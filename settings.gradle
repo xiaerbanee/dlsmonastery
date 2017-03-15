@@ -1,1 +1,2 @@
 include 'summer-uaa'
+include 'summer-gateway'
