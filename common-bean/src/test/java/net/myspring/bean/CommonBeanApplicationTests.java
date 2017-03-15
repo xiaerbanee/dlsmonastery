@@ -1,4 +1,4 @@
-package net.myspring.hr;
+package net.myspring.bean;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SummerHrApplicationTests {
+public class CommonBeanApplicationTests {
 
 	@Test
 	public void contextLoads() {
