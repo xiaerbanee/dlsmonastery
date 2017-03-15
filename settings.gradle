@@ -1,3 +1,4 @@
 include 'summer-config'
 include 'summer-uaa'
 include 'summer-gateway'
+include 'summer-discovery'
