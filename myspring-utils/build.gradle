@@ -3,31 +3,25 @@ buildscript {
 		springBootVersion = '1.5.2.RELEASE'
 	}
 	repositories {
-		maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+		mavenCentral()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
-allprojects {
-	repositories {
-		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-	}
-}
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
+apply plugin: 'spring-boot'
 
 jar {
-	baseName = 'myspring-util'
-	version = '0.0.1-SNAPSHOT'
+	baseName = 'myspring-utils'
+	version = '1.0.0-RELEASE'
 }
 
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+	maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 }
 
 

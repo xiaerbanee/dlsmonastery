@@ -3,17 +3,13 @@ buildscript {
 		springBootVersion = '1.5.2.RELEASE'
 	}
 	repositories {
-		maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+		mavenCentral()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
-allprojects {
-	repositories {
-		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-	}
-}
+
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
@@ -27,9 +23,8 @@ jar {
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+	maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 }
-
 
 dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-hystrix')
