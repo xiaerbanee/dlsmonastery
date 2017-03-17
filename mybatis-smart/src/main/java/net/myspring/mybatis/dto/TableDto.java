@@ -1,6 +1,7 @@
 package net.myspring.mybatis.dto;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 public class TableDto {
     private String jdbcTable;
-    private List<ColumnDto> mybatisColumnList;
+    private List<ColumnDto> mybatisColumnList = Lists.newArrayList();
     private ColumnDto idColumn;
     private ColumnDto createdByColumn;
     private ColumnDto createdDateColumn;
@@ -19,7 +20,7 @@ public class TableDto {
     private ColumnDto versionColumn;
     private ColumnDto enabledColumn;
     private String generationType;
-    private Map<String,ColumnDto> columnMap;
+    private Map<String,ColumnDto> columnMap = Maps.newHashMap();
 
     public String getJdbcTable() {
         return jdbcTable;
