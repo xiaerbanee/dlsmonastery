@@ -1,31 +1,124 @@
 package net.myspring.mybatis.mapper;
 
 import net.myspring.mybatis.provider.CrudProvider;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.annotations.*;
 
 import java.io.Serializable;
 
 /**
- * Created by liuj on 2016/11/14.
+ * Interface for generic CRUD operations on a repository for a specific type.
+ *
+ * @author liuj
  */
 public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID> {
 
-    @InsertProvider(type=CrudProvider.class, method = CrudProvider.SAVE)
+    /**
+     * Saves a given entity. Use the returned instance for further operations as the save operation might have changed the
+     * entity instance completely.
+     *
+     * @param entity
+     * @return the saved entity
+     */
+    @InsertProvider(type=CrudProvider.class, method = "save")
     @Options(useGeneratedKeys = true)
-    int save(T entity);
+    <S extends T> S save(S entity);
 
-    @UpdateProvider(type=CrudProvider.class, method = CrudProvider.UPDATE)
-    int update(T entity);
+    /**
+     * Saves all given entities.
+     *
+     * @param entities
+     * @return the saved entities
+     * @throws IllegalArgumentException in case the given entity is {@literal null}.
+     */
+    @InsertProvider(type=CrudProvider.class, method = "saveByEntities")
+    @Options(useGeneratedKeys = true)
+    <S extends T> Iterable<S> save(Iterable<S> entities);
 
-    @SelectProvider(type=CrudProvider.class,method = CrudProvider.FIND_ONE)
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param id must not be {@literal null}.
+     * @return the entity with the given id or {@literal null} if none found
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @SelectProvider(type=CrudProvider.class, method = "findOne")
     T findOne(ID id);
 
-    @UpdateProvider(type=CrudProvider.class,method = CrudProvider.DELETE_ONE)
-    int deleteOne(ID id);
+    /**
+     * Returns whether an entity with the given id exists.
+     *
+     * @param id must not be {@literal null}.
+     * @return true if an entity with the given id exists, {@literal false} otherwise
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @SelectProvider(type=CrudProvider.class, method = "exists")
+    boolean exists(ID id);
 
-    @UpdateProvider(type=CrudProvider.class,method = CrudProvider.LOGIC_DELETE_ONE)
-    int logicDeleteOne(ID id);
+    /**
+     * Returns all instances of the type.
+     *
+     * @return all entities
+     */
+    @SelectProvider(type=CrudProvider.class, method = "findAll")
+    Iterable<T> findAll();
+
+    /**
+     * Returns all instances of the type with the given IDs.
+     *
+     * @param ids
+     * @return
+     */
+    @SelectProvider(type=CrudProvider.class, method = "findAllByIds")
+    Iterable<T> findAll(Iterable<ID> ids);
+
+    /**
+     * Returns the number of entities available.
+     *
+     * @return the number of entities
+     */
+    @SelectProvider(type=CrudProvider.class, method = "count")
+    long count();
+
+    /**
+     * Deletes the entity with the given id.
+     *
+     * @param id must not be {@literal null}.
+     * @throws IllegalArgumentException in case the given {@code id} is {@literal null}
+     */
+    @DeleteProvider(type=CrudProvider.class, method = "deleteById")
+    void delete(ID id);
+
+    /**
+     * Deletes a given entity.
+     *
+     * @param entity
+     * @throws IllegalArgumentException in case the given entity is {@literal null}.
+     */
+    @DeleteProvider(type=CrudProvider.class, method = "deleteByEntity")
+    void delete(T entity);
+
+
+    /**
+     * Deletes the given entities.
+     *
+     * @param entities
+     * @throws IllegalArgumentException in case the given {@link Iterable} is {@literal null}.
+     */
+    @DeleteProvider(type=CrudProvider.class, method = "deleteByEntities")
+    void delete(Iterable<? extends T> entities);
+
+    /**
+     * Deletes all entities managed by the repository.
+     */
+    @DeleteProvider(type=CrudProvider.class, method = "deleteAll")
+    void deleteAll();
+
+    /**
+     * Updates a given entity
+     *
+     * @param entity
+     */
+    @UpdateProvider(type=CrudProvider.class, method = "update")
+    <S extends T> void update(S entity);
+
 }

@@ -1,17 +1,17 @@
 package net.myspring.mybatis.provider;
 
-import net.myspring.mybatis.dto.TableDto;
+import java.io.Serializable;
 
 /**
  * Created by liuj on 2016/11/12.
  */
 public class BaseProvider {
 
-    protected TableDto getTableDto() {
+    protected Class<? extends Serializable> getIdClass() {
         return null;
     }
 
-    protected Class getEntityClass() {
+    protected Class<?> getDomainClass() {
         return null;
     }
 }
