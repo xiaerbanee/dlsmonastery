@@ -33,5 +33,6 @@ dependencies {
 	compile('org.mybatis:mybatis-typehandlers-jsr310:1.0.1')
 	compile 'com.google.guava:guava:20.0'
 	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.1.RELEASE'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }

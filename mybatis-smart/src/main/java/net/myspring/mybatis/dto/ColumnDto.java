@@ -3,6 +3,8 @@ package net.myspring.mybatis.dto;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
+import javax.persistence.GeneratedValue;
+
 /**
  * Created by liuj on 2017/3/17.
  */
@@ -13,6 +15,8 @@ public class ColumnDto {
     private Boolean insertable;
     private Boolean updatable;
     private  Boolean nullable;
+
+    private GeneratedValue generatedValue;
 
     public TableDto getTableDto() {
         return tableDto;
@@ -61,4 +65,13 @@ public class ColumnDto {
     public void setNullable(Boolean nullable) {
         this.nullable = nullable;
     }
+
+    public GeneratedValue getGeneratedValue() {
+        return generatedValue;
+    }
+
+    public void setGeneratedValue(GeneratedValue generatedValue) {
+        this.generatedValue = generatedValue;
+    }
+
 }

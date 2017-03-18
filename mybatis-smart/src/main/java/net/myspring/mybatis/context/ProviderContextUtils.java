@@ -5,9 +5,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.mybatis.dto.ColumnDto;
 import net.myspring.mybatis.dto.TableDto;
+import org.springframework.data.annotation.*;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
@@ -23,42 +27,48 @@ public class ProviderContextUtils {
     public static TableDto getTableDto(Class clazz) {
         String key = clazz.getName();
         if(!tableDtoMap.containsKey(key)) {
-           initTableDto(clazz);
-        }
-        return tableDtoMap.get(key);
-    }
-
-    private static void initTableDto(Class clazz) {
-        String key = clazz.getName();
-        TableDto tableDto = new TableDto();
-        Entity entity = (Entity) clazz.getAnnotation(Entity.class);
-        Table table = (Table) clazz.getAnnotation(Table.class);
-        if(entity != null && table != null) {
-            //获取表名
-            String jdbcTable = table.name();
-            if(StringUtils.isEmpty(jdbcTable)) {
-                jdbcTable = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE,clazz.getSimpleName());
-            }
-            tableDto.setJdbcTable(jdbcTable);
-            List<Field> fields = getFields(null,clazz);
-            for(Field field:fields) {
-                if(isJdbcColumn(field)) {
-                    ColumnDto columnDto = getColumnDto(field);
-                    columnDto.setTableDto(tableDto);
-                    tableDto.getMybatisColumnList().add(columnDto);
-                    //检查是否是ID
-                    if(field.getAnnotation(Id.class) != null) {
-                        tableDto.setIdColumn(columnDto);
-                        String generationType = GenerationType.IDENTITY.name();
-                        if(field.getAnnotation(GeneratedValue.class) != null) {
-                            generationType = field.getAnnotation(GeneratedValue.class).strategy().name();
+            Entity entity = (Entity) clazz.getAnnotation(Entity.class);
+            Table table = (Table) clazz.getAnnotation(Table.class);
+            if(entity != null && table != null) {
+                TableDto tableDto = new TableDto();
+                //获取表名
+                String jdbcTable = table.name();
+                if (StringUtils.isEmpty(jdbcTable)) {
+                    jdbcTable = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, clazz.getSimpleName());
+                }
+                tableDto.setJdbcTable(jdbcTable);
+                List<Field> fields = getFields(null, clazz);
+                for (Field field : fields) {
+                    if (isJdbcColumn(field)) {
+                        ColumnDto columnDto = getColumnDto(field);
+                        //检查是否是ID
+                        if (field.getAnnotation(Id.class) != null) {
+                            columnDto.setGeneratedValue(field.getAnnotation(GeneratedValue.class));
+                            tableDto.setIdColumn(columnDto);
                         }
-                        tableDto.setGenerationType(generationType);
+                        if (field.getAnnotation(CreatedBy.class) != null) {
+                            tableDto.setCreatedByColumn(columnDto);
+                        }
+                        if (field.getAnnotation(CreatedDate.class) != null) {
+                            tableDto.setCreatedDateColumn(columnDto);
+                        }
+                        if (field.getAnnotation(LastModifiedBy.class) != null) {
+                            tableDto.setLastModifiedByColumn(columnDto);
+                        }
+                        if (field.getAnnotation(LastModifiedDate.class) != null) {
+                            tableDto.setLastModifiedDateColumn(columnDto);
+                        }
+                        if (field.getAnnotation(Version.class) != null) {
+                            tableDto.setVersionColumn(columnDto);
+                        }
+                        columnDto.setTableDto(tableDto);
+                        tableDto.getMybatisColumnList().add(columnDto);
                     }
                 }
+                tableDtoMap.put(key, tableDto);
             }
         }
-        tableDtoMap.put(key,tableDto);
+        return tableDtoMap.get(key);
     }
 
     private static Boolean isJdbcColumn(Field field) {

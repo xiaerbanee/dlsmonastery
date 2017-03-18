@@ -3,6 +3,7 @@ package net.myspring.mybatis.dto;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import javax.persistence.GeneratedValue;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,6 @@ public class TableDto {
     private ColumnDto LastModifiedDateColumn;
     private ColumnDto versionColumn;
     private ColumnDto enabledColumn;
-    private String generationType;
     private Map<String,ColumnDto> columnMap = Maps.newHashMap();
 
     public String getJdbcTable() {
@@ -93,15 +93,6 @@ public class TableDto {
     public void setEnabledColumn(ColumnDto enabledColumn) {
         this.enabledColumn = enabledColumn;
     }
-
-    public String getGenerationType() {
-        return generationType;
-    }
-
-    public void setGenerationType(String generationType) {
-        this.generationType = generationType;
-    }
-
     public Map<String, ColumnDto> getColumnMap() {
         return columnMap;
     }
