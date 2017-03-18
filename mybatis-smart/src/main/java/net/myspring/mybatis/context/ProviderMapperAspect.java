@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
@@ -59,6 +60,15 @@ public class ProviderMapperAspect {
     }
 
     private Class getMapperInterface(MapperProxy mapperProxy) {
+        try {
+            Field field= mapperProxy.getClass().getDeclaredField("mapperInterface");
+            field.setAccessible(true);
+            return (Class) field.get(mapperProxy);
+        } catch (NoSuchFieldException e) {
+            logger.error(e.getMessage());
+        } catch (IllegalAccessException e) {
+            logger.error(e.getMessage());
+        }
         return null;
     }
 
