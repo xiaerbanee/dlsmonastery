@@ -6,7 +6,7 @@ package net.myspring.mybatis.context;
 public class MapperThreadLocal {
     private static ThreadLocal<MapperThreadLocal> threadLocal = new ThreadLocal<MapperThreadLocal>();
 
-    private Class entityClass;
+    private Class domainClass;
 
     private Class idClass;
 
@@ -21,12 +21,12 @@ public class MapperThreadLocal {
         return threadLocal.get();
     }
 
-    public Class getEntityClass() {
-        return entityClass;
+    public Class getDomainClass() {
+        return domainClass;
     }
 
-    public void setEntityClass(Class entityClass) {
-        this.entityClass = entityClass;
+    public void setDomainClass(Class domainClass) {
+        this.domainClass = domainClass;
     }
 
     public Class getIdClass() {
