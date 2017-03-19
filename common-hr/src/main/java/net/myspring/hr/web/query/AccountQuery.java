@@ -5,5 +5,5 @@ import net.myspring.hr.domain.Account;
 /**
  * Created by liuj on 2017/3/19.
  */
-public class AccountQuery extends Account {
+public class AccountQuery {
 }
