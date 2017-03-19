@@ -26,4 +26,9 @@ public class MapperThreadLocal {
     public void setMapperDefinition(MapperDefinition mapperDefinition) {
         this.mapperDefinition = mapperDefinition;
     }
+
+    public void remove() {
+        this.mapperDefinition = null;
+        threadLocal.remove();
+    }
 }

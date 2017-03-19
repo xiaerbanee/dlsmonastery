@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.binding.MapperProxy;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -36,7 +37,7 @@ public class ProviderMapperAspect {
     }
 
     @Before("mapperAspect()")
-    public void mapperAspect(JoinPoint point) {
+    public void setMapperThreadLocal(JoinPoint point) {
         Class entityClass = null;
         Object target = point.getTarget();
         if(BaseMapper.class.isAssignableFrom(target.getClass())) {
@@ -57,6 +58,11 @@ public class ProviderMapperAspect {
             }
         }
         MapperThreadLocal.get().setMapperDefinition(mapperDefinitionMap.get(entityClass==null?null:entityClass.getName()));
+    }
+
+    @After("mapperAspect()")
+    public void removeMapperThreadLocal(JoinPoint point) {
+        MapperThreadLocal.get().remove();
     }
 
     private Class getMapperInterface(MapperProxy mapperProxy) {

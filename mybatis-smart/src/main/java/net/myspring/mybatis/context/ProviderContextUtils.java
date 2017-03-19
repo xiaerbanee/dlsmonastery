@@ -62,7 +62,7 @@ public class ProviderContextUtils {
                             tableDto.setVersionColumn(columnDto);
                         }
                         columnDto.setTableDto(tableDto);
-                        tableDto.getMybatisColumnList().add(columnDto);
+                        tableDto.getColumnList().add(columnDto);
                     }
                 }
                 tableDtoMap.put(key, tableDto);

@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class TableDto {
     private String jdbcTable;
-    private List<ColumnDto> mybatisColumnList = Lists.newArrayList();
+    private List<ColumnDto> columnList = Lists.newArrayList();
     private ColumnDto idColumn;
     private ColumnDto createdByColumn;
     private ColumnDto createdDateColumn;
@@ -30,12 +30,12 @@ public class TableDto {
         this.jdbcTable = jdbcTable;
     }
 
-    public List<ColumnDto> getMybatisColumnList() {
-        return mybatisColumnList;
+    public List<ColumnDto> getColumnList() {
+        return columnList;
     }
 
-    public void setMybatisColumnList(List<ColumnDto> mybatisColumnList) {
-        this.mybatisColumnList = mybatisColumnList;
+    public void setColumnList(List<ColumnDto> columnList) {
+        this.columnList = columnList;
     }
 
     public ColumnDto getIdColumn() {
