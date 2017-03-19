@@ -6,16 +6,12 @@ package net.myspring.mybatis.context;
 public class MapperThreadLocal {
     private static ThreadLocal<MapperThreadLocal> threadLocal = new ThreadLocal<MapperThreadLocal>();
 
-    private MapperDefinition mapperDefinition;
+    private MapperDefinition mapperDefinition = new MapperDefinition();
 
     private MapperThreadLocal() {
     }
 
     public static MapperThreadLocal get() {
-        if (threadLocal.get() == null) {
-            MapperThreadLocal mapperThreadLocal = new MapperThreadLocal();
-            threadLocal.set(mapperThreadLocal);
-        }
         return threadLocal.get();
     }
 
@@ -28,7 +24,6 @@ public class MapperThreadLocal {
     }
 
     public void remove() {
-        this.mapperDefinition = null;
         threadLocal.remove();
     }
 }
