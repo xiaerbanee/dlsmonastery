@@ -12,14 +12,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class MybatisConfig {
-
-    @Value("${mysql.url}")
-    private String url;
-    @Value("${mysql.username}")
-    private String username;
-    @Value("${mysql.password}")
-    private String password;
-
     @Bean
     public MybatisContext mybatisContext() {
         return new MybatisContext() {

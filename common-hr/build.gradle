@@ -30,6 +30,9 @@ dependencies {
 	compile project(':mybatis-smart')
 	compile project(':common-bean')
 	compile('org.springframework.boot:spring-boot-starter')
+	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.2.0'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
 	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
