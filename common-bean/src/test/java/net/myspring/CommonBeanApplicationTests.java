@@ -1,4 +1,4 @@
-package net.myspring.bean;
+package net.myspring;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

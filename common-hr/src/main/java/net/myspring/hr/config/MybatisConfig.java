@@ -1,6 +1,8 @@
 package net.myspring.hr.config;
 
 import net.myspring.mybatis.context.MybatisContext;
+import net.myspring.mybatis.dialect.Dialect;
+import net.myspring.mybatis.dialect.MySQLDialect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +22,17 @@ public class MybatisConfig {
 
     @Bean
     public MybatisContext mybatisContext() {
-        return new MybatisContextImpl();
+        return new MybatisContext() {
+            @Override
+            public String getAccountId() {
+                return "1";
+            }
+
+            @Override
+            public Dialect getDialect() {
+                return new MySQLDialect();
+            }
+        };
     }
 
 
