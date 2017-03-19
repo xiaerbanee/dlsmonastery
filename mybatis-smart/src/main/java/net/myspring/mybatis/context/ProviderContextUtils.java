@@ -7,6 +7,7 @@ import net.myspring.mybatis.dto.ColumnDto;
 import net.myspring.mybatis.dto.TableDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.*;
+import org.springframework.data.domain.Sort;
 
 import javax.persistence.*;
 import javax.persistence.Id;
@@ -14,6 +15,7 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +71,20 @@ public class ProviderContextUtils {
             }
         }
         return tableDtoMap.get(key);
+    }
+
+    public static String getSql(Sort sort) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" ORDER BY ");
+        Iterator<Sort.Order> iterator = sort.iterator();
+        while (iterator.hasNext()) {
+            Sort.Order order = iterator.next();
+            sb.append(order.getProperty()).append(" ").append(order.getDirection());
+            if(iterator.hasNext()) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
     }
 
     private static Boolean isJdbcColumn(Field field) {

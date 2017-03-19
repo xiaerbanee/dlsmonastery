@@ -1,5 +1,6 @@
 package net.myspring.mybatis.provider;
 
+import net.myspring.mybatis.context.ProviderContextUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -12,6 +13,9 @@ public class PagingAndSortingProvider extends CrudProvider {
 
     public String findAllBySort(Sort sort) {
         String sql = "SELECT * FROM " + getTableDto().getJdbcTable();
+        if(sort != null) {
+            sql = sql + ProviderContextUtils.getSql(sort);
+        }
         return sql;
     }
 
