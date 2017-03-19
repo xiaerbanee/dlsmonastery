@@ -11,19 +11,8 @@ import java.util.Iterator;
 public class PagingAndSortingProvider extends CrudProvider {
 
     public String findAllBySort(Sort sort) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM " + getTableDto().getJdbcTable());
-        if(sort != null) {
-            sb.append(" ORDER BY ");
-            Iterator<Sort.Order> iterator = sort.iterator();
-            while (iterator.hasNext()) {
-                Sort.Order order = iterator.next();
-                sb.append(order.getProperty()).append(" ").append(order.getDirection());
-                if(iterator.hasNext()) {
-                    sb.append(", ");
-                }
-            }
-        }
-        return sb.toString();
+        String sql = "SELECT * FROM " + getTableDto().getJdbcTable();
+        return sql;
     }
 
     public String findAllByPageable(Pageable pageable) {

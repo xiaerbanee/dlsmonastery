@@ -1,11 +1,10 @@
 package net.myspring.mybatis.provider;
 
 import com.google.common.collect.Lists;
-import com.sun.deploy.util.StringUtils;
 import net.myspring.mybatis.dto.ColumnDto;
 import net.myspring.mybatis.dto.TableDto;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.swing.table.TableColumn;
 import java.util.List;
 import java.util.Map;
 

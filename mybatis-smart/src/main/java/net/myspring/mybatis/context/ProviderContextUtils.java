@@ -5,8 +5,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.mybatis.dto.ColumnDto;
 import net.myspring.mybatis.dto.TableDto;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.*;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import javax.persistence.Id;
@@ -33,7 +33,7 @@ public class ProviderContextUtils {
                 TableDto tableDto = new TableDto();
                 //获取表名
                 String jdbcTable = table.name();
-                if (StringUtils.isEmpty(jdbcTable)) {
+                if (StringUtils.isBlank(jdbcTable)) {
                     jdbcTable = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, clazz.getSimpleName());
                 }
                 tableDto.setJdbcTable(jdbcTable);

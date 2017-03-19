@@ -27,10 +27,9 @@ import java.util.Map;
 @Component
 @Order(1)
 public class ProviderMapperAspect {
+    private final static Logger logger = LoggerFactory.getLogger(ProviderMapperAspect.class);
 
     private static Map<String,MapperDefinition> mapperDefinitionMap = Maps.newHashMap();
-
-    private final static Logger logger = LoggerFactory.getLogger(ProviderMapperAspect.class);
 
     @Pointcut("@annotation(org.apache.ibatis.annotations.Mapper)")
     public void mapperAspect() {
