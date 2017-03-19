@@ -109,7 +109,7 @@ public class ProviderContextUtils {
         boolean nullable = false;
         Column column = field.getAnnotation(Column.class);
         if(column !=null) {
-            if(!StringUtils.isEmpty(column.name())) {
+            if(StringUtils.isNotBlank(column.name())) {
                 jdbcColumn = column.name();
             }
             insertable = column.insertable();

@@ -66,11 +66,11 @@ public class PageableInterceptor implements Interceptor {
             // 2.2 继续执行剩余步骤，获取查询结果
             Object ret = invocation.proceed();
             // 3. 组成分页对象
-            Page<Object> pi = new PageImpl((List<Object>) ret, pageRequest, total);
+            Page<Object> page = new PageImpl((List<Object>) ret, pageRequest, total);
             // 4. MyBatis 需要返回一个List对象，这里只是满足MyBatis而作的临时包装
-            List<Page<?>> tmp = new ArrayList<Page<?>>(1);
-            tmp.add(pi);
-            return tmp;
+            List<Page<?>> list = new ArrayList<Page<?>>(1);
+            list.add(page);
+            return list;
         }
         return invocation.proceed();
     }

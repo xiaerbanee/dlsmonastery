@@ -19,7 +19,6 @@ public class TableDto {
     private ColumnDto lastModifiedByColumn;
     private ColumnDto LastModifiedDateColumn;
     private ColumnDto versionColumn;
-    private ColumnDto enabledColumn;
     private Map<String,ColumnDto> columnMap = Maps.newHashMap();
 
     public String getJdbcTable() {
@@ -84,14 +83,6 @@ public class TableDto {
 
     public void setVersionColumn(ColumnDto versionColumn) {
         this.versionColumn = versionColumn;
-    }
-
-    public ColumnDto getEnabledColumn() {
-        return enabledColumn;
-    }
-
-    public void setEnabledColumn(ColumnDto enabledColumn) {
-        this.enabledColumn = enabledColumn;
     }
     public Map<String, ColumnDto> getColumnMap() {
         return columnMap;
