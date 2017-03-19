@@ -175,8 +175,8 @@ public class PageableInterceptor implements Interceptor {
         return copyFromMappedStatement(ms, new BoundSqlSqlSource(newBoundSql));
     }
 
-    public static class BoundSqlSqlSource implements SqlSource {
-        BoundSql boundSql;
+    private  class BoundSqlSqlSource implements SqlSource {
+        private BoundSql boundSql;
 
         public BoundSqlSqlSource(BoundSql boundSql) {
             this.boundSql = boundSql;
