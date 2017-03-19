@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by liuj on 2016/11/12.
  */
 public class CrudProvider extends BaseProvider {
-    public String save(Object entity) {
+    public String save(Object entity) throws NoSuchFieldException {
         List<String> jdbcColumns = Lists.newArrayList();
         List<String> javaInstances = Lists.newArrayList();
         for(ColumnDto columnDto:getTableDto().getColumnList()) {
@@ -34,7 +34,7 @@ public class CrudProvider extends BaseProvider {
         return sql;
     }
 
-    public String saveByEntities(Map map) {
+    public String saveByEntities(Map map) throws NoSuchFieldException {
         List<Object> list = (List<Object>) map.get("list");
         List<String> jdbcColumns = Lists.newArrayList();
         List<String> javaInstances = Lists.newArrayList();
