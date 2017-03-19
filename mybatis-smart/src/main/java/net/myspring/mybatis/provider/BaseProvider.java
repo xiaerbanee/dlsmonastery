@@ -6,6 +6,7 @@ import net.myspring.mybatis.dto.ColumnDto;
 import net.myspring.mybatis.dto.TableDto;
 
 import javax.persistence.Column;
+import javax.persistence.GenerationType;
 import java.io.Serializable;
 
 /**
@@ -26,7 +27,25 @@ public class BaseProvider {
     }
 
     protected Boolean getInsertable(Object entity, ColumnDto columnDto) {
-        return true;
+        boolean insertable = columnDto.getInsertable();
+        if(getTableDto().getIdColumn() != null && getTableDto().getIdColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            if (GenerationType.IDENTITY.name().equals(columnDto.getGeneratedValue().strategy().name())) {
+                insertable = false;
+            } else {
+                insertable = true;
+            }
+        } else if(getTableDto().getVersionColumn() != null && getTableDto().getVersionColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            insertable = true;
+        } else if(getTableDto().getCreatedByColumn() != null && getTableDto().getCreatedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            insertable = true;
+        }else if(getTableDto().getCreatedDateColumn() != null && getTableDto().getCreatedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            insertable = true;
+        } else if(getTableDto().getLastModifiedByColumn() != null && getTableDto().getLastModifiedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            insertable = true;
+        }else if(getTableDto().getLastModifiedDateColumn() != null && getTableDto().getLastModifiedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            insertable = true;
+        }
+        return insertable;
     }
 
     protected Boolean getUpdatable(Object entity, ColumnDto columnDto) {
