@@ -19,7 +19,6 @@ public class MybatisConfig {
             public String getAccountId() {
                 return "1";
             }
-
             @Override
             public Dialect getDialect() {
                 return new MySQLDialect();
