@@ -30,6 +30,20 @@ public class BaseProvider {
     }
 
     protected Boolean getUpdatable(Object entity, ColumnDto columnDto) {
-        return true;
+        boolean updatable = columnDto.getUpdatable();
+        if(getTableDto().getIdColumn() != null && getTableDto().getIdColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            updatable = false;
+        } else if(getTableDto().getVersionColumn() != null && getTableDto().getVersionColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            updatable = false;
+        } else if(getTableDto().getCreatedByColumn() != null && getTableDto().getCreatedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            updatable = false;
+        }else if(getTableDto().getCreatedDateColumn() != null && getTableDto().getCreatedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            updatable = false;
+        } else if(getTableDto().getLastModifiedByColumn() != null && getTableDto().getLastModifiedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            updatable = true;
+        }else if(getTableDto().getLastModifiedDateColumn() != null && getTableDto().getLastModifiedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            updatable = true;
+        }
+        return updatable;
     }
 }
