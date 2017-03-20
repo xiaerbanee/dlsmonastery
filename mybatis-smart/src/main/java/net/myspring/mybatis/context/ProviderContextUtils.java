@@ -132,8 +132,9 @@ public class ProviderContextUtils {
         for(Field field:clazz.getDeclaredFields()) {
             fields.add(field);
         }
+        clazz = clazz.getSuperclass();
         while (!clazz.getName().equals(Object.class.getName())) {
-            getFields(fields,clazz.getSuperclass());
+            getFields(fields,clazz);
         }
         return fields;
     }

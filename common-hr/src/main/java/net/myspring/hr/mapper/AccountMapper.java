@@ -8,5 +8,5 @@ import org.apache.ibatis.annotations.Mapper;
  * Created by liuj on 2017/3/19.
  */
 @Mapper
-public interface AccountMapper extends PagingAndSortingMapper<Account,String>{
+public interface AccountMapper extends PagingAndSortingMapper<Account,String> {
 }
