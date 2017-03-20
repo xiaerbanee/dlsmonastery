@@ -30,9 +30,9 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @return the saved entities
      * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
-    @InsertProvider(type=CrudProvider.class, method = "saveByEntities")
+    @InsertProvider(type=CrudProvider.class, method = "batchSave")
     @Options(useGeneratedKeys = true)
-    <S extends T> Iterable<S> save(Iterable<S> entities);
+    <S extends T> Iterable<S> batchSave(Iterable<S> entities);
 
     /**
      * Retrieves an entity by its id.
@@ -69,7 +69,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @return
      */
     @SelectProvider(type=CrudProvider.class, method = "findAllByIds")
-    Iterable<T> findAll(Iterable<ID> ids);
+    Iterable<T> findAllByIds(Iterable<ID> ids);
 
     /**
      * Returns the number of entities available.
@@ -86,7 +86,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @throws IllegalArgumentException in case the given {@code id} is {@literal null}
      */
     @DeleteProvider(type=CrudProvider.class, method = "deleteById")
-    void delete(ID id);
+    void deleteById(ID id);
 
     /**
      * Deletes a given entity.
@@ -95,7 +95,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
     @DeleteProvider(type=CrudProvider.class, method = "deleteByEntity")
-    void delete(T entity);
+    void deleteByEntity(T entity);
 
 
     /**
@@ -104,8 +104,8 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @param entities
      * @throws IllegalArgumentException in case the given {@link Iterable} is {@literal null}.
      */
-    @DeleteProvider(type=CrudProvider.class, method = "deleteByEntities")
-    void delete(Iterable<? extends T> entities);
+    @DeleteProvider(type=CrudProvider.class, method = "batchDelete")
+    void batchDelete(Iterable<? extends T> entities);
 
     /**
      * Deletes all entities managed by the repository.

@@ -34,7 +34,7 @@ public class CrudProvider extends BaseProvider {
         return sql;
     }
 
-    public String saveByEntities(Map map) throws NoSuchFieldException {
+    public String batchSave(Map map) throws NoSuchFieldException {
         List<Object> list = (List<Object>) map.get("list");
         List<String> jdbcColumns = Lists.newArrayList();
         List<String> javaInstances = Lists.newArrayList();
@@ -108,7 +108,7 @@ public class CrudProvider extends BaseProvider {
         return sql;
     }
 
-    public String deleteByEntities(Map map) {
+    public String batchDelete(Map map) {
         List<Object> list = (List<Object>) map.get("list");
         List<String> values = Lists.newArrayList();
         String idJdbcColumn = getTableDto().getIdColumn().getJdbcColumn();

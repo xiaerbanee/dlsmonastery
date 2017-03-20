@@ -1,6 +1,7 @@
 package net.myspring.hr.config;
 
 import net.myspring.mybatis.context.MybatisContext;
+import net.myspring.mybatis.context.ProviderMapperAspect;
 import net.myspring.mybatis.dialect.Dialect;
 import net.myspring.mybatis.dialect.MySQLDialect;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,12 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class MybatisConfig {
+
+    @Bean
+    public ProviderMapperAspect providerMapperAspect() {
+        return new ProviderMapperAspect();
+    }
+
     @Bean
     public MybatisContext mybatisContext() {
         return new MybatisContext() {
@@ -24,6 +31,4 @@ public class MybatisConfig {
             }
         };
     }
-
-
 }

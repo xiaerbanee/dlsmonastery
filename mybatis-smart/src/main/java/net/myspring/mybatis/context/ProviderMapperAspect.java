@@ -24,14 +24,13 @@ import java.util.Map;
  */
 
 @Aspect
-@Component
 @Order(1)
 public class ProviderMapperAspect {
     private final static Logger logger = LoggerFactory.getLogger(ProviderMapperAspect.class);
 
     private static Map<String,MapperDefinition> mapperDefinitionMap = Maps.newHashMap();
 
-    @Pointcut("@annotation(org.apache.ibatis.annotations.Mapper)")
+    @Pointcut("execution(* net.myspring..*.mapper.*.*(..))")
     public void mapperAspect() {
     }
 
@@ -57,11 +56,6 @@ public class ProviderMapperAspect {
             }
         }
         MapperThreadLocal.get().setMapperDefinition(mapperDefinitionMap.get(entityClass==null?null:entityClass.getName()));
-    }
-
-    @After("mapperAspect()")
-    public void removeMapperThreadLocal(JoinPoint point) {
-        MapperThreadLocal.get().remove();
     }
 
     private Class getMapperInterface(MapperProxy mapperProxy) {
