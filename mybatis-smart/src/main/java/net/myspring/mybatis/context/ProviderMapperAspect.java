@@ -4,20 +4,20 @@ import com.google.common.collect.Maps;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.binding.MapperProxy;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Map;
+
+n;
 
 /**
  * Created by liuj on 2016/11/14.
