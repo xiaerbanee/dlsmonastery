@@ -30,7 +30,7 @@ public class ProviderMapperAspect {
 
     private static Map<String,MapperDefinition> mapperDefinitionMap = Maps.newHashMap();
 
-    @Pointcut("execution(* net.myspring..*.mapper.*.*(..))")
+    @Pointcut("this(net.myspring.mybatis.mapper.BaseMapper)")
     public void mapperAspect() {
     }
 
