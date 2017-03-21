@@ -17,8 +17,6 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-n;
-
 /**
  * Created by liuj on 2016/11/14.
  */
