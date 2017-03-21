@@ -15,7 +15,6 @@ import org.apache.ibatis.plugin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.util.ReflectionUtils;
 
 import javax.persistence.Entity;
@@ -33,7 +32,6 @@ import java.util.Properties;
 public class AuditingInterceptor implements Interceptor {
     private final static Logger logger = LoggerFactory.getLogger(ProviderMapperAspect.class);
 
-    @Autowired
     private MybatisContext mybatisContext;
 
     @Override
@@ -73,7 +71,7 @@ public class AuditingInterceptor implements Interceptor {
 
     @Override
     public void setProperties(Properties properties) {
-
+        this.mybatisContext = ProviderContextUtils.getMybatisContext(properties);
     }
 
     private void setFieldValue(TableDto tableDto, Object entity, SqlCommandType sqlCommandType) throws NoSuchFieldException {

@@ -14,10 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by liuj on 2017/3/17.
@@ -98,6 +95,20 @@ public class ProviderContextUtils {
             isJdbcColumn = false;
         }
         return isJdbcColumn;
+    }
+
+    public static MybatisContext getMybatisContext(Properties properties) {
+        MybatisContext mybatisContext = null;
+        try {
+            mybatisContext  =  (MybatisContext) Class.forName(properties.getProperty("mybatisContext")).newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return mybatisContext;
     }
 
     private static ColumnDto getColumnDto(Field field) {

@@ -17,18 +17,4 @@ public class MybatisConfig {
     public ProviderMapperAspect providerMapperAspect() {
         return new ProviderMapperAspect();
     }
-
-    @Bean
-    public MybatisContext mybatisContext() {
-        return new MybatisContext() {
-            @Override
-            public String getAccountId() {
-                return "1";
-            }
-            @Override
-            public Dialect getDialect() {
-                return new MySQLDialect();
-            }
-        };
-    }
 }

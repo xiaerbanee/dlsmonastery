@@ -1,6 +1,7 @@
 package net.myspring.mybatis.interceptor;
 
 import net.myspring.mybatis.context.MybatisContext;
+import net.myspring.mybatis.context.ProviderContextUtils;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -38,7 +39,7 @@ import java.util.Properties;
  */
 @Intercepts({@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 public class PageableInterceptor implements Interceptor {
-    @Autowired
+
     private MybatisContext mybatisContext;
 
     private static Logger logger = LoggerFactory.getLogger(PageableInterceptor.class);
@@ -111,7 +112,8 @@ public class PageableInterceptor implements Interceptor {
     }
 
     @Override
-    public void setProperties(Properties p) {
+    public void setProperties(Properties properties) {
+        this.mybatisContext = ProviderContextUtils.getMybatisContext(properties);
     }
 
     /**
