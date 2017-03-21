@@ -21,4 +21,10 @@ public class AccountController {
     public Account report(String id) {
         return accountService.findOne(id);
     }
+
+    @RequestMapping(value = "save")
+    public Account save() {
+        return accountService.save();
+    }
+
 }

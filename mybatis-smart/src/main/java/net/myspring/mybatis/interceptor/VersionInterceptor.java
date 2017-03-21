@@ -138,7 +138,7 @@ public class VersionInterceptor implements Interceptor {
             String versionColumn = tableDto.getVersionColumn().getJdbcColumn();
             if(StringUtils.isNotBlank(versionColumn)) {
                 if(Integer.valueOf(result.toString())==0) {
-                    Field field = paramObj.getClass().getField(tableDto.getIdColumn().getJavaInstance());
+                    Field field = paramObj.getClass().getDeclaredField(tableDto.getIdColumn().getJavaInstance());
                     String id = (String) field.get(paramObj);
                     throw new StaleObjectStateException(paramObj.getClass().getName(),id);
                 }
@@ -201,7 +201,7 @@ public class VersionInterceptor implements Interceptor {
         ResultSet rs = null;
         try {
             Object paramObj = boundSql.getParameterObject();
-            Field field = paramObj.getClass().getField(ProviderContextUtils.getTableDto(paramObj.getClass()).getIdColumn().getJavaInstance());
+            Field field = paramObj.getClass().getDeclaredField(ProviderContextUtils.getTableDto(paramObj.getClass()).getIdColumn().getJavaInstance());
             String id = (String) field.get(paramObj);
             connection = mappedStatement.getConfiguration().getEnvironment().getDataSource().getConnection();
             versionStmt = connection.prepareStatement(sql);

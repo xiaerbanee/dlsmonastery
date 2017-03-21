@@ -15,6 +15,7 @@ import org.apache.ibatis.plugin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.util.ReflectionUtils;
 
 import javax.persistence.Entity;
@@ -31,8 +32,10 @@ import java.util.Properties;
 @Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
 public class AuditingInterceptor implements Interceptor {
     private final static Logger logger = LoggerFactory.getLogger(ProviderMapperAspect.class);
+
     @Autowired
     private MybatisContext mybatisContext;
+
     @Override
     public Object intercept(Invocation invocation) throws NoSuchFieldException, InvocationTargetException, IllegalAccessException {
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
@@ -78,24 +81,24 @@ public class AuditingInterceptor implements Interceptor {
             LocalDateTime localDateTime = LocalDateTime.now();
             if (SqlCommandType.INSERT == sqlCommandType) {
                 if (tableDto.getCreatedByColumn() != null) {
-                    Field field =  entity.getClass().getField(tableDto.getCreatedByColumn().getJavaInstance());
+                    Field field =  entity.getClass().getDeclaredField(tableDto.getCreatedByColumn().getJavaInstance());
                     ReflectionUtils.setField(field,entity,mybatisContext.getAccountId());
                 }
                 if (tableDto.getCreatedDateColumn() != null) {
-                    Field field =  entity.getClass().getField(tableDto.getCreatedDateColumn().getJavaInstance());
+                    Field field =  entity.getClass().getDeclaredField(tableDto.getCreatedDateColumn().getJavaInstance());
                     ReflectionUtils.setField(field,entity, localDateTime);
                 }
                 if (tableDto.getVersionColumn() != null) {
-                    Field field =  entity.getClass().getField(tableDto.getVersionColumn().getJavaInstance());
+                    Field field =  entity.getClass().getDeclaredField(tableDto.getVersionColumn().getJavaInstance());
                     ReflectionUtils.setField(field,entity, 0L);
                 }
             }
             if (tableDto.getLastModifiedByColumn() != null) {
-                Field field =  entity.getClass().getField(tableDto.getLastModifiedByColumn().getJavaInstance());
+                Field field =  entity.getClass().getDeclaredField(tableDto.getLastModifiedByColumn().getJavaInstance());
                 ReflectionUtils.setField(field,entity, mybatisContext.getAccountId());
             }
             if (tableDto.getLastModifiedDateColumn() != null) {
-                Field field =  entity.getClass().getField(tableDto.getLastModifiedDateColumn().getJavaInstance());
+                Field field =  entity.getClass().getDeclaredField(tableDto.getLastModifiedDateColumn().getJavaInstance());
                 ReflectionUtils.setField(field,entity, localDateTime);
             }
         }
