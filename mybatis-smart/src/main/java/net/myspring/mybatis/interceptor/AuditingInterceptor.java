@@ -4,6 +4,7 @@ package net.myspring.mybatis.interceptor;
  * Created by liuj on 2016/11/16.
  */
 
+import com.google.common.collect.Maps;
 import net.myspring.mybatis.context.MybatisContext;
 import net.myspring.mybatis.context.ProviderContextUtils;
 import net.myspring.mybatis.context.ProviderMapperAspect;
@@ -14,8 +15,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.ReflectionUtils;
+import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.Entity;
 import java.lang.reflect.Field;
@@ -30,7 +30,7 @@ import java.util.Properties;
  */
 @Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
 public class AuditingInterceptor implements Interceptor {
-    private final static Logger logger = LoggerFactory.getLogger(ProviderMapperAspect.class);
+    private final Logger logger = LoggerFactory.getLogger(AuditingInterceptor.class);
 
     private MybatisContext mybatisContext;
 
@@ -40,7 +40,7 @@ public class AuditingInterceptor implements Interceptor {
         SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
         Object parameter = invocation.getArgs()[1];
         if (parameter != null) {
-            if (parameter.getClass().getAnnotation(Entity.class) != null) {
+            if (ProviderContextUtils.getEntityClass(parameter.getClass()) != null) {
                 TableDto tableDto = ProviderContextUtils.getTableDto(parameter.getClass());
                 setFieldValue(tableDto, parameter, sqlCommandType);
             } else {
@@ -48,7 +48,7 @@ public class AuditingInterceptor implements Interceptor {
                     if(((Map) parameter).containsKey("list")) {
                         List<Object> list = (List<Object>) ((Map) parameter).get("list");
                         for (Object entity :list) {
-                            if (entity.getClass().getAnnotation(Entity.class) != null) {
+                            if (ProviderContextUtils.getEntityClass(entity.getClass()) != null) {
                                 TableDto tableDto = ProviderContextUtils.getTableDto(entity.getClass());
                                 setFieldValue(tableDto, entity, sqlCommandType);
                             }
@@ -79,24 +79,29 @@ public class AuditingInterceptor implements Interceptor {
             LocalDateTime localDateTime = LocalDateTime.now();
             if (SqlCommandType.INSERT == sqlCommandType) {
                 if (tableDto.getCreatedByColumn() != null) {
-                    Field field =  entity.getClass().getDeclaredField(tableDto.getCreatedByColumn().getJavaInstance());
+                    Field field = ReflectionUtils.findField(entity.getClass(),tableDto.getCreatedByColumn().getJavaInstance());
+                    field.setAccessible(true);
                     ReflectionUtils.setField(field,entity,mybatisContext.getAccountId());
                 }
                 if (tableDto.getCreatedDateColumn() != null) {
-                    Field field =  entity.getClass().getDeclaredField(tableDto.getCreatedDateColumn().getJavaInstance());
+                    Field field =ReflectionUtils.findField(entity.getClass(),tableDto.getCreatedDateColumn().getJavaInstance());
+                    field.setAccessible(true);
                     ReflectionUtils.setField(field,entity, localDateTime);
                 }
                 if (tableDto.getVersionColumn() != null) {
-                    Field field =  entity.getClass().getDeclaredField(tableDto.getVersionColumn().getJavaInstance());
+                    Field field =  ReflectionUtils.findField(entity.getClass(),tableDto.getVersionColumn().getJavaInstance());
+                    field.setAccessible(true);
                     ReflectionUtils.setField(field,entity, 0L);
                 }
             }
             if (tableDto.getLastModifiedByColumn() != null) {
-                Field field =  entity.getClass().getDeclaredField(tableDto.getLastModifiedByColumn().getJavaInstance());
+                Field field =  ReflectionUtils.findField(entity.getClass(),tableDto.getLastModifiedByColumn().getJavaInstance());
+                field.setAccessible(true);
                 ReflectionUtils.setField(field,entity, mybatisContext.getAccountId());
             }
             if (tableDto.getLastModifiedDateColumn() != null) {
-                Field field =  entity.getClass().getDeclaredField(tableDto.getLastModifiedDateColumn().getJavaInstance());
+                Field field =  ReflectionUtils.findField(entity.getClass(),tableDto.getLastModifiedDateColumn().getJavaInstance());
+                field.setAccessible(true);
                 ReflectionUtils.setField(field,entity, localDateTime);
             }
         }

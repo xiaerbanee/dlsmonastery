@@ -22,8 +22,11 @@ import java.util.*;
 public class ProviderContextUtils {
     //表结构缓存
     private static Map<String,TableDto> tableDtoMap = Maps.newHashMap();
+    //class对应的entityClass
+    private static Map<String,Class> entityClassMap= Maps.newHashMap();
 
     public static TableDto getTableDto(Class clazz) {
+        clazz = getEntityClass(clazz);
         String key = clazz.getName();
         if(!tableDtoMap.containsKey(key)) {
             Entity entity = (Entity) clazz.getAnnotation(Entity.class);
@@ -70,20 +73,6 @@ public class ProviderContextUtils {
         return tableDtoMap.get(key);
     }
 
-    public static String getSql(Sort sort) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" ORDER BY ");
-        Iterator<Sort.Order> iterator = sort.iterator();
-        while (iterator.hasNext()) {
-            Sort.Order order = iterator.next();
-            sb.append(order.getProperty()).append(" ").append(order.getDirection());
-            if(iterator.hasNext()) {
-                sb.append(", ");
-            }
-        }
-        return sb.toString();
-    }
-
     private static Boolean isJdbcColumn(Field field) {
         Class fieldClass = field.getType();
         Boolean isJdbcColumn = true;
@@ -111,7 +100,7 @@ public class ProviderContextUtils {
         return mybatisContext;
     }
 
-    private static ColumnDto getColumnDto(Field field) {
+    public static ColumnDto getColumnDto(Field field) {
         ColumnDto columnDto = new ColumnDto();
         columnDto.setJavaInstance(field.getName());
         String jdbcColumn = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE,field.getName());
@@ -132,6 +121,24 @@ public class ProviderContextUtils {
         columnDto.setUpdatable(updatable);
         columnDto.setNullable(nullable);
         return columnDto;
+    }
+
+    public static Class getEntityClass(Class clazz) {
+        String key = clazz.getName();
+        if(!entityClassMap.containsKey(key)) {
+            Entity entity = null;
+            while (!clazz.getName().equals(Object.class.getName()) && entity==null) {
+                entity = (Entity) clazz.getAnnotation(Entity.class);
+                if(entity != null) {
+                    entityClassMap.put(key,clazz);
+                }
+                clazz = clazz.getSuperclass();
+            }
+            if(!entityClassMap.containsKey(key)) {
+                entityClassMap.put(key,null);
+            }
+        }
+        return entityClassMap.get(key);
     }
 
 

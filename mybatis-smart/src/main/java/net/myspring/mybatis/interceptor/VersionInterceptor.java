@@ -42,6 +42,7 @@ import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.Entity;
 import java.lang.reflect.Field;
@@ -138,7 +139,7 @@ public class VersionInterceptor implements Interceptor {
             String versionColumn = tableDto.getVersionColumn().getJdbcColumn();
             if(StringUtils.isNotBlank(versionColumn)) {
                 if(Integer.valueOf(result.toString())==0) {
-                    Field field = paramObj.getClass().getDeclaredField(tableDto.getIdColumn().getJavaInstance());
+                    Field field =  ReflectionUtils.findField(paramObj.getClass(),tableDto.getIdColumn().getJavaInstance());
                     field.setAccessible(true);
                     String id = (String) field.get(paramObj);
                     throw new StaleObjectStateException(paramObj.getClass().getName(),id);
@@ -165,11 +166,11 @@ public class VersionInterceptor implements Interceptor {
 
     private Boolean checkVersion(BoundSql boundSql) {
         Object paramObj = boundSql.getParameterObject();
-        if(paramObj.getClass().getAnnotation(Entity.class)==null) {
+        if(ProviderContextUtils.getEntityClass(paramObj.getClass()) ==null) {
             return false;
         }
         TableDto tableDto = ProviderContextUtils.getTableDto(paramObj.getClass());
-       String sql = boundSql.getSql();
+        String sql = boundSql.getSql();
         if(!sql.matches("[\\s\\S]*\\s+(\\w+\\.)?(?i)" + tableDto.getIdColumn().getJdbcColumn() + "\\s*=\\s*\\?[\\s\\S]*")) {
             return false;
         }
@@ -202,7 +203,7 @@ public class VersionInterceptor implements Interceptor {
         ResultSet rs = null;
         try {
             Object paramObj = boundSql.getParameterObject();
-            Field field = paramObj.getClass().getDeclaredField(ProviderContextUtils.getTableDto(paramObj.getClass()).getIdColumn().getJavaInstance());
+            Field field =  ReflectionUtils.findField(paramObj.getClass(),ProviderContextUtils.getTableDto(paramObj.getClass()).getIdColumn().getJavaInstance());
             field.setAccessible(true);
             String id = (String) field.get(paramObj);
             connection = mappedStatement.getConfiguration().getEnvironment().getDataSource().getConnection();

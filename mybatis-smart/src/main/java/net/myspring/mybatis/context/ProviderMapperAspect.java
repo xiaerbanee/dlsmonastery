@@ -10,6 +10,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -58,11 +59,9 @@ public class ProviderMapperAspect {
 
     private Class getMapperInterface(MapperProxy mapperProxy) {
         try {
-            Field field= mapperProxy.getClass().getDeclaredField("mapperInterface");
+            Field field =  ReflectionUtils.findField(mapperProxy.getClass(),"mapperInterface");
             field.setAccessible(true);
             return (Class) field.get(mapperProxy);
-        } catch (NoSuchFieldException e) {
-            logger.error(e.getMessage());
         } catch (IllegalAccessException e) {
             logger.error(e.getMessage());
         }

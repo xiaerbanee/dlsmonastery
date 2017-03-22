@@ -2,6 +2,7 @@ package net.myspring.hr.service;
 
 import net.myspring.hr.domain.Account;
 import net.myspring.hr.mapper.AccountMapper;
+import net.myspring.hr.web.form.AccountForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +26,12 @@ public class AccountService {
     }
 
     public Account save() {
-        Account account = accountMapper.findOne("1");
-        account.setRemarks(UUID.randomUUID().toString());
-        int result = accountMapper.update(account);
+        AccountForm accountForm = new AccountForm();
+        accountForm.setId("1");
+        accountForm.setRemarks(UUID.randomUUID().toString());
+        accountForm.setName(UUID.randomUUID().toString());
+        int result = accountMapper.update(accountForm);
         System.out.println(result);
-        return account;
+        return accountForm;
     }
 }
