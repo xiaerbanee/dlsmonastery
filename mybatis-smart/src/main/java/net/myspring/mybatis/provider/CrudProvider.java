@@ -3,7 +3,10 @@ package net.myspring.mybatis.provider;
 import com.google.common.collect.Lists;
 import net.myspring.mybatis.dto.ColumnDto;
 import net.myspring.mybatis.dto.TableDto;
+import net.myspring.mybatis.interceptor.VersionInterceptor;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +15,9 @@ import java.util.Map;
  * Created by liuj on 2016/11/12.
  */
 public class CrudProvider extends BaseProvider {
+
+    private Logger logger = LoggerFactory.getLogger(CrudProvider.class);
+
     public String save(Object entity) {
         List<String> jdbcColumns = Lists.newArrayList();
         List<String> javaInstances = Lists.newArrayList();
@@ -31,6 +37,7 @@ public class CrudProvider extends BaseProvider {
         sb.append(StringUtils.join(javaInstances,","));
         sb.append(")");
         String sql = sb.toString();
+        logger.info(sql);
         return sql;
     }
 
@@ -65,21 +72,25 @@ public class CrudProvider extends BaseProvider {
         }
         sb.append(StringUtils.join(insertValues,","));
         String sql = sb.toString();
+        logger.info(sql);
         return sql;
     }
 
     public String  findOne(Object id) {
         String sql = "SELECT * FROM " + getTableDto().getJdbcTable() + " WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "=#{id}";
+        logger.info(sql);
         return sql;
     }
 
     public String  exists(Object id) {
         String sql = "SELECT COUNT(*) FROM " + getTableDto().getJdbcTable() + " WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "=#{id}";
+        logger.info(sql);
         return sql;
     }
 
     public String findAll() {
         String sql = "SELECT * FROM " + getTableDto().getJdbcTable();
+        logger.info(sql);
         return sql;
     }
 
@@ -90,21 +101,25 @@ public class CrudProvider extends BaseProvider {
             values.add("#{list[" + i + "]}");
         }
         String sql = "SELECT * FROM " + getTableDto().getJdbcTable() + " WHERE " + getTableDto().getIdColumn().getJdbcColumn() + " IN (" + StringUtils.join(values,",") + ")";
+        logger.info(sql);
         return sql;
     }
 
     public String count() {
         String sql = "SELECT COUNT(*) FROM " + getTableDto().getJdbcTable();
+        logger.info(sql);
         return sql;
     }
 
     public String deleteById(Object id) {
         String sql =  "DELETE FROM " + getTableDto().getJdbcTable() + " WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "=#{id}";
+        logger.info(sql);
         return sql;
     }
 
     public String deleteByEntity(Object entity) {
         String sql =  "DELETE FROM " + getTableDto().getJdbcTable() + " WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "#{" + getTableDto().getIdColumn().getJavaInstance() + "}";
+        logger.info(sql);
         return sql;
     }
 
@@ -116,11 +131,13 @@ public class CrudProvider extends BaseProvider {
             values.add("#{list[" + i + "]." + idJdbcColumn +"}");
         }
         String sql = "DELETE FROM " + getTableDto().getJdbcTable() + " WHERE " + getTableDto().getIdColumn().getJdbcColumn() + " IN (" + StringUtils.join(values,",") + ")";
+        logger.info(sql);
         return sql;
     }
 
     public String deleteAll() {
         String sql =  "DELETE FROM " + getTableDto().getJdbcTable();
+        logger.info(sql);
         return sql;
     }
 
@@ -141,6 +158,7 @@ public class CrudProvider extends BaseProvider {
         sb.append(" = ");
         sb.append("#{" + getTableDto().getIdColumn().getJavaInstance()+ "}");
         String sql = sb.toString();
+        logger.info(sql);
         return sql;
     }
 }

@@ -4,13 +4,8 @@ import net.myspring.hr.domain.Account;
 import net.myspring.hr.mapper.AccountMapper;
 import net.myspring.hr.web.form.AccountForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 
 /**
