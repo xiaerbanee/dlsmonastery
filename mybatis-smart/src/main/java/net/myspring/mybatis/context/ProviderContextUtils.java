@@ -22,6 +22,8 @@ import java.util.*;
 public class ProviderContextUtils {
     //表结构缓存
     private static Map<String,TableDto> tableDtoMap = Maps.newHashMap();
+    //字段缓存
+    private static Map<String,ColumnDto> columnDtoMap = Maps.newHashMap();
     //class对应的entityClass
     private static Map<String,Class> entityClassMap= Maps.newHashMap();
 
@@ -45,7 +47,6 @@ public class ProviderContextUtils {
                         ColumnDto columnDto = getColumnDto(field);
                         //检查是否是ID
                         if (field.getAnnotation(Id.class) != null) {
-                            columnDto.setGeneratedValue(field.getAnnotation(GeneratedValue.class));
                             tableDto.setIdColumn(columnDto);
                         }
                         if (field.getAnnotation(CreatedBy.class) != null) {
@@ -101,26 +102,33 @@ public class ProviderContextUtils {
     }
 
     public static ColumnDto getColumnDto(Field field) {
-        ColumnDto columnDto = new ColumnDto();
-        columnDto.setJavaInstance(field.getName());
-        String jdbcColumn = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE,field.getName());
-        boolean insertable = true;
-        boolean updatable = true;
-        boolean nullable = false;
-        Column column = field.getAnnotation(Column.class);
-        if(column !=null) {
-            if(StringUtils.isNotBlank(column.name())) {
-                jdbcColumn = column.name();
+        String key = field.toString();
+        if(!columnDtoMap.containsKey(key)) {
+            ColumnDto columnDto = new ColumnDto();
+            columnDto.setJavaInstance(field.getName());
+            String jdbcColumn = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE,field.getName());
+            boolean insertable = true;
+            boolean updatable = true;
+            boolean nullable = false;
+            Column column = field.getAnnotation(Column.class);
+            if(column !=null) {
+                if(StringUtils.isNotBlank(column.name())) {
+                    jdbcColumn = column.name();
+                }
+                insertable = column.insertable();
+                updatable = column.updatable();
+                nullable = column.nullable();
             }
-            insertable = column.insertable();
-            updatable = column.updatable();
-            nullable = column.nullable();
+            if (field.getAnnotation(Id.class) != null) {
+                columnDto.setGeneratedValue(field.getAnnotation(GeneratedValue.class));
+            }
+            columnDto.setJdbcColumn(jdbcColumn);
+            columnDto.setInsertable(insertable);
+            columnDto.setUpdatable(updatable);
+            columnDto.setNullable(nullable);
+            columnDtoMap.put(key,columnDto);
         }
-        columnDto.setJdbcColumn(jdbcColumn);
-        columnDto.setInsertable(insertable);
-        columnDto.setUpdatable(updatable);
-        columnDto.setNullable(nullable);
-        return columnDto;
+        return columnDtoMap.get(key);
     }
 
     public static Class getEntityClass(Class clazz) {

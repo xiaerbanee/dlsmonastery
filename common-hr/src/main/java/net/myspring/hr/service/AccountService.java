@@ -27,10 +27,9 @@ public class AccountService {
 
     public Account save() {
         AccountForm accountForm = new AccountForm();
-        accountForm.setId("1");
         accountForm.setRemarks(UUID.randomUUID().toString());
         accountForm.setName(UUID.randomUUID().toString());
-        int result = accountMapper.update(accountForm);
+        int result = accountMapper.save(accountForm);
         System.out.println(result);
         return accountForm;
     }
