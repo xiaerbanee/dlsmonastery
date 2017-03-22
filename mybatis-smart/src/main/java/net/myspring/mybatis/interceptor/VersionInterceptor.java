@@ -139,6 +139,7 @@ public class VersionInterceptor implements Interceptor {
             if(StringUtils.isNotBlank(versionColumn)) {
                 if(Integer.valueOf(result.toString())==0) {
                     Field field = paramObj.getClass().getDeclaredField(tableDto.getIdColumn().getJavaInstance());
+                    field.setAccessible(true);
                     String id = (String) field.get(paramObj);
                     throw new StaleObjectStateException(paramObj.getClass().getName(),id);
                 }
@@ -202,6 +203,7 @@ public class VersionInterceptor implements Interceptor {
         try {
             Object paramObj = boundSql.getParameterObject();
             Field field = paramObj.getClass().getDeclaredField(ProviderContextUtils.getTableDto(paramObj.getClass()).getIdColumn().getJavaInstance());
+            field.setAccessible(true);
             String id = (String) field.get(paramObj);
             connection = mappedStatement.getConfiguration().getEnvironment().getDataSource().getConnection();
             versionStmt = connection.prepareStatement(sql);

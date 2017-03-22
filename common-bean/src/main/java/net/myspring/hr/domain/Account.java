@@ -27,6 +27,8 @@ public class Account {
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
     private String remarks;
+    @Version
+    private Long version;
 
     public String getId() {
         return id;
@@ -82,5 +84,13 @@ public class Account {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

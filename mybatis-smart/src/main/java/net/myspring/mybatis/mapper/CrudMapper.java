@@ -4,6 +4,7 @@ import net.myspring.mybatis.provider.CrudProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Interface for generic CRUD operations on a repository for a specific type.
@@ -60,7 +61,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @return all entities
      */
     @SelectProvider(type=CrudProvider.class, method = "findAll")
-    Iterable<T> findAll();
+    List<T> findAll();
 
     /**
      * Returns all instances of the type with the given IDs.
@@ -69,7 +70,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @return
      */
     @SelectProvider(type=CrudProvider.class, method = "findAllByIds")
-    Iterable<T> findAllByIds(Iterable<ID> ids);
+    List<T> findAllByIds(Iterable<ID> ids);
 
     /**
      * Returns the number of entities available.

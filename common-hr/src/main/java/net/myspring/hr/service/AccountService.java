@@ -3,8 +3,13 @@ package net.myspring.hr.service;
 import net.myspring.hr.domain.Account;
 import net.myspring.hr.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -20,9 +25,10 @@ public class AccountService {
     }
 
     public Account save() {
-        Account account = new Account();
-        account.setName(UUID.randomUUID().toString());
-        accountMapper.save(account);
+        Account account = accountMapper.findOne("1");
+        account.setRemarks(UUID.randomUUID().toString());
+        int result = accountMapper.update(account);
+        System.out.println(result);
         return account;
     }
 }
