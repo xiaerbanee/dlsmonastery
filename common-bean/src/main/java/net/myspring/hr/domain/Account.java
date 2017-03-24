@@ -6,6 +6,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name="hr_account")
-public class Account {
+public class Account implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
