@@ -28,7 +28,7 @@ repositories {
 
 dependencies {
 	compile project(':mybatis-smart')
-	compile project(':common-bean')
+	compile project(':summer-bean')
 	compile('org.springframework.boot:spring-boot-starter')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile("org.springframework.boot:spring-boot-starter-aop")

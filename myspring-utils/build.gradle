@@ -49,6 +49,7 @@ dependencies {
 	compile 'org.apache.poi:poi-ooxml-schemas:3.10-FINAL'
 	compile group: 'commons-io', name: 'commons-io', version: '2.5'
 	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.5.0'
+	compile group: 'io.springside', name: 'springside-utils', version: '5.0.0-RC1'
 
 	compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.1.1')
 	compile('org.mybatis:mybatis-typehandlers-jsr310:1.0.1')
