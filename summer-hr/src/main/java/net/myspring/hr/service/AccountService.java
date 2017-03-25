@@ -33,10 +33,7 @@ public class AccountService {
     private RedisTemplate redisTemplate;
 
     public Account findOne(String id) {
-        for(int i=1;i<50000;i++) {
-            accountManager.findOne(String.valueOf(i));
-        }
-        return null;
+        return accountManager.findOne(id);
     }
 
     public Account save() {
