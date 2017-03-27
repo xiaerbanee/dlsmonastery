@@ -90,6 +90,16 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
     int deleteById(ID id);
 
     /**
+     * Delete all entities  with the given IDs.
+     *
+     * @param ids
+     * @return
+     */
+    @DeleteProvider(type=CrudProvider.class, method = "deleteByIds")
+    int deleteByIds(Iterable<ID> ids);
+
+
+    /**
      * Deletes a given entity.
      *
      * @param entity
