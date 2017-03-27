@@ -19,7 +19,7 @@ apply plugin: 'org.springframework.boot'
 def env = System.getProperty("env") ?: "snapshots"
 jar {
 	baseName = 'mybatis-smart'
-	version = '1.0.2.RELEASE'
+	version = '1.0.5.RELEASE'
 }
 
 sourceCompatibility = 1.8
@@ -36,7 +36,6 @@ dependencies {
 	compile('org.mybatis:mybatis-typehandlers-jsr310:1.0.1')
 	compile 'com.google.guava:guava:20.0'
 	compile "org.apache.commons:commons-lang3:3.4"
-	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
     compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.1.RELEASE'
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
