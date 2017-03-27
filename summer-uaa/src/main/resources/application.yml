@@ -1,5 +1,11 @@
+spring:
+  application:
+    name: summer-uaa
 server:
   port: 9999
 eureka:
   instance:
     prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
