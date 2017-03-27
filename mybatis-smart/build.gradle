@@ -3,7 +3,7 @@ buildscript {
 		springBootVersion = '1.4.2.RELEASE'
 	}
 	repositories {
-		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+		maven{ url 'http://117.40.139.3:8081/repository/maven-public/'}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -13,17 +13,19 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
 
+def env = System.getProperty("env") ?: "snapshots"
 jar {
 	baseName = 'mybatis-smart'
-	version = '0.0.1-SNAPSHOT'
+	version = '1.0.0-RELEASE'
 }
 
 sourceCompatibility = 1.8
 
 repositories {
-	maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+	maven{ url 'http://117.40.139.3:8081/repository/maven-public/'}
 }
 
 
@@ -37,4 +39,18 @@ dependencies {
 	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
     compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.1.RELEASE'
     testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+uploadArchives {
+	repositories.mavenDeployer {
+		repository(url: "http://117.40.139.3:8081/repository/maven-$env/") {
+			authentication(userName: "admin", password: "admin123")
+			pom.groupId = "net.myspring"
+			pom.artifactId = jar.baseName
+			pom.version = jar.version
+		}
+	}
+}
+artifacts {
+	archives jar
 }

@@ -3,7 +3,7 @@ buildscript {
 		springBootVersion = '1.4.2.RELEASE'
 	}
 	repositories {
-		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+		maven{ url 'http://117.40.139.3:8081/repository/maven-public/'}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -21,7 +21,7 @@ jar {
 sourceCompatibility = 1.8
 
 repositories {
-	maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+	maven{ url 'http://117.40.139.3:8081/repository/maven-public/'}
 }
 
 

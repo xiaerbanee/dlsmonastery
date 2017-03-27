@@ -17,10 +17,7 @@ public class AccountManager {
 
     @Cacheable(value = "account",key="#p0")
     public Account findOne(String id) {
-        Account account = new Account();
-        account.setId(id);
-        account.setName(id);
-        return account;
+        return accountMapper.findOne(id);
     }
     
 }
