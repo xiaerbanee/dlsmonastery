@@ -12,5 +12,5 @@ import org.springframework.data.domain.Pageable;
 @Mapper
 public interface AccountMapper extends CrudMapper<Account,String> {
 
-    public Page<Account> findPage(Pageable pageable);
+    Page<Account> findPage(Pageable pageable);
 }

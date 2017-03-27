@@ -11,9 +11,9 @@ eureka:
       defaultZone: http://localhost:1111/eureka/
 zuul:
   routes:
-   summer-uaa:
-     serviceId: summer-uaa
-     path: /uaa/**
-   summer-hr:
-     serviceId: summer-hr
-     path: /hr/**
+    summer-uaa:
+      sensitiveHeaders:
+      path: /uaa/**
+      stripPrefix: false
+    summer-hr: /hr/**
+  add-proxy-headers: true

@@ -3,6 +3,9 @@ spring:
     name: summer-uaa
 server:
   port: 9999
+  # Use different context-path to avoid session cookie overlapping
+  context-path: /uaa
+  use-forward-headers: false
 eureka:
   instance:
     prefer-ip-address: true
