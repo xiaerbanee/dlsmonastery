@@ -22,7 +22,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      */
     @InsertProvider(type=CrudProvider.class, method = "save")
     @Options(useGeneratedKeys = true)
-    <S extends T> Integer save(S entity);
+    <S extends T> int save(S entity);
 
     /**
      * Saves all given entities.
@@ -33,7 +33,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      */
     @InsertProvider(type=CrudProvider.class, method = "batchSave")
     @Options(useGeneratedKeys = true)
-    <S extends T> Integer batchSave(Iterable<S> entities);
+    <S extends T> int batchSave(Iterable<S> entities);
 
     /**
      * Retrieves an entity by its id.
@@ -87,7 +87,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @throws IllegalArgumentException in case the given {@code id} is {@literal null}
      */
     @DeleteProvider(type=CrudProvider.class, method = "deleteById")
-    Integer deleteById(ID id);
+    int deleteById(ID id);
 
     /**
      * Deletes a given entity.
@@ -96,7 +96,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
     @DeleteProvider(type=CrudProvider.class, method = "deleteByEntity")
-    Integer deleteByEntity(T entity);
+    int deleteByEntity(T entity);
 
 
     /**
@@ -106,13 +106,13 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @throws IllegalArgumentException in case the given {@link Iterable} is {@literal null}.
      */
     @DeleteProvider(type=CrudProvider.class, method = "batchDelete")
-    Integer batchDelete(Iterable<? extends T> entities);
+    int batchDelete(Iterable<? extends T> entities);
 
     /**
      * Deletes all entities managed by the repository.
      */
     @DeleteProvider(type=CrudProvider.class, method = "deleteAll")
-    Integer deleteAll();
+    int deleteAll();
 
     /**
      * Updates a given entity
@@ -120,6 +120,6 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @param entity
      */
     @UpdateProvider(type=CrudProvider.class, method = "update")
-    <S extends T> Integer update(S entity);
+    <S extends T> int update(S entity);
 
 }
