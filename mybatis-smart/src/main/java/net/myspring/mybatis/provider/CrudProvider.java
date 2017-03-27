@@ -94,7 +94,7 @@ public class CrudProvider extends BaseProvider {
         return sql;
     }
 
-    public String findAllByIds(Map map) {
+    public String findByIds(Map map) {
         List<Object> list = (List<Object>) map.get("list");
         List<String> values = Lists.newArrayList();
         for(int i =0;i<list.size();i++) {

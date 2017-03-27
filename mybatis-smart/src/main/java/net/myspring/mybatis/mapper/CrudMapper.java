@@ -69,8 +69,8 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @param ids
      * @return
      */
-    @SelectProvider(type=CrudProvider.class, method = "findAllByIds")
-    List<T> findAllByIds(Iterable<ID> ids);
+    @SelectProvider(type=CrudProvider.class, method = "findByIds")
+    List<T> findByIds(Iterable<ID> ids);
 
     /**
      * Returns the number of entities available.
