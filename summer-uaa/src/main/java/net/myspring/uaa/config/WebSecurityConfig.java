@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author David Steiman
  */
 @Configuration
-class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -31,7 +31,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
             .and()
-                .authorizeRequests()
+                .authorizeRequests().antMatchers("/uaa/**").permitAll()
                 .antMatchers("/**").authenticated()
             .and()
                 .httpBasic();

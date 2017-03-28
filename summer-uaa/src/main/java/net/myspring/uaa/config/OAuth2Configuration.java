@@ -23,10 +23,19 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @Configuration
 @EnableAuthorizationServer
 public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
+
+    @Autowired
+    @Qualifier("authenticationManagerBean")
+    private AuthenticationManager authenticationManager;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("web_app")
+                .withClient("future-report")
+                .secret("123456")
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("server")
+         .and().withClient("web_app")
                 .scopes("FOO")
                 .autoApprove(true)
                 .authorities("FOO_READ", "FOO_WRITE")
@@ -37,10 +46,6 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(tokenStore()).tokenEnhancer(jwtTokenEnhancer()).authenticationManager(authenticationManager);
     }
-
-    @Autowired
-    @Qualifier("authenticationManagerBean")
-    private AuthenticationManager authenticationManager;
 
     @Bean
     public TokenStore tokenStore() {

@@ -22,6 +22,12 @@ eureka:
 
 security:
   oauth2:
+    client:
+      accessTokenUri: http://localhost:9999/uaa/oauth/token
+      clientId: future-report
+      clientSecret: 123456
+      grant-type: client_credentials
+      scope: server
     resource:
       jwt:
         keyValue: |
