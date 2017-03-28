@@ -41,7 +41,8 @@ public class ProviderContextUtils {
                     jdbcTable = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, clazz.getSimpleName());
                 }
                 tableDto.setJdbcTable(jdbcTable);
-                List<Field> fields = getFields(null, clazz);
+                List<Field> fields=Lists.newArrayList();
+                 getFields(fields, clazz);
                 for (Field field : fields) {
                     if (isJdbcColumn(field)) {
                         ColumnDto columnDto = getColumnDto(field);
@@ -79,7 +80,7 @@ public class ProviderContextUtils {
         Boolean isJdbcColumn = true;
         if("serialVersionUID".equals(field.getName())) {
             isJdbcColumn = false;
-        }else if (field.getAnnotation(Transient.class) != null || field.getAnnotation(Entity.class) != null) {
+        }else if (field.getAnnotation(Transient.class) != null || fieldClass.getAnnotation(Entity.class) != null) {
             isJdbcColumn = false;
         } else if (Collection.class.isAssignableFrom(fieldClass) || Map.class.isAssignableFrom(fieldClass)) {
             isJdbcColumn = false;
@@ -151,7 +152,7 @@ public class ProviderContextUtils {
 
 
     //递归获取所有Field
-    private static List<Field> getFields(List<Field> fields,Class clazz) {
+    private static void getFields(List<Field> fields,Class clazz) {
         if(fields == null) {
             fields= Lists.newArrayList();
         }
@@ -159,9 +160,8 @@ public class ProviderContextUtils {
             fields.add(field);
         }
         clazz = clazz.getSuperclass();
-        while (!clazz.getName().equals(Object.class.getName())) {
+        if (!clazz.getName().equals(Object.class.getName())) {
             getFields(fields,clazz);
         }
-        return fields;
     }
 }
