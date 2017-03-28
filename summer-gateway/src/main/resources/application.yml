@@ -16,6 +16,7 @@ zuul:
       path: /uaa/**
       stripPrefix: false
     summer-hr: /hr/**
+    future-report: /futureReport/**
   add-proxy-headers: true
 
 security:
