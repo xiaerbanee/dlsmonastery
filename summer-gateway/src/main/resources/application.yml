@@ -19,9 +19,6 @@ zuul:
   add-proxy-headers: true
 
 security:
-  # Disable Spring Boot basic authentication
-  basic:
-    enabled: false
   oauth2:
     resource:
       jwt:
