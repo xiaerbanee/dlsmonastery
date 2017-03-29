@@ -31,8 +31,8 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("future-report")
-                .secret("123456")
+                .withClient("summer-client")
+                .secret("summer-client@123456")
                 .authorizedGrantTypes("client_credentials", "refresh_token")
                 .scopes("server")
          .and().withClient("web_app")
