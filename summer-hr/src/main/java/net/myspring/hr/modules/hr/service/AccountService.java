@@ -1,21 +1,12 @@
-package net.myspring.hr.service;
+package net.myspring.hr.modules.hr.service;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import net.myspring.hr.domain.Account;
-import net.myspring.hr.manager.AccountManager;
-import net.myspring.hr.mapper.AccountMapper;
-import net.myspring.hr.web.form.AccountForm;
+import net.myspring.hr.modules.hr.domain.Account;
+import net.myspring.hr.modules.hr.manager.AccountManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Connection;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;

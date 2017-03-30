@@ -19,7 +19,7 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
     <typeAliases>
-        <package name="net.myspring.hr.domain"/>
+        <package name="net.myspring.hr.modules.sys.domain"/>
     </typeAliases>
     <typeHandlers>
         <typeHandler handler="org.apache.ibatis.type.InstantTypeHandler" />

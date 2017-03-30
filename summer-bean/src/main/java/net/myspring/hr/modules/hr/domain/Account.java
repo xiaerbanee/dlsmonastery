@@ -1,4 +1,4 @@
-package net.myspring.hr.domain;
+package net.myspring.hr.modules.hr.domain;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;

@@ -1,7 +1,7 @@
-package net.myspring.hr.manager;
+package net.myspring.hr.modules.hr.manager;
 
-import net.myspring.hr.domain.Account;
-import net.myspring.hr.mapper.AccountMapper;
+import net.myspring.hr.modules.hr.domain.Account;
+import net.myspring.hr.modules.hr.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;

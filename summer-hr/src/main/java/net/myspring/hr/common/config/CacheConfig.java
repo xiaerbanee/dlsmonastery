@@ -1,4 +1,4 @@
-package net.myspring.hr.config;
+package net.myspring.hr.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;

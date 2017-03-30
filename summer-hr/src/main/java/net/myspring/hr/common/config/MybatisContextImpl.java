@@ -1,4 +1,4 @@
-package net.myspring.hr.config;
+package net.myspring.hr.common.config;
 
 import net.myspring.mybatis.context.MybatisContext;
 import net.myspring.mybatis.dialect.Dialect;

@@ -1,6 +1,6 @@
-package net.myspring.hr.dto;
+package net.myspring.hr.modules.hr.dto;
 
-import net.myspring.hr.domain.Account;
+import net.myspring.hr.modules.hr.domain.Account;
 
 /**
  * Created by liuj on 2017/3/19.

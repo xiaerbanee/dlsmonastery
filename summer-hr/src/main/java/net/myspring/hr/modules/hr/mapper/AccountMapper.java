@@ -1,6 +1,6 @@
-package net.myspring.hr.mapper;
+package net.myspring.hr.modules.hr.mapper;
 
-import net.myspring.hr.domain.Account;
+import net.myspring.hr.modules.hr.domain.Account;
 import net.myspring.mybatis.mapper.CrudMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.domain.Page;
