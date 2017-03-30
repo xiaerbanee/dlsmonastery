@@ -1,97 +1,269 @@
 package net.myspring.hr.modules.hr.domain;
 
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
+import com.google.common.collect.Lists;
+import net.myspring.common.domain.DataEntity;
+import net.myspring.hr.modules.sys.domain.Menu;
+import net.myspring.hr.modules.sys.domain.Monitor;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.List;
 
-/**
- * Created by liuj on 2017/3/19.
- */
+
 @Entity
 @Table(name="hr_account")
-public class Account implements Serializable{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
-    private String name;
-    @CreatedBy
-    private String createdBy;
-    @CreatedDate
-    private LocalDateTime createdDate;
-    @LastModifiedBy
-    private String lastModifiedBy;
-    @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
-    private String remarks;
-    @Version
-    private Long version;
+public class Account extends DataEntity<Account> {
+    private String loginName;
+    private Integer version = 0;
+    private String password;
+    private String leaderId;
+    private Account leader;
+    private String type;
+    private String outId;
+    private String outPassword;
+    private Boolean viewReport;
+    private Position position;
+    private String positionId;
+    private Office office;
+    private String officeId;
+    private Employee employee;
+    private String employeeId;
+    private String dealerId;
+    private List<AccountChange> accountChangeList = Lists.newArrayList();
+    private List<String> accountChangeIdList = Lists.newArrayList();
+    private List<Menu> menuList = Lists.newArrayList();
+    private List<String> menuIdList = Lists.newArrayList();
+    private List<Office> officeList = Lists.newArrayList();
+    private List<String> officeIdList = Lists.newArrayList();
+    private List<AccountTask> accountTaskList = Lists.newArrayList();
+    private List<String> accountTaskIdList = Lists.newArrayList();
+    private List<Employee> employeeList = Lists.newArrayList();
+    private List<String> employeeIdList = Lists.newArrayList();
+    private List<Monitor> monitorList = Lists.newArrayList();
+    private List<String> monitorIdList = Lists.newArrayList();
 
-    public String getId() {
-        return id;
+    public String getLoginName() {
+        return loginName;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public Long getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(Long version) {
+    public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getLeaderId() {
+        return leaderId;
+    }
+
+    public void setLeaderId(String leaderId) {
+        this.leaderId = leaderId;
+    }
+
+    public Account getLeader() {
+        return leader;
+    }
+
+    public void setLeader(Account leader) {
+        this.leader = leader;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getOutId() {
+        return outId;
+    }
+
+    public void setOutId(String outId) {
+        this.outId = outId;
+    }
+
+    public String getOutPassword() {
+        return outPassword;
+    }
+
+    public void setOutPassword(String outPassword) {
+        this.outPassword = outPassword;
+    }
+
+    public Boolean getViewReport() {
+        return viewReport;
+    }
+
+    public void setViewReport(Boolean viewReport) {
+        this.viewReport = viewReport;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
+
+    public Office getOffice() {
+        return office;
+    }
+
+    public void setOffice(Office office) {
+        this.office = office;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getDealerId() {
+        return dealerId;
+    }
+
+    public void setDealerId(String dealerId) {
+        this.dealerId = dealerId;
+    }
+
+    public List<AccountChange> getAccountChangeList() {
+        return accountChangeList;
+    }
+
+    public void setAccountChangeList(List<AccountChange> accountChangeList) {
+        this.accountChangeList = accountChangeList;
+    }
+
+    public List<String> getAccountChangeIdList() {
+        return accountChangeIdList;
+    }
+
+    public void setAccountChangeIdList(List<String> accountChangeIdList) {
+        this.accountChangeIdList = accountChangeIdList;
+    }
+
+    public List<Menu> getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List<Menu> menuList) {
+        this.menuList = menuList;
+    }
+
+    public List<String> getMenuIdList() {
+        return menuIdList;
+    }
+
+    public void setMenuIdList(List<String> menuIdList) {
+        this.menuIdList = menuIdList;
+    }
+
+    public List<Office> getOfficeList() {
+        return officeList;
+    }
+
+    public void setOfficeList(List<Office> officeList) {
+        this.officeList = officeList;
+    }
+
+    public List<String> getOfficeIdList() {
+        return officeIdList;
+    }
+
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
+    }
+
+    public List<AccountTask> getAccountTaskList() {
+        return accountTaskList;
+    }
+
+    public void setAccountTaskList(List<AccountTask> accountTaskList) {
+        this.accountTaskList = accountTaskList;
+    }
+
+    public List<String> getAccountTaskIdList() {
+        return accountTaskIdList;
+    }
+
+    public void setAccountTaskIdList(List<String> accountTaskIdList) {
+        this.accountTaskIdList = accountTaskIdList;
+    }
+
+    public List<Employee> getEmployeeList() {
+        return employeeList;
+    }
+
+    public void setEmployeeList(List<Employee> employeeList) {
+        this.employeeList = employeeList;
+    }
+
+    public List<String> getEmployeeIdList() {
+        return employeeIdList;
+    }
+
+    public void setEmployeeIdList(List<String> employeeIdList) {
+        this.employeeIdList = employeeIdList;
+    }
+
+    public List<Monitor> getMonitorList() {
+        return monitorList;
+    }
+
+    public void setMonitorList(List<Monitor> monitorList) {
+        this.monitorList = monitorList;
+    }
+
+    public List<String> getMonitorIdList() {
+        return monitorIdList;
+    }
+
+    public void setMonitorIdList(List<String> monitorIdList) {
+        this.monitorIdList = monitorIdList;
     }
 }

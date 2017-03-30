@@ -1,7 +1,7 @@
 package net.myspring.hr.web.controller;
 
-import net.myspring.hr.domain.Account;
-import net.myspring.hr.service.AccountService;
+import net.myspring.hr.modules.hr.domain.Account;
+import net.myspring.hr.modules.hr.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
