@@ -16,10 +16,10 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
 
-def env = System.getProperty("env") ?: "snapshots"
+def env = System.getProperty("env") ?: "releases"
 jar {
 	baseName = 'mybatis-smart'
-	version = '1.0.8.RELEASE'
+	version = '1.0.9.RELEASE'
 }
 
 sourceCompatibility = 1.8
