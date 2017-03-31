@@ -3,14 +3,13 @@ package net.myspring.basic.modules.hr.service;
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.manager.AccountManager;
+import net.myspring.util.cahe.CacheReadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
 import java.util.*;
 
 /**
@@ -62,21 +61,10 @@ public class AccountService {
 
         for(int i = 0;i<results.size();i++) {
             if(results.get(i) != null) {
-                Account account = (Account)deSerialize(results.get(i));
+                Account account = (Account) CacheReadUtils.deSerialize(results.get(i));
             }
         }
         System.out.println("with pipeline used [" + (end - start)  + "] millseconds ..");
     }
 
-    public Object deSerialize(byte[] bytes){
-        Object obj=null;
-        try {
-            ByteArrayInputStream bais=new ByteArrayInputStream(bytes);
-            ObjectInputStream ois=new ObjectInputStream(bais);
-            obj=ois.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return obj;
-    }
 }

@@ -153,9 +153,6 @@ public class ProviderContextUtils {
 
     //递归获取所有Field
     private static void getFields(List<Field> fields,Class clazz) {
-        if(fields == null) {
-            fields= Lists.newArrayList();
-        }
         for(Field field:clazz.getDeclaredFields()) {
             fields.add(field);
         }

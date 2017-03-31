@@ -33,6 +33,7 @@ dependencies {
 	compile "org.apache.commons:commons-lang3:3.5"
 	compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
 	compile 'com.google.guava:guava:20.0'
+	compile 'org.springframework.boot:spring-boot-starter-data-redis'
 	compile group: 'ma.glasnost.orika', name: 'orika-core', version: '1.5.0'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     compile 'org.apache.poi:poi:3.10-FINAL'

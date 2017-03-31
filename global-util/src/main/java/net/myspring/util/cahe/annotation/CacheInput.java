@@ -20,15 +20,10 @@ public @interface CacheInput {
     /**
      * 缓存中值对应的字段
      */
-    String inputField() default "";
-
-    /**
-     * 缓存反序列化后对应的class
-     */
-    Class outputClass();
+    String inputInstance() default "";
 
     /**
      * 缓存反序列化后获取值对应的字段
      */
-    String outputField() default "";
+    String outputInstance() default "";
 }

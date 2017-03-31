@@ -8,6 +8,7 @@ package net.myspring.util.reflect;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
@@ -207,4 +208,16 @@ public class ReflectionUtil {
 		}
 		return new UncheckedException(e);
 	}
+
+	//递归获取所有Field
+	public static void getFields(List<Field> fields, Class clazz) {
+		for(Field field:clazz.getDeclaredFields()) {
+			fields.add(field);
+		}
+		clazz = clazz.getSuperclass();
+		if (!clazz.getName().equals(Object.class.getName())) {
+			getFields(fields,clazz);
+		}
+	}
+
 }
