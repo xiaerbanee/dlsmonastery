@@ -102,7 +102,26 @@ public class ProviderContextUtils {
         return mybatisContext;
     }
 
-    public static ColumnDto getColumnDto(Field field) {
+    public static Class getEntityClass(Class clazz) {
+        String key = clazz.getName();
+        if(!entityClassMap.containsKey(key)) {
+            Entity entity = null;
+            while (!clazz.getName().equals(Object.class.getName()) && entity==null) {
+                entity = (Entity) clazz.getAnnotation(Entity.class);
+                if(entity != null) {
+                    entityClassMap.put(key,clazz);
+                }
+                clazz = clazz.getSuperclass();
+            }
+            if(!entityClassMap.containsKey(key)) {
+                entityClassMap.put(key,null);
+            }
+        }
+        return entityClassMap.get(key);
+    }
+
+
+    private static ColumnDto getColumnDto(Field field) {
         String key = field.toString();
         if(!columnDtoMap.containsKey(key)) {
             ColumnDto columnDto = new ColumnDto();
@@ -131,25 +150,6 @@ public class ProviderContextUtils {
         }
         return columnDtoMap.get(key);
     }
-
-    public static Class getEntityClass(Class clazz) {
-        String key = clazz.getName();
-        if(!entityClassMap.containsKey(key)) {
-            Entity entity = null;
-            while (!clazz.getName().equals(Object.class.getName()) && entity==null) {
-                entity = (Entity) clazz.getAnnotation(Entity.class);
-                if(entity != null) {
-                    entityClassMap.put(key,clazz);
-                }
-                clazz = clazz.getSuperclass();
-            }
-            if(!entityClassMap.containsKey(key)) {
-                entityClassMap.put(key,null);
-            }
-        }
-        return entityClassMap.get(key);
-    }
-
 
     //递归获取所有Field
     private static void getFields(List<Field> fields,Class clazz) {

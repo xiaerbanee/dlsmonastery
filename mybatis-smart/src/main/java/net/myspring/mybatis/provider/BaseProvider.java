@@ -39,25 +39,34 @@ public class BaseProvider {
     protected Boolean getInsertable(Object entity, ColumnDto columnDto) {
         String key = entity.getClass().getName() + "_" + columnDto.getJdbcColumn();
         if(!insertableMap.containsKey(key)) {
-            Field field =  ReflectionUtils.findField(entity.getClass(),columnDto.getJavaInstance());
-            columnDto = ProviderContextUtils.getColumnDto(field);
-            boolean insertable = columnDto.getInsertable();
-            if(getTableDto().getIdColumn() != null && getTableDto().getIdColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                if (GenerationType.IDENTITY.name().equals(columnDto.getGeneratedValue().strategy().name())) {
-                    insertable = false;
-                } else {
+            boolean insertable;
+            Field field =  null;
+            try {
+                field = entity.getClass().getDeclaredField(columnDto.getJavaInstance());
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+            if(field==null) {
+                insertable  = false;
+            } else {
+                insertable = columnDto.getInsertable();
+                if(getTableDto().getIdColumn() != null && getTableDto().getIdColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    if (GenerationType.IDENTITY.name().equals(columnDto.getGeneratedValue().strategy().name())) {
+                        insertable = false;
+                    } else {
+                        insertable = true;
+                    }
+                } else if(getTableDto().getVersionColumn() != null && getTableDto().getVersionColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    insertable = true;
+                } else if(getTableDto().getCreatedByColumn() != null && getTableDto().getCreatedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    insertable = true;
+                }else if(getTableDto().getCreatedDateColumn() != null && getTableDto().getCreatedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    insertable = true;
+                } else if(getTableDto().getLastModifiedByColumn() != null && getTableDto().getLastModifiedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    insertable = true;
+                }else if(getTableDto().getLastModifiedDateColumn() != null && getTableDto().getLastModifiedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
                     insertable = true;
                 }
-            } else if(getTableDto().getVersionColumn() != null && getTableDto().getVersionColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                insertable = true;
-            } else if(getTableDto().getCreatedByColumn() != null && getTableDto().getCreatedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                insertable = true;
-            }else if(getTableDto().getCreatedDateColumn() != null && getTableDto().getCreatedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                insertable = true;
-            } else if(getTableDto().getLastModifiedByColumn() != null && getTableDto().getLastModifiedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                insertable = true;
-            }else if(getTableDto().getLastModifiedDateColumn() != null && getTableDto().getLastModifiedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                insertable = true;
             }
             insertableMap.put(key,insertable);
         }
@@ -67,21 +76,30 @@ public class BaseProvider {
     protected Boolean getUpdatable(Object entity, ColumnDto columnDto) {
         String key = entity.getClass().getName() + "_" + columnDto.getJdbcColumn();
         if(!updatableMap.containsKey(key)) {
-            Field field =  ReflectionUtils.findField(entity.getClass(),columnDto.getJavaInstance());
-            columnDto = ProviderContextUtils.getColumnDto(field);
-            boolean updatable = columnDto.getUpdatable();
-            if(getTableDto().getIdColumn() != null && getTableDto().getIdColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+            boolean updatable;
+            Field field =  null;
+            try {
+                field = entity.getClass().getDeclaredField(columnDto.getJavaInstance());
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+            if(field==null) {
                 updatable = false;
-            } else if(getTableDto().getVersionColumn() != null && getTableDto().getVersionColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                updatable = false;
-            } else if(getTableDto().getCreatedByColumn() != null && getTableDto().getCreatedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                updatable = false;
-            }else if(getTableDto().getCreatedDateColumn() != null && getTableDto().getCreatedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                updatable = false;
-            } else if(getTableDto().getLastModifiedByColumn() != null && getTableDto().getLastModifiedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                updatable = true;
-            }else if(getTableDto().getLastModifiedDateColumn() != null && getTableDto().getLastModifiedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
-                updatable = true;
+            } else {
+                updatable = columnDto.getUpdatable();
+                if(getTableDto().getIdColumn() != null && getTableDto().getIdColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    updatable = false;
+                } else if(getTableDto().getVersionColumn() != null && getTableDto().getVersionColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    updatable = false;
+                } else if(getTableDto().getCreatedByColumn() != null && getTableDto().getCreatedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    updatable = false;
+                }else if(getTableDto().getCreatedDateColumn() != null && getTableDto().getCreatedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    updatable = false;
+                } else if(getTableDto().getLastModifiedByColumn() != null && getTableDto().getLastModifiedByColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    updatable = true;
+                }else if(getTableDto().getLastModifiedDateColumn() != null && getTableDto().getLastModifiedDateColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
+                    updatable = true;
+                }
             }
             updatableMap.put(key,updatable);
         }
