@@ -1,12 +1,12 @@
-package net.myspring.utils;
+package net.myspring.util;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MyspringUtilsApplication {
+public class GlobalUtilApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MyspringUtilsApplication.class, args);
+		SpringApplication.run(GlobalUtilApplication.class, args);
 	}
 }

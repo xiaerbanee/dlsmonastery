@@ -14,7 +14,7 @@ apply plugin: 'java'
 apply plugin: 'spring-boot'
 
 jar {
-	baseName = 'myspring-utils'
+	baseName = 'global-cloud'
 	version = '1.0.0-RELEASE'
 }
 
