@@ -8,9 +8,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @SpringBootApplication
 @EnableResourceServer
 @EnableDiscoveryClient
-public class SummerHrApplication {
+public class SummerBasicApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SummerHrApplication.class, args);
+		SpringApplication.run(SummerBasicApplication.class, args);
 	}
 }
