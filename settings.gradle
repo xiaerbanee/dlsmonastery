@@ -1,7 +1,7 @@
 include 'summer-uaa'
 include 'summer-gateway'
 include 'summer-discovery'
-include 'summer-hr'
+include 'summer-basic'
 include 'summer-bean'
 include 'mybatis-smart'
 include 'global-util'

@@ -1,0 +1,13 @@
+package net.myspring.basic.modules.sys.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import net.myspring.basic.modules.sys.mapper.FolderFileMapper;
+
+@Service
+public class FolderFileService {
+
+    @Autowired
+    private FolderFileMapper folderFileMapper;
+
+}
