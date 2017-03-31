@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import net.myspring.util.time.LocalTimeUtils;
 
 import java.io.IOException;
 import java.time.LocalTime;
@@ -15,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 public class LocalTimeSerializer extends JsonSerializer<LocalTime> {
     @Override
     public void serialize(LocalTime value, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonProcessingException {
-        String string = value==null?"":value.format(DateTimeFormatter.ofPattern("HH:mm"));
+        String string = LocalTimeUtils.format(value);
         gen.writeString(string);
     }
 }
