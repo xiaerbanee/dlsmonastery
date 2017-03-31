@@ -20,7 +20,6 @@ import net.myspring.util.base.annotation.NotNull;
 import net.myspring.util.base.annotation.Nullable;
 import net.myspring.util.collection.type.primitive.IntObjectHashMap;
 import net.myspring.util.collection.type.primitive.LongObjectHashMap;
-import net.myspring.util.concurrent.jsr166e.ConcurrentHashMapV8;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
@@ -213,15 +212,11 @@ public class MapUtil {
 
 	/**
 	 * JDK8下，ConcurrentHashMap已不再需要设置loadFactor, concurrencyLevel和initialCapacity.
-	 * 
+	 *
 	 * 如果JDK8，使用原生ConcurrentHashMap，否则使用移植版
 	 */
 	public static <K, V> ConcurrentMap<K, V> newConcurrentHashMap() {
-		if (Platforms.IS_ATLEASET_JAVA8) {
-			return new ConcurrentHashMap<K, V>();
-		} else {
-			return new ConcurrentHashMapV8<K, V>();
-		}
+		return new ConcurrentHashMap<K, V>();
 	}
 
 	/**
