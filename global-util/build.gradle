@@ -30,9 +30,9 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile("org.springframework.boot:spring-boot-devtools")
 	compile("org.springframework.boot:spring-boot-starter-aop")
-	compile 'org.springframework.boot:spring-boot-starter-data-redis'
-	compile "org.apache.commons:commons-lang3:3.4"
+	compile "org.apache.commons:commons-lang3:3.5"
+	compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
 	compile 'com.google.guava:guava:20.0'
-	compile("org.hibernate:hibernate-validator")
+	compile group: 'ma.glasnost.orika', name: 'orika-core', version: '1.5.0'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
