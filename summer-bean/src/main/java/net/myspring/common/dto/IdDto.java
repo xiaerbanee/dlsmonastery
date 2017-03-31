@@ -1,21 +1,13 @@
-package net.myspring.common.domain;
+package net.myspring.common.dto;
 
+import net.myspring.common.domain.IdEntity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Transient;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 /**
- * Created by liuj on 2016-07-25.
+ * Created by liuj on 2017/3/31.
  */
-public class IdEntity<T> implements Serializable {
-    private static final long serialVersionUID = -864662154371775680L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class IdDto<T> {
     protected String id;
 
     public String getId() {
@@ -42,7 +34,7 @@ public class IdEntity<T> implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        IdEntity other = (IdEntity) obj;
+        IdDto other = (IdDto) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

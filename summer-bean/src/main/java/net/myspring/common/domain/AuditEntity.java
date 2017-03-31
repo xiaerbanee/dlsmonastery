@@ -14,8 +14,6 @@ public abstract class AuditEntity<T> extends DataEntity<T> {
 	protected LocalDateTime auditDate;
 	protected String auditRemarks;
 	protected String status;
-	@Transient
-	protected Boolean pass;
 
 	public String getAuditBy() {
 		return auditBy;
@@ -47,13 +45,5 @@ public abstract class AuditEntity<T> extends DataEntity<T> {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public Boolean getPass() {
-		return pass;
-	}
-
-	public void setPass(Boolean pass) {
-		this.pass = pass;
 	}
 }

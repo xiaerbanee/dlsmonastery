@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.manager.AccountManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,10 @@ public class AccountService {
     public void sample(){
         long start = System.currentTimeMillis();
         RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();
+        List<byte[]> keys = Lists.newArrayList();
         for(int i=1;i<=50000;i++) {
             String key = "account:" + i;
-            Object a = connection.get(key.getBytes());
+            keys.add(key.getBytes());
         }
         long end = System.currentTimeMillis();
         System.out.println(" without pipeline used [" + (end - start)  + "] millseconds ..");
