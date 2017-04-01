@@ -39,7 +39,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                     true,
                     !account.getLocked(),
                     authList,
-                    account.getCompanyId()
+                    account.getCompanyId(),
+                    account.getPositionId()
             );
         }
         return customUserDetails;

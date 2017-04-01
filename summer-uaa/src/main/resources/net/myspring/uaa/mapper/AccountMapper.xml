@@ -4,7 +4,8 @@
     <select id="findByLoginName" resultType="Account">
         SELECT
         t1.*,
-        t2.position_id as "employee.positionId"
+        t2.id as 'employee.id',
+        t2.leave_date as 'employee.leaveDate'
         FROM
         hr_account t1,
         hr_employee t2

@@ -21,8 +21,9 @@ public class CustomUserDetails implements UserDetails {
     private final boolean credentialsNonExpired;
     private final boolean enabled;
     private final String companyId;
+    private final String positionId;
 
-    public CustomUserDetails(String username,String password,boolean enabled,boolean accountNonExpired,boolean credentialsNonExpired,boolean accountNonLocked,Collection<? extends GrantedAuthority> authorities,String companyId) {
+    public CustomUserDetails(String username,String password,boolean enabled,boolean accountNonExpired,boolean credentialsNonExpired,boolean accountNonLocked,Collection<? extends GrantedAuthority> authorities,String companyId,String positionId) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
         }
@@ -34,6 +35,7 @@ public class CustomUserDetails implements UserDetails {
         this.accountNonLocked = accountNonLocked;
         this.authorities = Collections.unmodifiableSet(sortAuthorities(authorities));
         this.companyId = companyId;
+        this.positionId = positionId;
     }
 
 
@@ -74,6 +76,10 @@ public class CustomUserDetails implements UserDetails {
 
     public String getCompanyId() {
         return companyId;
+    }
+
+    public String getPositionId() {
+        return positionId;
     }
 
     private static SortedSet<GrantedAuthority> sortAuthorities(Collection<? extends GrantedAuthority> authorities) {
