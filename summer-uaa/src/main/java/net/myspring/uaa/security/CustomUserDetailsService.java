@@ -15,7 +15,7 @@ import java.util.*;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Set<SimpleGrantedAuthority> authList = new TreeSet<SimpleGrantedAuthority>(new SimpleGrantedAuthorityComparator());
         CustomUserDetails customUserDetails = new CustomUserDetails(
                 username,
@@ -33,6 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private Collection<? extends GrantedAuthority> getAuthorities() {
         Set<SimpleGrantedAuthority> authList = new TreeSet<SimpleGrantedAuthority>(new SimpleGrantedAuthorityComparator());
         authList.add(new SimpleGrantedAuthority("FOO_READ"));
+        authList.add(new SimpleGrantedAuthority("FOO_TEST"));
         return authList;
     }
 
