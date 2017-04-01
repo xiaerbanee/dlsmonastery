@@ -1,4 +1,4 @@
-package net.myspring.basic.modules.sys.web;
+package net.myspring.basic.modules.sys.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;

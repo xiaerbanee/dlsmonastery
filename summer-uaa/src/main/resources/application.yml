@@ -7,7 +7,7 @@ spring:
     password: bbk@123456
     driver-class-name: com.mysql.jdbc.Driver
 server:
-  port: 9999
+  port: 1100
   # Use different context-path to avoid session cookie overlapping
   context-path: /uaa
   use-forward-headers: false
@@ -16,4 +16,4 @@ eureka:
     prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://localhost:1000/eureka/
+      defaultZone: http://168.192.1.20:1000/eureka/

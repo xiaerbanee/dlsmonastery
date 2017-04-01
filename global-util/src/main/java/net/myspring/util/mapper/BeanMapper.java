@@ -5,13 +5,22 @@
  *******************************************************************************/
 package net.myspring.util.mapper;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.converter.builtin.PassThroughConverter;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.Type;
 import ma.glasnost.orika.metadata.TypeFactory;
+import net.myspring.util.collection.CollectionUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 /**
  * 简单封装orika, 实现深度的BeanOfClasssA<->BeanOfClassB复制
@@ -26,8 +35,38 @@ public class BeanMapper {
 
 	static {
 		MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        mapperFactory.getConverterFactory().registerConverter(new PassThroughConverter(LocalDate.class));
+        mapperFactory.getConverterFactory().registerConverter(new PassThroughConverter(LocalDateTime.class));
 		mapper = mapperFactory.getMapperFacade();
 	}
+
+	public static <S, D> D convertDto(S source, Class<D> destinationClass) {
+		if(source==null){
+			try {
+				return destinationClass.newInstance();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+        return map(source,destinationClass);
+	}
+
+    public static <S, D> List<D> convertDtoList(List<S> sourceList, Class<D> destinationClass) {
+	    List<D> list=Lists.newArrayList();
+        if(CollectionUtil.isNotEmpty(sourceList)){
+           for(S source:sourceList){
+               list.add(convertDto(source,destinationClass));
+           }
+        }
+        return list;
+    }
+
+    public static <S, D> Page<D> convertPage(Page<S> page, Class<D> destinationClass) {
+        List<D> list=convertDtoList(page.getContent(),destinationClass);
+        Pageable pageable=new PageRequest(page.getNumber(),page.getSize(),page.getSort());
+        Page<D> destinationPage=new PageImpl<D>(list,pageable,page.getTotalElements());
+        return destinationPage;
+    }
 
 	/**
 	 * 简单的复制出新类型对象.
@@ -35,7 +74,7 @@ public class BeanMapper {
 	 * 通过source.getClass() 获得源Class
 	 */
 	public static <S, D> D map(S source, Class<D> destinationClass) {
-		return mapper.map(source, destinationClass);
+		return mapper.map(source,destinationClass);
 	}
 
 	/**
