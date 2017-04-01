@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * Created by liuj on 2017/3/28.
  */
-@FeignClient(value = "summer-hr")
+@FeignClient(value = "summer-basic")
 public interface AccountManager {
 
     @RequestMapping(method = RequestMethod.GET, value = "/account/findOne")

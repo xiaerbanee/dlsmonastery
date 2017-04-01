@@ -12,7 +12,7 @@ spring:
     port: 6379
     database: 0
 server:
-  port: 2002
+  port: 3200
 eureka:
   instance:
     prefer-ip-address: true

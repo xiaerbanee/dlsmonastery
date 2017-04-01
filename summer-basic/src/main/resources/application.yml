@@ -1,6 +1,6 @@
 spring:
   application:
-    name: summer-hr
+    name: summer-basic
   datasource:
     url: jdbc:mysql://localhost:3306/summer_hr
     username: root
@@ -14,7 +14,7 @@ spring:
 mybatis:
   config-location: classpath:/mybatis-config.xml
 server:
-  port: 2222
+  port: 1300
 eureka:
   instance:
     prefer-ip-address: true

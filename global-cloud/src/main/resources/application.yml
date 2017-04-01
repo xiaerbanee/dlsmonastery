@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: summer-gateway
+server:
+  port: 2000
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
