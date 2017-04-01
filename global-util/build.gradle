@@ -39,5 +39,8 @@ dependencies {
     compile 'org.apache.poi:poi:3.10-FINAL'
     compile 'org.apache.poi:poi-ooxml:3.10-FINAL'
     compile 'org.apache.poi:poi-ooxml-schemas:3.10-FINAL'
+
+	compile 'net.sf.dozer:dozer:5.5.1'
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

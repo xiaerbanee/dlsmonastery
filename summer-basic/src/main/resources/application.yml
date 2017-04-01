@@ -2,9 +2,9 @@ spring:
   application:
     name: summer-basic
   datasource:
-    url: jdbc:mysql://localhost:3306/summer_hr
+    url: jdbc:mysql://168.192.1.243:3306/db_id_vivo_hr
     username: root
-    password: 123456
+    password: bbk@123456
     driver-class-name: com.mysql.jdbc.Driver
   redis:
     host: localhost
@@ -20,7 +20,7 @@ eureka:
     prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://localhost:1111/eureka/
+      defaultZone: http://168.192.1.20:1000/eureka/
 
 security:
   oauth2:

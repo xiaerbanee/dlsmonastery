@@ -3,11 +3,13 @@ package net.myspring.common.dto;
 import net.myspring.common.domain.IdEntity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by liuj on 2017/3/31.
  */
 public class IdDto<T> {
+
     protected String id;
 
     public String getId() {
