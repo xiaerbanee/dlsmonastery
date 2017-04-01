@@ -15,7 +15,7 @@ zuul:
       sensitiveHeaders:
       path: /uaa/**
       stripPrefix: false
-    summer-hr: /hr/**
+    summer-basic: /basic/**
     future-report: /futureReport/**
   add-proxy-headers: true
 
