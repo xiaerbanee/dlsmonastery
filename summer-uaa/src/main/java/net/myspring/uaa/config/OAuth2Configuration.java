@@ -36,8 +36,9 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
                 .authorizedGrantTypes("client_credentials", "refresh_token")
                 .scopes("server")
          .and().withClient("web_app")
-                .scopes("web")
+                .scopes("FOO")
                 .autoApprove(true)
+                .authorities("FOO_READ", "FOO_WRITE")
                 .authorizedGrantTypes("implicit","refresh_token", "password", "authorization_code");
     }
 

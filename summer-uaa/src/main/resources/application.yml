@@ -1,8 +1,13 @@
 spring:
   application:
     name: summer-uaa
+  datasource:
+    url: jdbc:mysql://168.192.1.243:3306/db_id_vivo_hr
+    username: root
+    password: bbk@123456
+    driver-class-name: com.mysql.jdbc.Driver
 server:
-  port: 9999
+  port: 1100
   # Use different context-path to avoid session cookie overlapping
   context-path: /uaa
   use-forward-headers: false
