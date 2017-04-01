@@ -37,8 +37,6 @@ public class DictMapService {
     public DictMapDto findDto(String id){
         DictMap dictMap=findOne(id);
         DictMapDto dictMapDto = BeanMapper.convertDto(dictMap, DictMapDto.class);
-        dictMapDto.setCreatedByList(Lists.newArrayList("1","271"));
-        dictMapDto.setLastModifiedByList(Lists.newArrayList("1","271"));
         CacheReadUtils.initCacheInput(redisTemplate,Lists.newArrayList(dictMapDto));
         return dictMapDto;
     }
@@ -49,7 +47,9 @@ public class DictMapService {
 
     public Page<DictMapDto> findPage(Pageable pageable, Map<String, Object> map) {
         Page<DictMap> page = dictMapManager.findPage(pageable, map);
-        return BeanMapper.convertPage(page,DictMapDto.class);
+        Page<DictMapDto> dictMapDtoPage = BeanMapper.convertPage(page, DictMapDto.class);
+        CacheReadUtils.initCacheInput(redisTemplate,dictMapDtoPage.getContent());
+        return dictMapDtoPage;
     }
 
     public DictMapForm save(DictMapForm dictMapForm){

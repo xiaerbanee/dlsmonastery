@@ -31,7 +31,7 @@ public class CacheReadUtils {
         initCacheInput(redisTemplate, Lists.newArrayList(object));
     }
 
-    public static void initCacheInput(RedisTemplate redisTemplate, Collection<Object> objects) {
+    public static void initCacheInput(RedisTemplate redisTemplate, Collection objects) {
         Class clazz = null;
         List<Object> list = null;
         if (CollectionUtils.isNotEmpty(objects)) {
@@ -57,17 +57,19 @@ public class CacheReadUtils {
                     } else {
                         keySuffixList.add(ReflectionUtil.getFieldValue(object, cacheInputField.getInputField()));
                     }
-                    CacheInputObject cacheInputObject = new CacheInputObject();
-                    cacheInputObject.setObject(object);
-                    cacheInputObject.setCacheInputField(cacheInputField);
-                    for (String keySuffix : keySuffixList) {
-                        if (StringUtils.isNotBlank(keySuffix)) {
-                            String key = keyPrefix + keySuffix;
-                            keySet.add(key);
-                            cacheInputObject.getKeyList().add(key);
+                    if(CollectionUtil.isNotEmpty(keySuffixList)){
+                        CacheInputObject cacheInputObject = new CacheInputObject();
+                        cacheInputObject.setObject(object);
+                        cacheInputObject.setCacheInputField(cacheInputField);
+                        for (String keySuffix : keySuffixList) {
+                            if (StringUtils.isNotBlank(keySuffix)) {
+                                String key = keyPrefix + keySuffix;
+                                keySet.add(key);
+                                cacheInputObject.getKeyList().add(key);
+                            }
                         }
+                        cacheInputObjectList.add(cacheInputObject);
                     }
-                    cacheInputObjectList.add(cacheInputObject);
                 }
             }
         }
