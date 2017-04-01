@@ -1,5 +1,9 @@
 package net.myspring.uaa.security;
 
+import com.google.common.collect.Sets;
+import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.uaa.mapper.AccountMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -14,34 +19,30 @@ import java.util.*;
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+    @Autowired
+    private AccountMapper accountMapper;
+
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Set<SimpleGrantedAuthority> authList = new TreeSet<SimpleGrantedAuthority>(new SimpleGrantedAuthorityComparator());
-        CustomUserDetails customUserDetails = new CustomUserDetails(
-                username,
-                "reader",
-                true,
-                true,
-                true,
-                true,
-                getAuthorities(),
-                "1"
-        );
+        Account account = accountMapper.findByLoginName(username);
+        CustomUserDetails customUserDetails = null;
+        if(account != null) {
+            LocalDate leaveDate = account.getEmployee().getLeaveDate();
+            boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
+            Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
+            authList.add(new SimpleGrantedAuthority(account.getPositionId()));
+            customUserDetails = new CustomUserDetails(
+                    username,
+                    account.getPassword(),
+                    account.getEnabled(),
+                    accountNoExpired,
+                    true,
+                    !account.getLocked(),
+                    authList,
+                    account.getCompanyId()
+            );
+        }
         return customUserDetails;
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<SimpleGrantedAuthority> authList = new TreeSet<SimpleGrantedAuthority>(new SimpleGrantedAuthorityComparator());
-        authList.add(new SimpleGrantedAuthority("FOO_READ"));
-        authList.add(new SimpleGrantedAuthority("FOO_TEST"));
-        return authList;
-    }
-
-
-    private static class SimpleGrantedAuthorityComparator implements Comparator<SimpleGrantedAuthority> {
-        @Override
-        public int compare(SimpleGrantedAuthority o1, SimpleGrantedAuthority o2) {
-            return o1.equals(o2) ? 0 : -1;
-        }
-    }
 }

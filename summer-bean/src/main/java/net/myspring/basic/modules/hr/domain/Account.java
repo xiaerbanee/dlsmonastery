@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name="hr_account")
 public class Account extends DataEntity<Account> {
+    private String companyId;
     private String loginName;
     private Integer version = 0;
     private String password;
@@ -41,6 +42,14 @@ public class Account extends DataEntity<Account> {
     private List<String> employeeIdList = Lists.newArrayList();
     private List<Monitor> monitorList = Lists.newArrayList();
     private List<String> monitorIdList = Lists.newArrayList();
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
     public String getLoginName() {
         return loginName;
