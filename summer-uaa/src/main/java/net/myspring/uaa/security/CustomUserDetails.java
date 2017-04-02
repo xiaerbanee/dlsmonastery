@@ -21,10 +21,11 @@ public class CustomUserDetails implements UserDetails {
     private final boolean accountNonLocked;
     private final boolean credentialsNonExpired;
     private final boolean enabled;
+    private final String accountId;
     private final String companyId;
     private final String positionId;
 
-    public CustomUserDetails(String username,String password,boolean enabled,boolean accountNonExpired,boolean credentialsNonExpired,boolean accountNonLocked,Collection<? extends GrantedAuthority> authorities,String companyId,String positionId) {
+    public CustomUserDetails(String username,String password,boolean enabled,boolean accountNonExpired,boolean credentialsNonExpired,boolean accountNonLocked,Collection<? extends GrantedAuthority> authorities,String accountId,String companyId,String positionId) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
         }
@@ -35,6 +36,7 @@ public class CustomUserDetails implements UserDetails {
         this.credentialsNonExpired = credentialsNonExpired;
         this.accountNonLocked = accountNonLocked;
         this.authorities = Sets.newHashSet(authorities);
+        this.accountId = accountId;
         this.companyId = companyId;
         this.positionId = positionId;
     }
@@ -73,6 +75,10 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public String getAccountId() {
+        return accountId;
     }
 
     public String getCompanyId() {
