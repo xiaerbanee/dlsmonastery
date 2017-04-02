@@ -17,7 +17,6 @@ import java.util.*;
 /**
  * Created by liuj on 2017/4/1.
  */
-@Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private AccountMapper accountMapper;
