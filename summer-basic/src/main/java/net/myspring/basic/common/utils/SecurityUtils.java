@@ -12,23 +12,24 @@ import java.util.Map;
 /**
  * Created by liuj on 2017/4/2.
  */
+@Component
 public class SecurityUtils {
     @Autowired
-    private static TokenStore tokenStore;
+    private TokenStore tokenStore;
 
-    public static String getAccountId() {
+    public String getAccountId() {
         return String.valueOf(getAdditionalInformation().get("accountId"));
     }
 
-    public static String getCompanyId() {
+    public String getCompanyId() {
         return String.valueOf(getAdditionalInformation().get("companyId"));
     }
 
-    public static String getPositionId() {
+    public String getPositionId() {
         return String.valueOf(getAdditionalInformation().get("positionId"));
     }
 
-    private static Map<String, Object> getAdditionalInformation() {
+    private Map<String, Object> getAdditionalInformation() {
         final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
         final OAuth2AccessToken accessToken = tokenStore.readAccessToken(details.getTokenValue());
         return accessToken.getAdditionalInformation();

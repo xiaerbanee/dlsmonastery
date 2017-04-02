@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.web.controller;
 
+import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,12 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private SecurityUtils securityUtils;
 
     @RequestMapping(value = "findOne")
     public Account report(String id) {
+        String accountId = securityUtils.getAccountId();
         return accountService.findOne(id);
     }
 
