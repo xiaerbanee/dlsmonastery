@@ -2,15 +2,17 @@ spring:
   application:
     name: future-business
   datasource:
-    url: jdbc:mysql://localhost:3306/summer_hr
+    url: jdbc:mysql://168.192.1.243:3306/db_oppo_test
     username: root
-    password: 123456
+    password: bbk@123456
     driver-class-name: com.mysql.jdbc.Driver
   redis:
     host: localhost
     password:
     port: 6379
     database: 0
+mybatis:
+  config-location: classpath:/mybatis-config.xml
 server:
   port: 3000
 eureka:

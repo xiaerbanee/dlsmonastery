@@ -16,7 +16,8 @@ zuul:
       path: /uaa/**
       stripPrefix: false
     summer-basic: /basic/**
-    future-report: /futureReport/**
+    future-business: /future/business/**
+    future-report: /future/report/**
   add-proxy-headers: true
 
 security:

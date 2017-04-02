@@ -29,6 +29,7 @@ repositories {
 dependencies {
 	compile project(':summer-bean')
 	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.1.0.RELEASE'
+	compile group: 'org.elasticsearch', name: 'elasticsearch', version: '5.3.0'
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.cloud:spring-cloud-starter-oauth2')
 	compile('org.springframework.cloud:spring-cloud-starter-security')
