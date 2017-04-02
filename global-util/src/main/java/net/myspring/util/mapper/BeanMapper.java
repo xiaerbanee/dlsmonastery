@@ -7,8 +7,10 @@ package net.myspring.util.mapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
@@ -31,13 +33,15 @@ import org.springframework.data.domain.Pageable;
  */
 public class BeanMapper {
 
-	private static MapperFacade mapper;
+	private static MapperFacade mapper = getBeanMapper();
 
-	static {
+	public static MapperFacade getBeanMapper() {
 		MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-        mapperFactory.getConverterFactory().registerConverter(new PassThroughConverter(LocalDate.class));
-        mapperFactory.getConverterFactory().registerConverter(new PassThroughConverter(LocalDateTime.class));
+		mapperFactory.getConverterFactory().registerConverter(new PassThroughConverter(LocalDate.class));
+		mapperFactory.getConverterFactory().registerConverter(new PassThroughConverter(LocalDateTime.class));
+		mapperFactory.getConverterFactory().registerConverter(new PassThroughConverter(LocalTime.class));
 		mapper = mapperFactory.getMapperFacade();
+		return mapper;
 	}
 
 	public static <S, D> D convertDto(S source, Class<D> destinationClass) {
@@ -52,11 +56,11 @@ public class BeanMapper {
 	}
 
     public static <S, D> List<D> convertDtoList(List<S> sourceList, Class<D> destinationClass) {
-	    List<D> list=Lists.newArrayList();
+        List<D> list=Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(sourceList)){
-           for(S source:sourceList){
-               list.add(convertDto(source,destinationClass));
-           }
+            for(S source:sourceList){
+                list.add(convertDto(source,destinationClass));
+            }
         }
         return list;
     }
@@ -68,22 +72,23 @@ public class BeanMapper {
         return destinationPage;
     }
 
-	/**
+
+    /**
+     * 极致性能的复制出新类型对象.
+     *
+     * 预先通过BeanMapper.getType() 静态获取并缓存Type类型，在此处传入
+     */
+    public static <S, D> D map(S source, Type<S> sourceType, Type<D> destinationType) {
+        return mapper.map(source, sourceType, destinationType);
+    }
+
+    /**
 	 * 简单的复制出新类型对象.
 	 * 
 	 * 通过source.getClass() 获得源Class
 	 */
 	public static <S, D> D map(S source, Class<D> destinationClass) {
 		return mapper.map(source,destinationClass);
-	}
-
-	/**
-	 * 极致性能的复制出新类型对象.
-	 * 
-	 * 预先通过BeanMapper.getType() 静态获取并缓存Type类型，在此处传入
-	 */
-	public static <S, D> D map(S source, Type<S> sourceType, Type<D> destinationType) {
-		return mapper.map(source, sourceType, destinationType);
 	}
 
 	/**
