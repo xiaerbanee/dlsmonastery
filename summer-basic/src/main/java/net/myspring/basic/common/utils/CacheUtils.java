@@ -31,7 +31,7 @@ public class CacheUtils {
         CacheReadUtils.initCacheInput(redisTemplate,objects);
     }
 
-    public  void  mSet(String keyPrefix, List<? extends IdEntity> entities) {
+    public  void  initCache(String keyPrefix, List<? extends IdEntity> entities) {
         if(CollectionUtil.isNotEmpty(entities)) {
             Map<byte[],byte[]> tuple = Maps.newHashMap();
             for(IdEntity idEntity:entities) {
