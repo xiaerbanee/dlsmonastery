@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import ma.glasnost.orika.metadata.Type;
+import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.manager.DictMapManager;
@@ -27,7 +28,7 @@ public class DictMapService {
     @Autowired
     private DictMapManager dictMapManager;
     @Autowired
-    private RedisTemplate redisTemplate;
+    private CacheUtils cacheUtils;
 
     public DictMap findOne(String id) {
         DictMap dictMap= dictMapManager.findOne(id);
@@ -37,7 +38,7 @@ public class DictMapService {
     public DictMapDto findDto(String id){
         DictMap dictMap=findOne(id);
         DictMapDto dictMapDto = BeanMapper.convertDto(dictMap, DictMapDto.class);
-        CacheReadUtils.initCacheInput(redisTemplate,Lists.newArrayList(dictMapDto));
+        cacheUtils.initCacheInput(dictMapDto);
         return dictMapDto;
     }
 
@@ -48,7 +49,7 @@ public class DictMapService {
     public Page<DictMapDto> findPage(Pageable pageable, Map<String, Object> map) {
         Page<DictMap> page = dictMapManager.findPage(pageable, map);
         Page<DictMapDto> dictMapDtoPage = BeanMapper.convertPage(page, DictMapDto.class);
-        CacheReadUtils.initCacheInput(redisTemplate,dictMapDtoPage.getContent());
+        cacheUtils.initCacheInput(dictMapDtoPage.getContent());
         return dictMapDtoPage;
     }
 
