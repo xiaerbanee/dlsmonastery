@@ -35,7 +35,7 @@ public class DictMapManager {
         return page;
     }
 
-    @Cacheable(value = "dictMaps",key="#p0.id")
+    @CachePut(value = "dictMaps",key="#p0.id")
     public DictMap save(DictMap dictMap){
         dictMapMapper.save(dictMap);
         return  dictMap;
