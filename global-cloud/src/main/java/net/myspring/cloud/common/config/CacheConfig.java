@@ -1,4 +1,4 @@
-package net.myspring.cloud.config;
+package net.myspring.cloud.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;

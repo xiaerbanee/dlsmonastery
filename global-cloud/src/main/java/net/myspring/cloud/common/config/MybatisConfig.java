@@ -1,4 +1,4 @@
-package net.myspring.cloud.config;
+package net.myspring.cloud.common.config;
 
 import net.myspring.mybatis.context.ProviderMapperAspect;
 import org.springframework.context.annotation.Bean;
