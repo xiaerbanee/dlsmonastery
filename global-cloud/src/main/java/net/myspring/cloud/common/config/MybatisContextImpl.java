@@ -1,5 +1,7 @@
 package net.myspring.cloud.common.config;
 
+import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
+import net.myspring.cloud.common.enums.DataSourceTypeEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.mybatis.context.MybatisContext;
 import net.myspring.mybatis.dialect.Dialect;
@@ -19,6 +21,10 @@ public class MybatisContextImpl implements MybatisContext {
 
     @Override
     public Dialect getDialect() {
-        return new MySQLDialect();
+        if(DataSourceTypeEnum.SYS.name().equals(DynamicDataSourceContext.get().getDataSourceType())) {
+            return new MySQLDialect();
+        } else {
+            return new MySQLDialect();
+        }
     }
 }

@@ -1,14 +1,14 @@
-package net.myspring.cloud.domain;
+package net.myspring.cloud.modules.kingdee.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * Created by lihx on 2016/12/19.
+ * Created by lihx on 2016/11/12.
  */
-public class ReceivableReportForDetail {
-    private String customerId;
-    private String customerName;
+public class PayableReconciliationForDetail {
+    private String supplyId;
+    private String departmentId;
     private String billType;
     private String billNo;
     private LocalDate date;
@@ -24,20 +24,20 @@ public class ReceivableReportForDetail {
     private String css;
     private String documentStatus;
 
-    public String getCustomerId() {
-        return customerId;
+    public String getSupplyId() {
+        return supplyId;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setSupplyId(String supplyId) {
+        this.supplyId = supplyId;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
     }
 
     public String getBillType() {

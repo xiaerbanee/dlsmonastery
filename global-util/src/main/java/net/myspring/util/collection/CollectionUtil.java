@@ -5,17 +5,12 @@
  *******************************************************************************/
 package net.myspring.util.collection;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
+import com.google.common.collect.*;
 import net.myspring.util.collection.type.Pair;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Ordering;
+import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  * 通用Collection的工具集
@@ -176,6 +171,42 @@ public class CollectionUtil {
 	 */
 	public static <T extends Comparable> List<T> bottomN(Iterable<T> coll, int n, Comparator<? super T> comp) {
 		return Ordering.from(comp).leastOf(coll, n);
+	}
+
+	public static <E> List<E> extractToList(final Collection collection, final String propertyName) {
+		if (isEmpty(collection)) {
+			return Lists.newArrayList();
+		}
+		List<E> list = new ArrayList(collection.size());
+		try {
+			for (Object obj : collection) {
+				E value=(E) PropertyUtils.getProperty(obj, propertyName);
+				if(obj != null&&value!=null) {
+					list.add(value);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	public static <K,V> Map<K,V> extractToMap(final Collection collection, final String keyPropertyName) {
+		if (isEmpty(collection)) {
+			return Maps.<K,V>newHashMap();
+		}
+		Map<K,V> map = new HashMap<K,V>(collection.size());
+		try {
+			for (Object obj : collection) {
+				K key=(K)PropertyUtils.getProperty(obj, keyPropertyName);
+				if(obj != null&&key!=null) {
+					map.put(key, (V)obj);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return map;
 	}
 
 }
