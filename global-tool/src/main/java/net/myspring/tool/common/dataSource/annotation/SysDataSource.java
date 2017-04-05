@@ -1,4 +1,4 @@
-package net.myspring.cloud.common.dataSource.annotation;
+package net.myspring.tool.common.dataSource.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

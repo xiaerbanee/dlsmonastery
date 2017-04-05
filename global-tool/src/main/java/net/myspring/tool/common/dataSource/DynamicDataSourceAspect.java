@@ -4,10 +4,10 @@ package net.myspring.tool.common.dataSource;
  * Created by admin on 2016/9/7.
  */
 
-import net.myspring.cloud.common.dataSource.annotation.FactoryDataSource;
-import net.myspring.cloud.common.dataSource.annotation.SysDataSource;
-import net.myspring.cloud.common.enums.DataSourceTypeEnum;
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
+import net.myspring.tool.common.dataSource.annotation.SysDataSource;
+import net.myspring.tool.common.enums.DataSourceTypeEnum;
+import net.myspring.tool.common.utils.SecurityUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -39,14 +39,14 @@ public class DynamicDataSourceAspect {
             if(method.isAnnotationPresent(SysDataSource.class)) {
                 dataSourceType = DataSourceTypeEnum.SYS.name();
             } else if (method.isAnnotationPresent(FactoryDataSource.class)) {
-                dataSourceType =  DataSourceTypeEnum.KINGDEE.name();
+                dataSourceType =  DataSourceTypeEnum.FACTORY.name();
             }
         } else {
             if(target.getClass().isAnnotationPresent(SysDataSource.class) || target.getClass().isAnnotationPresent(FactoryDataSource.class)) {
                 if(target.getClass().isAnnotationPresent(SysDataSource.class)) {
                     dataSourceType = DataSourceTypeEnum.SYS.name();
                 } else if (target.getClass().isAnnotationPresent(FactoryDataSource.class)) {
-                    dataSourceType = DataSourceTypeEnum.KINGDEE.name();
+                    dataSourceType = DataSourceTypeEnum.FACTORY.name();
                 }
             }
         }
@@ -54,7 +54,7 @@ public class DynamicDataSourceAspect {
         if(DataSourceTypeEnum.SYS.name().equals(dataSourceType)) {
             DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.SYS.name());
         } else {
-            DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.KINGDEE.name());
+            DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.FACTORY.name());
         }
     }
 
