@@ -1,4 +1,4 @@
-package net.myspring.cloud.domain;
+package net.myspring.cloud.modules.kingdee.domain;
 
 /**
  * Created by lihx on 2017/2/9.

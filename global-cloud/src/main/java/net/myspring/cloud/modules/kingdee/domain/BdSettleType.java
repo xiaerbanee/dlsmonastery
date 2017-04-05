@@ -1,4 +1,4 @@
-package net.myspring.cloud.domain;
+package net.myspring.cloud.modules.kingdee.domain;
 
 //结算方式
 public class BdSettleType {

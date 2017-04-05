@@ -1,17 +1,12 @@
-package net.myspring.cloud.domain;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+package net.myspring.cloud.modules.kingdee.domain;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 /**
- * 总盘报表
- * Created by lihx on 2016/11/30.
+ * 二维报表
+ * Created by liuj on 2016-09-26.
  */
-public class TotalDiscReport {
+public class RetailOrWholeSaleReport {
     //部门名称
     private String departmentName;
     //年
@@ -24,6 +19,8 @@ public class TotalDiscReport {
     private String code;
     //金额
     private BigDecimal amount;
+    //占比
+    private BigDecimal percent;
 
     public String getDepartmentName() {
         return departmentName;
@@ -71,5 +68,13 @@ public class TotalDiscReport {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public BigDecimal getPercent() {
+        return percent;
+    }
+
+    public void setPercent(BigDecimal percent) {
+        this.percent = percent;
     }
 }
