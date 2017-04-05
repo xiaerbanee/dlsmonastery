@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.sys.domain;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.domain.DataEntity;
-import net.myspring.util.collection.CollectionUtil;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name="sys_company")
-public class Company extends DataEntity<Company> {
+public class KingdeeBook extends DataEntity<KingdeeBook> {
     private String name;
     private String type;
     private String cloudUrl;
@@ -20,10 +19,10 @@ public class Company extends DataEntity<Company> {
     private String cloudPassword;
     private String cloudDbid;
     private Integer version = 0;
-    private List<CloudProduct> cloudProductList = Lists.newArrayList();
-    private List<String> cloudProductIdList = Lists.newArrayList();
-    private List<K3cloudGlVoucher> k3cloudGlVoucherList = Lists.newArrayList();
-    private List<String> k3cloudGlVoucherIdList = Lists.newArrayList();
+    private List<Product> productList = Lists.newArrayList();
+    private List<String> productIdList = Lists.newArrayList();
+    private List<GlVoucher> glVoucherList = Lists.newArrayList();
+    private List<String> glVoucherIdList = Lists.newArrayList();
 
     public String getName() {
         return name;
@@ -89,41 +88,35 @@ public class Company extends DataEntity<Company> {
         this.version = version;
     }
 
-    public List<CloudProduct> getCloudProductList() {
-        return cloudProductList;
+    public List<Product> getProductList() {
+        return productList;
     }
 
-    public void setCloudProductList(List<CloudProduct> cloudProductList) {
-        this.cloudProductList = cloudProductList;
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 
-    public List<String> getCloudProductIdList() {
-        if(CollectionUtil.isEmpty(cloudProductIdList) && CollectionUtil.isNotEmpty(cloudProductList)) {
-            cloudProductIdList = CollectionUtil.extractToList(cloudProductList,"id");
-        }
-        return cloudProductIdList;
+    public List<String> getProductIdList() {
+        return productIdList;
     }
 
-    public void setCloudProductIdList(List<String> cloudProductIdList) {
-        this.cloudProductIdList = cloudProductIdList;
+    public void setProductIdList(List<String> productIdList) {
+        this.productIdList = productIdList;
     }
 
-    public List<K3cloudGlVoucher> getK3cloudGlVoucherList() {
-        return k3cloudGlVoucherList;
+    public List<GlVoucher> getGlVoucherList() {
+        return glVoucherList;
     }
 
-    public void setK3cloudGlVoucherList(List<K3cloudGlVoucher> k3cloudGlVoucherList) {
-        this.k3cloudGlVoucherList = k3cloudGlVoucherList;
+    public void setGlVoucherList(List<GlVoucher> glVoucherList) {
+        this.glVoucherList = glVoucherList;
     }
 
-    public List<String> getK3cloudGlVoucherIdList() {
-        if(CollectionUtil.isEmpty(k3cloudGlVoucherIdList) && CollectionUtil.isNotEmpty(k3cloudGlVoucherList)) {
-            k3cloudGlVoucherIdList = CollectionUtil.extractToList(k3cloudGlVoucherList,"id");
-        }
-        return k3cloudGlVoucherIdList;
+    public List<String> getGlVoucherIdList() {
+        return glVoucherIdList;
     }
 
-    public void setK3cloudGlVoucherIdList(List<String> k3cloudGlVoucherIdList) {
-        this.k3cloudGlVoucherIdList = k3cloudGlVoucherIdList;
+    public void setGlVoucherIdList(List<String> glVoucherIdList) {
+        this.glVoucherIdList = glVoucherIdList;
     }
 }

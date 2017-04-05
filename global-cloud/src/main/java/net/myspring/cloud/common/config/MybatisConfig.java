@@ -4,7 +4,7 @@ import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.DynamicDataSource;
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
-import net.myspring.cloud.modules.sys.domain.Company;
+import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.mybatis.context.ProviderMapperAspect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,8 +37,8 @@ public class MybatisConfig {
     @Bean
     public DynamicDataSource dynamicDataSource() {
         Map<Object, Object> targetDataSources = Maps.newHashMap();
-        List<Company> companyList = getCompanyList();
-        for (Company company:companyList) {
+        List<KingdeeBook> companyList = getCompanyList();
+        for (KingdeeBook company:companyList) {
             targetDataSources.put(DataSourceTypeEnum.KINGDEE.name() + "_" + company.getId(),getCloudDataSource(company));
         }
         targetDataSources.put(DataSourceTypeEnum.SYS.name(),getSysDataSource());
@@ -60,14 +60,14 @@ public class MybatisConfig {
         }
     }
 
-    private List<Company> getCompanyList() {
+    private List<KingdeeBook> getCompanyList() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(getSysDataSource());
         String sql = "select * from sys_company";
-        List<Company> companyList = jdbcTemplate.query(sql,new BeanPropertyRowMapper<Company>(Company.class));
+        List<KingdeeBook> companyList = jdbcTemplate.query(sql,new BeanPropertyRowMapper<KingdeeBook>(KingdeeBook.class));
         return companyList;
     }
 
-    private DataSource getCloudDataSource(Company company) {
+    private DataSource getCloudDataSource(KingdeeBook company) {
         Properties props = new Properties();
         props.put("driverClassName", "net.sourceforge.jtds.jdbc.Driver");
         props.put("url", company.getCloudUrl());
