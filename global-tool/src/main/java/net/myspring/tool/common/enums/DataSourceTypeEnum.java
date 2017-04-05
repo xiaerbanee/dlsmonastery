@@ -1,8 +1,8 @@
-package net.myspring.cloud.common.enums;
+package net.myspring.tool.common.enums;
 
 /**
  * Created by liuj on 2017/4/5.
  */
 public enum DataSourceTypeEnum {
-    KINGDEE,LOCAL
+    FACTORY,LOCAL
 }

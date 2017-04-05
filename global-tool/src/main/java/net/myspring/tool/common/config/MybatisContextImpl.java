@@ -1,4 +1,4 @@
-package net.myspring.cloud.common.config;
+package net.myspring.tool.common.config;
 
 import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;

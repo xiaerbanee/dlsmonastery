@@ -1,11 +1,12 @@
-package net.myspring.cloud.common.config;
+package net.myspring.tool.common.config;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.google.common.collect.Maps;
-import net.myspring.cloud.common.dataSource.DynamicDataSource;
-import net.myspring.cloud.common.enums.DataSourceTypeEnum;
-import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.tool.common.dataSource.DynamicDataSource;
+import net.myspring.tool.common.enums.DataSourceTypeEnum;
+import net.myspring.tool.modules.sys.domain.Factory;
 import net.myspring.mybatis.context.ProviderMapperAspect;
+import net.myspring.tool.modules.sys.domain.Factory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,9 +38,9 @@ public class MybatisConfig {
     @Bean
     public DynamicDataSource dynamicDataSource() {
         Map<Object, Object> targetDataSources = Maps.newHashMap();
-        List<KingdeeBook> kingdeeBookList = getKingdeeBookList();
-        for (KingdeeBook kingdeeBook:kingdeeBookList) {
-            targetDataSources.put(DataSourceTypeEnum.KINGDEE.name() + "_" + kingdeeBook.getCompanyId(),getCloudDataSource(kingdeeBook));
+        List<Factory> factoryList = getFactoryList();
+        for (Factory factory:factoryList) {
+            targetDataSources.put(DataSourceTypeEnum.FACTORY.name() + "_" + factory.getCompanyId(),getFactoryDataSource(factory));
         }
         targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getLocalDataSource());
         DynamicDataSource dataSource = new DynamicDataSource();
@@ -60,19 +61,19 @@ public class MybatisConfig {
         }
     }
 
-    private List<KingdeeBook> getKingdeeBookList() {
+    private List<Factory> getFactoryList() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(getLocalDataSource());
-        String sql = "select * from sys_kingdee_book";
-        List<KingdeeBook> kingdeeBookList = jdbcTemplate.query(sql,new BeanPropertyRowMapper<KingdeeBook>(KingdeeBook.class));
-        return kingdeeBookList;
+        String sql = "select * from sys_factory";
+        List<Factory> factoryList = jdbcTemplate.query(sql,new BeanPropertyRowMapper<Factory>(Factory.class));
+        return factoryList;
     }
 
-    private DataSource getCloudDataSource(KingdeeBook kingdeeBook) {
+    private DataSource getFactoryDataSource(Factory factory) {
         Properties props = new Properties();
         props.put("driverClassName", "net.sourceforge.jtds.jdbc.Driver");
-        props.put("url", kingdeeBook.getKingdeeUrl());
-        props.put("username", kingdeeBook.getKingdeeUsername());
-        props.put("password", kingdeeBook.getKingdeePassword());
+        props.put("url", factory.getUrl());
+        props.put("username", factory.getUsername());
+        props.put("password", factory.getPassword());
         try {
             return DruidDataSourceFactory.createDataSource(props);
         } catch (Exception e) {
