@@ -3,17 +3,15 @@ package net.myspring.cloud.modules.sys.domain;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.domain.IdEntity;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.List;
 
 
 @Entity
-@Table(name="api_gl_voucher_entry")
+@Table(name="sys_gl_voucher_entry")
 public class GlVoucherEntry extends IdEntity<GlVoucherEntry> {
     //摘要
     private String fexplanation;
