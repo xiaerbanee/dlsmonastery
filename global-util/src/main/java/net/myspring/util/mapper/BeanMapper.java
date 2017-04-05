@@ -46,11 +46,7 @@ public class BeanMapper {
 
 	public static <S, D> D convertDto(S source, Class<D> destinationClass) {
 		if(source==null){
-			try {
-				return destinationClass.newInstance();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			return null;
 		}
         return map(source,destinationClass);
 	}

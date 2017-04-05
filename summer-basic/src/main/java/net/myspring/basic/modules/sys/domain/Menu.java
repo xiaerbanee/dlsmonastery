@@ -31,6 +31,24 @@ public class Menu extends DataEntity<Menu> {
     private String menuCategoryId;
     private List<Permission> permissionList = Lists.newArrayList();
     private List<String> permissionIdList = Lists.newArrayList();
+    private String menuCode;
+    private String categoryCode;
+
+    public String getMenuCode() {
+        return menuCode;
+    }
+
+    public void setMenuCode(String menuCode) {
+        this.menuCode = menuCode;
+    }
+
+    public String getCategoryCode() {
+        return categoryCode;
+    }
+
+    public void setCategoryCode(String categoryCode) {
+        this.categoryCode = categoryCode;
+    }
 
     public String getCategory() {
         return category;

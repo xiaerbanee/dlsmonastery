@@ -26,16 +26,7 @@ public class DictMapManager {
         return dictMapMapper.findOne(id);
     }
 
-    public List<String> findDistinctCategory(){
-        return dictMapMapper.findDistinctCategory();
-    }
-
-    public Page<DictMap> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DictMap> page = dictMapMapper.findPage(pageable, map);
-        return page;
-    }
-
-    @CachePut(value = "dictMaps",key="#p0.id")
+    @Cacheable(value = "dictMaps",key="#p0.id")
     public DictMap save(DictMap dictMap){
         dictMapMapper.save(dictMap);
         return  dictMap;
@@ -47,7 +38,4 @@ public class DictMapManager {
         return  dictMapMapper.findOne(dictMap.getId());
     }
 
-    public void logicDeleteOne(String id) {
-        dictMapMapper.logicDeleteOne(id);
-    }
 }

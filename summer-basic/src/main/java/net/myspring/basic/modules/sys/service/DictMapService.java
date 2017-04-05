@@ -28,6 +28,8 @@ public class DictMapService {
     @Autowired
     private DictMapManager dictMapManager;
     @Autowired
+    private DictMapMapper dictMapMapper;
+    @Autowired
     private CacheUtils cacheUtils;
 
     public DictMap findOne(String id) {
@@ -43,11 +45,11 @@ public class DictMapService {
     }
 
     public List<String> findDistinctCategory(){
-        return dictMapManager.findDistinctCategory();
+        return dictMapMapper.findDistinctCategory();
     }
 
     public Page<DictMapDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DictMap> page = dictMapManager.findPage(pageable, map);
+        Page<DictMap> page = dictMapMapper.findPage(pageable, map);
         Page<DictMapDto> dictMapDtoPage = BeanMapper.convertPage(page, DictMapDto.class);
         cacheUtils.initCacheInput(dictMapDtoPage.getContent());
         return dictMapDtoPage;
@@ -63,6 +65,6 @@ public class DictMapService {
     }
 
     public void logicDeleteOne(String id) {
-        dictMapManager.logicDeleteOne(id);
+        dictMapMapper.logicDeleteOne(id);
     }
 }

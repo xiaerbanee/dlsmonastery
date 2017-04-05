@@ -2,4 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.sys.mapper.FolderMapper">
 
+
+    <select id="findByParentIdAndName" resultType="Folder">
+        SELECT
+            t1.*
+        FROM
+        sys_folder t1
+        WHERE
+        t1.parent_id=#{parentId}
+        and t1.name = #{name}
+    </select>
+
+
+    <select id="findByCreatedByAndParentIds" resultType="Folder">
+        SELECT
+            t1.*
+        FROM
+        sys_folder t1
+        WHERE
+        t1.created_by=#{createdBy}
+        and t1.parent_ids = #{parentIds}
+    </select>
+
+    <select id="findByCreatedBy" resultType="Folder">
+        SELECT
+            t1.*
+        FROM
+        sys_folder t1
+        WHERE
+        t1.created_by=#{createdBy}
+    </select>
+
+    <select id="findByParentIdsLike" resultType="Folder">
+        SELECT
+            t1.*
+        FROM
+        sys_folder t1
+        WHERE
+        t1.parent_ids like #{parentIds}
+    </select>
+
 </mapper>

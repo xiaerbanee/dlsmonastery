@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +40,10 @@ public class JobManager {
     public Job update(Job job){
         jobMapper.update(job);
         return  jobMapper.findOne(job.getId());
+    }
+
+    public List<Job> findAll(){
+        return jobMapper.findAll();
     }
 
     public void logicDeleteOne(String id) {

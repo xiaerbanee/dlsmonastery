@@ -44,6 +44,7 @@ public class AccountService {
     public Account findByLoginName(String loginName) {
         Account account = accountManager.findByLoginName(loginName);
         AccountDto accountDto= BeanMapper.convertDto(account,AccountDto.class);
+        cacheUtils.initCacheInput(accountDto);
         return accountDto;
     }
 
@@ -54,12 +55,14 @@ public class AccountService {
         return accountDtoPage;
     }
 
-    public List<Account> findByOffice(String officeId){
-        List<Account> accountList=Lists.newArrayList();
+    public List<AccountDto> findByOffice(String officeId){
+        List<AccountDto> accountDtoList=Lists.newArrayList();
         if(StringUtils.isNotBlank(officeId)){
-            accountList=accountManager.findByOfficeId(officeId);
+            List<Account> accountList=accountManager.findByOfficeId(officeId);
+            accountDtoList=BeanMapper.convertDtoList(accountList,AccountDto.class);
+            cacheUtils.initCacheInput(accountList);
         }
-        return accountList;
+        return accountDtoList;
     }
 
     public Account save(Account account) {

@@ -2,4 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.sys.mapper.DictEnumMapper">
 
+    <select id="findPage" resultType="DictEnum">
+        SELECT
+        t1.*
+        FROM
+        sys_dict_enum t1
+        WHERE
+        t1.enabled=1
+        <if test="p.category != null">
+            AND t1.category LIKE CONCAT('%',#{p.category},'%')
+        </if>
+        <if test="p.value != null">
+            AND t1.value LIKE CONCAT('%',#{p.value},'%')
+        </if>
+        <if test="p.createdDateStart != null">
+            AND t1.created_date > #{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd != null">
+            AND t1.created_date &lt;= #{p.createdDateEnd}
+        </if>
+    </select>
+
+    <select id="findByCategory" resultType="DictEnum">
+        SELECT
+        t1.*
+        FROM
+        sys_dict_enum t1
+        WHERE
+        t1.enabled=1
+        and t1.category=#{category}  order by sort asc
+    </select>
+
+    <select id="findDistinctCategory" resultType="String">
+        SELECT DISTINCT
+        t1.category
+        FROM
+        sys_dict_enum t1
+    </select>
+
 </mapper>

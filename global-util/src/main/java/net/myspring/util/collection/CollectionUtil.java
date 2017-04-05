@@ -39,6 +39,14 @@ public class CollectionUtil {
 		return (collection != null) && !(collection.isEmpty());
 	}
 
+	public static boolean isNotEmpty(Map map) {
+		return !isEmpty(map);
+	}
+
+	public static boolean isEmpty(Map map) {
+		return (map == null) || map.isEmpty();
+	}
+
 	/**
 	 * 取得Collection的第一个元素，如果collection为空返回null.
 	 */
@@ -201,6 +209,27 @@ public class CollectionUtil {
 				K key=(K)PropertyUtils.getProperty(obj, keyPropertyName);
 				if(obj != null&&key!=null) {
 					map.put(key, (V)obj);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return map;
+	}
+
+	public static <K,E> Map<K,List<E>> extractToMapList(final Collection collection, final String keyPropertyName) {
+		if (isEmpty(collection)) {
+			return Maps.<K,List<E>>newHashMap();
+		}
+		Map<K,List<E>> map = new HashMap<K,List<E>>(collection.size());
+		try {
+			for (Object obj : collection) {
+				K key=(K)PropertyUtils.getProperty(obj, keyPropertyName);
+				if(obj != null&&key!=null) {
+					if(!map.containsKey(key)){
+						map.put(key,Lists.newArrayList());
+					}
+					map.get(key).add((E)obj);
 				}
 			}
 		} catch (Exception e) {

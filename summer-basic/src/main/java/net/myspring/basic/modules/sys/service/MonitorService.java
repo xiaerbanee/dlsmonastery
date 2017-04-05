@@ -1,13 +1,13 @@
 package net.myspring.basic.modules.sys.service;
 
-import org.springframework.stereotype.Service;
+import net.myspring.basic.modules.sys.manager.MonitorManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import net.myspring.basic.modules.sys.mapper.MonitorMapper;
+import org.springframework.stereotype.Service;
 
 @Service
 public class MonitorService {
 
     @Autowired
-    private MonitorMapper monitorMapper;
+    private MonitorManager monitorManager;
 
 }

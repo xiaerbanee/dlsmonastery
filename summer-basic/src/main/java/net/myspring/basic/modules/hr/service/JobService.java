@@ -37,9 +37,16 @@ public class JobService {
         return job;
     }
 
+    public List<JobDto> findAll(){
+        List<Job> jobList=jobManager.findAll();
+        List<JobDto> jobDtoList=BeanMapper.convertDtoList(jobList,JobDto.class);
+        return jobDtoList;
+    }
+
     public JobDto findDto(String id){
         Job job=findOne(id);
         JobDto jobDto=BeanMapper.convertDto(job,JobDto.class);
+        cacheUtils.initCacheInput(jobDto);
         return jobDto;
     }
 

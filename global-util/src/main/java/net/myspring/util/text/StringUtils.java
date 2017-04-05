@@ -1,5 +1,6 @@
 package net.myspring.util.text;
 
+import com.google.common.collect.Lists;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
@@ -29,6 +30,20 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
 			}
 			return sb.toString();
 		}
+	}
+
+	public static <E> List<E> getSplitList(String str, String splitter) {
+		List<E> list = Lists.newArrayList();
+		if (isNotBlank(str)) {
+			String[] arr = str.split(splitter);
+			for (String item : arr) {
+				if (isNotBlank(item) && !list.contains(item.trim())) {
+					E value = (E) item.trim();
+					list.add(value);
+				}
+			}
+		}
+		return list;
 	}
 
 	public static String getNextBusinessId(String maxBusinessId) {

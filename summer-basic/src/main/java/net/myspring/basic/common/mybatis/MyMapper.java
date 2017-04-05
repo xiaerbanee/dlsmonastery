@@ -1,6 +1,8 @@
 package net.myspring.basic.common.mybatis;
 
 import net.myspring.mybatis.mapper.CrudMapper;
+import net.myspring.mybatis.provider.CrudProvider;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.io.Serializable;
@@ -16,5 +18,11 @@ public interface MyMapper<T, ID extends Serializable> extends CrudMapper<T, ID> 
 
     @UpdateProvider(type=MyProvider.class,method = "logicDeleteByIds")
     int logicDeleteByIds(List<ID> ids);
+
+    @SelectProvider(
+            type = MyProvider.class,
+            method = "findAll"
+    )
+    List<T> findAll();
 
 }

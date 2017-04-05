@@ -2,4 +2,54 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.sys.mapper.MenuMapper">
 
+    <select id="findPage" resultType="Menu">
+        SELECT
+        t1.*
+        FROM
+        sys_menu t1
+        WHERE
+        t1.enabled=1
+        <if test="p.name != null">
+            AND t1.name LIKE CONCAT('%',#{p.name},'%')
+        </if>
+        <if test="p.sort != null">
+            AND t1.sort =#{p.sort}
+        </if>
+        <if test="p.category != null">
+            AND t1.category =#{p.category}
+        </if>
+        <if test="p.menuCategory != null">
+            AND t1.menu_category_id in (select t2.id from sys_menu_category t2 where t2.name LIKE CONCAT('%',#{p.menuCategory},'%') )
+        </if>
+    </select>
+
+    <select id="findByMenuCategoryId" resultType="Menu">
+        select t1.*  from sys_menu t1 where t1.enabled = 1 and t1.menu_category_id = #{menuCategoryId}
+    </select>
+
+    <select id="findByPermissionIsEmpty" resultType="Menu">
+        SELECT
+        t1.*
+        FROM
+        sys_menu t1
+        where
+        t1.enabled=1 and t1.id not in (select DISTINCT menu_id from sys_permission)
+    </select>
+
+    <select id="findByPermissionIsNotEmpty" resultType="Menu">
+        SELECT
+        t1.*
+        FROM
+        sys_menu t1
+        where
+        t1.enabled=1 and t1.id  in (select DISTINCT menu_id from sys_permission)
+    </select>
+
+    <select id="findDistinctCategory" resultType="String">
+        SELECT DISTINCT
+        t1.category
+        FROM
+        sys_menu t1
+    </select>
+
 </mapper>
