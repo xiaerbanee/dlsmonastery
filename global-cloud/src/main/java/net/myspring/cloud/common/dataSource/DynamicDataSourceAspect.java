@@ -8,6 +8,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.dataSource.annotation.SysDataSource;
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -52,7 +53,9 @@ public class DynamicDataSourceAspect {
                 }
             }
         }
-        DynamicDataSourceContext.get().setCompanyId(securityUtils.getCompanyId());
+        if(StringUtils.isNotBlank(securityUtils.getCompanyId())) {
+            DynamicDataSourceContext.get().setCompanyId(securityUtils.getCompanyId());
+        }
         if(DataSourceTypeEnum.SYS.name().equals(dataSourceType)) {
             DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.SYS.name());
         } else {

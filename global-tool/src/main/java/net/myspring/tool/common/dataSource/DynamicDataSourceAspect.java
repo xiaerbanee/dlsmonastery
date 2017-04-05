@@ -8,6 +8,7 @@ import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.SysDataSource;
 import net.myspring.tool.common.enums.DataSourceTypeEnum;
 import net.myspring.tool.common.utils.SecurityUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -50,7 +51,9 @@ public class DynamicDataSourceAspect {
                 }
             }
         }
-        DynamicDataSourceContext.get().setCompanyId(securityUtils.getCompanyId());
+        if(StringUtils.isNotBlank(securityUtils.getCompanyId())) {
+            DynamicDataSourceContext.get().setCompanyId(securityUtils.getCompanyId());
+        }
         if(DataSourceTypeEnum.SYS.name().equals(dataSourceType)) {
             DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.SYS.name());
         } else {
