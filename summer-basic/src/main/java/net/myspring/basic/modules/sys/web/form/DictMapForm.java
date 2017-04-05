@@ -7,7 +7,19 @@ import net.myspring.basic.modules.sys.domain.DictMap;
  */
 public class DictMapForm extends DictMap{
 
+    private String category;
     private String name;
+    private String value;
+
+    @Override
+    public String getCategory() {
+        return category;
+    }
+
+    @Override
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     @Override
     public String getName() {
@@ -17,5 +29,15 @@ public class DictMapForm extends DictMap{
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getValue() {
+        return value;
+    }
+
+    @Override
+    public void setValue(String value) {
+        this.value = value;
     }
 }

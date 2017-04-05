@@ -2,4 +2,147 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.AccountMapper">
 
+    <select id="findByLoginName" resultType="Account">
+        SELECT
+        t1.*
+        FROM
+        hr_account t1
+        where t1.enabled=1
+        and t1.login_name=#{loginName}
+    </select>
+
+    <select id="findByLoginNameLikeAndType" resultType="Account">
+        SELECT
+        t1.*
+        FROM
+        hr_account t1
+        where t1.enabled=1
+        and t1.login_name LIKE  concat('%',#{p.name},'%')
+        <if test="p.type!=null">
+            t1.type=#{p.type}
+        </if>
+    </select>
+
+    <select id="findAccountOfficeByIds" resultType="net.myspring.future.common.model.NameValue">
+        SELECT account_id as 'name',office_id AS 'value'
+        FROM hr_account_office
+        where account_id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findAccountPassword" resultType="string">
+        SELECT t1.password
+        FROM hr_account t1
+        WHERE t1.id=#{id}
+    </select>
+
+    <select id="findByOfficeIds" resultType="Account">
+        SELECT t1.id
+        FROM hr_account t1
+        where t1.enabled=1
+        and t1.office_id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByPosition" resultType="Account">
+        SELECT
+        t1.*
+        FROM
+        hr_account t1,hr_position t2
+        where t1.position_id=t2.id
+        and t2.id=#{positionId}
+    </select>
+
+    <select id="findByFilter" resultType="Account">
+        SELECT
+        t1.*
+        FROM
+        hr_account t1
+        WHERE
+        t1.enabled=1
+        <include refid="accountFilter"/>
+    </select>
+
+    <select id="findPage" resultType="Account">
+        SELECT
+        t1.*
+        FROM
+        hr_account t1,hr_office office
+        WHERE
+        t1.enabled=1
+        and t1.office_id=office.id
+        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter" />
+        <include refid="accountFilter"/>
+    </select>
+
+    <insert id="saveAccountOffice">
+        INSERT INTO hr_account_office(account_id,office_id) VALUES
+        <foreach collection="officeIds" index="index" item="item" open="" separator="," close="">
+            (#{accountId},#{item})
+        </foreach>
+    </insert>
+
+    <delete id="deleteAccountOffice">
+        DELETE FROM
+        hr_account_office
+        where account_id=#{accountId}
+    </delete>
+
+    <select id="findLabels" resultType="Account">
+        SELECT t1.id,t1.login_name,t1.position_id,t1.office_id,t1.employee_id
+        FROM hr_account t1
+        WHERE t1.enabled = 1
+        and t1.id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByLoginNameList" resultType="Account">
+        SELECT t1.*
+        FROM hr_account t1
+        WHERE t1.enabled=1
+        and t1.login_name in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <sql id="accountFilter">
+        <if test="p.loginName != null">
+            AND t1.login_name LIKE CONCAT('%',#{p.loginName},'%')
+        </if>
+        <if test="p.officeName != null">
+            and t1.office_id in(
+            select t2.id
+            from hr_office t2
+            where t2.name=#{p.officeName}
+            )
+        </if>
+        <if test="p.positionName != null">
+            and t1.position_id in(
+            select t3.id
+            from hr_position t3
+            where t3.name=#{p.positionName} )
+        </if>
+        <if test="p.employeeName != null">
+            and t1.employee_id in(
+            select t4.id
+            from hr_employee t4
+            where t4.name LIKE CONCAT('%',#{p.employeeName},'%')
+            )
+        </if>
+        <if test="p.leaderName != null">
+            AND t1.leader_id in (
+            select t1.id
+            from hr_account t1
+            where t1.login_name LIKE CONCAT('%',#{p.leaderName},'%')
+            )
+        </if>
+    </sql>
+
 </mapper>

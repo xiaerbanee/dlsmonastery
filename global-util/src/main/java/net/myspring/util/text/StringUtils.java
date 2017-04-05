@@ -38,4 +38,16 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
 		}
 		return String.valueOf(Long.valueOf(maxBusinessId)+1);
 	}
+
+	public static String getEncryptPassword(String plainPassword) {
+		byte[] salt = Digests.generateSalt(8);
+		byte[] hashPassword = Digests.sha1(plainPassword.getBytes(), salt, 1024);
+		return EncodeUtil.encodeHex(salt) + EncodeUtil.encodeHex(hashPassword);
+	}
+
+	public static boolean validatePassword(String plainPassword, String password) {
+		byte[] salt = EncodeUtil.decodeHex(password.substring(0, 16));
+		byte[] hashPassword = Digests.sha1(plainPassword.getBytes(), salt, 1024);
+		return password.equals(EncodeUtil.encodeHex(salt) + EncodeUtil.encodeHex(hashPassword));
+	}
 }

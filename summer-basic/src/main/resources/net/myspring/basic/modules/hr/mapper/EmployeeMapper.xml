@@ -2,4 +2,88 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.EmployeeMapper">
 
+    <select id="findPage" resultType="Employee">
+        SELECT employee.*
+        FROM hr_employee employee,
+        hr_account account,
+        hr_office office
+        where  employee.account_id=account.id
+        and account.office_id=office.id
+        and employee.enabled=1
+        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter" />
+        <if test="p.name !=null" >
+            and employee.name like CONCAT('%',#{p.name},'%')
+        </if>
+        <if test="p.status !=null" >
+            and employee.status =#{p.status}
+        </if>
+        <if test="p.mobilePhone !=null" >
+            and employee.mobile_phone like CONCAT('%',#{p.mobilePhone},'%')
+        </if>
+        <if test="p.entryDateStart != null">
+            AND employee.entry_date >= #{p.entryDateStart}
+        </if>
+        <if test="p.entryDateEnd != null">
+            AND employee.entry_date  &lt;= #{p.entryDateEnd}
+        </if>
+        <if test="p.regularDateStart != null">
+            AND employee.regular_date >= #{p.regularDateStart}
+        </if>
+        <if test="p.regularDateEnd != null">
+            AND employee.regular_date  &lt;= #{p.regularDateEnd}
+        </if>
+        <if test="p.leaveDateStart != null">
+            AND employee.leave_date >= #{p.leaveDateStart}
+        </if>
+        <if test="p.leaveDateEnd != null">
+            AND employee.leave_date  &lt;= #{p.leaveDateEnd}
+        </if>
+        <if test="p.positionId != null">
+            AND employee.account_id in(
+            select t1.id
+            from hr_account t1,hr_position t2
+            where t1.position_id=t2.id
+            and t2.id=#{p.positionId}
+            and t1.enabled=1
+            )
+        </if>
+        <if test="p.leaderName != null">
+            AND employee.account_id in(
+            select t1.id
+            from hr_account t1,hr_account t2
+            where t1.leader_id=t2.id
+            and t2.login_name=#{p.leaderName}
+            and t1.enabled=1
+            )
+        </if>
+        <if test="p.officeId != null">
+            AND employee.account_id in(
+            select t1.id
+            from hr_account t1,hr_office t2
+            where t1.office_id=t2.id
+            and (t2.parent_ids like concat('%,',#{p.officeId},',%') or t2.id =#{p.officeId})
+            and t1.enabled=1
+            )
+        </if>
+    </select>
+
+    <select id="findByNameLike" resultType="Employee">
+        SELECT t1.*
+        FROM hr_employee t1
+        where t1.enabled=1
+        and t1.name like CONCAT('%',#{name},'%')
+    </select>
+
+    <select id="findByStatusAndregularDate" resultType="Employee">
+        SELECT t1.*
+        FROM  hr_employee t1
+        where t1.enabled=1
+        and t1.status=#{status}
+        and t1.regular_date>#{regularDate}
+    </select>
+
+    <update id="updateAccountId">
+        UPDATE hr_employee  set account_id = #{accountId} where id=#{employeeId}
+    </update>
+
 </mapper>

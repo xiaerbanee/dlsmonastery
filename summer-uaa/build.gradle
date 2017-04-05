@@ -26,7 +26,6 @@ repositories {
 }
 
 dependencies {
-	compile project(':summer-bean')
 	compile project(':global-util')
 	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.1.0.RELEASE'
 	runtime('mysql:mysql-connector-java')

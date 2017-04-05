@@ -1,18 +1,16 @@
 package net.myspring.uaa.security;
 
 import com.google.common.collect.Sets;
-import net.myspring.basic.modules.hr.domain.Account;
-import net.myspring.uaa.mapper.AccountMapper;
+import net.myspring.uaa.dto.AccountDto;
+import net.myspring.uaa.mapper.AccountDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Set;
 
 /**
  * Created by liuj on 2017/4/1.
@@ -20,28 +18,28 @@ import java.util.*;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
-    private AccountMapper accountMapper;
+    private AccountDtoMapper accountMapper;
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountMapper.findByLoginName(username);
+        AccountDto accountDto = accountMapper.findByLoginName(username);
         CustomUserDetails customUserDetails = null;
-        if(account != null) {
-            LocalDate leaveDate = account.getEmployee().getLeaveDate();
+        if(accountDto != null) {
+            LocalDate leaveDate = accountDto.getLeaveDate();
             boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
-            authList.add(new SimpleGrantedAuthority(account.getPositionId()));
+            authList.add(new SimpleGrantedAuthority(accountDto.getPositionId()));
             customUserDetails = new CustomUserDetails(
                     username,
-                    account.getPassword(),
-                    account.getEnabled(),
+                    accountDto.getPassword(),
+                    accountDto.getEnabled(),
                     accountNoExpired,
                     true,
-                    !account.getLocked(),
+                    !accountDto.getLocked(),
                     authList,
-                    account.getId(),
-                    account.getCompanyId(),
-                    account.getPositionId()
+                    accountDto.getId(),
+                    accountDto.getCompanyId(),
+                    accountDto.getPositionId()
             );
         }
         return customUserDetails;

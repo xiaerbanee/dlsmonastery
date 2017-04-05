@@ -7,11 +7,16 @@ package net.myspring.util.text;
 
 import com.google.common.io.BaseEncoding;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
 /**
  * hex/base64 编解码工具集，依赖Guava, 取消了对Commmon Codec的依赖
  */
 public class EncodeUtil {
 
+	private static final String DEFAULT_URL_ENCODING = "UTF-8";
 	/**
 	 * Hex编码, 将byte[]编码为String，默认为ABCDEF为大写字母.
 	 */
@@ -58,5 +63,27 @@ public class EncodeUtil {
 	 */
 	public static byte[] decodeBase64UrlSafe(CharSequence input) {
 		return BaseEncoding.base64Url().decode(input);
+	}
+
+	/**
+	 * URL 编码, Encode默认为UTF-8.
+	 */
+	public static String urlEncode(String part) {
+		try {
+			return URLEncoder.encode(part, DEFAULT_URL_ENCODING);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException();
+		}
+	}
+
+	/**
+	 * URL 解码, Encode默认为UTF-8.
+	 */
+	public static String urlDecode(String part) {
+		try {
+			return URLDecoder.decode(part, DEFAULT_URL_ENCODING);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException();
+		}
 	}
 }
