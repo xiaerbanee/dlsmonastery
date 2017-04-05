@@ -23,11 +23,11 @@ import java.util.Properties;
 @Configuration
 public class MybatisConfig {
 
-    @Value("${mysql.url}")
+    @Value("${spring.datasource.url}")
     private String url;
-    @Value("${mysql.username}")
+    @Value("${spring.datasource.username}")
     private String username;
-    @Value("${mysql.password}")
+    @Value("${spring.datasource.password}")
     private String password;
 
     @Bean
@@ -37,9 +37,9 @@ public class MybatisConfig {
     @Bean
     public DynamicDataSource dynamicDataSource() {
         Map<Object, Object> targetDataSources = Maps.newHashMap();
-        List<KingdeeBook> companyList = getCompanyList();
-        for (KingdeeBook company:companyList) {
-            targetDataSources.put(DataSourceTypeEnum.KINGDEE.name() + "_" + company.getId(),getCloudDataSource(company));
+        List<KingdeeBook> kingdeeBookList = getKingdeeBookList();
+        for (KingdeeBook kingdeeBook:kingdeeBookList) {
+            targetDataSources.put(DataSourceTypeEnum.KINGDEE.name() + "_" + kingdeeBook.getCompanyId(),getCloudDataSource(kingdeeBook));
         }
         targetDataSources.put(DataSourceTypeEnum.SYS.name(),getSysDataSource());
         DynamicDataSource dataSource = new DynamicDataSource();
@@ -60,19 +60,19 @@ public class MybatisConfig {
         }
     }
 
-    private List<KingdeeBook> getCompanyList() {
+    private List<KingdeeBook> getKingdeeBookList() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(getSysDataSource());
-        String sql = "select * from sys_company";
-        List<KingdeeBook> companyList = jdbcTemplate.query(sql,new BeanPropertyRowMapper<KingdeeBook>(KingdeeBook.class));
-        return companyList;
+        String sql = "select * from sys_kingdee_book";
+        List<KingdeeBook> kingdeeBookList = jdbcTemplate.query(sql,new BeanPropertyRowMapper<KingdeeBook>(KingdeeBook.class));
+        return kingdeeBookList;
     }
 
     private DataSource getCloudDataSource(KingdeeBook company) {
         Properties props = new Properties();
         props.put("driverClassName", "net.sourceforge.jtds.jdbc.Driver");
-        props.put("url", company.getCloudUrl());
-        props.put("username", company.getCloudUsername());
-        props.put("password", company.getCloudPassword());
+        props.put("url", company.getKingdeeUrl());
+        props.put("username", company.getKingdeeUsername());
+        props.put("password", company.getKingdeePassword());
         try {
             return DruidDataSourceFactory.createDataSource(props);
         } catch (Exception e) {

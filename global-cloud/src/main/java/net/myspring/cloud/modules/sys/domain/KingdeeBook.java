@@ -9,20 +9,25 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Entity
-@Table(name="sys_company")
+@Table(name="sys_kingdee_book")
 public class KingdeeBook extends DataEntity<KingdeeBook> {
+    private String companyId;
     private String name;
     private String type;
-    private String cloudUrl;
-    private String cloudPostUrl;
-    private String cloudUsername;
-    private String cloudPassword;
-    private String cloudDbid;
-    private Integer version = 0;
-    private List<Product> productList = Lists.newArrayList();
-    private List<String> productIdList = Lists.newArrayList();
-    private List<GlVoucher> glVoucherList = Lists.newArrayList();
-    private List<String> glVoucherIdList = Lists.newArrayList();
+    private String kingdeeUrl;
+    private String kingdeePostUrl;
+    private String kingdeeUsername;
+    private String kingdeePassword;
+    private String kingdeeDbid;
+    private Integer version;
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
     public String getName() {
         return name;
@@ -40,44 +45,44 @@ public class KingdeeBook extends DataEntity<KingdeeBook> {
         this.type = type;
     }
 
-    public String getCloudUrl() {
-        return cloudUrl;
+    public String getKingdeeUrl() {
+        return kingdeeUrl;
     }
 
-    public void setCloudUrl(String cloudUrl) {
-        this.cloudUrl = cloudUrl;
+    public void setKingdeeUrl(String kingdeeUrl) {
+        this.kingdeeUrl = kingdeeUrl;
     }
 
-    public String getCloudPostUrl() {
-        return cloudPostUrl;
+    public String getKingdeePostUrl() {
+        return kingdeePostUrl;
     }
 
-    public void setCloudPostUrl(String cloudPostUrl) {
-        this.cloudPostUrl = cloudPostUrl;
+    public void setKingdeePostUrl(String kingdeePostUrl) {
+        this.kingdeePostUrl = kingdeePostUrl;
     }
 
-    public String getCloudUsername() {
-        return cloudUsername;
+    public String getKingdeeUsername() {
+        return kingdeeUsername;
     }
 
-    public void setCloudUsername(String cloudUsername) {
-        this.cloudUsername = cloudUsername;
+    public void setKingdeeUsername(String kingdeeUsername) {
+        this.kingdeeUsername = kingdeeUsername;
     }
 
-    public String getCloudPassword() {
-        return cloudPassword;
+    public String getKingdeePassword() {
+        return kingdeePassword;
     }
 
-    public void setCloudPassword(String cloudPassword) {
-        this.cloudPassword = cloudPassword;
+    public void setKingdeePassword(String kingdeePassword) {
+        this.kingdeePassword = kingdeePassword;
     }
 
-    public String getCloudDbid() {
-        return cloudDbid;
+    public String getKingdeeDbid() {
+        return kingdeeDbid;
     }
 
-    public void setCloudDbid(String cloudDbid) {
-        this.cloudDbid = cloudDbid;
+    public void setKingdeeDbid(String kingdeeDbid) {
+        this.kingdeeDbid = kingdeeDbid;
     }
 
     public Integer getVersion() {
@@ -86,37 +91,5 @@ public class KingdeeBook extends DataEntity<KingdeeBook> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
-    }
-
-    public List<String> getProductIdList() {
-        return productIdList;
-    }
-
-    public void setProductIdList(List<String> productIdList) {
-        this.productIdList = productIdList;
-    }
-
-    public List<GlVoucher> getGlVoucherList() {
-        return glVoucherList;
-    }
-
-    public void setGlVoucherList(List<GlVoucher> glVoucherList) {
-        this.glVoucherList = glVoucherList;
-    }
-
-    public List<String> getGlVoucherIdList() {
-        return glVoucherIdList;
-    }
-
-    public void setGlVoucherIdList(List<String> glVoucherIdList) {
-        this.glVoucherIdList = glVoucherIdList;
     }
 }
