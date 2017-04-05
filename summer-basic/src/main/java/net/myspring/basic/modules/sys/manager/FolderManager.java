@@ -44,6 +44,12 @@ public class FolderManager {
         return folderMapper.deleteById(id);
     }
 
+    public void deleteByIds(List<String> ids) {
+        for(String id:ids){
+            deleteById(id);
+        }
+    }
+
     public void batchSave(List<Folder> folderList){
         for(Folder folder:folderList){
             save(folder);

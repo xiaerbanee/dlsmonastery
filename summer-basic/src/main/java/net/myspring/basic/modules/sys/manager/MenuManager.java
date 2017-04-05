@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.mapper.MenuMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -38,5 +39,16 @@ public class MenuManager {
     public Menu update(Menu menu){
         menuMapper.update(menu);
         return  menuMapper.findOne(menu.getId());
+    }
+
+    @CacheEvict(value = "menus",key="#p0")
+    public int deleteById(String id) {
+        return menuMapper.deleteById(id);
+    }
+
+    public void deleteByIds(List<String> ids) {
+        for(String id:ids){
+            deleteById(id);
+        }
     }
 }

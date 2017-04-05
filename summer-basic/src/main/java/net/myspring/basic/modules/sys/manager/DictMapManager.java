@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.manager;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.mapper.DictMapMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -38,4 +39,14 @@ public class DictMapManager {
         return  dictMapMapper.findOne(dictMap.getId());
     }
 
+    @CacheEvict(value = "dictMaps",key="#p0")
+    public int deleteById(String id) {
+        return dictMapMapper.deleteById(id);
+    }
+
+    public void deleteByIds(List<String> ids) {
+        for(String id:ids){
+            deleteById(id);
+        }
+    }
 }

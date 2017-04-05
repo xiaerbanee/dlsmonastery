@@ -4,6 +4,7 @@ import net.myspring.basic.modules.sys.domain.ProcessType;
 import net.myspring.basic.modules.sys.mapper.ProcessTypeMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -37,5 +38,16 @@ public class ProcessTypeManager {
     public ProcessType update(ProcessType processType){
         processTypeMapper.update(processType);
         return  processTypeMapper.findOne(processType.getId());
+    }
+
+    @CacheEvict(value = "processTypes",key="#p0")
+    public int deleteById(String id) {
+        return processTypeMapper.deleteById(id);
+    }
+
+    public void deleteByIds(List<String> ids) {
+        for(String id:ids){
+            deleteById(id);
+        }
     }
 }

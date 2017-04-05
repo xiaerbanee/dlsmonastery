@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.manager;
 import net.myspring.basic.modules.sys.domain.Town;
 import net.myspring.basic.modules.sys.mapper.TownMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -33,5 +34,16 @@ public class TownManager {
     public Town update(Town town){
         townMapper.update(town);
         return  townMapper.findOne(town.getId());
+    }
+
+    @CacheEvict(value = "towns",key="#p0")
+    public int deleteById(String id) {
+        return townMapper.deleteById(id);
+    }
+
+    public void deleteByIds(List<String> ids) {
+        for(String id:ids){
+            deleteById(id);
+        }
     }
 }
