@@ -1,6 +1,5 @@
 package net.myspring.cloud.modules.sys.domain;
 
-
 import com.google.common.collect.Lists;
 import net.myspring.common.domain.DataEntity;
 
@@ -11,7 +10,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name="api_gl_voucher")
+@Table(name="sys_gl_voucher")
 public class GlVoucher extends DataEntity<GlVoucher> {
     //业务日期
     private LocalDate fdate;

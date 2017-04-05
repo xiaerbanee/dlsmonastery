@@ -5,11 +5,10 @@ import net.myspring.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 
 @Entity
-@Table(name="api_gl_voucher_entry_flow")
+@Table(name="sys_gl_voucher_entry_flow")
 public class GlVoucherEntryFlow extends IdEntity<GlVoucherEntryFlow> {
     //Json 名称 例如：FDetailID__XXX
     private String name;
@@ -17,8 +16,9 @@ public class GlVoucherEntryFlow extends IdEntity<GlVoucherEntryFlow> {
     private String value;
     //核算维度值
     private String code;
-    private GlVoucherEntry glVoucherEntry;
+
     private String glVoucherEntryId;
+    private GlVoucherEntry glVoucherEntry;
 
     public String getName() {
         return name;

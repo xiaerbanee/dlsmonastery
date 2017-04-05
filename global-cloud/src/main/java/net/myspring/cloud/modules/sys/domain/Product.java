@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="api_cloud_product")
+@Table(name="sys_product")
 public class Product extends DataEntity<Product> {
     private String name;
     private String code;
@@ -17,7 +17,7 @@ public class Product extends DataEntity<Product> {
     private String outId;
     private String returnOutId;
     private LocalDateTime outDate;
-    private Integer version = 0;
+    private Integer version;
     private KingdeeBook kingdeeBook;
     private String kingdeeBookId;
     private String companyId;
