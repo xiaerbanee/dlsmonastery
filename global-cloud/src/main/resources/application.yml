@@ -1,6 +1,18 @@
 spring:
   application:
-    name: summer-gateway
+    name: global-cloud
+  datasource:
+    url: jdbc:mysql://168.192.1.243:3306/db_summer_cloud
+    username: root
+    password: bbk@123456
+    driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: localhost
+    password:
+    port: 6379
+    database: 0
+mybatis:
+  config-location: classpath:/mybatis-config.xml
 server:
   port: 2000
 eureka:
@@ -9,3 +21,18 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:1000/eureka/
+
+security:
+  oauth2:
+    resource:
+      jwt:
+        keyValue: |
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwR84LFHwnK5GXErnwkmD
+          mPOJl4CSTtYXCqmCtlbF+5qVOosu0YsM2DsrC9O2gun6wVFKkWYiMoBSjsNMSI3Z
+          w5JYgh+ldHvA+MIex2QXfOZx920M1fPUiuUPgmnTFS+Z3lmK3/T6jJnmciUPY1pe
+          h4MXL6YzeI0q4W9xNBBeKT6FDGpduc0FC3OlXHfLbVOThKmAUpAWFDwf9/uUA//l
+          3PLchmV6VwTcUaaHp5W8Af/GU4lPGZbTAqOxzB9ukisPFuO1DikacPhrOQgdxtqk
+          LciRTa884uQnkFwSguOEUYf3ni8GNRJauIuW0rVXhMOs78pKvCKmo53M0tqeC6ul
+          +QIDAQAB
+          -----END PUBLIC KEY-----
