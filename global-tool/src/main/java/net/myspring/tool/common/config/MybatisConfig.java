@@ -63,7 +63,7 @@ public class MybatisConfig {
 
     private List<Factory> getFactoryList() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(getLocalDataSource());
-        String sql = "select * from sys_kingdee_book";
+        String sql = "select * from sys_factory";
         List<Factory> factoryList = jdbcTemplate.query(sql,new BeanPropertyRowMapper<Factory>(Factory.class));
         return factoryList;
     }
