@@ -52,10 +52,11 @@ public class DynamicDataSourceAspect {
                 }
             }
         }
+        DynamicDataSourceContext.get().setCompanyId(securityUtils.getCompanyId());
         if(DataSourceTypeEnum.SYS.name().equals(dataSourceType)) {
-            DynamicDataSourceContext.get().setLookupKey(DataSourceTypeEnum.SYS.name());
+            DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.SYS.name());
         } else {
-            DynamicDataSourceContext.get().setLookupKey(DataSourceTypeEnum.KINGDEE.name() + "_" + securityUtils.getCompanyId());
+            DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.KINGDEE.name());
         }
     }
 
