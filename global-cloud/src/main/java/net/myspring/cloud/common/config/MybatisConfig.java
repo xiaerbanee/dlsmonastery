@@ -41,13 +41,13 @@ public class MybatisConfig {
         for (KingdeeBook kingdeeBook:kingdeeBookList) {
             targetDataSources.put(DataSourceTypeEnum.KINGDEE.name() + "_" + kingdeeBook.getCompanyId(),getCloudDataSource(kingdeeBook));
         }
-        targetDataSources.put(DataSourceTypeEnum.SYS.name(),getSysDataSource());
+        targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getLocalDataSource());
         DynamicDataSource dataSource = new DynamicDataSource();
         dataSource.setTargetDataSources(targetDataSources);
         return dataSource;
     }
 
-    private DataSource getSysDataSource() {
+    private DataSource getLocalDataSource() {
         Properties props = new Properties();
         props.put("driverClassName", "com.mysql.jdbc.Driver");
         props.put("url", url);
@@ -61,7 +61,7 @@ public class MybatisConfig {
     }
 
     private List<KingdeeBook> getKingdeeBookList() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(getSysDataSource());
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(getLocalDataSource());
         String sql = "select * from sys_kingdee_book";
         List<KingdeeBook> kingdeeBookList = jdbcTemplate.query(sql,new BeanPropertyRowMapper<KingdeeBook>(KingdeeBook.class));
         return kingdeeBookList;

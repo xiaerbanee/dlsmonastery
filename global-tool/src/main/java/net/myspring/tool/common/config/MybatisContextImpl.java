@@ -21,7 +21,7 @@ public class MybatisContextImpl implements MybatisContext {
 
     @Override
     public Dialect getDialect() {
-        if(DataSourceTypeEnum.SYS.name().equals(DynamicDataSourceContext.get().getDataSourceType())) {
+        if(DataSourceTypeEnum.LOCAL.name().equals(DynamicDataSourceContext.get().getDataSourceType())) {
             return new MySQLDialect();
         } else {
             return new MySQLDialect();

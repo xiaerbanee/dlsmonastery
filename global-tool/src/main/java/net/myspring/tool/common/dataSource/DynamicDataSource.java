@@ -8,7 +8,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     @Override
     protected Object determineCurrentLookupKey() {
         String dataSourceType = DynamicDataSourceContext.get().getDataSourceType();
-        if(DataSourceTypeEnum.SYS.name().equals(dataSourceType)) {
+        if(DataSourceTypeEnum.LOCAL.name().equals(dataSourceType)) {
             return dataSourceType;
         } else {
             return dataSourceType + "_" + DynamicDataSourceContext.get().getCompanyId();

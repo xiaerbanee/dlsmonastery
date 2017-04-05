@@ -5,7 +5,7 @@ package net.myspring.cloud.common.dataSource;
  */
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.dataSource.annotation.SysDataSource;
+import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,8 +14,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -38,16 +36,16 @@ public class DynamicDataSourceAspect {
         Object target = point.getTarget();
         Method method = ((MethodSignature) point.getSignature()).getMethod();
         String dataSourceType =  DataSourceTypeEnum.KINGDEE.name();
-        if(method.isAnnotationPresent(SysDataSource.class)|| method.isAnnotationPresent(KingdeeDataSource.class)) {
-            if(method.isAnnotationPresent(SysDataSource.class)) {
-                dataSourceType = DataSourceTypeEnum.SYS.name();
+        if(method.isAnnotationPresent(LocalDataSource.class)|| method.isAnnotationPresent(KingdeeDataSource.class)) {
+            if(method.isAnnotationPresent(LocalDataSource.class)) {
+                dataSourceType = DataSourceTypeEnum.LOCAL.name();
             } else if (method.isAnnotationPresent(KingdeeDataSource.class)) {
                 dataSourceType =  DataSourceTypeEnum.KINGDEE.name();
             }
         } else {
-            if(target.getClass().isAnnotationPresent(SysDataSource.class) || target.getClass().isAnnotationPresent(KingdeeDataSource.class)) {
-                if(target.getClass().isAnnotationPresent(SysDataSource.class)) {
-                    dataSourceType = DataSourceTypeEnum.SYS.name();
+            if(target.getClass().isAnnotationPresent(LocalDataSource.class) || target.getClass().isAnnotationPresent(KingdeeDataSource.class)) {
+                if(target.getClass().isAnnotationPresent(LocalDataSource.class)) {
+                    dataSourceType = DataSourceTypeEnum.LOCAL.name();
                 } else if (target.getClass().isAnnotationPresent(KingdeeDataSource.class)) {
                     dataSourceType = DataSourceTypeEnum.KINGDEE.name();
                 }
@@ -56,8 +54,8 @@ public class DynamicDataSourceAspect {
         if(StringUtils.isNotBlank(securityUtils.getCompanyId())) {
             DynamicDataSourceContext.get().setCompanyId(securityUtils.getCompanyId());
         }
-        if(DataSourceTypeEnum.SYS.name().equals(dataSourceType)) {
-            DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.SYS.name());
+        if(DataSourceTypeEnum.LOCAL.name().equals(dataSourceType)) {
+            DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.LOCAL.name());
         } else {
             DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.KINGDEE.name());
         }

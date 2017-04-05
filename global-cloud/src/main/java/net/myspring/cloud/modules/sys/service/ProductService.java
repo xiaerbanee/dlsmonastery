@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.sys.service;
 
-import net.myspring.cloud.common.dataSource.annotation.SysDataSource;
+import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.modules.sys.domain.Product;
 import net.myspring.cloud.modules.sys.dto.ProductDto;
 import net.myspring.cloud.modules.sys.mapper.ProductMapper;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * Created by liuj on 2017/4/5.
  */
 @Service
-@SysDataSource
+@LocalDataSource
 public class ProductService {
     @Autowired
     private ProductMapper productMapper;

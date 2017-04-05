@@ -42,13 +42,13 @@ public class MybatisConfig {
         for (Factory factory:factoryList) {
             targetDataSources.put(DataSourceTypeEnum.FACTORY.name() + "_" + factory.getCompanyId(),getFactoryDataSource(factory));
         }
-        targetDataSources.put(DataSourceTypeEnum.SYS.name(),getSysDataSource());
+        targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getLocalDataSource());
         DynamicDataSource dataSource = new DynamicDataSource();
         dataSource.setTargetDataSources(targetDataSources);
         return dataSource;
     }
 
-    private DataSource getSysDataSource() {
+    private DataSource getLocalDataSource() {
         Properties props = new Properties();
         props.put("driverClassName", "com.mysql.jdbc.Driver");
         props.put("url", url);
@@ -62,7 +62,7 @@ public class MybatisConfig {
     }
 
     private List<Factory> getFactoryList() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(getSysDataSource());
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(getLocalDataSource());
         String sql = "select * from sys_kingdee_book";
         List<Factory> factoryList = jdbcTemplate.query(sql,new BeanPropertyRowMapper<Factory>(Factory.class));
         return factoryList;
