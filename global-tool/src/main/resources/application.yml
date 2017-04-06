@@ -11,6 +11,16 @@ spring:
     password:
     port: 6379
     database: 0
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: cloud-stream
+  rabbitmq:
+    addresses: amqp://127.0.0.1:5672
+    username: alan
+    password: alan
+
 mybatis:
   config-location: classpath:/mybatis-config.xml
 server:
@@ -21,7 +31,6 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://168.192.1.20:1000/eureka/
-
 security:
   oauth2:
     resource:
