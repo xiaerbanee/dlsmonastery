@@ -10,6 +10,7 @@ import net.myspring.cloud.common.enums.DataSourceTypeEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -61,4 +62,8 @@ public class DynamicDataSourceAspect {
         }
     }
 
+    @After("serviceExecution()")
+    public void removeDynamicDataSource(JoinPoint point) {
+        DynamicDataSourceContext.get().remove();
+    }
 }
