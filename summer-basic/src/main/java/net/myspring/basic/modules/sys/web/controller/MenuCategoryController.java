@@ -5,6 +5,7 @@ import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
 import net.myspring.basic.modules.sys.service.MenuCategoryService;
+import net.myspring.basic.modules.sys.web.form.MenuCategoryForm;
 import net.myspring.common.domain.RestResponse;
 import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.collection.CollectionUtil;
@@ -41,8 +42,8 @@ public class MenuCategoryController {
     }
 
     @RequestMapping(value = "save")
-    public String save(MenuCategory menuCategory) {
-        menuCategoryService.save(menuCategory);
+    public String save(MenuCategoryForm menuCategoryForm) {
+        menuCategoryService.save(menuCategoryForm);
         return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功"));
     }
 

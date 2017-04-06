@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.sys.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Town;
 import net.myspring.basic.modules.sys.mapper.TownMapper;
 import org.springframework.beans.factory.annotation.Autowired;

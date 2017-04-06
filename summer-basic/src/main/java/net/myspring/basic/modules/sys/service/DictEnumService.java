@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.service;
 
+import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.manager.DictEnumManager;
@@ -22,15 +23,18 @@ public class DictEnumService {
     private DictEnumManager dictEnumManager;
     @Autowired
     private DictEnumMapper dictEnumMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
 
     public List<String> findValueByCategory(String category){
         return  dictEnumManager.findValueByCategory(category);
     }
 
-    public  List<DictEnum> findByCategory(String category){
+    public  List<DictEnumDto> findByCategory(String category){
         List<DictEnum> dictEnumList=dictEnumManager.findByCategory(category);
         List<DictEnumDto> dictEnumDtoList=BeanMapper.convertDtoList(dictEnumList,DictEnumDto.class);
-        return dictEnumList;
+        cacheUtils.initCacheInput(dictEnumDtoList);
+        return dictEnumDtoList;
     }
 
     public DictEnum findOne(String id) {
@@ -41,6 +45,7 @@ public class DictEnumService {
     public DictEnumDto findDto(String id) {
         DictEnum dictEnum =findOne(id);
         DictEnumDto dictEnumDto=BeanMapper.convertDto(dictEnum,DictEnumDto.class);
+        cacheUtils.initCacheInput(dictEnumDto);
         return dictEnumDto;
     }
 
@@ -62,6 +67,7 @@ public class DictEnumService {
     public Page<DictEnumDto> findPage(Pageable pageable, Map<String, Object> map) {
         Page<DictEnum> page = dictEnumMapper.findPage(pageable, map);
         Page<DictEnumDto> dictEnumDtoPage= BeanMapper.convertPage(page,DictEnumDto.class);
+        cacheUtils.initCacheInput(dictEnumDtoPage.getContent());
         return dictEnumDtoPage;
     }
 

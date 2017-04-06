@@ -4,6 +4,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
 import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
+import net.myspring.basic.modules.sys.web.form.MenuCategoryForm;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +46,12 @@ public class MenuCategoryService {
         menuCategoryMapper.logicDeleteOne(id);
     }
 
-    public void save(MenuCategory menuCategory){
-        boolean isCreated= StringUtils.isBlank(menuCategory.getId());
+    public void save(MenuCategoryForm menuCategoryForm){
+        boolean isCreated= StringUtils.isBlank(menuCategoryForm.getId());
         if(isCreated) {
-            menuCategoryMapper.save(menuCategory);
+            menuCategoryMapper.save(menuCategoryForm);
         } else {
-            menuCategoryMapper.update(menuCategory);
+            menuCategoryMapper.update(menuCategoryForm);
         }
     }
 

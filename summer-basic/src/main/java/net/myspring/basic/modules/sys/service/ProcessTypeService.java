@@ -56,6 +56,13 @@ public class ProcessTypeService {
         return processType;
     }
 
+    public ProcessTypeDto findDto(String id){
+        ProcessType processType=findOne(id);
+        ProcessTypeDto processTypeDto=BeanMapper.convertDto(processType,ProcessTypeDto.class);
+        cacheUtils.initCacheInput(processTypeDto);
+        return processTypeDto;
+    }
+
     public void logicDeleteOne(ProcessType processType) {
         processType.setEnabled(false);
         processType.setName(processType.getName() +"废弃("+System.currentTimeMillis()+")");

@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.sys.domain.ProcessType;
 import net.myspring.basic.modules.sys.dto.ProcessTypeDto;
 import net.myspring.basic.modules.sys.service.ProcessTypeService;
+import net.myspring.basic.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.common.domain.RestResponse;
 import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -44,13 +45,14 @@ public class ProcessTypeController {
     }
 
     @RequestMapping(value = "save")
-    public String save(ProcessType processType) {
+    public String save(ProcessTypeForm processTypeForm) {
         return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功"));
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(ProcessType processType){
-        return ObjectMapperUtils.writeValueAsString(processType);
+    public String findOne(String id){
+        ProcessTypeDto processTypeDto=processTypeService.findDto(id);
+        return ObjectMapperUtils.writeValueAsString(processTypeDto);
     }
 
     @RequestMapping(value="getFormProperty")

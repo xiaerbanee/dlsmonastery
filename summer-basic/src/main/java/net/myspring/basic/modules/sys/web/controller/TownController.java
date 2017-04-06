@@ -2,8 +2,10 @@ package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Town;
+import net.myspring.basic.modules.sys.dto.TownDto;
 import net.myspring.basic.modules.sys.service.TownService;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,10 +24,11 @@ public class TownController {
 
     @RequestMapping(value = "search")
     public String search(String name) {
-        List<Town> townList = Lists.newArrayList();
+        List<TownDto> townDtoList = Lists.newArrayList();
         if (StringUtils.isNotBlank(name)) {
-            townList = townService.findByLikeName(name);
+           List<Town> townList = townService.findByLikeName(name);
+           townDtoList= BeanMapper.convertDtoList(townList,TownDto.class);
         }
-        return ObjectMapperUtils.writeValueAsString(townList);
+        return ObjectMapperUtils.writeValueAsString(townDtoList);
     }
 }

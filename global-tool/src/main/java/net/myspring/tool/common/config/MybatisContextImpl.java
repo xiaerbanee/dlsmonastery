@@ -1,11 +1,11 @@
 package net.myspring.tool.common.config;
 
-import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
-import net.myspring.cloud.common.enums.DataSourceTypeEnum;
-import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.mybatis.context.MybatisContext;
 import net.myspring.mybatis.dialect.Dialect;
 import net.myspring.mybatis.dialect.MySQLDialect;
+import net.myspring.tool.common.dataSource.DynamicDataSourceContext;
+import net.myspring.tool.common.enums.DataSourceTypeEnum;
+import net.myspring.tool.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

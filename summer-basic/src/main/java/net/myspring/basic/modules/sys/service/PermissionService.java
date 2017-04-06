@@ -58,6 +58,7 @@ public class PermissionService {
     public PermissionDto findDto(String id){
         Permission permission=findOne(id);
         PermissionDto permissionDto=BeanMapper.convertDto(permission,PermissionDto.class);
+        cacheUtils.initCacheInput(permissionDto);
         return permissionDto;
     }
 

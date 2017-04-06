@@ -34,6 +34,12 @@ public class FolderService {
         return folderManager.findOne(id);
     }
 
+    public FolderDto findDto(String id){
+        Folder folder = findOne(id);
+        FolderDto folderDto = BeanMapper.convertDto(folder, FolderDto.class);
+        return folderDto;
+    }
+
     public void deleteOne(String id){
         folderManager.deleteById(id);
     }

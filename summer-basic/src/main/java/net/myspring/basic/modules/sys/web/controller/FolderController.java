@@ -47,8 +47,9 @@ public class FolderController {
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(Folder folder){
-        return ObjectMapperUtils.writeValueAsString(folder);
+    public String findOne(String id){
+        FolderDto folderDto=folderService.findDto(id);
+        return ObjectMapperUtils.writeValueAsString(folderDto);
     }
 
     @RequestMapping(value="getFormProperty")
