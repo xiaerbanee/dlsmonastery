@@ -3,6 +3,7 @@ package net.myspring.tool.common.dataSource;
 public class DynamicDataSourceContext  {
     private String dataSourceType;
     private String companyId;
+    private boolean automaticSetCompany = true;
     private static ThreadLocal<DynamicDataSourceContext> threadLocal = new ThreadLocal<DynamicDataSourceContext>();
 
     public static DynamicDataSourceContext get() {
@@ -33,5 +34,13 @@ public class DynamicDataSourceContext  {
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    public boolean isAutomaticSetCompany() {
+        return automaticSetCompany;
+    }
+
+    public void setAutomaticSetCompany(boolean automaticSetCompany) {
+        this.automaticSetCompany = automaticSetCompany;
     }
 }

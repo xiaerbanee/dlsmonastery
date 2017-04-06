@@ -51,7 +51,7 @@ public class DynamicDataSourceAspect {
                 }
             }
         }
-        if(StringUtils.isNotBlank(securityUtils.getCompanyId())) {
+        if(DynamicDataSourceContext.get().isAutomaticSetCompany()) {
             DynamicDataSourceContext.get().setCompanyId(securityUtils.getCompanyId());
         }
         if(DataSourceTypeEnum.LOCAL.name().equals(dataSourceType)) {
