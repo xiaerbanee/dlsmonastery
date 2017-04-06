@@ -1,0 +1,61 @@
+<import src="/page/template/pageable/pageable" />
+<view class="page">
+  <form class="{{searchHidden?'hidden':''}}" bindsubmit="formSubmit">
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <input type="hidden" name="pageNumber" value="{{formData.pageNumber}}" class="hidden" />
+      <input type="hidden" name="pageSize" value="{{formData.pageSize}}" class="hidden" />
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">开始日期</view>
+        </view>
+        <view class="weui-cell__bd ">
+          <picker mode="date" name="createdDateStart" value="{{formData.createdDateStart}}" data-name="createdDateStart" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.createdDateStart}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">结束日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" name="createdDateEnd" value="{{formData.createdDateEnd}}" data-name="createdDateEnd" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.createdDateEnd}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">审批类型</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="needAuditByMe" range="{{auditList}}" range-key="name" value="{{formData.auditTypeId}}" bindchange="bindAuditType">
+            <view class="weui-input">{{formData.auditTypeName}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+  <view class="page__bd">
+    <view class="weui-panel">
+      <template is="header" />
+      <view class="weui-panel__bd panel_bd">
+        <view class="weui-media-box weui-media-box_text" wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" bindlongtap="showActionSheet" bindtouchstart="itemActive">
+          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.lastModified.fullName}}~{{item.lastModifiedDate}}</view>
+          <view class="weui-media-box__desc item_style">类型:{{item.processType.name}}</view>
+          <view class="weui-media-box__desc item_style">标题:{{item.title}}</view>
+          <view class="weui-media-box__desc item_style">审核状态:{{item.processStatus}}</view>
+          <view class="weui-media-box__info">
+            <view class="weui-media-box__info__meta">创建人</view>
+            <view class="weui-media-box__info__meta">{{item.created.fullName}}</view>
+            <image wx:if="{{item.active}}" src="/image/icons/action.png" class="pageable_list_item_active"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <template is="footer" data="{{page}}" />
+</view>

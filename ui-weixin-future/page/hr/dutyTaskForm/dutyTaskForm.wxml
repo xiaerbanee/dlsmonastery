@@ -1,0 +1,352 @@
+<view class="page">
+  <form class="page__bd" catchsubmit="formSubmit">
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+      <view wx:if="{{dutyType=='请假'}}">
+       <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">申请人</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">请假类型</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="leaveType" class="weui-input" value="{{formData.leaveType}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">请假日期</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dutyDate" class="weui-input" value="{{formData.dutyDate}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">日期类型</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dateType" class="weui-input" value="{{formData.dateType}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">备注</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="remarks" class="weui-input" value="{{formData.remarks}}" disabled/>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{dutyType=='签到'}}">
+      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">申请人</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">签到日期</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dutyDate" class="weui-input" value="{{formData.dutyDate}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">签到时间</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dutyTime" class="weui-input" value="{{formData.dutyTime}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">签到地址</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="address" class="weui-input" value="{{formData.address}}" disabled/>
+          </view>
+        </view>
+            <view class="weui-cells">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <view class="weui-uploader">
+            <view class="weui-uploader__hd">
+              <view class="weui-uploader__title">附件</view>
+            </view>
+            <view class="weui-uploader__bd" >
+              <view class="weui-uploader__files" id="uploaderFiles">
+                <block wx:for-items="{{formProperty.images}}" wx:for-item="img" wx:key="{{index}}">
+                  <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                    <image class="weui-uploader__img" mode="aspectFill" src="{{img.preview}}" data-view="{{img.view}}" data-index="{{index}}" bindtap="showImageActionSheet" />
+                  </view>
+                  <input type="hidden" name="attachment" value="{{img.id}}" class="hidden" />
+                </block>
+              </view>
+              <view class="weui-uploader__input-box">
+                <view class="weui-uploader__input" bindtap="addImage"></view>
+              </view>
+              <view class="weui-cell__ft" wx:if="{{response.data.errors.attachment}}">
+                <icon type="warn" class="warn"></icon>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">备注</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="remarks" class="weui-input" value="{{formData.remarks}}" disabled/>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{dutyType=='补卡'}}">
+      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">申请人</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">补卡日期</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dutyDate" class="weui-input" value="{{formData.dutyDate}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">补卡时间</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dutyTime" class="weui-input" value="{{formData.dutyTime}}" disabled/>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{dutyType=='加班'}}">
+      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">申请人</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">加班日期</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dutyDate" class="weui-input" value="{{formData.dutyDate}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">开始时间</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="timeStart" class="weui-input" value="{{formData.timeStart}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">结束时间</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="timeEnd" class="weui-input" value="{{formData.timeEnd}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">加班时长</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="hour" class="weui-input" value="{{formData.hour}}" />
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">备注</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="remarks" class="weui-input" value="{{formData.remarks}}" disabled/>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{dutyType=='调休'}}">
+      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">申请人</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">调休类型</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="type" class="weui-input" value="{{formData.type}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">调休日期</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dutyDate" class="weui-input" value="{{formData.dutyDate}}" disabled/>
+          </view>
+        </view>
+        <view wx:if="{{formData.type=='年假调休'}}">
+          <view class="weui-cell weui-cell_input">
+            <view class="weui-cell__hd">
+              <view class="weui-label">日期类型</view>
+            </view>
+            <view class="weui-cell__bd">
+              <input name="dateType" class="weui-input" value="{{formData.dateType}}" disabled/>
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{formData.type=='加班调休'}}">
+          <view class="weui-cell weui-cell_input">
+            <view class="weui-cell__hd">
+              <view class="weui-label">开始时间</view>
+            </view>
+            <view class="weui-cell__bd">
+              <input name="timeStart" class="weui-input" value="{{formData.timeStart}}" disabled/>
+            </view>
+          </view>
+          <view class="weui-cell weui-cell_input">
+            <view class="weui-cell__hd">
+              <view class="weui-label">结束时间</view>
+            </view>
+            <view class="weui-cell__bd">
+              <input name="timeEnd" class="weui-input" value="{{formData.timeEnd}}" />
+            </view>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">调休时长</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="hour" class="weui-input" value="{{formData.hour}}" disabled/>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{dutyType=='出差'}}">
+      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">申请人</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">开始时间</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dateStart" class="weui-input" value="{{formData.dateStart}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">结束时间</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dateEnd" class="weui-input" value="{{formData.dateEnd}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">备注</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="remarks" class="weui-input" value="{{formData.remarks}}" disabled/>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{dutyType=='免打卡'}}">
+      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">申请人</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">日期</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="freeDate" class="weui-input" value="{{formData.freeDate}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">类型</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="dateType" class="weui-input" value="{{formData.dateType}}" disabled/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">备注</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="remarks" class="weui-input" value="{{formData.remarks}}" disabled/>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{formData.status=='申请中'}}">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">是否通过</view>
+          </view>
+          <view class="weui-cell__bd">
+            <switch name="pass" class="weui-input"/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">审批备注</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="auditRemarks" class="weui-input" value="{{auditRemarks}}" />
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+</view>

@@ -1,0 +1,11 @@
+.item_small {
+  color: #999999;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.item_middle {
+  color: #999999;
+  font-size: 15px;
+  line-height: 1.2;
+}

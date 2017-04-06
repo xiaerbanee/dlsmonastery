@@ -1,0 +1,7 @@
+@import "/page/template/pageable/pageable.wxss";
+
+.item_small {
+  color: #999999;
+  font-size: 13px;
+  line-height: 1.2;
+}

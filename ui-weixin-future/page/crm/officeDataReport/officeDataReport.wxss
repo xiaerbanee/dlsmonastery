@@ -1,0 +1,4 @@
+@import "/page/template/pageable/pageable.wxss";
+.groupType_style{
+    font-size:28rpx
+}

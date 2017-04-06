@@ -1,0 +1,36 @@
+<view class="page">
+  <view class="page_choose_company">
+    <view class="{{weixinAccountsHidden?'hidden':''}}">
+      <view class="page__hd">
+        <view class="page__title page__title_style">请选择账号</view>
+      </view>
+      <view class="page__bd page__bd_spacing">
+        <button type="primary" class="page__bd_company" wx:for="{{weixinAccounts}}" wx:for-index="index" wx:key="item.id" data-index="{{index}}" bindtap="login">{{item.companyName}}_{{item.accountName}}</button>
+      </view>
+    </view>
+  </view>
+  <view class="{{weixinAccountsHidden?'':'hidden'}}">
+    <view bindtap="switchAccount">
+      <view class="page_switch">切换
+        <image class="page_switch_icon" src="/image/icons/right.png" />
+      </view>
+    </view>
+    <block wx:for="{{menuList}}" wx:for-index="index" wx:key="{{index}}">
+      <view class="menu_list">
+        <view class="menu_hd">
+          <view class="menu_hd_title">{{item.category.name}}</view>
+        </view>
+        <view class="menu_bd">
+          <view class="weui-grids">
+            <block wx:for="{{item.menus}}" wx:for-item="menu" wx:for-index="{{index}}" wx:key="{{menu.id}}">
+              <navigator url="{{menu.mobileHref}}" class="weui-grid menu_bd_grid" hover-class="weui-grid_active">
+                <image class="weui-grid__icon" src="/image/home/{{menu.mobileIcon}}" />
+                <view class="weui-grid__label">{{menu.name}}</view>
+              </navigator>
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

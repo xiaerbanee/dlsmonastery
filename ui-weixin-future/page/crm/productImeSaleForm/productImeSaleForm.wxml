@@ -1,0 +1,123 @@
+<view class="page">
+  <form class="page__bd" catchsubmit="formSubmit">
+    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
+    <view class="weui-btn-area">
+      <button class="weui-btn" type="primary" bindtap="imeScan">扫描</button>
+    </view>
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="ime">
+        <view class="weui-cell__hd">
+          <view class="weui-label">串码</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="hidden" value="{{formData.imeStr}}" name="ime" />
+          <input class="weui-input" bindblur="imeChange" value="{{formData.imeStr}}" name="imeStr" />
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.ime}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" wx:if="{{formProperty.shops.length > 1}}" bindtap="showError" data-key="shopId">
+        <view class="weui-cell__hd">
+          <view class="weui-label">核销门店</view>
+        </view>
+        <view class="weui-cell__bd" style="overflow:hidden">
+          <input class="hidden" name="shopId" value="{{formData.shop.id}}" />
+          <picker value="{{formData.shop.id}}" bindtap="bindSaleShop">
+            <view class="weui-input">{{formData.shop.name}}
+              <image class="right_icon" src="/image/icons/right.png" />
+            </view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.shopId}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" wx:elif="{{formProperty.shops.length == 1}}" bindtap="showError" data-key="shopId">
+        <view class="weui-cell__hd">
+          <view class="weui-label">核销门店</view>
+        </view>
+        <view class="weui-cell__bd" style="overflow:hidden">
+          <input class="hidden" name="shopId" value="{{formProperty.shops[0].id}}" />
+          <view value="{{formProperty.shops[0].id}}" class="weui-input">{{formProperty.shops[0].name}}</view>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.errors.shopId}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">备注</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="remarks" class="weui-input" value="{{formData.remarks}}" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">用户姓名</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="buyer" class="weui-input" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">年龄</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="buyerAge" class="weui-input" value="{{formData.buyerAge}}" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">性别</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="buyerSex" class="weui-input" value="{{formData.buyerSex}}" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">电话</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="buyerPhone" class="weui-input" value="{{formData.buyerPhone}}" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">学校</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="buyerSchool" class="weui-input" value="{{formData.buyerSchool}}" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">年级</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="buyerGrade" class="weui-input" value="{{formData.buyerGrade}}" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button disabled="{{submitDisabled?'disabled':''}}" formType="submit" class="weui-btn " type="primary" >确定</button>
+    </view>
+  </form>
+  <view class="weui-panel">
+    <view class="weui-panel__bd panel_bd">
+      <block wx:for-items="{{productImeSearchResult.productImeList}}" wx:for-item="item" wx:key="item.id">
+        <navigator url="/page/crm/productImeDetail/productImeDetail?productImeId= {{item.id}}" class="weui-media-box weui-media-box_text">
+          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.ime}}</view>
+          <view class="weui-media-box__desc item_style">产品名称：{{item.product.name}} </view>
+          <view class="weui-media-box__desc item_style">核销门店：{{item.productImeSale.shop.name}}</view>
+          <view class="weui-media-box__desc item_style">工厂注册时间：{{item.retailDate}}</view>
+          <view class="weui-media-box__desc item_style">核销人：{{item.productImeSale.employee.name}}</view>
+          <view class="weui-media-box__desc item_style">核销时间：{{item.productImeSale.createdDate}}</view>
+        </navigator>
+      </block>
+    </view>
+  </view>
+</view>

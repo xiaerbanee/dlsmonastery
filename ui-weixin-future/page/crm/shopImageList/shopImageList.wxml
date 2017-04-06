@@ -1,0 +1,70 @@
+<import src="/page/template/pageable/pageable" />
+<view class="page">
+  <form wx:if="{{!searchHidden}}" bindsubmit="formSubmit">
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <input type="hidden" name="pageNumber" value="{{formData.pageNumber}}" class="hidden" />
+      <input type="hidden" name="pageSize" value="{{formData.pageSize}}" class="hidden" />
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">开始日期</view>
+        </view>
+        <view class="weui-cell__bd ">
+          <picker mode="date" name="createdDateStart" value="{{formData.createdDateStart}}" data-name="createdDateStart" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.createdDateStart}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">结束日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" name="createdDateEnd" value="{{formData.createdDateEnd}}" data-name="createdDateEnd" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.createdDateEnd}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">办事处</view>
+        </view>
+        <view class="weui-cell__bd" style="overflow:hidden">
+          <picker name="officeId" range="{{formProperty.areaList}}" range-key="name" value="{{formData.office.id}}" bindchange="bindOffice">
+            <view class="weui-input">{{formData.office.name}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">门店</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="shopName" class="weui-input" placeholder="模糊搜索" value="{{formData.shopName}}" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+  <view class="page__bd">
+    <view class="weui-panel">
+      <template is="header" />
+      <view class="weui-panel__bd panel_bd">
+        <view class="weui-media-box weui-media-box_text" wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" bindlongtap="showActionSheet" bindtouchstart="itemActive">
+          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.shop.name}}</view>
+          <view class="weui-media-box__desc item_style">{{item.created.fullName}}{{item.createdDate}}</view>
+          <view class="weui-media-box__desc item_style">部门:{{item.shop.office.name}}</view>
+          <view class="weui-media-box__desc item_style">形象方案:{{item.imageType}}</view>
+          <view class="weui-media-box__desc item_style">图片规格:{{item.imageSize}}</view>
+          <view class="weui-media-box__desc item_style">备注:{{item.remarks}}</view>
+          <view class="weui-media-box__info">
+            <view class="weui-media-box__info__meta">{{item.lastModifiedDate}}</view>
+            <image wx:if="{{item.active}}" src="/image/icons/action.png" class="pageable_list_item_active"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <template is="footer" data="{{page}}" />
+</view>

@@ -1,0 +1,136 @@
+<template>
+  <div>
+    <head-tab :active="$t('menuList.menuList') "></head-tab>
+    <div>
+      <el-row>
+        <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'sys:menu:edit'">{{$t('menuList.add')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'sys:menu:view'">{{$t('menuList.filter')}}</el-button>
+        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+      </el-row>
+      <el-dialog :title="$t('menuList.filter')" v-model="formVisible" size="tiny" class="search-form">
+        <el-form :model="formData">
+          <el-row :gutter="4">
+            <el-col :span="24">
+              <el-form-item :label="formLabel.menuCategory.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.menuCategory" filterable clearable :placeholder="$t('menuList.inputKey')">
+                  <el-option v-for="category in formProperty.menuCategory" :key="category.name" :label="category.name" :value="category.name"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.category" filterable clearable :placeholder="$t('menuList.inputKey')">
+                  <el-option v-for="category in formProperty.category"  :key="category.name" :label="category" :value="category"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('menuList.likeSearch')"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="search()">{{$t('menuList.sure')}}</el-button>
+        </div>
+      </el-dialog>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('menuList.loading')" @sort-change="sortChange" stripe border>
+        <el-table-column fixed prop="id" :label="$t('menuList.id')" sortable width="150"></el-table-column>
+        <el-table-column prop="name" :label="$t('menuList.name')" ></el-table-column>
+        <el-table-column prop="menuCode" label="菜单code" ></el-table-column>
+        <el-table-column prop="category" :label="$t('menuList.category')" ></el-table-column>
+        <el-table-column prop="menuCategory.name" :label="$t('menuList.menuCategoryName')" ></el-table-column>
+        <el-table-column prop="categoryCode" label="分组code"></el-table-column>
+        <el-table-column prop="sort" :label="$t('menuList.sort')" ></el-table-column>
+        <el-table-column prop="href" :label="$t('menuList.href')"></el-table-column>
+        <el-table-column prop="locked" :label="$t('menuList.locked')" width="100">
+          <template scope="scope">
+            <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="enabled" :label="$t('menuList.enabled')" width="100">
+          <template scope="scope">
+            <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="mobile" :label="$t('menuList.mobile')" width="100">
+          <template scope="scope">
+            <el-tag :type="scope.row.mobile ? 'primary' : 'danger'">{{scope.row.mobile | bool2str}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="remarks" :label="$t('menuList.remarks')"></el-table-column>
+        <el-table-column fixed="right" :label="$t('menuList.operation')" width="140">
+          <template scope="scope">
+            <div v-for="action in scope.row.actionList" :key="action" class="action">
+              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
+    </div>
+  </div>
+</template>
+<script>
+  export default {
+    data() {
+      return {
+        pageLoading: false,
+        pageHeight:600,
+        page:{},
+        formData:{
+          pageNumber:0,
+          pageSize:25,
+          menuCategory:'',
+          category:"",
+          name:''
+        },formLabel:{
+          menuCategory:{label:this.$t('menuList.menuCategory')},
+          category:{label:this.$t('menuList.category')},
+          name:{label:this.$t('menuList.name')}
+        },
+        formProperty:{},
+        formLabelWidth: '120px',
+        formVisible: false,
+        loading:false
+      };
+    },
+    methods: {
+      pageRequest() {
+        this.pageLoading = true;
+        util.setQuery("menuList",this.formData);
+        axios.get('/api/sys/menu',{params:this.formData}).then((response) => {
+          this.page = response.data;
+          this.pageLoading = false;
+        })
+      },pageChange(pageNumber,pageSize) {
+        this.formData.pageNumber = pageNumber;
+        this.formData.pageSize = pageSize;
+        this.pageRequest();
+      },sortChange(column) {
+        this.formData.order=util.getOrder(column);
+        this.formData.pageNumber=0;
+        this.pageRequest();
+      },search() {
+        this.formVisible = false;
+        this.pageRequest();
+      },itemAdd(){
+        this.$router.push({ name: 'menuForm'})
+      },itemAction:function(id,action){
+        if(action=="修改") {
+          this.$router.push({ name: 'menuForm', query: { id: id }})
+        } else if(action=="删除") {
+          axios.get('/api/sys/menu/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+            this.pageRequest();
+          })
+        }
+      }
+    },created () {
+      this.pageHeight = window.outerHeight -320;
+      util.copyValue(this.$route.query,this.formData);
+      axios.get('/api/sys/menu/getListProperty').then((response) =>{
+        this.formProperty=response.data;
+      });
+      this.pageRequest();
+    }
+  };
+</script>
+

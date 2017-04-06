@@ -1,0 +1,188 @@
+<view class="page">
+  <form class="page__bd" catchsubmit="formSubmit">
+    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+      <input type="hidden" name="businessId" value="{{formData.businessId}}" class="hidden" />
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="shopId">
+        <view class="weui-cell__hd">
+          <view class="weui-label">门店</view>
+        </view>
+        <view class="weui-cell__bd" style="overflow:hidden">
+          <picker name="shopId" value="{{formData.shop.id}}" bindtap="bindShop" disabled>
+            <view class="weui-input">{{formData.shop.name}}<image class="right_icon" src="/image/icons/right.png"/></view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.shopId}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="activityDate">
+        <view class="weui-cell__hd">
+          <view class="weui-label">活动日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" name="activityDate" value="{{formData.activityDate}}" bindchange="bindActivityDate">
+            <view class="weui-input">{{formData.activityDate}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.activityDate}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="activityType">
+        <view class="weui-cell__hd">
+          <view class="weui-label">活动类型</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="activityType" range="{{formProperty.activityList}}" value="{{formData.activityType}}" data-name="activityType" bindchange="bindActivityType">
+            <view class="weui-input">{{formData.activityType}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.activityType}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="dayAmount">
+        <view class="weui-cell__hd">
+          <view class="weui-label">当日门店销售总额</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="dayAmount" class="weui-input" value="{{formData.dayAmount}}"/>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.dayAmount}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="amount">
+        <view class="weui-cell__hd">
+          <view class="weui-label">当天{{formData.brandName}}销量</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="amount" class="weui-input" value="{{formData.amount}}" />
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.amount}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">人员投入描述</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="salerComment" class="weui-input" value="{{formData.salerComment}}"/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">物料投入描述</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="materialComment" class="weui-input" value="{{formData.materialComment}}"/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">业务活动总结</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="comment" class="weui-input" value="{{formData.comment}}"  />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="phone">
+        <view class="weui-cell__hd">
+          <view class="weui-label">业务联系电话</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="phone" class="weui-input" value="{{formData.phone}}"  />
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.phone}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">备注</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="remarks" class="weui-input" value="{{formData.remarks}}" />
+        </view>
+      </view>
+      <view class="weui-cells">
+        <view class="weui-cell">
+          <view class="weui-cell__bd">
+            <view class="weui-uploader">
+              <view class="weui-uploader__hd">
+                <view class="weui-uploader__title">体验区图片</view>
+              </view>
+              <view class="weui-uploader__bd">
+                <view class="weui-uploader__files" id="uploaderFiles">
+                  <block wx:for-items="{{formProperty.activityImage1}}" wx:for-item="img" wx:key="{{index}}">
+                    <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                      <image class="weui-uploader__img" mode="aspectFill" src="{{img.preview}}" data-view="{{img.view}}" data-index="{{index}}" data-name="activityImage1" bindtap="showImageActionSheet" />
+                    </view>
+                    <input type="hidden" name="activityImage1" value="{{img.id}}" class="hidden" />
+                  </block>
+                </view>
+                <view class="weui-uploader__input-box">
+                  <view class="weui-uploader__input" data-name="activityImage1" bindtap="addImage"></view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells">
+        <view class="weui-cell">
+          <view class="weui-cell__bd">
+            <view class="weui-uploader">
+              <view class="weui-uploader__hd">
+                <view class="weui-uploader__title">互动游戏区照片</view>
+              </view>
+              <view class="weui-uploader__bd">
+                <view class="weui-uploader__files" id="uploaderFiles">
+                  <block wx:for-items="{{formProperty.activityImage2}}" wx:for-item="img" wx:key="{{index}}">
+                    <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                      <image class="weui-uploader__img" mode="aspectFill" src="{{img.preview}}" data-view="{{img.view}}" data-index="{{index}}" data-name="activityImage2" bindtap="showImageActionSheet" />
+                    </view>
+                    <input type="hidden" name="activityImage2" value="{{img.id}}" class="hidden" />
+                  </block>
+                </view>
+                <view class="weui-uploader__input-box">
+                  <view class="weui-uploader__input" data-name="activityImage2" bindtap="addImage"></view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells">
+        <view class="weui-cell">
+          <view class="weui-cell__bd">
+            <view class="weui-uploader">
+              <view class="weui-uploader__hd">
+                <view class="weui-uploader__title">整体外场布置照片</view>
+              </view>
+              <view class="weui-uploader__bd">
+                <view class="weui-uploader__files" id="uploaderFiles">
+                  <block wx:for-items="{{formProperty.activityImage3}}" wx:for-item="img" wx:key="{{index}}">
+                    <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                      <image class="weui-uploader__img" mode="aspectFill" src="{{img.preview}}" data-view="{{img.view}}" data-index="{{index}}" data-name="activityImage3" bindtap="showImageActionSheet" />
+                    </view>
+                    <input type="hidden" name="activityImage3" value="{{img.id}}" class="hidden" />
+                  </block>
+                </view>
+                <view class="weui-uploader__input-box">
+                  <view class="weui-uploader__input" data-name="activityImage3" bindtap="addImage"></view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area" wx:if="{{!submitHidden}}">
+      <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+</view>

@@ -1,0 +1,79 @@
+<view class="page">
+  <form class="page__bd" catchsubmit="formSubmit">
+    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">时间</view>
+        </view>
+        <view class="weui-cell__bd">
+          <view class="weui-input">{{formData.dutyDateTime}}</view>
+        </view>
+      </view>
+      <view wx:if="{{!formData.id}}" class="weui-cell weui-cell_input" bindtap="showError" data-key="address">
+        <view class="weui-cell__hd">
+          <view class="weui-label">地址</view>
+        </view>
+        <view class="weui-cell__bd" style="overflow:hidden">
+          <picker name="address" range="{{formProperty.addressList}}" value="{{formProperty.addressIndex?formProperty.addressList[formProperty.addressIndex]:''}}" bindchange="bindAddressChange">
+            <view class="weui-input">{{formProperty.addressList[formProperty.addressIndex]}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.address}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view wx:if="{{formData.id}}" class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">地址</view>
+        </view>
+        <view class="weui-cell__bd" style="overflow:hidden">
+          <view class="weui-input">{{formData.address}}</view>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">备注</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="remarks" class="weui-input" value="{{formData.remarks}}" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <view class="weui-uploader">
+            <view class="weui-uploader__hd">
+              <view class="weui-uploader__title">图片上传</view>
+              <input type="hidden" name="lng" value="{{formData.longitude}}" class="hidden" />
+              <input type="hidden" name="lat" value="{{formData.latitude}}" class="hidden" />
+              <input type="hidden" name="netType" value="{{formData.networkType}}" class="hidden" />
+              <input type="hidden" name="model" value="{{formData.model}}" class="hidden" />
+              <input type="hidden" name="accuracy" value="{{formData.accuracy}}" class="hidden" />
+            </view>
+            <view class="weui-uploader__bd" bindtap="showError" data-key="attachment">
+              <view class="weui-uploader__files" id="uploaderFiles">
+                <block wx:for-items="{{formProperty.images}}" wx:for-item="img" wx:key="{{index}}">
+                  <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                    <image class="weui-uploader__img" mode="aspectFill" src="{{img.preview}}" data-view="{{img.view}}" data-index="{{index}}" bindtap="showImageActionSheet" />
+                  </view>
+                  <input type="hidden" name="attachment" value="{{img.id}}" class="hidden" />
+                </block>
+              </view>
+              <view class="weui-uploader__input-box">
+                <view class="weui-uploader__input" bindtap="addImage"></view>
+              </view>
+              <view class="weui-cell__ft" wx:if="{{response.data.errors.attachment}}">
+                <icon type="warn" class="warn"></icon>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area" wx:if="{{!submitHidden}}">
+      <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+</view>

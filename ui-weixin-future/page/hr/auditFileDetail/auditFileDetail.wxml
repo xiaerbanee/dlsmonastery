@@ -1,0 +1,62 @@
+<view class="page">
+  <form catchsubmit="formSubmit">
+    <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+    <input type="hidden" name="processFlowId" value="{{formData.processFlowId}}" class="hidden" />
+    <input type="hidden" name="processTypeId" value="{{formData.processTypeId}}" class="hidden" />
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">类型</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="processTypeName" value="{{formData.processType.name}}" class="weui-input" disabled />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">标题</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="title" value="{{formData.title}}" class="weui-input" disabled />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <image src="{{formData.contentImage}}" mode="widthFix" bindtap="showImageActionSheet"></image>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" >
+        <view class="weui-cell__hd">
+          <view class="weui-label">状态</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="title" value="{{formData.processStatus}}" class="weui-input" disabled/>
+        </view>
+      </view>
+      <view>
+        <view wx:if="{{!submitHidden}}">
+          <view class="input_border"></view>
+          <view class="weui-cell weui-cell_input">
+            <view class="weui-cell__hd">
+              <view class="weui-label">通过</view>
+            </view>
+            <view class="weui-cell__bd">
+              <switch name="pass" class="weui-input" />
+            </view>
+          </view>
+          <view class="weui-cell weui-cell_input">
+            <view class="weui-cell__hd">
+              <view class="weui-label">审批备注</view>
+            </view>
+            <view class="weui-cell__bd">
+              <input name="comment" class="weui-input" value="{{comment}}" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area" wx:if="{{!submitHidden}}">
+      <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">审核</button>
+    </view>
+  </form>
+</view>

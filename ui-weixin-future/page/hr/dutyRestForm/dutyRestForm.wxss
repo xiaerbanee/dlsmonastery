@@ -1,0 +1,6 @@
+.tip{
+    font-size:28rpx;
+}
+.red{
+    color:red;
+}

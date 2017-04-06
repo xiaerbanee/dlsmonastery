@@ -1,0 +1,42 @@
+<import src="/page/template/pageable/pageable" />
+<view class="page">
+  <view class="page__bd">
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">门店名称</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="name" class="weui-input" value="{{formData.name}}" disabled/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">区域类型</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="areaType" class="weui-input" value="{{formData.areaType}}" disabled/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">地址</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="address" class="weui-input" value="{{formData.address}}" disabled/>
+        </view>
+      </view>
+    </view>
+    <view class="weui-panel">
+      <view class="weui-panel__bd panel_bd">
+        <view class="weui-media-box weui-media-box_text" wx:for="{{formData.extendMap.depotInventoryModelList}}">
+          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.productTypeName}} </view>
+          <view class="weui-media-box__desc item_style">核销库存:{{item.saleStockQty}}</view>
+          <view class="weui-media-box__desc item_style">电子保卡库存:{{item.baoKaStockQty}}</view>
+          <view class="weui-media-box__desc item_style">核销销量:{{item.saleSalesQty}}</view>
+          <view class="weui-media-box__desc item_style">电子保卡销量:{{item.baoKaSalesQty}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

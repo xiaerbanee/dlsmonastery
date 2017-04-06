@@ -1,0 +1,124 @@
+<view class="page">
+  <view>
+    <view class="weui-flex" style="margin-top:20rpx;">
+      <view class="weui-flex__item">
+        <button size="mini" type="primary" class="pageable_footer_item" bindtap="numberScan" data-name="formatId">订单扫描</button>
+      </view>
+      <view class="weui-flex__item">
+        <button size="mini" type="primary" class="pageable_footer_item" bindtap="numberScan" data-name="imeStr">串码扫描</button>
+      </view>
+      <view class="weui-flex__item">
+        <button size="mini" type="primary" class="pageable_footer_item" bindtap="numberScan" data-name="boxImeStr">箱号扫描</button>
+      </view>
+      <view class="weui-flex__item">
+        <button size="mini" type="primary" class="pageable_footer_item" bindtap="numberScan" data-name="expressCodes">快递扫描</button>
+      </view>
+    </view>
+    <view class="alert-danger">
+      <view wx:for="{{productImeSearchResult.notExists}}" wx:key="id" data-id="{{item.id}}">
+        串码{{item}}在系统中不存在.
+      </view>
+    </view>
+    <form catchsubmit="formSubmit">
+      <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
+      <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+      <view class="weui-cells weui-cells_after-title form_bd">
+        <view class="weui-cell weui-cell_input" bindtap="showError" data-key="storeId">
+          <view class="weui-cell__hd">
+            <view class="weui-label">仓库</view>
+          </view>
+          <view class="weui-cell__bd" style="overflow:hidden">
+            <picker name="storeId" value="{{formData.store.id}}" disabled>
+              <view class="weui-input">{{formData.store.name}}</view>
+            </picker>
+          </view>
+          <view class="weui-cell__ft" wx:if="{{response.data.errors.storeId}}">
+            <icon type="warn" class="warn"></icon>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input" bindtap="showError" data-key="type">
+          <view class="weui-cell__hd" style="overflow:hidden">
+            <view class="weui-label">门店</view>
+          </view>
+          <view class="weui-cell__bd" style="overflow:hidden">
+            <picker name="shopId" value="{{formData.shop.id}}" disabled>
+              <view class="weui-input">{{formData.shop.name}}</view>
+            </picker>
+          </view>
+          <view class="weui-cell__ft" wx:if="{{response.data.errors.shopId}}">
+            <icon type="warn" class="warn"></icon>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">订单号</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="formatId" class="weui-input" value="{{formData.formatId}}" />
+          </view>
+          <view class="weui-cell__ft" wx:if="{{response.data.errors.formatId}}">
+            <icon type="warn" class="warn"></icon>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">串码</view>
+          </view>
+          <view class="weui-cell__bd">
+            <textarea name="imeStr" class="weui-textarea" value="{{formData.imeStr}}" style="min-height:220rpx" auto-height />
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">箱号</view>
+          </view>
+          <view class="weui-cell__bd">
+            <textarea name="boxImeStr" class="weui-textarea" value="{{formData.boxImeStr}}" style="min-height:220rpx" auto-height />
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">快递单号</view>
+          </view>
+          <view class="weui-cell__bd">
+            <textarea name="expressCodes" class="weui-textarea" value="{{formData.expressCodes}}" style="min-height:220rpx" auto-height />
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">发货备注</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="remarks" value="{{formData.shipRemarks}}" class="weui-input" />
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">订单备注</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="remarks" value="{{formData.remarks}}" class="weui-input" />
+          </view>
+        </view>
+      </view>
+      <view class="weui-btn-area">
+        <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
+      </view>
+    </form>
+    <view class="{{formData.goodsOrderDetail!=null?'':'hidden'}}">
+      <view class="page__bd">
+        <view class="weui-panel">
+          <view class="weui-panel__bd panel_bd">
+            <view class="weui-media-box weui-media-box_text" wx:for="{{formData.goodsOrderDetail}}" wx:key="id" data-id="{{item.id}}">
+              <view class="weui-media-box__title weui-media-box__title_in-text">货品名称:{{item.product.name}}</view>
+              <view class="weui-media-box__desc item_style">包含串码:{{item.product.hasIme?'是':'否'}}</view>
+              <view class="weui-media-box__desc item_style">开单数:{{item.billQty}}</view>
+              <view class="weui-media-box__desc item_style">已发货数:{{item.shippedQty}}</view>
+              <view class="weui-media-box__desc item_style">待发货数:{{item.billQty-item.shippedQty}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

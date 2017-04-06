@@ -1,0 +1,67 @@
+<view class="page">
+  <form class="page__bd" catchsubmit="formSubmit">
+    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="dutyDate">
+        <view class="weui-cell__hd">
+          <view class="weui-label">加班日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" name="dutyDate" value="{{formData.dutyDate}}" bindchange="bindDutyDate">
+            <view class="weui-input">{{formData.dutyDate}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.dutyDate}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="timeStart">
+        <view class="weui-cell__hd">
+          <view class="weui-label">开始时间</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="time" name="timeStart" value="{{formData.timeStart}}" data-name="timeStart" bindchange="bindTimeChange">
+            <view class="weui-input">{{formData.timeStart}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.timeStart}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="timeEnd">
+        <view class="weui-cell__hd">
+          <view class="weui-label">结束时间</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="time" name="timeEnd" value="{{formData.timeEnd}}" data-name="timeEnd" bindchange="bindTimeChange">
+            <view class="weui-input">{{formData.timeEnd}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.timeEnd}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">时长</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="hour" type="number" class="weui-input" value="{{formData.hour}}" disabled/>
+        </view>
+
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">备注</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="remarks" class="weui-input" value="{{formData.remarks}}" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area" >
+      <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+</view>

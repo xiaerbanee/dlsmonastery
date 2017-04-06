@@ -1,0 +1,20 @@
+<view class="page">
+  <view class="page__bd">
+    <view class="weui-search-bar search-bar_style">
+      <view class="weui-search-bar__form">
+        <view class="weui-search-bar__box">
+          <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+          <input type="text" class="weui-search-bar__input" placeholder="搜索名称或首字母，显示前20条" focus="true" bindinput="inputName" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <radio-group bindchange="depotSelect">
+        <label class="weui-cell weui-check__label" wx:for="{{depotList}}" wx:key="{{item.id}}">
+          <radio class="weui-check" value="{{item.id}},{{item.name}}" />
+          <view class="weui-cell__bd">{{item.name}}</view>
+        </label>
+      </radio-group>
+    </view>
+  </view>
+</view>

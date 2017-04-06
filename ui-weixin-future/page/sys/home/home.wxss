@@ -1,0 +1,49 @@
+page {
+    background-color: #fff;
+}
+.page_choose_company{
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+.page__title_style{
+    text-align: center;
+    font-size:46rpx;
+}
+.page__bd_company{
+    width:450rpx;
+    text-align: center;
+    margin-bottom: 20rpx;
+    font-weight: bold;
+}
+.page_switch{
+    position:absolute;
+    font-size: 28rpx;
+    right:30rpx;
+    margin-top:20rpx;
+}
+.page_switch_icon{
+    width:24rpx;
+    height:24rpx;
+}
+.menu_list{
+  width:100%;
+  height:auto;
+  display:inline-block;
+}
+.menu_hd {
+    padding: 0rpx;
+    background-color: #EFEFF4;
+    margin-top: -2rpx;
+}
+.menu_hd_title {
+    text-align: left;
+    font-size: 14px;
+    margin-left: 10rpx;
+    margin-top:20rpx;
+}
+
+.menu_bd_grid {
+    border-bottom: 1rpx solid #E6E6E6;
+    border-right: 1rpx solid #E6E6E6;
+}

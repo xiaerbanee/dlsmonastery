@@ -1,0 +1,47 @@
+<view class="page">
+  <form class="page__bd" catchsubmit="formSubmit">
+  <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="dateStart">
+        <view class="weui-cell__hd">
+          <view class="weui-label">开始日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" name="dateStart" value="{{formData.dateStart}}" data-name="dateStart" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dateStart}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.dateStart}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="dateEnd">
+        <view class="weui-cell__hd">
+          <view class="weui-label">结束日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <view class="weui-cell__bd">
+            <picker mode="date" name="dateEnd" value="{{formData.dateEnd}}" data-name="dateEnd" bindchange="bindDateChange">
+              <view class="weui-input">{{formData.dateEnd}}</view>
+            </picker>
+          </view>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.dateEnd}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">备注</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="remarks" class="weui-input" value="{{formData.remarks}}" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+</view>

@@ -1,0 +1,9 @@
+<import src="/page/template/userInfo/userInfo" />
+<view class="page">
+  <view class="page__hd">
+    <template is="userinfo" data="{{userInfo}}" />
+  </view>
+  <view class="page__bd page__bd_spacing">
+    <button class="weui-btn" type="primary" bindtap="accountBind">账号绑定</button>
+  </view>
+</view>

@@ -1,0 +1,57 @@
+<template name="header">
+  <view class="weui-flex pageable_header">
+    <view class="weui-flex__item pageable_header_item" bindtap="add">
+      <view class="pageable_header_item_text">添加</view>
+      <image src="/image/icons/add.png" class="pageable_header_item_image"></image>
+    </view>
+    <view class="weui-flex__item pageable_header_item" bindtap="search">
+      <view class="pageable_header_item_text">搜索</view>
+      <image src="/image/icons/search.png" class="pageable_header_item_image"></image>
+    </view>
+  </view>
+</template>
+<template name="searchHeader">
+  <view class="weui-flex pageable_header">
+    <view class="weui-flex__item pageable_header_item" bindtap="search">
+      <view class="pageable_header_item_text">搜索</view>
+      <image src="/image/icons/search.png" class="pageable_header_item_image"></image>
+    </view>
+  </view>
+</template>
+<template name="backHeader">
+  <view class="weui-flex pageable_header">
+    <view class="weui-flex__item pageable_header_item" bindtap="back">
+      <view class="pageable_header_item_text">返回</view>
+      <image src="/image/icons/return.png" class="pageable_header_item_image"></image>
+    </view>
+  </view>
+</template>
+<template name="passHeader">
+  <view class="weui-flex pageable_header">
+    <view class="weui-flex__item pageable_header_item" bindtap="passAll">
+      <view class="pageable_header_item_text">全部</view>
+      <image src="/image/icons/sale.png" class="pageable_header_item_image"></image>
+    </view>
+  </view>
+</template>
+<template name="footer">
+  <view class="pageable_footer">
+    <view class="weui-flex">
+      <view class="weui-flex__item">
+        <view class="pageable_footer_item" bindtap="toFirstPage">首页</view>
+      </view>
+      <view class="weui-flex__item">
+        <view class="pageable_footer_item" bindtap="toPreviousPage">上页</view>
+      </view>
+      <view class="weui-flex__item">
+        <view class="pageable_footer_item" bindtap="toPage">{{page.number+1}}/{{page.totalPages}}</view>
+      </view>
+      <view class="weui-flex__item">
+        <view class="pageable_footer_item" bindtap="toNextPage">下页</view>
+      </view>
+      <view class="weui-flex__item">
+        <view class="pageable_footer_item" bindtap="toLastPage">末页</view>
+      </view>
+    </view>
+  </view>
+</template>

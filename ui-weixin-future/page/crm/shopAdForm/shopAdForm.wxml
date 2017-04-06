@@ -1,0 +1,115 @@
+<view class="page">
+  <form catchsubmit="formSubmit">
+    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
+    <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="shopAdTypeId">
+        <view class="weui-cell__hd">
+          <view class="weui-label">广告品种</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="shopAdTypeId" range="{{formProperty.shopAdTypeList}}" range-key="name" value="{{formData.shopAdType.id}}" bindchange="bindAdType">
+            <view class="weui-input">{{formData.shopAdType.name}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.shopAdTypeId}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="shopId">
+        <view class="weui-cell__hd">
+          <view class="weui-label">门店</view>
+        </view>
+        <view class="weui-cell__bd" style="overflow:hidden">
+          <picker name="shopId" value="{{formData.shop.id}}" bindtap="bindShop" disabled>
+            <view class="weui-input">{{formData.shop.name}} <image class="right_icon" src="/image/icons/right.png"/></view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.shopId}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="length">
+        <view class="weui-cell__hd">
+          <view class="weui-label">长度</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="length" value="{{formData.length}}" class="weui-input"  />
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.length}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="width">
+        <view class="weui-cell__hd">
+          <view class="weui-label">高度</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="width" value="{{formData.width}}" class="weui-input"  />
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.width}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="qty">
+        <view class="weui-cell__hd">
+          <view class="weui-label">数量</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="qty" value="{{formData.qty}}" class="weui-input"  />
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.qty}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">内容说明</view>
+        </view>
+        <view class="weui-cell__bd">
+          <textarea name="content" value="{{formData.content}}" class="weui-textarea" style="min-height:88rpx;" auto-height/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">是否专区</view>
+        </view>
+        <view class="weui-cell__bd">
+           <switch name="specialArea"  class="weui-input" checked="{{formData.specialArea}}" bindchange="switchChange"/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">备注</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="remarks" value="{{formData.remarks}}" class="weui-input"  />
+        </view>
+      </view>
+      <view wx:if="{{auditHidden}}">
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">是否通过</view>
+          </view>
+          <view class="weui-cell__bd">
+            <switch name="pass" class="weui-input"/>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">审批备注</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="comment" class="weui-input" value="{{comment}}" />
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area" wx:if="{{!submitHidden}}">
+      <button disabled="{{submitDisabled}}" formType="submit" data-event="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+    <view class="weui-btn-area" wx:if="{{auditHidden}}">
+      <button disabled="{{auditDisabled}}" formType="submit" data-event="audit" class="weui-btn" type="primary">审核</button>
+    </view>
+  </form>
+</view>

@@ -1,0 +1,32 @@
+<view class="page">
+  <view class="page__bd">
+    <view class="weui-panel">
+      <view class="weui-panel__hd">{{productImeDetail.productIme.ime}}</view>
+      <view class="weui-panel__bd">
+        <view class="weui-media-box weui-media-box_text">
+          <view class="weui-media-box__desc"><span>门店：</span> {{productImeDetail.productIme.productImeSale.shop.name}}</view>
+          <view class="weui-media-box__desc"><span>产品名称：</span> {{productImeDetail.productIme.product.name}}</view>
+          <view class="weui-media-box__desc"><span>更新时间：</span> {{productImeDetail.productIme.lastModifiedDate}}</view>
+          <view class="weui-media-box__desc"><span>工厂注册时间：</span> {{productImeDetail.productIme.retailDate}}</view>
+          <view class="weui-media-box__desc"><span>创建人：</span> {{productImeDetail.productIme.created.name}}</view>
+          <view class="weui-media-box__desc"><span>备注：</span> {{productImeDetail.productIme.remarks}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-panel weui-panel_access">
+      <view class="weui-panel__hd">串码调拨历史</view>
+      <view class="weui-panel__bd">
+        <block wx:for="{{productImeDetail.allotHistoryList}}" wx:key="id" data-id="{{item.id}}">
+          <view class="weui-media-box weui-media-box_text">
+            <view class="weui-media-box__title weui-media-box__title_in-text">{{item.historyType}}</view>
+            <view class="weui-media-box__desc"><span>起始位置：</span> {{item.fromDepot.name}}</view>
+            <view class="weui-media-box__desc"><span>终止位置：</span> {{item.toDepot.name}}</view>
+            <view class="weui-media-box__desc"><span>创建时间：</span> {{item.createdDate}}</view>
+            <view class="weui-media-box__desc"><span>创建人：</span> {{item.created.fullName}}</view>
+            <view class="weui-media-box__desc"><span>备注：</span> {{item.remarks}}</view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,13 @@
+@import "/page/template/pageable/pageable.wxss";
+.groupType_style{
+    font-size:28rpx
+}
+.office_name{
+    text-align:center;
+ padding-bottom: 24rpx;
+  width:20%;
+  height:110rpx;
+  border-top:1rpx solid #dadada;
+  border-bottom: 1rpx solid #dadada;
+  border-right: 1rpx solid #dadada;
+}

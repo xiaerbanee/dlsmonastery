@@ -1,0 +1,43 @@
+<view class="page">
+  <form catchsubmit="formSubmit">
+    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
+    <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="processTypeId">
+        <view class="weui-cell__hd">
+          <view class="weui-label">流程</view>
+        </view>
+        <view class="weui-cell__bd" style="overflow:hidden">
+          <picker name="processTypeId" range="{{formProperty.processList}}" range-key="name" value="{{formData.processType.id}}" bindchange="bindProcessType">
+            <view class="weui-input">{{formData.processType.name}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.processTypeId}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="title">
+        <view class="weui-cell__hd">
+          <view class="weui-label">标题</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="title" value="{{formData.title}}" class="weui-input" />
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.title}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="content">
+        <view class="weui-cell__hd">
+          <view class="weui-label">正文</view>
+        </view>
+        <view class="weui-cell__bd">
+           <textarea name="content" value="{{formData.content}}" class="weui-textarea" style="min-height:280rpx" auto-height/>
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+</view>

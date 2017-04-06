@@ -1,0 +1,71 @@
+<view class="page">
+  <form class="page__bd" catchsubmit="formSubmit">
+    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="dutyDateStart">
+        <view class="weui-cell__hd">
+          <view class="weui-label">开始日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" name="dutyDateStart" value="{{formData.dutyDateStart}}" data-name="dutyDateStart" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dutyDateStart}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.dutyDateStart}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="dutyDateEnd">
+        <view class="weui-cell__hd">
+          <view class="weui-label">结束日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" name="dutyDateEnd" value="{{formData.dutyDateEnd}}" data-name="dutyDateEnd" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dutyDateEnd}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.dutyDateEnd}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="dateType">
+        <view class="weui-cell__hd">
+          <view class="weui-label">时间类型</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="dateType" range="{{formProperty.dateList}}" value="{{formData.dateType}}" data-name="dateType" bindchange="bindTypeChange" disabled="{{leaveDisabled}}">
+            <view class="weui-input">{{formData.dateType}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.dateType}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="leaveType">
+        <view class="weui-cell__hd">
+          <view class="weui-label">请假类型</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="leaveType" range="{{formProperty.leaveList}}" value="{{formData.leaveType}}" data-name="leaveType" bindchange="bindTypeChange">
+            <view class="weui-input">{{formData.leaveType}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.errors.leaveType}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">备注</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="remarks" class="weui-input" value="{{formData.remarks}}" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+</view>

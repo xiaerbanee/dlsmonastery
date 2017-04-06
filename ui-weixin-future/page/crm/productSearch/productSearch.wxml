@@ -1,0 +1,27 @@
+<view class="page">
+  <view class="page__bd">
+    <view class="weui-search-bar search-bar_style">
+      <view class="weui-search-bar__form">
+        <view class="weui-search-bar__box">
+          <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+          <input type="text" class="weui-search-bar__input" placeholder="模糊搜索" focus="true" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <checkbox-group bindchange="productChange">
+        <label class="weui-cell weui-check__label" wx:for="{{productList}}" wx:key="{{item.id}}">
+          <checkbox class="weui-check" value="{{item.id}},{{item.name}}"  checked="{{item.checked}}"/>
+          <view class="weui-cell__hd weui-check__hd_in-checkbox">
+            <icon class="weui-icon-checkbox_circle" type="circle" size="23" wx:if="{{!item.checked}}"></icon>
+            <icon class="weui-icon-checkbox_success" type="success" size="23" wx:if="{{item.checked}}"></icon>
+          </view>
+          <view class="weui-cell__bd">{{item.name}}</view>
+        </label>
+      </checkbox-group>
+    </view>
+        <view class="weui-btn-area">
+      <button class="weui-btn" type="primary" bindtap="productSelect">确定</button>
+    </view>
+  </view>
+</view>

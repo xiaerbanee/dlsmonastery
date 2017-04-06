@@ -1,0 +1,89 @@
+{
+  "pages": [
+    "page/sys/home/home",
+    "page/sys/accountBind/accountBind",
+    "page/sys/accountIndex/accountIndex",
+    "page/sys/townSearch/townSearch",
+    "page/hr/auditFileList/auditFileList",
+    "page/hr/auditFileForm/auditFileForm",
+    "page/hr/auditFileDetail/auditFileDetail",
+    "page/hr/accountTaskList/accountTaskList",
+    "page/hr/dutyLeaveList/dutyLeaveList",
+    "page/hr/dutyLeaveForm/dutyLeaveForm",
+    "page/hr/dutySignList/dutySignList",
+    "page/hr/dutySignForm/dutySignForm",
+    "page/hr/dutyOvertimeList/dutyOvertimeList",
+    "page/hr/dutyOvertimeForm/dutyOvertimeForm",
+    "page/hr/dutyRestList/dutyRestList",
+    "page/hr/dutyRestForm/dutyRestForm",
+    "page/hr/dutyFreeList/dutyFreeList",
+    "page/hr/dutyFreeForm/dutyFreeForm",
+    "page/hr/dutyTripList/dutyTripList",
+    "page/hr/dutyTripForm/dutyTripForm",
+    "page/hr/dutyTaskList/dutyTaskList",
+    "page/hr/dutyTaskForm/dutyTaskForm",
+    "page/hr/employeeSaleList/employeeSaleList",
+    "page/hr/employeeSaleDetail/employeeSaleDetail",
+    "page/crm/depotForm/depotForm",
+    "page/crm/depotList/depotList",
+    "page/crm/shopPromotionList/shopPromotionList",
+    "page/crm/shopPromotionForm/shopPromotionForm",
+    "page/crm/productImeSearch/productImeSearch",
+    "page/crm/productImeDetail/productImeDetail",
+    "page/crm/productImeSaleList/productImeSaleList",
+    "page/crm/productImeSaleForm/productImeSaleForm",
+    "page/crm/shopAdList/shopAdList",
+    "page/crm/shopAdForm/shopAdForm",
+    "page/crm/shopImageList/shopImageList",
+    "page/crm/shopImageForm/shopImageForm",
+    "page/crm/goodsOrderList/goodsOrderList",
+    "page/crm/goodsOrderDetail/goodsOrderDetail",
+    "page/crm/goodsOrderShip/goodsOrderShip",
+    "page/crm/priceChangeImeList/priceChangeImeList",
+    "page/crm/priceChangeImeForm/priceChangeImeForm",
+    "page/crm/depotSearch/depotSearch",
+    "page/crm/officeSearch/officeSearch",
+    "page/crm/reportScoreOfficeList/reportScoreOfficeList",
+    "page/crm/reportScoreAreaList/reportScoreAreaList",
+    "page/crm/imeAllotList/imeAllotList",
+    "page/crm/imeAllotForm/imeAllotForm",
+    "page/crm/depotInventoryList/depotInventoryList",
+    "page/crm/depotInventoryDetail/depotInventoryDetail",
+    "page/crm/officeDataReport/officeDataReport",
+    "page/crm/productDataReport/productDataReport",
+    "page/crm/productSearch/productSearch"
+  ],
+  "window": {
+    "navigationBarTextStyle": "#fff",
+    "navigationBarTitleText": "OA",
+    "navigationBarBackgroundColor": "#2c2b31",
+    "backgroundColor": "#2c2b31"
+  },
+  "tabBar": {
+    "color": "#black",
+    "selectedColor": "#51aa37",
+    "borderStyle": "#EFEFF4",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "page/sys/home/home",
+        "iconPath": "image/tabbar/home.png",
+        "selectedIconPath": "image/tabbar/home_active.png",
+        "text": "OA"
+      },
+      {
+        "pagePath": "page/sys/accountIndex/accountIndex",
+        "iconPath": "image/tabbar/me.png",
+        "selectedIconPath": "image/tabbar/me_active.png",
+        "text": "我"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 20000,
+    "connectSocket": 20000,
+    "uploadFile": 20000,
+    "downloadFile": 20000
+  },
+  "debug": true
+}

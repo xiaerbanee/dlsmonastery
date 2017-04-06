@@ -1,0 +1,173 @@
+<view class="page">
+  <form class="page__bd" catchsubmit="formSubmit">
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">门店：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="name" class="weui-input" value="{{formData.name}}" disabled/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">手机：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="mobilePhone" class="weui-input" value="{{formData.mobilePhone}}" disabled/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">地址：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="address" class="weui-input" value="{{formData.address}}" disabled/>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title">基础资料</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">区域类型：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="areaType" value="{{formData.areaType}}" range="{{formProperty.areaTypes}}" range-key="name" bindchange="bindAreaTypeChange">
+            <view class="weui-input">
+              {{formData.areaType}}
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" wx:if="{{formData.areaType == '乡镇'}}">
+        <view class="weui-cell__hd">
+          <view class="weui-label">乡镇名称：</view>
+        </view>
+        <view class="weui-cell__bd" style="overflow:hidden">
+          <input class="hidden" name="townId" value="{{formData.town.id}}" />
+            <view class="weui-input"  bindtap="bindTown">
+              {{formData.town.name}}
+              <image class="right_icon" src="/image/icons/right.png" />
+            </view>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" wx:if="{{formData.areaType == '市区'}}">
+        <view class="weui-cell__hd">
+          <view class="weui-label">核心商圈：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <switch checked="{{formData.bussinessCenter}}" name="bussinessCenter" value="{{formData.bussinessCenter}}" bindchange="bindBussinessCenterChange" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" wx:if="{{formData.bussinessCenter && formData.areaType == '市区'}}">
+        <view class="weui-cell__hd">
+          <view class="weui-label">核心商圈名称</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="bussinessCenterName" bindchange="bussinessCenterNameChange" value="{{formData.bussinessCenterName}}" range="{{formProperty.businessCenterTypes}}" range-key="name">
+            <view class="weui-input">
+              {{formData.bussinessCenterName}}
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">运营商社会渠道：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="channelType" bindchange="bindChannelTypeChange" value="{{formData.channelType}}" range="{{formProperty.channelTypes}}" range-key="name">
+            <view class="weui-input">
+              {{formData.channelType}}
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">门店属性：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="salePointType" bindchange="bindSalePointTypeChange" value="{{formData.salePointType}}" range="{{formProperty.salePointTypes}}" range-key="name">
+            <view class="weui-input">
+              {{formData.salePointType}}
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">连锁类型：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker bindchange="bindChainTypeChange" value="{{formData.chainType}}" range="{{formProperty.chainTypes}}" range-key="name" name="chainType">
+            <view class="weui-input">
+              {{formData.chainType}}
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">运营商属性：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker bindchange="bindCarrierTypeChange" value="{{formData.carrierType}}" range="{{formProperty.carrierTypes}}" range-key="name" name="carrierType">
+            <view class="weui-input">
+              {{formData.carrierType}}
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">有门头：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <switch checked="{{formData.doorHead}}" name="doorHead" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">店面尺寸：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker bindchange="bindAreaSizeChange" value="{{formData.shopArea}}" range="{{formProperty.shopAreaTypes}}" range-key="name" name="shopArea">
+            <view class="weui-input">
+              {{formData.shopArea}}
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">备注：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" value="{{formData.remarks}}" name="remarks" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title" >终端统计</view>
+    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">
+    <text>{{response.error}}</text></view>
+    <view class="weui-cells weui-cells_after-title">
+      <block wx:for-items="{{formData.shopAttributeList}}" wx:key="{{item.typeName}}">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">{{item.typeName}}：</view>
+          </view>
+          <view class="weui-cell__bd" >
+            <input class="hidden" name="shopAttributeList[{{index}}].typeName" value="{{item.typeName}}" />
+            <input class="weui-input" name="shopAttributeList[{{index}}].typeValue" value="{{item.typeValue}}" />
+          </view>
+        </view>
+      </block>
+    </view>
+    <view class="weui-btn-area">
+      <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+</view>

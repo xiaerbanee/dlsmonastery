@@ -1,0 +1,7 @@
+@import "/page/template/pageable/pageable.wxss";
+.office_name{
+  padding-top: 20rpx;
+  width:25%;
+  border-bottom: 1rpx solid #dadada;
+  border-right: 1rpx solid #dadada;
+}

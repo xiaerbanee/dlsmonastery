@@ -1,0 +1,111 @@
+<template>
+  <div>
+    <head-tab :active="$t('recruitList.recruitList')"></head-tab>
+    <div>
+      <el-row>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:demoPhone:edit'">{{$t('recruitList.add')}}</el-button>
+        <el-button type="primary" @click="batchEdit" icon="edit" v-permit="'crm:demoPhone:edit'">{{$t('recruitList.batchEdit')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:demoPhone:view'">{{$t('recruitList.filter')}}</el-button>
+        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+      </el-row>
+      <el-dialog :title="$t('recruitList.filter')" v-model="formVisible" size="tiny" class="search-form">
+        <el-form :model="formData">
+          <el-row :gutter="4">
+            <el-col :span="24">
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="search()">{{$t('recruitList.sure')}}</el-button>
+        </div>
+      </el-dialog>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"   :element-loading-text="$t('recruitList.loading')" @sort-change="sortChange" stripe border>
+        <el-table-column type="selection" width="55" ></el-table-column>
+        <el-table-column  prop="name"  :label="$t('recruitList.name')"></el-table-column>
+        <el-table-column prop="sex" :label="$t('recruitList.sex')"></el-table-column>
+        <el-table-column prop="education" :label="$t('recruitList.education')"></el-table-column>
+        <el-table-column prop="mobilePhone":label="$t('recruitList.mobilePhone')"></el-table-column>
+        <el-table-column prop="firstAppointDate" :label="$t('recruitList.firstAppointDate')"></el-table-column>
+        <el-table-column prop="secondAppointDate" :label="$t('recruitList.secondAppointDate')"></el-table-column>
+        <el-table-column prop="physicalAppointDate" :label="$t('recruitList.physicalAppointDate')"></el-table-column>
+        <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
+          <template scope="scope">
+            <div v-for="action in scope.row.actionList" :key="action" class="action">
+              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
+    </div>
+  </div>
+</template>
+<script>
+  export default {
+    data() {
+      return {
+        pageLoading: false,
+        pageHeight:600,
+        page:{},
+        formData:{
+          pageNumber:0,
+          pageSize:25,
+        },formLabel:{
+        },
+        formProperty:{},
+        formLabelWidth: '120px',
+        formVisible: false,
+        selects:new Array(),
+        pickerDateOption:util.pickerDateOption
+      };
+    },
+    methods: {
+      pageRequest() {
+        this.pageLoading = true;
+        util.setQuery("recruitList",this.formData);
+        axios.get('/api/hr/recruit',{params:this.formData}).then((response) => {
+          this.page = response.data;
+          this.pageLoading = false;
+        })
+      },pageChange(pageNumber,pageSize) {
+        this.formData.pageNumber = pageNumber;
+        this.formData.pageSize = pageSize;
+        this.pageRequest();
+      },sortChange(column) {
+        this.formData.order=util.getOrder(column);
+        this.formData.pageNumber=0;
+        this.pageRequest();
+      },search() {
+        this.formVisible = false;
+        this.pageRequest();
+      },itemAdd(){
+        this.$router.push({ name: 'recruitForm'})
+      },itemAction:function(id,action){
+        if(action=="修改") {
+          this.$router.push({ name: 'recruitForm', query: { id: id }})
+        } else if(action=="删除") {
+          axios.get('/api/hr/recruit/delete',{params:{id:id}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          })
+        }
+      },selectionChange(selection){
+        console.log(selection);
+        this.selects=new Array();
+        for(var key in selection){
+          this.selects.push(selection[key].id)
+        }
+      },batchEdit(){
+        if(this.selects.length>1){
+          this.$router.push({ name: 'recruitBatchForm', query: { ids: this.selects }})
+        }
+      }
+    },created () {
+      this.pageHeight = window.outerHeight -325;
+      util.copyValue(this.$route.query,this.formData);
+      this.pageRequest();
+    }
+  };
+</script>
+
+

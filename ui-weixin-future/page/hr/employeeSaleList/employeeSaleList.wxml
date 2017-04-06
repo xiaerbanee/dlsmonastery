@@ -1,0 +1,59 @@
+<import src="/page/template/pageable/pageable" />
+<view class="page">
+  <form class="{{searchHidden?'hidden':''}}" bindsubmit="formSubmit">
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <input type="hidden" name="pageNumber" value="{{formData.pageNumber}}" class="hidden" />
+      <input type="hidden" name="pageSize" value="{{formData.pageSize}}" class="hidden" />
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">开始日期</view>
+        </view>
+        <view class="weui-cell__bd ">
+          <picker mode="date" name="dateStart" placeholder="串码核销开始时间" value="{{formData.dateStart}}" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dateStart}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">结束日期</view>
+        </view>
+        <view class="weui-cell__bd ">
+          <picker mode="date" name="dateEnd" placeholder="串码核销结束时间" value="{{formData.dateEnd}}" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dateEnd}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="type">
+        <view class="weui-cell__hd">
+          <view class="weui-label">员工名称</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="employeeName" placeholder="输入关键字搜索" value="{{formData.employeeName}}" class="weui-input" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+  <view class="page__bd">
+    <view class="weui-panel">
+      <template is="searchHeader" />
+      <view class="container">
+        <view class="table">
+          <view class="tr">
+            <view class="th">员工</view>
+            <view class="th">销量</view>
+          </view>
+          <view class="tr" wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" bindlongtap="showActionSheet" bindtouchstart="itemActive">
+            <view class="td">{{item.name}}</view>
+            <view class="td">{{item.extendMap.saleQty}} </view>
+            <image wx:if="{{item.active}}" src="/image/icons/action.png" class="pageable_list_item_active"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <template is="footer" data="{{page}}" />
+</view>
