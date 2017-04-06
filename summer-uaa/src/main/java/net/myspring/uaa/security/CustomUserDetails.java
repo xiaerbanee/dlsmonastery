@@ -21,8 +21,10 @@ public class CustomUserDetails implements UserDetails {
     private final String accountId;
     private final String companyId;
     private final String positionId;
+    private final String officeId;
+    private final String employeeId;
 
-    public CustomUserDetails(String username,String password,boolean enabled,boolean accountNonExpired,boolean credentialsNonExpired,boolean accountNonLocked,Collection<? extends GrantedAuthority> authorities,String accountId,String companyId,String positionId) {
+    public CustomUserDetails(String username,String password,boolean enabled,boolean accountNonExpired,boolean credentialsNonExpired,boolean accountNonLocked,Collection<? extends GrantedAuthority> authorities,String accountId,String companyId,String positionId,String officeId,String employeeId) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
         }
@@ -36,6 +38,8 @@ public class CustomUserDetails implements UserDetails {
         this.accountId = accountId;
         this.companyId = companyId;
         this.positionId = positionId;
+        this.officeId=officeId;
+        this.employeeId=employeeId;
     }
 
 
@@ -84,5 +88,13 @@ public class CustomUserDetails implements UserDetails {
 
     public String getPositionId() {
         return positionId;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
     }
 }

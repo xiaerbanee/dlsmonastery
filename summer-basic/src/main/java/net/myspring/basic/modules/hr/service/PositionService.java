@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.manager.PositionManager;
@@ -24,6 +25,8 @@ public class PositionService {
     private PositionManager positionManager;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private SecurityUtils securityUtils;
 
     public List<PositionDto> findAll(){
         List<Position> positionList=positionManager.findAll();

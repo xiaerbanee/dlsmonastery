@@ -2,4 +2,102 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.DutyTripMapper">
 
+
+    <select id="findPage" resultType="DutyTrip">
+        SELECT
+            t1.*
+        FROM
+        hr_duty_trip t1,
+        hr_account account,
+        hr_office office
+        WHERE
+        t1.created_by=account.id
+        and account.office_id=office.id
+        and t1.enabled=1
+        <if test="p.createdBy !=null ">
+            AND t1.created_by=#{p.createdBy}
+        </if>
+        <if test="p.dutyDateStart != null">
+            AND t1.date_start >= #{p.dutyDateStart}
+        </if>
+        <if test="p.dutyDateEnd != null">
+            AND t1.date_end  &lt;= #{p.dutyDateEnd}
+        </if>
+        <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
+    </select>
+
+    <select id="findByAuditable" resultType="net.myspring.future.modules.hr.model.DutyModel">
+        SELECT
+            '出差' as dutyType,
+            CONCAT(t1.date_start,'~',t1.date_end) as dutyDate,
+            t1.remarks,
+            t2.login_name as 'account.loginName',
+            t2.leader_id AS 'account.leaderId' ,
+            CONCAT('CC0000000',t1.id) AS 'formatId',
+            t1.id
+        FROM
+        hr_duty_trip t1 , hr_account t2 ,hr_employee t3
+        WHERE
+          t1.enabled=1
+          AND t1.employee_id=t3.id
+          and t3.account_id=t2.id
+          AND t2.leader_id=#{leaderId}
+          AND t1.status=#{status}
+          AND t1.created_date>=#{createdDateStart}
+    </select>
+
+    <select id="findByDateAndStatusList" resultType="DutyTrip">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_trip t1
+        WHERE
+        t1.enabled=1
+        AND t1.date_start >= #{dateStart}
+        and t1.date_end &lt;= #{dateEnd}
+        and t1.status in
+        <foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <select id="findByEmployeeAndDate" resultType="DutyTrip">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_trip t1
+        WHERE
+        t1.enabled=1
+        and t1.employee_id=#{employeeId}
+        and ((t1.date_start >= #{dateStart}
+        and t1.date_start &lt;= #{dateEnd})
+        or  (t1.date_end >= #{dateStart}
+        and t1.date_end &lt;= #{dateEnd}))
+    </select>
+
+    <select id="findByAccountIdAndDutyDate" resultType="DutyTrip">
+        SELECT
+        tr.employee_id,tr.date_start,tr.date_end,tr.status
+        FROM
+        hr_duty_trip
+        WHERE
+        (
+        date_end &gt;= #{dateStart}
+        and date_end &lt;= #{dateEnd}
+        )
+        or (date_start &gt;= #{dateStart} and date_start &lt;=#{dateEnd})
+        or (date_start &lt; #{dateStart} and date_end &gt; #{dateStart})
+        FROM
+        hr_duty_trip tr
+        WHERE
+        tr.enabled=1
+        <if test="accountIds!=null" >
+            and tr.employee_id in
+            <foreach item="item" index="index" collection="accountIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
 </mapper>

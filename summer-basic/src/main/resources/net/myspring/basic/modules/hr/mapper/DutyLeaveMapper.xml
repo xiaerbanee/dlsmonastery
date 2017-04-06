@@ -2,4 +2,120 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.DutyLeaveMapper">
 
+    <select id="findPage" resultType="DutyLeave">
+        SELECT
+          t1.*
+        FROM
+        hr_duty_leave t1,
+        hr_account account
+        WHERE
+        t1.created_by=account.id
+        and t1.enabled=1
+        <if test="p.createdBy != null">
+            AND t1.created_by=#{p.createdBy}
+        </if>
+        <if test="p.dutyDateStart != null">
+            AND t1.duty_date >= #{p.dutyDateStart}
+        </if>
+        <if test="p.dutyDateEnd != null">
+            AND t1.duty_date  &lt;= #{p.dutyDateEnd}
+        </if>
+        <if test="p.dateType != null">
+            AND t1.date_type=#{p.dateType}
+        </if>
+        <if test="p.leaveType != null">
+            AND t1.leave_type=#{p.leaveType}
+        </if>
+    </select>
+
+    <select id="findByEmployeeAndDateAndDateType" resultType="DutyLeave">
+        SELECT
+          t1.*
+        FROM
+        hr_duty_leave t1
+        WHERE
+        t1.enabled=1
+        AND t1.employee_id=#{employeeId} AND t1.duty_date=#{date} AND t1.date_type=#{dateType}
+    </select>
+
+    <select id="findByAuditable" resultType="net.myspring.future.modules.hr.model.DutyModel">
+        SELECT
+        '请假' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'account.loginName',t2.leader_id AS 'account.leaderId' ,CONCAT('QJ0000000',t1.id) AS 'formatId',t1.id
+        FROM
+        hr_duty_leave t1, hr_account t2,hr_employee t3
+        WHERE
+        t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
+        AND t2.leader_id=#{leaderId} AND t1.status=#{status} AND t1.created_date>=#{dateStart}
+    </select>
+
+    <select id="findByDutyDateList" resultType="DutyLeave">
+    SELECT
+    t1.*
+    FROM
+    hr_duty_leave t1
+    WHERE
+    t1.enabled=1
+    AND t1.employee_id=#{employeeId}
+    AND t1.duty_date in
+    <foreach collection="dutyDateList" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+    </select>
+
+    <select id="findByDutyDate" resultType="DutyLeave">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_leave t1
+        WHERE
+        t1.enabled=1
+        AND t1.employee_id=#{employeeId}
+        AND t1.duty_date =#{dutyDate}
+    </select>
+
+    <select id="findByEmployeeAndDate" resultType="DutyLeave">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_leave t1
+        WHERE
+        t1.enabled=1
+        AND t1.employee_id=#{employeeId}
+        AND t1.duty_date >= #{dateStart}
+        and t1.duty_date &lt;= #{dateEnd}
+    </select>
+
+    <select id="findByDateAndStatusList" resultType="DutyLeave">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_leave t1
+        WHERE
+        t1.enabled=1
+        AND t1.duty_date >= #{dateStart} and t1.duty_date &lt;= #{dateEnd}
+        and t1.status in
+        <foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByAccountIdAndDutyDate" resultType="DutyLeave">
+        SELECT
+        le.employee_id,
+        le.duty_date,
+        le.leave_type,
+        le.date_type
+        FROM
+        hr_duty_leave le
+        WHERE
+        le.duty_date  &gt;= #{dateStart}
+        AND le.duty_date  &lt;= #{dateEnd}
+        <if test="accountIds!=null" >
+            and le.employee_id in
+            <foreach item="item" index="index" collection="accountIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY le.employee_id,le.duty_date asc
+    </select>
 </mapper>

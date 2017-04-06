@@ -1,9 +1,11 @@
 package net.myspring.util.time;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Created by liuj on 2017/3/31.
@@ -34,6 +36,20 @@ public class LocalDateUtils {
             localDate =LocalDate.parse(localDateStr,DateTimeFormatter.ofPattern(formatter));
         }
         return localDate;
+    }
+
+    public static List<LocalDate> getDateList(LocalDate dateStart, LocalDate dateEnd) {
+        List<LocalDate> dateList = Lists.newArrayList();
+        if (dateEnd.isBefore(dateStart)) {
+            return dateList;
+        }
+        Long step = dateEnd.toEpochDay() - dateStart.toEpochDay();
+        if (step >= 1) {
+            for (int i = 0; i <= step; i++) {
+                dateList.add(dateStart.plusDays(i));
+            }
+        }
+        return dateList;
     }
 
 }

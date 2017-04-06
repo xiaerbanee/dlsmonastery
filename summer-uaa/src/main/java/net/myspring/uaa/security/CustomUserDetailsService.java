@@ -39,7 +39,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                     authList,
                     accountDto.getId(),
                     accountDto.getCompanyId(),
-                    accountDto.getPositionId()
+                    accountDto.getPositionId(),
+                    accountDto.getOfficeId(),
+                    accountDto.getEmployeeId()
             );
         }
         return customUserDetails;

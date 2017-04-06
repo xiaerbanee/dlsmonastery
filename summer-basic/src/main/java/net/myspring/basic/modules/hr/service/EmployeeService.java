@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
@@ -22,6 +23,8 @@ public class EmployeeService {
     private EmployeeManager employeeManager;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private SecurityUtils securityUtils;
 
     public Employee findOne(String id){
         Employee employee=employeeManager.findOne(id);

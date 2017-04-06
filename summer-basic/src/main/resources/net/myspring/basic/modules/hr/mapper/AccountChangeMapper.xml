@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.AccountChangeMapper">
-
-</mapper>
+        <select id="findPage" resultType="AccountChange">
+            select
+            t1.*
+            from
+            hr_account_change t1,hr_account ac,hr_office office
+            where
+            t1.enabled=1
+            and t1.account_id=ac.id
+            and ac.office_id=office.id
+            <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
+            <if test="p.createdDateStart !=null">
+                AND t1.created_date>=#{p.createdDateStart}
+            </if>
+            <if test="p.createdDateEnd !=null">
+                AND t1.created_date &lt;=#{p.createdDateEnd}
+            </if>
+            <if test="p.type != null">
+                and t1.type = #{p.type}
+            </if>
+            <if test="p.createdByName !=null">
+                and t1.account_id in(
+                select t2.id
+                from hr_account t2
+                where t2.login_name like concat('%',#{p.createdByName},'%')
+                and t2.enabled=1
+                )
+            </if>
+            <if test="p.officeId !=null">
+                and t1.account_id  in(
+                select t2.id
+                from hr_account t2 ,hr_office office
+                where  t2.enabled=1
+                and t2.office_id=office.id
+                and (
+                    office.parent_ids like concat('%,',#{p.officeId},',%')
+                  or office.id=#{p.officeId}
+                )
+                )
+            </if>
+        </select>
+    </mapper>

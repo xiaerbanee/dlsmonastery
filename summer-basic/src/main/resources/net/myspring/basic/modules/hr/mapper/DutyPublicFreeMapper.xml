@@ -2,4 +2,74 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.DutyPublicFreeMapper">
 
+    <select id="findPage" resultType="DutyPublicFree">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_public_free t1,
+        hr_account account,
+        hr_office office
+        WHERE
+        t1.created_by=account.id
+        and account.office_id=office.id
+        and t1.enabled=1
+        <include refid="dutyPublicFreeFilter"/>
+        <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
+    </select>
+
+
+    <select id="findByAuditable" resultType="net.myspring.future.modules.hr.model.DutyModel">
+        SELECT
+        '公休' as dutyType,t1.free_date AS dutyDate,t1.remarks,t2.login_name as 'account.loginName',t2.leader_id AS 'account.leaderId' ,CONCAT('GX0000000',t1.id) AS 'formatId',t1.id
+        FROM
+        hr_duty_public_free t1 , hr_account t2 ,hr_employee t3
+        WHERE
+        t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
+        AND t2.leader_id=#{leaderId} AND t1.status=#{status} AND t1.created_date>=#{dateStart}
+    </select>
+
+    <select id="findByDateAndStatusList" resultType="DutyPublicFree">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_public_free t1
+        WHERE
+        t1.enabled=1
+        AND t1.free_date >= #{dateStart}
+        and t1.free_date &lt;= #{dateEnd}
+        and t1.status in
+        <foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <sql id="dutyPublicFreeFilter">
+        <if test="p.dutyDateStart != null">
+            AND t1.free_date >= #{p.dutyDateStart}
+        </if>
+        <if test="p.dutyDateEnd != null">
+            AND t1.free_date  &lt;= #{p.dutyDateEnd}
+        </if>
+        <if test="p.employeeName != null">
+            and t1.employee_id in (
+            select t2.id
+            from hr_employee t2
+            where t2.name LIKE CONCAT('%',#{p.employeeName},'%')
+            )
+        </if>
+    </sql>
+
+
+    <select id="findByEmployeeAndDate" resultType="DutyPublicFree">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_public_free t1
+        WHERE
+        t1.enabled=1
+        and t1.employee_id=#{employeeId}
+        and t1.free_date >= #{dateStart}
+        and t1.free_date &lt;= #{dateEnd}
+    </select>
+
 </mapper>

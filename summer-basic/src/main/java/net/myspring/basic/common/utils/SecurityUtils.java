@@ -29,6 +29,14 @@ public class SecurityUtils {
         return String.valueOf(getAdditionalInformation().get("positionId"));
     }
 
+    public String getOfficeId() {
+        return String.valueOf(getAdditionalInformation().get("officeId"));
+    }
+
+    public String getEmployeeId() {
+        return String.valueOf(getAdditionalInformation().get("employeeId"));
+    }
+
     private Map<String, Object> getAdditionalInformation() {
         final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
         final OAuth2AccessToken accessToken = tokenStore.readAccessToken(details.getTokenValue());

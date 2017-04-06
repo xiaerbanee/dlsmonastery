@@ -2,4 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.DutyAnnualMapper">
 
+    <select id="findByEmployee" resultType="DutyAnnual">
+        select t1.*
+        from hr_duty_annual t1
+        where t1.employee_id=#{employeeId}
+        order by annual_year desc
+        limit 0,1
+    </select>
+
+    <select id="findPage" resultType="DutyAnnual">
+        SELECT t1.*
+        FROM  hr_duty_annual t1
+        where t1.enabled=1
+        <if test="p.name!=null">
+            and t1.employee_id in(
+                SELECT id
+                FROM  hr_employee
+                where enabled=1
+                and name like concat('%',#{p.name},'%')
+            )
+        </if>
+    </select>
+
 </mapper>

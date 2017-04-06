@@ -57,4 +57,11 @@ public class LocalDateTimeUtils {
         return localDateTime;
     }
 
+    public static LocalDateTime getFirstDayOfThisMonth(LocalDateTime localDateTime){
+        return localDateTime.withDayOfMonth(1);
+    }
+
+    public static LocalDateTime getLastDayOfThisMonth(LocalDateTime localDateTime){
+        return localDateTime.withDayOfMonth(localDateTime.toLocalDate().lengthOfMonth());
+    }
 }

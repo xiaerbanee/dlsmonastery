@@ -5,6 +5,6 @@ import net.myspring.basic.modules.hr.domain.EmployeeSalaryBasic;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface EmployeeSalaryBasicMapper extends MyMapper<EmployeeSalaryBasic,String> {
+public interface EmployeeSalaryBasicMapper extends MyMapper<EmployeeSalaryBasic,String>{
 
 }

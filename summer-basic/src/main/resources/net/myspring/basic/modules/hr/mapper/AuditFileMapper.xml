@@ -2,4 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.AuditFileMapper">
 
+    <select id="findPage" resultType="AuditFile">
+        SELECT
+        t1.*
+        FROM hr_audit_file t1 , sys_process_flow t2 ,hr_account t3,hr_office office
+        WHERE
+        t1.process_flow_id=t2.id
+        and t1.created_by=t3.id
+        and t3.office_id=office.id
+        AND t1.enabled=1
+        <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
+        <if test="p.createdDateStart !=null">
+            and t1.created_date >=#{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd !=null">
+            and t1.created_date &lt;=#{p.createdDateEnd}
+        </if>
+        <if test="p.positionId !=null">
+            and t2.position_id=#{p.positionId}
+        </if>
+        <if test="p.processTypeId !=null">
+            and t1.process_type_id &lt;=#{p.processTypeId}
+        </if>
+        <if test="p.id !=null">
+            and t1.id=#{p.id}
+        </if>
+        <if test="p.title !=null">
+            and t1.title like concat('%',#{p.title},'%')
+        </if>
+        <if test="p.content !=null">
+            and t1.content like concat('%',#{p.content},'%')
+        </if>
+        <if test="p.officeId !=null">
+            and office.id=#{p.officeId}
+        </if>
+        <if test="p.processflowName !=null">
+            and t2.name like concat('%',#{p.processflowName},'%')
+        </if>
+        <if test="p.createdByName !=null">
+            and t1.created_by in(
+                select id
+                from hr_account
+                where login_name like concat('%',#{p.createdByName},'%')
+                and enabled=1
+            )
+        </if>
+    </select>
 </mapper>

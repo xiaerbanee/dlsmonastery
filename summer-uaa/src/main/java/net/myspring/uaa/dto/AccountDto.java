@@ -14,6 +14,8 @@ public class AccountDto {
 
     private String positionId;
     private String companyId;
+    private String officeId;
+    private String employeeId;
 
     private boolean enabled;
     private boolean locked;
@@ -82,5 +84,21 @@ public class AccountDto {
 
     public void setLeaveDate(LocalDate leaveDate) {
         this.leaveDate = leaveDate;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
     }
 }

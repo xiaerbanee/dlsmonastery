@@ -2,4 +2,119 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.DutyOvertimeMapper">
 
+
+    <select id="findPage" resultType="DutyOvertime">
+        SELECT
+            t1.*
+        FROM
+        hr_duty_overtime t1,
+        hr_account account,
+        hr_office office
+        WHERE
+        t1.created_by=account.id
+        and account.office_id=office.id
+        and t1.enabled=1
+        <if test="p.createdBy !=null">
+            AND t1.created_by=#{p.createdBy}
+        </if>
+        <if test="p.dutyDateStart !=null">
+            AND t1.duty_date>=#{p.dutyDateStart}
+        </if>
+        <if test="p.dutyDateEnd !=null">
+            AND t1.duty_date &lt;=#{p.dutyDateEnd}
+        </if>
+        <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
+    </select>
+
+    <select id="findByAuditable" resultType="net.myspring.future.modules.hr.model.DutyModel">
+        SELECT
+        '加班' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'account.loginName',t2.leader_id AS 'account.leaderId' ,CONCAT('JB0000000',t1.id) AS 'formatId',t1.id
+        FROM
+        hr_duty_overtime t1 , hr_account t2 ,hr_employee t3
+        WHERE
+        t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
+        AND t2.leader_id=#{leaderId} AND t1.status=#{status} AND t1.created_date>=#{dateStart}
+    </select>
+
+    <select id="findByDutyDate" resultType="DutyOvertime">
+        SELECT
+            t1.*
+        FROM
+        hr_duty_overtime t1
+        WHERE
+        t1.enabled=1
+        and t1.employee_id=#{employeeId}
+        and t1.duty_date=#{dutyDate}
+    </select>
+
+    <select id="findByEmployeeAndDate" resultType="DutyOvertime">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_overtime t1
+        WHERE
+        t1.enabled=1
+        and t1.employee_id=#{employeeId}
+        and t1.duty_date >= #{dateStart}
+        and t1.duty_date &lt;= #{dateEnd}
+    </select>
+
+    <select id="findByDutyDateAndStatus" resultType="DutyOvertime">
+        SELECT
+            t1.*
+        FROM
+        hr_duty_overtime t1
+        WHERE
+        t1.enabled=1
+        and t1.status=#{status}
+        and t1.employee_id=#{employeeId}
+        and t1.duty_date>=#{dutyDateStart}
+        and t1.duty_date &lt;=#{dutyDateEnd}
+    </select>
+
+    <select id="findByIdAndDate" resultType="DutyOvertime">
+        SELECT
+          t1.*
+        FROM
+          hr_duty_overtime t1
+          WHERE
+          t1.enabled=1
+          and t1.status=#{status}
+          and t1.duty_date>=#{dateStart}
+          and t1.duty_date &lt;=#{dateEnd}
+          and t1.employee_id=#{employeeId}
+    </select>
+
+    <select id="findByDateAndStatusList" resultType="DutyOvertime">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_overtime t1
+        WHERE
+        t1.enabled=1
+        AND t1.duty_date >= #{dateStart} and t1.duty_date &lt;= #{dateEnd}
+        and t1.status in
+        <foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+        <select id="findByAccountIdAndDutyDate" resultType="DutyOvertime">
+            SELECT
+            ov.employee_id,
+            ov.duty_date,
+            ov.time_start,
+            ov.time_end
+            FROM
+            hr_duty_overtime ov
+            WHERE
+            ov.duty_date gt;= #{dateStart}
+            AND ov.duty_date lt;= #{dateEnd}
+            and ov.enabled=1
+            <if test="accountIds!=null" >
+                and ov.employee_id in
+                <foreach item="item" index="index" collection="accountIds" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </select>
 </mapper>

@@ -2,4 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.AccountTaskMapper">
 
+    <select id="findPage" resultType="AccountTask">
+        SELECT t1.*
+        FROM hr_account_task t1
+        WHERE
+        t1.enabled=1
+        <if test="p.name !=null ">
+            AND t1.name=#{p.name}
+        </if>
+        <if test="p.status !=null ">
+            AND t1.status=#{p.status}
+        </if>
+        and t1.position_id=#{p.positionId}
+        <if test="p.officeIds !=null and p.officeIds.size()>0">
+            and t1.office_id in
+            <foreach collection="p.officeIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="findByNameAndExtendId" resultType="AccountTask">
+        SELECT  t1.*
+        FROM hr_account_task t1
+        where t1.name=#{name}
+        and t1.extend_id=#{extendId}
+        and t1.enabled=1
+    </select>
+
+    <select id="findLabels" resultType="AccountTask">
+        SELECT t1.id,t1.name
+        FROM hr_accoun_task t1
+        WHERE t1.enabled = 1
+        and t1.id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByPositionAndOfficeIds" resultType="AccountTask">
+        SELECT t1.*
+        FROM hr_account_task t1
+        where t1.enabled=1
+        and t1.position_id=#{positionId}
+        and t1.office_id in
+        <foreach collection="officeIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

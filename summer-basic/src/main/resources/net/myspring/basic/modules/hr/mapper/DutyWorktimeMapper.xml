@@ -2,4 +2,72 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.DutyWorktimeMapper">
 
+    <select id="findPage" resultType="DutyWorktime">
+        select *
+        from hr_duty_worktime t1
+        where t1.enabled = 1
+        <include refid="dutyWorktimeFilter"></include>
+    </select>
+
+    <select id="findByDutyDate" resultType="DutyWorktime">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_worktime t1
+        WHERE
+        t1.enabled=1
+        AND t1.duty_date >= #{dateStart}
+        and t1.duty_date &lt;= #{dateEnd}
+    </select>
+
+    <select id="findByEmployeeAndDate" resultType="DutyWorktime">
+        SELECT
+        t1.*
+        FROM
+        hr_duty_worktime t1
+        WHERE
+        t1.enabled=1
+        and t1.employee_id=#{employeeId}
+        AND t1.duty_date >= #{dateStart}
+        and t1.duty_date &lt;= #{dateEnd}
+    </select>
+
+
+    <sql id="dutyWorktimeFilter">
+        <if test="p.dutyDateStart != null">
+            AND t1.duty_date >= #{p.dutyDateStart}
+        </if>
+        <if test="p.dutyDateEnd != null">
+            AND t1.duty_date  &lt;= #{p.dutyDateEnd}
+        </if>
+        <if test="p.accountId != null">
+            and t1.employee_id in (
+              select t2.id
+              from hr_employee t2
+              where t2.account_id = #{p.accountId}
+            )
+        </if>
+    </sql>
+
+    <select id="findByAccountIdAndDutyDate" resultType="DutyWorktime">
+        SELECT
+        w.employee_id,
+        w.duty_date,
+        if(min(w.duty_time) &lt;= '12:00:00',min(w.duty_time),'') as dutyTimeStart,
+        if(max(w.duty_time) &gt;='12:00:00',max(w.duty_time),'') as dutyTimeEnd
+        FROM
+        hr_duty_worktime w
+        WHERE
+        w.duty_date &gt;= #{dateStart}
+       and  w.duty_date &lt;= #{dateEnd}
+        <if test="accountIds!=null" >
+            and w.employee_id in
+            <foreach item="item" index="index" collection="accountIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        GROUP BY
+        w.employee_id,
+        w.duty_date ASC
+    </select>
 </mapper>
