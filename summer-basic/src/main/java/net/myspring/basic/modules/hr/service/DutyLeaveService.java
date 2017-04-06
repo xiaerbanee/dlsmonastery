@@ -33,9 +33,11 @@ public class DutyLeaveService {
     @Autowired
     private SecurityUtils securityUtils;
 
-    public Page<DutyLeave> findPage(Pageable pageable, Map<String, Object> map) {
+    public Page<DutyLeaveDto> findPage(Pageable pageable, Map<String, Object> map) {
         Page<DutyLeave> page = dutyLeaveMapper.findPage(pageable, map);
-        return page;
+        Page<DutyLeaveDto> dutyLeaveDtoPage=BeanMapper.convertPage(page,DutyLeaveDto.class);
+        cacheUtils.initCacheInput(dutyLeaveDtoPage.getContent());
+        return dutyLeaveDtoPage;
     }
 
     public DutyLeave save(DutyLeaveForm dutyLeaveForm) {

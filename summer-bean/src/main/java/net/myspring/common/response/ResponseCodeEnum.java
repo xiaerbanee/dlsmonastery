@@ -7,6 +7,7 @@ public enum ResponseCodeEnum {
     saved,
     updated,
     removed,
+    audited,
     missing_field,
     invalid,
     already_exists

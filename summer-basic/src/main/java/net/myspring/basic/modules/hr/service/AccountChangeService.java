@@ -12,6 +12,7 @@ import net.myspring.basic.modules.hr.mapper.*;
 import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.util.mapper.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,13 @@ public class AccountChangeService {
     public AccountChange findOne(String id){
         AccountChange accountChange=accountChangeMapper.findOne(id);
         return accountChange;
+    }
+
+    public AccountChangeDto findDto(String id){
+        AccountChange accountChange=findOne(id);
+        AccountChangeDto accountChangeDto= BeanMapper.convertDto(accountChange,AccountChangeDto.class);
+        cacheUtils.initCacheInput(accountChangeDto);
+        return accountChangeDto;
     }
 
     public Page<AccountChangeDto> findPage(Pageable pageable, Map<String,Object> map){
