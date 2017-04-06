@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.cloud.modules.kingdee.mapper.BdAccountMapper">
+    <select id="findFNumberByName" resultType="String">
+        select
+        t.FNUMBER
+        from
+        T_BD_ACCOUNT t,
+        T_BD_ACCOUNT_L  tl
+        where
+        t.FACCTID = tl.FACCTID
+        and  tl.FNAME = #{name}
+    </select>
+</mapper>

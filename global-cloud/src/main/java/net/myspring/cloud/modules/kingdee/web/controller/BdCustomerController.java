@@ -35,4 +35,10 @@ public class BdCustomerController {
         return ObjectMapperUtils.writeValueAsString(customerList);
     }
 
+    @RequestMapping(value = "getByName", method = RequestMethod.GET)
+    public String getByName(String customerName) {
+        List<BdCustomer> customerList = bdCustomerService.findByName(customerName);
+        return ObjectMapperUtils.writeValueAsString(customerList);
+    }
+
 }

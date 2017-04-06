@@ -14,4 +14,6 @@ import java.util.List;
 public interface BdCustomerMapper {
 
     List<BdCustomer> findAll(@Param("maxOutDate")LocalDateTime maxOutDate);
+
+    List<BdCustomer> findByName(@Param("name") String name);
 }
