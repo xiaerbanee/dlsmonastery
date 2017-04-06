@@ -1,14 +1,13 @@
 package net.myspring.basic.modules.sys.web.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.sys.domain.Folder;
 import net.myspring.basic.modules.sys.dto.FolderDto;
-import net.myspring.basic.modules.sys.dto.FolderFileDto;
 import net.myspring.basic.modules.sys.service.FolderService;
 import net.myspring.basic.modules.sys.web.form.FolderForm;
-import net.myspring.common.domain.RestResponse;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +35,14 @@ public class FolderController {
     @RequestMapping(value = "delete")
     public String delete(Folder folder,BindingResult bindingResult) {
         folderService.deleteOne(folder.getId());
-        RestResponse restResponse=new RestResponse("删除成功");
+        RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 
     @RequestMapping(value = "save")
     public String save(FolderForm folderForm) {
         folderService.save(folderForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功"));
+        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
     }
 
     @RequestMapping(value = "findOne")

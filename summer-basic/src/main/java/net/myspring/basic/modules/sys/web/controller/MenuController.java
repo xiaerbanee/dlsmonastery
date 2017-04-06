@@ -9,7 +9,8 @@ import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.service.MenuCategoryService;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
-import net.myspring.common.domain.RestResponse;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -46,17 +47,17 @@ public class MenuController {
     @RequestMapping(value = "delete")
     public String delete(Menu menu, BindingResult bindingResult) {
         if(CollectionUtil.isNotEmpty(menu.getPermissionList())){
-            return ObjectMapperUtils.writeValueAsString(new RestResponse("菜单删除失败，请先删除下属权限"));
+            return ObjectMapperUtils.writeValueAsString(new RestResponse("菜单删除失败，请先删除下属权限",null));
         }
         menuService.delete(menu.getId());
-        RestResponse restResponse=new RestResponse("删除成功");
+        RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 
     @RequestMapping(value = "save")
     public String save(MenuForm menuForm) {
         menuService.save(menuForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功"));
+        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
     }
 
     @RequestMapping(value = "findOne")

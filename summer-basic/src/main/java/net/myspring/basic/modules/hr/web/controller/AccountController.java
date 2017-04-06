@@ -11,7 +11,8 @@ import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.service.AccountService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
-import net.myspring.common.domain.RestResponse;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelSheet;
@@ -20,13 +21,7 @@ import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,14 +54,14 @@ public class AccountController {
     @RequestMapping(value = "delete")
     public String delete(String id) {
         accountService.logicDeleteOne(id);
-        RestResponse restResponse =new RestResponse("删除成功");
+        RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 
     @RequestMapping(value = "save")
     public String save(AccountForm accountForm) {
         accountService.save(accountForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功"));
+        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
     }
 
     @RequestMapping(value = "findOne")

@@ -1,13 +1,12 @@
 package net.myspring.basic.modules.sys.web.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.RequestUtils;
-import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.service.DictEnumService;
 import net.myspring.basic.modules.sys.web.form.DictEnumForm;
-import net.myspring.common.domain.RestResponse;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -35,14 +33,14 @@ public class DictEnumController {
     @RequestMapping(value = "delete")
     public String delete(String id) {
         dictEnumService.logicDeleteOne(id);
-        RestResponse restResponse =new RestResponse("删除成功");
+        RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 
     @RequestMapping(value = "save")
     public String save(DictEnumForm dictEnumForm) {
         dictEnumService.save(dictEnumForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功"));
+        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功", ResponseCodeEnum.saved.name()));
     }
 
     @RequestMapping(value = "findOne")

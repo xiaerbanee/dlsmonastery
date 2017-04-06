@@ -4,13 +4,13 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DataScopeEnum;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.RequestUtils;
-import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.service.JobService;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.sys.service.PermissionService;
-import net.myspring.common.domain.RestResponse;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -71,13 +71,13 @@ public class PositionController {
     public String save(PositionForm positionForm, String permissionIdStr) {
         positionForm.setPermissionIdList(StringUtils.getSplitList(permissionIdStr, Const.CHAR_COMMA));
         positionService.save(positionForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("岗位保存成功"));
+        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
     }
 
     @RequestMapping(value = "delete")
     public String delete(String id) {
         positionService.delete(id);
-        RestResponse restResponse =new RestResponse("删除成功");
+        RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 

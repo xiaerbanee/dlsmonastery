@@ -8,7 +8,8 @@ import net.myspring.basic.modules.sys.dto.PermissionDto;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.basic.modules.sys.web.form.PermissionForm;
-import net.myspring.common.domain.RestResponse;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -38,14 +39,14 @@ public class PermissionController {
     @RequestMapping(value = "delete")
     public String delete(String id) {
         permissionService.logicDeleteOne(id);
-        RestResponse restResponse =new RestResponse("删除成功");
+        RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 
     @RequestMapping(value = "save")
     public String save(PermissionForm permissionForm) {
         permissionService.save(permissionForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功"));
+        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
     }
 
     @RequestMapping(value = "findOne")

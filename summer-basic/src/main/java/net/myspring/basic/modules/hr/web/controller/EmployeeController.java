@@ -1,18 +1,16 @@
 package net.myspring.basic.modules.hr.web.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.common.utils.RequestUtils;
-import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.sys.service.DictEnumService;
-import net.myspring.common.domain.RestResponse;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.common.domain.SearchEntity;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
@@ -39,15 +37,15 @@ public class EmployeeController {
     @RequestMapping(value = "delete")
     public String delete(String id) {
         employeeService.logicDeleteOne(id);
-        RestResponse restResponse =new RestResponse("删除成功");
+        RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 
     @RequestMapping(value = "save")
     public String save(EmployeeForm employeeForm) {
         employeeService.save(employeeForm);
-        RestResponse restResponse = new RestResponse("保存成功");
-        restResponse.getExtendMap().put("employeeId",employeeForm.getId());
+        RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        restResponse.getExtra().put("employeeId",employeeForm.getId());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 

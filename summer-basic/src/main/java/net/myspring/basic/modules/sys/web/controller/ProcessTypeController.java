@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.sys.web.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.BoolEnum;
 import net.myspring.basic.common.utils.RequestUtils;
@@ -9,7 +8,8 @@ import net.myspring.basic.modules.sys.domain.ProcessType;
 import net.myspring.basic.modules.sys.dto.ProcessTypeDto;
 import net.myspring.basic.modules.sys.service.ProcessTypeService;
 import net.myspring.basic.modules.sys.web.form.ProcessTypeForm;
-import net.myspring.common.domain.RestResponse;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,13 +39,13 @@ public class ProcessTypeController {
     @RequestMapping(value = "delete")
     public String delete(ProcessType processType,BindingResult bindingResult) {
         processTypeService.logicDeleteOne(processType);
-        RestResponse restResponse=new RestResponse("删除成功");
+        RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 
     @RequestMapping(value = "save")
     public String save(ProcessTypeForm processTypeForm) {
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功"));
+        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
     }
 
     @RequestMapping(value = "findOne")

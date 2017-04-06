@@ -2,18 +2,16 @@ package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.RequestUtils;
-import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.web.form.DictMapForm;
-import net.myspring.common.domain.RestResponse;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import net.myspring.basic.modules.sys.service.DictMapService;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,13 +54,13 @@ public class DictMapController {
     @RequestMapping(value = "save")
     public String save(DictMapForm dictMapForm) {
         dictMapService.save(dictMapForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功"));
+        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功", ResponseCodeEnum.saved.name()));
     }
 
     @RequestMapping(value = "delete")
     public String delete(String id) {
         dictMapService.logicDeleteOne(id);
-        RestResponse restResponse = new RestResponse("刪除成功");
+        RestResponse restResponse = new RestResponse("刪除成功",ResponseCodeEnum.removed.name());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 
