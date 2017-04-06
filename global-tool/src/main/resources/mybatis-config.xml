@@ -35,8 +35,8 @@
         <typeHandler handler="org.apache.ibatis.type.MonthTypeHandler" />
     </typeHandlers>
     <plugins>
-        <plugin interceptor="net.myspring.mybatis.interceptor.PageableInterceptor"><property name="mybatisContext" value="net.myspring.cloud.common.config.MybatisContextImpl"/></plugin>
-        <plugin interceptor="net.myspring.mybatis.interceptor.AuditingInterceptor"><property name="mybatisContext" value="net.myspring.cloud.common.config.MybatisContextImpl"/></plugin>
+        <plugin interceptor="net.myspring.mybatis.interceptor.PageableInterceptor"><property name="mybatisContext" value="net.myspring.tool.common.config.MybatisContextImpl"/></plugin>
+        <plugin interceptor="net.myspring.mybatis.interceptor.AuditingInterceptor"><property name="mybatisContext" value="net.myspring.tool.common.config.MybatisContextImpl"/></plugin>
         <plugin interceptor="net.myspring.mybatis.interceptor.VersionInterceptor"/>
     </plugins>
 </configuration>

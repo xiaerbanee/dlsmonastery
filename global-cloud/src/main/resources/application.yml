@@ -11,6 +11,18 @@ spring:
     password:
     port: 6379
     database: 0
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: cloud-stream
+          group: group
+          consumer:
+            durableSubscription: true
+  rabbitmq:
+    addresses: amqp://127.0.0.1:5672
+    username: alan
+    password: alan
 mybatis:
   config-location: classpath:/mybatis-config.xml
 server:
