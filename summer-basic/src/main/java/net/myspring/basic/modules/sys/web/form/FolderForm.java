@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by admin on 2017/4/5.
  */
-@FormDomain(Folder.class)
+
 public class FolderForm {
 
     private Folder parent;

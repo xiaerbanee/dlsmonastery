@@ -6,7 +6,7 @@ import net.myspring.mybatis.annotation.FormDomain;
 /**
  * Created by admin on 2017/4/5.
  */
-@FormDomain(MenuForm.class)
+
 public class MenuForm {
     private String permissionStr;
 

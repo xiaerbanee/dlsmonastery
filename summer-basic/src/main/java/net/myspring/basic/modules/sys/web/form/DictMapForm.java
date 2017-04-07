@@ -6,7 +6,7 @@ import net.myspring.mybatis.annotation.FormDomain;
 /**
  * Created by admin on 2017/4/1.
  */
-@FormDomain(DictMap.class)
+
 public class DictMapForm{
 
     private String category;

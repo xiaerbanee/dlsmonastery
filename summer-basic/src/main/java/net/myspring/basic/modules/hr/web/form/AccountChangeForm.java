@@ -1,11 +1,10 @@
 package net.myspring.basic.modules.hr.web.form;
 
 import net.myspring.basic.modules.hr.domain.AccountChange;
-import net.myspring.mybatis.annotation.FormDomain;
+import net.myspring.mybatis.form.BaseForm;
 
 /**
  * Created by admin on 2017/4/6.
  */
-@FormDomain(AccountChange.class)
-public class AccountChangeForm{
+public class AccountChangeForm extends BaseForm<AccountChange> {
 }

@@ -6,6 +6,6 @@ import net.myspring.mybatis.annotation.FormDomain;
 /**
  * Created by admin on 2017/4/5.
  */
-@FormDomain(Position.class)
+
 public class PositionForm {
 }

@@ -7,6 +7,6 @@ import net.myspring.mybatis.annotation.FormDomain;
 /**
  * Created by admin on 2017/4/6.
  */
-@FormDomain(EmployeeSalary.class)
+
 public class EmployeeSalaryForm {
 }
