@@ -30,10 +30,10 @@ public class AccountChangeController {
     private PositionService positionService;
 
     @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public String detail(AccountChangeForm accountChangeForm) {
+    public Map<String,Object> detail(AccountChangeForm accountChangeForm) {
         Map<String,Object> paramMap= Maps.newHashMap();
         paramMap.put("accountChange", accountChangeForm);
-        return ObjectMapperUtils.writeValueAsString(paramMap);
+        return paramMap;
     }
 
     @RequestMapping(value = "audit", method = RequestMethod.GET)
@@ -42,30 +42,30 @@ public class AccountChangeController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, AccountChangeQuery accountChangeQuery){
+    public Page<AccountChangeDto> list(Pageable pageable, AccountChangeQuery accountChangeQuery){
         Page<AccountChangeDto> page = accountChangeService.findPage(pageable,accountChangeQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    public Map<String,Object> getListProperty(){
         Map<String,Object> map = Maps.newHashMap();
         map.put("areas",officeService.findByType(Const.OFFICE_TYPE_AREA));
         map.put("types", AccountChangeTypeEnum.values());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "getFormProperty")
-    public String getFormProperty(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map = Maps.newHashMap();
         map.put("types",AccountChangeTypeEnum.values());
         map.put("positions",positionService.findAll());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id ){
+    public AccountChangeDto findOne(String id ){
         AccountChangeDto accountChangeDto=accountChangeService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(accountChangeDto);
+        return accountChangeDto;
     }
 }
