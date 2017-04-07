@@ -1,9 +1,12 @@
 package net.myspring.basic.modules.hr.web.form;
 
+import net.myspring.basic.modules.hr.domain.DutyWorktime;
 import net.myspring.basic.modules.hr.domain.Employee;
+import net.myspring.mybatis.annotation.FormDomain;
 
 /**
  * Created by admin on 2017/4/5.
  */
-public class EmployeeForm  extends Employee{
+@FormDomain(Employee.class)
+public class EmployeeForm {
 }

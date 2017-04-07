@@ -1,9 +1,12 @@
 package net.myspring.basic.modules.hr.web.form;
 
 import net.myspring.basic.modules.hr.domain.Office;
+import net.myspring.basic.modules.hr.domain.OfficeChange;
+import net.myspring.mybatis.annotation.FormDomain;
 
 /**
  * Created by admin on 2017/4/6.
  */
-public class OfficeForm extends Office{
+@FormDomain(Office.class)
+public class OfficeForm {
 }
