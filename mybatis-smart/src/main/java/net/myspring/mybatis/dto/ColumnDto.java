@@ -1,9 +1,5 @@
 package net.myspring.mybatis.dto;
 
-import net.myspring.mybatis.annotation.FormDomain;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
-
 import javax.persistence.GeneratedValue;
 
 /**

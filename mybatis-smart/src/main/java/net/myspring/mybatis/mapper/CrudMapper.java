@@ -1,5 +1,6 @@
 package net.myspring.mybatis.mapper;
 
+import net.myspring.mybatis.form.BaseForm;
 import net.myspring.mybatis.provider.CrudProvider;
 import org.apache.ibatis.annotations.*;
 
@@ -24,6 +25,11 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
     @Options(useGeneratedKeys = true)
     <S extends T> int save(S entity);
 
+
+    @InsertProvider(type=CrudProvider.class, method = "save")
+    @Options(useGeneratedKeys = true)
+    <S extends BaseForm<T>> int saveForm(S entity);
+
     /**
      * Saves all given entities.
      *
@@ -34,6 +40,10 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
     @InsertProvider(type=CrudProvider.class, method = "batchSave")
     @Options(useGeneratedKeys = true)
     <S extends T> int batchSave(Iterable<S> entities);
+
+    @InsertProvider(type=CrudProvider.class, method = "batchSave")
+    @Options(useGeneratedKeys = true)
+    <S extends BaseForm<T>> int batchSaveForm(Iterable<S> entities);
 
     /**
      * Retrieves an entity by its id.
@@ -131,5 +141,8 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      */
     @UpdateProvider(type=CrudProvider.class, method = "update")
     <S extends T> int update(S entity);
+
+    @UpdateProvider(type=CrudProvider.class, method = "update")
+    <S extends BaseForm<T>> int updateForm(S entity);
 
 }

@@ -3,7 +3,6 @@ package net.myspring.mybatis.dto;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import javax.persistence.GeneratedValue;
 import java.util.List;
 import java.util.Map;
 

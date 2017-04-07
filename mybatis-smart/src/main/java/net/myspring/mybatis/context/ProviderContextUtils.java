@@ -3,9 +3,9 @@ package net.myspring.mybatis.context;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.mybatis.annotation.FormDomain;
 import net.myspring.mybatis.dto.ColumnDto;
 import net.myspring.mybatis.dto.TableDto;
+import net.myspring.mybatis.form.BaseForm;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,6 +15,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -114,11 +115,9 @@ public class ProviderContextUtils {
             if(annotation != null) {
                 entityClass = clazz;
             } else {
-                annotation =clazz.getAnnotation(FormDomain.class);
-                if(annotation != null) {
-                    entityClass = ((FormDomain)annotation).value();
+                if(clazz.isAssignableFrom(BaseForm.class)) {
+                    entityClass = ((ParameterizedType)clazz.getGenericSuperclass()).getActualTypeArguments()[0].getClass();
                 }
-
             }
             entityClassMap.put(key,entityClass);
         }
