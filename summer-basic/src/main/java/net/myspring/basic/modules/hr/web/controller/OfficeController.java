@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.dto.OfficeDto;
 import net.myspring.basic.modules.hr.service.OfficeService;
 import net.myspring.basic.modules.hr.web.form.OfficeForm;
+import net.myspring.basic.modules.hr.web.query.OfficeQuery;
 import net.myspring.basic.modules.sys.service.DictEnumService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -16,6 +17,7 @@ import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,9 +34,8 @@ public class OfficeController {
     private DictEnumService  dictEnumService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request) {
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<OfficeDto> page = officeService.findPage(searchEntity.getPageable(), searchEntity.getParams());
+    public String list(Pageable pageable, OfficeQuery officeQuery) {
+        Page<OfficeDto> page = officeService.findPage(pageable,officeQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

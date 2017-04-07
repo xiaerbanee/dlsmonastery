@@ -5,6 +5,7 @@ import net.myspring.basic.common.config.ExcelView;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.dto.DutyAnnualDto;
 import net.myspring.basic.modules.hr.service.DutyAnnualService;
+import net.myspring.basic.modules.hr.web.query.DutyAnnualQuery;
 import net.myspring.basic.modules.sys.domain.FolderFile;
 import net.myspring.basic.modules.sys.service.FolderFileService;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -17,6 +18,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,10 +37,9 @@ public class DutyAnnualController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request) {
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        searchEntity.getParams().put("createdBy", securityUtils.getAccountId());
-        Page<DutyAnnualDto> page  = dutyAnnualService.findPage(searchEntity.getPageable(), searchEntity.getParams());
+    public String list(Pageable pageable, DutyAnnualQuery dutyAnnualQuery) {
+        dutyAnnualQuery.setCreatedBy(securityUtils.getAccountId());
+        Page<DutyAnnualDto> page  = dutyAnnualService.findPage(pageable,dutyAnnualQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

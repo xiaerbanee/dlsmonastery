@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.domain.DutyLeave;
 import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
 import net.myspring.basic.modules.hr.mapper.DutyLeaveMapper;
 import net.myspring.basic.modules.hr.web.form.DutyLeaveForm;
+import net.myspring.basic.modules.hr.web.query.DutyLeaveQuery;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class DutyLeaveService {
     @Autowired
     private SecurityUtils securityUtils;
 
-    public Page<DutyLeaveDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DutyLeave> page = dutyLeaveMapper.findPage(pageable, map);
+    public Page<DutyLeaveDto> findPage(Pageable pageable, DutyLeaveQuery dutyLeaveQuery) {
+        Page<DutyLeave> page = dutyLeaveMapper.findPage(pageable, dutyLeaveQuery);
         Page<DutyLeaveDto> dutyLeaveDtoPage=BeanMapper.convertPage(page,DutyLeaveDto.class);
         cacheUtils.initCacheInput(dutyLeaveDtoPage.getContent());
         return dutyLeaveDtoPage;

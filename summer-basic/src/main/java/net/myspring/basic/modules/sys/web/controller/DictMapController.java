@@ -3,11 +3,13 @@ package net.myspring.basic.modules.sys.web.controller;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.web.form.DictMapForm;
+import net.myspring.basic.modules.sys.web.query.DictMapQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import net.myspring.basic.modules.sys.service.DictMapService;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +39,8 @@ public class DictMapController {
     }
 
     @RequestMapping
-    public String list(HttpServletRequest request) {
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<DictMapDto> page = dictMapService.findPage(searchEntity.getPageable(), searchEntity.getParams());
+    public String list(Pageable pageable, DictMapQuery dictMapQuery) {
+        Page<DictMapDto> page = dictMapService.findPage(pageable, dictMapQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

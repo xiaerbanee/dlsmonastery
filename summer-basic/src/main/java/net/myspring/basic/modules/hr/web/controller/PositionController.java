@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.service.JobService;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
+import net.myspring.basic.modules.hr.web.query.PositionQuery;
 import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -14,6 +15,7 @@ import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,9 +38,8 @@ public class PositionController {
     private PermissionService permissionService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String findPage(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<PositionDto> page = positionService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String findPage(Pageable pageable, PositionQuery positionQuery){
+        Page<PositionDto> page = positionService.findPage(pageable,positionQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

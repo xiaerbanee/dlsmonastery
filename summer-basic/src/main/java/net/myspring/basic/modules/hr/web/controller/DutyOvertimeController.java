@@ -1,14 +1,17 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.modules.hr.domain.DutyOvertime;
 import net.myspring.basic.modules.hr.dto.DutyOvertimeDto;
 import net.myspring.basic.modules.hr.service.DutyOvertimeService;
 import net.myspring.basic.modules.hr.web.form.DutyOvertimeForm;
+import net.myspring.basic.modules.hr.web.query.DutyOvertimeQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +27,9 @@ public class DutyOvertimeController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request) {
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        searchEntity.getParams().put("createdBy", securityUtils.getAccountId());
-        Page<DutyOvertimeDto> page = dutyOvertimeService.findPage(searchEntity.getPageable(), searchEntity.getParams());
+    public String list(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
+        dutyOvertimeQuery.setCreatedBy(securityUtils.getAccountId());
+        Page<DutyOvertimeDto> page = dutyOvertimeService.findPage(pageable,dutyOvertimeQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

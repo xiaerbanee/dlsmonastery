@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.Recruit;
 import net.myspring.basic.modules.hr.dto.RecruitDto;
 import net.myspring.basic.modules.hr.mapper.RecruitMapper;
 import net.myspring.basic.modules.hr.web.form.RecruitForm;
+import net.myspring.basic.modules.hr.web.query.RecruitQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
@@ -30,8 +31,8 @@ public class RecruitService {
     @Autowired
     private SecurityUtils securityUtils;
 
-    public Page<RecruitDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<Recruit> page = recruitMapper.findPage(pageable, map);
+    public Page<RecruitDto> findPage(Pageable pageable, RecruitQuery recruitQuery) {
+        Page<Recruit> page = recruitMapper.findPage(pageable, recruitQuery);
         Page<RecruitDto> recruitDtoPage= BeanMapper.convertPage(page,RecruitDto.class);
         cacheUtils.initCacheInput(recruitDtoPage.getContent());
         return recruitDtoPage;

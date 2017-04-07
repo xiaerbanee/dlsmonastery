@@ -8,12 +8,14 @@ import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
 import net.myspring.basic.modules.hr.service.DutyLeaveService;
 import net.myspring.basic.modules.hr.web.form.DutyLeaveForm;
+import net.myspring.basic.modules.hr.web.query.DutyLeaveQuery;
 import net.myspring.basic.modules.sys.service.DictEnumService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +34,9 @@ public class DutyLeaveController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        searchEntity.getParams().put("createdBy", securityUtils.getAccountId());
-        Page<DutyLeaveDto> page = dutyLeaveService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String list(Pageable pageable, DutyLeaveQuery dutyLeaveQuery){
+        dutyLeaveQuery.setCreatedBy(securityUtils.getAccountId());
+        Page<DutyLeaveDto> page = dutyLeaveService.findPage(pageable,dutyLeaveQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

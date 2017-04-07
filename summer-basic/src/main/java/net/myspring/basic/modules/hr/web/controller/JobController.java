@@ -2,11 +2,13 @@ package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.basic.modules.hr.dto.JobDto;
 import net.myspring.basic.modules.hr.web.form.JobForm;
+import net.myspring.basic.modules.hr.web.query.JobQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +23,8 @@ public class JobController {
     private JobService jobService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String findPage(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<JobDto> page = jobService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String findPage(Pageable pageable, JobQuery jobQuery){
+        Page<JobDto> page = jobService.findPage(pageable,jobQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

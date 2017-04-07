@@ -18,6 +18,7 @@ import net.myspring.basic.modules.sys.mapper.PermissionMapper;
 import net.myspring.basic.modules.sys.model.MenuCategoryItem;
 import net.myspring.basic.modules.sys.model.MenuItem;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
+import net.myspring.basic.modules.sys.web.query.MenuQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanMapper;
@@ -168,8 +169,8 @@ public class MenuService {
         return menuMapper.findDistinctCategory();
     }
 
-    public Page<MenuDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<Menu> page = menuMapper.findPage(pageable, map);
+    public Page<MenuDto> findPage(Pageable pageable, MenuQuery menuQuery) {
+        Page<Menu> page = menuMapper.findPage(pageable, menuQuery);
         Page<MenuDto> menuDtoPage=BeanMapper.convertPage(page,MenuDto.class);
         cacheUtils.initCacheInput(menuDtoPage.getContent());
         return menuDtoPage;

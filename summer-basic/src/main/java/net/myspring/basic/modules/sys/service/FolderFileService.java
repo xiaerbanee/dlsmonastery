@@ -8,6 +8,7 @@ import net.myspring.basic.modules.sys.domain.FolderFile;
 import net.myspring.basic.modules.sys.dto.FolderFileDto;
 import net.myspring.basic.modules.sys.manager.FolderFileManager;
 import net.myspring.basic.modules.sys.mapper.FolderFileMapper;
+import net.myspring.basic.modules.sys.web.query.FolderFileQuery;
 import net.myspring.util.io.FileUtil;
 import net.myspring.util.mapper.BeanMapper;
 import org.imgscalr.Scalr;
@@ -98,8 +99,8 @@ public class FolderFileService {
         return uploadRootPath + securityUtils.getCompanyId()+ "\\convert\\" + folderFile.getPhysicalName().substring(0, folderFile.getPhysicalName().lastIndexOf(".")) + ".png";
     }
 
-    public Page<FolderFileDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<FolderFile> page = folderFileMapper.findPage(pageable, map);
+    public Page<FolderFileDto> findPage(Pageable pageable, FolderFileQuery folderFileQuery) {
+        Page<FolderFile> page = folderFileMapper.findPage(pageable, folderFileQuery);
         Page<FolderFileDto> FolderFileDtoPage=BeanMapper.convertPage(page,FolderFileDto.class);
         cacheUtils.initCacheInput(FolderFileDtoPage.getContent());
         return FolderFileDtoPage;

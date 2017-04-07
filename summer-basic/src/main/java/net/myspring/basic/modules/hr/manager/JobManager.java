@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.manager;
 
 import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.mapper.JobMapper;
+import net.myspring.basic.modules.hr.web.query.JobQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,8 +26,8 @@ public class JobManager {
         return jobMapper.findOne(id);
     }
 
-    public Page<Job> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<Job> page = jobMapper.findPage(pageable, map);
+    public Page<Job> findPage(Pageable pageable, JobQuery jobQuery) {
+        Page<Job> page = jobMapper.findPage(pageable, jobQuery);
         return page;
     }
 

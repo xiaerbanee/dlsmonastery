@@ -9,6 +9,7 @@ import net.myspring.basic.modules.sys.domain.FolderFile;
 import net.myspring.basic.modules.sys.dto.FolderFileDto;
 import net.myspring.basic.modules.sys.service.FolderFileService;
 import net.myspring.basic.modules.sys.service.FolderService;
+import net.myspring.basic.modules.sys.web.query.FolderFileQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanMapper;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,9 +46,8 @@ public class FolderFileController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<FolderFileDto> page = folderFileService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String list(Pageable pageable, FolderFileQuery folderFileQuery){
+        Page<FolderFileDto> page = folderFileService.findPage(pageable,folderFileQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

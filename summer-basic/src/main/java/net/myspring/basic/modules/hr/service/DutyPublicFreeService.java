@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.DutyPublicFree;
 import net.myspring.basic.modules.hr.dto.DutyPublicFreeDto;
 import net.myspring.basic.modules.hr.mapper.DutyPublicFreeMapper;
 import net.myspring.basic.modules.hr.web.form.DutyPublicFreeForm;
+import net.myspring.basic.modules.hr.web.query.DutyPublicFreeQuery;
 import net.myspring.util.mapper.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,8 +36,8 @@ public class DutyPublicFreeService {
         return dutyPublicFreeForm;
     }
 
-    public Page<DutyPublicFreeDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DutyPublicFree> page = dutyPublicFreeMapper.findPage(pageable,map);
+    public Page<DutyPublicFreeDto> findPage(Pageable pageable, DutyPublicFreeQuery dutyPublicFreeQuery) {
+        Page<DutyPublicFree> page = dutyPublicFreeMapper.findPage(pageable,dutyPublicFreeQuery);
         Page<DutyPublicFreeDto> dutyPublicFreeDtoPage= BeanMapper.convertPage(page,DutyPublicFreeDto.class);
         cacheUtils.initCacheInput(dutyPublicFreeDtoPage.getContent());
         return dutyPublicFreeDtoPage;

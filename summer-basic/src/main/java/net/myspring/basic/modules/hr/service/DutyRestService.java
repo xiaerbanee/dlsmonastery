@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.DutyRest;
 import net.myspring.basic.modules.hr.dto.DutyRestDto;
 import net.myspring.basic.modules.hr.mapper.DutyRestMapper;
 import net.myspring.basic.modules.hr.web.form.DutyRestForm;
+import net.myspring.basic.modules.hr.web.query.DutyRestQuery;
 import net.myspring.util.mapper.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,8 +30,8 @@ public class DutyRestService {
     @Autowired
     private SecurityUtils securityUtils;
 
-    public Page<DutyRestDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DutyRest> page = dutyRestMapper.findPage(pageable, map);
+    public Page<DutyRestDto> findPage(Pageable pageable,DutyRestQuery dutyRestQuery) {
+        Page<DutyRest> page = dutyRestMapper.findPage(pageable, dutyRestQuery);
         Page<DutyRestDto> dutyRestDtoPage=BeanMapper.convertPage(page,DutyRestDto.class);
         cacheUtils.initCacheInput(dutyRestDtoPage.getContent());
         return dutyRestDtoPage;

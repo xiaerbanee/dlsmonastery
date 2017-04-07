@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.DutySign;
 import net.myspring.basic.modules.hr.dto.DutySignDto;
 import net.myspring.basic.modules.hr.mapper.DutySignMapper;
 import net.myspring.basic.modules.hr.web.form.DutySignForm;
+import net.myspring.basic.modules.hr.web.query.DutySignQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanMapper;
@@ -48,15 +49,15 @@ public class DutySignService {
         return dutySignForm;
     }
 
-    public Page<DutySignDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DutySign> page = dutySignMapper.findPage(pageable,map);
+    public Page<DutySignDto> findPage(Pageable pageable, DutySignQuery dutySignQuery) {
+        Page<DutySign> page = dutySignMapper.findPage(pageable,dutySignQuery);
         Page<DutySignDto> dutySignDtoPage= BeanMapper.convertPage(page,DutySignDto.class);
         cacheUtils.initCacheInput(dutySignDtoPage.getContent());
         return dutySignDtoPage;
     }
 
-    public List<DutySignDto> findByFilter(Map<String,Object> map) {
-        List<DutySign> dutySignList =  dutySignMapper.findByFilter(map);
+    public List<DutySignDto> findByFilter(DutySignQuery dutySignQuery) {
+        List<DutySign> dutySignList =  dutySignMapper.findByFilter(dutySignQuery);
         List<DutySignDto> dutySignDtoList=BeanMapper.convertDtoList(dutySignList,DutySignDto.class);
         cacheUtils.initCacheInput(dutySignDtoList);
         return  dutySignDtoList;
@@ -78,8 +79,8 @@ public class DutySignService {
         return dutySignDto;
     }
 
-    public SimpleExcelSheet findSimpleExcelSheet(Workbook workbook, Map<String, Object> map){
-        List<DutySign> dutySignList = dutySignMapper.findByFilter(map);
+    public SimpleExcelSheet findSimpleExcelSheet(Workbook workbook, DutySignQuery dutySignQuery){
+        List<DutySign> dutySignList = dutySignMapper.findByFilter(dutySignQuery);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"employee.name","姓名"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"dutyDate","日期"));

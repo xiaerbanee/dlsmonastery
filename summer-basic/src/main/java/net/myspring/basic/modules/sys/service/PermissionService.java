@@ -14,6 +14,7 @@ import net.myspring.basic.modules.sys.manager.PermissionManager;
 import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
 import net.myspring.basic.modules.sys.mapper.MenuMapper;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
+import net.myspring.basic.modules.sys.web.query.PermissionQuery;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanMapper;
@@ -70,8 +71,8 @@ public class PermissionService {
         return permissionMapper.findByPermissionLike(permissionStr);
     }
 
-    public Page<PermissionDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<Permission> page = permissionMapper.findPage(pageable, map);
+    public Page<PermissionDto> findPage(Pageable pageable,PermissionQuery permissionQuery) {
+        Page<Permission> page = permissionMapper.findPage(pageable, permissionQuery);
         Page<PermissionDto> permissionDtoPage= BeanMapper.convertPage(page,PermissionDto.class);
         cacheUtils.initCacheInput(permissionDtoPage.getContent());
         return permissionDtoPage;

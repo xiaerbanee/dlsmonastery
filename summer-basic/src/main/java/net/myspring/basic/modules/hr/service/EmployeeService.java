@@ -6,6 +6,7 @@ import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
+import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,8 @@ public class EmployeeService {
         return employeeDto;
     }
 
-    public Page<EmployeeDto> findPage(Pageable pageable, Map<String,Object> map){
-        Page<Employee> page=employeeManager.findPage(pageable,map);
+    public Page<EmployeeDto> findPage(Pageable pageable, EmployeeQuery employeeQuery){
+        Page<Employee> page=employeeManager.findPage(pageable,employeeQuery);
         Page<EmployeeDto> employeeDtoPage=BeanMapper.convertPage(page,EmployeeDto.class);
         cacheUtils.initCacheInput(employeeDtoPage.getContent());
         return employeeDtoPage;

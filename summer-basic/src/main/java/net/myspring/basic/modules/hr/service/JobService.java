@@ -6,6 +6,7 @@ import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.dto.JobDto;
 import net.myspring.basic.modules.hr.manager.JobManager;
 import net.myspring.basic.modules.hr.web.form.JobForm;
+import net.myspring.basic.modules.hr.web.query.JobQuery;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
@@ -25,8 +26,8 @@ public class JobService {
     @Autowired
     private JobManager jobManager;
 
-    public Page<JobDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<Job> page = jobManager.findPage(pageable, map);
+    public Page<JobDto> findPage(Pageable pageable, JobQuery jobQuery) {
+        Page<Job> page = jobManager.findPage(pageable, jobQuery);
         Page<JobDto> jobDtoPage = BeanMapper.convertPage(page, JobDto.class);
         cacheUtils.initCacheInput(jobDtoPage.getContent());
         return jobDtoPage;

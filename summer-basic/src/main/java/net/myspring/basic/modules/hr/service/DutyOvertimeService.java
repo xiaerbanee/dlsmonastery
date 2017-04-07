@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.DutyOvertime;
 import net.myspring.basic.modules.hr.dto.DutyOvertimeDto;
 import net.myspring.basic.modules.hr.mapper.DutyOvertimeMapper;
 import net.myspring.basic.modules.hr.web.form.DutyOvertimeForm;
+import net.myspring.basic.modules.hr.web.query.DutyOvertimeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.time.LocalDateTimeUtils;
@@ -35,8 +36,8 @@ public class DutyOvertimeService {
     private SecurityUtils securityUtils;
 
 
-    public Page<DutyOvertimeDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DutyOvertime> page = dutyOvertimeMapper.findPage(pageable, map);
+    public Page<DutyOvertimeDto> findPage(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
+        Page<DutyOvertime> page = dutyOvertimeMapper.findPage(pageable, dutyOvertimeQuery);
         Page<DutyOvertimeDto> dutyOvertimeDtoPage=BeanMapper.convertPage(page,DutyOvertimeDto.class);
         cacheUtils.initCacheInput(dutyOvertimeDtoPage.getContent());
         return dutyOvertimeDtoPage;

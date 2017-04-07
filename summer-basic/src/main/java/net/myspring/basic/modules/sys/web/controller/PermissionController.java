@@ -7,12 +7,14 @@ import net.myspring.basic.modules.sys.dto.PermissionDto;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.basic.modules.sys.web.form.PermissionForm;
+import net.myspring.basic.modules.sys.web.query.PermissionQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,9 +30,8 @@ public class PermissionController {
     private MenuService menuService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<PermissionDto> page = permissionService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String list(Pageable pageable, PermissionQuery permissionQuery){
+        Page<PermissionDto> page = permissionService.findPage(pageable,permissionQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

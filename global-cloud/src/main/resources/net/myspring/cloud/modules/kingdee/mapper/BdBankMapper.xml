@@ -13,7 +13,7 @@
         WHERE
         t1.FBANKACNTID = t2.FBANKACNTID
         <if test="maxOutDate != null ">
-            AND t1.FMODIFYDATE>#{maxOutDate}
+            AND t1.FMODIFYDATE > #{maxOutDate}
         </if>
     </select>
 </mapper>

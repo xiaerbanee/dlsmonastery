@@ -4,12 +4,14 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.service.DictEnumService;
 import net.myspring.basic.modules.sys.web.form.DictEnumForm;
+import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -22,9 +24,8 @@ public class DictEnumController {
     private DictEnumService dictEnumService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<DictEnumDto> page = dictEnumService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String list(Pageable pageable, DictEnumQuery dictEnumQuery){
+        Page<DictEnumDto> page = dictEnumService.findPage(pageable,dictEnumQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

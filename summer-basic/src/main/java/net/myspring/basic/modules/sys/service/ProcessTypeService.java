@@ -11,6 +11,7 @@ import net.myspring.basic.modules.sys.manager.ProcessFlowManager;
 import net.myspring.basic.modules.sys.manager.ProcessTypeManager;
 import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.basic.modules.sys.mapper.ProcessTypeMapper;
+import net.myspring.basic.modules.sys.web.query.ProcessTypeQuery;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +70,8 @@ public class ProcessTypeService {
         processTypeManager.update(processType);
     }
 
-    public Page<ProcessTypeDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<ProcessType> page = processTypeMapper.findPage(pageable, map);
+    public Page<ProcessTypeDto> findPage(Pageable pageable, ProcessTypeQuery processTypeQuery) {
+        Page<ProcessType> page = processTypeMapper.findPage(pageable, processTypeQuery);
         Page<ProcessTypeDto> processTypeDtoPage= BeanMapper.convertPage(page,ProcessTypeDto.class);
         cacheUtils.initCacheInput(processTypeDtoPage.getContent());
         return processTypeDtoPage;

@@ -4,11 +4,13 @@ import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.dto.DutyTripDto;
 import net.myspring.basic.modules.hr.service.DutyTripService;
 import net.myspring.basic.modules.hr.web.form.DutyTripForm;
+import net.myspring.basic.modules.hr.web.query.DutyTripQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +25,9 @@ public class DutyTripController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        searchEntity.getParams().put("createdBy", securityUtils.getAccountId());
-        Page<DutyTripDto> page = dutyTripService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String list(Pageable pageable, DutyTripQuery dutyTripQuery){
+        dutyTripQuery.setCreatedBy(securityUtils.getAccountId());
+        Page<DutyTripDto> page = dutyTripService.findPage(pageable,dutyTripQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

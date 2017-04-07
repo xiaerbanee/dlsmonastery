@@ -8,6 +8,7 @@ import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.service.MenuCategoryService;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
+import net.myspring.basic.modules.sys.web.query.MenuQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
@@ -15,6 +16,7 @@ import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,9 +38,8 @@ public class MenuController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<MenuDto> page = menuService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String list(Pageable pageable, MenuQuery menuQuery){
+        Page<MenuDto> page = menuService.findPage(pageable,menuQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

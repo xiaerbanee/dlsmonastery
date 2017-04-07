@@ -3,11 +3,13 @@ package net.myspring.basic.modules.hr.web.controller;
 import net.myspring.basic.modules.hr.domain.DutyWorktime;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto;
 import net.myspring.basic.modules.hr.service.DutyWorktimeService;
+import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,22 +29,14 @@ public class DutyWorktimeController {
     private DutyWorktimeService dutyWorktimeService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String findPage(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<DutyWorktimeDto> page = dutyWorktimeService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery){
+        Page<DutyWorktimeDto> page = dutyWorktimeService.findPage(pageable,dutyWorktimeQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 
     @RequestMapping(value = "export")
-    public ModelAndView export(Long accountId,HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        String dutyDateBTW = (String)searchEntity.getParams().get("dutyDate");
-        if(!dutyDateBTW.equals("")) {
-            String[] dutyDateBetween = dutyDateBTW.split(" - ");
-            LocalDate dateStart = LocalDateUtils.parse(dutyDateBetween[0]);
-            LocalDate dateEnd = LocalDateUtils.parse(dutyDateBetween[1]);
-            Map<String, DutyWorktime> getWorktimeMap = dutyWorktimeService.getWorktimeMap(accountId,dateStart,dateEnd);
-        }
+    public ModelAndView export(Long accountId,DutyWorktimeQuery dutyWorktimeQueryt){
+        Map<String, DutyWorktime> getWorktimeMap = dutyWorktimeService.getWorktimeMap(accountId,dutyWorktimeQueryt.getDateStart(),dutyWorktimeQueryt.getDateEnd());
         return null;
     }
 

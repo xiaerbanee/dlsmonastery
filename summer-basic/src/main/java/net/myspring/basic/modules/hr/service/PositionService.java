@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.manager.PositionManager;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
+import net.myspring.basic.modules.hr.web.query.PositionQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
@@ -35,8 +36,8 @@ public class PositionService {
         return positionDtoList;
     }
 
-    public Page<PositionDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<Position> page = positionManager.findPage(pageable, map);
+    public Page<PositionDto> findPage(Pageable pageable, PositionQuery positionQuery) {
+        Page<Position> page = positionManager.findPage(pageable, positionQuery);
         Page<PositionDto> positionDtoPage=BeanMapper.convertPage(page,PositionDto.class);
         cacheUtils.initCacheInput(positionDtoPage.getContent());
         return positionDtoPage;

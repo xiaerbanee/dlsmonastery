@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.DictMap;
+import net.myspring.basic.modules.sys.web.query.DictMapQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -15,7 +16,7 @@ public interface DictMapMapper extends MyMapper<DictMap,String> {
 
     List<String> findDistinctCategory();
 
-    Page<DictMap> findPage(Pageable pageable, @Param("p")Map<String,Object> map);
+    Page<DictMap> findPage(Pageable pageable, @Param("p")DictMapQuery dictMapQuery);
 
 
 }

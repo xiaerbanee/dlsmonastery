@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.FolderFile;
+import net.myspring.basic.modules.sys.web.query.FolderFileQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -13,5 +14,5 @@ import java.util.Map;
 @Mapper
 public interface FolderFileMapper extends MyMapper<FolderFile,String> {
 
-    Page<FolderFile> findPage(Pageable pageable, @Param("p") Map<String, Object> map);
+    Page<FolderFile> findPage(Pageable pageable, @Param("p")FolderFileQuery folderFileQuery);
 }

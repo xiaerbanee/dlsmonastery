@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.manager;
 
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
+import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -50,8 +51,8 @@ public class EmployeeManager {
         return employeeMapper.findByNameLike(name);
     }
 
-    public Page<Employee> findPage(Pageable pageable, Map<String,Object> map){
-        return employeeMapper.findPage(pageable,map);
+    public Page<Employee> findPage(Pageable pageable, EmployeeQuery employeeQuery){
+        return employeeMapper.findPage(pageable,employeeQuery);
     }
 
     List<Employee> findByStatusAndregularDate(String status,LocalDateTime regularDate){

@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.Permission;
+import net.myspring.basic.modules.sys.web.query.PermissionQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ public interface PermissionMapper extends MyMapper<Permission,String> {
 
     List<Permission> findByPermissionLike(String permissionStr);
 
-    Page<Permission> findPage(Pageable pageable, @Param("p") Map<String,Object> map);
+    Page<Permission> findPage(Pageable pageable, @Param("p")PermissionQuery permissionQuery);
 
     int savePermissionPosition(@Param("permissionId")String permissionId,@Param("positionIds")List<String> positionIds);
 

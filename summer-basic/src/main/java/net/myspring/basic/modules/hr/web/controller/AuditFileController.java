@@ -9,6 +9,7 @@ import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.service.AuditFileService;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
+import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.sys.domain.ProcessType;
 import net.myspring.basic.modules.sys.service.FolderService;
 import net.myspring.basic.modules.sys.service.ProcessTypeService;
@@ -18,6 +19,7 @@ import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,12 +46,9 @@ public class AuditFileController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String data(HttpServletRequest request) {
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        if(searchEntity.getParams().get("auditType")==null||searchEntity.getParams().get("auditType").equals("1")){
-            searchEntity.getParams().put("positionId",securityUtils.getPositionId());
-        }
-        Page<AuditFileDto> page = auditFileService.findPage(searchEntity.getPageable(), searchEntity.getParams());
+    public String data(Pageable pageable, AuditFileQuery auditFileQuery) {
+        auditFileQuery.setPositionId(securityUtils.getPositionId());
+        Page<AuditFileDto> page = auditFileService.findPage(pageable,auditFileQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

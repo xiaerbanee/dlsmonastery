@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.DutyTrip;
 import net.myspring.basic.modules.hr.dto.DutyTripDto;
 import net.myspring.basic.modules.hr.mapper.DutyTripMapper;
 import net.myspring.basic.modules.hr.web.form.DutyTripForm;
+import net.myspring.basic.modules.hr.web.query.DutyTripQuery;
 import net.myspring.util.mapper.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,8 +30,8 @@ public class DutyTripService {
     @Autowired
     private SecurityUtils securityUtils;
 
-    public Page<DutyTripDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DutyTrip> page = dutyTripMapper.findPage(pageable, map);
+    public Page<DutyTripDto> findPage(Pageable pageable, DutyTripQuery dutyTripQuery) {
+        Page<DutyTrip> page = dutyTripMapper.findPage(pageable, dutyTripQuery);
         Page<DutyTripDto> dutyTripDtoPage=BeanMapper.convertPage(page,DutyTripDto.class);
         cacheUtils.initCacheInput(dutyTripDtoPage.getContent());
         return dutyTripDtoPage;

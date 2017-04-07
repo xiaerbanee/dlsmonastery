@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.dto.DutyAnnualDto;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.DutyAnnualMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
+import net.myspring.basic.modules.hr.web.query.DutyAnnualQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelColumn;
@@ -48,8 +49,8 @@ public class DutyAnnualService {
         return dutyAnnual;
     }
 
-    public Page<DutyAnnualDto> findPage(Pageable pageable, Map<String,Object> map){
-        Page<DutyAnnual> page=dutyAnnualMapper.findPage(pageable,map);
+    public Page<DutyAnnualDto> findPage(Pageable pageable, DutyAnnualQuery dutyAnnualQuery){
+        Page<DutyAnnual> page=dutyAnnualMapper.findPage(pageable,dutyAnnualQuery);
         Page<DutyAnnualDto> dutyAnnualDtoPage= BeanMapper.convertPage(page,DutyAnnualDto.class);
         cacheUtils.initCacheInput(dutyAnnualDtoPage.getContent());
         return dutyAnnualDtoPage;

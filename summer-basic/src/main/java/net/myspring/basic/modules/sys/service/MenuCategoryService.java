@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
 import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
 import net.myspring.basic.modules.sys.web.form.MenuCategoryForm;
+import net.myspring.basic.modules.sys.web.query.MenuCategoryQuery;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,8 @@ public class MenuCategoryService {
         return menuCategoryDto;
     }
 
-    public Page<MenuCategoryDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<MenuCategory> page = menuCategoryMapper.findPage(pageable, map);
+    public Page<MenuCategoryDto> findPage(Pageable pageable,MenuCategoryQuery menuCategoryQuery) {
+        Page<MenuCategory> page = menuCategoryMapper.findPage(pageable, menuCategoryQuery);
         Page<MenuCategoryDto> menuCategoryDtoPage= BeanMapper.convertPage(page,MenuCategoryDto.class);
         cacheUtils.initCacheInput(menuCategoryDtoPage.getContent());
         return menuCategoryDtoPage;

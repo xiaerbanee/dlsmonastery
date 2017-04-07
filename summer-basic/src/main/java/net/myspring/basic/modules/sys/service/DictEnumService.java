@@ -6,6 +6,7 @@ import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.manager.DictEnumManager;
 import net.myspring.basic.modules.sys.mapper.DictEnumMapper;
 import net.myspring.basic.modules.sys.web.form.DictEnumForm;
+import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +65,8 @@ public class DictEnumService {
         dictEnumMapper.logicDeleteOne(id);
     }
 
-    public Page<DictEnumDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DictEnum> page = dictEnumMapper.findPage(pageable, map);
+    public Page<DictEnumDto> findPage(Pageable pageable, DictEnumQuery dictEnumQuery) {
+        Page<DictEnum> page = dictEnumMapper.findPage(pageable, dictEnumQuery);
         Page<DictEnumDto> dictEnumDtoPage= BeanMapper.convertPage(page,DictEnumDto.class);
         cacheUtils.initCacheInput(dictEnumDtoPage.getContent());
         return dictEnumDtoPage;

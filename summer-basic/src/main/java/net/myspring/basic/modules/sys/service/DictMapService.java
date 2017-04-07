@@ -7,6 +7,7 @@ import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.manager.DictMapManager;
 import net.myspring.basic.modules.sys.web.form.DictMapForm;
+import net.myspring.basic.modules.sys.web.query.DictMapQuery;
 import net.myspring.util.cahe.CacheReadUtils;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
@@ -48,8 +49,8 @@ public class DictMapService {
         return dictMapMapper.findDistinctCategory();
     }
 
-    public Page<DictMapDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DictMap> page = dictMapMapper.findPage(pageable, map);
+    public Page<DictMapDto> findPage(Pageable pageable, DictMapQuery dictMapQuery) {
+        Page<DictMap> page = dictMapMapper.findPage(pageable, dictMapQuery);
         Page<DictMapDto> dictMapDtoPage = BeanMapper.convertPage(page, DictMapDto.class);
         cacheUtils.initCacheInput(dictMapDtoPage.getContent());
         return dictMapDtoPage;

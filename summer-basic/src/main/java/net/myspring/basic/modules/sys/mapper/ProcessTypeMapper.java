@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.ProcessType;
+import net.myspring.basic.modules.sys.web.query.ProcessTypeQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -17,7 +18,7 @@ public interface ProcessTypeMapper extends MyMapper<ProcessType,String> {
 
     List<ProcessType> findEnabledAuditFileType();
 
-    Page<ProcessType> findPage(Pageable pageable, @Param("p") Map<String, Object> map);
+    Page<ProcessType> findPage(Pageable pageable, @Param("p")ProcessTypeQuery processTypeQuery);
 
     List<String> findPositionNames(String permissionId);
 

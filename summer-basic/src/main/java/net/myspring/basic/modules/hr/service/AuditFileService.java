@@ -11,6 +11,7 @@ import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.mapper.AccountTaskMapper;
 import net.myspring.basic.modules.hr.mapper.AuditFileMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
+import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.util.mapper.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,8 @@ public class AuditFileService {
     @Autowired
     private SecurityUtils securityUtils;
 
-    public Page<AuditFileDto> findPage(Pageable pageable, Map<String,Object> map){
-        Page<AuditFile> page=auditFileMapper.findPage(pageable,map);
+    public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery){
+        Page<AuditFile> page=auditFileMapper.findPage(pageable,auditFileQuery);
         Page<AuditFileDto> auditFileDtoPage= BeanMapper.convertPage(page,AuditFileDto.class);
         cacheUtils.initCacheInput(auditFileDtoPage.getContent());
         return auditFileDtoPage;

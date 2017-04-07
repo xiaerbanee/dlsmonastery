@@ -9,6 +9,7 @@ import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.dto.OfficeDto;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.OfficeForm;
+import net.myspring.basic.modules.hr.web.query.OfficeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
@@ -34,8 +35,8 @@ public class OfficeService {
         return officeMapper.findByType(type);
     }
 
-    public Page<OfficeDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<Office> page = officeMapper.findPage(pageable, map);
+    public Page<OfficeDto> findPage(Pageable pageable, OfficeQuery officeQuery) {
+        Page<Office> page = officeMapper.findPage(pageable, officeQuery);
         Page<OfficeDto> officeDtoPage= BeanMapper.convertPage(page,OfficeDto.class);
         cacheUtils.initCacheInput(officeDtoPage.getContent());
         return officeDtoPage;

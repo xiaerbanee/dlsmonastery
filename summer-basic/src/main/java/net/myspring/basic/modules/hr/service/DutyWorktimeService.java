@@ -6,6 +6,7 @@ import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.*;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto;
 import net.myspring.basic.modules.hr.mapper.*;
+import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
 import net.myspring.util.mapper.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,8 +44,8 @@ public class DutyWorktimeService {
     @Autowired
     private SecurityUtils securityUtils;
 
-    public Page<DutyWorktimeDto> findPage(Pageable pageable, Map<String,Object> map){
-        Page<DutyWorktime> page = dutyWorktimeMapper.findPage(pageable, map);
+    public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery){
+        Page<DutyWorktime> page = dutyWorktimeMapper.findPage(pageable, dutyWorktimeQuery);
         Page<DutyWorktimeDto> dutyWorktimeDtoPage= BeanMapper.convertPage(page,DutyWorktimeDto.class);
         cacheUtils.initCacheInput(dutyWorktimeDtoPage.getContent());
         return dutyWorktimeDtoPage;

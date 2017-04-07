@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.manager;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.mapper.PositionMapper;
+import net.myspring.basic.modules.hr.web.query.PositionQuery;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -44,8 +45,8 @@ public class PositionManager {
         return positionMapper.findAll();
     }
 
-    public Page<Position> findPage(Pageable pageable, Map<String,Object> map){
-        return positionMapper.findPage(pageable,map);
+    public Page<Position> findPage(Pageable pageable, PositionQuery positionQuery){
+        return positionMapper.findPage(pageable,positionQuery);
     }
 
     public List<Position> findByNameLike(String name){

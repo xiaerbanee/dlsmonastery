@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.dto.RecruitDto;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.service.RecruitService;
 import net.myspring.basic.modules.hr.web.form.RecruitForm;
+import net.myspring.basic.modules.hr.web.query.RecruitQuery;
 import net.myspring.basic.modules.sys.service.DictEnumService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -16,6 +17,7 @@ import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -34,9 +36,8 @@ public class RecruitController {
     private DictEnumService dictEnumService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String findPage(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<RecruitDto> page = recruitService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String findPage(Pageable pageable, RecruitQuery recruitQuery){
+        Page<RecruitDto> page = recruitService.findPage(pageable,recruitQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 
