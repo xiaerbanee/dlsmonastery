@@ -53,25 +53,4 @@ public class EmployeeManager {
         employeeMapper.updateForm(employeeForm);
         return  employeeMapper.findOne(employeeForm.getId());
     }
-
-
-    public int logicDeleteOne(String id){
-        return employeeMapper.logicDeleteOne(id);
-    }
-
-    public int updateAccountId(String employeeId,String accountId){
-        return employeeMapper.updateAccountId(employeeId,accountId);
-    }
-
-    public List<Employee> findByNameLike(String name){
-        return employeeMapper.findByNameLike(name);
-    }
-
-    public Page<Employee> findPage(Pageable pageable, EmployeeQuery employeeQuery){
-        return employeeMapper.findPage(pageable,employeeQuery);
-    }
-
-    List<Employee> findByStatusAndregularDate(String status,LocalDateTime regularDate){
-        return employeeMapper.findByStatusAndregularDate(status,regularDate);
-    }
 }

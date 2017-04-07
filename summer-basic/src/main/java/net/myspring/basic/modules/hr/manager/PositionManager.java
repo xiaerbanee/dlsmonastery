@@ -53,32 +53,4 @@ public class PositionManager {
         positionMapper.updateForm(positionForm);
         return  positionMapper.findOne(positionForm.getId());
     }
-
-    public List<Position> findAll(){
-        return positionMapper.findAll();
-    }
-
-    public Page<Position> findPage(Pageable pageable, PositionQuery positionQuery){
-        return positionMapper.findPage(pageable,positionQuery);
-    }
-
-    public List<Position> findByNameLike(String name){
-        return positionMapper.findByNameLike(name);
-    }
-
-    public List<String> findPermissionByPosition( String positionId){
-        return positionMapper.findPermissionByPosition(positionId);
-    }
-
-    public int deleteByPosition(String positionId){
-        return positionMapper.deleteByPosition(positionId);
-    }
-
-    public int savePositionAndPermission(String positionId, List<String> permissionIds){
-        return positionMapper.savePositionAndPermission(positionId,permissionIds);
-    }
-
-    public int logicDeleteOne(String id){
-        return positionMapper.logicDeleteOne(id);
-    }
 }

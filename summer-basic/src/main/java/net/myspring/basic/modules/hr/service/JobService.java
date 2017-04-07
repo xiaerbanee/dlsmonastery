@@ -5,6 +5,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.dto.JobDto;
 import net.myspring.basic.modules.hr.manager.JobManager;
+import net.myspring.basic.modules.hr.mapper.JobMapper;
 import net.myspring.basic.modules.hr.web.form.JobForm;
 import net.myspring.basic.modules.hr.web.query.JobQuery;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
@@ -25,9 +26,11 @@ public class JobService {
     private CacheUtils cacheUtils;
     @Autowired
     private JobManager jobManager;
+    @Autowired
+    private JobMapper jobMapper;
 
     public Page<JobDto> findPage(Pageable pageable, JobQuery jobQuery) {
-        Page<Job> page = jobManager.findPage(pageable, jobQuery);
+        Page<Job> page = jobMapper.findPage(pageable, jobQuery);
         Page<JobDto> jobDtoPage = BeanMapper.convertPage(page, JobDto.class);
         cacheUtils.initCacheInput(jobDtoPage.getContent());
         return jobDtoPage;
@@ -39,7 +42,7 @@ public class JobService {
     }
 
     public List<JobDto> findAll(){
-        List<Job> jobList=jobManager.findAll();
+        List<Job> jobList=jobMapper.findAll();
         List<JobDto> jobDtoList=BeanMapper.convertDtoList(jobList,JobDto.class);
         return jobDtoList;
     }
@@ -61,6 +64,6 @@ public class JobService {
     }
 
     public void logicDeleteOne(String id){
-        jobManager.logicDeleteOne(id);
+        jobMapper.logicDeleteOne(id);
     }
 }

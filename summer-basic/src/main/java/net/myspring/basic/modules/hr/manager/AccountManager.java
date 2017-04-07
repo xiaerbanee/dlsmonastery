@@ -30,27 +30,6 @@ public class AccountManager {
         return accountMapper.findOne(id);
     }
 
-    public Page<Account> findPage(Pageable pageable, AccountQuery accountQuery) {
-        Page<Account> page = accountMapper.findPage(pageable, accountQuery);
-        return page;
-    }
-
-
-    public List<Account> findByOfficeId(String officeId){
-        List<Account> accountList=accountMapper.findByOfficeIds(Lists.newArrayList(officeId));
-        return accountList;
-    }
-
-    public List<Account> findByOfficeIds(List<String> officeIds){
-        List<Account> accountList=accountMapper.findByOfficeIds(officeIds);
-        return accountList;
-    }
-
-    public List<Account> findByFilter(AccountQuery accountQuery){
-        List<Account> accountList=accountMapper.findByFilter(accountQuery);
-        return accountList;
-    }
-
     @CachePut(value = "accounts",key="#p0.id")
     public Account save(Account account){
         accountMapper.save(account);
@@ -61,15 +40,6 @@ public class AccountManager {
     public AccountForm saveForm(AccountForm accountForm){
         accountMapper.saveForm(accountForm);
         return  accountForm;
-    }
-
-    public Account findByLoginName(String loginName){
-        Account account=accountMapper.findByLoginName(loginName);
-        return account;
-    }
-
-    public List<Account> findByLoginNameLikeAndType(Map<String,Object> map){
-        return accountMapper.findByLoginNameLikeAndType(map);
     }
 
     @CachePut(value = "accounts",key="#p0.id")
@@ -83,17 +53,4 @@ public class AccountManager {
         accountMapper.updateForm(accountForm);
         return  accountMapper.findOne(accountForm.getId());
     }
-
-    public int deleteAccountOffice(String accountId){
-        return accountMapper.deleteAccountOffice(accountId);
-    }
-
-    public int saveAccountOffice(String accountId,List<String> officeIds){
-        return accountMapper.saveAccountOffice(accountId,officeIds);
-    }
-
-    public void logicDeleteOne(String id) {
-        accountMapper.logicDeleteOne(id);
-    }
-
 }

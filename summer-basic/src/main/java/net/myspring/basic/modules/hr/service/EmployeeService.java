@@ -5,6 +5,7 @@ import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
+import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.util.mapper.BeanMapper;
@@ -23,6 +24,8 @@ public class EmployeeService {
     @Autowired
     private EmployeeManager employeeManager;
     @Autowired
+    private EmployeeMapper employeeMapper;
+    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private SecurityUtils securityUtils;
@@ -40,14 +43,14 @@ public class EmployeeService {
     }
 
     public Page<EmployeeDto> findPage(Pageable pageable, EmployeeQuery employeeQuery){
-        Page<Employee> page=employeeManager.findPage(pageable,employeeQuery);
+        Page<Employee> page=employeeMapper.findPage(pageable,employeeQuery);
         Page<EmployeeDto> employeeDtoPage=BeanMapper.convertPage(page,EmployeeDto.class);
         cacheUtils.initCacheInput(employeeDtoPage.getContent());
         return employeeDtoPage;
     }
 
     public List<EmployeeDto> findByNameLike(String name){
-        List<Employee> employeeList=employeeManager.findByNameLike(name);
+        List<Employee> employeeList=employeeMapper.findByNameLike(name);
         List<EmployeeDto> employeeDtoList= BeanMapper.convertDtoList(employeeList,EmployeeDto.class);
         cacheUtils.initCacheInput(employeeDtoList);
         return employeeDtoList;
@@ -64,6 +67,6 @@ public class EmployeeService {
     }
 
     public void logicDeleteOne(String id) {
-        employeeManager.logicDeleteOne(id);
+        employeeMapper.logicDeleteOne(id);
     }
 }

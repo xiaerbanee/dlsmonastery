@@ -27,11 +27,6 @@ public class JobManager {
         return jobMapper.findOne(id);
     }
 
-    public Page<Job> findPage(Pageable pageable, JobQuery jobQuery) {
-        Page<Job> page = jobMapper.findPage(pageable, jobQuery);
-        return page;
-    }
-
     @CachePut(value = "jobs",key="#p0.id")
     public Job save(Job job){
         jobMapper.save(job);
@@ -54,13 +49,5 @@ public class JobManager {
     public Job updateForm(JobForm jobForm){
         jobMapper.updateForm(jobForm);
         return  jobMapper.findOne(jobForm.getId());
-    }
-
-    public List<Job> findAll(){
-        return jobMapper.findAll();
-    }
-
-    public void logicDeleteOne(String id) {
-        jobMapper.logicDeleteOne(id);
     }
 }

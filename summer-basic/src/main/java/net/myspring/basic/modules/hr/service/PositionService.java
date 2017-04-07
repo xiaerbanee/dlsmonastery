@@ -6,6 +6,7 @@ import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.manager.PositionManager;
+import net.myspring.basic.modules.hr.mapper.PositionMapper;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -25,33 +26,35 @@ public class PositionService {
     @Autowired
     private PositionManager positionManager;
     @Autowired
+    private PositionMapper positionMapper;
+    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private SecurityUtils securityUtils;
 
     public List<PositionDto> findAll(){
-        List<Position> positionList=positionManager.findAll();
+        List<Position> positionList=positionMapper.findAll();
         List<PositionDto> positionDtoList= BeanMapper.convertDtoList(positionList,PositionDto.class);
         cacheUtils.initCacheInput(positionDtoList);
         return positionDtoList;
     }
 
     public Page<PositionDto> findPage(Pageable pageable, PositionQuery positionQuery) {
-        Page<Position> page = positionManager.findPage(pageable, positionQuery);
+        Page<Position> page = positionMapper.findPage(pageable, positionQuery);
         Page<PositionDto> positionDtoPage=BeanMapper.convertPage(page,PositionDto.class);
         cacheUtils.initCacheInput(positionDtoPage.getContent());
         return positionDtoPage;
     }
 
     public List<PositionDto> findByNameLike(String name){
-        List<Position> positionList=positionManager.findByNameLike(name);
+        List<Position> positionList=positionMapper.findByNameLike(name);
         List<PositionDto> positionDtoList=BeanMapper.convertDtoList(positionList,PositionDto.class);
         cacheUtils.initCacheInput(positionDtoList);
         return  positionDtoList;
     }
 
     public List<String> findPermissionByPosition(String positionId){
-        return positionManager.findPermissionByPosition(positionId);
+        return positionMapper.findPermissionByPosition(positionId);
     }
 
     public Position findOne(String id){
@@ -72,15 +75,15 @@ public class PositionService {
         }else{
             positionManager.updateForm(positionForm);
         }
-        positionManager.deleteByPosition(positionForm.getId());
+        positionMapper.deleteByPosition(positionForm.getId());
         if(CollectionUtil.isNotEmpty(positionForm.getPermissionIdList())){
-            positionManager.savePositionAndPermission(positionForm.getId(),positionForm.getPermissionIdList());
+            positionMapper.savePositionAndPermission(positionForm.getId(),positionForm.getPermissionIdList());
         }
 
     }
 
     public void delete(String id){
-        positionManager.logicDeleteOne(id);
+        positionMapper.logicDeleteOne(id);
     }
 
 }
