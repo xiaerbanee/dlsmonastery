@@ -58,14 +58,15 @@ public class FolderFileService {
                     folderFileDto.setName(multipartFile.getOriginalFilename().replaceAll("/","."));
                     folderFileDto.setSize(Integer.valueOf(String.valueOf(multipartFile.getSize())));
                     folderFileDto.setPhysicalName(UUID.randomUUID().toString() + "." + folderFileDto.getExtendType());
-                    folderFileManager.save(null);
+                    FolderFile folderFile = BeanUtil.map(folderFileDto,FolderFile.class);
+                    folderFileManager.save(folderFile);
                     list.add(folderFileDto);
                     // 保存文件
-                    String uploadPath = getUploadPath(null);
+                    String uploadPath = getUploadPath(folderFile);
                     FileUtil.makesureDirExists(uploadPath);
                     FileCopyUtils.copy(multipartFile.getBytes(), new FileOutputStream(uploadPath));
                     if (folderFileDto.isImage()) {
-                        String previewUploadPath = getPreviewUploadPath(null);
+                        String previewUploadPath = getPreviewUploadPath(folderFile);
                         FileUtil.makesureDirExists(previewUploadPath);
                         File file = new File(uploadPath);
                         BufferedImage image;
