@@ -35,59 +35,59 @@ public class EmployeeController {
     private DictEnumService dictEnumService;
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         employeeService.logicDeleteOne(id);
         RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "save")
-    public String save(EmployeeForm employeeForm) {
+    public RestResponse save(EmployeeForm employeeForm) {
         employeeService.save(employeeForm);
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         restResponse.getExtra().put("employeeId",employeeForm.getId());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id){
+    public EmployeeDto findOne(String id){
         EmployeeDto employeeDto=employeeService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(employeeDto);
+        return employeeDto;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable,EmployeeQuery employeeQuery){
+    public Page<EmployeeDto> list(Pageable pageable,EmployeeQuery employeeQuery){
         Page<EmployeeDto> page = employeeService.findPage(pageable,employeeQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "search")
-    public String search(String key){
+    public List<EmployeeDto> search(String key){
         List<EmployeeDto> employeeList=employeeService.findByNameLike(key);
-        return ObjectMapperUtils.writeValueAsString(employeeList);
+        return employeeList;
     }
 
 
     @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("positions",positionService.findAll());
         map.put("educationsList", dictEnumService.findByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    public Map<String,Object> getListProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("positions",positionService.findAll());
         map.put("statusList", EmployeeStatusEnum.values());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "editForm",method = RequestMethod.GET)
-    public String editForm(){
+    public Map<String,Object> editForm(){
         Map<String,Object> map=Maps.newHashMap();
         map.put("educationsList", dictEnumService.findByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 }

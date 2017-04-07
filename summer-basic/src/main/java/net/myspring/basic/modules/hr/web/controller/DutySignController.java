@@ -44,37 +44,37 @@ public class DutySignController {
     private PositionService positionService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, DutySignQuery dutySignQuery) {
+    public Page<DutySignDto> list(Pageable pageable, DutySignQuery dutySignQuery) {
         Page<DutySignDto> page = dutySignService.findPage(pageable,dutySignQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "getListProperty")
-    public String getListProperty() {
+    public Map<String, Object> getListProperty() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("officeList", officeService.findAll());
         map.put("positionList", positionService.findAll());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "save")
-    public String save(DutySignForm dutySignForm, BindingResult bindingResult) {
+    public RestResponse save(DutySignForm dutySignForm, BindingResult bindingResult) {
         RestResponse restResponse = new RestResponse("签到成功", null);
         dutySignService.save(dutySignForm);
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         dutySignService.logicDeleteOne(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "detail")
-    public String detail(String id) {
+    public DutySignDto detail(String id) {
         DutySignDto dutySignDto = dutySignService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(dutySignDto);
+        return dutySignDto;
     }
 
     @RequestMapping(value = "export")

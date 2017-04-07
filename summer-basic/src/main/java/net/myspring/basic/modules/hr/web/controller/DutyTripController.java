@@ -25,24 +25,24 @@ public class DutyTripController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, DutyTripQuery dutyTripQuery){
+    public Page<DutyTripDto>  list(Pageable pageable, DutyTripQuery dutyTripQuery){
         dutyTripQuery.setCreatedBy(securityUtils.getAccountId());
         Page<DutyTripDto> page = dutyTripService.findPage(pageable,dutyTripQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value="save")
-    public String save(DutyTripForm dutyTripForm, BindingResult bindingResult){
+    public RestResponse save(DutyTripForm dutyTripForm, BindingResult bindingResult){
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         dutyTripService.save(dutyTripForm);
-        return  ObjectMapperUtils.writeValueAsString(restResponse);
+        return  restResponse;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         dutyTripService.logicDeleteOne(id);
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
 }

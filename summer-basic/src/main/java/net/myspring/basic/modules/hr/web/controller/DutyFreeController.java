@@ -30,31 +30,31 @@ public class DutyFreeController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, DutyFreeQuery dutyFreeQuery) {
+    public Page<DutyFreeDto> list(Pageable pageable, DutyFreeQuery dutyFreeQuery) {
         dutyFreeQuery.setCreatedBy(securityUtils.getAccountId());
         Page<DutyFreeDto> page = dutyFreeService.findPage(pageable, dutyFreeQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value="getFormProperty")
-    public String getListProperty(){
+    public Map<String,Object> getListProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("dateList", DutyDateTypeEnum.values());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
 
     @RequestMapping(value = "delete", method = RequestMethod.GET)
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         dutyFreeService.logicDeleteOne(id);
         RestResponse restResponse = new RestResponse("免打卡删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "save")
-    public String save(DutyFreeForm dutyFreeForm, BindingResult bindingResult) {
+    public RestResponse save(DutyFreeForm dutyFreeForm, BindingResult bindingResult) {
         dutyFreeService.save(dutyFreeForm);
         RestResponse restResponse = new RestResponse("申请成功",null);
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 }

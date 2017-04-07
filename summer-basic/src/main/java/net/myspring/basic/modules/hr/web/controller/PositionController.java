@@ -38,53 +38,53 @@ public class PositionController {
     private PermissionService permissionService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String findPage(Pageable pageable, PositionQuery positionQuery){
+    public Page<PositionDto> findPage(Pageable pageable, PositionQuery positionQuery){
         Page<PositionDto> page = positionService.findPage(pageable,positionQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    public Map<String,Object>  getListProperty(){
         Map<String,Object> map = Maps.newHashMap();
         map.put("jobList",jobService.findAll());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "getFormProperty")
-    public String getFormProperty(Position position){
+    public Map<String,Object> getFormProperty(Position position){
         Map<String,Object> map = Maps.newHashMap();
         List<String> permissionIdList = position.getId()==null?new ArrayList<>():positionService.findPermissionByPosition(position.getId());
         map.put("permissionTree",permissionService.findPermissionTree(permissionIdList));
         map.put("jobList",jobService.findAll());
         map.put("dataScopeMap", DataScopeEnum.getMap());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id) {
+    public PositionDto findOne(String id) {
         PositionDto positionDto=positionService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(positionDto);
+        return positionDto;
     }
 
     @RequestMapping(value = "save")
-    public String save(PositionForm positionForm, String permissionIdStr) {
+    public RestResponse save(PositionForm positionForm, String permissionIdStr) {
         positionForm.setPermissionIdList(StringUtils.getSplitList(permissionIdStr, Const.CHAR_COMMA));
         positionService.save(positionForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         positionService.delete(id);
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
 
     @RequestMapping(value = "search")
-    public String search(String name) {
+    public List<PositionDto>  search(String name) {
         List<PositionDto> positionDtoList  = positionService.findByNameLike(name);
-        return ObjectMapperUtils.writeValueAsString(positionDtoList);
+        return positionDtoList;
     }
 
 }

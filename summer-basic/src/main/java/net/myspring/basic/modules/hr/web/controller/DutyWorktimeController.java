@@ -29,9 +29,9 @@ public class DutyWorktimeController {
     private DutyWorktimeService dutyWorktimeService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery){
+    public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery){
         Page<DutyWorktimeDto> page = dutyWorktimeService.findPage(pageable,dutyWorktimeQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "export")
@@ -41,9 +41,9 @@ public class DutyWorktimeController {
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
-    public String importFile(@RequestParam(value = "importFile", required = true) MultipartFile[] importFile, String month, String remarks) {
+    public RestResponse importFile(@RequestParam(value = "importFile", required = true) MultipartFile[] importFile, String month, String remarks) {
         RestResponse restResponse =new RestResponse("上传成功",null);
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
 }

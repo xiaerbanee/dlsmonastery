@@ -27,23 +27,23 @@ public class DutyOvertimeController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
+    public Page<DutyOvertimeDto> list(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
         dutyOvertimeQuery.setCreatedBy(securityUtils.getAccountId());
         Page<DutyOvertimeDto> page = dutyOvertimeService.findPage(pageable,dutyOvertimeQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "save")
-    public String save(DutyOvertimeForm dutyOvertimeForm, BindingResult bindingResult) {
+    public RestResponse save(DutyOvertimeForm dutyOvertimeForm, BindingResult bindingResult) {
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         dutyOvertimeService.save(dutyOvertimeForm);
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         dutyOvertimeService.logicDeleteOne(id);
         RestResponse restResponse = new RestResponse("删除成功",ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 }

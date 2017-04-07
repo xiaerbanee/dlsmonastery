@@ -18,16 +18,16 @@ public class OfficeChangeController {
     private OfficeChangeService officeChangeService;
 
     @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public String detail(OfficeChangeForm officeChangeForm) {
+    public Map<String,Object> detail(OfficeChangeForm officeChangeForm) {
         Map<String,Object> paramMap= Maps.newHashMap();
         paramMap.put("shopPrint", officeChangeForm);
-        return ObjectMapperUtils.writeValueAsString(paramMap);
+        return paramMap;
     }
 
     @RequestMapping(value = "audit", method = RequestMethod.GET)
-    public String audit(OfficeChangeForm officeChangeForm,boolean pass,String comment) {
+    public RestResponse audit(OfficeChangeForm officeChangeForm,boolean pass,String comment) {
         RestResponse restResponse=new RestResponse("广告印刷审核成功",null);
-        return  ObjectMapperUtils.writeValueAsString(restResponse);
+        return  restResponse;
     }
 
 }

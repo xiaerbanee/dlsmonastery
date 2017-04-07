@@ -36,50 +36,47 @@ public class RecruitController {
     private DictEnumService dictEnumService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String findPage(Pageable pageable, RecruitQuery recruitQuery){
+    public Page<RecruitDto> findPage(Pageable pageable, RecruitQuery recruitQuery){
         Page<RecruitDto> page = recruitService.findPage(pageable,recruitQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    public Map<String,Object> getListProperty(){
         Map<String,Object> map = Maps.newHashMap();
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "getFormProperty")
-    public String getFormProperty(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map = Maps.newHashMap();
         map.put("positions",positionService.findAll());
         map.put("educationsList", dictEnumService.findByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id){
+    public RecruitDto findOne(String id){
         RecruitDto recruitDto=recruitService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(recruitDto);
+        return recruitDto;
     }
 
     @RequestMapping(value = "save")
-    public String save(RecruitForm recruitForm) {
+    public RestResponse save(RecruitForm recruitForm) {
         recruitService.save(recruitForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功", ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         recruitService.logicDeleteOne(id);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("删除成功",ResponseCodeEnum.removed.name()));
+        return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "checkMobilePhone")
-    public String checkMobilePhone(String mobilePhone) {
+    public Recruit checkMobilePhone(String mobilePhone) {
         Recruit recruit = recruitService.findByMobilePhone(mobilePhone);
-        if(recruit!=null){
-            return ObjectMapperUtils.writeValueAsString(new RestResponse("手机号码已存在", null));
-        }
-        return ObjectMapperUtils.writeValueAsString(recruit);
+        return recruit;
     }
 
     @RequestMapping(value = "findNameByIds")
@@ -89,8 +86,8 @@ public class RecruitController {
     }
 
     @RequestMapping(value = "update")
-    public String update(Recruit recruit) {
+    public RestResponse update(Recruit recruit) {
         recruitService.update(recruit);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("删除成功",ResponseCodeEnum.removed.name()));
+        return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 }

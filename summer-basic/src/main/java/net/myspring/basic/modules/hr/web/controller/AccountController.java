@@ -45,51 +45,51 @@ public class AccountController {
     private PositionService positionService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, AccountQuery accountQuery){
+    public Page<AccountDto> list(Pageable pageable, AccountQuery accountQuery){
         Page<AccountDto> page = accountService.findPage(pageable,accountQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         accountService.logicDeleteOne(id);
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "save")
-    public String save(AccountForm accountForm) {
+    public RestResponse save(AccountForm accountForm) {
         accountService.save(accountForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(Account account){
-        return ObjectMapperUtils.writeValueAsString(account);
+    public Account findOne(Account account){
+        return account;
     }
 
     @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("position",positionService.findAll());
         map.put("bools", BoolEnum.getMap());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    public Map<String,Object> getListProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("position",positionService.findAll());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "search")
-    public String search(String type,String key){
+    public Map<String,Object> search(String type,String key){
         Map<String,Object> map=Maps.newHashMap();
         map.put("name",key);
         map.put("type",type);
         List<AccountDto> accountDtoList=accountService.findByLoginNameLikeAndType(map);
-        return ObjectMapperUtils.writeValueAsString(accountDtoList);
+        return map;
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)

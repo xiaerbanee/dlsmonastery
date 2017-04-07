@@ -23,28 +23,28 @@ public class JobController {
     private JobService jobService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String findPage(Pageable pageable, JobQuery jobQuery){
+    public Page<JobDto> findPage(Pageable pageable, JobQuery jobQuery){
         Page<JobDto> page = jobService.findPage(pageable,jobQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id){
+    public JobDto findOne(String id){
         JobDto jobDto=jobService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(jobDto);
+        return jobDto;
     }
 
     @RequestMapping(value = "save")
-    public String save(JobForm jobForm) {
+    public RestResponse save(JobForm jobForm) {
         jobService.save(jobForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功", ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id){
+    public RestResponse delete(String id){
         jobService.logicDeleteOne(id);
         RestResponse restResponse = new RestResponse("刪除成功",ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
 }

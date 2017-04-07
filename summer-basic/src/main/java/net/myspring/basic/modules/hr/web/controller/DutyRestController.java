@@ -37,14 +37,14 @@ public class DutyRestController {
     private DutyOvertimeService dutyOvertimeService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, DutyRestQuery dutyRestQuery) {
+    public Page<DutyRestDto> list(Pageable pageable, DutyRestQuery dutyRestQuery) {
         dutyRestQuery.setCreatedBy(securityUtils.getAccountId());
         Page<DutyRestDto> page = dutyRestService.findPage(pageable,dutyRestQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "getFormProperty")
-    public String getFormProperty(DutyRestForm dutyRestForm) {
+    public Map<String, Object> getFormProperty(DutyRestForm dutyRestForm) {
         Map<String, Object> map = Maps.newHashMap();
         dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(securityUtils.getEmployeeId(), LocalDateTime.now()));
         dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(securityUtils.getEmployeeId()));
@@ -52,28 +52,28 @@ public class DutyRestController {
         map.put("expiredHour", dutyOvertimeService.getExpiredHour(securityUtils.getEmployeeId(), LocalDateTime.now()));
         map.put("restList", DutyRestTypeEnum.values());
         map.put("dateList", DutyDateTypeEnum.values());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "getListProperty")
-    public String getListProperty() {
+    public Map<String, Object> getListProperty() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("restList", DutyRestTypeEnum.values());
         map.put("dateList", DutyDateTypeEnum.values());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "save")
-    public String save(DutyRestForm dutyRestForm, BindingResult bindingResult) {
+    public RestResponse save(DutyRestForm dutyRestForm, BindingResult bindingResult) {
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         dutyRestService.save(dutyRestForm);
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         dutyRestService.logicDeleteOne(id);
         RestResponse restResponse = new RestResponse("删除成功",ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 }

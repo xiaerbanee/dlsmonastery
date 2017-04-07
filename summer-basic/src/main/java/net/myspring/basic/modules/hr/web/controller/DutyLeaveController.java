@@ -34,39 +34,39 @@ public class DutyLeaveController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, DutyLeaveQuery dutyLeaveQuery){
+    public Page<DutyLeaveDto> list(Pageable pageable, DutyLeaveQuery dutyLeaveQuery){
         dutyLeaveQuery.setCreatedBy(securityUtils.getAccountId());
         Page<DutyLeaveDto> page = dutyLeaveService.findPage(pageable,dutyLeaveQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map=Maps.newHashMap();
         map.put("dateList", DutyDateTypeEnum.values());
         map.put("leaveList",dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.getValue()));
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    public Map<String,Object> getListProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("dateList", DutyDateTypeEnum.values());
         map.put("leaveList",dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.getValue()));
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value="save")
-    public String save(DutyLeaveForm dutyLeaveForm, BindingResult  bindingResult){
+    public RestResponse save(DutyLeaveForm dutyLeaveForm, BindingResult  bindingResult){
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         dutyLeaveService.save(dutyLeaveForm);
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         dutyLeaveService.logicDeleteOne(id);
         RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 }

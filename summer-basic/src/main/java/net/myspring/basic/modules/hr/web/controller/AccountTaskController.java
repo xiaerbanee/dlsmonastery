@@ -25,9 +25,9 @@ public class AccountTaskController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, AccountTaskQuery accountTaskQuery) {
+    public Page<AccountTaskDto> list(Pageable pageable, AccountTaskQuery accountTaskQuery) {
         accountTaskQuery.setPositionId(securityUtils.getPositionId());
         Page<AccountTaskDto> page=accountTaskService.findPage(pageable, accountTaskQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 }

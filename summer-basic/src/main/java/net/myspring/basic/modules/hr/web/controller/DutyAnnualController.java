@@ -37,16 +37,16 @@ public class DutyAnnualController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, DutyAnnualQuery dutyAnnualQuery) {
+    public Page<DutyAnnualDto> list(Pageable pageable, DutyAnnualQuery dutyAnnualQuery) {
         dutyAnnualQuery.setCreatedBy(securityUtils.getAccountId());
         Page<DutyAnnualDto> page  = dutyAnnualService.findPage(pageable,dutyAnnualQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "getListProperty")
-    public String getListProperty(){
+    public Map<String,Object> getListProperty(){
         Map<String,Object> map = Maps.newHashMap();
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "import/template", method = RequestMethod.GET)
@@ -59,12 +59,12 @@ public class DutyAnnualController {
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
-    public String importFile(@RequestParam(value = "folderFileId", required = true) String folderFileId, String annualYear, String remarks) {
+    public RestResponse importFile(@RequestParam(value = "folderFileId", required = true) String folderFileId, String annualYear, String remarks) {
         FolderFile folderFile = folderFileService.findOne(folderFileId);
         File file  = new File(folderFileService.getUploadPath(folderFile));
         dutyAnnualService.save(file, annualYear, remarks);
         RestResponse restResponse=new RestResponse("保存成功", ResponseCodeEnum.saved.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
 }

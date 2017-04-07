@@ -46,26 +46,26 @@ public class AuditFileController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String data(Pageable pageable, AuditFileQuery auditFileQuery) {
+    public Page<AuditFileDto> data(Pageable pageable, AuditFileQuery auditFileQuery) {
         auditFileQuery.setPositionId(securityUtils.getPositionId());
         Page<AuditFileDto> page = auditFileService.findPage(pageable,auditFileQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
-    public String getFormProperty() {
+    public Map<String, Object> getFormProperty() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("folder", folderService.getAccountFolder(securityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
         map.put("processTypes", processTypeService.findEnabledAuditFileType());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "getListProperty", method = RequestMethod.GET)
-    public String getListProperty() {
+    public Map<String, Object> getListProperty() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("folder", folderService.getAccountFolder(securityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
         map.put("processTypes", processTypeService.findEnabledAuditFileType());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
 
@@ -76,25 +76,25 @@ public class AuditFileController {
     }
 
     @RequestMapping(value = "delete", method = RequestMethod.GET)
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         auditFileService.logicDeleteOne(id);
         RestResponse restResponse = new RestResponse("删除成功",ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
 
     @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public String detail(AuditFileForm auditFileForm) {
+    public Map<String, Object> detail(AuditFileForm auditFileForm) {
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("auditFile", auditFileForm);
         paramMap.put("bools", BoolEnum.getMap());
-        return ObjectMapperUtils.writeValueAsString(paramMap);
+        return paramMap;
     }
 
     @RequestMapping(value = "audit")
-    public String audit(AuditFile auditFile, boolean pass, String comment) {
+    public RestResponse audit(AuditFile auditFile, boolean pass, String comment) {
         RestResponse restResponse = new RestResponse("审核成功",ResponseCodeEnum.audited.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "/view", method = RequestMethod.GET)

@@ -34,13 +34,13 @@ public class OfficeController {
     private DictEnumService  dictEnumService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, OfficeQuery officeQuery) {
+    public Page<OfficeDto> list(Pageable pageable, OfficeQuery officeQuery) {
         Page<OfficeDto> page = officeService.findPage(pageable,officeQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "search")
-    public String search(String name,String officeType,String parentOfficeId) {
+    public List<OfficeDto> search(String name,String officeType,String parentOfficeId) {
         List<OfficeDto> officeDtos = Lists.newArrayList();
         if(StringUtils.isNotBlank(name)) {
             Map<String, Object> map = Maps.newHashMap();
@@ -50,7 +50,7 @@ public class OfficeController {
             }
             officeDtos = officeService.findByFilter(map);
         }
-         return ObjectMapperUtils.writeValueAsString(officeDtos);
+         return officeDtos;
     }
 
 
@@ -62,9 +62,9 @@ public class OfficeController {
 
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id){
+    public OfficeDto findOne(String id){
         OfficeDto officeDto=officeService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(officeDto);
+        return officeDto;
     }
 
     @RequestMapping(value = "delete")
@@ -74,10 +74,10 @@ public class OfficeController {
     }
 
     @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("officeTypes", dictEnumService.findByCategory(DictMapCategoryEnum.机构分类.name()));
         map.put("jointTypes", JointTypeEnum.getList());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 }

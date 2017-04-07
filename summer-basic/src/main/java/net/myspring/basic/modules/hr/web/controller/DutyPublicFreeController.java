@@ -29,30 +29,30 @@ public class DutyPublicFreeController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, DutyPublicFreeQuery dutyPublicFreeQuery) {
+    public Page<DutyPublicFreeDto> list(Pageable pageable, DutyPublicFreeQuery dutyPublicFreeQuery) {
         dutyPublicFreeQuery.setCreatedBy(securityUtils.getAccountId());
         Page<DutyPublicFreeDto> page = dutyPublicFreeService.findPage(pageable,dutyPublicFreeQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "getListProperty")
-    public String getListProperty() {
+    public Map<String, Object> getListProperty() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("dateList", DutyDateTypeEnum.values());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "save")
-    public String save(DutyPublicFreeForm dutyPublicFreeForm, BindingResult bindingResult) {
+    public RestResponse save(DutyPublicFreeForm dutyPublicFreeForm, BindingResult bindingResult) {
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         dutyPublicFreeService.save(dutyPublicFreeForm);
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         dutyPublicFreeService.logicDeleteOne(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 }

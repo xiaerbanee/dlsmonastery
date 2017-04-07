@@ -37,17 +37,17 @@ public class DutyController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list() {
-        return ObjectMapperUtils.writeValueAsString(getDutyModelList());
+    public List<DutyModel> list() {
+        return getDutyModelList();
     }
 
     @RequestMapping(value = "detail")
-    public String detail(String id, String dutyType) {
+    public Map<String, Object> detail(String id, String dutyType) {
         Map<String, Object> map = Maps.newHashMap();
         map.put("item", dutyService.findDutyItem(id, dutyType));
         map.put("dutyType", dutyType);
         map.put("bools", BoolEnum.getMap());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
 
@@ -75,11 +75,11 @@ public class DutyController {
     }
 
     @RequestMapping(value = "events", method = RequestMethod.GET)
-    public String events(String start, String end) {
+    public List<CalendarEvent> events(String start, String end) {
         LocalDate dateStart= LocalDateUtils.parse(start);
         LocalDate dateEnd= LocalDateUtils.parse(end);
         List<CalendarEvent> events = dutyService.findEvent(securityUtils.getEmployeeId(),dateStart,dateEnd);
-        return ObjectMapperUtils.writeValueAsString(events);
+        return events;
     }
 
     private List<DutyModel> getDutyModelList() {
