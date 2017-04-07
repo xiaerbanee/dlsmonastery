@@ -49,9 +49,9 @@ public class PermissionController {
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id) {
+    public PermissionDto findOne(String id) {
         PermissionDto permissionDto=permissionService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(permissionDto);
+        return permissionDto;
     }
 
     @RequestMapping(value="getFormProperty")

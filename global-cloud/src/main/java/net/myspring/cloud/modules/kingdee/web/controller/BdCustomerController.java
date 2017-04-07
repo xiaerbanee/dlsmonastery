@@ -25,20 +25,20 @@ public class BdCustomerController {
     private BdCustomerService bdCustomerService;
 
     @RequestMapping(value = "getCustomerList", method = RequestMethod.GET)
-    public String getCustomerList(String maxOutDate) {
+    public List<BdCustomer> getCustomerList(String maxOutDate) {
         LocalDateTime localDateTime=null;
         if(StringUtils.isNotBlank(maxOutDate)){
             localDateTime= LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
         List<BdCustomer> customerList = bdCustomerService.findAll(localDateTime);
 
-        return ObjectMapperUtils.writeValueAsString(customerList);
+        return customerList;
     }
 
     @RequestMapping(value = "getByName", method = RequestMethod.GET)
-    public String getByName(String customerName) {
+    public List<BdCustomer> getByName(String customerName) {
         List<BdCustomer> customerList = bdCustomerService.findByName(customerName);
-        return ObjectMapperUtils.writeValueAsString(customerList);
+        return customerList;
     }
 
 }

@@ -25,13 +25,13 @@ public class BdStockController {
     private BdStockService bdStockService;
 
     @RequestMapping(value = "getStockList", method = RequestMethod.GET)
-    public String getStockList(String maxOutDate) {
+    public List<BdStock> getStockList(String maxOutDate) {
         LocalDateTime localDateTime = null;
         if(StringUtils.isNotBlank(maxOutDate)){
             localDateTime = LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
         List<BdStock> stockList = bdStockService.findAll(localDateTime);
-        return ObjectMapperUtils.writeValueAsString(stockList);
+        return stockList;
     }
 
 }

@@ -23,15 +23,14 @@ public class StkInventoryController {
 
     //库存
     @RequestMapping(value = "getInventoryList", method = RequestMethod.GET)
-    public String getInventoryList(@RequestParam(value = "stockIds")List<String> stockIds) {
+    public List<StkInventory>  getInventoryList(@RequestParam(value = "stockIds")List<String> stockIds) {
         List<StkInventory>  bdInventoryList = stkInventoryService.findByfStockIds(stockIds);
-        return ObjectMapperUtils.writeValueAsString(bdInventoryList);
+        return bdInventoryList;
     }
 
     @RequestMapping(value = "getByDepotAndProduct", method = RequestMethod.GET)
-    public  String findBdInventoryByDepotAndProduct(String companyName,String depotId,String productId){
-        StkInventory inventory = null;
-        inventory = stkInventoryService.findByStockIdAndMaterialId(depotId,productId);
-        return ObjectMapperUtils.writeValueAsString(inventory);
+    public  StkInventory findBdInventoryByDepotAndProduct(String companyName,String depotId,String productId){
+        StkInventory inventory = stkInventoryService.findByStockIdAndMaterialId(depotId,productId);
+        return inventory;
     }
 }

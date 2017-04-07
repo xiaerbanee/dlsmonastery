@@ -24,12 +24,12 @@ public class BdMaterialController {
     private BdMaterialService bdMaterialService;
 
     @RequestMapping(value = "getMaterialList", method = RequestMethod.GET)
-    public String getMaterialList(String maxOutDate) {
+    public List<BdMaterial> getMaterialList(String maxOutDate) {
         LocalDateTime localDateTime = null;
         if(StringUtils.isNotBlank(maxOutDate)){
             localDateTime= LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
         List<BdMaterial>  materialList = bdMaterialService.findAll(localDateTime);
-        return ObjectMapperUtils.writeValueAsString(materialList);
+        return materialList;
     }
 }

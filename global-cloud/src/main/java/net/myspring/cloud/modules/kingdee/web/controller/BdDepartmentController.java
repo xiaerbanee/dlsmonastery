@@ -20,15 +20,15 @@ public class BdDepartmentController {
     private BdDepartmentService bdDepartmentService;
 
     @RequestMapping(value = "getByCustomerId", method = RequestMethod.GET)
-    public String getByCustomerId(String customerId) {
+    public BdDepartment getByCustomerId(String customerId) {
         BdDepartment department = bdDepartmentService.findByCustomerId(customerId);
-        return ObjectMapperUtils.writeValueAsString(department);
+        return department;
     }
 
     @RequestMapping(value = "getDepartmentList", method = RequestMethod.GET)
-    public String getDepartmentList() {
+    public List<BdDepartment> getDepartmentList() {
         List<BdDepartment> departmentList = bdDepartmentService.findAll();
-        return ObjectMapperUtils.writeValueAsString(departmentList);
+        return departmentList;
     }
 
 }

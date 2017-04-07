@@ -24,12 +24,12 @@ public class CnBankController {
     private CnBankService cnBankService;
 
     @RequestMapping(value = "getBankList", method = RequestMethod.GET)
-    public String getBankList(String maxOutDate) {
+    public List<CnBank> getBankList(String maxOutDate) {
         LocalDateTime localDateTime = null;
         if(StringUtils.isNotBlank(maxOutDate)){
             localDateTime = LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
         List<CnBank> bankList = cnBankService.findAll(localDateTime);
-        return ObjectMapperUtils.writeValueAsString(bankList);
+        return bankList;
     }
 }

@@ -18,9 +18,9 @@ public class ProductController {
     private ProductService productService;
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id) {
+    public ProductDto findOne(String id) {
         ProductDto productDto=productService.findOne(id);
-        return ObjectMapperUtils.writeValueAsString(productDto);
+        return productDto;
     }
 
 }

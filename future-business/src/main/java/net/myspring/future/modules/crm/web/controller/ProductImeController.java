@@ -23,9 +23,9 @@ public class ProductImeController {
     private ProductImeService productImeService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
+    public Page<ProductIme> list(HttpServletRequest request){
         Pageable pageable = new PageRequest(0,100);
         Page<ProductIme> page = productImeService.findPage(pageable);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 }

@@ -18,8 +18,8 @@ public class OppoPlantProductSelController {
     private OppoPlantProductSelService oppoPlantProductSelService;
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id) {
+    public OppoPlantProductSelDto findOne(String id) {
         OppoPlantProductSelDto oppoPlantProductSelDto = oppoPlantProductSelService.findOne(id);
-        return ObjectMapperUtils.writeValueAsString(oppoPlantProductSelDto);
+        return oppoPlantProductSelDto;
     }
 }
