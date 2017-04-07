@@ -16,6 +16,7 @@ import javax.persistence.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +117,18 @@ public class ProviderContextUtils {
                 entityClass = clazz;
             } else {
                 if(clazz.isAssignableFrom(BaseForm.class)) {
-                    entityClass = ((ParameterizedType)clazz.getGenericSuperclass()).getActualTypeArguments()[0].getClass();
+                    Type[] types= clazz.getGenericInterfaces();
+                    for(Type type:types) {
+                        ParameterizedType parameterizedType = (ParameterizedType)type;
+                        if(parameterizedType.getRawType().getTypeName().equals(BaseForm.class.getName())) {
+                            try {
+                                entityClass = Class.forName(parameterizedType.getActualTypeArguments()[0].getTypeName());
+                            } catch (ClassNotFoundException e) {
+                               e.printStackTrace();
+                            }
+                            break;
+                        }
+                    }
                 }
             }
             entityClassMap.put(key,entityClass);
