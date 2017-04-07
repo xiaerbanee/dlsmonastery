@@ -37,9 +37,9 @@ public class AccountManager {
     }
 
     @CachePut(value = "accounts",key="#p0.id")
-    public AccountForm saveForm(AccountForm accountForm){
+    public Account saveForm(AccountForm accountForm){
         accountMapper.saveForm(accountForm);
-        return  accountForm;
+        return  accountMapper.findOne(accountForm.getId());
     }
 
     @CachePut(value = "accounts",key="#p0.id")

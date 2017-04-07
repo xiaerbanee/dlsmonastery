@@ -43,9 +43,9 @@ public class DictEnumManager {
     }
 
     @Cacheable(value = "dictEnums",key="#p0.id")
-    public DictEnumForm saveForm(DictEnumForm dictEnumForm){
+    public DictEnum saveForm(DictEnumForm dictEnumForm){
         dictEnumMapper.saveForm(dictEnumForm);
-        return  dictEnumForm;
+        return  dictEnumMapper.findOne(dictEnumForm.getId());
     }
 
     @CachePut(value = "dictEnums",key="#p0.id")

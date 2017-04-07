@@ -37,9 +37,9 @@ public class PositionManager {
     }
 
     @CachePut(value = "positions",key="#p0.id")
-    public PositionForm saveForm(PositionForm positionForm){
+    public Position saveForm(PositionForm positionForm){
         positionMapper.saveForm(positionForm);
-        return  positionForm;
+        return  positionMapper.findOne(positionForm.getId());
     }
 
     @CachePut(value = "positions",key="#p0.id")

@@ -35,9 +35,9 @@ public class DictMapManager {
     }
 
     @Cacheable(value = "dictMaps",key="#p0.id")
-    public DictMapForm saveForm(DictMapForm dictMapForm){
+    public DictMap saveForm(DictMapForm dictMapForm){
         dictMapMapper.saveForm(dictMapForm);
-        return  dictMapForm;
+        return  dictMapMapper.findOne(dictMapForm.getId());
     }
 
     @CachePut(value = "dictMaps",key="#p0.id")

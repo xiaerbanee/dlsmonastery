@@ -35,9 +35,9 @@ public class FolderManager {
     }
 
     @Cacheable(value = "folders",key="#p0.id")
-    public FolderForm saveForm(FolderForm folderForm){
+    public Folder saveForm(FolderForm folderForm){
         folderMapper.saveForm(folderForm);
-        return  folderForm;
+        return  folderMapper.findOne(folderForm.getId());
     }
 
     @CachePut(value = "folders",key="#p0.id")

@@ -34,9 +34,9 @@ public class JobManager {
     }
 
     @CachePut(value = "jobs",key="#p0.id")
-    public JobForm saveForm(JobForm jobForm){
+    public Job saveForm(JobForm jobForm){
         jobMapper.saveForm(jobForm);
-        return  jobForm;
+        return  jobMapper.findOne(jobForm.getId());
     }
 
     @CachePut(value = "jobs",key="#p0.id")

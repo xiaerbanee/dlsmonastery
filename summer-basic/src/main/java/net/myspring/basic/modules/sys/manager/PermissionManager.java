@@ -37,9 +37,9 @@ public class PermissionManager {
     }
 
     @CachePut(value = "permissions",key="#p0.id")
-    public PermissionForm saveForm(PermissionForm permissionForm){
+    public Permission saveForm(PermissionForm permissionForm){
         permissionMapper.saveForm(permissionForm);
-        return  permissionForm;
+        return  permissionMapper.findOne(permissionForm.getId());
     }
 
     @CachePut(value = "permissions",key="#p0.id")
