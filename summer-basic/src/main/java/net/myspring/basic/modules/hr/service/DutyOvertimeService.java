@@ -82,7 +82,7 @@ public class DutyOvertimeService {
         if (currentDate == null) {
             return overtimeHour;
         }
-        LocalDateTime dateStart = LocalDateTimeUtils.getFirstDayOfThisMonth(currentDate.minusMonths(3));
+        LocalDateTime dateStart = LocalDateTimeUtils.getFirstDayOfMonth(currentDate.minusMonths(3));
         LocalDateTime dateEnd = currentDate;
         List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASS.getValue());
         if (CollectionUtil.isNotEmpty(overtimeList)) {
@@ -98,8 +98,8 @@ public class DutyOvertimeService {
         if (currentDate == null) {
             return overtimeHour;
         }
-        LocalDateTime dateStart = LocalDateTimeUtils.getFirstDayOfThisMonth(currentDate.minusMonths(3));
-        LocalDateTime dateEnd =  LocalDateTimeUtils.getLastDayOfThisMonth(currentDate.minusMonths(3));
+        LocalDateTime dateStart = LocalDateTimeUtils.getFirstDayOfMonth(currentDate.minusMonths(3));
+        LocalDateTime dateEnd =  LocalDateTimeUtils.getLastDayOfMonth(currentDate.minusMonths(3));
         List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASS.getValue());
         if (CollectionUtil.isNotEmpty(overtimeList)) {
             for (DutyOvertime dutyOvertime : overtimeList) {

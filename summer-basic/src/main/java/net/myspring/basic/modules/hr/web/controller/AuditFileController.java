@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.hr.web.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import gui.ava.html.image.generator.HtmlImageGenerator;
 import net.myspring.basic.common.enums.BoolEnum;
@@ -16,22 +15,21 @@ import net.myspring.basic.modules.sys.service.FolderService;
 import net.myspring.basic.modules.sys.service.ProcessTypeService;
 import net.myspring.common.domain.SearchEntity;
 import net.myspring.common.response.ResponseCodeEnum;
-import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
-import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @RestController

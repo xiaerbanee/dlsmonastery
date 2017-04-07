@@ -22,7 +22,7 @@ public class ProductIme extends DataEntity<ProductIme> {
     private LocalDateTime createdTime;
     private String inputType;
     private String meid;
-    private Integer version = 0;
+    private Integer version;
     private String itemNumber;
     private String colorId;
     private String retailShopId;

@@ -57,11 +57,11 @@ public class LocalDateTimeUtils {
         return localDateTime;
     }
 
-    public static LocalDateTime getFirstDayOfThisMonth(LocalDateTime localDateTime){
+    public static LocalDateTime getFirstDayOfMonth(LocalDateTime localDateTime){
         return localDateTime.withDayOfMonth(1);
     }
 
-    public static LocalDateTime getLastDayOfThisMonth(LocalDateTime localDateTime){
+    public static LocalDateTime getLastDayOfMonth(LocalDateTime localDateTime){
         return localDateTime.withDayOfMonth(localDateTime.toLocalDate().lengthOfMonth());
     }
 }
