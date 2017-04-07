@@ -7,7 +7,7 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/5.
  */
 
-public class DictEnumForm extends BaseForm<DictEnum>{
+public class DictEnumForm implements BaseForm<DictEnum>{
     private String id;
 
     public String getId() {

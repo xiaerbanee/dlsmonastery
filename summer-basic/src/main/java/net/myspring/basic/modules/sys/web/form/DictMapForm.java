@@ -7,7 +7,7 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/1.
  */
 
-public class DictMapForm extends BaseForm<DictMap>{
+public class DictMapForm implements BaseForm<DictMap>{
     private String id;
     private String category;
     private String name;

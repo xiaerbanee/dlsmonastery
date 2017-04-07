@@ -7,7 +7,7 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/5.
  */
 
-public class FolderForm extends BaseForm<Folder>{
+public class FolderForm implements BaseForm<Folder>{
     private String id;
     private Folder parent;
     private String name;

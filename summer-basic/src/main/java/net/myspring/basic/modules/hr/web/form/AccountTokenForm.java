@@ -8,5 +8,5 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/6.
  */
 
-public class AccountTokenForm extends BaseForm<AccountToken> {
+public class AccountTokenForm implements BaseForm<AccountToken> {
 }

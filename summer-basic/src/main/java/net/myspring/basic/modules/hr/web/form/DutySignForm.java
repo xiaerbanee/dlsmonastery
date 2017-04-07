@@ -12,7 +12,7 @@ import java.time.LocalTime;
  * Created by admin on 2017/4/6.
  */
 
-public class DutySignForm extends BaseForm<DutySign> {
+public class DutySignForm implements BaseForm<DutySign> {
     private LocalDate dutyDate;
     private LocalTime dutyTime;
     private String status;

@@ -7,7 +7,7 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/6.
  */
 
-public class MenuCategoryForm extends BaseForm<MenuCategory> {
+public class MenuCategoryForm implements BaseForm<MenuCategory> {
     private String id;
 
     public String getId() {

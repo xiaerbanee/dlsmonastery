@@ -7,5 +7,5 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/6.
  */
 
-public class AccountMessageForm extends BaseForm<AccountMessage> {
+public class AccountMessageForm implements BaseForm<AccountMessage> {
 }

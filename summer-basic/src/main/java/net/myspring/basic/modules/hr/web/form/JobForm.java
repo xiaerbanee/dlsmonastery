@@ -8,7 +8,7 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/5.
  */
 
-public class JobForm extends BaseForm<Job> {
+public class JobForm implements BaseForm<Job> {
     private String id;
 
     public String getId() {

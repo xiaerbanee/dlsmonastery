@@ -9,7 +9,7 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/5.
  */
 
-public class MenuForm extends BaseForm<Menu>{
+public class MenuForm implements BaseForm<Menu>{
     private String id;
     private String menuCategoryId;
     private MenuCategory menuCategory;

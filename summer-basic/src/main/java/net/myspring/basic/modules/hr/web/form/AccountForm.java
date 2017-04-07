@@ -9,7 +9,7 @@ import java.util.List;
  * Created by liuj on 2017/3/19.
  */
 
-public class AccountForm extends BaseForm<Account>{
+public class AccountForm implements BaseForm<Account>{
     private String id;
     private String password;
     private List<String> OfficeIdList;

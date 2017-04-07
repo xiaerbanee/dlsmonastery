@@ -10,7 +10,7 @@ import java.util.List;
  * Created by admin on 2017/4/5.
  */
 
-public class PermissionForm extends BaseForm<Permission> {
+public class PermissionForm implements BaseForm<Permission> {
     private String id;
     private List<String> positionIdList;
 

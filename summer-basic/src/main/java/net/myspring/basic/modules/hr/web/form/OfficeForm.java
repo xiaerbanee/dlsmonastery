@@ -8,7 +8,7 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/6.
  */
 
-public class OfficeForm extends BaseForm<Office> {
+public class OfficeForm implements BaseForm<Office> {
     private String id;
 
     public String getId() {

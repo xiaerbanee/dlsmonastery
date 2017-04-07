@@ -6,7 +6,7 @@ import net.myspring.mybatis.form.BaseForm;
 /**
  * Created by admin on 2017/4/6.
  */
-public class DutyRestForm extends BaseForm<DutyRest> {
+public class DutyRestForm implements BaseForm<DutyRest> {
     private Double annualLeftHour;
 
     public Double getAnnualLeftHour() {

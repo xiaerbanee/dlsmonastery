@@ -7,5 +7,5 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/6.
  */
 
-public class ProcessTypeForm extends BaseForm<ProcessType>{
+public class ProcessTypeForm implements BaseForm<ProcessType>{
 }

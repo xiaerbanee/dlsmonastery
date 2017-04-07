@@ -6,5 +6,5 @@ import net.myspring.mybatis.form.BaseForm;
 /**
  * Created by admin on 2017/4/6.
  */
-public class AccountChangeForm extends BaseForm<AccountChange> {
+public class AccountChangeForm implements BaseForm<AccountChange> {
 }

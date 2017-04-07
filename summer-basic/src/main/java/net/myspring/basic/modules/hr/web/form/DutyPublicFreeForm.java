@@ -8,7 +8,7 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/6.
  */
 
-public class DutyPublicFreeForm extends BaseForm<DutyPublicFree> {
+public class DutyPublicFreeForm implements BaseForm<DutyPublicFree> {
     private String employeeId;
     private String status;
 

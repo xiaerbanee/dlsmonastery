@@ -8,5 +8,5 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/6.
  */
 
-public class DutyAnnualForm extends BaseForm<DutyAnnual> {
+public class DutyAnnualForm implements BaseForm<DutyAnnual> {
 }

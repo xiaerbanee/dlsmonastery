@@ -7,7 +7,7 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/6.
  */
 
-public class DutyOvertimeForm extends BaseForm<DutyOvertime> {
+public class DutyOvertimeForm implements BaseForm<DutyOvertime> {
     private Integer hour;
     private Integer leftHour;
     private String status;

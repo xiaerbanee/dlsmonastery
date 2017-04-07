@@ -8,5 +8,5 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/5.
  */
 
-public class EmployeeForm extends BaseForm<Employee> {
+public class EmployeeForm implements BaseForm<Employee> {
 }

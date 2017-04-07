@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * Created by admin on 2017/4/6.
  */
 
-public class DutyLeaveForm extends BaseForm<DutyLeave>{
+public class DutyLeaveForm implements BaseForm<DutyLeave>{
     private String dutyDateStart;
     private String dutyDateEnd;
     private String employeeId;
