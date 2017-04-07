@@ -1,17 +1,14 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
-import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
 import net.myspring.basic.modules.hr.service.DutyLeaveService;
 import net.myspring.basic.modules.hr.web.form.DutyLeaveForm;
 import net.myspring.basic.modules.sys.service.DictEnumService;
-import net.myspring.common.domain.SearchEntity;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -21,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 @RestController

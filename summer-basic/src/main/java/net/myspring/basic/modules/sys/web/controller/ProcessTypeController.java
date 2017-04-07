@@ -2,7 +2,6 @@ package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.BoolEnum;
-import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.sys.domain.ProcessType;
 import net.myspring.basic.modules.sys.dto.ProcessTypeDto;
@@ -10,7 +9,6 @@ import net.myspring.basic.modules.sys.service.ProcessTypeService;
 import net.myspring.basic.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

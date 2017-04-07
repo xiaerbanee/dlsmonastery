@@ -9,6 +9,7 @@ import net.myspring.basic.modules.hr.domain.AccountChange;
 import net.myspring.basic.modules.hr.domain.AccountTask;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.mapper.*;
+import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
 import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.util.mapper.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,8 @@ public class AccountChangeService {
         return accountChangeDto;
     }
 
-    public Page<AccountChangeDto> findPage(Pageable pageable, Map<String,Object> map){
-        Page<AccountChange> page=accountChangeMapper.findPage(pageable,map);
+    public Page<AccountChangeDto> findPage(Pageable pageable, AccountChangeQuery accountChangeQuery){
+        Page<AccountChange> page=accountChangeMapper.findPage(pageable,accountChangeQuery);
         Page<AccountChangeDto> accountChangeDtoPage= BeanMapper.convertPage(page,AccountChangeDto.class);
         cacheUtils.initCacheInput(accountChangeDtoPage.getContent());
         return accountChangeDtoPage;

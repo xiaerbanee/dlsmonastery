@@ -2,7 +2,6 @@ package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.PermissionDto;
 import net.myspring.basic.modules.sys.service.MenuService;
@@ -10,7 +9,6 @@ import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.basic.modules.sys.web.form.PermissionForm;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.common.domain.SearchEntity;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

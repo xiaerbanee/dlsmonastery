@@ -1,24 +1,20 @@
 package net.myspring.basic.modules.hr.web.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.AccountChangeTypeEnum;
 import net.myspring.basic.common.utils.Const;
-import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.service.AccountChangeService;
 import net.myspring.basic.modules.hr.service.OfficeService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
-import net.myspring.common.domain.SearchEntity;
+import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
 import net.myspring.util.json.ObjectMapperUtils;
-import net.myspring.util.text.StringUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -45,9 +41,8 @@ public class AccountChangeController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<AccountChangeDto> page = accountChangeService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String list(Pageable pageable, AccountChangeQuery accountChangeQuery){
+        Page<AccountChangeDto> page = accountChangeService.findPage(pageable,accountChangeQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 

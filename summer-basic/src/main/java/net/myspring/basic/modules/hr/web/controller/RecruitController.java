@@ -1,18 +1,14 @@
 package net.myspring.basic.modules.hr.web.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.utils.Const;
-import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Recruit;
 import net.myspring.basic.modules.hr.dto.RecruitDto;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.service.RecruitService;
 import net.myspring.basic.modules.hr.web.form.RecruitForm;
-import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.service.DictEnumService;
-import net.myspring.common.domain.SearchEntity;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
