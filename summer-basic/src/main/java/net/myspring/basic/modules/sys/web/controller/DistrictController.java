@@ -18,9 +18,9 @@ public class DistrictController {
     private DistrictService districtService;
 
     @RequestMapping(value = "search")
-    public String search(String key) {
+    public List<DistrictDto> search(String key) {
         List<DistrictDto> districtDtoList =districtService.findByNameLike(key);
-        return ObjectMapperUtils.writeValueAsString(districtDtoList);
+        return districtDtoList;
     }
 
 }

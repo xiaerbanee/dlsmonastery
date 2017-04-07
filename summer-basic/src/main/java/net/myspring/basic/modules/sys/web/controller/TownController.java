@@ -21,12 +21,12 @@ public class TownController {
     private TownService townService;
 
     @RequestMapping(value = "search")
-    public String search(String name) {
+    public List<TownDto> search(String name) {
         List<TownDto> townDtoList = Lists.newArrayList();
         if (StringUtils.isNotBlank(name)) {
            List<Town> townList = townService.findByLikeName(name);
            townDtoList= BeanUtil.map(townList,TownDto.class);
         }
-        return ObjectMapperUtils.writeValueAsString(townDtoList);
+        return townDtoList;
     }
 }

@@ -45,9 +45,9 @@ public class FolderFileController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, FolderFileQuery folderFileQuery){
+    public Page<FolderFileDto>  list(Pageable pageable, FolderFileQuery folderFileQuery){
         Page<FolderFileDto> page = folderFileService.findPage(pageable,folderFileQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "/upload")
@@ -100,13 +100,13 @@ public class FolderFileController {
     }
 
     @RequestMapping(value = "/findByIds")
-    public String findByIds(String ids) {
+    public List<FolderFileDto> findByIds(String ids) {
         List<String> idList = StringUtils.getSplitList(ids, Const.CHAR_COMMA);
         List<FolderFileDto> folderFileDtoList = Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(idList)) {
             List<FolderFile> folderFileList = folderFileService.findByIds(idList);
             folderFileDtoList= BeanUtil.map(folderFileList,FolderFileDto.class);
         }
-        return ObjectMapperUtils.writeValueAsString(folderFileDtoList);
+        return folderFileDtoList;
     }
 }
