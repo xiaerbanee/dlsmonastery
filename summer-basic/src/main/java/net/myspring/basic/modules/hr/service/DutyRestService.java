@@ -40,8 +40,8 @@ public class DutyRestService {
     public DutyRest save(DutyRestForm dutyRestForm) {
         dutyRestForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyRestForm.setEmployeeId(securityUtils.getEmployeeId());
-        dutyRestMapper.save(dutyRestForm);
-        return dutyRestForm;
+        dutyRestMapper.saveForm(dutyRestForm);
+        return dutyRestMapper.findOne(dutyRestForm.getId());
     }
 
     public void logicDeleteOne(String id) {

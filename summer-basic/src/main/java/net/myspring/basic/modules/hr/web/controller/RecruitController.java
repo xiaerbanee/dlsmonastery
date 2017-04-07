@@ -68,8 +68,8 @@ public class RecruitController {
     }
 
     @RequestMapping(value = "delete")
-    public String delete(RecruitForm recruitForm) {
-        recruitService.delete(recruitForm);
+    public String delete(String id) {
+        recruitService.logicDeleteOne(id);
         return ObjectMapperUtils.writeValueAsString(new RestResponse("删除成功",ResponseCodeEnum.removed.name()));
     }
 

@@ -72,7 +72,6 @@ public class AuditFileController {
     @RequestMapping(value = "save")
     public RestResponse save(AuditFileForm auditFileForm, BindingResult result) {
         ProcessType processType = processTypeService.findOne(auditFileForm.getProcessTypeId());
-        auditFileForm.setProcessType(processType);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 

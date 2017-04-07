@@ -45,8 +45,8 @@ public class DutyFreeController {
 
 
     @RequestMapping(value = "delete", method = RequestMethod.GET)
-    public String delete(DutyFreeForm dutyFreeForm) {
-        dutyFreeService.logicDeleteOne(dutyFreeForm);
+    public String delete(String id) {
+        dutyFreeService.logicDeleteOne(id);
         RestResponse restResponse = new RestResponse("免打卡删除成功", ResponseCodeEnum.removed.name());
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }

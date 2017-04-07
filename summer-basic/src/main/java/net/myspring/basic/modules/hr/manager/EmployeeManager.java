@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.manager;
 
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
+import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,26 @@ public class EmployeeManager {
         return  employee;
     }
 
+
+    @CachePut(value = "employees",key="#p0.id")
+    public Employee saveForm(EmployeeForm employeeForm){
+        employeeMapper.saveForm(employeeForm);
+        return  employeeMapper.findOne(employeeForm.getId());
+    }
+
     @CachePut(value = "employees",key="#p0.id")
     public Employee update(Employee employee){
         employeeMapper.update(employee);
         return  employeeMapper.findOne(employee.getId());
     }
+
+
+    @CachePut(value = "employees",key="#p0.id")
+    public Employee updateForm(EmployeeForm employeeForm){
+        employeeMapper.updateForm(employeeForm);
+        return  employeeMapper.findOne(employeeForm.getId());
+    }
+
 
     public int logicDeleteOne(String id){
         return employeeMapper.logicDeleteOne(id);

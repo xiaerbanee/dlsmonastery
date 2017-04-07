@@ -9,4 +9,13 @@ import net.myspring.mybatis.form.BaseForm;
  */
 
 public class EmployeeForm implements BaseForm<Employee> {
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

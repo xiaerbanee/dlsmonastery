@@ -57,8 +57,8 @@ public class DutyFreeService {
         return dutyFreeDto;
     }
 
-    public void logicDeleteOne(DutyFree dutyFree) {
-        dutyFreeMapper.logicDeleteOne(dutyFree.getId());
+    public void logicDeleteOne(String id) {
+        dutyFreeMapper.logicDeleteOne(id);
     }
 
     public List<DutyFree> findByDate(LocalDate freeDate, String employeeId) {

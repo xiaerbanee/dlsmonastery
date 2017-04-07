@@ -9,4 +9,13 @@ import net.myspring.mybatis.form.BaseForm;
  */
 
 public class AuditFileForm implements BaseForm<AuditFile> {
+    private String processTypeId;
+
+    public String getProcessTypeId() {
+        return processTypeId;
+    }
+
+    public void setProcessTypeId(String processTypeId) {
+        this.processTypeId = processTypeId;
+    }
 }

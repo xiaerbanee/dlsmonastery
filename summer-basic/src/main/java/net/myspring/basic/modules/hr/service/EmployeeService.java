@@ -56,9 +56,9 @@ public class EmployeeService {
     public EmployeeForm save(EmployeeForm employeeForm) {
         boolean isCreate= StringUtils.isBlank(employeeForm.getId());
         if(isCreate) {
-            employeeManager.save(employeeForm);
+            employeeManager.saveForm(employeeForm);
         } else {
-            employeeManager.update(employeeForm);
+            employeeManager.updateForm(employeeForm);
         }
         return employeeForm;
     }

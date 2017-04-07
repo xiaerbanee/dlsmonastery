@@ -71,8 +71,8 @@ public class RecruitService {
     }
 
     @Transactional
-    public void delete(Recruit recruit){
-        recruitMapper.logicDeleteOne(recruit.getId());
+    public void logicDeleteOne(String id){
+        recruitMapper.logicDeleteOne(id);
     }
 
     @Transactional
