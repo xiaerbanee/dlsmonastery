@@ -19,10 +19,7 @@ public interface MyMapper<T, ID extends Serializable> extends CrudMapper<T, ID> 
     @UpdateProvider(type=MyProvider.class,method = "logicDeleteByIds")
     int logicDeleteByIds(List<ID> ids);
 
-    @SelectProvider(
-            type = MyProvider.class,
-            method = "findAll"
-    )
-    List<T> findAll();
+    @SelectProvider(type = MyProvider.class,method = "findAllEnabled")
+    List<T> findAllEnabled();
 
 }

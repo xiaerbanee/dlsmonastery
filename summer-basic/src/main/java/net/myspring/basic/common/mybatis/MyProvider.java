@@ -32,7 +32,7 @@ public class MyProvider extends CrudProvider {
         return sql;
     }
 
-    public String findAll() {
+    public String findAllEnabled() {
         String sql = "SELECT  * FROM " + getTableDto().getJdbcTable()+"where enabled=1";
         logger.info(sql);
         return sql;

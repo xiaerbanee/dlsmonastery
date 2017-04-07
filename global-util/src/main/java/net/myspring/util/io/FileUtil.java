@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 
@@ -353,5 +354,19 @@ public class FileUtil {
 	 */
 	public static String getFileExtension(String fullName) {
 		return Files.getFileExtension(fullName);
+	}
+
+	public static void createFile(String filePath,List<String> fileContent) {
+		File file = new File(filePath);
+		File path = new File(file.getParent());
+		path.mkdirs();
+		try (BufferedWriter writer = java.nio.file.Files.newBufferedWriter(Paths.get(filePath)))  {
+			for(String line:fileContent) {
+				writer.write(line);
+				writer.newLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

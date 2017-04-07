@@ -3,12 +3,12 @@ package net.myspring.basic.modules.sys.service;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.exception.ServiceException;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.FileUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.sys.domain.FolderFile;
 import net.myspring.basic.modules.sys.dto.FolderFileDto;
 import net.myspring.basic.modules.sys.manager.FolderFileManager;
 import net.myspring.basic.modules.sys.mapper.FolderFileMapper;
+import net.myspring.util.io.FileUtil;
 import net.myspring.util.mapper.BeanMapper;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +61,11 @@ public class FolderFileService {
                     list.add(folderFileDto);
                     // 保存文件
                     String uploadPath = getUploadPath(folderFileDto);
-                    FileUtils.mkdirs(uploadPath);
+                    FileUtil.makesureDirExists(uploadPath);
                     FileCopyUtils.copy(multipartFile.getBytes(), new FileOutputStream(uploadPath));
                     if (folderFileDto.isImage()) {
                         String previewUploadPath = getPreviewUploadPath(folderFileDto);
-                        FileUtils.mkdirs(previewUploadPath);
+                        FileUtil.makesureDirExists(previewUploadPath);
                         File file = new File(uploadPath);
                         BufferedImage image;
                         image = Scalr.resize(ImageIO.read(file), uploadPreviewSize);
