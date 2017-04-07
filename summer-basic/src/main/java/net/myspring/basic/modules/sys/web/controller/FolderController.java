@@ -27,35 +27,35 @@ public class FolderController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
+    public List<FolderDto> list(HttpServletRequest request){
         List<FolderDto> list = folderService.findAll(securityUtils.getAccountId());
-        return ObjectMapperUtils.writeValueAsString(list);
+        return list;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(Folder folder,BindingResult bindingResult) {
+    public RestResponse delete(Folder folder,BindingResult bindingResult) {
         folderService.deleteOne(folder.getId());
         RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "save")
-    public String save(FolderForm folderForm) {
+    public RestResponse save(FolderForm folderForm) {
         folderService.save(folderForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id){
+    public FolderDto findOne(String id){
         FolderDto folderDto=folderService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(folderDto);
+        return folderDto;
     }
 
     @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("folders",folderService.findAll(securityUtils.getAccountId()));
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
 }

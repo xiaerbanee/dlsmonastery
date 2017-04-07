@@ -23,31 +23,31 @@ public class MenuCategoryController {
     private MenuCategoryService menuCategoryService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, MenuCategoryQuery menuCategoryQuery){
+    public Page<MenuCategoryDto> list(Pageable pageable, MenuCategoryQuery menuCategoryQuery){
         Page<MenuCategoryDto> page = menuCategoryService.findPage(pageable,menuCategoryQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(MenuCategory menuCategory) {
+    public RestResponse delete(MenuCategory menuCategory) {
         if(CollectionUtil.isNotEmpty(menuCategory.getMenuList())){
-            return ObjectMapperUtils.writeValueAsString(new RestResponse("菜单分类删除失败，请先删除下属菜单",null));
+            return new RestResponse("菜单分类删除失败，请先删除下属菜单",null);
         }
         menuCategoryService.logicDeleteOne(menuCategory.getId());
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "save")
-    public String save(MenuCategoryForm menuCategoryForm) {
+    public RestResponse save(MenuCategoryForm menuCategoryForm) {
         menuCategoryService.save(menuCategoryForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id){
+    public MenuCategoryDto findOne(String id){
         MenuCategoryDto menuCategoryDto=menuCategoryService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(menuCategoryDto);
+        return menuCategoryDto;
     }
 
 }

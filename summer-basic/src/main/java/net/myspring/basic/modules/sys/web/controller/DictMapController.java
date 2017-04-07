@@ -25,42 +25,42 @@ public class DictMapController {
     private DictMapService dictMapService;
 
     @RequestMapping(value = "getFormProperty")
-    public String getFormProperty() {
+    public Map<String, Object> getFormProperty() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("category", dictMapService.findDistinctCategory());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "getListProperty")
-    public String getListProperty() {
+    public Map<String, Object> getListProperty() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("category", dictMapService.findDistinctCategory());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping
-    public String list(Pageable pageable, DictMapQuery dictMapQuery) {
+    public Page<DictMapDto> list(Pageable pageable, DictMapQuery dictMapQuery) {
         Page<DictMapDto> page = dictMapService.findPage(pageable, dictMapQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id) {
+    public DictMapDto findOne(String id) {
         DictMapDto dictMapDto=dictMapService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(dictMapDto);
+        return dictMapDto;
     }
 
     @RequestMapping(value = "save")
-    public String save(DictMapForm dictMapForm) {
+    public RestResponse save(DictMapForm dictMapForm) {
         dictMapService.save(dictMapForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功", ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         dictMapService.logicDeleteOne(id);
         RestResponse restResponse = new RestResponse("刪除成功",ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
 

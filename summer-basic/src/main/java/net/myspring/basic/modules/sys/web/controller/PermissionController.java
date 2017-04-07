@@ -30,22 +30,22 @@ public class PermissionController {
     private MenuService menuService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, PermissionQuery permissionQuery){
+    public Page<PermissionDto> list(Pageable pageable, PermissionQuery permissionQuery){
         Page<PermissionDto> page = permissionService.findPage(pageable,permissionQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         permissionService.logicDeleteOne(id);
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "save")
-    public String save(PermissionForm permissionForm) {
+    public RestResponse save(PermissionForm permissionForm) {
         permissionService.save(permissionForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
@@ -55,14 +55,14 @@ public class PermissionController {
     }
 
     @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("menu",menuService.findAll());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "search")
-    public String search(String query){
+    public List<Map<String, String>> search(String query){
         List<Permission> permissions=permissionService.findByPermissionLike(query);
         List<Map<String, String>> list = Lists.newArrayList();
         for (Permission permission : permissions) {
@@ -71,6 +71,6 @@ public class PermissionController {
             map.put("fullName",permission.getName()+" "+permission.getPermission());
             list.add(map);
         }
-        return ObjectMapperUtils.writeValueAsString(list);
+        return list;
     }
 }

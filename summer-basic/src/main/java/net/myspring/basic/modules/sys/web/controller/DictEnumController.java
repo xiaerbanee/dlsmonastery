@@ -25,41 +25,41 @@ public class DictEnumController {
     private DictEnumService dictEnumService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list( Pageable pageable, DictEnumQuery dictEnumQuery){
+    public Page<DictEnumDto>  list( Pageable pageable, DictEnumQuery dictEnumQuery){
         Page<DictEnumDto> page = dictEnumService.findPage(pageable,dictEnumQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(String id) {
+    public RestResponse delete(String id) {
         dictEnumService.logicDeleteOne(id);
         RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "save")
-    public String save(DictEnumForm dictEnumForm) {
+    public RestResponse save(DictEnumForm dictEnumForm) {
         dictEnumService.save(dictEnumForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功", ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id){
+    public DictEnumDto findOne(String id){
         DictEnumDto dictEnumDto=dictEnumService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(dictEnumDto);
+        return dictEnumDto;
     }
 
     @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("category", dictEnumService.findDistinctCategory());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    public Map<String,Object> getListProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("category", dictEnumService.findDistinctCategory());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 }

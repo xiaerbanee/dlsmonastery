@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,48 +39,48 @@ public class MenuController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, MenuQuery menuQuery){
+    public Page<MenuDto> list(Pageable pageable, MenuQuery menuQuery){
         Page<MenuDto> page = menuService.findPage(pageable,menuQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(Menu menu, BindingResult bindingResult) {
+    public RestResponse delete(Menu menu, BindingResult bindingResult) {
         if(CollectionUtil.isNotEmpty(menu.getPermissionList())){
-            return ObjectMapperUtils.writeValueAsString(new RestResponse("菜单删除失败，请先删除下属权限",null));
+            return new RestResponse("菜单删除失败，请先删除下属权限",null);
         }
         menuService.delete(menu.getId());
         RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "save")
-    public String save(MenuForm menuForm) {
+    public RestResponse save(MenuForm menuForm) {
         menuService.save(menuForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id){
+    public MenuDto findOne(String id){
         MenuDto menuDto=menuService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(menuDto);
+        return menuDto;
     }
 
     @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("menuCategory", menuCategoryService.findAll());
         map.put("category",menuService.findDistinctCategory());
         map.put("bools", BoolEnum.getMap());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    public Map<String,Object> getListProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("menuCategory", menuCategoryService.findAll());
         map.put("category",menuService.findDistinctCategory());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "getMenus")

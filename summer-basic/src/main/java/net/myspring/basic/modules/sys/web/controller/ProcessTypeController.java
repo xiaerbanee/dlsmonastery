@@ -30,40 +30,40 @@ public class ProcessTypeController {
     private PositionService positionService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, ProcessTypeQuery processTypeQuery){
+    public Page<ProcessTypeDto> list(Pageable pageable, ProcessTypeQuery processTypeQuery){
         Page<ProcessTypeDto> page = processTypeService.findPage(pageable,processTypeQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(ProcessType processType,BindingResult bindingResult) {
+    public RestResponse delete(ProcessType processType,BindingResult bindingResult) {
         processTypeService.logicDeleteOne(processType);
         RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "save")
-    public String save(ProcessTypeForm processTypeForm) {
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功",ResponseCodeEnum.saved.name()));
+    public RestResponse save(ProcessTypeForm processTypeForm) {
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(String id){
+    public ProcessTypeDto findOne(String id){
         ProcessTypeDto processTypeDto=processTypeService.findDto(id);
-        return ObjectMapperUtils.writeValueAsString(processTypeDto);
+        return processTypeDto;
     }
 
     @RequestMapping(value="getFormProperty")
-    public String getFormProperty(String query){
+    public Map<String,Object> getFormProperty(String query){
         Map<String,Object> map= Maps.newHashMap();
         map.put("positions",positionService.findAll());
         map.put("bools", BoolEnum.getMap());
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    public Map<String,Object> getListProperty(){
         Map<String,Object> map= Maps.newHashMap();
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 }
