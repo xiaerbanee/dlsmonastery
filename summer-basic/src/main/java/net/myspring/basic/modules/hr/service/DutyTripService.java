@@ -37,10 +37,10 @@ public class DutyTripService {
         return dutyTripDtoPage;
     }
 
-    public DutyTrip save(DutyTripForm dutyTripForm) {
+    public DutyTripForm save(DutyTripForm dutyTripForm) {
         dutyTripForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyTripForm.setEmployeeId(securityUtils.getEmployeeId());
-        dutyTripMapper.save(dutyTripForm);
+        dutyTripMapper.saveForm(dutyTripForm);
         return dutyTripForm;
     }
 

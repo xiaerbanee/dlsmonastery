@@ -43,11 +43,11 @@ public class DutyOvertimeService {
         return dutyOvertimeDtoPage;
     }
 
-    public DutyOvertime save(DutyOvertimeForm dutyOvertimeForm) {
+    public DutyOvertimeForm save(DutyOvertimeForm dutyOvertimeForm) {
         dutyOvertimeForm.setLeftHour(dutyOvertimeForm.getHour());
         dutyOvertimeForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyOvertimeForm.setEmployeeId(securityUtils.getEmployeeId());
-        dutyOvertimeMapper.save(dutyOvertimeForm);
+        dutyOvertimeMapper.saveForm(dutyOvertimeForm);
         return dutyOvertimeForm;
     }
 

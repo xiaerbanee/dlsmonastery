@@ -187,9 +187,9 @@ public class MenuService {
         Set<Permission> oldPermissions = Sets.newHashSet();
         if(isCreate) {
             menuForm.setMenuCategory(menuCategoryMapper.findOne(menuForm.getMenuCategoryId()));
-            menuMapper.save(menuForm);
+            menuMapper.saveForm(menuForm);
         } else {
-            menuMapper.update(menuForm);
+            menuMapper.updateForm(menuForm);
             oldPermissions = Sets.newHashSet(permissionMapper.findByMenuId(menuForm.getId()));
         }
         if (StringUtils.isNotBlank(menuForm.getPermissionStr())) {
@@ -203,13 +203,13 @@ public class MenuService {
                         Permission permission = permissionMapper.findByPermission(permissionStr);
                         if (permission != null) {
                             permission.setName(name);
-                            permission.setMenu(menuForm);
+                            permission.setMenuId(menuForm.getId());
                             permissionMapper.update(permission);
                         } else {
                             permission = new Permission();
                             permission.setName(name);
                             permission.setPermission(permissionStr);
-                            permission.setMenu(menuForm);
+                            permission.setMenuId(menuForm.getId());
                             permissionMapper.save(permission);
                         }
                         permissions.add(permission);

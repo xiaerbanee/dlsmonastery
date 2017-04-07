@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.manager;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.mapper.PositionMapper;
+import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,21 @@ public class PositionManager {
     }
 
     @CachePut(value = "positions",key="#p0.id")
+    public PositionForm saveForm(PositionForm positionForm){
+        positionMapper.saveForm(positionForm);
+        return  positionForm;
+    }
+
+    @CachePut(value = "positions",key="#p0.id")
     public Position update(Position position){
         positionMapper.update(position);
         return  positionMapper.findOne(position.getId());
+    }
+
+    @CachePut(value = "positions",key="#p0.id")
+    public Position updateForm(PositionForm positionForm){
+        positionMapper.updateForm(positionForm);
+        return  positionMapper.findOne(positionForm.getId());
     }
 
     public List<Position> findAll(){

@@ -58,9 +58,9 @@ public class DictMapService {
 
     public DictMapForm save(DictMapForm dictMapForm){
         if(StringUtils.isBlank(dictMapForm.getId())){
-            dictMapManager.save(dictMapForm);
+            dictMapManager.saveForm(dictMapForm);
         }else{
-            dictMapManager.update(dictMapForm);
+            dictMapManager.updateForm(dictMapForm);
         }
         return  dictMapForm;
     }

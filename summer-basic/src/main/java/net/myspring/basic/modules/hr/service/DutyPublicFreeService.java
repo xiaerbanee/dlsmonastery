@@ -29,10 +29,10 @@ public class DutyPublicFreeService {
     private SecurityUtils securityUtils;
 
 
-    public DutyPublicFree save(DutyPublicFreeForm dutyPublicFreeForm) {
+    public DutyPublicFreeForm save(DutyPublicFreeForm dutyPublicFreeForm) {
         dutyPublicFreeForm.setEmployeeId(securityUtils.getEmployeeId());
         dutyPublicFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
-        dutyPublicFreeMapper.save(dutyPublicFreeForm);
+        dutyPublicFreeMapper.saveForm(dutyPublicFreeForm);
         return dutyPublicFreeForm;
     }
 

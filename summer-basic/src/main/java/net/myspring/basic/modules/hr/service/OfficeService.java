@@ -65,12 +65,12 @@ public class OfficeService {
     }
 
 
-    public Office save(OfficeForm officeForm) {
+    public OfficeForm save(OfficeForm officeForm) {
         boolean isCreate= StringUtils.isBlank(officeForm.getId());
         if (isCreate) {
-            officeMapper.save(officeForm);
+            officeMapper.saveForm(officeForm);
         } else {
-            officeMapper.update(officeForm);
+            officeMapper.updateForm(officeForm);
         }
         return officeForm;
     }

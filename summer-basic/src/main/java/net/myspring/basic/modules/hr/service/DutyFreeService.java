@@ -38,10 +38,10 @@ public class DutyFreeService {
         return dutyFreeDtoPage;
     }
 
-    public DutyFree save(DutyFreeForm dutyFreeForm) {
+    public DutyFreeForm save(DutyFreeForm dutyFreeForm) {
         dutyFreeForm.setEmployeeId(securityUtils.getEmployeeId());
         dutyFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
-        dutyFreeMapper.save(dutyFreeForm);
+        dutyFreeMapper.saveForm(dutyFreeForm);
         return dutyFreeForm;
     }
 

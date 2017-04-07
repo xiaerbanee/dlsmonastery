@@ -40,12 +40,12 @@ public class DutySignService {
     @Autowired
     private SecurityUtils securityUtils;
 
-    public DutySign save(DutySignForm dutySignForm) {
+    public DutySignForm save(DutySignForm dutySignForm) {
         dutySignForm.setDutyDate(LocalDate.now());
         dutySignForm.setDutyTime(LocalTime.now());
         dutySignForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutySignForm.setEmployeeId(securityUtils.getEmployeeId());
-        dutySignMapper.save(dutySignForm);
+        dutySignMapper.saveForm(dutySignForm);
         return dutySignForm;
     }
 

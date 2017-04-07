@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
+import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
@@ -66,27 +67,27 @@ public class AccountService {
         return accountDtoList;
     }
 
-    public Account save(Account account) {
-        boolean isCreate = StringUtils.isBlank(account.getId());
+    public AccountForm save(AccountForm accountForm) {
+        boolean isCreate = StringUtils.isBlank(accountForm.getId());
         if (isCreate) {
-            account.setPassword(StringUtils.getEncryptPassword(Const.DEFAULT_PASSWORD));
-            accountManager.save(account);
+            accountForm.setPassword(StringUtils.getEncryptPassword(Const.DEFAULT_PASSWORD));
+            accountManager.saveForm(accountForm);
         } else {
-            if(StringUtils.isNotBlank(account.getPassword())){
-                account.setPassword(StringUtils.getEncryptPassword(account.getPassword()));
+            if(StringUtils.isNotBlank(accountForm.getPassword())){
+                accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
             }else {
-                account.setPassword(accountManager.findOne(account.getId()).getPassword());
+                accountForm.setPassword(accountManager.findOne(accountForm.getId()).getPassword());
             }
-            accountManager.update(account);
+            accountManager.updateForm(accountForm);
         }
-        accountManager.deleteAccountOffice(account.getId());
-        if (CollectionUtil.isNotEmpty(account.getOfficeIdList())) {
-            accountManager.saveAccountOffice(account.getId(), account.getOfficeIdList());
+        accountManager.deleteAccountOffice(accountForm.getId());
+        if (CollectionUtil.isNotEmpty(accountForm.getOfficeIdList())) {
+            accountManager.saveAccountOffice(accountForm.getId(), accountForm.getOfficeIdList());
         }
-        if("主账号".equals(account.getType())){
-            employeeManager.updateAccountId(account.getEmployeeId(),account.getId());
+        if("主账号".equals(accountForm.getType())){
+            employeeManager.updateAccountId(accountForm.getEmployeeId(),accountForm.getId());
         }
-        return account;
+        return accountForm;
     }
 
 

@@ -63,9 +63,9 @@ public class RecruitService {
     public RecruitForm save(RecruitForm recruitForm){
         boolean isCreate = StringUtils.isBlank(recruitForm.getId());
         if(isCreate){
-            recruitMapper.save(recruitForm);
+            recruitMapper.saveForm(recruitForm);
         }else{
-            recruitMapper.update(recruitForm);
+            recruitMapper.updateForm(recruitForm);
         }
         return recruitForm;
     }

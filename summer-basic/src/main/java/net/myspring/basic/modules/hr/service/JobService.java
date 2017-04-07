@@ -53,9 +53,9 @@ public class JobService {
 
     public JobForm save(JobForm jobForm){
         if(StringUtils.isBlank(jobForm.getId())) {
-            jobManager.save(jobForm);
+            jobManager.saveForm(jobForm);
         } else {
-            jobManager.update(jobForm);
+            jobManager.updateForm(jobForm);
         }
         return jobForm;
     }

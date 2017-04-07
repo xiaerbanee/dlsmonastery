@@ -14,6 +14,7 @@ import net.myspring.basic.modules.sys.manager.PermissionManager;
 import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
 import net.myspring.basic.modules.sys.mapper.MenuMapper;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
+import net.myspring.basic.modules.sys.web.form.PermissionForm;
 import net.myspring.basic.modules.sys.web.query.PermissionQuery;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
@@ -78,21 +79,21 @@ public class PermissionService {
         return permissionDtoPage;
     }
 
-    public Permission save(Permission permission) {
-        boolean isCreate= StringUtils.isBlank(permission.getId());
+    public PermissionForm save(PermissionForm permissionForm) {
+        boolean isCreate= StringUtils.isBlank(permissionForm.getId());
         if (isCreate) {
-            permissionManager.save(permission);
-            if(CollectionUtil.isNotEmpty(permission.getPositionIdList())){
-                permissionMapper.savePermissionPosition(permission.getId(),permission.getPositionIdList());
+            permissionManager.saveForm(permissionForm);
+            if(CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())){
+                permissionMapper.savePermissionPosition(permissionForm.getId(),permissionForm.getPositionIdList());
             }
         } else {
-            permissionManager.update(permission);
-            permissionMapper.deletePermissionPosition(permission.getId());
-            if(CollectionUtil.isNotEmpty(permission.getPositionIdList())){
-                permissionMapper.savePermissionPosition(permission.getId(),permission.getPositionIdList());
+            permissionManager.updateForm(permissionForm);
+            permissionMapper.deletePermissionPosition(permissionForm.getId());
+            if(CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())){
+                permissionMapper.savePermissionPosition(permissionForm.getId(),permissionForm.getPositionIdList());
             }
         }
-        return permission;
+        return permissionForm;
     }
 
     public TreeNode findPermissionTree(List<String> permissionIds) {

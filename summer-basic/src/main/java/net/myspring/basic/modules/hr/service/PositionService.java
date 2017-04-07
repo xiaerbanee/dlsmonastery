@@ -68,9 +68,9 @@ public class PositionService {
     public void save(PositionForm positionForm){
         boolean isCreate= StringUtils.isBlank(positionForm.getId());
         if(isCreate){
-            positionManager.save(positionForm);
+            positionManager.saveForm(positionForm);
         }else{
-            positionManager.update(positionForm);
+            positionManager.updateForm(positionForm);
         }
         positionManager.deleteByPosition(positionForm.getId());
         if(CollectionUtil.isNotEmpty(positionForm.getPermissionIdList())){

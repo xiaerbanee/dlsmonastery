@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.manager;
 
 import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.mapper.JobMapper;
+import net.myspring.basic.modules.hr.web.form.JobForm;
 import net.myspring.basic.modules.hr.web.query.JobQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -38,9 +39,21 @@ public class JobManager {
     }
 
     @CachePut(value = "jobs",key="#p0.id")
+    public JobForm saveForm(JobForm jobForm){
+        jobMapper.saveForm(jobForm);
+        return  jobForm;
+    }
+
+    @CachePut(value = "jobs",key="#p0.id")
     public Job update(Job job){
         jobMapper.update(job);
         return  jobMapper.findOne(job.getId());
+    }
+
+    @CachePut(value = "jobs",key="#p0.id")
+    public Job updateForm(JobForm jobForm){
+        jobMapper.updateForm(jobForm);
+        return  jobMapper.findOne(jobForm.getId());
     }
 
     public List<Job> findAll(){

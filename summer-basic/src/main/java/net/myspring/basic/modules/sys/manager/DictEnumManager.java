@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.manager;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.mapper.DictEnumMapper;
+import net.myspring.basic.modules.sys.web.form.DictEnumForm;
 import net.myspring.util.collection.CollectionUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,22 @@ public class DictEnumManager {
         return  dictEnum;
     }
 
+    @Cacheable(value = "dictEnums",key="#p0.id")
+    public DictEnumForm saveForm(DictEnumForm dictEnumForm){
+        dictEnumMapper.saveForm(dictEnumForm);
+        return  dictEnumForm;
+    }
+
     @CachePut(value = "dictEnums",key="#p0.id")
     public DictEnum update(DictEnum dictEnum){
         dictEnumMapper.update(dictEnum);
         return  dictEnumMapper.findOne(dictEnum.getId());
+    }
+
+    @CachePut(value = "dictEnums",key="#p0.id")
+    public DictEnum updateForm(DictEnumForm dictEnumForm){
+        dictEnumMapper.updateForm(dictEnumForm);
+        return  dictEnumMapper.findOne(dictEnumForm.getId());
     }
 
     @CacheEvict(value = "dictEnums",key="#p0")

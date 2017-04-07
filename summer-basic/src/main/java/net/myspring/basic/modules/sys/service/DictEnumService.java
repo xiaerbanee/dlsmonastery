@@ -50,12 +50,12 @@ public class DictEnumService {
         return dictEnumDto;
     }
 
-    public DictEnum save(DictEnumForm dictEnumForm) {
+    public DictEnumForm save(DictEnumForm dictEnumForm) {
         boolean isCreate= StringUtils.isBlank(dictEnumForm.getId());
         if(isCreate) {
-            dictEnumManager.save(dictEnumForm);
+            dictEnumManager.saveForm(dictEnumForm);
         } else {
-            dictEnumManager.update(dictEnumForm);
+            dictEnumManager.updateForm(dictEnumForm);
         }
         return dictEnumForm;
     }

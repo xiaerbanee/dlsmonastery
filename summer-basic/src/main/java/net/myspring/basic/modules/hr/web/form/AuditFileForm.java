@@ -1,11 +1,12 @@
 package net.myspring.basic.modules.hr.web.form;
 
+
 import net.myspring.basic.modules.hr.domain.AuditFile;
-import net.myspring.mybatis.annotation.FormDomain;
+import net.myspring.mybatis.form.BaseForm;
 
 /**
  * Created by admin on 2017/4/6.
  */
 
-public class AuditFileForm {
+public class AuditFileForm extends BaseForm<AuditFile> {
 }

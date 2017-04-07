@@ -41,14 +41,14 @@ public class DutyLeaveService {
         return dutyLeaveDtoPage;
     }
 
-    public DutyLeave save(DutyLeaveForm dutyLeaveForm) {
+    public DutyLeaveForm save(DutyLeaveForm dutyLeaveForm) {
         if (dutyLeaveForm.getDutyDateStart().equals(dutyLeaveForm.getDutyDateEnd())) {
             LocalDate date = LocalDate.parse(dutyLeaveForm.getDutyDateStart());
             if (dutyLeaveMapper.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, dutyLeaveForm.getDateType())  == null) {
                 dutyLeaveForm.setDutyDate(date);
                 dutyLeaveForm.setStatus(AuditTypeEnum.APPLY.getValue());
                 dutyLeaveForm.setEmployeeId(securityUtils.getEmployeeId());
-                dutyLeaveMapper.save(dutyLeaveForm);
+                dutyLeaveMapper.saveForm(dutyLeaveForm);
             }
             return dutyLeaveForm;
         }

@@ -1,12 +1,21 @@
 package net.myspring.basic.modules.hr.web.form;
 
+
 import net.myspring.basic.modules.hr.domain.Office;
-import net.myspring.basic.modules.hr.domain.OfficeChange;
-import net.myspring.mybatis.annotation.FormDomain;
+import net.myspring.mybatis.form.BaseForm;
 
 /**
  * Created by admin on 2017/4/6.
  */
 
-public class OfficeForm {
+public class OfficeForm extends BaseForm<Office> {
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

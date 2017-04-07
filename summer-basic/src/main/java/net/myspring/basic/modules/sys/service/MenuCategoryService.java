@@ -50,9 +50,9 @@ public class MenuCategoryService {
     public void save(MenuCategoryForm menuCategoryForm){
         boolean isCreated= StringUtils.isBlank(menuCategoryForm.getId());
         if(isCreated) {
-            menuCategoryMapper.save(menuCategoryForm);
+            menuCategoryMapper.saveForm(menuCategoryForm);
         } else {
-            menuCategoryMapper.update(menuCategoryForm);
+            menuCategoryMapper.updateForm(menuCategoryForm);
         }
     }
 
