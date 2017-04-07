@@ -50,9 +50,9 @@ public class DutyFreeService {
         return dutyFree;
     }
 
-    public DutyFree findDto(String id) {
+    public DutyFreeDto findDto(String id) {
         DutyFree dutyFree =findOne(id);
-        DutyFreeDto dutyFreeDto=BeanMapper.convertDto(dutyFree,DutyFreeDto.class);
+        DutyFreeDto dutyFreeDto = BeanMapper.convertDto(dutyFree,DutyFreeDto.class);
         cacheUtils.initCacheInput(dutyFreeDto);
         return dutyFreeDto;
     }

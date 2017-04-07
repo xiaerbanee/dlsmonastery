@@ -53,7 +53,7 @@ public class AuditFileService {
         return auditFile;
     }
 
-    public AuditFile findDto(String id){
+    public AuditFileDto findDto(String id){
         AuditFile auditFile=findOne(id);
         AuditFileDto auditFileDto= BeanMapper.convertDto(auditFile,AuditFileDto.class);
         cacheUtils.initCacheInput(auditFileDto);

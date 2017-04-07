@@ -38,8 +38,6 @@ public class AccountService {
     @Autowired
     private AccountManager accountManager;
     @Autowired
-    private EmployeeManager employeeManager;
-    @Autowired
     private EmployeeMapper employeeMapper;
 
     public Account findOne(String id) {
@@ -47,7 +45,7 @@ public class AccountService {
         return account;
     }
 
-    public Account findByLoginName(String loginName) {
+    public AccountDto findByLoginName(String loginName) {
         Account account = accountMapper.findByLoginName(loginName);
         AccountDto accountDto= BeanMapper.convertDto(account,AccountDto.class);
         cacheUtils.initCacheInput(accountDto);
