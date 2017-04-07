@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.mybatis.mapper.CrudMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -27,9 +28,9 @@ public interface AccountMapper extends MyMapper<Account,String> {
 
     List<Account> findByPosition(String positionId);
 
-    Page<Account> findPage(Pageable pageable, @Param("p") Map<String,Object> map);
+    Page<Account> findPage(Pageable pageable, @Param("p")AccountQuery accountQuery);
 
-    List<Account> findByFilter(@Param("p")Map<String,Object> map);
+    List<Account> findByFilter(@Param("p")AccountQuery accountQuery);
 
     int saveAccountOffice(@Param("accountId")String accountId,@Param("officeIds")List<String> officeIds);
 

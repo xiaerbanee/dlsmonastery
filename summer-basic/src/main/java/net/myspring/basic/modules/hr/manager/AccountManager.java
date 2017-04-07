@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.manager;
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
+import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -28,8 +29,8 @@ public class AccountManager {
         return accountMapper.findOne(id);
     }
 
-    public Page<Account> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<Account> page = accountMapper.findPage(pageable, map);
+    public Page<Account> findPage(Pageable pageable, AccountQuery accountQuery) {
+        Page<Account> page = accountMapper.findPage(pageable, accountQuery);
         return page;
     }
 
@@ -44,8 +45,8 @@ public class AccountManager {
         return accountList;
     }
 
-    public List<Account> findByFilter(Map<String,Object> map){
-        List<Account> accountList=accountMapper.findByFilter(map);
+    public List<Account> findByFilter(AccountQuery accountQuery){
+        List<Account> accountList=accountMapper.findByFilter(accountQuery);
         return accountList;
     }
 

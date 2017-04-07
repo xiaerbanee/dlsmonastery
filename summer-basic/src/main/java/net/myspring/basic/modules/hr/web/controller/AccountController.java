@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.service.AccountService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
+import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -20,6 +21,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,9 +45,8 @@ public class AccountController {
     private PositionService positionService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        Page<AccountDto> page = accountService.findPage(searchEntity.getPageable(),searchEntity.getParams());
+    public String list(Pageable pageable, AccountQuery accountQuery){
+        Page<AccountDto> page = accountService.findPage(pageable,accountQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }
 
@@ -92,11 +93,10 @@ public class AccountController {
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public ModelAndView export(HttpServletRequest request) {
+    public ModelAndView export(AccountQuery accountQuery) {
         ExcelView excelView = new ExcelView();
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
         Workbook workbook = new SXSSFWorkbook(Const.DEFAULT_PAGE_SIZE);
-        List<SimpleExcelSheet> simpleExcelSheetList=accountService.findSimpleExcelSheets(workbook,searchEntity.getParams());
+        List<SimpleExcelSheet> simpleExcelSheetList=accountService.findSimpleExcelSheets(workbook,accountQuery);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"账户信息.xlsx",simpleExcelSheetList);
         return new ModelAndView(excelView, "simpleExcelBook", simpleExcelBook);
     }

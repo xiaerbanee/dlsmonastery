@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
+import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
@@ -48,8 +49,8 @@ public class AccountService {
         return accountDto;
     }
 
-    public Page<AccountDto> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<Account> page = accountManager.findPage(pageable, map);
+    public Page<AccountDto> findPage(Pageable pageable, AccountQuery accountQuery) {
+        Page<Account> page = accountManager.findPage(pageable, accountQuery);
         Page<AccountDto> accountDtoPage=BeanMapper.convertPage(page,AccountDto.class);
         cacheUtils.initCacheInput(accountDtoPage);
         return accountDtoPage;
@@ -93,7 +94,7 @@ public class AccountService {
         accountManager.logicDeleteOne(id);
     }
 
-    public List<SimpleExcelSheet> findSimpleExcelSheets(Workbook workbook, Map<String, Object> map) {
+    public List<SimpleExcelSheet> findSimpleExcelSheets(Workbook workbook, AccountQuery accountQuery) {
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "type", "类型"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "loginName", "登录名"));
@@ -108,7 +109,7 @@ public class AccountService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employee.leaveDate", "离职日期"));
 
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-        List<Account> accountList=accountManager.findByFilter(map);
+        List<Account> accountList=accountManager.findByFilter(accountQuery);
         List<AccountDto> accountDtoList=BeanMapper.convertDtoList(accountList,AccountDto.class);
         cacheUtils.initCacheInput(accountDtoList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("账户信息", accountList, simpleExcelColumnList);

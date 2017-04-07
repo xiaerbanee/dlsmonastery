@@ -6,6 +6,7 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountTask;
 import net.myspring.basic.modules.hr.dto.AccountTaskDto;
 import net.myspring.basic.modules.hr.mapper.AccountTaskMapper;
+import net.myspring.basic.modules.hr.web.query.AccountTaskQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanMapper;
 import net.myspring.util.text.StringUtils;
@@ -29,8 +30,8 @@ public class AccountTaskService {
         return accountTaskMapper.findByNameAndExtendId(name,extendId);
     }
 
-    public Page<AccountTaskDto> findPage(Pageable pageable, Map<String,Object> paramMap){
-        Page<AccountTask> page=accountTaskMapper.findPage(pageable,paramMap);
+    public Page<AccountTaskDto> findPage(Pageable pageable, AccountTaskQuery accountTaskQuery){
+        Page<AccountTask> page=accountTaskMapper.findPage(pageable,accountTaskQuery);
         Page<AccountTaskDto> accountTaskDtoPage= BeanMapper.convertPage(page,AccountTaskDto.class);
         cacheUtils.initCacheInput(accountTaskDtoPage.getContent());
         return accountTaskDtoPage;
