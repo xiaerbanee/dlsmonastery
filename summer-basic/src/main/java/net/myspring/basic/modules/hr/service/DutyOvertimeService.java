@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.hr.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
@@ -10,19 +9,17 @@ import net.myspring.basic.modules.hr.mapper.DutyOvertimeMapper;
 import net.myspring.basic.modules.hr.web.form.DutyOvertimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyOvertimeQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.security.krb5.internal.PAData;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -38,7 +35,7 @@ public class DutyOvertimeService {
 
     public Page<DutyOvertimeDto> findPage(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
         Page<DutyOvertime> page = dutyOvertimeMapper.findPage(pageable, dutyOvertimeQuery);
-        Page<DutyOvertimeDto> dutyOvertimeDtoPage=BeanMapper.convertPage(page,DutyOvertimeDto.class);
+        Page<DutyOvertimeDto> dutyOvertimeDtoPage= BeanUtil.map(page,DutyOvertimeDto.class);
         cacheUtils.initCacheInput(dutyOvertimeDtoPage.getContent());
         return dutyOvertimeDtoPage;
     }
@@ -73,7 +70,7 @@ public class DutyOvertimeService {
 
     public DutyOvertimeDto findDto(String id) {
         DutyOvertime dutyOvertime =findOne(id);
-        DutyOvertimeDto dutyOvertimeDto= BeanMapper.convertDto(dutyOvertime,DutyOvertimeDto.class);
+        DutyOvertimeDto dutyOvertimeDto= BeanUtil.map(dutyOvertime,DutyOvertimeDto.class);
         cacheUtils.initCacheInput(dutyOvertimeDto);
         return dutyOvertimeDto;
     }

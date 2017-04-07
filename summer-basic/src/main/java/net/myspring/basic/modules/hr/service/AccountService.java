@@ -14,7 +14,7 @@ import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,14 +47,14 @@ public class AccountService {
 
     public AccountDto findByLoginName(String loginName) {
         Account account = accountMapper.findByLoginName(loginName);
-        AccountDto accountDto= BeanMapper.convertDto(account,AccountDto.class);
+        AccountDto accountDto= BeanUtil.map(account,AccountDto.class);
         cacheUtils.initCacheInput(accountDto);
         return accountDto;
     }
 
     public Page<AccountDto> findPage(Pageable pageable, AccountQuery accountQuery) {
         Page<Account> page = accountMapper.findPage(pageable, accountQuery);
-        Page<AccountDto> accountDtoPage=BeanMapper.convertPage(page,AccountDto.class);
+        Page<AccountDto> accountDtoPage= BeanUtil.map(page,AccountDto.class);
         cacheUtils.initCacheInput(accountDtoPage);
         return accountDtoPage;
     }
@@ -63,7 +63,7 @@ public class AccountService {
         List<AccountDto> accountDtoList=Lists.newArrayList();
         if(StringUtils.isNotBlank(officeId)){
             List<Account> accountList=accountMapper.findByOfficeIds(Lists.newArrayList(officeId));
-            accountDtoList=BeanMapper.convertDtoList(accountList,AccountDto.class);
+            accountDtoList= BeanUtil.map(accountList,AccountDto.class);
             cacheUtils.initCacheInput(accountList);
         }
         return accountDtoList;
@@ -113,7 +113,7 @@ public class AccountService {
 
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<Account> accountList=accountMapper.findByFilter(accountQuery);
-        List<AccountDto> accountDtoList=BeanMapper.convertDtoList(accountList,AccountDto.class);
+        List<AccountDto> accountDtoList= BeanUtil.map(accountList,AccountDto.class);
         cacheUtils.initCacheInput(accountDtoList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("账户信息", accountList, simpleExcelColumnList);
         simpleExcelSheetList.add(simpleExcelSheet);
@@ -122,7 +122,7 @@ public class AccountService {
 
     public List<AccountDto> findByLoginNameLikeAndType(Map<String,Object> map) {
         List<Account> accountList = accountMapper.findByLoginNameLikeAndType(map);
-        List<AccountDto> accountDtoList=BeanMapper.convertDtoList(accountList,AccountDto.class);
+        List<AccountDto> accountDtoList= BeanUtil.map(accountList,AccountDto.class);
         return accountDtoList;
     }
 

@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.hr.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.dto.JobDto;
@@ -8,8 +7,7 @@ import net.myspring.basic.modules.hr.manager.JobManager;
 import net.myspring.basic.modules.hr.mapper.JobMapper;
 import net.myspring.basic.modules.hr.web.form.JobForm;
 import net.myspring.basic.modules.hr.web.query.JobQuery;
-import net.myspring.basic.modules.sys.dto.DictMapDto;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class JobService {
@@ -31,7 +28,7 @@ public class JobService {
 
     public Page<JobDto> findPage(Pageable pageable, JobQuery jobQuery) {
         Page<Job> page = jobMapper.findPage(pageable, jobQuery);
-        Page<JobDto> jobDtoPage = BeanMapper.convertPage(page, JobDto.class);
+        Page<JobDto> jobDtoPage = BeanUtil.map(page, JobDto.class);
         cacheUtils.initCacheInput(jobDtoPage.getContent());
         return jobDtoPage;
     }
@@ -43,13 +40,13 @@ public class JobService {
 
     public List<JobDto> findAll(){
         List<Job> jobList=jobMapper.findAll();
-        List<JobDto> jobDtoList=BeanMapper.convertDtoList(jobList,JobDto.class);
+        List<JobDto> jobDtoList= BeanUtil.map(jobList,JobDto.class);
         return jobDtoList;
     }
 
     public JobDto findDto(String id){
         Job job=findOne(id);
-        JobDto jobDto=BeanMapper.convertDto(job,JobDto.class);
+        JobDto jobDto= BeanUtil.map(job,JobDto.class);
         cacheUtils.initCacheInput(jobDto);
         return jobDto;
     }

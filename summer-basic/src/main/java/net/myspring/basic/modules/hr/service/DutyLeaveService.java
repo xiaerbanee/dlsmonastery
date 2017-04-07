@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.hr.service;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
@@ -11,7 +10,7 @@ import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
 import net.myspring.basic.modules.hr.mapper.DutyLeaveMapper;
 import net.myspring.basic.modules.hr.web.form.DutyLeaveForm;
 import net.myspring.basic.modules.hr.web.query.DutyLeaveQuery;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -36,7 +34,7 @@ public class DutyLeaveService {
 
     public Page<DutyLeaveDto> findPage(Pageable pageable, DutyLeaveQuery dutyLeaveQuery) {
         Page<DutyLeave> page = dutyLeaveMapper.findPage(pageable, dutyLeaveQuery);
-        Page<DutyLeaveDto> dutyLeaveDtoPage=BeanMapper.convertPage(page,DutyLeaveDto.class);
+        Page<DutyLeaveDto> dutyLeaveDtoPage= BeanUtil.map(page,DutyLeaveDto.class);
         cacheUtils.initCacheInput(dutyLeaveDtoPage.getContent());
         return dutyLeaveDtoPage;
     }
@@ -82,7 +80,7 @@ public class DutyLeaveService {
 
     public DutyLeaveDto findDto(String id) {
         DutyLeave dutyLeave=findOne(id);
-        DutyLeaveDto dutyLeaveDto= BeanMapper.convertDto(dutyLeave,DutyLeaveDto.class);
+        DutyLeaveDto dutyLeaveDto= BeanUtil.map(dutyLeave,DutyLeaveDto.class);
         cacheUtils.initCacheInput(dutyLeaveDto);
         return dutyLeaveDto;
     }

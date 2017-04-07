@@ -3,14 +3,13 @@ package net.myspring.basic.modules.sys.service;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.exception.ServiceException;
 import net.myspring.basic.common.utils.Const;
-import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.sys.domain.Folder;
 import net.myspring.basic.modules.sys.dto.FolderDto;
 import net.myspring.basic.modules.sys.manager.FolderManager;
 import net.myspring.basic.modules.sys.mapper.FolderMapper;
 import net.myspring.basic.modules.sys.web.form.FolderForm;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class FolderService {
 
     public FolderDto findDto(String id){
         Folder folder = findOne(id);
-        FolderDto folderDto = BeanMapper.convertDto(folder, FolderDto.class);
+        FolderDto folderDto = BeanUtil.map(folder, FolderDto.class);
         return folderDto;
     }
 
@@ -85,7 +84,7 @@ public class FolderService {
         List<Folder> sourcelist = folderMapper.findByCreatedBy(accountId);
         sortList(folders, sourcelist, parent.getId());
         if (!CollectionUtil.isEmpty(folders)) {
-            folderDtoList= BeanMapper.convertDtoList(folders,FolderDto.class);
+            folderDtoList= BeanUtil.map(folders,FolderDto.class);
             for (FolderDto folderDto : folderDtoList) {
                 if (folderDto.getParentId() == null) {
                     folderDto.setLevelName(folderDto.getName().trim());

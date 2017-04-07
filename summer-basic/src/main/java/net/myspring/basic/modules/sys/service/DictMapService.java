@@ -1,27 +1,20 @@
 package net.myspring.basic.modules.sys.service;
 
-import com.google.common.collect.Lists;
-import ma.glasnost.orika.metadata.Type;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.manager.DictMapManager;
 import net.myspring.basic.modules.sys.web.form.DictMapForm;
 import net.myspring.basic.modules.sys.web.query.DictMapQuery;
-import net.myspring.util.cahe.CacheReadUtils;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
-import org.dozer.DozerBeanMapperSingletonWrapper;
-import org.dozer.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import net.myspring.basic.modules.sys.mapper.DictMapMapper;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class DictMapService {
@@ -40,7 +33,7 @@ public class DictMapService {
 
     public DictMapDto findDto(String id){
         DictMap dictMap=findOne(id);
-        DictMapDto dictMapDto = BeanMapper.convertDto(dictMap, DictMapDto.class);
+        DictMapDto dictMapDto = BeanUtil.map(dictMap, DictMapDto.class);
         cacheUtils.initCacheInput(dictMapDto);
         return dictMapDto;
     }
@@ -51,7 +44,7 @@ public class DictMapService {
 
     public Page<DictMapDto> findPage(Pageable pageable, DictMapQuery dictMapQuery) {
         Page<DictMap> page = dictMapMapper.findPage(pageable, dictMapQuery);
-        Page<DictMapDto> dictMapDtoPage = BeanMapper.convertPage(page, DictMapDto.class);
+        Page<DictMapDto> dictMapDtoPage = BeanUtil.map(page, DictMapDto.class);
         cacheUtils.initCacheInput(dictMapDtoPage.getContent());
         return dictMapDtoPage;
     }

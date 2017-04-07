@@ -2,13 +2,12 @@ package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountTask;
 import net.myspring.basic.modules.hr.dto.AccountTaskDto;
 import net.myspring.basic.modules.hr.mapper.AccountTaskMapper;
 import net.myspring.basic.modules.hr.web.query.AccountTaskQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AccountTaskService {
@@ -32,7 +30,7 @@ public class AccountTaskService {
 
     public Page<AccountTaskDto> findPage(Pageable pageable, AccountTaskQuery accountTaskQuery){
         Page<AccountTask> page=accountTaskMapper.findPage(pageable,accountTaskQuery);
-        Page<AccountTaskDto> accountTaskDtoPage= BeanMapper.convertPage(page,AccountTaskDto.class);
+        Page<AccountTaskDto> accountTaskDtoPage= BeanUtil.map(page,AccountTaskDto.class);
         cacheUtils.initCacheInput(accountTaskDtoPage.getContent());
         return accountTaskDtoPage;
     }
@@ -41,7 +39,7 @@ public class AccountTaskService {
         List<AccountTaskDto> accountTaskDtoList= Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(officeIds)&& StringUtils.isNotBlank(positionId)){
             List<AccountTask> accountTasks=accountTaskMapper.findByPositionAndOfficeIds(positionId,officeIds);
-            accountTaskDtoList=BeanMapper.convertDtoList(accountTasks,AccountTaskDto.class);
+            accountTaskDtoList= BeanUtil.map(accountTasks,AccountTaskDto.class);
         }
         return accountTaskDtoList;
     }

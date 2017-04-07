@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.hr.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
@@ -9,15 +8,12 @@ import net.myspring.basic.modules.hr.dto.DutyTripDto;
 import net.myspring.basic.modules.hr.mapper.DutyTripMapper;
 import net.myspring.basic.modules.hr.web.form.DutyTripForm;
 import net.myspring.basic.modules.hr.web.query.DutyTripQuery;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -32,7 +28,7 @@ public class DutyTripService {
 
     public Page<DutyTripDto> findPage(Pageable pageable, DutyTripQuery dutyTripQuery) {
         Page<DutyTrip> page = dutyTripMapper.findPage(pageable, dutyTripQuery);
-        Page<DutyTripDto> dutyTripDtoPage=BeanMapper.convertPage(page,DutyTripDto.class);
+        Page<DutyTripDto> dutyTripDtoPage= BeanUtil.map(page,DutyTripDto.class);
         cacheUtils.initCacheInput(dutyTripDtoPage.getContent());
         return dutyTripDtoPage;
     }
@@ -55,7 +51,7 @@ public class DutyTripService {
 
     public DutyTripDto findDto(String id) {
         DutyTrip dutyTrip = findOne(id);
-        DutyTripDto dutyTripDto= BeanMapper.convertDto(dutyTrip,DutyTripDto.class);
+        DutyTripDto dutyTripDto= BeanUtil.map(dutyTrip,DutyTripDto.class);
         cacheUtils.initCacheInput(dutyTripDto);
         return dutyTripDto;
     }

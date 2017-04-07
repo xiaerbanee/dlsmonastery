@@ -1,7 +1,5 @@
 package net.myspring.basic.modules.hr.service;
 
-import com.ctc.wstx.util.StringUtil;
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Recruit;
@@ -10,7 +8,7 @@ import net.myspring.basic.modules.hr.mapper.RecruitMapper;
 import net.myspring.basic.modules.hr.web.form.RecruitForm;
 import net.myspring.basic.modules.hr.web.query.RecruitQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class RecruitService {
@@ -33,7 +30,7 @@ public class RecruitService {
 
     public Page<RecruitDto> findPage(Pageable pageable, RecruitQuery recruitQuery) {
         Page<Recruit> page = recruitMapper.findPage(pageable, recruitQuery);
-        Page<RecruitDto> recruitDtoPage= BeanMapper.convertPage(page,RecruitDto.class);
+        Page<RecruitDto> recruitDtoPage= BeanUtil.map(page,RecruitDto.class);
         cacheUtils.initCacheInput(recruitDtoPage.getContent());
         return recruitDtoPage;
     }
@@ -54,7 +51,7 @@ public class RecruitService {
 
     public RecruitDto findDto(String id){
         Recruit recruit = findOne(id);
-        RecruitDto recruitDto=BeanMapper.convertDto(recruit,RecruitDto.class);
+        RecruitDto recruitDto= BeanUtil.map(recruit,RecruitDto.class);
         cacheUtils.initCacheInput(recruitDto);
         return recruitDto;
     }

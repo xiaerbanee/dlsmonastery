@@ -11,7 +11,7 @@ import net.myspring.basic.modules.hr.web.form.DutySignForm;
 import net.myspring.basic.modules.hr.web.query.DutySignQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.TextStyle;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * Created by liuj on 2016/11/18.
@@ -51,14 +48,14 @@ public class DutySignService {
 
     public Page<DutySignDto> findPage(Pageable pageable, DutySignQuery dutySignQuery) {
         Page<DutySign> page = dutySignMapper.findPage(pageable,dutySignQuery);
-        Page<DutySignDto> dutySignDtoPage= BeanMapper.convertPage(page,DutySignDto.class);
+        Page<DutySignDto> dutySignDtoPage= BeanUtil.map(page,DutySignDto.class);
         cacheUtils.initCacheInput(dutySignDtoPage.getContent());
         return dutySignDtoPage;
     }
 
     public List<DutySignDto> findByFilter(DutySignQuery dutySignQuery) {
         List<DutySign> dutySignList =  dutySignMapper.findByFilter(dutySignQuery);
-        List<DutySignDto> dutySignDtoList=BeanMapper.convertDtoList(dutySignList,DutySignDto.class);
+        List<DutySignDto> dutySignDtoList= BeanUtil.map(dutySignList,DutySignDto.class);
         cacheUtils.initCacheInput(dutySignDtoList);
         return  dutySignDtoList;
     }
@@ -74,7 +71,7 @@ public class DutySignService {
 
     public DutySignDto findDto(String id) {
         DutySign dutySign =findOne(id);
-        DutySignDto dutySignDto=BeanMapper.convertDto(dutySign,DutySignDto.class);
+        DutySignDto dutySignDto= BeanUtil.map(dutySign,DutySignDto.class);
         cacheUtils.initCacheInput(dutySignDto);
         return dutySignDto;
     }

@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.hr.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
@@ -9,14 +8,11 @@ import net.myspring.basic.modules.hr.dto.DutyPublicFreeDto;
 import net.myspring.basic.modules.hr.mapper.DutyPublicFreeMapper;
 import net.myspring.basic.modules.hr.web.form.DutyPublicFreeForm;
 import net.myspring.basic.modules.hr.web.query.DutyPublicFreeQuery;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class DutyPublicFreeService {
@@ -38,7 +34,7 @@ public class DutyPublicFreeService {
 
     public Page<DutyPublicFreeDto> findPage(Pageable pageable, DutyPublicFreeQuery dutyPublicFreeQuery) {
         Page<DutyPublicFree> page = dutyPublicFreeMapper.findPage(pageable,dutyPublicFreeQuery);
-        Page<DutyPublicFreeDto> dutyPublicFreeDtoPage= BeanMapper.convertPage(page,DutyPublicFreeDto.class);
+        Page<DutyPublicFreeDto> dutyPublicFreeDtoPage= BeanUtil.map(page,DutyPublicFreeDto.class);
         cacheUtils.initCacheInput(dutyPublicFreeDtoPage.getContent());
         return dutyPublicFreeDtoPage;
     }
@@ -54,7 +50,7 @@ public class DutyPublicFreeService {
 
     public DutyPublicFreeDto findDto(String id) {
         DutyPublicFree dutyPublicFree =findOne(id);
-        DutyPublicFreeDto publicFreeDto=BeanMapper.convertDto(dutyPublicFree,DutyPublicFreeDto.class);
+        DutyPublicFreeDto publicFreeDto= BeanUtil.map(dutyPublicFree,DutyPublicFreeDto.class);
         return publicFreeDto;
     }
 }

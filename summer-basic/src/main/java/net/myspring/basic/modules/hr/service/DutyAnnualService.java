@@ -15,7 +15,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,7 +51,7 @@ public class DutyAnnualService {
 
     public Page<DutyAnnualDto> findPage(Pageable pageable, DutyAnnualQuery dutyAnnualQuery){
         Page<DutyAnnual> page=dutyAnnualMapper.findPage(pageable,dutyAnnualQuery);
-        Page<DutyAnnualDto> dutyAnnualDtoPage= BeanMapper.convertPage(page,DutyAnnualDto.class);
+        Page<DutyAnnualDto> dutyAnnualDtoPage= BeanUtil.map(page,DutyAnnualDto.class);
         cacheUtils.initCacheInput(dutyAnnualDtoPage.getContent());
         return dutyAnnualDtoPage;
     }

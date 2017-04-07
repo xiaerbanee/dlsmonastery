@@ -5,12 +5,10 @@ import net.myspring.basic.modules.sys.domain.Town;
 import net.myspring.basic.modules.sys.dto.TownDto;
 import net.myspring.basic.modules.sys.service.TownService;
 import net.myspring.util.json.ObjectMapperUtils;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,7 +25,7 @@ public class TownController {
         List<TownDto> townDtoList = Lists.newArrayList();
         if (StringUtils.isNotBlank(name)) {
            List<Town> townList = townService.findByLikeName(name);
-           townDtoList= BeanMapper.convertDtoList(townList,TownDto.class);
+           townDtoList= BeanUtil.map(townList,TownDto.class);
         }
         return ObjectMapperUtils.writeValueAsString(townDtoList);
     }

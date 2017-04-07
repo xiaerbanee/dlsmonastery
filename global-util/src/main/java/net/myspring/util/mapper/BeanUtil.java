@@ -19,6 +19,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.Type;
 import ma.glasnost.orika.metadata.TypeFactory;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.SimpleExcelSheet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +32,7 @@ import org.springframework.data.domain.Pageable;
  * 
  * 注意: 需要参考本模块的POM文件，显式引用orika.
  */
-public class BeanMapper {
+public class BeanUtil {
 
 	private static MapperFacade mapper = getBeanMapper();
 
@@ -44,25 +45,19 @@ public class BeanMapper {
 		return mapper;
 	}
 
-	public static <S, D> D convertDto(S source, Class<D> destinationClass) {
-		if(source==null){
-			return null;
-		}
-        return map(source,destinationClass);
-	}
 
-    public static <S, D> List<D> convertDtoList(List<S> sourceList, Class<D> destinationClass) {
+    public static <S, D> List<D> map(List<S> sourceList, Class<D> destinationClass) {
         List<D> list=Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(sourceList)){
             for(S source:sourceList){
-                list.add(convertDto(source,destinationClass));
+                list.add(map(source,destinationClass));
             }
         }
         return list;
     }
 
-    public static <S, D> Page<D> convertPage(Page<S> page, Class<D> destinationClass) {
-        List<D> list=convertDtoList(page.getContent(),destinationClass);
+    public static <S, D> Page<D> map(Page<S> page, Class<D> destinationClass) {
+        List<D> list=map(page.getContent(),destinationClass);
         Pageable pageable=new PageRequest(page.getNumber(),page.getSize(),page.getSort());
         Page<D> destinationPage=new PageImpl<D>(list,pageable,page.getTotalElements());
         return destinationPage;

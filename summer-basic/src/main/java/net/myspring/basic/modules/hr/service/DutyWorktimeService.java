@@ -7,16 +7,14 @@ import net.myspring.basic.modules.hr.domain.*;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto;
 import net.myspring.basic.modules.hr.mapper.*;
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.TextStyle;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -46,7 +44,7 @@ public class DutyWorktimeService {
 
     public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery){
         Page<DutyWorktime> page = dutyWorktimeMapper.findPage(pageable, dutyWorktimeQuery);
-        Page<DutyWorktimeDto> dutyWorktimeDtoPage= BeanMapper.convertPage(page,DutyWorktimeDto.class);
+        Page<DutyWorktimeDto> dutyWorktimeDtoPage= BeanUtil.map(page,DutyWorktimeDto.class);
         cacheUtils.initCacheInput(dutyWorktimeDtoPage.getContent());
         return dutyWorktimeDtoPage;
     }

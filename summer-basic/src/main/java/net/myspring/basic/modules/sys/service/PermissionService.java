@@ -3,7 +3,6 @@ package net.myspring.basic.modules.sys.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.hr.manager.PositionManager;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.domain.Permission;
@@ -18,7 +17,7 @@ import net.myspring.basic.modules.sys.web.form.PermissionForm;
 import net.myspring.basic.modules.sys.web.query.PermissionQuery;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,7 +58,7 @@ public class PermissionService {
 
     public PermissionDto findDto(String id){
         Permission permission=findOne(id);
-        PermissionDto permissionDto=BeanMapper.convertDto(permission,PermissionDto.class);
+        PermissionDto permissionDto= BeanUtil.map(permission,PermissionDto.class);
         cacheUtils.initCacheInput(permissionDto);
         return permissionDto;
     }
@@ -74,7 +73,7 @@ public class PermissionService {
 
     public Page<PermissionDto> findPage(Pageable pageable,PermissionQuery permissionQuery) {
         Page<Permission> page = permissionMapper.findPage(pageable, permissionQuery);
-        Page<PermissionDto> permissionDtoPage= BeanMapper.convertPage(page,PermissionDto.class);
+        Page<PermissionDto> permissionDtoPage= BeanUtil.map(page,PermissionDto.class);
         cacheUtils.initCacheInput(permissionDtoPage.getContent());
         return permissionDtoPage;
     }

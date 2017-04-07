@@ -4,7 +4,7 @@ import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.modules.sys.domain.Product;
 import net.myspring.cloud.modules.sys.dto.ProductDto;
 import net.myspring.cloud.modules.sys.mapper.ProductMapper;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class ProductService {
 
     public ProductDto findOne(String id) {
         Product product = productMapper.findOne(id);
-        ProductDto productDto =  BeanMapper.convertDto(product, ProductDto.class);
+        ProductDto productDto =  BeanUtil.map(product, ProductDto.class);
         return productDto;
     }
 }

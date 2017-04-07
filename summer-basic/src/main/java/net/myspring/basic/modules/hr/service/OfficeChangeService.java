@@ -1,7 +1,5 @@
 package net.myspring.basic.modules.hr.service;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
@@ -12,14 +10,10 @@ import net.myspring.basic.modules.hr.mapper.AccountTaskMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeChangeMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
 import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional(readOnly = false)
@@ -45,7 +39,7 @@ public class OfficeChangeService {
 
     public OfficeChangeDto findDto(String id){
         OfficeChange officeChange=findOne(id);
-        OfficeChangeDto officeChangeDto= BeanMapper.convertDto(officeChange,OfficeChangeDto.class);
+        OfficeChangeDto officeChangeDto= BeanUtil.map(officeChange,OfficeChangeDto.class);
         cacheUtils.initCacheInput(officeChangeDto);
         return officeChangeDto;
     }

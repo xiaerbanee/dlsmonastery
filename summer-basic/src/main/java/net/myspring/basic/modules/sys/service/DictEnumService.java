@@ -7,7 +7,7 @@ import net.myspring.basic.modules.sys.manager.DictEnumManager;
 import net.myspring.basic.modules.sys.mapper.DictEnumMapper;
 import net.myspring.basic.modules.sys.web.form.DictEnumForm;
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class DictEnumService {
@@ -33,7 +32,7 @@ public class DictEnumService {
 
     public  List<DictEnumDto> findByCategory(String category){
         List<DictEnum> dictEnumList=dictEnumManager.findByCategory(category);
-        List<DictEnumDto> dictEnumDtoList=BeanMapper.convertDtoList(dictEnumList,DictEnumDto.class);
+        List<DictEnumDto> dictEnumDtoList= BeanUtil.map(dictEnumList,DictEnumDto.class);
         cacheUtils.initCacheInput(dictEnumDtoList);
         return dictEnumDtoList;
     }
@@ -45,7 +44,7 @@ public class DictEnumService {
 
     public DictEnumDto findDto(String id) {
         DictEnum dictEnum =findOne(id);
-        DictEnumDto dictEnumDto=BeanMapper.convertDto(dictEnum,DictEnumDto.class);
+        DictEnumDto dictEnumDto= BeanUtil.map(dictEnum,DictEnumDto.class);
         cacheUtils.initCacheInput(dictEnumDto);
         return dictEnumDto;
     }
@@ -67,7 +66,7 @@ public class DictEnumService {
 
     public Page<DictEnumDto> findPage(Pageable pageable, DictEnumQuery dictEnumQuery) {
         Page<DictEnum> page = dictEnumMapper.findPage(pageable, dictEnumQuery);
-        Page<DictEnumDto> dictEnumDtoPage= BeanMapper.convertPage(page,DictEnumDto.class);
+        Page<DictEnumDto> dictEnumDtoPage= BeanUtil.map(page,DictEnumDto.class);
         cacheUtils.initCacheInput(dictEnumDtoPage.getContent());
         return dictEnumDtoPage;
     }

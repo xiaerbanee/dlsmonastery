@@ -8,7 +8,7 @@ import net.myspring.basic.modules.hr.manager.EmployeeManager;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class EmployeeService {
@@ -37,21 +36,21 @@ public class EmployeeService {
 
     public EmployeeDto findDto(String id){
         Employee employee=employeeManager.findOne(id);
-        EmployeeDto employeeDto=BeanMapper.convertDto(employee,EmployeeDto.class);
+        EmployeeDto employeeDto= BeanUtil.map(employee,EmployeeDto.class);
         cacheUtils.initCacheInput(employeeDto);
         return employeeDto;
     }
 
     public Page<EmployeeDto> findPage(Pageable pageable, EmployeeQuery employeeQuery){
         Page<Employee> page=employeeMapper.findPage(pageable,employeeQuery);
-        Page<EmployeeDto> employeeDtoPage=BeanMapper.convertPage(page,EmployeeDto.class);
+        Page<EmployeeDto> employeeDtoPage= BeanUtil.map(page,EmployeeDto.class);
         cacheUtils.initCacheInput(employeeDtoPage.getContent());
         return employeeDtoPage;
     }
 
     public List<EmployeeDto> findByNameLike(String name){
         List<Employee> employeeList=employeeMapper.findByNameLike(name);
-        List<EmployeeDto> employeeDtoList= BeanMapper.convertDtoList(employeeList,EmployeeDto.class);
+        List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
         cacheUtils.initCacheInput(employeeDtoList);
         return employeeDtoList;
     }

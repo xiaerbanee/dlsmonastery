@@ -6,7 +6,7 @@ import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
 import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
 import net.myspring.basic.modules.sys.web.form.MenuCategoryForm;
 import net.myspring.basic.modules.sys.web.query.MenuCategoryQuery;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class MenuCategoryService {
@@ -31,14 +30,14 @@ public class MenuCategoryService {
 
     public MenuCategoryDto findDto(String id){
         MenuCategory menuCategory=findOne(id);
-        MenuCategoryDto menuCategoryDto=BeanMapper.convertDto(menuCategory,MenuCategoryDto.class);
+        MenuCategoryDto menuCategoryDto= BeanUtil.map(menuCategory,MenuCategoryDto.class);
         cacheUtils.initCacheInput(menuCategoryDto);
         return menuCategoryDto;
     }
 
     public Page<MenuCategoryDto> findPage(Pageable pageable,MenuCategoryQuery menuCategoryQuery) {
         Page<MenuCategory> page = menuCategoryMapper.findPage(pageable, menuCategoryQuery);
-        Page<MenuCategoryDto> menuCategoryDtoPage= BeanMapper.convertPage(page,MenuCategoryDto.class);
+        Page<MenuCategoryDto> menuCategoryDtoPage= BeanUtil.map(page,MenuCategoryDto.class);
         cacheUtils.initCacheInput(menuCategoryDtoPage.getContent());
         return menuCategoryDtoPage;
     }
@@ -58,7 +57,7 @@ public class MenuCategoryService {
 
     public List<MenuCategoryDto> findAll(){
         List<MenuCategory> menuCategoryList =menuCategoryMapper.findAll();
-        List<MenuCategoryDto> menuCategoryDtoList = BeanMapper.convertDtoList(menuCategoryList,MenuCategoryDto.class);
+        List<MenuCategoryDto> menuCategoryDtoList = BeanUtil.map(menuCategoryList,MenuCategoryDto.class);
         cacheUtils.initCacheInput(menuCategoryDtoList);
         return menuCategoryDtoList;
     }

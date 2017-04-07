@@ -10,7 +10,7 @@ import net.myspring.basic.modules.sys.manager.FolderFileManager;
 import net.myspring.basic.modules.sys.mapper.FolderFileMapper;
 import net.myspring.basic.modules.sys.web.query.FolderFileQuery;
 import net.myspring.util.io.FileUtil;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -101,7 +101,7 @@ public class FolderFileService {
 
     public Page<FolderFileDto> findPage(Pageable pageable, FolderFileQuery folderFileQuery) {
         Page<FolderFile> page = folderFileMapper.findPage(pageable, folderFileQuery);
-        Page<FolderFileDto> FolderFileDtoPage=BeanMapper.convertPage(page,FolderFileDto.class);
+        Page<FolderFileDto> FolderFileDtoPage= BeanUtil.map(page,FolderFileDto.class);
         cacheUtils.initCacheInput(FolderFileDtoPage.getContent());
         return FolderFileDtoPage;
     }

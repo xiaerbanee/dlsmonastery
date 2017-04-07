@@ -12,6 +12,7 @@ import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -24,7 +25,7 @@ public class DictEnumController {
     private DictEnumService dictEnumService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, DictEnumQuery dictEnumQuery){
+    public String list( Pageable pageable, DictEnumQuery dictEnumQuery){
         Page<DictEnumDto> page = dictEnumService.findPage(pageable,dictEnumQuery);
         return ObjectMapperUtils.writeValueAsString(page);
     }

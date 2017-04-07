@@ -1,12 +1,11 @@
 package net.myspring.basic.modules.sys.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.District;
 import net.myspring.basic.modules.sys.dto.DistrictDto;
 import net.myspring.basic.modules.sys.manager.DistrictManager;
 import net.myspring.basic.modules.sys.mapper.DistrictMapper;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +28,7 @@ public class DistrictService {
 
     public List<DistrictDto> findByNameLike(String name){
         List<District> citys = districtMapper.findByNameLike(name);
-        List<DistrictDto> districtDtos= BeanMapper.convertDtoList(citys,DistrictDto.class);
+        List<DistrictDto> districtDtos= BeanUtil.map(citys,DistrictDto.class);
         cacheUtils.initCacheInput(districtDtos);
         return districtDtos;
     }

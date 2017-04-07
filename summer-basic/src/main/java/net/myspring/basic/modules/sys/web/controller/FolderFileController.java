@@ -12,10 +12,9 @@ import net.myspring.basic.modules.sys.service.FolderService;
 import net.myspring.basic.modules.sys.web.query.FolderFileQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
-import net.myspring.util.mapper.BeanMapper;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.EncodeUtil;
 import net.myspring.util.text.StringUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,7 +105,7 @@ public class FolderFileController {
         List<FolderFileDto> folderFileDtoList = Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(idList)) {
             List<FolderFile> folderFileList = folderFileService.findByIds(idList);
-            folderFileDtoList= BeanMapper.convertDtoList(folderFileList,FolderFileDto.class);
+            folderFileDtoList= BeanUtil.map(folderFileList,FolderFileDto.class);
         }
         return ObjectMapperUtils.writeValueAsString(folderFileDtoList);
     }
