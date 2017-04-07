@@ -3,12 +3,17 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  *******************************************************************************/
-package net.myspring.common.domain;
+package net.myspring.basic.common.dto;
+
+
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDateTime;
 
-public class AuditEntity<T> extends DataEntity<T> {
+public class AuditDto<T> extends DataDto<T> {
 	protected String auditBy;
+	@CacheInput(inputKey = "account",inputInstance = "auditBy",outputInstance = "auditByName")
+	protected String auditByName;
 	protected LocalDateTime auditDate;
 	protected String auditRemarks;
 	protected String status;
@@ -19,6 +24,14 @@ public class AuditEntity<T> extends DataEntity<T> {
 
 	public void setAuditBy(String auditBy) {
 		this.auditBy = auditBy;
+	}
+
+	public String getAuditByName() {
+		return auditByName;
+	}
+
+	public void setAuditByName(String auditByName) {
+		this.auditByName = auditByName;
 	}
 
 	public LocalDateTime getAuditDate() {
