@@ -5,5 +5,6 @@ import net.myspring.basic.modules.sys.domain.DictEnum;
 /**
  * Created by admin on 2017/4/5.
  */
-public class DictEnumForm  extends DictEnum{
+
+public class DictEnumForm{
 }

@@ -40,12 +40,7 @@ public class BaseProvider {
         String key = entity.getClass().getName() + "_" + columnDto.getJdbcColumn();
         if(!insertableMap.containsKey(key)) {
             boolean insertable;
-            Field field =  null;
-            try {
-                field = entity.getClass().getDeclaredField(columnDto.getJavaInstance());
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            }
+            Field field =  ReflectionUtils.findField(entity.getClass(),columnDto.getJavaInstance());
             if(field==null) {
                 insertable  = false;
             } else {
@@ -77,12 +72,7 @@ public class BaseProvider {
         String key = entity.getClass().getName() + "_" + columnDto.getJdbcColumn();
         if(!updatableMap.containsKey(key)) {
             boolean updatable;
-            Field field =  null;
-            try {
-                field = entity.getClass().getDeclaredField(columnDto.getJavaInstance());
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            }
+            Field field =   ReflectionUtils.findField(entity.getClass(),columnDto.getJavaInstance());
             if(field==null) {
                 updatable = false;
             } else {

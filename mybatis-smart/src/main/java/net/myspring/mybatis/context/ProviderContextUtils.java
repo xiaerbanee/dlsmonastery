@@ -3,18 +3,22 @@ package net.myspring.mybatis.context;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.mybatis.annotation.FormDomain;
 import net.myspring.mybatis.dto.ColumnDto;
 import net.myspring.mybatis.dto.TableDto;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.annotation.*;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import javax.persistence.Id;
-import javax.persistence.Transient;
-import javax.persistence.Version;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by liuj on 2017/3/17.
@@ -105,17 +109,18 @@ public class ProviderContextUtils {
     public static Class getEntityClass(Class clazz) {
         String key = clazz.getName();
         if(!entityClassMap.containsKey(key)) {
-            Entity entity = null;
-            while (!clazz.getName().equals(Object.class.getName()) && entity==null) {
-                entity = (Entity) clazz.getAnnotation(Entity.class);
-                if(entity != null) {
-                    entityClassMap.put(key,clazz);
+            Class entityClass = null;
+            Annotation annotation =clazz.getAnnotation(Entity.class);
+            if(annotation != null) {
+                entityClass = clazz;
+            } else {
+                annotation =clazz.getAnnotation(FormDomain.class);
+                if(annotation != null) {
+                    entityClass = ((FormDomain)annotation).value();
                 }
-                clazz = clazz.getSuperclass();
+
             }
-            if(!entityClassMap.containsKey(key)) {
-                entityClassMap.put(key,null);
-            }
+            entityClassMap.put(key,entityClass);
         }
         return entityClassMap.get(key);
     }
