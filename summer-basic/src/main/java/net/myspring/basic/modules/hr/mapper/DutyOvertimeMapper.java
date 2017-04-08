@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.DutyOvertime;
-import net.myspring.basic.modules.hr.model.DutyModel;
+import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.web.query.DutyOvertimeQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,7 +19,7 @@ public interface DutyOvertimeMapper extends MyMapper<DutyOvertime,String> {
 
     Page<DutyOvertime> findPage(Pageable pageable, @Param("p")DutyOvertimeQuery dutyOvertimeQuery);
 
-    List<DutyModel> findByAuditable(@Param("leaderId") String leaderId, @Param("status") String status, @Param("dateStart") LocalDateTime dateStart);
+    List<DutyDto> findByAuditable(@Param("leaderId") String leaderId, @Param("status") String status, @Param("dateStart") LocalDateTime dateStart);
 
     List<DutyOvertime> findByDutyDate(@Param("employeeId") String employeeId, @Param("dutyDate") LocalDate dutyDate);
 

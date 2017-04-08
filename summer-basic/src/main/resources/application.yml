@@ -20,7 +20,7 @@ eureka:
     prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://localhost:1000/eureka/
+      defaultZone: http://168.192.1.20:1000/eureka/
 
 security:
   oauth2:
@@ -36,3 +36,14 @@ security:
           LciRTa884uQnkFwSguOEUYf3ni8GNRJauIuW0rVXhMOs78pKvCKmo53M0tqeC6ul
           +QIDAQAB
           -----END PUBLIC KEY-----
+upload:
+  root-path: d:/upload
+  preview-size: 290
+
+weixin:
+  appid: wx9306888de0cb1c04
+  appsecret: e7822bbf9d836b0b909342662fb4e0ee
+  app:
+    name: mktsp
+  audit:
+    menuId: 14,15,16,17,34,130,131,170

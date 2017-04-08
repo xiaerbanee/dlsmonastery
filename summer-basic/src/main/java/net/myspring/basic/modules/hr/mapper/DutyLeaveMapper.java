@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.DutyLeave;
-import net.myspring.basic.modules.hr.model.DutyModel;
+import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.web.query.DutyLeaveQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,7 +22,7 @@ public interface DutyLeaveMapper extends MyMapper<DutyLeave,String> {
 
     DutyLeave findByEmployeeAndDateAndDateType(@Param("employeeId") String employeeId, @Param("date") LocalDate date, @Param("dateType") String dateType);
 
-    List<DutyModel> findByAuditable(@Param("leaderId") String leaderId, @Param("status") String status, @Param("dateStart") LocalDateTime dateStart);
+    List<DutyDto> findByAuditable(@Param("leaderId") String leaderId, @Param("status") String status, @Param("dateStart") LocalDateTime dateStart);
 
     List<DutyLeave> findByDutyDateList(@Param("employeeId") String employeeId, @Param("dutyDateList") List<LocalDate> dutyDateList);
 

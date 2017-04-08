@@ -32,7 +32,7 @@
         <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
     </select>
 
-    <select id="findByAuditable" resultType="net.myspring.future.modules.hr.model.DutyModel">
+    <select id="findByAuditable" resultType="net.myspring.basic.modules.hr.dto.DutyDto">
         SELECT
         '调休' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'account.loginName',t2.leader_id AS 'account.leaderId' ,CONCAT('TX0000000',t1.id) AS 'formatId',t1.id
         FROM

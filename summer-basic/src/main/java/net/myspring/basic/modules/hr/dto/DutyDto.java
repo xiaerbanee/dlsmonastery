@@ -1,4 +1,4 @@
-package net.myspring.basic.modules.hr.model;
+package net.myspring.basic.modules.hr.dto;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Account;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by admin on 2016/12/23.
  */
-public class DutyModel {
+public class DutyDto {
     private String id;
     private String formatId;
     private Account account;

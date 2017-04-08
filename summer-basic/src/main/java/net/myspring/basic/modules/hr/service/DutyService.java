@@ -5,9 +5,9 @@ import net.myspring.basic.common.enums.*;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.*;
+import net.myspring.basic.modules.hr.dto.CalendarEventDto;
 import net.myspring.basic.modules.hr.mapper.*;
-import net.myspring.basic.modules.hr.model.CalendarEvent;
-import net.myspring.basic.modules.hr.model.DutyModel;
+import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.time.LocalDateUtils;
 import net.myspring.util.time.LocalTimeUtils;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -55,23 +54,23 @@ public class DutyService {
     @Autowired
     private SecurityUtils securityUtils;
 
-    public List<DutyModel> findByAuditable(String leaderId, String status, LocalDateTime dateStart) {
-        List<DutyModel> leaveList = dutyLeaveMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyModel> overtimeList = dutyOvertimeMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyModel> restList = dutyRestMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyModel> signList = dutySignMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyModel> freeList = dutyFreeMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyModel> publicFreeList = dutyPublicFreeMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyModel> tripList = dutyTripMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyModel> dutyModelList = Lists.newArrayList();
-        dutyModelList.addAll(leaveList);
-        dutyModelList.addAll(overtimeList);
-        dutyModelList.addAll(restList);
-        dutyModelList.addAll(signList);
-        dutyModelList.addAll(freeList);
-        dutyModelList.addAll(publicFreeList);
-        dutyModelList.addAll(tripList);
-        return dutyModelList;
+    public List<DutyDto> findByAuditable(String leaderId, String status, LocalDateTime dateStart) {
+        List<DutyDto> leaveList = dutyLeaveMapper.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> overtimeList = dutyOvertimeMapper.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> restList = dutyRestMapper.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> signList = dutySignMapper.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> freeList = dutyFreeMapper.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> publicFreeList = dutyPublicFreeMapper.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> tripList = dutyTripMapper.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> dutyDtoList = Lists.newArrayList();
+        dutyDtoList.addAll(leaveList);
+        dutyDtoList.addAll(overtimeList);
+        dutyDtoList.addAll(restList);
+        dutyDtoList.addAll(signList);
+        dutyDtoList.addAll(freeList);
+        dutyDtoList.addAll(publicFreeList);
+        dutyDtoList.addAll(tripList);
+        return dutyDtoList;
     }
 
     public Object findDutyItem(String id, String dutyType) {
@@ -243,8 +242,8 @@ public class DutyService {
         return true;
     }
 
-    public List<CalendarEvent> findEvent(String employeeId, LocalDate start, LocalDate end) {
-        List<CalendarEvent> list = Lists.newArrayList();
+    public List<CalendarEventDto> findEvent(String employeeId, LocalDate start, LocalDate end) {
+        List<CalendarEventDto> list = Lists.newArrayList();
         List<DutyWorktime> worktimeList = dutyWorktimeMapper.findByEmployeeAndDate(employeeId, start, end);
         List<DutyLeave> leaveList = dutyLeaveMapper.findByEmployeeAndDate(employeeId, start, end);
         List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByEmployeeAndDate(employeeId, start, end);
@@ -254,70 +253,70 @@ public class DutyService {
         List<DutyTrip> tripList = dutyTripMapper.findByEmployeeAndDate(employeeId, start, end);
         List<DutySign>signList=dutySignMapper.findByEmployeeAndDate(employeeId, start, end);
         for (DutyWorktime dutyWorktime : worktimeList) {
-            CalendarEvent calendarEvent = new CalendarEvent();
-            calendarEvent.setId(dutyWorktime.getId());
-            calendarEvent.setStart(dutyWorktime.getDutyDate());
-            calendarEvent.setTitle("卡:" + LocalTimeUtils.format(dutyWorktime.getDutyTime()));
-            calendarEvent.setCssClass(getCssClass(AuditTypeEnum.APPLY.getValue()));
-            list.add(calendarEvent);
+            CalendarEventDto calendarEventDto = new CalendarEventDto();
+            calendarEventDto.setId(dutyWorktime.getId());
+            calendarEventDto.setStart(dutyWorktime.getDutyDate());
+            calendarEventDto.setTitle("卡:" + LocalTimeUtils.format(dutyWorktime.getDutyTime()));
+            calendarEventDto.setCssClass(getCssClass(AuditTypeEnum.APPLY.getValue()));
+            list.add(calendarEventDto);
         }
         for (DutyLeave dutyLeave : leaveList) {
-            CalendarEvent calendarEvent = new CalendarEvent();
-            calendarEvent.setStart(dutyLeave.getDutyDate());
-            calendarEvent.setTitle("假:" + dutyLeave.getDateType());
-            calendarEvent.setContent("请假申请<br/>状态：" + dutyLeave.getStatus());
-            calendarEvent.setCssClass(getCssClass(dutyLeave.getStatus()));
-            list.add(calendarEvent);
+            CalendarEventDto calendarEventDto = new CalendarEventDto();
+            calendarEventDto.setStart(dutyLeave.getDutyDate());
+            calendarEventDto.setTitle("假:" + dutyLeave.getDateType());
+            calendarEventDto.setContent("请假申请<br/>状态：" + dutyLeave.getStatus());
+            calendarEventDto.setCssClass(getCssClass(dutyLeave.getStatus()));
+            list.add(calendarEventDto);
         }
         for (DutyOvertime dutyOvertime : overtimeList) {
-            CalendarEvent calendarEvent = new CalendarEvent();
-            calendarEvent.setStart(dutyOvertime.getDutyDate());
-            calendarEvent.setTitle("加:" + LocalTimeUtils.format(dutyOvertime.getTimeStart()) + "~" + LocalTimeUtils.format(dutyOvertime.getTimeEnd()));
-            calendarEvent.setContent("加班申请<br/>状态：" + dutyOvertime.getStatus());
-            calendarEvent.setCssClass(getCssClass(dutyOvertime.getStatus()));
-            list.add(calendarEvent);
+            CalendarEventDto calendarEventDto = new CalendarEventDto();
+            calendarEventDto.setStart(dutyOvertime.getDutyDate());
+            calendarEventDto.setTitle("加:" + LocalTimeUtils.format(dutyOvertime.getTimeStart()) + "~" + LocalTimeUtils.format(dutyOvertime.getTimeEnd()));
+            calendarEventDto.setContent("加班申请<br/>状态：" + dutyOvertime.getStatus());
+            calendarEventDto.setCssClass(getCssClass(dutyOvertime.getStatus()));
+            list.add(calendarEventDto);
         }
         for (DutyRest dutyRest : restList) {
-            CalendarEvent calendarEvent = new CalendarEvent();
-            calendarEvent.setStart(dutyRest.getDutyDate());
-            calendarEvent.setTitle("调:" + LocalTimeUtils.format(dutyRest.getTimeStart()) + "~" + LocalTimeUtils.format(dutyRest.getTimeEnd()));
-            calendarEvent.setContent("调休申请<br/>状态：" + dutyRest.getStatus());
-            calendarEvent.setCssClass(getCssClass(dutyRest.getStatus()));
-            list.add(calendarEvent);
+            CalendarEventDto calendarEventDto = new CalendarEventDto();
+            calendarEventDto.setStart(dutyRest.getDutyDate());
+            calendarEventDto.setTitle("调:" + LocalTimeUtils.format(dutyRest.getTimeStart()) + "~" + LocalTimeUtils.format(dutyRest.getTimeEnd()));
+            calendarEventDto.setContent("调休申请<br/>状态：" + dutyRest.getStatus());
+            calendarEventDto.setCssClass(getCssClass(dutyRest.getStatus()));
+            list.add(calendarEventDto);
         }
         for (DutyFree dutyFree : freeList) {
-            CalendarEvent calendarEvent = new CalendarEvent();
-            calendarEvent.setStart(dutyFree.getFreeDate());
-            calendarEvent.setTitle("免:" + dutyFree.getDateType());
-            calendarEvent.setContent("免打卡申请<br/>状态：" + dutyFree.getStatus());
-            calendarEvent.setCssClass(getCssClass(dutyFree.getStatus()));
-            list.add(calendarEvent);
+            CalendarEventDto calendarEventDto = new CalendarEventDto();
+            calendarEventDto.setStart(dutyFree.getFreeDate());
+            calendarEventDto.setTitle("免:" + dutyFree.getDateType());
+            calendarEventDto.setContent("免打卡申请<br/>状态：" + dutyFree.getStatus());
+            calendarEventDto.setCssClass(getCssClass(dutyFree.getStatus()));
+            list.add(calendarEventDto);
         }
         for (DutyPublicFree dutyPublicFree : publicFreeList) {
-            CalendarEvent calendarEvent = new CalendarEvent();
-            calendarEvent.setStart(dutyPublicFree.getFreeDate());
-            calendarEvent.setTitle("公:" + dutyPublicFree.getDateType());
-            calendarEvent.setContent("公休申请<br/>状态：" + dutyPublicFree.getStatus());
-            calendarEvent.setCssClass(getCssClass(dutyPublicFree.getStatus()));
-            list.add(calendarEvent);
+            CalendarEventDto calendarEventDto = new CalendarEventDto();
+            calendarEventDto.setStart(dutyPublicFree.getFreeDate());
+            calendarEventDto.setTitle("公:" + dutyPublicFree.getDateType());
+            calendarEventDto.setContent("公休申请<br/>状态：" + dutyPublicFree.getStatus());
+            calendarEventDto.setCssClass(getCssClass(dutyPublicFree.getStatus()));
+            list.add(calendarEventDto);
         }
         for (DutyTrip dutyTrip : tripList) {
             for(LocalDate date : LocalDateUtils.getDateList(dutyTrip.getDateStart(), dutyTrip.getDateEnd())){
-                CalendarEvent calendarEvent = new CalendarEvent();
-                calendarEvent.setStart(date);
-                calendarEvent.setTitle("差:" + LocalDateUtils.format(date));
-                calendarEvent.setContent("出差申请<br/>状态：" + dutyTrip.getStatus());
-                calendarEvent.setCssClass(getCssClass(dutyTrip.getStatus()));
-                list.add(calendarEvent);
+                CalendarEventDto calendarEventDto = new CalendarEventDto();
+                calendarEventDto.setStart(date);
+                calendarEventDto.setTitle("差:" + LocalDateUtils.format(date));
+                calendarEventDto.setContent("出差申请<br/>状态：" + dutyTrip.getStatus());
+                calendarEventDto.setCssClass(getCssClass(dutyTrip.getStatus()));
+                list.add(calendarEventDto);
             }
         }
         //签到
         for(DutySign dutySign:signList){
-            CalendarEvent calendarEvent = new CalendarEvent();
-            calendarEvent.setStart(dutySign.getDutyDate());
-            calendarEvent.setTitle("签:" + LocalTimeUtils.format(dutySign.getDutyTime()));
-            calendarEvent.setContent("签到申请<br/>状态：" + dutySign.getStatus());
-            list.add(calendarEvent);
+            CalendarEventDto calendarEventDto = new CalendarEventDto();
+            calendarEventDto.setStart(dutySign.getDutyDate());
+            calendarEventDto.setTitle("签:" + LocalTimeUtils.format(dutySign.getDutyTime()));
+            calendarEventDto.setContent("签到申请<br/>状态：" + dutySign.getStatus());
+            list.add(calendarEventDto);
         }
         return list;
     }

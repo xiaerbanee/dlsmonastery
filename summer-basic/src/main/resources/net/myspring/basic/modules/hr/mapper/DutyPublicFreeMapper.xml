@@ -18,7 +18,7 @@
     </select>
 
 
-    <select id="findByAuditable" resultType="net.myspring.future.modules.hr.model.DutyModel">
+    <select id="findByAuditable" resultType="net.myspring.basic.modules.hr.dto.DutyDto">
         SELECT
         '公休' as dutyType,t1.free_date AS dutyDate,t1.remarks,t2.login_name as 'account.loginName',t2.leader_id AS 'account.leaderId' ,CONCAT('GX0000000',t1.id) AS 'formatId',t1.id
         FROM

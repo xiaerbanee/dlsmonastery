@@ -26,7 +26,7 @@
         <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
     </select>
 
-    <select id="findByAuditable" resultType="net.myspring.future.modules.hr.model.DutyModel">
+    <select id="findByAuditable" resultType="net.myspring.basic.modules.hr.dto.DutyDto">
         SELECT
             '出差' as dutyType,
             CONCAT(t1.date_start,'~',t1.date_end) as dutyDate,

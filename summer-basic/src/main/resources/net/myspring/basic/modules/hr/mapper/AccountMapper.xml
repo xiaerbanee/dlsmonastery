@@ -23,7 +23,7 @@
         </if>
     </select>
 
-    <select id="findAccountOfficeByIds" resultType="net.myspring.future.common.model.NameValue">
+    <select id="findAccountOfficeByIds" resultType="net.myspring.basic.common.dto.NameValueDto">
         SELECT account_id as 'name',office_id AS 'value'
         FROM hr_account_office
         where account_id IN
