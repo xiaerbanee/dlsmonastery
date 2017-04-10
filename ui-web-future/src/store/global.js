@@ -15,6 +15,11 @@ const getLang = function () {
   return local;
 }
 
+const getToken = function () {
+  var token = window.localStorage.getItem("token");
+  return token;
+}
+
 const getMenus = function () {
   var local = window.localStorage.getItem("menus");
   if(local) {
@@ -45,7 +50,8 @@ export default {
     lang: getLang(),
     menus:getMenus(),
     account:getAccount(),
-    authorityList:getAuthorityList()
+    authorityList:getAuthorityList(),
+    token: getToken()
   },getters: {
     getQuery: (state, routerName) => {
       var query = {};
@@ -79,6 +85,10 @@ export default {
     setAccount(state,account) {
       state.account = account;
       localStorage.setItem('account', JSON.stringify(account))
+    },
+    setToken(state,token) {
+      state.token = token;
+      localStorage.setItem('token', token)
     }
   },
   actions: {
@@ -103,11 +113,15 @@ export default {
     },
     setAccount({ commit, state }, account) {
       commit('setAccount', account);
+    },
+    setToken({ commit, state }, token) {
+      commit('setToken', token);
     },clearGlobal({ commit, state }) {
       commit('setTabs', new Map());
       commit('setMenus', []);
       commit('setAccount', {});
       commit('setAuthorityList', []);
+      commit('token', '');
     }
   }
 }

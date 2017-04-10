@@ -5,6 +5,7 @@ import axios from 'axios'
 import qs from 'qs'
 import _ from 'lodash'
 import store from './store/'
+import jwtDecode from 'jwt-decode';
 
 import ElementUI from 'element-ui';
 import zhElement from 'element-ui/lib/locale/lang/zh-CN'
@@ -25,6 +26,9 @@ import './filters'
 import util from "./utils/util"
 import zhLocale from "./utils/locales/zh-CN"
 import idLocale from "./utils/locales/id"
+
+axios.defaults.headers.common['Authorization'] = store.state.global.token;
+
 window.axios = axios;
 window.qs = qs;
 window._=_;
@@ -86,15 +90,19 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth==false)) {
     next();
   } else {
-    axios.get('/api/login/isLogin').then((response) => {
-      if(response.data) {
-        util.setQuery(to.name, to.query);
-        next();
-      } else {
-        store.dispatch('clearGlobal');
-        next({path: '/login', query: {redirect: to.fullPath}});
-      }
-    })
+    var token = store.state.global.token;
+    //如果没有token，去登陆页面
+    if(util.isBlank(token)) {
+      store.dispatch('clearGlobal');
+      next({path: '/login', query: {redirect: to.fullPath}});
+    } else {
+      //如果包含token，解析token
+      var decoded = jwtDecode(token);
+      var exp = decoded.exp;
+      console.log(exp);
+      util.setQuery(to.name, to.query);
+      next();
+    }
   }
 });
 
