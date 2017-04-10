@@ -8,7 +8,7 @@
         t2.FNAME,
         t1.FMATERIALGROUP,
         t4.FNAME AS fmaterialGroupName,
-        t1.FMODIFYDATE AS modifyDate,
+        t1.FMODIFYDATE
         FROM
         T_BD_MATERIAL t1,
         T_BD_MATERIAL_L t2,

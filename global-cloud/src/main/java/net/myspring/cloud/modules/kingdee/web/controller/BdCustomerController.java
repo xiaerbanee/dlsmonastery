@@ -1,10 +1,8 @@
 package net.myspring.cloud.modules.kingdee.web.controller;
 
-import com.google.common.collect.Lists;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.service.BdCustomerService;
-import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
