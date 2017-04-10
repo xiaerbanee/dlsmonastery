@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.DutyPublicFree;
-import net.myspring.basic.modules.hr.model.DutyModel;
+import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.web.query.DutyPublicFreeQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,7 +19,7 @@ public interface DutyPublicFreeMapper extends MyMapper<DutyPublicFree, String> {
 
     Page<DutyPublicFree> findPage(Pageable pageable, @Param("p")DutyPublicFreeQuery dutyPublicFreeQuery);
 
-    List<DutyModel> findByAuditable(@Param("leaderId") String leaderId, @Param("status") String status, @Param("dateStart") LocalDateTime dateStart);
+    List<DutyDto> findByAuditable(@Param("leaderId") String leaderId, @Param("status") String status, @Param("dateStart") LocalDateTime dateStart);
 
     List<DutyPublicFree> findByDateAndStatusList(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("statusList") List<String> statusList);
 

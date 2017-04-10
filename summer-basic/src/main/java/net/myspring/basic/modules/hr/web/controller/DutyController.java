@@ -1,13 +1,11 @@
 package net.myspring.basic.modules.hr.web.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.enums.BoolEnum;
 import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.domain.Account;
-import net.myspring.basic.modules.hr.model.CalendarEvent;
-import net.myspring.basic.modules.hr.model.DutyModel;
+import net.myspring.basic.modules.hr.dto.CalendarEventDto;
+import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.DutyService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -37,8 +35,8 @@ public class DutyController {
     private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<DutyModel> list() {
-        return getDutyModelList();
+    public List<DutyDto> list() {
+        return getDutyDtoList();
     }
 
     @RequestMapping(value = "detail")
@@ -59,9 +57,9 @@ public class DutyController {
 
     @RequestMapping(value = "passAll")
     public RestResponse passAll() {
-        List<DutyModel> dutyModelList = getDutyModelList();
-        for(DutyModel dutyModel : dutyModelList) {
-            dutyService.audit(dutyModel.getId(), dutyModel.getDutyType(),true,null);
+        List<DutyDto> dutyDtoList = getDutyDtoList();
+        for(DutyDto dutyDto : dutyDtoList) {
+            dutyService.audit(dutyDto.getId(), dutyDto.getDutyType(),true,null);
         }
         return new RestResponse("审批成功",ResponseCodeEnum.audited.name());
     }
@@ -75,17 +73,17 @@ public class DutyController {
     }
 
     @RequestMapping(value = "events", method = RequestMethod.GET)
-    public List<CalendarEvent> events(String start, String end) {
+    public List<CalendarEventDto> events(String start, String end) {
         LocalDate dateStart= LocalDateUtils.parse(start);
         LocalDate dateEnd= LocalDateUtils.parse(end);
-        List<CalendarEvent> events = dutyService.findEvent(securityUtils.getEmployeeId(),dateStart,dateEnd);
+        List<CalendarEventDto> events = dutyService.findEvent(securityUtils.getEmployeeId(),dateStart,dateEnd);
         return events;
     }
 
-    private List<DutyModel> getDutyModelList() {
+    private List<DutyDto> getDutyDtoList() {
         LocalDateTime dateStart = LocalDateTime.now().minusMonths(1);
         String leaderId = securityUtils.getAccountId();
-        List<DutyModel> list = dutyService.findByAuditable(leaderId, AuditTypeEnum.APPLY.getValue(), dateStart);
+        List<DutyDto> list = dutyService.findByAuditable(leaderId, AuditTypeEnum.APPLY.getValue(), dateStart);
         return list;
     }
 }

@@ -1,9 +1,9 @@
-package net.myspring.basic.modules.hr.model;
+package net.myspring.basic.modules.hr.dto;
 
 
 import java.time.LocalDate;
 
-public class CalendarEvent {
+public class CalendarEventDto {
 	private String id;
 	private String title;
 	private LocalDate start;
