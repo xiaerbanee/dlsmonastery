@@ -8,7 +8,5 @@ import net.myspring.basic.modules.hr.domain.Account;
  */
 public class AccountDto extends DataDto<Account> {
 
-    private String createdByName;
-
 
 }

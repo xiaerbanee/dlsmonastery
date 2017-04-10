@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.sys.mapper.ProductMapper">
+    <select id="findByCompanyId" resultType="Product">
+        SELECT
+        t1.*
+        FROM
+        sys_product t1
+        WHERE
+        t1.enabled=1
+        AND  t1.company_id = #{companyId}
+    </select>
 
+    <select id="findMaxOutDate" resultType="java.time.LocalDateTime">
+        SELECT max(t1.out_date)
+        from sys_product t1
+        WHERE t1.company_id = #{companyId}
+    </select>
+
+    <select id="findReturnOutId" resultType="String">
+        SELECT DISTINCT(t1.return_out_id)
+        FROM sys_product t1
+        WHERE  t1.company_id = #{companyId}
+    </select>
 </mapper>

@@ -14,4 +14,6 @@ import java.util.List;
 public interface BdMaterialMapper {
 
     List<BdMaterial> findAll(@Param("maxOutDate")LocalDateTime maxOutDate);
+
+
 }
