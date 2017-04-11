@@ -13,4 +13,16 @@
         and t1.login_name=#{loginName}
     </select>
 
+    <select id="findById" resultType="AccountDto">
+        SELECT
+        t1.*,
+        t2.leave_date as 'leaveDate'
+        FROM
+        hr_account t1,
+        hr_employee t2
+        WHERE
+        t1.employee_id = t2.id
+        and t1.id=#{id}
+    </select>
+
 </mapper>

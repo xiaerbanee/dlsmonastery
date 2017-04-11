@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.uaa.mapper.AccountWeixinDtoMapper">
+    <select id="findByOpenId" resultType="AccountWeixinDto">
+        SELECT
+        t1.company_id,
+        t1.account_id,
+        t1.open_id
+        FROM
+        hr_account_weixin t1
+        WHERE
+        t1.open_id = #{openId}
+        and t1.enabled=1
+    </select>
+
+</mapper>
