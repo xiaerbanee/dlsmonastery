@@ -73,7 +73,7 @@ public class AccountService {
     public Page<AccountDto> findPage(Pageable pageable, AccountQuery accountQuery) {
         Page<Account> page = accountMapper.findPage(pageable, accountQuery);
         Page<AccountDto> accountDtoPage = BeanUtil.map(page, AccountDto.class);
-        cacheUtils.initCacheInput(accountDtoPage);
+        cacheUtils.initCacheInput(accountDtoPage.getContent());
         return accountDtoPage;
     }
 

@@ -2,6 +2,8 @@ package net.myspring.uaa.security;
 
 import com.google.common.collect.Sets;
 import net.myspring.uaa.dto.AccountDto;
+import net.myspring.uaa.dto.WeixinSessionDto;
+import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.mapper.AccountDtoMapper;
 import net.myspring.util.base.ObjectUtil;
 import org.apache.commons.lang.ObjectUtils;
@@ -28,6 +30,8 @@ import java.util.Set;
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private AccountDtoMapper accountMapper;
+    @Autowired
+    private WeixinManager weixinManager;
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -36,6 +40,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         String weixinCode = ObjectUtils.toString(request.getAttribute("weixinCode"));
         if(StringUtils.isNotBlank(weixinCode)) {
             String accountId = ObjectUtils.toString(request.getAttribute("accountId"));
+            WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(weixinCode);
+            if(weixinSessionDto != null && StringUtils.isNotBlank(weixinSessionDto.getOpenid())) {
+
+            }
 
         } else {
             AccountDto accountDto = accountMapper.findByLoginName(username);

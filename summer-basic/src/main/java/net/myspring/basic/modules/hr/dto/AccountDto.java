@@ -10,7 +10,6 @@ import net.myspring.util.cahe.annotation.CacheInput;
 public class AccountDto extends DataDto<Account> {
 
     private String positionId;
-    @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "dataScope")
     private String dataScope;
 
     public String getPositionId() {
