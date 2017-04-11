@@ -7,8 +7,10 @@ import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -42,7 +44,14 @@ public class AccountManager {
         return  accountMapper.findOne(accountForm.getId());
     }
 
-    @CachePut(value = "accounts",key="#p0.id")
+    @Caching(
+            put = {
+                    @CachePut(value = "accounts", key = "#p0.id"),
+            },
+            evict = {
+                    @CacheEvict(value = "accountOffices",key = "#p0.id")
+            }
+    )
     public Account update(Account account){
         accountMapper.update(account);
         return  accountMapper.findOne(account.getId());

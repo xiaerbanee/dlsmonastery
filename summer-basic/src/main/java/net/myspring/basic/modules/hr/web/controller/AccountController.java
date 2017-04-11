@@ -34,7 +34,7 @@ import java.util.Map;
  * Created by liuj on 2017/3/19.
  */
 @RestController
-@RequestMapping(value = "account")
+@RequestMapping(value = "hr/account")
 public class AccountController {
 
     @Autowired
@@ -64,8 +64,9 @@ public class AccountController {
     }
 
     @RequestMapping(value = "findOne")
-    public Account findOne(Account account){
-        return account;
+    public AccountDto findOne(String id){
+        AccountDto accountDto=accountService.findDto(id);
+        return accountDto;
     }
 
     @RequestMapping(value="getFormProperty")

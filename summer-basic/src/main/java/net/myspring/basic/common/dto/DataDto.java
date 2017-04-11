@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
  */
 public class DataDto<T> extends IdDto<T> {
     protected String createdBy;
-    @CacheInput(inputKey = "account",inputInstance = "createdBy",outputInstance = "loginName")
+    @CacheInput(inputKey = "accounts",inputInstance = "createdBy",outputInstance = "loginName")
     protected String createdByName;
     protected LocalDateTime createdDate;
     protected String lastModifiedBy;
-    @CacheInput(inputKey = "account",inputInstance = "lastModifiedBy",outputInstance = "loginName")
+    @CacheInput(inputKey = "accounts",inputInstance = "lastModifiedBy",outputInstance = "loginName")
     protected String lastModifiedByName;
     protected LocalDateTime lastModifiedDate;
     protected String remarks;
