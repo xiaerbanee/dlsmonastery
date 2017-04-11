@@ -121,7 +121,7 @@ export default {
       commit('setMenus', []);
       commit('setAccount', {});
       commit('setAuthorityList', []);
-      commit('token', '');
+      commit('setToken', '');
     }
   }
 }

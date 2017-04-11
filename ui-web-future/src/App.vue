@@ -94,12 +94,6 @@ export default {
     // set default lang
     Vue.config.lang = this.lang;
   },mounted(){
-    //初始化dictEnum
-    axios.get('/api/login/getEnumMap').then((response) => {
-      window.enumMap = response.data;
-    });
-    this.getAuthorityList();
-    this.getMenus()
   },
   watch: {
     '$route'(to, from) {
@@ -139,27 +133,6 @@ export default {
       this.$store.dispatch('setLang',lang);
       Vue.config.lang = lang;
       this.$router.push({ name: "home"});
-    },getAuthorityList() {
-      axios.get('/api/login/getAuthorityList').then((response) => {
-        this.$store.dispatch('setAuthorityList',response.data);
-      });
-    },getMenus() {
-      axios.get('/api/sys/menu/getMenus').then((response) => {
-       var menus=response.data;
-       if(menus !=null && menus.length>0) {
-          for (var i in menus) {
-              var menuCategoryCode =menus[i].menuCategory.code;
-              var menuItems =menus[i].menuItems;
-              for(var j in menuItems) {
-                for(var k in menuItems[j].menus) {
-                  var menu = menuItems[j].menus[k];
-                  menu.name=menu.menuCode
-                }
-              }
-          }
-       }
-        this.$store.dispatch('setMenus',menus);
-      });
     }
   }
 };

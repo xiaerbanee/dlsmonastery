@@ -5,8 +5,8 @@ import axios from 'axios'
 import qs from 'qs'
 import _ from 'lodash'
 import store from './store/'
-import jwtDecode from 'jwt-decode';
 
+import jwtDecode from "jwt-decode"
 import ElementUI from 'element-ui';
 import zhElement from 'element-ui/lib/locale/lang/zh-CN'
 import idElement from 'element-ui/lib/locale/lang/id'
@@ -26,10 +26,6 @@ import './filters'
 import util from "./utils/util"
 import zhLocale from "./utils/locales/zh-CN"
 import idLocale from "./utils/locales/id"
-
-axios.defaults.headers.common['Authorization'] = store.state.global.token;
-
-window.axios = axios;
 window.qs = qs;
 window._=_;
 window.util=util;
@@ -90,18 +86,11 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth==false)) {
     next();
   } else {
-    var token = store.state.global.token;
-    //如果没有token，去登陆页面
-    if(util.isBlank(token)) {
-      store.dispatch('clearGlobal');
-      next({path: '/login', query: {redirect: to.fullPath}});
-    } else {
-      //如果包含token，解析token
-      var decoded = jwtDecode(token);
-      var exp = decoded.exp;
-      console.log(exp);
+    if(checkLogin()) {
       util.setQuery(to.name, to.query);
       next();
+    } else {
+      router.push("login");
     }
   }
 });
@@ -110,6 +99,37 @@ router.afterEach(route => {
   window.scrollTo(0, 0)
   router.app.$Progress.finish()
 })
+
+
+axios.interceptors.request.use(function (config) {
+  if(config.url !='/api/uaa/oauth/token') {
+    if(checkLogin()) {
+      var token = store.state.global.token;
+      config.headers['Authorization'] = 'Bearer ' + token;
+    } else {
+      router.push("login");
+    }
+  }
+  return config;
+}, function (error) {
+  // Do something with request error
+  return Promise.reject(error);
+});
+
+
+window.axios = axios;
+
+window.checkLogin = function () {
+  var token = store.state.global.token;
+  if(util.isBlank(token)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
+
 
 new Vue({
   render: h => h(App),
