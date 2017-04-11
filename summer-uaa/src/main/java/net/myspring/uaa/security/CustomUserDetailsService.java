@@ -3,13 +3,20 @@ package net.myspring.uaa.security;
 import com.google.common.collect.Sets;
 import net.myspring.uaa.dto.AccountDto;
 import net.myspring.uaa.mapper.AccountDtoMapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -22,27 +29,34 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AccountDto accountDto = accountMapper.findByLoginName(username);
         CustomUserDetails customUserDetails = null;
-        if(accountDto != null) {
-            LocalDate leaveDate = accountDto.getLeaveDate();
-            boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
-            Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
-            authList.add(new SimpleGrantedAuthority(accountDto.getPositionId()));
-            customUserDetails = new CustomUserDetails(
-                    username,
-                    accountDto.getPassword(),
-                    accountDto.getEnabled(),
-                    accountNoExpired,
-                    true,
-                    !accountDto.getLocked(),
-                    authList,
-                    accountDto.getId(),
-                    accountDto.getCompanyId(),
-                    accountDto.getPositionId(),
-                    accountDto.getOfficeId(),
-                    accountDto.getEmployeeId()
-            );
+        HttpServletRequest request  = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        String weixinCode = Objects.toString(request.getAttribute("weixinCode"));
+        if(StringUtils.isNotBlank(weixinCode)) {
+            String accountId = Objects.toString(request.getAttribute("accountId"));
+
+        } else {
+            AccountDto accountDto = accountMapper.findByLoginName(username);
+            if(accountDto != null) {
+                LocalDate leaveDate = accountDto.getLeaveDate();
+                boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
+                Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
+                authList.add(new SimpleGrantedAuthority(accountDto.getPositionId()));
+                customUserDetails = new CustomUserDetails(
+                        username,
+                        accountDto.getPassword(),
+                        accountDto.getEnabled(),
+                        accountNoExpired,
+                        true,
+                        !accountDto.getLocked(),
+                        authList,
+                        accountDto.getId(),
+                        accountDto.getCompanyId(),
+                        accountDto.getPositionId(),
+                        accountDto.getOfficeId(),
+                        accountDto.getEmployeeId()
+                );
+            }
         }
         return customUserDetails;
     }
