@@ -14,7 +14,7 @@ zuul:
     summer-uaa:
       sensitiveHeaders:
       path: /api/uaa/**
-      stripPrefix: false
+      stripPrefix: true
     summer-basic: /api/basic/**
     future-business: /api/future/business/**
     future-report: /api/future/report/**

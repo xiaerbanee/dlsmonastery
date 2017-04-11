@@ -1,8 +1,8 @@
 package net.myspring.basic;
 
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.hr.mapper.AccountMapper;
-import net.myspring.basic.modules.sys.mapper.DictMapMapper;
+import net.myspring.basic.modules.hr.mapper.*;
+import net.myspring.basic.modules.sys.mapper.*;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +25,38 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
     @Autowired
     private DictMapMapper dictMapMapper;
     @Autowired
+    private JobMapper jobMapper;
+    @Autowired
+    private EmployeeMapper employeeMapper;
+    @Autowired
+    private PositionMapper positionMapper;
+    @Autowired
+    private OfficeMapper officeMapper;
+    @Autowired
+    private DictEnumMapper dictEnumMapper;
+    @Autowired
+    private DistrictMapper districtMapper;
+    @Autowired
+    private MenuMapper menuMapper;
+    @Autowired
+    private MenuCategoryMapper menuCategoryMapper;
+    @Autowired
+    private TownMapper townMapper;
+    @Autowired
     private CacheUtils cacheUtils;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LocalDateTime start = LocalDateTime.now();
         logger.info("init cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
-        cacheUtils.initCache("account",accountMapper.findAll());
-        cacheUtils.initCache("dictMap",dictMapMapper.findAll());
+        cacheUtils.initCache("accounts",accountMapper.findAllEnabled());
+        cacheUtils.initCache("dictMaps",dictMapMapper.findAllEnabled());
+        cacheUtils.initCache("jobs",jobMapper.findAllEnabled());
+        cacheUtils.initCache("employees",employeeMapper.findAllEnabled());
+        cacheUtils.initCache("offices",officeMapper.findAllEnabled());
+        cacheUtils.initCache("positions",positionMapper.findAllEnabled());
+        cacheUtils.initCache("towns",townMapper.findAll());
+        cacheUtils.initCache("menus",menuMapper.findAllEnabled());
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");

@@ -3,9 +3,6 @@
     <div class="login-form">
       <div class="input-group">
         <div class="title">OA SYSTEM</div>
-        <el-select v-model="companyName" :placeholder="$t('login.selectCompanyName')" class="company-name">
-          <el-option  v-for="item in companyNames" :key="item" :label="item"  :value="item"></el-option>
-        </el-select>
       </div>
       <div class="input-group">
         <el-input :autofocus="true" :placeholder="$t('login.inputUserName')" v-model="username"></el-input>
@@ -27,8 +24,6 @@
 export default {
   data() {
     return {
-      companyNames : [],
-      companyName:'',
       username: '',
       password: '',
       rememberMe: true,
@@ -44,10 +39,6 @@ export default {
   methods: {
     login() {
       var that = this;
-      if (!that.companyName) {
-        that.$message.error(this.$t('login.selectCompanyName'));
-        return;
-      }
       if (!that.username) {
         that.$message.error(this.$t('login.inputUserName'));
         return;
@@ -57,36 +48,39 @@ export default {
         return;
       }
       that.isBtnLoading = true;
-      axios.post('/api/login?companyName=' + that.companyName +'&loginName='+that.username+'&password='+that.password + '&rememberMe=' + that.rememberMe).then((response)=>{
-        axios.all([that.getAccount(), that.getMenu(),that.getAuthorityList()]) .then(axios.spread(function (account, menus,authorityList) {
-          account.data.avatar = 'https://o0p2nwku4.qnssl.com/favicon.ico';
-          that.$store.dispatch('setAccount',account.data);
-          that.$store.dispatch('setMenus',menus.data);
-          that.$store.dispatch('setAuthorityList',authorityList.data);
-          that.isBtnLoading = false;
-          var redirect = that.$route.query.redirect;
-          if (redirect) {
-            that.$router.push({path: redirect});
-          } else {
-            that.$router.push({path: "/"});
-          }
-        }));
+      let data = {
+          grant_type:'password',
+          username:that.username,
+          password:that.password
+      };
+      axios.post('/api/uaa/oauth/token',qs.stringify(data)).then((response)=>{
+          var token = response.data.access_token;
+          that.$store.dispatch('setToken',token);
+          axios.all([that.getAccount(), that.getMenu(),that.getAuthorityList()]) .then(axios.spread(function (account, menus,authorityList) {
+            that.$store.dispatch('setAccount',account.data);
+            that.$store.dispatch('setMenus',menus.data);
+            that.$store.dispatch('setAuthorityList',authorityList.data);
+            that.isBtnLoading = false;
+            var redirect = that.$route.query.redirect;
+            if (redirect) {
+              that.$router.push({path: redirect});
+            } else {
+              that.$router.push({path: "/"});
+            }
+          }));
       }).catch(function (error) {
         that.$store.dispatch('clearGlobal');
         that.isBtnLoading = false;
-        that.$message.error(this.$t('login.errorUserNameOrPassword'));
+        that.$message.error("用户名或密码不正确");
       });
     },getAccount() {
-      return axios.get('/api/login/getAccount');
+      return {};
     },getMenu() {
-      return axios.get('/api/sys/menu/getMenus');
+      return {};
     },getAuthorityList() {
-      return axios.get('/api/login/getAuthorityList');
+      return {};
     }
   },created () {
-      axios.get('/api/login/companyNames').then((response) => {
-        this.companyNames = response.data;
-      })
     }
 };
 </script>
@@ -116,10 +110,6 @@ export default {
         text-align: center;
         line-height: 2.2;
         font-family: sans-serif;
-      }
-
-      .company-name {
-        width:400px;
       }
 
       .input-group {

@@ -1,6 +1,7 @@
 package net.myspring.uaa.config;
 
 import net.myspring.uaa.security.CustomTokenEnhancer;
+import net.myspring.uaa.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,8 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
     @Autowired
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -43,6 +46,7 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
                 .authorizedGrantTypes("client_credentials", "refresh_token")
                 .scopes("server")
          .and().withClient("web_app")
+                .secret("web_app")
                 .scopes("FOO")
                 .autoApprove(true)
                 .authorities("FOO_READ", "FOO_WRITE")
@@ -55,7 +59,7 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
         tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), jwtAccessTokenConverter()));
         endpoints.tokenStore(tokenStore())
                 .tokenEnhancer(tokenEnhancerChain)
-                .authenticationManager(authenticationManager);
+                .authenticationManager(authenticationManager).userDetailsService(customUserDetailsService);
     }
 
     @Bean

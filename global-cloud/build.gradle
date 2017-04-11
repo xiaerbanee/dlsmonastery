@@ -43,9 +43,12 @@ dependencies {
 	compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.1.1'
 	compile 'org.springframework.cloud:spring-cloud-stream'
 	compile 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
+	compile('org.springframework.cloud:spring-cloud-starter-feign')
 	runtime('mysql:mysql-connector-java')
+	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.5.0'
 	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile group: 'org.json', name: 'json', version: '20160810'
 }
 
 dependencyManagement {
