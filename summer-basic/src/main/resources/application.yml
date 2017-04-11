@@ -2,12 +2,12 @@ spring:
   application:
     name: summer-basic
   datasource:
-    url: jdbc:mysql://168.192.1.243:3306/db_id_vivo_hr
+    url: jdbc:mysql://168.192.1.243:3306/db_oppo_test
     username: root
     password: bbk@123456
     driver-class-name: com.mysql.jdbc.Driver
   redis:
-    host: localhost
+    host: 168.192.1.88
     password:
     port: 6379
     database: 0

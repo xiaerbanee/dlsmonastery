@@ -84,12 +84,12 @@ public class MenuController {
     }
 
     @RequestMapping(value = "getMenus")
-    public String getMenus(String requestClient){
+    public Object getMenus(String requestClient){
         Boolean isMobile = "weixin".equals(requestClient);
         if(isMobile) {
-            return ObjectMapperUtils.writeValueAsString(menuService.findMobileMenus(securityUtils.getAccountId()));
+            return menuService.findMobileMenus(securityUtils.getAccountId());
         } else {
-            return ObjectMapperUtils.writeValueAsString(menuService.findMenus(securityUtils.getAccountId()));
+            return menuService.findMenus(securityUtils.getAccountId());
         }
     }
 }

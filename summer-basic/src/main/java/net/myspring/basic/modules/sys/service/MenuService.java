@@ -7,6 +7,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.manager.AccountManager;
+import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.domain.Permission;
@@ -50,6 +51,8 @@ public class MenuService {
     private PermissionMapper permissionMapper;
     @Autowired
     private MenuCategoryMapper menuCategoryMapper;
+    @Autowired
+    private AccountMapper accountMapper;
 
     public List<MenuDto> findAll(){
         List<Menu> menuList=menuMapper.findAll();
@@ -60,7 +63,7 @@ public class MenuService {
 
     public List<Map<String, Object>> findMobileMenus(String accountId) {
         Map<MenuCategory, List<Menu>> map= Maps.newHashMap();
-        Account account = accountManager.findOne(accountId);
+        Account account = accountMapper.findOne(accountId);
         if (Const.XCXAUDIT.equals(account.getLoginName())) {
             List<String> menuIds= StringUtils.getSplitList(weixinAuditMenuId,Const.CHAR_COMMA);
             List<Menu> menus=menuMapper.findByIds(menuIds);
@@ -80,7 +83,7 @@ public class MenuService {
 
     public List<MenuCategoryItem> findMenus(String accountId) {
         List<MenuCategoryItem> menuCategoryItems = Lists.newArrayList();
-        Account account = accountManager.findOne(accountId);
+        Account account = accountMapper.findOne(accountId);
         Map<MenuCategory, List<Menu>> map = getMenuMap(account, false);
         for (MenuCategory menuCategory : map.keySet()) {
             MenuCategoryItem menuCategoryItem = new MenuCategoryItem();

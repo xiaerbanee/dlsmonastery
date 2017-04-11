@@ -57,6 +57,9 @@ export default {
           var token = response.data.access_token;
           that.$store.dispatch('setToken',token);
           axios.all([that.getAccount(), that.getMenu(),that.getAuthorityList()]) .then(axios.spread(function (account, menus,authorityList) {
+            console.log(account)
+            console.log(menus)
+            console.log(authorityList)
             that.$store.dispatch('setAccount',account.data);
             that.$store.dispatch('setMenus',menus.data);
             that.$store.dispatch('setAuthorityList',authorityList.data);
@@ -74,11 +77,11 @@ export default {
         that.$message.error("用户名或密码不正确");
       });
     },getAccount() {
-      return {};
+      return axios.get('/api/basic/hr/account/getAccount');
     },getMenu() {
-      return {};
+      return axios.get('/api/basic/sys/menu/getMenus');
     },getAuthorityList() {
-      return {};
+      return axios.get('/api/basic/hr/account/getAuthorityList');
     }
   },created () {
     }

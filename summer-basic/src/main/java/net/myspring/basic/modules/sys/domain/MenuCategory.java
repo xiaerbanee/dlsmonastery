@@ -18,6 +18,15 @@ public class MenuCategory extends DataEntity<MenuCategory> {
     private Integer version = 0;
     private List<Menu> menuList = Lists.newArrayList();
     private List<String> menuIdList = Lists.newArrayList();
+    private String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getName() {
         return name;
