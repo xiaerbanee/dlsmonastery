@@ -19,3 +19,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:1000/eureka/
+weixin:
+  appid: wx9306888de0cb1c04
+  appsecret: e7822bbf9d836b0b909342662fb4e0ee
+  audit-menuId: 14,15,16,17,34,130,131,170
+  app-name: mktsp
