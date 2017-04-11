@@ -1,21 +1,11 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
-
 /**
- * Created by lihx on 2017/4/6.
+ * Created by lihx on 2017/4/11.
  */
-public class BdDepartment {
-    private String fDeptId;
+public class HrEmpInfo {
     private String fNumber;
     private String fName;
-
-    public String getfDeptId() {
-        return fDeptId;
-    }
-
-    public void setfDeptId(String fDeptId) {
-        this.fDeptId = fDeptId;
-    }
 
     public String getfNumber() {
         return fNumber;

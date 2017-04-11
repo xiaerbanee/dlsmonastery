@@ -4,24 +4,24 @@ package net.myspring.cloud.modules.kingdee.domain;
  * Created by lihx on 2017/4/6.
  */
 public class StkInventory {
-    private String fstockId;
-    private String fmaterialId;
+    private String fStockId;
+    private String fMaterialId;
     private Integer qty;
 
-    public String getFstockId() {
-        return fstockId;
+    public String getfStockId() {
+        return fStockId;
     }
 
-    public void setFstockId(String fstockId) {
-        this.fstockId = fstockId;
+    public void setfStockId(String fStockId) {
+        this.fStockId = fStockId;
     }
 
-    public String getFmaterialId() {
-        return fmaterialId;
+    public String getfMaterialId() {
+        return fMaterialId;
     }
 
-    public void setFmaterialId(String fmaterialId) {
-        this.fmaterialId = fmaterialId;
+    public void setfMaterialId(String fMaterialId) {
+        this.fMaterialId = fMaterialId;
     }
 
     public Integer getQty() {

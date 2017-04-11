@@ -1,11 +1,14 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
-//结算方式
-public class BdSettleType {
-
+/**
+ * Created by lihx on 2017/4/10.
+ */
+//所有核算维度
+public class BdFlexItemProperty {
     private String fId;
     private String fNumber;
     private String fName;
+    private String  fFlexNumber;
 
     public String getfId() {
         return fId;
@@ -30,5 +33,12 @@ public class BdSettleType {
     public void setfName(String fName) {
         this.fName = fName;
     }
-}
 
+    public String getfFlexNumber() {
+        return fFlexNumber;
+    }
+
+    public void setfFlexNumber(String fFlexNumber) {
+        this.fFlexNumber = fFlexNumber;
+    }
+}

@@ -1,20 +1,20 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
-
 /**
- * Created by lihx on 2017/4/6.
+ * Created by lihx on 2017/4/10.
  */
-public class BdDepartment {
-    private String fDeptId;
+//科目对应核算维度
+public class BdFlexItemGroup {
+    private String fId;
     private String fNumber;
     private String fName;
 
-    public String getfDeptId() {
-        return fDeptId;
+    public String getfId() {
+        return fId;
     }
 
-    public void setfDeptId(String fDeptId) {
-        this.fDeptId = fDeptId;
+    public void setfId(String fId) {
+        this.fId = fId;
     }
 
     public String getfNumber() {

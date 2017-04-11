@@ -5,17 +5,17 @@ import java.time.LocalDateTime;
 
 public class BdMaterial {
     //id
-    private String fmasterId;
-    private String fnumber;
+    private String fMasterId;
+    private String fNumber;
     //名称
-    private String fname;
+    private String fName;
     //物料分组
-    private Long fmaterialGroup;
+    private Long fMaterialGroup;
     //分组名称
-    private String fmaterialGroupName;
-    private LocalDateTime fmodifyDate;
+    private String fMaterialGroupName;
+    private LocalDateTime fModifyDate;
     //存货类别
-    private String fcateGoryId;
+    private String fCateGoryId;
 
     //一级价
     private BigDecimal price1;
@@ -23,60 +23,60 @@ public class BdMaterial {
     //广告让利
     private BigDecimal rlPrice;
 
-    public String getFmasterId() {
-        return fmasterId;
+    public String getfMasterId() {
+        return fMasterId;
     }
 
-    public void setFmasterId(String fmasterId) {
-        this.fmasterId = fmasterId;
+    public void setfMasterId(String fMasterId) {
+        this.fMasterId = fMasterId;
     }
 
-    public String getFnumber() {
-        return fnumber;
+    public String getfNumber() {
+        return fNumber;
     }
 
-    public void setFnumber(String fnumber) {
-        this.fnumber = fnumber;
+    public void setfNumber(String fNumber) {
+        this.fNumber = fNumber;
     }
 
-    public String getFname() {
-        return fname;
+    public String getfName() {
+        return fName;
     }
 
-    public void setFname(String fname) {
-        this.fname = fname;
+    public void setfName(String fName) {
+        this.fName = fName;
     }
 
-    public Long getFmaterialGroup() {
-        return fmaterialGroup;
+    public Long getfMaterialGroup() {
+        return fMaterialGroup;
     }
 
-    public void setFmaterialGroup(Long fmaterialGroup) {
-        this.fmaterialGroup = fmaterialGroup;
+    public void setfMaterialGroup(Long fMaterialGroup) {
+        this.fMaterialGroup = fMaterialGroup;
     }
 
-    public String getFmaterialGroupName() {
-        return fmaterialGroupName;
+    public String getfMaterialGroupName() {
+        return fMaterialGroupName;
     }
 
-    public void setFmaterialGroupName(String fmaterialGroupName) {
-        this.fmaterialGroupName = fmaterialGroupName;
+    public void setfMaterialGroupName(String fMaterialGroupName) {
+        this.fMaterialGroupName = fMaterialGroupName;
     }
 
-    public LocalDateTime getFmodifyDate() {
-        return fmodifyDate;
+    public LocalDateTime getfModifyDate() {
+        return fModifyDate;
     }
 
-    public void setFmodifyDate(LocalDateTime fmodifyDate) {
-        this.fmodifyDate = fmodifyDate;
+    public void setfModifyDate(LocalDateTime fModifyDate) {
+        this.fModifyDate = fModifyDate;
     }
 
-    public String getFcateGoryId() {
-        return fcateGoryId;
+    public String getfCateGoryId() {
+        return fCateGoryId;
     }
 
-    public void setFcateGoryId(String fcateGoryId) {
-        this.fcateGoryId = fcateGoryId;
+    public void setfCateGoryId(String fCateGoryId) {
+        this.fCateGoryId = fCateGoryId;
     }
 
     public BigDecimal getPrice1() {

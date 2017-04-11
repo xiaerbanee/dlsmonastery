@@ -43,7 +43,8 @@ public class ProductController {
             DynamicDataSourceContext.get().setCompanyId(companyId);
             map.putAll(productService.getFormProperty());
         }
-        map.put("kingdeeBookList",kingdeeBookService.findAll());
+        //用户所拥有的kingdeeName
+//        map.put("kingdeeBookList",kingdeeBookService.findAll());
         map.put("companyId", companyId);
         return map;
     }

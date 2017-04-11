@@ -1,20 +1,19 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
-
 /**
- * Created by lihx on 2017/4/6.
+ * Created by lihx on 2017/4/11.
  */
-public class BdDepartment {
-    private String fDeptId;
+public class BdSupplier {
+    private String fSupplierId;
     private String fNumber;
     private String fName;
 
-    public String getfDeptId() {
-        return fDeptId;
+    public String getfSupplierId() {
+        return fSupplierId;
     }
 
-    public void setfDeptId(String fDeptId) {
-        this.fDeptId = fDeptId;
+    public void setfSupplierId(String fSupplierId) {
+        this.fSupplierId = fSupplierId;
     }
 
     public String getfNumber() {

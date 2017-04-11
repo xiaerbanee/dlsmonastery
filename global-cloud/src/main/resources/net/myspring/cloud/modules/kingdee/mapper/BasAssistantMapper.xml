@@ -13,4 +13,19 @@
        and t2.FNAME = #{name}
        and t1.FDATAVALUE = #{dataValue}
     </select>
+
+    <select id="findByType" resultType="BasAssistant">
+        SELECT
+        t.FENTRYID,
+        t.FNUMBER,
+        t1.FDATAVALUE
+        FROM
+        T_BAS_ASSISTANTDATAENTRY t,
+        T_BAS_ASSISTANTDATAENTRY_L t1,
+        T_BAS_ASSISTANTDATA_L t2
+        WHERE
+        t.FENTRYID = t1.FENTRYID
+        AND t.FID = t2.FID
+        AND t2.FNAME = #{type}
+    </select>
 </mapper>
