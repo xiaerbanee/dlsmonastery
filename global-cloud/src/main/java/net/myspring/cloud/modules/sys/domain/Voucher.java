@@ -1,37 +1,32 @@
 package net.myspring.cloud.modules.sys.domain;
 
-import com.google.common.collect.Lists;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.List;
 
 
 @Entity
 @Table(name="sys_gl_voucher")
-public class GlVoucher extends DataEntity<GlVoucher> {
+public class Voucher extends DataEntity<Voucher> {
     //业务日期
-    private LocalDate fdate;
+    private LocalDate fDate;
     private String createdName;
-    private Integer version = 0;
+    private Integer version;
     private String status;
     //返回的单号
     private String outCode;
     private KingdeeBook kingdeeBook;
     private String companyId ;
     private String kingdeeBookId;
-    //明细
-    private List<GlVoucherEntry> glVoucherEntryList = Lists.newArrayList();
-    private List<String> glVoucherEntryIdList = Lists.newArrayList();
 
-    public LocalDate getFdate() {
-        return fdate;
+    public LocalDate getfDate() {
+        return fDate;
     }
 
-    public void setFdate(LocalDate fdate) {
-        this.fdate = fdate;
+    public void setfDate(LocalDate fDate) {
+        this.fDate = fDate;
     }
 
     public String getCreatedName() {
@@ -88,21 +83,5 @@ public class GlVoucher extends DataEntity<GlVoucher> {
 
     public void setKingdeeBookId(String kingdeeBookId) {
         this.kingdeeBookId = kingdeeBookId;
-    }
-
-    public List<GlVoucherEntry> getGlVoucherEntryList() {
-        return glVoucherEntryList;
-    }
-
-    public void setGlVoucherEntryList(List<GlVoucherEntry> glVoucherEntryList) {
-        this.glVoucherEntryList = glVoucherEntryList;
-    }
-
-    public List<String> getGlVoucherEntryIdList() {
-        return glVoucherEntryIdList;
-    }
-
-    public void setGlVoucherEntryIdList(List<String> glVoucherEntryIdList) {
-        this.glVoucherEntryIdList = glVoucherEntryIdList;
     }
 }

@@ -3,12 +3,27 @@
 <mapper namespace="net.myspring.cloud.modules.kingdee.mapper.BdAccountMapper">
     <select id="findFNumberByName" resultType="String">
         select
-        t.FNUMBER
+        t1.FNUMBER
         from
-        T_BD_ACCOUNT t,
-        T_BD_ACCOUNT_L  tl
+        T_BD_ACCOUNT t1,
+        T_BD_ACCOUNT_L  t2
         where
-        t.FACCTID = tl.FACCTID
-        and  tl.FNAME = #{name}
+        t1.FACCTID = t2.FACCTID
+        and  t2.FNAME = #{name}
+    </select>
+
+    <select id="findAllSubject" resultType="BdAccount">
+        select
+        t1.FACCTID,
+        t2.FFULLNAME,
+        t1.FNUMBER,
+        t2.FNAME,
+        t1.FITEMDETAILID
+        from
+        T_BD_ACCOUNT t1,
+        T_BD_ACCOUNT_L  t2
+        where
+        t1.FACCTID = t2.FACCTID
+        and t2.FLOCALEID = 2052
     </select>
 </mapper>

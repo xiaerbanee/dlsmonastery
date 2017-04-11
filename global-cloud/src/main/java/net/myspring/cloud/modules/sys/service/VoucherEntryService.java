@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.sys.service;
 
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
-import net.myspring.cloud.modules.sys.mapper.GlVoucherEntryFlowMapper;
+import net.myspring.cloud.modules.sys.mapper.VoucherEntryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @LocalDataSource
-public class GlVoucherEntryFlowService {
+public class VoucherEntryService {
     @Autowired
-    private GlVoucherEntryFlowMapper glVoucherEntryFlowMapper;
+    private VoucherEntryMapper voucherEntryMapper;
+
 }

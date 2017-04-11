@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_gl_voucher_entry_flow")
-public class GlVoucherEntryFlow extends IdEntity<GlVoucherEntryFlow> {
+public class VoucherEntryFlow extends IdEntity<VoucherEntryFlow> {
     //Json 名称 例如：FDetailID__XXX
     private String name;
     //核算维度名称
@@ -18,7 +18,6 @@ public class GlVoucherEntryFlow extends IdEntity<GlVoucherEntryFlow> {
     private String code;
 
     private String glVoucherEntryId;
-    private GlVoucherEntry glVoucherEntry;
 
     public String getName() {
         return name;
@@ -42,14 +41,6 @@ public class GlVoucherEntryFlow extends IdEntity<GlVoucherEntryFlow> {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public GlVoucherEntry getGlVoucherEntry() {
-        return glVoucherEntry;
-    }
-
-    public void setGlVoucherEntry(GlVoucherEntry glVoucherEntry) {
-        this.glVoucherEntry = glVoucherEntry;
     }
 
     public String getGlVoucherEntryId() {

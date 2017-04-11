@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.kingdee.service;
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.modules.kingdee.mapper.HrEmpinfoMapper;
+import net.myspring.cloud.modules.kingdee.mapper.HrEmpInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @KingdeeDataSource
-public class HrEmpinfoService {
+public class HrEmpInfoService {
     @Autowired
-    private HrEmpinfoMapper hrEmpinfoMapper;
+    private HrEmpInfoMapper hrEmpInfoMapper;
 
     public String findFNumberByName(String name){
-        return hrEmpinfoMapper.findFNumberByName(name);
+        return hrEmpInfoMapper.findFNumberByName(name);
     }
 }

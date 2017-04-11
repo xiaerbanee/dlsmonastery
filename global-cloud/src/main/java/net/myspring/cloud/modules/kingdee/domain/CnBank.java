@@ -3,40 +3,40 @@ package net.myspring.cloud.modules.kingdee.domain;
 import java.time.LocalDate;
 
 public class CnBank {
-    private String fbankAcntId;
-    private String fnumber;
-    private String fname;
-    private LocalDate fmodeifyDate;
+    private String fBankAcntId;
+    private String fNumber;
+    private String fName;
+    private LocalDate fModeifyDate;
 
-    public String getFbankAcntId() {
-        return fbankAcntId;
+    public String getfBankAcntId() {
+        return fBankAcntId;
     }
 
-    public void setFbankAcntId(String fbankAcntId) {
-        this.fbankAcntId = fbankAcntId;
+    public void setfBankAcntId(String fBankAcntId) {
+        this.fBankAcntId = fBankAcntId;
     }
 
-    public String getFnumber() {
-        return fnumber;
+    public String getfNumber() {
+        return fNumber;
     }
 
-    public void setFnumber(String fnumber) {
-        this.fnumber = fnumber;
+    public void setfNumber(String fNumber) {
+        this.fNumber = fNumber;
     }
 
-    public String getFname() {
-        return fname;
+    public String getfName() {
+        return fName;
     }
 
-    public void setFname(String fname) {
-        this.fname = fname;
+    public void setfName(String fName) {
+        this.fName = fName;
     }
 
-    public LocalDate getFmodeifyDate() {
-        return fmodeifyDate;
+    public LocalDate getfModeifyDate() {
+        return fModeifyDate;
     }
 
-    public void setFmodeifyDate(LocalDate fmodeifyDate) {
-        this.fmodeifyDate = fmodeifyDate;
+    public void setfModeifyDate(LocalDate fModeifyDate) {
+        this.fModeifyDate = fModeifyDate;
     }
 }

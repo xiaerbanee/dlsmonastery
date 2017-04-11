@@ -4,59 +4,59 @@ import java.time.LocalDate;
 
 public class BdCustomer {
 
-    private String fcustId;
-    private String fnumber;
-    private String fname;
+    private String fCustId;
+    private String fNumber;
+    private String fName;
     //客户分组
-    private Long fprimaryGroup;
-    private String fprimaryGroupName;
-    private LocalDate fmodifyDate;
+    private Long fPrimaryGroup;
+    private String fPrimaryGroupName;
+    private LocalDate fModifyDate;
 
-    public String getFcustId() {
-        return fcustId;
+    public String getfCustId() {
+        return fCustId;
     }
 
-    public void setFcustId(String fcustId) {
-        this.fcustId = fcustId;
+    public void setfCustId(String fCustId) {
+        this.fCustId = fCustId;
     }
 
-    public String getFnumber() {
-        return fnumber;
+    public String getfNumber() {
+        return fNumber;
     }
 
-    public void setFnumber(String fnumber) {
-        this.fnumber = fnumber;
+    public void setfNumber(String fNumber) {
+        this.fNumber = fNumber;
     }
 
-    public String getFname() {
-        return fname;
+    public String getfName() {
+        return fName;
     }
 
-    public void setFname(String fname) {
-        this.fname = fname;
+    public void setfName(String fName) {
+        this.fName = fName;
     }
 
-    public Long getFprimaryGroup() {
-        return fprimaryGroup;
+    public Long getfPrimaryGroup() {
+        return fPrimaryGroup;
     }
 
-    public void setFprimaryGroup(Long fprimaryGroup) {
-        this.fprimaryGroup = fprimaryGroup;
+    public void setfPrimaryGroup(Long fPrimaryGroup) {
+        this.fPrimaryGroup = fPrimaryGroup;
     }
 
-    public String getFprimaryGroupName() {
-        return fprimaryGroupName;
+    public String getfPrimaryGroupName() {
+        return fPrimaryGroupName;
     }
 
-    public void setFprimaryGroupName(String fprimaryGroupName) {
-        this.fprimaryGroupName = fprimaryGroupName;
+    public void setfPrimaryGroupName(String fPrimaryGroupName) {
+        this.fPrimaryGroupName = fPrimaryGroupName;
     }
 
-    public LocalDate getFmodifyDate() {
-        return fmodifyDate;
+    public LocalDate getfModifyDate() {
+        return fModifyDate;
     }
 
-    public void setFmodifyDate(LocalDate fmodifyDate) {
-        this.fmodifyDate = fmodifyDate;
+    public void setfModifyDate(LocalDate fModifyDate) {
+        this.fModifyDate = fModifyDate;
     }
 }
