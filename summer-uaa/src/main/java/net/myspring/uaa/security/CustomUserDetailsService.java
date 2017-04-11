@@ -3,6 +3,8 @@ package net.myspring.uaa.security;
 import com.google.common.collect.Sets;
 import net.myspring.uaa.dto.AccountDto;
 import net.myspring.uaa.mapper.AccountDtoMapper;
+import net.myspring.util.base.ObjectUtil;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -31,9 +33,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         CustomUserDetails customUserDetails = null;
         HttpServletRequest request  = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-        String weixinCode = Objects.toString(request.getAttribute("weixinCode"));
+        String weixinCode = ObjectUtils.toString(request.getAttribute("weixinCode"));
         if(StringUtils.isNotBlank(weixinCode)) {
-            String accountId = Objects.toString(request.getAttribute("accountId"));
+            String accountId = ObjectUtils.toString(request.getAttribute("accountId"));
 
         } else {
             AccountDto accountDto = accountMapper.findByLoginName(username);

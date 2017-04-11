@@ -7,10 +7,12 @@ spring:
     password: bbk@123456
     driver-class-name: com.mysql.jdbc.Driver
   redis:
-    host: 168.192.1.88
+    host: localhost
     password:
     port: 6379
     database: 0
+    max-idle: 25
+    max-total: 50
 mybatis:
   config-location: classpath:/mybatis-config.xml
 server:

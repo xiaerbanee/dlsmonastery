@@ -12,6 +12,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Created by liuj on 2017/3/24.
@@ -32,6 +33,12 @@ public class CacheConfig extends CachingConfigurerSupport {
     @Value("${spring.redis.database}")
     private Integer redisDatabase;
 
+    @Value("${spring.redis.max-idle}")
+    private Integer maxIdle;
+
+    @Value("${spring.redis.max-total}")
+    private Integer maxTotal;
+
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
@@ -39,6 +46,10 @@ public class CacheConfig extends CachingConfigurerSupport {
         jedisConnectionFactory.setPort(redisPort);
         jedisConnectionFactory.setPassword(redisPassword);
         jedisConnectionFactory.setDatabase(redisDatabase);
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxIdle(maxIdle);
+        jedisPoolConfig.setMaxTotal(maxTotal);
+        jedisConnectionFactory.setPoolConfig(jedisPoolConfig);
         return jedisConnectionFactory;
     }
 
