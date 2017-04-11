@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
+import net.myspring.basic.modules.hr.manager.OfficeManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
@@ -39,10 +40,18 @@ public class AccountService {
     private AccountManager accountManager;
     @Autowired
     private EmployeeMapper employeeMapper;
+    @Autowired
+    private OfficeManager officeManager;
 
     public Account findOne(String id) {
         Account account = accountManager.findOne(id);
         return account;
+    }
+
+    public AccountDto findDto(String id) {
+        Account account = accountMapper.findOne(id);
+        AccountDto accountDto=BeanUtil.map(account,AccountDto.class);
+        return accountDto;
     }
 
     public AccountDto findByLoginName(String loginName) {
