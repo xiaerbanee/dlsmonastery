@@ -26,8 +26,7 @@
     "vue-router": "^2.2.1",
     "vuex": "^2.1.2",
     "zeroclipboard": "^2.3.0",
-    "vue-progressbar": "^0.7.1",
-    "jwt-decode":"^2.2.0"
+    "vue-progressbar": "^0.7.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
