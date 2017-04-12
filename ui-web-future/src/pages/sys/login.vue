@@ -54,12 +54,8 @@ export default {
           password:that.password
       };
       axios.post('/api/uaa/oauth/token',qs.stringify(data)).then((response)=>{
-          var token = response.data.access_token;
-          that.$store.dispatch('setToken',token);
+          that.$store.dispatch('setToken',response.data);
           axios.all([that.getAccount(), that.getMenu(),that.getAuthorityList()]) .then(axios.spread(function (account, menus,authorityList) {
-            console.log(account)
-            console.log(menus)
-            console.log(authorityList)
             that.$store.dispatch('setAccount',account.data);
             that.$store.dispatch('setMenus',menus.data);
             that.$store.dispatch('setAuthorityList',authorityList.data);

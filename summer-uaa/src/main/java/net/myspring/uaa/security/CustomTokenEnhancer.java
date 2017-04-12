@@ -23,7 +23,6 @@ public class CustomTokenEnhancer implements TokenEnhancer {
         additionalInfo.put("accountId",customUserDetails.getAccountId());
         additionalInfo.put("officeId",customUserDetails.getOfficeId());
         additionalInfo.put("employeeId",customUserDetails.getEmployeeId());
-        additionalInfo.put("exp", LocalDateTimeUtils.format(LocalDateTime.now()));
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }

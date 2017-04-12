@@ -56,7 +56,8 @@ export default {
     menus:getMenus(),
     account:getAccount(),
     authorityList:getAuthorityList(),
-    token: getToken()
+    token: getToken(),
+    isRefreshToken:false
   },getters: {
     getQuery: (state, routerName) => {
       var query = {};
@@ -92,8 +93,12 @@ export default {
       localStorage.setItem('account', JSON.stringify(account))
     },
     setToken(state,token) {
+      token.exp = new Date().getTime();
       state.token = token;
       localStorage.setItem('token', JSON.stringify(token));
+    },
+    setIsRefreshToken(state,isRefreshToken) {
+      state.isRefreshToken = isRefreshToken;
     }
   },
   actions: {
@@ -121,12 +126,16 @@ export default {
     },
     setToken({ commit, state }, token) {
       commit('setToken', token);
+    },
+    setIsRefreshToken({ commit, state }, isRefreshToken) {
+      commit('setIsRefreshToken', isRefreshToken);
     },clearGlobal({ commit, state }) {
       commit('setTabs', new Map());
       commit('setMenus', []);
       commit('setAccount', {});
       commit('setAuthorityList', []);
       commit('setToken', '');
+      commit('setIsRefreshToken', false);
     }
   }
 }
