@@ -19,7 +19,7 @@ public class OppoPlantProductSelService {
     private OppoPlantProductSelMapper oppoPlantProductSelMapper;
 
     @FactoryDataSource
-    List<OppoPlantProductSel> findFromFactory(String companyId, String password, String branchId) {
+    public List<OppoPlantProductSel> findFromFactory(String companyId, String password, String branchId) {
         return oppoPlantProductSelMapper.findFromFactory(companyId,password,branchId);
     }
 
