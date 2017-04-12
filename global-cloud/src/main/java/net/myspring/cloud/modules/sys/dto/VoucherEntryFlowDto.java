@@ -12,6 +12,11 @@ public class VoucherEntryFlowDto extends DataDto<VoucherEntryFlow> {
     //核算维度名称
     private String flexName;
 
+    //核算维度名称
+    private String value;
+    //核算维度值
+    private String code;
+
     private VoucherEntryDto voucherEntryDto;
 
     public String getName() {
@@ -32,6 +37,22 @@ public class VoucherEntryFlowDto extends DataDto<VoucherEntryFlow> {
 
     public void setFlexName(String flexName) {
         this.flexName = flexName;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public VoucherEntryDto getVoucherEntryDto() {
