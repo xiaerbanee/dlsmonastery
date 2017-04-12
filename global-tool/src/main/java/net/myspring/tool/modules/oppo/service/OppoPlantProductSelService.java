@@ -5,7 +5,6 @@ import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
 import net.myspring.tool.modules.oppo.mapper.OppoPlantProductSelMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
