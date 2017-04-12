@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by liuj on 2016-07-25.
  */
-public class TreeEntity<T> extends DataEntity<T> {
+public class TreeEntity<T> extends CompanyEntity<T> {
     private String parentId;
     private String parentIds;
 
