@@ -17,6 +17,11 @@ const getLang = function () {
 
 const getToken = function () {
   var token = window.localStorage.getItem("token");
+  if(token) {
+    token = JSON.parse(token);
+  } else {
+    token = {};
+  }
   return token;
 }
 
@@ -88,7 +93,7 @@ export default {
     },
     setToken(state,token) {
       state.token = token;
-      localStorage.setItem('token', token)
+      localStorage.setItem('token', JSON.stringify(token));
     }
   },
   actions: {
