@@ -1,5 +1,5 @@
 function getUrl(url) {
-    var baseUrl =  "https://xcx.ncoppo.com/api/";
+    var baseUrl =  "http://168.192.1.20:1200/api/";
     var result = baseUrl + url;
     if(url.indexOf("?") > 0) {
         result = result + "&requestClient=weixin";

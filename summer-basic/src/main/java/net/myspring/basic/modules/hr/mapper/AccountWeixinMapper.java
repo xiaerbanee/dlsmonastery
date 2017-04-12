@@ -12,6 +12,6 @@ import java.util.List;
 @Mapper
 public interface AccountWeixinMapper extends MyMapper<AccountWeixin,String> {
 
-    List<AccountWeixin> findByAccountId(String accountId);
+    AccountWeixin findByAccountId(String accountId);
 
 }
