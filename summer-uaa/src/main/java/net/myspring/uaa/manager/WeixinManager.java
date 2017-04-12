@@ -27,12 +27,12 @@ public class WeixinManager {
 
     private OkHttpClient okHttpClient=new OkHttpClient();
     @Autowired
-    private RedisTemplate<String,WeixinSessionDto> redisTemplate;
+    private RedisTemplate redisTemplate;
 
     public WeixinSessionDto findWeixinSessionDto(String weixinCode) {
         String key = "weixinSessions:" + weixinCode;
         redisTemplate.expire(key,24, TimeUnit.HOURS);
-        WeixinSessionDto weixinSessionDto = redisTemplate.opsForValue().get(key);
+        WeixinSessionDto weixinSessionDto = (WeixinSessionDto) redisTemplate.opsForValue().get(key);
         if(weixinSessionDto == null) {
             String httpUrl = "https://api.weixin.qq.com/sns/jscode2session?appid="  + appID + "&secret="  + appSecret + "&js_code=" + weixinCode + "&grant_type=authorization_code";
             Request request=new Request.Builder().url(httpUrl).build();
