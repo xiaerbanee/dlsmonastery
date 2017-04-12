@@ -124,7 +124,7 @@ export default {
   },
   methods : {
     changeMonth(start, end, current) {
-      axios.get('/api/hr/duty/events',{params:{start:start,end:end}}).then((response)=>{
+      axios.get('/api/basic/hr/duty/events',{params:{start:start,end:end}}).then((response)=>{
         this.fcEvents=response.data;
       });
     }, eventClick(event, jsEvent, pos) {
@@ -135,22 +135,22 @@ export default {
     },updateMsg(accountId,type){
       this.$router.push({ name: 'accountChangeForm', query: { accountId: accountId,type:type }})
     },getAccount(){
-      axios.get('/api/home').then((response) =>{
+      axios.get('/api/basic/hr/account/home').then((response) =>{
           this.account=response.data.account;
           this.labelData=response.data;
       })
     },synFactory(){
       if(this.synDate!==''){
         this.synDate=util.formatLocalDate(this.synDate);
-        window.open("http://ncoppo.com:1234/future/syn?companyName="+this.account.companyName.toUpperCase( )+"&date=" + this.synDate,"_blank");
+//        window.open("http://ncoppo.com:1234/future/syn?companyName="+this.account.companyName.toUpperCase( )+"&date=" + this.synDate,"_blank");
       }
     },factoryOrder(){
-      if(this.account.companyName.toUpperCase( )=='JXVIVO'){
-        window.open("http://ncoppo.com:1234/factory/vivo/factoryOrder");
-      }
-      if(this.account.companyName.toUpperCase( )=='IDVIVO'){
-        window.open("http://idvivo.com:1234/factory/vivo/idFactoryOrder");
-      }
+//      if(this.account.companyName.toUpperCase( )=='JXVIVO'){
+//        window.open("http://ncoppo.com:1234/factory/vivo/factoryOrder");
+//      }
+//      if(this.account.companyName.toUpperCase( )=='IDVIVO'){
+//        window.open("http://idvivo.com:1234/factory/vivo/idFactoryOrder");
+//      }
     }
   },
   created(){

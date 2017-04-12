@@ -26,10 +26,9 @@ public class WeixinManager {
     private String appSecret;
 
     private OkHttpClient okHttpClient=new OkHttpClient();
-    @Autowired
-    private RedisTemplate<String,WeixinSessionDto> redisTemplate;
 
     public WeixinSessionDto findWeixinSessionDto(String weixinCode) {
+        RedisTemplate<String,WeixinSessionDto> redisTemplate=new RedisTemplate<>();
         String key = "weixinSessions:" + weixinCode;
         redisTemplate.expire(key,24, TimeUnit.HOURS);
         WeixinSessionDto weixinSessionDto = redisTemplate.opsForValue().get(key);

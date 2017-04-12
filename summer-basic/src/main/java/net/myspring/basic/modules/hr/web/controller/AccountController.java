@@ -3,13 +3,19 @@ package net.myspring.basic.modules.hr.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.config.ExcelView;
+import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.enums.BoolEnum;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.AccountMessage;
+import net.myspring.basic.modules.hr.domain.AccountTask;
+import net.myspring.basic.modules.hr.domain.DutyAnnual;
 import net.myspring.basic.modules.hr.dto.AccountDto;
-import net.myspring.basic.modules.hr.service.AccountService;
-import net.myspring.basic.modules.hr.service.PositionService;
+import net.myspring.basic.modules.hr.dto.AccountMessageDto;
+import net.myspring.basic.modules.hr.dto.AccountTaskDto;
+import net.myspring.basic.modules.hr.dto.DutyDto;
+import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -29,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +50,18 @@ public class AccountController {
     private AccountService accountService;
     @Autowired
     private PositionService positionService;
+    @Autowired
+    private SecurityUtils securityUtils;
+    @Autowired
+    private AccountTaskService accountTaskService;
+    @Autowired
+    private AccountMessageService accountMessageService;
+    @Autowired
+    private DutyService dutyService;
+    @Autowired
+    private DutyAnnualService dutyAnnualService;
+    @Autowired
+    private DutyOvertimeService dutyOvertimeService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AccountDto> list(Pageable pageable, AccountQuery accountQuery) {
@@ -112,6 +131,27 @@ public class AccountController {
     public AccountDto getAccount() {
         AccountDto accountDto=accountService.getAccount();
         return accountDto;
+    }
+
+    @RequestMapping(value = "/home")
+    public String home() {
+        Map<String, Object> map = Maps.newHashMap();
+        Account account=accountService.findOne(securityUtils.getAccountId());
+        LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
+        List<DutyDto> dutyList = dutyService.findByAuditable(account.getId(), AuditTypeEnum.APPLY.getValue(), lastMonth);
+        List<AccountTaskDto> accountTasks = accountTaskService.findByPositionId(account.getPositionId(),account);
+        map.put("accountTaskSize", accountTasks.size());
+        List<AccountMessageDto> accountMessages = accountMessageService.findByAccount(account.getId(), lastMonth);
+        map.put("dutySize", dutyList.size());
+        map.put("accountMessageSize", accountMessages.size());
+        //显示剩余的加班调休时间和年假时间
+        String employeeId = securityUtils.getEmployeeId();
+        map.put("annualHour", dutyAnnualService.getAvailableHour(employeeId));
+        map.put("overtimeHour", dutyOvertimeService.getAvailableHour(employeeId, LocalDateTime.now()));
+        //显示快到期时间
+        map.put("expiredHour", dutyOvertimeService.getExpiredHour(employeeId, LocalDateTime.now()));
+        map.put("account",account);
+        return ObjectMapperUtils.writeValueAsString(map);
     }
 
 }
