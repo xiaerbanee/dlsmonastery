@@ -18,6 +18,7 @@ zuul:
     summer-basic: /api/basic/**
     future-business: /api/future/business/**
     future-report: /api/future/report/**
+    global-tool: /api/global/tool/**
   add-proxy-headers: true
 
 security:
