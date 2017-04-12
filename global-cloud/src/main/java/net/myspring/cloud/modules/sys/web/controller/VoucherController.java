@@ -6,18 +6,25 @@ import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.modules.kingdee.dto.GlVoucherDto;
 import net.myspring.cloud.modules.kingdee.service.GlVoucherService;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
 import net.myspring.cloud.modules.sys.service.VoucherService;
+import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.ServletRequest;
@@ -39,6 +46,13 @@ public class VoucherController {
     private SecurityUtils securityUtils;
     @Autowired
     private GlVoucherService glVoucherService;
+
+    @ModelAttribute
+    public VoucherForm get(@RequestParam(required = false) String id) {
+        VoucherDto voucherdto = StringUtils.isBlank(id) ? new VoucherDto() : voucherService.findOne(id);
+        VoucherForm voucherForm = BeanUtil.map(voucherdto,VoucherForm.class);
+        return voucherForm;
+    }
 
     @RequestMapping(value = "list")
     public Map<String,Object> list(Pageable pageable, VoucherQuery voucherQuery, String companyId) {
@@ -92,13 +106,44 @@ public class VoucherController {
             if (restResponse.getErrors().size()>0) {
                 return restResponse;
             }else{
-                voucherDto.setfDate(LocalDate.parse(billDate, DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
-                voucherService.save(datas,voucherDto,glVoucherDto);
+//                voucherDto.setfDate(LocalDate.parse(billDate, DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
+//                voucherService.save(datas,voucherDto,glVoucherDto);
                 restResponse.setMessage("凭证保存成功");
                 return restResponse;
             }
         }else{
             restResponse = new RestResponse("页面已经提交过，请核对系统中是否已保存",null);
+        }
+        return restResponse;
+    }
+
+    @RequestMapping(value = "audit")
+    public RestResponse audit(VoucherForm voucherForm, String billDate,String data,RedirectAttributes redirectAttributes,ServletRequest request) {
+        RestResponse restResponse = null;
+        if("false".equals(request.getAttribute("doubleSubmit").toString())) {
+            data = HtmlUtils.htmlUnescape(data);
+            List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
+            GlVoucherDto glVoucherDto = glVoucherService.getGlVoucherDto();
+            restResponse.setErrors(voucherService.check(datas,glVoucherDto));
+            if (restResponse.getErrors().size()>0) {
+                voucherForm.setfDate(LocalDate.parse(billDate, DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
+//                VoucherForm voucherForm = voucherService.save(datas,voucherForm,glVoucherDto);
+                if(VoucherStatusEnum.地区财务审核.name().equals(voucherForm.getStatus())){
+                    voucherForm.setStatus(VoucherStatusEnum.省公司财务审核.name());
+                }else{
+                    voucherForm.setStatus(VoucherStatusEnum.已完成.name());
+                }
+//                restResponse.setMessage(voucherService.audit(voucherForm));
+//                if (VoucherStatusEnum.已完成.name().equals(voucherForm.getStatus())) {
+//                    String outCode = voucherService.syn(voucherForm);
+//                    outCode = "序号：" + outCode + "  凭证号：" + basicDataService.findFvoucherNoByBillNo(outCode);
+//                    k3cloudGlVoucherService.saveBillNo(voucherForm,outCode);
+//                    message=new Message("凭证录入成功" );
+//                }
+            }
+//            redirectAttributes.addFlashAttribute("message", message);
+        }else{
+//            redirectAttributes.addFlashAttribute("message", new Message("页面已经提交过，请核对系统中是否已保存"));
         }
         return restResponse;
     }

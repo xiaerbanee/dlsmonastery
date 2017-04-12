@@ -11,6 +11,7 @@ import java.util.List;
  * Created by lihx on 2017/4/5.
  */
 public class VoucherDto extends DataDto<Voucher> {
+    private String createdName;
     private String companyId;
     private String status;
     //明细
@@ -20,6 +21,14 @@ public class VoucherDto extends DataDto<Voucher> {
     private Boolean deletable = false;
     private Boolean editable = false;
     private List<String> actionList;
+
+    public String getCreatedName() {
+        return createdName;
+    }
+
+    public void setCreatedName(String createdName) {
+        this.createdName = createdName;
+    }
 
     public String getCompanyId() {
         return companyId;

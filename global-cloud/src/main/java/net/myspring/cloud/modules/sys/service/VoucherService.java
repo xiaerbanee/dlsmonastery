@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.CharEnum;
+import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.utils.HandSonTableUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
@@ -23,6 +24,7 @@ import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.cloud.modules.sys.mapper.VoucherEntryFlowMapper;
 import net.myspring.cloud.modules.sys.mapper.VoucherEntryMapper;
 import net.myspring.cloud.modules.sys.mapper.VoucherMapper;
+import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.util.collection.CollectionUtil;
@@ -36,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -235,33 +238,33 @@ public class VoucherService {
     }
 
     @Transactional
-    public Voucher save(List<List<Object>> datas,VoucherDto voucherDto,GlVoucherDto glVoucherDto) {
-        Boolean isCreate = StringUtils.isBlank(voucherDto.getId());
+    public VoucherForm save(List<List<Object>> datas,VoucherForm voucherForm,GlVoucherDto glVoucherDto) {
+        Boolean isCreate = StringUtils.isBlank(voucherForm.getId());
         if (isCreate) {
-            voucherDto.setCompanyId(DynamicDataSourceContext.get().getCompanyId());
+            voucherForm.setCompanyId(DynamicDataSourceContext.get().getCompanyId());
             //待写accountName；
-            voucherDto.setCreatedName(securityUtils.getAccountId());
+            voucherForm.setCreatedName(securityUtils.getAccountId());
             if(securityUtils.getAccountId() != null){//问题ThreadLocalContext.get().getAccount() != null
-                voucherDto.setStatus(VoucherStatusEnum.省公司财务审核.name());
+                voucherForm.setStatus(VoucherStatusEnum.省公司财务审核.name());
             }else{
-                voucherDto.setStatus(VoucherStatusEnum.地区财务审核.name());
+                voucherForm.setStatus(VoucherStatusEnum.地区财务审核.name());
             }
-            voucherMapper.save(voucherDto);
+            voucherMapper.saveForm(voucherForm);
         } else {
-            LocalDate date = voucherDto.getfDate();
-            voucherDto = findOne(voucherDto.getId());
-            voucherDto.setfDate(date);
+            LocalDate date = voucherForm.getfDate();
+//            voucherForm = findOne(voucherForm.getId());
+            voucherForm.setfDate(date);
             //删除原有数据
-            if (CollectionUtil.isNotEmpty(voucherDto.getVoucherEntryDtoList())) {
-                for (VoucherEntryDto voucherEntryDto : voucherDto.getVoucherEntryDtoList()) {
+            if (CollectionUtil.isNotEmpty(voucherForm.getVoucherEntryDtoList())) {
+                for (VoucherEntryDto voucherEntryDto : voucherForm.getVoucherEntryDtoList()) {
                     if (CollectionUtil.isNotEmpty(voucherEntryDto.getVoucherEntryFlowDtoList())) {
                         voucherEntryFlowMapper.deleteByIds(voucherEntryDto.getVoucherEntryFlowIdList());
                     }
                 }
-                voucherEntryMapper.deleteByIds(voucherDto.getVoucherEntryIdList());
-                voucherDto.setVoucherEntryDtoList(Lists.<VoucherEntryDto>newArrayList());
+                voucherEntryMapper.deleteByIds(voucherForm.getVoucherEntryIdList());
+                voucherForm.setVoucherEntryDtoList(Lists.<VoucherEntryDto>newArrayList());
             }
-            voucherMapper.update(voucherDto);
+            voucherMapper.updateForm(voucherForm);
         }
         List<String> headers = getHeaders(glVoucherDto);
         //核算维度分组
@@ -283,7 +286,7 @@ public class VoucherService {
             } else {
                 voucherEntry.setfCredit(new BigDecimal(creditStr));
             }
-            voucherEntry.setGlVoucherId(voucherDto.getId());
+            voucherEntry.setGlVoucherId(voucherForm.getId());
             voucherEntryMapper.save(voucherEntry);
             //核算维度明细
             List<VoucherEntryFlow> voucherEntryFlowList = Lists.newArrayList();
@@ -306,9 +309,9 @@ public class VoucherService {
 //               voucherEntry.setK3cloudGlVoucherEntryFlowList(voucherEntryFlowList);
 //            }
 //            voucherEntryMapper.update(voucherEntry);
-//            voucherDto.getVoucherEntryDtoList().add(voucherEntry);
+//            voucherForm.getVoucherEntryDtoList().add(voucherEntry);
         }
-        voucherMapper.update(voucherDto);
-        return voucherDto;
+        voucherMapper.updateForm(voucherForm);
+        return voucherForm;
     }
 }
