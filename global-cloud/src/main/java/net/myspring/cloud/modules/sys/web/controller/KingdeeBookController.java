@@ -3,9 +3,12 @@ package net.myspring.cloud.modules.sys.web.controller;
 import net.myspring.cloud.modules.sys.dto.KingdeeBookDto;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.web.query.KingdeeBookQuery;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,4 +28,16 @@ public class KingdeeBookController {
         return page;
     }
 
+    @RequestMapping(value = "findOne")
+    public KingdeeBookDto findOne(String id){
+        KingdeeBookDto kingdeeBookDto = kingdeeBookService.findOne(id);
+        return kingdeeBookDto;
+    }
+
+    @RequestMapping(value = "delete")
+    public RestResponse delete(String id) {
+        kingdeeBookService.deleteById(id);
+        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
+    }
 }

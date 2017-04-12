@@ -27,10 +27,19 @@ public class KingdeeBookService {
 
     public Page<KingdeeBookDto> findPage(Pageable pageable, KingdeeBookQuery kingdeeBookQuery){
         Page<KingdeeBook> page = kingdeeBookMapper.findPage(pageable,kingdeeBookQuery);
-        Page<KingdeeBookDto> accountChangeDtoPage= BeanUtil.map(page,KingdeeBookDto.class);
+        Page<KingdeeBookDto> accountChangeDtoPage = BeanUtil.map(page,KingdeeBookDto.class);
         cacheUtils.initCacheInput(accountChangeDtoPage.getContent());
         return accountChangeDtoPage;
     }
 
+    public KingdeeBookDto findOne(String id){
+        KingdeeBook kingdeeBook = kingdeeBookMapper.findOne(id);
+        KingdeeBookDto kingdeeBookDto = BeanUtil.map(kingdeeBook,KingdeeBookDto.class);
+        cacheUtils.initCacheInput(kingdeeBookDto);
+        return kingdeeBookDto;
+    }
 
+    public void deleteById(String id) {
+        kingdeeBookMapper.deleteById(id);
+    }
 }
