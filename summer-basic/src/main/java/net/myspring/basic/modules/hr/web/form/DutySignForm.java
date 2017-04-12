@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.web.form;
 
 
 import net.myspring.basic.modules.hr.domain.DutySign;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.basic.common.form.DataForm;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import java.time.LocalTime;
  * Created by admin on 2017/4/6.
  */
 
-public class DutySignForm implements BaseForm<DutySign> {
+public class DutySignForm extends DataForm<DutySign> {
     private LocalDate dutyDate;
     private LocalTime dutyTime;
     private String status;
