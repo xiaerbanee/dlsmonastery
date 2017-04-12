@@ -13,15 +13,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableResourceServer
 @EnableDiscoveryClient
 @EnableFeignClients
-@EnableBinding(Sink.class)
 public class GlobalCloudApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GlobalCloudApplication.class, args);
-	}
-
-	@StreamListener(Sink.INPUT)
-	public void log(String message) {
-		System.out.println(message);
 	}
 }

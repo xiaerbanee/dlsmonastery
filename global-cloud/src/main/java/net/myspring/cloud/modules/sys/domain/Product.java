@@ -18,7 +18,6 @@ public class Product extends DataEntity<Product> {
     private String returnOutId;
     private LocalDateTime outDate;
     private Integer version;
-    private KingdeeBook kingdeeBook;
     private String kingdeeBookId;
     private String companyId;
 
@@ -76,14 +75,6 @@ public class Product extends DataEntity<Product> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public KingdeeBook getKingdeeBook() {
-        return kingdeeBook;
-    }
-
-    public void setKingdeeBook(KingdeeBook kingdeeBook) {
-        this.kingdeeBook = kingdeeBook;
     }
 
     public String getKingdeeBookId() {

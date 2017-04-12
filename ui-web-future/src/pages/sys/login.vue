@@ -55,29 +55,36 @@ export default {
       };
       axios.post('/api/uaa/oauth/token',qs.stringify(data)).then((response)=>{
           that.$store.dispatch('setToken',response.data);
-          axios.all([that.getAccount(), that.getMenu(),that.getAuthorityList()]) .then(axios.spread(function (account, menus,authorityList) {
-            that.$store.dispatch('setAccount',account.data);
-            that.$store.dispatch('setMenus',menus.data);
-            that.$store.dispatch('setAuthorityList',authorityList.data);
-            that.isBtnLoading = false;
-            var redirect = that.$route.query.redirect;
-            if (redirect) {
-              that.$router.push({path: redirect});
-            } else {
-              that.$router.push({path: "/"});
-            }
-          }));
+          axios.post('/api/basic/hr/account/getAccountMessage').then((response)=>{
+              that.setMenuCode(response.data.menus)
+              that.$store.dispatch('setAccount',response.data.account);
+              that.$store.dispatch('setMenus',response.data.menus);
+              that.$store.dispatch('setAuthorityList',response.data.authorityList);
+              that.isBtnLoading = false;
+              var redirect = that.$route.query.redirect;
+              if (redirect) {
+                that.$router.push({path: redirect});
+              } else {
+                that.$router.push({path: "/"});
+              }
+          })
       }).catch(function (error) {
         that.$store.dispatch('clearGlobal');
         that.isBtnLoading = false;
         that.$message.error("用户名或密码不正确");
       });
-    },getAccount() {
-      return axios.get('/api/basic/hr/account/getAccount');
-    },getMenu() {
-      return axios.get('/api/basic/sys/menu/getMenus');
-    },getAuthorityList() {
-      return axios.get('/api/basic/hr/account/getAuthorityList');
+    },setMenuCode(menus) {
+      if(menus !=null && menus.length>0) {
+        for (var i in menus) {
+          var menuItems =menus[i].menuItems;
+          for(var j in menuItems) {
+            for(var k in menuItems[j].menus) {
+              var menu = menuItems[j].menus[k];
+              menu.name=menu.menuCode
+            }
+          }
+        }
+      }
     }
   },created () {
     }

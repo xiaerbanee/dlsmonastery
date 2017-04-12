@@ -78,12 +78,8 @@ export default {
     lang: state => state.global.lang
   }),
   created() {
-      console.log("app")
-    console.log(this.menus[0])
      if(this.menus !=null && this.menus.length>0) {
         for (var i in this.menus) { //一級
-          console.log("this.menus[i].menuCategory.code")
-          console.log(this.menus[i].menuCategory)
             var menuCategoryCode = this.menus[i].menuCategory.code;
             var menuItems = this.menus[i].menuItems;
             for(var j in menuItems) { //二級
@@ -98,7 +94,6 @@ export default {
     // set default lang
     Vue.config.lang = this.lang;
   },mounted(){
-      this.setMenuCode();
   },
   watch: {
     '$route'(to, from) {
@@ -138,18 +133,6 @@ export default {
       this.$store.dispatch('setLang',lang);
       Vue.config.lang = lang;
       this.$router.push({ name: "home"});
-    },setMenuCode() {
-        if(this.menus !=null && this.menus.length>0) {
-          for (var i in this.menus) {
-            var menuItems =this.menus[i].menuItems;
-            for(var j in menuItems) {
-              for(var k in menuItems[j].menus) {
-                var menu = menuItems[j].menus[k];
-                menu.name=menu.menuCode
-              }
-            }
-          }
-        }
     }
   }
 };

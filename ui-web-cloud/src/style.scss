@@ -1,0 +1,169 @@
+// Project specific
+@import "styles/global";
+
+// third party css
+.db {
+  .el-dropdown-menu {
+    margin-top: 20px;
+  }
+  // header
+  .db-header {
+    width: 100%;
+    height: 60px;
+    background: #3f51b5;
+    padding: 13px 20px;
+    box-sizing: border-box;
+    color: #ffffff;
+    z-index: 99;
+    position: fixed;
+    left: 0;
+    top: 0;
+    .logo {
+      font-size: 2.4rem;
+    }
+    .user-info {
+      float: right;
+      img {
+        width: 25px;
+        height: 25px;
+        vertical-align: -7px;
+        margin: 0 0 0 10px;
+        cursor: pointer;
+      }
+    }
+  }
+  // body
+  .db-body {
+    // menu
+    .db-menu-wrapper {
+      position: fixed;
+      left: 0;
+      top: 60px;
+      bottom: 0px;
+      background: #eef1f6;
+      overflow: auto;
+      z-index: 98;
+
+      .db-menu-category {
+        float: left;
+        height: 100%;
+        flex-grow: 0;
+        width: 30px;
+      }
+      .db-menu-bar {
+        float: left;
+        height: 100%;
+        flex-grow: 0;
+        width: 120px;
+      }
+    }
+    // content
+    .db-content-wrapper {
+      width: 100%;
+      z-index: 97;
+      box-sizing: border-box;
+      padding: 40px 0px 0px 150px;
+
+      .db-content {
+        padding: 25px;
+
+        .db-content-inner {
+          padding: 30px 0px;
+        }
+      }
+    }
+  }
+}
+#fixed {
+  position: fixed;
+  background-color: #133E64;
+  width: 44px;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 99999;
+  dl {
+    list-style: none;
+    padding: 0px;
+    border-top: 1px solid #184E7E;
+    width: 44px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    bottom: 0;
+    vertical-align: middle;
+    margin-top: -240px;
+  }
+  dt {
+    position: absolute;
+    width: 44px;
+    display: block;
+    bottom: 85px;
+  }
+  dd {
+    border-bottom: 1px solid #184E7E;
+    font: normal 12px/normal 'microsoft yahei';
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: none;
+    outline: none;
+  }
+  a, a:link, a:visited {
+    text-decoration: none;
+    display: block;
+    height: 65px;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 90px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  a.crm {
+    background: transparent url(./assets/category/crm.png) top center no-repeat;
+  }
+  a.hr {
+    background: transparent url(./assets/category/hr.png) top center no-repeat;
+  }
+  a.out {
+    background: transparent url(./assets/category/out.png) top center no-repeat;
+  }
+  a.sal {
+    background: transparent url(./assets/category/sal.png) top center no-repeat;
+  }
+  a.sys {
+    background: transparent url(./assets/category/sys.png) top center no-repeat;
+  }
+  a:hover {
+    background-color: #1C588E;
+  }
+}
+
+.search-form {
+  input {
+    width:217px;
+  }
+}
+.input-form{
+  input,textarea {
+    width:217px;
+  }
+  .el-date-editor .el-input__icon {
+    right:-25px;
+  }
+}
+
+.ql-container .ql-editor {
+  min-height: 20em;
+  padding-bottom: 1em;
+  max-height: 25em;
+}
+
+.el-table__body {
+  div.action {
+    margin-left:5px;display:inline;
+    button {
+      margin-top:5px;
+    }
+  }
+}

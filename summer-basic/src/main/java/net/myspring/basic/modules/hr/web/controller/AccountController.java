@@ -19,6 +19,8 @@ import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.basic.modules.sys.model.MenuCategoryItem;
+import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -66,6 +68,8 @@ public class AccountController {
     private DutyAnnualService dutyAnnualService;
     @Autowired
     private DutyOvertimeService dutyOvertimeService;
+    @Autowired
+    private MenuService menuService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AccountDto> list(Pageable pageable, AccountQuery accountQuery) {
@@ -131,10 +135,16 @@ public class AccountController {
         return authorityList;
     }
 
-    @RequestMapping(value = "getAccount")
-    public AccountDto getAccount() {
+    @RequestMapping(value = "getAccountMessage")
+    public Map<String,Object> getAccount() {
+        Map<String,Object> map=Maps.newHashMap();
         AccountDto accountDto=accountService.getAccount();
-        return accountDto;
+        List<String> authorityList = accountService.getAuthorityList();
+        List<MenuCategoryItem> menus = menuService.findMenus(securityUtils.getAccountId());
+        map.put("account",accountDto);
+        map.put("authorityList",authorityList);
+        map.put("menus",menus);
+        return map;
     }
 
     @RequestMapping(value = "/home")
