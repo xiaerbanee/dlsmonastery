@@ -114,13 +114,15 @@ axios.interceptors.request.use(function (config) {
 
 
 axios.interceptors.response.use((resp) => {
-  if (_.isString(resp.data)) {
-    router.push("login");
-    return Promise.reject(new Error('解析异常'))
-  } else {
-    return Promise.resolve(resp)
-  }
+  return resp;
 }, (error) => {
+  if (error.response) {
+    switch (error.response.status) {
+      case 401:
+        router.push("login");
+        break;
+    }
+  }
   return Promise.reject(error)
 })
 
