@@ -44,6 +44,8 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
     private TownMapper townMapper;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private CompanyMapper companyMapper;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
@@ -57,6 +59,8 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
         cacheUtils.initCache("positions",positionMapper.findAllEnabled());
         cacheUtils.initCache("towns",townMapper.findAll());
         cacheUtils.initCache("menus",menuMapper.findAllEnabled());
+        cacheUtils.initCache("companys",companyMapper.findAllEnabled());
+        cacheUtils.initCache("menuCategorys",menuCategoryMapper.findAllEnabled());
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");

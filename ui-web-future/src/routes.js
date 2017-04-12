@@ -195,7 +195,7 @@ const accountTaskList= r => require.ensure([], () => r(require('pages/hr/account
 let routes = [
   {path: '/login',component: login,name: 'login',meta: {hidden: true,requiresAuth: false}},
   {path: '/',component: home,name: 'home'},
-  {path: '/404',component: notFound,name: '404'},
+  {path: '/404',component: notFound,name: '404',meta: {requiresAuth: false}},
   {path:'/sys/processList',component:processList,name:'processList'},
   {path:'/hr/dutyLeaveList',component:dutyLeaveList,name:'dutyLeaveList'},
   {path:'/hr/dutyTripList',component:dutyTripList,name:'dutyTripList'},
