@@ -6,7 +6,6 @@ import qs from 'qs'
 import _ from 'lodash'
 import store from './store/'
 
-import jwtDecode from "jwt-decode"
 import ElementUI from 'element-ui';
 import zhElement from 'element-ui/lib/locale/lang/zh-CN'
 import idElement from 'element-ui/lib/locale/lang/id'

@@ -1,11 +1,13 @@
 package net.myspring.uaa.security;
 
 import com.google.common.collect.Maps;
+import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -21,6 +23,7 @@ public class CustomTokenEnhancer implements TokenEnhancer {
         additionalInfo.put("accountId",customUserDetails.getAccountId());
         additionalInfo.put("officeId",customUserDetails.getOfficeId());
         additionalInfo.put("employeeId",customUserDetails.getEmployeeId());
+        additionalInfo.put("exp", LocalDateTimeUtils.format(LocalDateTime.now()));
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }
