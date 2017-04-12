@@ -1,11 +1,6 @@
 function getUrl(url) {
-    var baseUrl =  "https://xcx.ncoppo.com/api/";
+    var baseUrl =  "http://localhost:1200/api/";
     var result = baseUrl + url;
-    if(url.indexOf("?") > 0) {
-        result = result + "&requestClient=weixin";
-    } else {
-        result = result + "?requestClient=weixin";
-    }
     return result;
 }
 

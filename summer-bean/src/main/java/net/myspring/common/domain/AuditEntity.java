@@ -7,7 +7,7 @@ package net.myspring.common.domain;
 
 import java.time.LocalDateTime;
 
-public class AuditEntity<T> extends DataEntity<T> {
+public class AuditEntity<T> extends CompanyEntity<T> {
 	protected String auditBy;
 	protected LocalDateTime auditDate;
 	protected String auditRemarks;

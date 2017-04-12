@@ -1,10 +1,9 @@
-package net.myspring.cloud.modules.kingdee.model;
+package net.myspring.cloud.modules.kingdee.dto;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.modules.kingdee.domain.BdAccount;
 import net.myspring.cloud.modules.kingdee.domain.BdFlexItemProperty;
-import net.myspring.cloud.modules.kingdee.dto.BdFlexItemGroupDto;
 
 import java.util.List;
 import java.util.Map;
@@ -12,22 +11,11 @@ import java.util.Map;
 /**
  * Created by lihx on 2017/4/10.
  */
-public class GlVoucherModel {
+public class GlVoucherDto {
     List<BdAccount> bdAccountList = Lists.newArrayList();
     List<BdFlexItemGroupDto> bdFlexItemGroupDtoList = Lists.newArrayList();
     List<BdFlexItemProperty> bdFlexItemPropertyList = Lists.newArrayList();
     Map<String, Map<String, String>> result = Maps.newHashMap();
-
-    //核算维度
-    public enum SubjectGroup {
-        供应商,
-        部门,
-        客户,
-        其他类,
-        费用类,
-        员工,
-        银行账号
-    };
 
     public List<BdAccount> getBdAccountList() {
         return bdAccountList;
