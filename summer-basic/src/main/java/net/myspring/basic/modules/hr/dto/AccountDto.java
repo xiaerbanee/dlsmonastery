@@ -10,7 +10,18 @@ import net.myspring.util.cahe.annotation.CacheInput;
 public class AccountDto extends DataDto<Account> {
 
     private String positionId;
-    private String dataScope;
+    private String officeId;
+
+    @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "dataScope")
+    private Integer dataScope;
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
 
     public String getPositionId() {
         return positionId;
@@ -20,11 +31,11 @@ public class AccountDto extends DataDto<Account> {
         this.positionId = positionId;
     }
 
-    public String getDataScope() {
+    public Integer getDataScope() {
         return dataScope;
     }
 
-    public void setDataScope(String dataScope) {
+    public void setDataScope(Integer dataScope) {
         this.dataScope = dataScope;
     }
 }

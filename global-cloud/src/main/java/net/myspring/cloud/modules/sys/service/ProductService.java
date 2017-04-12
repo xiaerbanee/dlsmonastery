@@ -81,22 +81,7 @@ public class ProductService {
             List<Product> productList = productMapper.findByCompanyId(companyId);
             Map<String,Product> productMap = CollectionUtil.extractToMap(productList,"outId");
             for (BdMaterial bdmaterial : bdMaterials) {
-                Product product = productMap.get(bdmaterial.getFmasterId());
-                if (product == null) {
-                    product = new Product();
-                    product.setCompanyId(companyId);
-                    product.setName(bdmaterial.getFname());
-                    product.setCode(bdmaterial.getFnumber());
-                    product.setOutId(bdmaterial.getFmasterId());
-                    product.setOutDate(bdmaterial.getFmodifyDate());
-                    product.setReturnOutId(returnOutId);
-                    productMapper.save(product);
-                } else {
-                    product.setCode(bdmaterial.getFnumber());
-                    product.setOutDate(bdmaterial.getFmodifyDate());
-                    product.setName(bdmaterial.getFname());
-                    productMapper.update(product);
-                }
+
             }
         }
     }

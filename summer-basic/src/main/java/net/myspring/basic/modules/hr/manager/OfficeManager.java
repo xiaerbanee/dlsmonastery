@@ -46,37 +46,39 @@ public class OfficeManager {
         return  officeMapper.findOne(office.getId());
     }
 
-    @Cacheable(value = "accountOffices", key = "p0.id")
+    @Cacheable(value = "accountOffices", key = "#p0.id")
     public List<String> officeFilter(Account account){
         List<String> officeIdList= Lists.newArrayList();
-        List<Office> officeList=Lists.newArrayList();
         AccountDto accountDto= BeanUtil.map(account,AccountDto.class);
         cacheUtils.initCacheInput(accountDto);
+
+        Set<String> set = Sets.newHashSet();
+        set.add(accountDto.getOfficeId());
         List<Office> offices = officeMapper.findByAccountId(account.getId());
-        officeList.addAll(offices);
-        officeList.add(account.getOffice());
-        String dataScope=accountDto.getDataScope();
+        Integer dataScope=accountDto.getDataScope();
         if(CollectionUtil.isNotEmpty(offices)){
+            set.addAll(CollectionUtil.extractToList(offices,"id"));
             if((DataScopeEnum.OFFICE_AND_CHILD.getValue().equals(dataScope))) {
                 for(Office office:offices) {
                     List<Office> tempOffices = officeMapper.findByParentIdsLike("%," + office.getId() + ",%");
                     if(CollectionUtil.isNotEmpty(tempOffices)) {
-                        officeList.addAll(tempOffices);
+                        set.addAll(CollectionUtil.extractToList(tempOffices,"id"));
                     }
                 }
             }
         }else {
             if(DataScopeEnum.ALL.getValue().equals(dataScope)) {
-                officeList = Lists.newArrayList();
+                set = Sets.newHashSet();
             } else if (DataScopeEnum.OFFICE_AND_CHILD.getValue().equals(dataScope)) {
-                officeList = officeMapper.findByParentIdsLike("%," + account.getOfficeId() + ",%");
+                List<Office> officeList = officeMapper.findByParentIdsLike("%," + account.getOfficeId() + ",%");
+                if(CollectionUtil.isNotEmpty(officeList)) {
+                    set.addAll(CollectionUtil.extractToList(officeList,"id"));
+                }
             }
         }
-        Set<Office> set = Sets.newHashSet(officeList);
-        officeList=Lists.newArrayList(set);
-        List<String> officeIds = CollectionUtil.extractToList(officeList,"id");
-        if(CollectionUtil.isNotEmpty(officeIds)) {
-            officeIds.add("0");
+        officeIdList=Lists.newArrayList(set);
+        if(CollectionUtil.isNotEmpty(officeIdList)) {
+            officeIdList.add("0");
         }
         return officeIdList;
     }
