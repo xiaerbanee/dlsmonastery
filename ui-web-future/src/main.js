@@ -115,20 +115,12 @@ axios.interceptors.request.use(function (config) {
 
 axios.interceptors.response.use((resp) => {
   if (_.isString(resp.data)) {
-    Message.error('登录超时！请重新登录')
     router.push("login");
     return Promise.reject(new Error('解析异常'))
   } else {
     return Promise.resolve(resp)
   }
 }, (error) => {
-  if (error.response && error.response.data) {
-    if (error.response.data.code === '0') {
-      Message.error(error.response.data.content)
-    } else {
-      Message.error('服务器忙，请稍候再试...')
-    }
-  }
   return Promise.reject(error)
 })
 
