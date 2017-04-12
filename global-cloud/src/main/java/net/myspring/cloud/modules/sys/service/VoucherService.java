@@ -9,12 +9,9 @@ import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.utils.HandSonTableUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.kingdee.domain.BdAccount;
-import net.myspring.cloud.modules.kingdee.domain.BdFlexItemGroup;
 import net.myspring.cloud.modules.kingdee.domain.BdFlexItemProperty;
 import net.myspring.cloud.modules.kingdee.dto.BdFlexItemGroupDto;
-import net.myspring.cloud.modules.kingdee.mapper.BdAccountMapper;
-import net.myspring.cloud.modules.kingdee.mapper.BdFlexItemMapper;
-import net.myspring.cloud.modules.kingdee.model.GlVoucherModel;
+import net.myspring.cloud.modules.kingdee.dto.GlVoucherDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.domain.Voucher;
 import net.myspring.cloud.modules.sys.domain.VoucherEntry;
@@ -28,7 +25,6 @@ import net.myspring.cloud.modules.sys.mapper.VoucherEntryMapper;
 import net.myspring.cloud.modules.sys.mapper.VoucherMapper;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.response.RestErrorField;
-import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
@@ -83,25 +79,25 @@ public class VoucherService {
     }
 
     //
-    public Map<String,Object> getFormProperty(GlVoucherModel glVoucherModel,VoucherDto voucherDto) {
+    public Map<String,Object> getFormProperty(GlVoucherDto glVoucherDto, VoucherDto voucherDto) {
         Map<String, Object> map = Maps.newHashMap();
-        map.put("headers", getHeaders(glVoucherModel));
+        map.put("headers", getHeaders(glVoucherDto));
         if(voucherDto.getId() == null){
             map.put("data", Lists.newArrayList());
         }else {
-            map.put("data", initData(glVoucherModel, voucherDto));
+            map.put("data", initData(glVoucherDto, voucherDto));
         }
         //科目列表（包含核算维度）
-        map.put("bdVourchers", getBdVoucherList(glVoucherModel.getBdAccountList(),glVoucherModel.getBdFlexItemGroupDtoList()));
+        map.put("bdVourchers", getBdVoucherList(glVoucherDto.getBdAccountList(),glVoucherDto.getBdFlexItemGroupDtoList()));
         return map;
     }
 
     //添加将headers页面的头部获取
-    public List<String> getHeaders(GlVoucherModel glVoucherModel) {
+    public List<String> getHeaders(GlVoucherDto glVoucherDto) {
         List<String> list = Lists.newLinkedList();
         list.add("摘要");
         list.add("科目名称");
-        list.addAll(getBdFlexItemProperties(glVoucherModel.getBdFlexItemGroupDtoList()));
+        list.addAll(getBdFlexItemProperties(glVoucherDto.getBdFlexItemGroupDtoList()));
         list.add("借方金额");
         list.add("贷方金额");
         return list;
@@ -121,21 +117,21 @@ public class VoucherService {
     }
 
     //将headers和data赋值
-    public List<List<String>>  initData(GlVoucherModel glVoucherModel,VoucherDto voucherDto) {
+    public List<List<String>>  initData(GlVoucherDto glVoucherDto,VoucherDto voucherDto) {
         List<List<String>> datas = Lists.newArrayList();
         //所有科目
-        Map<String, BdAccount> bdVoucherMap = CollectionUtil.extractToMap(glVoucherModel.getBdAccountList(), "fNumber");
+        Map<String, BdAccount> bdVoucherMap = CollectionUtil.extractToMap(glVoucherDto.getBdAccountList(), "fNumber");
         //所有核算维度
-        Map<String, BdFlexItemProperty> bdFlexItemPropertyMap = CollectionUtil.extractToMap(glVoucherModel.getBdFlexItemPropertyList(), "fName");
-        Map<String,BdFlexItemProperty> flexNumberMap = CollectionUtil.extractToMap(glVoucherModel.getBdFlexItemPropertyList(),"fFlexNumber");
+        Map<String, BdFlexItemProperty> bdFlexItemPropertyMap = CollectionUtil.extractToMap(glVoucherDto.getBdFlexItemPropertyList(), "fName");
+        Map<String,BdFlexItemProperty> flexNumberMap = CollectionUtil.extractToMap(glVoucherDto.getBdFlexItemPropertyList(),"fFlexNumber");
         //所有使用的核算维度
-        List<String> headerSubjects = getBdFlexItemProperties(glVoucherModel.getBdFlexItemGroupDtoList());
+        List<String> headerSubjects = getBdFlexItemProperties(glVoucherDto.getBdFlexItemGroupDtoList());
         List<String> headers = Lists.newLinkedList();
         for (String header : headerSubjects) {
             headers.add("FDetailID__" + bdFlexItemPropertyMap.get(header).getfFlexNumber());
         }
         //设置名称
-        Map<String, Map<String, String>> map = glVoucherModel.getResult();
+        Map<String, Map<String, String>> map = glVoucherDto.getResult();
         Map<String, Map<String, String>> reverseMap = Maps.newHashMap();
         for(String key:map.keySet()) {
             reverseMap.put(key,Maps.<String, String>newHashMap());
@@ -189,11 +185,11 @@ public class VoucherService {
         return result;
     }
 
-    public List<RestErrorField> check(List<List<Object>> datas, GlVoucherModel glVoucherModel) {
+    public List<RestErrorField> check(List<List<Object>> datas, GlVoucherDto glVoucherDto) {
         List<RestErrorField> restErrorFieldList = Lists.newArrayList();
         //所有科目
-        Map<String, List<String>> map = getBdVoucherList(glVoucherModel.getBdAccountList(),glVoucherModel.getBdFlexItemGroupDtoList());
-        List<String> header = getHeaders(glVoucherModel);
+        Map<String, List<String>> map = getBdVoucherList(glVoucherDto.getBdAccountList(),glVoucherDto.getBdFlexItemGroupDtoList());
+        List<String> header = getHeaders(glVoucherDto);
         BigDecimal debitAmount = BigDecimal.ZERO;
         BigDecimal creditAmount = BigDecimal.ZERO;
         for (int i = 0; i < datas.size(); i++) {
@@ -239,7 +235,7 @@ public class VoucherService {
     }
 
     @Transactional
-    public Voucher save(List<List<Object>> datas,VoucherDto voucherDto,GlVoucherModel glVoucherModel) {
+    public Voucher save(List<List<Object>> datas,VoucherDto voucherDto,GlVoucherDto glVoucherDto) {
         Boolean isCreate = StringUtils.isBlank(voucherDto.getId());
         if (isCreate) {
             voucherDto.setCompanyId(DynamicDataSourceContext.get().getCompanyId());
@@ -267,9 +263,9 @@ public class VoucherService {
             }
             voucherMapper.update(voucherDto);
         }
-        List<String> headers = getHeaders(glVoucherModel);
+        List<String> headers = getHeaders(glVoucherDto);
         //核算维度分组
-        List<BdFlexItemProperty> bdFlexItemPropertyList = glVoucherModel.getBdFlexItemPropertyList();
+        List<BdFlexItemProperty> bdFlexItemPropertyList = glVoucherDto.getBdFlexItemPropertyList();
         Map<String, BdFlexItemProperty> bdFlexItemPropertyMap = CollectionUtil.extractToMap(bdFlexItemPropertyList, "fName");
         for (List<Object> row : datas) {
             VoucherEntry voucherEntry = new VoucherEntry();

@@ -6,8 +6,8 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.kingdee.dto.BdFlexItemGroupDto;
+import net.myspring.cloud.modules.kingdee.dto.GlVoucherDto;
 import net.myspring.cloud.modules.kingdee.mapper.*;
-import net.myspring.cloud.modules.kingdee.model.GlVoucherModel;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,24 +38,24 @@ public class GlVoucherService {
     @Autowired
     private CnBankMapper cnBankMapper;
 
-    public GlVoucherModel getGlVoucherModel(){
-        GlVoucherModel glVoucherModel = new GlVoucherModel();
-        glVoucherModel.setBdAccountList(bdAccountMapper.findAllSubject());
+    public GlVoucherDto getGlVoucherDto(){
+        GlVoucherDto glVoucherDto = new GlVoucherDto();
+        glVoucherDto.setBdAccountList(bdAccountMapper.findAllSubject());
         List<BdFlexItemGroupDto> bdFlexItemGroupDtoList = BeanUtil.map(bdFlexItemMapper.findFlexItemGroup(),BdFlexItemGroupDto.class);
-        glVoucherModel.setBdFlexItemGroupDtoList(bdFlexItemGroupDtoList);
-        glVoucherModel.setBdFlexItemPropertyList(bdFlexItemMapper.findBdFlexItemProperty());
+        glVoucherDto.setBdFlexItemGroupDtoList(bdFlexItemGroupDtoList);
+        glVoucherDto.setBdFlexItemPropertyList(bdFlexItemMapper.findBdFlexItemProperty());
 
         Map<String, Map<String, String>> result= Maps.newHashMap();
         //待定
-//        result.put(GlVoucherModel.SubjectGroup.供应商.name(), CollectionUtil.extractToMap(bdSupplierMapper.findAll(), "fName", "fNumber"));
-//        result.put(GlVoucherModel.SubjectGroup.部门.name(), CollectionUtil.extractToMap(bdDepartmentMapper.findAll(), "fname", "fnumber"));
-//        result.put(GlVoucherModel.SubjectGroup.客户.name(), CollectionUtil.extractToMap(bdCustomerMapper.findAll(null), "name", "code"));
-//        result.put(GlVoucherModel.SubjectGroup.其他类.name(), CollectionUtil.extractToMap(basAssistantMapper.findByType("其他类"), "fname", "fnumber"));
-//        result.put(GlVoucherModel.SubjectGroup.费用类.name(), CollectionUtil.extractToMap(basAssistantMapper.findByType( "费用类"), "fname", "fnumber"));
-//        result.put(GlVoucherModel.SubjectGroup.员工.name(), CollectionUtil.extractToMap(hrEmpInfoMapper.findAllUser(), "fname", "fnumber"));
-//        result.put(GlVoucherModel.SubjectGroup.银行账号.name(), CollectionUtil.extractToMap(cnBankMapper.findAll(null), "name", "code"));
-        glVoucherModel.setResult(result);
-        return glVoucherModel;
+//        result.put(GlVoucherDto.SubjectGroup.供应商.name(), CollectionUtil.extractToMap(bdSupplierMapper.findAll(), "fName", "fNumber"));
+//        result.put(GlVoucherDto.SubjectGroup.部门.name(), CollectionUtil.extractToMap(bdDepartmentMapper.findAll(), "fname", "fnumber"));
+//        result.put(GlVoucherDto.SubjectGroup.客户.name(), CollectionUtil.extractToMap(bdCustomerMapper.findAll(null), "name", "code"));
+//        result.put(GlVoucherDto.SubjectGroup.其他类.name(), CollectionUtil.extractToMap(basAssistantMapper.findByType("其他类"), "fname", "fnumber"));
+//        result.put(GlVoucherDto.SubjectGroup.费用类.name(), CollectionUtil.extractToMap(basAssistantMapper.findByType( "费用类"), "fname", "fnumber"));
+//        result.put(GlVoucherDto.SubjectGroup.员工.name(), CollectionUtil.extractToMap(hrEmpInfoMapper.findAllUser(), "fname", "fnumber"));
+//        result.put(GlVoucherDto.SubjectGroup.银行账号.name(), CollectionUtil.extractToMap(cnBankMapper.findAll(null), "name", "code"));
+        glVoucherDto.setResult(result);
+        return glVoucherDto;
     }
 
     public Map<String,Object> getFormProperty(){

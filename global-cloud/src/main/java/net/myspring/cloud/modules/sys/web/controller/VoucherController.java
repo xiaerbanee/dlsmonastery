@@ -6,7 +6,6 @@ import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
-import net.myspring.cloud.modules.kingdee.model.GlVoucherModel;
 import net.myspring.cloud.modules.kingdee.service.GlVoucherService;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
 import net.myspring.cloud.modules.sys.service.VoucherService;
@@ -72,9 +71,9 @@ public class VoucherController {
             DynamicDataSourceContext.get().setCompanyId(companyId);
         }
         if(StringUtils.isNotBlank(companyId)){
-            GlVoucherModel glVoucherModel = glVoucherService.getGlVoucherModel();
+            GlVoucherDto glVoucherDto = glVoucherService.getGlVoucherDto();
             map.putAll(glVoucherService.getFormProperty());
-            map.putAll(voucherService.getFormProperty(glVoucherModel,voucherDto));
+            map.putAll(voucherService.getFormProperty(glVoucherDto,voucherDto));
         }
         map.put("companyId", companyId);
         //用户所拥有的kingdeeName
@@ -88,13 +87,13 @@ public class VoucherController {
         if("false".equals(request.getAttribute("doubleSubmit").toString())) {
             data = HtmlUtils.htmlUnescape(data);
             List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
-            GlVoucherModel glVoucherModel = glVoucherService.getGlVoucherModel();
-            restResponse.setErrors(voucherService.check(datas,glVoucherModel));
+            GlVoucherDto glVoucherDto = glVoucherService.getGlVoucherDto();
+            restResponse.setErrors(voucherService.check(datas,glVoucherDto));
             if (restResponse.getErrors().size()>0) {
                 return restResponse;
             }else{
                 voucherDto.setfDate(LocalDate.parse(billDate, DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
-                voucherService.save(datas,voucherDto,glVoucherModel);
+                voucherService.save(datas,voucherDto,glVoucherDto);
                 restResponse.setMessage("凭证保存成功");
                 return restResponse;
             }
