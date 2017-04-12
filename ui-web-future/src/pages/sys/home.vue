@@ -42,23 +42,23 @@
 
             <tr>
               <td class="td">{{$t('home.employeeName')}}</td>
-              <td  class="td">{{account.employee.name}}</td>
+              <td  class="td">{{account.employeeName}}</td>
             </tr>
             <tr>
               <td class="td">{{$t('home.officeName')}}</td>
-              <td  class="td">{{account.office.name}}</td>
+              <td  class="td">{{account.officeName}}</td>
             </tr>
             <tr>
               <td class="td">{{$t('home.positionName')}}</td>
-              <td  class="td">{{account.position.name}}</td>
+              <td  class="td">{{account.positionName}}</td>
             </tr>
             <tr>
               <td class="td">{{$t('home.leaderName')}}</td>
-              <td  class="td">{{account.leader==null?'':account.leader.fullName}}</td>
+              <td  class="td">{{account.leaderId==null?'':account.leaderName}}</td>
             </tr>
             <tr>
               <td class="td">{{$t('home.regularDate')}}</td>
-              <td  class="td">{{account.employee.regularDate}}</td>
+              <td  class="td">{{account.regularDate}}</td>
             </tr>
             </tbody>
           </table>

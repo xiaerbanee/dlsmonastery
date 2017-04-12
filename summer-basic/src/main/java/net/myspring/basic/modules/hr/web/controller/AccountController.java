@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.config.ExcelView;
 import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.enums.BoolEnum;
+import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
@@ -23,6 +24,7 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -52,6 +54,8 @@ public class AccountController {
     private PositionService positionService;
     @Autowired
     private SecurityUtils securityUtils;
+    @Autowired
+    private CacheUtils cacheUtils;
     @Autowired
     private AccountTaskService accountTaskService;
     @Autowired
@@ -134,14 +138,14 @@ public class AccountController {
     }
 
     @RequestMapping(value = "/home")
-    public String home() {
+    public Map<String, Object> home() {
         Map<String, Object> map = Maps.newHashMap();
-        Account account=accountService.findOne(securityUtils.getAccountId());
+        AccountDto accountDto=accountService.findDto(securityUtils.getAccountId());
         LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
-        List<DutyDto> dutyList = dutyService.findByAuditable(account.getId(), AuditTypeEnum.APPLY.getValue(), lastMonth);
-        List<AccountTaskDto> accountTasks = accountTaskService.findByPositionId(account.getPositionId(),account);
+        List<DutyDto> dutyList = dutyService.findByAuditable(accountDto.getId(), AuditTypeEnum.APPLY.getValue(), lastMonth);
+        List<AccountTaskDto> accountTasks = accountTaskService.findByPositionId(accountDto.getPositionId(),accountService.findOne(securityUtils.getAccountId()));
         map.put("accountTaskSize", accountTasks.size());
-        List<AccountMessageDto> accountMessages = accountMessageService.findByAccount(account.getId(), lastMonth);
+        List<AccountMessageDto> accountMessages = accountMessageService.findByAccount(accountDto.getId(), lastMonth);
         map.put("dutySize", dutyList.size());
         map.put("accountMessageSize", accountMessages.size());
         //显示剩余的加班调休时间和年假时间
@@ -150,8 +154,8 @@ public class AccountController {
         map.put("overtimeHour", dutyOvertimeService.getAvailableHour(employeeId, LocalDateTime.now()));
         //显示快到期时间
         map.put("expiredHour", dutyOvertimeService.getExpiredHour(employeeId, LocalDateTime.now()));
-        map.put("account",account);
-        return ObjectMapperUtils.writeValueAsString(map);
+        map.put("account",accountDto);
+        return map;
     }
 
 }

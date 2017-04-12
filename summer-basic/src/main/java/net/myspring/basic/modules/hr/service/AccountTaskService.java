@@ -39,7 +39,7 @@ public class AccountTaskService {
         return accountTaskDtoPage;
     }
 
-    public List<AccountTaskDto> findByPositionId(String positionId, Account account){
+    public List<AccountTaskDto> findByPositionId(String positionId,Account account){
         List<AccountTaskDto> accountTaskDtoList= Lists.newArrayList();
         List<String> officeIds=officeManager.officeFilter(account);
         officeIds.add(account.getOfficeId());

@@ -83,7 +83,7 @@
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         util.getQuery("dictEnumList");
         util.setQuery("dictEnumList",this.formData);
-        axios.get('/api/sys/dictEnum',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/sys/dictEnum',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -104,7 +104,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'dictEnumForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/sys/dictEnum/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/sys/dictEnum/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
@@ -113,7 +113,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/sys/dictEnum/getListProperty').then((response) =>{
+      axios.get('/api/basic/sys/dictEnum/getListProperty').then((response) =>{
         this.formProperty=response.data;
       });
       this.pageRequest();
