@@ -6,7 +6,7 @@ import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
-import net.myspring.cloud.modules.kingdee.dto.GlVoucherDto;
+import net.myspring.cloud.modules.kingdee.dto.VoucherFormDto;
 import net.myspring.cloud.modules.kingdee.service.GlVoucherService;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
 import net.myspring.cloud.modules.sys.service.VoucherService;
@@ -19,7 +19,6 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,9 +84,9 @@ public class VoucherController {
             DynamicDataSourceContext.get().setCompanyId(companyId);
         }
         if(StringUtils.isNotBlank(companyId)){
-            GlVoucherDto glVoucherDto = glVoucherService.getGlVoucherDto();
+            VoucherFormDto voucherFormDto = glVoucherService.getGlVoucherDto();
             map.putAll(glVoucherService.getFormProperty());
-            map.putAll(voucherService.getFormProperty(glVoucherDto,voucherDto));
+            map.putAll(voucherService.getFormProperty(voucherFormDto,voucherDto));
         }
         map.put("companyId", companyId);
         //用户所拥有的kingdeeName
@@ -101,13 +100,13 @@ public class VoucherController {
         if("false".equals(request.getAttribute("doubleSubmit").toString())) {
             data = HtmlUtils.htmlUnescape(data);
             List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
-            GlVoucherDto glVoucherDto = glVoucherService.getGlVoucherDto();
-            restResponse.setErrors(voucherService.check(datas,glVoucherDto));
+            VoucherFormDto voucherFormDto = glVoucherService.getGlVoucherDto();
+            restResponse.setErrors(voucherService.check(datas, voucherFormDto));
             if (restResponse.getErrors().size()>0) {
                 return restResponse;
             }else{
 //                voucherDto.setfDate(LocalDate.parse(billDate, DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
-//                voucherService.save(datas,voucherDto,glVoucherDto);
+//                voucherService.save(datas,voucherDto,voucherFormDto);
                 restResponse.setMessage("凭证保存成功");
                 return restResponse;
             }
@@ -123,11 +122,11 @@ public class VoucherController {
         if("false".equals(request.getAttribute("doubleSubmit").toString())) {
             data = HtmlUtils.htmlUnescape(data);
             List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
-            GlVoucherDto glVoucherDto = glVoucherService.getGlVoucherDto();
-            restResponse.setErrors(voucherService.check(datas,glVoucherDto));
+            VoucherFormDto voucherFormDto = glVoucherService.getGlVoucherDto();
+            restResponse.setErrors(voucherService.check(datas, voucherFormDto));
             if (restResponse.getErrors().size()>0) {
                 voucherForm.setfDate(LocalDate.parse(billDate, DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
-//                VoucherForm voucherForm = voucherService.save(datas,voucherForm,glVoucherDto);
+//                VoucherForm voucherForm = voucherService.save(datas,voucherForm,voucherFormDto);
                 if(VoucherStatusEnum.地区财务审核.name().equals(voucherForm.getStatus())){
                     voucherForm.setStatus(VoucherStatusEnum.省公司财务审核.name());
                 }else{

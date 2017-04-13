@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by lihx on 2017/4/10.
  */
-public class GlVoucherDto {
+public class VoucherFormDto {
     List<BdAccount> bdAccountList = Lists.newArrayList();
     List<BdFlexItemGroupDto> bdFlexItemGroupDtoList = Lists.newArrayList();
     List<BdFlexItemProperty> bdFlexItemPropertyList = Lists.newArrayList();
