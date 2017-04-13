@@ -63,7 +63,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             }
             if(StringUtils.isNotBlank(accountId)) {
                 accountDto = accountMapper.findById(accountId);
-                username=accountDto.getUsername();
             }
         } else {
             accountDto = accountMapper.findByLoginName(username);
