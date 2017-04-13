@@ -141,7 +141,7 @@ export default {
       commit('setMenus', []);
       commit('setAccount', {});
       commit('setAuthorityList', []);
-      commit('setToken', '');
+      commit('setToken', {});
       commit('setIsRefreshToken', false);
     }
   }
