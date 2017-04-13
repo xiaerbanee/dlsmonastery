@@ -247,7 +247,7 @@ public class VoucherService {
             }else{
                 voucherForm.setStatus(VoucherStatusEnum.地区财务审核.name());
             }
-            voucherMapper.saveForm(voucherForm);
+            voucherMapper.save(BeanUtil.map(voucherForm,Voucher.class));
         } else {
             LocalDate date = voucherForm.getfDate();
 //            voucherForm = findOne(voucherForm.getId());

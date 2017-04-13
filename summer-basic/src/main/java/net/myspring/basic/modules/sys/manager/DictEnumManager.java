@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.mapper.DictEnumMapper;
 import net.myspring.basic.modules.sys.web.form.DictEnumForm;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -44,7 +45,7 @@ public class DictEnumManager {
 
     @Cacheable(value = "dictEnums",key="#p0.id")
     public DictEnum saveForm(DictEnumForm dictEnumForm){
-        dictEnumMapper.saveForm(dictEnumForm);
+        dictEnumMapper.save(BeanUtil.map(dictEnumForm,DictEnum.class));
         return  dictEnumMapper.findOne(dictEnumForm.getId());
     }
 

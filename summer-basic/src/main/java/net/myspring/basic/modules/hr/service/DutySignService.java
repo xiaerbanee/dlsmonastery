@@ -42,7 +42,7 @@ public class DutySignService {
         dutySignForm.setDutyTime(LocalTime.now());
         dutySignForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutySignForm.setEmployeeId(securityUtils.getEmployeeId());
-        dutySignMapper.saveForm(dutySignForm);
+        dutySignMapper.save(BeanUtil.map(dutySignForm,DutySign.class));
         return dutySignForm;
     }
 

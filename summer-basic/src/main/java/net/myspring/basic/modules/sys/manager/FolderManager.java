@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.Folder;
 import net.myspring.basic.modules.sys.domain.Folder;
 import net.myspring.basic.modules.sys.mapper.FolderMapper;
 import net.myspring.basic.modules.sys.web.form.FolderForm;
+import net.myspring.util.mapper.BeanUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -36,7 +37,7 @@ public class FolderManager {
 
     @Cacheable(value = "folders",key="#p0.id")
     public Folder saveForm(FolderForm folderForm){
-        folderMapper.saveForm(folderForm);
+        folderMapper.save(BeanUtil.map(folderForm,Folder.class));
         return  folderMapper.findOne(folderForm.getId());
     }
 

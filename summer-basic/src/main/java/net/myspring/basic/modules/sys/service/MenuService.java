@@ -188,7 +188,7 @@ public class MenuService {
         Set<Permission> oldPermissions = Sets.newHashSet();
         if(isCreate) {
             menuForm.setMenuCategory(menuCategoryMapper.findOne(menuForm.getMenuCategoryId()));
-            menuMapper.saveForm(menuForm);
+            menuMapper.save(BeanUtil.map(menuForm,Menu.class));
         } else {
             menuMapper.updateForm(menuForm);
             oldPermissions = Sets.newHashSet(permissionMapper.findByMenuId(menuForm.getId()));

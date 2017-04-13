@@ -60,7 +60,7 @@ public class RecruitService {
     public RecruitForm save(RecruitForm recruitForm){
         boolean isCreate = StringUtils.isBlank(recruitForm.getId());
         if(isCreate){
-            recruitMapper.saveForm(recruitForm);
+            recruitMapper.save(BeanUtil.map(recruitForm,Recruit.class));
         }else{
             recruitMapper.updateForm(recruitForm);
         }
