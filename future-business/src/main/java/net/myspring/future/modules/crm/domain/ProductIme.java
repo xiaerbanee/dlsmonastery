@@ -1,15 +1,15 @@
 package net.myspring.future.modules.crm.domain;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
-/**
- * Created by liuj on 2017/4/2.
- */
 @Entity
 @Table(name="crm_product_ime")
 public class ProductIme extends DataEntity<ProductIme> {
@@ -22,16 +22,36 @@ public class ProductIme extends DataEntity<ProductIme> {
     private LocalDateTime createdTime;
     private String inputType;
     private String meid;
-    private Integer version;
+    private Integer version = 0;
     private String itemNumber;
     private String colorId;
     private String retailShopId;
+    private Depot retailShop;
     private BigDecimal baokaPrice;
     private BigDecimal price3;
+    private Depot depot;
     private String depotId;
+    private ProductImeUpload productImeUpload;
     private String productImeUploadId;
+    private ProductImeSale productImeSale;
     private String productImeSaleId;
+    private Product product;
     private String productId;
+
+    @Transient
+    private String fullName;
+    @Transient
+    private List<Depot> accessDepots = Lists.newArrayList();
+    @Transient
+    private Boolean fromChain;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
     public String getBillId() {
         return billId;
@@ -153,12 +173,28 @@ public class ProductIme extends DataEntity<ProductIme> {
         this.price3 = price3;
     }
 
+    public Depot getDepot() {
+        return depot;
+    }
+
+    public void setDepot(Depot depot) {
+        this.depot = depot;
+    }
+
     public String getDepotId() {
         return depotId;
     }
 
     public void setDepotId(String depotId) {
         this.depotId = depotId;
+    }
+
+    public ProductImeUpload getProductImeUpload() {
+        return productImeUpload;
+    }
+
+    public void setProductImeUpload(ProductImeUpload productImeUpload) {
+        this.productImeUpload = productImeUpload;
     }
 
     public String getProductImeUploadId() {
@@ -169,6 +205,14 @@ public class ProductIme extends DataEntity<ProductIme> {
         this.productImeUploadId = productImeUploadId;
     }
 
+    public ProductImeSale getProductImeSale() {
+        return productImeSale;
+    }
+
+    public void setProductImeSale(ProductImeSale productImeSale) {
+        this.productImeSale = productImeSale;
+    }
+
     public String getProductImeSaleId() {
         return productImeSaleId;
     }
@@ -177,11 +221,43 @@ public class ProductIme extends DataEntity<ProductIme> {
         this.productImeSaleId = productImeSaleId;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
     public String getProductId() {
         return productId;
     }
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public Depot getRetailShop() {
+        return retailShop;
+    }
+
+    public void setRetailShop(Depot retailShop) {
+        this.retailShop = retailShop;
+    }
+
+    public List<Depot> getAccessDepots() {
+        return accessDepots;
+    }
+
+    public void setAccessDepots(List<Depot> accessDepots) {
+        this.accessDepots = accessDepots;
+    }
+
+    public Boolean getFromChain() {
+        return fromChain;
+    }
+
+    public void setFromChain(Boolean fromChain) {
+        this.fromChain = fromChain;
     }
 }
