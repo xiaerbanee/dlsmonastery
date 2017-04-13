@@ -105,8 +105,8 @@
       return {
         page:{},
         formData:{
-          pageNumber:0,
-          pageSize:25,
+          page:0,
+          size:25,
           name:'',
           type:'',
           hasIme:'',
@@ -145,12 +145,12 @@
           this.pageLoading = false;
         })
       },pageChange(pageNumber,pageSize) {
-        this.formData.pageNumber = pageNumber;
-        this.formData.pageSize = pageSize;
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
         this.formData.order=util.getOrder(column);
-        this.formData.pageNumber=0;
+        this.formData.page=0;
         this.pageRequest();
       },search() {
         this.formVisible = false;
