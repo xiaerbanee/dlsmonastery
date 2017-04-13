@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.web.form;
 
+import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.mybatis.form.BaseForm;
 
@@ -7,7 +8,7 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/5.
  */
 
-public class DictEnumForm extends DataForm<DictEnum>{
+public class DictEnumForm extends DataForm<DictEnum> {
     private String id;
     private Integer sort;
     private String category;
@@ -35,14 +36,6 @@ public class DictEnumForm extends DataForm<DictEnum>{
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
     }
 
     public String getId() {
