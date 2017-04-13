@@ -9,10 +9,18 @@ import net.myspring.mybatis.form.BaseForm;
  */
 
 public class DictEnumForm extends DataForm<DictEnum> {
-    private String id;
     private Integer sort;
     private String category;
     private String value;
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public Integer getSort() {
         return sort;
@@ -36,13 +44,5 @@ public class DictEnumForm extends DataForm<DictEnum> {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }
