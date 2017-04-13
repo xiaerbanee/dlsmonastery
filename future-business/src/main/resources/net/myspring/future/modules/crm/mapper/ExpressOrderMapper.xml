@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.ExpressOrderMapper">
+
+
+    <select id="findPage" resultType="ExpressOrder">
+        SELECT
+        t1.*
+        FROM
+        crm_express_order t1
+        WHERE
+        t1.enabled=1
+        <if test="p.expressCode !=null">
+
+        </if>
+    </select>
+
+   <select id="findByExtendIdAndType" resultType="ExpressOrder">
+       SELECT t1.*
+       FROM crm_express_order t1
+       where t1.extend_id=#{extendId}
+       and t1.extend_type=#{extendType}
+   </select>
+
+
+    <select id="findLabels" resultType="ExpressOrder">
+        SELECT t1.id,t1.extend_type,t1.extend_id,t1.contator,t1.address,t1.mobile_phone,t1.from_depot_id,t1.to_depot_id,t1.extend_business_id,t1.express_company_id
+        FROM crm_express_order t1
+        WHERE t1.enabled = 1
+        and t1.id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+</mapper>

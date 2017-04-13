@@ -5,6 +5,7 @@ import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.mapper.PositionMapper;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
+import net.myspring.util.mapper.BeanUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -38,7 +39,7 @@ public class PositionManager {
 
     @CachePut(value = "positions",key="#p0.id")
     public Position saveForm(PositionForm positionForm){
-        positionMapper.saveForm(positionForm);
+        positionMapper.save(BeanUtil.map(positionForm,Position.class));
         return  positionMapper.findOne(positionForm.getId());
     }
 

@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
 import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
@@ -49,7 +50,7 @@ public class MenuCategoryService {
     public void save(MenuCategoryForm menuCategoryForm){
         boolean isCreated= StringUtils.isBlank(menuCategoryForm.getId());
         if(isCreated) {
-            menuCategoryMapper.saveForm(menuCategoryForm);
+            menuCategoryMapper.save(BeanUtil.map(menuCategoryForm, MenuCategory.class));
         } else {
             menuCategoryMapper.updateForm(menuCategoryForm);
         }

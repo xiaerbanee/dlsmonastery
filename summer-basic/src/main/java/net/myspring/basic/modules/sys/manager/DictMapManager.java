@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.manager;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.mapper.DictMapMapper;
 import net.myspring.basic.modules.sys.web.form.DictMapForm;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -36,7 +37,7 @@ public class DictMapManager {
 
     @Cacheable(value = "dictMaps",key="#p0.id")
     public DictMap saveForm(DictMapForm dictMapForm){
-        dictMapMapper.saveForm(dictMapForm);
+        dictMapMapper.save(BeanUtil.map(dictMapForm,DictMap.class));
         return  dictMapMapper.findOne(dictMapForm.getId());
     }
 

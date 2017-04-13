@@ -37,74 +37,75 @@ public class CacheReadUtils {
         if (CollectionUtils.isNotEmpty(objects)) {
             list = Lists.newArrayList(objects);
             clazz = list.get(0).getClass();
-        }
-        String cacheInputKey = clazz.getName();
-        if (!cacheInputMap.containsKey(cacheInputKey)) {
-            cacheInputMap.put(cacheInputKey, getCacheFieldList(clazz));
-        }
-        List<CacheInputField> cacheInputFieldList = cacheInputMap.get(cacheInputKey);
-        //key所对应的需要设置数据的field
-        List<CacheInputObject> cacheInputObjectList = Lists.newArrayList();
-        //所有的key
-        Set<String> keySet = Sets.newHashSet();
-        if (CollectionUtils.isNotEmpty(cacheInputFieldList)) {
-            for (Object object : list) {
-                for (CacheInputField cacheInputField : cacheInputFieldList) {
-                    String keyPrefix = cacheInputField.getInputKey() + ":";
-                    List<String> keySuffixList = Lists.newArrayList();
-                    if (cacheInputField.getCollection()) {
-                        keySuffixList = ReflectionUtil.getFieldValue(object, cacheInputField.getInputField());
-                    } else {
-                        keySuffixList.add(ReflectionUtil.getFieldValue(object, cacheInputField.getInputField()));
-                    }
-                    if(CollectionUtil.isNotEmpty(keySuffixList)){
-                        CacheInputObject cacheInputObject = new CacheInputObject();
-                        cacheInputObject.setObject(object);
-                        cacheInputObject.setCacheInputField(cacheInputField);
-                        for (String keySuffix : keySuffixList) {
-                            if (StringUtils.isNotBlank(keySuffix)) {
-                                String key = keyPrefix + keySuffix;
-                                keySet.add(key);
-                                cacheInputObject.getKeyList().add(key);
-                            }
+            String cacheInputKey = clazz.getName();
+            if (!cacheInputMap.containsKey(cacheInputKey)) {
+                cacheInputMap.put(cacheInputKey, getCacheFieldList(clazz));
+            }
+            List<CacheInputField> cacheInputFieldList = cacheInputMap.get(cacheInputKey);
+            //key所对应的需要设置数据的field
+            List<CacheInputObject> cacheInputObjectList = Lists.newArrayList();
+            //所有的key
+            Set<String> keySet = Sets.newHashSet();
+            if (CollectionUtils.isNotEmpty(cacheInputFieldList)) {
+                for (Object object : list) {
+                    for (CacheInputField cacheInputField : cacheInputFieldList) {
+                        String keyPrefix = cacheInputField.getInputKey() + ":";
+                        List<String> keySuffixList = Lists.newArrayList();
+                        if (cacheInputField.getCollection()) {
+                            keySuffixList = ReflectionUtil.getFieldValue(object, cacheInputField.getInputField());
+                        } else {
+                            keySuffixList.add(ReflectionUtil.getFieldValue(object, cacheInputField.getInputField()));
                         }
-                        cacheInputObjectList.add(cacheInputObject);
-                    }
-                }
-            }
-        }
-        if (CollectionUtils.isNotEmpty(keySet)) {
-            List<String> keyList = Lists.newArrayList(keySet);
-            List<byte[]> cacheList = getCacheList(redisTemplate, keyList);
-            Map<String,Object> keyMap = Maps.newHashMap();
-            for (int i = 0; i < keyList.size(); i++) {
-                byte[] cache = cacheList.get(i);
-                Object object = deSerialize(cache);
-                if (object != null) {
-                    keyMap.put(keyList.get(i),object);
-                }
-            }
-            for(CacheInputObject cacheInputObject:cacheInputObjectList) {
-                if(CollectionUtils.isNotEmpty(cacheInputObject.getKeyList())) {
-                    boolean isCollection = cacheInputObject.getCacheInputField().getCollection();
-                    Object localFieldValue = ReflectionUtil.getFieldValue(cacheInputObject.getObject(), cacheInputObject.getCacheInputField().getOutputField());
-                    for(String key:cacheInputObject.getKeyList()) {
-                        if(keyMap.containsKey(key)) {
-                            Object cacheInputFieldValue = ReflectionUtil.getFieldValue(keyMap.get(key),cacheInputObject.getCacheInputField().getOutputInstance());
-                            if(isCollection) {
-                                if (CollectionUtil.isEmpty((Collection) localFieldValue)) {
-                                    localFieldValue = Lists.newArrayList();
+                        if(CollectionUtil.isNotEmpty(keySuffixList)){
+                            CacheInputObject cacheInputObject = new CacheInputObject();
+                            cacheInputObject.setObject(object);
+                            cacheInputObject.setCacheInputField(cacheInputField);
+                            for (String keySuffix : keySuffixList) {
+                                if (StringUtils.isNotBlank(keySuffix)) {
+                                    String key = keyPrefix + keySuffix;
+                                    keySet.add(key);
+                                    cacheInputObject.getKeyList().add(key);
                                 }
-                                ((Collection) localFieldValue).add(cacheInputFieldValue);
-                                ReflectionUtils.setField(cacheInputObject.getCacheInputField().getOutputField(), cacheInputObject.getObject(), localFieldValue);
-                            } else {
-                                ReflectionUtils.setField(cacheInputObject.getCacheInputField().getOutputField(), cacheInputObject.getObject(), cacheInputFieldValue);
+                            }
+                            cacheInputObjectList.add(cacheInputObject);
+                        }
+                    }
+                }
+            }
+            if (CollectionUtils.isNotEmpty(keySet)) {
+                List<String> keyList = Lists.newArrayList(keySet);
+                List<byte[]> cacheList = getCacheList(redisTemplate, keyList);
+                Map<String,Object> keyMap = Maps.newHashMap();
+                for (int i = 0; i < keyList.size(); i++) {
+                    byte[] cache = cacheList.get(i);
+                    Object object = deSerialize(cache);
+                    if (object != null) {
+                        keyMap.put(keyList.get(i),object);
+                    }
+                }
+                for(CacheInputObject cacheInputObject:cacheInputObjectList) {
+                    if(CollectionUtils.isNotEmpty(cacheInputObject.getKeyList())) {
+                        boolean isCollection = cacheInputObject.getCacheInputField().getCollection();
+                        Object localFieldValue = ReflectionUtil.getFieldValue(cacheInputObject.getObject(), cacheInputObject.getCacheInputField().getOutputField());
+                        for(String key:cacheInputObject.getKeyList()) {
+                            if(keyMap.containsKey(key)) {
+                                Object cacheInputFieldValue = ReflectionUtil.getFieldValue(keyMap.get(key),cacheInputObject.getCacheInputField().getOutputInstance());
+                                if(isCollection) {
+                                    if (CollectionUtil.isEmpty((Collection) localFieldValue)) {
+                                        localFieldValue = Lists.newArrayList();
+                                    }
+                                    ((Collection) localFieldValue).add(cacheInputFieldValue);
+                                    ReflectionUtils.setField(cacheInputObject.getCacheInputField().getOutputField(), cacheInputObject.getObject(), localFieldValue);
+                                } else {
+                                    ReflectionUtils.setField(cacheInputObject.getCacheInputField().getOutputField(), cacheInputObject.getObject(), cacheInputFieldValue);
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
     }
 
     public static List<byte[]> getCacheList(RedisTemplate redisTemplate, List<String> keyList) {

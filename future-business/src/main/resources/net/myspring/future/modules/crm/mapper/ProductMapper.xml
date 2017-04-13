@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.ProductMapper">
+
+    <select id="findHasImeProduct" resultType="Product">
+        select t1.*
+        from crm_product t1
+        where t1.enabled=1
+        and t1.has_ime=1
+    </select>
+
+    <select id="findByNameLike" resultType="Product">
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.name like concat('%',#{name},'%')
+        limit 0,100
+    </select>
+
+    <select id="findByCodeLike" resultType="Product">
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.code like concat('%',#{code},'%')
+        limit 0,100
+    </select>
+
+    <select id="findByNameLikeHasIme" resultType="Product">
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.has_ime=1
+        and t1.name like concat('%',#{name},'%')
+    </select>
+
+    <select id="findByCodeLikeHasIme" resultType="Product">
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.has_ime=1
+        and t1.code like concat('%',#{code},'%')
+    </select>
+
+    <select id="findByName" resultType="Product">
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.name  = #{name}
+    </select>
+
+    <select id="findByOutId" resultType="Product">
+        SELECT t1.*
+        FROM crm_product t1
+        where
+         t1.out_id = #{outId}
+    </select>
+
+    <select id="findPage" resultType="Product">
+        select t1.*
+        from crm_product t1
+        where
+        t1.enabled=1
+        <include refid="filter"></include>
+    </select>
+
+    <select id="findFilter" resultType="Product">
+        select t1.*
+        from crm_product t1
+        where
+        t1.enabled=1
+        <include refid="filter"></include>
+    </select>
+
+    <select id="findByOutName" resultType="Product">
+        select DISTINCT  t1.out_group_name
+        FROM crm_product t1
+        WHERE  t1.enabled=1
+        and t1.out_group_id is not NULL
+    </select>
+
+    <select id="findByOutGroupIdsAndAllowOrder" resultType="Product">
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.allow_order=#{allowOrder}
+        and t1.out_group_id in
+        <foreach collection="outGroupIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByOutGroupIds" resultType="Product">
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.out_group_id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findLabels" resultType="Product">
+        SELECT t1.id,t1.name,t1.code,t1.product_type_id,t1.net_type
+        FROM crm_product t1
+        WHERE t1.enabled = 1
+        and t1.id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByProductTypeIds" resultType="Product">
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.product_type_id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="updateProductTypeId">
+        UPDATE crm_product t1 set t1.product_type_id=#{productTypeId}
+        where t1.id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateProductTypeToNull">
+        UPDATE crm_product t1 set t1.product_type_id=NULL
+        where t1.product_type_id =#{productTypeId}
+    </update>
+
+    <sql id="filter">
+        <if test="p.name !=null">
+            AND t1.name like concat('%',#{p.name},'%')
+        </if>
+        <if test="p.code != null">
+            AND t1.code like concat('%',#{p.code},'%')
+        </if>
+        <if test="p.hasIme !=null ">
+            and t1.has_ime = #{p.hasIme}
+        </if>
+        <if test="p.allowOrder != null">
+            AND t1.allow_order = #{p.allowOrder}
+        </if>
+        <if test="p.allowBill !=null">
+            and t1.allow_bill = #{p.allowBill}
+        </if>
+        <if test="p.productType !=null">
+            and t1.product_type_id=#{p.productType}
+        </if>
+        <if test="p.outGroupName !=null">
+            and t1.out_group_name =#{p.outGroupName}
+        </if>
+        <if test="p.outGroupIds !=null and p.outGroupIds.size() !=0">
+            and t1.out_group_id in
+            <foreach collection="p.outGroupIds" index="index" item="item" open="(" separator="," close=")">
+                #{p.outGroupIds[${index}]}
+            </foreach>
+        </if>
+        <if test="p.netType !=null">
+            and t1.net_type =#{p.netType}
+        </if>
+    </sql>
+
+    <select id="getMaxOutDate" resultType="java.time.LocalDateTime">
+        select
+        MAX(out_date)
+        from
+        crm_product t1
+        where
+        t1.enabled=1
+    </select>
+
+</mapper>

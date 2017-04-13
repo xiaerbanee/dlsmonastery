@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.GoodsOrderDetailMapper">
+
+    <select id="findByGoodsOrderId" resultType="GoodsOrderDetail">
+        SELECT t1.*
+        FROM crm_goods_order_detail t1
+        WHERE t1.goods_order_id=#{goodsOrderId}
+    </select>
+
+    <select id="findByGoodsOrderIds" resultType="GoodsOrderDetail">
+        SELECT t1.*
+        FROM crm_goods_order_detail t1
+        WHERE t1.goods_order_id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByParentOfficeIdAndCreatedDate" resultType="GoodsOrderDetail">
+        SELECT t1.*
+         FROM crm_goods_order_detail t1,crm_goods_order t2 ,crm_depot t3
+          where t3.enabled=1
+          and t2.enabled=1
+          and t1.goods_order_id=t2.id
+          and t2.shop_id=t3.id
+          and t3.area_id=#{areaId}
+          and t2.created_date &gt;= #{dateStart}
+          and t2.created_date &lt;= #{dateEnd}
+    </select>
+
+    <select id="findByParentOfficeIdAndBillDate" resultType="GoodsOrderDetail">
+         SELECT t1.*
+         FROM crm_goods_order_detail t1,crm_goods_order t2 ,crm_depot t3
+          where t3.enabled=1
+          and t2.enabled=1
+          and t1.goods_order_id=t2.id
+          and t2.shop_id=t3.id
+          and t3.area_id=#{areaId}
+          and t2.bill_date &gt;= #{dateStart}
+          and t2.bill_date &lt;= #{dateEnd}
+          and t2.ship_type in
+          <foreach collection="shipTypes" item="item" index="index" open="(" separator="," close=")">
+              #{item}
+          </foreach>
+    </select>
+
+</mapper>

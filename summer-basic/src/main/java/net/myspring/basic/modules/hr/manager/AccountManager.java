@@ -5,6 +5,7 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -40,7 +41,7 @@ public class AccountManager {
 
     @CachePut(value = "accounts",key="#p0.id")
     public Account saveForm(AccountForm accountForm){
-        accountMapper.saveForm(accountForm);
+        accountMapper.save(BeanUtil.map(accountForm,Account.class));
         return  accountMapper.findOne(accountForm.getId());
     }
 

@@ -4,6 +4,7 @@ import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.mapper.JobMapper;
 import net.myspring.basic.modules.hr.web.form.JobForm;
 import net.myspring.basic.modules.hr.web.query.JobQuery;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -35,7 +36,7 @@ public class JobManager {
 
     @CachePut(value = "jobs",key="#p0.id")
     public Job saveForm(JobForm jobForm){
-        jobMapper.saveForm(jobForm);
+        jobMapper.save(BeanUtil.map(jobForm,Job.class));
         return  jobMapper.findOne(jobForm.getId());
     }
 

@@ -14,6 +14,7 @@ import java.util.Map;
  */
 @Component
 public class SecurityUtils {
+
     @Autowired
     private TokenStore tokenStore;
 

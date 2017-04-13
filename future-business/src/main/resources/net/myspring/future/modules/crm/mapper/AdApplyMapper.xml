@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.AdApplyMapper">
+    <select id="findPage" resultType="AdApply">
+        select adApply.*
+        from crm_ad_apply adApply,crm_depot depot,hr_office office
+        where adApply.enabled = 1
+        and adApply.shop_id=depot.id
+        and depot.office_id=office.id
+        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter" />
+        <include refid="filter"></include>
+    </select>
+
+    <select id="findByOutGroupIdAndDate" resultType="AdApply">
+        select adApply.*
+        from crm_ad_apply adApply
+        where adApply.enabled = 1
+        AND  adApply.confirm_qty > adApply.billed_qty
+        and   created_date>#{p.createdDateStart}
+        and   adApply.product_id in (
+            select product.id
+            from crm_product product
+            where product.enabled = 1 and product.out_group_id in
+            <foreach collection="p.outGroupIds" index="index" item="item" open="(" separator="," close=")">
+                #{p.outGroupIds[${index}]}
+            </foreach>
+        )
+    </select>
+
+    <select id="findByFilter" resultType="AdApply">
+        select adApply.*
+        from crm_ad_apply adApply
+        where adApply.enabled = 1
+        <include refid="filter"></include>
+    </select>
+
+    <select id="findAllId" resultType="String">
+        select adApply.id
+        from crm_ad_apply adApply
+        where adApply.enabled = 1
+    </select>
+
+    <sql id="filter">
+        <if test="p.shopName != null">
+            and adApply.shop_id in (
+              select depot.id
+              from crm_depot depot
+              where depot.enabled = 1
+                    and depot.name LIKE  concat('%',#{p.shopName},'%')
+            )
+        </if>
+        <if test="p.createdLoginName != null">
+            and adApply.created_by in (
+              select account.id
+              from hr_account account
+              where account.enabled = 1
+                    and account.login_name LIKE  concat('%',#{p.createdLoginName},'%')
+            )
+        </if>
+        <if test="p.createdDateStart != null">
+            and adApply.created_date >= #{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd != null">
+            and adApply.created_date &lt;= #{p.createdDateEnd}
+        </if>
+        <if test="p.productName != null">
+            and adApply.product_id in (
+            select product.id
+            from crm_product product
+            where product.enabled = 1
+                  and product.name LIKE  concat('%',#{p.productName},'%')
+            )
+        </if>
+        <if test="p.productCodeList != null and p.productCodeList.size() >0">
+            and adApply.product_id in (
+            select product.id
+            from crm_product product
+            where product.enabled = 1
+                 and product.code in
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="p.billedQty != null">
+            and adApply.billed_qty = #{p.billedQty}
+        </if>
+        <if test="p.leftQty != null">
+            and adApply.left_qty = #{p.leftQty}
+        </if>
+        <if test="p.outGroupIds != null and p.outGroupIds.size() !=0">
+            and adApply.product_id in (
+              select product.id
+              from crm_product product
+              where product.enabled = 1 and product.out_group_id in
+            <foreach collection="p.outGroupIds" index="index" item="item" open="(" separator="," close=")">
+                #{p.outGroupIds[${index}]}
+            </foreach>
+            )
+        </if>
+    </sql>
+</mapper>

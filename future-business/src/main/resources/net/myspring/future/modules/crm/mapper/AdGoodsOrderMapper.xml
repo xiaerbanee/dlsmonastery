@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.AdGoodsOrderMapper">
+
+    <select id="findPage" resultType="AdGoodsOrder">
+        SELECT
+        t1.*
+        FROM
+        crm_ad_goods_order t1,hr_office office,crm_depot depot
+        WHERE
+        t1.enabled=1
+        and t1.shop_id=depot.id
+        and depot.office_id=office.id
+        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter" />
+        <if test="p.billType !=null">
+            and t1.bill_type =#{p.billType}
+        </if>
+        <if test="p.processStatus !=null">
+            and t1.process_status =#{p.processStatus}
+        </if>
+        <if test="p.remarks !=null">
+            and t1.remarks like concat('%',#{p.remarks},'%')
+        </if>
+        <if test="p.createdDateStart !=null">
+            and t1.created_date >= #{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd !=null">
+            and t1.created_date &lt;= #{p.createdDateEnd}
+        </if>
+        <if test="p.billDateStart !=null">
+            and t1.bill_date >= #{p.billDateStart}
+        </if>
+        <if test="p.billDateEnd !=null">
+            and t1.bill_date &lt;= #{p.billDateEnd}
+        </if>
+        <if test="p.createdBy !=null">
+            and t1.created_by in(
+            select id
+            from hr_account
+            where login_name like concat('%',#{p.createdBy},'%')
+            and enabled=1
+            )
+        </if>
+        <if test="p.officeName != null">
+            and t1.created_by in (
+            select t2.id
+            from hr_account t2 , hr_account_office t3, hr_office t4
+            where t2.id = t3.account_id
+            and t3.office_id = t4.id
+            and t4.name like CONCAT('%',#{p.officeName},'%')
+            )
+        </if>
+        <if test="p.storeId !=null">
+            AND t1.store_id =#{p.storeId}
+            )
+        </if>
+        <if test="p.shopName !=null">
+            and t1.shop_id in(
+            select depot.id
+            from crm_depot depot
+            where depot.name like concat('%',#{p.shopName},'%')
+            and depot.enabled=1
+            )
+        </if>
+        <if test="p.areaType !=null">
+            and t1.shop_id in(
+            select depot.id
+            from crm_depot depot
+            where depot.area_type like concat('%',#{p.areaType},'%')
+            and depot.enabled=1
+            )
+        </if>
+    </select>
+
+    <select id="findMaxBusinessId" resultType="String">
+        SELECT
+        MAX(t1.business_id)
+        FROM  crm_ad_goods_order t1
+        WHERE
+        t1.created_date>=#{localDate}
+    </select>
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.ProductImeSaleMapper">
+    <select id="findByProductImeId" resultType="ProductImeSale">
+        select t1.*
+        from crm_product_ime_sale t1
+        where t1.product_ime_id = #{productImeId}
+    </select>
+
+    <select id="findPage" resultType="ProductImeSale">
+        select
+          t1.*
+        from
+          crm_product_ime_sale t1,crm_depot depot
+        where
+        t1.enabled=1
+        and t1.shop_id=depot.id
+        <if test="p.createdDateStart !=null">
+            and t1.created_date >=#{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd !=null">
+            and t1.created_date &lt;=#{p.createdDateEnd}
+        </if>
+        <if test="p.shopName != null">
+            and depot.name LIKE CONCAT('%',#{p.shopName},'%')
+        </if>
+        <if test="p.isBack != null">
+            and t1.is_back = #{p.isBack}
+        </if>
+        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+    </select>
+
+    <select id="findByEmployeeId" resultType="ProductImeSale">
+        select t1.*
+        FROM crm_product_ime_sale t1
+        WHERE t1.employee_id = #{employeeId}
+        and t1.created_date >= #{createdDateStart}
+        and t1.created_date &lt;= #{createdDateEnd}
+    </select>
+
+    <select id="findByEmployeeIds" resultType="net.myspring.future.common.model.NameValue">
+        select t1.employee_id as name,count(*) as value
+        FROM crm_product_ime_sale t1
+        WHERE t1.employee_id IN
+        <foreach collection="employeeIds" index="index" item="item" open="(" separator="," close=")" >
+            #{item}
+        </foreach>
+        and t1.created_date >= #{createdDateStart}
+        and t1.created_date &lt;= #{createdDateEnd}
+        and t1.enabled=1
+        and t1.is_back=0
+    </select>
+
+</mapper>

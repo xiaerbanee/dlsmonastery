@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.DemoPhoneMapper">
+
+    <select id="findPage" resultType="DemoPhone">
+        SELECT t1.*
+        FROM crm_demo_phone t1
+        where t1.enabled=1
+        <include refid="demoPhoneFilter"/>
+    </select>
+
+    <select id="findByFilter" resultType="DemoPhone">
+        SELECT t1.*
+        FROM crm_demo_phone t1
+        where t1.enabled=1
+        <include refid="demoPhoneFilter"/>
+    </select>
+
+    <sql id="demoPhoneFilter">
+        <if test="p.ime != null">
+            and t1.product_ime_id in(
+            select t2.id
+            from crm_product_ime t2
+            where t2.ime like concat('%',#{p.ime},'%') or t2.ime2 like concat('%',#{p.ime},'%')
+            )
+        </if>
+        <if test="p.shopName != null">
+            and t1.shop_id in(
+            select t2.id
+            from crm_depot t2
+            where t2.name like concat('%',#{p.shopName},'%')
+            )
+        </if>
+    </sql>
+
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.GoodsOrderImeMapper">
+
+    <select id="findByProductImeId" resultType="GoodsOrderIme">
+        select t1.*
+        from crm_goods_order_ime t1
+        where t1.product_ime_id = #{productImeId}
+    </select>
+
+    <select id="findByGoodsOrderIds" resultType="GoodsOrderIme">
+        select t1.*
+        from crm_goods_order_ime t1
+        where t1.goods_order_Id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>
