@@ -101,7 +101,7 @@
         })
       },sortChange(column) {
         this.formData.order=util.getOrder(column);
-        this.formData.pageNumber=0;
+        this.formData.page=0;
         this.pageRequest();
       },search() {
         this.formVisible = false;

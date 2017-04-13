@@ -127,8 +127,8 @@
         pageHeight:600,
         page:{},
         formData:{
-          pageNumber:0,
-          pageSize:25,
+          page:0,
+          size:25,
           expressCode:'',
           fromDepotName:'',
           toDepotName:'',
@@ -170,14 +170,14 @@
         })
       },pageChange(pageNumber,pageSize) {
         if(this.isPageChange){
-          this.formData.pageNumber = pageNumber;
-          this.formData.pageSize = pageSize;
+          this.formData.page = pageNumber;
+          this.formData.size = pageSize;
           this.pageRequest();
         }
         this.isPageChange = true;
       },sortChange(column) {
         this.formData.order=util.getOrder(column);
-        this.formData.pageNumber=0;
+        this.formData.page=0;
         this.pageRequest();
       },search() {
         this.formVisible = false;

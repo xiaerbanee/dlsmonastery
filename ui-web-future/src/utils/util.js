@@ -50,12 +50,12 @@ util.pickerDateOption = {
 util.getOrder = function (column) {
   let order = '';
   if (column.prop == null) {
-    order = "id:DESC";
+    order = "id,DESC";
   } else {
     if(column.sort != null) {
-      order = column.sort + ":" + column.order;
+      order = column.sort + "," + column.order;
     } else {
-      order = column.prop + ":" + column.order;
+      order = column.prop + "," + column.order;
     }
   }
   return order
