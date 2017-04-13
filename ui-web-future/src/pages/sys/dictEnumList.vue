@@ -34,7 +34,7 @@
         <el-table-column prop="category" :label="$t('dictEnumList.category')"></el-table-column>
         <el-table-column prop="value" :label="$t('dictEnumList.value')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('dictEnumList.remarks')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('dictEnumList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('dictEnumList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('dictEnumList.createdDate')"></el-table-column>
         <el-table-column prop="locked" :label="$t('dictEnumList.locked')" width="120">
           <template scope="scope">
@@ -43,9 +43,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('dictEnumList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

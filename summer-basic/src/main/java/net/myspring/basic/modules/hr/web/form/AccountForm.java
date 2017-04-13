@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.web.form;
 
 import net.myspring.basic.modules.hr.domain.Account;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.basic.common.form.DataForm;
 
 import java.util.List;
 
@@ -9,20 +9,11 @@ import java.util.List;
  * Created by liuj on 2017/3/19.
  */
 
-public class AccountForm implements BaseForm<Account>{
-    private String id;
+public class AccountForm extends DataForm<Account>{
     private String password;
     private List<String> OfficeIdList;
     private String type;
     private String employeeId;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getPassword() {
         return password;

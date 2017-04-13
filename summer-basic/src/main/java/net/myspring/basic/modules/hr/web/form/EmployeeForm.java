@@ -2,20 +2,11 @@ package net.myspring.basic.modules.hr.web.form;
 
 
 import net.myspring.basic.modules.hr.domain.Employee;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.basic.common.form.DataForm;
 
 /**
  * Created by admin on 2017/4/5.
  */
 
-public class EmployeeForm implements BaseForm<Employee> {
-    private String id;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+public class EmployeeForm extends DataForm<Employee> {
 }

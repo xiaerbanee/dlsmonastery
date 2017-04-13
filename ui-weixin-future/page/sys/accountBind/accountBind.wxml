@@ -6,16 +6,6 @@
   <view style="color:red">测试账号为xcxtest,密码123456</view>
   <form class="page__bd" catchsubmit="formSubmit">
     <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_select">
-          <view class="weui-cell__hd weui-cell__hd_in-select-after">
-              <view class="weui-label">公司</view>
-          </view>
-          <view class="weui-cell__bd">
-              <picker name="companyName" bindchange="bindCompanyChange" value="{{companyNames[companyIndex]}}" range="{{companyNames}}">
-                  <view class="weui-select weui-select_in-select-after">{{companyNames[companyIndex]}}</view>
-              </picker>
-          </view>
-      </view>
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">登录名</view>

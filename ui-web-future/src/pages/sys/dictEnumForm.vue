@@ -51,7 +51,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/sys/dictEnum/save', qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/basic/sys/dictEnum/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -66,11 +66,11 @@
           })
         }
       },created(){
-        axios.get('/api/sys/dictEnum/getFormProperty').then((response)=>{
+        axios.get('/api/basic/sys/dictEnum/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
           })
         }

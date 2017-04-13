@@ -17,18 +17,18 @@ import java.util.Map;
 /**
  * Created by liuj on 2016/11/12.
  */
-public class BaseProvider {
+public class BaseProvider<T, ID extends Serializable> {
     private final Logger logger = LoggerFactory.getLogger(BaseProvider.class);
     private Map<String,Boolean> insertableMap = Maps.newHashMap();
 
     private Map<String,Boolean> updatableMap = Maps.newHashMap();
 
 
-    protected Class<? extends Serializable> getIdClass() {
+    protected Class<ID> getIdClass() {
         return MapperThreadLocal.get().getMapperDefinition().getIdClass();
     }
 
-    protected Class<?> getDomainClass() {
+    protected Class<T> getDomainClass() {
         return MapperThreadLocal.get().getMapperDefinition().getDomainClass();
     }
 
@@ -36,7 +36,7 @@ public class BaseProvider {
         return ProviderContextUtils.getTableDto(getDomainClass());
     }
 
-    protected Boolean getInsertable(Object entity, ColumnDto columnDto) {
+    protected Boolean getInsertable(T entity, ColumnDto columnDto) {
         String key = entity.getClass().getName() + "_" + columnDto.getJdbcColumn();
         if(!insertableMap.containsKey(key)) {
             boolean insertable;
@@ -68,7 +68,7 @@ public class BaseProvider {
         return insertableMap.get(key);
     }
 
-    protected Boolean getUpdatable(Object entity, ColumnDto columnDto) {
+    protected Boolean getUpdatable(T entity, ColumnDto columnDto) {
         String key = entity.getClass().getName() + "_" + columnDto.getJdbcColumn();
         if(!updatableMap.containsKey(key)) {
             boolean updatable;

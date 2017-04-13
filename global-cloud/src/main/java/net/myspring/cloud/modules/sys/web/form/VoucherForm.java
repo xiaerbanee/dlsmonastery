@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
+import net.myspring.cloud.common.form.DataForm;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.domain.Voucher;
 import net.myspring.cloud.modules.sys.dto.VoucherEntryDto;
@@ -12,9 +13,8 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/12.
  */
-public class VoucherForm implements BaseForm<Voucher> {
+public class VoucherForm extends DataForm<Voucher> {
     //业务日期
-    private String id;
     private LocalDate fDate;
     private String createdName;
     private Integer version;
@@ -27,14 +27,6 @@ public class VoucherForm implements BaseForm<Voucher> {
     //明细
     private List<VoucherEntryDto> voucherEntryDtoList = Lists.newArrayList();
     private List<String> voucherEntryIdList = Lists.newArrayList();
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public LocalDate getfDate() {
         return fDate;

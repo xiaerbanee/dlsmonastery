@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class AccountDto extends DataDto<Account> {
 
     private String loginName;
+    private String password;
 
     private String positionId;
     private String officeId;
@@ -33,6 +34,14 @@ public class AccountDto extends DataDto<Account> {
     private String companyName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
     private String employeeName;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getEmployeeName() {
         return employeeName;

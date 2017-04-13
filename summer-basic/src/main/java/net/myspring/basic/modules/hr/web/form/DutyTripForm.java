@@ -2,13 +2,13 @@ package net.myspring.basic.modules.hr.web.form;
 
 
 import net.myspring.basic.modules.hr.domain.DutyTrip;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.basic.common.form.DataForm;
 
 /**
  * Created by admin on 2017/4/6.
  */
 
-public class DutyTripForm implements BaseForm<DutyTrip> {
+public class DutyTripForm extends DataForm<DutyTrip> {
     private String status;
     private String employeeId;
 

@@ -2,11 +2,11 @@ package net.myspring.basic.modules.hr.web.form;
 
 
 import net.myspring.basic.modules.hr.domain.AccountToken;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.basic.common.form.DataForm;
 
 /**
  * Created by admin on 2017/4/6.
  */
 
-public class AccountTokenForm implements BaseForm<AccountToken> {
+public class AccountTokenForm extends DataForm<AccountToken> {
 }

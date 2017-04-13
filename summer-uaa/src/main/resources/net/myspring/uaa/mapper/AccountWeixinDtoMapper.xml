@@ -13,4 +13,26 @@
         and t1.enabled=1
     </select>
 
+    <select id="findByAccountId" resultType="AccountWeixinDto">
+        SELECT
+        t1.company_id,
+        t1.account_id,
+        t1.open_id
+        FROM
+        hr_account_weixin t1
+        WHERE
+        t1.account_id = #{accountId}
+        and t1.enabled=1
+    </select>
+
+    <insert id="saveDto">
+        INSERT  INTO hr_account_weixin(account_id,company_id,open_id) VALUE (#{accountWeixinDto.accountId},#{accountWeixinDto.company_id},#{accountWeixinDto.open_id},)
+    </insert>
+
+    <update id="updateDto">
+        UPDATE  hr_account_weixin SET acount_id=#{accountWeixinDto.accountId},company_id=#{accountWeixinDto.companyId},openId=#{accountWeixinDto.openId}
+    </update>
+
+
+
 </mapper>

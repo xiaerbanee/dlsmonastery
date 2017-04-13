@@ -1,26 +1,17 @@
 package net.myspring.basic.modules.sys.web.form;
 
 import net.myspring.basic.modules.sys.domain.Folder;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.basic.common.form.DataForm;
 
 /**
  * Created by admin on 2017/4/5.
  */
 
-public class FolderForm implements BaseForm<Folder>{
-    private String id;
+public class FolderForm extends DataForm<Folder>{
     private Folder parent;
     private String name;
     private String parentIds;
     private String parentId;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Folder getParent() {
         return parent;

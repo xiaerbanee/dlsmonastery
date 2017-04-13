@@ -4,8 +4,6 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     userInfo: [],
-    companyNames: null,
-    companyIndex: null,
     disabled: false
   },
   onLoad: function () {
@@ -15,43 +13,27 @@ Page({
         userInfo: userInfo
       })
     });
-
-    //获取所有公司
-    wx.request({
-      url: $util.getUrl("login/companyNames"),
-      header: {
-        'x-auth-token': app.globalData.sessionId
-      },
-      success: function (res) {
-        that.setData({ companyNames: res.data });
-      }
-    })
-  },
-  bindCompanyChange: function (e) {
-    this.setData({
-      companyIndex: e.detail.value
-    })
   },
   formSubmit: function (e) {
     var that = this;
-    if(e.detail.value.companyName == "" || e.detail.value.loginName == "" || e.detail.value.password=="") {
+    if(e.detail.value.loginName == "" || e.detail.value.password=="") {
         wx.showModal({
-          content: "请输入公司，用户名及密码",
+          content: "请输入用户名及密码",
           showCancel: false
         });
         return;
     }
     that.setData({ disabled: true });
     wx.request({
-      url: $util.getUrl("login/accountBind"),
-      data: {companyName:e.detail.value.companyName,
-             loginName: e.detail.value.loginName,
+      url: $util.getUrl("uaa/sys/accountWeixin/accountBind"),
+      data: {loginName: e.detail.value.loginName,
              password: e.detail.value.password,
              code: app.globalData.weixinCode},
       header: {
         'x-auth-token': app.globalData.sessionId
       },
       success: function (res) {
+        console.log(res)
         if(res.data.success) {
          wx.navigateBack({delta: 10})
         } else {

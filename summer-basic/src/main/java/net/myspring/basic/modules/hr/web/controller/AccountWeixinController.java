@@ -40,6 +40,8 @@ public class AccountWeixinController {
     private AccountWeixinService accountWeixinService;
     @Autowired
     private SecurityUtils securityUtils;
+    @Autowired
+    private AccountService accountService;
 
     @RequestMapping(value = "findOne")
     public AccountWeixinDto findOne(String id){
@@ -47,9 +49,8 @@ public class AccountWeixinController {
         return accountWeixinDto;
     }
 
-    @RequestMapping(value = "findAccountWeixinList")
-    public List<AccountWeixinDto> findAccountWeixinList(){
-        return accountWeixinService.findByAccountId(securityUtils.getAccountId());
+    @RequestMapping(value = "findByAccountId")
+    public AccountWeixinDto findByAccountId(String accountId) {
+        return accountWeixinService.findByAccountId(accountId);
     }
-
 }

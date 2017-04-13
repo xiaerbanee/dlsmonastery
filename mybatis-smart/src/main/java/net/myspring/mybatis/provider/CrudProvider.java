@@ -3,22 +3,24 @@ package net.myspring.mybatis.provider;
 import com.google.common.collect.Lists;
 import net.myspring.mybatis.dto.ColumnDto;
 import net.myspring.mybatis.dto.TableDto;
+import net.myspring.mybatis.form.BaseForm;
 import net.myspring.mybatis.interceptor.VersionInterceptor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by liuj on 2016/11/12.
  */
-public class CrudProvider extends BaseProvider {
+public class CrudProvider<T, ID extends Serializable> extends BaseProvider<T,ID> {
 
     private Logger logger = LoggerFactory.getLogger(CrudProvider.class);
 
-    public String save(Object entity) {
+    public String save(T entity) {
         List<String> jdbcColumns = Lists.newArrayList();
         List<String> javaInstances = Lists.newArrayList();
         for(ColumnDto columnDto:getTableDto().getColumnList()) {
@@ -48,7 +50,7 @@ public class CrudProvider extends BaseProvider {
         List<String> insertValues = Lists.newArrayList();
         TableDto tableDto = getTableDto();
         for(ColumnDto columnDto:tableDto.getColumnList()) {
-            boolean insertable = getInsertable(list.get(0),columnDto);
+            boolean insertable = getInsertable((T)list.get(0),columnDto);
             if(insertable) {
                 jdbcColumns.add(columnDto.getJdbcColumn());
                 javaInstances.add(columnDto.getJavaInstance());
@@ -76,13 +78,13 @@ public class CrudProvider extends BaseProvider {
         return sql;
     }
 
-    public String  findOne(Object id) {
+    public String  findOne(ID id) {
         String sql = "SELECT * FROM " + getTableDto().getJdbcTable() + " WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "=#{id}";
         logger.info(sql);
         return sql;
     }
 
-    public String  exists(Object id) {
+    public String  exists(ID id) {
         String sql = "SELECT COUNT(*) FROM " + getTableDto().getJdbcTable() + " WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "=#{id}";
         logger.info(sql);
         return sql;
@@ -111,7 +113,7 @@ public class CrudProvider extends BaseProvider {
         return sql;
     }
 
-    public String deleteById(Object id) {
+    public String deleteById(ID id) {
         String sql =  "DELETE FROM " + getTableDto().getJdbcTable() + " WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "=#{id}";
         logger.info(sql);
         return sql;
@@ -128,7 +130,7 @@ public class CrudProvider extends BaseProvider {
         return sql;
     }
 
-    public String deleteByEntity(Object entity) {
+    public String deleteByEntity(T entity) {
         String sql =  "DELETE FROM " + getTableDto().getJdbcTable() + " WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "#{" + getTableDto().getIdColumn().getJavaInstance() + "}";
         logger.info(sql);
         return sql;
@@ -152,7 +154,7 @@ public class CrudProvider extends BaseProvider {
         return sql;
     }
 
-    public String update(Object entity) {
+    public String update(T entity) {
         List<String>  jdbcColumns = Lists.newArrayList();
         for(ColumnDto columnDto:getTableDto().getColumnList()) {
             boolean updatable = getUpdatable(entity,columnDto);
