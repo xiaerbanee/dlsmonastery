@@ -116,7 +116,7 @@ public class ProviderContextUtils {
             if(annotation != null) {
                 entityClass = clazz;
             } else {
-                if(clazz.isAssignableFrom(BaseForm.class)) {
+                if(BaseForm.class.isAssignableFrom(clazz)) {
                     Type[] types= clazz.getGenericInterfaces();
                     for(Type type:types) {
                         ParameterizedType parameterizedType = (ParameterizedType)type;
