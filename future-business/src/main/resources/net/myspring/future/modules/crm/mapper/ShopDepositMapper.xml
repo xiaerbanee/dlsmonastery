@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.ShopDepositMapper">
+
+    <select id="findPage" resultType="ShopDeposit">
+        SELECT
+        t1.*
+        FROM
+        crm_shop_deposit t1,crm_depot depot
+        WHERE
+        t1.enabled=1
+        and t1.shop_id = depot.id
+        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <if test="p.shopName != null">
+            AND depot.name LIKE CONCAT('%',#{p.shopName},'%')
+        </if>
+        <if test="p.type != null">
+            AND t1.type =#{p.type}
+        </if>
+        <if test="p.remarks != null">
+            AND t1.remarks LIKE CONCAT('%',#{p.remarks},'%')
+        </if>
+        <if test="p.createdDateStart !=null">
+            and t1.created_date >=#{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd !=null">
+            and t1.created_date &lt;=#{p.createdDateEnd}
+        </if>
+        <if test="p.createdBy !=null">
+            and t1.created_by in(
+            select id
+            from hr_account
+            where login_name like concat('%',#{p.createdBy},'%')
+            and enabled=1
+            )
+        </if>
+    </select>
+
+    <select id="findByTypeAndShops" resultType="ShopDeposit">
+        SELECT
+        t1.*
+        FROM
+        crm_shop_deposit t1
+        where t1.id in (
+        SELECT
+        Max(id)
+        FROM
+        crm_shop_deposit
+        where `type`=#{type}
+        <if test="shopIds!=null and shopIds.size()>0">
+            and shop_id IN
+            <foreach collection="shopIds" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        GROUP BY shop_id,type
+        )
+    </select>
+
+    <select id="findByTypeAndShopId" resultType="ShopDeposit">
+        SELECT
+        t1.*
+        FROM
+        crm_shop_deposit t1
+        where t1.shop_id = #{shopId}
+        and t1.type = #{type}
+        and t1.enabled =1
+        order by t1.created_date desc  LIMIT 0,#{size}
+</select>
+
+</mapper>

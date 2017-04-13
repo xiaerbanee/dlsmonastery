@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.ExpressMapper">
+
+    <select id="findPage" resultType="Express">
+        SELECT
+        t1.*
+        FROM
+        crm_express t1,crm_depot depot,crm_express_order ord
+        WHERE
+        t1.enabled=1
+        and t1.express_order_id=ord.id and ord.to_depot_id=depot.id
+        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <if test="p.code !=null">
+            and t1.code like concat('%',#{p.code},'%')
+        </if>
+        <if test="p.createdDateStart !=null">
+            and t1.created_date >= #{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd !=null">
+            and t1.created_date &lt;= #{p.createdDateEnd}
+        </if>
+        <if test="p.createdBy !=null">
+            and t1.created_by in(
+            select id
+            from hr_account
+            where login_name like concat('%',#{p.createdBy},'%')
+            and enabled=1
+            )
+        </if>
+        <if test="p.extendType !=null">
+            and express_order_id in(
+            select id
+            from crm_express_order
+            where enabled=1 and extend_type = #{p.extendType}
+            )
+        </if>
+        <if test="p.extendBusinessId !=null">
+            and express_order_id in(
+            select id
+            from crm_express_order
+            where enabled=1 and extend_business_id like concat('%',#{p.extendBusinessId},'%')
+            )
+        </if>
+        <if test="p.expressCompanyId !=null">
+        and express_order_id in(
+        select t2.id
+        from crm_express_order t2 ,crm_express_company t3
+        where t1.express_order_id=t2.id and t2.express_company_id=t3.id and t3.enabled=1 and t3.id=#{p.expressCompanyId}
+        )
+    </if>
+    </select>
+
+    <select id="findByExpressOrderId" resultType="Express">
+        SELECT t1.*
+        FROM crm_express t1
+        where t1.express_order_id=#{expressOrderId}
+    </select>
+</mapper>

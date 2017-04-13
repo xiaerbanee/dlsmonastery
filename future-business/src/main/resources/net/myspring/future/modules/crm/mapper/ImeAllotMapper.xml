@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.ImeAllotMapper">
+    <select id="findByProductImeId" resultType="ImeAllot">
+        select t1.*
+        from crm_ime_allot t1
+        where t1.product_ime_id = #{productImeId}
+    </select>
+
+    <select id="findPage" resultType="ImeAllot">
+        SELECT
+        t1.*
+        FROM
+        crm_ime_allot t1,crm_depot t2,crm_depot t3
+        WHERE
+        t1.enabled=1
+        and t1.from_depot_id = t2.id
+        and t1.to_depot_id = t3.id
+        <if test="p.ime !=null">
+            and t1.product_ime_id in(
+            select id
+            from crm_product_ime
+            where enabled=1 and  ime like concat('%',#{p.ime},'%')
+            )
+        </if>
+        <if test="p.createdBy != null">
+            AND t1.created_by = #{p.createdBy}
+        </if>
+        <if test="p.fromDepotName != null">
+            AND t2.name LIKE  CONCAT('%',#{p.fromDepotName},'%')
+        </if>
+        <if test="p.toDepotName != null">
+            AND t3.name  LIKE CONCAT('%',#{p.toDepotName},'%')
+        </if>
+        <if test="p.status != null">
+            AND t1.status  = #{p.status}
+        </if>
+        <if test="p.crossArea != null">
+            AND t1.cross_area  = #{p.crossArea}
+        </if>
+        <if test="p.createdDateStart !=null">
+            AND t1.created_date &gt;=#{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd !=null">
+            AND t1.created_date &lt;=#{p.createdDateEnd}
+        </if>
+        <if test="p.officeIds !=null and p.officeIds.size() !=0 and p.depotIds.size()==0">
+            and (t2.office_id IN
+            <foreach collection="p.officeIds" index="index" item="item" open="(" separator="," close=")">
+                #{p.officeIds[${index}]}
+            </foreach> or t3.office_id IN
+            <foreach collection="p.officeIds" index="index" item="item" open="(" separator="," close=")">
+                #{p.officeIds[${index}]}
+            </foreach>
+            )
+        </if>
+        <if test="p.depotIds !=null and p.depotIds.size() !=0">
+            and (t2.id IN
+            <foreach collection="p.depotIds" index="index" item="item" open="(" separator="," close=")">
+                #{p.depotIds[${index}]}
+            </foreach> or t3.id in
+            <foreach collection="p.depotIds" index="index" item="item" open="(" separator="," close=")">
+                #{p.depotIds[${index}]}
+            </foreach>
+            )
+        </if>
+
+
+    </select>
+</mapper>
