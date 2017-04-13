@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.web.form;
 
 import net.myspring.basic.modules.hr.domain.DutyLeave;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.basic.common.form.DataForm;
 
 import java.time.LocalDate;
 
@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * Created by admin on 2017/4/6.
  */
 
-public class DutyLeaveForm implements BaseForm<DutyLeave>{
+public class DutyLeaveForm extends DataForm<DutyLeave>{
     private String dutyDateStart;
     private String dutyDateEnd;
     private String employeeId;

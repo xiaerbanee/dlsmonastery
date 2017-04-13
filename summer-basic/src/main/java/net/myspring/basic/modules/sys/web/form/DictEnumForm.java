@@ -7,12 +7,11 @@ import net.myspring.mybatis.form.BaseForm;
  * Created by admin on 2017/4/5.
  */
 
-public class DictEnumForm implements BaseForm<DictEnum>{
+public class DictEnumForm extends DataForm<DictEnum>{
     private String id;
     private Integer sort;
     private String category;
     private String value;
-    private String remarks;
 
     public Integer getSort() {
         return sort;

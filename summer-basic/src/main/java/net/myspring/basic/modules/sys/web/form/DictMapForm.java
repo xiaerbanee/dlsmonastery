@@ -1,25 +1,16 @@
 package net.myspring.basic.modules.sys.web.form;
 
 import net.myspring.basic.modules.sys.domain.DictMap;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.basic.common.form.DataForm;
 
 /**
  * Created by admin on 2017/4/1.
  */
 
-public class DictMapForm implements BaseForm<DictMap>{
-    private String id;
+public class DictMapForm extends DataForm<DictMap>{
     private String category;
     private String name;
     private String value;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getCategory() {
         return category;

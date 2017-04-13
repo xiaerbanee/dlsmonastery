@@ -2,13 +2,13 @@ package net.myspring.basic.modules.hr.web.form;
 
 
 import net.myspring.basic.modules.hr.domain.DutyFree;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.basic.common.form.DataForm;
 
 /**
  * Created by admin on 2017/4/6.
  */
 
-public class DutyFreeForm implements BaseForm<DutyFree> {
+public class DutyFreeForm extends DataForm<DutyFree> {
     private String employeeId;
     private String Status;
 

@@ -3,25 +3,16 @@ package net.myspring.basic.modules.sys.web.form;
 
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.basic.common.form.DataForm;
 
 /**
  * Created by admin on 2017/4/5.
  */
 
-public class MenuForm implements BaseForm<Menu>{
-    private String id;
+public class MenuForm extends DataForm<Menu>{
     private String menuCategoryId;
     private MenuCategory menuCategory;
     private String permissionStr;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getMenuCategoryId() {
         return menuCategoryId;
