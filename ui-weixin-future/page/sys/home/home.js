@@ -27,10 +27,13 @@ Page({
             success: function (loginRes) {
                 if (loginRes.code) {
                     app.globalData.weixinCode = loginRes.code;
+                    console.log(app.globalData.weixinCode);
+                    console.log("+++++++++++++++++++")
                     that.getToken();
                 }
             },
             fail: function (res) {
+                console.log("login fail")
             },
         });
     },
@@ -39,7 +42,7 @@ Page({
         that.setData({ weixinAccountsHidden: true })
         if (that.data.menuList == null) {
             wx.request({
-                url: $util.getUrl('sys/menu/getMenus?isMobile=true'),
+                url: $util.getUrl('basic/sys/menu/getMenus?isMobile=true'),
                 header: {
                     'x-auth-token': app.globalData.sessionId
                 },
@@ -76,11 +79,13 @@ Page({
         })
     },
     getToken: function () {
+        console.log(app.globalData.weixinCode)
         wx.request({
-            url: $util.getUrl('uaa/oauth/token?weixinCode=' + app.globalData.weixinCode + "&grant_type=password"),
+            url: $util.getUrl('uaa/oauth/token?username=xcxtest&weixinCode=' + app.globalData.weixinCode + "&grant_type=password"),
             data: {},
             method: 'POST',
             success: function (res) {
+                console.log(res);
                 if (res.statusCode == 401) {
                     wx.navigateTo({
                         url: '/page/sys/accountBind/accountBind'

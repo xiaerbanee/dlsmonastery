@@ -6,6 +6,8 @@
 package net.myspring.util.text;
 
 import com.google.common.io.BaseEncoding;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -25,14 +27,16 @@ public class EncodeUtil {
 	}
 
 	/**
-	 * Hex解码, 将String解码为byte[].
-	 * 
-	 * 字符串有异常时抛出IllegalArgumentException.
+	 * Hex解码.
 	 */
-	public static byte[] decodeHex(CharSequence input) {
-		return BaseEncoding.base16().decode(input);
+	public static byte[] decodeHex(String input) {
+		try {
+			return Hex.decodeHex(input.toCharArray());
+		} catch (DecoderException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
-
 	/**
 	 * Base64编码.
 	 */

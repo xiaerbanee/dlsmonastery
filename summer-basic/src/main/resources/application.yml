@@ -22,7 +22,7 @@ eureka:
     prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://168.192.1.20:1000/eureka/
+      defaultZone: http://localhost:1000/eureka/
 
 security:
   oauth2:

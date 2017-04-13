@@ -45,7 +45,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         CustomUserDetails customUserDetails = null;
         AccountDto accountDto = null;
         HttpServletRequest request  = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-        String weixinCode = ObjectUtils.toString(request.getAttribute("weixinCode"));
+        String weixinCode = request.getParameter("weixinCode");
         if(StringUtils.isNotBlank(weixinCode)) {
             String accountId = ObjectUtils.toString(request.getAttribute("accountId"));
             WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(weixinCode);
@@ -63,6 +63,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             }
             if(StringUtils.isNotBlank(accountId)) {
                 accountDto = accountMapper.findById(accountId);
+                username=accountDto.getUsername();
             }
         } else {
             accountDto = accountMapper.findByLoginName(username);
