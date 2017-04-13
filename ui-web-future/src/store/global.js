@@ -46,7 +46,13 @@ const getAccount = function () {
 }
 
 const getAuthorityList = function () {
-  return [];
+  var local = window.localStorage.getItem("authorityList");
+  if(local) {
+    local = JSON.parse(local);
+  } else {
+    local = {};
+  }
+  return local;
 }
 
 export default {
@@ -87,6 +93,7 @@ export default {
     },
     setAuthorityList(state,authorityList) {
       state.authorityList = authorityList;
+      localStorage.setItem('authorityList', JSON.stringify(authorityList))
     },
     setAccount(state,account) {
       state.account = account;

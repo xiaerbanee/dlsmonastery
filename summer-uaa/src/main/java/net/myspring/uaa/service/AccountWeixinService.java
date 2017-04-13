@@ -29,12 +29,12 @@ public class AccountWeixinService {
     }
 
     public AccountWeixinDto save(AccountWeixinDto accountWeixinDto){
-        accountWeixinDtoMapper.save(accountWeixinDto);
+        accountWeixinDtoMapper.saveDto(accountWeixinDto);
         return accountWeixinDto;
     }
 
     public AccountWeixinDto update(AccountWeixinDto accountWeixinDto){
-        accountWeixinDtoMapper.update(accountWeixinDto);
+        accountWeixinDtoMapper.updateDto(accountWeixinDto);
         return accountWeixinDto;
     }
 

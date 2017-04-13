@@ -9,6 +9,42 @@ import net.myspring.mybatis.form.BaseForm;
 
 public class DictEnumForm implements BaseForm<DictEnum>{
     private String id;
+    private Integer sort;
+    private String category;
+    private String value;
+    private String remarks;
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public String getId() {
         return id;

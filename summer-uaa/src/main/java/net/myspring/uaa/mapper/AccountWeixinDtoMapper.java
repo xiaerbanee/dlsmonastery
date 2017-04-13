@@ -16,4 +16,8 @@ public interface AccountWeixinDtoMapper extends CrudMapper<AccountWeixinDto,Stri
     List<AccountWeixinDto> findByOpenId(String openId);
 
     AccountWeixinDto findByAccountId(String accountId);
+
+    int saveDto(AccountWeixinDto accountWeixinDto);
+
+    int updateDto(AccountWeixinDto accountWeixinDto);
 }
