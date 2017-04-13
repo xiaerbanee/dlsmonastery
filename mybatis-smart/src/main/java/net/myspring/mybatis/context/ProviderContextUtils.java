@@ -27,19 +27,19 @@ import java.util.Properties;
  */
 public class ProviderContextUtils {
     //表结构缓存
-    private static Map<String,TableDto> tableDtoMap = Maps.newHashMap();
+    private static Map<String, TableDto> tableDtoMap = Maps.newHashMap();
     //字段缓存
-    private static Map<String,ColumnDto> columnDtoMap = Maps.newHashMap();
+    private static Map<String, ColumnDto> columnDtoMap = Maps.newHashMap();
     //class对应的entityClass
-    private static Map<String,Class> entityClassMap= Maps.newHashMap();
+    private static Map<String, Class> entityClassMap = Maps.newHashMap();
 
     public static TableDto getTableDto(Class clazz) {
         clazz = getEntityClass(clazz);
         String key = clazz.getName();
-        if(!tableDtoMap.containsKey(key)) {
+        if (!tableDtoMap.containsKey(key)) {
             Entity entity = (Entity) clazz.getAnnotation(Entity.class);
             Table table = (Table) clazz.getAnnotation(Table.class);
-            if(entity != null && table != null) {
+            if (entity != null && table != null) {
                 TableDto tableDto = new TableDto();
                 //获取表名
                 String jdbcTable = table.name();
@@ -47,8 +47,8 @@ public class ProviderContextUtils {
                     jdbcTable = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, clazz.getSimpleName());
                 }
                 tableDto.setJdbcTable(jdbcTable);
-                List<Field> fields=Lists.newArrayList();
-                 getFields(fields, clazz);
+                List<Field> fields = Lists.newArrayList();
+                getFields(fields, clazz);
                 for (Field field : fields) {
                     if (isJdbcColumn(field)) {
                         ColumnDto columnDto = getColumnDto(field);
@@ -84,9 +84,9 @@ public class ProviderContextUtils {
     private static Boolean isJdbcColumn(Field field) {
         Class fieldClass = field.getType();
         Boolean isJdbcColumn = true;
-        if("serialVersionUID".equals(field.getName())) {
+        if ("serialVersionUID".equals(field.getName())) {
             isJdbcColumn = false;
-        }else if (field.getAnnotation(Transient.class) != null || fieldClass.getAnnotation(Entity.class) != null) {
+        } else if (field.getAnnotation(Transient.class) != null || fieldClass.getAnnotation(Entity.class) != null) {
             isJdbcColumn = false;
         } else if (Collection.class.isAssignableFrom(fieldClass) || Map.class.isAssignableFrom(fieldClass)) {
             isJdbcColumn = false;
@@ -97,7 +97,7 @@ public class ProviderContextUtils {
     public static MybatisContext getMybatisContext(Properties properties) {
         MybatisContext mybatisContext = null;
         try {
-            mybatisContext  =  (MybatisContext) Class.forName(properties.getProperty("mybatisContext")).newInstance();
+            mybatisContext = (MybatisContext) Class.forName(properties.getProperty("mybatisContext")).newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -110,25 +110,23 @@ public class ProviderContextUtils {
 
     public static Class getEntityClass(Class clazz) {
         String key = clazz.getName();
-        if(!entityClassMap.containsKey(key)) {
+        if (!entityClassMap.containsKey(key)) {
             Class entityClass = null;
-            Annotation annotation =clazz.getAnnotation(Entity.class);
-            if(annotation != null) {
+            Annotation annotation = clazz.getAnnotation(Entity.class);
+            if (annotation != null) {
                 entityClass = clazz;
             } else {
-                if(BaseForm.class.isAssignableFrom(clazz)) {
+                if (BaseForm.class.isAssignableFrom(clazz)) {
                     Type type = clazz.getGenericSuperclass();
-                    ParameterizedType parameterizedType = (ParameterizedType)type;
-                    if(parameterizedType.getRawType().getTypeName().equals(BaseForm.class.getName())) {
-                        try {
-                            entityClass = Class.forName(parameterizedType.getActualTypeArguments()[0].getTypeName());
-                        } catch (ClassNotFoundException e) {
-                           e.printStackTrace();
-                        }
+                    ParameterizedType parameterizedType = (ParameterizedType) type;
+                    try {
+                        entityClass = Class.forName(parameterizedType.getActualTypeArguments()[0].getTypeName());
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
             }
-            entityClassMap.put(key,entityClass);
+            entityClassMap.put(key, entityClass);
         }
         return entityClassMap.get(key);
     }
@@ -136,16 +134,16 @@ public class ProviderContextUtils {
 
     private static ColumnDto getColumnDto(Field field) {
         String key = field.toString();
-        if(!columnDtoMap.containsKey(key)) {
+        if (!columnDtoMap.containsKey(key)) {
             ColumnDto columnDto = new ColumnDto();
             columnDto.setJavaInstance(field.getName());
-            String jdbcColumn = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE,field.getName());
+            String jdbcColumn = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName());
             boolean insertable = true;
             boolean updatable = true;
             boolean nullable = false;
             Column column = field.getAnnotation(Column.class);
-            if(column !=null) {
-                if(StringUtils.isNotBlank(column.name())) {
+            if (column != null) {
+                if (StringUtils.isNotBlank(column.name())) {
                     jdbcColumn = column.name();
                 }
                 insertable = column.insertable();
@@ -159,19 +157,19 @@ public class ProviderContextUtils {
             columnDto.setInsertable(insertable);
             columnDto.setUpdatable(updatable);
             columnDto.setNullable(nullable);
-            columnDtoMap.put(key,columnDto);
+            columnDtoMap.put(key, columnDto);
         }
         return columnDtoMap.get(key);
     }
 
     //递归获取所有Field
-    private static void getFields(List<Field> fields,Class clazz) {
-        for(Field field:clazz.getDeclaredFields()) {
+    private static void getFields(List<Field> fields, Class clazz) {
+        for (Field field : clazz.getDeclaredFields()) {
             fields.add(field);
         }
         clazz = clazz.getSuperclass();
         if (!clazz.getName().equals(Object.class.getName())) {
-            getFields(fields,clazz);
+            getFields(fields, clazz);
         }
     }
 }

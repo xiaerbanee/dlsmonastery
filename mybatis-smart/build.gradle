@@ -19,7 +19,7 @@ apply plugin: 'org.springframework.boot'
 def env = System.getProperty("env") ?: "releases"
 jar {
 	baseName = 'mybatis-smart'
-	version = '1.1.5.RELEASE'
+	version = '1.1.6.RELEASE'
 }
 
 sourceCompatibility = 1.8
