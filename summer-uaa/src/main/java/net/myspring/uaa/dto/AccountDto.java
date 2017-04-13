@@ -1,5 +1,7 @@
 package net.myspring.uaa.dto;
 
+import net.myspring.util.text.StringUtils;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -10,6 +12,7 @@ public class AccountDto {
 
     private String id;
     private String username;
+    private String loginName;
     private String password;
 
     private String positionId;
@@ -22,6 +25,14 @@ public class AccountDto {
 
     private LocalDate leaveDate;
 
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
     public String getId() {
         return id;
     }
@@ -31,6 +42,9 @@ public class AccountDto {
     }
 
     public String getUsername() {
+        if(StringUtils.isBlank(username)&&StringUtils.isNotBlank(loginName)){
+            this.username=loginName;
+        }
         return username;
     }
 

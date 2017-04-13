@@ -31,6 +31,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
 	public static boolean validatePassword(String plainPassword, String password) {
 		byte[] salt = EncodeUtil.decodeHex(password.substring(0, 16));
 		byte[] hashPassword = Digests.sha1(plainPassword.getBytes(), salt, 1024);
-		return password.equals(EncodeUtil.encodeHex(salt) + EncodeUtil.encodeHex(hashPassword));
+        String pwd = EncodeUtil.encodeHex(salt) + EncodeUtil.encodeHex(hashPassword);
+        return password.equalsIgnoreCase(pwd);
 	}
 }

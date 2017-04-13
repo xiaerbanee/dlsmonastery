@@ -26,11 +26,11 @@
     </select>
 
     <insert id="saveDto">
-        INSERT  INTO hr_account_weixin(account_id,company_id,open_id) VALUE (#{accountWeixinDto.accountId},#{accountWeixinDto.company_id},#{accountWeixinDto.open_id},)
+        INSERT  INTO hr_account_weixin(account_id,company_id,open_id) VALUE (#{accountId},#{companyId},#{openId})
     </insert>
 
     <update id="updateDto">
-        UPDATE  hr_account_weixin SET acount_id=#{accountWeixinDto.accountId},company_id=#{accountWeixinDto.companyId},openId=#{accountWeixinDto.openId}
+        UPDATE  hr_account_weixin SET acount_id=#{accountId},company_id=#{companyId},openId=#{openId}
     </update>
 
 
