@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.kingdee.dto;
 
+import net.myspring.cloud.common.dto.DataDto;
 import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.modules.kingdee.domain.BdFlexItemGroup;
 import net.myspring.util.text.StringUtils;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/11.
  */
-public class BdFlexItemGroupDto {
+public class BdFlexItemGroupDto extends DataDto<BdFlexItemGroup> {
     private String fId;
     private String fNumber;
     private String fName;
