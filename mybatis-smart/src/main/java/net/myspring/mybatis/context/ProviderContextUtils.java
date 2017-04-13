@@ -117,16 +117,13 @@ public class ProviderContextUtils {
                 entityClass = clazz;
             } else {
                 if(BaseForm.class.isAssignableFrom(clazz)) {
-                    Type[] types= clazz.getGenericInterfaces();
-                    for(Type type:types) {
-                        ParameterizedType parameterizedType = (ParameterizedType)type;
-                        if(parameterizedType.getRawType().getTypeName().equals(BaseForm.class.getName())) {
-                            try {
-                                entityClass = Class.forName(parameterizedType.getActualTypeArguments()[0].getTypeName());
-                            } catch (ClassNotFoundException e) {
-                               e.printStackTrace();
-                            }
-                            break;
+                    Type type = clazz.getGenericSuperclass();
+                    ParameterizedType parameterizedType = (ParameterizedType)type;
+                    if(parameterizedType.getRawType().getTypeName().equals(BaseForm.class.getName())) {
+                        try {
+                            entityClass = Class.forName(parameterizedType.getActualTypeArguments()[0].getTypeName());
+                        } catch (ClassNotFoundException e) {
+                           e.printStackTrace();
                         }
                     }
                 }

@@ -5,7 +5,7 @@ import net.myspring.mybatis.form.BaseForm;
 /**
  * Created by liuj on 2017/4/12.
  */
-public class IdForm<T> implements BaseForm<T> {
+public class IdForm<T> extends BaseForm<T> {
     private String id;
 
     public String getId() {
