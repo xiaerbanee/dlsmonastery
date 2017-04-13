@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.mapper;
 
-import net.myspring.future.common.model.NameValue;
+import net.myspring.future.common.dto.NameValueDto;
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.crm.domain.Bank;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,7 +21,7 @@ public interface BankMapper extends MyMapper<Bank,String> {
 
     Page<Bank> findPage(Pageable pageable, @Param("p") Map<String, Object> map);
 
-    List<NameValue> findByBankId(List<String> bankId);
+    List<NameValueDto> findByBankId(List<String> bankId);
 
     int deleteBankAccount(@Param("bankId") String bankId);
 

@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.mapper;
 
-import net.myspring.future.common.model.NameValue;
+import net.myspring.future.common.dto.NameValueDto;
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.crm.domain.ProductImeSale;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,5 +21,5 @@ public interface ProductImeSaleMapper extends MyMapper<ProductImeSale,String> {
 
     List<ProductImeSale> findByEmployeeId(@Param("employeeId") String employeeId, @Param("createdDateStart") LocalDateTime createdDateStart, @Param("createdDateEnd") LocalDateTime createdDateEnd);
 
-    List<NameValue> findByEmployeeIds(@Param("employeeIds") List<String> employeeIds, @Param("createdDateStart") LocalDateTime createdDateStart, @Param("createdDateEnd") LocalDateTime createdDateEnd);
+    List<NameValueDto> findByEmployeeIds(@Param("employeeIds") List<String> employeeIds, @Param("createdDateStart") LocalDateTime createdDateStart, @Param("createdDateEnd") LocalDateTime createdDateEnd);
 }
