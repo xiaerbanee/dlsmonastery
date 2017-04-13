@@ -1,9 +1,11 @@
 package net.myspring.basic.modules.hr.manager;
 
+import net.myspring.basic.modules.hr.domain.DutyPublicFree;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
+import net.myspring.util.mapper.BeanUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -39,7 +41,7 @@ public class EmployeeManager {
 
     @CachePut(value = "employees",key="#p0.id")
     public Employee saveForm(EmployeeForm employeeForm){
-        employeeMapper.saveForm(employeeForm);
+        employeeMapper.save(BeanUtil.map(employeeForm,Employee.class));
         return  employeeMapper.findOne(employeeForm.getId());
     }
 

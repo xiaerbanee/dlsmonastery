@@ -46,7 +46,7 @@ public class DutyLeaveService {
                 dutyLeaveForm.setDutyDate(date);
                 dutyLeaveForm.setStatus(AuditTypeEnum.APPLY.getValue());
                 dutyLeaveForm.setEmployeeId(securityUtils.getEmployeeId());
-                dutyLeaveMapper.saveForm(dutyLeaveForm);
+                dutyLeaveMapper.save(BeanUtil.map(dutyLeaveForm,DutyLeave.class));
             }
             return dutyLeaveForm;
         }

@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
 import net.myspring.basic.modules.sys.web.form.PermissionForm;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -38,7 +39,7 @@ public class PermissionManager {
 
     @CachePut(value = "permissions",key="#p0.id")
     public Permission saveForm(PermissionForm permissionForm){
-        permissionMapper.saveForm(permissionForm);
+        permissionMapper.save(BeanUtil.map(permissionForm,Permission.class));
         return  permissionMapper.findOne(permissionForm.getId());
     }
 

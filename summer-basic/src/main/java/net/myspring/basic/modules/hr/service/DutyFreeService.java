@@ -39,7 +39,7 @@ public class DutyFreeService {
     public DutyFreeForm save(DutyFreeForm dutyFreeForm) {
         dutyFreeForm.setEmployeeId(securityUtils.getEmployeeId());
         dutyFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
-        dutyFreeMapper.saveForm(dutyFreeForm);
+        dutyFreeMapper.save(BeanUtil.map(dutyFreeForm,DutyFree.class));
         return dutyFreeForm;
     }
 

@@ -36,7 +36,7 @@ public class DutyRestService {
     public DutyRest save(DutyRestForm dutyRestForm) {
         dutyRestForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyRestForm.setEmployeeId(securityUtils.getEmployeeId());
-        dutyRestMapper.saveForm(dutyRestForm);
+        dutyRestMapper.save(BeanUtil.map(dutyRestForm,DutyRest.class));
         return dutyRestMapper.findOne(dutyRestForm.getId());
     }
 

@@ -64,7 +64,7 @@ public class OfficeService {
     public OfficeForm save(OfficeForm officeForm) {
         boolean isCreate= StringUtils.isBlank(officeForm.getId());
         if (isCreate) {
-            officeMapper.saveForm(officeForm);
+            officeMapper.save(BeanUtil.map(officeForm,Office.class));
         } else {
             officeMapper.updateForm(officeForm);
         }

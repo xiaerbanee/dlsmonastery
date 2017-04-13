@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.web.form.DutyTripForm;
 import net.myspring.basic.modules.hr.web.query.DutyTripQuery;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class DutyTripService {
     public DutyTripForm save(DutyTripForm dutyTripForm) {
         dutyTripForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyTripForm.setEmployeeId(securityUtils.getEmployeeId());
-        dutyTripMapper.saveForm(dutyTripForm);
+        dutyTripMapper.save(BeanUtil.map(dutyTripForm,DutyTrip.class));
         return dutyTripForm;
     }
 
