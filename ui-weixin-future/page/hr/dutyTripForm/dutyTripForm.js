@@ -33,9 +33,11 @@ Page({
     var that = this;
     that.setData({ submitDisabled: true });
     wx.request({
-      url: $util.getUrl("hr/dutyTrip/save"),
+      url: $util.getUrl("basic/hr/dutyTrip/save"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { 'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();

@@ -3,6 +3,8 @@ package net.myspring.basic.common.config;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
+import net.myspring.util.time.LocalTimeUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -42,10 +44,8 @@ public class MyWebBindingInitializer {
         binder.registerCustomEditor(LocalDateTime.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
-                if(StringUtils.isNotBlank(text)) {
-                    LocalDateTime localDateTime = LocalDateTimeUtils.parse(text);
-                    setValue(localDateTime);
-                }
+                LocalDateTime localDateTime = LocalDateTimeUtils.parse(text);
+                setValue(localDateTime);
             }
         });
 
@@ -54,10 +54,7 @@ public class MyWebBindingInitializer {
         binder.registerCustomEditor(LocalDate.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
-                if(StringUtils.isNotBlank(text)) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Const.FORMATTER_DATE);
-                    setValue(LocalDate.parse(text,formatter));
-                }
+                setValue(LocalDateUtils.parse(text));
             }
         });
 
@@ -65,10 +62,7 @@ public class MyWebBindingInitializer {
         binder.registerCustomEditor(LocalTime.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
-                if(StringUtils.isNotBlank(text)) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Const.FORMATTER_TIME);
-                    setValue(LocalTime.parse(text,formatter));
-                }
+                setValue(LocalTimeUtils.parse(text));
             }
         });
     }

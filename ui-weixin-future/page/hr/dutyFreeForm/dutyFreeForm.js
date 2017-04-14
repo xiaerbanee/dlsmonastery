@@ -21,10 +21,12 @@ Page({
   initPage: function () {
     var that = this;
     wx.request({
-      url: $util.getUrl("hr/dutyFree/getFormProperty"),
+      url: $util.getUrl("basic/hr/dutyFree/getFormProperty"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { 'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+       },
       success: function (res) {
         that.setData({ 'formProperty.dateList': res.data.dateList })
       }
@@ -47,9 +49,11 @@ Page({
     var that = this;
     that.setData({ submitDisabled: true });
     wx.request({
-      url: $util.getUrl("hr/dutyFree/save"),
+      url: $util.getUrl("basic/hr/dutyFree/save"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { 'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+       },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();

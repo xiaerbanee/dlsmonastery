@@ -18,7 +18,7 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutyFreeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="freeDate" :label="$t('dutyFreeList.freeDate')"></el-table-column>
-        <el-table-column prop="dateType":label="$t('dutyFreeList.dateType')" ></el-table-column>
+        <el-table-column prop="dateType" :label="$t('dutyFreeList.dateType')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('dutyFreeList.dutyFreeRemarks')"></el-table-column>
         <el-table-column prop="status" :label="$t('dutyFreeList.status')" >
           <template scope="scope">

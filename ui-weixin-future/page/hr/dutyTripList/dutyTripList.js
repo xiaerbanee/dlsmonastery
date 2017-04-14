@@ -31,8 +31,10 @@ Page({
             duration: 10000,
             success: function (res) {
                 wx.request({
-                    url: $util.getUrl("hr/dutyTrip"),
-                    header: { 'x-auth-token': app.globalData.sessionId },
+                    url: $util.getUrl("basic/hr/dutyTrip"),
+                    header: { 'x-auth-token': app.globalData.sessionId,
+                              'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                      },
                     data: that.data.formData,
                     success: function (res) {
                         that.setData({ page: res.data });
@@ -88,9 +90,11 @@ Page({
                 if (!res.cancel) {
                     if (itemList[res.tapIndex] == "删除") {
                         wx.request({
-                            url: $util.getUrl("hr/dutyTrip/delete"),
+                            url: $util.getUrl("basic/hr/dutyTrip/delete"),
                             data: { id: id },
-                            header: { 'x-auth-token': app.globalData.sessionId },
+                            header: { 'x-auth-token': app.globalData.sessionId,
+                                      'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                              },
                             success: function (res) {
                                 that.pageRequest();
                             }

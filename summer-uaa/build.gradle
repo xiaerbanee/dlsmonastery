@@ -27,7 +27,6 @@ repositories {
 
 dependencies {
 	compile project(':summer-bean')
-	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.1.7.RELEASE'
 	runtime('mysql:mysql-connector-java')
 	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.5.0'
 	compile('org.springframework.cloud:spring-cloud-starter-oauth2')

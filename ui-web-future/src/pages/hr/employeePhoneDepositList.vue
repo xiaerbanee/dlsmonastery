@@ -39,16 +39,16 @@
         <el-table-column fixed prop="employee.name" :label="$t('employeePhoneDepositList.employeeName')" width="150"></el-table-column>
         <el-table-column prop="depot.name" :label="$t('employeePhoneDepositList.shopName')" ></el-table-column>
         <el-table-column prop="areaName"  :label="$t('employeePhoneDepositList.areaName')"  width="100"></el-table-column>
-        <el-table-column prop="department"  :label="$t('employeePhoneDepositList.department')"   width="100"></el-table-column>
-        <el-table-column prop="bank.name"  :label="$t('employeePhoneDepositList.bank')"   width="100"></el-table-column>
+        <el-table-column prop="department" :label="$t('employeePhoneDepositList.department')"   width="100"></el-table-column>
+        <el-table-column prop="bank.name" :label="$t('employeePhoneDepositList.bank')"   width="100"></el-table-column>
         <el-table-column prop="amount"  :label="$t('employeePhoneDepositList.amount')" ></el-table-column>
-        <el-table-column prop="outCode"  :label="$t('employeePhoneDepositList.outCode')"  width="120"></el-table-column>
-        <el-table-column prop="billDate"  :label="$t('employeePhoneDepositList.billDate')" ></el-table-column>
-        <el-table-column prop="product.name"  :label="$t('employeePhoneDepositList.productName')"  width="120"></el-table-column>
+        <el-table-column prop="outCode" :label="$t('employeePhoneDepositList.outCode')"  width="120"></el-table-column>
+        <el-table-column prop="billDate" :label="$t('employeePhoneDepositList.billDate')" ></el-table-column>
+        <el-table-column prop="product.name" :label="$t('employeePhoneDepositList.productName')"  width="120"></el-table-column>
         <el-table-column prop="status" :label="$t('employeePhoneDepositList.status')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('employeePhoneDepositList.remarks')"></el-table-column>
         <el-table-column prop="lastModified.fullName" :label="$t('employeePhoneDepositList.lastModifiedBy')" ></el-table-column>
-        <el-table-column prop="lastModifiedByDate"  :label="$t('employeePhoneDepositList.lastModifiedDate')"  width="120"></el-table-column>
+        <el-table-column prop="lastModifiedByDate" :label="$t('employeePhoneDepositList.lastModifiedDate')"  width="120"></el-table-column>
         <el-table-column prop="locked" :label="$t('employeePhoneDepositList.locked')" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>

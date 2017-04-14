@@ -26,11 +26,4 @@ public class Const {
     public static final String OFFICE_TYPE_AREA = "100";
     public static final String XCXAUDIT= "xcxtest";
 
-    public static final String FORMATTER_DATE = "yyyy-MM-dd";
-    public static final String FORMATTER_SHORT_DATE = "yyyyMMdd";
-    public static final String FORMATTER_DATE_TIME = "yyyy-MM-dd HH:mm";
-    public static final String FORMATTER_LONG_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
-    public static final String FORMATTER_TIME = "HH:mm";
-    public static final String FORMATTER_LONG_TIME = "HH:mm:ss";
-
 }

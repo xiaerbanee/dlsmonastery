@@ -37,10 +37,13 @@ Page({
     var that = this;
     that.setData({ disabled: true });
     wx.request({
-      url: $util.getUrl("hr/dutyOvertime/save"),
+      url: $util.getUrl("basic/hr/dutyOvertime/save"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { 'x-auth-token': app.globalData.sessionId,
+               'authorization': "Bearer" + wx.getStorageSync('token').access_token
+       },
       success: function (res) {
+        console.log(res)
         if (res.data.success) {
           wx.navigateBack();
         } else {

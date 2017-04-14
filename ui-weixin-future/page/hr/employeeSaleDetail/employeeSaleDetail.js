@@ -16,10 +16,12 @@ Page({
         var that = this;
         var options = that.data.options;
         wx.request({
-            url: $util.getUrl("hr/employee/saleDetail"),
+            url: $util.getUrl("basic/hr/employee/saleDetail"),
             data: { id: options.id, dateStart: options.dateStart, dateEnd: options.dateEnd },
             method: 'GET',
-            header: { 'x-auth-token': app.globalData.sessionId },
+            header: { 'x-auth-token': app.globalData.sessionId,
+                      'authorization': "Bearer" + wx.getStorageSync('token').access_token
+             },
             success: function (res) {
                 that.setData({ formData: res.data })
             }

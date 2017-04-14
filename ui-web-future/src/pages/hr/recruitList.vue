@@ -24,7 +24,7 @@
         <el-table-column  prop="name"  :label="$t('recruitList.name')"></el-table-column>
         <el-table-column prop="sex" :label="$t('recruitList.sex')"></el-table-column>
         <el-table-column prop="education" :label="$t('recruitList.education')"></el-table-column>
-        <el-table-column prop="mobilePhone":label="$t('recruitList.mobilePhone')"></el-table-column>
+        <el-table-column prop="mobilePhone" :label="$t('recruitList.mobilePhone')"></el-table-column>
         <el-table-column prop="firstAppointDate" :label="$t('recruitList.firstAppointDate')"></el-table-column>
         <el-table-column prop="secondAppointDate" :label="$t('recruitList.secondAppointDate')"></el-table-column>
         <el-table-column prop="physicalAppointDate" :label="$t('recruitList.physicalAppointDate')"></el-table-column>
