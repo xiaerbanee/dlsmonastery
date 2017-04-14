@@ -5,6 +5,7 @@ import net.myspring.basic.modules.hr.domain.AccountChange;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.domain.EmployeeSalaryBasic;
 import net.myspring.basic.modules.hr.domain.OfficeChange;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name="sys_process_type")
-public class ProcessType extends DataEntity<ProcessType> {
+public class ProcessType extends CompanyEntity<ProcessType> {
     private String type;
     private String name;
     private String viewPermissionId;

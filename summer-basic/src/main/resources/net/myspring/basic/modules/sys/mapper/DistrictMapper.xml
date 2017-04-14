@@ -14,7 +14,7 @@
         where t1.name=#{name}
     </select>
 
-    <select id="findByProcinceAndCityAndCounty" resultType="District">
+    <select id="findByProvinceAndCityAndCounty" resultType="District">
         select t1.*  from sys_district t1 where t1.province = #{province} and t1.city =#{city} and t1.county = #{county}
     </select>
 
