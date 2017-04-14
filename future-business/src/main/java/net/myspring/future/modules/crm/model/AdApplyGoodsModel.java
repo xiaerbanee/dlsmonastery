@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/3/23.
  */
-public class adApplyGoodsModel {
+public class AdApplyGoodsModel {
     String productId;
     String remarks;
     List<AdApply> adApplyList;
