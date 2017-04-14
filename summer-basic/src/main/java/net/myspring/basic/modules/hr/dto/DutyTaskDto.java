@@ -1,14 +1,11 @@
 package net.myspring.basic.modules.hr.dto;
 
-import net.myspring.basic.common.dto.DataDto;
-import net.myspring.basic.modules.hr.domain.Job;
-
 import java.time.LocalDate;
 
 /**
- * Created by admin on 2017/4/5.
+ * Created by lihx on 2017/4/14.
  */
-public class JobDto extends DataDto<Job> {
+public class DutyTaskDto {
     private String formatId;
     private String dutyType;
     private LocalDate dutyDate;

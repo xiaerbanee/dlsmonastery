@@ -36,7 +36,7 @@ public class DutyWorktimeController {
 
     @RequestMapping(value = "export")
     public ModelAndView export(Long accountId,DutyWorktimeQuery dutyWorktimeQueryt){
-        Map<String, DutyWorktime> getWorktimeMap = dutyWorktimeService.getWorktimeMap(accountId,dutyWorktimeQueryt.getDateStart(),dutyWorktimeQueryt.getDateEnd());
+        Map<String, DutyWorktime> getWorktimeMap = dutyWorktimeService.getWorktimeMap(accountId,dutyWorktimeQueryt.getDutyDateStart(),dutyWorktimeQueryt.getDutyDateEnd());
         return null;
     }
 
