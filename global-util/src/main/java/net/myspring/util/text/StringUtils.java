@@ -5,6 +5,7 @@ import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 public class StringUtils extends org.apache.commons.lang3.StringUtils{
 
@@ -33,5 +34,13 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
 		byte[] hashPassword = Digests.sha1(plainPassword.getBytes(), salt, 1024);
         String pwd = EncodeUtil.encodeHex(salt) + EncodeUtil.encodeHex(hashPassword);
         return password.equalsIgnoreCase(pwd);
+	}
+
+	public static  String toString(Object object) {
+		if(object == null) {
+			return "";
+		} else {
+			return String.valueOf(object);
+		}
 	}
 }
