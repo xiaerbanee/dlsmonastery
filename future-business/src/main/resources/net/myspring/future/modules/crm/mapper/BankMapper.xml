@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.BankMapper">
+
+    <select id="findByName" resultType="Bank">
+        SELECT t1.*
+        FROM crm_bank t1
+        where t1.enabled=1
+        and t1.name = #{name}
+    </select>
+
+
+    <select id="findByOutId" resultType="Bank">
+        SELECT t1.*
+        FROM crm_bank t1
+        where
+         t1.out_id = #{outId}
+    </select>
+
+
+    <select id="findPage" resultType="Bank">
+        SELECT
+        t1.*
+        FROM
+        crm_bank t1
+        WHERE
+        t1.enabled=1
+        <if test="p.name != null">
+            AND t1.name LIKE CONCAT('%',#{p.name},'%')
+        </if>
+
+    </select>
+
+    <select id="findByBankId" resultType="net.myspring.future.common.model.NameValue">
+        SELECT bank_id as 'name',account_id AS 'value'
+        FROM crm_account_bank
+        where bank_id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findLabels" resultType="Bank">
+        SELECT t1.id,t1.name,t1.code,t1.out_id
+        FROM crm_bank t1
+        WHERE t1.enabled = 1
+        and t1.id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteBankAccount">
+        DELETE FROM
+        crm_account_bank
+        where bank_id=#{bankId}
+    </delete>
+
+    <insert id="saveAccount">
+        INSERT INTO crm_account_bank(account_id,bank_id) VALUES
+        <foreach collection="accountIds" index="index" item="item" open="" separator="," close="">
+            (#{item},#{bankId})
+        </foreach>
+    </insert>
+
+    <select id="findByAccountId" resultType="Bank">
+        select
+        t1.*
+        from
+        crm_bank t1,
+        crm_account_bank t2
+        where
+        t1.enabled =1
+        and t1.id=t2.bank_id
+        and t2.account_id=#{accountId}
+    </select>
+
+    <select id="getMaxOutDate" resultType="java.time.LocalDateTime">
+        select
+        MAX(out_date)
+        from
+        crm_bank t1
+        where
+        t1.enabled=1
+    </select>
+
+</mapper>

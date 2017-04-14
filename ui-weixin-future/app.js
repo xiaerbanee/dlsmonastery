@@ -2,7 +2,6 @@
 var $util = require("/util/util.js");
 App({
     onLaunch: function () {
-        console.log("lauch");
     },
     getUserInfo: function (cb) {
         var that = this
@@ -31,29 +30,83 @@ App({
     //检查用户是否登陆，如果未登陆，自动登陆
     autoLogin: function (cb) {
         var that = this;
+        if (!that.globalData.weixinCode) {
+            that.getCode(function () {
+                that.checkLogin(cb);
+            })
+        } else {
+            that.checkLogin(cb);
+        }
+    }, checkLogin(cb) {
+        var that = this;
+        var token = wx.getStorageSync('token')
+        var distance = that.getDistance();
+        var reflushTokenDustance = wx.getStorageSync('token').expires_in;
+        //如果没有登陆
+        if ($util.isNotBlank(token.access_token) || distance <60 * 1000) {
+            console.log("getToken")
+            that.getToken();
+        } else if (distance < (reflushTokenDustance / 2) * 1000) {
+            that.getRefreshToken();
+        }
+        typeof cb == "function" && cb();
+    },
+    getRefreshToken: function () {
+        var that = this;
+        var token = wx.getStorageSync('token');
+        var pages = getCurrentPages();
+        var currentPages = pages[pages.length - 1]
         wx.request({
-            url: $util.getUrl("login/isLogin"),
-            header: {
-                'x-auth-token': that.globalData.sessionId
-            },
+            url: $util.getUrl('uaa/oauth/token?username=' + that.globalData.weixinCode + '&password=' + that.globalData.weixinCode + '&weixinCode=' + that.globalData.weixinCode + '&grant_type=refresh_token&refresh_token=' + token.refresh_token),
+            data: {},
+            method: 'POST',
             success: function (res) {
-                if (res.data) {
-                    typeof cb == "function" && cb()
-                } else {
-                    var loginName = that.globalData.weixinAccount.id + "_" + that.globalData.weixinCode;
-                    wx.request({
-                        url: $util.getUrl('login?loginName=' + loginName),
-                        method: "POST",
-                        header: {
-                            'x-auth-token': that.globalData.sessionId
-                        },
-                        success: function (loginRes) {
-                            that.globalData.sessionId = loginRes.data;
-                            typeof cb == "function" && cb()
-                        }
-                    })
+                if ($util.isNotBlank(res.data.access_token)) {
+                    res.data.exp = new Date().getTime();
+                    wx.setStorageSync('token', res.data);
+                    wx.navigateTo({
+                        url: '/' + currentPages.__route__
+                    });
                 }
             }
         })
+    },
+    getDistance: function () {
+        var that = this;
+        var token = wx.getStorageSync('token');
+        var distance;
+        var expDate = new Date(token.exp + token.expires_in * 1000);
+        return distance = expDate.getTime() - new Date().getTime();
+    }, getToken: function () {
+        var that = this;
+        wx.request({
+            url: $util.getUrl('uaa/oauth/token?username=' + that.globalData.weixinCode + '&password=' + that.globalData.weixinCode + '&weixinCode=' + that.globalData.weixinCode + '&grant_type=password'),
+            data: {},
+            method: 'POST',
+            success: function (res) {
+                if (res.statusCode == 401) {
+                    wx.navigateTo({
+                        url: '/page/sys/accountBind/accountBind'
+                    })
+                } else if ($util.isNotBlank(res.data.access_token)) {
+                    res.data.exp = new Date().getTime();
+                    wx.setStorageSync('token', res.data);
+                }
+            }
+        })
+    }, getCode(cb) {
+        console.log("getCode")
+        var that = this;
+        if (!that.globalData.weixinCode) {
+            wx.login({
+                success: function (loginRes) {
+                    console.log(loginRes.code)
+                    if (loginRes.code) {
+                        that.globalData.weixinCode = loginRes.code;
+                        typeof cb == "function" && cb();
+                    }
+                }
+            });
+        }
     }
 })

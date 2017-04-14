@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.AfterSaleStoreAllotMapper">
+
+    <select id="findPage" resultType="AfterSaleStoreAllot">
+        SELECT
+        t1.*
+        FROM
+        crm_after_sale_store_allot t1
+        WHERE
+        t1.enabled=1
+        <if test="p.fromStoreName !=null">
+            AND t1.from_store_id in(
+            select depot.id
+            FROM crm_depot depot
+            where depot.enabled=1 and depot.name like concat('%',#{p.fromStoreName},'%')
+            )
+        </if>
+        <if test="p.toStoreName !=null">
+            AND t1.to_store_id in(
+            select depot.id
+            FROM crm_depot depot
+            where depot.enabled=1 and depot.name like concat('%',#{p.toStoreName},'%')
+            )
+        </if>
+        <if test="p.createdDateStart !=null">
+            and t1.created_date >= #{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd !=null">
+            and t1.created_date &lt;= #{p.createdDateEnd}
+        </if>
+        <if test="p.createdBy !=null">
+            and t1.created_by in(
+            select id
+            from hr_account
+            where login_name like concat('%',#{p.createdBy},'%')
+            and enabled=1
+            )
+        </if>
+        <if test="p.productName !=null">
+            and t1.product_id in(
+            select product.id
+            from crm_product product
+            where product.name like concat('%',#{p.productName},'%')
+            and product.enabled=1
+            )
+        </if>
+        <if test="p.badProductIme !=null">
+            and t1.product_id in(
+            select id
+            from crm_product_ime
+            where ime like concat('%',#{p.badProductIme},'%')
+            and enabled=1
+            )
+        </if>
+        <if test="p.outCode !=null">
+            and t1.out_code like concat('%',#{p.outCode},'%')
+        </if>
+        <if test="p.afterSaleId !=null">
+            and t1.after_sale_id like concat('%',#{p.afterSaleId},'%')
+        </if>
+    </select>
+
+</mapper>

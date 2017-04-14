@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.StoreAllotMapper">
+
+    <select id="findPage" resultType="StoreAllot">
+        SELECT t1.*
+        FROM  crm_store_allot t1
+        where t1.enabled=1
+        <include refid="storeAllotFilter" />
+    </select>
+
+    <select id="findByFilter" resultType="StoreAllot">
+        SELECT t1.*
+        FROM  crm_store_allot t1
+        where t1.enabled=1
+        <include refid="storeAllotFilter" />
+    </select>
+
+    <select id="findMaxBusinessId" resultType="String">
+        SELECT
+        MAX(t1.business_id)
+        FROM
+        crm_store_allot t1
+        WHERE
+        t1.created_date>=#{localDate}
+    </select>
+
+    <sql id="storeAllotFilter">
+        <if test="p.remarks!=null">
+            and t1.remarks like concat('%',#{p.remarks},'%')
+        </if>
+        <if test="p.status!=null">
+            and t1.status=#{p.status}
+        </if>
+        <if test="p.fromStoreId!=null">
+            and t1.from_store_id=#{p.fromStoreId}
+        </if>
+        <if test="p.toStoreId!=null">
+            and t1.to_store_id=#{p.toStoreId}
+        </if>
+        <if test="p.businessId!=null">
+            and t1.business_id  like concat('%',#{p.businessId},'%')
+        </if>
+        <if test="p.outCode!=null">
+            and t1.out_code like concat('%',#{p.outCode},'%')
+        </if>
+        <if test="p.createdDateStart!=null">
+            and t1.created_date &gt;= #{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd!=null">
+            and t1.created_date &lt;= #{p.createdDateEnd}
+        </if>
+        <if test="p.createdBy !=null">
+            and t1.created_by in(
+            select id
+            from hr_account
+            where login_name like concat('%',#{p.createdBy},'%')
+            and endabled=1
+            )
+        </if>
+    </sql>
+
+</mapper>

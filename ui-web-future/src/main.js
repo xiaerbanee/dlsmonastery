@@ -89,6 +89,7 @@ router.beforeEach((to, from, next) => {
       util.setQuery(to.name, to.query);
       next();
     } else {
+      store.dispatch('clearGlobal');
       router.push("login");
     }
   }
@@ -119,7 +120,8 @@ axios.interceptors.response.use((resp) => {
   if (error.response) {
     switch (error.response.status) {
       case 401:
-        router.push("login");
+        store.dispatch('clearGlobal');
+        window.location.assign('/');
         break;
     }
   }

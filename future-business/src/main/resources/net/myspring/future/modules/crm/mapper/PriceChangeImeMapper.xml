@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.PriceChangeImeMapper">
+
+    <select id="findPage" resultType="PriceChangeIme">
+        SELECT
+        t1.*
+        FROM
+        crm_price_change_ime t1,crm_price_change t2,crm_depot depot
+        WHERE
+         t1.price_change_id=t2.id
+        and t1.shop_id=depot.id
+        and t1.enabled=1
+        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        and (
+          t1.image is null
+        <if test="p.isCheck != null">
+            OR t1.is_check = #{p.isCheck}
+        </if>
+        <if test="p.status != null">
+            OR t1.status = #{p.status}
+        </if>
+        )
+        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter"/>
+        <if test="p.priceChangeName != null ">
+            and t2.name  like CONCAT('%', #{p.priceChangeName},'%')
+        </if>
+        <if test="p.productName !=null">
+            and t1.product_id in(
+            select product.id
+            from crm_product product
+            where product.name like concat('%',#{p.productName},'%')
+            and product.enabled=1
+            )
+        </if>
+        <if test="p.shopName !=null">
+            and t1.shop_id in(
+            select depot.id
+            from crm_depot depot
+            where depot.enabeld=1 and depot.name=#{p.shopName}
+            )
+        </if>
+        <if test="p.ime !=null">
+            and t1.product_ime_id in(
+            select ime.id
+            from crm_product_ime ime
+            where ime.enabeld=1 and ime.ime=#{p.ime}
+            )
+        </if>
+        <if test="p.officeId !=null">
+            and t1.shop_id in(
+            select depot.id
+            from crm_depot depot
+            where depot.office_id=#{p.officeId}
+            )
+        </if>
+    </select>
+
+    <select id="findByPriceChangeId" resultType="PriceChangeIme">
+        select t1.* from crm_price_change_ime t1 where t1.enabled = 1 and t1.price_change_id = #{priceChangeId}
+    </select>
+
+    <select id="findByUploadDateIsNotNull" resultType="PriceChangeIme">
+        select t1.* from crm_price_change_ime t1 where t1.enabled = 1 and t1.price_change_id = #{priceChangeId} and  t1.uploadDate is not null
+    </select>
+
+    <select id="findCheckList" resultType="PriceChangeIme">
+        select t1.*
+        from crm_price_change_ime t1
+        where t1.enabled = 1
+        and t1.price_change_id = #{priceChangeId}
+        <if test="maxSaleDate !=null">
+            and  t.saleDate &lt;  #{maxSaleDate}
+        </if>
+        <if test="maxSaleDate ==null">
+            and  t.saleDate is null
+        </if>
+         and  t1.uploadDate is not null
+    </select>
+</mapper>

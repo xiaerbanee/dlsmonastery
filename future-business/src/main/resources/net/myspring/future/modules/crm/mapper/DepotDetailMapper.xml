@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.DepotDetailMapper">
+    <select id="findPage" resultType="DepotDetail">
+        select t1.*
+        from crm_depot_detail t1
+        where
+        t1.enabled=1
+        <include refid="depotDetailFilter"/>
+    </select>
+
+    <select id="findByFilter" resultType="DepotDetail">
+        SELECT
+        t1.*
+        FROM
+        crm_depot_detail t1
+        WHERE
+        t1.enabled=1
+        <include refid="depotDetailFilter"/>
+    </select>
+
+    <sql id="depotDetailFilter">
+        <if test="p.depotName != null">
+            AND t1.depot_id in (
+            select t2.id
+            from crm_depot t2
+            where t2.name LIKE CONCAT('%',#{p.depotName},'%')
+            )
+        </if>
+        <if test="p.productName != null" >
+            AND t1.product_id in (
+            select t3.id
+            from crm_product t3
+            where t3.name LIKE CONCAT('%',#{p.productName},'%')
+            )
+        </if>
+        <if test="p.hasIme !=null">
+            and t1.has_ime=#{p.hasIme}
+        </if>
+        <if test="p.isSame !=null">
+            and t1.is_same=#{p.isSame}
+        </if>
+    </sql>
+
+</mapper>

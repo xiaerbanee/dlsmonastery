@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.BankInMapper">
+
+    <select id="findPage" resultType="BankIn">
+        SELECT
+        t1.*
+        FROM
+        crm_bank_in t1,crm_depot depot
+        WHERE
+        t1.enabled=1
+        and t1.shop_id=depot.id
+        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <if test="p.id !=null">
+            and t1.id=#{p.id}
+        </if>
+        <if test="p.shopName!=null">
+            and t1.shop_id in(
+            select shop.id
+            from crm_depot shop
+            where shop.name like concat('%',#{p.shopName},'%')
+            )
+        </if>
+        <if test="p.amount !=null">
+            and t1.amount=#{p.amount}
+        </if>
+        <if test="p.outCode !=null">
+            and t1.out_code like concat('%',#{p.outCode},'%')
+        </if>
+        <if test="p.bankName!=null">
+            and t1.bank_id in(
+            select bank.id
+            from crm_bank bank
+            where bank.name like concat('%',#{p.bankName},'%')
+            )
+        </if>
+        <if test="p.processStatus !=null">
+            and t1.process_status =#{p.processStatus}
+        </if>
+        <if test="p.serialNumber !=null">
+            and t1.serial_number like concat('%',#{p.serialNumber},'%')
+        </if>
+        <if test="p.createdDateStart !=null">
+            and t1.created_date >= #{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd !=null">
+            and t1.created_date &lt;= #{p.createdDateEnd}
+        </if>
+        <if test="p.billDateStart !=null">
+            and t1.bill_date >= #{p.billDateStart}
+        </if>
+        <if test="p.billDateEnd !=null">
+            and t1.bill_date &lt;= #{p.billDateEnd}
+        </if>
+        <if test="p.inputDateStart !=null">
+            and t1.input_date >= #{p.inputDateStart}
+        </if>
+        <if test="p.inputDateEnd !=null">
+            and t1.input_date &lt;= #{p.inputDateEnd}
+        </if>
+        <if test="p.createdBy !=null">
+            and t1.created_by in(
+            select id
+            from hr_account
+            where login_name like concat('%',#{p.createdBy},'%')
+            and enabled=1
+            )
+        </if>
+    </select>
+
+    <select id="findByShopAndType" resultType="BankIn">
+        select t1.* from crm_bank_in t1 where t1.shop_id = #{shopId} and t1.type = #{type} and t1.process_status='已通过' order by t1.last_modified_date desc limit 0,1
+    </select>
+</mapper>

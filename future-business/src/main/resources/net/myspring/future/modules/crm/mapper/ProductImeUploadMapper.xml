@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.crm.mapper.ProductImeUploadMapper">
+
+    <select id="findPage" resultType="ProductImeUpload">
+        select
+        t1.*
+        from
+        crm_product_ime_upload t1,crm_depot depot,hr_office office
+        where
+        t1.enabled=1
+        and t1.shop_id=depot.id and depot.office_id=office.id
+        <if test="p.createdDateStart !=null">
+            and t1.created_date >=#{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd !=null">
+            and t1.created_date &lt;=#{p.createdDateEnd}
+        </if>
+        <if test="p.shopName != null">
+            and depot.name LIKE CONCAT('%',#{p.shopName},'%')
+        </if>
+        <if test="p.officeId != null">
+            and office.id = #{p.officeId}
+        </if>
+        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+    </select>
+
+
+
+    <select id="findByProductImeId" resultType="ProductImeUpload">
+        select t1.*
+        from crm_product_ime_upload t1
+        where t1.product_ime_id = #{productImeId}
+    </select>
+</mapper>
