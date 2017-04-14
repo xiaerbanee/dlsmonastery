@@ -37,21 +37,16 @@ public class DictEnumService {
         return dictEnumDtoList;
     }
 
-    public DictEnum findOne(String id) {
-        DictEnum dictEnum = dictEnumManager.findOne(id);
-        return dictEnum;
-    }
 
     public DictEnumDto findDto(String id) {
-        DictEnum dictEnum =findOne(id);
+        DictEnum dictEnum =dictEnumManager.findOne(id);
         DictEnumDto dictEnumDto= BeanUtil.map(dictEnum,DictEnumDto.class);
         cacheUtils.initCacheInput(dictEnumDto);
         return dictEnumDto;
     }
 
     public DictEnumForm save(DictEnumForm dictEnumForm) {
-        boolean isCreate= StringUtils.isBlank(dictEnumForm.getId());
-        if(isCreate) {
+        if(dictEnumForm.isCreate()) {
             DictEnum dictEnum = BeanUtil.map(dictEnumForm, DictEnum.class);
             dictEnumManager.save(dictEnum);
         } else {

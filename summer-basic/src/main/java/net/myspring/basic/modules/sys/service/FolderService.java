@@ -100,13 +100,12 @@ public class FolderService {
 
     @Transactional
     public FolderForm save(FolderForm folderForm) {
-        boolean isCreate = StringUtils.isBlank(folderForm.getId());
         Folder parent = folderManager.findOne(folderForm.getParentId());
         String oldParentIds = folderForm.getParentIds();
         folderForm.setParent(parent);
         folderForm.setParentIds(folderForm.getParent().getParentIds() + folderForm.getParent().getId() + ",");
         // 无法将上级部门设置为自己或者自己的下级部门
-        if (!isCreate && folderForm.getParentIds().contains("," + folderForm.getId() + ",")) {
+        if (!folderForm.isCreate() && folderForm.getParentIds().contains("," + folderForm.getId() + ",")) {
             throw new ServiceException("无法将上级目录设置为自己或者自己的下级目录");
         }
         folderManager.save(BeanUtil.map(folderForm,Folder.class));
