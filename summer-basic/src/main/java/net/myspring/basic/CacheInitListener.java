@@ -46,6 +46,10 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
     private CacheUtils cacheUtils;
     @Autowired
     private CompanyMapper companyMapper;
+    @Autowired
+    private FolderFileMapper folderFileMapper;
+    @Autowired
+    private FolderMapper folderMapper;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
@@ -61,6 +65,8 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
         cacheUtils.initCache("menus",menuMapper.findAllEnabled());
         cacheUtils.initCache("companys",companyMapper.findAllEnabled());
         cacheUtils.initCache("menuCategorys",menuCategoryMapper.findAllEnabled());
+        cacheUtils.initCache("folderFiles",folderFileMapper.findAllEnabled());
+        cacheUtils.initCache("folders",folderMapper.findAllEnabled());
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");

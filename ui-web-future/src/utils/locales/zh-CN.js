@@ -19,7 +19,7 @@ export default {
     sure: "确定",
     cancel: "取消",
     monitor:"报表监控",
-    menuCategory:"菜单分组",
+    menuCategoryId:"菜单分组",
     menusCategory:"菜单",
     officeCategory:"组织机构",
     dictCategory:"字典",
@@ -458,7 +458,7 @@ export default {
   },
   folderForm: {
     folderForm: "文件目录编辑",
-    parentName: "上级",
+    parentId: "上级",
     selectGroup: "请选择分组",
     name: "名称",
     inputKey: "请输入关键字",

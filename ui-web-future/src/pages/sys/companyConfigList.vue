@@ -36,9 +36,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('companyConfigList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -70,7 +69,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("companyConfigList",this.formData);
-        axios.get('/api/sys/companyConfig',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/sys/companyConfig',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

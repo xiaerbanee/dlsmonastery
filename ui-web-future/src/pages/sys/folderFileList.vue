@@ -22,11 +22,11 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('folderFileList.loading')" @sort-change="sortChange"  stripe border>
         <el-table-column  prop="id" :label="$t('folderFileList.id')" sortable width="150"></el-table-column>
-        <el-table-column  prop="folder.name" :label="$t('folderFileList.folderName')" ></el-table-column>
+        <el-table-column  prop="folderName" :label="$t('folderFileList.folderName')" ></el-table-column>
         <el-table-column  prop="name" :label="$t('folderFileList.name')" ></el-table-column>
         <el-table-column  prop="contentType" :label="$t('folderFileList.contentType')" ></el-table-column>
         <el-table-column  prop="size" :label="$t('folderFileList.size')" ></el-table-column>
-        <el-table-column  prop="created.loginName" :label="$t('folderFileList.createdBy')" ></el-table-column>
+        <el-table-column  prop="createdByName" :label="$t('folderFileList.createdBy')" ></el-table-column>
         <el-table-column  prop="createdDate" :label="$t('folderFileList.createdDate')" ></el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
@@ -58,7 +58,7 @@
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         util.getQuery("folderFileList");
         util.setQuery("folderFileList",this.formData);
-        axios.get('/api/sys/folderFile',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/sys/folderFile',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

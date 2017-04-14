@@ -55,7 +55,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.image')" prop="image">
-              <el-upload action="/api/sys/folderFile/upload?uploadPath=/员工管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" >
+              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/员工管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" >
                 <el-button size="small" type="primary">{{$t('employeeEditForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('employeeEditForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -153,7 +153,7 @@
           util.copyValue(response.data.account,this.accountForm);
           this.employeeForm.sexLabel=response.data.sex=="男"?1:0;
           if(this.employeeForm.image !=null) {
-            axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.employeeForm.image}}).then((response)=>{
+            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.employeeForm.image}}).then((response)=>{
               this.fileList= response.data;
             });
           }

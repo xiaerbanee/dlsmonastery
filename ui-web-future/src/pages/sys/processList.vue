@@ -42,7 +42,7 @@
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
       util.setQuery("processList",this.formData);
-      axios.get('/api/sys/activiti/processList',{params:this.formData}).then((response) => {
+      axios.get('/api/basic/sys/activiti/processList',{params:this.formData}).then((response) => {
         this.processList = response.data;
         console.log(response.data)
         this.pageLoading = false;

@@ -38,12 +38,6 @@ public class PermissionManager {
     }
 
     @CachePut(value = "permissions",key="#p0.id")
-    public Permission saveForm(PermissionForm permissionForm){
-        permissionMapper.save(BeanUtil.map(permissionForm,Permission.class));
-        return  permissionMapper.findOne(permissionForm.getId());
-    }
-
-    @CachePut(value = "permissions",key="#p0.id")
     public Permission update(Permission permission){
         permissionMapper.update(permission);
         return  permissionMapper.findOne(permission.getId());

@@ -93,7 +93,7 @@
         },remoteDistrict(query) {
           if (query !== '') {
             this.remoteLoading = true;
-            axios.get('/api/sys/district/search',{params:{key:query}}).then((response)=>{
+            axios.get('/api/basic/sys/district/search',{params:{key:query}}).then((response)=>{
               this.districts=response.data;
               this.remoteLoading = false;
             })

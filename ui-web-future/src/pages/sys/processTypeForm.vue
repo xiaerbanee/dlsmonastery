@@ -89,7 +89,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/sys/processType/save', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+              axios.post('/api/basic/sys/processType/save', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -105,7 +105,7 @@
         },createPermissionMethod(query){
           if(query!==''){
             this.loading = true;
-            axios.get('/api/sys/permission/search',{params: {query:query}}).then((response)=>{
+            axios.get('/api/basic/sys/permission/search',{params: {query:query}}).then((response)=>{
               this.createPermissions=response.data;
               this.loading = false;
             });
@@ -113,7 +113,7 @@
         },viewPermissionMethod(query){
           if(query!==''){
             this.loading = true;
-            axios.get('/api/sys/permission/search',{params: {query:query}}).then((response)=>{
+            axios.get('/api/basic/sys/permission/search',{params: {query:query}}).then((response)=>{
               this.viewPermissions=response.data;
               this.loading = false;
             });
@@ -143,7 +143,7 @@
           this.inputForm.processFlowList.push({name:"",sort:sort,positionId:""});
         }
       },created(){
-        axios.get('/api/sys/processType/getFormProperty').then((res)=>{
+        axios.get('/api/basic/sys/processType/getFormProperty').then((res)=>{
           this.formProperty=res.data;
         });
         if(this.isCreate){
@@ -151,7 +151,7 @@
             this.inputForm.processFlowList.push({name:"",sort:(i+1)*10,positionId:""});
           }
         } else {
-          axios.get('/api/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
             this.inputForm.auditFileType=response.data.auditFileType?"1":"0";
             this.inputForm.processFlowList=response.data.processFlowList;

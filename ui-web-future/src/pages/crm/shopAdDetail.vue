@@ -30,7 +30,7 @@
               {{inputForm.remarks}}
             </el-form-item>
             <el-form-item :label="$t('shopAdDetail.attachment')" prop="attachment">
-              <el-upload  action="/api/sys/folderFile/upload?uploadPath=/广告申请" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload  action="/api/basic/sys/folderFile/upload?uploadPath=/广告申请" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
               </el-upload>
             </el-form-item>
           </el-col>
@@ -80,7 +80,7 @@
           this.inputForm=response.data.shopAd;
         console.log(this.inputForm.attachment);
         if(this.inputForm.attachment !=null) {
-          axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
+          axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
             this.fileList= response.data;
         });
         }

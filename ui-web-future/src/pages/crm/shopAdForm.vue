@@ -36,7 +36,7 @@
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.attachment')" prop="attachment">
-              <el-upload action="/api/sys/folderFile/upload?uploadPath=/广告申请" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/广告申请" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopAdForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopAdForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -123,7 +123,7 @@
         axios.get('/api/crm/shopAd/detail',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
         if(this.inputForm.attachment !=null) {
-          axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
+          axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
             this.fileList= response.data;
         });
         }

@@ -30,7 +30,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('permissionList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="name" :label="$t('permissionList.name')" sortable></el-table-column>
         <el-table-column prop="permission" :label="$t('permissionList.permission')" sortable></el-table-column>
-        <el-table-column prop="menu.name" :label="$t('permissionList.menuName')"></el-table-column>
+        <el-table-column prop="menuName" :label="$t('permissionList.menuName')"></el-table-column>
         <el-table-column prop="locked" :label="$t('permissionList.locked')" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
@@ -39,9 +39,8 @@
         <el-table-column prop="remarks" :label="$t('permissionList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('permissionList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -76,7 +75,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("permissionList",this.formData);
-        axios.get('/api/sys/permission',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/sys/permission',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -97,7 +96,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'permissionForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/sys/permission/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/sys/permission/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

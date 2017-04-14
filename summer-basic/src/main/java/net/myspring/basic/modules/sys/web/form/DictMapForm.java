@@ -11,6 +11,15 @@ public class DictMapForm extends DataForm<DictMap>{
     private String category;
     private String name;
     private String value;
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public String getCategory() {
         return category;

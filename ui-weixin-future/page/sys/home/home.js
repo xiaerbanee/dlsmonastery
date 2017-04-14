@@ -8,43 +8,22 @@ Page({
         weixinAccountsHidden: true
     },
     onLoad: function (options) {
-
     },
     onShow: function (options) {
         var that = this;
-        //如果没有登陆
-        if (app.globalData.weixinAccount == null) {
-            that.initLogin();
-        } else {
-            app.autoLogin(function () {
-                that.initPage();
-            })
-        }
-    },
-    initLogin: function () {
+        app.autoLogin(function () {
+            that.initPage();
+        })
+    }, initPage: function () {
         var that = this;
-        wx.login({
-            success: function (loginRes) {
-                if (loginRes.code) {
-                    app.globalData.weixinCode = loginRes.code;
-                    console.log(app.globalData.weixinCode);
-                    console.log("+++++++++++++++++++")
-                    that.getToken();
-                }
-            },
-            fail: function (res) {
-                console.log("login fail")
-            },
-        });
-    },
-    initPage: function () {
-        var that = this;
+        console.log("initMenu")
         that.setData({ weixinAccountsHidden: true })
         if (that.data.menuList == null) {
             wx.request({
-                url: $util.getUrl('basic/sys/menu/getMenus?isMobile=true'),
+                url: $util.getUrl('basic/sys/menu/getMenus'),
                 header: {
-                    'x-auth-token': app.globalData.sessionId
+                    'x-auth-token': app.globalData.sessionId,
+                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
                 },
                 success: function (res) {
                     that.setData({ menuList: res.data });
@@ -52,15 +31,6 @@ Page({
             });
 
         }
-    },
-    login: function (event) {
-        var that = this;
-        var index = event.currentTarget.dataset.index;
-        app.globalData.weixinAccount = that.data.weixinAccounts[index];
-        that.setData({ weixinAccountsHidden: true })
-        app.autoLogin(function () {
-            that.initPage();
-        })
     },
     switchAccount: function (e) {
         var that = this;
@@ -73,35 +43,8 @@ Page({
             },
             success: function () {
                 that.data.menuList = null
-                app.globalData.weixinAccount = null
                 that.setData({ weixinAccountsHidden: false })
             }
         })
     },
-    getToken: function () {
-        console.log(app.globalData.weixinCode)
-        wx.request({
-            url: $util.getUrl('uaa/oauth/token?username=xcxtest&weixinCode=' + app.globalData.weixinCode + "&grant_type=password"),
-            data: {},
-            method: 'POST',
-            success: function (res) {
-                console.log(res);
-                if (res.statusCode == 401) {
-                    wx.navigateTo({
-                        url: '/page/sys/accountBind/accountBind'
-                    })
-                } else if ($util.isNotBlank(res.data)) {
-                    wx.navigateTo({
-                        url: '/page/sys/home/home'
-                    })
-                }
-            },
-            fail: function () {
-                // fail
-            },
-            complete: function () {
-                // complete
-            }
-        })
-    }
 })

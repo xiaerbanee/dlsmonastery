@@ -24,7 +24,7 @@
               {{detailForm.remarks}}
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.attachment')" prop="attachment">
-              <el-upload  action="/api/sys/folderFile/upload?uploadPath=/文件审批" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload  action="/api/basic/sys/folderFile/upload?uploadPath=/文件审批" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
               </el-upload>
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.isPass')" prop="pass" v-if="isAudit">
@@ -114,7 +114,7 @@
           this.inputForm.bools=response.data.bools;
           this.activityEntity = response.data.activityEntity;
           if(this.detailForm.attachment != null) {
-             axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.detailForm.attachment}}).then((response)=>{
+             axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.detailForm.attachment}}).then((response)=>{
                this.fileList= response.data;
              });
           }
