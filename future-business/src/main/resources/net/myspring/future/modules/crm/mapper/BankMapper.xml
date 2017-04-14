@@ -31,7 +31,7 @@
 
     </select>
 
-    <select id="findByBankId" resultType="net.myspring.future.common.model.NameValue">
+    <select id="findByBankId" resultType="net.myspring.future.common.dto.NameValueDto">
         SELECT bank_id as 'name',account_id AS 'value'
         FROM crm_account_bank
         where bank_id IN
