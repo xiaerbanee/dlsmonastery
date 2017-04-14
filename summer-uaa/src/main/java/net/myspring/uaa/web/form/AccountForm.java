@@ -1,7 +1,5 @@
 package net.myspring.uaa.web.form;
 
-import net.myspring.mybatis.form.BaseForm;
-
 /**
  * Created by zhucc on 2017/4/12.
  */
