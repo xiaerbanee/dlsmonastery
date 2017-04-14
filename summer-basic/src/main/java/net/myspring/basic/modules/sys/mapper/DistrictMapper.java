@@ -14,9 +14,9 @@ public interface DistrictMapper extends MyMapper<District,String> {
 
     District findByName(String name);
 
-    List<District> findByNameLike(String name);
+    List<District> findByLikeName(String name);
 
-    District findByProcinceAndCityAndCounty(@Param("province") String province, @Param("city") String city, @Param("county") String county);
+    District findByProvinceAndCityAndCounty(@Param("province") String province, @Param("city") String city, @Param("county") String county);
 
     List<District> findByProvince();
 }
