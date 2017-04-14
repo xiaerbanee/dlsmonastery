@@ -192,10 +192,9 @@ public class MenuService {
 
     @Transactional
     public void save(MenuForm menuForm){
-        boolean isCreate= StringUtils.isBlank(menuForm.getId());
         Set<Permission> permissions = Sets.newHashSet();
         Set<Permission> oldPermissions = Sets.newHashSet();
-        if(isCreate) {
+        if(menuForm.isCreate()) {
             menuForm.setMenuCategory(menuCategoryMapper.findOne(menuForm.getMenuCategoryId()));
             menuMapper.save(BeanUtil.map(menuForm,Menu.class));
         } else {
