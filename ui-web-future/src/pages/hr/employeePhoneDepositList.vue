@@ -56,9 +56,7 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('employeePhoneDepositList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
