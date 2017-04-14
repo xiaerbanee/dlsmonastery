@@ -27,13 +27,9 @@ public class DictMapService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public DictMap findOne(String id) {
-        DictMap dictMap= dictMapManager.findOne(id);
-        return dictMap;
-    }
 
     public DictMapDto findDto(String id){
-        DictMap dictMap=findOne(id);
+        DictMap dictMap= dictMapManager.findOne(id);
         DictMapDto dictMapDto = BeanUtil.map(dictMap, DictMapDto.class);
         cacheUtils.initCacheInput(dictMapDto);
         return dictMapDto;

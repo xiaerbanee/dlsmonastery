@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -7,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_folder_file")
-public class FolderFile extends DataEntity<FolderFile> {
+public class FolderFile extends CompanyEntity<FolderFile> {
     private String name;
     private String contentType;
     private Integer size;

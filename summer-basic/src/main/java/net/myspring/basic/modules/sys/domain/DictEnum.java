@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -7,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_dict_enum")
-public class DictEnum extends DataEntity<DictEnum> {
+public class DictEnum extends CompanyEntity<DictEnum> {
     private Integer sort;
     private String category;
     private String value;

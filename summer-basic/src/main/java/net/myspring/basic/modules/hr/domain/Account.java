@@ -3,7 +3,6 @@ package net.myspring.basic.modules.hr.domain;
 import com.google.common.collect.Lists;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.basic.modules.sys.domain.Menu;
-import net.myspring.basic.modules.sys.domain.Monitor;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -40,7 +39,6 @@ public class Account extends DataEntity<Account> {
     private List<String> accountTaskIdList = Lists.newArrayList();
     private List<Employee> employeeList = Lists.newArrayList();
     private List<String> employeeIdList = Lists.newArrayList();
-    private List<Monitor> monitorList = Lists.newArrayList();
     private List<String> monitorIdList = Lists.newArrayList();
 
     public String getCompanyId() {
@@ -257,14 +255,6 @@ public class Account extends DataEntity<Account> {
 
     public void setEmployeeIdList(List<String> employeeIdList) {
         this.employeeIdList = employeeIdList;
-    }
-
-    public List<Monitor> getMonitorList() {
-        return monitorList;
-    }
-
-    public void setMonitorList(List<Monitor> monitorList) {
-        this.monitorList = monitorList;
     }
 
     public List<String> getMonitorIdList() {
