@@ -10,8 +10,9 @@ import java.util.Map;
  */
 public class DutyWorktimeQuery {
     private String dutyDate;
-    private LocalDate dateStart;
-    private LocalDate dateEnd;
+    private LocalDate dutyDateStart;
+    private LocalDate dutyDateEnd;
+    private String accountId;
 
     public String getDutyDate() {
         return dutyDate;
@@ -20,26 +21,34 @@ public class DutyWorktimeQuery {
     public void setDutyDate(String dutyDate) {
         if(!dutyDate.equals("")) {
             String[] dutyDateBetween = dutyDate.split(" - ");
-            this.dateStart = LocalDateUtils.parse(dutyDateBetween[0]);
-            this.dateEnd = LocalDateUtils.parse(dutyDateBetween[1]);
+            this.dutyDateStart = LocalDateUtils.parse(dutyDateBetween[0]);
+            this.dutyDateEnd = LocalDateUtils.parse(dutyDateBetween[1]);
         }else {
             this.dutyDate = dutyDate;
         }
     }
 
-    public LocalDate getDateStart() {
-        return dateStart;
+    public LocalDate getDutyDateStart() {
+        return dutyDateStart;
     }
 
-    public void setDateStart(LocalDate dateStart) {
-        this.dateStart = dateStart;
+    public void setDutyDateStart(LocalDate dutyDateStart) {
+        this.dutyDateStart = dutyDateStart;
     }
 
-    public LocalDate getDateEnd() {
-        return dateEnd;
+    public LocalDate getDutyDateEnd() {
+        return dutyDateEnd;
     }
 
-    public void setDateEnd(LocalDate dateEnd) {
-        this.dateEnd = dateEnd;
+    public void setDutyDateEnd(LocalDate dutyDateEnd) {
+        this.dutyDateEnd = dutyDateEnd;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 }

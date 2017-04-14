@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.web.query;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/7.
@@ -12,7 +12,7 @@ public class DutyFreeQuery {
     private LocalDate freeDateEnd;
     private LocalDate dutyDateStart;
     private LocalDate dutyDateEnd;
-    private String officeIds;
+    private List<String> officeIds;
 
     public String getCreatedBy() {
         return createdBy;
@@ -54,11 +54,11 @@ public class DutyFreeQuery {
         this.dutyDateEnd = dutyDateEnd;
     }
 
-    public String getOfficeIds() {
+    public List<String> getOfficeIds() {
         return officeIds;
     }
 
-    public void setOfficeIds(String officeIds) {
+    public void setOfficeIds(List<String> officeIds) {
         this.officeIds = officeIds;
     }
 }

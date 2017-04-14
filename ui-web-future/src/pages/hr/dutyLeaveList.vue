@@ -29,7 +29,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutyLeaveList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="dutyDate" :label="$t('dutyLeaveList.dutyDate')"></el-table-column>
         <el-table-column prop="dateType"  :label="$t('dutyLeaveList.dateType')" ></el-table-column>
-        <el-table-column prop="leaveType"  :label="$t('dutyLeaveList.leaveType')"></el-table-column>
+        <el-table-column prop="leaveType" :label="$t('dutyLeaveList.leaveType')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('dutyLeaveList.remarks')"></el-table-column>
         <el-table-column prop="status"  :label="$t('dutyLeaveList.status')">
           <template scope="scope">

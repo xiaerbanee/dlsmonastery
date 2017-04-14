@@ -28,7 +28,7 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutyRestList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="dutyDate" :label="$t('dutyRestList.dutyDate')"></el-table-column>
-        <el-table-column prop="type":label="$t('dutyRestList.type')" ></el-table-column>
+        <el-table-column prop="type" :label="$t('dutyRestList.type')" ></el-table-column>
         <el-table-column prop="dateType" :label="$t('dutyRestList.dateType')"></el-table-column>
         <el-table-column prop="timeStart" :label="$t('dutyRestList.timeStart')"></el-table-column>
         <el-table-column prop="timeEnd" :label="$t('dutyRestList.timeEnd')" ></el-table-column>

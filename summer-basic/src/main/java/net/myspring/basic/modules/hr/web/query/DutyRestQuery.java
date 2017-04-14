@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.web.query;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/7.
@@ -12,8 +12,7 @@ public class DutyRestQuery {
     private LocalDate dutyDateEnd;
     private String type;
     private String dateType;
-    private String officeIds;
-
+    private List<String> officeIds;
 
     public String getCreatedBy() {
         return createdBy;
@@ -55,11 +54,11 @@ public class DutyRestQuery {
         this.dateType = dateType;
     }
 
-    public String getOfficeIds() {
+    public List<String> getOfficeIds() {
         return officeIds;
     }
 
-    public void setOfficeIds(String officeIds) {
+    public void setOfficeIds(List<String> officeIds) {
         this.officeIds = officeIds;
     }
 }

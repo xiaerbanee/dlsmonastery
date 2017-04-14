@@ -6,8 +6,6 @@ import javax.persistence.Table;
 /**
  * Created by liuj on 2017/4/11.
  */
-@Entity
-@Table(name = "hr_account_weixin")
 public class AccountWeixinDto {
     private String accountId;
     private String companyId;

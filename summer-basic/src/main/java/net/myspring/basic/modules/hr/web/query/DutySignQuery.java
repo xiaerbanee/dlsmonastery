@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.web.query;
 import org.joda.time.LocalDateTime;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/7.
@@ -15,7 +16,7 @@ public class DutySignQuery {
     private String employeeName;
     private String officeName;
     private String positionName;
-    private String officeIds;
+    private List<String> officeIds;
 
     public LocalDateTime getDutyDateStart() {
         return dutyDateStart;
@@ -81,11 +82,11 @@ public class DutySignQuery {
         this.positionName = positionName;
     }
 
-    public String getOfficeIds() {
+    public List<String> getOfficeIds() {
         return officeIds;
     }
 
-    public void setOfficeIds(String officeIds) {
+    public void setOfficeIds(List<String> officeIds) {
         this.officeIds = officeIds;
     }
 }
