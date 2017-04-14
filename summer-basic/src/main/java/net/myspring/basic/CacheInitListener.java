@@ -57,7 +57,7 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
         cacheUtils.initCache("employees",employeeMapper.findAllEnabled());
         cacheUtils.initCache("offices",officeMapper.findAllEnabled());
         cacheUtils.initCache("dictEnums",dictEnumMapper.findAllEnabled());
-        cacheUtils.initCache("districts",districtMapper.findAllEnabled());
+        cacheUtils.initCache("districts",districtMapper.findAll());
         cacheUtils.initCache("positions",positionMapper.findAllEnabled());
         cacheUtils.initCache("towns",townMapper.findAll());
         cacheUtils.initCache("menus",menuMapper.findAllEnabled());
