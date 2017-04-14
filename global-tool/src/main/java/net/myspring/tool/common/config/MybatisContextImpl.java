@@ -23,10 +23,7 @@ public class MybatisContextImpl implements MybatisContext {
 
     @Override
     public String getAccountId() {
-        final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        Jwt jwt = JwtHelper.decode(details.getTokenValue());
-        Map<String,Object> map = ObjectMapperUtils.readValue(jwt.getClaims(),Map.class);
-        return ObjectUtils.toString(map.get("accountId"));
+        return SecurityUtils.getAccountId();
     }
 
     @Override
