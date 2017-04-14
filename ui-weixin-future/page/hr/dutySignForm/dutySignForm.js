@@ -28,10 +28,11 @@ Page({
       });
     } else {
       wx.request({
-        url: $util.getUrl("hr/dutySign/detail"),
+        url: $util.getUrl("basic/hr/dutySign/detail"),
         data: { id: that.data.options.id },
         header: {
-          'x-auth-token': app.globalData.sessionId
+          'x-auth-token': app.globalData.sessionId,
+          'authorization': "Bearer" + wx.getStorageSync('token').access_token
         },
         success: function (res) {
           that.setData({ formData: res.data });
@@ -39,8 +40,8 @@ Page({
           var images = new Array();
           images.push({
             id: res.data.attachment,
-            preview: $util.getUrl('sys/folderFile/preview?x-auth-token=' + app.globalData.sessionId + '&id=' + res.data.attachment),
-            view: $util.getUrl('sys/folderFile/view?x-auth-token=' + app.globalData.sessionId + '&id=' + res.data.attachment)
+            preview: $util.getUrl('basic/sys/folderFile/preview?x-auth-token=' + app.globalData.sessionId +'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + res.data.attachment),
+            view: $util.getUrl('basic/sys/folderFile/view?x-auth-token=' + app.globalData.sessionId +'authorization=Bearer' + wx.getStorageSync('token').access_token +"&id=" + res.data.attachment)
           })
           that.setData({ "formProperty.images": images })
         }
@@ -65,9 +66,11 @@ Page({
           }
         })
         wx.request({
-          url: $util.getUrl("api/map/getPoiList?longitude=" + res.longitude + "&latitude=" + res.latitude),
+          url: $util.getUrl("basic/api/map/getPoiList?longitude=" + res.longitude + "&latitude=" + res.latitude),
           method: 'GET',
-          header: { 'x-auth-token': app.globalData.sessionId },
+          header: { 'x-auth-token': app.globalData.sessionId,
+                    'authorization':'Bearer'+wx.getStorageSync('token').access_token 
+           },
           success: function (res) {
             that.setData({ "formProperty.addressList": res.data });
             wx.hideToast();
@@ -95,9 +98,10 @@ Page({
         console.log(res);
         var tempFilePaths = res.tempFilePaths
         wx.uploadFile({
-          url: $util.getUrl('sys/folderFile/upload'),
+          url: $util.getUrl('basic/sys/folderFile/upload'),
           header: {
-            'x-auth-token': app.globalData.sessionId
+            'x-auth-token': app.globalData.sessionId,
+            'authorization':'Bearer' + wx.getStorageSync('token').access_token 
           },
           filePath: tempFilePaths[0],
           name: 'file',
@@ -109,8 +113,8 @@ Page({
             var folderFile = JSON.parse(res.data)[0];
             images.push({
               id: folderFile.id,
-              preview: $util.getUrl('sys/folderFile/preview?x-auth-token=' + app.globalData.sessionId + '&id=' + folderFile.id),
-              view: $util.getUrl('sys/folderFile/view?x-auth-token=' + app.globalData.sessionId + '&id=' + folderFile.id)
+              preview: $util.getUrl('basic/sys/folderFile/preview?x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.id),
+              view: $util.getUrl('basic/sys/folderFile/view?x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.id)
             })
             that.setData({ "formProperty.images": images })
           }
@@ -143,10 +147,11 @@ Page({
     var that = this;
     that.setData({ submitDisabled: true });
     wx.request({
-      url: $util.getUrl("hr/dutySign/save"),
+      url: $util.getUrl("basic/hr/dutySign/save"),
       data: e.detail.value,
       header: {
-        'x-auth-token': app.globalData.sessionId
+        'x-auth-token': app.globalData.sessionId,
+        'authorization':'Bearer' + wx.getStorageSync('token').access_token 
       },
       success: function (res) {
         if (res.data.success) {

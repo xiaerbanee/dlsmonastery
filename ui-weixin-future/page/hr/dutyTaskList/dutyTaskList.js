@@ -26,10 +26,13 @@ Page({
       duration: 10000,
       success: function (res) {
         wx.request({
-          url: $util.getUrl("hr/duty"),
-          header: { 'x-auth-token': app.globalData.sessionId },
+          url: $util.getUrl("basic/hr/duty"),
+          header: { 'x-auth-token': app.globalData.sessionId,
+                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
+           },
           data: that.data.formData,
           success: function (res) {
+            console.log(res)
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -45,10 +48,12 @@ Page({
       success: function (res) {
         if (res.confirm) {
           wx.request({
-            url: $util.getUrl("hr/duty/passAll"),
+            url: $util.getUrl("basic/hr/duty/passAll"),
             data: {},
             method: 'GET',
-            header: { 'x-auth-token': app.globalData.sessionId },
+            header: { 'x-auth-token': app.globalData.sessionId,
+                      'authorization': "Bearer" + wx.getStorageSync('token').access_token
+              },
             success: function (res) {
               that.pageRequest();
             }

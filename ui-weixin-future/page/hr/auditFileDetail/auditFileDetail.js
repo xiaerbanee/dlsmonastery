@@ -19,13 +19,15 @@ Page({
     var that = this;
     var options=that.data.options;
     wx.request({
-      url: $util.getUrl("hr/auditFile/detail"),
+      url: $util.getUrl("basic/hr/auditFile/detail"),
       data: { id: options.id },
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { 'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        },
       success: function (res) {
         that.setData({ formData: res.data.auditFile })
-        var contentImage = $util.getUrl("hr/auditFile/view?x-auth-token=" + app.globalData.sessionId + "&id=" + options.id);
+        var contentImage = $util.getUrl("basic/hr/auditFile/view?x-auth-token=" + app.globalData.sessionId + "&id=" + options.id+"&authorization=Bearer" + wx.getStorageSync('token').access_token);
         console.log(contentImage);
         that.setData({ "formData.contentImage": contentImage })
       }
@@ -58,9 +60,11 @@ Page({
     var that = this;
     that.setData({ submitDisabled: true })
     wx.request({
-      url: $util.getUrl("hr/auditFile/audit"),
+      url: $util.getUrl("basic/hr/auditFile/audit"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { 'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+       },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();

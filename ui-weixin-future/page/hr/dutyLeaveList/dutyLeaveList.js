@@ -15,10 +15,12 @@ Page({
   onLoad: function (option) {
     var that = this;
     wx.request({
-      url: $util.getUrl("hr/dutyLeave/getListProperty"),
+      url: $util.getUrl("basic/hr/dutyLeave/getListProperty"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { 'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        },
       success: function (res) {
         that.setData({
           'formProperty.dateList': res.data.dateList,
@@ -45,10 +47,14 @@ Page({
       duration: 10000,
       success: function (res) {
         wx.request({
-          url: $util.getUrl("hr/dutyLeave"),
-          header: { 'x-auth-token': app.globalData.sessionId },
+          url: $util.getUrl("basic/hr/dutyLeave"),
+          header: { 
+               'x-auth-token': app.globalData.sessionId,
+               'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            },
           data: that.data.formData,
           success: function (res) {
+            console.log(res)
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -112,9 +118,11 @@ Page({
         if (!res.cancel) {
           if (itemList[res.tapIndex] == "删除") {
             wx.request({
-              url: $util.getUrl("hr/dutyLeave/delete"),
+              url: $util.getUrl("basic/hr/dutyLeave/delete"),
               data: { id: id },
-              header: { 'x-auth-token': app.globalData.sessionId },
+              header: { 'x-auth-token': app.globalData.sessionId,
+                        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                },
               success: function (res) {
                 that.pageRequest();
               }

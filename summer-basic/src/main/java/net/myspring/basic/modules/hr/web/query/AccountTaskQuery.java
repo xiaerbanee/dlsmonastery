@@ -6,6 +6,9 @@ package net.myspring.basic.modules.hr.web.query;
  */
 public class AccountTaskQuery {
     private String positionId;
+    private String status;
+    private String name;
+    private String officeIds;
 
     public String getPositionId() {
         return positionId;
@@ -13,5 +16,29 @@ public class AccountTaskQuery {
 
     public void setPositionId(String positionId) {
         this.positionId = positionId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getOfficeIds() {
+        return officeIds;
+    }
+
+    public void setOfficeIds(String officeIds) {
+        this.officeIds = officeIds;
     }
 }

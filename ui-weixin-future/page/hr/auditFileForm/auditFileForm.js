@@ -19,20 +19,24 @@ Page({
     var that = this;
     var options = that.data.options;
     wx.request({
-      url: $util.getUrl("hr/auditFile/getFormProperty"),
+      url: $util.getUrl("basic/hr/auditFile/getFormProperty"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { 'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+       },
       success: function (res) {
         that.setData({ 'formProperty.processList': res.data.processTypes })
       }
     })
     if ( options.action == "update") {
       wx.request({
-        url: $util.getUrl("hr/auditFile/detail"),
+        url: $util.getUrl("basic/hr/auditFile/detail"),
         data: { id:  options.id },
         method: 'GET',
-        header: { 'x-auth-token': app.globalData.sessionId },
+        header: { 'x-auth-token': app.globalData.sessionId,
+                  'authorization': "Bearer" + wx.getStorageSync('token').access_token
+         },
         success: function (res) {
           that.setData({ formData: res.data })
         }
@@ -62,9 +66,12 @@ Page({
     var that = this;
     that.setData({ submitDisabled: true });
     wx.request({
-      url: $util.getUrl("hr/auditFile/save"),
+      url: $util.getUrl("basic/hr/auditFile/save"),
       data: e.detail.value,
-      header: {'x-auth-token': app.globalData.sessionId},
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
