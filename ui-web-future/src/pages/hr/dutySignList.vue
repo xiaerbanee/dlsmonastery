@@ -41,10 +41,10 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutySignList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="employee.name" :label="$t('dutySignList.employeeName')" sortable></el-table-column>
-        <el-table-column prop="dutyDate":label="$t('dutySignList.dutyDate')"></el-table-column>
+        <el-table-column prop="dutyDate" :label="$t('dutySignList.dutyDate')"></el-table-column>
         <el-table-column prop="extendMap.week" :label="$t('dutySignList.week')" ></el-table-column>
         <el-table-column prop="dutyTime" :label="$t('dutySignList.dutyTime')" ></el-table-column>
-        <el-table-column prop="address":label="$t('dutySignList.address')" ></el-table-column>
+        <el-table-column prop="address" :label="$t('dutySignList.address')" ></el-table-column>
         <el-table-column prop="uuid" :label="$t('dutySignList.uuid')" ></el-table-column>
         <el-table-column prop="netType" :label="$t('dutySignList.netType')" ></el-table-column>
         <el-table-column prop="attachment" :label="$t('dutySignList.attachment')" >

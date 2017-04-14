@@ -33,7 +33,7 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('employeePhoneList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="areaName":label="$t('employeePhoneList.areaName')"  width="150"></el-table-column>
+        <el-table-column fixed prop="areaName" :label="$t('employeePhoneList.areaName')"  width="150"></el-table-column>
         <el-table-column prop="depot.name" :label="$t('employeePhoneList.depotName')"></el-table-column>
         <el-table-column prop="employee.name" :label="$t('employeePhoneList.employeeName')" width="100"></el-table-column>
         <el-table-column prop="depositAmount" :label="$t('employeePhoneList.depositAmount')"  width="100"></el-table-column>
@@ -41,9 +41,9 @@
         <el-table-column prop="uploadTime" :label="$t('employeePhoneList.uploadTime')"></el-table-column>
         <el-table-column prop="product.name" :label="$t('employeePhoneList.productName')" width="120"></el-table-column>
         <el-table-column prop="jobPrice" :label="$t('employeePhoneList.jobPrice')" ></el-table-column>
-        <el-table-column prop="imeStr":label="$t('employeePhoneList.imeStr')" width="120"></el-table-column>
+        <el-table-column prop="imeStr" :label="$t('employeePhoneList.imeStr')" width="120"></el-table-column>
         <el-table-column prop="retailPrice" :label="$t('employeePhoneList.retailPrice')"></el-table-column>
-        <el-table-column prop="createdDate":label="$t('employeePhoneList.createdDate')" width="120"></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('employeePhoneList.createdDate')" width="120"></el-table-column>
         <el-table-column prop="created.fullName" :label="$t('employeePhoneList.createdBy')"></el-table-column>
         <el-table-column fixed="right" :label="$t('employeePhoneList.operation')" width="140">
           <template scope="scope">
