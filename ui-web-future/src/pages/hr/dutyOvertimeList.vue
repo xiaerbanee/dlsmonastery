@@ -62,7 +62,7 @@
         this.pageLoading = true;
         util.setQuery("dutyOvertimeList",this.formData);
          this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/hr/dutyOvertime',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutyOvertime',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

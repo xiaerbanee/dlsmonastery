@@ -1,16 +1,20 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.dto.NameValueDto;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
+import net.myspring.basic.common.utils.InitDomainUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
 import net.myspring.basic.modules.hr.manager.OfficeManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
+import net.myspring.basic.modules.hr.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.domain.Permission;
@@ -49,7 +53,11 @@ public class AccountService {
     @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
+    private OfficeMapper officeMapper;
+    @Autowired
     private SecurityUtils securityUtils;
+    @Autowired
+    private InitDomainUtils initDomainUtils;
 
     public Account findOne(String id) {
         Account account = accountManager.findOne(id);
@@ -58,6 +66,8 @@ public class AccountService {
 
     public AccountDto findDto(String id) {
         Account account = accountMapper.findOne(id);
+        List<NameValueDto> nameValueDtoList = accountMapper.findAccountOfficeByIds(Lists.newArrayList(account.getId()));
+        initDomainUtils.initChildIdList(account,Office.class,nameValueDtoList);
         AccountDto accountDto = BeanUtil.map(account, AccountDto.class);
         cacheUtils.initCacheInput(accountDto);
         return accountDto;
@@ -72,6 +82,8 @@ public class AccountService {
 
     public Page<AccountDto> findPage(Pageable pageable, AccountQuery accountQuery) {
         Page<Account> page = accountMapper.findPage(pageable, accountQuery);
+        List<NameValueDto> nameValueDtoList = accountMapper.findAccountOfficeByIds(CollectionUtil.extractToList(page.getContent(), "id"));
+        initDomainUtils.initChildIdList(page.getContent(),Office.class,nameValueDtoList);
         Page<AccountDto> accountDtoPage = BeanUtil.map(page, AccountDto.class);
         cacheUtils.initCacheInput(accountDtoPage.getContent());
         return accountDtoPage;
@@ -91,7 +103,9 @@ public class AccountService {
         boolean isCreate = StringUtils.isBlank(accountForm.getId());
         if (isCreate) {
             accountForm.setPassword(StringUtils.getEncryptPassword(Const.DEFAULT_PASSWORD));
-            accountManager.saveForm(accountForm);
+            Account account = BeanUtil.map(accountForm, Account.class);
+            account.setCompanyId(securityUtils.getCompanyId());
+            accountManager.save(account);
         } else {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
                 accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));

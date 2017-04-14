@@ -18,14 +18,9 @@
                 <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('accountForm.depot')" prop="depotIdList">
-              <el-select v-model="inputForm.depotIdList" multiple filterable remote :placeholder="$t('accountForm.inputWord')" :remote-method="remoteDepot" :loading="remoteLoading" :clearable=true >
-                <el-option v-for="depot in depots" :key="depot.id" :label="depot.name" :value="depot.id"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item :label="$t('accountForm.leader')" prop="leaderId">
               <el-select v-model="inputForm.leaderId" filterable remote :placeholder="$t('accountForm.inputWord')" :remote-method="remoteAccount" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="leader in leaders" :key="leader.id" :label="leader.loginName" :value="leader.id"></el-option>
+                <el-option v-for="item in leaders" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.position')" prop="positionId">
@@ -106,7 +101,8 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/hr/account/save',qs.stringify(this.inputForm)).then((response)=> {
+            this.inputForm.viewReport=
+            axios.post('/api/basic/hr/account/save',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -122,7 +118,7 @@
       },remoteAccount(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/account/search',{params:{key:query}}).then((response)=>{
+          axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
             this.leaders=response.data;
             this.remoteLoading = false;
           })
@@ -130,7 +126,7 @@
       },remoteDataScopeOffice(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
             this.dataScopeOffices=response.data;
             this.remoteLoading = false;
           })
@@ -138,7 +134,7 @@
       },remoteEmployee(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/employee/search',{params:{key:query}}).then((response)=>{
+          axios.get('/api/basic/hr/employee/search',{params:{key:query}}).then((response)=>{
             this.employees=response.data;
             this.remoteLoading = false;
           })
@@ -146,44 +142,37 @@
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
             this.offices = response.data;
-            this.remoteLoading = false;
-          })
-        }
-      },remoteDepot(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/crm/depot/search',{params:{name:query}}).then((response)=>{
-            this.depots=response.data;
             this.remoteLoading = false;
           })
         }
       }
     },created(){
-      axios.get('/api/hr/account/getFormProperty').then((response)=>{
+      axios.get('/api/basic/hr/account/getFormProperty').then((response)=>{
         this.formProperty = response.data;
       });
       if(!this.isCreate){
-        axios.get('/api/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
           this.inputForm.viewReport = response.data.viewReport?1:0;
-          if(response.data.office!=null){
-            this.offices=new Array(response.data.office)
+          if(response.data.officeId!=null){
+            this.offices=new Array({id:response.data.officeId,name:response.data.officeName})
           }
-         if(response.data.officeList!=null&&response.data.officeList.length>0){
-            this.dataScopeOffices=response.data.officeList;
-            this.inputForm.officeIdList=util.getIdList(this.dataScopeOffices);
+         if(response.data.officeIdList!=null&&response.data.officeIdList.length>0){
+           let officeList=new Array();
+            for(var i=response.data.officeIdList.length;i>0;i--){
+                officeList.push({id:response.data.officeIdList[i],name:response.data.officeListName[i]})
+            }
+           this.dataScopeOffices=officeList;
+           this.inputForm.officeIdList=response.data.officeIdList;
           }
-          if(response.data.depotList!=null&&response.data.depotList.length>0){
-            this.depots=response.data.depotList;
-            this.inputForm.depotIdList=util.getIdList(this.depots);
+          if(response.data.employeeId!=null){
+            this.employees=new Array({id:response.data.employeeId,name:response.data.employeeName})
+            console.log(this.employees)
           }
-          if(response.data.employee!=null){
-            this.employees=new Array(response.data.employee)
-          }
-          if(response.data.leader!=null){
-            this.leaders=new Array(response.data.leader)
+          if(response.data.leaderId!=null){
+            this.leaders=new Array({id:response.data.leaderId,loginName:response.data.leaderName})
           }
         })
       }

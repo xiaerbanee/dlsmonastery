@@ -42,32 +42,22 @@
         <el-table-column fixed prop="id" :label="$t('accountList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="type" :label="$t('accountList.type')"></el-table-column>
         <el-table-column prop="loginName" :label="$t('accountList.loginName')"></el-table-column>
-        <el-table-column prop="employee.name" :label="$t('accountList.employeeName')"></el-table-column>
-        <el-table-column prop="leader.loginName" sortable :label="$t('accountList.leader')" width="120"></el-table-column>
-        <el-table-column prop="office.name" :label="$t('accountList.officeName')"></el-table-column>
-        <el-table-column prop="officeList" :label="$t('accountList.dataScopeOffice')">
-          <template scope="scope">
-            {{scope.row.officeList | joinColumn('name')}}
-          </template>
-        </el-table-column>
-        <el-table-column prop="depotList" :label="$t('accountList.depotName')">
-          <template scope="scope">
-            {{scope.row.depotList | joinColumn('name')}}
-          </template>
-        </el-table-column>
-        <el-table-column prop="position.name" :label="$t('accountList.positionName')"></el-table-column>
-        <el-table-column prop="position.dataScope" :label="$t('accountList.positionDataScope')" width="120">
-          <template scope="scope">{{scope.row.position ? scope.row.position.dataScope : ''  | getEnumLabel('dataScope')}}</template>
-        </el-table-column>
+        <el-table-column prop="employeeName" :label="$t('accountList.employeeName')"></el-table-column>
+        <el-table-column prop="leaderName" sortable :label="$t('accountList.leader')" width="120"></el-table-column>
+        <el-table-column prop="officeName" :label="$t('accountList.officeName')"></el-table-column>
+        <el-table-column prop="dataOfficeName" :label="$t('accountList.dataScopeOffice')"></el-table-column>
+        <el-table-column prop="positionName" :label="$t('accountList.positionName')"></el-table-column>
+        <el-table-column prop="dataScopeLabel" :label="$t('accountList.positionDataScope')" width="120"></el-table-column>
         <el-table-column prop="viewReport" :label="$t('accountList.viewReport')">
           <template scope="scope">
             <el-tag :type="scope.row.viewReport ? 'primary' : 'danger'">{{scope.row.viewReport | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="employee.status" :label="$t('accountList.employeeStatus')"></el-table-column>
+        <el-table-column prop="employeeStatus" :label="$t('accountList.employeeStatus')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -107,7 +97,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("accountList",this.formData);
-        axios.get('/api/hr/account',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/account',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -128,12 +118,12 @@
       },itemAdd(){
         this.$router.push({ name: 'accountForm'})
       },exportData(){
-				window.location.href= "/api/hr/account/export?"+qs.stringify(this.formData);
+				window.location.href= "/api/basic/hr/account/export?"+qs.stringify(this.formData);
       },itemAction:function(id,action){
         if(action=="修改") {
           this.$router.push({ name: 'accountForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/hr/account/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/hr/account/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
@@ -141,7 +131,7 @@
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
             this.offices=response.data;
             this.remoteLoading = false;
           })
@@ -151,7 +141,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/hr/account/getListProperty').then((response) =>{
+      axios.get('/api/basic/hr/account/getListProperty').then((response) =>{
         this.formProperty=response.data;
       });
       this.pageRequest();

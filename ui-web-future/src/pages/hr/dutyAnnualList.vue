@@ -53,7 +53,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("dutyAnnualList",this.formData);
-        axios.get('/api/hr/dutyAnnual',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutyAnnual',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

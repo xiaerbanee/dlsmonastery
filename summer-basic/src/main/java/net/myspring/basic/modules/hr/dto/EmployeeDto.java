@@ -18,6 +18,8 @@ public class EmployeeDto extends DataDto<Employee> {
     private LocalDate leaveDate;
     private String status;
     private String mobilePhone;
+    private String name;
+
 
     public String getOfficeId() {
         return officeId;
@@ -89,5 +91,13 @@ public class EmployeeDto extends DataDto<Employee> {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -86,11 +86,11 @@ public class CacheReadUtils {
                 for(CacheInputObject cacheInputObject:cacheInputObjectList) {
                     if(CollectionUtils.isNotEmpty(cacheInputObject.getKeyList())) {
                         boolean isCollection = cacheInputObject.getCacheInputField().getCollection();
-                        Object localFieldValue = ReflectionUtil.getFieldValue(cacheInputObject.getObject(), cacheInputObject.getCacheInputField().getOutputField());
                         for(String key:cacheInputObject.getKeyList()) {
                             if(keyMap.containsKey(key)) {
                                 Object cacheInputFieldValue = ReflectionUtil.getFieldValue(keyMap.get(key),cacheInputObject.getCacheInputField().getOutputInstance());
                                 if(isCollection) {
+                                    Object localFieldValue = ReflectionUtil.getFieldValue(cacheInputObject.getObject(), cacheInputObject.getCacheInputField().getOutputField());
                                     if (CollectionUtil.isEmpty((Collection) localFieldValue)) {
                                         localFieldValue = Lists.newArrayList();
                                     }

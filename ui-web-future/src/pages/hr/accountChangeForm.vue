@@ -93,7 +93,7 @@
         this.inputForm.expiryDate=util.formatLocalDate( this.inputForm.expiryDate)
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/hr/accountChange/save', qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/basic/hr/accountChange/save', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
               this.$message(response.data.message);
             }
@@ -111,7 +111,7 @@
       },remoteAccount(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/account/search',{params:{key:query}}).then((response)=>{
+          axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
             this.accounts=response.data;
             this.remoteLoading = false;
           })
@@ -121,7 +121,7 @@
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
             this.offices=response.data;
             this.remoteLoading = false;
           })
@@ -130,7 +130,7 @@
         }
       },getAccount(id){
         if(id){
-          axios.get('/api/hr/account/findOne',{params: {id:id}}).then((response)=>{
+          axios.get('/api/basic/hr/account/findOne',{params: {id:id}}).then((response)=>{
             this.employee = response.data.employee;
             this.account=response.data;
             this.accounts = new Array(response.data);
@@ -162,7 +162,7 @@
               this.inputForm.oldValue = this.employee.leaveDate;
             }
       },findOne(){
-        axios.get('/api/hr/accountChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/hr/accountChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
           if(response.data.type){
             this.inputForm.type=response.data.type;
@@ -172,7 +172,7 @@
           this.inputForm.accountId=response.data.account.id;
         })
       },getFormProperty(){
-        axios.get('/api/hr/accountChange/getFormProperty').then((response)=>{
+        axios.get('/api/basic/hr/accountChange/getFormProperty').then((response)=>{
           this.formProperty = response.data;
         });
       }

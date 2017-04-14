@@ -61,7 +61,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("recruitList",this.formData);
-        axios.get('/api/hr/recruit',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/recruit',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -82,7 +82,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'recruitForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/hr/recruit/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/hr/recruit/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

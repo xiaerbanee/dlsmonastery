@@ -18,5 +18,7 @@ public interface DictMapMapper extends MyMapper<DictMap,String> {
 
     Page<DictMap> findPage(Pageable pageable, @Param("p")DictMapQuery dictMapQuery);
 
+    List<DictMap> findByCategory(String category);
+
 
 }

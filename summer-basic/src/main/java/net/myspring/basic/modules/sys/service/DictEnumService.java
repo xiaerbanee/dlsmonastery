@@ -31,7 +31,7 @@ public class DictEnumService {
     }
 
     public  List<DictEnumDto> findByCategory(String category){
-        List<DictEnum> dictEnumList=dictEnumManager.findByCategory(category);
+        List<DictEnum> dictEnumList=dictEnumMapper.findByCategory(category);
         List<DictEnumDto> dictEnumDtoList= BeanUtil.map(dictEnumList,DictEnumDto.class);
         cacheUtils.initCacheInput(dictEnumDtoList);
         return dictEnumDtoList;
@@ -52,7 +52,8 @@ public class DictEnumService {
     public DictEnumForm save(DictEnumForm dictEnumForm) {
         boolean isCreate= StringUtils.isBlank(dictEnumForm.getId());
         if(isCreate) {
-            dictEnumManager.saveForm(dictEnumForm);
+            DictEnum dictEnum = BeanUtil.map(dictEnumForm, DictEnum.class);
+            dictEnumManager.save(dictEnum);
         } else {
             dictEnumManager.updateForm(dictEnumForm);
         }

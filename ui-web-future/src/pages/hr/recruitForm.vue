@@ -259,7 +259,7 @@
               this.inputForm.auditRealDate=util.formatLocalDateTime(this.inputForm.auditRealDate);
               this.inputForm.entryAppointDate=util.formatLocalDateTime(this.inputForm.entryAppointDate);
               this.inputForm.entryRealDate=util.formatLocalDateTime(this.inputForm.entryRealDate);
-              axios.post('/api/hr/recruit/save', qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/basic/hr/recruit/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -280,7 +280,7 @@
         },remoteAccount(query) {
           if (query !== '') {
             this.remoteLoading = true;
-              axios.get('/api/hr/account/search',{params:{key:query}}).then((response)=>{
+              axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
                 var dataMap = new Map();
                 response.data.map((v,index)=>{
                   dataMap.set(response.data[index].id,response.data[index]);
@@ -308,7 +308,7 @@
         },onChange(){
           this.message="";
           if(this.inputForm.mobilePhone.length>=11){
-            axios.get('/api/hr/recruit/checkMobilePhone',{params:{mobilePhone:this.inputForm.mobilePhone}}).then((response)=>{
+            axios.get('/api/basic/hr/recruit/checkMobilePhone',{params:{mobilePhone:this.inputForm.mobilePhone}}).then((response)=>{
               if(!response.data.success){
                 this.message=response.data.message;
                 this.submitDisabled = true;
@@ -317,11 +317,11 @@
           }
         }
       },created(){
-        axios.get('/api/hr/recruit/getFormProperty').then((response)=>{
+        axios.get('/api/basic/hr/recruit/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/hr/recruit/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/hr/recruit/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
           })
         }

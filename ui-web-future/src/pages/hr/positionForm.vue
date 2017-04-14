@@ -92,7 +92,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/hr/position/save',qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/basic/hr/position/save',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -117,13 +117,13 @@
         this.inputForm.permissionIdStr=permissions.join();
       },
     },created(){
-      axios.get('/api/hr/position/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/hr/position/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
         this.formProperty = response.data;
       this.treeData =new Array( response.data.permissionTree);
       this.checked = response.data.permissionTree.checked;
       this.inputForm.permissionIdStr = response.data.permissionTree.checked.join();
       if(!this.isCreate){
-        axios.get('/api/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
       })
       }

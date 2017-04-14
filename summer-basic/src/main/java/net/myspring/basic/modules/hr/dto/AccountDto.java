@@ -1,10 +1,18 @@
 package net.myspring.basic.modules.hr.dto;
 
+import io.reactivex.netty.channel.StringTransformer;
 import net.myspring.basic.common.dto.DataDto;
+import net.myspring.basic.common.enums.DataScopeEnum;
+import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuj on 2017/3/19.
@@ -13,12 +21,16 @@ public class AccountDto extends DataDto<Account> {
 
     private String loginName;
     private String password;
+    private String type;
+
 
     private String positionId;
     private String officeId;
     private String leaderId;
     private String employeeId;
     private String companyId;
+    private boolean viewReport;
+    private List<String> officeIdList;
 
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "dataScope")
     private Integer dataScope;
@@ -34,6 +46,12 @@ public class AccountDto extends DataDto<Account> {
     private String companyName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
     private String employeeName;
+    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "status")
+    private String employeeStatus;
+    @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "dataScope")
+    private Integer positionDataScope;
+    @CacheInput(inputKey = "offices",inputInstance = "officeIdList",outputInstance = "name")
+    private List<String> officeListName;
 
     public String getPassword() {
         return password;
@@ -146,4 +164,68 @@ public class AccountDto extends DataDto<Account> {
     public void setRegularDate(LocalDate regularDate) {
         this.regularDate = regularDate;
     }
+
+    public String getDataScopeLabel(){
+        Map<Integer, String> map = DataScopeEnum.getMap();
+        if(CollectionUtil.isNotEmpty(map)){
+            return map.get(positionDataScope);
+        }
+        return "";
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isViewReport() {
+        return viewReport;
+    }
+
+    public void setViewReport(boolean viewReport) {
+        this.viewReport = viewReport;
+    }
+
+    public String getEmployeeStatus() {
+        return employeeStatus;
+    }
+
+    public void setEmployeeStatus(String employeeStatus) {
+        this.employeeStatus = employeeStatus;
+    }
+
+    public Integer getPositionDataScope() {
+        return positionDataScope;
+    }
+
+    public void setPositionDataScope(Integer positionDataScope) {
+        this.positionDataScope = positionDataScope;
+    }
+
+    public String getDataOfficeName(){
+        if( CollectionUtil.isNotEmpty(officeListName)){
+            return StringUtils.join(officeListName, Const.CHAR_COMMA);
+        }
+        return "";
+    }
+
+    public List<String> getOfficeIdList() {
+        return officeIdList;
+    }
+
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
+    }
+
+    public List<String> getOfficeListName() {
+        return officeListName;
+    }
+
+    public void setOfficeListName(List<String> officeListName) {
+        this.officeListName = officeListName;
+    }
+
 }

@@ -135,7 +135,7 @@
         this.formLabel.processTypeId.value=util.getLabel(this.formProperty.processTypes,this.formData.processTypeId);
         util.getQuery("auditFileList");
         util.setQuery("auditFileList",this.formData);
-        axios.get('/api/hr/auditFile',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/auditFile',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -160,7 +160,7 @@
         }else if(action=="审核"){
           this.$router.push({ name: 'auditFileDetail', query: { id: id,action:"audit" }})
         }else if(action=="删除") {
-          axios.get('/api/hr/auditFile/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/hr/auditFile/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
@@ -168,7 +168,7 @@
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
             this.offices=response.data;
             this.remoteLoading = false;
           })
@@ -177,7 +177,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/hr/auditFile/getListProperty').then((response) =>{
+      axios.get('/api/basic/hr/auditFile/getListProperty').then((response) =>{
         this.formProperty=response.data;
       });
       this.pageRequest();

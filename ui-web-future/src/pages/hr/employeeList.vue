@@ -129,7 +129,7 @@
         this.formLabel.positionId.value=util.getLabel(this.formProperty.positions,this.formData.positionId);
         util.getQuery("employeeList");
         util.setQuery("employeeList",this.formData);
-        axios.get('/api/hr/employee',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/employee',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -150,7 +150,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'employeeForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/hr/employee/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/hr/employee/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
@@ -158,13 +158,13 @@
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
             this.offices=response.data;
             this.remoteLoading = false;
           })
         }
       },getListProperty(){
-        axios.get('/api/hr/employee/getListProperty').then((response) =>{
+        axios.get('/api/basic/hr/employee/getListProperty').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });

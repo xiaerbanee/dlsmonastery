@@ -186,10 +186,10 @@
                   this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
                   this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
                   this.employeeForm.sex=this.employeeForm.sexLabel==1?"男":"女"
-                    axios.post('/api/hr/employee/save', qs.stringify(this.employeeForm)).then((response)=> {
+                    axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm)).then((response)=> {
                         this.$message("员工"+response.data.message);
                         this.accountForm.employeeId=response.data.extendMap.employeeId;
-                        axios.post('/api/hr/account/save', qs.stringify(this.accountForm)).then((response)=> {
+                        axios.post('/api/basic/hr/account/save', qs.stringify(this.accountForm)).then((response)=> {
                         this.$message("账户"+response.data.message);
                     });
                     if(this.isCreate){
@@ -208,7 +208,7 @@
         },remoteAccount(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/account/search',{params:{key:query}}).then((response)=>{
+          axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
             this.leaders=response.data;
             this.remoteLoading = false;
           })
@@ -216,7 +216,7 @@
       },remoteDataScopeOffice(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
             this.dataScopeOffices=response.data;
             this.remoteLoading = false;
           })
@@ -224,7 +224,7 @@
       },remoteEmployee(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/employee/search',{params:{key:query}}).then((response)=>{
+          axios.get('/api/basic/hr/employee/search',{params:{key:query}}).then((response)=>{
             this.employees=response.data;
             this.remoteLoading = false;
           })
@@ -232,7 +232,7 @@
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
             this.offices=response.data;
             this.remoteLoading = false;
           })
@@ -257,11 +257,11 @@
         }
       }
       },created(){
-        axios.get('/api/hr/employee/getFormProperty').then((response)=>{
+        axios.get('/api/basic/hr/employee/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
          if(response.data.account.office!=null){
             this.offices=new Array(response.data.account.office)
           }
