@@ -27,7 +27,7 @@ public class DistrictService {
     }
 
     public List<DistrictDto> findByNameLike(String name){
-        List<District> citys = districtMapper.findByNameLike(name);
+        List<District> citys = districtMapper.findByLikeName(name);
         List<DistrictDto> districtDtos= BeanUtil.map(citys,DistrictDto.class);
         cacheUtils.initCacheInput(districtDtos);
         return districtDtos;
