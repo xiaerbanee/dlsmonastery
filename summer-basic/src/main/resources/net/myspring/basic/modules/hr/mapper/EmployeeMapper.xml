@@ -38,13 +38,17 @@
         <if test="p.leaveDateEnd != null">
             AND employee.leave_date  &lt;= #{p.leaveDateEnd}
         </if>
-        <if test="p.positionId != null">
+        <if test="p.positionId != null ">
             AND employee.account_id in(
             select t1.id
-            from hr_account t1,hr_position t2
-            where t1.position_id=t2.id
-            and t2.id=#{p.positionId}
-            and t1.enabled=1
+            from hr_account t1
+            where t1.enabled=1
+            <if test="p.positionId != null ">
+                and t1.position_id=#{p.positionId}
+            </if>
+            <if test="p.officeId != null ">
+                and t1.office_id=#{p.officeId}
+            </if>
             )
         </if>
         <if test="p.leaderName != null">
@@ -53,15 +57,6 @@
             from hr_account t1,hr_account t2
             where t1.leader_id=t2.id
             and t2.login_name=#{p.leaderName}
-            and t1.enabled=1
-            )
-        </if>
-        <if test="p.officeId != null">
-            AND employee.account_id in(
-            select t1.id
-            from hr_account t1,hr_office t2
-            where t1.office_id=t2.id
-            and (t2.parent_ids like concat('%,',#{p.officeId},',%') or t2.id =#{p.officeId})
             and t1.enabled=1
             )
         </if>
