@@ -9,7 +9,7 @@
               <a style="text-decoration:underline;color:blue" href="/api/hr/dutyAnnual/import/template">{{$t('dutyAnnualForm.downLoad')}}</a>
             </el-form-item>
             <el-form-item :label="$t('dutyAnnualForm.exportData')" prop="folderFileId">
-              <el-upload action="/api/sys/folderFile/upload?uploadPath=/年假管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" >
+              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/年假管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" >
                 <el-button size="small" type="primary">{{$t('dutyAnnualForm.clickUpload')}}</el-button>
               </el-upload>
             </el-form-item>

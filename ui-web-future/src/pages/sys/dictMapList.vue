@@ -41,9 +41,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('dictMapList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -80,7 +79,7 @@
         this.pageLoading = true;
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         util.setQuery("dictMapList",this.formData);
-        axios.get('/api/sys/dictMap',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/sys/dictMap',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -101,7 +100,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'dictMapForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/sys/dictMap/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/sys/dictMap/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
@@ -110,7 +109,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/sys/dictMap/getListProperty').then((response) =>{
+      axios.get('/api/basic/sys/dictMap/getListProperty').then((response) =>{
         this.formProperty=response.data;
       });
       this.pageRequest();

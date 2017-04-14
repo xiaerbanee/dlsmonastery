@@ -47,7 +47,7 @@
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.scenePhoto')" prop="scenePhoto">
-              <el-upload action="/api/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -144,7 +144,7 @@
         axios.get('/api/crm/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
           if(this.inputForm.scenePhoto !=null) {
-            axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
+            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
               this.fileList= response.data;
             });
           }

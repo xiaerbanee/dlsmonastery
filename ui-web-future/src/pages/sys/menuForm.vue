@@ -79,7 +79,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/sys/menu/save',qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/basic/sys/menu/save',qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -94,11 +94,11 @@
           })
         }
       },created(){
-        axios.get('/api/sys/menu/getFormProperty').then((response)=>{
+        axios.get('/api/basic/sys/menu/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/sys/menu/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/sys/menu/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
             this.inputForm.mobile=response.data.mobile?"1":"0";
             this.inputForm.visible=response.data.visible?"1":"0";

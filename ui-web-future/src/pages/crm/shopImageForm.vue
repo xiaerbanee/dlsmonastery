@@ -22,7 +22,7 @@
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item  :label="$t('shopImageForm.image')" prop="image">
-              <el-upload action="/api/sys/folderFile/upload?uploadPath=/形象更换" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/形象更换" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopImageForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopImageForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -105,7 +105,7 @@
           util.copyValue(response.data,this.inputForm);
           this.shops=new Array(response.data.shop);
           if(this.inputForm.image != null) {
-            axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
+            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
               this.fileList= response.data;
             });
           }

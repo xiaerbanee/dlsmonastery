@@ -39,19 +39,19 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('shopPromotionForm.activityImage1')" prop="activityImage1">
-                  <el-upload action="/api/sys/folderFile/upload?uploadPath=/活动拉销":on-change="handleChange1" :on-remove="handleRemove1"  :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
+                  <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/活动拉销":on-change="handleChange1" :on-remove="handleRemove1"  :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
                     <el-button size="small" type="primary">{{$t('shopPromotionForm.clickUpload')}}</el-button>
                     <div slot="tip" class="el-upload__tip">{{$t('shopPromotionForm.uploadImageSizeFor5000KB')}}</div>
                   </el-upload>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityImage2')" prop="activityImage2">
-                  <el-upload action="/api/sys/folderFile/upload?uploadPath=/活动拉销":on-change="handleChange2" :on-remove="handleRemove2"  :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
+                  <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/活动拉销":on-change="handleChange2" :on-remove="handleRemove2"  :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
                     <el-button size="small" type="primary">{{$t('shopPromotionForm.clickUpload')}}</el-button>
                     <div slot="tip" class="el-upload__tip">{{$t('shopPromotionForm.uploadImageSizeFor5000KB')}}</div>
                   </el-upload>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityImage3')" prop="activityImage3">
-                  <el-upload action="/api/sys/folderFile/upload?uploadPath=/活动拉销" :on-change="handleChange3" :on-remove="handleRemove3"  :on-preview="handlePreview3" :file-list="fileList3" list-type="picture">
+                  <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/活动拉销" :on-change="handleChange3" :on-remove="handleRemove3"  :on-preview="handlePreview3" :file-list="fileList3" list-type="picture">
                     <el-button size="small" type="primary">{{$t('shopPromotionForm.clickUpload')}}</el-button>
                     <div slot="tip" class="el-upload__tip">{{$t('shopPromotionForm.uploadImageSizeFor5000KB')}}</div>
                   </el-upload>
@@ -171,17 +171,17 @@
             this.shops=new Array(response.data.shop)
           }
           if(this.inputForm.activityImage1 !=null) {
-            axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
+            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
               this.fileList1= response.data;
             });
           }
           if(this.inputForm.activityImage2 !=null) {
-            axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
+            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
               this.fileList2= response.data;
             });
           }
           if(this.inputForm.activityImage3 !=null) {
-            axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
+            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
               this.fileList3= response.data;
             });
           }

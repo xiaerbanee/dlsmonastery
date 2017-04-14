@@ -3,9 +3,9 @@
     <head-tab :active="$t('folderForm.folderForm') "></head-tab>
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
-        <el-form-item :label="$t('folderForm.parentName')" prop="parentName">
-          <el-select v-model="inputForm.parentName" filterable :placeholder="$t('folderForm.selectGroup')">
-            <el-option v-for="folder in formProperty.folders" :key="folder.name":label="folder.name" :value="folder.name"></el-option>
+        <el-form-item :label="$t('folderForm.parentId')" prop="parentId">
+          <el-select v-model="inputForm.parentId" filterable :placeholder="$t('folderForm.selectGroup')">
+            <el-option v-for="folder in formProperty.folders" :key="folder.id":label="folder.name" :value="folder.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('folderForm.name')" prop="name">
@@ -31,11 +31,11 @@
             inputForm:{
               id:'',
               name:'',
-              parentName:"",
+              parentId:"",
               remarks:''
             },
             rules: {
-              parentName: [{ required: true, message: this.$t('folderForm.prerequisiteMessage')}],
+              parentId: [{ required: true, message: this.$t('folderForm.prerequisiteMessage')}],
               name: [{ required: true, message: this.$t('folderForm.prerequisiteMessage')}]
             }
           }
@@ -46,7 +46,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/sys/folder/save', qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/basic/sys/folder/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -61,11 +61,11 @@
           })
         }
       },created(){
-        axios.get('/api/sys/folder/getFormProperty').then((response)=>{
+        axios.get('/api/basic/sys/folder/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/sys/folder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/sys/folder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
           })
         }

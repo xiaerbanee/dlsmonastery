@@ -11,7 +11,12 @@ import java.util.List;
  */
 
 public class PermissionForm extends DataForm<Permission> {
+
     private List<String> positionIdList;
+    private String menuId;
+    private String name;
+    private String permission;
+    private String remarks;
 
     public List<String> getPositionIdList() {
         return positionIdList;
@@ -19,5 +24,37 @@ public class PermissionForm extends DataForm<Permission> {
 
     public void setPositionIdList(List<String> positionIdList) {
         this.positionIdList = positionIdList;
+    }
+
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }

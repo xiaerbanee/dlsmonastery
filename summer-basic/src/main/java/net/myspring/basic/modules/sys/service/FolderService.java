@@ -109,7 +109,7 @@ public class FolderService {
         if (!isCreate && folderForm.getParentIds().contains("," + folderForm.getId() + ",")) {
             throw new ServiceException("无法将上级目录设置为自己或者自己的下级目录");
         }
-        folderManager.saveForm(folderForm);
+        folderManager.save(BeanUtil.map(folderForm,Folder.class));
         List<Folder> list = folderMapper.findByParentIdsLike("%," + folderForm.getId() + ",%");
         for (Folder e : list) {
             e.setParentIds(e.getParentIds().replace(oldParentIds, folderForm.getParentIds()));

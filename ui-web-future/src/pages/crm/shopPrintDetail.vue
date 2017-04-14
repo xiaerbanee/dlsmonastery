@@ -18,7 +18,7 @@
               {{shopPrint.content}}
             </el-form-item>
             <el-form-item :label="$t('shopPrintDetail.attachment')" prop="attachment">
-              <el-upload  action="/api/sys/folderFile/upload?uploadPath=/广告印刷" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload  action="/api/basic/sys/folderFile/upload?uploadPath=/广告印刷" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
               </el-upload>
             </el-form-item>
           </el-col>
@@ -80,7 +80,7 @@
           this.shopPrint = response.data.shopPrint;
           console.log(this.shopPrint.attachment)
           if(this.shopPrint.attachment != null) {
-            axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.shopPrint.attachment}}).then((response)=>{
+            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.shopPrint.attachment}}).then((response)=>{
               this.fileList = response.data;
               console.log(response.data)
             });

@@ -81,7 +81,7 @@ public class PermissionService {
     public PermissionForm save(PermissionForm permissionForm) {
         boolean isCreate= StringUtils.isBlank(permissionForm.getId());
         if (isCreate) {
-            permissionManager.saveForm(permissionForm);
+            permissionManager.save(BeanUtil.map(permissionForm,Permission.class));
             if(CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())){
                 permissionMapper.savePermissionPosition(permissionForm.getId(),permissionForm.getPositionIdList());
             }

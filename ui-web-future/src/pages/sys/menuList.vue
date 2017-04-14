@@ -11,14 +11,14 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.menuCategory.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.menuCategory" filterable clearable :placeholder="$t('menuList.inputKey')">
-                  <el-option v-for="category in formProperty.menuCategory" :key="category.name" :label="category.name" :value="category.name"></el-option>
+              <el-form-item :label="formLabel.menuCategoryId.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.menuCategoryId" filterable clearable>
+                  <el-option v-for="item in formProperty.menuCategory" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('menuList.inputKey')">
-                  <el-option v-for="category in formProperty.category"  :key="category.name" :label="category" :value="category"></el-option>
+                  <el-option v-for="category in formProperty.category"  :key="category" :label="category" :value="category"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
@@ -36,7 +36,7 @@
         <el-table-column prop="name" :label="$t('menuList.name')" ></el-table-column>
         <el-table-column prop="menuCode" label="菜单code" ></el-table-column>
         <el-table-column prop="category" :label="$t('menuList.category')" ></el-table-column>
-        <el-table-column prop="menuCategory.name" :label="$t('menuList.menuCategoryName')" ></el-table-column>
+        <el-table-column prop="menuCategoryName" :label="$t('menuList.menuCategoryName')" ></el-table-column>
         <el-table-column prop="categoryCode" label="分组code"></el-table-column>
         <el-table-column prop="sort" :label="$t('menuList.sort')" ></el-table-column>
         <el-table-column prop="href" :label="$t('menuList.href')"></el-table-column>
@@ -58,9 +58,8 @@
         <el-table-column prop="remarks" :label="$t('menuList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('menuList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -78,11 +77,11 @@
         formData:{
           page:0,
           size:25,
-          menuCategory:'',
+          menuCategoryId:'',
           category:"",
           name:''
         },formLabel:{
-          menuCategory:{label:this.$t('menuList.menuCategory')},
+          menuCategoryId:{label:this.$t('menuList.menuCategoryId')},
           category:{label:this.$t('menuList.category')},
           name:{label:this.$t('menuList.name')}
         },
@@ -96,7 +95,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("menuList",this.formData);
-        axios.get('/api/sys/menu',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/sys/menu',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -117,7 +116,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'menuForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/sys/menu/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/sys/menu/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
             this.pageRequest();
           })
@@ -126,7 +125,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/sys/menu/getListProperty').then((response) =>{
+      axios.get('/api/basic/sys/menu/getListProperty').then((response) =>{
         this.formProperty=response.data;
       });
       this.pageRequest();

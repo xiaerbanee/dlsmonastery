@@ -53,11 +53,11 @@
               {{inputForm.processStatus}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.scenePhoto')" prop="scenePhoto">
-              <el-upload action="/api/sys/folderFile/upload?uploadPath=/活动拉销":on-change="handleChange1" :on-remove="handleRemove1"  :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
+              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/活动拉销":on-change="handleChange1" :on-remove="handleRemove1"  :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
               </el-upload>
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.confirmPhoto')" prop="confirmPhoto">
-              <el-upload action="/api/sys/folderFile/upload?uploadPath=/活动拉销" :on-change="handleChange2" :on-remove="handleRemove2"  :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
+              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/活动拉销" :on-change="handleChange2" :on-remove="handleRemove2"  :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
               </el-upload>
             </el-form-item>
           </el-col>
@@ -84,12 +84,12 @@
         axios.get('/api/crm/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
         if(this.inputForm.scenePhoto !=null) {
-          axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
+          axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
             this.fileList1= response.data;
         });
         }
         if(this.inputForm.confirmPhoto !=null) {
-          axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.inputForm.confirmPhoto}}).then((response)=>{
+          axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.confirmPhoto}}).then((response)=>{
             this.fileList2= response.data;
         });
         }

@@ -35,9 +35,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('menuCategoryList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -71,7 +70,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("menuCategoryList",this.formData);
-        axios.get('/api/sys/menuCategory',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/sys/menuCategory',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -92,7 +91,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'menuCategoryForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/sys/menuCategory/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/sys/menuCategory/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

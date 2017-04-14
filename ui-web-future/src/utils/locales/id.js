@@ -19,7 +19,7 @@ export default {
     sure: "确定",
     cancel: "取消",
     monitor: "laporan pemantauan",
-    menuCategory: "klasifikasi pilihan",
+    menuCategoryId: "klasifikasi pilihan",
     menusCategory: "pilihan",
     officeCategory: "organisasi",
     dictCategory: "kamus",
@@ -458,7 +458,7 @@ export default {
   },
   folderForm: {
     folderForm: "mengedit direktori file",
-    parentName: "induk",
+    parentId: "induk",
     selectGroup: "pilih grup",
     name: "nama",
     inputKey: "silahkan masukkan kata kunci",

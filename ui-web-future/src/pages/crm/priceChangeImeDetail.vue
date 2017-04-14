@@ -23,11 +23,11 @@
               {{inputForm.shop.name}}
             </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image">
-              <el-upload  action="/api/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload  action="/api/basic/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
               </el-upload>
             </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action=='上传'">
-              <el-upload action="/api/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
                 <el-button size="small" type="primary">{{$t('priceChangeImeDetail.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('priceChangeImeDetail.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -118,7 +118,7 @@
             util.copyValue(response.data.priceChangeIme,this.inputForm);
             util.copyValue(response.data.bools,this.formProperty.bools);
             if(this.inputForm.image != null) {
-              axios.get('/api/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((res)=>{
+              axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((res)=>{
                 this.fileList= res.data;
               });
             }

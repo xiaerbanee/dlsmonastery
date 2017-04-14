@@ -17,7 +17,7 @@
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item :label="$t('auditFileForm.attachment')" prop="attachment">
-              <el-upload action="/api/sys/folderFile/upload?uploadPath=/文件审批" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/文件审批" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
                 <el-button size="small" type="primary">{{$t('auditFileForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('auditFileForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>

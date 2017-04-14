@@ -162,7 +162,16 @@ public class MenuService {
 
     public MenuDto findDto(String id) {
         Menu menu = findOne(id);
-        MenuDto menuDto= BeanUtil.map(menu,MenuDto.class);
+        MenuDto menuDto=null;
+        if(menu!=null){
+            menuDto= BeanUtil.map(menu,MenuDto.class);
+            List<Permission> permissionList=permissionMapper.findByMenuId(id);
+            String permissionStr="";
+            for (Permission permission : permissionList) {
+                permissionStr = permissionStr + permission.getName() + Const.CHAR_SPACE + permission.getPermission() + Const.CHAR_ENTER;
+            }
+            menuDto.setPermissionStr(permissionStr);
+        }
         return menuDto;
     }
 

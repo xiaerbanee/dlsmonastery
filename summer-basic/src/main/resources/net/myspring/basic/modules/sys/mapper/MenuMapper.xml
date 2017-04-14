@@ -9,7 +9,7 @@
         sys_menu t1
         WHERE
         t1.enabled=1
-        <if test="p.name != null">
+        <if test="p.name != null ">
             AND t1.name LIKE CONCAT('%',#{p.name},'%')
         </if>
         <if test="p.sort != null">
@@ -18,8 +18,8 @@
         <if test="p.category != null">
             AND t1.category =#{p.category}
         </if>
-        <if test="p.menuCategory != null">
-            AND t1.menu_category_id in (select t2.id from sys_menu_category t2 where t2.name LIKE CONCAT('%',#{p.menuCategory},'%') )
+        <if test="p.menuCategoryId != null">
+            AND t1.menu_category_id =#{p.menuCategoryId}
         </if>
     </select>
 

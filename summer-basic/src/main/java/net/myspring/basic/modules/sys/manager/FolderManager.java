@@ -32,13 +32,7 @@ public class FolderManager {
     @Cacheable(value = "folders",key="#p0.id")
     public Folder save(Folder folder){
         folderMapper.save(folder);
-        return  folder;
-    }
-
-    @Cacheable(value = "folders",key="#p0.id")
-    public Folder saveForm(FolderForm folderForm){
-        folderMapper.save(BeanUtil.map(folderForm,Folder.class));
-        return  folderMapper.findOne(folderForm.getId());
+        return  folderMapper.findOne(folder.getId());
     }
 
     @CachePut(value = "folders",key="#p0.id")
