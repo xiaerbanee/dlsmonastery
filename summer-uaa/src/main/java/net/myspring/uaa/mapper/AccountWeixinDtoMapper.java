@@ -11,13 +11,13 @@ import java.util.List;
  * Created by liuj on 2017/3/19.
  */
 @Mapper
-public interface AccountWeixinDtoMapper extends CrudMapper<AccountWeixinDto,String> {
+public interface AccountWeixinDtoMapper  {
 
     List<AccountWeixinDto> findByOpenId(String openId);
 
     AccountWeixinDto findByAccountId(String accountId);
 
-    int saveDto(AccountWeixinDto accountWeixinDto);
+    int save(AccountWeixinDto accountWeixinDto);
 
-    int updateDto(AccountWeixinDto accountWeixinDto);
+    int update(AccountWeixinDto accountWeixinDto);
 }
