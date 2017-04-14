@@ -22,7 +22,7 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('officeList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="parent.name" :label="$t('officeList.parentName')" sortable></el-table-column>
+        <el-table-column fixed prop="parentName" :label="$t('officeList.parentName')" sortable></el-table-column>
         <el-table-column prop="name" :label="$t('officeList.name')" ></el-table-column>
         <el-table-column prop="extendMap.typeLabel" :label="$t('officeList.typeLabel')" ></el-table-column>
         <el-table-column prop="locked" :label="$t('officeList.locked')">
@@ -70,7 +70,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("officeList",this.formData);
-        axios.get('/api/hr/office',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/office',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -94,7 +94,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'officeForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/hr/office/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/hr/office/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

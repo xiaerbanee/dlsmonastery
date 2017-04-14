@@ -9,4 +9,32 @@ import net.myspring.basic.common.form.DataForm;
  */
 
 public class JobForm extends DataForm<Job> {
+
+    private String name;
+    private String permission;
+    private String remarks;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 }

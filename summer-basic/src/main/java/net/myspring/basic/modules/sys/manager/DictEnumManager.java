@@ -28,11 +28,6 @@ public class DictEnumManager {
     private DictEnumMapper dictEnumMapper;
 
     @Cacheable(value = "dictEnums",key="#p0")
-    public List<DictEnum> findByCategory(String category){
-        return dictEnumMapper.findByCategory(category);
-    }
-
-    @Cacheable(value = "dictEnums",key="#p0")
     public DictEnum findOne(String id){
         return dictEnumMapper.findOne(id);
     }
@@ -41,12 +36,6 @@ public class DictEnumManager {
     public DictEnum save(DictEnum dictEnum){
         dictEnumMapper.save(dictEnum);
         return  dictEnum;
-    }
-
-    @Cacheable(value = "dictEnums",key="#p0.id")
-    public DictEnum saveForm(DictEnumForm dictEnumForm){
-        dictEnumMapper.save(BeanUtil.map(dictEnumForm,DictEnum.class));
-        return  dictEnumMapper.findOne(dictEnumForm.getId());
     }
 
     @CachePut(value = "dictEnums",key="#p0.id")
@@ -73,7 +62,7 @@ public class DictEnumManager {
     }
 
     public List<String> findValueByCategory(String category){
-        List<DictEnum> dictEnumList=findByCategory(category);
+        List<DictEnum> dictEnumList=dictEnumMapper.findByCategory(category);
         return CollectionUtil.extractToList(dictEnumList,"value");
     }
 

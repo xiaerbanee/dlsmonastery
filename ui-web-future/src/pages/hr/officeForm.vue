@@ -61,7 +61,7 @@
           officeType: [{ required: true, message: this.$t('officeForm.prerequisiteMessage')}],
           jointType:[{ required: true, message: this.$t('officeForm.prerequisiteMessage')}]
         },
-         remoteLoading:false,
+         remoteLoading:false
       };
     },
     methods:{
@@ -70,7 +70,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/hr/office/save', qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/basic/hr/office/save', qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -83,29 +83,25 @@
             this.submitDisabled = false;
           }
         })
-      },findOne(){
-        axios.get('/api/hr/office/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-         if(response.data.parent!=null){
-            this.offices=new Array(response.data.parent)
-          }
-           util.copyValue(response.data,this.inputForm);
-        })
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
             this.offices=response.data;
             this.remoteLoading = false;
           })
         }
       }
     },created(){
-      axios.get('/api/hr/office/getFormProperty').then((response)=>{
+      axios.get('/api/basic/hr/office/getFormProperty').then((response)=>{
         this.formProperty=response.data;
       });
-      if(!this.isCreate){
-        this.findOne();
+      axios.get('/api/basic/hr/office/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        if(response.data.parentId!=null){
+        this.offices=new Array({id:response.data.parentId,name:response.data.parentName})
       }
+      util.copyValue(response.data,this.inputForm);
+    })
     }
   }
 </script>

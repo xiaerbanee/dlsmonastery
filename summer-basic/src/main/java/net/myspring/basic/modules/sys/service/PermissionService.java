@@ -47,49 +47,49 @@ public class PermissionService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public List<Permission> findByPositionId(String positionId){
+    public List<Permission> findByPositionId(String positionId) {
         return permissionMapper.findByPositionId(positionId);
     }
 
-    public Permission findOne(String id){
-        Permission permission=permissionManager.findOne(id);
+    public Permission findOne(String id) {
+        Permission permission = permissionManager.findOne(id);
         return permission;
     }
 
-    public PermissionDto findDto(String id){
-        Permission permission=findOne(id);
-        PermissionDto permissionDto= BeanUtil.map(permission,PermissionDto.class);
+    public PermissionDto findDto(String id) {
+        Permission permission = findOne(id);
+        PermissionDto permissionDto = BeanUtil.map(permission, PermissionDto.class);
         cacheUtils.initCacheInput(permissionDto);
         return permissionDto;
     }
 
-    public List<Permission> findAll(){
+    public List<Permission> findAll() {
         return permissionMapper.findAll();
     }
 
-    public List<Permission> findByPermissionLike(String permissionStr){
+    public List<Permission> findByPermissionLike(String permissionStr) {
         return permissionMapper.findByPermissionLike(permissionStr);
     }
 
-    public Page<PermissionDto> findPage(Pageable pageable,PermissionQuery permissionQuery) {
+    public Page<PermissionDto> findPage(Pageable pageable, PermissionQuery permissionQuery) {
         Page<Permission> page = permissionMapper.findPage(pageable, permissionQuery);
-        Page<PermissionDto> permissionDtoPage= BeanUtil.map(page,PermissionDto.class);
+        Page<PermissionDto> permissionDtoPage = BeanUtil.map(page, PermissionDto.class);
         cacheUtils.initCacheInput(permissionDtoPage.getContent());
         return permissionDtoPage;
     }
 
     public PermissionForm save(PermissionForm permissionForm) {
-        boolean isCreate= StringUtils.isBlank(permissionForm.getId());
+        boolean isCreate = StringUtils.isBlank(permissionForm.getId());
         if (isCreate) {
-            permissionManager.save(BeanUtil.map(permissionForm,Permission.class));
-            if(CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())){
-                permissionMapper.savePermissionPosition(permissionForm.getId(),permissionForm.getPositionIdList());
+            permissionManager.save(BeanUtil.map(permissionForm, Permission.class));
+            if (CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())) {
+                permissionMapper.savePermissionPosition(permissionForm.getId(), permissionForm.getPositionIdList());
             }
         } else {
             permissionManager.updateForm(permissionForm);
             permissionMapper.deletePermissionPosition(permissionForm.getId());
-            if(CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())){
-                permissionMapper.savePermissionPosition(permissionForm.getId(),permissionForm.getPositionIdList());
+            if (CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())) {
+                permissionMapper.savePermissionPosition(permissionForm.getId(), permissionForm.getPositionIdList());
             }
         }
         return permissionForm;
@@ -102,27 +102,25 @@ public class PermissionService {
                 permissionIdSet.add(id);
             }
         }
-        TreeNode treeNode = new TreeNode("0","权限列表");
+        TreeNode treeNode = new TreeNode("0", "权限列表");
         List<TreeNode> list = Lists.newArrayList();
-        List<MenuCategory> menuCategories = menuCategoryMapper.findAll();
-        List<Menu> menus=menuMapper.findByPermissionIsNotEmpty();
+        List<MenuCategory> menuCategories = menuCategoryMapper.findAllEnabled();
+        List<Menu> menus = menuMapper.findByPermissionIsNotEmpty();
         Map<String, List<Menu>> menuMap = CollectionUtil.extractToMapList(menus, "menuCategoryId");
-        List<Permission> permissions=permissionMapper.findAll();
+        List<Permission> permissions = permissionMapper.findAllEnabled();
         Map<String, List<Permission>> permissionMap = CollectionUtil.extractToMapList(permissions, "menuId");
-
-
-        for(MenuCategory menuCategory:menuCategories){
-            TreeNode categoryTree = new TreeNode("p"+menuCategory.getId(),menuCategory.getName());
-            List<Menu> menuList =menuMap.get(menuCategory.getId());
+        for (MenuCategory menuCategory : menuCategories) {
+            TreeNode categoryTree = new TreeNode("p" + menuCategory.getId(), menuCategory.getName());
+            List<Menu> menuList = menuMap.get(menuCategory.getId());
             List<TreeNode> categorychildList = Lists.newArrayList();
-            for(Menu menu:menuList){
-                TreeNode menuTree = new TreeNode("m"+menu.getId(),menu.getName());
+            for (Menu menu : menuList) {
+                TreeNode menuTree = new TreeNode("m" + menu.getId(), menu.getName());
                 categorychildList.add(menuTree);
                 List<TreeNode> menuChildList = Lists.newArrayList();
                 List<Permission> permissionList = permissionMap.get(menu.getId());
-                if(CollectionUtil.isNotEmpty(permissionList)){
-                    for(Permission permission:permissionList){
-                        TreeNode permissTree = new TreeNode(permission.getId(),permission.getName());
+                if (CollectionUtil.isNotEmpty(permissionList)) {
+                    for (Permission permission : permissionList) {
+                        TreeNode permissTree = new TreeNode(permission.getId(), permission.getName());
                         menuChildList.add(permissTree);
                     }
                 }

@@ -95,7 +95,7 @@
         this.pageLoading = true;
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         util.setQuery("employeePhoneDepositList",this.formData);
-        axios.get('/api/hr/employeePhoneDeposit',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/employeePhoneDeposit',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -122,11 +122,11 @@
            this.selects.push(selection[key].id)
         }
       },batchPass(){
-        axios.get('/api/hr/employeePhoneDeposit/batchAudit',{params:{ids:this.selects,pass:true}}).then((response) =>{
+        axios.get('/api/basic/hr/employeePhoneDeposit/batchAudit',{params:{ids:this.selects,pass:true}}).then((response) =>{
         this.$message(response.data.message);
       });
       },batchNoPass(){
-        axios.get('/api/hr/employeePhoneDeposit/batchAudit',{params:{ids:this.selects,pass:false}}).then((response) =>{
+        axios.get('/api/basic/hr/employeePhoneDeposit/batchAudit',{params:{ids:this.selects,pass:false}}).then((response) =>{
         this.$message(response.data.message);
       });
       },checkSelectable(row) {
@@ -135,7 +135,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/hr/employeePhoneDeposit/getListProperty').then((response) =>{
+      axios.get('/api/basic/hr/employeePhoneDeposit/getListProperty').then((response) =>{
         this.searchProperty=response.data;
       });
       this.pageRequest();

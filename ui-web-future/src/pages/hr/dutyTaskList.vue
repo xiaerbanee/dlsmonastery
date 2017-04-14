@@ -35,12 +35,12 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("dutyTaskList");
-        axios.get('/api/hr/duty').then((response) => {
+        axios.get('/api/basic/hr/duty').then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
       },batchPass(){
-        axios.get('/api/hr/duty/batchPass',{params:{dutyAuditMap : this.multipleSelection}}).then((response) =>{
+        axios.get('/api/basic/hr/duty/batchPass',{params:{dutyAuditMap : this.multipleSelection}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

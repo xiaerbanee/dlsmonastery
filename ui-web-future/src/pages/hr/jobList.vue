@@ -11,8 +11,8 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.jobName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.jobName" auto-complete="off" :placeholder="$t('jobList.likeSearch')"></el-input>
+              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('jobList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -32,7 +32,8 @@
         <el-table-column prop="remarks" :label="$t('jobList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('jobList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -48,9 +49,9 @@
         formData:{
           page:0,
           size:25,
-          jobName:''
+          name:''
         },formLabel:{
-          jobName:{label:this.$t('jobList.jobName')}
+          name:{label:this.$t('jobList.jobName')}
         },
         formProperty:{},
         formLabelWidth: '120px',
@@ -62,7 +63,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("jobList",this.formData);
-        axios.get('/api/hr/job',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/job',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -83,7 +84,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'jobForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/hr/job/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/hr/job/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

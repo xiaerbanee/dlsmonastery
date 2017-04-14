@@ -81,7 +81,7 @@
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         this.formLabel.officeId.value=util.getLabel(this.formProperty.areas, this.formData.officeId);
         util.setQuery("accountChangeList",this.formData);
-        axios.get('/api/hr/accountChange',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/accountChange',{params:this.formData}).then((response) => {
           console.log(response.data);
           this.page = response.data;
           this.pageLoading = false;
@@ -103,7 +103,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'accountChangeForm', query: { id: id }})
         } else if(action="删除") {
-          axios.get('/api/hr/accountChange/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/hr/accountChange/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
@@ -111,7 +111,7 @@
       }},created () {
       this.pageHeight = window.outerHeight -120;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/hr/accountChange/getListProperty').then((response) =>{
+      axios.get('/api/basic/hr/accountChange/getListProperty').then((response) =>{
         this.formProperty=response.data;
       });
       this.pageRequest();

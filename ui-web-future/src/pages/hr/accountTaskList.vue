@@ -64,7 +64,7 @@
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         util.getQuery("accountTaskList");
         util.setQuery("accountTaskList",this.formData);
-        axios.get('/api/hr/accountTask',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/accountTask',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

@@ -79,7 +79,7 @@
         this.pageLoading = true;
         util.setQuery("dutyWorktimeList",this.formData);
         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/hr/dutyWorktime',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutyWorktime',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -99,7 +99,7 @@
       },exportData(){
         this.exportVisible = false;
         this.formData.formatMonth = util.formatLocalMonth(this.formData.month);
-        window.location.href="/api/hr/dutyWorktime/export?formatMonth="+this.formData.formatMonth;
+        window.location.href="/api/basic/hr/dutyWorktime/export?formatMonth="+this.formData.formatMonth;
 			}
     },created () {
       this.pageHeight = window.outerHeight -320;

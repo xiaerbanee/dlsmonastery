@@ -44,7 +44,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/hr/job/save', qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/basic/hr/job/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -62,7 +62,7 @@
         },
       },created(){
         if(!this.isCreate){
-          axios.get('/api/hr/job/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/hr/job/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
           })
         }

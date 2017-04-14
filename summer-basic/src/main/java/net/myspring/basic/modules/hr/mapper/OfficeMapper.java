@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.mapper;
 
+import net.myspring.basic.common.dto.NameValueDto;
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.web.query.OfficeQuery;

@@ -39,12 +39,6 @@ public class AccountManager {
         return  account;
     }
 
-    @CachePut(value = "accounts",key="#p0.id")
-    public Account saveForm(AccountForm accountForm){
-        accountMapper.save(BeanUtil.map(accountForm,Account.class));
-        return  accountMapper.findOne(accountForm.getId());
-    }
-
     @Caching(
             put = {
                     @CachePut(value = "accounts", key = "#p0.id"),

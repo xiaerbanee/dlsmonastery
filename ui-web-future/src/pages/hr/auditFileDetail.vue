@@ -96,7 +96,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/hr/auditFile/audit',qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/basic/hr/auditFile/audit',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
                this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})
             });
@@ -106,7 +106,7 @@
         })
       }
     },created(){
-        axios.get('/api/hr/auditFile/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/hr/auditFile/detail',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data.auditFile,this.inputForm);
           console.log(response.data.auditFile.content)
           console.log(this.inputForm.content)

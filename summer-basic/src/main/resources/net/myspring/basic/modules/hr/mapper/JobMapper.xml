@@ -6,5 +6,8 @@
         SELECT t1.*
         FROM hr_job t1
         where t1.enabled=1
+        <if test="p.name!=null">
+            and t1.name like concat('%',#{p.name},'%')
+        </if>
     </select>
 </mapper>

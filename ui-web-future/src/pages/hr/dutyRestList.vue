@@ -74,7 +74,7 @@
         this.pageLoading = true;
         util.setQuery("dutyRestList",this.formData);
          this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/hr/dutyRest',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutyRest',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -90,7 +90,7 @@
         this.formVisible = false;
         this.pageRequest();
       },getListProperty(){
-      axios.get('/api/hr/dutyRest/getListProperty').then((response) =>{
+      axios.get('/api/basic/hr/dutyRest/getListProperty').then((response) =>{
          this.formProperty=response.data;
          this.pageRequest();
     });

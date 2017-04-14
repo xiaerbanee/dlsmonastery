@@ -10,7 +10,10 @@ import java.util.*;
 import com.google.common.collect.*;
 import net.myspring.util.collection.type.Pair;
 
+import net.myspring.util.reflect.ReflectionUtil;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
  * 通用Collection的工具集
@@ -238,4 +241,82 @@ public class CollectionUtil {
 		return map;
 	}
 
+	public static <P,C> List<P>  joinChildList(List<P> parentList, List<C> childList) {
+		String parentKeyField = "id";
+		String childClassName = getClassName(childList);
+		String parentClassName = getClassName(parentList);
+		String parentChildField = WordUtils.uncapitalize(childClassName + "List");
+		String childParentKeyFiled =WordUtils.uncapitalize(parentClassName + "Id");
+		if(StringUtils.isBlank(childClassName)) {
+			return parentList;
+		} else {
+			return joinChildList(parentList,childList,parentKeyField,parentChildField,childParentKeyFiled);
+		}
+	}
+
+
+	public static <P,C> List<P>  joinChildList(List<P> parentList, List<C> childList, String parentKeyField,String parentChildField, String childParentKeyFiled) {
+		Map<Object,Collection<C>> childMap = Maps.newHashMap();
+		try {
+			for(C item:childList) {
+				Object key = ReflectionUtil.getFieldValue(item,childParentKeyFiled);
+				if(!childMap.containsKey(key)) {
+					childMap.put(key,Lists.<C>newArrayList());
+				}
+				childMap.get(key).add(item);
+			}
+			for(P item:parentList) {
+				Object key =ReflectionUtil.getFieldValue(item,parentKeyField);
+				if(childMap.containsKey(key)) {
+					Collection<C> property = (Collection<C>)ReflectionUtil.getFieldValue(item,parentChildField);
+					property.addAll(childMap.get(key));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return parentList;
+	}
+
+	public static <P,C> List<P>  joinChild(List<P> parentList, List<C> childList) {
+		String parentChildField =  WordUtils.uncapitalize(getClassName(childList));
+		String parentChildKeyField = parentChildField + "Id";
+		String childKeyField = "id";
+		if(StringUtils.isBlank(parentChildField)) {
+			return parentList;
+		} else {
+			return joinChild(parentList,childList,parentChildField,parentChildKeyField,childKeyField);
+		}
+	}
+
+	public static <P,C> List<P>  joinChild(List<P> parentList, List<C> childList, String parentChildField,String parentChildKeyField, String childKeyField) {
+		Map<Object,C> childMap = Maps.newHashMap();
+		try {
+			for(C item:childList) {
+				Object key = ReflectionUtil.getFieldValue(item,childKeyField);
+				childMap.put(key,item);
+			}
+			for(P item:parentList) {
+				Object key = ReflectionUtil.getFieldValue(item,parentChildKeyField);
+				if(childMap.containsKey(key)) {
+					ReflectionUtil.setFieldValue(item,parentChildField,childMap.get(key));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return parentList;
+	}
+
+	public static  <T>  String getClassName(List<T> list) {
+		String className = "";
+		if(CollectionUtil.isNotEmpty(list)) {
+			for(T t:list) {
+				if(t != null) {
+					return t.getClass().getSimpleName();
+				}
+			}
+		}
+		return className;
+	}
 }

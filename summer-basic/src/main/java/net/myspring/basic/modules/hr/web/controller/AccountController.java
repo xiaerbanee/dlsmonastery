@@ -112,12 +112,12 @@ public class AccountController {
     }
 
     @RequestMapping(value = "search")
-    public Map<String, Object> search(String type, String key) {
+    public List<AccountDto> search(String type, String key) {
         Map<String, Object> map = Maps.newHashMap();
         map.put("name", key);
         map.put("type", type);
         List<AccountDto> accountDtoList = accountService.findByLoginNameLikeAndType(map);
-        return map;
+        return accountDtoList;
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)

@@ -14,6 +14,14 @@ public class AccountForm extends DataForm<Account>{
     private List<String> OfficeIdList;
     private String type;
     private String employeeId;
+    private String loginName;
+    private String officeId;
+    private String leaderId;
+    private Boolean viewReport;
+    private String outId;
+    private String outPassword;
+    private String remarks;
+    private String positionId;
 
     public String getPassword() {
         return password;
@@ -45,5 +53,69 @@ public class AccountForm extends DataForm<Account>{
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getLeaderId() {
+        return leaderId;
+    }
+
+    public void setLeaderId(String leaderId) {
+        this.leaderId = leaderId;
+    }
+
+    public Boolean isViewReport() {
+        return viewReport;
+    }
+
+    public void setViewReport(Boolean viewReport) {
+        this.viewReport = viewReport;
+    }
+
+    public String getOutId() {
+        return outId;
+    }
+
+    public void setOutId(String outId) {
+        this.outId = outId;
+    }
+
+    public String getOutPassword() {
+        return outPassword;
+    }
+
+    public void setOutPassword(String outPassword) {
+        this.outPassword = outPassword;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
     }
 }

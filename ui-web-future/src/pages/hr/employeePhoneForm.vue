@@ -83,7 +83,7 @@
           form.validate((valid) => {
             if (valid) {
             this.inputForm.uploadTime=util.formatLocalDateTime(this.inputForm.uploadTime)
-              axios.get('/api/hr/employeePhone/save',{params:this.inputForm}).then((response)=> {
+              axios.get('/api/basic/hr/employeePhone/save',{params:this.inputForm}).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -118,11 +118,11 @@
           }
         }
       },created(){
-        axios.get('/api/hr/employeePhone/getFormProperty').then((response)=>{
+        axios.get('/api/basic/hr/employeePhone/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/hr/employeePhone/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/hr/employeePhone/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
             if(response.data.depot!=null){
                 this.depots=new Array(response.data.depot)

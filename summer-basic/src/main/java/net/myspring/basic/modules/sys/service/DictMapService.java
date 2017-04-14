@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
@@ -56,6 +57,14 @@ public class DictMapService {
             dictMapManager.updateForm(dictMapForm);
         }
         return  dictMapForm;
+    }
+
+    public  List<DictMap> findByCategory(String category){
+        List<DictMap> dictMapList= Lists.newArrayList();
+        if(StringUtils.isNotBlank(category)){
+            dictMapList=dictMapMapper.findByCategory(category);
+        }
+        return dictMapList;
     }
 
     public void logicDeleteOne(String id) {

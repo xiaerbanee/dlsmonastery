@@ -96,7 +96,7 @@
         this.pageLoading = true;
         util.setQuery("dutySignList",this.formData);
         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/hr/dutySign',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutySign',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -113,9 +113,9 @@
         this.pageRequest();
       },exportData(){
         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        window.location.href= "/api/hr/dutySign/export?"+qs.stringify(this.formData);
+        window.location.href= "/api/basic/hr/dutySign/export?"+qs.stringify(this.formData);
 			},getListProperty(){
-        axios.get('/api/hr/dutySign/getListProperty').then((response) =>{
+        axios.get('/api/basic/hr/dutySign/getListProperty').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });

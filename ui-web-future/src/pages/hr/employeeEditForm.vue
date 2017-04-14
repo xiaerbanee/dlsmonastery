@@ -123,9 +123,9 @@
           if (valid) {
             this.employeeForm.image = util.getFolderFileIdStr(this.fileList);
             this.employeeForm.sex=this.employeeForm.sexLabel==1?"男":"女";
-              axios.post('/api/hr/employee/save', qs.stringify(this.employeeForm)).then((response)=> {
+              axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm)).then((response)=> {
                   this.$message("员工"+response.data.message);
-                  axios.post('/api/hr/account/save', qs.stringify(this.accountForm)).then((response)=> {
+                  axios.post('/api/basic/hr/account/save', qs.stringify(this.accountForm)).then((response)=> {
                   this.$message("账户"+response.data.message);
                   });
                this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
@@ -135,7 +135,7 @@
           }
         })
       },getFormProperty(){
-          axios.get('/api/hr/employee/editForm').then((response)=>{
+          axios.get('/api/basic/hr/employee/editForm').then((response)=>{
               this.formProperty=response.data
           })
       },handlePreview(file) {
@@ -148,7 +148,7 @@
     },created(){
        this.getFormProperty();
       if(!this.isCreate){
-        axios.get('/api/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.employeeForm);
           util.copyValue(response.data.account,this.accountForm);
           this.employeeForm.sexLabel=response.data.sex=="男"?1:0;

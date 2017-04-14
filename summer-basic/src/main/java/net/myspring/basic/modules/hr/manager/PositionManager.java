@@ -38,12 +38,6 @@ public class PositionManager {
     }
 
     @CachePut(value = "positions",key="#p0.id")
-    public Position saveForm(PositionForm positionForm){
-        positionMapper.save(BeanUtil.map(positionForm,Position.class));
-        return  positionMapper.findOne(positionForm.getId());
-    }
-
-    @CachePut(value = "positions",key="#p0.id")
     public Position update(Position position){
         positionMapper.update(position);
         return  positionMapper.findOne(position.getId());

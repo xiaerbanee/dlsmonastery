@@ -68,7 +68,7 @@
           console.log( this.inputForm.attachment)
           if (valid) {
             this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
-            axios.post('/api/hr/auditFile/save', qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/basic/hr/auditFile/save', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -85,7 +85,7 @@
           }
         })
       },getFormProperty(){
-        axios.get('/api/hr/auditFile/getFormProperty').then((response)=>{
+        axios.get('/api/basic/hr/auditFile/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
       },
@@ -98,7 +98,7 @@
       }
     },created(){
       this.getFormProperty();
-     axios.get('/api/hr/auditFile/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+     axios.get('/api/basic/hr/auditFile/detail',{params: {id:this.$route.query.id}}).then((response)=>{
         util.copyValue(response.data,this.inputForm);
       })
     }

@@ -35,12 +35,6 @@ public class JobManager {
     }
 
     @CachePut(value = "jobs",key="#p0.id")
-    public Job saveForm(JobForm jobForm){
-        jobMapper.save(BeanUtil.map(jobForm,Job.class));
-        return  jobMapper.findOne(jobForm.getId());
-    }
-
-    @CachePut(value = "jobs",key="#p0.id")
     public Job update(Job job){
         jobMapper.update(job);
         return  jobMapper.findOne(job.getId());

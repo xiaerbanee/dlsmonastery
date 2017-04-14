@@ -53,7 +53,7 @@ public class JobService {
 
     public JobForm save(JobForm jobForm){
         if(StringUtils.isBlank(jobForm.getId())) {
-            jobManager.saveForm(jobForm);
+            jobManager.save(BeanUtil.map(jobForm,Job.class));
         } else {
             jobManager.updateForm(jobForm);
         }

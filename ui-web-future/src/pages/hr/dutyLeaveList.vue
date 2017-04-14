@@ -71,7 +71,7 @@
         this.pageLoading = true;
         util.setQuery("dutyLeaveList",this.formData);
          this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/hr/dutyLeave',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutyLeave',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -87,7 +87,7 @@
         this.formVisible = false;
         this.pageRequest();
       },getListProperty(){
-        axios.get('/api/hr/dutyLeave/getListProperty').then((response) =>{
+        axios.get('/api/basic/hr/dutyLeave/getListProperty').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });
