@@ -25,16 +25,20 @@ Page({
   },
   pageRequest: function () {
     var that = this
+    console.log( wx.getStorageSync('token').access_token)
     wx.showToast({
       title: '加载中',
       icon: 'loading',
       duration: 10000,
       success: function (res) {
         wx.request({
-          url: $util.getUrl("hr/dutySign"),
-          header: { 'x-auth-token': app.globalData.sessionId },
+          url: $util.getUrl("basic/hr/dutySign"),
+          header: { 'x-auth-token': app.globalData.sessionId,
+                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            },
           data: that.data.formData,
           success: function (res) {
+            console.log(res);
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -95,10 +99,11 @@ Page({
             })
           } else {
             wx.request({
-              url: $util.getUrl( "hr/dutySign/delete"),
+              url: $util.getUrl( "basic/hr/dutySign/delete"),
               data: { id: id },
               header: {
-                'x-auth-token': app.globalData.sessionId
+                'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
               },
               success: function (res) {
                 that.pageRequest();

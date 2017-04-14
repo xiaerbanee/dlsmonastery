@@ -17,10 +17,12 @@ Page({
   initPage: function () {
     var that = this;
     wx.request({
-      url: $util.getUrl("hr/dutyRest/getFormProperty"),
+      url: $util.getUrl("basic/hr/dutyRest/getFormProperty"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { 'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+       },
       success: function (res) {
         console.log(res);
         that.setData({ 'formProperty.restList': res.data.restList, 'formProperty.dateList': res.data.dateList, 'fromProperty.dutyRest': res.data.dutyRest, 'fromProperty.expiredHour': res.data.expiredHour })
@@ -62,9 +64,11 @@ Page({
     var that = this;
     that.setData({ submitDisabled: true });
     wx.request({
-      url: $util.getUrl("hr/dutyRest/save"),
+      url: $util.getUrl("basic/hr/dutyRest/save"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { 'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+       },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();

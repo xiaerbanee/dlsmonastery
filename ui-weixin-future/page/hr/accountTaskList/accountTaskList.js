@@ -30,10 +30,13 @@ Page({
             duration: 10000,
             success: function (res) {
                 wx.request({
-                    url: $util.getUrl("hr/accountTask"),
-                    header: { 'x-auth-token': app.globalData.sessionId },
+                    url: $util.getUrl("basic/hr/accountTask"),
+                    header: { 'x-auth-token': app.globalData.sessionId,
+                              'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                     },
                     data: that.data.formData,
                     success: function (res) {
+                        console.log(res)
                         that.setData({ page: res.data });
                         wx.hideToast();
                     }
