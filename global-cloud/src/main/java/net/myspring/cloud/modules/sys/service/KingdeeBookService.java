@@ -5,6 +5,7 @@ import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.dto.KingdeeBookDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
+import net.myspring.cloud.modules.sys.web.form.KingdeeBookForm;
 import net.myspring.cloud.modules.sys.web.query.KingdeeBookQuery;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,9 @@ public class KingdeeBookService {
 
     public void deleteById(String id) {
         kingdeeBookMapper.deleteById(id);
+    }
+
+    public void save(KingdeeBookForm kingdeeBookForm){
+        kingdeeBookMapper.saveForm(kingdeeBookForm);
     }
 }
