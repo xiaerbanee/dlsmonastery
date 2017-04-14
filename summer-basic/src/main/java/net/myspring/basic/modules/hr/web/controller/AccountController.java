@@ -54,8 +54,7 @@ public class AccountController {
     private AccountService accountService;
     @Autowired
     private PositionService positionService;
-    @Autowired
-    private SecurityUtils securityUtils;
+
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -140,7 +139,7 @@ public class AccountController {
         Map<String,Object> map=Maps.newHashMap();
         AccountDto accountDto=accountService.getAccount();
         List<String> authorityList = accountService.getAuthorityList();
-        List<MenuCategoryItem> menus = menuService.findMenus(securityUtils.getAccountId());
+        List<MenuCategoryItem> menus = menuService.findMenus(SecurityUtils.getAccountId());
         map.put("account",accountDto);
         map.put("authorityList",authorityList);
         map.put("menus",menus);
@@ -150,16 +149,16 @@ public class AccountController {
     @RequestMapping(value = "/home")
     public Map<String, Object> home() {
         Map<String, Object> map = Maps.newHashMap();
-        AccountDto accountDto=accountService.findDto(securityUtils.getAccountId());
+        AccountDto accountDto=accountService.findDto(SecurityUtils.getAccountId());
         LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
         List<DutyDto> dutyList = dutyService.findByAuditable(accountDto.getId(), AuditTypeEnum.APPLY.getValue(), lastMonth);
-        List<AccountTaskDto> accountTasks = accountTaskService.findByPositionId(accountDto.getPositionId(),accountService.findOne(securityUtils.getAccountId()));
+        List<AccountTaskDto> accountTasks = accountTaskService.findByPositionId(accountDto.getPositionId(),accountService.findOne(SecurityUtils.getAccountId()));
         map.put("accountTaskSize", accountTasks.size());
         List<AccountMessageDto> accountMessages = accountMessageService.findByAccount(accountDto.getId(), lastMonth);
         map.put("dutySize", dutyList.size());
         map.put("accountMessageSize", accountMessages.size());
         //显示剩余的加班调休时间和年假时间
-        String employeeId = securityUtils.getEmployeeId();
+        String employeeId = SecurityUtils.getEmployeeId();
         map.put("annualHour", dutyAnnualService.getAvailableHour(employeeId));
         map.put("overtimeHour", dutyOvertimeService.getAvailableHour(employeeId, LocalDateTime.now()));
         //显示快到期时间

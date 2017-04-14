@@ -35,8 +35,7 @@ public class MenuController {
     private MenuService menuService;
     @Autowired
     private MenuCategoryService menuCategoryService;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<MenuDto> list(Pageable pageable, MenuQuery menuQuery){
@@ -87,9 +86,9 @@ public class MenuController {
     public Object getMenus(String requestClient){
         Boolean isMobile = "weixin".equals(requestClient);
         if(isMobile) {
-            return menuService.findMobileMenus(securityUtils.getAccountId());
+            return menuService.findMobileMenus(SecurityUtils.getAccountId());
         } else {
-            return menuService.findMenus(securityUtils.getAccountId());
+            return menuService.findMenus(SecurityUtils.getAccountId());
         }
     }
 }

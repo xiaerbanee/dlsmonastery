@@ -39,8 +39,6 @@ public class AccountWeixinController {
     @Autowired
     private AccountWeixinService accountWeixinService;
     @Autowired
-    private SecurityUtils securityUtils;
-    @Autowired
     private AccountService accountService;
 
     @RequestMapping(value = "findOne")

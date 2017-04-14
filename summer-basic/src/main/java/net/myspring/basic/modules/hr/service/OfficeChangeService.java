@@ -29,8 +29,7 @@ public class OfficeChangeService {
     private AccountTaskMapper accountTaskMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public OfficeChange findOne(String id){
         OfficeChange officeChange=officeChangeMapper.findOne(id);
@@ -52,7 +51,7 @@ public class OfficeChangeService {
             accountTask.setName(name);
             accountTask.setExtendId(officeChange.getId());
             accountTask.setPositionId(officeChange.getProcessFlow().getPositionId());
-            accountTask.setOfficeId(securityUtils.getOfficeId());
+            accountTask.setOfficeId(SecurityUtils.getOfficeId());
             accountTaskMapper.save(accountTask);
         }else {
             if(AuditTypeEnum.PASS.getValue().equals(officeChange.getProcessStatus()) ||AuditTypeEnum.NOT_PASS.getValue().equals(officeChange.getProcessStatus())){

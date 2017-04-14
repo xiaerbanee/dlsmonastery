@@ -24,8 +24,7 @@ public class DutyTripService {
     private DutyTripMapper dutyTripMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public Page<DutyTripDto> findPage(Pageable pageable, DutyTripQuery dutyTripQuery) {
         Page<DutyTrip> page = dutyTripMapper.findPage(pageable, dutyTripQuery);
@@ -36,7 +35,7 @@ public class DutyTripService {
 
     public DutyTripForm save(DutyTripForm dutyTripForm) {
         dutyTripForm.setStatus(AuditTypeEnum.APPLY.getValue());
-        dutyTripForm.setEmployeeId(securityUtils.getEmployeeId());
+        dutyTripForm.setEmployeeId(SecurityUtils.getEmployeeId());
         dutyTripMapper.save(BeanUtil.map(dutyTripForm,DutyTrip.class));
         return dutyTripForm;
     }

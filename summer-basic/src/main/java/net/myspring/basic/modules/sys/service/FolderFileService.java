@@ -40,8 +40,7 @@ public class FolderFileService {
     private FolderFileManager folderFileManager;
     @Autowired
     private FolderFileMapper folderFileMapper;
-    @Autowired
-    private SecurityUtils securityUtils;
+
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -93,11 +92,11 @@ public class FolderFileService {
     }
 
     public String getUploadPath(FolderFile folderFile) {
-        return uploadRootPath + securityUtils.getCompanyId() + "\\upload\\" + folderFile.getPhysicalName();
+        return uploadRootPath + SecurityUtils.getCompanyId() + "\\upload\\" + folderFile.getPhysicalName();
     }
 
     public String getPreviewUploadPath(FolderFile folderFile) {
-        return uploadRootPath + securityUtils.getCompanyId()+ "\\convert\\" + folderFile.getPhysicalName().substring(0, folderFile.getPhysicalName().lastIndexOf(".")) + ".png";
+        return uploadRootPath + SecurityUtils.getCompanyId()+ "\\convert\\" + folderFile.getPhysicalName().substring(0, folderFile.getPhysicalName().lastIndexOf(".")) + ".png";
     }
 
     public Page<FolderFileDto> findPage(Pageable pageable, FolderFileQuery folderFileQuery) {

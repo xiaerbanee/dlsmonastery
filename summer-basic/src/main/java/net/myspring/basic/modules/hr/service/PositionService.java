@@ -27,8 +27,7 @@ public class PositionService {
     private PositionMapper positionMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public List<PositionDto> findAll(){
         List<Position> positionList=positionMapper.findAll();

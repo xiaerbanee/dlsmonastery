@@ -29,8 +29,7 @@ public class DutyOvertimeService {
     private DutyOvertimeMapper dutyOvertimeMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
 
     public Page<DutyOvertimeDto> findPage(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
@@ -43,7 +42,7 @@ public class DutyOvertimeService {
     public DutyOvertimeForm save(DutyOvertimeForm dutyOvertimeForm) {
         dutyOvertimeForm.setLeftHour(dutyOvertimeForm.getHour());
         dutyOvertimeForm.setStatus(AuditTypeEnum.APPLY.getValue());
-        dutyOvertimeForm.setEmployeeId(securityUtils.getEmployeeId());
+        dutyOvertimeForm.setEmployeeId(SecurityUtils.getEmployeeId());
         dutyOvertimeMapper.save(BeanUtil.map(dutyOvertimeForm,DutyOvertime.class));
         return dutyOvertimeForm;
     }

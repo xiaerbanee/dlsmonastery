@@ -21,12 +21,11 @@ public class DutyPublicFreeService {
     private DutyPublicFreeMapper dutyPublicFreeMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
 
     public DutyPublicFreeForm save(DutyPublicFreeForm dutyPublicFreeForm) {
-        dutyPublicFreeForm.setEmployeeId(securityUtils.getEmployeeId());
+        dutyPublicFreeForm.setEmployeeId(SecurityUtils.getEmployeeId());
         dutyPublicFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyPublicFreeMapper.save(BeanUtil.map(dutyPublicFreeForm,DutyPublicFree.class));
         return dutyPublicFreeForm;

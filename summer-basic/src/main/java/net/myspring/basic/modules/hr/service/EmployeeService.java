@@ -26,8 +26,7 @@ public class EmployeeService {
     private EmployeeMapper employeeMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public Employee findOne(String id){
         Employee employee=employeeManager.findOne(id);

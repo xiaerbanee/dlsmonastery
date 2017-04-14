@@ -41,8 +41,7 @@ import java.util.Map;
 public class VoucherController {
     @Autowired
     private VoucherService voucherService;
-    @Autowired
-    private SecurityUtils securityUtils;
+
     @Autowired
     private GlVoucherService glVoucherService;
 
@@ -149,10 +148,10 @@ public class VoucherController {
 
     public List<String> getActionList(VoucherDto voucherDto){
         List<String> actionList = Lists.newArrayList();
-        if (VoucherStatusEnum.地区财务审核.name().equals(voucherDto.getStatus()) && securityUtils.getAccountId() == null) {
+        if (VoucherStatusEnum.地区财务审核.name().equals(voucherDto.getStatus()) && SecurityUtils.getAccountId() == null) {
             voucherDto.setEditable(true);
             voucherDto.setDeletable(true);
-        } else if (!VoucherStatusEnum.已完成.name().equals(voucherDto.getStatus()) && securityUtils.getAccountId() != null) {
+        } else if (!VoucherStatusEnum.已完成.name().equals(voucherDto.getStatus()) && SecurityUtils.getAccountId() != null) {
             voucherDto.setEditable(true);
             voucherDto.setDeletable(true);
         }

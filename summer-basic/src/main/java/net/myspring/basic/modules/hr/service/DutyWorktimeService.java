@@ -39,8 +39,6 @@ public class DutyWorktimeService {
     private EmployeeMapper employeeMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
 
     public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery){
         Page<DutyWorktime> page = dutyWorktimeMapper.findPage(pageable, dutyWorktimeQuery);

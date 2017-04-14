@@ -30,15 +30,13 @@ public class DutyRestController {
     @Autowired
     private DutyRestService dutyRestService;
     @Autowired
-    private SecurityUtils securityUtils;
-    @Autowired
     private DutyAnnualService dutyAnnualService;
     @Autowired
     private DutyOvertimeService dutyOvertimeService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyRestDto> list(Pageable pageable, DutyRestQuery dutyRestQuery) {
-        dutyRestQuery.setCreatedBy(securityUtils.getAccountId());
+        dutyRestQuery.setCreatedBy(SecurityUtils.getAccountId());
         Page<DutyRestDto> page = dutyRestService.findPage(pageable,dutyRestQuery);
         return page;
     }
@@ -46,10 +44,10 @@ public class DutyRestController {
     @RequestMapping(value = "getFormProperty")
     public Map<String, Object> getFormProperty(DutyRestForm dutyRestForm) {
         Map<String, Object> map = Maps.newHashMap();
-        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(securityUtils.getEmployeeId(), LocalDateTime.now()));
-        dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(securityUtils.getEmployeeId()));
+        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(SecurityUtils.getEmployeeId(), LocalDateTime.now()));
+        dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(SecurityUtils.getEmployeeId()));
         map.put("dutyRest", dutyRestForm);
-        map.put("expiredHour", dutyOvertimeService.getExpiredHour(securityUtils.getEmployeeId(), LocalDateTime.now()));
+        map.put("expiredHour", dutyOvertimeService.getExpiredHour(SecurityUtils.getEmployeeId(), LocalDateTime.now()));
         map.put("restList", DutyRestTypeEnum.values());
         map.put("dateList", DutyDateTypeEnum.values());
         return map;

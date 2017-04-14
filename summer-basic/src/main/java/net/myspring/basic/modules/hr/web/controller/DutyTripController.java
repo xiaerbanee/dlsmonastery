@@ -21,12 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 public class DutyTripController {
     @Autowired
     private DutyTripService dutyTripService;
-    @Autowired
-    private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyTripDto>  list(Pageable pageable, DutyTripQuery dutyTripQuery){
-        dutyTripQuery.setCreatedBy(securityUtils.getAccountId());
+        dutyTripQuery.setCreatedBy(SecurityUtils.getAccountId());
         Page<DutyTripDto> page = dutyTripService.findPage(pageable,dutyTripQuery);
         return page;
     }

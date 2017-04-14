@@ -36,8 +36,7 @@ public class AccountChangeService {
     private AccountMapper accountMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public AccountChange findOne(String id){
         AccountChange accountChange=accountChangeMapper.findOne(id);
@@ -69,7 +68,7 @@ public class AccountChangeService {
             accountTask.setName(name);
             accountTask.setExtendId(accountChange.getId());
             accountTask.setPositionId(accountChange.getProcessFlow().getPositionId());
-            accountTask.setOfficeId(securityUtils.getOfficeId());
+            accountTask.setOfficeId(SecurityUtils.getOfficeId());
             accountTaskMapper.save(accountTask);
         }else {
             if(AuditTypeEnum.PASS.getValue().equals(accountChange.getProcessStatus()) ||AuditTypeEnum.NOT_PASS.getValue().equals(accountChange.getProcessStatus())){

@@ -31,8 +31,7 @@ public class DutyController {
 
     @Autowired
     private DutyService dutyService;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     @RequestMapping(method = RequestMethod.GET)
     public List<DutyDto> list() {
@@ -76,13 +75,13 @@ public class DutyController {
     public List<CalendarEventDto> events(String start, String end) {
         LocalDate dateStart= LocalDateUtils.parse(start);
         LocalDate dateEnd= LocalDateUtils.parse(end);
-        List<CalendarEventDto> events = dutyService.findEvent(securityUtils.getEmployeeId(),dateStart,dateEnd);
+        List<CalendarEventDto> events = dutyService.findEvent(SecurityUtils.getEmployeeId(),dateStart,dateEnd);
         return events;
     }
 
     private List<DutyDto> getDutyDtoList() {
         LocalDateTime dateStart = LocalDateTime.now().minusMonths(1);
-        String leaderId = securityUtils.getAccountId();
+        String leaderId = SecurityUtils.getAccountId();
         List<DutyDto> list = dutyService.findByAuditable(leaderId, AuditTypeEnum.APPLY.getValue(), dateStart);
         return list;
     }

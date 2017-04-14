@@ -25,8 +25,6 @@ import java.lang.reflect.Method;
 @Component
 @Order(1)
 public class DynamicDataSourceAspect {
-    @Autowired
-    private SecurityUtils securityUtils;
 
     @Pointcut("execution(* net.myspring..*.service.*.*(..))")
     public void serviceExecution() {
@@ -53,7 +51,7 @@ public class DynamicDataSourceAspect {
             }
         }
         if(DynamicDataSourceContext.get().isAutomaticSetCompany()) {
-            DynamicDataSourceContext.get().setCompanyId(securityUtils.getCompanyId());
+            DynamicDataSourceContext.get().setCompanyId(SecurityUtils.getCompanyId());
         }
         if(DataSourceTypeEnum.LOCAL.name().equals(dataSourceType)) {
             DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.LOCAL.name());

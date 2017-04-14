@@ -42,12 +42,11 @@ public class AuditFileController {
     private ProcessTypeService processTypeService;
     @Autowired
     private FolderService folderService;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AuditFileDto> data(Pageable pageable, AuditFileQuery auditFileQuery) {
-        auditFileQuery.setPositionId(securityUtils.getPositionId());
+        auditFileQuery.setPositionId(SecurityUtils.getPositionId());
         Page<AuditFileDto> page = auditFileService.findPage(pageable,auditFileQuery);
         return page;
     }
@@ -55,7 +54,7 @@ public class AuditFileController {
     @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
     public Map<String, Object> getFormProperty() {
         Map<String, Object> map = Maps.newHashMap();
-        map.put("folder", folderService.getAccountFolder(securityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
+        map.put("folder", folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
         map.put("processTypes", processTypeService.findEnabledAuditFileType());
         return map;
     }
@@ -63,7 +62,7 @@ public class AuditFileController {
     @RequestMapping(value = "getListProperty", method = RequestMethod.GET)
     public Map<String, Object> getListProperty() {
         Map<String, Object> map = Maps.newHashMap();
-        map.put("folder", folderService.getAccountFolder(securityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
+        map.put("folder", folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
         map.put("processTypes", processTypeService.findEnabledAuditFileType());
         return map;
     }

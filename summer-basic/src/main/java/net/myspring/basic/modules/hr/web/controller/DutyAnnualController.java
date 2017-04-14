@@ -33,12 +33,10 @@ public class DutyAnnualController {
     private DutyAnnualService dutyAnnualService;
     @Autowired
     private FolderFileService folderFileService;
-    @Autowired
-    private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyAnnualDto> list(Pageable pageable, DutyAnnualQuery dutyAnnualQuery) {
-        dutyAnnualQuery.setCreatedBy(securityUtils.getAccountId());
+        dutyAnnualQuery.setCreatedBy(SecurityUtils.getAccountId());
         Page<DutyAnnualDto> page  = dutyAnnualService.findPage(pageable,dutyAnnualQuery);
         return page;
     }

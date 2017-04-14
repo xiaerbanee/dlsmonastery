@@ -54,8 +54,6 @@ public class VoucherService {
     private VoucherEntryFlowMapper voucherEntryFlowMapper;
     @Autowired
     private KingdeeBookMapper kingdeeBookMapper;
-    @Autowired
-    private SecurityUtils securityUtils;
 
     public Page<VoucherDto> findPage(Pageable pageable, VoucherQuery voucherQuery) {
         Page<Voucher> page = voucherMapper.findPage(pageable, voucherQuery);
@@ -241,8 +239,8 @@ public class VoucherService {
         if (isCreate) {
             voucherForm.setCompanyId(DynamicDataSourceContext.get().getCompanyId());
             //待写accountName；
-            voucherForm.setCreatedName(securityUtils.getAccountId());
-            if(securityUtils.getAccountId() != null){//问题ThreadLocalContext.get().getAccount() != null
+            voucherForm.setCreatedName(SecurityUtils.getAccountId());
+            if(SecurityUtils.getAccountId() != null){//问题ThreadLocalContext.get().getAccount() != null
                 voucherForm.setStatus(VoucherStatusEnum.省公司财务审核.name());
             }else{
                 voucherForm.setStatus(VoucherStatusEnum.地区财务审核.name());

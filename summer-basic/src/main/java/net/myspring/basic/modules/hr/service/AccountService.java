@@ -54,8 +54,7 @@ public class AccountService {
     private PermissionMapper permissionMapper;
     @Autowired
     private OfficeMapper officeMapper;
-    @Autowired
-    private SecurityUtils securityUtils;
+
     @Autowired
     private InitDomainUtils initDomainUtils;
 
@@ -104,7 +103,7 @@ public class AccountService {
         if (isCreate) {
             accountForm.setPassword(StringUtils.getEncryptPassword(Const.DEFAULT_PASSWORD));
             Account account = BeanUtil.map(accountForm, Account.class);
-            account.setCompanyId(securityUtils.getCompanyId());
+            account.setCompanyId(SecurityUtils.getCompanyId());
             accountManager.save(account);
         } else {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
@@ -160,7 +159,7 @@ public class AccountService {
 
     public List<String> getAuthorityList() {
         List<String> authorityList = Lists.newArrayList();
-        String positionId=securityUtils.getPositionId();
+        String positionId=SecurityUtils.getPositionId();
         if (StringUtils.isNotBlank(positionId)) {
             List<Permission> permissionList=permissionMapper.findByPositionId(positionId);
             authorityList= CollectionUtil.extractToList(permissionList,"permission");
@@ -169,7 +168,7 @@ public class AccountService {
     }
 
     public AccountDto getAccount(){
-        String accountId=securityUtils.getAccountId();
+        String accountId=SecurityUtils.getAccountId();
         if(StringUtils.isNotBlank(accountId)){
             AccountDto accountDto=findDto(accountId);
             return accountDto;

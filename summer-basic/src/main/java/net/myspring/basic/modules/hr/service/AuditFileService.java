@@ -32,8 +32,7 @@ public class AuditFileService {
     private OfficeMapper officeMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery){
         Page<AuditFile> page=auditFileMapper.findPage(pageable,auditFileQuery);
@@ -62,7 +61,7 @@ public class AuditFileService {
             accountTask.setName(name);
             accountTask.setExtendId(auditFile.getId());
             accountTask.setPositionId(auditFile.getProcessFlow().getPositionId());
-            accountTask.setOfficeId(securityUtils.getOfficeId());
+            accountTask.setOfficeId(SecurityUtils.getOfficeId());
             accountTaskMapper.save(accountTask);
         }else {
             if(AuditTypeEnum.PASS.getValue().equals(auditFile.getProcessStatus()) ||AuditTypeEnum.NOT_PASS.getValue().equals(auditFile.getProcessStatus())){

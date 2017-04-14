@@ -20,13 +20,10 @@ public class AccountTaskController {
 
     @Autowired
     private AccountTaskService accountTaskService;
-    @Autowired
-    private SecurityUtils securityUtils;
-
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AccountTaskDto> list(Pageable pageable, AccountTaskQuery accountTaskQuery) {
-        accountTaskQuery.setPositionId(securityUtils.getPositionId());
+        accountTaskQuery.setPositionId(SecurityUtils.getPositionId());
         Page<AccountTaskDto> page=accountTaskService.findPage(pageable, accountTaskQuery);
         return page;
     }

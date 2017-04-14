@@ -26,8 +26,6 @@ public class DutyFreeService {
     private DutyFreeMapper dutyFreeMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
 
     public Page<DutyFreeDto> findPage(Pageable pageable, DutyFreeQuery dutyFreeQuery) {
         Page<DutyFree> page = dutyFreeMapper.findPage(pageable, dutyFreeQuery);
@@ -37,7 +35,7 @@ public class DutyFreeService {
     }
 
     public DutyFreeForm save(DutyFreeForm dutyFreeForm) {
-        dutyFreeForm.setEmployeeId(securityUtils.getEmployeeId());
+        dutyFreeForm.setEmployeeId(SecurityUtils.getEmployeeId());
         dutyFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyFreeMapper.save(BeanUtil.map(dutyFreeForm,DutyFree.class));
         return dutyFreeForm;

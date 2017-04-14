@@ -36,8 +36,7 @@ public class DutySignController {
 
     @Autowired
     private DutySignService dutySignService;
-    @Autowired
-    private SecurityUtils securityUtils;
+
     @Autowired
     private OfficeService officeService;
     @Autowired

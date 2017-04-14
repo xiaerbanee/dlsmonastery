@@ -23,8 +23,7 @@ public class DutyRestService {
     private DutyRestMapper dutyRestMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public Page<DutyRestDto> findPage(Pageable pageable,DutyRestQuery dutyRestQuery) {
         Page<DutyRest> page = dutyRestMapper.findPage(pageable, dutyRestQuery);
@@ -35,7 +34,7 @@ public class DutyRestService {
 
     public DutyRest save(DutyRestForm dutyRestForm) {
         dutyRestForm.setStatus(AuditTypeEnum.APPLY.getValue());
-        dutyRestForm.setEmployeeId(securityUtils.getEmployeeId());
+        dutyRestForm.setEmployeeId(SecurityUtils.getEmployeeId());
         dutyRestMapper.save(BeanUtil.map(dutyRestForm,DutyRest.class));
         return dutyRestMapper.findOne(dutyRestForm.getId());
     }

@@ -25,8 +25,6 @@ public class RecruitService {
     private RecruitMapper recruitMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
 
     public Page<RecruitDto> findPage(Pageable pageable, RecruitQuery recruitQuery) {
         Page<Recruit> page = recruitMapper.findPage(pageable, recruitQuery);

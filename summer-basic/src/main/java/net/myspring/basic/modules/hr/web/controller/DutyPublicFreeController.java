@@ -25,12 +25,10 @@ public class DutyPublicFreeController {
 
     @Autowired
     private DutyPublicFreeService dutyPublicFreeService;
-    @Autowired
-    private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyPublicFreeDto> list(Pageable pageable, DutyPublicFreeQuery dutyPublicFreeQuery) {
-        dutyPublicFreeQuery.setCreatedBy(securityUtils.getAccountId());
+        dutyPublicFreeQuery.setCreatedBy(SecurityUtils.getAccountId());
         Page<DutyPublicFreeDto> page = dutyPublicFreeService.findPage(pageable,dutyPublicFreeQuery);
         return page;
     }

@@ -29,8 +29,7 @@ public class DutyLeaveService {
     private DutyLeaveMapper dutyLeaveMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public Page<DutyLeaveDto> findPage(Pageable pageable, DutyLeaveQuery dutyLeaveQuery) {
         Page<DutyLeave> page = dutyLeaveMapper.findPage(pageable, dutyLeaveQuery);
@@ -45,7 +44,7 @@ public class DutyLeaveService {
             if (dutyLeaveMapper.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, dutyLeaveForm.getDateType())  == null) {
                 dutyLeaveForm.setDutyDate(date);
                 dutyLeaveForm.setStatus(AuditTypeEnum.APPLY.getValue());
-                dutyLeaveForm.setEmployeeId(securityUtils.getEmployeeId());
+                dutyLeaveForm.setEmployeeId(SecurityUtils.getEmployeeId());
                 dutyLeaveMapper.save(BeanUtil.map(dutyLeaveForm,DutyLeave.class));
             }
             return dutyLeaveForm;
@@ -62,7 +61,7 @@ public class DutyLeaveService {
                 item.setLeaveType(dutyLeaveForm.getLeaveType());
                 item.setAttachment(dutyLeaveForm.getAttachment());
                 item.setRemarks(dutyLeaveForm.getRemarks());
-                item.setEmployeeId(securityUtils.getEmployeeId());
+                item.setEmployeeId(SecurityUtils.getEmployeeId());
                 dutyLeaveMapper.save(item);
             }
         }

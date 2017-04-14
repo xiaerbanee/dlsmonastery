@@ -23,12 +23,11 @@ public class DutyOvertimeController {
 
     @Autowired
     private DutyOvertimeService dutyOvertimeService;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyOvertimeDto> list(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
-        dutyOvertimeQuery.setCreatedBy(securityUtils.getAccountId());
+        dutyOvertimeQuery.setCreatedBy(SecurityUtils.getAccountId());
         Page<DutyOvertimeDto> page = dutyOvertimeService.findPage(pageable,dutyOvertimeQuery);
         return page;
     }

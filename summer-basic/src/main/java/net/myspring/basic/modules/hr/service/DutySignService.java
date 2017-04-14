@@ -34,14 +34,13 @@ public class DutySignService {
     private DutySignMapper dutySignMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public DutySignForm save(DutySignForm dutySignForm) {
         dutySignForm.setDutyDate(LocalDate.now());
         dutySignForm.setDutyTime(LocalTime.now());
         dutySignForm.setStatus(AuditTypeEnum.APPLY.getValue());
-        dutySignForm.setEmployeeId(securityUtils.getEmployeeId());
+        dutySignForm.setEmployeeId(SecurityUtils.getEmployeeId());
         dutySignMapper.save(BeanUtil.map(dutySignForm,DutySign.class));
         return dutySignForm;
     }

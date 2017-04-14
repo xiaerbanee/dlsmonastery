@@ -23,12 +23,10 @@ public class FolderController {
 
     @Autowired
     private FolderService folderService;
-    @Autowired
-    private SecurityUtils securityUtils;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<FolderDto> list(HttpServletRequest request){
-        List<FolderDto> list = folderService.findAll(securityUtils.getAccountId());
+        List<FolderDto> list = folderService.findAll(SecurityUtils.getAccountId());
         return list;
     }
 
@@ -54,7 +52,7 @@ public class FolderController {
     @RequestMapping(value="getFormProperty")
     public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
-        map.put("folders",folderService.findAll(securityUtils.getAccountId()));
+        map.put("folders",folderService.findAll(SecurityUtils.getAccountId()));
         return map;
     }
 

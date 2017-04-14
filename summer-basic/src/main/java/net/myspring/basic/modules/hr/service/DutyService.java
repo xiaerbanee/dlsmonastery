@@ -51,8 +51,7 @@ public class DutyService {
     private AccountMapper accountMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public List<DutyDto> findByAuditable(String leaderId, String status, LocalDateTime dateStart) {
         List<DutyDto> leaveList = dutyLeaveMapper.findByAuditable(leaderId, status, dateStart);
@@ -100,7 +99,7 @@ public class DutyService {
     }
 
     public void audit(String id, String dutyType, Boolean pass, String auditRemarks) {
-        String auditBy = securityUtils.getAccountId();
+        String auditBy = SecurityUtils.getAccountId();
         if (DutyTypeEnum.请假.toString().equals(dutyType)) {
             DutyLeave dutyLeave = dutyLeaveMapper.findOne(id);
             if (AuditTypeEnum.APPLY.getValue().equals(dutyLeave.getStatus())) {

@@ -41,8 +41,7 @@ public class FolderFileController {
     private FolderService folderService;
     @Autowired
     private FolderFileService folderFileService;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<FolderFileDto>  list(Pageable pageable, FolderFileQuery folderFileQuery){
@@ -52,7 +51,7 @@ public class FolderFileController {
 
     @RequestMapping(value = "/upload")
     public List<FolderFileDto> upload(String uploadPath, MultipartHttpServletRequest request, HttpServletResponse response) {
-        Folder folder = folderService.getAccountFolder(securityUtils.getAccountId(), uploadPath);
+        Folder folder = folderService.getAccountFolder(SecurityUtils.getAccountId(), uploadPath);
         Map<String, MultipartFile> fileMap = request.getFileMap();
         List<FolderFileDto> list = folderFileService.save(folder.getId(), fileMap);
         return list;

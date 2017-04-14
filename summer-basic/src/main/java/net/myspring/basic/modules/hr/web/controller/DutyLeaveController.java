@@ -30,12 +30,11 @@ public class DutyLeaveController {
     private DutyLeaveService dutyLeaveService;
     @Autowired
     private DictEnumService dictEnumService;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyLeaveDto> list(Pageable pageable, DutyLeaveQuery dutyLeaveQuery){
-        dutyLeaveQuery.setCreatedBy(securityUtils.getAccountId());
+        dutyLeaveQuery.setCreatedBy(SecurityUtils.getAccountId());
         Page<DutyLeaveDto> page = dutyLeaveService.findPage(pageable,dutyLeaveQuery);
         return page;
     }

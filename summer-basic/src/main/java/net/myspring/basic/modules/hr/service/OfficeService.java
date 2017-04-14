@@ -24,8 +24,7 @@ public class OfficeService {
     private OfficeMapper officeMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     public List<Office> findByType(String type) {
         return officeMapper.findByType(type);
