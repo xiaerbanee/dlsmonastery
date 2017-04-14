@@ -1,12 +1,6 @@
 package net.myspring.future.modules.crm.web.controller;
 
-import net.myspring.common.domain.SearchEntity;
-import net.myspring.common.utils.ObjectMapperUtils;
-import net.myspring.common.utils.StringUtils;
-import net.myspring.future.common.service.AccountUtils;
-import net.myspring.future.common.service.FilterUtils;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.crm.domain.AfterSale;
+
 import net.myspring.future.modules.crm.domain.AfterSaleImeAllot;
 import net.myspring.future.modules.crm.service.AfterSaleImeAllotService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -23,16 +17,14 @@ public class AfterSaleImeAllotController {
 
     @ModelAttribute
     public AfterSaleImeAllot get(@RequestParam(required = false) String id) {
-        return StringUtils.isBlank(id) ? new AfterSaleImeAllot() : afterSaleImeAllotService.findOne(id);
+        return null;
     }
 
 
     @RequestMapping(method = RequestMethod.GET)
     public String list(HttpServletRequest request) {
-        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-        searchEntity.getParams().putAll(FilterUtils.getDepotFilter(AccountUtils.getAccountId()));
-        Page<AfterSale> page = afterSaleImeAllotService.findPage(searchEntity.getPageable(), searchEntity.getParams());
-        return ObjectMapperUtils.writeValueAsString(page);
+
+        return null;
     }
 
 

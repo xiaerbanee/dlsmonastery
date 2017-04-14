@@ -1,6 +1,5 @@
 package net.myspring.future.modules.crm.web.controller;
 
-import net.myspring.future.common.utils.StringUtils;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.service.GoodsOrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class GoodsOrderDetailController {
 
     @ModelAttribute
     public GoodsOrderDetail get(@RequestParam(required = false) String id) {
-        return StringUtils.isBlank(id) ? new GoodsOrderDetail() : goodsOrderDetailService.findOne(id);
+        return null;
     }
 
 }
