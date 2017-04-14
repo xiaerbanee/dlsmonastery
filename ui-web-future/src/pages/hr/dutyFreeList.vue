@@ -55,7 +55,7 @@
         this.pageLoading = true;
         util.setQuery("dutyFreeList",this.formData);
          this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/hr/dutyFree',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutyFree',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

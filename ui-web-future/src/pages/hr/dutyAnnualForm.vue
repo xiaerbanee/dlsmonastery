@@ -6,7 +6,7 @@
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item :label="$t('dutyAnnualForm.exportTemplate')">
-              <a style="text-decoration:underline;color:blue" href="/api/hr/dutyAnnual/import/template">{{$t('dutyAnnualForm.downLoad')}}</a>
+              <a style="text-decoration:underline;color:blue" href="/api/basic/hr/dutyAnnual/import/template">{{$t('dutyAnnualForm.downLoad')}}</a>
             </el-form-item>
             <el-form-item :label="$t('dutyAnnualForm.exportData')" prop="folderFileId">
               <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/年假管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" >
@@ -56,7 +56,7 @@
         form.validate((valid) => {
           if (valid) {
             this.inputForm.annualYear=util.formatLocalDate(this.inputForm.annualYear)
-            axios.post('/api/hr/dutyAnnual/import', qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/basic/hr/dutyAnnual/import', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }

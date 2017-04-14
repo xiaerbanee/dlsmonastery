@@ -72,7 +72,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.get('/api/hr/employeePhoneDeposit/save',{params:this.inputForm}).then((response)=> {
+              axios.get('/api/basic/hr/employeePhoneDeposit/save',{params:this.inputForm}).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -113,7 +113,7 @@
         },remoteEmployee(query) {
           if (query !== '') {
             this.remoteLoading = true;
-            axios.get('/api/hr/employee/search',{params:{key:query}}).then((response)=>{
+            axios.get('/api/basic/hr/employee/search',{params:{key:query}}).then((response)=>{
               this.employees=response.data;
               this.remoteLoading = false;
             })
@@ -122,11 +122,11 @@
           }
         }
       },created(){
-        axios.get('/api/hr/employeePhoneDeposit/getFormProperty').then((response)=>{
+        axios.get('/api/basic/hr/employeePhoneDeposit/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/hr/employeePhoneDeposit/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/hr/employeePhoneDeposit/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
             if(response.data.depot!=null){
                 this.depots=new Array(response.data.depot)

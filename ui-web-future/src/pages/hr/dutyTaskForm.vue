@@ -175,7 +175,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/hr/duty/audit',qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/basic/hr/duty/audit',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -191,7 +191,7 @@
       }
     },
     created () {
-      axios.get('/api/hr/duty/detail',{params:{id:this.$route.query.id,dutyType:this.$route.query.dutyType}}).then((response)=>{
+      axios.get('/api/basic/hr/duty/detail',{params:{id:this.$route.query.id,dutyType:this.$route.query.dutyType}}).then((response)=>{
         this.dutyType = response.data.dutyType;
         this.showForm = response.data.item;
         this.formProperty.bools = response.data.bools;

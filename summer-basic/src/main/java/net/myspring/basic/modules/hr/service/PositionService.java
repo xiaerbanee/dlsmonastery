@@ -69,7 +69,7 @@ public class PositionService {
     public void save(PositionForm positionForm){
         boolean isCreate= StringUtils.isBlank(positionForm.getId());
         if(isCreate){
-            positionManager.saveForm(positionForm);
+            positionManager.save(BeanUtil.map(positionForm,Position.class));
         }else{
             positionManager.updateForm(positionForm);
         }

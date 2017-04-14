@@ -11,7 +11,16 @@ import java.util.List;
  */
 
 public class PositionForm extends DataForm<Position> {
+
     private List<String> permissionIdList;
+    private String jobId;
+    private String name;
+    private String reportName;
+    private String dataScope;
+    private String permission;
+    private String sort;
+    private String remarks;
+    private String permissionIdStr;
 
     public List<String> getPermissionIdList() {
         return permissionIdList;
@@ -19,5 +28,69 @@ public class PositionForm extends DataForm<Position> {
 
     public void setPermissionIdList(List<String> permissionIdList) {
         this.permissionIdList = permissionIdList;
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getReportName() {
+        return reportName;
+    }
+
+    public void setReportName(String reportName) {
+        this.reportName = reportName;
+    }
+
+    public String getDataScope() {
+        return dataScope;
+    }
+
+    public void setDataScope(String dataScope) {
+        this.dataScope = dataScope;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getPermissionIdStr() {
+        return permissionIdStr;
+    }
+
+    public void setPermissionIdStr(String permissionIdStr) {
+        this.permissionIdStr = permissionIdStr;
     }
 }

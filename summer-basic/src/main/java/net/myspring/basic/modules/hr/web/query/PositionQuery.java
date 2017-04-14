@@ -4,22 +4,22 @@ package net.myspring.basic.modules.hr.web.query;
  * Created by lihx on 2017/4/7.
  */
 public class PositionQuery {
-    private String positionName;
-    private String jobName;
+    private String name;
+    private String jobId;
 
-    public String getPositionName() {
-        return positionName;
+    public String getName() {
+        return name;
     }
 
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getJobName() {
-        return jobName;
+    public String getJobId() {
+        return jobId;
     }
 
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
     }
 }

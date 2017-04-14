@@ -56,7 +56,7 @@
         this.pageLoading = true;
         util.setQuery("dutyTripList",this.formData);
          this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/hr/dutyTrip',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutyTrip',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

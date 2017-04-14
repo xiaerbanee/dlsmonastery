@@ -87,7 +87,7 @@
         this.pageLoading = true;
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         util.setQuery("employeePhoneList",this.formData);
-        axios.get('/api/hr/employeePhone',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/employeePhone',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -112,7 +112,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/hr/employeePhone/getListProperty').then((response) =>{
+      axios.get('/api/basic/hr/employeePhone/getListProperty').then((response) =>{
         this.searchProperty=response.data;
       });
       this.pageRequest();

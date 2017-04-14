@@ -9,7 +9,9 @@ import net.myspring.basic.modules.hr.dto.OfficeDto;
 import net.myspring.basic.modules.hr.service.OfficeService;
 import net.myspring.basic.modules.hr.web.form.OfficeForm;
 import net.myspring.basic.modules.hr.web.query.OfficeQuery;
+import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.service.DictEnumService;
+import net.myspring.basic.modules.sys.service.DictMapService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -31,7 +33,7 @@ public class OfficeController {
     @Autowired
     private OfficeService officeService;
     @Autowired
-    private DictEnumService  dictEnumService;
+    private DictMapService dictMapService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<OfficeDto> list(Pageable pageable, OfficeQuery officeQuery) {
@@ -76,7 +78,7 @@ public class OfficeController {
     @RequestMapping(value="getFormProperty")
     public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
-        map.put("officeTypes", dictEnumService.findByCategory(DictMapCategoryEnum.机构分类.name()));
+        map.put("officeTypes", dictMapService.findByCategory(DictMapCategoryEnum.机构分类.name()));
         map.put("jointTypes", JointTypeEnum.getList());
         return map;
     }

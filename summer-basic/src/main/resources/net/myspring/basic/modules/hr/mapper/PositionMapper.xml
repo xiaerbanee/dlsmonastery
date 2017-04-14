@@ -9,15 +9,11 @@
         hr_position t1
         where
         t1.enabled=1
-        <if test="p.positionName != null">
-            and t1.name like concat(concat('%',#{p.positionName}),'%')
+        <if test="p.name != null">
+            and t1.name like concat(concat('%',#{p.name}),'%')
         </if>
-        <if test="p.jobName != null">
-            and t1.job_id in (
-            select t2.id
-            from hr_job t2
-            where t2.name = #{p.jobName}
-            )
+        <if test="p.jobId != null">
+            and t1.job_id=#{p.jobId}
         </if>
     </select>
 

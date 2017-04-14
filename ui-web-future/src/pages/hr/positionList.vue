@@ -11,12 +11,12 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.positionName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.positionName" auto-complete="off" :placeholder="$t('positionList.likeSearch')"></el-input>
+              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('positionList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.jobName.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.jobName" filterable clearable :placeholder="$t('positionList.inputKey')">
-                  <el-option v-for="job in formProperty.jobList" :key="job.name" :label="job.name" :value="job.name"></el-option>
+              <el-form-item :label="formLabel.jobId.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.jobId" filterable clearable :placeholder="$t('positionList.inputKey')">
+                  <el-option v-for="job in formProperty.jobList" :key="job.id" :label="job.name" :value="job.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -28,10 +28,8 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('positionList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('positionList.positionName')" sortable width="150"></el-table-column>
-        <el-table-column prop="job.name" :label="$t('positionList.jobName')"></el-table-column>
-        <el-table-column prop="dataScope" :label="$t('positionList.dataScope')" width="120">
-          <template scope="scope">{{scope.row.dataScope | getEnumLabel('dataScope')}}</template>
-        </el-table-column>
+        <el-table-column prop="jobName" :label="$t('positionList.jobName')"></el-table-column>
+        <el-table-column prop="dataScopeLabel" :label="$t('positionList.dataScope')" width="120"></el-table-column>
         <el-table-column prop="permission" :label="$t('positionList.permission')"></el-table-column>
         <el-table-column prop="locked" :label="$t('positionList.locked')" width="120">
           <template scope="scope">
@@ -41,7 +39,8 @@
         <el-table-column prop="remarks" :label="$t('positionList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('positionList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -57,11 +56,11 @@
         formData:{
           page:0,
           size:25,
-          positionName:'',
-          jobName:''
+          name:'',
+          jobId:''
         },formLabel:{
-          positionName:{label:this.$t('positionList.positionName')},
-          jobName:{label:this.$t('positionList.jobName')}
+          name:{label:this.$t('positionList.positionName')},
+          jobId:{label:this.$t('positionList.jobName')}
         },
         formProperty:{},
         formLabelWidth: '120px',
@@ -73,7 +72,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("positionList",this.formData);
-        axios.get('/api/hr/position',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/position',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -94,7 +93,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'positionForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/hr/position/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/hr/position/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
@@ -103,7 +102,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/hr/position/getListProperty').then((response) =>{
+      axios.get('/api/basic/hr/position/getListProperty').then((response) =>{
         this.formProperty=response.data;
       });
       this.pageRequest();

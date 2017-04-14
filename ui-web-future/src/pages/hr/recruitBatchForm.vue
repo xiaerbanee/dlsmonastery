@@ -61,7 +61,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/hr/recruit/update',qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/basic/hr/recruit/update',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               this.$router.push({name:'recruitList',query:util.getQuery("recruitList")})
             });
@@ -71,11 +71,11 @@
         })
       }
     },created(){
-      axios.get('/api/hr/recruit/getFormProperty').then((response)=>{
+      axios.get('/api/basic/hr/recruit/getFormProperty').then((response)=>{
         this.formProperty=response.data;
       });
       console.log(this.inputForm.ids)
-      axios.get('/api/hr/recruit/findNameByIds',{params:{ids:this.inputForm.ids}}).then((response)=>{
+      axios.get('/api/basic/hr/recruit/findNameByIds',{params:{ids:this.inputForm.ids}}).then((response)=>{
         this.nameList=response.data;
       });
     }
