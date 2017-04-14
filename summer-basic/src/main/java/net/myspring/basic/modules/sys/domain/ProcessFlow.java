@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.domain;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.*;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.IdEntity;
 
 import javax.persistence.Entity;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name="sys_process_flow")
-public class ProcessFlow extends IdEntity<ProcessFlow> {
+public class ProcessFlow extends CompanyEntity<ProcessFlow> {
     private String name;
     private Integer sort;
     private List<AccountChange> accountChangeList = Lists.newArrayList();
