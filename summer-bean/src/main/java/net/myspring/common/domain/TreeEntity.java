@@ -28,14 +28,4 @@ public class TreeEntity<T> extends DataEntity<T> {
     public void setParentIds(String parentIds) {
         this.parentIds = parentIds;
     }
-
-    public List<String> getParentIdList() {
-        List<String> parentIdList = Lists.newArrayList();
-        if(StringUtils.isNotBlank(parentIds)) {
-            for(String parentId:parentIds.split(",")) {
-                parentIdList.add(parentId);
-            }
-        }
-        return parentIdList;
-    }
 }
