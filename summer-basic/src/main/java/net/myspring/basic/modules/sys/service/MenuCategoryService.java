@@ -37,8 +37,7 @@ public class MenuCategoryService {
     }
 
     public Page<MenuCategoryDto> findPage(Pageable pageable,MenuCategoryQuery menuCategoryQuery) {
-        Page<MenuCategory> page = menuCategoryMapper.findPage(pageable, menuCategoryQuery);
-        Page<MenuCategoryDto> menuCategoryDtoPage= BeanUtil.map(page,MenuCategoryDto.class);
+        Page<MenuCategoryDto> menuCategoryDtoPage= menuCategoryMapper.findPage(pageable, menuCategoryQuery);
         cacheUtils.initCacheInput(menuCategoryDtoPage.getContent());
         return menuCategoryDtoPage;
     }
