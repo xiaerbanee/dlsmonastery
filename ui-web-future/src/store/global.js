@@ -1,5 +1,3 @@
-import Cookie from 'js-cookie'
-
 const getTabs = function () {
   var tabs = new Map();
   let local = window.localStorage.getItem("tabs");
@@ -105,12 +103,6 @@ export default {
       token.exp = new Date().getTime();
       state.token = token;
       localStorage.setItem('token', JSON.stringify(token));
-      if(util.isNotBlank(token.access_token)) {
-        var expires = new Date(token.exp +  token.expires_in);
-        Cookie.set('Authorization', token.access_token, { expires: expires,path:"" });
-      } else {
-        Cookie.remove('Authorization');
-      }
     },
     setIsRefreshToken(state,isRefreshToken) {
       state.isRefreshToken = isRefreshToken;
