@@ -61,7 +61,7 @@ public class MenuController {
 
     @RequestMapping(value = "findOne")
     public MenuDto findOne(String id){
-        MenuDto menuDto=menuService.findDto(id);
+        MenuDto menuDto = menuService.findDto(id);
         return menuDto;
     }
 
