@@ -3,7 +3,7 @@
 <mapper namespace="net.myspring.basic.modules.hr.mapper.DutyTripMapper">
 
 
-    <select id="findPage" resultType="DutyTrip">
+    <select id="findPage" resultType="DutyTripDto">
         SELECT
             t1.*
         FROM
@@ -33,7 +33,7 @@
             t1.remarks,
             t2.login_name as 'account.loginName',
             t2.leader_id AS 'account.leaderId' ,
-            CONCAT('CC0000000',t1.id) AS 'formatId',
+            'CC' AS 'prefix',
             t1.id
         FROM
         hr_duty_trip t1 , hr_account t2 ,hr_employee t3

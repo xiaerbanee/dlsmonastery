@@ -10,11 +10,11 @@
         <el-table-column fixed prop="formatId" :label="$t('dutyTaskList.formatId')" sortable></el-table-column>
         <el-table-column prop="dutyType"  :label="$t('dutyTaskList.dutyType')" ></el-table-column>
         <el-table-column prop="dutyDate" :label="$t('dutyTaskList.dutyDate')"></el-table-column>
-        <el-table-column prop="account.loginName" :label="$t('dutyTaskList.applyAccount')"></el-table-column>
+        <el-table-column prop="accountName" :label="$t('dutyTaskList.applyAccount')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('dutyTaskList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('dutyTaskList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'审核')">审核</el-button>
           </template>
         </el-table-column>
       </el-table>

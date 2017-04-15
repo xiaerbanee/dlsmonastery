@@ -23,6 +23,19 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
 		return list;
 	}
 
+	public static String getFormatId(String id, String prefix) {
+		return getFormatId(id, prefix, "000000000000");
+	}
+
+	public static String getFormatId(String id, String prefix, String format) {
+		if (id == null) {
+			return "";
+		} else {
+			java.text.DecimalFormat decimalFormat = new java.text.DecimalFormat(format);
+			return prefix + decimalFormat.format(id);
+		}
+	}
+
 	public static String getEncryptPassword(String plainPassword) {
 		byte[] salt = Digests.generateSalt(8);
 		byte[] hashPassword = Digests.sha1(plainPassword.getBytes(), salt, 1024);

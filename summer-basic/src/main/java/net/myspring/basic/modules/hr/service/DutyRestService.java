@@ -26,10 +26,9 @@ public class DutyRestService {
 
 
     public Page<DutyRestDto> findPage(Pageable pageable,DutyRestQuery dutyRestQuery) {
-        Page<DutyRest> page = dutyRestMapper.findPage(pageable, dutyRestQuery);
-        Page<DutyRestDto> dutyRestDtoPage= BeanUtil.map(page,DutyRestDto.class);
-        cacheUtils.initCacheInput(dutyRestDtoPage.getContent());
-        return dutyRestDtoPage;
+        Page<DutyRestDto> page = dutyRestMapper.findPage(pageable, dutyRestQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public DutyRest save(DutyRestForm dutyRestForm) {

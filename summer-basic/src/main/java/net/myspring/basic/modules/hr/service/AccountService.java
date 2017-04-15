@@ -10,23 +10,18 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
-import net.myspring.basic.modules.hr.manager.EmployeeManager;
-import net.myspring.basic.modules.hr.manager.OfficeManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.domain.Permission;
-import net.myspring.basic.modules.sys.manager.PermissionManager;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
-import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -80,10 +75,9 @@ public class AccountService {
     }
 
     public Page<AccountDto> findPage(Pageable pageable, AccountQuery accountQuery) {
-        Page<Account> page = accountMapper.findPage(pageable, accountQuery);
-        List<NameValueDto> nameValueDtoList = accountMapper.findAccountOfficeByIds(CollectionUtil.extractToList(page.getContent(), "id"));
-        initDomainUtils.initChildIdList(page.getContent(),Office.class,nameValueDtoList);
-        Page<AccountDto> accountDtoPage = BeanUtil.map(page, AccountDto.class);
+        Page<AccountDto> accountDtoPage = accountMapper.findPage(pageable, accountQuery);
+        List<NameValueDto> nameValueDtoList = accountMapper.findAccountOfficeByIds(CollectionUtil.extractToList(accountDtoPage.getContent(), "id"));
+        initDomainUtils.initChildIdList(accountDtoPage.getContent(),Office.class,nameValueDtoList);
         cacheUtils.initCacheInput(accountDtoPage.getContent());
         return accountDtoPage;
     }
