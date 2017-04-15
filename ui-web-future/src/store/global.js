@@ -107,9 +107,9 @@ export default {
       localStorage.setItem('token', JSON.stringify(token));
       if(util.isNotBlank(token.access_token)) {
         var expires = new Date(token.exp +  token.expires_in);
-        Cookie.set('access_token', token.access_token, { expires: expires,path:"" });
+        Cookie.set('Authorization', token.access_token, { expires: expires,path:"" });
       } else {
-        Cookie.remove('access_token');
+        Cookie.remove('Authorization');
       }
     },
     setIsRefreshToken(state,isRefreshToken) {
