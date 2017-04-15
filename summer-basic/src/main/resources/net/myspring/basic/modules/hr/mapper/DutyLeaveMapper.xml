@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.DutyLeaveMapper">
 
-    <select id="findPage" resultType="DutyLeave">
+    <select id="findPage" resultType="DutyLeaveDto">
         SELECT
           t1.*
         FROM
@@ -40,7 +40,7 @@
 
     <select id="findByAuditable" resultType="net.myspring.basic.modules.hr.dto.DutyDto">
         SELECT
-        '请假' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'account.loginName',t2.leader_id AS 'account.leaderId' ,CONCAT('QJ0000000',t1.id) AS 'formatId',t1.id
+        '请假' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'accountName' ,'QJ' AS 'prefix',t1.id
         FROM
         hr_duty_leave t1, hr_account t2,hr_employee t3
         WHERE

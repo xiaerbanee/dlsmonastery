@@ -4,6 +4,7 @@ package net.myspring.basic.modules.hr.mapper;
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.DutyLeave;
 import net.myspring.basic.modules.hr.dto.DutyDto;
+import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
 import net.myspring.basic.modules.hr.web.query.DutyLeaveQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,7 +19,7 @@ import java.util.Map;
 @Mapper
 public interface DutyLeaveMapper extends MyMapper<DutyLeave,String> {
 
-    Page<DutyLeave> findPage(Pageable pageable, @Param("p") DutyLeaveQuery dutyLeaveQuery);
+    Page<DutyLeaveDto> findPage(Pageable pageable, @Param("p") DutyLeaveQuery dutyLeaveQuery);
 
     DutyLeave findByEmployeeAndDateAndDateType(@Param("employeeId") String employeeId, @Param("date") LocalDate date, @Param("dateType") String dateType);
 

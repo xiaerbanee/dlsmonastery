@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.AccountTaskMapper">
 
-    <select id="findPage" resultType="AccountTask">
+    <select id="findPage" resultType="AccountTaskDto">
         SELECT t1.*
         FROM hr_account_task t1
         WHERE

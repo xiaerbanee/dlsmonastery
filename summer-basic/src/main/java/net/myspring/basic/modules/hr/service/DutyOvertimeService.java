@@ -33,10 +33,9 @@ public class DutyOvertimeService {
 
 
     public Page<DutyOvertimeDto> findPage(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
-        Page<DutyOvertime> page = dutyOvertimeMapper.findPage(pageable, dutyOvertimeQuery);
-        Page<DutyOvertimeDto> dutyOvertimeDtoPage= BeanUtil.map(page,DutyOvertimeDto.class);
-        cacheUtils.initCacheInput(dutyOvertimeDtoPage.getContent());
-        return dutyOvertimeDtoPage;
+        Page<DutyOvertimeDto> page = dutyOvertimeMapper.findPage(pageable, dutyOvertimeQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public DutyOvertimeForm save(DutyOvertimeForm dutyOvertimeForm) {

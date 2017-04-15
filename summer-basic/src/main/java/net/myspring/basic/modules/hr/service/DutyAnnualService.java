@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.DutyAnnual;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.DutyAnnualDto;
+import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.DutyAnnualMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
@@ -18,6 +19,7 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -50,20 +52,20 @@ public class DutyAnnualService {
     }
 
     public Page<DutyAnnualDto> findPage(Pageable pageable, DutyAnnualQuery dutyAnnualQuery){
-        Page<DutyAnnual> page=dutyAnnualMapper.findPage(pageable,dutyAnnualQuery);
-        Page<DutyAnnualDto> dutyAnnualDtoPage= BeanUtil.map(page,DutyAnnualDto.class);
+        Page<DutyAnnualDto> dutyAnnualDtoPage= dutyAnnualMapper.findPage(pageable,dutyAnnualQuery);
         cacheUtils.initCacheInput(dutyAnnualDtoPage.getContent());
         return dutyAnnualDtoPage;
     }
 
     public SimpleExcelSheet findSimpleExcelSheet(Workbook workbook){
         List<Employee> employeeList = employeeMapper.findByStatusAndregularDate(EmployeeStatusEnum.在职.name(), LocalDateTime.now().minusYears(1));
+        List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"name","用户名"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"account.loginName","登录名"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"extendMap.hour","年假时间"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"extendMap.leftHour","剩余时间"));
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("年假导入模版",employeeList,simpleExcelColumnList);
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"accountName","登录名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","年假时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","剩余时间"));
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("年假导入模版",employeeDtoList,simpleExcelColumnList);
         return simpleExcelSheet;
     }
 

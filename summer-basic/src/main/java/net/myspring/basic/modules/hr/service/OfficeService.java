@@ -31,10 +31,9 @@ public class OfficeService {
     }
 
     public Page<OfficeDto> findPage(Pageable pageable, OfficeQuery officeQuery) {
-        Page<Office> page = officeMapper.findPage(pageable, officeQuery);
-        Page<OfficeDto> officeDtoPage= BeanUtil.map(page,OfficeDto.class);
-        cacheUtils.initCacheInput(officeDtoPage.getContent());
-        return officeDtoPage;
+        Page<OfficeDto> page = officeMapper.findPage(pageable, officeQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public List<Office> findByParentIdsLike(String parentId) {

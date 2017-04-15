@@ -32,10 +32,9 @@ public class DutyPublicFreeService {
     }
 
     public Page<DutyPublicFreeDto> findPage(Pageable pageable, DutyPublicFreeQuery dutyPublicFreeQuery) {
-        Page<DutyPublicFree> page = dutyPublicFreeMapper.findPage(pageable,dutyPublicFreeQuery);
-        Page<DutyPublicFreeDto> dutyPublicFreeDtoPage= BeanUtil.map(page,DutyPublicFreeDto.class);
-        cacheUtils.initCacheInput(dutyPublicFreeDtoPage.getContent());
-        return dutyPublicFreeDtoPage;
+        Page<DutyPublicFreeDto> page = dutyPublicFreeMapper.findPage(pageable,dutyPublicFreeQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public void logicDeleteOne(String id) {

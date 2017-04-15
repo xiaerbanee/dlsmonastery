@@ -28,10 +28,9 @@ public class DutyFreeService {
     private CacheUtils cacheUtils;
 
     public Page<DutyFreeDto> findPage(Pageable pageable, DutyFreeQuery dutyFreeQuery) {
-        Page<DutyFree> page = dutyFreeMapper.findPage(pageable, dutyFreeQuery);
-        Page<DutyFreeDto> dutyFreeDtoPage= BeanUtil.map(page,DutyFreeDto.class);
-        cacheUtils.initCacheInput(dutyFreeDtoPage.getContent());
-        return dutyFreeDtoPage;
+        Page<DutyFreeDto> page = dutyFreeMapper.findPage(pageable, dutyFreeQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public DutyFreeForm save(DutyFreeForm dutyFreeForm) {

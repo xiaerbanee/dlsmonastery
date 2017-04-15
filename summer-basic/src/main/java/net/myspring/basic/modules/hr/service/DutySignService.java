@@ -46,10 +46,9 @@ public class DutySignService {
     }
 
     public Page<DutySignDto> findPage(Pageable pageable, DutySignQuery dutySignQuery) {
-        Page<DutySign> page = dutySignMapper.findPage(pageable,dutySignQuery);
-        Page<DutySignDto> dutySignDtoPage= BeanUtil.map(page,DutySignDto.class);
-        cacheUtils.initCacheInput(dutySignDtoPage.getContent());
-        return dutySignDtoPage;
+        Page<DutySignDto> page = dutySignMapper.findPage(pageable,dutySignQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public List<DutySignDto> findByFilter(DutySignQuery dutySignQuery) {

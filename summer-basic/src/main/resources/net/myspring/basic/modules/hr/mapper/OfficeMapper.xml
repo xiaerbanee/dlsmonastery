@@ -91,7 +91,7 @@
         )
     </select>
 
-    <select id="findPage" resultType="Office">
+    <select id="findPage" resultType="OfficeDto">
         SELECT
         t1.*
         FROM

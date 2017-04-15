@@ -27,10 +27,9 @@ public class JobService {
     private JobMapper jobMapper;
 
     public Page<JobDto> findPage(Pageable pageable, JobQuery jobQuery) {
-        Page<Job> page = jobMapper.findPage(pageable, jobQuery);
-        Page<JobDto> jobDtoPage = BeanUtil.map(page, JobDto.class);
-        cacheUtils.initCacheInput(jobDtoPage.getContent());
-        return jobDtoPage;
+        Page<JobDto> page = jobMapper.findPage(pageable, jobQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public Job findOne(String id){

@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.dto;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.util.text.StringUtils;
 
 import java.util.List;
 
@@ -10,14 +11,25 @@ import java.util.List;
  */
 public class DutyDto {
     private String id;
+    private String prefix;
     private String formatId;
-    private Account account;
+    private String accountName;
     private String dutyType;
     private String dutyDate;
     private String remarks;
-    private List<String> actionList = Lists.newArrayList();
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
 
     public String getFormatId() {
+        if(StringUtils.isBlank(formatId)&&StringUtils.isNotBlank(id)){
+            this.formatId=StringUtils.getFormatId(id,prefix);
+        }
         return formatId;
     }
 
@@ -25,12 +37,12 @@ public class DutyDto {
         this.formatId = formatId;
     }
 
-    public Account getAccount() {
-        return account;
+    public String getAccountName() {
+        return accountName;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
     public String getDutyType() {
@@ -65,11 +77,4 @@ public class DutyDto {
         this.id = id;
     }
 
-    public List<String> getActionList() {
-        return actionList;
-    }
-
-    public void setActionList(List<String> actionList) {
-        this.actionList = actionList;
-    }
 }

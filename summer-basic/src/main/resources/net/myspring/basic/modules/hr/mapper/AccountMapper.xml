@@ -67,7 +67,7 @@
         <include refid="accountFilter"/>
     </select>
 
-    <select id="findPage" resultType="Account">
+    <select id="findPage" resultType="AccountDto">
         SELECT
         t1.*
         FROM

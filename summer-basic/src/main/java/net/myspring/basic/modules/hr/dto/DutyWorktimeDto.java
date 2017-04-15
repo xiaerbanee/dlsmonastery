@@ -2,9 +2,14 @@ package net.myspring.basic.modules.hr.dto;
 
 import net.myspring.basic.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.DutyWorktime;
+import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * Created by admin on 2017/4/5.
@@ -12,9 +17,19 @@ import java.time.LocalDateTime;
 public class DutyWorktimeDto extends DataDto<DutyWorktime> {
     private LocalDate dutyDate;
     private String week;
-    private LocalDateTime dutyTime;
-    private String employeeName;
+    private LocalTime dutyTime;
     private String type;
+    private String employeeId;
+    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
+    private String employeeName;
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
 
     public LocalDate getDutyDate() {
         return dutyDate;
@@ -25,6 +40,9 @@ public class DutyWorktimeDto extends DataDto<DutyWorktime> {
     }
 
     public String getWeek() {
+        if(StringUtils.isBlank(week)&&dutyDate!=null){
+            this.week= LocalDateUtils.getDayOfWeek(dutyDate);
+        }
         return week;
     }
 
@@ -32,11 +50,11 @@ public class DutyWorktimeDto extends DataDto<DutyWorktime> {
         this.week = week;
     }
 
-    public LocalDateTime getDutyTime() {
+    public LocalTime getDutyTime() {
         return dutyTime;
     }
 
-    public void setDutyTime(LocalDateTime dutyTime) {
+    public void setDutyTime(LocalTime dutyTime) {
         this.dutyTime = dutyTime;
     }
 

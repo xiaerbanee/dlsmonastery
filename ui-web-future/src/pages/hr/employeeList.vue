@@ -56,14 +56,9 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('employeeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="name" :label="$t('employeeList.employeeName')" sortable></el-table-column>
         <el-table-column prop="sex" :label="$t('employeeList.sex')"></el-table-column>
-        <el-table-column prop="account.depotList" :label="$t('employeeList.depotList')">
-          <template scope="scope">
-            {{scope.row.account.depotList | joinColumn('name')}}
-          </template>
-        </el-table-column>
-        <el-table-column prop="account.office.name" :label="$t('employeeList.officeName')"></el-table-column>
-        <el-table-column prop="account.position.name" :label="$t('employeeList.positionName')"></el-table-column>
-        <el-table-column prop="account.leader.loginName" :label="$t('employeeList.leader')"></el-table-column>
+        <el-table-column prop="officeName" :label="$t('employeeList.officeName')"></el-table-column>
+        <el-table-column prop="positionName" :label="$t('employeeList.positionName')"></el-table-column>
+        <el-table-column prop="leaderName" :label="$t('employeeList.leader')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('employeeList.createdDate')"></el-table-column>
         <el-table-column prop="entryDate" :label="$t('employeeList.entryDate')"></el-table-column>
         <el-table-column prop="leaveDate" :label="$t('employeeList.leaveDate')"></el-table-column>
@@ -71,7 +66,8 @@
         <el-table-column prop="mobilePhone" :label="$t('employeeList.mobilePhone')"></el-table-column>
         <el-table-column :label="$t('employeeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

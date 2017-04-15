@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.Employee;
+import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -15,7 +16,7 @@ import java.util.Map;
 @Mapper
 public interface EmployeeMapper extends MyMapper<Employee,String> {
 
-    Page<Employee> findPage(Pageable pageable, @Param("p")EmployeeQuery employeeQuery);
+    Page<EmployeeDto> findPage(Pageable pageable, @Param("p")EmployeeQuery employeeQuery);
 
     List<Employee> findByNameLike(String name);
 

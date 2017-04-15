@@ -20,7 +20,9 @@
     </settings>
     <typeAliases>
         <package name="net.myspring.basic.modules.sys.domain"/>
+        <package name="net.myspring.basic.modules.sys.dto"/>
         <package name="net.myspring.basic.modules.hr.domain"/>
+        <package name="net.myspring.basic.modules.hr.dto"/>
     </typeAliases>
     <typeHandlers>
         <typeHandler handler="org.apache.ibatis.type.InstantTypeHandler" />

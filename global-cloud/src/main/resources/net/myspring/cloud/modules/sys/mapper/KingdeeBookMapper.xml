@@ -12,4 +12,10 @@
         from sys_kingdee_book t1
         where t1.company_id = #{companyId} and t1.enabled = 1
     </select>
+
+    <select id="findKingdeePostUrls" resultType="String">
+        select t1.kingdee_post_url
+        from sys_kingdee_book t1
+        where t1.enabled = 1
+    </select>
 </mapper>

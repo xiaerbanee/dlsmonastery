@@ -54,8 +54,8 @@
                 <el-radio :label="0">{{$t('employeeForm.women')}}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('employeeForm.origin')" prop="origin">
-              <el-select v-model="employeeForm.origin"  clearable filterable remote :placeholder="$t('employeeForm.inputWord')" :remote-method="remoteDistrict" :loading="remoteLoading">
+            <el-form-item :label="$t('employeeForm.origin')" prop="originId">
+              <el-select v-model="employeeForm.originId"  clearable filterable remote :placeholder="$t('employeeForm.inputWord')" :remote-method="remoteDistrict" :loading="remoteLoading">
                 <el-option v-for="item in origins" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -137,7 +137,7 @@
               birthday:'',
               sex:"",
               sexLabel:"",
-              origin:'',
+              originId:'',
               salerName:'',
             },
            accountForm:{
