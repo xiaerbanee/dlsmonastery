@@ -24,7 +24,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('officeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="parentName" :label="$t('officeList.parentName')" sortable></el-table-column>
         <el-table-column prop="name" :label="$t('officeList.name')" ></el-table-column>
-        <el-table-column prop="extendMap.typeLabel" :label="$t('officeList.typeLabel')" ></el-table-column>
+        <el-table-column prop="typeLabel" :label="$t('officeList.typeLabel')" ></el-table-column>
         <el-table-column prop="locked" :label="$t('officeList.locked')">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
@@ -35,7 +35,6 @@
             <el-tag :type="scope.row.enabled? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="dingId" :label="$t('officeList.dingId')"></el-table-column>
         <el-table-column prop="point" :label="$t('officeList.point')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('officeList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('officeList.operation')" width="140">

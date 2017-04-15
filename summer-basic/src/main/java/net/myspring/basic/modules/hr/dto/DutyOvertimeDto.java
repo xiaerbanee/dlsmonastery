@@ -5,14 +5,15 @@ import net.myspring.basic.modules.hr.domain.DutyOvertime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * Created by admin on 2017/4/5.
  */
 public class DutyOvertimeDto extends DataDto<DutyOvertime> {
     private LocalDate dutyDate;
-    private LocalDateTime timeStart;
-    private LocalDateTime timeEnd;
+    private LocalTime timeStart;
+    private LocalTime timeEnd;
     private Double hour;
     private String status;
 
@@ -24,19 +25,19 @@ public class DutyOvertimeDto extends DataDto<DutyOvertime> {
         this.dutyDate = dutyDate;
     }
 
-    public LocalDateTime getTimeStart() {
+    public LocalTime getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(LocalDateTime timeStart) {
+    public void setTimeStart(LocalTime timeStart) {
         this.timeStart = timeStart;
     }
 
-    public LocalDateTime getTimeEnd() {
+    public LocalTime getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(LocalDateTime timeEnd) {
+    public void setTimeEnd(LocalTime timeEnd) {
         this.timeEnd = timeEnd;
     }
 

@@ -37,10 +37,9 @@ public class PositionService {
     }
 
     public Page<PositionDto> findPage(Pageable pageable, PositionQuery positionQuery) {
-        Page<Position> page = positionMapper.findPage(pageable, positionQuery);
-        Page<PositionDto> positionDtoPage= BeanUtil.map(page,PositionDto.class);
-        cacheUtils.initCacheInput(positionDtoPage.getContent());
-        return positionDtoPage;
+        Page<PositionDto> page = positionMapper.findPage(pageable, positionQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public List<PositionDto> findByNameLike(String name){

@@ -41,9 +41,9 @@
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutyWorktimeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="dutyDate" :label="$t('dutyWorktimeList.dutyDate')" sortable></el-table-column>
-        <el-table-column prop="extendMap.week" :label="$t('dutyWorktimeList.week')"></el-table-column>
+        <el-table-column prop="week" :label="$t('dutyWorktimeList.week')"></el-table-column>
         <el-table-column prop="dutyTime" :label="$t('dutyWorktimeList.dutyTime')" ></el-table-column>
-        <el-table-column prop="employee.name" :label="$t('dutyWorktimeList.employeeName')"></el-table-column>
+        <el-table-column prop="employeeName" :label="$t('dutyWorktimeList.employeeName')"></el-table-column>
         <el-table-column prop="type" :label="$t('dutyWorktimeList.type')"></el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>

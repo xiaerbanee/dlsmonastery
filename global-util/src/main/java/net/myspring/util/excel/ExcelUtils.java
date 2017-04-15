@@ -217,7 +217,10 @@ public class ExcelUtils {
                 row = sheet.createRow(rowIndex);
                 for(int i=0;i<simpleExcelSheet.getSimpleExcelColumnList().size();i++) {
                     SimpleExcelColumn simpleExcelColumn = simpleExcelSheet.getSimpleExcelColumnList().get(i);
-                    Object value = ReflectionUtil.getFieldValue(rowValue,simpleExcelColumn.getFieldName());
+                    Object value=null;
+                    if(StringUtils.isNotBlank(simpleExcelColumn.getFieldName())){
+                        value = ReflectionUtil.getFieldValue(rowValue,simpleExcelColumn.getFieldName());
+                    }
                     Cell cell = row.createCell(i);
                     cell.setCellStyle(simpleExcelColumn.getCellStyle());
                     setCellValue(cell,value);

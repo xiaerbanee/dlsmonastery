@@ -32,10 +32,9 @@ public class DutyLeaveService {
 
 
     public Page<DutyLeaveDto> findPage(Pageable pageable, DutyLeaveQuery dutyLeaveQuery) {
-        Page<DutyLeave> page = dutyLeaveMapper.findPage(pageable, dutyLeaveQuery);
-        Page<DutyLeaveDto> dutyLeaveDtoPage= BeanUtil.map(page,DutyLeaveDto.class);
-        cacheUtils.initCacheInput(dutyLeaveDtoPage.getContent());
-        return dutyLeaveDtoPage;
+        Page<DutyLeaveDto> page = dutyLeaveMapper.findPage(pageable, dutyLeaveQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public DutyLeaveForm save(DutyLeaveForm dutyLeaveForm) {

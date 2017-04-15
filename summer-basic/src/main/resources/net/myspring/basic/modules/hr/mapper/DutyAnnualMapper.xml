@@ -10,10 +10,12 @@
         limit 0,1
     </select>
 
-    <select id="findPage" resultType="DutyAnnual">
-        SELECT t1.*
-        FROM  hr_duty_annual t1
+    <select id="findPage" resultType="DutyAnnualDto">
+        SELECT t1.*,t3.office_id,t3.position_id
+        FROM  hr_duty_annual t1,hr_employee t2,hr_account t3
         where t1.enabled=1
+        and t1.employee_id=t2.id
+        and t2.account_id=t3.id
         <if test="p.name!=null">
             and t1.employee_id in(
                 SELECT id
