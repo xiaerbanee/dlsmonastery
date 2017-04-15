@@ -66,8 +66,7 @@ public class ProcessTypeService {
     }
 
     public Page<ProcessTypeDto> findPage(Pageable pageable, ProcessTypeQuery processTypeQuery) {
-        Page<ProcessType> page = processTypeMapper.findPage(pageable, processTypeQuery);
-        Page<ProcessTypeDto> processTypeDtoPage= BeanUtil.map(page,ProcessTypeDto.class);
+        Page<ProcessTypeDto> processTypeDtoPage= processTypeMapper.findPage(pageable, processTypeQuery);
         cacheUtils.initCacheInput(processTypeDtoPage.getContent());
         return processTypeDtoPage;
     }

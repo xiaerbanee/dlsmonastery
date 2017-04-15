@@ -180,8 +180,7 @@ public class MenuService {
     }
 
     public Page<MenuDto> findPage(Pageable pageable, MenuQuery menuQuery) {
-        Page<Menu> page = menuMapper.findPage(pageable, menuQuery);
-        Page<MenuDto> menuDtoPage= BeanUtil.map(page,MenuDto.class);
+        Page<MenuDto> menuDtoPage= menuMapper.findPage(pageable, menuQuery);
         cacheUtils.initCacheInput(menuDtoPage.getContent());
         return menuDtoPage;
     }

@@ -100,8 +100,7 @@ public class FolderFileService {
     }
 
     public Page<FolderFileDto> findPage(Pageable pageable, FolderFileQuery folderFileQuery) {
-        Page<FolderFile> page = folderFileMapper.findPage(pageable, folderFileQuery);
-        Page<FolderFileDto> FolderFileDtoPage= BeanUtil.map(page,FolderFileDto.class);
+        Page<FolderFileDto> FolderFileDtoPage= folderFileMapper.findPage(pageable, folderFileQuery);
         cacheUtils.initCacheInput(FolderFileDtoPage.getContent());
         return FolderFileDtoPage;
     }
