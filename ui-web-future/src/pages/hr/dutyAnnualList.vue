@@ -18,9 +18,9 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutyAnnualList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="employee.account.office.name" :label="$t('dutyAnnualList.officeName')" ></el-table-column>
-        <el-table-column prop="employee.account.position.name" :label="$t('dutyAnnualList.positionName')" ></el-table-column>
-        <el-table-column prop="employee.name" :label="$t('dutyAnnualList.employeeName')"></el-table-column>
+        <el-table-column prop="officeName" :label="$t('dutyAnnualList.officeName')" ></el-table-column>
+        <el-table-column prop="positionName" :label="$t('dutyAnnualList.positionName')" ></el-table-column>
+        <el-table-column prop="employeeName" :label="$t('dutyAnnualList.employeeName')"></el-table-column>
         <el-table-column prop="annualYear" :label="$t('dutyAnnualList.annualYear')"></el-table-column>
         <el-table-column prop="hour" :label="$t('dutyAnnualList.hour')" ></el-table-column>
         <el-table-column prop="leftHour" :label="$t('dutyAnnualList.leftHour')"></el-table-column>

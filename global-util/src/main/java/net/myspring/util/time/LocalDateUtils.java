@@ -5,7 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by liuj on 2017/3/31.
@@ -50,6 +52,15 @@ public class LocalDateUtils {
             }
         }
         return dateList;
+    }
+
+    public static String getDayOfWeek(LocalDate localDate) {
+        if(localDate!=null){
+            Locale defaultLocal = Locale.getDefault();
+            return localDate.getDayOfWeek().getDisplayName(TextStyle.FULL, defaultLocal);
+        }else {
+            return null;
+        }
     }
 
 }

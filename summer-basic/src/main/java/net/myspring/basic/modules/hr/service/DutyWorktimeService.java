@@ -41,10 +41,9 @@ public class DutyWorktimeService {
     private CacheUtils cacheUtils;
 
     public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery){
-        Page<DutyWorktime> page = dutyWorktimeMapper.findPage(pageable, dutyWorktimeQuery);
-        Page<DutyWorktimeDto> dutyWorktimeDtoPage= BeanUtil.map(page,DutyWorktimeDto.class);
-        cacheUtils.initCacheInput(dutyWorktimeDtoPage.getContent());
-        return dutyWorktimeDtoPage;
+        Page<DutyWorktimeDto> page = dutyWorktimeMapper.findPage(pageable, dutyWorktimeQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public Map<String, DutyWorktime> getWorktimeMap(Long accountId,LocalDate dateStart, LocalDate dateEnd){

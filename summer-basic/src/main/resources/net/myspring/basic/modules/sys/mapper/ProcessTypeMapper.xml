@@ -15,7 +15,7 @@
         AND t1.enabled=1
     </select>
 
-    <select id="findPage" resultType="ProcessType">
+    <select id="findPage" resultType="ProcessTypeDto">
         SELECT
         t1.*
         FROM

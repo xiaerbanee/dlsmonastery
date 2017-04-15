@@ -5,6 +5,7 @@ import net.myspring.basic.modules.hr.domain.DutyRest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * Created by admin on 2017/4/5.
@@ -13,8 +14,8 @@ public class DutyRestDto extends DataDto<DutyRest> {
     private LocalDate dutyDate;
     private String type;
     private String dateType;
-    private LocalDateTime timeStart;
-    private LocalDateTime timeEnd;
+    private LocalTime timeStart;
+    private LocalTime timeEnd;
     private Double hour;
     private String status;
 
@@ -42,19 +43,19 @@ public class DutyRestDto extends DataDto<DutyRest> {
         this.dateType = dateType;
     }
 
-    public LocalDateTime getTimeStart() {
+    public LocalTime getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(LocalDateTime timeStart) {
+    public void setTimeStart(LocalTime timeStart) {
         this.timeStart = timeStart;
     }
 
-    public LocalDateTime getTimeEnd() {
+    public LocalTime getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(LocalDateTime timeEnd) {
+    public void setTimeEnd(LocalTime timeEnd) {
         this.timeEnd = timeEnd;
     }
 

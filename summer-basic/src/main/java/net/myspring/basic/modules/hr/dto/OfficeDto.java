@@ -1,10 +1,15 @@
 package net.myspring.basic.modules.hr.dto;
 
 import net.myspring.basic.common.dto.DataDto;
+import net.myspring.basic.common.enums.DictMapCategoryEnum;
+import net.myspring.basic.common.utils.Global;
 import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by admin on 2017/4/5.
@@ -102,5 +107,13 @@ public class OfficeDto extends DataDto<Office> {
 
     public void setParentName(String parentName) {
         this.parentName = parentName;
+    }
+
+    public String getTypeLabel(){
+        if(StringUtils.isNotBlank(type)){
+            Map<String,String> map= Global.getDictMapList(DictMapCategoryEnum.机构分类.name());
+            return map.get(type);
+        }
+        return "";
     }
 }

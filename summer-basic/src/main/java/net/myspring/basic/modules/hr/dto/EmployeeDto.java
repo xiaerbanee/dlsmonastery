@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.dto;
 
 import net.myspring.basic.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Employee;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
 
@@ -19,7 +20,25 @@ public class EmployeeDto extends DataDto<Employee> {
     private String status;
     private String mobilePhone;
     private String name;
+    private String accountId;
+    @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
+    private String accountName;
 
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
 
     public String getOfficeId() {
         return officeId;

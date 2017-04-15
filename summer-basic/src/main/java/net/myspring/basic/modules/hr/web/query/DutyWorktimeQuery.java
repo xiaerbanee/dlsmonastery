@@ -1,5 +1,7 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
@@ -19,16 +21,14 @@ public class DutyWorktimeQuery {
     }
 
     public void setDutyDate(String dutyDate) {
-        if(!dutyDate.equals("")) {
-            String[] dutyDateBetween = dutyDate.split(" - ");
-            this.dutyDateStart = LocalDateUtils.parse(dutyDateBetween[0]);
-            this.dutyDateEnd = LocalDateUtils.parse(dutyDateBetween[1]);
-        }else {
-            this.dutyDate = dutyDate;
-        }
+        this.dutyDate = dutyDate;
     }
 
     public LocalDate getDutyDateStart() {
+        if(dutyDateStart==null&& StringUtils.isNotBlank(dutyDate)){
+            String[] tempParamValues = dutyDate.split(" - ");
+            this.dutyDateStart= LocalDateUtils.parse(tempParamValues[0]);
+        }
         return dutyDateStart;
     }
 
@@ -37,6 +37,10 @@ public class DutyWorktimeQuery {
     }
 
     public LocalDate getDutyDateEnd() {
+        if(dutyDateEnd==null&& StringUtils.isNotBlank(dutyDate)){
+            String[] tempParamValues = dutyDate.split(" - ");
+            this.dutyDateEnd= LocalDateUtils.parse(tempParamValues[1]);
+        }
         return dutyDateEnd;
     }
 

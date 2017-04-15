@@ -40,8 +40,7 @@ public class DictMapService {
     }
 
     public Page<DictMapDto> findPage(Pageable pageable, DictMapQuery dictMapQuery) {
-        Page<DictMap> page = dictMapMapper.findPage(pageable, dictMapQuery);
-        Page<DictMapDto> dictMapDtoPage = BeanUtil.map(page, DictMapDto.class);
+        Page<DictMapDto> dictMapDtoPage = dictMapMapper.findPage(pageable, dictMapQuery);
         cacheUtils.initCacheInput(dictMapDtoPage.getContent());
         return dictMapDtoPage;
     }

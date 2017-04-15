@@ -72,8 +72,7 @@ public class PermissionService {
     }
 
     public Page<PermissionDto> findPage(Pageable pageable, PermissionQuery permissionQuery) {
-        Page<Permission> page = permissionMapper.findPage(pageable, permissionQuery);
-        Page<PermissionDto> permissionDtoPage = BeanUtil.map(page, PermissionDto.class);
+        Page<PermissionDto> permissionDtoPage = permissionMapper.findPage(pageable, permissionQuery);
         cacheUtils.initCacheInput(permissionDtoPage.getContent());
         return permissionDtoPage;
     }

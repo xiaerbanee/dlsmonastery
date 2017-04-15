@@ -27,10 +27,9 @@ public class DutyTripService {
 
 
     public Page<DutyTripDto> findPage(Pageable pageable, DutyTripQuery dutyTripQuery) {
-        Page<DutyTrip> page = dutyTripMapper.findPage(pageable, dutyTripQuery);
-        Page<DutyTripDto> dutyTripDtoPage= BeanUtil.map(page,DutyTripDto.class);
-        cacheUtils.initCacheInput(dutyTripDtoPage.getContent());
-        return dutyTripDtoPage;
+        Page<DutyTripDto> page = dutyTripMapper.findPage(pageable, dutyTripQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public DutyTripForm save(DutyTripForm dutyTripForm) {

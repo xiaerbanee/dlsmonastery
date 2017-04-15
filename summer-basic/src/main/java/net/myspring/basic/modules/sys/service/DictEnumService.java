@@ -61,8 +61,7 @@ public class DictEnumService {
     }
 
     public Page<DictEnumDto> findPage(Pageable pageable, DictEnumQuery dictEnumQuery) {
-        Page<DictEnum> page = dictEnumMapper.findPage(pageable, dictEnumQuery);
-        Page<DictEnumDto> dictEnumDtoPage= BeanUtil.map(page,DictEnumDto.class);
+        Page<DictEnumDto> dictEnumDtoPage= dictEnumMapper.findPage(pageable, dictEnumQuery);
         cacheUtils.initCacheInput(dictEnumDtoPage.getContent());
         return dictEnumDtoPage;
     }

@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.Job;
+import net.myspring.basic.modules.hr.dto.JobDto;
 import net.myspring.basic.modules.hr.web.query.JobQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,5 +14,5 @@ import java.util.Map;
 @Mapper
 public interface JobMapper extends MyMapper<Job,String> {
 
-    Page<Job> findPage(Pageable pageable, @Param("p")JobQuery jobQuery);
+    Page<JobDto> findPage(Pageable pageable, @Param("p")JobQuery jobQuery);
 }
