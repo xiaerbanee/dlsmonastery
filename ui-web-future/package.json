@@ -26,7 +26,6 @@
     "vue-router": "^2.2.1",
     "vuex": "^2.1.2",
     "zeroclipboard": "^2.3.0",
-    "js-cookie": "^2.1.4",
     "vue-progressbar": "^0.7.1"
   },
   "devDependencies": {

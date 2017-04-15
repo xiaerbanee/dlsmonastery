@@ -1,16 +1,15 @@
-package net.myspring.future.modules.crm.domain;
+package net.myspring.future.modules.crm.dto;
+
+import net.myspring.future.common.dto.DataDto;
+import net.myspring.future.modules.crm.domain.AdApply;
+import net.myspring.future.modules.crm.domain.Depot;
+import net.myspring.future.modules.crm.domain.Product;
 
 
-import net.myspring.common.domain.DataEntity;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-
-@Entity
-@Table(name="crm_ad_apply")
-public class AdApply extends DataEntity<AdApply> {
+/**
+ * Created by lihx on 2017/4/15.
+ */
+public class AdApplyDto extends DataDto<AdApply> {
     private String shopId;
     private Integer applyQty;
     private Integer confirmQty;
@@ -18,9 +17,12 @@ public class AdApply extends DataEntity<AdApply> {
     private String orderId;
     private Integer leftQty;
     private String expiryDateRemarks;
-    private Integer version=0;
+    private Integer version;
     private String productId;
-
+    private Product product;
+    private Depot shop;
+    private Integer storeQty;
+    private Integer billQty;
 
     public String getShopId() {
         return shopId;
@@ -92,5 +94,37 @@ public class AdApply extends DataEntity<AdApply> {
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Depot getShop() {
+        return shop;
+    }
+
+    public void setShop(Depot shop) {
+        this.shop = shop;
+    }
+
+    public Integer getStoreQty() {
+        return storeQty;
+    }
+
+    public void setStoreQty(Integer storeQty) {
+        this.storeQty = storeQty;
+    }
+
+    public Integer getBillQty() {
+        return billQty;
+    }
+
+    public void setBillQty(Integer billQty) {
+        this.billQty = billQty;
     }
 }

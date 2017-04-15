@@ -9,6 +9,7 @@ import net.myspring.future.modules.crm.mapper.AdApplyMapper;
 import net.myspring.future.modules.crm.mapper.DepotMapper;
 import net.myspring.future.modules.crm.mapper.ProductMapper;
 import net.myspring.future.modules.crm.model.AdApplyModel;
+import net.myspring.future.modules.crm.web.query.AdApplyQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -32,8 +33,8 @@ public class AdApplyService {
     @Autowired
     private ProductMapper productMapper;
 
-    public Page<AdApply> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<AdApply> page = adApplyMapper.findPage(pageable, map);
+    public Page<AdApply> findPage(Pageable pageable, AdApplyQuery adApplyQuery) {
+        Page<AdApply> page = adApplyMapper.findPage(pageable, adApplyQuery);
         return page;
     }
 
@@ -52,16 +53,7 @@ public class AdApplyService {
         List<String> adApplyIdList = adApplyMapper.findAllId();
         List<Depot> depotList = depotMapper.findByFilter(filter);
         List<AdApply> adApplys = Lists.newArrayList();
-        for(String adApplyId : adApplyIdList){
-            for(Depot depot : depotList){
-                if(adApplyId.equals(depot.getId())){
-                    AdApply adApply = new AdApply();
-                    adApply.setShop(depot);
-                    adApply.setShopId(depot.getId());
-                    adApplys.add(adApply);
-                }
-            }
-        }
+
         return adApplys;
     }
 

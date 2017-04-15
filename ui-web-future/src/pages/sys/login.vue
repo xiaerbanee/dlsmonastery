@@ -55,38 +55,44 @@ export default {
       };
       axios.post('/api/uaa/oauth/token',qs.stringify(data)).then((response)=>{
           that.$store.dispatch('setToken',response.data);
-          axios.post('/api/basic/hr/account/getAccountMessage').then((response)=>{
-              that.setMenuCode(response.data.menus);
-              that.$store.dispatch('setAccount',response.data.account);
-              that.$store.dispatch('setMenus',response.data.menus);
-              that.$store.dispatch('setAuthorityList',response.data.authorityList);
-              that.isBtnLoading = false;
-              var redirect = that.$route.query.redirect;
-              if (redirect) {
-                that.$router.push({path: redirect});
-              } else {
-                that.$router.push({path: "/"});
-              }
-          })
+          that.initLogin();
       }).catch(function (error) {
         that.$store.dispatch('clearGlobal');
         that.isBtnLoading = false;
         that.$message.error("用户名或密码不正确");
       });
-    },setMenuCode(menus) {
-      if(menus !=null && menus.length>0) {
-        for (var i in menus) {
-          var menuItems =menus[i].menuItems;
-          for(var j in menuItems) {
-            for(var k in menuItems[j].menus) {
-              var menu = menuItems[j].menus[k];
-              menu.name=menu.menuCode
+    },initLogin() {
+      var that = this;
+      axios.post('/api/basic/hr/account/getAccountMessage').then((response)=>{
+        var menus = response.data.menus;
+        if(menus !=null && menus.length>0) {
+          for (var i in menus) {
+            var menuItems =menus[i].menuItems;
+            for(var j in menuItems) {
+              for(var k in menuItems[j].menus) {
+                var menu = menuItems[j].menus[k];
+                menu.name=menu.menuCode
+              }
             }
           }
         }
-      }
+        that.$store.dispatch('setAccount',response.data.account);
+        that.$store.dispatch('setMenus',response.data.menus);
+        that.$store.dispatch('setAuthorityList',response.data.authorityList);
+        that.isBtnLoading = false;
+        var redirect = that.$route.query.redirect;
+        console.log("redict:" + redirect);
+        if (redirect) {
+          that.$router.push({path: redirect});
+        } else {
+          that.$router.push({path: "/"});
+        }
+      })
     }
   },created () {
+      if(checkLogin()) {
+        this.initLogin();
+      }
     }
 };
 </script>
