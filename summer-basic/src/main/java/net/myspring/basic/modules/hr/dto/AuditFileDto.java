@@ -1,9 +1,12 @@
 package net.myspring.basic.modules.hr.dto;
 
 import net.myspring.basic.common.dto.DataDto;
+import net.myspring.basic.common.utils.Const;
+import net.myspring.basic.common.utils.OfficeUtils;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.service.OfficeService;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 /**
  * Created by admin on 2017/4/5.
@@ -23,11 +26,13 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String officeName;
 
     public String getAreaId() {
+        if(StringUtils.isBlank(areaId)&&StringUtils.isNotBlank(officeId)){
+            this.areaId= OfficeUtils.getOfficeIdByOfficeType(officeId, Const.OFFICE_TYPE_AREA);
+        }
         return areaId;
     }
 
     public void setAreaId(String areaId) {
-
         this.areaId = areaId;
     }
 
