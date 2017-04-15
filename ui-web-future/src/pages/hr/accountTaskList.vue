@@ -27,11 +27,11 @@
         <el-table-column fixed prop="id" :label="$t('accountTaskList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="name" :label="$t('accountTaskList.name')"></el-table-column>
         <el-table-column prop="status" :label="$t('accountTaskList.status')"></el-table-column>
-        <el-table-column prop="lastModified.loginName" :label="$t('accountTaskList.lastModified')"></el-table-column>
+        <el-table-column prop="lastModifiedByName" :label="$t('accountTaskList.lastModified')"></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('accountTaskList.lastModifiedDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountTaskList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,scope.row.name,'审核')">审核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,9 +79,8 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
-      },itemAction:function(id,action){
+      },itemAction:function(id,name,action){
         if(action=="审核") {
-          var name=this.inputForm.name;
           if("仓库调整"==name){
             this.$router.push({ name: 'depotChangeForm', query: { id: id }})
           }else if("员工信息调整"==name){

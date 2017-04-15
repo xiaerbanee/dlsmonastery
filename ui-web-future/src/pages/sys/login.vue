@@ -56,7 +56,7 @@ export default {
       axios.post('/api/uaa/oauth/token',qs.stringify(data)).then((response)=>{
           that.$store.dispatch('setToken',response.data);
           axios.post('/api/basic/hr/account/getAccountMessage').then((response)=>{
-              that.setMenuCode(response.data.menus)
+              that.setMenuCode(response.data.menus);
               that.$store.dispatch('setAccount',response.data.account);
               that.$store.dispatch('setMenus',response.data.menus);
               that.$store.dispatch('setAuthorityList',response.data.authorityList);
@@ -98,33 +98,34 @@ export default {
     justify-content: center;
     align-items: center;
     background: #1f2d3d;
-
-    .login-form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 500px;
-      height: 400px;
-      border-radius: 5px;
-      background: white;
-      border: 2px solid #8492a6;
-
-      .title {
-        color: #20a0ff;
-        font-weight: bold;
-        font-size: 40px;
-        text-align: center;
-        line-height: 2.2;
-        font-family: sans-serif;
-      }
-
-      .input-group {
-        margin-top: 25px;
-        width: 80%;
-        button {
-          width: 100%;
-        }
-      }
-    }
   }
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px;
+    height: 400px;
+    border-radius: 5px;
+    background: white;
+    border: 2px solid #8492a6;
+  }
+  .title {
+    color: #20a0ff;
+    font-weight: bold;
+    font-size: 40px;
+    text-align: center;
+    line-height: 2.2;
+    font-family: sans-serif;
+  }
+
+  .input-group {
+    margin-top: 25px;
+    width: 80%;
+  }
+
+  button {
+    width: 100%;
+  }
+
+
 </style>

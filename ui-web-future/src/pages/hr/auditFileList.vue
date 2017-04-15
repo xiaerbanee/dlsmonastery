@@ -58,13 +58,13 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('auditFileList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="id" :label="$t('auditFileList.id')" sortable></el-table-column>
-        <el-table-column prop="created.loginName":label="$t('auditFileList.applyAccount')"></el-table-column>
-        <el-table-column prop="created.extendMap.areaName":label="$t('auditFileList.areaName')"></el-table-column>
-        <el-table-column prop="created.office.name" :label="$t('auditFileList.officeName')"></el-table-column>
+        <el-table-column prop="createdByName":label="$t('auditFileList.applyAccount')"></el-table-column>
+        <el-table-column prop="areaName":label="$t('auditFileList.areaName')"></el-table-column>
+        <el-table-column prop="officeName" :label="$t('auditFileList.officeName')"></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('auditFileList.createdDate')"></el-table-column>
-        <el-table-column prop="lastModified.loginName" :label="$t('auditFileList.lastModifiedBy')"></el-table-column>
+        <el-table-column prop="lastModifiedByName" :label="$t('auditFileList.lastModifiedBy')"></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('auditFileList.lastModifiedDate')"></el-table-column>
-        <el-table-column prop="processType.name":label="$t('auditFileList.processTypeName')"></el-table-column>
+        <el-table-column prop="processTypeName":label="$t('auditFileList.processTypeName')"></el-table-column>
         <el-table-column prop="title" :label="$t('auditFileList.title')"></el-table-column>
         <el-table-column prop="processStatus" :label="$t('auditFileList.processStatus')" width="150">
           <template scope="scope">
@@ -92,7 +92,7 @@
           page:0,
           size:25,
           id:'',
-          auditType:"1",
+          auditType:1,
           officeName:'',
           officeId:'',
           createdDateBTW:'',
@@ -136,6 +136,7 @@
         util.getQuery("auditFileList");
         util.setQuery("auditFileList",this.formData);
         axios.get('/api/basic/hr/auditFile',{params:this.formData}).then((response) => {
+          console.log(response);
           this.page = response.data;
           this.pageLoading = false;
         })

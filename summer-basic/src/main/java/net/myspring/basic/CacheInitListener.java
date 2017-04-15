@@ -51,18 +51,18 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LocalDateTime start = LocalDateTime.now();
         logger.info("init cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
-        cacheUtils.initCache("accounts",accountMapper.findAllEnabled());
-        cacheUtils.initCache("dictMaps",dictMapMapper.findAllEnabled());
-        cacheUtils.initCache("jobs",jobMapper.findAllEnabled());
-        cacheUtils.initCache("employees",employeeMapper.findAllEnabled());
-        cacheUtils.initCache("offices",officeMapper.findAllEnabled());
-        cacheUtils.initCache("dictEnums",dictEnumMapper.findAllEnabled());
+        cacheUtils.initCache("accounts",accountMapper.findAll());
+        cacheUtils.initCache("dictMaps",dictMapMapper.findAll());
+        cacheUtils.initCache("jobs",jobMapper.findAll());
+        cacheUtils.initCache("employees",employeeMapper.findAll());
+        cacheUtils.initCache("offices",officeMapper.findAll());
+        cacheUtils.initCache("dictEnums",dictEnumMapper.findAll());
         cacheUtils.initCache("districts",districtMapper.findAll());
-        cacheUtils.initCache("positions",positionMapper.findAllEnabled());
+        cacheUtils.initCache("positions",positionMapper.findAll());
         cacheUtils.initCache("towns",townMapper.findAll());
-        cacheUtils.initCache("menus",menuMapper.findAllEnabled());
-        cacheUtils.initCache("companys",companyMapper.findAllEnabled());
-        cacheUtils.initCache("menuCategorys",menuCategoryMapper.findAllEnabled());
+        cacheUtils.initCache("menus",menuMapper.findAll());
+        cacheUtils.initCache("companys",companyMapper.findAll());
+        cacheUtils.initCache("menuCategorys",menuCategoryMapper.findAll());
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");

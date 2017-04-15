@@ -35,10 +35,9 @@ public class AuditFileService {
 
 
     public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery){
-        Page<AuditFile> page=auditFileMapper.findPage(pageable,auditFileQuery);
-        Page<AuditFileDto> auditFileDtoPage= BeanUtil.map(page,AuditFileDto.class);
-        cacheUtils.initCacheInput(auditFileDtoPage.getContent());
-        return auditFileDtoPage;
+        Page<AuditFileDto> page=auditFileMapper.findPage(pageable,auditFileQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public AuditFile findOne(String id){

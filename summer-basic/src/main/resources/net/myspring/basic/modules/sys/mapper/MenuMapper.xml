@@ -50,6 +50,7 @@
         t1.category
         FROM
         sys_menu t1
+        where enabled = 1
     </select>
 
 </mapper>
