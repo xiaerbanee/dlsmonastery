@@ -45,6 +45,6 @@ public class KingdeeBookService {
     }
 
     public void save(KingdeeBookForm kingdeeBookForm){
-        kingdeeBookMapper.saveForm(kingdeeBookForm);
+        kingdeeBookMapper.save(BeanUtil.map(kingdeeBookForm,KingdeeBook.class));
     }
 }
