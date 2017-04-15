@@ -118,10 +118,8 @@ export default {
         cancelButtonText: this.$t('app.cancel'),
         type: 'info'
       }).then(() => {
-        axios.get('/api/logout').then((response)=>{
-          this.$store.dispatch('clearGlobal');
-          this.$router.push({ path: '/login' });
-        });
+        this.$store.dispatch('clearGlobal');
+        this.$router.push({ path: '/login' });
       }).catch(() => {});
     },chooseCategory(e) {
         for(var i in this.menus ){
