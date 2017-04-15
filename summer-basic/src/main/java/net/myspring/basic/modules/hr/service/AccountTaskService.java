@@ -2,9 +2,12 @@ package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.AccountMessage;
 import net.myspring.basic.modules.hr.domain.AccountTask;
 import net.myspring.basic.modules.hr.dto.AccountTaskDto;
+import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.manager.OfficeManager;
 import net.myspring.basic.modules.hr.mapper.AccountTaskMapper;
 import net.myspring.basic.modules.hr.web.query.AccountTaskQuery;
@@ -26,6 +29,8 @@ public class AccountTaskService {
     @Autowired
     private OfficeManager officeManager;
     @Autowired
+    private AccountManager accountManager;
+    @Autowired
     private CacheUtils cacheUtils;
 
     public AccountTask findByNameAndExtendId(String name, String extendId){
@@ -33,10 +38,10 @@ public class AccountTaskService {
     }
 
     public Page<AccountTaskDto> findPage(Pageable pageable, AccountTaskQuery accountTaskQuery){
-        Page<AccountTask> page=accountTaskMapper.findPage(pageable,accountTaskQuery);
-        Page<AccountTaskDto> accountTaskDtoPage= BeanUtil.map(page,AccountTaskDto.class);
-        cacheUtils.initCacheInput(accountTaskDtoPage.getContent());
-        return accountTaskDtoPage;
+        accountTaskQuery.setOfficeIds(officeManager.officeFilter(accountManager.findOne(SecurityUtils.getAccountId())));
+        Page<AccountTaskDto> page=accountTaskMapper.findPage(pageable,accountTaskQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public List<AccountTaskDto> findByPositionId(String positionId,Account account){

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.hr.mapper.EmployeeMapper">
 
-    <select id="findPage" resultType="Employee">
-        SELECT employee.*
+    <select id="findPage" resultType="EmployeeDto">
+        SELECT employee.*,account.office_id,account.position_id,account.leader_id
         FROM hr_employee employee,
         hr_account account,
         hr_office office

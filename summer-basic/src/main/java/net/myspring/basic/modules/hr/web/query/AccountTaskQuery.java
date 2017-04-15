@@ -1,6 +1,8 @@
 package net.myspring.basic.modules.hr.web.query;
 
 
+import java.util.List;
+
 /**
  * Created by liuj on 2017/3/19.
  */
@@ -8,7 +10,7 @@ public class AccountTaskQuery {
     private String positionId;
     private String status;
     private String name;
-    private String officeIds;
+    private List<String> officeIds;
 
     public String getPositionId() {
         return positionId;
@@ -34,11 +36,11 @@ public class AccountTaskQuery {
         this.name = name;
     }
 
-    public String getOfficeIds() {
+    public List<String> getOfficeIds() {
         return officeIds;
     }
 
-    public void setOfficeIds(String officeIds) {
+    public void setOfficeIds(List<String> officeIds) {
         this.officeIds = officeIds;
     }
 }

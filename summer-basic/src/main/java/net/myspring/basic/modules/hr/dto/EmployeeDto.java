@@ -11,10 +11,9 @@ import java.time.LocalDate;
  */
 public class EmployeeDto extends DataDto<Employee> {
     private String officeId;
-    private String officeName;
     private String positionId;
-    private String positionName;
-    private String leaderName;
+    private String leaderId;
+    private String sex;
     private LocalDate entryDate;
     private LocalDate leaveDate;
     private String status;
@@ -23,6 +22,28 @@ public class EmployeeDto extends DataDto<Employee> {
     private String accountId;
     @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
     private String accountName;
+    @CacheInput(inputKey = "office",inputInstance = "officeId",outputInstance = "name")
+    private String officeName;
+    @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
+    private String leaderName;
+    @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
+    private String positionName;
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getLeaderId() {
+        return leaderId;
+    }
+
+    public void setLeaderId(String leaderId) {
+        this.leaderId = leaderId;
+    }
 
     public String getAccountId() {
         return accountId;
