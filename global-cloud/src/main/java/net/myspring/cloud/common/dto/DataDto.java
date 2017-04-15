@@ -1,8 +1,10 @@
 package net.myspring.cloud.common.dto;
 
+import com.google.common.collect.Lists;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by liuj on 2017/4/7.
@@ -17,6 +19,7 @@ public class DataDto<T> extends IdDto<T> {
     protected String lastModifiedByName;
     protected LocalDateTime lastModifiedDate;
     protected String remarks;
+    protected List<String> actionList = Lists.newArrayList();
 
     public String getCreatedBy() {
         return createdBy;
@@ -72,5 +75,13 @@ public class DataDto<T> extends IdDto<T> {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public List<String> getActionList() {
+        return actionList;
+    }
+
+    public void setActionList(List<String> actionList) {
+        this.actionList = actionList;
     }
 }

@@ -19,7 +19,7 @@ export default {
     sure: "确定",
     cancel: "取消",
     monitor: "laporan pemantauan",
-    menuCategoryId: "klasifikasi pilihan",
+    menuCategory: "klasifikasi pilihan",
     menusCategory: "pilihan",
     officeCategory: "organisasi",
     dictCategory: "kamus",
@@ -285,6 +285,33 @@ export default {
     k3cloudCheckOutStockDetail:'出库核对详细',
     cloudSynList:'金蝶核对',
     cloudSynDetail:'金蝶核对详细',
+    localizationList:'国际化设置',
+    dutyTimeSearchList:'考勤查询',
+    employeePointSearchList:'积分查询',
+    employeeExpenseList:'费用报销',
+    employeeSaleReport:'员工报表',
+    productImeUploadReport:'上报报表',
+    goodsOrderShipList:'仓库发货',
+    productImeSearchList:'串码查询',
+    shopAttributeList:'终端统计',
+    productImeSaleReport:'销售报表',
+    depotInventoryReport:'门店报表',
+    b2bForm:'移动订货',
+    taskProductTypeList:'任务机型',
+    taskAreaList:'办事处任务',
+    taskOfficeList:'考核区域任务',
+    taskDetailList:'门店任务',
+    taskPolicyList:'政策管理',
+    areaCommissionList:'办事处提成',
+    basicCommissionList:'提成基准',
+    priceChangeCommissionList:'调价提成',
+    //delete
+    hrrecruit:"无效",
+    officeUnitsEdit:'单元编辑'
+
+  },
+  localizationList:{
+
   },
   404: {
     404:"404",
@@ -423,7 +450,7 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "periksa"
+    audit: "periksa",
   },
   folderFileList: {
     folderFileList: "Manajemen File",
@@ -496,7 +523,7 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "periksa"
+    audit: "periksa",
   },
   home: {
     home:"home",
@@ -589,6 +616,7 @@ export default {
     menuCategory: "pilihan kategori",
     category: "kategori",
     name: "nama",
+    menuCode: "code",
     sort: "pengurutan",
     href: "link",
     mobile: "telepon",
@@ -614,6 +642,7 @@ export default {
     sort: "pengurutan",
     href: "Link",
     mobile: "menu telepon",
+    menuCategoryId:"一级菜单",
     add: "tambah",
     filter: "saring",
     export: "ekspor / mengeluarkan",
@@ -682,7 +711,7 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "periksa"
+    audit: "periksa",
   },
   processList: {
     processList: "DAFTAR PROSES",
@@ -826,7 +855,7 @@ export default {
     mainAccount: "AKUN UTAMA",
     loginName: "USERNAME",
     officeName: "DEPARTEMEN",
-    depot: "",
+    depot: "绑定门店",
     leader: "pemimpin",
     position: "posisi",
     selectGroup: "pilih grup",
