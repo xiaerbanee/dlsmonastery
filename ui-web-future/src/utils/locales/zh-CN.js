@@ -304,6 +304,11 @@ export default {
     taskPolicyList:'政策管理',
     areaCommissionList:'办事处提成',
     basicCommissionList:'提成基准',
+    priceChangeCommissionList:'调价提成',
+    //delete
+    hrrecruit:"无效",
+    officeUnitsEdit:'单元编辑'
+
   },
   localizationList:{
 
