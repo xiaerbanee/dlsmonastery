@@ -16,7 +16,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
-                  <el-option v-for="category in formProperty.categoryList" :key="category" :label="category" :value="category"></el-option>
+                  <el-option v-for="category in formData.categoryList" :key="category" :label="category" :value="category"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.value.label" :label-width="formLabelWidth">
@@ -64,7 +64,6 @@
           value:{label: this.$t('dictEnumList.value')}
         },
         pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -85,7 +84,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -106,7 +105,7 @@
     },created () {
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/sys/dictEnum/getListProperty').then((response) =>{
+      axios.get('/api/basic/sys/dictEnum/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
         that.pageRequest();

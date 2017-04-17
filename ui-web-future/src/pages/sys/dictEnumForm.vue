@@ -28,7 +28,6 @@
     export default{
       data(){
           return{
-            isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{},
             rules: {
@@ -46,7 +45,7 @@
             if (valid) {
               axios.post('/api/basic/sys/dictEnum/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
-                if(this.isCreate){
+                if(this.inputForm.create){
                   form.resetFields();
                   this.submitDisabled = false;
                 } else {

@@ -51,8 +51,8 @@ public class DictEnumController {
         return dictEnumForm;
     }
 
-    @RequestMapping(value="getListProperty")
-    public  DictEnumQuery getListProperty(DictEnumQuery dictEnumQuery){
+    @RequestMapping(value="getQuery")
+    public  DictEnumQuery getQuery(DictEnumQuery dictEnumQuery){
         dictEnumQuery.setCategoryList(dictEnumService.findDistinctCategory());
         return dictEnumQuery;
     }
