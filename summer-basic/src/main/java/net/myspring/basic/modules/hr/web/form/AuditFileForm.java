@@ -1,8 +1,15 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.sys.domain.Folder;
+import net.myspring.basic.modules.sys.domain.ProcessType;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by admin on 2017/4/6.
