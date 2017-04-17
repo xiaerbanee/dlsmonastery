@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.manager.DictMapManager;
@@ -28,10 +29,12 @@ public class DictMapService {
     private CacheUtils cacheUtils;
 
 
-    public DictMapForm findForm(String id){
-        DictMap dictMap= dictMapManager.findOne(id);
-        DictMapForm dictMapForm = BeanUtil.map(dictMap, DictMapForm.class);
-        cacheUtils.initCacheInput(dictMapForm);
+    public DictMapForm findForm(DictMapForm dictMapForm){
+        if(!dictMapForm.isCreate()){
+            DictMap dictMap= dictMapManager.findOne(dictMapForm.getId());
+            dictMapForm = BeanUtil.map(dictMap, DictMapForm.class);
+            cacheUtils.initCacheInput(dictMapForm);
+        }
         return dictMapForm;
     }
 
@@ -45,13 +48,15 @@ public class DictMapService {
         return dictMapDtoPage;
     }
 
-    public DictMapForm save(DictMapForm dictMapForm){
+    public DictMap save(DictMapForm dictMapForm){
+        DictMap dictMap;
         if(StringUtils.isBlank(dictMapForm.getId())){
-            dictMapManager.saveForm(dictMapForm);
+            dictMap=BeanUtil.map(dictMapForm,DictMap.class);
+            dictMap=dictMapManager.save(dictMap);
         }else{
-            dictMapManager.updateForm(dictMapForm);
+            dictMap=dictMapManager.updateForm(dictMapForm);
         }
-        return  dictMapForm;
+        return  dictMap;
     }
 
     public  List<DictMap> findByCategory(String category){

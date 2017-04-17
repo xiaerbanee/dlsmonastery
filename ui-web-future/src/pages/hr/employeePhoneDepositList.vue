@@ -135,7 +135,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/basic/hr/employeePhoneDeposit/getListProperty').then((response) =>{
+      axios.get('/api/basic/hr/employeePhoneDeposit/getQuery').then((response) =>{
         this.searchProperty=response.data;
       });
       this.pageRequest();

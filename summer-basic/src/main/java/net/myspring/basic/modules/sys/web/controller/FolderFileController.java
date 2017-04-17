@@ -50,10 +50,10 @@ public class FolderFileController {
     }
 
     @RequestMapping(value = "/upload")
-    public List<FolderFileDto> upload(String uploadPath, MultipartHttpServletRequest request, HttpServletResponse response) {
+    public List<FolderFile> upload(String uploadPath, MultipartHttpServletRequest request, HttpServletResponse response) {
         Folder folder = folderService.getAccountFolder(SecurityUtils.getAccountId(), uploadPath);
         Map<String, MultipartFile> fileMap = request.getFileMap();
-        List<FolderFileDto> list = folderFileService.save(folder.getId(), fileMap);
+        List<FolderFile> list = folderFileService.save(folder.getId(), fileMap);
         return list;
     }
 

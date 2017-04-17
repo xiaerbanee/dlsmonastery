@@ -53,10 +53,12 @@ public class ProcessTypeService {
         return processType;
     }
 
-    public ProcessTypeForm findForm(String id){
-        ProcessType processType=findOne(id);
-        ProcessTypeForm processTypeForm= BeanUtil.map(processType,ProcessTypeForm.class);
-        cacheUtils.initCacheInput(processTypeForm);
+    public ProcessTypeForm findForm(ProcessTypeForm processTypeForm){
+        if(!processTypeForm.isCreate()){
+            ProcessType processType=findOne(processTypeForm.getId());
+            processTypeForm= BeanUtil.map(processType,ProcessTypeForm.class);
+            cacheUtils.initCacheInput(processTypeForm);
+        }
         return processTypeForm;
     }
 

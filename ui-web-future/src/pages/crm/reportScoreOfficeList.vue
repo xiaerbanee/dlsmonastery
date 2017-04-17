@@ -100,7 +100,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -325;
-      axios.get('/api/crm/reportScoreOffice/getListProperty').then((response)=>{
+      axios.get('/api/crm/reportScoreOffice/getQuery').then((response)=>{
         this.formProperty = response.data;
       });
       this.pageRequest();

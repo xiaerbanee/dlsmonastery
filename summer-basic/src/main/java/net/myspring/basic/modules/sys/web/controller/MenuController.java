@@ -62,15 +62,15 @@ public class MenuController {
 
     @RequestMapping(value = "findOne")
     public MenuForm findOne(MenuForm menuForm){
-        menuForm = menuService.findForm(menuForm.getId());
+        menuForm = menuService.findForm(menuForm);
         menuForm.setCategoryList(menuService.findDistinctCategory());
         menuForm.setMenuCategoryList(menuCategoryService.findAll());
         menuForm.setBools(BoolEnum.getMap());
         return menuForm;
     }
 
-    @RequestMapping(value="getListProperty")
-    public MenuQuery getListProperty(MenuQuery menuQuery){
+    @RequestMapping(value="getQuery")
+    public MenuQuery getQuery(MenuQuery menuQuery){
         menuQuery.setCategoryList(menuService.findDistinctCategory());
         menuQuery.setMenuCategoryList(menuCategoryService.findAll());
         return menuQuery;

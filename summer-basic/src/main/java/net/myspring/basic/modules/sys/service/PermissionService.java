@@ -56,10 +56,12 @@ public class PermissionService {
         return permission;
     }
 
-    public PermissionForm findForm(String id) {
-        Permission permission = permissionManager.findOne(id);
-        PermissionForm permissionForm = BeanUtil.map(permission, PermissionForm.class);
-        cacheUtils.initCacheInput(permissionForm);
+    public PermissionForm findForm(PermissionForm permissionForm) {
+        if (!permissionForm.isCreate()) {
+            Permission permission = permissionManager.findOne(permissionForm.getId());
+            permissionForm = BeanUtil.map(permission, PermissionForm.class);
+            cacheUtils.initCacheInput(permissionForm);
+        }
         return permissionForm;
     }
 
@@ -77,21 +79,22 @@ public class PermissionService {
         return permissionDtoPage;
     }
 
-    public PermissionForm save(PermissionForm permissionForm) {
-        boolean isCreate = StringUtils.isBlank(permissionForm.getId());
-        if (isCreate) {
-            permissionManager.save(BeanUtil.map(permissionForm, Permission.class));
+    public Permission save(PermissionForm permissionForm) {
+        Permission permission;
+        if (permissionForm.isCreate()) {
+            permission=BeanUtil.map(permissionForm, Permission.class);
+            permission=permissionManager.save(permission);
             if (CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())) {
                 permissionMapper.savePermissionPosition(permissionForm.getId(), permissionForm.getPositionIdList());
             }
         } else {
-            permissionManager.updateForm(permissionForm);
+            permission=permissionManager.updateForm(permissionForm);
             permissionMapper.deletePermissionPosition(permissionForm.getId());
             if (CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())) {
                 permissionMapper.savePermissionPosition(permissionForm.getId(), permissionForm.getPositionIdList());
             }
         }
-        return permissionForm;
+        return permission;
     }
 
     public TreeNode findPermissionTree(List<String> permissionIds) {

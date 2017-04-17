@@ -110,7 +110,7 @@
       }},created () {
       this.pageHeight = window.outerHeight -120;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/basic/hr/accountChange/getListProperty').then((response) =>{
+      axios.get('/api/basic/hr/accountChange/getQuery').then((response) =>{
         this.formProperty=response.data;
       });
       this.pageRequest();

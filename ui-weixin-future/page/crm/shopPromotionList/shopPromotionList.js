@@ -15,7 +15,7 @@ Page({
   onLoad: function (option) {
     var that = this;
     wx.request({
-      url: $util.getUrl("crm/shopPromotion/getListProperty"),
+      url: $util.getUrl("crm/shopPromotion/getQuery"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId },

@@ -50,7 +50,7 @@ public class PermissionController {
 
     @RequestMapping(value = "findOne")
     public PermissionForm findOne(PermissionForm permissionForm) {
-        permissionForm=permissionService.findForm(permissionForm.getId());
+        permissionForm=permissionService.findForm(permissionForm);
         permissionForm.setMenuList(menuService.findAll());
         return permissionForm;
     }

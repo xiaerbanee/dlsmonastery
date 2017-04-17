@@ -143,8 +143,8 @@
         this.$router.push({ name: 'priceChangeImeForm'})
       },itemAction:function(id,action){
           this.$router.push({ name: 'priceChangeImeDetail', query: { id: id ,action:action }})
-      },getListProperty(){
-        axios.get('/api/crm/priceChangeIme/getListProperty').then((response) =>{
+      },getQuery(){
+        axios.get('/api/crm/priceChangeIme/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });
@@ -152,7 +152,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      this.getListProperty();
+      this.getQuery();
     }
   };
 </script>

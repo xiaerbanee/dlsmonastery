@@ -97,8 +97,8 @@ public class AccountController {
         return accountForm;
     }
 
-    @RequestMapping(value = "getListProperty")
-    public AccountQuery getListProperty(AccountQuery accountQuery) {
+    @RequestMapping(value = "getQuery")
+    public AccountQuery getQuery(AccountQuery accountQuery) {
         accountQuery.setPositionList(positionService.findAll());
         return accountQuery;
     }

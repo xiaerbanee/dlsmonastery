@@ -206,7 +206,7 @@
       },created(){
         this.pageHeight = window.outerHeight -350;
 
-        axios.get('/api/crm/depot/getListProperty').then((response) =>{
+        axios.get('/api/crm/depot/getQuery').then((response) =>{
           this.formProperty=response.data;
         this.getDepots();
         });

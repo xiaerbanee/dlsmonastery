@@ -86,8 +86,8 @@ public class EmployeeController {
         return map;
     }
 
-    @RequestMapping(value="getListProperty")
-    public Map<String,Object> getListProperty(){
+    @RequestMapping(value="getQuery")
+    public Map<String,Object> getQuery(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("positions",positionService.findAll());
         map.put("statusList", EmployeeStatusEnum.values());

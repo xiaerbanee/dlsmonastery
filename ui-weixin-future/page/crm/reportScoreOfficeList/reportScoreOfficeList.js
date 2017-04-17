@@ -48,7 +48,7 @@ Page({
       that.setData({ "formData.scoreDate": that.data.options.scoreDate });
     }
     wx.request({
-      url: $util.getUrl("crm/reportScoreOffice/getListProperty"),
+      url: $util.getUrl("crm/reportScoreOffice/getQuery"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId },

@@ -41,8 +41,8 @@ public class GoodsOrderController {
     }
 
 
-    @RequestMapping(value = "getListProperty", method = RequestMethod.GET)
-    public String getListProperty() {
+    @RequestMapping(value = "getQuery", method = RequestMethod.GET)
+    public String getQuery() {
         return null;  }
 
     @RequestMapping(value = "findByFormatId", method = RequestMethod.GET)

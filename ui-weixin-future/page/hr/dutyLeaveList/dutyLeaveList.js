@@ -15,7 +15,7 @@ Page({
   onLoad: function (option) {
     var that = this;
     wx.request({
-      url: $util.getUrl("basic/hr/dutyLeave/getListProperty"),
+      url: $util.getUrl("basic/hr/dutyLeave/getQuery"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId,

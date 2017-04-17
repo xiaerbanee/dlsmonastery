@@ -114,8 +114,8 @@
       },exportData(){
         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
         window.location.href= "/api/basic/hr/dutySign/export?"+qs.stringify(this.formData);
-			},getListProperty(){
-        axios.get('/api/basic/hr/dutySign/getListProperty').then((response) =>{
+			},getQuery(){
+        axios.get('/api/basic/hr/dutySign/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });

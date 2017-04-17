@@ -49,7 +49,7 @@ public class ProcessTypeController {
 
     @RequestMapping(value = "findOne")
     public ProcessTypeForm findOne(ProcessTypeForm processTypeForm){
-        processTypeForm=processTypeService.findForm(processTypeForm.getId());
+        processTypeForm=processTypeService.findForm(processTypeForm);
         processTypeForm.setPositionList(positionService.findAll());
         processTypeForm.setBools(BoolEnum.getMap());
         return processTypeForm;
