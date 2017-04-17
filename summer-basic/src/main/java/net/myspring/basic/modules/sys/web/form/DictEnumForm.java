@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.web.form;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.mybatis.form.BaseForm;
@@ -15,7 +16,7 @@ public class DictEnumForm extends DataForm<DictEnum> {
     private String category;
     private String value;
     private String remarks;
-    private List<String> categoryList;
+    private List<String> categoryList= Lists.newArrayList();
 
     public String getRemarks() {
         return remarks;

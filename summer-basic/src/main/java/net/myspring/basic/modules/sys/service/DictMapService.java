@@ -28,11 +28,11 @@ public class DictMapService {
     private CacheUtils cacheUtils;
 
 
-    public DictMapDto findDto(String id){
+    public DictMapForm findForm(String id){
         DictMap dictMap= dictMapManager.findOne(id);
-        DictMapDto dictMapDto = BeanUtil.map(dictMap, DictMapDto.class);
-        cacheUtils.initCacheInput(dictMapDto);
-        return dictMapDto;
+        DictMapForm dictMapForm = BeanUtil.map(dictMap, DictMapForm.class);
+        cacheUtils.initCacheInput(dictMapForm);
+        return dictMapForm;
     }
 
     public List<String> findDistinctCategory(){

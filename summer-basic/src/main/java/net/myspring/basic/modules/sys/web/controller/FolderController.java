@@ -44,16 +44,10 @@ public class FolderController {
     }
 
     @RequestMapping(value = "findOne")
-    public FolderDto findOne(String id){
-        FolderDto folderDto=folderService.findDto(id);
-        return folderDto;
-    }
-
-    @RequestMapping(value="getFormProperty")
-    public Map<String,Object> getFormProperty(){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("folders",folderService.findAll(SecurityUtils.getAccountId()));
-        return map;
+    public FolderForm findOne(FolderForm folderForm){
+        folderForm=folderService.findForm(folderForm.getId());
+        folderForm.setFolderList(folderService.findAll(SecurityUtils.getAccountId()));
+        return folderForm;
     }
 
 }

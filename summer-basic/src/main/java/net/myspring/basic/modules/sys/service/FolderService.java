@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.exception.ServiceException;
+import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.sys.domain.Folder;
 import net.myspring.basic.modules.sys.dto.FolderDto;
@@ -24,6 +25,8 @@ public class FolderService {
     private FolderManager folderManager;
     @Autowired
     private FolderMapper folderMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
 
     public Folder findByParentIdAndName(String parentId, String name) {
         return folderMapper.findByParentIdAndName(parentId, name);
@@ -33,10 +36,11 @@ public class FolderService {
         return folderManager.findOne(id);
     }
 
-    public FolderDto findDto(String id){
-        Folder folder = findOne(id);
-        FolderDto folderDto = BeanUtil.map(folder, FolderDto.class);
-        return folderDto;
+    public FolderForm findForm(String id){
+        Folder folder = folderManager.findOne(id);
+        FolderForm folderForm = BeanUtil.map(folder, FolderForm.class);
+        cacheUtils.initCacheInput(folderForm);
+        return folderForm;
     }
 
     public void deleteOne(String id){

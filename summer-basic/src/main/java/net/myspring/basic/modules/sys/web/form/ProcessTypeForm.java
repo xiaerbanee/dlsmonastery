@@ -1,5 +1,7 @@
 package net.myspring.basic.modules.sys.web.form;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.sys.domain.ProcessType;
 import net.myspring.basic.common.form.DataForm;
@@ -12,15 +14,15 @@ import java.util.Map;
  */
 
 public class ProcessTypeForm extends DataForm<ProcessType>{
-    private List<PositionDto> positionDtoList;
-    private Map<Boolean,String>  bools;
+    private List<PositionDto> positionList= Lists.newArrayList();
+    private Map<Boolean,String>  bools= Maps.newHashMap();
 
-    public List<PositionDto> getPositionDtoList() {
-        return positionDtoList;
+    public List<PositionDto> getPositionList() {
+        return positionList;
     }
 
-    public void setPositionDtoList(List<PositionDto> positionDtoList) {
-        this.positionDtoList = positionDtoList;
+    public void setPositionList(List<PositionDto> positionList) {
+        this.positionList = positionList;
     }
 
     public Map<Boolean, String> getBools() {

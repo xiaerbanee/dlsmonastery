@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
 
 import java.util.List;
@@ -12,15 +13,15 @@ public class MenuQuery {
     private String name;
     private String sort;
     private String menuCategoryId;
-    private List<MenuCategoryDto> menuCategoryDtoList;
-    private List<String> categoryList;
+    private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
+    private List<String> categoryList=Lists.newArrayList();
 
-    public List<MenuCategoryDto> getMenuCategoryDtoList() {
-        return menuCategoryDtoList;
+    public List<MenuCategoryDto> getMenuCategoryList() {
+        return menuCategoryList;
     }
 
-    public void setMenuCategoryDtoList(List<MenuCategoryDto> menuCategoryDtoList) {
-        this.menuCategoryDtoList = menuCategoryDtoList;
+    public void setMenuCategoryList(List<MenuCategoryDto> menuCategoryList) {
+        this.menuCategoryList = menuCategoryList;
     }
 
     public List<String> getCategoryList() {

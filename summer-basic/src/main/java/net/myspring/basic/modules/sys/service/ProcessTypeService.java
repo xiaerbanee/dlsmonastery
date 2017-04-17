@@ -9,6 +9,7 @@ import net.myspring.basic.modules.sys.manager.ProcessFlowManager;
 import net.myspring.basic.modules.sys.manager.ProcessTypeManager;
 import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.basic.modules.sys.mapper.ProcessTypeMapper;
+import net.myspring.basic.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.basic.modules.sys.web.query.ProcessTypeQuery;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +53,11 @@ public class ProcessTypeService {
         return processType;
     }
 
-    public ProcessTypeDto findDto(String id){
+    public ProcessTypeForm findForm(String id){
         ProcessType processType=findOne(id);
-        ProcessTypeDto processTypeDto= BeanUtil.map(processType,ProcessTypeDto.class);
-        cacheUtils.initCacheInput(processTypeDto);
-        return processTypeDto;
+        ProcessTypeForm processTypeForm= BeanUtil.map(processType,ProcessTypeForm.class);
+        cacheUtils.initCacheInput(processTypeForm);
+        return processTypeForm;
     }
 
     public void logicDeleteOne(ProcessType processType) {
