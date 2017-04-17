@@ -6,6 +6,7 @@ import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.service.AccountService;
 import net.myspring.basic.modules.hr.service.PositionService;
+import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.sys.service.DictEnumService;
@@ -58,7 +59,9 @@ public class EmployeeController {
         Map<String,Object> map=Maps.newHashMap();
         EmployeeDto employeeDto=employeeService.findDto(id);
         map.put("employee",employeeDto);
-        map.put("account",accountService.findDto(employeeDto.getAccountId()));
+        AccountForm accountForm=new AccountForm();
+        accountForm.setId(employeeDto.getAccountId());
+        map.put("account",accountService.findForm(accountForm));
         return map;
     }
 
