@@ -44,10 +44,12 @@ public class AccountChangeService {
         return accountChange;
     }
 
-    public AccountChangeForm findForm(String id){
-        AccountChange accountChange=accountChangeMapper.findOne(id);
-        AccountChangeForm accountChangeForm= BeanUtil.map(accountChange,AccountChangeForm.class);
-        cacheUtils.initCacheInput(accountChangeForm);
+    public AccountChangeForm findForm(AccountChangeForm accountChangeForm){
+        if(!accountChangeForm.isCreate()){
+            AccountChange accountChange=accountChangeMapper.findOne(accountChangeForm.getId());
+            accountChangeForm= BeanUtil.map(accountChange,AccountChangeForm.class);
+            cacheUtils.initCacheInput(accountChangeForm);
+        }
         return accountChangeForm;
     }
 
