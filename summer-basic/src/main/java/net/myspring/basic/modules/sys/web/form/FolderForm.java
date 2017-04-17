@@ -17,6 +17,15 @@ public class FolderForm extends DataForm<Folder>{
     private String parentIds;
     private String parentId;
     private List<FolderDto> folderList= Lists.newArrayList();
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public List<FolderDto> getFolderList() {
         return folderList;

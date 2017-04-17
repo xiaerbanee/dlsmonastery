@@ -28,7 +28,7 @@
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" v-if="isCreate">{{$t('processTypeForm.save')}}</el-button>
         </el-form-item>
         <template>
-          <el-table :data="inputForm.processFlowList" border stripe>
+          <el-table :data="inputForm.processFlowDtoList" border stripe>
             <el-table-column :label="$t('processTypeForm.name')">
               <template scope="scope">
                 <el-input v-model="scope.row.name"></el-input>
@@ -73,7 +73,7 @@
               remarks:'',
               createPermissionId:"",
               viewPermissionId:"",
-              processFlowList:[]
+              processFlowDtoList:[]
             },
             rules: {
               name: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
@@ -120,9 +120,9 @@
             });
           }
         },removeDomain(item) {
-          var index = this.inputForm.processFlowList.indexOf(item)
+          var index = this.inputForm.processFlowDtoList.indexOf(item)
           if (index !== -1) {
-            this.inputForm.processFlowList.splice(index, 1)
+            this.inputForm.processFlowDtoList.splice(index, 1)
           }
         },renderAction(createElement) {
           return createElement(
@@ -138,21 +138,21 @@
           );
         },addDomain(){
           var sort = 10;
-          if(this.inputForm.processFlowList.length>0 && this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort != null) {
-            sort = this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort + 10;
+          if(this.inputForm.processFlowDtoList.length>0 && this.inputForm.processFlowDtoList[this.inputForm.processFlowDtoList.length-1].sort != null) {
+            sort = this.inputForm.processFlowDtoList[this.inputForm.processFlowDtoList.length-1].sort + 10;
           }
-          this.inputForm.processFlowList.push({name:"",sort:sort,positionId:""});
+          this.inputForm.processFlowDtoList.push({name:"",sort:sort,positionId:""});
         }
       },created(){
         if(this.isCreate){
           for(var i = 0;i<3;i++) {
-            this.inputForm.processFlowList.push({name:"",sort:(i+1)*10,positionId:""});
+            this.inputForm.processFlowDtoList.push({name:"",sort:(i+1)*10,positionId:""});
           }
         } else {
           axios.get('/api/basic/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
             this.inputForm.auditFileType=response.data.auditFileType?"1":"0";
-            this.inputForm.processFlowList=response.data.processFlowList;
+            this.inputForm.processFlowDtoList=response.data.processFlowDtoList;
             if(response.data.createPermission!=null){
               this.createPermissions=new Array(response.data.createPermission);
             }

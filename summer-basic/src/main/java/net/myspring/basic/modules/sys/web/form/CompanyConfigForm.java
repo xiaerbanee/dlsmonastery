@@ -10,6 +10,15 @@ public class CompanyConfigForm extends DataForm<CompanyConfig>{
     private String name;
     private String code;
     private String value;
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public String getName() {
         return name;
