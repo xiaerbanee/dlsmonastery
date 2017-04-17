@@ -7,10 +7,12 @@ import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.dto.CalendarEventDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.DutyService;
+import net.myspring.basic.modules.hr.web.form.DutyForm;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.antlr.runtime.DFA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,13 +40,11 @@ public class DutyController {
         return getDutyDtoList();
     }
 
-    @RequestMapping(value = "detail")
-    public Map<String, Object> detail(String id, String dutyType) {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("item", dutyService.findDutyItem(id, dutyType));
-        map.put("dutyType", dutyType);
-        map.put("bools", BoolEnum.getMap());
-        return map;
+    @RequestMapping(value = "findOne")
+    public DutyForm detail(DutyForm dutyForm) {
+        dutyForm.setItem(dutyService.findDutyItem(dutyForm.getId(), dutyForm.getDutyType()));
+        dutyForm.setBoolMap(BoolEnum.getMap());
+        return dutyForm;
     }
 
 

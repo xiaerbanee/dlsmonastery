@@ -16,7 +16,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
-                  <el-option v-for="category in formProperty.category" :key="category" :label="category" :value="category"></el-option>
+                  <el-option v-for="category in formProperty.categoryList" :key="category" :label="category" :value="category"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.value.label" :label-width="formLabelWidth">
@@ -113,7 +113,7 @@
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
       axios.get('/api/basic/sys/dictEnum/getListProperty').then((response) =>{
-        this.formProperty=response.data;
+        this.formProperty.categoryList=response.data.categoryList;
       });
       this.pageRequest();
     }

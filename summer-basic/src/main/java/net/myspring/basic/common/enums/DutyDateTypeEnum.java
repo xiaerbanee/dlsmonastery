@@ -5,4 +5,5 @@ package net.myspring.basic.common.enums;
  */
 public enum DutyDateTypeEnum {
     全天, 上午, 下午;
+
 }

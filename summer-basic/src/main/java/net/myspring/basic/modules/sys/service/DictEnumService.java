@@ -38,10 +38,12 @@ public class DictEnumService {
     }
 
 
-    public DictEnumForm findForm(String id) {
-        DictEnum dictEnum =dictEnumManager.findOne(id);
-        DictEnumForm dictEnumForm= BeanUtil.map(dictEnum,DictEnumForm.class);
-        cacheUtils.initCacheInput(dictEnumForm);
+    public DictEnumForm findForm(DictEnumForm dictEnumForm) {
+        if(!dictEnumForm.isCreate()){
+            DictEnum dictEnum =dictEnumManager.findOne(dictEnumForm.getId());
+            dictEnumForm= BeanUtil.map(dictEnum,DictEnumForm.class);
+            cacheUtils.initCacheInput(dictEnumForm);
+        }
         return dictEnumForm;
     }
 

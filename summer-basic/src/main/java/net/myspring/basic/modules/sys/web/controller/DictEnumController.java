@@ -46,7 +46,7 @@ public class DictEnumController {
 
     @RequestMapping(value = "findOne")
     public DictEnumForm findOne(DictEnumForm dictEnumForm){
-        dictEnumForm=dictEnumService.findForm(dictEnumForm.getId());
+        dictEnumForm=dictEnumService.findForm(dictEnumForm);
         dictEnumForm.setCategoryList(dictEnumService.findDistinctCategory());
         return dictEnumForm;
     }
