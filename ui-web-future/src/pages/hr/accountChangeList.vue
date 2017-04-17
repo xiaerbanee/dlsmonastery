@@ -10,7 +10,7 @@
       <el-dialog :title="$t('accountChangeList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
           <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-            <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('accountChangeList.selectDateRange')"  :picker-options="pickerDateOption"></el-date-picker>
+            <el-date-picker v-model="formData.createdDateBTW" type="daterange" align="right" :placeholder="$t('accountChangeList.selectDateRange')"  :picker-options="pickerDateOption"></el-date-picker>
           </el-form-item>
           <el-form-item :label="formLabel.createdByName.label" :label-width="formLabelWidth">
             <el-input v-model="formData.createdByName" auto-complete="off" :placeholder="$t('accountChangeList.likeSearch')"></el-input>
@@ -57,7 +57,6 @@
         formData:{
           page:0,
           size:25,
-          createdDate:"",
           officeId:'',
           createdDateBTW:'',
           createdByName:'',

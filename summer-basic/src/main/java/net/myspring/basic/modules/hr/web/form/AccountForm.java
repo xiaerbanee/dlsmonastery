@@ -1,9 +1,14 @@
 package net.myspring.basic.modules.hr.web.form;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.hr.domain.Position;
+import net.myspring.basic.modules.hr.dto.PositionDto;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuj on 2017/3/19.
@@ -11,7 +16,7 @@ import java.util.List;
 
 public class AccountForm extends DataForm<Account>{
     private String password;
-    private List<String> OfficeIdList;
+    private List<String> officeIdList;
     private String type;
     private String employeeId;
     private String loginName;
@@ -22,6 +27,24 @@ public class AccountForm extends DataForm<Account>{
     private String outPassword;
     private String remarks;
     private String positionId;
+    private List<PositionDto> positionList= Lists.newArrayList();
+    private Map<Boolean,String> bools= Maps.newHashMap();
+
+    public List<PositionDto> getPositionList() {
+        return positionList;
+    }
+
+    public void setPositionList(List<PositionDto> positionList) {
+        this.positionList = positionList;
+    }
+
+    public Map<Boolean, String> getBools() {
+        return bools;
+    }
+
+    public void setBools(Map<Boolean, String> bools) {
+        this.bools = bools;
+    }
 
     public String getPassword() {
         return password;
@@ -32,11 +55,11 @@ public class AccountForm extends DataForm<Account>{
     }
 
     public List<String> getOfficeIdList() {
-        return OfficeIdList;
+        return officeIdList;
     }
 
     public void setOfficeIdList(List<String> officeIdList) {
-        OfficeIdList = officeIdList;
+        this.officeIdList = officeIdList;
     }
 
     public String getType() {

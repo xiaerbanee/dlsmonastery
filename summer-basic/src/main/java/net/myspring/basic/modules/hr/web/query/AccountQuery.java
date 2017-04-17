@@ -1,6 +1,10 @@
 package net.myspring.basic.modules.hr.web.query;
 
 
+import com.google.common.collect.Lists;
+import net.myspring.basic.modules.hr.domain.Position;
+import net.myspring.basic.modules.hr.dto.PositionDto;
+
 import java.util.List;
 
 /**
@@ -13,7 +17,15 @@ public class AccountQuery {
     private String employeeName;
     private String leaderName;
     private List<String> officeIds;
+    private List<PositionDto> positionList= Lists.newArrayList();
 
+    public List<PositionDto> getPositionList() {
+        return positionList;
+    }
+
+    public void setPositionList(List<PositionDto> positionList) {
+        this.positionList = positionList;
+    }
 
     public String getLoginName() {
         return loginName;
