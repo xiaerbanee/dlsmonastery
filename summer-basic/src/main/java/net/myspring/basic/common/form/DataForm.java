@@ -1,13 +1,19 @@
 package net.myspring.basic.common.form;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import java.time.LocalDateTime;
 
 /**
  * Created by liuj on 2017/4/12.
  */
 public class DataForm<T> extends IdForm<T> {
+    @JsonIgnore
     protected String lastModifiedBy;
+    @JsonIgnore
     protected LocalDateTime lastModifiedDate;
+
+    protected String remarks;
 
     public String getLastModifiedBy() {
         return lastModifiedBy;
@@ -23,5 +29,13 @@ public class DataForm<T> extends IdForm<T> {
 
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }
