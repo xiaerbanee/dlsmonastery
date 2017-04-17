@@ -1,4 +1,4 @@
-package net.myspring.future.modules.crm.dto;
+package net.myspring.future.modules.basic.dto;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.common.dto.DataDto;

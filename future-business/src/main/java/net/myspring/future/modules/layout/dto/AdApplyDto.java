@@ -1,4 +1,4 @@
-package net.myspring.future.modules.crm.dto;
+package net.myspring.future.modules.layout.dto;
 
 import net.myspring.future.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.Depot;

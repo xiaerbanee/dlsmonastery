@@ -3,6 +3,11 @@ package net.myspring.future.modules.basic.domain;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.domain.DataEntity;
+import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.layout.domain.AdApply;
+import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
+import net.myspring.future.modules.layout.domain.AdPricesystemChange;
+import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,7 +18,6 @@ import java.util.List;
 @Entity
 @Table(name="crm_product")
 public class Product extends DataEntity<Product> {
-    private ProductType productType;
     private String name;
     private String code;
     private Boolean hasIme;
@@ -80,13 +84,6 @@ public class Product extends DataEntity<Product> {
     private List<String> employeePhoneIdList = Lists.newArrayList();
     private List<String> employeePhoneDepositIdList = Lists.newArrayList();
 
-    public ProductType getProductType() {
-        return productType;
-    }
-
-    public void setProductType(ProductType productType) {
-        this.productType = productType;
-    }
 
     public String getName() {
         return name;
