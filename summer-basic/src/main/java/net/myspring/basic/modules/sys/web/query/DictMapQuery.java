@@ -41,7 +41,7 @@ public class DictMapQuery {
     public LocalDateTime getCreatedDateEnd() {
         if(createdDateEnd==null&& StringUtils.isNotBlank(createdDateBTW)){
             String[] tempParamValues = createdDateBTW.split(" - ");
-            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]);
+            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 23:59:59");
         }
         return createdDateEnd;
     }

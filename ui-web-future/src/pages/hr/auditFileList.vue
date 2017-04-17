@@ -136,7 +136,6 @@
         util.getQuery("auditFileList");
         util.setQuery("auditFileList",this.formData);
         axios.get('/api/basic/hr/auditFile',{params:this.formData}).then((response) => {
-          console.log(response);
           this.page = response.data;
           this.pageLoading = false;
         })
