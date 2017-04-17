@@ -1,14 +1,10 @@
 package net.myspring.future.modules.basic.domain;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.crm.domain.ExpressOrder;
-import net.myspring.future.modules.layout.domain.ShopBuild;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.List;
 
 @Entity
 @Table(name="crm_express_company")
@@ -23,13 +19,7 @@ public class ExpressCompany extends DataEntity<ExpressCompany> {
     private String shouldGetRule;
     private String shouldPayRule;
     private Integer version = 0;
-    private List<Depot> depotList = Lists.newArrayList();
-    private List<String> depotIdList = Lists.newArrayList();
     private String districtId;
-    private List<ExpressOrder> expressOrderList = Lists.newArrayList();
-    private List<String> expressOrderIdList = Lists.newArrayList();
-    private List<ShopBuild> shopBuildList = Lists.newArrayList();
-    private List<String> shopBuildIdList = Lists.newArrayList();
 
     public String getName() {
         return name;
@@ -111,59 +101,11 @@ public class ExpressCompany extends DataEntity<ExpressCompany> {
         this.version = version;
     }
 
-    public List<Depot> getDepotList() {
-        return depotList;
-    }
-
-    public void setDepotList(List<Depot> depotList) {
-        this.depotList = depotList;
-    }
-
-    public List<String> getDepotIdList() {
-        return depotIdList;
-    }
-
-    public void setDepotIdList(List<String> depotIdList) {
-        this.depotIdList = depotIdList;
-    }
-
     public String getDistrictId() {
         return districtId;
     }
 
     public void setDistrictId(String districtId) {
         this.districtId = districtId;
-    }
-
-    public List<ExpressOrder> getExpressOrderList() {
-        return expressOrderList;
-    }
-
-    public void setExpressOrderList(List<ExpressOrder> expressOrderList) {
-        this.expressOrderList = expressOrderList;
-    }
-
-    public List<String> getExpressOrderIdList() {
-        return expressOrderIdList;
-    }
-
-    public void setExpressOrderIdList(List<String> expressOrderIdList) {
-        this.expressOrderIdList = expressOrderIdList;
-    }
-
-    public List<ShopBuild> getShopBuildList() {
-        return shopBuildList;
-    }
-
-    public void setShopBuildList(List<ShopBuild> shopBuildList) {
-        this.shopBuildList = shopBuildList;
-    }
-
-    public List<String> getShopBuildIdList() {
-        return shopBuildIdList;
-    }
-
-    public void setShopBuildIdList(List<String> shopBuildIdList) {
-        this.shopBuildIdList = shopBuildIdList;
     }
 }

@@ -12,9 +12,7 @@ import java.math.BigDecimal;
 public class PricesystemDetail extends IdEntity<PricesystemDetail> {
     private BigDecimal price;
     private Integer sort;
-    private Product product;
     private String productId;
-    private Pricesystem pricesystem;
     private String pricesystemId;
 
 
@@ -34,28 +32,12 @@ public class PricesystemDetail extends IdEntity<PricesystemDetail> {
         this.sort = sort;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public String getProductId() {
         return productId;
     }
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public Pricesystem getPricesystem() {
-        return pricesystem;
-    }
-
-    public void setPricesystem(Pricesystem pricesystem) {
-        this.pricesystem = pricesystem;
     }
 
     public String getPricesystemId() {

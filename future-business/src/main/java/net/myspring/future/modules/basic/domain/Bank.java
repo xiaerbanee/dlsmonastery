@@ -1,16 +1,11 @@
 package net.myspring.future.modules.basic.domain;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.crm.domain.BankIn;
-import net.myspring.future.modules.layout.domain.ShopDeposit;
-import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Entity
@@ -23,14 +18,6 @@ public class Bank extends DataEntity<Bank> {
     private Integer version = 0;
     private String oldName;
     private String oldOutId;
-    private List<String> accountIdList = Lists.newArrayList();
-    private List<BankIn> bankInList = Lists.newArrayList();
-    private List<String> bankInIdList = Lists.newArrayList();
-    private List<ShopDeposit> shopDepositList = Lists.newArrayList();
-    private List<String> shopDepositIdList = Lists.newArrayList();
-    private List<ShopGoodsDeposit> shopGoodsDepositList = Lists.newArrayList();
-    private List<String> shopGoodsDepositIdList = Lists.newArrayList();
-    private List<String> employeePhoneDepositIdList = Lists.newArrayList();
 
     public String getName() {
         return name;
@@ -88,67 +75,4 @@ public class Bank extends DataEntity<Bank> {
         this.oldOutId = oldOutId;
     }
 
-    public List<String> getAccountIdList() {
-        return accountIdList;
-    }
-
-    public void setAccountIdList(List<String> accountIdList) {
-        this.accountIdList = accountIdList;
-    }
-
-    public List<BankIn> getBankInList() {
-        return bankInList;
-    }
-
-    public void setBankInList(List<BankIn> bankInList) {
-        this.bankInList = bankInList;
-    }
-
-    public List<String> getBankInIdList() {
-        return bankInIdList;
-    }
-
-    public void setBankInIdList(List<String> bankInIdList) {
-        this.bankInIdList = bankInIdList;
-    }
-
-    public List<ShopDeposit> getShopDepositList() {
-        return shopDepositList;
-    }
-
-    public void setShopDepositList(List<ShopDeposit> shopDepositList) {
-        this.shopDepositList = shopDepositList;
-    }
-
-    public List<String> getShopDepositIdList() {
-        return shopDepositIdList;
-    }
-
-    public void setShopDepositIdList(List<String> shopDepositIdList) {
-        this.shopDepositIdList = shopDepositIdList;
-    }
-
-    public List<ShopGoodsDeposit> getShopGoodsDepositList() {
-        return shopGoodsDepositList;
-    }
-
-    public void setShopGoodsDepositList(List<ShopGoodsDeposit> shopGoodsDepositList) {
-        this.shopGoodsDepositList = shopGoodsDepositList;
-    }
-
-    public List<String> getShopGoodsDepositIdList() {
-        return shopGoodsDepositIdList;
-    }
-
-    public void setShopGoodsDepositIdList(List<String> shopGoodsDepositIdList) {
-        this.shopGoodsDepositIdList = shopGoodsDepositIdList;
-    }
-
-    public List<String> getEmployeePhoneDepositIdList() {
-        return employeePhoneDepositIdList;
-    }
-
-    public void setEmployeePhoneDepositIdList(List<String> employeePhoneDepositIdList) {
-        this.employeePhoneDepositIdList = employeePhoneDepositIdList;
-    }
 }

@@ -1,15 +1,18 @@
-package net.myspring.future.modules.basic.domain;
+package net.myspring.future.modules.basic.dto;
 
-import net.myspring.common.domain.DataEntity;
+import com.google.common.collect.Lists;
+import net.myspring.future.common.dto.DataDto;
+import net.myspring.future.modules.basic.domain.*;
+import net.myspring.future.modules.crm.domain.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Entity
-@Table(name="crm_depot")
-public class Depot extends DataEntity<Depot> {
+/**
+ * Created by lihx on 2017/4/17.
+ */
+public class DepotDto extends DataDto<Depot> {
     private String code;
     private Integer type;
     private String name;
@@ -34,6 +37,7 @@ public class Depot extends DataEntity<Depot> {
     private String lng;
     private String lat;
     private String delegateDepotId;
+    private Depot delegateDepot;
     private BigDecimal credit;
     private String oldName;
     private Boolean checkStock;
@@ -63,13 +67,36 @@ public class Depot extends DataEntity<Depot> {
     private String taxName;
     private String cmccCarrierShopId;
     private String ctccCarrierShopId;
+    private List<String> carrierShopIdList = Lists.newArrayList();
+    private List<String> accountIdList = Lists.newArrayList();
+    private List<AfterSale> afterSaleList = Lists.newArrayList();
+    private List<String> afterSaleIdList = Lists.newArrayList();
     private String officeId;
+    private Dealer dealer;
     private String dealerId;
+    private Chain chain;
     private String chainId;
+    private PricesystemDto pricesystem;
     private String pricesystemId;
     private String districtId;
+    private AdPricesystem adPricesystem;
     private String adPricesystemId;
+    private ExpressCompany expressCompany;
+    private String expressCompanyId;
+    private String townId;
+    private List<DepotChange> depotChangeList = Lists.newArrayList();
+    private List<String> depotChangeIdList = Lists.newArrayList();
+    private List<DepotDetail> depotDetailList = Lists.newArrayList();
+    private List<String> depotDetailIdList = Lists.newArrayList();
+    private List<ProductIme> productImeList = Lists.newArrayList();
+    private List<String> productImeIdList = Lists.newArrayList();
+    private List<StockCheck> stockCheckList = Lists.newArrayList();
+    private List<String> stockCheckIdList = Lists.newArrayList();
+    private List<String> employeePhoneIdList = Lists.newArrayList();
+    private List<String> employeePhoneDepositIdList = Lists.newArrayList();
+    private Depot parent;
     private String parentId;
+    private List<Depot> childList = Lists.newArrayList();
     private Long taskQty;
 
     public String getCode() {
@@ -262,6 +289,14 @@ public class Depot extends DataEntity<Depot> {
 
     public void setDelegateDepotId(String delegateDepotId) {
         this.delegateDepotId = delegateDepotId;
+    }
+
+    public Depot getDelegateDepot() {
+        return delegateDepot;
+    }
+
+    public void setDelegateDepot(Depot delegateDepot) {
+        this.delegateDepot = delegateDepot;
     }
 
     public BigDecimal getCredit() {
@@ -496,12 +531,52 @@ public class Depot extends DataEntity<Depot> {
         this.ctccCarrierShopId = ctccCarrierShopId;
     }
 
+    public List<String> getCarrierShopIdList() {
+        return carrierShopIdList;
+    }
+
+    public void setCarrierShopIdList(List<String> carrierShopIdList) {
+        this.carrierShopIdList = carrierShopIdList;
+    }
+
+    public List<String> getAccountIdList() {
+        return accountIdList;
+    }
+
+    public void setAccountIdList(List<String> accountIdList) {
+        this.accountIdList = accountIdList;
+    }
+
+    public List<AfterSale> getAfterSaleList() {
+        return afterSaleList;
+    }
+
+    public void setAfterSaleList(List<AfterSale> afterSaleList) {
+        this.afterSaleList = afterSaleList;
+    }
+
+    public List<String> getAfterSaleIdList() {
+        return afterSaleIdList;
+    }
+
+    public void setAfterSaleIdList(List<String> afterSaleIdList) {
+        this.afterSaleIdList = afterSaleIdList;
+    }
+
     public String getOfficeId() {
         return officeId;
     }
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
+    }
+
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    public void setDealer(Dealer dealer) {
+        this.dealer = dealer;
     }
 
     public String getDealerId() {
@@ -512,12 +587,28 @@ public class Depot extends DataEntity<Depot> {
         this.dealerId = dealerId;
     }
 
+    public Chain getChain() {
+        return chain;
+    }
+
+    public void setChain(Chain chain) {
+        this.chain = chain;
+    }
+
     public String getChainId() {
         return chainId;
     }
 
     public void setChainId(String chainId) {
         this.chainId = chainId;
+    }
+
+    public PricesystemDto getPricesystem() {
+        return pricesystem;
+    }
+
+    public void setPricesystem(PricesystemDto pricesystem) {
+        this.pricesystem = pricesystem;
     }
 
     public String getPricesystemId() {
@@ -536,6 +627,14 @@ public class Depot extends DataEntity<Depot> {
         this.districtId = districtId;
     }
 
+    public AdPricesystem getAdPricesystem() {
+        return adPricesystem;
+    }
+
+    public void setAdPricesystem(AdPricesystem adPricesystem) {
+        this.adPricesystem = adPricesystem;
+    }
+
     public String getAdPricesystemId() {
         return adPricesystemId;
     }
@@ -544,12 +643,132 @@ public class Depot extends DataEntity<Depot> {
         this.adPricesystemId = adPricesystemId;
     }
 
+    public ExpressCompany getExpressCompany() {
+        return expressCompany;
+    }
+
+    public void setExpressCompany(ExpressCompany expressCompany) {
+        this.expressCompany = expressCompany;
+    }
+
+    public String getExpressCompanyId() {
+        return expressCompanyId;
+    }
+
+    public void setExpressCompanyId(String expressCompanyId) {
+        this.expressCompanyId = expressCompanyId;
+    }
+
+    public String getTownId() {
+        return townId;
+    }
+
+    public void setTownId(String townId) {
+        this.townId = townId;
+    }
+
+    public List<DepotChange> getDepotChangeList() {
+        return depotChangeList;
+    }
+
+    public void setDepotChangeList(List<DepotChange> depotChangeList) {
+        this.depotChangeList = depotChangeList;
+    }
+
+    public List<String> getDepotChangeIdList() {
+        return depotChangeIdList;
+    }
+
+    public void setDepotChangeIdList(List<String> depotChangeIdList) {
+        this.depotChangeIdList = depotChangeIdList;
+    }
+
+    public List<DepotDetail> getDepotDetailList() {
+        return depotDetailList;
+    }
+
+    public void setDepotDetailList(List<DepotDetail> depotDetailList) {
+        this.depotDetailList = depotDetailList;
+    }
+
+    public List<String> getDepotDetailIdList() {
+        return depotDetailIdList;
+    }
+
+    public void setDepotDetailIdList(List<String> depotDetailIdList) {
+        this.depotDetailIdList = depotDetailIdList;
+    }
+
+    public List<ProductIme> getProductImeList() {
+        return productImeList;
+    }
+
+    public void setProductImeList(List<ProductIme> productImeList) {
+        this.productImeList = productImeList;
+    }
+
+    public List<String> getProductImeIdList() {
+        return productImeIdList;
+    }
+
+    public void setProductImeIdList(List<String> productImeIdList) {
+        this.productImeIdList = productImeIdList;
+    }
+
+    public List<StockCheck> getStockCheckList() {
+        return stockCheckList;
+    }
+
+    public void setStockCheckList(List<StockCheck> stockCheckList) {
+        this.stockCheckList = stockCheckList;
+    }
+
+    public List<String> getStockCheckIdList() {
+        return stockCheckIdList;
+    }
+
+    public void setStockCheckIdList(List<String> stockCheckIdList) {
+        this.stockCheckIdList = stockCheckIdList;
+    }
+
+    public List<String> getEmployeePhoneIdList() {
+        return employeePhoneIdList;
+    }
+
+    public void setEmployeePhoneIdList(List<String> employeePhoneIdList) {
+        this.employeePhoneIdList = employeePhoneIdList;
+    }
+
+    public List<String> getEmployeePhoneDepositIdList() {
+        return employeePhoneDepositIdList;
+    }
+
+    public void setEmployeePhoneDepositIdList(List<String> employeePhoneDepositIdList) {
+        this.employeePhoneDepositIdList = employeePhoneDepositIdList;
+    }
+
+    public Depot getParent() {
+        return parent;
+    }
+
+    public void setParent(Depot parent) {
+        this.parent = parent;
+    }
+
     public String getParentId() {
         return parentId;
     }
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public List<Depot> getChildList() {
+        return childList;
+    }
+
+    public void setChildList(List<Depot> childList) {
+        this.childList = childList;
     }
 
     public Long getTaskQty() {

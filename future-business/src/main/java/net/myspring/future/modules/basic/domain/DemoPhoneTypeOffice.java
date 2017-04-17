@@ -10,7 +10,6 @@ import javax.persistence.Table;
 @Table(name="crm_demo_phone_type_office")
 public class DemoPhoneTypeOffice extends IdEntity<DemoPhoneTypeOffice> {
     private Integer qty;
-    private DemoPhoneType demoPhoneType;
     private String demoPhoneTypeId;
     private String officeId;
 
@@ -20,14 +19,6 @@ public class DemoPhoneTypeOffice extends IdEntity<DemoPhoneTypeOffice> {
 
     public void setQty(Integer qty) {
         this.qty = qty;
-    }
-
-    public DemoPhoneType getDemoPhoneType() {
-        return demoPhoneType;
-    }
-
-    public void setDemoPhoneType(DemoPhoneType demoPhoneType) {
-        this.demoPhoneType = demoPhoneType;
     }
 
     public String getDemoPhoneTypeId() {

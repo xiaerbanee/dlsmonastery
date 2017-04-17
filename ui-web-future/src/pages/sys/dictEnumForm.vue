@@ -30,6 +30,13 @@
           return{
             submitDisabled:false,
             inputForm:{},
+            submitData:{
+              id:'',
+              category:'',
+              sort:'',
+              value:'',
+              remarks:''
+            },
             rules: {
               category: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}],
               sort: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')},{ type: 'number', message: this.$t('dictEnumForm.inputLegalValue')}],

@@ -27,15 +27,19 @@ public class AccountForm extends DataForm<Account>{
     private String outPassword;
     private String remarks;
     private String positionId;
-    private List<PositionDto> positionList= Lists.newArrayList();
+    private List<PositionDto> positionDtoList= Lists.newArrayList();
     private Map<Boolean,String> bools= Maps.newHashMap();
 
-    public List<PositionDto> getPositionList() {
-        return positionList;
+    public Boolean getViewReport() {
+        return viewReport;
     }
 
-    public void setPositionList(List<PositionDto> positionList) {
-        this.positionList = positionList;
+    public List<PositionDto> getPositionDtoList() {
+        return positionDtoList;
+    }
+
+    public void setPositionDtoList(List<PositionDto> positionDtoList) {
+        this.positionDtoList = positionDtoList;
     }
 
     public Map<Boolean, String> getBools() {

@@ -58,6 +58,14 @@
       return {
         page:{},
         formData:{},
+        submitData:{
+          page:0,
+          size:25,
+          createdDate:'',
+          createdDateBTW:'',
+          category:'',
+          value:''
+        },
         formLabel:{
           createdDateBTW:{label: this.$t('dictEnumList.createdDate')},
           category:{label: this.$t('dictEnumList.category')},
@@ -75,7 +83,8 @@
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         util.getQuery("dictEnumList");
         util.setQuery("dictEnumList",this.formData);
-        axios.get('/api/basic/sys/dictEnum',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/sys/dictEnum',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

@@ -1,6 +1,5 @@
 package net.myspring.basic.common.form;
 
-import com.ctc.wstx.util.StringUtil;
 import net.myspring.mybatis.form.BaseForm;
 import org.apache.commons.lang.StringUtils;
 
