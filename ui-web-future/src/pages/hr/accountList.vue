@@ -71,6 +71,14 @@
       return {
         page:{},
         formData:{
+        },formLabel:{
+          loginName:{label:this.$t('accountList.loginName')},
+          employeeName:{label:this.$t('accountList.employeeName')},
+          officeName:{label:this.$t('accountList.officeName')},
+          leaderName:{label:this.$t('accountList.leader')},
+          positionName:{label:this.$t('accountList.positionName')}
+        },
+        submitData:{
           page:0,
           size:25,
           loginName:'',
@@ -78,12 +86,6 @@
           officeName:'',
           leaderName:'',
           positionName:''
-        },formLabel:{
-          loginName:{label:this.$t('accountList.loginName')},
-          employeeName:{label:this.$t('accountList.employeeName')},
-          officeName:{label:this.$t('accountList.officeName')},
-          leaderName:{label:this.$t('accountList.leader')},
-          positionName:{label:this.$t('accountList.positionName')}
         },
         offices:[],
         formProperty:{},
@@ -96,8 +98,10 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("accountList");
         util.setQuery("accountList",this.formData);
-        axios.get('/api/basic/hr/account',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/hr/account',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -140,11 +144,13 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
+        var that=this;
+      that.pageHeight = window.outerHeight -320;
       axios.get('/api/basic/hr/account/getQuery').then((response) =>{
-        this.formProperty=response.data;
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>

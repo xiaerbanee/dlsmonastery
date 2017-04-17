@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.AccountChange;
+import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,6 +14,6 @@ import java.util.Map;
 @Mapper
 public interface AccountChangeMapper extends MyMapper<AccountChange,String> {
 
-    Page<AccountChange> findPage(Pageable pageable, @Param("p")AccountChangeQuery accountChangeQuery);
+    Page<AccountChangeDto> findPage(Pageable pageable, @Param("p")AccountChangeQuery accountChangeQuery);
 
 }

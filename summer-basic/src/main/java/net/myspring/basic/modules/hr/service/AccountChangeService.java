@@ -54,10 +54,9 @@ public class AccountChangeService {
     }
 
     public Page<AccountChangeDto> findPage(Pageable pageable, AccountChangeQuery accountChangeQuery){
-        Page<AccountChange> page=accountChangeMapper.findPage(pageable,accountChangeQuery);
-        Page<AccountChangeDto> accountChangeDtoPage= BeanUtil.map(page,AccountChangeDto.class);
-        cacheUtils.initCacheInput(accountChangeDtoPage.getContent());
-        return accountChangeDtoPage;
+        Page<AccountChangeDto> page=accountChangeMapper.findPage(pageable,accountChangeQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
 

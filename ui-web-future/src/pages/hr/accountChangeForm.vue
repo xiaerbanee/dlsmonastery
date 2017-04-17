@@ -7,12 +7,12 @@
           <el-col :span="6">
             <el-form-item :label="$t('accountChangeForm.account')" prop="accountId">
               <el-select v-model="inputForm.accountId" filterable remote clearable :placeholder="$t('accountChangeForm.inputWord')"  :remote-method="remoteAccount" :loading="remoteLoading" @change="getAccount(inputForm.accountId)">
-                <el-option v-for="item in accounts" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
+                <el-option v-for="item in accounts" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('accountChangeForm.type')"  prop="type">
               <el-select v-model="inputForm.type" filterable clearable :placeholder="$t('accountChangeForm.selectGroup')"  @change="getOldValue">
-                <el-option v-for="item in formProperty.types" :key="item":label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.typeList" :key="item":label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('accountChangeForm.oldValue')" prop="oldValue">
@@ -33,7 +33,7 @@
             </el-form-item>
             <el-form-item v-show="inputForm.type=='岗位'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
               <el-select v-model="inputForm.newValue" filterable :placeholder="$t('accountChangeForm.inputWord')" >
-                <el-option v-for="item in formProperty.positions"  :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in inputForm.positionList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item  v-show="inputForm.type=='上级'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
@@ -161,31 +161,19 @@
             }else if(this.inputForm.type == "离职"){
               this.inputForm.oldValue = this.employee.leaveDate;
             }
-      },findOne(){
-        axios.get('/api/basic/hr/accountChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-          if(response.data.type){
-            this.inputForm.type=response.data.type;
-            this.getAccount(response.data.accountId);
-          }
-          this.accounts = new Array(response.data.account);
-          this.inputForm.accountId=response.data.account.id;
-        })
-      },getFormProperty(){
-        axios.get('/api/basic/hr/accountChange/getFormProperty').then((response)=>{
-          this.formProperty = response.data;
-        });
       }
     },created(){
-        this.getFormProperty();
       if(!this.type){
         this.inputForm.type=this.$route.query.type;
         this.getAccount(this.$route.query.accountId);
       }
-      if(!this.isCreate){
-
-          this.findOne();
-      }
+      axios.get('/api/basic/hr/accountChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm=response.data;
+          console.log(response.data);
+          if(response.data.accountId!=null){
+            this.accounts=new Array({id:response.data.accountId,loginName:response.data.accountName})
+          }
+      })
     }
   }
 </script>

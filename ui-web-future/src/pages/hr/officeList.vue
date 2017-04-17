@@ -52,7 +52,8 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:''
@@ -101,6 +102,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
+      util.copyValue(this.$route.query,this.formData);
       this.pageRequest();
     }
   };

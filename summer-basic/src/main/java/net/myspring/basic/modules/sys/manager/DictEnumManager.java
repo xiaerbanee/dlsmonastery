@@ -32,7 +32,7 @@ public class DictEnumManager {
         return dictEnumMapper.findOne(id);
     }
 
-    @Cacheable(value = "dictEnums",key="#p0.id")
+    @CachePut(value = "dictEnums",key="#p0.id")
     public DictEnum save(DictEnum dictEnum){
         dictEnumMapper.save(dictEnum);
         return  dictEnum;

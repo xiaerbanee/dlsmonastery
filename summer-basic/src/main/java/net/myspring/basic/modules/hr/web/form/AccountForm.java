@@ -6,6 +6,7 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.PositionDto;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,8 @@ public class AccountForm extends DataForm<Account>{
     private List<String> officeIdList;
     private String type;
     private String employeeId;
+    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
+    private String employeeName;
     private String loginName;
     private String officeId;
     private String leaderId;
@@ -144,5 +147,13 @@ public class AccountForm extends DataForm<Account>{
 
     public void setPositionId(String positionId) {
         this.positionId = positionId;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
     }
 }
