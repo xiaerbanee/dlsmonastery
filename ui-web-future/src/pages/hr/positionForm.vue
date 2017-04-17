@@ -7,7 +7,7 @@
           <el-col :span = "7">
             <el-form-item :label="$t('positionForm.jobId')" prop="jobId">
               <el-select v-model="inputForm.jobId" filterable >
-                <el-option v-for="job in formProperty.jobList" :key="job.id" :label="job.name" :value="job.id"></el-option>
+                <el-option v-for="job in inputForm.jobList" :key="job.id" :label="job.name" :value="job.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('positionForm.name')" prop="name">
@@ -18,7 +18,7 @@
             </el-form-item>
             <el-form-item :label="$t('positionForm.dataScope')" prop="dataScope">
               <el-select v-model="inputForm.dataScope" filterable >
-                <el-option v-for="(value,key) in formProperty.dataScopeMap"  :key="key" :label="value" :value="key | toInteger"></el-option>
+                <el-option v-for="(value,key) in inputForm.dataScopeMap"  :key="key" :label="value" :value="key"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('positionForm.permission')" prop="permission">
@@ -59,8 +59,8 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        formProperty:{},
-        inputForm:{
+        inputForm:{},
+        submitData:{
           id:this.$route.query.id,
           jobId:'',
           name:'',
@@ -92,7 +92,8 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/hr/position/save',qs.stringify(this.inputForm)).then((response)=> {
+            util.copyValue(this.inputForm,this.submitData);
+            axios.post('/api/basic/hr/position/save',qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -117,17 +118,13 @@
         this.inputForm.permissionIdStr=permissions.join();
       },
     },created(){
-      axios.get('/api/basic/hr/position/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.formProperty = response.data;
-      this.treeData =new Array( response.data.permissionTree);
-      this.checked = response.data.permissionTree.checked;
-      this.inputForm.permissionIdStr = response.data.permissionTree.checked.join();
-      if(!this.isCreate){
-        axios.get('/api/basic/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
+      axios.get('/api/basic/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm=response.data;
+        this.treeData =new Array( response.data.permissionTree);
+        this.checked = response.data.permissionTree.checked;
+        this.inputForm.permissionIdStr = response.data.permissionTree.checked.join();
       })
-      }
-    })
+
     }
   }
 </script>

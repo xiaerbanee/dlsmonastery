@@ -9,6 +9,7 @@ import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.hr.dto.JobDto;
 import net.myspring.common.tree.TreeNode;
+import net.myspring.util.collection.CollectionUtil;
 
 import java.util.List;
 import java.util.Map;

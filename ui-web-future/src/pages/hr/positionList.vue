@@ -16,7 +16,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.jobId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.jobId" filterable clearable :placeholder="$t('positionList.inputKey')">
-                  <el-option v-for="job in formProperty.jobList" :key="job.id" :label="job.name" :value="job.id"></el-option>
+                  <el-option v-for="job in formData.jobList" :key="job.id" :label="job.name" :value="job.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -53,7 +53,8 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:'',
@@ -62,7 +63,6 @@
           name:{label:this.$t('positionList.positionName')},
           jobId:{label:this.$t('positionList.jobName')}
         },
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -71,8 +71,10 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("positionList");
         util.setQuery("positionList",this.formData);
-        axios.get('/api/basic/hr/position',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/hr/position',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -101,11 +103,11 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
       axios.get('/api/basic/hr/position/getQuery').then((response) =>{
-        this.formProperty=response.data;
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>
