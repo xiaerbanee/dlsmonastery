@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.model;
 
 
-import net.myspring.future.modules.crm.domain.Depot;
+import net.myspring.future.modules.basic.domain.Depot;
 
 import java.time.LocalDateTime;
 

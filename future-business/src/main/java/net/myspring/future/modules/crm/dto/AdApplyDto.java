@@ -1,9 +1,9 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.future.common.dto.DataDto;
-import net.myspring.future.modules.crm.domain.AdApply;
-import net.myspring.future.modules.crm.domain.Depot;
-import net.myspring.future.modules.crm.domain.Product;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.layout.domain.AdApply;
 
 
 /**

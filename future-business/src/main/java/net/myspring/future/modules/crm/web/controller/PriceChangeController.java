@@ -1,9 +1,9 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.future.modules.basic.service.ProductTypeService;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.service.PriceChangeService;
-import net.myspring.future.modules.crm.service.ProductTypeService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

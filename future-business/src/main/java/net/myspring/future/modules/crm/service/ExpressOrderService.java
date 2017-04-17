@@ -1,9 +1,9 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.modules.basic.mapper.ExpressCompanyMapper;
 import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
-import net.myspring.future.modules.crm.mapper.ExpressCompanyMapper;
 import net.myspring.future.modules.crm.mapper.ExpressMapper;
 import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
 import net.myspring.util.collection.CollectionUtil;

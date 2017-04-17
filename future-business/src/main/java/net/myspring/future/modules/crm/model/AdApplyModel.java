@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.model;
 
 import com.google.common.collect.Lists;
-import net.myspring.future.modules.crm.domain.AdApply;
+import net.myspring.future.modules.layout.domain.AdApply;
 
 import java.time.LocalDate;
 import java.util.List;

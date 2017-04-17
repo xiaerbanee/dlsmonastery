@@ -2,7 +2,15 @@ package net.myspring.future.modules.crm.dto;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.common.dto.DataDto;
+import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
+import net.myspring.future.modules.basic.domain.PricesystemDetail;
+import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.layout.domain.AdApply;
+import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
+import net.myspring.future.modules.layout.domain.AdPricesystemChange;
+import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

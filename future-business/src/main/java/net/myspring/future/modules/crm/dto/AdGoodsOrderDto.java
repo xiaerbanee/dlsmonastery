@@ -1,10 +1,10 @@
 package net.myspring.future.modules.crm.dto;
 
 import com.google.common.collect.Lists;
-import net.myspring.future.modules.crm.domain.AdGoodsOrder;
-import net.myspring.future.modules.crm.domain.AdGoodsOrderDetail;
-import net.myspring.future.modules.crm.domain.Depot;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
+import net.myspring.future.modules.layout.domain.AdGoodsOrder;
+import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

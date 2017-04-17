@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.model;
 
-import net.myspring.future.modules.crm.domain.AdApply;
+
+import net.myspring.future.modules.layout.domain.AdApply;
 
 import java.util.List;
 
