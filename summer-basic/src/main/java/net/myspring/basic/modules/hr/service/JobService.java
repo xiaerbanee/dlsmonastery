@@ -43,20 +43,24 @@ public class JobService {
         return jobDtoList;
     }
 
-    public JobDto findDto(String id){
-        Job job=findOne(id);
-        JobDto jobDto= BeanUtil.map(job,JobDto.class);
-        cacheUtils.initCacheInput(jobDto);
-        return jobDto;
-    }
-
-    public JobForm save(JobForm jobForm){
-        if(StringUtils.isBlank(jobForm.getId())) {
-            jobManager.save(BeanUtil.map(jobForm,Job.class));
-        } else {
-            jobManager.updateForm(jobForm);
+    public JobForm findForm(JobForm jobForm){
+        if(!jobForm.isCreate()){
+            Job job=jobManager.findOne(jobForm.getId());
+            jobForm= BeanUtil.map(job,JobForm.class);
+            cacheUtils.initCacheInput(jobForm);
         }
         return jobForm;
+    }
+
+    public Job save(JobForm jobForm){
+        Job job;
+        if(StringUtils.isBlank(jobForm.getId())) {
+            job = BeanUtil.map(jobForm, Job.class);
+            job=jobManager.save(job);
+        } else {
+            job=jobManager.updateForm(jobForm);
+        }
+        return job;
     }
 
     public void logicDeleteOne(String id){

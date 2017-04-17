@@ -9,6 +9,7 @@ import net.myspring.basic.modules.hr.dto.OfficeChangeDto;
 import net.myspring.basic.modules.hr.mapper.AccountTaskMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeChangeMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
+import net.myspring.basic.modules.hr.web.form.OfficeChangeForm;
 import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,13 @@ public class OfficeChangeService {
         return officeChange;
     }
 
-    public OfficeChangeDto findDto(String id){
-        OfficeChange officeChange=findOne(id);
-        OfficeChangeDto officeChangeDto= BeanUtil.map(officeChange,OfficeChangeDto.class);
-        cacheUtils.initCacheInput(officeChangeDto);
-        return officeChangeDto;
+    public OfficeChangeForm findForm(OfficeChangeForm officeChangeForm){
+        if(!officeChangeForm.isCreate()){
+            OfficeChange officeChange=findOne(officeChangeForm.getId());
+            officeChangeForm= BeanUtil.map(officeChange,OfficeChangeForm.class);
+            cacheUtils.initCacheInput(officeChangeForm);
+        }
+        return officeChangeForm;
     }
 
     public void notify(OfficeChange officeChange) {

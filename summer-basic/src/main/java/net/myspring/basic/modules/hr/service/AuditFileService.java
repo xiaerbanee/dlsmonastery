@@ -35,39 +35,41 @@ public class AuditFileService {
     private CacheUtils cacheUtils;
 
 
-    public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery){
-        Page<AuditFileDto> page=auditFileMapper.findPage(pageable,auditFileQuery);
+    public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery) {
+        Page<AuditFileDto> page = auditFileMapper.findPage(pageable, auditFileQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
-    public AuditFile findOne(String id){
-        AuditFile auditFile=auditFileMapper.findOne(id);
+    public AuditFile findOne(String id) {
+        AuditFile auditFile = auditFileMapper.findOne(id);
         return auditFile;
     }
 
-    public AuditFileForm findForm(String id){
-        AuditFile auditFile=auditFileMapper.findOne(id);
-        AuditFileForm auditFileForm= BeanUtil.map(auditFile,AuditFileForm.class);
-        cacheUtils.initCacheInput(auditFileForm);
+    public AuditFileForm findForm(AuditFileForm auditFileForm) {
+        if (!auditFileForm.isCreate()) {
+            AuditFile auditFile = auditFileMapper.findOne(auditFileForm.getId());
+            auditFileForm = BeanUtil.map(auditFile, AuditFileForm.class);
+            cacheUtils.initCacheInput(auditFileForm);
+        }
         return auditFileForm;
     }
 
     public void notify(AuditFile auditFile) {
         String name = "文件审批";
-        AccountTask accountTask = accountTaskMapper.findByNameAndExtendId(name,auditFile.getId());
-        if(accountTask==null){
-            accountTask =new AccountTask();
+        AccountTask accountTask = accountTaskMapper.findByNameAndExtendId(name, auditFile.getId());
+        if (accountTask == null) {
+            accountTask = new AccountTask();
             accountTask.setName(name);
             accountTask.setExtendId(auditFile.getId());
             accountTask.setPositionId(auditFile.getProcessFlow().getPositionId());
             accountTask.setOfficeId(SecurityUtils.getOfficeId());
             accountTaskMapper.save(accountTask);
-        }else {
-            if(AuditTypeEnum.PASS.getValue().equals(auditFile.getProcessStatus()) ||AuditTypeEnum.NOT_PASS.getValue().equals(auditFile.getProcessStatus())){
+        } else {
+            if (AuditTypeEnum.PASS.getValue().equals(auditFile.getProcessStatus()) || AuditTypeEnum.NOT_PASS.getValue().equals(auditFile.getProcessStatus())) {
                 accountTask.setStatus("已审核");
                 accountTask.setEnabled(false);
-            }else{
+            } else {
                 accountTask.setPositionId(auditFile.getProcessFlow().getPositionId());
                 accountTask.setStatus(auditFile.getProcessStatus());
             }

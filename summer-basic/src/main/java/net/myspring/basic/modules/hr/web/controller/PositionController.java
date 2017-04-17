@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.web.controller;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DataScopeEnum;
 import net.myspring.basic.common.utils.Const;
@@ -39,52 +40,45 @@ public class PositionController {
     private PermissionService permissionService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<PositionDto> findPage(Pageable pageable, PositionQuery positionQuery){
-        Page<PositionDto> page = positionService.findPage(pageable,positionQuery);
+    public Page<PositionDto> findPage(Pageable pageable, PositionQuery positionQuery) {
+        Page<PositionDto> page = positionService.findPage(pageable, positionQuery);
         return page;
     }
 
-    @RequestMapping(value="getQuery")
-    public Map<String,Object>  getQuery(){
-        Map<String,Object> map = Maps.newHashMap();
-        map.put("jobDtoList",jobService.findAll());
-        return map;
-    }
-
-    @RequestMapping(value = "getFormProperty")
-    public Map<String,Object> getFormProperty(Position position){
-        Map<String,Object> map = Maps.newHashMap();
-        List<String> permissionIdList = position.getId()==null?new ArrayList<>():positionService.findPermissionByPosition(position.getId());
-        map.put("permissionTree",permissionService.findPermissionTree(permissionIdList));
-        map.put("jobDtoList",jobService.findAll());
-        map.put("dataScopeMap", DataScopeEnum.getMap());
-        return map;
+    @RequestMapping(value = "getQuery")
+    public PositionQuery getQuery(PositionQuery positionQuery) {
+        positionQuery.setJobList(jobService.findAll());
+        return positionQuery;
     }
 
     @RequestMapping(value = "findOne")
-    public PositionDto findOne(String id) {
-        PositionDto positionDto=positionService.findDto(id);
-        return positionDto;
+    public PositionForm findOne(PositionForm positionForm) {
+        positionForm= positionService.findForm(positionForm);
+        List<String> permissionIdList = positionForm.isCreate()? Lists.newArrayList() : positionService.findPermissionByPosition(positionForm.getId());
+        positionForm.setPermissionTree( permissionService.findPermissionTree(permissionIdList));
+        positionForm.setJobList( jobService.findAll());
+        positionForm.setDataScopeMap(DataScopeEnum.getMap());
+        return positionForm;
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(PositionForm positionForm, String permissionIdStr) {
         positionForm.setPermissionIdList(StringUtils.getSplitList(permissionIdStr, Const.CHAR_COMMA));
         positionService.save(positionForm);
-        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
         positionService.delete(id);
-        RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
 
 
     @RequestMapping(value = "search")
-    public List<PositionDto>  search(String name) {
-        List<PositionDto> positionDtoList  = positionService.findByNameLike(name);
+    public List<PositionDto> search(String name) {
+        List<PositionDto> positionDtoList = positionService.findByNameLike(name);
         return positionDtoList;
     }
 

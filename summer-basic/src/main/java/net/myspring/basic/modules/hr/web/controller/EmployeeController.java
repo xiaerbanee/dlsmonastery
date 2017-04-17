@@ -3,6 +3,8 @@ package net.myspring.basic.modules.hr.web.controller;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
+import net.myspring.basic.common.utils.Global;
+import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.service.AccountService;
 import net.myspring.basic.modules.hr.service.PositionService;
@@ -54,15 +56,15 @@ public class EmployeeController {
         return restResponse;
     }
 
-    @RequestMapping(value = "findDate")
-    public Map<String,Object> findOne(String id){
-        Map<String,Object> map=Maps.newHashMap();
-        EmployeeDto employeeDto=employeeService.findDto(id);
-        map.put("employee",employeeDto);
+    @RequestMapping(value = "findOne")
+    public EmployeeForm findOne(EmployeeForm employeeForm){
+        employeeForm=employeeService.findForm(employeeForm);
+        employeeForm.setPositionList(positionService.findAll());
+        employeeForm.setEducationList( Global.getDictEnumValueList(DictEnumCategoryEnum.EDUCATION.getValue()));
         AccountForm accountForm=new AccountForm();
-        accountForm.setId(employeeDto.getAccountId());
-        map.put("account",accountService.findForm(accountForm));
-        return map;
+        accountForm.setId(employeeForm.getAccountId());
+        employeeForm.setAccount(accountService.findForm(accountForm));
+        return employeeForm;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -78,20 +80,11 @@ public class EmployeeController {
     }
 
 
-    @RequestMapping(value="getFormProperty")
-    public Map<String,Object> getFormProperty(){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("positionDtoList",positionService.findAll());
-        map.put("educationsList", dictEnumService.findByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
-        return map;
-    }
-
     @RequestMapping(value="getQuery")
-    public Map<String,Object> getQuery(){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("positions",positionService.findAll());
-        map.put("statusList", EmployeeStatusEnum.values());
-        return map;
+    public EmployeeQuery getQuery(EmployeeQuery employeeQuery){
+        employeeQuery.setPositionList(positionService.findAll());
+        employeeQuery.setStatusList(EmployeeStatusEnum.getList());
+        return employeeQuery;
     }
 
     @RequestMapping(value = "editForm",method = RequestMethod.GET)

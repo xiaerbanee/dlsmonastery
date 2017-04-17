@@ -38,12 +38,13 @@ public class DutyOvertimeService {
         return page;
     }
 
-    public DutyOvertimeForm save(DutyOvertimeForm dutyOvertimeForm) {
+    public DutyOvertime save(DutyOvertimeForm dutyOvertimeForm) {
         dutyOvertimeForm.setLeftHour(dutyOvertimeForm.getHour());
         dutyOvertimeForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyOvertimeForm.setEmployeeId(SecurityUtils.getEmployeeId());
-        dutyOvertimeMapper.save(BeanUtil.map(dutyOvertimeForm,DutyOvertime.class));
-        return dutyOvertimeForm;
+        DutyOvertime dutyOvertime = BeanUtil.map(dutyOvertimeForm, DutyOvertime.class);
+        dutyOvertimeMapper.save(dutyOvertime);
+        return dutyOvertime;
     }
 
     public List<DutyOvertime> findByDutyDate(String employeeId, LocalDate dutyDate) {
@@ -66,11 +67,13 @@ public class DutyOvertimeService {
         return dutyOvertime;
     }
 
-    public DutyOvertimeDto findDto(String id) {
-        DutyOvertime dutyOvertime =findOne(id);
-        DutyOvertimeDto dutyOvertimeDto= BeanUtil.map(dutyOvertime,DutyOvertimeDto.class);
-        cacheUtils.initCacheInput(dutyOvertimeDto);
-        return dutyOvertimeDto;
+    public DutyOvertimeForm findForm(DutyOvertimeForm dutyOvertimeForm) {
+        if(!dutyOvertimeForm.isCreate()){
+            DutyOvertime dutyOvertime =dutyOvertimeMapper.findOne(dutyOvertimeForm.getId());
+            dutyOvertimeForm= BeanUtil.map(dutyOvertime,DutyOvertimeForm.class);
+            cacheUtils.initCacheInput(dutyOvertimeForm);
+        }
+        return dutyOvertimeForm;
     }
 
     public Double getAvailableHour(String employeeId, LocalDateTime currentDate) {

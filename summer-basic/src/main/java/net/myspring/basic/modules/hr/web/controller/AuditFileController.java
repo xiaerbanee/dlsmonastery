@@ -79,7 +79,7 @@ public class AuditFileController {
 
     @RequestMapping(value = "findOne", method = RequestMethod.GET)
     public AuditFileForm detail(AuditFileForm auditFileForm) {
-        auditFileForm=auditFileService.findForm(auditFileForm.getId());
+        auditFileForm=auditFileService.findForm(auditFileForm);
         auditFileForm.setBoolMap(BoolEnum.getMap());
         auditFileForm.setFolder(folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
         auditFileForm.setProcessTypesList(processTypeService.findEnabledAuditFileType());

@@ -58,23 +58,28 @@ public class PositionService {
         return position;
     }
 
-    public PositionDto findDto(String id){
-        Position position = findOne(id);
-        PositionDto positionDto= BeanUtil.map(position,PositionDto.class);
-        return positionDto;
+    public PositionForm findForm(PositionForm positionForm){
+        if(!positionForm.isCreate()){
+            Position position = positionManager.findOne(positionForm.getId());
+            positionForm= BeanUtil.map(position,PositionForm.class);
+            cacheUtils.initCacheInput(positionForm);
+        }
+        return positionForm;
     }
 
-    public void save(PositionForm positionForm){
+    public Position save(PositionForm positionForm){
+        Position position;
         if(positionForm.isCreate()){
-            positionManager.save(BeanUtil.map(positionForm,Position.class));
+            position=BeanUtil.map(positionForm,Position.class);
+            position=positionManager.save(position);
         }else{
-            positionManager.updateForm(positionForm);
+            position=positionManager.updateForm(positionForm);
         }
         positionMapper.deleteByPosition(positionForm.getId());
         if(CollectionUtil.isNotEmpty(positionForm.getPermissionIdList())){
             positionMapper.savePositionAndPermission(positionForm.getId(),positionForm.getPermissionIdList());
         }
-
+        return position;
     }
 
     public void delete(String id){

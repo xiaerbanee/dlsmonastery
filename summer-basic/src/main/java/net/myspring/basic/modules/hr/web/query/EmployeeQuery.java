@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 
@@ -23,22 +24,22 @@ public class EmployeeQuery {
     private String positionId;
     private String leaderName;
     private String officeId;
-    private List<PositionDto> positionDtoList;
-    private EmployeeStatusEnum[] statusList;
+    private List<PositionDto> positionList= Lists.newArrayList();
+    private List<String> statusList=Lists.newArrayList();
 
-    public List<PositionDto> getPositionDtoList() {
-        return positionDtoList;
+    public List<PositionDto> getPositionList() {
+        return positionList;
     }
 
-    public void setPositionDtoList(List<PositionDto> positionDtoList) {
-        this.positionDtoList = positionDtoList;
+    public void setPositionList(List<PositionDto> positionList) {
+        this.positionList = positionList;
     }
 
-    public EmployeeStatusEnum[] getStatusList() {
+    public List<String> getStatusList() {
         return statusList;
     }
 
-    public void setStatusList(EmployeeStatusEnum[] statusList) {
+    public void setStatusList(List<String> statusList) {
         this.statusList = statusList;
     }
 

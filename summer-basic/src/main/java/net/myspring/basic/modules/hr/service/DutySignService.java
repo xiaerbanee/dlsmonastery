@@ -36,13 +36,14 @@ public class DutySignService {
     private CacheUtils cacheUtils;
 
 
-    public DutySignForm save(DutySignForm dutySignForm) {
+    public DutySign save(DutySignForm dutySignForm) {
         dutySignForm.setDutyDate(LocalDate.now());
         dutySignForm.setDutyTime(LocalTime.now());
         dutySignForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutySignForm.setEmployeeId(SecurityUtils.getEmployeeId());
-        dutySignMapper.save(BeanUtil.map(dutySignForm,DutySign.class));
-        return dutySignForm;
+        DutySign dutySign=BeanUtil.map(dutySignForm,DutySign.class);
+        dutySignMapper.save(dutySign);
+        return dutySign;
     }
 
     public Page<DutySignDto> findPage(Pageable pageable, DutySignQuery dutySignQuery) {
@@ -67,11 +68,13 @@ public class DutySignService {
         return dutySign;
     }
 
-    public DutySignDto findDto(String id) {
-        DutySign dutySign =findOne(id);
-        DutySignDto dutySignDto= BeanUtil.map(dutySign,DutySignDto.class);
-        cacheUtils.initCacheInput(dutySignDto);
-        return dutySignDto;
+    public DutySignForm findForm(DutySignForm dutySignForm) {
+        if(!dutySignForm.isCreate()){
+            DutySign dutySign =findOne(dutySignForm.getId());
+            dutySignForm= BeanUtil.map(dutySign,DutySignForm.class);
+            cacheUtils.initCacheInput(dutySignForm);
+        }
+        return dutySignForm;
     }
 
     public SimpleExcelSheet findSimpleExcelSheet(Workbook workbook, DutySignQuery dutySignQuery){

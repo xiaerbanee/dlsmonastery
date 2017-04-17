@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.web.controller;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.config.ExcelView;
 import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.modules.hr.domain.DutySign;
 import net.myspring.basic.modules.hr.dto.DutySignDto;
 import net.myspring.basic.modules.hr.service.DutySignService;
 import net.myspring.basic.modules.hr.service.OfficeService;
@@ -49,11 +50,10 @@ public class DutySignController {
     }
 
     @RequestMapping(value = "getQuery")
-    public Map<String, Object> getQuery() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("officeList", officeService.findAll());
-        map.put("positionDtoList", positionService.findAll());
-        return map;
+    public DutySignQuery getQuery(DutySignQuery dutySignQuery) {
+        dutySignQuery.setOfficeList( officeService.findAll());
+        dutySignQuery.setPositionList(positionService.findAll());
+        return dutySignQuery;
     }
 
     @RequestMapping(value = "save")
@@ -70,10 +70,10 @@ public class DutySignController {
         return restResponse;
     }
 
-    @RequestMapping(value = "detail")
-    public DutySignDto detail(String id) {
-        DutySignDto dutySignDto = dutySignService.findDto(id);
-        return dutySignDto;
+    @RequestMapping(value = "findOne")
+    public DutySignForm detail(DutySignForm dutySignForm) {
+        dutySignForm = dutySignService.findForm(dutySignForm);
+        return dutySignForm;
     }
 
     @RequestMapping(value = "export")

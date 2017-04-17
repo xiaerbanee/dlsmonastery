@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.dto.OfficeDto;
 import net.myspring.basic.modules.hr.dto.PositionDto;
@@ -20,8 +21,8 @@ public class DutySignQuery {
     private String officeName;
     private String positionName;
     private List<String> officeIds;
-    private List<Office> officeList;
-    private List<PositionDto> positionDtoList;
+    private List<Office> officeList= Lists.newArrayList();
+    private List<PositionDto> positionList= Lists.newArrayList();
 
     public List<Office> getOfficeList() {
         return officeList;
@@ -31,12 +32,12 @@ public class DutySignQuery {
         this.officeList = officeList;
     }
 
-    public List<PositionDto> getPositionDtoList() {
-        return positionDtoList;
+    public List<PositionDto> getPositionList() {
+        return positionList;
     }
 
-    public void setPositionDtoList(List<PositionDto> positionDtoList) {
-        this.positionDtoList = positionDtoList;
+    public void setPositionList(List<PositionDto> positionList) {
+        this.positionList = positionList;
     }
 
     public LocalDateTime getDutyDateStart() {

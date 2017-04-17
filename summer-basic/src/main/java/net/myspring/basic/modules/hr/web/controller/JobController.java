@@ -30,9 +30,9 @@ public class JobController {
     }
 
     @RequestMapping(value = "findOne")
-    public JobDto findOne(String id){
-        JobDto jobDto=jobService.findDto(id);
-        return jobDto;
+    public JobForm findOne(JobForm jobForm){
+        jobForm=jobService.findForm(jobForm);
+        return jobForm;
     }
 
     @RequestMapping(value = "save")

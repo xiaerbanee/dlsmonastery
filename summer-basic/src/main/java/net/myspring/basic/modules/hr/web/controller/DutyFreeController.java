@@ -26,8 +26,6 @@ public class DutyFreeController {
     @Autowired
     private DutyFreeService dutyFreeService;
 
-
-
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyFreeDto> list(Pageable pageable, DutyFreeQuery dutyFreeQuery) {
         dutyFreeQuery.setCreatedBy(SecurityUtils.getAccountId());
@@ -36,7 +34,7 @@ public class DutyFreeController {
     }
 
     @RequestMapping(value="getFormProperty")
-    public Map<String,Object> getQuery(){
+    public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("dateList", DutyDateTypeEnum.values());
         return map;
