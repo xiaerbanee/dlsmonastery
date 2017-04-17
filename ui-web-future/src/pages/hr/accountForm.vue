@@ -7,7 +7,7 @@
           <el-col :span="10">
             <el-form-item :label="$t('accountForm.mainAccount')" prop="employeeId">
               <el-select v-model="inputForm.employeeId" filterable remote :placeholder="$t('accountForm.inputWord')" :remote-method="remoteEmployee" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="employee in employees" :key="employee.id" :label="employee.name" :value="employee.id"></el-option>
+                <el-option v-for="employee in employees" :key="employee.id" :label="employee.employeeName" :value="employee.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.loginName')" prop="loginName">
@@ -72,7 +72,9 @@
         depots:[],
         dataScopeOffices:[],
         inputForm:{
-          id:this.$route.query.id,
+        },
+        submitData:{
+          id:'',
           employeeId:'',
           loginName:'',
           officeId:"",
@@ -149,8 +151,9 @@
         }
       }
     },created(){
-      axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then  ((response)=>{
-        util.copyValue(response.data,this.inputForm);
+      axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          console.log(response.data);
+        this.inputForm = response.data;
         this.formProperty.positionDtoList = response.data.positionDtoList;
         this.inputForm.viewReport = response.data.viewReport?1:0;
         if(response.data.officeId!=null){

@@ -56,17 +56,21 @@
       return {
         page:{},
         formData:{
-          page:0,
-          size:25,
-          officeId:'',
-          createdDateBTW:'',
-          createdByName:'',
-          type:''
+
         },formLabel:{
           createdDateBTW:{label:this.$t('accountChangeList.createdDate')},
           createdByName:{label:this.$t('accountChangeList.createdBy')},
           type:{label:this.$t('accountChangeList.type')},
           officeId:{label:this.$t('accountChangeList.areaName'),value:''}
+        },
+        submitData:{
+          page:0,
+          size:25,
+          officeId:'',
+          createdDate:'',
+          createdDateBTW:'',
+          createdByName:'',
+          type:''
         },
         pickerDateOption:util.pickerDateOption,
         formProperty:{},
@@ -80,8 +84,10 @@
         this.pageLoading = true;
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         this.formLabel.officeId.value=util.getLabel(this.formProperty.areas, this.formData.officeId);
+        util.getQuery("accountChangeList");
         util.setQuery("accountChangeList",this.formData);
-        axios.get('/api/basic/hr/accountChange',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/hr/accountChange',{params:this.submitData}).then((response) => {
           console.log(response.data);
           this.page = response.data;
           this.pageLoading = false;
@@ -109,12 +115,13 @@
           })
         }
       }},created () {
+        var that=this;
       this.pageHeight = window.outerHeight -120;
-      util.copyValue(this.$route.query,this.formData);
       axios.get('/api/basic/hr/accountChange/getQuery').then((response) =>{
-        this.formProperty=response.data;
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>
