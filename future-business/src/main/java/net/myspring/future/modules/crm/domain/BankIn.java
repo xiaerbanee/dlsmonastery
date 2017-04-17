@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 import net.myspring.common.domain.DataEntity;
+import net.myspring.future.modules.basic.domain.Bank;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

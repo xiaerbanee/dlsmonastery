@@ -45,9 +45,9 @@ public class MenuCategoryController {
     }
 
     @RequestMapping(value = "findOne")
-    public MenuCategoryDto findOne(String id){
-        MenuCategoryDto menuCategoryDto=menuCategoryService.findDto(id);
-        return menuCategoryDto;
+    public MenuCategoryForm findOne(MenuCategoryForm menuCategoryForm){
+        menuCategoryForm=menuCategoryService.findForm(menuCategoryForm.getId());
+        return menuCategoryForm;
     }
 
 }

@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Maps;
+import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.web.form.DictMapForm;
 import net.myspring.basic.modules.sys.web.query.DictMapQuery;
@@ -24,18 +25,10 @@ public class DictMapController {
     @Autowired
     private DictMapService dictMapService;
 
-    @RequestMapping(value = "getFormProperty")
-    public Map<String, Object> getFormProperty() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("category", dictMapService.findDistinctCategory());
-        return map;
-    }
-
     @RequestMapping(value = "getListProperty")
-    public Map<String, Object> getListProperty() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("category", dictMapService.findDistinctCategory());
-        return map;
+    public DictMapQuery getListProperty(DictMapQuery dictMapQuery) {
+        dictMapQuery.setCategoryList(dictMapService.findDistinctCategory());
+        return dictMapQuery;
     }
 
     @RequestMapping
@@ -45,9 +38,10 @@ public class DictMapController {
     }
 
     @RequestMapping(value = "findOne")
-    public DictMapDto findOne(String id) {
-        DictMapDto dictMapDto=dictMapService.findDto(id);
-        return dictMapDto;
+    public DictMapForm findOne(DictMapForm dictMapForm) {
+        dictMapForm=dictMapService.findForm(dictMapForm.getId());
+        dictMapForm.setCategoryList(dictMapService.findDistinctCategory());
+        return dictMapForm;
     }
 
     @RequestMapping(value = "save")

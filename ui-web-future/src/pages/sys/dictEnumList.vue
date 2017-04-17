@@ -16,7 +16,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
-                  <el-option v-for="category in formProperty.category" :key="category" :label="category" :value="category"></el-option>
+                  <el-option v-for="category in formData.categoryList" :key="category" :label="category" :value="category"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.value.label" :label-width="formLabelWidth">
@@ -57,20 +57,13 @@
     data() {
       return {
         page:{},
-        formData:{
-          page:0,
-          size:25,
-          createdDate:'',
-          createdDateBTW:'',
-          category:'',
-          value:''
-        },formLabel:{
+        formData:{},
+        formLabel:{
           createdDateBTW:{label: this.$t('dictEnumList.createdDate')},
           category:{label: this.$t('dictEnumList.category')},
           value:{label: this.$t('dictEnumList.value')}
         },
         pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -91,7 +84,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -110,12 +103,13 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/basic/sys/dictEnum/getListProperty').then((response) =>{
-        this.formProperty=response.data;
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/basic/sys/dictEnum/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>

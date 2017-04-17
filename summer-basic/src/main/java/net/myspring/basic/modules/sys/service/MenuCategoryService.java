@@ -29,11 +29,11 @@ public class MenuCategoryService {
         return menuCategory;
     }
 
-    public MenuCategoryDto findDto(String id){
-        MenuCategory menuCategory=findOne(id);
-        MenuCategoryDto menuCategoryDto= BeanUtil.map(menuCategory,MenuCategoryDto.class);
-        cacheUtils.initCacheInput(menuCategoryDto);
-        return menuCategoryDto;
+    public MenuCategoryForm findForm(String id){
+        MenuCategory menuCategory=menuCategoryMapper.findOne(id);
+        MenuCategoryForm menuCategoryForm= BeanUtil.map(menuCategory,MenuCategoryForm.class);
+        cacheUtils.initCacheInput(menuCategoryForm);
+        return menuCategoryForm;
     }
 
     public Page<MenuCategoryDto> findPage(Pageable pageable,MenuCategoryQuery menuCategoryQuery) {

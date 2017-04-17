@@ -49,16 +49,10 @@ public class PermissionController {
     }
 
     @RequestMapping(value = "findOne")
-    public PermissionDto findOne(String id) {
-        PermissionDto permissionDto=permissionService.findDto(id);
-        return permissionDto;
-    }
-
-    @RequestMapping(value="getFormProperty")
-    public Map<String,Object> getFormProperty(){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("menu",menuService.findAll());
-        return map;
+    public PermissionForm findOne(PermissionForm permissionForm) {
+        permissionForm=permissionService.findForm(permissionForm.getId());
+        permissionForm.setMenuList(menuService.findAll());
+        return permissionForm;
     }
 
     @RequestMapping(value = "search")

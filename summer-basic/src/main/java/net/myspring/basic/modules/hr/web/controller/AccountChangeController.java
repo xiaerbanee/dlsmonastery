@@ -48,24 +48,17 @@ public class AccountChangeController {
     }
 
     @RequestMapping(value="getListProperty")
-    public Map<String,Object> getListProperty(){
-        Map<String,Object> map = Maps.newHashMap();
-        map.put("areas",officeService.findByType(Const.OFFICE_TYPE_AREA));
-        map.put("types", AccountChangeTypeEnum.values());
-        return map;
-    }
-
-    @RequestMapping(value = "getFormProperty")
-    public Map<String,Object> getFormProperty(){
-        Map<String,Object> map = Maps.newHashMap();
-        map.put("types",AccountChangeTypeEnum.values());
-        map.put("positions",positionService.findAll());
-        return map;
+    public AccountChangeQuery getListProperty(AccountChangeQuery accountChangeQuery){
+        accountChangeQuery.setAreaList(officeService.findByType(Const.OFFICE_TYPE_AREA));
+        accountChangeQuery.setTypeList(AccountChangeTypeEnum.getList());
+        return accountChangeQuery;
     }
 
     @RequestMapping(value = "findOne")
-    public AccountChangeDto findOne(String id ){
-        AccountChangeDto accountChangeDto=accountChangeService.findDto(id);
-        return accountChangeDto;
+    public AccountChangeForm findOne(AccountChangeForm accountChangeForm){
+        accountChangeForm=accountChangeService.findForm(accountChangeForm.getId());
+        accountChangeForm.setTypeList(AccountChangeTypeEnum.getList());
+        accountChangeForm.setPositionList(positionService.findAll());
+        return accountChangeForm;
     }
 }

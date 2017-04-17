@@ -1,7 +1,11 @@
 package net.myspring.basic.modules.sys.web.form;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Folder;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.sys.dto.FolderDto;
+
+import java.util.List;
 
 /**
  * Created by admin on 2017/4/5.
@@ -12,6 +16,15 @@ public class FolderForm extends DataForm<Folder>{
     private String name;
     private String parentIds;
     private String parentId;
+    private List<FolderDto> folderList= Lists.newArrayList();
+
+    public List<FolderDto> getFolderList() {
+        return folderList;
+    }
+
+    public void setFolderList(List<FolderDto> folderList) {
+        this.folderList = folderList;
+    }
 
     public Folder getParent() {
         return parent;

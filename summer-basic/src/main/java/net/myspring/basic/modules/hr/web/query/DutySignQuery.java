@@ -1,5 +1,8 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import net.myspring.basic.modules.hr.domain.Office;
+import net.myspring.basic.modules.hr.dto.OfficeDto;
+import net.myspring.basic.modules.hr.dto.PositionDto;
 import org.joda.time.LocalDateTime;
 
 import java.time.LocalDate;
@@ -17,6 +20,24 @@ public class DutySignQuery {
     private String officeName;
     private String positionName;
     private List<String> officeIds;
+    private List<Office> officeList;
+    private List<PositionDto> positionDtoList;
+
+    public List<Office> getOfficeList() {
+        return officeList;
+    }
+
+    public void setOfficeList(List<Office> officeList) {
+        this.officeList = officeList;
+    }
+
+    public List<PositionDto> getPositionDtoList() {
+        return positionDtoList;
+    }
+
+    public void setPositionDtoList(List<PositionDto> positionDtoList) {
+        this.positionDtoList = positionDtoList;
+    }
 
     public LocalDateTime getDutyDateStart() {
         return dutyDateStart;

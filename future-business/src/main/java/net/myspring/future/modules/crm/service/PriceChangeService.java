@@ -1,10 +1,10 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.mapper.PriceChangeImeMapper;
 import net.myspring.future.modules.crm.mapper.PriceChangeMapper;
 import net.myspring.future.modules.crm.mapper.PriceChangeProductMapper;
-import net.myspring.future.modules.crm.mapper.ProductTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

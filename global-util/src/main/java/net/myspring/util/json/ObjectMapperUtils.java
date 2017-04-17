@@ -36,8 +36,6 @@ public class ObjectMapperUtils {
         javaTimeModule.addDeserializer(LocalDateTime.class,new LocalDateTimeDeserializer());
         javaTimeModule.addDeserializer(LocalTime.class,new LocalTimeDeserializer());
         objectMapper.registerModule(javaTimeModule);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true) ;
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
         return objectMapper;

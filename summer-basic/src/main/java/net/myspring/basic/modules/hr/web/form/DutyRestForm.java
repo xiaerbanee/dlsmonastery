@@ -1,5 +1,7 @@
 package net.myspring.basic.modules.hr.web.form;
 
+import net.myspring.basic.common.enums.DutyDateTypeEnum;
+import net.myspring.basic.common.enums.DutyRestTypeEnum;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.hr.domain.DutyRest;
 import net.myspring.basic.common.form.DataForm;
@@ -12,6 +14,10 @@ public class DutyRestForm extends DataForm<DutyRest> {
     private Double overtimeLeftHour;
     private String status;
     private String employeeId;
+    private DutyRestForm dutyRestForm;
+    private Double expiredHour;
+    private DutyRestTypeEnum[] restList;
+    private DutyDateTypeEnum[] dateList;
 
     public Double getAnnualLeftHour() {
         return annualLeftHour;

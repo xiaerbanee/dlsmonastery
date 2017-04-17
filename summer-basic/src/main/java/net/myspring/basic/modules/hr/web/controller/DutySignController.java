@@ -52,7 +52,7 @@ public class DutySignController {
     public Map<String, Object> getListProperty() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("officeList", officeService.findAll());
-        map.put("positionList", positionService.findAll());
+        map.put("positionDtoList", positionService.findAll());
         return map;
     }
 

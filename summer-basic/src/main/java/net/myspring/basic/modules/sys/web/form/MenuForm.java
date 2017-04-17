@@ -1,9 +1,15 @@
 package net.myspring.basic.modules.sys.web.form;
 
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by admin on 2017/4/5.
@@ -21,6 +27,41 @@ public class MenuForm extends DataForm<Menu>{
     private String sort;
     private String name;
     private String category;
+    private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
+    private List<String> categoryList= Lists.newArrayList();;
+    private Map<Boolean,String> bools= Maps.newHashMap();
+
+    public void setMobile(Boolean mobile) {
+        this.mobile = mobile;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public List<MenuCategoryDto> getMenuCategoryList() {
+        return menuCategoryList;
+    }
+
+    public void setMenuCategoryList(List<MenuCategoryDto> menuCategoryList) {
+        this.menuCategoryList = menuCategoryList;
+    }
+
+    public List<String> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<String> categoryList) {
+        this.categoryList = categoryList;
+    }
+
+    public Map<Boolean, String> getBools() {
+        return bools;
+    }
+
+    public void setBools(Map<Boolean, String> bools) {
+        this.bools = bools;
+    }
 
     public String getRemarks() {
         return remarks;

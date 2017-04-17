@@ -41,12 +41,6 @@ public class DutyAnnualController {
         return page;
     }
 
-    @RequestMapping(value = "getListProperty")
-    public Map<String,Object> getListProperty(){
-        Map<String,Object> map = Maps.newHashMap();
-        return map;
-    }
-
     @RequestMapping(value = "import/template", method = RequestMethod.GET)
     public ModelAndView impotTemplate() {
         Workbook workbook = new SXSSFWorkbook(10000);

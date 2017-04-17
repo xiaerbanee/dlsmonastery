@@ -2,6 +2,8 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.common.domain.IdEntity;
+import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.ProductType;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

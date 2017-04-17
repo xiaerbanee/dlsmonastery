@@ -3,6 +3,8 @@ package net.myspring.basic.modules.sys.web.form;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.common.form.DataForm;
 
+import java.util.List;
+
 /**
  * Created by admin on 2017/4/1.
  */
@@ -12,6 +14,15 @@ public class DictMapForm extends DataForm<DictMap>{
     private String name;
     private String value;
     private String remarks;
+    private List<String> categoryList;
+
+    public List<String> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<String> categoryList) {
+        this.categoryList = categoryList;
+    }
 
     public String getRemarks() {
         return remarks;

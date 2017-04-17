@@ -1,9 +1,11 @@
 package net.myspring.basic.modules.sys.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/7.
@@ -15,6 +17,15 @@ public class DictMapQuery {
     private String createdDateBTW;
     private LocalDateTime createdDateStart;
     private LocalDateTime createdDateEnd;
+    private List<String> categoryList= Lists.newArrayList();
+
+    public List<String> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<String> categoryList) {
+        this.categoryList = categoryList;
+    }
 
     public LocalDateTime getCreatedDateStart() {
         return createdDateStart;
@@ -23,7 +34,7 @@ public class DictMapQuery {
     public void setCreatedDateStart(LocalDateTime createdDateStart) {
         if(createdDateEnd==null&& StringUtils.isNotBlank(createdDateBTW)){
             String[] tempParamValues = createdDateBTW.split(" - ");
-            this.createdDateStart= LocalDateTimeUtils.parse(tempParamValues[0]);
+            this.createdDateStart= LocalDateTimeUtils.parse(tempParamValues[0]+"00:00:00");
         }
         this.createdDateStart = createdDateStart;
     }

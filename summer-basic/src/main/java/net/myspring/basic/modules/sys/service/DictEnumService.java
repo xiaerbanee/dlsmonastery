@@ -38,21 +38,24 @@ public class DictEnumService {
     }
 
 
-    public DictEnumDto findDto(String id) {
-        DictEnum dictEnum =dictEnumManager.findOne(id);
-        DictEnumDto dictEnumDto= BeanUtil.map(dictEnum,DictEnumDto.class);
-        cacheUtils.initCacheInput(dictEnumDto);
-        return dictEnumDto;
-    }
-
-    public DictEnumForm save(DictEnumForm dictEnumForm) {
-        if(dictEnumForm.isCreate()) {
-            DictEnum dictEnum = BeanUtil.map(dictEnumForm, DictEnum.class);
-            dictEnumManager.save(dictEnum);
-        } else {
-            dictEnumManager.updateForm(dictEnumForm);
+    public DictEnumForm findForm(DictEnumForm dictEnumForm) {
+        if(!dictEnumForm.isCreate()) {
+            DictEnum dictEnum =dictEnumManager.findOne(dictEnumForm.getId());
+            dictEnumForm= BeanUtil.map(dictEnum,DictEnumForm.class);
+            cacheUtils.initCacheInput(dictEnumForm);
         }
         return dictEnumForm;
+    }
+
+    public DictEnum save(DictEnumForm dictEnumForm) {
+        DictEnum dictEnum;
+        if(dictEnumForm.isCreate()) {
+            dictEnum = BeanUtil.map(dictEnumForm, DictEnum.class);
+            dictEnum = dictEnumManager.save(dictEnum);
+        } else {
+            dictEnum = dictEnumManager.updateForm(dictEnumForm);
+        }
+        return dictEnum;
     }
 
 

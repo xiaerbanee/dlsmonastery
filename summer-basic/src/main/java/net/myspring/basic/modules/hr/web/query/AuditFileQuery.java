@@ -1,5 +1,8 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import com.google.common.collect.Lists;
+import net.myspring.basic.modules.sys.domain.Folder;
+import net.myspring.basic.modules.sys.domain.ProcessType;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 
@@ -26,6 +29,24 @@ public class AuditFileQuery {
     private String content;
     private String title;
     private String processflowName;
+    private Folder folder;
+    private List<ProcessType> processTypesList= Lists.newArrayList();
+
+    public Folder getFolder() {
+        return folder;
+    }
+
+    public void setFolder(Folder folder) {
+        this.folder = folder;
+    }
+
+    public List<ProcessType> getProcessTypesList() {
+        return processTypesList;
+    }
+
+    public void setProcessTypesList(List<ProcessType> processTypesList) {
+        this.processTypesList = processTypesList;
+    }
 
     public String getId() {
         return id;
@@ -66,7 +87,7 @@ public class AuditFileQuery {
     public LocalDateTime getCreatedDateStart() {
         if(createdDateStart==null&& StringUtils.isNotBlank(createdDateBTW)){
             String[] tempParamValues = createdDateBTW.split(" - ");
-            this.createdDateStart= LocalDateTimeUtils.parse(tempParamValues[0]);
+            this.createdDateStart= LocalDateTimeUtils.parse(tempParamValues[0]+ " 00:00:00");
         }
         return createdDateStart;
     }

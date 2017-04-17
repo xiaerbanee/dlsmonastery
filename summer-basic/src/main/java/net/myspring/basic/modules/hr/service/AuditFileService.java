@@ -9,6 +9,7 @@ import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.mapper.AccountTaskMapper;
 import net.myspring.basic.modules.hr.mapper.AuditFileMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
+import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.util.mapper.BeanUtil;
@@ -45,11 +46,11 @@ public class AuditFileService {
         return auditFile;
     }
 
-    public AuditFileDto findDto(String id){
-        AuditFile auditFile=findOne(id);
-        AuditFileDto auditFileDto= BeanUtil.map(auditFile,AuditFileDto.class);
-        cacheUtils.initCacheInput(auditFileDto);
-        return auditFileDto;
+    public AuditFileForm findForm(String id){
+        AuditFile auditFile=auditFileMapper.findOne(id);
+        AuditFileForm auditFileForm= BeanUtil.map(auditFile,AuditFileForm.class);
+        cacheUtils.initCacheInput(auditFileForm);
+        return auditFileForm;
     }
 
     public void notify(AuditFile auditFile) {

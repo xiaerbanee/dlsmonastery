@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Maps;
+import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.service.DictEnumService;
 import net.myspring.basic.modules.sys.web.form.DictEnumForm;
@@ -44,22 +45,15 @@ public class DictEnumController {
     }
 
     @RequestMapping(value = "findOne")
-    public DictEnumDto findOne(String id){
-        DictEnumDto dictEnumDto=dictEnumService.findDto(id);
-        return dictEnumDto;
+    public DictEnumForm findOne(DictEnumForm dictEnumForm){
+        dictEnumForm=dictEnumService.findForm(dictEnumForm);
+        dictEnumForm.setCategoryList(dictEnumService.findDistinctCategory());
+        return dictEnumForm;
     }
 
-    @RequestMapping(value="getFormProperty")
-    public Map<String,Object> getFormProperty(){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("category", dictEnumService.findDistinctCategory());
-        return map;
-    }
-
-    @RequestMapping(value="getListProperty")
-    public Map<String,Object> getListProperty(){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("category", dictEnumService.findDistinctCategory());
-        return map;
+    @RequestMapping(value="getQuery")
+    public  DictEnumQuery getQuery(DictEnumQuery dictEnumQuery){
+        dictEnumQuery.setCategoryList(dictEnumService.findDistinctCategory());
+        return dictEnumQuery;
     }
 }

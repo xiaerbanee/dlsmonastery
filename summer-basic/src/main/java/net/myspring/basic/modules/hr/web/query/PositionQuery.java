@@ -1,11 +1,24 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import net.myspring.basic.modules.hr.dto.JobDto;
+
+import java.util.List;
+
 /**
  * Created by lihx on 2017/4/7.
  */
 public class PositionQuery {
     private String name;
     private String jobId;
+    private List<JobDto> jobDtoList;
+
+    public List<JobDto> getJobDtoList() {
+        return jobDtoList;
+    }
+
+    public void setJobDtoList(List<JobDto> jobDtoList) {
+        this.jobDtoList = jobDtoList;
+    }
 
     public String getName() {
         return name;

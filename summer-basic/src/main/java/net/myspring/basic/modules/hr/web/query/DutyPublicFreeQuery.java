@@ -1,5 +1,7 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import net.myspring.basic.common.enums.DutyDateTypeEnum;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,6 +14,15 @@ public class DutyPublicFreeQuery {
     private String employeeName;
     private List<String> officeIds;
     private String createdBy;
+    private DutyDateTypeEnum[] dateList;
+
+    public DutyDateTypeEnum[] getDateList() {
+        return dateList;
+    }
+
+    public void setDateList(DutyDateTypeEnum[] dateList) {
+        this.dateList = dateList;
+    }
 
     public LocalDate getDutyDateStart() {
         return dutyDateStart;
