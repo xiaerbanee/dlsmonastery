@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.dto.JobDto;
 
 import java.util.List;
@@ -10,14 +11,14 @@ import java.util.List;
 public class PositionQuery {
     private String name;
     private String jobId;
-    private List<JobDto> jobDtoList;
+    private List<JobDto> jobList= Lists.newArrayList();
 
-    public List<JobDto> getJobDtoList() {
-        return jobDtoList;
+    public List<JobDto> getJobList() {
+        return jobList;
     }
 
-    public void setJobDtoList(List<JobDto> jobDtoList) {
-        this.jobDtoList = jobDtoList;
+    public void setJobList(List<JobDto> jobList) {
+        this.jobList = jobList;
     }
 
     public String getName() {

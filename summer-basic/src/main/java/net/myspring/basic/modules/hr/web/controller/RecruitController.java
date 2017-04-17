@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.web.controller;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.utils.Const;
+import net.myspring.basic.common.utils.Global;
 import net.myspring.basic.modules.hr.domain.Recruit;
 import net.myspring.basic.modules.hr.dto.RecruitDto;
 import net.myspring.basic.modules.hr.service.PositionService;
@@ -41,24 +42,13 @@ public class RecruitController {
         return page;
     }
 
-    @RequestMapping(value="getQuery")
-    public Map<String,Object> getQuery(){
-        Map<String,Object> map = Maps.newHashMap();
-        return map;
-    }
-
-    @RequestMapping(value = "getFormProperty")
-    public Map<String,Object> getFormProperty(){
-        Map<String,Object> map = Maps.newHashMap();
-        map.put("positionDtoList",positionService.findAll());
-        map.put("educationsList", dictEnumService.findByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
-        return map;
-    }
 
     @RequestMapping(value = "findOne")
-    public RecruitDto findOne(String id){
-        RecruitDto recruitDto=recruitService.findDto(id);
-        return recruitDto;
+    public RecruitForm findOne(RecruitForm recruitForm){
+        recruitForm=recruitService.findForm(recruitForm);
+        recruitForm.setPositionList(positionService.findAll());
+        recruitForm.setEducationList(Global.getDictEnumValueList(DictEnumCategoryEnum.EDUCATION.getValue()));
+        return recruitForm;
     }
 
     @RequestMapping(value = "save")

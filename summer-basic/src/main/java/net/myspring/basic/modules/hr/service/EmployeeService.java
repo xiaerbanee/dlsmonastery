@@ -39,11 +39,13 @@ public class EmployeeService {
         return employee;
     }
 
-    public EmployeeDto findDto(String id){
-        Employee employee=employeeManager.findOne(id);
-        EmployeeDto employeeDto= BeanUtil.map(employee,EmployeeDto.class);
-        cacheUtils.initCacheInput(employeeDto);
-        return employeeDto;
+    public EmployeeForm findForm(EmployeeForm employeeForm){
+        if(!employeeForm.isCreate()){
+            Employee employee=employeeManager.findOne(employeeForm.getId());
+            employeeForm= BeanUtil.map(employee,EmployeeForm.class);
+            cacheUtils.initCacheInput(employeeForm);
+        }
+        return employeeForm;
     }
 
     public Page<EmployeeDto> findPage(Pageable pageable, EmployeeQuery employeeQuery){

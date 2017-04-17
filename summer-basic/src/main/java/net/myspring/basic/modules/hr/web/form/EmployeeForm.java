@@ -1,8 +1,10 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 
@@ -33,23 +35,41 @@ public class EmployeeForm extends DataForm<Employee> {
     private String originId;
     private String dutyCode;
     private String salerName;
-    private List<PositionDto> positionDtoList;
-    private List<DictEnumDto> educationsList;
+    private String accountId;
+    private AccountForm account;
+    private List<PositionDto> positionList= Lists.newArrayList();
+    private List<String> educationList= Lists.newArrayList();
 
-    public List<PositionDto> getPositionDtoList() {
-        return positionDtoList;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setPositionDtoList(List<PositionDto> positionDtoList) {
-        this.positionDtoList = positionDtoList;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
-    public List<DictEnumDto> getEducationsList() {
-        return educationsList;
+    public AccountForm getAccount() {
+        return account;
     }
 
-    public void setEducationsList(List<DictEnumDto> educationsList) {
-        this.educationsList = educationsList;
+    public void setAccount(AccountForm account) {
+        this.account = account;
+    }
+
+    public List<PositionDto> getPositionList() {
+        return positionList;
+    }
+
+    public void setPositionList(List<PositionDto> positionList) {
+        this.positionList = positionList;
+    }
+
+    public List<String> getEducationList() {
+        return educationList;
+    }
+
+    public void setEducationList(List<String> educationList) {
+        this.educationList = educationList;
     }
 
     public String getCode() {

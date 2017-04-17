@@ -24,11 +24,12 @@ public class DutyPublicFreeService {
 
 
 
-    public DutyPublicFreeForm save(DutyPublicFreeForm dutyPublicFreeForm) {
+    public DutyPublicFree save(DutyPublicFreeForm dutyPublicFreeForm) {
         dutyPublicFreeForm.setEmployeeId(SecurityUtils.getEmployeeId());
         dutyPublicFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
-        dutyPublicFreeMapper.save(BeanUtil.map(dutyPublicFreeForm,DutyPublicFree.class));
-        return dutyPublicFreeForm;
+        DutyPublicFree dutyPublicFree = BeanUtil.map(dutyPublicFreeForm, DutyPublicFree.class);
+        dutyPublicFreeMapper.save(dutyPublicFree);
+        return dutyPublicFree;
     }
 
     public Page<DutyPublicFreeDto> findPage(Pageable pageable, DutyPublicFreeQuery dutyPublicFreeQuery) {
@@ -46,9 +47,12 @@ public class DutyPublicFreeService {
         return dutyPublicFree;
     }
 
-    public DutyPublicFreeDto findDto(String id) {
-        DutyPublicFree dutyPublicFree =findOne(id);
-        DutyPublicFreeDto publicFreeDto= BeanUtil.map(dutyPublicFree,DutyPublicFreeDto.class);
-        return publicFreeDto;
+    public DutyPublicFreeForm findForm(DutyPublicFreeForm dutyPublicFreeForm) {
+        if(!dutyPublicFreeForm.isCreate()){
+            DutyPublicFree dutyPublicFree =dutyPublicFreeMapper.findOne(dutyPublicFreeForm.getId());
+            dutyPublicFreeForm= BeanUtil.map(dutyPublicFree,DutyPublicFreeForm.class);
+            cacheUtils.initCacheInput(dutyPublicFree);
+        }
+        return dutyPublicFreeForm;
     }
 }

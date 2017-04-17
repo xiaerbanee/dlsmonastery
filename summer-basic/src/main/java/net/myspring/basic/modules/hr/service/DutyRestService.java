@@ -34,8 +34,9 @@ public class DutyRestService {
     public DutyRest save(DutyRestForm dutyRestForm) {
         dutyRestForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyRestForm.setEmployeeId(SecurityUtils.getEmployeeId());
-        dutyRestMapper.save(BeanUtil.map(dutyRestForm,DutyRest.class));
-        return dutyRestMapper.findOne(dutyRestForm.getId());
+        DutyRest dutyRest = BeanUtil.map(dutyRestForm, DutyRest.class);
+        dutyRestMapper.save(dutyRest);
+        return dutyRest;
     }
 
     public void logicDeleteOne(String id) {
@@ -47,10 +48,12 @@ public class DutyRestService {
         return dutyRest;
     }
 
-    public DutyRestDto findDto(String id) {
-        DutyRest dutyRest =findOne(id);
-        DutyRestDto dutyRestDto= BeanUtil.map(dutyRest,DutyRestDto.class);
-        cacheUtils.initCacheInput(dutyRestDto);
-        return dutyRestDto;
+    public DutyRestForm findForm(DutyRestForm dutyRestForm) {
+        if(!dutyRestForm.isCreate()){
+            DutyRest dutyRest =findOne(dutyRestForm.getId());
+            dutyRestForm= BeanUtil.map(dutyRest,DutyRestForm.class);
+            cacheUtils.initCacheInput(dutyRestForm);
+        }
+        return dutyRestForm;
     }
 }

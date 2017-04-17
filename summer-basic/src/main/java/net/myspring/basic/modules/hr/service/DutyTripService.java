@@ -32,11 +32,12 @@ public class DutyTripService {
         return page;
     }
 
-    public DutyTripForm save(DutyTripForm dutyTripForm) {
+    public DutyTrip save(DutyTripForm dutyTripForm) {
         dutyTripForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyTripForm.setEmployeeId(SecurityUtils.getEmployeeId());
-        dutyTripMapper.save(BeanUtil.map(dutyTripForm,DutyTrip.class));
-        return dutyTripForm;
+        DutyTrip dutyTrip = BeanUtil.map(dutyTripForm, DutyTrip.class);
+        dutyTripMapper.save(dutyTrip);
+        return dutyTrip;
     }
 
     public void logicDeleteOne(String id) {
@@ -48,10 +49,10 @@ public class DutyTripService {
         return dutyTrip;
     }
 
-    public DutyTripDto findDto(String id) {
-        DutyTrip dutyTrip = findOne(id);
-        DutyTripDto dutyTripDto= BeanUtil.map(dutyTrip,DutyTripDto.class);
-        cacheUtils.initCacheInput(dutyTripDto);
-        return dutyTripDto;
+    public DutyTripForm findForm(DutyTripForm dutyTripForm) {
+        DutyTrip dutyTrip =dutyTripMapper.findOne(dutyTripForm.getId());
+        dutyTripForm= BeanUtil.map(dutyTrip,DutyTripForm.class);
+        cacheUtils.initCacheInput(dutyTripForm);
+        return dutyTripForm;
     }
 }

@@ -55,8 +55,7 @@ public class DutyAnnualController {
         FolderFile folderFile = folderFileService.findOne(folderFileId);
         File file  = new File(folderFileService.getUploadPath(folderFile));
         dutyAnnualService.save(file, annualYear, remarks);
-        RestResponse restResponse=new RestResponse("保存成功", ResponseCodeEnum.saved.name());
-        return restResponse;
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
 }

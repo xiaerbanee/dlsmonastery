@@ -42,7 +42,7 @@ public class CompanyConfigController {
 
     @RequestMapping(value = "findOne")
     public CompanyConfigDto findOne(String id) {
-        CompanyConfigDto companyConfigDto=companyConfigService.findDto(id);
+        CompanyConfigDto companyConfigDto=companyConfigService.findForm(id);
         return companyConfigDto;
     }
 

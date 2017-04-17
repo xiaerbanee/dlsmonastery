@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DictMapCategoryEnum;
 import net.myspring.basic.common.enums.JointTypeEnum;
+import net.myspring.basic.common.utils.Global;
 import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.dto.OfficeDto;
 import net.myspring.basic.modules.hr.service.OfficeService;
@@ -32,8 +33,6 @@ public class OfficeController {
 
     @Autowired
     private OfficeService officeService;
-    @Autowired
-    private DictMapService dictMapService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<OfficeDto> list(Pageable pageable, OfficeQuery officeQuery) {
@@ -64,22 +63,16 @@ public class OfficeController {
 
 
     @RequestMapping(value = "findOne")
-    public OfficeDto findOne(String id){
-        OfficeDto officeDto=officeService.findDto(id);
-        return officeDto;
+    public OfficeForm findOne(OfficeForm officeForm){
+        officeForm=officeService.findForm(officeForm);
+        officeForm.setOfficeTypeList(Global.getDictMapList(DictMapCategoryEnum.机构分类.name()));
+        officeForm.setJointTypeList(JointTypeEnum.getList());
+        return officeForm;
     }
 
     @RequestMapping(value = "delete")
     public RestResponse delete(Office office,BindingResult bindingResult) {
         officeService.logicDeleteOne(office);
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
-    }
-
-    @RequestMapping(value="getFormProperty")
-    public Map<String,Object> getFormProperty(){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("officeTypes", dictMapService.findByCategory(DictMapCategoryEnum.机构分类.name()));
-        map.put("jointTypes", JointTypeEnum.getList());
-        return map;
     }
 }

@@ -5,9 +5,12 @@ import com.google.common.collect.Sets;
 import net.myspring.basic.common.enums.DataScopeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
+import net.myspring.basic.modules.hr.web.form.JobForm;
+import net.myspring.basic.modules.hr.web.form.OfficeForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,12 @@ public class OfficeManager {
     public Office update(Office office){
         officeMapper.update(office);
         return  officeMapper.findOne(office.getId());
+    }
+
+    @CachePut(value = "offices",key="#p0.id")
+    public Office updateForm(OfficeForm officeForm){
+        officeMapper.updateForm(officeForm);
+        return  officeMapper.findOne(officeForm.getId());
     }
 
     @Cacheable(value = "accountOffices", key = "#p0.id")

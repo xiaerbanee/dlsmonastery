@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class RecruitService {
 
     @Autowired
@@ -47,21 +48,25 @@ public class RecruitService {
         return recruit;
     }
 
-    public RecruitDto findDto(String id){
-        Recruit recruit = findOne(id);
-        RecruitDto recruitDto= BeanUtil.map(recruit,RecruitDto.class);
-        cacheUtils.initCacheInput(recruitDto);
-        return recruitDto;
-    }
-
-    @Transactional
-    public RecruitForm save(RecruitForm recruitForm){
-        if(recruitForm.isCreate()){
-            recruitMapper.save(BeanUtil.map(recruitForm,Recruit.class));
-        }else{
-            recruitMapper.updateForm(recruitForm);
+    public RecruitForm findForm(RecruitForm recruitForm){
+        if(!recruitForm.isCreate()){
+            Recruit recruit = recruitMapper.findOne(recruitForm.getId());
+            recruitForm= BeanUtil.map(recruit,RecruitForm.class);
+            cacheUtils.initCacheInput(recruitForm);
         }
         return recruitForm;
+    }
+
+    public Recruit save(RecruitForm recruitForm){
+        Recruit recruit;
+        if(recruitForm.isCreate()){
+            recruit=BeanUtil.map(recruitForm,Recruit.class);
+            recruitMapper.save(recruit);
+        }else{
+            recruitMapper.updateForm(recruitForm);
+            recruit=recruitMapper.findOne(recruitForm.getId());
+        }
+        return recruit;
     }
 
     @Transactional

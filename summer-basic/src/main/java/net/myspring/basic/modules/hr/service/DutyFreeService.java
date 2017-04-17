@@ -33,11 +33,12 @@ public class DutyFreeService {
         return page;
     }
 
-    public DutyFreeForm save(DutyFreeForm dutyFreeForm) {
+    public DutyFree save(DutyFreeForm dutyFreeForm) {
         dutyFreeForm.setEmployeeId(SecurityUtils.getEmployeeId());
         dutyFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
-        dutyFreeMapper.save(BeanUtil.map(dutyFreeForm,DutyFree.class));
-        return dutyFreeForm;
+        DutyFree dutyFree = BeanUtil.map(dutyFreeForm, DutyFree.class);
+        dutyFreeMapper.save(dutyFree);
+        return dutyFree;
     }
 
     public DutyFree findOne(String id) {
@@ -45,11 +46,13 @@ public class DutyFreeService {
         return dutyFree;
     }
 
-    public DutyFreeDto findDto(String id) {
-        DutyFree dutyFree =findOne(id);
-        DutyFreeDto dutyFreeDto = BeanUtil.map(dutyFree,DutyFreeDto.class);
-        cacheUtils.initCacheInput(dutyFreeDto);
-        return dutyFreeDto;
+    public DutyFreeForm findForm(DutyFreeForm dutyFreeForm) {
+        if(!dutyFreeForm.isCreate()){
+            DutyFree dutyFree =dutyFreeMapper.findOne(dutyFreeForm.getId());
+            dutyFreeForm = BeanUtil.map(dutyFree,DutyFreeForm.class);
+            cacheUtils.initCacheInput(dutyFreeForm);
+        }
+        return dutyFreeForm;
     }
 
     public void logicDeleteOne(String id) {

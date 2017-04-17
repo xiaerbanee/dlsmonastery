@@ -1,12 +1,15 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.DictMap;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by admin on 2017/4/6.
@@ -21,23 +24,23 @@ public class OfficeForm extends DataForm<Office> {
     private String point;
     private String taskPoint;
     private String sort;
-    private List<DictMap> officeTypes;
-    private JointTypeEnum[] jointTypes;
+    private Map<String,String>  officeTypeList= Maps.newHashMap();
+    private List<String> jointTypeList= Lists.newArrayList();
 
-    public List<DictMap> getOfficeTypes() {
-        return officeTypes;
+    public Map<String, String> getOfficeTypeList() {
+        return officeTypeList;
     }
 
-    public void setOfficeTypes(List<DictMap> officeTypes) {
-        this.officeTypes = officeTypes;
+    public void setOfficeTypeList(Map<String, String> officeTypeList) {
+        this.officeTypeList = officeTypeList;
     }
 
-    public JointTypeEnum[] getJointTypes() {
-        return jointTypes;
+    public List<String> getJointTypeList() {
+        return jointTypeList;
     }
 
-    public void setJointTypes(JointTypeEnum[] jointTypes) {
-        this.jointTypes = jointTypes;
+    public void setJointTypeList(List<String> jointTypeList) {
+        this.jointTypeList = jointTypeList;
     }
 
     public String getParentId() {

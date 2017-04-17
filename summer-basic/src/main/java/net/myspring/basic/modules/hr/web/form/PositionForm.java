@@ -1,6 +1,8 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DataScopeEnum;
 import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.domain.Position;
@@ -9,6 +11,7 @@ import net.myspring.basic.modules.hr.dto.JobDto;
 import net.myspring.common.tree.TreeNode;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by admin on 2017/4/5.
@@ -26,8 +29,8 @@ public class PositionForm extends DataForm<Position> {
     private String remarks;
     private String permissionIdStr;
     private TreeNode permissionTree;
-    private List<JobDto> jobDtoList;
-    private DataScopeEnum[] dataScopeMap;
+    private List<JobDto> jobList= Lists.newArrayList();
+    private Map<Integer,String> dataScopeMap= Maps.newHashMap();
 
     public TreeNode getPermissionTree() {
         return permissionTree;
@@ -37,19 +40,19 @@ public class PositionForm extends DataForm<Position> {
         this.permissionTree = permissionTree;
     }
 
-    public List<JobDto> getJobDtoList() {
-        return jobDtoList;
+    public List<JobDto> getJobList() {
+        return jobList;
     }
 
-    public void setJobDtoList(List<JobDto> jobDtoList) {
-        this.jobDtoList = jobDtoList;
+    public void setJobList(List<JobDto> jobList) {
+        this.jobList = jobList;
     }
 
-    public DataScopeEnum[] getDataScopeMap() {
+    public Map<Integer,String> getDataScopeMap() {
         return dataScopeMap;
     }
 
-    public void setDataScopeMap(DataScopeEnum[] dataScopeMap) {
+    public void setDataScopeMap(Map<Integer,String> dataScopeMap) {
         this.dataScopeMap = dataScopeMap;
     }
 
