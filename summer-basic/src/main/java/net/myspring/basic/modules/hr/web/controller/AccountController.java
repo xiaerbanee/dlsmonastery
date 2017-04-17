@@ -91,8 +91,8 @@ public class AccountController {
 
     @RequestMapping(value = "findOne")
     public AccountForm findOne(AccountForm accountForm) {
-        accountForm = accountService.findDto(accountForm.getId());
-        accountForm.setPositionList(positionService.findAll());
+        accountForm = accountService.findDto(accountForm);
+        accountForm.setPositionDtoList(positionService.findAll());
         accountForm.setBools( BoolEnum.getMap());
         return accountForm;
     }

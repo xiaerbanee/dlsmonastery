@@ -58,6 +58,13 @@ public class AccountService {
         return account;
     }
 
+    public AccountForm findDto(AccountForm accountForm) {
+        if(!accountForm.isCreate()){
+            accountForm = findDto(accountForm.getId());
+        }
+        return accountForm;
+    }
+
     public AccountForm findDto(String id) {
         Account account = accountMapper.findOne(id);
         List<NameValueDto> nameValueDtoList = accountMapper.findAccountOfficeByIds(Lists.newArrayList(account.getId()));
