@@ -1,6 +1,9 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import net.myspring.basic.common.enums.DutyDateTypeEnum;
+
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/7.
@@ -11,6 +14,24 @@ public class DutyLeaveQuery {
     private LocalDate dutyDateEnd;
     private String dateType;
     private String leaveType;
+    private DutyDateTypeEnum[] dateList;
+    private List<String> leaveList;
+
+    public DutyDateTypeEnum[] getDateList() {
+        return dateList;
+    }
+
+    public void setDateList(DutyDateTypeEnum[] dateList) {
+        this.dateList = dateList;
+    }
+
+    public List<String> getLeaveList() {
+        return leaveList;
+    }
+
+    public void setLeaveList(List<String> leaveList) {
+        this.leaveList = leaveList;
+    }
 
     public String getCreatedBy() {
         return createdBy;

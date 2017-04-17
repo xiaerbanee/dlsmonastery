@@ -78,7 +78,7 @@ public class EmployeeController {
     @RequestMapping(value="getFormProperty")
     public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
-        map.put("positions",positionService.findAll());
+        map.put("positionDtoList",positionService.findAll());
         map.put("educationsList", dictEnumService.findByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
         return map;
     }

@@ -47,7 +47,7 @@ public class PositionController {
     @RequestMapping(value="getListProperty")
     public Map<String,Object>  getListProperty(){
         Map<String,Object> map = Maps.newHashMap();
-        map.put("jobList",jobService.findAll());
+        map.put("jobDtoList",jobService.findAll());
         return map;
     }
 
@@ -56,7 +56,7 @@ public class PositionController {
         Map<String,Object> map = Maps.newHashMap();
         List<String> permissionIdList = position.getId()==null?new ArrayList<>():positionService.findPermissionByPosition(position.getId());
         map.put("permissionTree",permissionService.findPermissionTree(permissionIdList));
-        map.put("jobList",jobService.findAll());
+        map.put("jobDtoList",jobService.findAll());
         map.put("dataScopeMap", DataScopeEnum.getMap());
         return map;
     }
