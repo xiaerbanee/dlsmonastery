@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.web.form;
 
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.sys.dto.MenuDto;
 
 import java.util.List;
 
@@ -17,6 +18,15 @@ public class PermissionForm extends DataForm<Permission> {
     private String name;
     private String permission;
     private String remarks;
+    private List<MenuDto> menuDtoList;
+
+    public List<MenuDto> getMenuDtoList() {
+        return menuDtoList;
+    }
+
+    public void setMenuDtoList(List<MenuDto> menuDtoList) {
+        this.menuDtoList = menuDtoList;
+    }
 
     public List<String> getPositionIdList() {
         return positionIdList;

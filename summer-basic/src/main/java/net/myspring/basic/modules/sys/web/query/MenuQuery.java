@@ -1,5 +1,9 @@
 package net.myspring.basic.modules.sys.web.query;
 
+import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
+
+import java.util.List;
+
 /**
  * Created by lihx on 2017/4/7.
  */
@@ -8,6 +12,24 @@ public class MenuQuery {
     private String name;
     private String sort;
     private String menuCategoryId;
+    private List<MenuCategoryDto> menuCategoryDtoList;
+    private List<String> categoryList;
+
+    public List<MenuCategoryDto> getMenuCategoryDtoList() {
+        return menuCategoryDtoList;
+    }
+
+    public void setMenuCategoryDtoList(List<MenuCategoryDto> menuCategoryDtoList) {
+        this.menuCategoryDtoList = menuCategoryDtoList;
+    }
+
+    public List<String> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<String> categoryList) {
+        this.categoryList = categoryList;
+    }
 
     public String getCategory() {
         return category;
