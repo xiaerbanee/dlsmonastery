@@ -33,11 +33,10 @@ public class DutyFreeController {
         return page;
     }
 
-    @RequestMapping(value="getFormProperty")
-    public Map<String,Object> getFormProperty(){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("dateList", DutyDateTypeEnum.values());
-        return map;
+    @RequestMapping(value="findOne")
+    public DutyFreeForm findOne(DutyFreeForm dutyFreeForm){
+        dutyFreeForm.setDateList(DutyDateTypeEnum.getList());
+        return dutyFreeForm;
     }
 
 

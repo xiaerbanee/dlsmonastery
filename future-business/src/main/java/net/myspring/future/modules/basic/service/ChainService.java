@@ -38,17 +38,5 @@ public class ChainService {
 
     @Transactional
     public void save(Chain chain) {
-        List<Depot> depotList = depotMapper.findByIds(chain.getPageIds());
-        for (Depot depot : depotList) {
-            if (!chain.getNewDepotIdList().contains(depot.getId())) {
-                depot.setChainId(null);
-                depotMapper.update(depot);
-            } else {
-                if (!chain.getId().equals(depot.getChainId())) {
-                    depot.setChainId(chain.getId());
-                    depotMapper.update(depot);
-                }
-            }
-        }
     }
 }

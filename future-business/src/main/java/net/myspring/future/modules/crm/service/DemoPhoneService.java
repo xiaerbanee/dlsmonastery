@@ -40,7 +40,6 @@ public class DemoPhoneService {
 
     public DemoPhone save(DemoPhone demoPhone) {
         demoPhone.setStatus("");
-        demoPhone.setDemoPhoneTypeId(demoPhone.getProductIme().getProduct().getProductType().getDemoPhoneTypeId());
         demoPhoneMapper.save(demoPhone);
         return demoPhone;
     }

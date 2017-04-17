@@ -56,8 +56,8 @@ public class DutyRestController {
     @RequestMapping(value = "getQuery")
     public Map<String, Object> getQuery(DutyRestQuery dutyRestQuery) {
         Map<String, Object> map = Maps.newHashMap();
-        dutyRestQuery.setRestList(DutyRestTypeEnum.values());
-        dutyRestQuery.setDateList(DutyDateTypeEnum.values());
+        dutyRestQuery.setRestList(DutyRestTypeEnum.getList());
+        dutyRestQuery.setDateList(DutyDateTypeEnum.getList());
         return map;
     }
 

@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 
 import java.time.LocalDate;
@@ -14,13 +15,13 @@ public class DutyPublicFreeQuery {
     private String employeeName;
     private List<String> officeIds;
     private String createdBy;
-    private DutyDateTypeEnum[] dateList;
+    private List<String> dateList= Lists.newArrayList();
 
-    public DutyDateTypeEnum[] getDateList() {
+    public List<String> getDateList() {
         return dateList;
     }
 
-    public void setDateList(DutyDateTypeEnum[] dateList) {
+    public void setDateList(List<String> dateList) {
         this.dateList = dateList;
     }
 

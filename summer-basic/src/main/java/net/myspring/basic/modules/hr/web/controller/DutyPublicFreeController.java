@@ -35,7 +35,7 @@ public class DutyPublicFreeController {
 
     @RequestMapping(value = "getQuery")
     public DutyPublicFreeQuery getQuery(DutyPublicFreeQuery dutyPublicFreeQuery) {
-        dutyPublicFreeQuery.setDateList( DutyDateTypeEnum.values());
+        dutyPublicFreeQuery.setDateList( DutyDateTypeEnum.getList());
         return dutyPublicFreeQuery;
     }
 

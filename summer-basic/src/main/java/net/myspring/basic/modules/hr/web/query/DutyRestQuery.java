@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.enums.DutyRestTypeEnum;
 
@@ -16,23 +17,23 @@ public class DutyRestQuery {
     private String type;
     private String dateType;
     private List<String> officeIds;
-    private DutyRestTypeEnum[] restList;
-    private DutyDateTypeEnum[] dateList;
+    private List<String> restList= Lists.newArrayList();
+    private List<String> dateList= Lists.newArrayList();
 
-    public DutyRestTypeEnum[] getRestList() {
-        return restList;
-    }
-
-    public void setRestList(DutyRestTypeEnum[] restList) {
+    public void setRestList(List<String> restList) {
         this.restList = restList;
     }
 
-    public DutyDateTypeEnum[] getDateList() {
-        return dateList;
+    public void setDateList(List<String> dateList) {
+        this.dateList = dateList;
     }
 
-    public void setDateList(DutyDateTypeEnum[] dateList) {
-        this.dateList = dateList;
+    public List<String> getRestList() {
+        return restList;
+    }
+
+    public List<String> getDateList() {
+        return dateList;
     }
 
     public String getCreatedBy() {

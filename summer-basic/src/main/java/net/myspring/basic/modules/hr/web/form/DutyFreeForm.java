@@ -1,9 +1,12 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.modules.hr.domain.DutyFree;
 import net.myspring.basic.common.form.DataForm;
+
+import java.util.List;
 
 /**
  * Created by admin on 2017/4/6.
@@ -12,13 +15,13 @@ import net.myspring.basic.common.form.DataForm;
 public class DutyFreeForm extends DataForm<DutyFree> {
     private String employeeId;
     private String Status;
-    private DutyDateTypeEnum[] dateList;
+    private List<String> dateList= Lists.newArrayList();
 
-    public DutyDateTypeEnum[] getDateList() {
+    public List<String> getDateList() {
         return dateList;
     }
 
-    public void setDateList(DutyDateTypeEnum[] dateList) {
+    public void setDateList(List<String> dateList) {
         this.dateList = dateList;
     }
 

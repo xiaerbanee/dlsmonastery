@@ -39,17 +39,16 @@ public class DutyLeaveController {
         return page;
     }
 
-    @RequestMapping(value="getFormProperty")
-    public Map<String,Object> getFormProperty(){
-        Map<String,Object> map=Maps.newHashMap();
-        map.put("dateList", DutyDateTypeEnum.values());
-        map.put("leaveList",dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.getValue()));
-        return map;
+    @RequestMapping(value="findOne")
+    public DutyLeaveForm getFormProperty(DutyLeaveForm dutyLeaveForm){
+        dutyLeaveForm.setDateList(DutyDateTypeEnum.values());
+        dutyLeaveForm.setLeaveList(dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.getValue()));
+        return dutyLeaveForm;
     }
 
     @RequestMapping(value="getQuery")
     public DutyLeaveQuery getQuery(DutyLeaveQuery dutyLeaveQuery){
-        dutyLeaveQuery.setDateList( DutyDateTypeEnum.values());
+        dutyLeaveQuery.setDateList( DutyDateTypeEnum.getList());
         dutyLeaveQuery.setLeaveList(dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.getValue()));
         return dutyLeaveQuery;
     }
