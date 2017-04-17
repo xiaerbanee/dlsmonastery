@@ -57,14 +57,8 @@
     data() {
       return {
         page:{},
-        formData:{
-          page:0,
-          size:25,
-          createdDate:'',
-          createdDateBTW:'',
-          category:'',
-          value:''
-        },formLabel:{
+        formData:{},
+        formLabel:{
           createdDateBTW:{label: this.$t('dictEnumList.createdDate')},
           category:{label: this.$t('dictEnumList.category')},
           value:{label: this.$t('dictEnumList.value')}
@@ -110,12 +104,13 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
       axios.get('/api/basic/sys/dictEnum/getListProperty').then((response) =>{
-        this.formProperty.categoryList=response.data.categoryList;
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>

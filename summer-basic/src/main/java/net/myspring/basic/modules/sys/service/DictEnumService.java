@@ -39,7 +39,7 @@ public class DictEnumService {
 
 
     public DictEnumForm findForm(DictEnumForm dictEnumForm) {
-        if(!dictEnumForm.isCreate()){
+        if(!dictEnumForm.isCreate()) {
             DictEnum dictEnum =dictEnumManager.findOne(dictEnumForm.getId());
             dictEnumForm= BeanUtil.map(dictEnum,DictEnumForm.class);
             cacheUtils.initCacheInput(dictEnumForm);
@@ -47,14 +47,15 @@ public class DictEnumService {
         return dictEnumForm;
     }
 
-    public DictEnumForm save(DictEnumForm dictEnumForm) {
+    public DictEnum save(DictEnumForm dictEnumForm) {
+        DictEnum dictEnum;
         if(dictEnumForm.isCreate()) {
-            DictEnum dictEnum = BeanUtil.map(dictEnumForm, DictEnum.class);
-            dictEnumManager.save(dictEnum);
+            dictEnum = BeanUtil.map(dictEnumForm, DictEnum.class);
+            dictEnum = dictEnumManager.save(dictEnum);
         } else {
-            dictEnumManager.updateForm(dictEnumForm);
+            dictEnum = dictEnumManager.updateForm(dictEnumForm);
         }
-        return dictEnumForm;
+        return dictEnum;
     }
 
 

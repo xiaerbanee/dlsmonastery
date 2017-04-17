@@ -76,11 +76,7 @@ util.copyValue = function (from, to) {
   if (from != null) {
     for (var key in to) {
       if (from[key] != null) {
-        if (typeof to[key] != "object") {
-          to[key] = from[key];
-        }else {
-          this.copyValue(from[key],to[key])
-        }
+        to[key] = from[key];
       }
     }
   }
