@@ -2,8 +2,10 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.crm.domain.AfterSale;
-import net.myspring.future.modules.crm.domain.Product;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.mapper.*;
 import net.myspring.util.collection.CollectionUtil;

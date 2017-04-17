@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
-import net.myspring.future.modules.crm.domain.Depot;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.crm.service.ProductImeService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.poi.ss.usermodel.Workbook;

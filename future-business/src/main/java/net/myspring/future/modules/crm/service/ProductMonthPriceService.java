@@ -2,12 +2,12 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.domain.ProductType;
+import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
 import net.myspring.future.modules.crm.domain.ProductMonthPrice;
 import net.myspring.future.modules.crm.domain.ProductMonthPriceDetail;
-import net.myspring.future.modules.crm.domain.ProductType;
 import net.myspring.future.modules.crm.mapper.ProductMonthPriceDetailMapper;
 import net.myspring.future.modules.crm.mapper.ProductMonthPriceMapper;
-import net.myspring.future.modules.crm.mapper.ProductTypeMapper;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

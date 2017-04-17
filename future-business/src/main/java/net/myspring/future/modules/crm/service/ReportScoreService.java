@@ -1,5 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
 import net.myspring.future.modules.crm.domain.ReportScore;
 import net.myspring.future.modules.crm.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;

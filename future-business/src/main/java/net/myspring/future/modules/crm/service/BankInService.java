@@ -1,9 +1,9 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.modules.basic.mapper.BankMapper;
+import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.mapper.BankInMapper;
-import net.myspring.future.modules.crm.mapper.BankMapper;
-import net.myspring.future.modules.crm.mapper.DepotMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

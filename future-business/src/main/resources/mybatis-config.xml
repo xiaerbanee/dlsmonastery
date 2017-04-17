@@ -19,7 +19,12 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
     <typeAliases>
+        <package name="net.myspring.future.modules.basic.domain"/>
+        <package name="net.myspring.future.modules.basic.dto"/>
         <package name="net.myspring.future.modules.crm.domain"/>
+        <package name="net.myspring.future.modules.crm.dto"/>
+        <package name="net.myspring.future.modules.layout.domain"/>
+        <package name="net.myspring.future.modules.layout.dto"/>
     </typeAliases>
     <typeHandlers>
         <typeHandler handler="org.apache.ibatis.type.InstantTypeHandler" />

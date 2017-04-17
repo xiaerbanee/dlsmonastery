@@ -1,9 +1,9 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.future.modules.crm.mapper.ProductImeMapper;
 import net.myspring.future.modules.crm.mapper.ProductImeUploadMapper;
-import net.myspring.future.modules.crm.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 import net.myspring.common.domain.AuditEntity;
+import net.myspring.future.modules.basic.domain.Depot;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

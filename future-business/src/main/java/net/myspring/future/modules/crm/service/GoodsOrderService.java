@@ -1,11 +1,13 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Maps;
-import net.myspring.future.modules.crm.domain.Depot;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.mapper.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.mapper.*;
+import net.myspring.future.modules.layout.mapper.ShopGoodsDepositMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
