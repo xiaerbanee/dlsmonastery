@@ -4,6 +4,10 @@ package net.myspring.basic.modules.sys.web.form;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by admin on 2017/4/5.
@@ -21,6 +25,41 @@ public class MenuForm extends DataForm<Menu>{
     private String sort;
     private String name;
     private String category;
+    private List<MenuCategoryDto> menuCategoryDtoList;
+    private List<String> categoryList;
+    private Map<Boolean,String> bools;
+
+    public void setMobile(Boolean mobile) {
+        this.mobile = mobile;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public List<MenuCategoryDto> getMenuCategoryDtoList() {
+        return menuCategoryDtoList;
+    }
+
+    public void setMenuCategoryDtoList(List<MenuCategoryDto> menuCategoryDtoList) {
+        this.menuCategoryDtoList = menuCategoryDtoList;
+    }
+
+    public List<String> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<String> categoryList) {
+        this.categoryList = categoryList;
+    }
+
+    public Map<Boolean, String> getBools() {
+        return bools;
+    }
+
+    public void setBools(Map<Boolean, String> bools) {
+        this.bools = bools;
+    }
 
     public String getRemarks() {
         return remarks;

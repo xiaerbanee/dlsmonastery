@@ -4,6 +4,8 @@ import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.mybatis.form.BaseForm;
 
+import java.util.List;
+
 /**
  * Created by admin on 2017/4/5.
  */
@@ -13,6 +15,7 @@ public class DictEnumForm extends DataForm<DictEnum> {
     private String category;
     private String value;
     private String remarks;
+    private List<String> categoryList;
 
     public String getRemarks() {
         return remarks;
@@ -44,5 +47,13 @@ public class DictEnumForm extends DataForm<DictEnum> {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public List<String> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<String> categoryList) {
+        this.categoryList = categoryList;
     }
 }

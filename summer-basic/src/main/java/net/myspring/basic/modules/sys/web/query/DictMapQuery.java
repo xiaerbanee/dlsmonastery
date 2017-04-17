@@ -4,6 +4,7 @@ import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/7.
@@ -15,6 +16,15 @@ public class DictMapQuery {
     private String createdDateBTW;
     private LocalDateTime createdDateStart;
     private LocalDateTime createdDateEnd;
+    private List<String> categoryList;
+
+    public List<String> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<String> categoryList) {
+        this.categoryList = categoryList;
+    }
 
     public LocalDateTime getCreatedDateStart() {
         return createdDateStart;
@@ -31,7 +41,7 @@ public class DictMapQuery {
     public LocalDateTime getCreatedDateEnd() {
         if(createdDateEnd==null&& StringUtils.isNotBlank(createdDateBTW)){
             String[] tempParamValues = createdDateBTW.split(" - ");
-            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]);
+            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 23:59:59");
         }
         return createdDateEnd;
     }

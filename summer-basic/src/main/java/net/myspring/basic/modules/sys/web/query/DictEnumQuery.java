@@ -6,6 +6,7 @@ import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/7.
@@ -16,6 +17,7 @@ public class DictEnumQuery {
     private String value;
     private LocalDateTime createdDateStart;
     private LocalDateTime createdDateEnd;
+    private List<String> categoryList;
 
     public String getCategory() {
         return category;
@@ -63,5 +65,13 @@ public class DictEnumQuery {
 
     public void setCreatedDateBTW(String createdDateBTW) {
         this.createdDateBTW = createdDateBTW;
+    }
+
+    public List<String> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<String> categoryList) {
+        this.categoryList = categoryList;
     }
 }

@@ -32,12 +32,12 @@
             )
         </if>
         <if test="p.processTypeId !=null">
-            and t1.process_type_id &lt;=#{p.processTypeId}
+            and t1.process_type_id =#{p.processTypeId}
         </if>
         <if test="p.id !=null">
             and t1.id=#{p.id}
-            <if test="p.title !=null">
-            </if>
+        </if>
+        <if test="p.title !=null">
             and t1.title like concat('%',#{p.title},'%')
         </if>
         <if test="p.content !=null">
@@ -45,6 +45,9 @@
         </if>
         <if test="p.officeId !=null">
             and office.id=#{p.officeId}
+        </if>
+        <if test="p.officeName !=null">
+            and office.name like concat('%',#{p.officeName},'%')
         </if>
         <if test="p.createdByName !=null">
             and t1.created_by in(

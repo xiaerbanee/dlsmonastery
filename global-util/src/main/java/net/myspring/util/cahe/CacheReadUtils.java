@@ -52,9 +52,9 @@ public class CacheReadUtils {
                         String keyPrefix = cacheInputField.getInputKey() + ":";
                         List<String> keySuffixList = Lists.newArrayList();
                         if (cacheInputField.getCollection()) {
-                            keySuffixList = ReflectionUtil.getFieldValue(object, cacheInputField.getInputField());
+                            keySuffixList = ReflectionUtil.getProperty(object, cacheInputField.getInputField().getName());
                         } else {
-                            keySuffixList.add(ReflectionUtil.getFieldValue(object, cacheInputField.getInputField()));
+                            keySuffixList.add(ReflectionUtil.getProperty(object, cacheInputField.getInputField().getName()));
                         }
                         if(CollectionUtil.isNotEmpty(keySuffixList)){
                             CacheInputObject cacheInputObject = new CacheInputObject();
