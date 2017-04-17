@@ -51,7 +51,8 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:"",
@@ -60,7 +61,6 @@
           name:{label:this.$t('menuCategoryList.name')},
           sort:{label:this.$t('menuCategoryList.sort')}
         },
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         loading:false
@@ -69,8 +69,10 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("menuCategoryList");
         util.setQuery("menuCategoryList",this.formData);
-        axios.get('/api/basic/sys/menuCategory',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/sys/menuCategory',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

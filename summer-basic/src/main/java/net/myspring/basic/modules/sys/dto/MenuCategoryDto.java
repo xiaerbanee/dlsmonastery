@@ -14,6 +14,24 @@ public class MenuCategoryDto extends DataDto<MenuCategory> {
     private String name;
     private Integer sort;
     private String code;
+    private List<Menu> menuList = Lists.newArrayList();
+    private List<String> menuIdList = Lists.newArrayList();
+
+    public List<Menu> getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List<Menu> menuList) {
+        this.menuList = menuList;
+    }
+
+    public List<String> getMenuIdList() {
+        return menuIdList;
+    }
+
+    public void setMenuIdList(List<String> menuIdList) {
+        this.menuIdList = menuIdList;
+    }
 
     public String getName() {
         return name;

@@ -25,8 +25,8 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
-            inputForm:{
+            inputForm:{},
+            submitData:{
               id:'',
               name:'',
               sort:'',
@@ -44,7 +44,8 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/basic/sys/menuCategory/save', qs.stringify(this.inputForm)).then((response)=> {
+              util.copyValue(this.inputForm,this.submitData);
+              axios.post('/api/basic/sys/menuCategory/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -59,11 +60,9 @@
           })
         }
       },created(){
-        if(!this.isCreate){
-          axios.get('/api/basic/sys/menuCategory/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          })
-        }
+        axios.get('/api/basic/sys/menuCategory/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+        })
       }
     }
 </script>

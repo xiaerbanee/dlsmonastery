@@ -50,7 +50,8 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:'',
@@ -69,7 +70,8 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("companyConfigList",this.formData);
-        axios.get('/api/basic/sys/companyConfig',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/sys/companyConfig',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

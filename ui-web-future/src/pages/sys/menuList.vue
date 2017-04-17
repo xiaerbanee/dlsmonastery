@@ -13,12 +13,12 @@
             <el-col :span="24">
               <el-form-item :label="formLabel.menuCategoryId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.menuCategoryId" filterable clearable>
-                  <el-option v-for="item in formProperty.menuCategory" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in formData.menuCategoryList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('menuList.inputKey')">
-                  <el-option v-for="category in formProperty.category"  :key="category" :label="category" :value="category"></el-option>
+                  <el-option v-for="category in formData.categoryList"  :key="category" :label="category" :value="category"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
@@ -74,7 +74,8 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           menuCategoryId:'',
@@ -85,7 +86,6 @@
           category:{label:this.$t('menuList.category')},
           name:{label:this.$t('menuList.name')}
         },
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         loading:false
@@ -94,8 +94,10 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("menuList");
         util.setQuery("menuList",this.formData);
-        axios.get('/api/basic/sys/menu',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/sys/menu',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -123,12 +125,13 @@
         }
       }
     },created () {
+      var that = this;
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
       axios.get('/api/basic/sys/menu/getQuery').then((response) =>{
-        this.formProperty=response.data;
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>

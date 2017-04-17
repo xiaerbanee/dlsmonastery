@@ -14,8 +14,6 @@ public class Permission extends DataEntity<Permission> {
     private String name;
     private String permission;
     private Integer version = 0;
-    private List<Position> positionList = Lists.newArrayList();
-    private List<String> positionIdList = Lists.newArrayList();
     private Menu menu;
     private String menuId;
 
@@ -41,22 +39,6 @@ public class Permission extends DataEntity<Permission> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public List<Position> getPositionList() {
-        return positionList;
-    }
-
-    public void setPositionList(List<Position> positionList) {
-        this.positionList = positionList;
-    }
-
-    public List<String> getPositionIdList() {
-        return positionIdList;
-    }
-
-    public void setPositionIdList(List<String> positionIdList) {
-        this.positionIdList = positionIdList;
     }
 
     public Menu getMenu() {

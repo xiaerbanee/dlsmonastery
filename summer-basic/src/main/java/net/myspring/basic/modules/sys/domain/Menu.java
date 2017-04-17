@@ -25,12 +25,9 @@ public class Menu extends DataEntity<Menu> {
     private String inaCategory;
     private String mobileHref;
     private String mobileIcon;
-    private List<Account> accountList = Lists.newArrayList();
-    private List<String> accountIdList = Lists.newArrayList();
-    private MenuCategory menuCategory;
+
     private String menuCategoryId;
-    private List<Permission> permissionList = Lists.newArrayList();
-    private List<String> permissionIdList = Lists.newArrayList();
+
     private String menuCode;
     private String categoryCode;
 
@@ -162,30 +159,6 @@ public class Menu extends DataEntity<Menu> {
         this.mobileIcon = mobileIcon;
     }
 
-    public List<Account> getAccountList() {
-        return accountList;
-    }
-
-    public void setAccountList(List<Account> accountList) {
-        this.accountList = accountList;
-    }
-
-    public List<String> getAccountIdList() {
-        return accountIdList;
-    }
-
-    public void setAccountIdList(List<String> accountIdList) {
-        this.accountIdList = accountIdList;
-    }
-
-    public MenuCategory getMenuCategory() {
-        return menuCategory;
-    }
-
-    public void setMenuCategory(MenuCategory menuCategory) {
-        this.menuCategory = menuCategory;
-    }
-
     public String getMenuCategoryId() {
         return menuCategoryId;
     }
@@ -194,19 +167,4 @@ public class Menu extends DataEntity<Menu> {
         this.menuCategoryId = menuCategoryId;
     }
 
-    public List<Permission> getPermissionList() {
-        return permissionList;
-    }
-
-    public void setPermissionList(List<Permission> permissionList) {
-        this.permissionList = permissionList;
-    }
-
-    public List<String> getPermissionIdList() {
-        return permissionIdList;
-    }
-
-    public void setPermissionIdList(List<String> permissionIdList) {
-        this.permissionIdList = permissionIdList;
-    }
 }

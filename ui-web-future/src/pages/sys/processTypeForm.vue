@@ -18,7 +18,7 @@
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.auditFileType')" prop="auditFileType">
           <el-radio-group v-model="inputForm.auditFileType">
-            <el-radio v-for="(value,key) in formProperty.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
+            <el-radio v-for="(value, key) in inputForm.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.remarks')" prop="remarks">
@@ -42,7 +42,7 @@
             <el-table-column :label="$t('processTypeForm.positionName')">
               <template scope="scope">
                 <el-select v-model="scope.row.positionId" filterable :placeholder="$t('processTypeForm.selectPositionName')" :loading="loading">
-                  <el-option v-for="item in formProperty.positions":key="item.id" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in inputForm.positionList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </template>
             </el-table-column>
@@ -63,11 +63,11 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
             createPermissions:[],
             viewPermissions:[],
             loading: false,
-            inputForm:{
+            inputForm:{},
+            submitData:{
               name:'',
               auditFileType:"1",
               remarks:'',
@@ -89,7 +89,8 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/basic/sys/processType/save', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+              util.copyValue(this.inputForm,this.submitData);
+              axios.post('/api/basic/sys/processType/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -143,16 +144,13 @@
           this.inputForm.processFlowList.push({name:"",sort:sort,positionId:""});
         }
       },created(){
-        axios.get('/api/basic/sys/processType/getFormProperty').then((res)=>{
-          this.formProperty=res.data;
-        });
         if(this.isCreate){
           for(var i = 0;i<3;i++) {
             this.inputForm.processFlowList.push({name:"",sort:(i+1)*10,positionId:""});
           }
         } else {
           axios.get('/api/basic/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
+            this.inputForm = response.data;
             this.inputForm.auditFileType=response.data.auditFileType?"1":"0";
             this.inputForm.processFlowList=response.data.processFlowList;
             if(response.data.createPermission!=null){

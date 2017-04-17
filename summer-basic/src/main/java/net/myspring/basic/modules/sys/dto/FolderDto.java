@@ -1,7 +1,11 @@
 package net.myspring.basic.modules.sys.dto;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.dto.DataDto;
 import net.myspring.basic.modules.sys.domain.Folder;
+import net.myspring.basic.modules.sys.domain.FolderFile;
+
+import java.util.List;
 
 /**
  * Created by admin on 2017/4/5.
@@ -13,7 +17,8 @@ public class FolderDto  extends DataDto<Folder> {
     private String ParentIds;
     private boolean locked;
     private boolean enabled;
-    private String remarks;
+    private List<FolderFile> folderFileList = Lists.newArrayList();
+    private List<String> folderFileIdList = Lists.newArrayList();
 
     public boolean isLocked() {
         return locked;
@@ -29,16 +34,6 @@ public class FolderDto  extends DataDto<Folder> {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    @Override
-    public String getRemarks() {
-        return remarks;
-    }
-
-    @Override
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
     }
 
     public String getName() {
@@ -71,5 +66,21 @@ public class FolderDto  extends DataDto<Folder> {
 
     public void setParentIds(String parentIds) {
         ParentIds = parentIds;
+    }
+
+    public List<FolderFile> getFolderFileList() {
+        return folderFileList;
+    }
+
+    public void setFolderFileList(List<FolderFile> folderFileList) {
+        this.folderFileList = folderFileList;
+    }
+
+    public List<String> getFolderFileIdList() {
+        return folderFileIdList;
+    }
+
+    public void setFolderFileIdList(List<String> folderFileIdList) {
+        this.folderFileIdList = folderFileIdList;
     }
 }

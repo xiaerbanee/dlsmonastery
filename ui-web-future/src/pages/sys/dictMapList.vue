@@ -16,7 +16,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('dictMapList.inputKey')">
-                  <el-option v-for="category in formProperty.category" :key="category" :label="category" :value="category"></el-option>
+                  <el-option v-for="category in formData.categoryList" :key="category" :label="category" :value="category"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.value.label" :label-width="formLabelWidth">
@@ -55,7 +55,8 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           createdDate:'',
@@ -68,7 +69,6 @@
           value:{label: this.$t('dictMapList.value')}
         },
         pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading:false
@@ -79,7 +79,8 @@
         this.pageLoading = true;
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         util.setQuery("dictMapList",this.formData);
-        axios.get('/api/basic/sys/dictMap',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/sys/dictMap',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -108,11 +109,11 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
       axios.get('/api/basic/sys/dictMap/getQuery').then((response) =>{
-        this.formProperty=response.data;
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>

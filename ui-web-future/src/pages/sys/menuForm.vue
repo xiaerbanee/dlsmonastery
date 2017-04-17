@@ -7,12 +7,12 @@
           <el-col :span="10">
             <el-form-item :label="$t('menuForm.menuCategory')" prop="menuCategoryId">
             <el-select v-model="inputForm.menuCategoryId" filterable :placeholder="$t('menuForm.selectGroup')">
-              <el-option v-for="category in formProperty.menuCategory" :key="category.id" :label="category.name" :value="category.id"></el-option>
+              <el-option v-for="category in inputForm.menuCategoryList" :key="category.id" :label="category.name" :value="category.id"></el-option>
             </el-select>
             </el-form-item>
             <el-form-item :label="$t('menuForm.category')" prop="category">
               <el-select v-model="inputForm.category" filterable allow-create :placeholder="$t('menuForm.selectGroup')">
-                <el-option v-for="category in formProperty.category" :key="category" :label="category" :value="category"></el-option>
+                <el-option v-for="category in inputForm.categoryList" :key="category" :label="category" :value="category"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('menuForm.name')" prop="name">
@@ -31,12 +31,12 @@
           <el-col :span="10">
             <el-form-item :label="$t('menuForm.mobile')" prop="mobile">
               <el-radio-group v-model="inputForm.mobile">
-                <el-radio v-for="(value,key) in formProperty.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
+                <el-radio v-for="(value,key) in inputForm.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('menuForm.visible')" prop="visible">
               <el-radio-group v-model="inputForm.visible">
-                <el-radio v-for="(value,key) in formProperty.bools"  :key="key" :label="value">{{key | bool2str}}</el-radio>
+                <el-radio v-for="(value,key) in inputForm.bools"  :key="key" :label="value">{{key | bool2str}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('menuForm.permissionStr')" prop="permissionStr">
@@ -60,8 +60,8 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
-            inputForm:{
+            inputForm:{},
+            submitData:{
               id:'',
               menuCategoryId:'',
               category:'',
@@ -90,7 +90,8 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/basic/sys/menu/save',qs.stringify(this.inputForm)).then((response)=> {
+              util.copyValue(this.inputForm,this.submitData);
+              axios.post('/api/basic/sys/menu/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -105,16 +106,11 @@
           })
         }
       },created(){
-        axios.get('/api/basic/sys/menu/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate){
-          axios.get('/api/basic/sys/menu/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            this.inputForm.mobile = response.data.mobile?"1":"0";
-            this.inputForm.visible = response.data.visible?"1":"0";
-          })
-        }
+        axios.get('/api/basic/sys/menu/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+          this.inputForm.mobile = response.data.mobile?"1":"0";
+          this.inputForm.visible = response.data.visible?"1":"0";
+        })
       }
     }
 </script>

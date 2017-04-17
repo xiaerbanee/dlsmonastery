@@ -15,7 +15,6 @@ public class FolderFile extends CompanyEntity<FolderFile> {
     private String physicalName;
     private Integer version = 0;
     private String companyId = "1";
-    private Folder folder;
     private String folderId;
 
     public String getName() {
@@ -64,14 +63,6 @@ public class FolderFile extends CompanyEntity<FolderFile> {
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
-    }
-
-    public Folder getFolder() {
-        return folder;
-    }
-
-    public void setFolder(Folder folder) {
-        this.folder = folder;
     }
 
     public String getFolderId() {

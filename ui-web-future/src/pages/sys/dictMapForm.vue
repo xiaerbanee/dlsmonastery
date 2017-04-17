@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('dictMapForm.category')" prop="category">
           <el-select v-model="inputForm.category" filterable :placeholder="$t('dictMapForm.selectCategory')">
-            <el-option v-for="category in formProperty.category" :key="category" :label="category" :value="category"></el-option>
+            <el-option v-for="category in inputForm.categoryList" :key="category" :label="category" :value="category"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('dictMapForm.name')" prop="name">
@@ -30,8 +30,8 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
-            inputForm:{
+            inputForm:{},
+            submitData:{
               id:'',
               category:'',
               name:'',
@@ -51,7 +51,8 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/basic/sys/dictMap/save', qs.stringify(this.inputForm)).then((response)=> {
+                util.copyValue(this.inputForm,this.submitData);
+              axios.post('/api/basic/sys/dictMap/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -66,14 +67,9 @@
           })
         }
       },created(){
-        axios.get('/api/basic/sys/dictMap/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate){
           axios.get('/api/basic/sys/dictMap/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
+            this.inputForm = response.data;
           })
-        }
       }
     }
 </script>

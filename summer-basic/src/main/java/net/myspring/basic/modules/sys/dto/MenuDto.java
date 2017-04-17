@@ -1,8 +1,11 @@
 package net.myspring.basic.modules.sys.dto;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.dto.DataDto;
 import net.myspring.basic.common.utils.Const;
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.sys.domain.Menu;
+import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.util.cahe.annotation.CacheInput;
 import org.apache.commons.lang3.StringUtils;
@@ -23,11 +26,55 @@ public class MenuDto extends DataDto<Menu> {
     private String categoryCode;
     private boolean locked;
     private boolean enabled;
-    private String remarks;
     @CacheInput(inputKey = "menuCategorys",inputInstance = "menuCategoryId",outputInstance = "name")
     private String menuCategoryName;
 
     private String permissionStr;
+    private List<Account> accountList = Lists.newArrayList();
+    private List<String> accountIdList = Lists.newArrayList();
+    private MenuCategory menuCategory;
+    private List<Permission> permissionList = Lists.newArrayList();
+    private List<String> permissionIdList = Lists.newArrayList();
+
+    public List<Account> getAccountList() {
+        return accountList;
+    }
+
+    public void setAccountList(List<Account> accountList) {
+        this.accountList = accountList;
+    }
+
+    public List<String> getAccountIdList() {
+        return accountIdList;
+    }
+
+    public void setAccountIdList(List<String> accountIdList) {
+        this.accountIdList = accountIdList;
+    }
+
+    public MenuCategory getMenuCategory() {
+        return menuCategory;
+    }
+
+    public void setMenuCategory(MenuCategory menuCategory) {
+        this.menuCategory = menuCategory;
+    }
+
+    public List<Permission> getPermissionList() {
+        return permissionList;
+    }
+
+    public void setPermissionList(List<Permission> permissionList) {
+        this.permissionList = permissionList;
+    }
+
+    public List<String> getPermissionIdList() {
+        return permissionIdList;
+    }
+
+    public void setPermissionIdList(List<String> permissionIdList) {
+        this.permissionIdList = permissionIdList;
+    }
 
     public String getMenuCategoryId() {
         return menuCategoryId;
@@ -107,16 +154,6 @@ public class MenuDto extends DataDto<Menu> {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    @Override
-    public String getRemarks() {
-        return remarks;
-    }
-
-    @Override
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
     }
 
     public String getMenuCategoryName() {

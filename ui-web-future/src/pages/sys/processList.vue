@@ -25,8 +25,8 @@
       return {
         pageLoading: false,
         pageHeight:600,
-        formProperty:{},
-        detailFormData:{},
+        formData:{},
+        submitData:{},
         formLabelWidth: '120px',
         formVisible: false,
         loading:false,
@@ -42,9 +42,9 @@
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
       util.setQuery("processList",this.formData);
-      axios.get('/api/basic/sys/activiti/processList',{params:this.formData}).then((response) => {
+      util.copyValue(this.formData,this.submitData);
+      axios.get('/api/basic/sys/activiti/processList',{params:this.submitData}).then((response) => {
         this.processList = response.data;
-        console.log(response.data)
         this.pageLoading = false;
       })
     }

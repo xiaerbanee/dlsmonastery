@@ -14,7 +14,6 @@ import java.util.List;
  */
 public class AdPricesystemDto extends DataDto<AdPricesystem>{
     private String name;
-    private Integer version;
     private List<AdPricesystemChange> adPricesystemChangeList = Lists.newArrayList();
     private List<String> adPricesystemChangeIdList = Lists.newArrayList();
     private List<AdPricesystemDetail> adPricesystemDetailList = Lists.newArrayList();
@@ -29,14 +28,6 @@ public class AdPricesystemDto extends DataDto<AdPricesystem>{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     public List<AdPricesystemChange> getAdPricesystemChangeList() {

@@ -45,7 +45,7 @@ public class MenuController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(Menu menu, BindingResult bindingResult) {
+    public RestResponse delete(MenuDto menu, BindingResult bindingResult) {
         if(CollectionUtil.isNotEmpty(menu.getPermissionList())){
             return new RestResponse("菜单删除失败，请先删除下属权限",null);
         }

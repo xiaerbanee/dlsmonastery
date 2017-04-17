@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.dto;
 
 import net.myspring.basic.common.dto.DataDto;
 import net.myspring.basic.modules.sys.domain.District;
+import net.myspring.basic.modules.sys.domain.Folder;
 import net.myspring.basic.modules.sys.domain.FolderFile;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.StringUtils;
@@ -16,6 +17,7 @@ public class FolderFileDto extends DataDto<FolderFile> {
     private Integer size;
     private String physicalName;
     private String name;
+    private Folder folder;
 
     @CacheInput(inputKey = "folders",inputInstance = "folderId",outputInstance = "name")
     private String folderName;
@@ -78,5 +80,13 @@ public class FolderFileDto extends DataDto<FolderFile> {
 
     public void setFolderName(String folderName) {
         this.folderName = folderName;
+    }
+
+    public Folder getFolder() {
+        return folder;
+    }
+
+    public void setFolder(Folder folder) {
+        this.folder = folder;
     }
 }

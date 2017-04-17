@@ -51,14 +51,14 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:''
         },formLabel:{
           name:{label:this.$t('processTypeList.name')}
         },
-        formProperty:{},
         detailFormData:{},
         formLabelWidth: '120px',
         formVisible: false,
@@ -69,7 +69,8 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("processTypeList",this.formData);
-        axios.get('/api/basic/sys/processType',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/sys/processType',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

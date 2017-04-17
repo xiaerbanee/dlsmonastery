@@ -30,12 +30,14 @@
       return {
         pageLoading: false,
         page:[],
-        formData:{
+        submitData:{
+          page:0,
+          size:25,
           name:''
         },formLabel:{
           name:{label:this.$t('folderList.name')}
         },
-        formProperty:{},
+        formData:{},
         formLabelWidth: '120px',
         formVisible: false,
         loading:false
@@ -45,7 +47,8 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("folderList",this.formData);
-        axios.get('/api/basic/sys/folder').then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/sys/folder',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

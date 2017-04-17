@@ -16,8 +16,6 @@ public class MenuCategory extends DataEntity<MenuCategory> {
     private String inaName;
     private Integer sort;
     private Integer version = 0;
-    private List<Menu> menuList = Lists.newArrayList();
-    private List<String> menuIdList = Lists.newArrayList();
     private String code;
 
     public String getCode() {
@@ -76,19 +74,4 @@ public class MenuCategory extends DataEntity<MenuCategory> {
         this.version = version;
     }
 
-    public List<Menu> getMenuList() {
-        return menuList;
-    }
-
-    public void setMenuList(List<Menu> menuList) {
-        this.menuList = menuList;
-    }
-
-    public List<String> getMenuIdList() {
-        return menuIdList;
-    }
-
-    public void setMenuIdList(List<String> menuIdList) {
-        this.menuIdList = menuIdList;
-    }
 }

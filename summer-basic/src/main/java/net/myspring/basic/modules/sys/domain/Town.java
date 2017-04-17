@@ -17,10 +17,7 @@ public class Town extends IdEntity<Town> {
     private String countyId;
     private String countyName;
     private String townName;
-    private Town town;
     private String townId;
-    private List<Town> townList = Lists.newArrayList();
-    private List<String> townIdList = Lists.newArrayList();
 
     public String getProvinceId() {
         return provinceId;
@@ -78,14 +75,6 @@ public class Town extends IdEntity<Town> {
         this.townName = townName;
     }
 
-    public Town getTown() {
-        return town;
-    }
-
-    public void setTown(Town town) {
-        this.town = town;
-    }
-
     public String getTownId() {
         return townId;
     }
@@ -94,19 +83,4 @@ public class Town extends IdEntity<Town> {
         this.townId = townId;
     }
 
-    public List<Town> getTownList() {
-        return townList;
-    }
-
-    public void setTownList(List<Town> townList) {
-        this.townList = townList;
-    }
-
-    public List<String> getTownIdList() {
-        return townIdList;
-    }
-
-    public void setTownIdList(List<String> townIdList) {
-        this.townIdList = townIdList;
-    }
 }

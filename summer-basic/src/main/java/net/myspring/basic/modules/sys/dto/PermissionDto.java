@@ -22,6 +22,24 @@ public class PermissionDto extends DataDto<Permission> {
 
     private String locked;
     private String remarks;
+    private List<Position> positionList = Lists.newArrayList();
+    private List<String> positionIdList = Lists.newArrayList();
+
+    public List<Position> getPositionList() {
+        return positionList;
+    }
+
+    public void setPositionList(List<Position> positionList) {
+        this.positionList = positionList;
+    }
+
+    public List<String> getPositionIdList() {
+        return positionIdList;
+    }
+
+    public void setPositionIdList(List<String> positionIdList) {
+        this.positionIdList = positionIdList;
+    }
 
     public String getLocked() {
         return locked;

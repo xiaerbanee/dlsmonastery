@@ -16,7 +16,6 @@ import java.util.Map;
  */
 
 public class MenuForm extends DataForm<Menu>{
-
     private String menuCategoryId;
     private MenuCategory menuCategory;
     private String permissionStr;
@@ -26,10 +25,19 @@ public class MenuForm extends DataForm<Menu>{
     private String href;
     private String sort;
     private String name;
+    private String menuCode;
     private String category;
     private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
-    private List<String> categoryList= Lists.newArrayList();;
+    private List<String> categoryList= Lists.newArrayList();
     private Map<Boolean,String> bools= Maps.newHashMap();
+
+    public String getMenuCode() {
+        return menuCode;
+    }
+
+    public void setMenuCode(String menuCode) {
+        this.menuCode = menuCode;
+    }
 
     public void setMobile(Boolean mobile) {
         this.mobile = mobile;

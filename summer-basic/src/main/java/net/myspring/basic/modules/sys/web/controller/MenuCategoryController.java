@@ -29,11 +29,11 @@ public class MenuCategoryController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(MenuCategory menuCategory) {
-        if(CollectionUtil.isNotEmpty(menuCategory.getMenuList())){
+    public RestResponse delete(MenuCategoryDto menuCategoryDto) {
+        if(CollectionUtil.isNotEmpty(menuCategoryDto.getMenuList())){
             return new RestResponse("菜单分类删除失败，请先删除下属菜单",null);
         }
-        menuCategoryService.logicDeleteOne(menuCategory.getId());
+        menuCategoryService.logicDeleteOne(menuCategoryDto.getId());
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

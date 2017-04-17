@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('permissionForm.menu')" prop="menuId">
           <el-select v-model="inputForm.menuId" filterable :placeholder="$t('permissionForm.selectCategory')">
-            <el-option v-for="menu in formProperty.menu" :key="menu.id" :label="menu.name" :value="menu.id"></el-option>
+            <el-option v-for="menu in inputForm.menuList" :key="menu.id" :label="menu.name" :value="menu.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('permissionForm.name')" prop="name">
@@ -35,9 +35,9 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
             positions:[],
-            inputForm:{
+            inputForm:{},
+            submitData:{
               id:'',
               menuId:'',
               name:'',
@@ -59,7 +59,8 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/basic/sys/permission/save' ,qs.stringify(this.inputForm)).then((response)=> {
+              util.copyValue(this.inputForm,this.submitData);
+              axios.post('/api/basic/sys/permission/save' ,qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -84,18 +85,14 @@
          }
        }
       },created(){
-        axios.get('/api/basic/sys/permission/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate){
-          axios.get('/api/basic/sys/permission/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(response.data.positionList!=null&&response.data.positionList.length>0){
-              this.positions=response.data.positionList;
-              this.inputForm.positionIdList=util.getIdList(this.positions);
-            }
-          })
-        }
+        var that = this;
+        axios.get('/api/basic/sys/permission/findOne',{params: {id:that.$route.query.id}}).then((response)=>{
+          that.inputForm = response.data;
+          if(response.data.positionList!=null && response.data.positionList.length>0){
+            that.positions=response.data.positionList;
+            that.inputForm.positionIdList=util.getIdList(that.positions);
+          }
+        })
       }
     }
 </script>

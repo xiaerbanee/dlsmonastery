@@ -13,8 +13,6 @@ public class Folder extends TreeEntity<Folder> {
     private String name;
     private Integer version = 0;
     private String companyId = "1";
-    private List<FolderFile> folderFileList = Lists.newArrayList();
-    private List<String> folderFileIdList = Lists.newArrayList();
 
     public String getName() {
         return name;
@@ -40,19 +38,4 @@ public class Folder extends TreeEntity<Folder> {
         this.companyId = companyId;
     }
 
-    public List<FolderFile> getFolderFileList() {
-        return folderFileList;
-    }
-
-    public void setFolderFileList(List<FolderFile> folderFileList) {
-        this.folderFileList = folderFileList;
-    }
-
-    public List<String> getFolderFileIdList() {
-        return folderFileIdList;
-    }
-
-    public void setFolderFileIdList(List<String> folderFileIdList) {
-        this.folderFileIdList = folderFileIdList;
-    }
 }

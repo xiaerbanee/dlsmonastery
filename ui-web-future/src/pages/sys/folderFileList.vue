@@ -38,7 +38,8 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           createdDate:'',
@@ -58,7 +59,8 @@
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         util.getQuery("folderFileList");
         util.setQuery("folderFileList",this.formData);
-        axios.get('/api/basic/sys/folderFile',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/sys/folderFile',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
