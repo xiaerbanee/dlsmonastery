@@ -27,7 +27,7 @@ public class ImeAllotController {
         return null;
     }
 
-    @RequestMapping(value="getListProperty")
+    @RequestMapping(value="getQuery")
     public String form(){
         return null;
     }

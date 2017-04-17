@@ -48,7 +48,7 @@ public class DutySignController {
         return page;
     }
 
-    @RequestMapping(value = "getListProperty")
+    @RequestMapping(value = "getQuery")
     public Map<String, Object> getQuery() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("officeList", officeService.findAll());

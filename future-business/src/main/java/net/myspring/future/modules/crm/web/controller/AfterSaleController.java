@@ -35,7 +35,7 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value="getFormProperty")
-    public String getListProperty(){
+    public String getQuery(){
         Map<String,Object> map= Maps.newHashMap();
 
         return null;

@@ -17,9 +17,9 @@ public class ReportScoreOfficeController {
         return null;
     }
 
-    @RequestMapping(value="getListProperty",method = RequestMethod.GET)
+    @RequestMapping(value="getQuery",method = RequestMethod.GET)
     @ResponseBody
-    public String getListProperty(){
+    public String getQuery(){
         return null;
     }
 }

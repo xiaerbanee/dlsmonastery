@@ -40,8 +40,8 @@ public class ShopAdTypeController {
         return null;
     }
 
-    @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    @RequestMapping(value="getQuery")
+    public String getQuery(){
         return null;
     }
 

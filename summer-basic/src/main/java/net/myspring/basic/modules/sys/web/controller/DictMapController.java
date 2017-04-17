@@ -25,7 +25,7 @@ public class DictMapController {
     @Autowired
     private DictMapService dictMapService;
 
-    @RequestMapping(value = "getListProperty")
+    @RequestMapping(value = "getQuery")
     public DictMapQuery getQuery(DictMapQuery dictMapQuery) {
         dictMapQuery.setCategoryList(dictMapService.findDistinctCategory());
         return dictMapQuery;

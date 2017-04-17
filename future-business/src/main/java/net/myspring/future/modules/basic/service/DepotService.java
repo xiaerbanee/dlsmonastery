@@ -181,7 +181,7 @@ public class DepotService {
         return null;
     }
 
-    public Map<String, Object> getListProperty() {
+    public Map<String, Object> getQuery() {
         return null;
     }
 

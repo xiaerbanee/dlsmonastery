@@ -28,8 +28,8 @@ public class ProductImeController {
         return null;
     }
 
-    @RequestMapping(value = "getListProperty")
-    public String getListProperty(Depot depot) {
+    @RequestMapping(value = "getQuery")
+    public String getQuery(Depot depot) {
         return null;
     }
 

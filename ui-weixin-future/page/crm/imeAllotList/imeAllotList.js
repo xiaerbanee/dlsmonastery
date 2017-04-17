@@ -15,7 +15,7 @@ Page({
   onLoad: function (options) {
     var that = this;
     wx.request({
-      url: $util.getUrl("crm/imeAllot/getListProperty"),
+      url: $util.getUrl("crm/imeAllot/getQuery"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId },
