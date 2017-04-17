@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.layout.mapper.ShopAdMapper">
+
+    <select id="findPage" resultType="ShopAd">
+        SELECT
+        t1.*
+        FROM
+        crm_shop_ad t1,crm_depot depot
+        WHERE
+        t1.enabled=1
+        and t1.shop_id=depot.id
+        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <include refid="shopAdFilter" />
+    </select>
+
+    <select id="findByFilter" resultType="ShopAd">
+        SELECT
+        t1.*
+        FROM
+        crm_shop_ad t1
+        WHERE
+        t1.enabled=1
+        <include refid="shopAdFilter"/>
+    </select>
+
+    <sql id="shopAdFilter">
+        <if test="p.shopAdTypeId != null">
+            AND t1.shop_ad_type_id = #{p.shopAdTypeId}
+        </if>
+        <if test="p.processStatus != null">
+            AND t1.process_status  = #{p.processStatus}
+        </if>
+        <if test="p.createdDateStart !=null">
+            AND t1.created_date>=#{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd != null">
+            AND t1.created_date &lt;=#{p.createdDateEnd}
+        </if>
+        <if test="p.shopName !=null">
+            AND t1.shop_id in(
+            select t2.id
+            from crm_depot t2
+            where t2.name like concat('%',#{p.shopName},'%')
+            )
+        </if>
+        <if test="p.createdBy !=null">
+            AND t1.created_by in(
+            select t2.id
+            from hr_account t2
+            where t2.login_name like concat('%',#{p.createdBy},'%')
+            )
+        </if>
+        <if test="p.specialArea != null">
+            AND t1.special_area = #{p.specialArea}
+        </if>
+        <if test="p.id != null">
+            AND t1.id = #{p.id}
+        </if>
+        <if test="p.officeId != null">
+            and depot.area_id in (
+            SELECT office.id
+            FROM hr_office office
+            where office.id = #{p.officeId} and office.enabled = 1
+            )
+        </if>
+    </sql>
+
+</mapper>
