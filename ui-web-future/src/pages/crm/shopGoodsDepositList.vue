@@ -161,8 +161,8 @@
         });
       },checkSelectable(row) {
         return row.status !== '已通过'
-      },getListProperty(){
-        axios.get('/api/crm/shopGoodsDeposit/getListProperty').then((response) =>{
+      },getQuery(){
+        axios.get('/api/crm/shopGoodsDeposit/getQuery').then((response) =>{
           this.formProperty=response.data;
         this.pageRequest();
       });
@@ -170,7 +170,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      this.getListProperty();
+      this.getQuery();
     }
   };
 </script>

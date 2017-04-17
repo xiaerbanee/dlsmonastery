@@ -99,7 +99,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -325;
-      axios.get('/api/crm/reportScore/getListProperty').then((response)=>{
+      axios.get('/api/crm/reportScore/getQuery').then((response)=>{
         this.formProperty = response.data;
       });
       this.pageRequest();

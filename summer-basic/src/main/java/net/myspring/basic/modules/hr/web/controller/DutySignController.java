@@ -49,7 +49,7 @@ public class DutySignController {
     }
 
     @RequestMapping(value = "getListProperty")
-    public Map<String, Object> getListProperty() {
+    public Map<String, Object> getQuery() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("officeList", officeService.findAll());
         map.put("positionDtoList", positionService.findAll());

@@ -35,12 +35,6 @@ public class DictMapManager {
         return  dictMap;
     }
 
-    @Cacheable(value = "dictMaps",key="#p0.id")
-    public DictMap saveForm(DictMapForm dictMapForm){
-        dictMapMapper.save(BeanUtil.map(dictMapForm,DictMap.class));
-        return  dictMapMapper.findOne(dictMapForm.getId());
-    }
-
     @CachePut(value = "dictMaps",key="#p0.id")
     public DictMap update(DictMap dictMap){
         dictMapMapper.update(dictMap);

@@ -116,8 +116,8 @@
       },preRequest:function(){
            this.parentIdArr=this.parentIdArr.slice(0, this.parentIdArr.length - 1);
            this.pageRequest();
-      },getListProperty(){
-        axios.get('/api/crm/product/getListProperty').then((response) =>{
+      },getQuery(){
+        axios.get('/api/crm/product/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });

@@ -179,8 +179,8 @@
             this.pageRequest();
           })
         }
-      },getListProperty(){
-        axios.get('/api/crm/adGoodsOrder/getListProperty').then((response) =>{
+      },getQuery(){
+        axios.get('/api/crm/adGoodsOrder/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });
@@ -188,7 +188,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      this.getListProperty();
+      this.getQuery();
     }
   };
 </script>

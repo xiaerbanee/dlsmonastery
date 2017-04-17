@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
+@Transactional
 public class MenuService {
 
     @Value("${weixin.audit.menuId}")
@@ -160,17 +161,18 @@ public class MenuService {
         return menu;
     }
 
-    public MenuForm findForm(String id) {
-        Menu menu = findOne(id);
-        MenuForm menuForm=null;
-        if(menu!=null){
-            menuForm= BeanUtil.map(menu,MenuForm.class);
-            List<Permission> permissionList=permissionMapper.findByMenuId(id);
-            String permissionStr="";
-            for (Permission permission : permissionList) {
-                permissionStr = permissionStr + permission.getName() + Const.CHAR_SPACE + permission.getPermission() + Const.CHAR_ENTER;
+    public MenuForm findForm(MenuForm menuForm) {
+        if(!menuForm.isCreate()){
+            Menu menu = findOne(menuForm.getId());
+            if(menu!=null){
+                menuForm= BeanUtil.map(menu,MenuForm.class);
+                List<Permission> permissionList=permissionMapper.findByMenuId(menuForm.getId());
+                String permissionStr="";
+                for (Permission permission : permissionList) {
+                    permissionStr = permissionStr + permission.getName() + Const.CHAR_SPACE + permission.getPermission() + Const.CHAR_ENTER;
+                }
+                menuForm.setPermissionStr(permissionStr);
             }
-            menuForm.setPermissionStr(permissionStr);
         }
         return menuForm;
     }
@@ -189,15 +191,15 @@ public class MenuService {
         menuMapper.deleteById(id);
     }
 
-    @Transactional
-    public void save(MenuForm menuForm){
+    public Menu save(MenuForm menuForm){
         Set<Permission> permissions = Sets.newHashSet();
         Set<Permission> oldPermissions = Sets.newHashSet();
+        Menu menu;
         if(menuForm.isCreate()) {
-            menuForm.setMenuCategory(menuCategoryMapper.findOne(menuForm.getMenuCategoryId()));
-            menuMapper.save(BeanUtil.map(menuForm,Menu.class));
+            menu=BeanUtil.map(menuForm,Menu.class);
+            menu=menuManager.save(menu);
         } else {
-            menuMapper.updateForm(menuForm);
+            menu=menuManager.updateForm(menuForm);
             oldPermissions = Sets.newHashSet(permissionMapper.findByMenuId(menuForm.getId()));
         }
         if (StringUtils.isNotBlank(menuForm.getPermissionStr())) {
@@ -232,5 +234,6 @@ public class MenuService {
                 }
             }
         }
+        return menu;
     }
 }

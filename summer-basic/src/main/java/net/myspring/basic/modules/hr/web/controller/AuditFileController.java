@@ -56,7 +56,7 @@ public class AuditFileController {
 
 
     @RequestMapping(value = "getListProperty", method = RequestMethod.GET)
-    public AuditFileQuery getListProperty(AuditFileQuery auditFileQuery) {
+    public AuditFileQuery getQuery(AuditFileQuery auditFileQuery) {
         auditFileQuery.setFolder(folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
         auditFileQuery.setProcessTypesList( processTypeService.findEnabledAuditFileType());
         return auditFileQuery;

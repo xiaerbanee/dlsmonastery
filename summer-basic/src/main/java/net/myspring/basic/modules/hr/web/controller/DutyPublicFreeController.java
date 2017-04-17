@@ -34,7 +34,7 @@ public class DutyPublicFreeController {
     }
 
     @RequestMapping(value = "getListProperty")
-    public Map<String, Object> getListProperty() {
+    public Map<String, Object> getQuery() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("dateList", DutyDateTypeEnum.values());
         return map;

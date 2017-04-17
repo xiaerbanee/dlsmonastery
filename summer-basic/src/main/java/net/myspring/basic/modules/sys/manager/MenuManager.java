@@ -1,8 +1,11 @@
 package net.myspring.basic.modules.sys.manager;
 
 import net.myspring.basic.modules.sys.domain.Menu;
+import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.mapper.MenuMapper;
+import net.myspring.basic.modules.sys.web.form.MenuCategoryForm;
+import net.myspring.basic.modules.sys.web.form.MenuForm;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -39,6 +42,12 @@ public class MenuManager {
     public Menu update(Menu menu){
         menuMapper.update(menu);
         return  menuMapper.findOne(menu.getId());
+    }
+
+    @CachePut(value = "menus",key="#p0.id")
+    public Menu updateForm(MenuForm menuForm){
+        menuMapper.updateForm(menuForm);
+        return  menuMapper.findOne(menuForm.getId());
     }
 
     @CacheEvict(value = "menus",key="#p0")

@@ -54,7 +54,7 @@ public class DutyRestController {
     }
 
     @RequestMapping(value = "getListProperty")
-    public Map<String, Object> getListProperty() {
+    public Map<String, Object> getQuery() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("restList", DutyRestTypeEnum.values());
         map.put("dateList", DutyDateTypeEnum.values());

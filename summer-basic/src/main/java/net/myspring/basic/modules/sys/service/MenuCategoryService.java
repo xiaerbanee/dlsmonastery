@@ -4,6 +4,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
+import net.myspring.basic.modules.sys.manager.MenuCategoryManager;
 import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
 import net.myspring.basic.modules.sys.web.form.MenuCategoryForm;
 import net.myspring.basic.modules.sys.web.query.MenuCategoryQuery;
@@ -23,16 +24,20 @@ public class MenuCategoryService {
     private MenuCategoryMapper menuCategoryMapper;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private MenuCategoryManager menuCategoryManager;
 
     public MenuCategory findOne(String id){
         MenuCategory menuCategory=menuCategoryMapper.findOne(id);
         return menuCategory;
     }
 
-    public MenuCategoryForm findForm(String id){
-        MenuCategory menuCategory=menuCategoryMapper.findOne(id);
-        MenuCategoryForm menuCategoryForm= BeanUtil.map(menuCategory,MenuCategoryForm.class);
-        cacheUtils.initCacheInput(menuCategoryForm);
+    public MenuCategoryForm findForm(MenuCategoryForm menuCategoryForm){
+        if(!menuCategoryForm.isCreate()){
+            MenuCategory menuCategory=menuCategoryMapper.findOne(menuCategoryForm.getId());
+            menuCategoryForm= BeanUtil.map(menuCategory,MenuCategoryForm.class);
+            cacheUtils.initCacheInput(menuCategoryForm);
+        }
         return menuCategoryForm;
     }
 
@@ -46,13 +51,15 @@ public class MenuCategoryService {
         menuCategoryMapper.logicDeleteOne(id);
     }
 
-    public void save(MenuCategoryForm menuCategoryForm){
-        boolean isCreated= StringUtils.isBlank(menuCategoryForm.getId());
-        if(isCreated) {
-            menuCategoryMapper.save(BeanUtil.map(menuCategoryForm, MenuCategory.class));
+    public MenuCategory save(MenuCategoryForm menuCategoryForm){
+        MenuCategory menuCategory;
+        if(!menuCategoryForm.isCreate()) {
+            menuCategory=BeanUtil.map(menuCategoryForm, MenuCategory.class);
+            menuCategory=menuCategoryManager.save(menuCategory);
         } else {
-            menuCategoryMapper.updateForm(menuCategoryForm);
+            menuCategory=menuCategoryManager.updateForm(menuCategoryForm);
         }
+        return menuCategory;
     }
 
     public List<MenuCategoryDto> findAll(){
