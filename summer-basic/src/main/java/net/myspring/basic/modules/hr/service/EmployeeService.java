@@ -60,13 +60,15 @@ public class EmployeeService {
         return employeeDtoList;
     }
 
-    public EmployeeForm save(EmployeeForm employeeForm) {
+    public Employee save(EmployeeForm employeeForm) {
+        Employee employee;
         if(employeeForm.isCreate()) {
-            employeeManager.saveForm(employeeForm);
+            employee=BeanUtil.map(employeeForm,Employee.class);
+            employeeManager.save(employee);
         } else {
-            employeeManager.updateForm(employeeForm);
+            employee=employeeManager.updateForm(employeeForm);
         }
-        return employeeForm;
+        return employee;
     }
 
     public void logicDeleteOne(String id) {

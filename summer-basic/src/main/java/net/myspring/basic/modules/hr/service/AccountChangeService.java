@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.domain.AccountChange;
 import net.myspring.basic.modules.hr.domain.AccountTask;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.mapper.*;
+import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
 import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.util.mapper.BeanUtil;
@@ -43,11 +44,11 @@ public class AccountChangeService {
         return accountChange;
     }
 
-    public AccountChangeDto findDto(String id){
-        AccountChange accountChange=findOne(id);
-        AccountChangeDto accountChangeDto= BeanUtil.map(accountChange,AccountChangeDto.class);
-        cacheUtils.initCacheInput(accountChangeDto);
-        return accountChangeDto;
+    public AccountChangeForm findForm(String id){
+        AccountChange accountChange=accountChangeMapper.findOne(id);
+        AccountChangeForm accountChangeForm= BeanUtil.map(accountChange,AccountChangeForm.class);
+        cacheUtils.initCacheInput(accountChangeForm);
+        return accountChangeForm;
     }
 
     public Page<AccountChangeDto> findPage(Pageable pageable, AccountChangeQuery accountChangeQuery){

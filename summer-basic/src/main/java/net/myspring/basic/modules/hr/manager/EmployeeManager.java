@@ -38,19 +38,11 @@ public class EmployeeManager {
         return  employee;
     }
 
-
-    @CachePut(value = "employees",key="#p0.id")
-    public Employee saveForm(EmployeeForm employeeForm){
-        employeeMapper.save(BeanUtil.map(employeeForm,Employee.class));
-        return  employeeMapper.findOne(employeeForm.getId());
-    }
-
     @CachePut(value = "employees",key="#p0.id")
     public Employee update(Employee employee){
         employeeMapper.update(employee);
         return  employeeMapper.findOne(employee.getId());
     }
-
 
     @CachePut(value = "employees",key="#p0.id")
     public Employee updateForm(EmployeeForm employeeForm){

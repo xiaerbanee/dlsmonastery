@@ -58,13 +58,13 @@ public class AccountService {
         return account;
     }
 
-    public AccountDto findDto(String id) {
+    public AccountForm findDto(String id) {
         Account account = accountMapper.findOne(id);
         List<NameValueDto> nameValueDtoList = accountMapper.findAccountOfficeByIds(Lists.newArrayList(account.getId()));
         initDomainUtils.initChildIdList(account,Office.class,nameValueDtoList);
-        AccountDto accountDto = BeanUtil.map(account, AccountDto.class);
-        cacheUtils.initCacheInput(accountDto);
-        return accountDto;
+        AccountForm accountForm = BeanUtil.map(account, AccountForm.class);
+        cacheUtils.initCacheInput(accountForm);
+        return accountForm;
     }
 
     public AccountDto findByLoginName(String loginName) {
@@ -95,10 +95,7 @@ public class AccountService {
     public AccountForm save(AccountForm accountForm) {
         boolean isCreate = StringUtils.isBlank(accountForm.getId());
         if (isCreate) {
-            accountForm.setPassword(StringUtils.getEncryptPassword(Const.DEFAULT_PASSWORD));
-            Account account = BeanUtil.map(accountForm, Account.class);
-            account.setCompanyId(SecurityUtils.getCompanyId());
-            accountManager.save(account);
+            accountManager.save(BeanUtil.map(accountForm, Account.class));
         } else {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
                 accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
@@ -164,7 +161,7 @@ public class AccountService {
     public AccountDto getAccount(){
         String accountId=SecurityUtils.getAccountId();
         if(StringUtils.isNotBlank(accountId)){
-            AccountDto accountDto=findDto(accountId);
+            AccountDto accountDto=BeanUtil.map(accountMapper.findOne(accountId),AccountDto.class);
             return accountDto;
         }else {
             return null;
