@@ -160,19 +160,19 @@ public class MenuService {
         return menu;
     }
 
-    public MenuDto findDto(String id) {
+    public MenuForm findForm(String id) {
         Menu menu = findOne(id);
-        MenuDto menuDto=null;
+        MenuForm menuForm=null;
         if(menu!=null){
-            menuDto= BeanUtil.map(menu,MenuDto.class);
+            menuForm= BeanUtil.map(menu,MenuForm.class);
             List<Permission> permissionList=permissionMapper.findByMenuId(id);
             String permissionStr="";
             for (Permission permission : permissionList) {
                 permissionStr = permissionStr + permission.getName() + Const.CHAR_SPACE + permission.getPermission() + Const.CHAR_ENTER;
             }
-            menuDto.setPermissionStr(permissionStr);
+            menuForm.setPermissionStr(permissionStr);
         }
-        return menuDto;
+        return menuForm;
     }
 
     public List<String> findDistinctCategory(){

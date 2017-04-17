@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.web.form;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Folder;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.sys.dto.FolderDto;
@@ -15,14 +16,14 @@ public class FolderForm extends DataForm<Folder>{
     private String name;
     private String parentIds;
     private String parentId;
-    private List<FolderDto> folderDtoList;
+    private List<FolderDto> folderList= Lists.newArrayList();
 
-    public List<FolderDto> getFolderDtoList() {
-        return folderDtoList;
+    public List<FolderDto> getFolderList() {
+        return folderList;
     }
 
-    public void setFolderDtoList(List<FolderDto> folderDtoList) {
-        this.folderDtoList = folderDtoList;
+    public void setFolderList(List<FolderDto> folderList) {
+        this.folderList = folderList;
     }
 
     public Folder getParent() {

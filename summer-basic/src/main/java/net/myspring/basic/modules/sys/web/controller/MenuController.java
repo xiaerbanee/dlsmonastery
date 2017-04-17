@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Maps;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.basic.common.enums.BoolEnum;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.sys.domain.Menu;
@@ -60,26 +61,19 @@ public class MenuController {
     }
 
     @RequestMapping(value = "findOne")
-    public MenuDto findOne(String id){
-        MenuDto menuDto = menuService.findDto(id);
-        return menuDto;
-    }
-
-    @RequestMapping(value="getFormProperty")
-    public Map<String,Object> getFormProperty(){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("menuCategory", menuCategoryService.findAll());
-        map.put("category",menuService.findDistinctCategory());
-        map.put("bools", BoolEnum.getMap());
-        return map;
+    public MenuForm findOne(MenuForm menuForm){
+        menuForm = menuService.findForm(menuForm.getId());
+        menuForm.setCategoryList(menuService.findDistinctCategory());
+        menuForm.setMenuCategoryList(menuCategoryService.findAll());
+        menuForm.setBools(BoolEnum.getMap());
+        return menuForm;
     }
 
     @RequestMapping(value="getListProperty")
-    public Map<String,Object> getListProperty(){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("menuCategory", menuCategoryService.findAll());
-        map.put("category",menuService.findDistinctCategory());
-        return map;
+    public MenuQuery getListProperty(MenuQuery menuQuery){
+        menuQuery.setCategoryList(menuService.findDistinctCategory());
+        menuQuery.setMenuCategoryList(menuCategoryService.findAll());
+        return menuQuery;
     }
 
     @RequestMapping(value = "getMenus")

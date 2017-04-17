@@ -90,24 +90,17 @@ public class AccountController {
     }
 
     @RequestMapping(value = "findOne")
-    public AccountDto findOne(String id) {
-        AccountDto accountDto = accountService.findDto(id);
-        return accountDto;
-    }
-
-    @RequestMapping(value = "getFormProperty")
-    public Map<String, Object> getFormProperty() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("position", positionService.findAll());
-        map.put("bools", BoolEnum.getMap());
-        return map;
+    public AccountForm findOne(AccountForm accountForm) {
+        accountForm = accountService.findDto(accountForm.getId());
+        accountForm.setPositionList(positionService.findAll());
+        accountForm.setBools( BoolEnum.getMap());
+        return accountForm;
     }
 
     @RequestMapping(value = "getListProperty")
-    public Map<String, Object> getListProperty() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("position", positionService.findAll());
-        return map;
+    public AccountQuery getListProperty(AccountQuery accountQuery) {
+        accountQuery.setPositionList(positionService.findAll());
+        return accountQuery;
     }
 
     @RequestMapping(value = "search")
@@ -135,24 +128,24 @@ public class AccountController {
     }
 
     @RequestMapping(value = "getAccountMessage")
-    public Map<String,Object> getAccount() {
-        Map<String,Object> map=Maps.newHashMap();
-        AccountDto accountDto=accountService.getAccount();
+    public Map<String, Object> getAccount() {
+        Map<String, Object> map = Maps.newHashMap();
+        AccountDto accountDto = accountService.getAccount();
         List<String> authorityList = accountService.getAuthorityList();
         List<MenuCategoryItem> menus = menuService.findMenus(SecurityUtils.getAccountId());
-        map.put("account",accountDto);
-        map.put("authorityList",authorityList);
-        map.put("menus",menus);
+        map.put("account", accountDto);
+        map.put("authorityList", authorityList);
+        map.put("menus", menus);
         return map;
     }
 
     @RequestMapping(value = "/home")
     public Map<String, Object> home() {
         Map<String, Object> map = Maps.newHashMap();
-        AccountDto accountDto=accountService.findDto(SecurityUtils.getAccountId());
+        AccountDto accountDto = accountService.getAccount();
         LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
         List<DutyDto> dutyList = dutyService.findByAuditable(accountDto.getId(), AuditTypeEnum.APPLY.getValue(), lastMonth);
-        List<AccountTaskDto> accountTasks = accountTaskService.findByPositionId(accountDto.getPositionId(),accountService.findOne(SecurityUtils.getAccountId()));
+        List<AccountTaskDto> accountTasks = accountTaskService.findByPositionId(accountDto.getPositionId(), accountService.findOne(SecurityUtils.getAccountId()));
         map.put("accountTaskSize", accountTasks.size());
         List<AccountMessageDto> accountMessages = accountMessageService.findByAccount(accountDto.getId(), lastMonth);
         map.put("dutySize", dutyList.size());
@@ -163,7 +156,7 @@ public class AccountController {
         map.put("overtimeHour", dutyOvertimeService.getAvailableHour(employeeId, LocalDateTime.now()));
         //显示快到期时间
         map.put("expiredHour", dutyOvertimeService.getExpiredHour(employeeId, LocalDateTime.now()));
-        map.put("account",accountDto);
+        map.put("account", accountDto);
         return map;
     }
 

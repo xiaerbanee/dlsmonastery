@@ -161,7 +161,7 @@
           }
          if(response.data.officeIdList!=null&&response.data.officeIdList.length>0){
            let officeList=new Array();
-            for(var i=response.data.officeIdList.length;i>0;i--){
+            for(var i=response.data.officeIdList.length-1;i>=0;i--){
                 officeList.push({id:response.data.officeIdList[i],name:response.data.officeListName[i]})
             }
            this.dataScopeOffices=officeList;

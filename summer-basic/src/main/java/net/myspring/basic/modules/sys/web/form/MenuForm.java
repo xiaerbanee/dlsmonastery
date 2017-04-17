@@ -1,6 +1,8 @@
 package net.myspring.basic.modules.sys.web.form;
 
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.common.form.DataForm;
@@ -25,9 +27,9 @@ public class MenuForm extends DataForm<Menu>{
     private String sort;
     private String name;
     private String category;
-    private List<MenuCategoryDto> menuCategoryDtoList;
-    private List<String> categoryList;
-    private Map<Boolean,String> bools;
+    private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
+    private List<String> categoryList= Lists.newArrayList();;
+    private Map<Boolean,String> bools= Maps.newHashMap();
 
     public void setMobile(Boolean mobile) {
         this.mobile = mobile;
@@ -37,12 +39,12 @@ public class MenuForm extends DataForm<Menu>{
         this.visible = visible;
     }
 
-    public List<MenuCategoryDto> getMenuCategoryDtoList() {
-        return menuCategoryDtoList;
+    public List<MenuCategoryDto> getMenuCategoryList() {
+        return menuCategoryList;
     }
 
-    public void setMenuCategoryDtoList(List<MenuCategoryDto> menuCategoryDtoList) {
-        this.menuCategoryDtoList = menuCategoryDtoList;
+    public void setMenuCategoryList(List<MenuCategoryDto> menuCategoryList) {
+        this.menuCategoryList = menuCategoryList;
     }
 
     public List<String> getCategoryList() {

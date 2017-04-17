@@ -10,7 +10,7 @@
             </el-form-item>
             <el-form-item :label="$t('employeeForm.education')" prop="education">
               <el-select v-model="employeeForm.education" >
-                <el-option v-for="item in formProperty.educationsList":key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in formProperty.educationsList":key="item.value" :label="item.value" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.code')" prop="code">
@@ -77,11 +77,6 @@
             <el-form-item :label="$t('employeeForm.office')" prop="officeId">
               <el-select v-model="accountForm.officeId" filterable remote :placeholder="$t('employeeForm.inputWord')" :remote-method="remoteOffice" :loading="remoteLoading" :clearable=true>
                 <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('employeeForm.depotList')" prop="depotIdList">
-              <el-select v-model="accountForm.depotIdList" multiple filterable remote :placeholder="$t('employeeForm.inputWord')" :remote-method="remoteDepot" :loading="remoteLoading" :clearable=true >
-                <el-option v-for="depot in depots" :key="depot.id" :label="depot.name" :value="depot.id"></el-option>
               </el-select>
             </el-form-item>
 
@@ -188,7 +183,8 @@
                   this.employeeForm.sex=this.employeeForm.sexLabel==1?"男":"女"
                     axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm)).then((response)=> {
                         this.$message("员工"+response.data.message);
-                        this.accountForm.employeeId=response.data.extendMap.employeeId;
+                        this.accountForm.employeeId=response.data.extra.employeeId;
+                        console.log(response.data.extra.employeeId)
                         axios.post('/api/basic/hr/account/save', qs.stringify(this.accountForm)).then((response)=> {
                         this.$message("账户"+response.data.message);
                     });
@@ -261,24 +257,30 @@
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-         if(response.data.account.office!=null){
-            this.offices=new Array(response.data.account.office)
-          }
-         if(response.data.account.officeList!=null&&response.data.account.officeList.length>0){
-            this.dataScopeOffices=response.data.account.officeList;
-            this.accountForm.officeIdList=util.getIdList(this.dataScopeOffices);
-          }
-          if(response.data.account.depotList!=null&&response.data.account.depotList.length>0){
-            this.depots=response.data.account.depotList;
-            this.accountForm.depotIdList=util.getIdList(this.depots);
-          }
-          if(response.data.account.leader!=null){
-            this.leaders=new Array(response.data.account.leader)
-          }
-         this.employeeForm.sexLabel=response.data.sex=="男"?1:0;
-         util.copyValue(response.data,this.employeeForm);
-         util.copyValue(response.data.account,this.accountForm);
+          axios.get('/api/basic/hr/employee/findDate',{params: {id:this.$route.query.id}}).then((response)=>{
+             var account=response.data.account;
+             var employee=response.data.employee;
+             if(account.officeId!=null){
+                this.offices=new Array({id:account.officeId,name:account.officeName})
+              }
+             if(account.officeIdList!=null&&account.officeIdList.length>0){
+               let officeList=new Array();
+               for(var i=account.officeIdList.length-1;i>=0;i--){
+                 officeList.push({id:account.officeIdList[i],name:account.officeListName[i]})
+               }
+               this.dataScopeOffices=officeList;
+                this.accountForm.officeIdList=account.officeIdList;
+                console.log(officeList)
+              }
+              if(account.leaderId!=null){
+                this.leaders=new Array({id:account.leaderId,loginName:account.leaderName})
+              }
+            if(account.leaderId!=null){
+              this.leaders=new Array({id:account.leaderId,loginName:account.leaderName})
+            }
+             this.employeeForm.sexLabel=employee.sex=="男"?1:0;
+             util.copyValue(employee,this.employeeForm);
+             util.copyValue(account,this.accountForm);
           })
         }
       }

@@ -3,9 +3,12 @@ package net.myspring.basic.modules.hr.web.form;
 
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.hr.dto.PositionDto;
+import net.myspring.basic.modules.sys.dto.DictEnumDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by admin on 2017/4/5.
@@ -30,6 +33,24 @@ public class EmployeeForm extends DataForm<Employee> {
     private String originId;
     private String dutyCode;
     private String salerName;
+    private List<PositionDto> positionDtoList;
+    private List<DictEnumDto> educationsList;
+
+    public List<PositionDto> getPositionDtoList() {
+        return positionDtoList;
+    }
+
+    public void setPositionDtoList(List<PositionDto> positionDtoList) {
+        this.positionDtoList = positionDtoList;
+    }
+
+    public List<DictEnumDto> getEducationsList() {
+        return educationsList;
+    }
+
+    public void setEducationsList(List<DictEnumDto> educationsList) {
+        this.educationsList = educationsList;
+    }
 
     public String getCode() {
         return code;

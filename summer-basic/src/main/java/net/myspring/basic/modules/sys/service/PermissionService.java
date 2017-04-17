@@ -56,11 +56,11 @@ public class PermissionService {
         return permission;
     }
 
-    public PermissionDto findDto(String id) {
-        Permission permission = findOne(id);
-        PermissionDto permissionDto = BeanUtil.map(permission, PermissionDto.class);
-        cacheUtils.initCacheInput(permissionDto);
-        return permissionDto;
+    public PermissionForm findForm(String id) {
+        Permission permission = permissionManager.findOne(id);
+        PermissionForm permissionForm = BeanUtil.map(permission, PermissionForm.class);
+        cacheUtils.initCacheInput(permissionForm);
+        return permissionForm;
     }
 
     public List<Permission> findAll() {

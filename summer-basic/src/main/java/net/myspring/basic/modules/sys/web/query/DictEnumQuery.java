@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
@@ -17,7 +18,7 @@ public class DictEnumQuery {
     private String value;
     private LocalDateTime createdDateStart;
     private LocalDateTime createdDateEnd;
-    private List<String> categoryList;
+    private List<String> categoryList= Lists.newArrayList();
 
     public String getCategory() {
         return category;
@@ -42,7 +43,7 @@ public class DictEnumQuery {
     public void setCreatedDateStart(LocalDateTime createdDateStart) {
         if(createdDateEnd==null&& StringUtils.isNotBlank(createdDateBTW)){
             String[] tempParamValues = createdDateBTW.split(" - ");
-            this.createdDateStart= LocalDateTimeUtils.parse(tempParamValues[0]);
+            this.createdDateStart= LocalDateTimeUtils.parse(tempParamValues[0]+"00:00:00");
         }
         this.createdDateStart = createdDateStart;
     }
@@ -50,7 +51,7 @@ public class DictEnumQuery {
     public LocalDateTime getCreatedDateEnd() {
         if(createdDateEnd==null&& StringUtils.isNotBlank(createdDateBTW)){
             String[] tempParamValues = createdDateBTW.split(" - ");
-            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]);
+            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 23:59:59");
         }
         return createdDateEnd;
     }

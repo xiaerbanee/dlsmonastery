@@ -1,8 +1,12 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
+import net.myspring.basic.common.enums.DataScopeEnum;
+import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.hr.dto.JobDto;
+import net.myspring.common.tree.TreeNode;
 
 import java.util.List;
 
@@ -21,6 +25,33 @@ public class PositionForm extends DataForm<Position> {
     private String sort;
     private String remarks;
     private String permissionIdStr;
+    private TreeNode permissionTree;
+    private List<JobDto> jobDtoList;
+    private DataScopeEnum[] dataScopeMap;
+
+    public TreeNode getPermissionTree() {
+        return permissionTree;
+    }
+
+    public void setPermissionTree(TreeNode permissionTree) {
+        this.permissionTree = permissionTree;
+    }
+
+    public List<JobDto> getJobDtoList() {
+        return jobDtoList;
+    }
+
+    public void setJobDtoList(List<JobDto> jobDtoList) {
+        this.jobDtoList = jobDtoList;
+    }
+
+    public DataScopeEnum[] getDataScopeMap() {
+        return dataScopeMap;
+    }
+
+    public void setDataScopeMap(DataScopeEnum[] dataScopeMap) {
+        this.dataScopeMap = dataScopeMap;
+    }
 
     public List<String> getPermissionIdList() {
         return permissionIdList;

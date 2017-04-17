@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
+import net.myspring.basic.modules.hr.service.AccountService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
@@ -34,6 +35,8 @@ public class EmployeeController {
     private PositionService positionService;
     @Autowired
     private DictEnumService dictEnumService;
+    @Autowired
+    private AccountService accountService;
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
@@ -50,10 +53,13 @@ public class EmployeeController {
         return restResponse;
     }
 
-    @RequestMapping(value = "findOne")
-    public EmployeeDto findOne(String id){
+    @RequestMapping(value = "findDate")
+    public Map<String,Object> findOne(String id){
+        Map<String,Object> map=Maps.newHashMap();
         EmployeeDto employeeDto=employeeService.findDto(id);
-        return employeeDto;
+        map.put("employee",employeeDto);
+        map.put("account",accountService.findDto(employeeDto.getAccountId()));
+        return map;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -72,7 +78,7 @@ public class EmployeeController {
     @RequestMapping(value="getFormProperty")
     public Map<String,Object> getFormProperty(){
         Map<String,Object> map= Maps.newHashMap();
-        map.put("positions",positionService.findAll());
+        map.put("positionDtoList",positionService.findAll());
         map.put("educationsList", dictEnumService.findByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
         return map;
     }

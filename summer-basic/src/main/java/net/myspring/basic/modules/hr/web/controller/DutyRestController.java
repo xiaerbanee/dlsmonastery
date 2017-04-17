@@ -46,7 +46,7 @@ public class DutyRestController {
         Map<String, Object> map = Maps.newHashMap();
         dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(SecurityUtils.getEmployeeId(), LocalDateTime.now()));
         dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(SecurityUtils.getEmployeeId()));
-        map.put("dutyRest", dutyRestForm);
+        map.put("dutyRestForm", dutyRestForm);
         map.put("expiredHour", dutyOvertimeService.getExpiredHour(SecurityUtils.getEmployeeId(), LocalDateTime.now()));
         map.put("restList", DutyRestTypeEnum.values());
         map.put("dateList", DutyDateTypeEnum.values());

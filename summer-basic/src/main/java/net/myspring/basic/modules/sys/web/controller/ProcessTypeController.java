@@ -48,22 +48,10 @@ public class ProcessTypeController {
     }
 
     @RequestMapping(value = "findOne")
-    public ProcessTypeDto findOne(String id){
-        ProcessTypeDto processTypeDto=processTypeService.findDto(id);
-        return processTypeDto;
-    }
-
-    @RequestMapping(value="getFormProperty")
-    public Map<String,Object> getFormProperty(String query){
-        Map<String,Object> map= Maps.newHashMap();
-        map.put("positions",positionService.findAll());
-        map.put("bools", BoolEnum.getMap());
-        return map;
-    }
-
-    @RequestMapping(value="getListProperty")
-    public Map<String,Object> getListProperty(){
-        Map<String,Object> map= Maps.newHashMap();
-        return map;
+    public ProcessTypeForm findOne(ProcessTypeForm processTypeForm){
+        processTypeForm=processTypeService.findForm(processTypeForm.getId());
+        processTypeForm.setPositionList(positionService.findAll());
+        processTypeForm.setBools(BoolEnum.getMap());
+        return processTypeForm;
     }
 }
