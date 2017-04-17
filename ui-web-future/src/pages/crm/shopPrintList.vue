@@ -117,8 +117,8 @@
         }else if(action == "详细"){
            this.$router.push({ name: 'shopPrintDetail', query: { id: id }})
         }
-      },getListProperty(){
-        axios.get('/api/crm/shopPrint/getListProperty').then((response) =>{
+      },getQuery(){
+        axios.get('/api/crm/shopPrint/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });
@@ -126,7 +126,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      this.getListProperty();
+      this.getQuery();
     }
   };
 </script>

@@ -159,8 +159,8 @@
             this.remoteLoading = false;
           })
         }
-      },getListProperty(){
-        axios.get('/api/basic/hr/employee/getListProperty').then((response) =>{
+      },getQuery(){
+        axios.get('/api/basic/hr/employee/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });
@@ -168,7 +168,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      this.getListProperty();
+      this.getQuery();
     }
   };
 </script>

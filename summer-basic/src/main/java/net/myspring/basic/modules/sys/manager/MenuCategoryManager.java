@@ -1,8 +1,11 @@
 package net.myspring.basic.modules.sys.manager;
 
+import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
+import net.myspring.basic.modules.sys.web.form.DictMapForm;
+import net.myspring.basic.modules.sys.web.form.MenuCategoryForm;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -39,6 +42,12 @@ public class MenuCategoryManager {
     public MenuCategory update(MenuCategory menuCategory){
         menuCategoryMapper.update(menuCategory);
         return  menuCategoryMapper.findOne(menuCategory.getId());
+    }
+
+    @CachePut(value = "menuCategorys",key="#p0.id")
+    public MenuCategory updateForm(MenuCategoryForm menuCategoryForm){
+        menuCategoryMapper.updateForm(menuCategoryForm);
+        return  menuCategoryMapper.findOne(menuCategoryForm.getId());
     }
 
     @CacheEvict(value = "menuCategorys",key="#p0")

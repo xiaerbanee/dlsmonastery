@@ -173,8 +173,8 @@
           this.$message(response.data.message);
           this.pageRequest();
         })
-    },getListProperty(){
-        axios.get('/api/crm/shopBuild/getListProperty').then((response) =>{
+    },getQuery(){
+        axios.get('/api/crm/shopBuild/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });
@@ -184,7 +184,7 @@
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
       this.pageRequest();
-      this.getListProperty();
+      this.getQuery();
     }
   };
 </script>

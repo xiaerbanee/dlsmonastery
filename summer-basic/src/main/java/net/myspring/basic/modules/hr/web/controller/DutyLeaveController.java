@@ -47,8 +47,8 @@ public class DutyLeaveController {
         return map;
     }
 
-    @RequestMapping(value="getListProperty")
-    public Map<String,Object> getListProperty(){
+    @RequestMapping(value="getQuery")
+    public Map<String,Object> getQuery(){
         Map<String,Object> map= Maps.newHashMap();
         map.put("dateList", DutyDateTypeEnum.values());
         map.put("leaveList",dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.getValue()));

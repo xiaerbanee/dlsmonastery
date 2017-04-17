@@ -16,9 +16,9 @@ public class ReportScoreAreaController {
         return null;
     }
 
-    @RequestMapping(value="getListProperty",method = RequestMethod.GET)
+    @RequestMapping(value="getQuery",method = RequestMethod.GET)
 
-    public String getListProperty(){
+    public String getQuery(){
         return null;
     }
 }

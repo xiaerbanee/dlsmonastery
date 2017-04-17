@@ -103,7 +103,7 @@ public class FolderService {
     }
 
     @Transactional
-    public FolderForm save(FolderForm folderForm) {
+    public Folder save(FolderForm folderForm) {
         Folder parent = folderManager.findOne(folderForm.getParentId());
         String oldParentIds = folderForm.getParentIds();
         folderForm.setParent(parent);
@@ -112,12 +112,13 @@ public class FolderService {
         if (!folderForm.isCreate() && folderForm.getParentIds().contains("," + folderForm.getId() + ",")) {
             throw new ServiceException("无法将上级目录设置为自己或者自己的下级目录");
         }
-        folderManager.save(BeanUtil.map(folderForm,Folder.class));
+        Folder folder=BeanUtil.map(folderForm,Folder.class);
+        folderManager.save(folder);
         List<Folder> list = folderMapper.findByParentIdsLike("%," + folderForm.getId() + ",%");
         for (Folder e : list) {
             e.setParentIds(e.getParentIds().replace(oldParentIds, folderForm.getParentIds()));
         }
-        return folderForm;
+        return folder;
     }
 
     private void sortList(List<Folder> list, List<Folder> sourceList, String parentId) {

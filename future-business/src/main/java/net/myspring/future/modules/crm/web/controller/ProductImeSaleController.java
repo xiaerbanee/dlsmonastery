@@ -21,8 +21,8 @@ public class ProductImeSaleController {
         return null;
     }
 
-    @RequestMapping(value = "getListProperty", method = RequestMethod.GET)
-    public String getListProperty() {
+    @RequestMapping(value = "getQuery", method = RequestMethod.GET)
+    public String getQuery() {
         return null;
     }
 

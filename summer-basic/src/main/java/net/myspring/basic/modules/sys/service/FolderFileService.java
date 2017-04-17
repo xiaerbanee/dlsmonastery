@@ -45,8 +45,8 @@ public class FolderFileService {
     private CacheUtils cacheUtils;
 
     @Transactional
-    public List<FolderFileDto> save(String folderId, Map<String, MultipartFile> fileMap) {
-        List<FolderFileDto> list = Lists.newArrayList();
+    public List<FolderFile> save(String folderId, Map<String, MultipartFile> fileMap) {
+        List<FolderFile> list = Lists.newArrayList();
         try {
             for (MultipartFile multipartFile : fileMap.values()) {
                 if (multipartFile.getSize() > 0) {
@@ -59,7 +59,7 @@ public class FolderFileService {
                     folderFileDto.setPhysicalName(UUID.randomUUID().toString() + "." + folderFileDto.getExtendType());
                     FolderFile folderFile = BeanUtil.map(folderFileDto,FolderFile.class);
                     folderFileManager.save(folderFile);
-                    list.add(folderFileDto);
+                    list.add(folderFile);
                     // 保存文件
                     String uploadPath = getUploadPath(folderFile);
                     FileUtil.makesureDirExists(uploadPath);

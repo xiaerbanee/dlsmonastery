@@ -21,7 +21,7 @@ export default {
     handleSizeChange (val) {
       this.$emit('pageChange',0,val);
     },handleCurrentChange(val) {
-      if(this.page.page != val - 1) {
+      if(this.page.number !== undefined && this.page.number != val - 1) {
         this.$emit('pageChange',val-1,this.page.size);
       }
     }

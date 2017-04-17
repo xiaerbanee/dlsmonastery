@@ -54,20 +54,12 @@ public class AuditFileController {
         return page;
     }
 
-    @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
-    public Map<String, Object> getFormProperty() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("folder", folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
-        map.put("processTypesList", processTypeService.findEnabledAuditFileType());
-        return map;
-    }
 
-    @RequestMapping(value = "getListProperty", method = RequestMethod.GET)
-    public Map<String, Object> getListProperty() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("folder", folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
-        map.put("processTypesList", processTypeService.findEnabledAuditFileType());
-        return map;
+    @RequestMapping(value = "getQuery", method = RequestMethod.GET)
+    public AuditFileQuery getQuery(AuditFileQuery auditFileQuery) {
+        auditFileQuery.setFolder(folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
+        auditFileQuery.setProcessTypesList( processTypeService.findEnabledAuditFileType());
+        return auditFileQuery;
     }
 
 
@@ -85,12 +77,13 @@ public class AuditFileController {
     }
 
 
-    @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public Map<String, Object> detail(AuditFileForm auditFileForm) {
-        Map<String, Object> paramMap = Maps.newHashMap();
-        paramMap.put("auditFile", auditFileForm);
-        paramMap.put("bools", BoolEnum.getMap());
-        return paramMap;
+    @RequestMapping(value = "findOne", method = RequestMethod.GET)
+    public AuditFileForm detail(AuditFileForm auditFileForm) {
+        auditFileForm=auditFileService.findForm(auditFileForm.getId());
+        auditFileForm.setBoolMap(BoolEnum.getMap());
+        auditFileForm.setFolder(folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
+        auditFileForm.setProcessTypesList(processTypeService.findEnabledAuditFileType());
+        return auditFileForm;
     }
 
     @RequestMapping(value = "audit")

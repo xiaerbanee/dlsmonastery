@@ -131,7 +131,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/crm/adApply/getListProperty').then((response)=>{
+      axios.get('/api/crm/adApply/getQuery').then((response)=>{
         this.formProperty = response.data;
       });
       this.pageRequest();

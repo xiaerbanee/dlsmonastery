@@ -47,8 +47,8 @@ public class AccountChangeController {
         return page;
     }
 
-    @RequestMapping(value="getListProperty")
-    public AccountChangeQuery getListProperty(AccountChangeQuery accountChangeQuery){
+    @RequestMapping(value="getQuery")
+    public AccountChangeQuery getQuery(AccountChangeQuery accountChangeQuery){
         accountChangeQuery.setAreaList(officeService.findByType(Const.OFFICE_TYPE_AREA));
         accountChangeQuery.setTypeList(AccountChangeTypeEnum.getList());
         return accountChangeQuery;
@@ -56,7 +56,7 @@ public class AccountChangeController {
 
     @RequestMapping(value = "findOne")
     public AccountChangeForm findOne(AccountChangeForm accountChangeForm){
-        accountChangeForm=accountChangeService.findForm(accountChangeForm.getId());
+        accountChangeForm=accountChangeService.findForm(accountChangeForm);
         accountChangeForm.setTypeList(AccountChangeTypeEnum.getList());
         accountChangeForm.setPositionList(positionService.findAll());
         return accountChangeForm;

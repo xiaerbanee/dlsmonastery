@@ -58,19 +58,14 @@ public class AccountService {
         return account;
     }
 
-    public AccountForm findDto(AccountForm accountForm) {
+    public AccountForm findForm(AccountForm accountForm) {
         if(!accountForm.isCreate()){
-            accountForm = findDto(accountForm.getId());
+            Account account = accountMapper.findOne(accountForm.getId());
+            List<NameValueDto> nameValueDtoList = accountMapper.findAccountOfficeByIds(Lists.newArrayList(account.getId()));
+            initDomainUtils.initChildIdList(account,Office.class,nameValueDtoList);
+            accountForm = BeanUtil.map(account, AccountForm.class);
+            cacheUtils.initCacheInput(accountForm);
         }
-        return accountForm;
-    }
-
-    public AccountForm findDto(String id) {
-        Account account = accountMapper.findOne(id);
-        List<NameValueDto> nameValueDtoList = accountMapper.findAccountOfficeByIds(Lists.newArrayList(account.getId()));
-        initDomainUtils.initChildIdList(account,Office.class,nameValueDtoList);
-        AccountForm accountForm = BeanUtil.map(account, AccountForm.class);
-        cacheUtils.initCacheInput(accountForm);
         return accountForm;
     }
 

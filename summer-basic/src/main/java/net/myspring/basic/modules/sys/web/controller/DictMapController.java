@@ -25,8 +25,8 @@ public class DictMapController {
     @Autowired
     private DictMapService dictMapService;
 
-    @RequestMapping(value = "getListProperty")
-    public DictMapQuery getListProperty(DictMapQuery dictMapQuery) {
+    @RequestMapping(value = "getQuery")
+    public DictMapQuery getQuery(DictMapQuery dictMapQuery) {
         dictMapQuery.setCategoryList(dictMapService.findDistinctCategory());
         return dictMapQuery;
     }
@@ -39,7 +39,7 @@ public class DictMapController {
 
     @RequestMapping(value = "findOne")
     public DictMapForm findOne(DictMapForm dictMapForm) {
-        dictMapForm=dictMapService.findForm(dictMapForm.getId());
+        dictMapForm=dictMapService.findForm(dictMapForm);
         dictMapForm.setCategoryList(dictMapService.findDistinctCategory());
         return dictMapForm;
     }

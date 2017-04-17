@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('dictEnumForm.category')" prop="category">
           <el-select v-model="inputForm.category" filterable :placeholder="$t('dictEnumForm.selectGroup')">
-            <el-option v-for="category in formProperty.category" :key="category" :label="category" :value="category"></el-option>
+            <el-option v-for="category in inputForm.categoryList" :key="category" :label="category" :value="category"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('dictEnumForm.sort')" prop="sort">
@@ -28,10 +28,9 @@
     export default{
       data(){
           return{
-            isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
-            inputForm:{
+            inputForm:{},
+            submitData:{
               id:'',
               category:'',
               sort:'',
@@ -53,7 +52,7 @@
             if (valid) {
               axios.post('/api/basic/sys/dictEnum/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
-                if(this.isCreate){
+                if(this.inputForm.create){
                   form.resetFields();
                   this.submitDisabled = false;
                 } else {
@@ -66,14 +65,9 @@
           })
         }
       },created(){
-        axios.get('/api/basic/sys/dictEnum/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate){
           axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
+            this.inputForm = response.data;
           })
-        }
       }
     }
 </script>

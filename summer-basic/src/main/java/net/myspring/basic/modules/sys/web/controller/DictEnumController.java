@@ -46,13 +46,13 @@ public class DictEnumController {
 
     @RequestMapping(value = "findOne")
     public DictEnumForm findOne(DictEnumForm dictEnumForm){
-        dictEnumForm=dictEnumService.findForm(dictEnumForm.getId());
+        dictEnumForm=dictEnumService.findForm(dictEnumForm);
         dictEnumForm.setCategoryList(dictEnumService.findDistinctCategory());
         return dictEnumForm;
     }
 
-    @RequestMapping(value="getListProperty")
-    public  DictEnumQuery getListProperty(DictEnumQuery dictEnumQuery){
+    @RequestMapping(value="getQuery")
+    public  DictEnumQuery getQuery(DictEnumQuery dictEnumQuery){
         dictEnumQuery.setCategoryList(dictEnumService.findDistinctCategory());
         return dictEnumQuery;
     }

@@ -1,10 +1,11 @@
 package net.myspring.basic.modules.sys.web.query;
 
 import com.google.common.collect.Lists;
-import net.myspring.util.collection.CollectionUtil;
+import net.myspring.basic.common.query.BaseQuery;
+import net.myspring.basic.common.query.PageQuery;
+import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
-import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/7.
  */
-public class DictEnumQuery {
+public class DictEnumQuery extends PageQuery<DictEnum> {
     private String createdDateBTW;
     private String category;
     private String value;

@@ -47,18 +47,18 @@ util.pickerDateOption = {
     var myDate = new Date();
     return myDate.toLocaleDateString();
   },
-util.getOrder = function (column) {
-  let order = '';
+util.getSort = function (column) {
+  let sort = '';
   if (column.prop == null) {
-    order = "id,DESC";
+    sort = "id,DESC";
   } else {
     if(column.sort != null) {
-      order = column.sort + "," + column.order;
+      sort = column.sort + "," + column.order;
     } else {
-      order = column.prop + "," + column.order;
+      sort = column.prop + "," + column.order;
     }
   }
-  return order
+  return sort
 }
 
 util.mergeJsonObject = function (jsonObject1, jsonObject2) {
@@ -76,11 +76,7 @@ util.copyValue = function (from, to) {
   if (from != null) {
     for (var key in to) {
       if (from[key] != null) {
-        if (typeof to[key] != "object") {
-          to[key] = from[key];
-        }else {
-          this.copyValue(from[key],to[key])
-        }
+        to[key] = from[key];
       }
     }
   }

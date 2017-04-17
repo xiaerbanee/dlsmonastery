@@ -59,8 +59,8 @@ public class PriceChangeController {
         return null;
     }
 
-    @RequestMapping(value="getListProperty")
-    public String getListProperty(){
+    @RequestMapping(value="getQuery")
+    public String getQuery(){
         return null;
     }
 

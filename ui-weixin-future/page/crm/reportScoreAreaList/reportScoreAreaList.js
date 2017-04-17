@@ -39,7 +39,7 @@ Page({
       }
     });
     wx.request({
-      url: $util.getUrl("crm/reportScoreArea/getListProperty"),
+      url: $util.getUrl("crm/reportScoreArea/getQuery"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId },
