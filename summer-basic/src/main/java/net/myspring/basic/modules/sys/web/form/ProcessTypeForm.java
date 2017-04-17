@@ -14,8 +14,62 @@ import java.util.Map;
  */
 
 public class ProcessTypeForm extends DataForm<ProcessType>{
+    private String type;
+    private String name;
+    private String viewPermissionId;
+    private String createPermissionId;
+    private String companyId = "1";
+    private Boolean auditFileType;
     private List<PositionDto> positionList= Lists.newArrayList();
     private Map<Boolean,String>  bools= Maps.newHashMap();
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getViewPermissionId() {
+        return viewPermissionId;
+    }
+
+    public void setViewPermissionId(String viewPermissionId) {
+        this.viewPermissionId = viewPermissionId;
+    }
+
+    public String getCreatePermissionId() {
+        return createPermissionId;
+    }
+
+    public void setCreatePermissionId(String createPermissionId) {
+        this.createPermissionId = createPermissionId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public Boolean getAuditFileType() {
+        return auditFileType;
+    }
+
+    public void setAuditFileType(Boolean auditFileType) {
+        this.auditFileType = auditFileType;
+    }
 
     public List<PositionDto> getPositionList() {
         return positionList;
