@@ -1,9 +1,11 @@
 package net.myspring.basic.modules.hr.web.form;
 
+import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.modules.hr.domain.DutyLeave;
 import net.myspring.basic.common.form.DataForm;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by admin on 2017/4/6.
@@ -19,6 +21,24 @@ public class DutyLeaveForm extends DataForm<DutyLeave>{
     private String leaveType;
     private String attachment;
     private String remarks;
+    private DutyDateTypeEnum[] dateList;
+    private List<String> leaveList;
+
+    public DutyDateTypeEnum[] getDateList() {
+        return dateList;
+    }
+
+    public void setDateList(DutyDateTypeEnum[] dateList) {
+        this.dateList = dateList;
+    }
+
+    public List<String> getLeaveList() {
+        return leaveList;
+    }
+
+    public void setLeaveList(List<String> leaveList) {
+        this.leaveList = leaveList;
+    }
 
     public String getDutyDateStart() {
         return dutyDateStart;

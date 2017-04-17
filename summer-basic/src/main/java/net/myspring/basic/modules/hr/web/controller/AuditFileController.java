@@ -58,7 +58,7 @@ public class AuditFileController {
     public Map<String, Object> getFormProperty() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("folder", folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
-        map.put("processTypes", processTypeService.findEnabledAuditFileType());
+        map.put("processTypesList", processTypeService.findEnabledAuditFileType());
         return map;
     }
 
@@ -66,7 +66,7 @@ public class AuditFileController {
     public Map<String, Object> getListProperty() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("folder", folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
-        map.put("processTypes", processTypeService.findEnabledAuditFileType());
+        map.put("processTypesList", processTypeService.findEnabledAuditFileType());
         return map;
     }
 
