@@ -32,8 +32,8 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('accountChangeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('accountChangeList.id')" sortable></el-table-column>
-        <el-table-column  prop="account.extendMap.areaName" :label="$t('accountChangeList.areaName')" sortable></el-table-column>
-        <el-table-column  prop="created.loginName" :label="$t('accountChangeList.applyAccount')" sortable></el-table-column>
+        <el-table-column  prop="areaName" :label="$t('accountChangeList.areaName')" sortable></el-table-column>
+        <el-table-column  prop="createdByName" :label="$t('accountChangeList.applyAccount')" sortable></el-table-column>
         <el-table-column  prop="createdDate" :label="$t('accountChangeList.applyDate')" sortable></el-table-column>
         <el-table-column  prop="type" :label="$t('accountChangeList.type')" sortable></el-table-column>
         <el-table-column  prop="oldValue" :label="$t('accountChangeList.oldValue')" sortable></el-table-column>
@@ -41,7 +41,8 @@
         <el-table-column  prop="processStatus" :label="$t('accountChangeList.processStatus')" sortable ></el-table-column>
         <el-table-column :label="$t('accountChangeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
