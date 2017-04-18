@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('dictEnumList.dictEnumList') "></head-tab>
+    <head-tab active="dictEnumList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:dictEnum:edit'">{{$t('dictEnumList.add')}}</el-button>
