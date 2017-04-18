@@ -760,6 +760,7 @@ export default {
     inputWord: "silahkan masukkan kata kunci",
     likeSearch: "pencarian",
     remarks: "keterangan / komen",
+    operation: "操作",
     sure: "yakin",
     delete: "删除",
     save: "simpan",

@@ -39,20 +39,20 @@ util.pickerDateOption = {
     }
   }]
 },
-  util.getFirstDayOfMonth=function(date) {
+util.getFirstDayOfMonth = function (date) {
   date.setDate(1);
   return date;
 }
-  util.currentDate = function(){
-    var myDate = new Date();
-    return myDate.toLocaleDateString();
-  },
+util.currentDate = function () {
+  var myDate = new Date();
+  return myDate.toLocaleDateString();
+},
 util.getSort = function (column) {
   let sort = '';
   if (column.prop == null) {
     sort = "id,DESC";
   } else {
-    if(column.sort != null) {
+    if (column.sort != null) {
       sort = column.sort + "," + column.order;
     } else {
       sort = column.prop + "," + column.order;
@@ -92,7 +92,7 @@ util.getQuery = function (routerName) {
 }
 
 util.isPermit = function (permissionName) {
-  var authorityList =store.state.global.authorityList;
+  var authorityList = store.state.global.authorityList;
   if (authorityList && authorityList.indexOf(permissionName) != -1) {
     return true;
   }
@@ -102,8 +102,8 @@ util.isPermit = function (permissionName) {
 util.setQuery = function (routerName, query) {
   if (routerName != "home") {
     var tabs = store.state.global.tabs;
-    var params = {routerName:routerName,query:query};
-    store.dispatch("setQuery",params);
+    var params = {routerName: routerName, query: query};
+    store.dispatch("setQuery", params);
   }
 }
 
@@ -129,40 +129,40 @@ util.formatDate = function (date, format) {
   return format;
 }
 
-util.formatDateRange = function(dateRange) {
-  if(dateRange !=null && dateRange[0] != null && dateRange[1] != null) {
-    return this.formatDate(new Date(dateRange[0]),"yyyy-MM-dd")  +  " - " + this.formatDate(new Date(dateRange[1]),"yyyy-MM-dd");
+util.formatDateRange = function (dateRange) {
+  if (dateRange != null && dateRange[0] != null && dateRange[1] != null) {
+    return this.formatDate(new Date(dateRange[0]), "yyyy-MM-dd") + " - " + this.formatDate(new Date(dateRange[1]), "yyyy-MM-dd");
   } else {
     return "";
   }
 }
 
-util.formatLocalDate = function(date) {
-  if(date !=null && date != "") {
-    return this.formatDate(new Date(date),"yyyy-MM-dd");
+util.formatLocalDate = function (date) {
+  if (date != null && date != "") {
+    return this.formatDate(new Date(date), "yyyy-MM-dd");
   } else {
     return "";
   }
 }
 
-util.formatLocalDateTime = function(date) {
-  if(date !=null && date != "") {
-    return this.formatDate(new Date(date),"yyyy-MM-dd hh:mm:ss");
+util.formatLocalDateTime = function (date) {
+  if (date != null && date != "") {
+    return this.formatDate(new Date(date), "yyyy-MM-dd hh:mm:ss");
   } else {
     return "";
   }
 }
 
 util.formatLocalMonth = function (date) {
-  if(date !=null && date != "") {
-    return this.formatDate(new Date(date),"yyyy-MM");
+  if (date != null && date != "") {
+    return this.formatDate(new Date(date), "yyyy-MM");
   } else {
     return "";
   }
 }
 
-util.bool2str=function (value) {
-  if(value=="true" || value== true || value=="1" || value==1) {
+util.bool2str = function (value) {
+  if (value == "true" || value == true || value == "1" || value == 1) {
     return "是";
   } else {
     return "否";
@@ -170,41 +170,41 @@ util.bool2str=function (value) {
 };
 
 util.getIdList = function (array) {
-    var idList = new Array();
-    if(array != null && array.length>0) {
-      for(var i=0;i<array.length;i++) {
-        idList.push(array[i].id);
-      }
+  var idList = new Array();
+  if (array != null && array.length > 0) {
+    for (var i = 0; i < array.length; i++) {
+      idList.push(array[i].id);
     }
-    return idList;
+  }
+  return idList;
 }
 
-util.getLabel = function(array,id,labelColumn) {
-    if(labelColumn==null) {
-      labelColumn = "name";
+util.getLabel = function (array, id, labelColumn) {
+  if (labelColumn == null) {
+    labelColumn = "name";
+  }
+  var labelObj = null;
+  for (var index in array) {
+    var obj = array[index];
+    if (obj.id == id) {
+      labelObj = obj;
     }
-    var labelObj = null;
-    for(var index in array) {
-      var obj = array[index];
-      if(obj.id == id) {
-        labelObj = obj;
-      }
-    }
-    if(labelObj == null) {
-      return null;
-    } else {
-      return labelObj[labelColumn];
-    }
+  }
+  if (labelObj == null) {
+    return null;
+  } else {
+    return labelObj[labelColumn];
+  }
 }
 
 util.getFolderFileIdStr = function (array) {
   var idList = new Array();
-  if(array != null && array.length>0) {
-    for(var i=0;i<array.length;i++) {
-      if(array[i].id != null) {
+  if (array != null && array.length > 0) {
+    for (var i = 0; i < array.length; i++) {
+      if (array[i].id != null) {
         idList.push(array[i].id);
       } else {
-        if(array[i].response != null && array[i].response.length > 0  && array[i].response[0].id != null) {
+        if (array[i].response != null && array[i].response.length > 0 && array[i].response[0].id != null) {
           idList.push(array[i].response[0].id);
         }
       }
@@ -213,20 +213,20 @@ util.getFolderFileIdStr = function (array) {
   return idList.join();
 }
 
-util.contains = function(str,subStr){
-  if(subStr==null || subStr.length==0) {
+util.contains = function (str, subStr) {
+  if (subStr == null || subStr.length == 0) {
     return true;
   }
-  var reg = eval("/"+subStr+"/ig");
+  var reg = eval("/" + subStr + "/ig");
   return reg.test(str);
 }
 
 util.isBlank = function (val) {
-  return _.trim(val)=="";
+  return _.trim(val) == "";
 }
 
 util.isNotBlank = function (val) {
-  return _.trim(val)!="";
+  return _.trim(val) != "";
 }
 
 export default util;
