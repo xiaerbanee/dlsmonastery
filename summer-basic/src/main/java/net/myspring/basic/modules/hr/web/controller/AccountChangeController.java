@@ -30,13 +30,6 @@ public class AccountChangeController {
     @Autowired
     private PositionService positionService;
 
-    @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public Map<String,Object> detail(AccountChangeForm accountChangeForm) {
-        Map<String,Object> paramMap= Maps.newHashMap();
-        paramMap.put("accountChange", accountChangeForm);
-        return paramMap;
-    }
-
     @RequestMapping(value = "audit", method = RequestMethod.GET)
     public String audit(AccountChangeForm accountChangeForm,boolean pass,String comment) {
         return null;

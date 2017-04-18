@@ -46,8 +46,7 @@ public class AccountChangeService {
 
     public AccountChangeForm findForm(AccountChangeForm accountChangeForm){
         if(!accountChangeForm.isCreate()){
-            AccountChange accountChange=accountChangeMapper.findOne(accountChangeForm.getId());
-            accountChangeForm= BeanUtil.map(accountChange,AccountChangeForm.class);
+            accountChangeForm= accountChangeMapper.findForm(accountChangeForm.getId());
             cacheUtils.initCacheInput(accountChangeForm);
         }
         return accountChangeForm;

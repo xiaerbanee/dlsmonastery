@@ -20,52 +20,51 @@
   </div>
 </template>
 <script>
-    export default{
-      data(){
-          return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            formProperty:{},
-            inputForm:{
-              id:this.$route.query.id,
-              name:'',
-              permission:'',
-              remarks:''
-            },
-            rules: {
-              name: [{ required: true, message: this.$t('jobForm.prerequisiteMessage')}],
-              permission: [{ required: true, message: this.$t('jobForm.prerequisiteMessage')}]
-            },
-        };
+  export default{
+    data(){
+      return {
+        isCreate: this.$route.query.id == null,
+        submitDisabled: false,
+        inputForm:{},
+        submitData: {
+          id: this.$route.query.id,
+          name: '',
+          permission: '',
+          remarks: ''
+        },
+        rules: {
+          name: [{required: true, message: this.$t('jobForm.prerequisiteMessage')}],
+          permission: [{required: true, message: this.$t('jobForm.prerequisiteMessage')}]
+        },
+      };
+    },
+    methods: {
+      formSubmit(){
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            util.copyValue(this.inputForm, this.submitData);
+            axios.post('/api/basic/hr/job/save', qs.stringify(this.submitData)).then((response) => {
+              this.$message(response.data.message);
+              if (this.isCreate) {
+                form.resetFields();
+                this.submitDisabled = false;
+              } else {
+                this.$router.push({name: 'jobList', query: util.getQuery("jobList")})
+              }
+            });
+          } else {
+            this.submitDisabled = false;
+          }
+        })
       },
-      methods:{
-        formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-              axios.post('/api/basic/hr/job/save', qs.stringify(this.inputForm)).then((response)=> {
-                this.$message(response.data.message);
-                if(this.isCreate){
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
-                  this.$router.push({name:'jobList',query:util.getQuery("jobList")})
-                }
-              });
-            }else{
-              this.submitDisabled = false;
-            }
-          })
-        },
       handleCheckChange(data, checked, indeterminate) {
-        },
-      },created(){
-        if(!this.isCreate){
-          axios.get('/api/basic/hr/job/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          })
-        }
-      }
+      },
+    }, created(){
+      axios.get('/api/basic/hr/job/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+        util.copyValue(response.data, this.inputForm);
+      })
     }
+  }
 </script>

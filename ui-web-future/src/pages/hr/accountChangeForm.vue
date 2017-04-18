@@ -23,7 +23,7 @@
             </el-form-item>
             <el-form-item v-show="inputForm.type=='有无导购' || inputForm.type=='是否让利'" :label="$t('accountChangeForm.account')"  prop="newValue">
               <el-select v-model="inputForm.newValue"  clearable :placeholder="$t('accountChangeForm.inputKey')" >
-                <el-option v-for="(value,key) in formProperty.bools"  :key="key" :label="value | bool2str" :value="key"></el-option>
+                <el-option v-for="(value,key) in inputForm.boolMap"  :key="key" :label="value" :value="key"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='部门'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
@@ -64,12 +64,12 @@
         isCreate:this.$route.query.id==null,
         type:this.$route.query.type==null,
         submitDisabled:false,
-        formProperty:{},
         employee:{},
         account:{},
         accounts:[],
         offices:[],
-        inputForm:{
+        inputForm:{},
+        submitData:{
           id:'',
           accountId:'',
           type:'',
@@ -93,7 +93,8 @@
         this.inputForm.expiryDate=util.formatLocalDate( this.inputForm.expiryDate)
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/hr/accountChange/save', qs.stringify(this.inputForm)).then((response)=> {
+            util.copyValue(this.inputForm, this.submitData);
+            axios.post('/api/basic/hr/accountChange/save', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
               this.$message(response.data.message);
             }
@@ -141,25 +142,25 @@
       },getOldValue(){
           this.inputForm.newValue = "";
             if(this.inputForm.type == "手机"){
-              this.inputForm.oldValue = this.employee.mobilePhone;
+              this.inputForm.oldValue = this.inputForm.employee.mobilePhone;
             }else if(this.inputForm.type == "身份证"){
-              this.inputForm.oldValue = this.employee.idcard;
+              this.inputForm.oldValue = this.inputForm.employee.idcard;
             }else if(this.inputForm.type == "银行卡号"){
-              this.inputForm.oldValue = this.employee.bankNumber;
+              this.inputForm.oldValue = this.inputForm.employee.bankNumber;
             }else if(this.inputForm.type == "底薪"){
-              this.inputForm.oldValue = this.employee.salary;
+              this.inputForm.oldValue = this.inputForm.employee.salary;
             }else if(this.inputForm.type == "部门"){
-              this.inputForm.oldValue = this.account.office.name;
+              this.inputForm.oldValue = this.inputForm.officeName;
             }else if(this.inputForm.type == "岗位"){
-              this.inputForm.oldValue = this.account.position.name;
+              this.inputForm.oldValue = this.inputForm.positionName;
             }else if(this.inputForm.type == "上级"){
-              this.inputForm.oldValue = this.account.leader.fullName;
+              this.inputForm.oldValue = this.inputForm.leaderName;
             } else if(this.inputForm.type == "转正"){
-              this.inputForm.oldValue = this.employee.regularDate ;
+              this.inputForm.oldValue = this.inputForm.employee.regularDate ;
             }else if(this.inputForm.type == "入职"){
-              this.inputForm.oldValue = this.employee.entryDate;
+              this.inputForm.oldValue = this.inputForm.employee.entryDate;
             }else if(this.inputForm.type == "离职"){
-              this.inputForm.oldValue = this.employee.leaveDate;
+              this.inputForm.oldValue = this.inputForm.employee.leaveDate;
             }
       }
     },created(){
@@ -169,7 +170,6 @@
       }
       axios.get('/api/basic/hr/accountChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
-          console.log(response.data);
           if(response.data.accountId!=null){
             this.accounts=new Array({id:response.data.accountId,loginName:response.data.accountName})
           }

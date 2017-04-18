@@ -7,7 +7,7 @@
           <el-col :span="10">
             <el-form-item :label="$t('accountForm.mainAccount')" prop="employeeId">
               <el-select v-model="inputForm.employeeId" filterable remote :placeholder="$t('accountForm.inputWord')" :remote-method="remoteEmployee" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="employee in employees" :key="employee.id" :label="employee.employeeName" :value="employee.id"></el-option>
+                <el-option v-for="employee in employees" :key="employee.id" :label="employee.name" :value="employee.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.loginName')" prop="loginName">
@@ -102,8 +102,8 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.viewReport=
-            axios.post('/api/basic/hr/account/save',qs.stringify(this.inputForm)).then((response)=> {
+            util.copyValue(this.inputForm, this.submitData);
+            axios.post('/api/basic/hr/account/save',qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -151,7 +151,6 @@
       }
     },created(){
       axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          console.log(response.data);
         this.inputForm = response.data;
         this.formProperty.positionDtoList = response.data.positionDtoList;
         this.inputForm.viewReport = response.data.viewReport?1:0;
