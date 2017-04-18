@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
-import VueRouter from 'vue-router';
 import axios from 'axios'
 import qs from 'qs'
 import _ from 'lodash'
@@ -19,7 +18,7 @@ import searchTag from './components/search-tag';
 
 import App from './app.vue';
 import fullCalendar from 'vue-fullcalendar'
-import routes from './routes';
+import router from './router'
 import './style.scss';
 import './filters'
 import util from "./utils/util"
@@ -31,7 +30,6 @@ window.util=util;
 window.enumMap = null;
 
 Vue.use(VueI18n);
-Vue.use(VueRouter);
 Vue.use(ElementUI);
 Vue.use(VueQuillEditor);
 
@@ -72,12 +70,6 @@ Vue.config.errorHandler = function (err, vm) {
   });
   console.error(err);
 }
-
-export const router = new VueRouter({
-  routes,
-  mode: 'hash',
-  linkActiveClass: 'active'
-});
 
 router.beforeEach((to, from, next) => {
   router.app.$Progress.start()
