@@ -82,7 +82,7 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
       store.dispatch('clearGlobal');
-      router.push("login");
+      router.push({ name: 'login' });
     }
   }
 });

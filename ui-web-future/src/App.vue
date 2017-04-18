@@ -78,7 +78,7 @@ export default {
     lang: state => state.global.lang
   }),
   created() {
-     if(this.menus !=null && this.menus.length>0) {
+    if(this.menus !=null && this.menus.length>0) {
         for (var i in this.menus) { //一級
             var menuCategoryCode = this.menus[i].menuCategory.code;
             var menuItems = this.menus[i].menuItems;
@@ -97,7 +97,7 @@ export default {
   },
   watch: {
     '$route'(to, from) {
-        var activeMenu = this.$route.meta.menu;
+      var activeMenu = this.$route.meta.menu;
         if(activeMenu==null) {
           activeMenu = this.$route.name;
         }
@@ -119,7 +119,7 @@ export default {
         type: 'info'
       }).then(() => {
         this.$store.dispatch('clearGlobal');
-        this.$router.push({ path: '/login' });
+        this.$router.push({ name: 'login' });
       }).catch(() => {});
     },chooseCategory(e) {
         for(var i in this.menus ){
