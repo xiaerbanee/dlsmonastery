@@ -7,6 +7,7 @@ import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.DictMap;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.util.List;
 import java.util.Map;
@@ -20,12 +21,23 @@ public class OfficeForm extends DataForm<Office> {
     private String parentId;
     private String name;
     private String type;
-    private String joinType;
+    private String jointType;
     private String point;
     private String taskPoint;
     private String sort;
     private Map<String,String>  officeTypeList= Maps.newHashMap();
     private List<String> jointTypeList= Lists.newArrayList();
+
+    @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
+    private String parentName;
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 
     public Map<String, String> getOfficeTypeList() {
         return officeTypeList;
@@ -67,12 +79,12 @@ public class OfficeForm extends DataForm<Office> {
         this.type = type;
     }
 
-    public String getJoinType() {
-        return joinType;
+    public String getJointType() {
+        return jointType;
     }
 
-    public void setJoinType(String joinType) {
-        this.joinType = joinType;
+    public void setJointType(String jointType) {
+        this.jointType = jointType;
     }
 
     public String getPoint() {

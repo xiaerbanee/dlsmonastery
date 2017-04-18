@@ -21,16 +21,6 @@ public class EmployeeDto extends DataDto<Employee> {
     private String mobilePhone;
     private String name;
     private String accountId;
-    private String idcard;
-    private LocalDate birthday;
-    private String education;
-    private String major;
-    private String school;
-    private BigDecimal salary;
-    private LocalDate regularDate;
-    private String code;
-    private String bankName;
-    private String bankNumber;
 
     @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
     private String accountName;
@@ -40,86 +30,6 @@ public class EmployeeDto extends DataDto<Employee> {
     private String leaderName;
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
     private String positionName;
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-
-    public String getBankNumber() {
-        return bankNumber;
-    }
-
-    public void setBankNumber(String bankNumber) {
-        this.bankNumber = bankNumber;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public LocalDate getRegularDate() {
-        return regularDate;
-    }
-
-    public void setRegularDate(LocalDate regularDate) {
-        this.regularDate = regularDate;
-    }
-
-    public BigDecimal getSalary() {
-        return salary;
-    }
-
-    public void setSalary(BigDecimal salary) {
-        this.salary = salary;
-    }
-
-    public String getIdcard() {
-        return idcard;
-    }
-
-    public void setIdcard(String idcard) {
-        this.idcard = idcard;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getEducation() {
-        return education;
-    }
-
-    public void setEducation(String education) {
-        this.education = education;
-    }
-
-    public String getMajor() {
-        return major;
-    }
-
-    public void setMajor(String major) {
-        this.major = major;
-    }
-
-    public String getSchool() {
-        return school;
-    }
-
-    public void setSchool(String school) {
-        this.school = school;
-    }
 
     public String getSex() {
         return sex;

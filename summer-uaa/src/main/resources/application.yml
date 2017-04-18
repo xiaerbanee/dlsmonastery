@@ -26,6 +26,7 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:1000/eureka/
+
 weixin:
   appid: wx9306888de0cb1c04
   appsecret: e7822bbf9d836b0b909342662fb4e0ee

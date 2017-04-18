@@ -80,7 +80,8 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:'',
@@ -125,7 +126,8 @@
         this.formLabel.positionId.value=util.getLabel(this.formProperty.positions,this.formData.positionId);
         util.getQuery("employeeList");
         util.setQuery("employeeList",this.formData);
-        axios.get('/api/basic/hr/employee',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/hr/employee',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

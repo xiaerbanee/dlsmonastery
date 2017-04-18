@@ -10,7 +10,7 @@
             </el-form-item>
             <el-form-item :label="$t('employeeForm.education')" prop="education">
               <el-select v-model="employeeForm.education" >
-                <el-option v-for="item in formProperty.educationsList":key="item.value" :label="item.value" :value="item.value"></el-option>
+                <el-option v-for="item in employeeForm.educationList":key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.code')" prop="code">
@@ -89,7 +89,7 @@
             </el-form-item>
             <el-form-item :label="$t('employeeForm.position')" prop="positionId">
               <el-select v-model="accountForm.positionId"  filterable :placeholder="$t('employeeForm.selectGroup')" :clearable=true>
-                <el-option v-for="position in formProperty.positions" :key="position.id" :label="position.name" :value="position.id"></el-option>
+                <el-option v-for="position in employeeForm.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -114,8 +114,9 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
-            employeeForm:{
+            employeeForm:{},
+            accountForm:{},
+            employeeSubmitData:{
               id:'',
               name:'',
               education:'',
@@ -135,7 +136,7 @@
               originId:'',
               salerName:'',
             },
-           accountForm:{
+           accountSubmitData:{
               id:"",
               loginName:'',
               employeeId:"",
@@ -176,16 +177,17 @@
             if (valid) {
               accountForm.validate((accountValid) => {
                 if (accountValid) {
-                  this.employeeForm.birthday=util.formatLocalDate(this.employeeForm.birthday)
-                  this.employeeForm.entryDate=util.formatLocalDate(this.employeeForm.entryDate)
-                  this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
-                  this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
-                  this.employeeForm.sex=this.employeeForm.sexLabel==1?"男":"女"
-                    axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm)).then((response)=> {
+                    this.employeeForm.birthday=util.formatLocalDate(this.employeeForm.birthday)
+                    this.employeeForm.entryDate=util.formatLocalDate(this.employeeForm.entryDate)
+                    this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
+                    this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
+                    this.employeeForm.sex=this.employeeForm.sexLabel==1?"男":"女"
+                    util.copyValue(this.employeeForm,this.employeeSubmitData);
+                    axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeSubmitData)).then((response)=> {
                         this.$message("员工"+response.data.message);
                         this.accountForm.employeeId=response.data.extra.employeeId;
-                        console.log(response.data.extra.employeeId)
-                        axios.post('/api/basic/hr/account/save', qs.stringify(this.accountForm)).then((response)=> {
+                        util.copyValue(this.accountForm,this.accountSubmitData);
+                        axios.post('/api/basic/hr/account/save', qs.stringify(this.accountSubmitData)).then((response)=> {
                         this.$message("账户"+response.data.message);
                     });
                     if(this.isCreate){
@@ -253,13 +255,9 @@
         }
       }
       },created(){
-        axios.get('/api/basic/hr/employee/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate){
-          axios.get('/api/basic/hr/employee/findDate',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
              var account=response.data.account;
-             var employee=response.data.employee;
+             var employee=response.data;
              if(account.officeId!=null){
                 this.offices=new Array({id:account.officeId,name:account.officeName})
               }
@@ -278,11 +276,10 @@
             if(account.leaderId!=null){
               this.leaders=new Array({id:account.leaderId,loginName:account.leaderName})
             }
-             this.employeeForm.sexLabel=employee.sex=="男"?1:0;
-             util.copyValue(employee,this.employeeForm);
-             util.copyValue(account,this.accountForm);
+            this.employeeForm=employee;
+            this.employeeForm.sexLabel=employee.sex=="男"?1:0;
+            this.accountForm=account;
           })
-        }
       }
     }
 </script>

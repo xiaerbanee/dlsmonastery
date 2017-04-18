@@ -18,12 +18,10 @@ public class OfficeDto extends DataDto<Office> {
 
     private String name;
     private BigDecimal point;
-    private Integer sort;
     private String parentId;
     private boolean locked;
     private boolean enabled;
     private String type;
-    private String jointType;
     private BigDecimal taskPoint;
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
@@ -45,14 +43,6 @@ public class OfficeDto extends DataDto<Office> {
         this.type = type;
     }
 
-    public String getJointType() {
-        return jointType;
-    }
-
-    public void setJointType(String jointType) {
-        this.jointType = jointType;
-    }
-
     public String getName() {
         return name;
     }
@@ -67,14 +57,6 @@ public class OfficeDto extends DataDto<Office> {
 
     public void setPoint(BigDecimal point) {
         this.point = point;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
     }
 
     public String getParentId() {

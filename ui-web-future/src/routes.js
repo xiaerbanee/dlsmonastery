@@ -175,9 +175,6 @@ const reportScoreAreaList = r => require.ensure([], () => r(require('pages/crm/r
 
 const dataReportList = r => require.ensure([], () => r(require('pages/crm/dataReportList.vue')));
 
-const k3cloudSynList = r => require.ensure([], () => r(require('pages/api/k3cloudSynList.vue')));
-const k3cloudSynForm = r => require.ensure([], () => r(require('pages/api/k3cloudSynForm.vue')));
-
 
 const dutyLeaveList= r => require.ensure([], () => r(require('pages/hr/dutyLeaveList.vue')));
 const dutyFreeList= r => require.ensure([], () => r(require('pages/hr/dutyFreeList.vue')));
@@ -364,9 +361,6 @@ let routes = [
   {path:'/crm/reportScoreAreaList',component:reportScoreAreaList,name:'reportScoreAreaList',meta: {menu:"reportScoreOfficeList"}},
 
   {path:'/crm/dataReportList',component:dataReportList,name:'dataReportList'},
-
-  {path:'/api/k3cloudSynList',component:k3cloudSynList,name:'k3cloudSynList' },
-  {path:'/api/k3cloudSynForm',component:k3cloudSynForm,name:'k3cloudSynForm',meta: {menu:"k3cloudSynList"}},
 
   {path:'/sys/menuCategoryList',component:menuCategoryList,name:'menuCategoryList'},
   {path:'/sys/menuCategoryForm',component:menuCategoryForm,name:'menuCategoryForm',meta: {menu:"menuCategoryList"}},

@@ -71,8 +71,7 @@
         offices:[],
         depots:[],
         dataScopeOffices:[],
-        inputForm:{
-        },
+        inputForm:{},
         submitData:{
           id:'',
           employeeId:'',

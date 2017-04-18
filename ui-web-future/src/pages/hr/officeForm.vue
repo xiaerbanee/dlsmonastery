@@ -13,12 +13,12 @@
         </el-form-item>
         <el-form-item :label="$t('officeForm.type')" prop="type">
           <el-select v-model="inputForm.type" filterable >
-            <el-option v-for="officeType in formProperty.officeTypes" :key="officeType.value" :label="officeType.name" :value="officeType.value"></el-option>
+            <el-option v-for="officeType in inputForm.officeTypeList" :key="officeType.value" :label="officeType.name" :value="officeType.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('officeForm.jointType')" prop="jointType">
           <el-select v-model="inputForm.jointType" filterable >
-            <el-option v-for="item in formProperty.jointTypes" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in inputForm.jointTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('officeForm.point')" prop="point">
@@ -43,9 +43,9 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        formProperty:{},
         offices:[],
-        inputForm:{
+        inputForm:{},
+        submitData:{
           id:this.$route.query.id,
           parentId:'',
           name:'',
@@ -70,7 +70,8 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/hr/office/save', qs.stringify(this.inputForm)).then((response)=> {
+            util.copyValue(this.inputForm,this.submitData);
+            axios.post('/api/basic/hr/office/save', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -93,14 +94,12 @@
         }
       }
     },created(){
-      axios.get('/api/basic/hr/office/getFormProperty').then((response)=>{
-        this.formProperty=response.data;
-      });
       axios.get('/api/basic/hr/office/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm=response.data;
+        console.log(this.inputForm)
         if(response.data.parentId!=null){
-        this.offices=new Array({id:response.data.parentId,name:response.data.parentName})
-      }
-      util.copyValue(response.data,this.inputForm);
+           this.offices=new Array({id:response.data.parentId,name:response.data.parentName})
+        }
     })
     }
   }

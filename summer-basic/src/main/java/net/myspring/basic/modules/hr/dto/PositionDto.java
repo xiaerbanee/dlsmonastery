@@ -19,24 +19,7 @@ public class PositionDto extends DataDto<Position> {
     private String jobName;
     private boolean locked;
     private String jobId;
-    private String sort;
-    private String reportName;
 
-    public String getReportName() {
-        return reportName;
-    }
-
-    public void setReportName(String reportName) {
-        this.reportName = reportName;
-    }
-
-    public String getSort() {
-        return sort;
-    }
-
-    public void setSort(String sort) {
-        this.sort = sort;
-    }
 
     public String getName() {
         return name;

@@ -69,8 +69,10 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("officeList");
         util.setQuery("officeList",this.formData);
-        axios.get('/api/basic/hr/office',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/hr/office',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

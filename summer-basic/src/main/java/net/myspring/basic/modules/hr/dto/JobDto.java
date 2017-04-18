@@ -9,6 +9,15 @@ import net.myspring.basic.modules.hr.domain.Job;
 public class JobDto extends DataDto<Job> {
     private String name;
     private String permission;
+    private boolean locked;
+
+    public boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
 
     public String getName() {
         return name;

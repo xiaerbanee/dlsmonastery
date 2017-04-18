@@ -18,13 +18,19 @@ import java.util.Map;
 public class AccountForm extends DataForm<Account>{
     private String password;
     private List<String> officeIdList;
+    @CacheInput(inputKey = "offices",inputInstance = "officeIdList",outputInstance = "name")
+    private List<String> officeListName;
     private String type;
     private String employeeId;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
     private String employeeName;
     private String loginName;
     private String officeId;
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
+    private String officeName;
     private String leaderId;
+    @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
+    private String leaderName;
     private Boolean viewReport;
     private String outId;
     private String outPassword;
@@ -32,6 +38,30 @@ public class AccountForm extends DataForm<Account>{
     private String positionId;
     private List<PositionDto> positionDtoList= Lists.newArrayList();
     private Map<Boolean,String> bools= Maps.newHashMap();
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
+
+    public String getLeaderName() {
+        return leaderName;
+    }
+
+    public void setLeaderName(String leaderName) {
+        this.leaderName = leaderName;
+    }
+
+    public List<String> getOfficeListName() {
+        return officeListName;
+    }
+
+    public void setOfficeListName(List<String> officeListName) {
+        this.officeListName = officeListName;
+    }
 
     public Boolean getViewReport() {
         return viewReport;
