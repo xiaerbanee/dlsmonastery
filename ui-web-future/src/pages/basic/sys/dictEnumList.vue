@@ -82,8 +82,8 @@
         this.pageLoading = true;
         this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         util.getQuery("dictEnumList");
-        util.setQuery("dictEnumList",this.formData);
         util.copyValue(this.formData,this.submitData);
+        util.setQuery("dictEnumList",this.submitData);
         axios.get('/api/basic/sys/dictEnum',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;

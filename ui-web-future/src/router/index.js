@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import commonRoutes from './common'
+import common from './common'
 import basicHr from './basic_hr'
 import basicSys from './basic_sys'
 import businessBasic from './business_basic'
@@ -10,7 +10,7 @@ import businessLayout from './business_layout'
 Vue.use(Router)
 
 const routes = [
-  ...commonRoutes,
+  ...common,
   ...basicHr,
   ...basicSys,
   ...businessBasic,

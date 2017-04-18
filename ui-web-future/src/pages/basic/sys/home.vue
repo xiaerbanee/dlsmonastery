@@ -71,12 +71,12 @@
             <tbody>
             <tr>
               <td class="td">{{$t('home.waitDuty')}}</td>
-              <td  class="td">{{$t('home.youHave')}}<router-link to="/hr/dutyTaskList"><span style="color:red">{{labelData.dutySize}}</span></router-link>{{$t('home.dutySize')}}</td>
+              <td  class="td">{{$t('home.youHave')}}<router-link  :to="{ name: 'dutyTaskList'}"><span style="color:red">{{labelData.dutySize}}</span></router-link>{{$t('home.dutySize')}}</td>
             </tr>
 
             <tr>
               <td class="td">{{$t('home.waitAccountTask')}}</td>
-              <td  class="td">{{$t('home.youHave')}}<router-link to="/hr/accountTaskList"><span style="color:red">{{labelData.accountTaskSize}}</span></router-link>{{$t('home.accountTaskSize')}}</td>
+              <td  class="td">{{$t('home.youHave')}}<router-link :to="{ name: 'accountTaskList'}"><span style="color:red">{{labelData.accountTaskSize}}</span></router-link>{{$t('home.accountTaskSize')}}</td>
             </tr>
             <tr>
               <td class="td">{{$t('home.waitReadMessage')}}</td>
