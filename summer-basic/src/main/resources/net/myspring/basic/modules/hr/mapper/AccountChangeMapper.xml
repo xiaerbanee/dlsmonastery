@@ -41,4 +41,16 @@
                 )
             </if>
         </select>
+
+    <select id="findForm" resultType="net.myspring.basic.modules.hr.web.form.AccountChangeForm">
+        SELECT  t1.*,t2.office_id,t2.leader_id,t2.position_id,t3.mobile_phone as 'employee.mobilePhone',t3.idcard as 'employee.idcard',t3.entry_date as 'employee.entryDate',
+        t3.bank_number as 'employee.bankNumber',t3.salary as 'employee.salary',t3.regular_date as 'employee.regularDate',t3.leave_date as 'employee.leaveDate'
+        from
+        hr_account_change t1,hr_account t2,hr_employee t3
+        where t1.enabled=1
+        and t1.account_id=t2.id
+        and t2.employee_id=t3.id
+        and t1.id=#{id}
+    </select>
+
     </mapper>

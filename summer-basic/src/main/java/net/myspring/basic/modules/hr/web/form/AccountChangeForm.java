@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountChange;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
@@ -22,31 +23,42 @@ public class AccountChangeForm extends DataForm<AccountChange> {
 
     private String type;
     private String accountId;
-    @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
-    private String accountName;
+    private String officeId;
+    private String positionId;
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
+    private String officeName;
+    @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
+    private String positionName;
+    @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
+    private String leaderName;
+    private String leaderId;
+    private Employee employee;
     private String remarks;
     private List<String> typeList= Lists.newArrayList();
     private List<PositionDto> positionList=Lists.newArrayList();
 
-    private Map<String,String> olderValueMap= Maps.newHashMap();
-
-    public Map<String, String> getOlderValueMap() {
-        if(StringUtils.isNotBlank(accountId)){
-
-        }
-        return olderValueMap;
+    public String getOfficeName() {
+        return officeName;
     }
 
-    public void setOlderValueMap(Map<String, String> olderValueMap) {
-        this.olderValueMap = olderValueMap;
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
     }
 
-    public String getType() {
-        return type;
+    public String getPositionName() {
+        return positionName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public String getLeaderName() {
+        return leaderName;
+    }
+
+    public void setLeaderName(String leaderName) {
+        this.leaderName = leaderName;
     }
 
     public String getAccountId() {
@@ -55,6 +67,46 @@ public class AccountChangeForm extends DataForm<AccountChange> {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
+
+    public String getLeaderId() {
+        return leaderId;
+    }
+
+    public void setLeaderId(String leaderId) {
+        this.leaderId = leaderId;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getRemarks() {
@@ -81,11 +133,4 @@ public class AccountChangeForm extends DataForm<AccountChange> {
         this.positionList = positionList;
     }
 
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
-    }
 }

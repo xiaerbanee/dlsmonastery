@@ -70,14 +70,14 @@
     data() {
       return {
         page:{},
-        formData:{
-        },formLabel:{
+        formLabel:{
           loginName:{label:this.$t('accountList.loginName')},
           employeeName:{label:this.$t('accountList.employeeName')},
           officeName:{label:this.$t('accountList.officeName')},
           leaderName:{label:this.$t('accountList.leader')},
           positionName:{label:this.$t('accountList.positionName')}
         },
+        formData:{},
         submitData:{
           page:0,
           size:25,
