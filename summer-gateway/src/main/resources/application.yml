@@ -21,6 +21,14 @@ zuul:
     global-tool: /api/global/tool/**
   add-proxy-headers: true
 
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
 security:
   oauth2:
     resource:
