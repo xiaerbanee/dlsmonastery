@@ -4,7 +4,6 @@ const home  = r => require.ensure([], () => r(require('pages/basic/sys/home.vue'
 const routes = [
   {path: '/basic/sys/login',component: login,name: 'login',meta: {hidden: true,requiresAuth: false}},
   {path: '/',component: home,name: 'home'},
-  {path: '/common/404',component: notFound,name: '404'},
-  {path: '*',redirect: {path: '/404'}}
+  {path: '/common/404',component: notFound,name: '404'}
 ]
 export default routes

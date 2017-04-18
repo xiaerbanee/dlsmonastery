@@ -9,13 +9,19 @@ import businessLayout from './business_layout'
 
 Vue.use(Router)
 
+const redirect = {
+    path: '*',
+    redirect: {path: '/common/404'}
+}
+
 const routes = [
   ...common,
   ...basicHr,
   ...basicSys,
   ...businessBasic,
   ...businessCrm,
-  ...businessLayout
+  ...businessLayout,
+  redirect
 ]
 
 export default new Router({
