@@ -42,10 +42,14 @@
       return {
         page:{},
         formData:{
+          dutyDate:'',
+          dutyDateBTW:''
+        },
+        submitData:{
           page:0,
           size:25,
-           dutyDate:'',
-          dutyDateBTW:'',
+          dutyDate:'',
+          dutyDateBTW:''
         },
         formLabel:{
           dutyDateBTW:{label:this.$t('dutyOvertimeList.dutyDate')},
@@ -60,9 +64,11 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("dutyOvertimeList");
         util.setQuery("dutyOvertimeList",this.formData);
-         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutyOvertime',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
+        axios.get('/api/basic/hr/dutyOvertime',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

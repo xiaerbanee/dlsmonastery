@@ -37,6 +37,9 @@
         submitDisabled:false,
         fileList:[],
         inputForm:{
+          annualYear:''
+        },
+        submitData:{
           id:'',
           folderFileId:'',
           annualYear:'',
@@ -55,8 +58,9 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.annualYear=util.formatLocalDate(this.inputForm.annualYear)
-            axios.post('/api/basic/hr/dutyAnnual/import', qs.stringify(this.inputForm)).then((response)=> {
+            util.copyValue(this.inputForm,this.submitData);
+            this.submitData.annualYear=util.formatLocalDate(this.submitData.annualYear)
+            axios.post('/api/basic/hr/dutyAnnual/import', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }

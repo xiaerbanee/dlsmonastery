@@ -13,12 +13,12 @@
               </el-form-item>
               <el-form-item :label="formLabel.type.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.type" filterable clearable :placeholder="$t('dutyRestList.inputKey')">
-                  <el-option v-for="item in formProperty.restList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.restList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.dateType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.dateType" filterable clearable :placeholder="$t('dutyRestList.inputKey')">
-                  <el-option v-for="item in formProperty.dateList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.dateList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
         </el-form>
@@ -50,9 +50,13 @@
       return {
         page:{},
         formData:{
+          dutyDate:'',
+          dutyDateBTW:'',
+        },
+        submitData:{
           page:0,
           size:25,
-           dutyDate:'',
+          dutyDate:'',
           dutyDateBTW:'',
           type:'',
           dateType:''
@@ -72,9 +76,11 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("dutyRestList");
         util.setQuery("dutyRestList",this.formData);
-         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutyRest',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
+        axios.get('/api/basic/hr/dutyRest',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -91,7 +97,7 @@
         this.pageRequest();
       },getQuery(){
       axios.get('/api/basic/hr/dutyRest/getQuery').then((response) =>{
-         this.formProperty=response.data;
+         this.formData=response.data;
          this.pageRequest();
     });
   }

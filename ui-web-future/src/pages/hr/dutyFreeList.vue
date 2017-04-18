@@ -36,9 +36,13 @@
       return {
         page:{},
         formData:{
+          dutyDate:'',
+          dutyDateBTW:'',
+        },
+        submitData:{
           page:0,
           size:25,
-           dutyDate:'',
+          dutyDate:'',
           dutyDateBTW:'',
         },
         formLabel:{
@@ -53,9 +57,11 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("dutyFreeList");
         util.setQuery("dutyFreeList",this.formData);
-         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutyFree',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
+        axios.get('/api/basic/hr/dutyFree',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

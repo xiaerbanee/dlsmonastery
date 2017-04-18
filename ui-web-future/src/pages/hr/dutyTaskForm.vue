@@ -136,7 +136,7 @@
         <el-row :gutter="20" v-if="showForm.status === '申请中'">
           <el-form-item :label="$t('dutyTaskForm.isPass')" prop="pass">
             <el-radio-group v-model="inputForm.pass">
-              <el-radio v-for="(value,key) in formProperty.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
+              <el-radio v-for="(value,key) in inputForm.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item :label="$t('dutyTaskForm.auditRemarks')" prop="auditRemarks">
@@ -156,8 +156,9 @@
       return {
         submitDisabled:false,
         dutyType:'',
-        formProperty:{bools:''},
         inputForm:{
+        },
+        submitData:{
           id: this.$route.query.id,
           dutyType: this.$route.query.dutyType,
           pass: '',
@@ -175,6 +176,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
+            util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/basic/hr/duty/audit',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
@@ -191,10 +193,10 @@
       }
     },
     created () {
-      axios.get('/api/basic/hr/duty/detail',{params:{id:this.$route.query.id,dutyType:this.$route.query.dutyType}}).then((response)=>{
+      axios.get('/api/basic/hr/duty/findOne',{params:{id:this.$route.query.id,dutyType:this.$route.query.dutyType}}).then((response)=>{
         this.dutyType = response.data.dutyType;
         this.showForm = response.data.item;
-        this.formProperty.bools = response.data.bools;
+        this.inputForm.bools = response.data.boolMap;
       });
     }
   };

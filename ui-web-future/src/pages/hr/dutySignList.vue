@@ -23,12 +23,12 @@
             <el-col :span="12">
               <el-form-item :label="formLabel.officeName.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.officeName" filterable clearable :placeholder="$t('dutySignList.inputKey')">
-                  <el-option v-for="office in formProperty.officeList" :key="office.name" :label="office.name" :value="office.name"></el-option>
+                  <el-option v-for="office in formData.officeList" :key="office.name" :label="office.name" :value="office.name"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.positionName.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.positionName" filterable clearable :placeholder="$t('dutySignList.inputKey')">
-                  <el-option v-for="position in formProperty.positionList" :key="position.name" :label="position.name" :value="position.name"></el-option>
+                  <el-option v-for="position in formData.positionList" :key="position.name" :label="position.name" :value="position.name"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -68,10 +68,12 @@
       return {
         page:{},
         formData:{
-          page:0,
-          size:25,
           dutyDate:'',
           dutyDateBTW:'',
+        },
+        submitData:{
+          page:0,
+          size:25,
           employeeName:'',
           address:'',
           officeName:'',
@@ -94,9 +96,11 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("dutySignList");
         util.setQuery("dutySignList",this.formData);
+        util.copyValue(this.formData,this.submitData);
         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutySign',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutySign',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -116,12 +120,13 @@
         window.location.href= "/api/basic/hr/dutySign/export?"+qs.stringify(this.formData);
 			},getQuery(){
         axios.get('/api/basic/hr/dutySign/getQuery').then((response) =>{
-          this.formProperty=response.data;
+          this.formData=response.data;
           this.pageRequest();
         });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
+      this.getQuery();
       util.copyValue(this.$route.query,this.formData);
     }
   };

@@ -33,6 +33,9 @@
           submitDisabled:false,
           fileList:[],
           inputForm:{
+
+          },
+          submitData:{
             importFile:'',
             yearMonth:'',
             remarks:''
@@ -49,7 +52,8 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.get('/api/basic/hr/dutyWorktime/import', {params: this.inputForm}).then((response)=> {
+              util.copyValue(this.inputForm,this.submitData);
+              axios.get('/api/basic/hr/dutyWorktime/import', {params: this.submitData}).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
               });

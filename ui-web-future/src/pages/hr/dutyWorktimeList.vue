@@ -56,6 +56,12 @@
       return {
         page:{},
         formData:{
+          dutyDate:'',
+          month:'',
+          formatMonth:'',
+          dutyDateBTW:''
+        },
+        submitData:{
           page:0,
           size:25,
           dutyDate:'',
@@ -77,9 +83,11 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("dutyWorktimeList");
         util.setQuery("dutyWorktimeList",this.formData);
+        util.copyValue(this.formData,this.submitData);
         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutyWorktime',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutyWorktime',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
