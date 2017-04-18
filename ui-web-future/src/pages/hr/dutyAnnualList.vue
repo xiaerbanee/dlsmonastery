@@ -36,6 +36,8 @@
       return {
         page:{},
         formData:{
+        },
+        submitData:{
           page:0,
           size:25,
           name:''
@@ -52,7 +54,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.getQuery("dutyAnnualList");
         util.setQuery("dutyAnnualList",this.formData);
+        util.copyValue(this.formData,this.submitData);
         axios.get('/api/basic/hr/dutyAnnual',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -73,7 +77,6 @@
       },
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
       this.pageRequest();
     }
   };
