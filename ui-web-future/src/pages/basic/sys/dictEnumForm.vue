@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('dictEnumForm.dictEnumForm') "></head-tab>
+    <head-tab active="dictEnumForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('dictEnumForm.category')" prop="category">
