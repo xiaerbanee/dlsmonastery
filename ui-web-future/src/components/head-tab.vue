@@ -1,8 +1,18 @@
 <template>
-  <el-tabs  :value="currentActive" @tab-click="headTabClick" @tab-remove="headTabRemove">
-    <el-tab-pane :label="$t('head_tab.home')" name="home"></el-tab-pane>
-    <el-tab-pane  closable :label="$t('app.' + tabName)" :name="tabName" v-for="tabName in tabNames" :key="tabName"></el-tab-pane>
-  </el-tabs>
+  <div class="el-tabs el-tabs--card">
+    <div class="el-tabs__header">
+      <div class="el-tabs__nav-wrap">
+        <div class="el-tabs__nav-scroll">
+          <div class="el-tabs__nav">
+            <div class="el-tabs__item">{{$t('head_tab.home')}}</div>
+            <div class="el-tabs__item is-closable is-active">枚举字典<span class="el-icon-close"></span></div>
+            <div class="el-tabs__item is-closable">枚举字典编辑<span class="el-icon-close"></span></div>
+            <div class="el-tabs__item is-closable">打卡记录<span class="el-icon-close"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 export default {
@@ -33,7 +43,13 @@ export default {
     },getTabNames() {
       var tabNames =new Array();
       for(let key of this.tabs.keys()){
-        tabNames.push(key);
+          var item = {key:key};
+          if(key == currentActive) {
+              item.isActive = true;
+          } else {
+              item.isActive = false;
+          }
+        tabNames.push(item);
       }
       return tabNames;
     }
