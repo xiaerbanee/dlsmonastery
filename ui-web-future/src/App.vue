@@ -85,8 +85,7 @@
           for(var j in menuItems) { //二級
             for(var k in menuItems[j].menus) {
               var menu = menuItems[j].menus[k];
-              menu.name=menu.menuCode
-              this.menuMap[menu.code] = menuCategoryCode;
+              this.menuMap[menu.menuCode] = menuCategoryCode;
             }
           }
         }
