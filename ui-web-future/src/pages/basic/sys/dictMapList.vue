@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('dictMapList.dictMapList')"></head-tab>
+    <head-tab active="dictMapList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:dictMap:edit'">{{$t('dictMapList.add')}}</el-button>

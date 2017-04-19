@@ -5,7 +5,9 @@
         <div class="el-tabs__nav-scroll">
           <div class="el-tabs__nav">
             <div class="el-tabs__item">{{$t('head_tab.home')}}</div>
-            <div  class="el-tabs__item is-closable" v-for="tabName in tabNames"  :key="tabName.key" :data-tab-name="tabName.key" @click.stop="headTabClick" >{{$t('app.' + tabName.key)}}<span class="el-icon-close" :data-tab-name="tabName.key" @click="headTabRemove"></span></div>
+            <div  class="el-tabs__item is-closable"  :class="tabItem.class" v-for="tabItem in tabList"   :key="tabItem.name" :data-tab-name="tabItem.name" @click.stop="headTabClick" >
+              {{$t('app.' + tabItem.name)}}<span class="el-icon-close" :data-tab-name="tabItem.name" @click.stop="headTabRemove"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -18,7 +20,7 @@
     data() {
       return {
         tabs : [],
-        tabNames:[],
+        tabList:[],
         currentActive:this.active,
       };
     },methods: {
@@ -26,41 +28,36 @@
        this.$router.push({ name: event.target.dataset.tabName})
       },
       headTabRemove(event) {
-        console.log(this.tabs)
         this.tabs.delete(event.target.dataset.tabName);
-
-        var names = this.getTabNames();
+        var list = this.getTabList();
         this.$store.dispatch('setTabs',this.tabs);
-        if(names.length==0) {
+        if(list.length==0) {
           this.$router.push({ name: "home"})
         } else {
-          var routeName = names[0];
-          if(this.currentActive == routeName) {
-            this.tabNames = this.getTabNames();
+          var tabItem = list[0];
+          if(this.currentActive == tabItem.name) {
+            this.tabList = this.getTabList();
           } else {
-              console.log(routeName);
-            this.$router.push({ name: routeName.key})
+            this.$router.push({ name: tabItem.name})
           }
         }
       },
-      getTabNames() {
-        var tabNames =new Array();
+      getTabList() {
+        var tabList =new Array();
         for(let key of this.tabs.keys()){
-          var item = {key:key};
-          console.log(key);
-          console.log(this.currentActive);
+          var item = {name:key};
           if(key == this.currentActive) {
-            item.isActive = true;
+            item.class = "is-active";
           } else {
-            item.isActive = false;
+            item.class = "";
           }
-          tabNames.push(item);
+          tabList.push(item);
         }
-        return tabNames;
+        return tabList;
       }
     },created () {
       this.tabs= this.$store.state.global.tabs;
-      this.tabNames = this.getTabNames();
+      this.tabList = this.getTabList();
     }
   };
 </script>
