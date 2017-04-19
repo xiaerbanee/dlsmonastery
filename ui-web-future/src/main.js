@@ -3,11 +3,10 @@ import VueI18n from 'vue-i18n';
 import axios from 'axios'
 import qs from 'qs'
 import _ from 'lodash'
-import store from './store/'
+import store from './store'
+import locale from './locate'
 
 import ElementUI from 'element-ui';
-import zhElement from 'element-ui/lib/locale/lang/zh-CN'
-import idElement from 'element-ui/lib/locale/lang/id'
 import 'element-ui/lib/theme-default/index.css';
 import VueQuillEditor from 'vue-quill-editor'
 import VueProgressBar from 'vue-progressbar'
@@ -22,8 +21,6 @@ import router from './router'
 import './style.scss';
 import './filters'
 import util from "./utils/util"
-import zhLocale from "./utils/locales/zh-CN"
-import idLocale from "./utils/locales/id"
 window.qs = qs;
 window._=_;
 window.util=util;
@@ -49,8 +46,8 @@ const options = {
 Vue.use(VueProgressBar, options)
 
 // set locales
-Vue.locale('zh-cn', util.mergeJsonObject(zhElement,zhLocale));
-Vue.locale("id",util.mergeJsonObject(idElement,idLocale));
+Vue.locale('zh-cn',locale.zhCn);
+Vue.locale("id",locale.id);
 
 Vue.directive('permit', function (el, binding) {
   var  hasPermit=false;
