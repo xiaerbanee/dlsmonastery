@@ -35,6 +35,12 @@ public class BackendService {
         return backendForm;
     }
 
+    public List<BackendDto> findByNameLike(String name){
+        List<Backend> backendList=backendMapper.findByNameLike(name);
+        List<BackendDto> backendDtoList=BeanUtil.map(backendList,BackendDto.class);
+        return backendDtoList;
+    }
+
     public Backend save(BackendForm backendForm) {
         Backend backend;
         if(backendForm.isCreate()) {

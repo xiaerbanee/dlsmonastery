@@ -10,4 +10,11 @@
             and t1.name=#{p.name}
         </if>
     </select>
+
+    <select id="findByNameLike" resultType="Backend">
+        SELECT t1.*
+        FROM sys_backend t1
+        where t1.enabled=1
+        and t1.name like concat('%',#{name},'%')
+    </select>
 </mapper>

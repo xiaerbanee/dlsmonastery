@@ -1,5 +1,7 @@
 package net.myspring.basic.modules.sys.web.controller;
 
+import com.google.common.collect.Lists;
+import net.myspring.basic.modules.sys.domain.Backend;
 import net.myspring.basic.modules.sys.dto.BackendDto;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.web.form.BackendForm;
@@ -8,6 +10,7 @@ import net.myspring.basic.modules.sys.web.query.BackendQuery;
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.text.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import net.myspring.basic.modules.sys.service.BackendService;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "sys/backend")
@@ -45,5 +50,14 @@ public class BackendController {
     public BackendForm findOne(BackendForm backendForm){
         backendForm=backendService.findForm(backendForm);
         return backendForm;
+    }
+
+    @RequestMapping(value = "search")
+    public List<BackendDto> search(String name){
+        List<BackendDto> backendDtoList= Lists.newArrayList();
+        if(StringUtils.isNotBlank(name)){
+            backendDtoList=backendService.findByNameLike(name);
+        }
+        return backendDtoList;
     }
 }
