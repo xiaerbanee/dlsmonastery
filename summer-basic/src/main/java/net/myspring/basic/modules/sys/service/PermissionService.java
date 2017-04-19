@@ -2,7 +2,11 @@ package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import net.myspring.basic.common.dto.NameValueDto;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.common.utils.InitDomainUtils;
+import net.myspring.basic.modules.hr.domain.Office;
+import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.domain.Permission;
@@ -46,6 +50,8 @@ public class PermissionService {
     private MenuMapper menuMapper;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private InitDomainUtils initDomainUtils;
 
     public List<Permission> findByPositionId(String positionId) {
         return permissionMapper.findByPositionId(positionId);
@@ -60,6 +66,8 @@ public class PermissionService {
         if (!permissionForm.isCreate()) {
             Permission permission = permissionManager.findOne(permissionForm.getId());
             permissionForm = BeanUtil.map(permission, PermissionForm.class);
+            List<NameValueDto> nameValueDtoList = permissionMapper.findNameValueByPositionId(Lists.newArrayList(permission.getId()));
+            initDomainUtils.initChildIdList(Lists.newArrayList(permissionForm),Position.class,nameValueDtoList);
             cacheUtils.initCacheInput(permissionForm);
         }
         return permissionForm;

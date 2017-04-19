@@ -91,4 +91,13 @@
         where permission_id=#{permissionId}
     </delete>
 
+    <select id="findNameValueByPositionId" resultType="net.myspring.basic.common.dto.NameValueDto">
+        SELECT permission_id as 'name',position_id AS 'value'
+        FROM hr_position_permission
+        where permission_id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

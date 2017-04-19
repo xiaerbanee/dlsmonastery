@@ -107,11 +107,6 @@ public class FolderService {
         Folder parent = folderManager.findOne(folderForm.getParentId());
         String oldParentIds = folderForm.getParentIds();
         folderForm.setParent(parent);
-        folderForm.setParentIds(folderForm.getParent().getParentIds() + folderForm.getParent().getId() + ",");
-        // 无法将上级部门设置为自己或者自己的下级部门
-        if (!folderForm.isCreate() && folderForm.getParentIds().contains("," + folderForm.getId() + ",")) {
-            throw new ServiceException("无法将上级目录设置为自己或者自己的下级目录");
-        }
         Folder folder=BeanUtil.map(folderForm,Folder.class);
         folderManager.save(folder);
         List<Folder> list = folderMapper.findByParentIdsLike("%," + folderForm.getId() + ",%");

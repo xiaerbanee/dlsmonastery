@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.sys.dto.MenuDto;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.util.List;
 
@@ -14,12 +15,22 @@ import java.util.List;
 
 public class PermissionForm extends DataForm<Permission> {
 
-    private List<String> positionIdList;
+    private List<String> positionIdList=Lists.newArrayList();
     private String menuId;
     private String name;
     private String permission;
     private String remarks;
     private List<MenuDto> menuList= Lists.newArrayList();
+    @CacheInput(inputKey = "positions",inputInstance = "positionIdList",outputInstance = "name")
+    private List<String> positionNameList=Lists.newArrayList();
+
+    public List<String> getPositionNameList() {
+        return positionNameList;
+    }
+
+    public void setPositionNameList(List<String> positionNameList) {
+        this.positionNameList = positionNameList;
+    }
 
     public List<MenuDto> getMenuList() {
         return menuList;
