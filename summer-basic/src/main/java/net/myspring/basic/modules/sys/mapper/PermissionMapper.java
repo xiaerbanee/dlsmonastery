@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.mapper;
 
+import net.myspring.basic.common.dto.NameValueDto;
 import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.PermissionDto;
@@ -30,5 +31,7 @@ public interface PermissionMapper extends MyMapper<Permission,String> {
     int savePermissionPosition(@Param("permissionId")String permissionId,@Param("positionIds")List<String> positionIds);
 
     int deletePermissionPosition(@Param("permissionId")String permissionId);
+
+    List<NameValueDto> findNameValueByPositionId(List<String> permissionIds);
 
 }

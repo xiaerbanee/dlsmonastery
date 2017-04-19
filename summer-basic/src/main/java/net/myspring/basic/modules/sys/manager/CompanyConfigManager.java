@@ -30,7 +30,7 @@ public class CompanyConfigManager {
         return  companyConfigMapper.findOne(companyConfigForm.getId());
     }
 
-    @Cacheable(value = "dictMaps",key="#p0")
+    @Cacheable(value = "companyConfigs",key="#p0")
     public CompanyConfig findOne(String id) {
         return companyConfigMapper.findOne(id);
     }

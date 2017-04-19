@@ -85,12 +85,15 @@
          }
        }
       },created(){
-        var that = this;
-        axios.get('/api/basic/sys/permission/findOne',{params: {id:that.$route.query.id}}).then((response)=>{
-          that.inputForm = response.data;
-          if(response.data.positionList!=null && response.data.positionList.length>0){
-            that.positions=response.data.positionList;
-            that.inputForm.positionIdList=util.getIdList(that.positions);
+        axios.get('/api/basic/sys/permission/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+          if(response.data.positionIdList !=null){
+            let positions=new Array();
+            for(var i=response.data.positionIdList.length-1;i>=0;i--){
+              positions.push({id:response.data.positionIdList[i],name:response.data.positionNameList[i]})
+            }
+            this.positions=positions;
+            this.inputForm.positionIdList=response.data.positionIdList
           }
         })
       }
