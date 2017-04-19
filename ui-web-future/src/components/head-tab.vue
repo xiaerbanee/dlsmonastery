@@ -5,9 +5,7 @@
         <div class="el-tabs__nav-scroll">
           <div class="el-tabs__nav">
             <div class="el-tabs__item">{{$t('head_tab.home')}}</div>
-            <div class="el-tabs__item is-closable is-active">枚举字典<span class="el-icon-close"></span></div>
-            <div class="el-tabs__item is-closable">枚举字典编辑<span class="el-icon-close"></span></div>
-            <div class="el-tabs__item is-closable">打卡记录<span class="el-icon-close"></span></div>
+            <div  class="el-tabs__item is-closable" v-for="tabName in tabNames"  :key="tabName.key" :data-tab-name="tabName.key" @click.stop="headTabClick" >{{$t('app.' + tabName.key)}}<span class="el-icon-close" :data-tab-name="tabName.key" @click="headTabRemove"></span></div>
           </div>
         </div>
       </div>
@@ -15,47 +13,54 @@
   </div>
 </template>
 <script>
-export default {
-  props: ['active'],
-  data() {
-    return {
-      tabs : [],
-      tabNames:[],
-      currentActive:this.active
-    };
-  },methods: {
-    headTabClick (tab) {
-      this.$router.push({ name: tab.name, query: this.tabs.get(tab.name)})
-    },headTabRemove(tabName) {
-        this.tabs.delete(tabName);
+  export default {
+    props: ['active'],
+    data() {
+      return {
+        tabs : [],
+        tabNames:[],
+        currentActive:this.active,
+      };
+    },methods: {
+      headTabClick (event) {
+       this.$router.push({ name: event.target.dataset.tabName})
+      },
+      headTabRemove(event) {
+        console.log(this.tabs)
+        this.tabs.delete(event.target.dataset.tabName);
+
         var names = this.getTabNames();
         this.$store.dispatch('setTabs',this.tabs);
         if(names.length==0) {
           this.$router.push({ name: "home"})
         } else {
-          var routeName = names[names.length-1];
+          var routeName = names[0];
           if(this.currentActive == routeName) {
-             this.tabNames = this.getTabNames();
+            this.tabNames = this.getTabNames();
           } else {
-            this.$router.push({ name: routeName,query:this.tabs.get(routeName)})
+              console.log(routeName);
+            this.$router.push({ name: routeName.key})
           }
         }
-    },getTabNames() {
-      var tabNames =new Array();
-      for(let key of this.tabs.keys()){
+      },
+      getTabNames() {
+        var tabNames =new Array();
+        for(let key of this.tabs.keys()){
           var item = {key:key};
-          if(key == currentActive) {
-              item.isActive = true;
+          console.log(key);
+          console.log(this.currentActive);
+          if(key == this.currentActive) {
+            item.isActive = true;
           } else {
-              item.isActive = false;
+            item.isActive = false;
           }
-        tabNames.push(item);
+          tabNames.push(item);
+        }
+        return tabNames;
       }
-      return tabNames;
+    },created () {
+      this.tabs= this.$store.state.global.tabs;
+      this.tabNames = this.getTabNames();
     }
- },created () {
-    this.tabs= this.$store.state.global.tabs;
-    this.tabNames = this.getTabNames();
-  }
-};
+  };
 </script>

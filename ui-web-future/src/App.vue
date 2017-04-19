@@ -63,41 +63,41 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import { mapState } from 'vuex'
-export default {
-  data() {
-    return {
-      menuMap:{},
-      activeMenu: '',
-      activeCategory:''
-    };
-  },computed: mapState({
-    account: state => state.global.account,
-    menus: state => state.global.menus,
-    lang: state => state.global.lang
-  }),
-  created() {
-    if(this.menus !=null && this.menus.length>0) {
+  import Vue from 'vue';
+  import { mapState } from 'vuex'
+  export default {
+    data() {
+      return {
+        menuMap:{},
+        activeMenu: '',
+        activeCategory:''
+      };
+    },computed: mapState({
+      account: state => state.global.account,
+      menus: state => state.global.menus,
+      lang: state => state.global.lang
+    }),
+    created() {
+      if(this.menus !=null && this.menus.length>0) {
         for (var i in this.menus) { //一級
-            var menuCategoryCode = this.menus[i].menuCategory.code;
-            var menuItems = this.menus[i].menuItems;
-            for(var j in menuItems) { //二級
-              for(var k in menuItems[j].menus) {
-                var menu = menuItems[j].menus[k];
-                menu.name=menu.menuCode
-                this.menuMap[menu.code] = menuCategoryCode;
-              }
+          var menuCategoryCode = this.menus[i].menuCategory.code;
+          var menuItems = this.menus[i].menuItems;
+          for(var j in menuItems) { //二級
+            for(var k in menuItems[j].menus) {
+              var menu = menuItems[j].menus[k];
+              menu.name=menu.menuCode
+              this.menuMap[menu.code] = menuCategoryCode;
             }
+          }
         }
-     }
-    // set default lang
-    Vue.config.lang = this.lang;
-  },mounted(){
-  },
-  watch: {
-    '$route'(to, from) {
-      var activeMenu = this.$route.meta.menu;
+      }
+      // set default lang
+      Vue.config.lang = this.lang;
+    },mounted(){
+    },
+    watch: {
+      '$route'(to, from) {
+        var activeMenu = this.$route.meta.menu;
         if(activeMenu==null) {
           activeMenu = this.$route.name;
         }
@@ -109,31 +109,31 @@ export default {
           }
         }
         this.activeMenu = activeMenu;
-     }
-  },
-  methods: {
-    logout() {
-      this.$confirm(this.$t('app.isLogout'), this.$t('app.tip'), {
-        confirmButtonText: this.$t('app.sure'),
-        cancelButtonText: this.$t('app.cancel'),
-        type: 'info'
-      }).then(() => {
-        this.$store.dispatch('clearGlobal');
-        this.$router.push({ name: 'login' });
-      }).catch(() => {});
-    },chooseCategory(e) {
+      }
+    },
+    methods: {
+      logout() {
+        this.$confirm(this.$t('app.isLogout'), this.$t('app.tip'), {
+          confirmButtonText: this.$t('app.sure'),
+          cancelButtonText: this.$t('app.cancel'),
+          type: 'info'
+        }).then(() => {
+          this.$store.dispatch('clearGlobal');
+          this.$router.push({ name: 'login' });
+        }).catch(() => {});
+      },chooseCategory(e) {
         for(var i in this.menus ){
-            if(e.target.innerText == this.$t('app.'+ this.menus[i].menuCategory.code)){
-                this.activeCategory = this.menus[i].menuCategory.code;
+          if(e.target.innerText == this.$t('app.'+ this.menus[i].menuCategory.code)){
+            this.activeCategory = this.menus[i].menuCategory.code;
           }
         }
-    },changeLang(lang) {
-      this.$store.dispatch('setLang',lang);
-      Vue.config.lang = lang;
-      this.$router.push({ name: "home"});
+      },changeLang(lang) {
+        this.$store.dispatch('setLang',lang);
+        Vue.config.lang = lang;
+        this.$router.push({ name: "home"});
+      }
     }
-  }
-};
+  };
 
 </script>
 

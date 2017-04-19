@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('accountChangeForm.accountChangeForm') "></head-tab>
+    <head-tab active="accountChangeForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter="20">
