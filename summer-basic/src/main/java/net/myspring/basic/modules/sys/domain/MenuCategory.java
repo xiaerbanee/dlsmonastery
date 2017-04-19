@@ -17,6 +17,15 @@ public class MenuCategory extends DataEntity<MenuCategory> {
     private Integer sort;
     private Integer version = 0;
     private String code;
+    private String backendModuleId;
+
+    public String getBackendModuleId() {
+        return backendModuleId;
+    }
+
+    public void setBackendModuleId(String backendModuleId) {
+        this.backendModuleId = backendModuleId;
+    }
 
     public String getCode() {
         return code;

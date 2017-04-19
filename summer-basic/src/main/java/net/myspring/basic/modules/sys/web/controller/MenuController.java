@@ -5,6 +5,7 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.basic.common.enums.BoolEnum;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.sys.domain.Menu;
+import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.service.MenuCategoryService;
 import net.myspring.basic.modules.sys.service.MenuService;
@@ -84,5 +85,11 @@ public class MenuController {
         } else {
             return menuService.findMenus(SecurityUtils.getAccountId());
         }
+    }
+
+    @RequestMapping(value = "getMenuMap")
+    public List<BackendMenuDto> getMenuMap(){
+        List<BackendMenuDto> backendMenuDtoList=menuService.getMenuMap(SecurityUtils.getAccountId());
+        return backendMenuDtoList;
     }
 }

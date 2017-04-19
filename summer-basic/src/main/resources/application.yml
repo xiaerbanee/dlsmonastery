@@ -2,7 +2,7 @@ spring:
   application:
     name: summer-basic
   datasource:
-    url: jdbc:mysql://168.192.1.243:3306/db_oppo_test
+    url: jdbc:mysql://168.192.1.243:3306/db_hr_test
     username: root
     password: bbk@123456
     driver-class-name: com.mysql.jdbc.Driver

@@ -13,6 +13,11 @@
             <el-form-item :label="$t('positionForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
+            <el-form-item :label="项目权限" prop="backendIdList">
+              <el-select v-model="inputForm.backendIdList" multiple filterable remote :placeholder="$t('positionForm.inputWord')" :remote-method="remoteBackend" :loading="remoteLoading">
+                <el-option v-for="item in backendList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('positionForm.reportName')" prop="reportName">
               <el-input v-model="inputForm.reportName"></el-input>
             </el-form-item>
@@ -78,6 +83,7 @@
           permission: [{ required: true, message: this.$t('positionForm.prerequisiteMessage')}],
           sort: [{ required: true, message: this.$t('positionForm.prerequisiteMessage')}],
         },
+        backendList:[],
         treeData:[],
         checked:[],
         defaultProps: {
@@ -116,7 +122,17 @@
           }
         }
         this.inputForm.permissionIdStr=permissions.join();
-      },
+      },remoteBackend(query){
+        if (query !== '') {
+          this.remoteLoading = true;
+          axios.get('/api/sys/backend/search',{params:{name:query}}).then((response)=>{
+            this.backendList=response.data;
+            this.remoteLoading = false;
+        })
+        } else {
+          this.backendList = [];
+        }
+      }
     },created(){
       axios.get('/api/basic/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
