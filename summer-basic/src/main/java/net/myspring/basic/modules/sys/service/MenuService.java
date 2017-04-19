@@ -260,7 +260,9 @@ public class MenuService {
             for (Backend backend : backendList) {
                 BackendMenuDto backendMenuDto = new BackendMenuDto();
                 backendMenuDto.setBackend(backend);
-                backendMenuDto.setBackendModuleMenuItemDtoList(backendModuleMenuItemDtoMap.get(backend.getId()));
+                Map<String,List<BackendModuleMenuItemDto>> map=Maps.newHashMap();
+                map.put(backend.getId(),backendModuleMenuItemDtoMap.get(backend.getId()));
+                backendMenuDto.setBackendModuleMenuItemDtoMap(map);
                 backendMenuDtoList.add(backendMenuDto);
             }
         }

@@ -13,7 +13,7 @@ import java.util.Map;
 public class BackendMenuDto {
 
     private Backend backend;
-    private List<BackendModuleMenuItemDto> backendModuleMenuItemDtoList= Lists.newArrayList();
+    private Map<String,List<BackendModuleMenuItemDto>> backendModuleMenuItemDtoMap= Maps.newHashMap();
 
     public Backend getBackend() {
         return backend;
@@ -23,11 +23,11 @@ public class BackendMenuDto {
         this.backend = backend;
     }
 
-    public List<BackendModuleMenuItemDto> getBackendModuleMenuItemDtoList() {
-        return backendModuleMenuItemDtoList;
+    public Map<String, List<BackendModuleMenuItemDto>> getBackendModuleMenuItemDtoMap() {
+        return backendModuleMenuItemDtoMap;
     }
 
-    public void setBackendModuleMenuItemDtoList(List<BackendModuleMenuItemDto> backendModuleMenuItemDtoList) {
-        this.backendModuleMenuItemDtoList = backendModuleMenuItemDtoList;
+    public void setBackendModuleMenuItemDtoMap(Map<String, List<BackendModuleMenuItemDto>> backendModuleMenuItemDtoMap) {
+        this.backendModuleMenuItemDtoMap = backendModuleMenuItemDtoMap;
     }
 }
