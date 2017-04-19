@@ -53,6 +53,7 @@
   </div>
 </template>
 <script>
+
   export default {
     data() {
       return {
@@ -113,6 +114,7 @@
       }
     },created () {
       var that = this;
+      that.formData = that.submitData;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/basic/sys/dictEnum/getQuery').then((response) =>{
         that.formData=response.data;
