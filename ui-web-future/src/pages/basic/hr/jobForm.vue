@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('jobForm.jobForm') "></head-tab>
+    <head-tab active="jobForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('jobForm.jobName')" prop="name">

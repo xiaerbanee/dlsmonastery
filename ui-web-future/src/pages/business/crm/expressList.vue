@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('expressList.expressList') "></head-tab>
+    <head-tab active="expressList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:express:edit'">{{$t('expressList.add')}}</el-button>

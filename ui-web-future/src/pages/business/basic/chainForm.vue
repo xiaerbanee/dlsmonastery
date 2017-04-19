@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('chainForm.chainForm')"></head-tab>
+    <head-tab active="chainForm"></head-tab>
     <div>
       <el-form :model="inputForm" :inline="true" ref="inputForm" :rules="rules"  class="form input-form">
         <el-form-item :label="$t('chainForm.name')" prop="name">

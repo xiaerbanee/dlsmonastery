@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('adPricesystemChangeForm.adPricesystemChangeForm') "></head-tab>
+    <head-tab active="adPricesystemChangeForm"></head-tab>
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
       <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>

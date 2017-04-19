@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('depotDetailList.depotDetailList') "></head-tab>
+    <head-tab active="depotDetailList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depotDetail:view'">{{$t('depotDetailList.filterOrExport')}}</el-button>

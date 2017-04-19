@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('bankInForm.bankInForm') "></head-tab>
+    <head-tab active="bankInForm"></head-tab>
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('bankInForm.shopName')" prop="shopId">

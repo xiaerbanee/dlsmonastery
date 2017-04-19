@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('home.home')"></head-tab>
+    <head-tab active="home"></head-tab>
     <el-row>
       <el-col :span="16">
       <el-alert :title="title" type="info" :closable="false">{{$t('home.messageForDutyOvertimeRest')}}{{labelData.overtimeHour}} {{$t('home.hour')}} {{$t('home.messageForDutyAnnualRest')}} {{labelData.annualHour}} {{$t('home.hour')}}  {{$t('home.messageForTimeDue')}}{{labelData.expiredHour}}{{$t('home.hour')}} </el-alert>

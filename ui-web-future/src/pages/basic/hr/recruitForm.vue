@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('recruitForm.recruitForm') "></head-tab>
+    <head-tab active="recruitForm"></head-tab>
     <el-row :gutter="20">
       <el-steps :space="100" :active="active" finish-status="success">
         <el-step :title="$t('recruitForm.reserve')"></el-step>

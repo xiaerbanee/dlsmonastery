@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('dutyTaskList.dutyTaskList') "></head-tab>
+    <head-tab active="dutyTaskList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="batchPass" icon="check">{{$t('dutyTaskList.batchPass')}}</el-button>

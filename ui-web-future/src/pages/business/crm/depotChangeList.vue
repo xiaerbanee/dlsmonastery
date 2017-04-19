@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('depotChangeList.depotChangeList') "></head-tab>
+    <head-tab active="depotChangeList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:depotChange:edit'">{{$t('depotChangeList.add')}}</el-button>

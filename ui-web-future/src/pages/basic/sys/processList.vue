@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('processList.processList') "></head-tab>
+    <head-tab active="processList"></head-tab>
     <div>
       <el-table :data="processList" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('processList.loading')" stripe border>
         <el-table-column  prop="id" :label="$t('processList.id')"  ></el-table-column>

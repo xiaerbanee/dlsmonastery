@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('goodsOrderDetail.goodsOrderDetail') "></head-tab>
+    <head-tab active="goodsOrderDetail"></head-tab>
     <div>
       <el-form :model="detailForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form">
         <el-row >

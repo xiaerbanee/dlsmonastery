@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('pricesystemChangeForm.pricesystemChangeForm') "></head-tab>
+    <head-tab active="pricesystemChangeForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="24">

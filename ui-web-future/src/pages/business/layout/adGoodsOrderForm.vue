@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('adGoodsOrderForm.adGoodsOrderForm')"></head-tab>
+    <head-tab active="adGoodsOrderForm"></head-tab>
     <el-row v-if="alertError">
       <el-col :span="24">
         <el-alert v-html="error" title="" type="error" :closable="true"></el-alert>

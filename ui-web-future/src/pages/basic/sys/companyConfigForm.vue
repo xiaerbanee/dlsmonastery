@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('companyConfigForm.companyConfigForm') "></head-tab>
+    <head-tab active="companyConfigForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('companyConfigForm.name')" prop="name">

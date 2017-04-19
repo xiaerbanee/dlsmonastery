@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('shopAllotList.shopAllotList') "></head-tab>
+    <head-tab active="shopAllotList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAllot:edit'">{{$t('shopAllotList.add')}}</el-button>

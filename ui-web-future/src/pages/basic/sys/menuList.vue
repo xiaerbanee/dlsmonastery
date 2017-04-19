@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('menuList.menuList') "></head-tab>
+    <head-tab active="menuList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'sys:menu:edit'">{{$t('menuList.add')}}</el-button>

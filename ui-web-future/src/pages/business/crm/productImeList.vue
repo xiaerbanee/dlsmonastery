@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('productImeList.productImeList') "></head-tab>
+    <head-tab active="productImeList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('productImeList.filterOrExport')}}</el-button>

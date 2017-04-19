@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('dictMapForm.dictMapForm') "></head-tab>
+    <head-tab active="dictMapForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('dictMapForm.category')" prop="category">

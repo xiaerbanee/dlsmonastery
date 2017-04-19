@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('folderList.folderList') "></head-tab>
+    <head-tab active="folderList"></head-tab>
     <div>
       <el-table :data="page" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('folderList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('folderList.name')" sortable ></el-table-column>

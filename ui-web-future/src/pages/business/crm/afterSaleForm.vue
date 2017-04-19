@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('afterSaleForm.afterSaleForm') "></head-tab>
+    <head-tab active="afterSaleForm"></head-tab>
     <div class="form input-form ">
       <el-row class="button">
         <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleForm.save')}}</el-button>

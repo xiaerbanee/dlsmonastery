@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab ::active="$t('goodsOrderList.goodsOrderList')"></head-tab>
+    <head-tab :active="goodsOrderList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">{{ $t('goodsOrderList.add') }}</el-button>

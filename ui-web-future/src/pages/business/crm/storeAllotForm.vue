@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('storeAllotForm.storeAllotForm') "></head-tab>
+    <head-tab active="storeAllotForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
             <el-form-item :label="$t('storeAllotForm.allotType')" prop="allotType" >

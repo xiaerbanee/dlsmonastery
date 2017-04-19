@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('adPricesystemChangeList.adPricesystemChangeList') "></head-tab>
+    <head-tab active="adPricesystemChangeList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'crm:adPricesystemChange:edit'">{{$t('adPricesystemChangeList.add')}}</el-button>

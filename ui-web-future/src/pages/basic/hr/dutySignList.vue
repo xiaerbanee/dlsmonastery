@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('dutySignList.dutySignList')"></head-tab>
+    <head-tab active="dutySignList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutySignList.filterOrExport')}}</el-button>

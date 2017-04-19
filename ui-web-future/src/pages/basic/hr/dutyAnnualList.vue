@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('bankList.bankList') "></head-tab>
+    <head-tab active="bankList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">{{$t('dutyAnnualList.add')}}</el-button>

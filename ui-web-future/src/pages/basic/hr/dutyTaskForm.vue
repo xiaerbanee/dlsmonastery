@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('dutyTaskForm.dutyTaskForm')"></head-tab>
+    <head-tab active="dutyTaskForm"></head-tab>
     <el-row :gutter="20" style="margin-bottom:10px">
       <el-col :span="4"><div class="grid-content bg-purple">{{$t('dutyTaskForm.dutyTaskType')}}<span>&nbsp;&nbsp;</span><span style="color:red">{{dutyType}}</span></div></el-col>
     </el-row>

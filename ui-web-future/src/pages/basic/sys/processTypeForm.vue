@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('processTypeForm.processTypeForm') "></head-tab>
+    <head-tab active="processTypeForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('processTypeForm.name')" prop="name">

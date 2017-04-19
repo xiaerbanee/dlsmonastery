@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('processTypeList.processTypeList') "></head-tab>
+    <head-tab active="processTypeList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:processType:edit'">{{$t('processTypeList.add')}}</el-button>

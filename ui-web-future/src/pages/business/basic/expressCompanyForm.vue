@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('expressCompanyForm.expressCompanyForm') "></head-tab>
+    <head-tab active="expressCompanyForm"></head-tab>
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('expressCompanyForm.name')" prop="name">
