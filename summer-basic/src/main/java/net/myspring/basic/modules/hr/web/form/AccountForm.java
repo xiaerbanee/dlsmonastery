@@ -17,9 +17,9 @@ import java.util.Map;
 
 public class AccountForm extends DataForm<Account>{
     private String password;
-    private List<String> officeIdList;
+    private List<String> officeIdList=Lists.newArrayList();
     @CacheInput(inputKey = "offices",inputInstance = "officeIdList",outputInstance = "name")
-    private List<String> officeListName;
+    private List<String> officeListName=Lists.newArrayList();
     private String type;
     private String employeeId;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")

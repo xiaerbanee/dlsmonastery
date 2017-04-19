@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.web.form;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.modules.hr.domain.DutyLeave;
 import net.myspring.basic.common.form.DataForm;
@@ -22,7 +23,7 @@ public class DutyLeaveForm extends DataForm<DutyLeave>{
     private String attachment;
     private String remarks;
     private DutyDateTypeEnum[] dateList;
-    private List<String> leaveList;
+    private List<String> leaveList= Lists.newArrayList();
 
     public DutyDateTypeEnum[] getDateList() {
         return dateList;

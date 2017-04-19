@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.web.form;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.common.form.DataForm;
 
@@ -14,7 +15,7 @@ public class DictMapForm extends DataForm<DictMap>{
     private String name;
     private String value;
     private String remarks;
-    private List<String> categoryList;
+    private List<String> categoryList= Lists.newArrayList();
 
     public List<String> getCategoryList() {
         return categoryList;

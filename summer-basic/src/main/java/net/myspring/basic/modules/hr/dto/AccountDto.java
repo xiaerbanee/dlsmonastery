@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.dto;
 
+import com.google.common.collect.Lists;
 import io.reactivex.netty.channel.StringTransformer;
 import net.myspring.basic.common.dto.DataDto;
 import net.myspring.basic.common.enums.DataScopeEnum;
@@ -29,7 +30,7 @@ public class AccountDto extends DataDto<Account> {
     private String employeeId;
     private String companyId;
     private boolean viewReport;
-    private List<String> officeIdList;
+    private List<String> officeIdList= Lists.newArrayList();
 
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "dataScope")
     private Integer dataScope;
@@ -50,7 +51,7 @@ public class AccountDto extends DataDto<Account> {
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "dataScope")
     private Integer positionDataScope;
     @CacheInput(inputKey = "offices",inputInstance = "officeIdList",outputInstance = "name")
-    private List<String> officeListName;
+    private List<String> officeListName=Lists.newArrayList();
 
     public String getEmployeeName() {
         return employeeName;

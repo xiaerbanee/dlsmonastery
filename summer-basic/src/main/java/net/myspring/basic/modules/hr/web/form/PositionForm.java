@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class PositionForm extends DataForm<Position> {
 
-    private List<String> permissionIdList;
+    private List<String> permissionIdList= Lists.newArrayList();
     private String jobId;
     private String name;
     private String reportName;
