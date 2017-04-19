@@ -21,80 +21,80 @@
   </div>
 </template>
 <script>
-export default {
-  data() {
-    return {
-      username: '',
-      password: '',
-      rememberMe: true,
-      isBtnLoading: false
-    };
-  },
-  computed: {
-    btnText() {
-      if (this.isBtnLoading) return this.$t('login.loginFor');
-      return this.$t('login.login');
-    }
-  },
-  methods: {
-    login() {
-      var that = this;
-      if (!that.username) {
-        that.$message.error(this.$t('login.inputUserName'));
-        return;
+  export default {
+    data() {
+      return {
+        username: '',
+        password: '',
+        rememberMe: true,
+        isBtnLoading: false
+      };
+    },
+    computed: {
+      btnText() {
+        if (this.isBtnLoading) return this.$t('login.loginFor');
+        return this.$t('login.login');
       }
-      if (!that.password) {
-        that.$message.error(this.$t('login.inputPassword'));
-        return;
-      }
-      that.isBtnLoading = true;
-      let data = {
+    },
+    methods: {
+      login() {
+        var that = this;
+        if (!that.username) {
+          that.$message.error(this.$t('login.inputUserName'));
+          return;
+        }
+        if (!that.password) {
+          that.$message.error(this.$t('login.inputPassword'));
+          return;
+        }
+        that.isBtnLoading = true;
+        let data = {
           grant_type:'password',
           username:that.username,
           password:that.password
-      };
-      axios.post('/api/uaa/oauth/token',qs.stringify(data)).then((response)=>{
+        };
+        axios.post('/api/uaa/oauth/token',qs.stringify(data)).then((response)=>{
           that.$store.dispatch('setToken',response.data);
           that.initLogin();
-      }).catch(function (error) {
-        that.$store.dispatch('clearGlobal');
-        that.isBtnLoading = false;
-        that.$message.error("用户名或密码不正确");
-      });
-    },initLogin() {
-      var that = this;
-      axios.post('/api/basic/hr/account/getAccountMessage').then((response)=>{
-        var menus = response.data.menus;
-        if(menus !=null && menus.length>0) {
-          for (var i in menus) {
-            var menuItems =menus[i].menuItems;
-            for(var j in menuItems) {
-              for(var k in menuItems[j].menus) {
-                var menu = menuItems[j].menus[k];
-                menu.name=menu.menuCode
+        }).catch(function (error) {
+          that.$store.dispatch('clearGlobal');
+          that.isBtnLoading = false;
+          that.$message.error("用户名或密码不正确");
+        });
+      },initLogin() {
+        var that = this;
+        axios.post('/api/basic/hr/account/getAccountMessage').then((response)=>{
+          var menus = response.data.menus;
+          if(menus !=null && menus.length>0) {
+            for (var i in menus) {
+              var menuItems =menus[i].menuItems;
+              for(var j in menuItems) {
+                for(var k in menuItems[j].menus) {
+                  var menu = menuItems[j].menus[k];
+                  menu.name=menu.menuCode
+                }
               }
             }
           }
-        }
-        that.$store.dispatch('setAccount',response.data.account);
-        that.$store.dispatch('setMenus',response.data.menus);
-        that.$store.dispatch('setAuthorityList',response.data.authorityList);
-        that.isBtnLoading = false;
-        var redirect = that.$route.query.redirect;
-        console.log("redict:" + redirect);
-        if (redirect) {
-          that.$router.push({path: redirect});
-        } else {
-          that.$router.push({path: "/"});
-        }
-      })
-    }
-  },created () {
+          that.$store.dispatch('setAccount',response.data.account);
+          that.$store.dispatch('setMenus',response.data.menus);
+          that.$store.dispatch('setAuthorityList',response.data.authorityList);
+          that.isBtnLoading = false;
+          var redirect = that.$route.query.redirect;
+          console.log("redict:" + redirect);
+          if (redirect) {
+            that.$router.push({path: redirect});
+          } else {
+            that.$router.push({path: "/"});
+          }
+        })
+      }
+    },created () {
       if(checkLogin()) {
         this.initLogin();
       }
     }
-};
+  };
 </script>
 <style lang="scss" scoped>
   #login-page {
