@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('dataReportList.dataReportList') "></head-tab>
+    <head-tab active="dataReportList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="preRequest" icon="left">{{$t('dataReportList.black')}}</el-button>

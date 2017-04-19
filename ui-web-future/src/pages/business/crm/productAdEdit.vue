@@ -3,7 +3,7 @@
 </style>
 <template>
   <div>
-    <head-tab :active="$t('productAdEdit.productAdEdit') "></head-tab>
+    <head-tab active="productAdEdit"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="" icon="check">{{$t('productAdEdit.save')}}</el-button>

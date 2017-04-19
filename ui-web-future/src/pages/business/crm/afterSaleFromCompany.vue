@@ -1,6 +1,6 @@
 <template>
     <div>
-      <head-tab :active="$t('afterSaleFromCompany.afterSaleFromCompany') "></head-tab>
+      <head-tab active="afterSaleFromCompany"></head-tab>
       <el-row>
         <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleFromCompany.save')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleFromCompany.filter')}}</el-button>

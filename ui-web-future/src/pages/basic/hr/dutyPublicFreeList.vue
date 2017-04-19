@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('dutyPublicFreeList.dutyPublicFreeList') "></head-tab>
+    <head-tab active="dutyPublicFreeList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutyPublicFreeList.filter')}}</el-button>

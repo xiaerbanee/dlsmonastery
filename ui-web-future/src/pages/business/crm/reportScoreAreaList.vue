@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('reportScoreAreaList.reportScoreAreaList') "></head-tab>
+    <head-tab active="reportScoreAreaList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="share">{{$t('reportScoreAreaList.reportScoreOfficeRank')}}</el-button>

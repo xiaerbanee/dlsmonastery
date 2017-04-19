@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('folderFileList.folderFileList') "></head-tab>
+    <head-tab active="folderFileList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('folderFileList.filter')}}</el-button>

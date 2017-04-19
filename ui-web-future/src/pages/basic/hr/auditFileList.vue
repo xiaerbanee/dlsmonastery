@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('auditFileList.auditFileList') "></head-tab>
+    <head-tab active="auditFileList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:auditFile:edit'">{{$t('auditFileList.add')}}</el-button>

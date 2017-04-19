@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('depotAccountList.depotAccountList') "></head-tab>
+    <head-tab active="depotAccountList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('depotAccountList.filterOrExport')}}</el-button>

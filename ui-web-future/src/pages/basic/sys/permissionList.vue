@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('permissionList.permissionList') "></head-tab>
+    <head-tab active="permissionList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:permission:edit'">{{$t('permissionList.add')}}</el-button>

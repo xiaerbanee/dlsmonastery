@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('positionList.positionList') "></head-tab>
+    <head-tab active="positionList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:position:edit'">{{$t('positionList.add')}}</el-button>

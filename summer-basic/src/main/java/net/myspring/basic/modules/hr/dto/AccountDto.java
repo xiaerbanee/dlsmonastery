@@ -20,7 +20,6 @@ import java.util.Map;
 public class AccountDto extends DataDto<Account> {
 
     private String loginName;
-    private String password;
     private String type;
 
 
@@ -52,14 +51,6 @@ public class AccountDto extends DataDto<Account> {
     private Integer positionDataScope;
     @CacheInput(inputKey = "offices",inputInstance = "officeIdList",outputInstance = "name")
     private List<String> officeListName;
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getEmployeeName() {
         return employeeName;

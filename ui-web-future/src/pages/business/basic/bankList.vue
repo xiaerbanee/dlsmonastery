@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('bankList.bankList') "></head-tab>
+    <head-tab active="bankList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">{{$t('bankList.filter')}}</el-button>

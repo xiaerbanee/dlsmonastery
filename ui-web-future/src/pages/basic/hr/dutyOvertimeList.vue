@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('dutyOvertimeList.dutyOvertimeList') "></head-tab>
+    <head-tab active="dutyOvertimeList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutyOvertimeList.filter')}}</el-button>

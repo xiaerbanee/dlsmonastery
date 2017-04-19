@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('adApplyForm.adApplyForm')"></head-tab>
+    <head-tab active="adApplyForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('adApplyForm.billType')" prop="billType">

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('accountTaskList.accountTaskList')"></head-tab>
+    <head-tab active="accountTaskList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('accountTaskList.filter')}}</el-button>

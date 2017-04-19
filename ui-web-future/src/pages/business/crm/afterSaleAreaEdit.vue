@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('afterSaleAreaEdit.afterSaleAreaEdit') "></head-tab>
+    <head-tab active="afterSaleAreaEdit"></head-tab>
     <el-row>
       <el-button type="primary" @click="formSubmit" icon="check" v-permit="'crm:afterSale:areaEdit:edit'">{{$t('afterSaleAreaEdit.save')}}</el-button>
       <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:afterSale:view'">{{$t('afterSaleAreaEdit.filter')}}</el-button>

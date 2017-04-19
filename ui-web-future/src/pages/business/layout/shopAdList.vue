@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('shopAdList.shopAdList') "></head-tab>
+    <head-tab active="shopAdList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopAd:view'">{{$t('shopAdList.batchPass')}}</el-button>

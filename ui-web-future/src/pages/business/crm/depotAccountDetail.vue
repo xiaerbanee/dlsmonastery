@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('depotAccountDetail.depotAccountDetail') "></head-tab>
+    <head-tab active="depotAccountDetail"></head-tab>
     <div>
       <el-table :data="depotAccountDetail"  style="margin-top:5px;"  :element-loading-text="$t('depotAccountDetail.loading')" stripe border :row-class-name="tableRowClassName">
         <el-table-column fixed prop="billType" :label="$t('depotAccountDetail.billType')" width="330px"></el-table-column>

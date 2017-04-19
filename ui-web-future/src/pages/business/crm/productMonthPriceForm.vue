@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('productMonthPriceForm.productMonthPriceForm') "></head-tab>
+    <head-tab active="productMonthPriceForm"></head-tab>
     <el-alert :title="message" type="error" show-icon v-if="message !==''"></el-alert>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
