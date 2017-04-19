@@ -21,6 +21,8 @@ public interface MenuMapper extends MyMapper<Menu,String> {
 
     List<Menu> findByPermissionIsNotEmpty();
 
+    List<Menu> findBackendMenuByPosition(String positionId);
+
     List<String> findDistinctCategory();
 
     List<Menu> findByMenuCategoryId( String menuCategoryId);

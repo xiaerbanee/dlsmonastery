@@ -88,8 +88,12 @@ public class MenuController {
     }
 
     @RequestMapping(value = "getMenuMap")
-    public List<BackendMenuDto> getMenuMap(){
-        List<BackendMenuDto> backendMenuDtoList=menuService.getMenuMap(SecurityUtils.getAccountId());
-        return backendMenuDtoList;
+    public Object getMenuMap(String requestClient){
+        Boolean isMobile = "weixin".equals(requestClient);
+        if(isMobile) {
+            return menuService.findMobileMenuMap(SecurityUtils.getAccountId());
+        } else {
+            return menuService.getMenuMap(SecurityUtils.getAccountId());
+        }
     }
 }

@@ -45,6 +45,19 @@
         t1.enabled=1 and t1.id  in (select DISTINCT menu_id from sys_permission)
     </select>
 
+    <select id="findBackendMenuByPosition" resultType="Menu">
+        SELECT
+        DISTINCT t1.*
+        FROM
+        sys_menu t1,sys_menu_category t2,sys_backend_module t3,sys_backend t4,hr_position_backend t5
+        WHERE	t1.enanled=1
+        AND t1.menu_category_id = t2.id
+        AND t2.backend_module_id = t3.id
+        AND t3.backend_id = t4.id
+        AND t4.id=t5.backend_id
+        and t5.position_id=#{positionId}
+    </select>
+
     <select id="findDistinctCategory" resultType="String">
         SELECT DISTINCT
         t1.category
