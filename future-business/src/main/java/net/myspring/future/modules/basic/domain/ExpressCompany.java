@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="crm_express_company")
-public class ExpressCompany extends DataEntity<ExpressCompany> {
+public class ExpressCompany extends CompanyEntity<ExpressCompany> {
     private String name;
     private String expressType;
     private String reachPlace;

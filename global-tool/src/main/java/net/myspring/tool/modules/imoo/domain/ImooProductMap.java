@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.imoo.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="imoo_product_map")
-public class ImooProductMap extends DataEntity<ImooProductMap> {
+public class ImooProductMap extends CompanyEntity<ImooProductMap> {
     private Integer version;
     private ImooPlantBasicProduct imooPlantBasicProduct;
     private String imooPlantBasicProductId;

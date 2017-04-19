@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.domain;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name="crm_ad_goods_order")
-public class AdGoodsOrder extends DataEntity<AdGoodsOrder> {
+public class AdGoodsOrder extends CompanyEntity<AdGoodsOrder> {
     private String storeId;
     private String outShopId;
     private String shopId;

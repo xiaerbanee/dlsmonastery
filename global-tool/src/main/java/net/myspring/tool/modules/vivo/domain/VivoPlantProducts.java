@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.vivo.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="vivo_plant_products")
-public class VivoPlantProducts extends DataEntity<VivoPlantProducts> {
+public class VivoPlantProducts extends CompanyEntity<VivoPlantProducts> {
     private String typeId;
     private String colorId;
     private String colorName;

@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.sys.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="sys_gl_voucher")
-public class Voucher extends DataEntity<Voucher> {
+public class Voucher extends CompanyEntity<Voucher> {
     //业务日期
     private LocalDate fDate;
     private String createdName;

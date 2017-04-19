@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Depot;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name="crm_store_allot")
-public class StoreAllot extends DataEntity<StoreAllot> {
+public class StoreAllot extends CompanyEntity<StoreAllot> {
     private String fromStoreId;
     private String toStoreId;
     private String outCode;

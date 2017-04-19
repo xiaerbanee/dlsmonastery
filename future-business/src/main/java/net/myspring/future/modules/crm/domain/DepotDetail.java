@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="crm_depot_detail")
-public class DepotDetail extends DataEntity<DepotDetail> {
+public class DepotDetail extends CompanyEntity<DepotDetail> {
     private Integer qty;
     private Boolean hasIme;
     private Integer version = 0;

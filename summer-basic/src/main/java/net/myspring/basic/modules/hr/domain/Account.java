@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.basic.modules.sys.domain.Menu;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name="hr_account")
-public class Account extends DataEntity<Account> {
+public class Account extends CompanyEntity<Account> {
     private String companyId;
     private String loginName;
     private Integer version = 0;

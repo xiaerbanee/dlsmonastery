@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_product_type")
-public class ProductType extends DataEntity<ProductType> {
+public class ProductType extends CompanyEntity<ProductType> {
     private String name;
     private String reportName;
     private String code;

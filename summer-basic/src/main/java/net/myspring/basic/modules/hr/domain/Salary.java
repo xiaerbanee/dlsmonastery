@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_salary")
-public class Salary extends DataEntity<Salary> {
+public class Salary extends CompanyEntity<Salary> {
     private String month;
     private String projectName;
     private String projectValue;

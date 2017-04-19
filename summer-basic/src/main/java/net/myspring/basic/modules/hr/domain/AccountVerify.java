@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -7,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_account_verify")
-public class AccountVerify extends DataEntity<AccountVerify> {
+public class AccountVerify extends CompanyEntity<AccountVerify> {
     private String password;
     private String remoteIp;
     private String device;

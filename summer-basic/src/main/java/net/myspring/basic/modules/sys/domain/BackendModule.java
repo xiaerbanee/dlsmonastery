@@ -2,6 +2,8 @@ package net.myspring.basic.modules.sys.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import java.util.List;
 import com.google.common.collect.Lists;
@@ -10,7 +12,7 @@ import net.myspring.util.text.StringUtils;
 
 @Entity
 @Table(name="sys_backend_module")
-public class BackendModule extends DataEntity<BackendModule> {
+public class BackendModule extends CompanyEntity<BackendModule> {
     private String name;
     private Integer version = 0;
     private Backend backend;

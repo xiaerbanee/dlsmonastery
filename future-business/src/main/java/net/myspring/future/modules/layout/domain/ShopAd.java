@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.ShopAdType;
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_shop_ad")
-public class ShopAd extends DataEntity<ShopAd> {
+public class ShopAd extends CompanyEntity<ShopAd> {
     private String shopId;
     private BigDecimal length;
     private BigDecimal width;

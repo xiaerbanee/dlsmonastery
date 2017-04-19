@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.domain;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name="hr_duty_worktime")
-public class DutyWorktime extends DataEntity<DutyWorktime> {
+public class DutyWorktime extends CompanyEntity<DutyWorktime> {
     private String type;
     private LocalDate dutyDate;
     private LocalTime dutyTime;

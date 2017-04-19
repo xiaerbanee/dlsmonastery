@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="hr_account_token")
-public class AccountToken extends DataEntity<AccountToken> {
+public class AccountToken extends CompanyEntity<AccountToken> {
     private String token;
     private String remoteIp;
     private String device;

@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.basic.modules.sys.domain.ProcessFlow;
 import net.myspring.basic.modules.sys.domain.ProcessType;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_office_change")
-public class OfficeChange extends DataEntity<OfficeChange> {
+public class OfficeChange extends CompanyEntity<OfficeChange> {
     private String type;
     private String oldLabel;
     private String oldValue;

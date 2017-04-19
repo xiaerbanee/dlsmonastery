@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.TreeEntity;
 
 import javax.persistence.Entity;
@@ -7,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_district")
-public class District extends TreeEntity<District> {
+public class District extends CompanyEntity<District> {
     private String name;
     private String shortName;
     private Integer level;

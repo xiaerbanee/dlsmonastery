@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.domain;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.ProductType;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name="crm_price_change")
-public class PriceChange extends DataEntity<PriceChange> {
+public class PriceChange extends CompanyEntity<PriceChange> {
     private String name;
     private LocalDate priceChangeDate;
     private LocalDate uploadEndDate;

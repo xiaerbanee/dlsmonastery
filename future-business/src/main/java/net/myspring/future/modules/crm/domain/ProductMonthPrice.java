@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.domain;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name="crm_product_month_price")
-public class ProductMonthPrice extends DataEntity<ProductMonthPrice> {
+public class ProductMonthPrice extends CompanyEntity<ProductMonthPrice> {
     private String month;
     private Integer version = 0;
     private List<ProductMonthPriceDetail> productMonthPriceDetailList = Lists.newArrayList();

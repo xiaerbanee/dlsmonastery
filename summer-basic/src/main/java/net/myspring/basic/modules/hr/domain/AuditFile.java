@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.basic.modules.sys.domain.ProcessFlow;
 import net.myspring.basic.modules.sys.domain.ProcessType;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_audit_file")
-public class AuditFile extends DataEntity<AuditFile> {
+public class AuditFile extends CompanyEntity<AuditFile> {
     private String title;
     private String content;
     private String attachment;

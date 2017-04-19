@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.basic.modules.sys.domain.ProcessFlow;
 import net.myspring.basic.modules.sys.domain.ProcessType;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="hr_employee_salary_basic")
-public class EmployeeSalaryBasic extends DataEntity<EmployeeSalaryBasic> {
+public class EmployeeSalaryBasic extends CompanyEntity<EmployeeSalaryBasic> {
     private String type;
     private LocalDate effectiveDate;
     private BigDecimal shouldGet;

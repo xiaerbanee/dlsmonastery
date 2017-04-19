@@ -1,6 +1,8 @@
 package net.myspring.future.modules.basic.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
+import net.myspring.common.domain.TreeEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -9,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="crm_depot")
-public class Depot extends DataEntity<Depot> {
+public class Depot extends TreeEntity<Depot> {
     private String code;
     private Integer type;
     private String name;

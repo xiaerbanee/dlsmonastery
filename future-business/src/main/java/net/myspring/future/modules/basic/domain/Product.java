@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="crm_product")
-public class Product extends DataEntity<Product> {
+public class Product extends CompanyEntity<Product> {
     private String name;
     private String code;
     private Boolean hasIme;

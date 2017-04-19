@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Depot;
 
@@ -11,7 +12,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name="crm_after_sale_ime_allot")
-public class AfterSaleImeAllot extends DataEntity<AfterSaleImeAllot> {
+public class AfterSaleImeAllot extends CompanyEntity<AfterSaleImeAllot> {
     private String fromDepotId;
     private String toDepotId;
     private Integer version = 0;

@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Bank;
 
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="crm_bank_in")
-public class BankIn extends DataEntity<BankIn> {
+public class BankIn extends CompanyEntity<BankIn> {
     private String shopId;
     private String type;
     private LocalDate inputDate;

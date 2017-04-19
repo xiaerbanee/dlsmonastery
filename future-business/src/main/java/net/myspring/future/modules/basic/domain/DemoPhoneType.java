@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="crm_demo_phone_type")
-public class DemoPhoneType extends DataEntity<DemoPhoneType> {
+public class DemoPhoneType extends CompanyEntity<DemoPhoneType> {
     private String name;
     private Integer limitQty;
     private LocalDate applyEndDate;

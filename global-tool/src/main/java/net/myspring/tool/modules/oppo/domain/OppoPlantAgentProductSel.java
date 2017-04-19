@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.oppo.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="oppo_plant_agent_product_sel")
-public class OppoPlantAgentProductSel extends DataEntity<OppoPlantAgentProductSel> {
+public class OppoPlantAgentProductSel extends CompanyEntity<OppoPlantAgentProductSel> {
     private String brandId;
     private String brandName;
     private String typeId;

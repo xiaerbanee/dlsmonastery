@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Depot;
 
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="crm_depot_change")
-public class DepotChange extends DataEntity<DepotChange> {
+public class DepotChange extends CompanyEntity<DepotChange> {
     private String type;
     private LocalDate expiryDate;
     private String oldLabel;

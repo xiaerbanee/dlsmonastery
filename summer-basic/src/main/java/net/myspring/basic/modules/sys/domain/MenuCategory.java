@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.domain;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name="sys_menu_category")
-public class MenuCategory extends DataEntity<MenuCategory> {
+public class MenuCategory extends CompanyEntity<MenuCategory> {
     private String name;
     private String icon;
     private String enName;

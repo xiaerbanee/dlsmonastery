@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Product;
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_ad_pricesystem_change")
-public class AdPricesystemChange extends DataEntity<AdPricesystemChange> {
+public class AdPricesystemChange extends CompanyEntity<AdPricesystemChange> {
     private BigDecimal oldPrice;
     private BigDecimal newPrice;
     private Integer version = 0;

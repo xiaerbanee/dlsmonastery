@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_employee_point")
-public class EmployeePoint extends DataEntity<EmployeePoint> {
+public class EmployeePoint extends CompanyEntity<EmployeePoint> {
     private String type;
     private Integer point;
     private Integer version = 0;

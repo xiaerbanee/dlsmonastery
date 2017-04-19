@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.domain.ProcessFlow;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name="hr_position")
-public class Position extends DataEntity<Position> {
+public class Position extends CompanyEntity<Position> {
     private String name;
     private Integer version = 0;
     private String permission;

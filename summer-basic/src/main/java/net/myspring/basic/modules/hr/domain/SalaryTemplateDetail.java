@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_salary_template_detail")
-public class SalaryTemplateDetail extends DataEntity<SalaryTemplateDetail> {
+public class SalaryTemplateDetail extends CompanyEntity<SalaryTemplateDetail> {
     private String name;
     private Integer sort;
     private Integer version = 0;

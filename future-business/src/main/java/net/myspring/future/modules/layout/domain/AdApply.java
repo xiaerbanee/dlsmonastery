@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -10,7 +11,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name="crm_ad_apply")
-public class AdApply extends DataEntity<AdApply> {
+public class AdApply extends CompanyEntity<AdApply> {
     private String shopId;
     private Integer applyQty;
     private Integer confirmQty;

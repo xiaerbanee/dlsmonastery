@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.domain;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "hr_employee")
-public class Employee extends DataEntity<Employee> {
+public class Employee extends CompanyEntity<Employee> {
     private String code;
     private String mobilePhone;
     private String image;

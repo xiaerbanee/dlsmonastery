@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.domain;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Position;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name="sys_permission")
-public class Permission extends DataEntity<Permission> {
+public class Permission extends CompanyEntity<Permission> {
     private String name;
     private String permission;
     private Integer version = 0;

@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_account_task")
-public class AccountTask extends DataEntity<AccountTask> {
+public class AccountTask extends CompanyEntity<AccountTask> {
     private Integer version = 0;
     private String name;
     private String extendId;

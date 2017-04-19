@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.domain;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name="crm_report_score")
-public class ReportScore extends DataEntity<ReportScore> {
+public class ReportScore extends CompanyEntity<ReportScore> {
     private LocalDate scoreDate;
     private BigDecimal score;
     private BigDecimal monthScore;

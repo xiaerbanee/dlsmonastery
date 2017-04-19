@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name="hr_recruit")
-public class Recruit extends DataEntity<Recruit> {
+public class Recruit extends CompanyEntity<Recruit> {
     private LocalDateTime contactDate;
     private String name;
     private String sex;

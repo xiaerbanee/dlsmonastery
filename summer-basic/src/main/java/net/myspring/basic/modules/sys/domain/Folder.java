@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.domain;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.TreeEntity;
 
 import javax.persistence.Entity;

@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_express")
-public class Express extends DataEntity<Express> {
+public class Express extends CompanyEntity<Express> {
     private String code;
     private BigDecimal weight;
     private BigDecimal shouldPay;

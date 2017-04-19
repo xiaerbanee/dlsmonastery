@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.domain;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name="crm_lottery_rule")
-public class LotteryRule extends DataEntity<LotteryRule> {
+public class LotteryRule extends CompanyEntity<LotteryRule> {
     private String name;
     private String type;
     private LocalDate dateStart;

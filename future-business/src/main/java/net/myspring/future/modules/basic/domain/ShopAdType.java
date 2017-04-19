@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_shop_ad_type")
-public class ShopAdType extends DataEntity<ShopAdType> {
+public class ShopAdType extends CompanyEntity<ShopAdType> {
     private String name;
     private String totalPriceType;
     private BigDecimal price;

@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.sys.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_kingdee_book")
-public class KingdeeBook extends DataEntity<KingdeeBook> {
+public class KingdeeBook extends CompanyEntity<KingdeeBook> {
     private String companyId;
     private String name;
     private String type;

@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="hr_employee_salary")
-public class EmployeeSalary extends DataEntity<EmployeeSalary> {
+public class EmployeeSalary extends CompanyEntity<EmployeeSalary> {
     private String type;
     private String month;
     private BigDecimal shouldGet;

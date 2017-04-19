@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.sys.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="sys_factory")
-public class Factory extends DataEntity<Factory> {
+public class Factory extends CompanyEntity<Factory> {
     private String companyId;
     private String name;
     private String url;

@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Product;
 
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="crm_ime_stock_report")
-public class ImeStockReport extends DataEntity<ImeStockReport> {
+public class ImeStockReport extends CompanyEntity<ImeStockReport> {
     private LocalDate reportDate;
     private String reportType;
     private Integer saleStock;

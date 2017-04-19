@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import net.myspring.basic.modules.hr.domain.PositionBackend;
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import net.myspring.util.collection.CollectionUtil;
 
 @Entity
 @Table(name = "sys_backend")
-public class Backend extends DataEntity<Backend> {
+public class Backend extends CompanyEntity<Backend> {
     private String name;
     private Integer version = 0;
     private List<PositionBackend> positionBackendList = Lists.newArrayList();

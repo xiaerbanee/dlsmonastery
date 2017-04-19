@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.domain;
 
+import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Depot;
 
@@ -8,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="crm_shop_image")
-public class ShopImage extends DataEntity<ShopImage> {
+public class ShopImage extends CompanyEntity<ShopImage> {
     private String shopId;
     private String imageSize;
     private String imageType;
