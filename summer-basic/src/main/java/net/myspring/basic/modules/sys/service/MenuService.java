@@ -6,15 +6,17 @@ import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.PositionBackend;
 import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
-import net.myspring.basic.modules.sys.domain.Menu;
-import net.myspring.basic.modules.sys.domain.MenuCategory;
-import net.myspring.basic.modules.sys.domain.Permission;
+import net.myspring.basic.modules.hr.mapper.PositionBackendMapper;
+import net.myspring.basic.modules.sys.domain.*;
+import net.myspring.basic.modules.sys.dto.BackendMenuDto;
+import net.myspring.basic.modules.sys.dto.BackendModuleMenuItemDto;
+import net.myspring.basic.modules.sys.dto.MenuCategoryItemDto;
 import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.manager.MenuManager;
-import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
-import net.myspring.basic.modules.sys.mapper.PermissionMapper;
+import net.myspring.basic.modules.sys.mapper.*;
 import net.myspring.basic.modules.sys.model.MenuCategoryItem;
 import net.myspring.basic.modules.sys.model.MenuItem;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
@@ -27,7 +29,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import net.myspring.basic.modules.sys.mapper.MenuMapper;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -47,29 +48,35 @@ public class MenuService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private AccountManager accountManager;
-    @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
     private MenuCategoryMapper menuCategoryMapper;
     @Autowired
     private AccountMapper accountMapper;
+    @Autowired
+    private BackendMapper backendMapper;
+    @Autowired
+    private BackendModuleMapper backendModuleMapper;
+    @Autowired
+    private PositionBackendMapper positionBackendMapper;
+    @Autowired
+    private AccountManager accountManager;
 
-    public List<MenuDto> findAll(){
-        List<Menu> menuList=menuMapper.findAll();
-        List<MenuDto> menuDtoList= BeanUtil.map(menuList,MenuDto.class);
+    public List<MenuDto> findAll() {
+        List<Menu> menuList = menuMapper.findAll();
+        List<MenuDto> menuDtoList = BeanUtil.map(menuList, MenuDto.class);
         cacheUtils.initCacheInput(menuDtoList);
         return menuDtoList;
     }
 
     public List<Map<String, Object>> findMobileMenus(String accountId) {
-        Map<MenuCategory, List<Menu>> map= Maps.newHashMap();
-        Account account = accountMapper.findOne(accountId);
+        Map<MenuCategory, List<Menu>> map = Maps.newHashMap();
+        Account account = accountManager.findOne(accountId);
         if (Const.XCXAUDIT.equals(account.getLoginName())) {
-            List<String> menuIds= StringUtils.getSplitList(weixinAuditMenuId,Const.CHAR_COMMA);
-            List<Menu> menus=menuMapper.findByIds(menuIds);
-            map=getMenuMap(menus);
-        }else {
+            List<String> menuIds = StringUtils.getSplitList(weixinAuditMenuId, Const.CHAR_COMMA);
+            List<Menu> menus = menuMapper.findByIds(menuIds);
+            map = getMenuMap(menus);
+        } else {
             map = getMenuMap(account, true);
         }
         List<Map<String, Object>> list = Lists.newArrayList();
@@ -84,7 +91,7 @@ public class MenuService {
 
     public List<MenuCategoryItem> findMenus(String accountId) {
         List<MenuCategoryItem> menuCategoryItems = Lists.newArrayList();
-        Account account = accountMapper.findOne(accountId);
+        Account account = accountManager.findOne(accountId);
         Map<MenuCategory, List<Menu>> map = getMenuMap(account, false);
         for (MenuCategory menuCategory : map.keySet()) {
             MenuCategoryItem menuCategoryItem = new MenuCategoryItem();
@@ -139,7 +146,7 @@ public class MenuService {
         return getMenuMap(menus);
     }
 
-    private Map<MenuCategory, List<Menu>> getMenuMap(List<Menu> menus){
+    private Map<MenuCategory, List<Menu>> getMenuMap(List<Menu> menus) {
         List<MenuCategory> menuCategories = menuCategoryMapper.findAll();
         Map<String, MenuCategory> menuCategoryMap = CollectionUtil.extractToMap(menuCategories, "id");
         Map<MenuCategory, List<Menu>> map = Maps.newHashMap();
@@ -162,12 +169,12 @@ public class MenuService {
     }
 
     public MenuForm findForm(MenuForm menuForm) {
-        if(!menuForm.isCreate()){
+        if (!menuForm.isCreate()) {
             Menu menu = findOne(menuForm.getId());
-            if(menu!=null){
-                menuForm= BeanUtil.map(menu,MenuForm.class);
-                List<Permission> permissionList=permissionMapper.findByMenuId(menuForm.getId());
-                String permissionStr="";
+            if (menu != null) {
+                menuForm = BeanUtil.map(menu, MenuForm.class);
+                List<Permission> permissionList = permissionMapper.findByMenuId(menuForm.getId());
+                String permissionStr = "";
                 for (Permission permission : permissionList) {
                     permissionStr = permissionStr + permission.getName() + Const.CHAR_SPACE + permission.getPermission() + Const.CHAR_ENTER;
                 }
@@ -177,12 +184,12 @@ public class MenuService {
         return menuForm;
     }
 
-    public List<String> findDistinctCategory(){
+    public List<String> findDistinctCategory() {
         return menuMapper.findDistinctCategory();
     }
 
     public Page<MenuDto> findPage(Pageable pageable, MenuQuery menuQuery) {
-        Page<MenuDto> menuDtoPage= menuMapper.findPage(pageable, menuQuery);
+        Page<MenuDto> menuDtoPage = menuMapper.findPage(pageable, menuQuery);
         cacheUtils.initCacheInput(menuDtoPage.getContent());
         return menuDtoPage;
     }
@@ -191,15 +198,15 @@ public class MenuService {
         menuMapper.deleteById(id);
     }
 
-    public Menu save(MenuForm menuForm){
+    public Menu save(MenuForm menuForm) {
         Set<Permission> permissions = Sets.newHashSet();
         Set<Permission> oldPermissions = Sets.newHashSet();
         Menu menu;
-        if(menuForm.isCreate()) {
-            menu=BeanUtil.map(menuForm,Menu.class);
-            menu=menuManager.save(menu);
+        if (menuForm.isCreate()) {
+            menu = BeanUtil.map(menuForm, Menu.class);
+            menu = menuManager.save(menu);
         } else {
-            menu=menuManager.updateForm(menuForm);
+            menu = menuManager.updateForm(menuForm);
             oldPermissions = Sets.newHashSet(permissionMapper.findByMenuId(menuForm.getId()));
         }
         if (StringUtils.isNotBlank(menuForm.getPermissionStr())) {
@@ -227,7 +234,7 @@ public class MenuService {
                 }
             }
         }
-        if(CollectionUtil.isNotEmpty(oldPermissions)){
+        if (CollectionUtil.isNotEmpty(oldPermissions)) {
             for (Permission permission : oldPermissions) {
                 if (!permissions.contains(permission)) {
                     permissionMapper.deleteById(permission.getId());
@@ -235,5 +242,73 @@ public class MenuService {
             }
         }
         return menu;
+    }
+
+    public List<BackendMenuDto> getMenuMap(String accountId) {
+        List<BackendMenuDto> backendMenuDtoList = Lists.newArrayList();
+        Account account = accountManager.findOne(accountId);
+        List<Backend> backendList;
+        if (Const.HR_ACCOUNT_ADMIN_LIST.contains(account.getId())) {
+            backendList= backendMapper.findAllEnabled();
+        } else {
+            List<PositionBackend> positionBackendList = positionBackendMapper.findByPositionId(account.getPositionId());
+            backendList = backendMapper.findByIds(CollectionUtil.extractToList(positionBackendList, "id"));
+        }
+        if (CollectionUtil.isNotEmpty(backendList)) {
+            List<BackendModuleMenuItemDto> backendModuleMenuItemDtoList = getBackendModuleMenuItem(account, backendList);
+            Map<String, List<BackendModuleMenuItemDto>> backendModuleMenuItemDtoMap = CollectionUtil.extractToMapList(backendModuleMenuItemDtoList, "backendId");
+            for (Backend backend : backendList) {
+                BackendMenuDto backendMenuDto = new BackendMenuDto();
+                backendMenuDto.setBackend(backend);
+                backendMenuDto.setBackendModuleMenuItemDtoList(backendModuleMenuItemDtoMap.get(backend.getId()));
+                backendMenuDtoList.add(backendMenuDto);
+            }
+        }
+        return backendMenuDtoList;
+    }
+
+    private List<BackendModuleMenuItemDto> getBackendModuleMenuItem(Account account, List<Backend> backendList) {
+        List<BackendModuleMenuItemDto> backendModuleMenuItemDtoList = Lists.newArrayList();
+        List<BackendModule> backendModuleList = backendModuleMapper.findByBackendIds(CollectionUtil.extractToList(backendList, "id"));
+        if(CollectionUtil.isNotEmpty(backendModuleList)){
+            List<MenuCategoryItemDto> menuCategoryItemDtoList = getMenuCategoryItemDtoList(account,backendModuleList);
+            Map<String, List<MenuCategoryItemDto>> menuCategoryItemDtoMap = CollectionUtil.extractToMapList(menuCategoryItemDtoList, "backendModuleId");
+            for (BackendModule backendModule : backendModuleList) {
+                BackendModuleMenuItemDto backendModuleMenuItemDto = new BackendModuleMenuItemDto();
+                backendModuleMenuItemDto.setBackendModule(backendModule);
+                backendModuleMenuItemDto.setMenuCategoryItemDtoList(menuCategoryItemDtoMap.get(backendModule.getId()));
+                backendModuleMenuItemDtoList.add(backendModuleMenuItemDto);
+            }
+        }
+        return backendModuleMenuItemDtoList;
+    }
+
+    private List<MenuCategoryItemDto> getMenuCategoryItemDtoList(Account account,List<BackendModule> backendModuleList) {
+        List<MenuCategoryItemDto> menuCategoryItemDtoList = Lists.newArrayList();
+        List<Menu> menuList;
+        if (Const.HR_ACCOUNT_ADMIN_LIST.contains(account.getId())) {
+            menuList = menuMapper.findAllEnabled();
+        } else {
+            String positionId = account.getPositionId();
+            List<Permission> permissions = permissionMapper.findByPositionId(positionId);
+            List<String> menuIds = CollectionUtil.extractToList(permissions, "menuId");
+            menuList = menuMapper.findByIds(menuIds);
+            List<Menu> permissionIsEmptyMenus = menuMapper.findByPermissionIsEmpty();
+            if (CollectionUtil.isNotEmpty(permissionIsEmptyMenus)) {
+                menuList.addAll(permissionIsEmptyMenus);
+                menuList = Lists.newArrayList(Sets.newHashSet(menuList));
+            }
+        }
+        if (CollectionUtil.isNotEmpty(menuList)) {
+            List<MenuCategory> menuCategoryList = menuCategoryMapper.findByBackendModuleIds(CollectionUtil.extractToList(backendModuleList,"id"));
+            Map<String, List<Menu>> menuMap = CollectionUtil.extractToMapList(menuList, "menuCategoryId");
+            for (MenuCategory menuCategory : menuCategoryList) {
+                MenuCategoryItemDto menuCategoryItemDto = new MenuCategoryItemDto();
+                menuCategoryItemDto.setMenuCategory(menuCategory);
+                menuCategoryItemDto.setMenuList(menuMap.get(menuCategory.getId()));
+                menuCategoryItemDtoList.add(menuCategoryItemDto);
+            }
+        }
+        return menuCategoryItemDtoList;
     }
 }

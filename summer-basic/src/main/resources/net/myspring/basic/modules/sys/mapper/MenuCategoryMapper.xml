@@ -27,4 +27,17 @@
         AND t1.name =#{p.name}
     </select>
 
+    <select id="findByBackendModuleIds" resultType="MenuCategory" >
+          SELECT
+        t1.*
+        FROM
+        sys_menu_category t1
+        WHERE
+        t1.enabled=1
+        and t1.backend_module_id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

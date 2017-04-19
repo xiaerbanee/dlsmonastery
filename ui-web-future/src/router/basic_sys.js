@@ -16,6 +16,10 @@ const processTypeForm  = r => require.ensure([], () => r(require('pages/basic/sy
 const permissionList  = r => require.ensure([], () => r(require('pages/basic/sys/permissionList.vue')));
 const permissionForm  = r => require.ensure([], () => r(require('pages/basic/sys/permissionForm.vue')));
 const processList= r => require.ensure([], () => r(require('pages/basic/sys/processList.vue')));
+const backendList  = r => require.ensure([], () => r(require('pages/basic/sys/backendList.vue')));
+const backendForm= r => require.ensure([], () => r(require('pages/basic/sys/backendForm.vue')));
+const backendModuleList  = r => require.ensure([], () => r(require('pages/basic/sys/backendModuleList.vue')));
+const backendModuleForm= r => require.ensure([], () => r(require('pages/basic/sys/backendModuleForm.vue')));
 
 
 
@@ -38,6 +42,10 @@ let routes = [
   {path:'/basic/sys/processTypeForm',component:processTypeForm,name:'processTypeForm',meta: {menu:"processTypeList"}},
   {path:'/basic/sys/permissionList',component:permissionList,name:'permissionList'},
   {path:'/basic/sys/permissionForm',component:permissionForm,name:'permissionForm',meta: {menu:"permissionList"}},
+  {path:'/basic/sys/backendList',component:backendList,name:'backendList'},
+  {path:'/basic/sys/backendForm',component:backendForm,name:'backendForm',meta: {menu:"backendList"}},
+  {path:'/basic/sys/backendModuleList',component:backendModuleList,name:'backendModuleList'},
+  {path:'/basic/sys/backendModuleForm',component:backendModuleForm,name:'backendModuleForm',meta: {menu:"backendModuleList"}},
 ];
 
 export default routes;
