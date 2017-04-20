@@ -16,9 +16,18 @@ public class BackendModule extends CompanyEntity<BackendModule> {
     private String name;
     private Integer version = 0;
     private Backend backend;
+    private String code;
     private String backendId;
     private List<MenuCategory> menuCategoryList = Lists.newArrayList();
     private List<String> menuCategoryIdList = Lists.newArrayList();
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getName() {
         return name;

@@ -4,6 +4,7 @@
       <!-- header start  -->
       <header class="db-header">
         <router-link class="logo" :to="{path: '/'}">{{account.companyName}}</router-link>
+        <div class="main_category" v-for="firstCategory in menus.backendList" :key="firstCategory.id" :data-backend-id="firstCategory.id" @click="mainCategory">{{firstCategory.name}}</div>
         <div class="user-info" v-if="account.id">
           <span><a href="javscript:void(0);" @click="changeLang('zh-cn')">中文</a> / <a href="javscript:void(0);" @click="changeLang('id')">Indonesia</a></span>
           <span v-text="account.loginName"></span>
@@ -26,21 +27,22 @@
         <aside class="db-menu-wrapper">
           <div class="db-menu-category">
             <div id="fixed">
-              <dl><dd><a v-for="item in menus" :key="item.id" @click="chooseCategory">{{$t('app.'+ item.menuCategory.code)}}</a></dd></dl>
+              <dl><dd><a v-for="item in secondCategory" :key="item.id" :data-choose-category="item.code" @click="chooseCategory">{{item.name}}</a></dd></dl>
             </div>
           </div>
+          <!--<div v-show="secondCategory.name== activeCategory">-->
           <el-menu :default-active="activeMenu" class="db-menu-bar" router unique-opened>
-            <template v-for="category in menus" ：key="category.id">
-              <div v-show="category.menuCategory.code == activeCategory">
-                <template v-for="menuItem in category.menuItems">
-                  <el-submenu :index="menuItem.groupName">
-                    <template slot="title">{{$t('app.'+ menuItem.groupName)}}</template>
-                    <el-menu-item :index="cMenu.menuCode" v-for="(cMenu, cIndex) in menuItem.menus"  :key="cIndex" :route="cMenu">
-                      {{$t('app.'+ cMenu.menuCode)}}
-                    </el-menu-item>
-                  </el-submenu>
-                </template>
-              </div>
+            <template v-for="category in secondCategory" ：key="category.id">
+            <div  v-show="category.code == activeCategory">
+            <template v-for="menuItem in category.menuCategoryList">
+            <el-submenu :index="menuItem.id">
+            <template slot="title">{{$t('app.'+ menuItem.code)}}</template>
+            <el-menu-item :index="cMenu.menuCode" v-for="(cMenu, cIndex) in menuItem.menuList"  :key="cIndex" :route="cMenu">
+              {{$t('app.'+ cMenu.menuCode)}}
+            </el-menu-item>
+            </el-submenu>
+            </template>
+            </div>
             </template>
           </el-menu>
         </aside>
@@ -70,7 +72,8 @@
       return {
         menuMap:{},
         activeMenu: '',
-        activeCategory:''
+        activeCategory:'',
+        secondCategory:[],
       };
     },computed: mapState({
       account: state => state.global.account,
@@ -78,18 +81,20 @@
       lang: state => state.global.lang
     }),
     created() {
-      if(this.menus !=null && this.menus.length>0) {
-        for (var i in this.menus) { //一級
-          var menuCategoryCode = this.menus[i].menuCategory.code;
-          var menuItems = this.menus[i].menuItems;
-          for(var j in menuItems) { //二級
-            for(var k in menuItems[j].menus) {
-              var menu = menuItems[j].menus[k];
-              this.menuMap[menu.menuCode] = menuCategoryCode;
+      var secondCategory = this.menus.backendModuleMap;
+      for(let item in secondCategory){
+          let copyItem="";
+          if(!copyItem){
+            copyItem=item;
+            this.secondCategory=secondCategory[item];
+            if( this.secondCategory.length>0){
+              this.activeCategory = this.secondCategory[0].code;
+              this.getCategory();
             }
           }
-        }
+          return;
       }
+
       // set default lang
       Vue.config.lang = this.lang;
     },mounted(){
@@ -100,14 +105,15 @@
         if(activeMenu==null) {
           activeMenu = this.$route.name;
         }
-        if(this.menus !=null && this.menus.length>0) {
-          if(this.menuMap[activeMenu] == null) {
-            this.activeCategory = this.menus[0].menuCategory.code;
+        if(this.secondCategory !=null && this.secondCategory.length>0) {
+          if(!this.menuMap[activeMenu]) {
+            this.activeCategory = this.secondCategory.menuCategoryList[0].code;
           } else {
-            this.activeCategory = this.menuMap[activeMenu];
+            this.activeCategory =  this.menuMap[activeMenu];
           }
         }
         this.activeMenu = activeMenu;
+        console.log(this.activeMenu )
       }
     },
     methods: {
@@ -121,15 +127,35 @@
           this.$router.push({ name: 'login' });
         }).catch(() => {});
       },chooseCategory(e) {
-        for(var i in this.menus ){
-          if(e.target.innerText == this.$t('app.'+ this.menus[i].menuCategory.code)){
-            this.activeCategory = this.menus[i].menuCategory.code;
+        for(var i in this.secondCategory){
+          if(e.target.dataset.chooseCategory==  this.secondCategory[i].code){
+            this.activeCategory = this.secondCategory[i].code;
           }
         }
       },changeLang(lang) {
         this.$store.dispatch('setLang',lang);
         Vue.config.lang = lang;
         this.$router.push({ name: "home"});
+      },
+      mainCategory(event){
+        this.secondCategory = [];
+        var id = event.target.dataset.backendId;
+        this.secondCategory = this.menus.backendModuleMap[id];
+        this.getCategory();
+      },
+      getCategory(){
+        for (let i = 0; i < this.secondCategory.length; i++) {
+          let secondCategoryList = this.secondCategory[i].menuCategoryList;
+          let secondCategoryCode = this.secondCategory[i].code;
+          for (let j = 0; j < secondCategoryList.length; j++) {
+            for (let k = 0; k < secondCategoryList[j].menuList.length; k++) {
+              let menu = secondCategoryList[j].menuList[k];
+              menu.name=menu.menuCode;
+              this.activeCategory = this.secondCategory[0].code;
+              this.menuMap[menu.menuCode] = secondCategoryCode;
+            }
+          }
+        }
       }
     }
   };
@@ -138,4 +164,16 @@
 
 <style lang="scss">
   @import './styles/_variables.scss';
+  .main_category{
+    display: inline-block;
+    width:100px;
+    height:30px;
+    margin-right:20px;
+    background-color:white;
+    border-radius: 5px;
+    text-align: center;
+    color:#184E7E;
+    line-height: 30px;
+    font-size:16px;
+  }
 </style>
