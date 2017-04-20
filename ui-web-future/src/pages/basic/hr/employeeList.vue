@@ -170,9 +170,6 @@
         util.copyValue(that.$route.query,that.formData);
         that.pageRequest();
     });
-      axios.get('/api/basic/sys/menu/getMenuMap').then((response) =>{
-
-    });
     }
   };
 </script>

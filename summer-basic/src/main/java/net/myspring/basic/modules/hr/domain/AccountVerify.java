@@ -14,7 +14,6 @@ public class AccountVerify extends CompanyEntity<AccountVerify> {
     private String device;
     private String userAgent;
     private Integer version = 0;
-    private String companyId = "1";
 
     public String getPassword() {
         return password;
@@ -54,13 +53,5 @@ public class AccountVerify extends CompanyEntity<AccountVerify> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 }

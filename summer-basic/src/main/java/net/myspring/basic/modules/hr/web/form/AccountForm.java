@@ -37,51 +37,7 @@ public class AccountForm extends DataForm<Account>{
     private String remarks;
     private String positionId;
     private List<PositionDto> positionDtoList= Lists.newArrayList();
-    private Map<Boolean,String> bools= Maps.newHashMap();
-
-    public String getOfficeName() {
-        return officeName;
-    }
-
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName;
-    }
-
-    public String getLeaderName() {
-        return leaderName;
-    }
-
-    public void setLeaderName(String leaderName) {
-        this.leaderName = leaderName;
-    }
-
-    public List<String> getOfficeListName() {
-        return officeListName;
-    }
-
-    public void setOfficeListName(List<String> officeListName) {
-        this.officeListName = officeListName;
-    }
-
-    public Boolean getViewReport() {
-        return viewReport;
-    }
-
-    public List<PositionDto> getPositionDtoList() {
-        return positionDtoList;
-    }
-
-    public void setPositionDtoList(List<PositionDto> positionDtoList) {
-        this.positionDtoList = positionDtoList;
-    }
-
-    public Map<Boolean, String> getBools() {
-        return bools;
-    }
-
-    public void setBools(Map<Boolean, String> bools) {
-        this.bools = bools;
-    }
+    private Map<Boolean,String> boolMap= Maps.newHashMap();
 
     public String getPassword() {
         return password;
@@ -97,6 +53,14 @@ public class AccountForm extends DataForm<Account>{
 
     public void setOfficeIdList(List<String> officeIdList) {
         this.officeIdList = officeIdList;
+    }
+
+    public List<String> getOfficeListName() {
+        return officeListName;
+    }
+
+    public void setOfficeListName(List<String> officeListName) {
+        this.officeListName = officeListName;
     }
 
     public String getType() {
@@ -115,6 +79,14 @@ public class AccountForm extends DataForm<Account>{
         this.employeeId = employeeId;
     }
 
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
     public String getLoginName() {
         return loginName;
     }
@@ -131,6 +103,14 @@ public class AccountForm extends DataForm<Account>{
         this.officeId = officeId;
     }
 
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
+
     public String getLeaderId() {
         return leaderId;
     }
@@ -139,7 +119,15 @@ public class AccountForm extends DataForm<Account>{
         this.leaderId = leaderId;
     }
 
-    public Boolean isViewReport() {
+    public String getLeaderName() {
+        return leaderName;
+    }
+
+    public void setLeaderName(String leaderName) {
+        this.leaderName = leaderName;
+    }
+
+    public Boolean getViewReport() {
         return viewReport;
     }
 
@@ -163,10 +151,12 @@ public class AccountForm extends DataForm<Account>{
         this.outPassword = outPassword;
     }
 
+    @Override
     public String getRemarks() {
         return remarks;
     }
 
+    @Override
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
@@ -179,11 +169,19 @@ public class AccountForm extends DataForm<Account>{
         this.positionId = positionId;
     }
 
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
+    public List<PositionDto> getPositionDtoList() {
+        return positionDtoList;
     }
 
-    public String getEmployeeName() {
-        return employeeName;
+    public void setPositionDtoList(List<PositionDto> positionDtoList) {
+        this.positionDtoList = positionDtoList;
+    }
+
+    public Map<Boolean, String> getBoolMap() {
+        return boolMap;
+    }
+
+    public void setBoolMap(Map<Boolean, String> boolMap) {
+        this.boolMap = boolMap;
     }
 }
