@@ -11,6 +11,7 @@ import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
 import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,9 +45,14 @@ public class AccountChangeService {
         return accountChange;
     }
 
-    public AccountChangeForm findForm(AccountChangeForm accountChangeForm){
-        if(!accountChangeForm.isCreate()){
-            accountChangeForm= accountChangeMapper.findForm(accountChangeForm.getId());
+    public AccountChangeForm findForm(AccountChangeQuery accountChangeQuery){
+        AccountChangeForm accountChangeForm =new AccountChangeForm();
+        if(StringUtils.isNotBlank(accountChangeQuery.getId())||StringUtils.isNotBlank(accountChangeQuery.getAccountId())){
+            accountChangeForm = accountChangeMapper.findForm(accountChangeQuery);
+            if(StringUtils.isNotBlank(accountChangeQuery.getId())){
+                AccountChange accountChange=accountChangeMapper.findOne(accountChangeQuery.getId());
+                accountChangeForm.setType(accountChange.getType());
+            }
             cacheUtils.initCacheInput(accountChangeForm);
         }
         return accountChangeForm;

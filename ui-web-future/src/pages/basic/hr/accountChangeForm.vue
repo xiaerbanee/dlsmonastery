@@ -115,7 +115,7 @@
           axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
             this.accounts=response.data;
             this.remoteLoading = false;
-          })
+        })
         } else {
           this.accounts = [];
         }
@@ -124,56 +124,58 @@
           this.remoteLoading = true;
           axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
             this.offices=response.data;
-            this.remoteLoading = false;
-          })
+          this.remoteLoading = false;
+        })
         } else {
           this.offices = [];
         }
       },getAccount(id){
         if(id){
-          axios.get('/api/basic/hr/account/findOne',{params: {id:id}}).then((response)=>{
-            this.employee = response.data.employee;
-            this.account=response.data;
-            this.accounts = new Array(response.data);
-            this.inputForm.accountId=response.data.id;
-              this.getOldValue();
-          })
+            var type=this.inputForm.type
+          axios.get('/api/basic/hr/accountChange/findData',{params: {accountId:id}}).then((response)=>{
+            this.inputForm=response.data;
+            this.inputForm.type=type
+            if(response.data.accountId!=null){
+              this.accounts=new Array({id:response.data.accountId,loginName:response.data.accountName})
+            }
+            this.getOldValue();
+        })
         }
       },getOldValue(){
-          this.inputForm.newValue = "";
-            if(this.inputForm.type == "手机"){
-              this.inputForm.oldValue = this.inputForm.employee.mobilePhone;
-            }else if(this.inputForm.type == "身份证"){
-              this.inputForm.oldValue = this.inputForm.employee.idcard;
-            }else if(this.inputForm.type == "银行卡号"){
-              this.inputForm.oldValue = this.inputForm.employee.bankNumber;
-            }else if(this.inputForm.type == "底薪"){
-              this.inputForm.oldValue = this.inputForm.employee.salary;
-            }else if(this.inputForm.type == "部门"){
-              this.inputForm.oldValue = this.inputForm.officeName;
-            }else if(this.inputForm.type == "岗位"){
-              this.inputForm.oldValue = this.inputForm.positionName;
-            }else if(this.inputForm.type == "上级"){
-              this.inputForm.oldValue = this.inputForm.leaderName;
-            } else if(this.inputForm.type == "转正"){
-              this.inputForm.oldValue = this.inputForm.employee.regularDate ;
-            }else if(this.inputForm.type == "入职"){
-              this.inputForm.oldValue = this.inputForm.employee.entryDate;
-            }else if(this.inputForm.type == "离职"){
-              this.inputForm.oldValue = this.inputForm.employee.leaveDate;
-            }
+        this.inputForm.newValue = "";
+        if(this.inputForm.type == "手机"){
+          this.inputForm.oldValue = this.inputForm.employee.mobilePhone;
+        }else if(this.inputForm.type == "身份证"){
+          this.inputForm.oldValue = this.inputForm.employee.idcard;
+        }else if(this.inputForm.type == "银行卡号"){
+          this.inputForm.oldValue = this.inputForm.employee.bankNumber;
+        }else if(this.inputForm.type == "底薪"){
+          this.inputForm.oldValue = this.inputForm.employee.salary;
+        }else if(this.inputForm.type == "部门"){
+          this.inputForm.oldValue = this.inputForm.officeName;
+        }else if(this.inputForm.type == "岗位"){
+          this.inputForm.oldValue = this.inputForm.positionName;
+        }else if(this.inputForm.type == "上级"){
+          this.inputForm.oldValue = this.inputForm.leaderName;
+        } else if(this.inputForm.type == "转正"){
+          this.inputForm.oldValue = this.inputForm.employee.regularDate ;
+        }else if(this.inputForm.type == "入职"){
+          this.inputForm.oldValue = this.inputForm.employee.entryDate;
+        }else if(this.inputForm.type == "离职"){
+          this.inputForm.oldValue = this.inputForm.employee.leaveDate;
+        }
       }
     },created(){
       if(!this.type){
         this.inputForm.type=this.$route.query.type;
         this.getAccount(this.$route.query.accountId);
       }
-      axios.get('/api/basic/hr/accountChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm=response.data;
-          if(response.data.accountId!=null){
-            this.accounts=new Array({id:response.data.accountId,loginName:response.data.accountName})
-          }
-      })
+      axios.get('/api/basic/hr/accountChange/findData',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm=response.data;
+        if(response.data.accountId!=null){
+          this.accounts=new Array({id:response.data.accountId,loginName:response.data.accountName})
+        }
+    })
     }
   }
 </script>

@@ -17,6 +17,6 @@ public interface AccountChangeMapper extends MyMapper<AccountChange,String> {
 
     Page<AccountChangeDto> findPage(Pageable pageable, @Param("p")AccountChangeQuery accountChangeQuery);
 
-    AccountChangeForm findForm(String id);
+    AccountChangeForm findForm(@Param("p")AccountChangeQuery accountChangeQuery);
 
 }
