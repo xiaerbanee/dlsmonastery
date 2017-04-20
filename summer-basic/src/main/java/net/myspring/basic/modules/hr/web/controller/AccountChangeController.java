@@ -10,13 +10,19 @@ import net.myspring.basic.modules.hr.service.OfficeService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
+import net.myspring.basic.modules.sys.domain.ProcessType;
+import net.myspring.basic.modules.sys.service.ProcessTypeService;
+import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -29,6 +35,8 @@ public class AccountChangeController {
     private OfficeService officeService;
     @Autowired
     private PositionService positionService;
+    @Autowired
+    private ProcessTypeService processTypeService;
 
     @RequestMapping(value = "audit", method = RequestMethod.GET)
     public String audit(AccountChangeForm accountChangeForm,boolean pass,String comment) {
@@ -48,9 +56,9 @@ public class AccountChangeController {
         return accountChangeQuery;
     }
 
-    @RequestMapping(value = "findOne")
-    public AccountChangeForm findOne(AccountChangeForm accountChangeForm){
-        accountChangeForm=accountChangeService.findForm(accountChangeForm);
+    @RequestMapping(value = "findData")
+    public AccountChangeForm findOne(AccountChangeQuery accountChangeQuery){
+        AccountChangeForm accountChangeForm=accountChangeService.findForm(accountChangeQuery);
         accountChangeForm.setTypeList(AccountChangeTypeEnum.getList());
         accountChangeForm.setPositionList(positionService.findAll());
         return accountChangeForm;

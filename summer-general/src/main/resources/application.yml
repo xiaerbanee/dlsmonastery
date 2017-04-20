@@ -1,8 +1,8 @@
 spring:
   application:
-    name: global-cloud
+    name: summer-general
   datasource:
-    url: jdbc:mysql://168.192.1.243:3306/db_summer_cloud
+    url: jdbc:mysql://168.192.1.243:3306/db_summer_general
     username: root
     password: bbk@123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -22,7 +22,12 @@ eureka:
     prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://168.192.1.20:1000/eureka/
+      defaultZone: http://localhost:1000/eureka/
+
+mongo:
+  name:  mongodb
+  host: 168.192.1.88
+  port: 1600
 
 security:
   oauth2:

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: future-business
+    name: ws-future
   datasource:
     url: jdbc:mysql://168.192.1.243:3306/db_oppo_test
     username: root

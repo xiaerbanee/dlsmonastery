@@ -16,8 +16,9 @@ zuul:
       path: /api/uaa/**
       stripPrefix: true
     summer-basic: /api/basic/**
-    future-business: /api/future/business/**
-    future-report: /api/future/report/**
+    summer-general: /api/general/**
+    ws-future: /api/ws/future/**
+    ws-dealer: /api/ws/dealer/**
     global-tool: /api/global/tool/**
   add-proxy-headers: true
 

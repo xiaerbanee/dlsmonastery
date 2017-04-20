@@ -20,7 +20,7 @@
     </settings>
     <typeAliases>
         <package name="net.myspring.general.modules.sys.domain"/>
-        <package name="net.myspring.general.modules.kingdee.domain"/>
+        <package name="net.myspring.general.modules.sys.dto"/>
     </typeAliases>
     <typeHandlers>
         <typeHandler handler="org.apache.ibatis.type.InstantTypeHandler" />
