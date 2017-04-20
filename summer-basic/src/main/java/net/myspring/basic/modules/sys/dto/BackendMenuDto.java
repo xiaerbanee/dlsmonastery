@@ -13,15 +13,15 @@ import java.util.Map;
  */
 public class BackendMenuDto {
 
-    private Backend backend;
+    private List<Backend> backendList;
     private Map<String,List<BackendModule>> backendModuleMap= Maps.newHashMap();
 
-    public Backend getBackend() {
-        return backend;
+    public List<Backend> getBackendList() {
+        return backendList;
     }
 
-    public void setBackend(Backend backend) {
-        this.backend = backend;
+    public void setBackendList(List<Backend> backendList) {
+        this.backendList = backendList;
     }
 
     public Map<String, List<BackendModule>> getBackendModuleMap() {

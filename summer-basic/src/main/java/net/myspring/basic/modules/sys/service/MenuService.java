@@ -241,19 +241,17 @@ public class MenuService {
         return menu;
     }
 
-    public List<BackendMenuDto> getMenuMap(String accountId) {
-        List<BackendMenuDto> backendMenuDtoList = Lists.newArrayList();
+    public BackendMenuDto getMenuMap(String accountId) {
+        BackendMenuDto backendMenuDto=new BackendMenuDto();
         Account account = accountManager.findOne(accountId);
         Map<Backend, List<Menu>> backendMenuMap =getMenusMap(account);
+        backendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
+        Map<String,List<BackendModule>> backendModuleMap= Maps.newHashMap();
         for(Backend backend:backendMenuMap.keySet()){
-            BackendMenuDto backendMenuDto=new BackendMenuDto();
-            backendMenuDto.setBackend(backend);
-            Map<String,List<BackendModule>> backendModuleMap= Maps.newHashMap();
             backendModuleMap.put(backend.getId(),backend.getBackendModuleList());
-            backendMenuDto.setBackendModuleMap(backendModuleMap);
-            backendMenuDtoList.add(backendMenuDto);
         }
-        return backendMenuDtoList;
+        backendMenuDto.setBackendModuleMap(backendModuleMap);
+        return backendMenuDto;
     }
 
     public List<Map<String, Object>> findMobileMenuMap(String accountId) {

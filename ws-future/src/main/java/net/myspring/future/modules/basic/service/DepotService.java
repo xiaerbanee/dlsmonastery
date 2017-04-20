@@ -1,48 +1,33 @@
 package net.myspring.future.modules.basic.service;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import net.myspring.future.common.enums.BoolEnum;
+import net.myspring.future.common.enums.DepotTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.mapper.*;
 import net.myspring.future.modules.basic.web.Query.DepotQuery;
-import net.myspring.future.modules.crm.model.DepotInventoryModel;
-import net.myspring.future.modules.crm.model.ReceivableReportForDetail;
-import net.myspring.future.modules.crm.model.ReceivableReportForSummary;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
-import net.myspring.future.modules.layout.mapper.ShopAttributeMapper;
 import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.excel.SimpleExcelBook;
-import net.myspring.util.excel.SimpleExcelColumn;
-import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.time.LocalDateUtils;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 @Transactional
 public class DepotService {
     @Autowired
     private DepotMapper depotMapper;
-    @Autowired
-    private ShopAttributeMapper shopAttributeMapper;
     @Autowired
     private PricesystemMapper pricesystemMapper;
     @Autowired
@@ -53,6 +38,7 @@ public class DepotService {
     private ExpressCompanyMapper expressCompanyMapper;
     @Autowired
     private ShopDepositMapper shopDepositMapper;
+
 
     public DepotDto findOne(String id) {
         Depot depot = depotMapper.findOne(id);
@@ -70,12 +56,33 @@ public class DepotService {
             xxbzjMap = CollectionUtil.extractToMap(xxbzjList, "shopId");
             scbzjMap = CollectionUtil.extractToMap(scbzjList, "shopId");
         }
+        Map<Integer, String> map = DepotTypeEnum.getMap();
         for (DepotDto depotDto : page.getContent()) {
             depotDto.getDepositMap().put("xxbzj", xxbzjMap.get(depotDto.getId()) == null ? BigDecimal.ZERO : xxbzjMap.get(depotDto.getId()).getAmount());
             depotDto.getDepositMap().put("scbzj", scbzjMap.get(depotDto.getId()) == null ? BigDecimal.ZERO : scbzjMap.get(depotDto.getId()).getAmount());
+            if (depotDto != null && depotDto.getType() != null) {
+                depotDto.setTypeLabel(map.get(depotDto.getType()));
+            }
         }
         return page;
     }
 
-    
+    public DepotQuery getQueryProperty(DepotQuery depotQuery) {
+        depotQuery.setTypeList(DepotTypeEnum.getMap());
+
+//        map.put("areas", officeMapper.findByType("100"));
+//        map.put("areaTypes", CacheUtils.findDictMapByCategory(DictMapCategoryEnum.门店_地区属性.name()));
+        depotQuery.setPricesystemList(pricesystemMapper.findAll());
+//        map.put("specialityStoreTypes", CacheUtils.findDictMapByCategory(DictMapCategoryEnum.门店_体验店类型.name()));
+        depotQuery.setChainList(chainMapper.findAll());
+        depotQuery.setAdPricesystemList(adPricesystemMapper.findAll());
+        depotQuery.setExpressCompanyList(expressCompanyMapper.findAll());
+        depotQuery.setBools(BoolEnum.getMap());
+//        searchPropertyMap.put("offices",officeService.findSortList());
+//        String dateStart=DateUtils.formatLocalDate(LocalDate.now().plusDays(-70));
+//        String dateEnd=DateUtils.formatLocalDate(LocalDate.now().plusMonths(1));
+//        String dateRange=dateStart+" - "+dateEnd;
+//        searchPropertyMap.put("dateRange",dateRange);
+        return depotQuery;
+    }
 }

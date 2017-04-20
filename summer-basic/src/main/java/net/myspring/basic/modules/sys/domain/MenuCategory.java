@@ -94,4 +94,6 @@ public class MenuCategory extends CompanyEntity<MenuCategory> {
         this.version = version;
     }
 
+
+
 }

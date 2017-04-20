@@ -17,17 +17,17 @@
               </el-form-item>
               <el-form-item :label="formLabel.type.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.type" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="(value,key) in formProperty.types" :key="key" :label="value" :value="key"></el-option>
+                  <el-option v-for="(value,key) in formData.TypeList" :key="key" :label="value" :value="key"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.areaType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.areaType" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="areaType in formProperty.areaTypes"  :key="areaType.name" :label="areaType.name" :value="areaType.name"></el-option>
-                </el-select>
-              </el-form-item>
+              <!--<el-form-item :label="formLabel.areaType.label" :label-width="formLabelWidth">-->
+                <!--<el-select v-model="formData.areaType" filterable clearable :placeholder="$t('depotList.inputKey')">-->
+                  <!--<el-option v-for="areaType in formData.areaList"  :key="areaType.name" :label="areaType.name" :value="areaType.name"></el-option>-->
+                <!--</el-select>-->
+              <!--</el-form-item>-->
               <el-form-item :label="formLabel.pricesystemId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.pricesystemId" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="pricesystem in formProperty.pricesystems"  :key="pricesystem.name" :label="pricesystem.name" :value="pricesystem.id"></el-option>
+                  <el-option v-for="pricesystem in formData.pricesystemList"  :key="pricesystem.name" :label="pricesystem.name" :value="pricesystem.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.contator.label" :label-width="formLabelWidth">
@@ -40,32 +40,32 @@
             <el-col :span="8">
               <el-form-item :label="formLabel.specialityStore.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.specialityStore" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="(value,key) in formProperty.bools" :key="key"  :label="key | bool2str" :value="value"></el-option>
+                  <el-option v-for="(value,key) in formData.bools" :key="key"  :label="key | bool2str" :value="value"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.specialityStoreType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.specialityStoreType" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="specialityStore in formProperty.specialityStoreTypes" :key="specialityStore.name" :label="specialityStore.name" :value="specialityStore.name"></el-option>
+                  <el-option v-for="specialityStore in formData.specialityStoreTypeList" :key="specialityStore.name" :label="specialityStore.name" :value="specialityStore.name"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.officeId" filterable remote :placeholder="$t('depotList.inputWord')" :clearable=true>
-                  <el-option v-for="office in formProperty.offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-                </el-select>
-              </el-form-item>
+              <!--<el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">-->
+                <!--<el-select v-model="formData.officeId" filterable remote :placeholder="$t('depotList.inputWord')" :clearable=true>-->
+                  <!--<el-option v-for="office in formData.offices" :key="office.id" :label="office.name" :value="office.id"></el-option>-->
+                <!--</el-select>-->
+              <!--</el-form-item>-->
               <el-form-item :label="formLabel.chainId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.chainId" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="chain in formProperty.chains" :key="chain.id" :label="chain.name" :value="chain.id"></el-option>
+                  <el-option v-for="chain in formData.chainList" :key="chain.id" :label="chain.name" :value="chain.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.adPricesystemId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.adPricesystemId" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="adPricesystem in formProperty.adPricesystems" :key="adPricesystem.id" :label="adPricesystem.name" :value="adPricesystem.id"></el-option>
+                  <el-option v-for="adPricesystem in formData.adPricesystemList" :key="adPricesystem.id" :label="adPricesystem.name" :value="adPricesystem.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.expressCompanyId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.expressCompanyId" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="expressCompany in formProperty.expressCompanys" :key="expressCompany.id" :label="expressCompany.name" :value="expressCompany.id"></el-option>
+                  <el-option v-for="expressCompany in formData.expressCompanyList" :key="expressCompany.id" :label="expressCompany.name" :value="expressCompany.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -75,17 +75,17 @@
               </el-form-item>
               <el-form-item :label="formLabel.adShopBsc.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.adShopBsc" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="(value,key) in formProperty.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
+                  <el-option v-for="(value,key) in formData.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.adShop.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.adShop" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="(value,key) in formProperty.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
+                  <el-option v-for="(value,key) in formData.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.isHidden.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.isHidden" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="(value,key) in formProperty.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
+                  <el-option v-for="(value,key) in formData.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -97,16 +97,16 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('depotList.name')" width="130px"></el-table-column>
-        <el-table-column prop="office.name" :label="$t('depotList.officeName')" width="130px"></el-table-column>
-        <el-table-column prop="area.name" :label="$t('depotList.areaName')" ></el-table-column>
+        <el-table-column prop="officeName" :label="$t('depotList.officeName')" width="130px"></el-table-column>
+        <el-table-column prop="areaName" :label="$t('depotList.areaName')" ></el-table-column>
         <el-table-column prop="typeLabel" :label="$t('depotList.typeLabel')" sortable ></el-table-column>
         <el-table-column prop="depositMap.xxbzj" :label="$t('depotList.xxbzj')"></el-table-column>
         <el-table-column prop="depositMap.scbzj" :label="$t('depotList.scbzj')"></el-table-column>
         <el-table-column prop="contator" :label="$t('depotList.contact')"></el-table-column>
         <el-table-column prop="mobilePhone" :label="$t('depotList.mobilePhone')"></el-table-column>
         <el-table-column prop="outGroupName" :label="$t('depotList.outGroupName')"></el-table-column>
-        <el-table-column prop="chain.name" :label="$t('depotList.chainName')"></el-table-column>
-        <el-table-column prop="pricesystem.name" :label="$t('depotList.pricesystemName')"></el-table-column>
+        <el-table-column prop="chainName" :label="$t('depotList.chainName')"></el-table-column>
+        <el-table-column prop="pricesystemName" :label="$t('depotList.pricesystemName')"></el-table-column>
         <el-table-column prop="adShop" :label="$t('depotList.adShop')" >
           <template scope="scope">
             <el-tag :type="scope.row.adShop ? 'primary' : 'danger'">{{scope.row.adShop | bool2str}}</el-tag>
@@ -118,13 +118,13 @@
           </template>
         </el-table-column>
         <el-table-column prop="areaType" :label="$t('depotList.areaType')"></el-table-column>
-        <el-table-column prop="delegateDepot.name" :label="$t('depotList.delegateDepotName')"></el-table-column>
+        <el-table-column prop="delegateDepotName" :label="$t('depotList.delegateDepotName')"></el-table-column>
         <el-table-column prop="townType" :label="$t('depotList.townType')"></el-table-column>
         <el-table-column prop="credit" :label="$t('depotList.credit')"></el-table-column>
         <el-table-column prop="code" :label="$t('depotList.id')"></el-table-column>
         <el-table-column prop="id" :label="$t('depotList.unicode')"></el-table-column>
         <el-table-column prop="outId" :label="$t('depotList.outCode')"></el-table-column>
-        <el-table-column prop="expressCompany.name" :label="$t('depotList.expressCompany')"></el-table-column>
+        <el-table-column prop="expressCompanyName" :label="$t('depotList.expressCompany')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('depotList.remarks')"></el-table-column>
         <el-table-column prop="rebate" :label="$t('depotList.rebate')" >
           <template scope="scope">
@@ -136,9 +136,9 @@
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="created.fullName" :label="$t('depotList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('depotList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('depotList.createdDate')" sortable></el-table-column>
-        <el-table-column prop="lastModified.fullName" :label="$t('depotList.lastModifiedBy')"></el-table-column>
+        <el-table-column prop="lastModifiedByName" :label="$t('depotList.lastModifiedBy')"></el-table-column>
         <el-table-column fixed="right" :label="$t('depotList.operation')" width="140">
           <template scope="scope">
             <div v-for="action in scope.row.actionList" :key="action" class="action">
@@ -159,7 +159,8 @@
         labelData:{
           pricesystem:{label:''}
         },
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:'',
@@ -200,7 +201,6 @@
         },
         offices:[],
         pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -209,23 +209,23 @@
     },
     methods: {
       pageRequest() {
-        this.pageLoading = true;
-        this.formLabel.type.value = this.formProperty.types[this.formData.type];
-        this.formLabel.specialityStore.value = util.bool2str(this.formData.specialityStore);
-        this.formLabel.adShopBsc.value = util.bool2str(this.formData.adShopBsc);
-        this.formLabel.adShop.value =  util.bool2str(this.formData.adShop);
-        this.formLabel.isHidden.value = util.bool2str(this.formData.isHidden);
-
-        this.formLabel.pricesystemId.value = util.getLabel(this.formProperty.pricesystems, this.formData.pricesystemId);
-        this.formLabel.expressCompanyId.value = util.getLabel(this.formProperty.expressCompanys, this.formData.expressCompanyId);
-        this.formLabel.specialityStoreType.value = util.getLabel(this.formProperty.specialityStoreTypes, this.formData.specialityStoreType);
-        this.formLabel.chainId.value = util.getLabel(this.formProperty.chains, this.formData.chainId);
-        this.formLabel.adPricesystemId.value = util.getLabel(this.formProperty.adPricesystems, this.formData.adPricesystemId);
-        this.formLabel.officeId.value = util.getLabel(this.offices, this.formData.officeId);
-
+//        this.pageLoading = true;
+//        this.formLabel.type.value = this.formData.types[this.formData.type];
+//        this.formLabel.specialityStore.value = util.bool2str(this.formData.specialityStore);
+//        this.formLabel.adShopBsc.value = util.bool2str(this.formData.adShopBsc);
+//        this.formLabel.adShop.value =  util.bool2str(this.formData.adShop);
+//        this.formLabel.isHidden.value = util.bool2str(this.formData.isHidden);
+//
+//        this.formLabel.pricesystemId.value = util.getLabel(this.formData.pricesystems, this.formData.pricesystemId);
+//        this.formLabel.expressCompanyId.value = util.getLabel(this.formData.expressCompanys, this.formData.expressCompanyId);
+//        this.formLabel.specialityStoreType.value = util.getLabel(this.formData.specialityStoreTypes, this.formData.specialityStoreType);
+//        this.formLabel.chainId.value = util.getLabel(this.formData.chains, this.formData.chainId);
+//        this.formLabel.adPricesystemId.value = util.getLabel(this.formData.adPricesystems, this.formData.adPricesystemId);
+//        this.formLabel.officeId.value = util.getLabel(this.offices, this.formData.officeId);
 
         util.setQuery("depotList",this.formData);
-        axios.get('/api/future/business/basic/depot',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/future/business/basic/depot',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -256,7 +256,7 @@
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
       axios.get('/api/future/business/basic/depot/getQuery').then((response) =>{
-        this.formProperty=response.data;
+        this.formData = response.data;
         this.pageRequest();
       });
     }
