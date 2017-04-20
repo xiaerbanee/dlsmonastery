@@ -24,6 +24,11 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:1000/eureka/
 
+mongo:
+  name:  mongodb
+  host: 168.192.1.88
+  port: 1600
+
 security:
   oauth2:
     resource:
