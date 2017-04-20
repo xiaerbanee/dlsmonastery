@@ -29,6 +29,7 @@ App({
     },
     //检查用户是否登陆，如果未登陆，自动登陆
     autoLogin: function (cb) {
+
         var that = this;
         if (!that.globalData.weixinCode) {
             that.getCode(function () {
@@ -43,7 +44,7 @@ App({
         var distance = that.getDistance();
         var reflushTokenDustance = wx.getStorageSync('token').expires_in;
         //如果没有登陆
-        if ($util.isNotBlank(token.access_token) || distance <60 * 1000) {
+        if (token==""||$util.isNotBlank(token.access_token) || distance < 60 * 1000) {
             console.log("getToken")
             that.getToken();
         } else if (distance < (reflushTokenDustance / 2) * 1000) {
@@ -95,7 +96,6 @@ App({
             }
         })
     }, getCode(cb) {
-        console.log("getCode")
         var that = this;
         if (!that.globalData.weixinCode) {
             wx.login({

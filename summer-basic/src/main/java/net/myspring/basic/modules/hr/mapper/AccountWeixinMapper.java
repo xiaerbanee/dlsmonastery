@@ -10,8 +10,12 @@ import java.util.List;
  * Created by liuj on 2017/3/19.
  */
 @Mapper
-public interface AccountWeixinMapper extends MyMapper<AccountWeixin,String> {
+public interface AccountWeixinMapper  {
 
     AccountWeixin findByAccountId(String accountId);
+
+    int save(AccountWeixin accountWeixinDto);
+
+    int update(AccountWeixin accountWeixinDto);
 
 }
