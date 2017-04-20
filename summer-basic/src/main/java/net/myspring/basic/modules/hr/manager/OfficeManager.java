@@ -55,7 +55,6 @@ public class OfficeManager {
         return  officeMapper.findOne(officeForm.getId());
     }
 
-    @Cacheable(value = "accountOffices", key = "#p0.id")
     public List<String> officeFilter(Account account){
         List<String> officeIdList= Lists.newArrayList();
         AccountDto accountDto= BeanUtil.map(account,AccountDto.class);

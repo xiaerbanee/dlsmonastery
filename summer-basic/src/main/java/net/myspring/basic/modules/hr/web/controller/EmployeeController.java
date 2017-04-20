@@ -50,9 +50,8 @@ public class EmployeeController {
 
     @RequestMapping(value = "save")
     public RestResponse save(EmployeeForm employeeForm) {
-        employeeService.save(employeeForm);
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
-        restResponse.getExtra().put("employeeId",employeeForm.getId());
+        restResponse.getExtra().put("employeeId",employeeService.save(employeeForm).getId());
         return restResponse;
     }
 

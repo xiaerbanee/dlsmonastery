@@ -84,7 +84,7 @@ public class AccountController {
     public AccountForm findOne(AccountForm accountForm) {
         accountForm = accountService.findForm(accountForm);
         accountForm.setPositionDtoList(positionService.findAll());
-        accountForm.setBools( BoolEnum.getMap());
+        accountForm.setBoolMap( BoolEnum.getMap());
         return accountForm;
     }
 
@@ -134,6 +134,7 @@ public class AccountController {
     public Map<String, Object> home() {
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccount();
+        cacheUtils.initCacheInput(accountDto);
         LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
         List<DutyDto> dutyList = dutyService.findByAuditable(accountDto.getId(), AuditTypeEnum.APPLY.getValue(), lastMonth);
         List<AccountTaskDto> accountTasks = accountTaskService.findByPositionId(accountDto.getPositionId(), accountService.findOne(SecurityUtils.getAccountId()));

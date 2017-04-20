@@ -10,17 +10,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name="hr_account_weixin")
 public class AccountWeixin extends CompanyEntity<AccountWeixin> {
-    private String companyId;
     private String accountId;
     private String openId;
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
 
     public String getAccountId() {
         return accountId;

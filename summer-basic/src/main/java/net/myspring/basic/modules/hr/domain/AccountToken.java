@@ -16,7 +16,6 @@ public class AccountToken extends CompanyEntity<AccountToken> {
     private String device;
     private String userAgent;
     private Integer version = 0;
-    private String companyId = "1";
     private LocalDate accessDate;
 
     public String getToken() {
@@ -57,14 +56,6 @@ public class AccountToken extends CompanyEntity<AccountToken> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 
     public LocalDate getAccessDate() {
