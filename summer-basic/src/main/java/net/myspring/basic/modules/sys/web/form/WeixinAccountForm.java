@@ -1,20 +1,12 @@
-package net.myspring.uaa.web.form;
+package net.myspring.basic.modules.sys.web.form;
 
 /**
- * Created by zhucc on 2017/4/12.
+ * Created by wangzm on 2017/4/20.
  */
-public class AccountForm  {
+public class WeixinAccountForm {
     private String code;
     private String loginName;
     private String password;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getPassword() {
         return password;
@@ -22,6 +14,14 @@ public class AccountForm  {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getLoginName() {

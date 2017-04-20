@@ -17,7 +17,4 @@ public interface AccountWeixinDtoMapper  {
 
     AccountWeixinDto findByAccountId(String accountId);
 
-    int save(AccountWeixinDto accountWeixinDto);
-
-    int update(AccountWeixinDto accountWeixinDto);
 }

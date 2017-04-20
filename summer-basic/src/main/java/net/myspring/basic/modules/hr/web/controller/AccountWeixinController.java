@@ -12,6 +12,7 @@ import net.myspring.basic.modules.hr.service.AccountWeixinService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.basic.modules.sys.web.form.WeixinAccountForm;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -41,14 +42,13 @@ public class AccountWeixinController {
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping(value = "findOne")
-    public AccountWeixinDto findOne(String id){
-        AccountWeixinDto accountWeixinDto = accountWeixinService.findOne(id);
-        return accountWeixinDto;
-    }
-
     @RequestMapping(value = "findByAccountId")
     public AccountWeixinDto findByAccountId(String accountId) {
         return accountWeixinService.findByAccountId(accountId);
+    }
+
+    @RequestMapping(value = "bind")
+    public RestResponse accountBind(WeixinAccountForm weixinAccountForm) {
+        return accountWeixinService.bind(weixinAccountForm);
     }
 }

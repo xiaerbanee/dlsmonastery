@@ -40,8 +40,7 @@ public class SecurityUtils {
     }
 
     private  static Map<String, Object> getAdditionalInformation() {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) securityContext.getAuthentication().getDetails();
+        final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
         Jwt jwt = JwtHelper.decode(details.getTokenValue());
         Map<String,Object> map = ObjectMapperUtils.readValue(jwt.getClaims(),Map.class);
         return map;
