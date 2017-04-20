@@ -23,6 +23,8 @@ public class AccountChangeForm extends DataForm<AccountChange> {
 
     private String type;
     private String accountId;
+    @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
+    private String accountName;
     private String officeId;
     private String positionId;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
@@ -34,8 +36,34 @@ public class AccountChangeForm extends DataForm<AccountChange> {
     private String leaderId;
     private Employee employee;
     private String remarks;
+    private String oldValue;
+    private String newValue;
     private List<String> typeList= Lists.newArrayList();
     private List<PositionDto> positionList=Lists.newArrayList();
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public String getOldValue() {
+        return oldValue;
+    }
+
+    public void setOldValue(String oldValue) {
+        this.oldValue = oldValue;
+    }
+
+    public String getNewValue() {
+        return newValue;
+    }
+
+    public void setNewValue(String newValue) {
+        this.newValue = newValue;
+    }
 
     public String getOfficeName() {
         return officeName;
