@@ -9,6 +9,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +26,7 @@ public class FolderController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<FolderDto> list(HttpServletRequest request){
+        Object object = SecurityContextHolder.getContext();
         List<FolderDto> list = folderService.findAll(SecurityUtils.getAccountId());
         return list;
     }
