@@ -298,17 +298,17 @@ public class MenuService {
         Map<Backend, List<Menu>> backendMenuMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(menuList)) {
             Map<String, List<Menu>> menuMap = CollectionUtil.extractToMapList(menuList, "menuCategoryId");
-            List<MenuCategory> menuCategoryList = menuCategoryMapper.findByIds(menuMap.keySet());
+            List<MenuCategory> menuCategoryList = menuCategoryMapper.findByIds(Lists.newArrayList(menuMap.keySet()));
             for (MenuCategory menuCategory : menuCategoryList) {
                 menuCategory.setMenuList(menuMap.get(menuCategory.getId()));
             }
             Map<String, List<MenuCategory>> menuCategoryMap = CollectionUtil.extractToMapList(menuCategoryList, "backendModuleId");
-            List<BackendModule> backendModuleList = backendModuleMapper.findByIds(menuCategoryMap.keySet());
+            List<BackendModule> backendModuleList = backendModuleMapper.findByIds(Lists.newArrayList(menuCategoryMap.keySet()));
             for (BackendModule backendModule : backendModuleList) {
                 backendModule.setMenuCategoryList(menuCategoryMap.get(backendModule.getId()));
             }
             Map<String, List<BackendModule>> backendModuleMap = CollectionUtil.extractToMapList(backendModuleList, "backendId");
-            List<Backend> backendList = backendMapper.findByIds(backendModuleMap.keySet());
+            List<Backend> backendList = backendMapper.findByIds(Lists.newArrayList(backendModuleMap.keySet()));
             for (Backend backend : backendList) {
                 backend.setBackendModuleList(backendModuleMap.get(backend.getId()));
                 List<Menu> menus = Lists.newArrayList();
@@ -317,7 +317,7 @@ public class MenuService {
                         menus.addAll(menuCategory.getMenuList());
                     }
                 }
-                backendMenuMap.put(backend, menuList);
+                backendMenuMap.put(backend, menus);
             }
         }
         return backendMenuMap;
