@@ -15,30 +15,6 @@ public class FolderFileDto extends DataDto<FolderFile> {
     private Integer size;
     private String physicalName;
     private String name;
-    private Folder folder;
-
-    @CacheInput(inputKey = "folders",inputInstance = "folderId",outputInstance = "name")
-    private String folderName;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getExtendType() {
-        if(StringUtils.isNotBlank(getName())){
-            return getName().substring(getName().lastIndexOf(".") + 1).toLowerCase();
-        }
-        return "";
-    }
-
-    public Boolean isImage() {
-        String extend = getExtendType();
-        return "jpg".equals(extend) || "jpeg".equals(extend) || "gif".equals(extend) || "png".equals(extend) || "bmp".equals(extend);
-    }
 
     public String getFolderId() {
         return folderId;
@@ -72,19 +48,11 @@ public class FolderFileDto extends DataDto<FolderFile> {
         this.physicalName = physicalName;
     }
 
-    public String getFolderName() {
-        return folderName;
+    public String getName() {
+        return name;
     }
 
-    public void setFolderName(String folderName) {
-        this.folderName = folderName;
-    }
-
-    public Folder getFolder() {
-        return folder;
-    }
-
-    public void setFolder(Folder folder) {
-        this.folder = folder;
+    public void setName(String name) {
+        this.name = name;
     }
 }
