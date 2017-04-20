@@ -15,7 +15,7 @@ public interface ShopDepositMapper extends MyMapper<ShopDeposit,String> {
 
     Page<ShopDeposit> findPage(Pageable pageable, @Param("p") Map<String, Object> map);
 
-    List<ShopDeposit> findByTypeAndShops(@Param("type") String type, @Param("shopIds") List<String> shopIds);
+    List<ShopDeposit> findByTypeAndShopIds(@Param("type") String type, @Param("shopIds") List<String> shopIds);
 
     List<ShopDeposit> findByTypeAndShopId(@Param("type") String type, @Param("shopId") String shopId, @Param("size") Integer size);
 }

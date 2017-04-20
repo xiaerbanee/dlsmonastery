@@ -107,7 +107,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/crm/product/save', qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/future/business/basic/product/save', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -125,18 +125,18 @@
       },remoteProductType(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/crm/productType/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/future/business/basic/productType/search',{params:{name:query}}).then((response)=>{
             this.productTypes = response.data;
             this.remoteLoading = false;
           })
         }
       }
     },created(){
-       axios.get('/api/crm/product/getFormProperty').then((response)=>{
+       axios.get('/api/future/business/basic/product/getFormProperty').then((response)=>{
         this.formProperty = response.data;
       });
       if(!this.isCreate){
-        axios.get('/api/crm/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/future/business/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
           this.inputForm.hasIme = response.data.hasIme?1:0;
           this.inputForm.allowOrder = response.data.allowOrder?1:0;

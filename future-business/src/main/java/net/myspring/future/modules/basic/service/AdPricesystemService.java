@@ -2,11 +2,15 @@ package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.web.Query.AdPricesystemQuery;
+import net.myspring.future.modules.basic.web.form.AdPricesystemForm;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,54 +27,54 @@ public class AdPricesystemService {
     @Autowired
     private DepotMapper depotMapper;
 
-//    public AdPricesystemDto findOne(String id){
-//        AdPricesystem adPricesystem = adPricesystemMapper.findOne(id);
-//        AdPricesystemDto adPricesystemDto = BeanUtil.map(adPricesystem,AdPricesystemDto.class)
-//        initDomain(Lists.newArrayList(adPricesystemDto));
-//        return adPricesystemDto;
-//    }
-//
-//    public Page<AdPricesystem> findPage(Pageable pageable, Map<String, Object> map) {
-//        Page<AdPricesystem> page = adPricesystemMapper.findPage(pageable, map);
-//        initDomain(page.getContent());
-//        return page;
-//    }
-//
-//    public List<AdPricesystem> findFilter( Map<String, Object> map){
-//        List<AdPricesystem> adPricesystemList = adPricesystemMapper.findFilter(map);
-//        initDomain(adPricesystemList);
-//        return adPricesystemList;
-//    }
-//
-//    @Transactional
-//    public void save(AdPricesystem adPricesystem){
-//        Boolean isCreated =adPricesystem.isCreate();
-//        if(isCreated){
-//            adPricesystemMapper.save(adPricesystem);
-//        }else{
-//            adPricesystemMapper.update(adPricesystem);
-//        }
-//        List<Depot> depotList = depotMapper.findByIds(adPricesystem.getPageIds());
-//        for(Depot depot:depotList){
-//            if(!adPricesystem.getNewDepotIds().contains(depot.getId())){
-//                depot.setAdPricesystemId(null);
-//                depotMapper.update(depot);
-//            }else {
-//                if(!adPricesystem.getId().equals(depot.getAdPricesystemId())){
-//                    depot.setAdPricesystemId(adPricesystem.getId());
-//                    depotMapper.update(depot);
-//                }
-//            }
-//        }
-//    }
-//
-//    public void delete(AdPricesystem adPricesystem){
-//        adPricesystem.setEnabled(false);
-//        adPricesystemMapper.update(adPricesystem);
-//    }
-//
-//
-//    private void initDomain(List<AdPricesystemDto> adPricesystemList){
+    public AdPricesystemDto findOne(String id){
+        AdPricesystem adPricesystem = adPricesystemMapper.findOne(id);
+        AdPricesystemDto adPricesystemDto = BeanUtil.map(adPricesystem,AdPricesystemDto.class);
+        initDomain(Lists.newArrayList(adPricesystemDto));
+        return adPricesystemDto;
+    }
+
+    public Page<AdPricesystemDto> findPage(Pageable pageable, AdPricesystemQuery adPricesystemQuery) {
+        Page<AdPricesystemDto> page = adPricesystemMapper.findPage(pageable, adPricesystemQuery);
+        initDomain(page.getContent());
+        return page;
+    }
+
+    public List<AdPricesystemDto> findFilter(AdPricesystemQuery adPricesystemQuery){
+        List<AdPricesystem> adPricesystemList = adPricesystemMapper.findFilter(adPricesystemQuery);
+        List<AdPricesystemDto> adPricesystemDtoList = BeanUtil.map(adPricesystemList,AdPricesystemDto.class);
+        initDomain(adPricesystemDtoList);
+        return adPricesystemDtoList;
+    }
+
+    public void save(AdPricesystemForm adPricesystemForm){
+        AdPricesystem adPricesystem;
+        if(adPricesystemForm.isCreate()){
+            adPricesystem = BeanUtil.map(adPricesystemForm,AdPricesystem.class);
+            adPricesystemMapper.save(adPricesystem);
+        }else{
+            adPricesystemMapper.updateForm(adPricesystemForm);
+        }
+        List<Depot> depotList = depotMapper.findByIds(adPricesystemForm.getPageIds());
+        for(Depot depot : depotList){
+            if(!adPricesystemForm.getNewDepotIds().contains(depot.getId())){
+                depot.setAdPricesystemId(null);
+                depotMapper.update(depot);
+            }else {
+                if(!adPricesystemForm.getId().equals(depot.getAdPricesystemId())){
+                    depot.setAdPricesystemId(adPricesystemForm.getId());
+                    depotMapper.update(depot);
+                }
+            }
+        }
+    }
+
+    public void delete(AdPricesystemForm adPricesystemForm){
+        adPricesystemForm.setEnabled(false);
+        adPricesystemMapper.updateForm(adPricesystemForm);
+    }
+
+    private void initDomain(List<AdPricesystemDto> adPricesystemList){
 //        DomainUtils.initAuditing(adPricesystemList);
-//    }
+    }
 }

@@ -72,7 +72,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("bankList",this.formData);
-        axios.get('/api/crm/bank',{params:this.formData}).then((response) => {
+        axios.get('/api/future/business/basic/bank',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -88,7 +88,7 @@
         this.formVisible = false;
         this.pageRequest();
       },synData(){
-        axios.get('/api/crm/bank/syn').then((response) =>{
+        axios.get('/api/future/business/basic/bank/syn').then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })
