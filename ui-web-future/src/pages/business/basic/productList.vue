@@ -140,7 +140,7 @@
         this.formLabel.allowOrder.value =  util.bool2str(this.formData.allowOrder);
         this.formLabel.productType.value = util.getLabel(this.formProperty.productTypes, this.formData.productType);
         util.setQuery("productList",this.formData);
-        axios.get('/api/crm/product',{params:this.formData}).then((response) => {
+        axios.get('/api/future/business/basic/product',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -158,7 +158,7 @@
       },productEdit(){
         this.$router.push({ name: 'productAdEdit'})
       },synData(){
-        axios.get('/api/crm/product/syn').then((response) =>{
+        axios.get('/api/future/business/basic/product/syn').then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })
@@ -169,7 +169,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/crm/product/getQuery').then((response) =>{
+      axios.get('/api/future/business/basic/product/getQuery').then((response) =>{
         this.formProperty = response.data;
         this.pageRequest();
       });

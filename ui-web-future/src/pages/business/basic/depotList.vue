@@ -178,7 +178,8 @@
           adShopBsc:'',
           adShop:'',
           isHidden:''
-        },formLabel:{
+        },
+        formLabel:{
           name:{label:this.$t('depotList.name')},
           type:{label:this.$t('depotList.typeLabel'),value:""},
           areaType:{label:this.$t('depotList.areaType')},
@@ -224,7 +225,7 @@
 
 
         util.setQuery("depotList",this.formData);
-        axios.get('/api/crm/depot',{params:this.formData}).then((response) => {
+        axios.get('/api/future/business/basic/depot',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -242,7 +243,7 @@
       },itemAdd(){
         this.$router.push({ name: 'depotForm'})
       },synData(){
-        axios.get('/api/crm/depot/syn').then((response) =>{
+        axios.get('/api/future/business/basic/depot/syn').then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })
@@ -254,7 +255,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/crm/depot/getQuery').then((response) =>{
+      axios.get('/api/future/business/basic/depot/getQuery').then((response) =>{
         this.formProperty=response.data;
         this.pageRequest();
       });

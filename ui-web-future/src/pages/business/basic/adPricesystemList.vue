@@ -69,7 +69,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("adPricesystemList",this.formData);
-        axios.get('/api/crm/adPricesystem',{params:this.formData}).then((response) => {
+        axios.get('/api/future/business/basic/adPricesystem',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -90,7 +90,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'adPricesystemForm', query: { id: id }})
         }else if(action=="删除"){
-          axios.get('/api/crm/adPricesystem/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/future/business/basic/adPricesystem/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

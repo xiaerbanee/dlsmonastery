@@ -61,7 +61,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("chainList",this.formData);
-        axios.get('/api/crm/chain',{params:this.formData}).then((response) => {
+        axios.get('/api/future/business/basic/chain',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -82,7 +82,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'chainForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/crm/chain/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/future/business/basic/chain/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
             this.pageRequest();
           })
