@@ -34,8 +34,9 @@ public class DepotController {
     }
 
     @RequestMapping(value = "getQuery")
-    public String getQuery(DepotQuery depotQuery) {
-        return null;
+    public DepotQuery getQuery(DepotQuery depotQuery) {
+        depotQuery = depotService.getQueryProperty(depotQuery);
+        return depotQuery;
     }
 
     @RequestMapping(value = "detail")
