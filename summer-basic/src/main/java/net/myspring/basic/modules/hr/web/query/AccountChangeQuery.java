@@ -21,6 +21,24 @@ public class AccountChangeQuery {
     private String officeId;
     private List<String> typeList=Lists.newArrayList();
     private List<Office> areaList=Lists.newArrayList();
+    private String id;
+    private String accountId;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
     public List<String> getTypeList() {
         return typeList;

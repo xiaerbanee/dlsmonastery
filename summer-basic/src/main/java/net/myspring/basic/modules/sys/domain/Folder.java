@@ -13,7 +13,6 @@ import java.util.List;
 public class Folder extends TreeEntity<Folder> {
     private String name;
     private Integer version = 0;
-    private String companyId = "1";
 
     public String getName() {
         return name;
@@ -29,14 +28,6 @@ public class Folder extends TreeEntity<Folder> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 
 }

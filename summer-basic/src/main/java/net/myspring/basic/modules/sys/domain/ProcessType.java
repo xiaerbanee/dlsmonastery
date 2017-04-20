@@ -20,7 +20,6 @@ public class ProcessType extends CompanyEntity<ProcessType> {
     private String viewPermissionId;
     private String createPermissionId;
     private Integer version = 0;
-    private String companyId = "1";
     private Boolean auditFileType;
 
     public String getType() {
@@ -61,14 +60,6 @@ public class ProcessType extends CompanyEntity<ProcessType> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 
     public Boolean getAuditFileType() {

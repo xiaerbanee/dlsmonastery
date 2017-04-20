@@ -118,6 +118,7 @@
             accountForm:{},
             employeeSubmitData:{
               id:'',
+              accountId:"",
               name:'',
               education:'',
               code:'',
@@ -132,7 +133,6 @@
               idcard:'',
               birthday:'',
               sex:"",
-              sexLabel:"",
               originId:'',
               salerName:'',
             },
@@ -141,7 +141,6 @@
               loginName:'',
               employeeId:"",
               officeId:"",
-              depotIdList:"",
               leaderId:'',
               positionId:"",
               type:"主账号",
@@ -171,22 +170,22 @@
       methods:{
         formSubmit(){
           this.submitDisabled = true;
-          var employeeForm = this.$refs["employeeForm"];
+           var employeeForm = this.$refs["employeeForm"];
            var accountForm = this.$refs["accountForm"];
             employeeForm.validate((valid) => {
             if (valid) {
+              this.employeeForm.birthday=util.formatLocalDate(this.employeeForm.birthday)
+              this.employeeForm.entryDate=util.formatLocalDate(this.employeeForm.entryDate)
+              this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
+              this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
               accountForm.validate((accountValid) => {
                 if (accountValid) {
-                    this.employeeForm.birthday=util.formatLocalDate(this.employeeForm.birthday)
-                    this.employeeForm.entryDate=util.formatLocalDate(this.employeeForm.entryDate)
-                    this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
-                    this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
-                    this.employeeForm.sex=this.employeeForm.sexLabel==1?"男":"女"
                     util.copyValue(this.employeeForm,this.employeeSubmitData);
                     axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeSubmitData)).then((response)=> {
                         this.$message("员工"+response.data.message);
                         this.accountForm.employeeId=response.data.extra.employeeId;
                         util.copyValue(this.accountForm,this.accountSubmitData);
+                      console.log(this.accountSubmitData)
                         axios.post('/api/basic/hr/account/save', qs.stringify(this.accountSubmitData)).then((response)=> {
                         this.$message("账户"+response.data.message);
                     });

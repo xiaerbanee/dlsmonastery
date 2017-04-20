@@ -49,4 +49,10 @@ public class EmployeeManager {
         employeeMapper.updateForm(employeeForm);
         return  employeeMapper.findOne(employeeForm.getId());
     }
+
+    @CachePut(value = "employees",key="#p0")
+    public Employee updateAccountId(String employeeId,String accountId){
+        employeeMapper.updateAccountId(employeeId,accountId);
+        return  employeeMapper.findOne(employeeId);
+    }
 }

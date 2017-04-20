@@ -9,10 +9,10 @@
               <el-input v-model="accountForm.loginName" readonly></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.password')" prop="password">
-              <el-input v-model="accountForm.password" placeholder="$t('employeeEditForm.LeaveEmpty')"></el-input>
+              <el-input v-model="accountForm.password" placeholder="$t('employeeEditForm.LeaveEmpty')" type="password"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.confirmPassword')" prop="confirmPassword">
-              <el-input v-model="confirmPassword"></el-input>
+              <el-input v-model="confirmPassword" type="password"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.bankName')" prop="bankName">
               <el-input v-model="employeeForm.bankName"></el-input>
@@ -24,7 +24,7 @@
               <el-input v-model="accountForm.outId"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.outPassword')" prop="outPassword">
-              <el-input  v-model="accountForm.outPassword"></el-input>
+              <el-input  v-model="accountForm.outPassword" type="password"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.remarks')" prop="remarks">
               <el-input  v-model="employeeForm.remarks"></el-input>

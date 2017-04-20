@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.basic.mapper.AdPricesystemMapper">
+
+    <select id="findPage" resultType="AdPricesystemDto">
+        SELECT
+        t1.*
+        FROM
+        crm_ad_pricesystem t1
+        WHERE
+        t1.enabled=1
+        <if test="p.name != null">
+            AND t1.name LIKE CONCAT('%',#{p.name},'%')
+        </if>
+
+    </select>
+
+    <select id="findFilter" resultType="AdPricesystem">
+        SELECT
+        t1.*
+        FROM
+        crm_ad_pricesystem t1
+        WHERE
+        t1.enabled=1
+    </select>
+
+    <select id="findLabels" resultType="AdPricesystem">
+        SELECT t1.id,t1.name
+        FROM crm_ad_pricesystem t1
+        WHERE t1.enabled = 1
+        and t1.id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByName" resultType="AdPricesystem">
+        SELECT t1.*
+        from crm_ad_pricesystem t1
+        where t1.enabled=1
+        and t1.name=#{name}
+    </select>
+
+</mapper>

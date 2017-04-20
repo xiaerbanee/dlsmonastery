@@ -8,7 +8,7 @@ import javax.persistence.Column;
 public class CompanyEntity<T> extends DataEntity<T> {
 
     @Column(updatable = false)
-    private String companyId;
+    private String companyId="1";
 
     public String getCompanyId() {
         return companyId;

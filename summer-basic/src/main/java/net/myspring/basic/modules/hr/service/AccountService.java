@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
+import net.myspring.basic.modules.hr.manager.EmployeeManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
@@ -48,7 +49,7 @@ public class AccountService {
     @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
-    private OfficeMapper officeMapper;
+    private EmployeeManager employeeManager;
 
     @Autowired
     private InitDomainUtils initDomainUtils;
@@ -94,26 +95,28 @@ public class AccountService {
         return accountDtoList;
     }
 
-    public AccountForm save(AccountForm accountForm) {
-        boolean isCreate = StringUtils.isBlank(accountForm.getId());
-        if (isCreate) {
-            accountManager.save(BeanUtil.map(accountForm, Account.class));
+    public Account save(AccountForm accountForm) {
+        Account account;
+        if (accountForm.isCreate()) {
+            accountForm.setPassword(StringUtils.getEncryptPassword(Const.DEFAULT_PASSWORD));
+            account=BeanUtil.map(accountForm, Account.class);
+            account= accountManager.save(account);
         } else {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
                 accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
             } else {
                 accountForm.setPassword(accountManager.findOne(accountForm.getId()).getPassword());
             }
-            accountManager.updateForm(accountForm);
+           account=accountManager.updateForm(accountForm);
         }
         accountMapper.deleteAccountOffice(accountForm.getId());
         if (CollectionUtil.isNotEmpty(accountForm.getOfficeIdList())) {
             accountMapper.saveAccountOffice(accountForm.getId(), accountForm.getOfficeIdList());
         }
         if ("主账号".equals(accountForm.getType())) {
-            employeeMapper.updateAccountId(accountForm.getEmployeeId(), accountForm.getId());
+            employeeManager.updateAccountId(accountForm.getEmployeeId(), account.getId());
         }
-        return accountForm;
+        return account;
     }
 
 
