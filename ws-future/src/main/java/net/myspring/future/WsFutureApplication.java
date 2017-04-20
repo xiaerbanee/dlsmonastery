@@ -8,9 +8,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @SpringBootApplication
 @EnableResourceServer
 @EnableDiscoveryClient
-public class FutureBusinessApplication {
+public class WsFutureApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FutureBusinessApplication.class, args);
+		SpringApplication.run(WsFutureApplication.class, args);
 	}
 }

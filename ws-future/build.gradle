@@ -16,7 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 jar {
-	baseName = 'future-business'
+	baseName = 'ws-future'
 	version = '0.0.1-SNAPSHOT'
 }
 
