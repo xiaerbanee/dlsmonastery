@@ -1,23 +1,16 @@
 package net.myspring.basic.common.utils;
 
 import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.SummerBasicApplication;
 import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.domain.DictMap;
-import net.myspring.basic.modules.sys.manager.DictEnumManager;
 import net.myspring.basic.modules.sys.mapper.DictEnumMapper;
 import net.myspring.basic.modules.sys.mapper.DictMapMapper;
-import net.myspring.basic.modules.sys.service.DistrictService;
 import net.myspring.util.collection.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.core.io.DefaultResourceLoader;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class Global {

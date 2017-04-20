@@ -5,12 +5,10 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.AccountTask;
 import net.myspring.basic.modules.hr.domain.OfficeChange;
-import net.myspring.basic.modules.hr.dto.OfficeChangeDto;
 import net.myspring.basic.modules.hr.mapper.AccountTaskMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeChangeMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.OfficeChangeForm;
-import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +20,6 @@ public class OfficeChangeService {
 
     @Autowired
     private OfficeChangeMapper officeChangeMapper;
-    @Autowired
-    private ProcessFlowMapper processFlowMapper;
     @Autowired
     private OfficeMapper officeMapper;
     @Autowired

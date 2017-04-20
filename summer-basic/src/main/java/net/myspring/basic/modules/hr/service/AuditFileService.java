@@ -11,7 +11,6 @@ import net.myspring.basic.modules.hr.mapper.AuditFileMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
-import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,8 +24,6 @@ public class AuditFileService {
 
     @Autowired
     private AuditFileMapper auditFileMapper;
-    @Autowired
-    private ProcessFlowMapper processFlowMapper;
     @Autowired
     private AccountTaskMapper accountTaskMapper;
     @Autowired

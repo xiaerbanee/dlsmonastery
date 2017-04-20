@@ -9,8 +9,6 @@ import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.mapper.*;
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
-import net.myspring.basic.modules.sys.mapper.ProcessFlowMapper;
-import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,8 +28,6 @@ public class AccountChangeService {
     private OfficeMapper officeMapper;
     @Autowired
     private AccountTaskMapper accountTaskMapper;
-    @Autowired
-    private ProcessFlowMapper processFlowMapper;
     @Autowired
     private EmployeeMapper employeeMapper;
     @Autowired

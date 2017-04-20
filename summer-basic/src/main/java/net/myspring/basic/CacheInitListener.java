@@ -35,13 +35,9 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
     @Autowired
     private DictEnumMapper dictEnumMapper;
     @Autowired
-    private DistrictMapper districtMapper;
-    @Autowired
     private MenuMapper menuMapper;
     @Autowired
     private MenuCategoryMapper menuCategoryMapper;
-    @Autowired
-    private TownMapper townMapper;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -63,9 +59,7 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
         cacheUtils.initCache("employees",employeeMapper.findAll());
         cacheUtils.initCache("offices",officeMapper.findAll());
         cacheUtils.initCache("dictEnums",dictEnumMapper.findAll());
-        cacheUtils.initCache("districts",districtMapper.findAll());
         cacheUtils.initCache("positions",positionMapper.findAll());
-        cacheUtils.initCache("towns",townMapper.findAll());
         cacheUtils.initCache("menus",menuMapper.findAll());
         cacheUtils.initCache("companys",companyMapper.findAll());
         cacheUtils.initCache("menuCategorys",menuCategoryMapper.findAll());

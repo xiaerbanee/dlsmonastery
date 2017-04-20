@@ -1,23 +1,17 @@
 package net.myspring.basic.modules.hr.web.controller;
 
-import com.google.common.collect.Maps;
 import gui.ava.html.image.generator.HtmlImageGenerator;
 import net.myspring.basic.common.enums.BoolEnum;
 import net.myspring.basic.common.enums.FolderDefaultEnum;
 import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.service.AuditFileService;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.sys.domain.ProcessType;
-import net.myspring.basic.modules.sys.service.FolderService;
-import net.myspring.basic.modules.sys.service.ProcessTypeService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.util.json.ObjectMapperUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +25,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "hr/auditFile")
@@ -39,10 +32,6 @@ public class AuditFileController {
 
     @Autowired
     private AuditFileService auditFileService;
-    @Autowired
-    private ProcessTypeService processTypeService;
-    @Autowired
-    private FolderService folderService;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -57,15 +46,12 @@ public class AuditFileController {
 
     @RequestMapping(value = "getQuery", method = RequestMethod.GET)
     public AuditFileQuery getQuery(AuditFileQuery auditFileQuery) {
-        auditFileQuery.setFolder(folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
-        auditFileQuery.setProcessTypesList( processTypeService.findEnabledAuditFileType());
         return auditFileQuery;
     }
 
 
     @RequestMapping(value = "save")
     public RestResponse save(AuditFileForm auditFileForm, BindingResult result) {
-        ProcessType processType = processTypeService.findOne(auditFileForm.getProcessTypeId());
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
@@ -81,8 +67,8 @@ public class AuditFileController {
     public AuditFileForm detail(AuditFileForm auditFileForm) {
         auditFileForm=auditFileService.findForm(auditFileForm);
         auditFileForm.setBoolMap(BoolEnum.getMap());
-        auditFileForm.setFolder(folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
-        auditFileForm.setProcessTypesList(processTypeService.findEnabledAuditFileType());
+//        auditFileForm.setFolder(folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
+//        auditFileForm.setProcessTypesList(processTypeService.findEnabledAuditFileType());
         return auditFileForm;
     }
 

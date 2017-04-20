@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.general.modules.sys.mapper.ProcessFlowMapper">
+
+    <select id="findByProductTypeAndName" resultType="ProcessFlow">
+        SELECT t.*
+        from sys_process_flow t
+         where t.process_type_id =#{processTypeId}
+         and t.name=#{name}
+    </select>
+
+    <select id="findByProcessType" resultType="ProcessFlow">
+        SELECT t.*
+        from sys_process_flow t
+        where t.process_type_id =#{processTypeId}
+    </select>
+
+</mapper>
