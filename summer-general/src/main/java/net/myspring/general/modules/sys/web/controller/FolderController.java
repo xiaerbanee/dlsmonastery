@@ -12,6 +12,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
@@ -30,8 +31,9 @@ public class FolderController {
 
     @Autowired
     private FolderService folderService;
+
     @Autowired
-    private GridFsTemplate gridFsTemplate;
+    private GridFsTemplate downloadGridFsTemplate;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<FolderDto> list(HttpServletRequest request) throws FileNotFoundException {
@@ -39,8 +41,7 @@ public class FolderController {
         DBObject metaData = new BasicDBObject();
         metaData.put("extra1", "anything 1");
         metaData.put("extra2", "anything 2");
-        GridFSFile gridFSFile = gridFsTemplate.store(inputStream,metaData);
-
+        GridFSFile gridFSFile = downloadGridFsTemplate.store(inputStream,metaData);
         List<FolderDto> list = folderService.findAll(SecurityUtils.getAccountId());
         return list;
     }
