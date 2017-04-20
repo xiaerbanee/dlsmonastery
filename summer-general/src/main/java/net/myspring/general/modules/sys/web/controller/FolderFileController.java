@@ -59,43 +59,14 @@ public class FolderFileController {
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public void download(String id, HttpServletResponse response) {
-        FolderFile folderFile = folderFileService.findOne(id);
-        File file = new File(folderFileService.getUploadPath(folderFile));
-        try {
-            response.setContentType(folderFile.getContentType());
-            response.setHeader("Content-disposition", "attachment; filename=\"" + EncodeUtil.urlEncode(folderFile.getName()) + "\"");
-            FileCopyUtils.copy(FileUtils.readFileToByteArray(file), response.getOutputStream());
-        } catch (IOException e) {
-            throw new ServiceException(e.getMessage());
-        }
     }
 
     @RequestMapping(value = "/preview", method = RequestMethod.GET)
     public void preview(String id, HttpServletResponse response) {
-        FolderFile folderFile = folderFileService.findOne(id);
-        File file  = new File(folderFileService.getPreviewUploadPath(folderFile));
-        if(file !=null) {
-            try {
-                response.setContentType("image/png");
-                FileCopyUtils.copy(FileUtils.readFileToByteArray(file), response.getOutputStream());
-            } catch (IOException e) {
-                logger.info(folderFileService.getPreviewUploadPath(folderFile) + "不存在");
-            }
-        }
     }
 
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public void view(String id, HttpServletResponse response) {
-        FolderFile folderFile = folderFileService.findOne(id);
-        if(folderFile!=null){
-            File file  = new File(folderFileService.getUploadPath(folderFile));
-            try {
-                response.setContentType(folderFile.getContentType());
-                FileCopyUtils.copy(FileUtils.readFileToByteArray(file), response.getOutputStream());
-            } catch (IOException e) {
-                throw new ServiceException(e.getMessage());
-            }
-        }
     }
 
     @RequestMapping(value = "/findByIds")
