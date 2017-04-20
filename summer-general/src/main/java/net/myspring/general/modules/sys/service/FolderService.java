@@ -5,7 +5,6 @@ import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.common.utils.Const;
 import net.myspring.general.modules.sys.domain.Folder;
 import net.myspring.general.modules.sys.dto.FolderDto;
-import net.myspring.general.modules.sys.manager.FolderManager;
 import net.myspring.general.modules.sys.mapper.FolderMapper;
 import net.myspring.general.modules.sys.web.form.FolderForm;
 import net.myspring.util.collection.CollectionUtil;
@@ -21,8 +20,6 @@ import java.util.List;
 @Service
 public class FolderService {
     @Autowired
-    private FolderManager folderManager;
-    @Autowired
     private FolderMapper folderMapper;
     @Autowired
     private CacheUtils cacheUtils;
@@ -32,18 +29,18 @@ public class FolderService {
     }
 
     public Folder findOne(String id){
-        return folderManager.findOne(id);
+        return folderMapper.findOne(id);
     }
 
     public FolderForm findForm(String id){
-        Folder folder = folderManager.findOne(id);
+        Folder folder = folderMapper.findOne(id);
         FolderForm folderForm = BeanUtil.map(folder, FolderForm.class);
         cacheUtils.initCacheInput(folderForm);
         return folderForm;
     }
 
     public void deleteOne(String id){
-        folderManager.deleteById(id);
+        folderMapper.deleteById(id);
     }
 
     @Transactional
@@ -53,7 +50,7 @@ public class FolderService {
             folder = new Folder();
             folder.setName(accountId);
             folder.setParentIds(Const.ROOT_PARENT_IDS);
-            folderManager.save(folder);
+            folderMapper.save(folder);
         }
         return folder;
     }
@@ -72,7 +69,7 @@ public class FolderService {
                     folderForm.setParent(parent);
                     folderForm.setName(p);
                     folderForm.setParentIds(folderForm.getParent().getParentIds() + folderForm.getParent().getId() + ",");
-                    folderManager.save(folder);
+                    folderMapper.save(folder);
                 }
                 parent = folder;
             }
@@ -103,11 +100,11 @@ public class FolderService {
 
     @Transactional
     public Folder save(FolderForm folderForm) {
-        Folder parent = folderManager.findOne(folderForm.getParentId());
+        Folder parent = folderMapper.findOne(folderForm.getParentId());
         String oldParentIds = folderForm.getParentIds();
         folderForm.setParent(parent);
         Folder folder=BeanUtil.map(folderForm,Folder.class);
-        folderManager.save(folder);
+        folderMapper.save(folder);
         List<Folder> list = folderMapper.findByParentIdsLike("%," + folderForm.getId() + ",%");
         for (Folder e : list) {
             e.setParentIds(e.getParentIds().replace(oldParentIds, folderForm.getParentIds()));

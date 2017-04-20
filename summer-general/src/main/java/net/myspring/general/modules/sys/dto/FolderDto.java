@@ -13,28 +13,8 @@ import java.util.List;
 public class FolderDto  extends DataDto<Folder> {
     private String name;
     private String levelName;
-    private String ParentId;
-    private String ParentIds;
-    private boolean locked;
-    private boolean enabled;
-    private List<FolderFile> folderFileList = Lists.newArrayList();
-    private List<String> folderFileIdList = Lists.newArrayList();
-
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+    private String parentId;
+    private String parentIds;
 
     public String getName() {
         return name;
@@ -53,34 +33,18 @@ public class FolderDto  extends DataDto<Folder> {
     }
 
     public String getParentId() {
-        return ParentId;
+        return parentId;
     }
 
     public void setParentId(String parentId) {
-        ParentId = parentId;
+        this.parentId = parentId;
     }
 
     public String getParentIds() {
-        return ParentIds;
+        return parentIds;
     }
 
     public void setParentIds(String parentIds) {
-        ParentIds = parentIds;
-    }
-
-    public List<FolderFile> getFolderFileList() {
-        return folderFileList;
-    }
-
-    public void setFolderFileList(List<FolderFile> folderFileList) {
-        this.folderFileList = folderFileList;
-    }
-
-    public List<String> getFolderFileIdList() {
-        return folderFileIdList;
-    }
-
-    public void setFolderFileIdList(List<String> folderFileIdList) {
-        this.folderFileIdList = folderFileIdList;
+        this.parentIds = parentIds;
     }
 }

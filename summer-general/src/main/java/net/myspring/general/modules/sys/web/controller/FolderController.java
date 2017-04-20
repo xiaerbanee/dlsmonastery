@@ -1,5 +1,8 @@
 package net.myspring.general.modules.sys.web.controller;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.gridfs.GridFSFile;
 import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.general.modules.sys.domain.Folder;
 import net.myspring.general.modules.sys.dto.FolderDto;
@@ -9,12 +12,16 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -23,10 +30,17 @@ public class FolderController {
 
     @Autowired
     private FolderService folderService;
+    @Autowired
+    private GridFsTemplate gridFsTemplate;
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<FolderDto> list(HttpServletRequest request){
-        Object object = SecurityContextHolder.getContext();
+    public List<FolderDto> list(HttpServletRequest request) throws FileNotFoundException {
+        InputStream inputStream = new FileInputStream("d:/test.txt");
+        DBObject metaData = new BasicDBObject();
+        metaData.put("extra1", "anything 1");
+        metaData.put("extra2", "anything 2");
+        GridFSFile gridFSFile = gridFsTemplate.store(inputStream,metaData);
+
         List<FolderDto> list = folderService.findAll(SecurityUtils.getAccountId());
         return list;
     }

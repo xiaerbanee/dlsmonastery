@@ -3,7 +3,6 @@ package net.myspring.general.modules.sys.service;
 import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.dto.FolderFileDto;
-import net.myspring.general.modules.sys.manager.FolderFileManager;
 import net.myspring.general.modules.sys.mapper.FolderFileMapper;
 import net.myspring.general.modules.sys.web.query.FolderFileQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,6 @@ import java.util.Map;
 @Service
 public class FolderFileService {
     @Autowired
-    private FolderFileManager folderFileManager;
-    @Autowired
     private FolderFileMapper folderFileMapper;
 
     @Autowired
@@ -32,7 +29,7 @@ public class FolderFileService {
     }
 
     public FolderFile findOne(String id) {
-        return folderFileManager.findOne(id);
+        return folderFileMapper.findOne(id);
     }
 
 
