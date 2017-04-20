@@ -85,7 +85,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("productTypeList",this.formData);
-        axios.get('/api/crm/productType',{params:this.formData}).then((response) => {
+        axios.get('/api/future/business/basic/productType',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -106,7 +106,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'productTypeForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/crm/productType/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/future/business/basic/productType/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

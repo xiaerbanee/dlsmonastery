@@ -69,7 +69,7 @@
         this.pageLoading = true;
         this.formLabel.totalPriceType.value = util.getLabel(this.formProperty.totalPriceTypes, this.formData.totalPriceType);
         util.setQuery("shopAdTypeList",this.formData);
-        axios.get('/api/crm/shopAdType',{params:this.formData}).then((response) => {
+        axios.get('/api/future/business/basic/shopAdType',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -90,13 +90,13 @@
         if(action=="修改") {
           this.$router.push({ name: 'shopAdTypeForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/crm/shopAdType/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/future/business/basic/shopAdType/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
         }
       },getQuery(){
-        axios.get('/api/crm/shopAdType/getQuery').then((response) =>{
+        axios.get('/api/future/business/basic/shopAdType/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
       });

@@ -2,11 +2,15 @@ package net.myspring.future.modules.basic.web.controller;
 
 
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.service.DepotService;
+import net.myspring.future.modules.basic.web.Query.DepotQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,13 +21,20 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "crm/depot")
+@RequestMapping(value = "basic/depot")
 public class DepotController {
 
-
+    @Autowired
+    private DepotService depotService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
+    public Page<DepotDto>  list(Pageable pageable, DepotQuery depotQuery){
+        Page<DepotDto> page = depotService.findPage(pageable, depotQuery);
+        return page;
+    }
+
+    @RequestMapping(value = "getQuery")
+    public String getQuery(DepotQuery depotQuery) {
         return null;
     }
 
@@ -49,16 +60,6 @@ public class DepotController {
 
     @RequestMapping(value = "syn")
     public String syn(){
-        return null;
-    }
-
-    @RequestMapping(value = "getFormProperty")
-    public String getFormProperty() {
-        return null;
-    }
-
-    @RequestMapping(value = "getQuery")
-    public String getQuery() {
         return null;
     }
 

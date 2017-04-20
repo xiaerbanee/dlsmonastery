@@ -1,5 +1,13 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.dto.AdPricesystemDto;
+import net.myspring.future.modules.basic.service.AdPricesystemService;
+import net.myspring.future.modules.basic.web.Query.AdPricesystemQuery;
+import net.myspring.future.modules.basic.web.form.AdPricesystemForm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -7,60 +15,31 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "crm/adPricesystem")
 public class AdPricesystemController {
 
-//    @Autowired
-//    private AdPricesystemService adPricesystemService;
-//    @Autowired
-//    private DepotService depotService;
-//
-//    @ModelAttribute
-//    public AdPricesystem get(@RequestParam(required = false) String id) {
-//        return StringUtils.isBlank(id) ? new AdPricesystem() : adPricesystemService.findOne(id);
-//    }
-//
-//    @RequestMapping(method = RequestMethod.GET)
-//    public String list(HttpServletRequest request){
-//        SearchEntity searchEntity = RequestUtils.getSearchEntity(request);
-//        Page<AdPricesystem> page = adPricesystemService.findPage(searchEntity.getPageable(),searchEntity.getParams());
-//        for(AdPricesystem adPricesystem: page.getContent()){
-//            adPricesystem.setActionList(getActionList());
-//        }
-//        return ObjectMapperUtils.writeValueAsString(page);
-//    }
-//
-//    @RequestMapping(value = "save")
-//    public String save(AdPricesystem adPricesystem){
-//        adPricesystemService.save(adPricesystem);
-//        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功"));
-//
-//    }
-//
-//    @RequestMapping(value = "getFormProperty")
-//    public String getFormProperty(AdPricesystem adPricesystem){
-//        Map<String,Object> map = Maps.newHashMap();
-//        return ObjectMapperUtils.writeValueAsString(map);
-//    }
-//
-//    @RequestMapping(value = "delete")
-//    public String delete(AdPricesystem adPricesystem,BindingResult bindingResult) {
-//        adPricesystemService.delete(adPricesystem);
-//        RestResponse restResponse=new RestResponse("删除成功");
-//        return ObjectMapperUtils.writeValueAsString(restResponse);
-//    }
-//
-//    @RequestMapping(value = "findOne")
-//    public String findOne(AdPricesystem adPricesystem){
-//        return ObjectMapperUtils.writeValueAsString(adPricesystem);
-//    }
-//
-//    private List<String> getActionList() {
-//        List<String> actionList = Lists.newArrayList();
-//        for(String authoritie : SecurityUtils.getAuthorityList()){
-//            switch (authoritie){
-//                case "crm:adPricesystem:delete" : actionList.add(Const.ITEM_ACTION_DELETE); break;
-//                case "crm:adPricesystem:edit" : actionList.add(Const.ITEM_ACTION_EDIT); break;
-//                default : break;
-//            }
-//        }
-//        return actionList;
-//    }
+    @Autowired
+    private AdPricesystemService adPricesystemService;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public Page<AdPricesystemDto> list(Pageable pageable, AdPricesystemQuery adPricesystemQuery){
+        Page<AdPricesystemDto> page = adPricesystemService.findPage(pageable,adPricesystemQuery);
+        return page;
+    }
+
+    @RequestMapping(value = "save")
+    public RestResponse save(AdPricesystemForm adPricesystemForm){
+        adPricesystemService.save(adPricesystemForm);
+        return new RestResponse("保存成功",null);
+
+    }
+
+    @RequestMapping(value = "delete")
+    public RestResponse delete(AdPricesystemForm adPricesystemForm) {
+        adPricesystemService.delete(adPricesystemForm);
+        return new RestResponse("删除成功",null);
+    }
+
+    @RequestMapping(value = "findOne")
+    public AdPricesystemDto findOne(AdPricesystemDto adPricesystemDto){
+        return adPricesystemDto;
+    }
+
 }

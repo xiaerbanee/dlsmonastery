@@ -48,7 +48,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.get('/api/crm/shopAdType/save', {params: this.inputForm}).then((response)=> {
+              axios.get('/api/future/business/basic/shopAdType/save', {params: this.inputForm}).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -63,11 +63,11 @@
           })
         }
       },created(){
-        axios.get('/api/crm/shopAdType/getFormProperty').then((response)=>{
+        axios.get('/api/future/business/basic/shopAdType/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/crm/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/future/business/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
           })
         }

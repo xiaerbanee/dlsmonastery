@@ -1,7 +1,5 @@
 package net.myspring.future.modules.basic.domain;
 
-import net.myspring.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 import net.myspring.common.domain.TreeEntity;
 
 import javax.persistence.Entity;

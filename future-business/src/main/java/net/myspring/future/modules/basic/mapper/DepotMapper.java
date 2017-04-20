@@ -2,6 +2,8 @@ package net.myspring.future.modules.basic.mapper;
 
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.web.Query.DepotQuery;
 import net.myspring.future.modules.crm.model.DepotInventoryModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -17,7 +19,7 @@ public interface DepotMapper extends MyMapper<Depot,String> {
 
     List<DepotInventoryModel> findInventoryData(@Param("p") Map<String, Object> map);
 
-    Page<Depot> findPage(Pageable pageable, @Param("p") Map<String, Object> map);
+    Page<DepotDto> findPage(Pageable pageable, @Param("p") DepotQuery depotQuery);
 
     Page<Depot> findDepotAccountPage(Pageable pageable, @Param("p") Map<String, Object> map);
 
