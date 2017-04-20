@@ -22,14 +22,14 @@
               </el-form-item>
               <el-form-item :label="formLabel.positionId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.positionId" clearable filterable :placeholder="$t('employeeList.selectGroup')">
-                  <el-option v-for="item in formProperty.positions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in formData.positionList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" clearable filterable :placeholder="$t('employeeList.selectGroup')">
-                  <el-option v-for="item in formProperty.statusList"  :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.statusList"  :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.officeId.label"  :label-width="formLabelWidth">
@@ -108,7 +108,6 @@
           leaveDateBTW:{label:this.$t('employeeList.leaveDate')}
         },
         pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -123,7 +122,7 @@
         this.formData.regularDateBTW=util.formatDateRange(this.formData.regularDate);
         this.formData.leaveDateBTW=util.formatDateRange(this.formData.leaveDate);
         this.formLabel.officeId.value=util.getLabel(this.offices,this.formData.officeId);
-        this.formLabel.positionId.value=util.getLabel(this.formProperty.positions,this.formData.positionId);
+        this.formLabel.positionId.value=util.getLabel(this.formData.positionList,this.formData.positionId);
         util.getQuery("employeeList");
         util.setQuery("employeeList",this.formData);
         util.copyValue(this.formData,this.submitData);
@@ -161,16 +160,19 @@
             this.remoteLoading = false;
           })
         }
-      },getQuery(){
-        axios.get('/api/basic/hr/employee/getQuery').then((response) =>{
-          this.formProperty=response.data;
-          this.pageRequest();
-        });
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.getQuery();
+      var that = this;
+      that.formData = that.submitData;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/basic/hr/employee/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+    });
+      axios.get('/api/basic/sys/menu/getMenuMap').then((response) =>{
+
+    });
     }
   };
 </script>
