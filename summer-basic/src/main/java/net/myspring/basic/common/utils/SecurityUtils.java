@@ -1,7 +1,9 @@
 package net.myspring.basic.common.utils;
 
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
@@ -18,27 +20,28 @@ import java.util.Map;
 public class SecurityUtils {
 
     public static String getAccountId() {
-        return String.valueOf(getAdditionalInformation().get("accountId"));
+        return StringUtils.toString(getAdditionalInformation().get("accountId"));
     }
 
     public static String getCompanyId() {
-        return String.valueOf(getAdditionalInformation().get("companyId"));
+        return StringUtils.toString(getAdditionalInformation().get("companyId"));
     }
 
     public static String getPositionId() {
-        return String.valueOf(getAdditionalInformation().get("positionId"));
+        return StringUtils.toString(getAdditionalInformation().get("positionId"));
     }
 
     public static String getOfficeId() {
-        return String.valueOf(getAdditionalInformation().get("officeId"));
+        return StringUtils.toString(getAdditionalInformation().get("officeId"));
     }
 
     public static String getEmployeeId() {
-        return String.valueOf(getAdditionalInformation().get("employeeId"));
+        return StringUtils.toString(getAdditionalInformation().get("employeeId"));
     }
 
     private  static Map<String, Object> getAdditionalInformation() {
-        final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) securityContext.getAuthentication().getDetails();
         Jwt jwt = JwtHelper.decode(details.getTokenValue());
         Map<String,Object> map = ObjectMapperUtils.readValue(jwt.getClaims(),Map.class);
         return map;

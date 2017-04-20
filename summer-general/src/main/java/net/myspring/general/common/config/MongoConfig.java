@@ -1,40 +1,26 @@
 package net.myspring.general.common.config;
 
-import com.google.common.collect.Lists;
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
-
-import java.util.List;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
+import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 /**
  * Created by liuj on 2017/4/20.
  */
 @Configuration
-public class MongoConfig extends AbstractMongoConfiguration {
+public class MongoConfig {
 
-    @Value("${mongo.host}")
-    private String mongoHost;
-
-    @Value("${mongo.port}")
-    private Integer mongoPort;
-
-    @Value("${mongo.name}")
-    private String mongoName;
-
-    @Override
-    protected String getDatabaseName() {
-        return mongoName;
+    @Bean
+    public MongoTemplate mongoTemplate(MongoDbFactory mongoDbFactory, MongoMappingContext context) {
+        MappingMongoConverter converter =  new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), context);
+        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory, converter);
+        return mongoTemplate;
     }
 
-    @Override
-    public Mongo mongo() throws Exception {
-        ServerAddress serverAddress = new ServerAddress(mongoHost,mongoPort);
-        List<MongoCredential> credentials = Lists.newArrayList();
-        return new MongoClient(serverAddress, credentials);
-    }
 }
