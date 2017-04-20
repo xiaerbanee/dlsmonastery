@@ -33,10 +33,19 @@ public class MongoConfig {
 
 
     @Bean
-    public GridFsTemplate gridFsTemplate() {
+    public GridFsTemplate uploadGridFsTemplate() {
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter);
+        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"upload");
+        return gridFsTemplate;
+    }
+
+
+    @Bean
+    public GridFsTemplate downloadGridFsTemplate() {
+        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
+        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"download");
         return gridFsTemplate;
     }
 
