@@ -1,57 +1,64 @@
 package net.myspring.general.modules.sys.service;
 
-import com.ctc.wstx.util.StringUtil;
 import com.google.common.collect.Lists;
+import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
-import com.netflix.discovery.converters.Auto;
 import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.dto.FolderFileDto;
 import net.myspring.general.modules.sys.mapper.FolderFileMapper;
 import net.myspring.general.modules.sys.web.query.FolderFileQuery;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.imgscalr.Scalr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class FolderFileService {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private FolderFileMapper folderFileMapper;
     @Autowired
-    private GridFsTemplate uploadGridFsTemplate;
+    private GridFsTemplate tempGridFsTemplate;
     @Autowired
-    private GridFsTemplate uploadPreviewGridFsTemplate;
+    private GridFsTemplate storageGridFsTemplate;
+    @Autowired
+    private GridFsTemplate previewGridFsTemplate;
 
     @Transactional
-    public List<FolderFile> save(String folderId, Map<String, MultipartFile> fileMap) {
+    public List<FolderFileDto> save(String folderId, Map<String, MultipartFile> fileMap) {
         List<FolderFile> list = Lists.newArrayList();
         try {
             for (MultipartFile multipartFile : fileMap.values()) {
                 if (multipartFile.getSize() > 0) {
                     //保存到mongoDb
-                    GridFSFile gridFSFile = uploadGridFsTemplate.store(multipartFile.getInputStream(),multipartFile.getOriginalFilename());
+                    GridFSFile gridFSFile = storageGridFsTemplate.store(multipartFile.getInputStream(),multipartFile.getOriginalFilename(),multipartFile.getContentType());
                     GridFSFile preview = null;
                     //如果是图片类型
                     if(multipartFile.getContentType().startsWith("image/")) {
                         BufferedImage image = Scalr.resize(ImageIO.read(multipartFile.getInputStream()), 290);
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         ImageIO.write(image, "png", baos);
-                        preview = uploadPreviewGridFsTemplate.store(new ByteArrayInputStream(baos.toByteArray()),multipartFile.getOriginalFilename());
+                        preview = previewGridFsTemplate.store(new ByteArrayInputStream(baos.toByteArray()),multipartFile.getOriginalFilename(),multipartFile.getContentType());
                     }
                     // 保存到数据库
                     FolderFile folderFile = new FolderFile();
@@ -69,17 +76,35 @@ public class FolderFileService {
                 }
             }
         } catch (Exception e) {
+            logger.error(e.getMessage());
         }
-        return list;
+        return BeanUtil.map(list,FolderFileDto.class);
+    }
+
+    public GridFSDBFile getGridFSDBFile(String type,String id) {
+        GridFsTemplate gridFsTemplate;
+        if("storage".equals(type)) {
+            gridFsTemplate = storageGridFsTemplate;
+        } else if("preview".equals(type)) {
+            gridFsTemplate = previewGridFsTemplate;
+        } else {
+            gridFsTemplate = tempGridFsTemplate;
+        }
+        return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(id)));
     }
 
     public FolderFile findOne(String id) {
-        return folderFileMapper.findOne(id);
+        FolderFile folderFile =  folderFileMapper.findOne(id);
+        return folderFile;
     }
 
 
-    public List<FolderFile> findByIds(List<String> ids) {
-        return folderFileMapper.findByIds(ids);
+    public List<FolderFileDto> findByIds(List<String> ids) {
+        if(CollectionUtil.isEmpty(ids)) {
+            return Lists.newArrayList();
+        }
+        List<FolderFile> folderFileList =  folderFileMapper.findByIds(ids);
+        return BeanUtil.map(folderFileList,FolderFileDto.class);
     }
 
     public Page<FolderFileDto> findPage(Pageable pageable, FolderFileQuery folderFileQuery) {
