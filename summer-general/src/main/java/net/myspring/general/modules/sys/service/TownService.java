@@ -1,6 +1,5 @@
 package net.myspring.general.modules.sys.service;
 
-import net.myspring.basic.modules.sys.domain.Town;
 import net.myspring.general.modules.sys.mapper.TownMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

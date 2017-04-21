@@ -1,9 +1,12 @@
 package net.myspring.basic.modules.hr.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.dto.OfficeDto;
+import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.manager.OfficeManager;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.OfficeForm;
@@ -27,6 +30,8 @@ public class OfficeService {
     private OfficeManager officeManager;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private AccountManager accountManager;
 
 
     public List<Office> findByType(String type) {
@@ -37,6 +42,15 @@ public class OfficeService {
         Page<OfficeDto> page = officeMapper.findPage(pageable, officeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
+    }
+
+    public List<String> getOfficeFilterIds(String accountId){
+        List<String> officeIdList= Lists.newArrayList();
+        Account account=accountManager.findOne(accountId);
+        if(account!=null){
+            officeIdList= officeManager.officeFilter(account);
+        }
+        return officeIdList;
     }
 
     public List<Office> findByParentIdsLike(String parentId) {

@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.mapper;
 
 import net.myspring.basic.common.mybatis.MyMapper;
+import net.myspring.basic.modules.sys.domain.Company;
 import net.myspring.basic.modules.sys.domain.CompanyConfig;
 import net.myspring.basic.modules.sys.dto.CompanyConfigDto;
 import net.myspring.basic.modules.sys.web.query.CompanyConfigQuery;
@@ -16,4 +17,6 @@ import org.springframework.data.domain.Pageable;
 public interface CompanyConfigMapper extends MyMapper<CompanyConfig,String>{
 
     Page<CompanyConfigDto> findPage(Pageable pageable, @Param("p")CompanyConfigQuery companyConfigQuery);
+
+    CompanyConfig findByCode(String code);
 }

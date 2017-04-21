@@ -50,15 +50,15 @@ public class FolderFileController {
     }
 
     @RequestMapping(value = "/upload")
-    public List<FolderFile> upload(String uploadPath, MultipartHttpServletRequest request, HttpServletResponse response) {
+    public List<FolderFileDto> upload(String uploadPath, MultipartHttpServletRequest request) {
         Folder folder = folderService.getAccountFolder(SecurityUtils.getAccountId(), uploadPath);
         Map<String, MultipartFile> fileMap = request.getFileMap();
-        List<FolderFile> list = folderFileService.save(folder.getId(), fileMap);
+        List<FolderFileDto> list = folderFileService.save(folder.getId(), fileMap);
         return list;
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public void download(String id, HttpServletResponse response) {
+    public void download(String id) {
     }
 
     @RequestMapping(value = "/preview", method = RequestMethod.GET)

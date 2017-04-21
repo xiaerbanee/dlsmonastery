@@ -2,7 +2,6 @@ package net.myspring.general.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.general.common.form.DataForm;
 import net.myspring.general.modules.sys.domain.ProcessType;
 import net.myspring.general.modules.sys.dto.ProcessFlowDto;
@@ -22,7 +21,6 @@ public class ProcessTypeForm extends DataForm<ProcessType> {
     private String companyId = "1";
     private Boolean auditFileType;
     private String remarks;
-    private List<PositionDto> positionList= Lists.newArrayList();
     private List<ProcessFlowDto> processFlowDtoList = Lists.newArrayList();
     private Map<Boolean,String>  bools= Maps.newHashMap();
 
@@ -72,14 +70,6 @@ public class ProcessTypeForm extends DataForm<ProcessType> {
 
     public void setAuditFileType(Boolean auditFileType) {
         this.auditFileType = auditFileType;
-    }
-
-    public List<PositionDto> getPositionList() {
-        return positionList;
-    }
-
-    public void setPositionList(List<PositionDto> positionList) {
-        this.positionList = positionList;
     }
 
     public Map<Boolean, String> getBools() {
