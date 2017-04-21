@@ -24,7 +24,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('chainList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('chainList.name')" sortable width="400"></el-table-column>
         <el-table-column prop="remarks" :label="$t('chainList.remarks')"></el-table-column>
-        <el-table-column prop="created.fullName" :label="$t('chainList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('chainList.createdBy')"></el-table-column>
         <el-table-column fixed="right" :label="$t('chainList.operation')" width="140">
           <template scope="scope">
             <div v-for="action in scope.row.actionList" :key="action" class="action">

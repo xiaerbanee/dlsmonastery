@@ -6,6 +6,7 @@ import net.myspring.future.modules.basic.domain.DemoPhoneType;
 import net.myspring.future.modules.basic.domain.DemoPhoneTypeOffice;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.crm.domain.DemoPhone;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,15 +17,11 @@ import java.util.List;
 public class DemoPhoneTypeDto  extends DataDto<DemoPhoneType>{
     private String name;
     private Integer limitQty;
+    private String productTypeNames;
     private LocalDate applyEndDate;
     private LocalDate renewEndDate;
-    private Integer version;
-    private List<DemoPhone> demoPhoneList = Lists.newArrayList();
-    private List<String> demoPhoneIdList = Lists.newArrayList();
-    private List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = Lists.newArrayList();
-    private List<String> demoPhoneTypeOfficeIdList = Lists.newArrayList();
-    private List<ProductType> productTypeList = Lists.newArrayList();
-    private List<String> productTypeIdList = Lists.newArrayList();
+    private Boolean locked;
+    private Boolean enabled;
 
     public String getName() {
         return name;
@@ -40,6 +37,14 @@ public class DemoPhoneTypeDto  extends DataDto<DemoPhoneType>{
 
     public void setLimitQty(Integer limitQty) {
         this.limitQty = limitQty;
+    }
+
+    public String getProductTypeNames() {
+        return productTypeNames;
+    }
+
+    public void setProductTypeNames(String productTypeNames) {
+        this.productTypeNames = productTypeNames;
     }
 
     public LocalDate getApplyEndDate() {
@@ -58,59 +63,19 @@ public class DemoPhoneTypeDto  extends DataDto<DemoPhoneType>{
         this.renewEndDate = renewEndDate;
     }
 
-    public Integer getVersion() {
-        return version;
+    public Boolean getLocked() {
+        return locked;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 
-    public List<DemoPhone> getDemoPhoneList() {
-        return demoPhoneList;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setDemoPhoneList(List<DemoPhone> demoPhoneList) {
-        this.demoPhoneList = demoPhoneList;
-    }
-
-    public List<String> getDemoPhoneIdList() {
-        return demoPhoneIdList;
-    }
-
-    public void setDemoPhoneIdList(List<String> demoPhoneIdList) {
-        this.demoPhoneIdList = demoPhoneIdList;
-    }
-
-    public List<DemoPhoneTypeOffice> getDemoPhoneTypeOfficeList() {
-        return demoPhoneTypeOfficeList;
-    }
-
-    public void setDemoPhoneTypeOfficeList(List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList) {
-        this.demoPhoneTypeOfficeList = demoPhoneTypeOfficeList;
-    }
-
-    public List<String> getDemoPhoneTypeOfficeIdList() {
-        return demoPhoneTypeOfficeIdList;
-    }
-
-    public void setDemoPhoneTypeOfficeIdList(List<String> demoPhoneTypeOfficeIdList) {
-        this.demoPhoneTypeOfficeIdList = demoPhoneTypeOfficeIdList;
-    }
-
-    public List<ProductType> getProductTypeList() {
-        return productTypeList;
-    }
-
-    public void setProductTypeList(List<ProductType> productTypeList) {
-        this.productTypeList = productTypeList;
-    }
-
-    public List<String> getProductTypeIdList() {
-        return productTypeIdList;
-    }
-
-    public void setProductTypeIdList(List<String> productTypeIdList) {
-        this.productTypeIdList = productTypeIdList;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

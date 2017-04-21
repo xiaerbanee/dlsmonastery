@@ -23,8 +23,6 @@ import java.util.List;
 public class FolderService {
     @Autowired
     private FolderMapper folderMapper;
-    @Autowired
-    private CacheUtils cacheUtils;
 
     public FolderForm findForm(String id){
         Folder folder = folderMapper.findOne(id);
@@ -74,8 +72,8 @@ public class FolderService {
         List<FolderDto> folderDtoList=Lists.newArrayList();
         Folder parent = getRoot(accountId);
         List<Folder> folders = Lists.newArrayList();
-        List<Folder> sourcelist = folderMapper.findByCreatedBy(accountId);
-        sortList(folders, sourcelist, parent.getId());
+        List<Folder> sourceList = folderMapper.findByCreatedBy(accountId);
+        sortList(folders, sourceList, parent.getId());
         if (!CollectionUtil.isEmpty(folders)) {
             folderDtoList= BeanUtil.map(folders,FolderDto.class);
             for (FolderDto folderDto : folderDtoList) {
@@ -93,13 +91,13 @@ public class FolderService {
 
     @Transactional
     public RestResponse save(FolderForm folderForm) {
+        String oldParentIds = folderForm.getParentIds();
         Folder parent = folderMapper.findOne(folderForm.getParentId());
         // 无法将上级部门设置为自己或者自己的下级部门
         folderForm.setParentIds(parent.getParentIds() + folderForm.getParentId() + ",");
         if (!folderForm.isCreate() && folderForm.getParentIds().contains("," + folderForm.getId() + ",")) {
             return new RestResponse("无法将上级目录设置为自己或者自己的下级目录",ResponseCodeEnum.invalid.name());
         }
-        String oldParentIds = folderForm.getParentIds();
         Folder folder=BeanUtil.map(folderForm,Folder.class);
         folderMapper.save(folder);
         List<Folder> list = folderMapper.findByParentIdsLike("%," + folderForm.getId() + ",%");

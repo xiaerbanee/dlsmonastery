@@ -10,7 +10,7 @@
         WHERE
         t1.enabled=1
         and t1.shop_id=depot.id
-        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
         <include refid="shopAdFilter" />
     </select>
 

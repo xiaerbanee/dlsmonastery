@@ -7,7 +7,7 @@
         FROM crm_product_ime t1,crm_depot depot
         where  t1.enabled=1
         and t1.depot_id=depot.id
-        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
         <if test="p.boxIme !=null" >
             and t1.box_ime=#{p.boxIme}
         </if>

@@ -10,7 +10,7 @@
         WHERE
         t1.enabled=1
         and t1.express_order_id=ord.id and ord.to_depot_id=depot.id
-        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
         <if test="p.code !=null">
             and t1.code like concat('%',#{p.code},'%')
         </if>
