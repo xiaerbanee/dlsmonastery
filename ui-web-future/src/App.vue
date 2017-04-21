@@ -101,19 +101,27 @@
     },
     watch: {
       '$route'(to, from) {
-        var activeMenu = this.$route.meta.menu;
-        if(activeMenu==null) {
-          activeMenu = this.$route.name;
+        if( to.name!="login"){
+          var activeMenu = to.meta.menu;
+          if(activeMenu==null) {
+            if(this.$route.name){
+              activeMenu = this.$route.name;
+            }else{
+              activeMenu="home"
+            }
+          }
+        }else{
+            activeMenu="login";
         }
-        if(this.secondCategory !=null && this.secondCategory.length>0) {
+
+        if(this.secondCategory !=null && this.secondCategory.length>0&&activeMenu!="home"&&activeMenu!="login") {
           if(!this.menuMap[activeMenu]) {
             this.activeCategory = this.secondCategory.menuCategoryList[0].code;
           } else {
-            this.activeCategory =  this.menuMap[activeMenu];
+              this.activeCategory =  this.menuMap[activeMenu];
           }
         }
         this.activeMenu = activeMenu;
-        console.log(this.activeMenu )
       }
     },
     methods: {
