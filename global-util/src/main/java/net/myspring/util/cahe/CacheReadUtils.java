@@ -32,8 +32,8 @@ public class CacheReadUtils {
     }
 
     public static void initCacheInput(RedisTemplate redisTemplate, Collection objects) {
-        Class clazz = null;
-        List<Object> list = null;
+        Class clazz;
+        List<Object> list;
         if (CollectionUtils.isNotEmpty(objects)) {
             list = Lists.newArrayList(objects);
             clazz = list.get(0).getClass();
@@ -74,21 +74,13 @@ public class CacheReadUtils {
             }
             if (CollectionUtils.isNotEmpty(keySet)) {
                 List<String> keyList = Lists.newArrayList(keySet);
-                List<byte[]> cacheList = getCacheList(redisTemplate, keyList);
-                Map<String,Object> keyMap = Maps.newHashMap();
-                for (int i = 0; i < keyList.size(); i++) {
-                    byte[] cache = cacheList.get(i);
-                    Object object = deSerialize(cache);
-                    if (object != null) {
-                        keyMap.put(keyList.get(i),object);
-                    }
-                }
+                Map<String,Object> cacheMap = getCacheMap(redisTemplate,keyList);
                 for(CacheInputObject cacheInputObject:cacheInputObjectList) {
                     if(CollectionUtils.isNotEmpty(cacheInputObject.getKeyList())) {
                         boolean isCollection = cacheInputObject.getCacheInputField().getCollection();
                         for(String key:cacheInputObject.getKeyList()) {
-                            if(keyMap.containsKey(key)) {
-                                Object cacheInputFieldValue = ReflectionUtil.getFieldValue(keyMap.get(key),cacheInputObject.getCacheInputField().getOutputInstance());
+                            if(cacheMap.containsKey(key)) {
+                                Object cacheInputFieldValue = ReflectionUtil.getFieldValue(cacheMap.get(key),cacheInputObject.getCacheInputField().getOutputInstance());
                                 if(isCollection) {
                                     Object localFieldValue = ReflectionUtil.getFieldValue(cacheInputObject.getObject(), cacheInputObject.getCacheInputField().getOutputField());
                                     if (CollectionUtil.isEmpty((Collection) localFieldValue)) {
@@ -105,10 +97,9 @@ public class CacheReadUtils {
                 }
             }
         }
-
     }
 
-    public static List<byte[]> getCacheList(RedisTemplate redisTemplate, List<String> keyList) {
+    public static Map<String,Object> getCacheMap(RedisTemplate redisTemplate, List<String> keyList) {
         RedisCallback<List<Object>> pipelineCallback = connection -> {
             connection.openPipeline();
             for (String key : keyList) {
@@ -116,11 +107,28 @@ public class CacheReadUtils {
             }
             return connection.closePipeline();
         };
-        List<byte[]> results = (List<byte[]>) redisTemplate.execute(pipelineCallback);
-        return results;
+        List<byte[]> cacheList = (List<byte[]>) redisTemplate.execute(pipelineCallback);
+        Map<String,Object> cacheMap = Maps.newHashMap();
+        for (int i = 0; i < keyList.size(); i++) {
+            byte[] cache = cacheList.get(i);
+            Object object = deSerialize(cache);
+            if (object != null) {
+                cacheMap.put(keyList.get(i),object);
+            }
+        }
+        return cacheMap;
     }
 
-    public static Object deSerialize(byte[] bytes) {
+    public static Map<String,Object> getCacheMap(RedisTemplate redisTemplate, List<String> keyList,String fieldName) {
+        Map<String,Object> cacheMap = getCacheMap(redisTemplate,keyList);
+        Map<String,Object> map = Maps.newHashMap();
+        for(String key:cacheMap.keySet()) {
+            map.put(key,ReflectionUtil.getFieldValue(cacheMap.get(key),fieldName));
+        }
+        return map;
+    }
+
+    private static Object deSerialize(byte[] bytes) {
         Object object = null;
         if (bytes != null) {
             try {

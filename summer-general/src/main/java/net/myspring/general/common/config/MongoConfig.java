@@ -31,29 +31,28 @@ public class MongoConfig {
         return mongoTemplate;
     }
 
-
     @Bean
-    public GridFsTemplate uploadGridFsTemplate() {
+    public GridFsTemplate exportGridFsTemplate() {
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"upload");
+        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter);
+        return gridFsTemplate;
+    }
+
+
+    @Bean
+    public GridFsTemplate storageGridFsTemplate() {
+        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
+        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"storage");
         return gridFsTemplate;
     }
 
     @Bean
-    public GridFsTemplate uploadPreviewGridFsTemplate() {
+    public GridFsTemplate previewGridFsTemplate() {
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
         GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"preview");
         return gridFsTemplate;
     }
-
-    @Bean
-    public GridFsTemplate downloadGridFsTemplate() {
-        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
-        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"download");
-        return gridFsTemplate;
-    }
-
 }

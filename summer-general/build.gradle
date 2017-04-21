@@ -44,6 +44,8 @@ dependencies {
 	compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.1.1'
 	compile 'org.springframework.cloud:spring-cloud-stream'
 	compile 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
+	compile 'org.activiti:activiti-spring-boot-starter-basic:5.22.0'
+	compile group: 'org.activiti', name: 'activiti-bpmn-layout', version: '5.22.0'
 	compile('org.springframework.cloud:spring-cloud-starter-feign')
 	compile group: 'commons-io', name: 'commons-io', version: '2.5'
 	compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'

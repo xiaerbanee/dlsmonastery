@@ -1,5 +1,6 @@
 package net.myspring.general;
 
+import org.activiti.spring.boot.JpaProcessEngineAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +11,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
+@EnableAutoConfiguration(exclude = JpaProcessEngineAutoConfiguration.class)
 public class SummerGeneralApplication {
 
 	public static void main(String[] args) {

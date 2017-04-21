@@ -1,6 +1,7 @@
 package net.myspring.general.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
+import com.mongodb.gridfs.GridFSDBFile;
 import net.myspring.general.modules.sys.domain.Folder;
 import net.myspring.general.common.exception.ServiceException;
 import net.myspring.general.common.utils.SecurityUtils;
@@ -50,33 +51,32 @@ public class FolderFileController {
     }
 
     @RequestMapping(value = "/upload")
-    public List<FolderFile> upload(String uploadPath, MultipartHttpServletRequest request) {
+    public List<FolderFileDto> upload(String uploadPath, MultipartHttpServletRequest request) {
         Folder folder = folderService.getAccountFolder(SecurityUtils.getAccountId(), uploadPath);
         Map<String, MultipartFile> fileMap = request.getFileMap();
-        List<FolderFile> list = folderFileService.save(folder.getId(), fileMap);
+        List<FolderFileDto> list = folderFileService.save(folder.getId(), fileMap);
         return list;
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public void download(String id) {
+    public void download(String type,String id,HttpServletResponse response) {
+        GridFSDBFile gridFSDBFile = folderFileService.getGridFSDBFile(type,id);
+        if(gridFSDBFile != null) {
+            try {
+                response.setContentType(gridFSDBFile.getContentType());
+                response.setHeader("Content-disposition", "attachment; filename=\"" + EncodeUtil.urlEncode(gridFSDBFile.getFilename()) + "\"");
+                FileCopyUtils.copy(gridFSDBFile.getInputStream(), response.getOutputStream());
+            } catch (IOException e) {
+                throw new ServiceException(e.getMessage());
+            }
+        }
     }
 
-    @RequestMapping(value = "/preview", method = RequestMethod.GET)
-    public void preview(String id, HttpServletResponse response) {
-    }
-
-    @RequestMapping(value = "/view", method = RequestMethod.GET)
-    public void view(String id, HttpServletResponse response) {
-    }
 
     @RequestMapping(value = "/findByIds")
     public List<FolderFileDto> findByIds(String ids) {
         List<String> idList = StringUtils.getSplitList(ids, ",");
-        List<FolderFileDto> folderFileDtoList = Lists.newArrayList();
-        if(CollectionUtil.isNotEmpty(idList)) {
-            List<FolderFile> folderFileList = folderFileService.findByIds(idList);
-            folderFileDtoList= BeanUtil.map(folderFileList,FolderFileDto.class);
-        }
+        List<FolderFileDto> folderFileDtoList = folderFileService.findByIds(idList);
         return folderFileDtoList;
     }
 }

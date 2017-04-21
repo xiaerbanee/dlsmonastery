@@ -69,20 +69,11 @@ public class DepotService {
 
     public DepotQuery getQueryProperty(DepotQuery depotQuery) {
         depotQuery.setTypeList(DepotTypeEnum.getMap());
-
-//        map.put("areas", officeMapper.findByType("100"));
-//        map.put("areaTypes", CacheUtils.findDictMapByCategory(DictMapCategoryEnum.门店_地区属性.name()));
         depotQuery.setPricesystemList(pricesystemMapper.findAll());
-//        map.put("specialityStoreTypes", CacheUtils.findDictMapByCategory(DictMapCategoryEnum.门店_体验店类型.name()));
         depotQuery.setChainList(chainMapper.findAll());
         depotQuery.setAdPricesystemList(adPricesystemMapper.findAll());
         depotQuery.setExpressCompanyList(expressCompanyMapper.findAll());
         depotQuery.setBools(BoolEnum.getMap());
-//        searchPropertyMap.put("offices",officeService.findSortList());
-//        String dateStart=DateUtils.formatLocalDate(LocalDate.now().plusDays(-70));
-//        String dateEnd=DateUtils.formatLocalDate(LocalDate.now().plusMonths(1));
-//        String dateRange=dateStart+" - "+dateEnd;
-//        searchPropertyMap.put("dateRange",dateRange);
         return depotQuery;
     }
 }
