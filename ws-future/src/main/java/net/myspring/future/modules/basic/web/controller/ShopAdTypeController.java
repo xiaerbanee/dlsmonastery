@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "crm/shopAdType")
+@RequestMapping(value = "basic/shopAdType")
 public class ShopAdTypeController {
 
 

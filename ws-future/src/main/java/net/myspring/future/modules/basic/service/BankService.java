@@ -2,7 +2,9 @@ package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.modules.basic.domain.Bank;
+import net.myspring.future.modules.basic.dto.BankDto;
 import net.myspring.future.modules.basic.mapper.BankMapper;
+import net.myspring.future.modules.basic.web.Query.BankQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +22,6 @@ public class BankService {
 
     public Bank findOne(String id){
         Bank bank=bankMapper.findOne(id);
-        initDomain(Lists.newArrayList(bank));
         return bank;
     }
 
@@ -32,9 +33,8 @@ public class BankService {
         return bankMapper.findAll();
     }
 
-    public Page<Bank> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<Bank> page = bankMapper.findPage(pageable, map);
-        initDomain(page.getContent());
+    public Page<BankDto> findPage(Pageable pageable, BankQuery bankQuery) {
+        Page<BankDto> page = bankMapper.findPage(pageable, bankQuery);
         return page;
     }
 
@@ -54,6 +54,4 @@ public class BankService {
     public void syn(){
     }
 
-    private void initDomain(List<Bank> bankList){
-    }
 }

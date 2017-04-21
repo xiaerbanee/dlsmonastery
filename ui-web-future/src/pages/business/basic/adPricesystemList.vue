@@ -24,7 +24,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adPricesystemList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('adPricesystemList.name')" sortable width="150"></el-table-column>
         <el-table-column prop="remarks" :label="$t('adPricesystemList.remarks')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('adPricesystemList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('adPricesystemList.createdBy')"></el-table-column>
         <el-table-column prop="enabled" :label="$t('adPricesystemList.enabled')" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
@@ -69,7 +69,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("adPricesystemList",this.formData);
-        axios.get('/api/future/business/basic/adPricesystem',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/basic/adPricesystem',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -90,7 +90,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'adPricesystemForm', query: { id: id }})
         }else if(action=="删除"){
-          axios.get('/api/future/business/basic/adPricesystem/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/ws/future/basic/adPricesystem/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

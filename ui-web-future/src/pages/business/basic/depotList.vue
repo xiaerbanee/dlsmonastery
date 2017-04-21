@@ -225,7 +225,7 @@
 
         util.setQuery("depotList",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/future/business/basic/depot',{params:this.submitData}).then((response) => {
+        axios.get('/api/ws/future/basic/depot',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -243,7 +243,7 @@
       },itemAdd(){
         this.$router.push({ name: 'depotForm'})
       },synData(){
-        axios.get('/api/future/business/basic/depot/syn').then((response) =>{
+        axios.get('/api/ws/future/basic/depot/syn').then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })
@@ -255,7 +255,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/future/business/basic/depot/getQuery').then((response) =>{
+      axios.get('/api/ws/future/basic/depot/getQuery').then((response) =>{
         this.formData = response.data;
         this.pageRequest();
       });

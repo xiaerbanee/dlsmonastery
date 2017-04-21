@@ -75,7 +75,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("productList",this.formData);
-        axios.get('/api/future/business/basic/dealer',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/basic/dealer',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

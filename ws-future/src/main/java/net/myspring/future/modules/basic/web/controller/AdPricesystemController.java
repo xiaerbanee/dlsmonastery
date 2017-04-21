@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping(value = "crm/adPricesystem")
+@RequestMapping(value = "basic/adPricesystem")
 public class AdPricesystemController {
 
     @Autowired

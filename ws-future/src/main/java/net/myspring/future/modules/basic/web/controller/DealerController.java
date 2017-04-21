@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "crm/dealer")
+@RequestMapping(value = "basic/dealer")
 public class DealerController {
 
 

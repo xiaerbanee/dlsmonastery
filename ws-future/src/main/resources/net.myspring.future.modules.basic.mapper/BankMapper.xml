@@ -18,7 +18,7 @@
     </select>
 
 
-    <select id="findPage" resultType="Bank">
+    <select id="findPage" resultType="BankDto">
         SELECT
         t1.*
         FROM

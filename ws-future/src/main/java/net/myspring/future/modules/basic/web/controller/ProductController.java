@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "crm/product")
+@RequestMapping(value = "basic/product")
 public class ProductController {
 
     @RequestMapping(method = RequestMethod.GET)

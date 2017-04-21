@@ -47,7 +47,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/future/business/basic/bank/save',qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/ws/future/basic/bank/save',qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -73,7 +73,7 @@
         }
       },created(){
         if(!this.isCreate){
-          axios.get('/api/future/business/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
             if(response.data.accountList!=null&&response.data.accountList.length>0){
               this.accounts=response.data.accountList;

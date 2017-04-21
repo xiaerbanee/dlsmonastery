@@ -30,7 +30,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="remarks" :label="$t('bankList.remarks')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('bankList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('bankList.createdBy')"></el-table-column>
         <el-table-column prop="enabled" :label="$t('bankList.enabled')" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
@@ -55,14 +55,14 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:''
         },formLabel:{
           name:this.$t('bankList.name')
         },
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         loading:false
@@ -72,7 +72,8 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("bankList",this.formData);
-        axios.get('/api/future/business/basic/bank',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/ws/future/basic/bank',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -88,7 +89,7 @@
         this.formVisible = false;
         this.pageRequest();
       },synData(){
-        axios.get('/api/future/business/basic/bank/syn').then((response) =>{
+        axios.get('/api/ws/future/basic/bank/syn').then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })

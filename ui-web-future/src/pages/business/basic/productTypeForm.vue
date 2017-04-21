@@ -80,7 +80,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/future/business/basic/productType/save',qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/ws/future/basic/productType/save',qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -96,18 +96,18 @@
         },remoteProduct(query) {
           if (query !== '') {
             this.remoteLoading = true;
-             axios.get('/api/future/business/basic/product/search',{params:{name:query}}).then((response)=>{
+             axios.get('/api/ws/future/basic/product/search',{params:{name:query}}).then((response)=>{
               this.products = response.data;
               this.remoteLoading = false;
             });
           }
         }
       },created(){
-        axios.get('/api/future/business/basic/productType/getFormProperty').then((response)=>{
+        axios.get('/api/ws/future/basic/productType/getFormProperty').then((response)=>{
           this.formProperty = response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/future/business/basic/productType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/productType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
             this.inputForm.scoreType = response.data.scoreType?1:0;
             if(response.data.productList!=null && response.data.productList.length>0){
