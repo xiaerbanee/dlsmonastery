@@ -1,10 +1,7 @@
 package net.myspring.general.modules.sys.service;
 
-import com.ctc.wstx.util.StringUtil;
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
-import com.netflix.discovery.converters.Auto;
-import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.dto.FolderFileDto;
 import net.myspring.general.modules.sys.mapper.FolderFileMapper;
@@ -17,18 +14,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
+@Transactional
 public class FolderFileService {
     @Autowired
     private FolderFileMapper folderFileMapper;
@@ -37,7 +33,6 @@ public class FolderFileService {
     @Autowired
     private GridFsTemplate uploadPreviewGridFsTemplate;
 
-    @Transactional
     public List<FolderFile> save(String folderId, Map<String, MultipartFile> fileMap) {
         List<FolderFile> list = Lists.newArrayList();
         try {
