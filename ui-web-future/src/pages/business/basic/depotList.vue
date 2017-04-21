@@ -43,11 +43,11 @@
                   <el-option v-for="(value,key) in formData.bools" :key="key"  :label="key | bool2str" :value="value"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.specialityStoreType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.specialityStoreType" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="specialityStore in formData.specialityStoreTypeList" :key="specialityStore.name" :label="specialityStore.name" :value="specialityStore.name"></el-option>
-                </el-select>
-              </el-form-item>
+              <!--<el-form-item :label="formLabel.specialityStoreType.label" :label-width="formLabelWidth">-->
+                <!--<el-select v-model="formData.specialityStoreType" filterable clearable :placeholder="$t('depotList.inputKey')">-->
+                  <!--<el-option v-for="specialityStore in formData.specialityStoreTypeList" :key="specialityStore.name" :label="specialityStore.name" :value="specialityStore.name"></el-option>-->
+                <!--</el-select>-->
+              <!--</el-form-item>-->
               <!--<el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">-->
                 <!--<el-select v-model="formData.officeId" filterable remote :placeholder="$t('depotList.inputWord')" :clearable=true>-->
                   <!--<el-option v-for="office in formData.offices" :key="office.id" :label="office.name" :value="office.id"></el-option>-->

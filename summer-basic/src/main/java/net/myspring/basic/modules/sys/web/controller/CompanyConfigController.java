@@ -8,6 +8,7 @@ import net.myspring.basic.modules.sys.web.form.CompanyConfigForm;
 import net.myspring.basic.modules.sys.web.query.CompanyConfigQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,5 +47,12 @@ public class CompanyConfigController {
         return companyConfigDto;
     }
 
-
+    @RequestMapping(value = "getValueByCode")
+    public String getValueByCode(String code) {
+        if(StringUtils.isNotBlank(code)){
+            String value=companyConfigService.getValueByCode(code);
+            return value;
+        }
+        return "";
+    }
 }
