@@ -27,7 +27,7 @@
         <if test="p.isBack != null">
             and t1.is_back = #{p.isBack}
         </if>
-        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
     </select>
 
     <select id="findByEmployeeId" resultType="ProductImeSale">

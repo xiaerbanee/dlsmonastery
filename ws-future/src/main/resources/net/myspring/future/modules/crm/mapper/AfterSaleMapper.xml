@@ -12,7 +12,7 @@
         and t1.bad_product_ime_id=im.id
         and im.depot_id=depot.id
         and depot.office_id=office.id
-        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
        <include refid="afterSaleFilter" />
     </select>
 
