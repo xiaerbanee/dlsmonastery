@@ -1,15 +1,23 @@
 package net.myspring.future.modules.basic.web.form;
 
+import com.google.common.collect.Lists;
+import net.myspring.future.common.dto.NameValueDto;
 import net.myspring.future.common.form.DataForm;
+import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.Pricesystem;
+import net.myspring.future.modules.basic.dto.BasicDistrictDto;
+import net.myspring.future.modules.layout.domain.ShopAttribute;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lihx on 2017/4/18.
  */
 public class DepotForm extends DataForm<Depot>{
-    private String type;
+    private Integer type;
     private String officeId;
     private String name;
     private String taxName;
@@ -18,7 +26,7 @@ public class DepotForm extends DataForm<Depot>{
     private String contator;
     private String mobilePhone;
     private String address;
-    private String accountIdList;
+    private List<String> accountIdList = Lists.newArrayList();
     private String areaType;
     private String bussinessCenter;
     private String bussinessCenterName;
@@ -49,12 +57,37 @@ public class DepotForm extends DataForm<Depot>{
     private Boolean isHidden;
     private Boolean adShop;
     private Boolean adShopBsc;
+    private List<NameValueDto> channelTypeList;
+    private List<NameValueDto> areaTypeList;
+    private List<NameValueDto> carrierTypeList;
+    private List<NameValueDto> chainTypeList;
+    private List<NameValueDto> turnoverTypeList;
+    private List<NameValueDto> salePointTypeList;
+    private List<NameValueDto> shopAreaTypeList;
+    private List<NameValueDto> businessCenterTypeList;
+    private List<NameValueDto> shopMonthTotalList;
+    private List<NameValueDto> specialityStoreTypeList;
+    private Map<Boolean,String> boolMap;
+    private List<NameValueDto> typeList;
+    private List<Pricesystem> pricesystemList;
+    private List<Chain> chainList;
+    private List<BasicDistrictDto> districtDtoList;
+    private List<ShopAttribute> shopAttributeList;
 
-    public String getType() {
+
+    public List<ShopAttribute> getShopAttributeList() {
+        return shopAttributeList;
+    }
+
+    public void setShopAttributeList(List<ShopAttribute> shopAttributeList) {
+        this.shopAttributeList = shopAttributeList;
+    }
+
+    public Integer getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -122,11 +155,11 @@ public class DepotForm extends DataForm<Depot>{
         this.address = address;
     }
 
-    public String getAccountIdList() {
+    public List<String> getAccountIdList() {
         return accountIdList;
     }
 
-    public void setAccountIdList(String accountIdList) {
+    public void setAccountIdList(List<String> accountIdList) {
         this.accountIdList = accountIdList;
     }
 
@@ -368,5 +401,125 @@ public class DepotForm extends DataForm<Depot>{
 
     public void setAdShopBsc(Boolean adShopBsc) {
         this.adShopBsc = adShopBsc;
+    }
+
+    public List<NameValueDto> getChannelTypeList() {
+        return channelTypeList;
+    }
+
+    public void setChannelTypeList(List<NameValueDto> channelTypeList) {
+        this.channelTypeList = channelTypeList;
+    }
+
+    public List<NameValueDto> getAreaTypeList() {
+        return areaTypeList;
+    }
+
+    public void setAreaTypeList(List<NameValueDto> areaTypeList) {
+        this.areaTypeList = areaTypeList;
+    }
+
+    public List<NameValueDto> getCarrierTypeList() {
+        return carrierTypeList;
+    }
+
+    public void setCarrierTypeList(List<NameValueDto> carrierTypeList) {
+        this.carrierTypeList = carrierTypeList;
+    }
+
+    public List<NameValueDto> getChainTypeList() {
+        return chainTypeList;
+    }
+
+    public void setChainTypeList(List<NameValueDto> chainTypeList) {
+        this.chainTypeList = chainTypeList;
+    }
+
+    public List<NameValueDto> getTurnoverTypeList() {
+        return turnoverTypeList;
+    }
+
+    public void setTurnoverTypeList(List<NameValueDto> turnoverTypeList) {
+        this.turnoverTypeList = turnoverTypeList;
+    }
+
+    public List<NameValueDto> getSalePointTypeList() {
+        return salePointTypeList;
+    }
+
+    public void setSalePointTypeList(List<NameValueDto> salePointTypeList) {
+        this.salePointTypeList = salePointTypeList;
+    }
+
+    public List<NameValueDto> getShopAreaTypeList() {
+        return shopAreaTypeList;
+    }
+
+    public void setShopAreaTypeList(List<NameValueDto> shopAreaTypeList) {
+        this.shopAreaTypeList = shopAreaTypeList;
+    }
+
+    public List<NameValueDto> getBusinessCenterTypeList() {
+        return businessCenterTypeList;
+    }
+
+    public void setBusinessCenterTypeList(List<NameValueDto> businessCenterTypeList) {
+        this.businessCenterTypeList = businessCenterTypeList;
+    }
+
+    public List<NameValueDto> getShopMonthTotalList() {
+        return shopMonthTotalList;
+    }
+
+    public void setShopMonthTotalList(List<NameValueDto> shopMonthTotalList) {
+        this.shopMonthTotalList = shopMonthTotalList;
+    }
+
+    public List<NameValueDto> getSpecialityStoreTypeList() {
+        return specialityStoreTypeList;
+    }
+
+    public void setSpecialityStoreTypeList(List<NameValueDto> specialityStoreTypeList) {
+        this.specialityStoreTypeList = specialityStoreTypeList;
+    }
+
+    public Map<Boolean,String> getBoolMap() {
+        return boolMap;
+    }
+
+    public void setBoolMap(Map<Boolean,String> boolMap) {
+        this.boolMap = boolMap;
+    }
+
+    public List<NameValueDto> getTypeList() {
+        return typeList;
+    }
+
+    public void setTypeList(List<NameValueDto> typeList) {
+        this.typeList = typeList;
+    }
+
+    public List<Pricesystem> getPricesystemList() {
+        return pricesystemList;
+    }
+
+    public void setPricesystemList(List<Pricesystem> pricesystemList) {
+        this.pricesystemList = pricesystemList;
+    }
+
+    public List<Chain> getChainList() {
+        return chainList;
+    }
+
+    public void setChainList(List<Chain> chainList) {
+        this.chainList = chainList;
+    }
+
+    public List<BasicDistrictDto> getDistrictDtoList() {
+        return districtDtoList;
+    }
+
+    public void setDistrictDtoList(List<BasicDistrictDto> districtDtoList) {
+        this.districtDtoList = districtDtoList;
     }
 }

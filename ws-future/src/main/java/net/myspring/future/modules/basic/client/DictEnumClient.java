@@ -1,7 +1,6 @@
 package net.myspring.future.modules.basic.client;
 
 import net.myspring.future.common.dto.NameValueDto;
-import net.myspring.future.modules.basic.dto.BasicCompanyConfigDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,8 +12,7 @@ import java.util.List;
  * Created by lihx on 2017/4/21.
  */
 @FeignClient("summer-basic")
-public interface CompanyConfigClient {
-
-    @RequestMapping(method = RequestMethod.GET, value = "/sys/companyConfig/findByCode")
-    BasicCompanyConfigDto findByCode(@RequestParam(value = "code") String code);
+public interface DictEnumClient {
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/dictEnum/getDictEnumByCategory")
+    List<NameValueDto> findDictEnumByCategory(@RequestParam(value = "category") String category);
 }
