@@ -48,8 +48,8 @@
             <el-form-item :label="$t('employeeForm.birthday')" prop="birthday">
               <el-date-picker  v-model="employeeForm.birthday" type="date" align="left" :placeholder="$t('employeeForm.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
             </el-form-item>
-            <el-form-item :label="$t('employeeForm.sex')" prop="sexLabel">
-              <el-radio-group v-model="employeeForm.sexLabel">
+            <el-form-item :label="$t('employeeForm.sex')" prop="sex">
+              <el-radio-group v-model="employeeForm.sex">
                 <el-radio :label="1">{{$t('employeeForm.man')}}</el-radio>
                 <el-radio :label="0">{{$t('employeeForm.women')}}</el-radio>
               </el-radio-group>
@@ -178,6 +178,7 @@
               this.employeeForm.entryDate=util.formatLocalDate(this.employeeForm.entryDate)
               this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
               this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
+              this.employeeForm.sex=this.employeeForm.sex==1?"男":"女"
               accountForm.validate((accountValid) => {
                 if (accountValid) {
                     util.copyValue(this.employeeForm,this.employeeSubmitData);
@@ -276,7 +277,7 @@
               this.leaders=new Array({id:account.leaderId,loginName:account.leaderName})
             }
             this.employeeForm=employee;
-            this.employeeForm.sexLabel=employee.sex=="男"?1:0;
+            this.employeeForm.sex=employee.sex=="男"?1:0;
             this.accountForm=account;
           })
       }
