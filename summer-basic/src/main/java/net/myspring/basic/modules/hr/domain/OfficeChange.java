@@ -2,9 +2,6 @@ package net.myspring.basic.modules.hr.domain;
 
 
 import net.myspring.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.basic.modules.sys.domain.ProcessFlow;
-import net.myspring.basic.modules.sys.domain.ProcessType;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -22,9 +19,7 @@ public class OfficeChange extends CompanyEntity<OfficeChange> {
     private String processStatus;
     private Office office;
     private String officeId;
-    private ProcessType processType;
     private String processTypeId;
-    private ProcessFlow processFlow;
     private String processFlowId;
 
     public String getType() {
@@ -107,28 +102,12 @@ public class OfficeChange extends CompanyEntity<OfficeChange> {
         this.officeId = officeId;
     }
 
-    public ProcessType getProcessType() {
-        return processType;
-    }
-
-    public void setProcessType(ProcessType processType) {
-        this.processType = processType;
-    }
-
     public String getProcessTypeId() {
         return processTypeId;
     }
 
     public void setProcessTypeId(String processTypeId) {
         this.processTypeId = processTypeId;
-    }
-
-    public ProcessFlow getProcessFlow() {
-        return processFlow;
-    }
-
-    public void setProcessFlow(ProcessFlow processFlow) {
-        this.processFlow = processFlow;
     }
 
     public String getProcessFlowId() {

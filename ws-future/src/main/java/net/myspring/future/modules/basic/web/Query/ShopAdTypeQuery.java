@@ -1,11 +1,24 @@
 package net.myspring.future.modules.basic.web.Query;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 /**
  * Created by lihx on 2017/4/19.
  */
 public class ShopAdTypeQuery {
     private String totalPriceType;
     private String name;
+    private List<String> totalPriceTypeList= Lists.newArrayList();
+
+    public List<String> getTotalPriceTypeList() {
+        return totalPriceTypeList;
+    }
+
+    public void setTotalPriceTypeList(List<String> totalPriceTypeList) {
+        this.totalPriceTypeList = totalPriceTypeList;
+    }
 
     public String getTotalPriceType() {
         return totalPriceType;

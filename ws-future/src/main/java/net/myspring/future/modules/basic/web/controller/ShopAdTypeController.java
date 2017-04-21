@@ -1,53 +1,56 @@
 package net.myspring.future.modules.basic.web.controller;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import net.myspring.future.modules.basic.domain.ShopAdType;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.TotalPriceTypeEnum;
+import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
+import net.myspring.future.modules.basic.service.ShopAdTypeService;
+import net.myspring.future.modules.basic.web.Query.ShopAdTypeQuery;
+import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "basic/shopAdType")
+@RequestMapping(value = "crm/shopAdType")
 public class ShopAdTypeController {
+
+    @Autowired
+    private ShopAdTypeService shopAdTypeService;
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        return null;
+    public Page<ShopAdTypeDto> list(Pageable pageable, ShopAdTypeQuery shopAdTypeQuery){
+        Page<ShopAdTypeDto> page = shopAdTypeService.findPage(pageable,shopAdTypeQuery);
+        return page;
     }
+
     @RequestMapping(value = "delete")
-    public String delete(ShopAdType shopAdType) {
-        return null;
+    public RestResponse delete(ShopAdTypeForm shopAdTypeForm) {
+        shopAdTypeService.delete(shopAdTypeForm);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "save")
-    public String save(ShopAdType shopAdType) {
-        return null;
+    public RestResponse save(ShopAdTypeForm shopAdTypeForm) {
+        shopAdTypeService.save(shopAdTypeForm);
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne(ShopAdType shopAdType){
-        return null;
-    }
-    @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
-        return null;
+    public ShopAdTypeForm findOne(ShopAdTypeForm shopAdTypeForm){
+        shopAdTypeForm=shopAdTypeService.findForm(shopAdTypeForm);
+        shopAdTypeForm.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
+       return shopAdTypeForm;
     }
 
-    @RequestMapping(value="getQuery")
-    public String getQuery(){
-        return null;
+    @RequestMapping(value="getListProperty")
+    public ShopAdTypeQuery getListProperty(ShopAdTypeQuery shopAdTypeQuery){
+        shopAdTypeQuery.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
+        return shopAdTypeQuery;
     }
-
-    private List<String> getActionList() {
-        return null;
-    }
-
 
 }

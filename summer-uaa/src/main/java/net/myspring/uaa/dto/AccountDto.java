@@ -19,11 +19,20 @@ public class AccountDto {
     private String companyId;
     private String officeId;
     private String employeeId;
+    private String companyName;
 
     private boolean enabled;
     private boolean locked;
 
     private LocalDate leaveDate;
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
     public String getLoginName() {
         return loginName;

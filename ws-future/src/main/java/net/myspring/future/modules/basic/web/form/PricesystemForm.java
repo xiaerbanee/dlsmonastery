@@ -1,7 +1,10 @@
 package net.myspring.future.modules.basic.web.form;
 
+import com.google.common.collect.Lists;
 import net.myspring.future.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.Pricesystem;
+import net.myspring.future.modules.basic.domain.PricesystemDetail;
+import net.myspring.future.modules.basic.dto.PricesystemDetailDto;
 
 import java.util.List;
 
@@ -10,8 +13,25 @@ import java.util.List;
  */
 public class PricesystemForm extends DataForm<Pricesystem> {
     private String name;
-    private String sotr;
-    private List<String> pricesystemDetailList;
+    private String sort;
+    private boolean enabled;
+    private List<PricesystemDetailForm> pricesystemDetailList= Lists.newArrayList();
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public String getName() {
         return name;
@@ -21,19 +41,11 @@ public class PricesystemForm extends DataForm<Pricesystem> {
         this.name = name;
     }
 
-    public String getSotr() {
-        return sotr;
-    }
-
-    public void setSotr(String sotr) {
-        this.sotr = sotr;
-    }
-
-    public List<String> getPricesystemDetailList() {
+    public List<PricesystemDetailForm> getPricesystemDetailList() {
         return pricesystemDetailList;
     }
 
-    public void setPricesystemDetailList(List<String> pricesystemDetailList) {
+    public void setPricesystemDetailList(List<PricesystemDetailForm> pricesystemDetailList) {
         this.pricesystemDetailList = pricesystemDetailList;
     }
 }

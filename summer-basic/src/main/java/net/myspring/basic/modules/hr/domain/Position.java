@@ -2,9 +2,7 @@ package net.myspring.basic.modules.hr.domain;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 import net.myspring.basic.modules.sys.domain.Permission;
-import net.myspring.basic.modules.sys.domain.ProcessFlow;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -28,7 +26,6 @@ public class Position extends CompanyEntity<Position> {
     private String jobId;
     private List<Permission> permissionList = Lists.newArrayList();
     private List<String> permissionIdList = Lists.newArrayList();
-    private List<ProcessFlow> processFlowList = Lists.newArrayList();
     private List<String> processFlowIdList = Lists.newArrayList();
 
     public String getName() {
@@ -141,14 +138,6 @@ public class Position extends CompanyEntity<Position> {
 
     public void setPermissionIdList(List<String> permissionIdList) {
         this.permissionIdList = permissionIdList;
-    }
-
-    public List<ProcessFlow> getProcessFlowList() {
-        return processFlowList;
-    }
-
-    public void setProcessFlowList(List<ProcessFlow> processFlowList) {
-        this.processFlowList = processFlowList;
     }
 
     public List<String> getProcessFlowIdList() {

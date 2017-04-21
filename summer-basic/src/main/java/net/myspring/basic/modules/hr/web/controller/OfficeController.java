@@ -6,6 +6,7 @@ import net.myspring.basic.common.enums.DictMapCategoryEnum;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.utils.Global;
 import net.myspring.basic.modules.hr.domain.Office;
+import net.myspring.basic.modules.hr.dto.OfficeBasicDto;
 import net.myspring.basic.modules.hr.dto.OfficeDto;
 import net.myspring.basic.modules.hr.service.OfficeService;
 import net.myspring.basic.modules.hr.web.form.OfficeForm;
@@ -16,6 +17,7 @@ import net.myspring.basic.modules.sys.service.DictMapService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,15 @@ public class OfficeController {
             officeIdList=officeService.getOfficeFilterIds(accountId);
         }
         return officeIdList;
+    }
+
+    @RequestMapping(value = "findByType")
+    public List<OfficeBasicDto> findByType(String type){
+        List<OfficeBasicDto> officeList=Lists.newArrayList();
+        if(StringUtils.isNotBlank(type)){
+            officeList= BeanUtil.map(officeService.findByType(type),OfficeBasicDto.class);
+        }
+        return officeList;
     }
 
     @RequestMapping(value = "save")

@@ -1,9 +1,13 @@
 package net.myspring.future.modules.basic.web.form;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.future.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.ProductType;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lihx on 2017/4/19.
@@ -14,10 +18,19 @@ public class ProductTypeForm extends DataForm<ProductType>{
     private String scoreType;
     private String code;
     private BigDecimal baokaPrice;
-    private String productIdList;
+    private List<String> productIdList= Lists.newArrayList();
     private BigDecimal price1;
     private BigDecimal price2;
     private BigDecimal price3;
+    private Map<Boolean,String> boolMap= Maps.newHashMap();
+
+    public Map<Boolean, String> getBoolMap() {
+        return boolMap;
+    }
+
+    public void setBoolMap(Map<Boolean, String> boolMap) {
+        this.boolMap = boolMap;
+    }
 
     public String getName() {
         return name;
@@ -59,11 +72,11 @@ public class ProductTypeForm extends DataForm<ProductType>{
         this.baokaPrice = baokaPrice;
     }
 
-    public String getProductIdList() {
+    public List<String> getProductIdList() {
         return productIdList;
     }
 
-    public void setProductIdList(String productIdList) {
+    public void setProductIdList(List<String> productIdList) {
         this.productIdList = productIdList;
     }
 

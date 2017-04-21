@@ -9,13 +9,11 @@ import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.AccountMessageDto;
-import net.myspring.basic.modules.hr.dto.AccountTaskDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
-import net.myspring.basic.modules.sys.model.MenuCategoryItem;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -49,8 +47,6 @@ public class AccountController {
 
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private AccountTaskService accountTaskService;
     @Autowired
     private AccountMessageService accountMessageService;
     @Autowired
@@ -138,8 +134,6 @@ public class AccountController {
         cacheUtils.initCacheInput(accountDto);
         LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
         List<DutyDto> dutyList = dutyService.findByAuditable(accountDto.getId(), AuditTypeEnum.APPLY.getValue(), lastMonth);
-        List<AccountTaskDto> accountTasks = accountTaskService.findByPositionId(accountDto.getPositionId(), accountService.findOne(SecurityUtils.getAccountId()));
-        map.put("accountTaskSize", accountTasks.size());
         List<AccountMessageDto> accountMessages = accountMessageService.findByAccount(accountDto.getId(), lastMonth);
         map.put("dutySize", dutyList.size());
         map.put("accountMessageSize", accountMessages.size());

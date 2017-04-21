@@ -59,13 +59,9 @@ public class Employee extends CompanyEntity<Employee> {
     private List<String> dutyWorktimeIdList = Lists.newArrayList();
     private Account account;
     private String accountId;
-    private List<EmployeePoint> employeePointList = Lists.newArrayList();
     private List<String> employeePointIdList = Lists.newArrayList();
-    private List<EmployeeSalary> employeeSalaryList = Lists.newArrayList();
     private List<String> employeeSalaryIdList = Lists.newArrayList();
-    private List<EmployeeSalaryBasic> employeeSalaryBasicList = Lists.newArrayList();
     private List<String> employeeSalaryBasicIdList = Lists.newArrayList();
-    private List<Salary> salaryList = Lists.newArrayList();
     private List<String> salaryIdList = Lists.newArrayList();
 
     public String getCode() {
@@ -429,28 +425,12 @@ public class Employee extends CompanyEntity<Employee> {
         this.accountId = accountId;
     }
 
-    public List<EmployeePoint> getEmployeePointList() {
-        return employeePointList;
-    }
-
-    public void setEmployeePointList(List<EmployeePoint> employeePointList) {
-        this.employeePointList = employeePointList;
-    }
-
     public List<String> getEmployeePointIdList() {
         return employeePointIdList;
     }
 
     public void setEmployeePointIdList(List<String> employeePointIdList) {
         this.employeePointIdList = employeePointIdList;
-    }
-
-    public List<EmployeeSalary> getEmployeeSalaryList() {
-        return employeeSalaryList;
-    }
-
-    public void setEmployeeSalaryList(List<EmployeeSalary> employeeSalaryList) {
-        this.employeeSalaryList = employeeSalaryList;
     }
 
     public List<String> getEmployeeSalaryIdList() {
@@ -461,28 +441,12 @@ public class Employee extends CompanyEntity<Employee> {
         this.employeeSalaryIdList = employeeSalaryIdList;
     }
 
-    public List<EmployeeSalaryBasic> getEmployeeSalaryBasicList() {
-        return employeeSalaryBasicList;
-    }
-
-    public void setEmployeeSalaryBasicList(List<EmployeeSalaryBasic> employeeSalaryBasicList) {
-        this.employeeSalaryBasicList = employeeSalaryBasicList;
-    }
-
     public List<String> getEmployeeSalaryBasicIdList() {
         return employeeSalaryBasicIdList;
     }
 
     public void setEmployeeSalaryBasicIdList(List<String> employeeSalaryBasicIdList) {
         this.employeeSalaryBasicIdList = employeeSalaryBasicIdList;
-    }
-
-    public List<Salary> getSalaryList() {
-        return salaryList;
-    }
-
-    public void setSalaryList(List<Salary> salaryList) {
-        this.salaryList = salaryList;
     }
 
     public List<String> getSalaryIdList() {

@@ -3,9 +3,7 @@ package net.myspring.basic.modules.hr.service;
 import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.domain.AccountTask;
 import net.myspring.basic.modules.hr.domain.OfficeChange;
-import net.myspring.basic.modules.hr.mapper.AccountTaskMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeChangeMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.OfficeChangeForm;
@@ -23,8 +21,6 @@ public class OfficeChangeService {
     @Autowired
     private OfficeMapper officeMapper;
     @Autowired
-    private AccountTaskMapper accountTaskMapper;
-    @Autowired
     private CacheUtils cacheUtils;
 
 
@@ -40,27 +36,5 @@ public class OfficeChangeService {
             cacheUtils.initCacheInput(officeChangeForm);
         }
         return officeChangeForm;
-    }
-
-    public void notify(OfficeChange officeChange) {
-        String name="机构调整";
-        AccountTask accountTask = accountTaskMapper.findByNameAndExtendId(name,officeChange.getId());
-        if(accountTask==null){
-            accountTask =new AccountTask();
-            accountTask.setName(name);
-            accountTask.setExtendId(officeChange.getId());
-            accountTask.setPositionId(officeChange.getProcessFlow().getPositionId());
-            accountTask.setOfficeId(SecurityUtils.getOfficeId());
-            accountTaskMapper.save(accountTask);
-        }else {
-            if(AuditTypeEnum.PASS.getValue().equals(officeChange.getProcessStatus()) ||AuditTypeEnum.NOT_PASS.getValue().equals(officeChange.getProcessStatus())){
-                accountTask.setStatus("已通过");
-                accountTask.setEnabled(false);
-            }else{
-                accountTask.setPositionId(officeChange.getProcessFlow().getPositionId());
-                accountTask.setStatus(officeChange.getProcessStatus());
-            }
-            accountTaskMapper.update(accountTask);
-        }
     }
 }

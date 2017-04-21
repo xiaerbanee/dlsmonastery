@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.basic.mapper.ProductTypeMapper">
 
-    <select id="findPage" resultType="ProductType">
+    <select id="findPage" resultType="ProductTypeDto">
         SELECT  t1.*
         FROM  crm_product_type t1
         where t1.enabled=1
