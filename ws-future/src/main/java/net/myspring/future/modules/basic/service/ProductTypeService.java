@@ -1,11 +1,18 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ProductType;
+import net.myspring.future.modules.basic.dto.ProductTypeDto;
+import net.myspring.future.modules.basic.manager.ProductTypeManager;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
+import net.myspring.future.modules.basic.web.Query.ProductTypeQuery;
+import net.myspring.future.modules.basic.web.form.ProductTypeForm;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.mapper.BeanUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,11 +28,15 @@ public class ProductTypeService {
     @Autowired
     private ProductTypeMapper productTypeMapper;
     @Autowired
+    private ProductTypeManager productTypeManager;
+    @Autowired
     private ProductMapper productMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
 
 
     public ProductType findOne(String id) {
-        ProductType productType = productTypeMapper.findOne(id);
+        ProductType productType = productTypeManager.findOne(id);
         return productType;
     }
 
@@ -34,16 +45,28 @@ public class ProductTypeService {
         return productTypeList;
     }
 
-    public ProductType save(ProductType productType) {
+    public ProductType save(ProductTypeForm productTypeForm) {
+        ProductType productType;
+        if (productTypeForm.isCreate()) {
+            productType= BeanUtil.map(productTypeForm,ProductType.class);
+            productType= productTypeManager.save(productType);
+        } else {
+            productMapper.updateProductTypeToNull(productTypeForm.getId());
+            productType= productTypeManager.updateForm(productTypeForm);
+        }
+        if (CollectionUtil.isNotEmpty(productTypeForm.getProductIdList())) {
+            productMapper.updateProductTypeId(productType.getId(), productTypeForm.getProductIdList());
+        }
         return productType;
     }
 
-    public void logicDeleteOne(String id) {
-        productTypeMapper.logicDeleteOne(id);
+    public void logicDeleteOne(ProductTypeForm productTypeForm) {
+        productTypeMapper.logicDeleteOne(productTypeForm.getId());
     }
 
-    public Page<ProductType> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<ProductType> page = productTypeMapper.findPage(pageable, map);
+    public Page<ProductTypeDto> findPage(Pageable pageable, ProductTypeQuery productTypeQuery) {
+        Page<ProductTypeDto> page = productTypeMapper.findPage(pageable, productTypeQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 

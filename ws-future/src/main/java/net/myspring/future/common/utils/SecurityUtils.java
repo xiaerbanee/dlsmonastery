@@ -37,6 +37,10 @@ public class SecurityUtils {
         return String.valueOf(getAdditionalInformation().get("employeeId"));
     }
 
+    public static String getCompanyName() {
+        return String.valueOf(getAdditionalInformation().get("companyName"));
+    }
+
     private  static Map<String, Object> getAdditionalInformation() {
         final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
         Jwt jwt = JwtHelper.decode(details.getTokenValue());

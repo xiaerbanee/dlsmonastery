@@ -1,8 +1,11 @@
 package net.myspring.future.modules.basic.web.form;
 
 
+import com.google.common.collect.Lists;
 import net.myspring.future.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
+
+import java.util.List;
 
 public class ExpressCompanyForm extends DataForm<ExpressCompany>{
     private String  name;
@@ -14,6 +17,16 @@ public class ExpressCompanyForm extends DataForm<ExpressCompany>{
     private String  phone;
     private String  mobilePhone;
     private String  contator;
+
+    private List<String> expressTypeList= Lists.newArrayList();
+
+    public List<String> getExpressTypeList() {
+        return expressTypeList;
+    }
+
+    public void setExpressTypeList(List<String> expressTypeList) {
+        this.expressTypeList = expressTypeList;
+    }
 
     public String getName() {
         return name;

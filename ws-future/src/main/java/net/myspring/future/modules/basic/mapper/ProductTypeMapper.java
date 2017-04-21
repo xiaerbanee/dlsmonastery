@@ -2,6 +2,8 @@ package net.myspring.future.modules.basic.mapper;
 
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.basic.domain.ProductType;
+import net.myspring.future.modules.basic.dto.ProductTypeDto;
+import net.myspring.future.modules.basic.web.Query.ProductTypeQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -13,7 +15,7 @@ import java.util.Map;
 @Mapper
 public interface ProductTypeMapper extends MyMapper<ProductType,String> {
 
-    Page<ProductType> findPage(Pageable pageable, @Param("p") Map<String, Object> map);
+    Page<ProductTypeDto> findPage(Pageable pageable, @Param("p") ProductTypeQuery productTypeQuery);
 
     List<ProductType> findByFilter(@Param("p") Map<String, Object> map);
 

@@ -1,7 +1,10 @@
 package net.myspring.future.modules.basic.web.form;
 
+import com.google.common.collect.Lists;
 import net.myspring.future.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.Product;
+
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/19.
@@ -20,6 +23,16 @@ public class ProductForm extends DataForm<Product> {
     private String depositPrice;
     private String mappingName;
     private String image;
+
+    private List<String> netTypeList= Lists.newArrayList();
+
+    public List<String> getNetTypeList() {
+        return netTypeList;
+    }
+
+    public void setNetTypeList(List<String> netTypeList) {
+        this.netTypeList = netTypeList;
+    }
 
     public String getName() {
         return name;
