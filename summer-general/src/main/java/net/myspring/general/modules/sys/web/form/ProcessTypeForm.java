@@ -2,10 +2,10 @@ package net.myspring.general.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.hr.dto.PositionDto;
-import net.myspring.basic.modules.sys.domain.ProcessType;
-import net.myspring.basic.modules.sys.dto.ProcessFlowDto;
+import net.myspring.general.common.form.DataForm;
+import net.myspring.general.modules.sys.domain.ProcessType;
+import net.myspring.general.modules.sys.dto.ProcessFlowDto;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by admin on 2017/4/6.
  */
 
-public class ProcessTypeForm extends DataForm<ProcessType>{
+public class ProcessTypeForm extends DataForm<ProcessType> {
     private String type;
     private String name;
     private String viewPermissionId;

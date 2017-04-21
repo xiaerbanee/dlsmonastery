@@ -1,6 +1,6 @@
 package net.myspring.general.modules.sys.web.controller;
 
-import net.myspring.basic.modules.sys.dto.DistrictDto;
+import net.myspring.general.modules.sys.dto.DistrictDto;
 import net.myspring.general.modules.sys.service.DistrictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
