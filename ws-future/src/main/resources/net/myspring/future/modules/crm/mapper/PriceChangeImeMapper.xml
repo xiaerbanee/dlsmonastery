@@ -11,7 +11,7 @@
          t1.price_change_id=t2.id
         and t1.shop_id=depot.id
         and t1.enabled=1
-        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter" />
+        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
         and (
           t1.image is null
         <if test="p.isCheck != null">
@@ -21,7 +21,7 @@
             OR t1.status = #{p.status}
         </if>
         )
-        <include refid="net.myspring.future.modules.crm.mapper.DepotMapper.depotFilter"/>
+        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter"/>
         <if test="p.priceChangeName != null ">
             and t2.name  like CONCAT('%', #{p.priceChangeName},'%')
         </if>
