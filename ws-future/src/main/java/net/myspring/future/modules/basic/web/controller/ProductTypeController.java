@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "crm/productType")
+@RequestMapping(value = "basic/productType")
 public class ProductTypeController {
 
 

@@ -13,11 +13,8 @@ import java.util.List;
 public class DealerDto extends DataDto<Dealer> {
     private String name;
     private String mobilePhone;
-    private Integer version;
-    private String accountId;
-    private List<Depot> depotList = Lists.newArrayList();
-    private List<String> depotIdList = Lists.newArrayList();
-    private List<String> accountIdList = Lists.newArrayList();
+    private Boolean locked;
+    private Boolean enabled;
 
     public String getName() {
         return name;
@@ -35,43 +32,19 @@ public class DealerDto extends DataDto<Dealer> {
         this.mobilePhone = mobilePhone;
     }
 
-    public Integer getVersion() {
-        return version;
+    public Boolean getLocked() {
+        return locked;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
-
-    public List<Depot> getDepotList() {
-        return depotList;
-    }
-
-    public void setDepotList(List<Depot> depotList) {
-        this.depotList = depotList;
-    }
-
-    public List<String> getDepotIdList() {
-        return depotIdList;
-    }
-
-    public void setDepotIdList(List<String> depotIdList) {
-        this.depotIdList = depotIdList;
-    }
-
-    public List<String> getAccountIdList() {
-        return accountIdList;
-    }
-
-    public void setAccountIdList(List<String> accountIdList) {
-        this.accountIdList = accountIdList;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

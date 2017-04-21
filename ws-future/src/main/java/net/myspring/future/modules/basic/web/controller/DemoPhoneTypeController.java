@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "crm/demoPhoneType")
+@RequestMapping(value = "basic/demoPhoneType")
 public class DemoPhoneTypeController {
 
 

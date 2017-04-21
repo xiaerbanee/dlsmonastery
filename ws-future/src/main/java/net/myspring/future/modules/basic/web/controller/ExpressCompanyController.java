@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "crm/expressCompany")
+@RequestMapping(value = "basic/expressCompany")
 public class ExpressCompanyController {
 
 

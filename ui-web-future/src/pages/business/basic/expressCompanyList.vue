@@ -67,7 +67,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("expressCompanyList",this.formData);
-        axios.get('/api/future/business/basic/expressCompany',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/basic/expressCompany',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -88,7 +88,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'expressCompanyForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/future/business/basic/expressCompany/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/ws/future/basic/expressCompany/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
             this.pageRequest();
           })
@@ -97,7 +97,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/future/business/basic/expressCompany/getQuery').then((response) =>{
+      axios.get('/api/ws/future/basic/expressCompany/getQuery').then((response) =>{
         this.formProperty=response.data;
         this.pageRequest();
       });

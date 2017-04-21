@@ -64,7 +64,7 @@
         <el-table-column prop="outId" label="outId"></el-table-column>
         <el-table-column prop="outGroupId" :label="$t('productList.outGroupId')"></el-table-column>
         <el-table-column prop="outGroupName"  :label="$t('productList.outGroupName')"></el-table-column>
-        <el-table-column prop="productType.name" :label="$t('productList.productType')"></el-table-column>
+        <el-table-column prop="productTypeName" :label="$t('productList.productType')"></el-table-column>
         <el-table-column prop="hasIme"  :label="$t('productList.hasIme')">
           <template scope="scope">
             <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
@@ -140,7 +140,7 @@
         this.formLabel.allowOrder.value =  util.bool2str(this.formData.allowOrder);
         this.formLabel.productType.value = util.getLabel(this.formProperty.productTypes, this.formData.productType);
         util.setQuery("productList",this.formData);
-        axios.get('/api/future/business/basic/product',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/basic/product',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -158,7 +158,7 @@
       },productEdit(){
         this.$router.push({ name: 'productAdEdit'})
       },synData(){
-        axios.get('/api/future/business/basic/product/syn').then((response) =>{
+        axios.get('/api/ws/future/basic/product/syn').then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })
@@ -169,7 +169,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/future/business/basic/product/getQuery').then((response) =>{
+      axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
         this.formProperty = response.data;
         this.pageRequest();
       });

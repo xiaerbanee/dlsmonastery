@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "crm/chain")
+@RequestMapping(value = "basic/chain")
 public class ChainController {
 
 

@@ -135,7 +135,7 @@
           form.validate((valid) => {
             if (valid) {
               this.inputForm.newDepotIds = this.selects;
-              axios.post('/api/future/business/basic/adPricesystem/save',qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/ws/future/basic/adPricesystem/save',qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -154,7 +154,7 @@
           this.formLabel.type.value = this.formProperty.types[this.formData.type];
           this.formLabel.officeId.value = util.getLabel(this.offices, this.formData.officeId);
           this.formLabel.adPricesystemId.value = util.getLabel(this.formProperty.adPricesystems, this.formData.adPricesystemId);
-          axios.get('/api/future/business/basic/depot',{params:this.formData}).then((response) => {
+          axios.get('/api/ws/future/basic/depot',{params:this.formData}).then((response) => {
             this.page = response.data;
             this.content = response.data.content;
             this.inputForm.pageIds=util.getIdList(this.content);
@@ -194,7 +194,7 @@
             form.validate((valid) => {
               if (valid) {
                 this.inputForm.newDepotIds = this.selects;
-                axios.post('/api/future/business/basic/adPricesystem/save',qs.stringify(this.inputForm, {allowDots:true})).then((response)=>{
+                axios.post('/api/ws/future/basic/adPricesystem/save',qs.stringify(this.inputForm, {allowDots:true})).then((response)=>{
                   this.$message(response.data.message);
                   this.selectChange = false;
                   this.getDepots();
@@ -206,12 +206,12 @@
       },created(){
         this.pageHeight = window.outerHeight -350;
 
-        axios.get('/api/future/business/basic/depot/getQuery').then((response) =>{
+        axios.get('/api/ws/future/basic/depot/getQuery').then((response) =>{
           this.formProperty=response.data;
         this.getDepots();
         });
         if(!this.isCreate){
-          axios.get('/api/future/business/basic/adPricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/adPricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
           })
         }

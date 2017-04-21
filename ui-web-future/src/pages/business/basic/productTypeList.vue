@@ -36,7 +36,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="remarks" :label="$t('productTypeList.remarks')"></el-table-column>
-        <el-table-column prop="created.fullName" :label="$t('productTypeList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('productTypeList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('productTypeList.createdDate')"></el-table-column>
         <el-table-column prop="locked" :label="$t('productTypeList.locked')">
           <template scope="scope">
@@ -85,7 +85,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("productTypeList",this.formData);
-        axios.get('/api/future/business/basic/productType',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/basic/productType',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -106,7 +106,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'productTypeForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/future/business/basic/productType/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/ws/future/basic/productType/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

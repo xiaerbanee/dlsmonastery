@@ -310,7 +310,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/future/business/basic/depot/save', qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/ws/future/basic/depot/save', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -378,7 +378,7 @@
       },remoteDepot(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/future/business/basic/depot/search', {params: {name: query, category: "SHOP"}}).then((response)=> {
+          axios.get('/api/ws/future/basic/depot/search', {params: {name: query, category: "SHOP"}}).then((response)=> {
             this.shops = response.data;
             this.remoteLoading = false;
           })
@@ -388,7 +388,7 @@
       },remoteStore(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/future/business/basic/depot/search',{params:{name:query,category:"STORE"}}).then((response)=>{
+          axios.get('/api/ws/future/basic/depot/search',{params:{name:query,category:"STORE"}}).then((response)=>{
             this.stores=response.data;
             this.remoteLoading = false;
           })
@@ -407,11 +407,11 @@
         }
       }
     },created(){
-      axios.get('/api/future/business/basic/depot/getFormProperty').then((response)=>{
+      axios.get('/api/ws/future/basic/depot/getFormProperty').then((response)=>{
         this.formProperty=response.data;
       });
       if(!this.isCreate){
-        axios.get('/api/future/business/basic/depot/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
           console.log(response.data);
           this.inputForm.doorHead = response.data.doorHead?1:0;

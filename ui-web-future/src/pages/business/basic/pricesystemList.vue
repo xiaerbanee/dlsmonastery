@@ -31,7 +31,7 @@
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="lastModified.fullName" :label="$t('pricesystemList.lastModifiedBy')"></el-table-column>
+        <el-table-column prop="lastModifiedByName" :label="$t('pricesystemList.lastModifiedBy')"></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('pricesystemList.lastModifiedDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('pricesystemList.operation')" width="140">
           <template scope="scope">
@@ -84,7 +84,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("pricesystemList",this.formData);
-        axios.get('/api/future/business/basic/pricesystem',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/basic/pricesystem',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -107,7 +107,7 @@
           if(action=="修改") {
             this.$router.push({ name: 'pricesystemForm', query: { id: id }})
           }else if(action == "删除"){
-            axios.get('/api/future/business/basic/pricesystem/delete',{params:{id:id}}).then((response) =>{
+            axios.get('/api/ws/future/basic/pricesystem/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
               this.pageRequest();
             })
@@ -116,7 +116,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/future/business/basic/product/getQuery').then((response) =>{
+      axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
         this.formProperty=response.data;
       });
       this.pageRequest();

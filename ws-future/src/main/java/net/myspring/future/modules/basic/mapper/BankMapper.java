@@ -3,6 +3,8 @@ package net.myspring.future.modules.basic.mapper;
 import net.myspring.future.common.dto.NameValueDto;
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.basic.domain.Bank;
+import net.myspring.future.modules.basic.dto.BankDto;
+import net.myspring.future.modules.basic.web.Query.BankQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -19,7 +21,7 @@ public interface BankMapper extends MyMapper<Bank,String> {
 
     Bank findByOutId(String outId);
 
-    Page<Bank> findPage(Pageable pageable, @Param("p") Map<String, Object> map);
+    Page<BankDto> findPage(Pageable pageable, @Param("p")BankQuery bankQuery);
 
     List<NameValueDto> findByBankId(List<String> bankId);
 
