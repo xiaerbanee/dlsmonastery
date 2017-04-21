@@ -9,7 +9,7 @@
         and t1.apply_end_date>#{applyEndDate}
     </select>
 
-    <select id="findPage" resultType="DemoPhoneType">
+    <select id="findPage" resultType="DemoPhoneTypeDto">
         SELECT t1.*
         FROM crm_demo_phone_type t1
         where t1.enabled=1

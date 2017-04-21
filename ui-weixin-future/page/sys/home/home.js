@@ -26,6 +26,7 @@ Page({
                     'authorization': "Bearer" + wx.getStorageSync('token').access_token
                 },
                 success: function (res) {
+                    console.log(res)
                     that.setData({ menuList: res.data });
                 }
             });

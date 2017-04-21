@@ -1,5 +1,15 @@
 package net.myspring.future.modules.basic.web.Query;
 
+import com.google.common.collect.Lists;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import net.myspring.future.common.enums.BoolEnum;
+import net.myspring.future.common.enums.NetTypeEnum;
+import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.ProductType;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by lihx on 2017/4/19.
  */
@@ -12,6 +22,42 @@ public class ProductQuery {
     private String allowOrder;
     private String outGroupName;
     private String netType;
+    private List<String> netTypeList= Lists.newArrayList();
+    private List<Product> outGroupNameList=Lists.newArrayList();
+    private Map<Boolean,String> boolMap;
+    private List<ProductType> productTypeList=Lists.newArrayList();
+
+    public List<ProductType> getProductTypeList() {
+        return productTypeList;
+    }
+
+    public void setProductTypeList(List<ProductType> productTypeList) {
+        this.productTypeList = productTypeList;
+    }
+
+    public List<String> getNetTypeList() {
+        return netTypeList;
+    }
+
+    public void setNetTypeList(List<String> netTypeList) {
+        this.netTypeList = netTypeList;
+    }
+
+    public List<Product> getOutGroupNameList() {
+        return outGroupNameList;
+    }
+
+    public void setOutGroupNameList(List<Product> outGroupNameList) {
+        this.outGroupNameList = outGroupNameList;
+    }
+
+    public Map<Boolean, String> getBoolMap() {
+        return boolMap;
+    }
+
+    public void setBoolMap(Map<Boolean, String> boolMap) {
+        this.boolMap = boolMap;
+    }
 
     public String getName() {
         return name;

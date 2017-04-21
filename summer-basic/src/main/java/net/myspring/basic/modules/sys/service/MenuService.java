@@ -14,8 +14,6 @@ import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.manager.MenuManager;
 import net.myspring.basic.modules.sys.mapper.*;
-import net.myspring.basic.modules.sys.model.MenuCategoryItem;
-import net.myspring.basic.modules.sys.model.MenuItem;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
 import net.myspring.basic.modules.sys.web.query.MenuQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -64,83 +62,6 @@ public class MenuService {
         List<MenuDto> menuDtoList = BeanUtil.map(menuList, MenuDto.class);
         cacheUtils.initCacheInput(menuDtoList);
         return menuDtoList;
-    }
-
-    public List<Map<String, Object>> findMobileMenus(String accountId) {
-        Map<MenuCategory, List<Menu>> map = Maps.newHashMap();
-        Account account = accountManager.findOne(accountId);
-        if (Const.XCXAUDIT.equals(account.getLoginName())) {
-            List<String> menuIds = StringUtils.getSplitList(weixinAuditMenuId, Const.CHAR_COMMA);
-            List<Menu> menus = menuMapper.findByIds(menuIds);
-            map = getMenuMap(menus);
-        } else {
-            map = getMenuMap(account, true);
-        }
-        List<Map<String, Object>> list = Lists.newArrayList();
-        for (MenuCategory menuCategory : map.keySet()) {
-            Map<String, Object> item = Maps.newHashMap();
-            item.put("category", menuCategory);
-            item.put("menus", map.get(menuCategory));
-            list.add(item);
-        }
-        return list;
-    }
-
-    public List<MenuCategoryItem> findMenus(String accountId) {
-        List<MenuCategoryItem> menuCategoryItems = Lists.newArrayList();
-        Account account = accountManager.findOne(accountId);
-        Map<MenuCategory, List<Menu>> map = getMenuMap(account, false);
-        for (MenuCategory menuCategory : map.keySet()) {
-            MenuCategoryItem menuCategoryItem = new MenuCategoryItem();
-            menuCategoryItem.setMenuCategory(menuCategory);
-            for (Menu menu : map.get(menuCategory)) {
-                if (!menuCategoryItem.getMenuMap().containsKey(menu.getCategoryCode())) {
-                    menuCategoryItem.getMenuMap().put(menu.getCategoryCode(), Lists.newArrayList());
-                }
-                menuCategoryItem.getMenuMap().get(menu.getCategoryCode()).add(menu);
-            }
-            if (CollectionUtil.isNotEmpty(menuCategoryItem.getMenuMap())) {
-                for (String groupName : menuCategoryItem.getMenuMap().keySet()) {
-                    MenuItem menuItem = new MenuItem();
-                    menuItem.setGroupName(groupName);
-                    menuItem.setMenus(menuCategoryItem.getMenuMap().get(groupName));
-                    menuCategoryItem.getMenuItems().add(menuItem);
-                }
-                menuCategoryItems.add(menuCategoryItem);
-            }
-        }
-        return menuCategoryItems;
-    }
-
-
-    private Map<MenuCategory, List<Menu>> getMenuMap(Account account, Boolean isMobile) {
-        List<Menu> menus = Lists.newArrayList();
-        List<Menu> menuList;
-        if (Const.HR_ACCOUNT_ADMIN_LIST.contains(account.getId())) {
-            menuList = menuMapper.findAll();
-        } else {
-            String positionId = account.getPositionId();
-            List<Permission> permissions = permissionMapper.findByPositionId(positionId);
-            List<String> menuIds = CollectionUtil.extractToList(permissions, "menuId");
-            menuList = menuMapper.findByIds(menuIds);
-            List<Menu> permissionIsEmptyMenus = menuMapper.findByPermissionIsEmpty();
-            if (CollectionUtil.isNotEmpty(permissionIsEmptyMenus)) {
-                menuList.addAll(permissionIsEmptyMenus);
-                menuList = Lists.newArrayList(Sets.newHashSet(menuList));
-            }
-        }
-        for (Menu menu : menuList) {
-            if (menu.getVisible()) {
-                if (isMobile) {
-                    if (menu.getMobile() && StringUtils.isNotBlank(menu.getMobileHref())) {
-                        menus.add(menu);
-                    }
-                } else {
-                    menus.add(menu);
-                }
-            }
-        }
-        return getMenuMap(menus);
     }
 
     private Map<MenuCategory, List<Menu>> getMenuMap(List<Menu> menus) {
@@ -244,7 +165,7 @@ public class MenuService {
     public BackendMenuDto getMenuMap(String accountId) {
         BackendMenuDto backendMenuDto = new BackendMenuDto();
         Account account = accountManager.findOne(accountId);
-        Map<Backend, List<Menu>> backendMenuMap = getMenusMap(account);
+        Map<Backend, List<Menu>> backendMenuMap = getMenusMap(account,false);
         backendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
         Map<String, List<BackendModule>> backendModuleMap = Maps.newHashMap();
         for (Backend backend : backendMenuMap.keySet()) {
@@ -262,7 +183,7 @@ public class MenuService {
             List<Menu> menus = menuMapper.findByIds(menuIds);
             backendMenuMap = getMenusMap(menus);
         } else {
-            backendMenuMap = getMenusMap(account);
+            backendMenuMap = getMenusMap(account,true);
         }
         List<Map<String, Object>> list = Lists.newArrayList();
         for (Backend backend : backendMenuMap.keySet()) {
@@ -274,7 +195,8 @@ public class MenuService {
         return list;
     }
 
-    private Map<Backend, List<Menu>> getMenusMap(Account account) {
+    private Map<Backend, List<Menu>> getMenusMap(Account account,boolean isMobile) {
+        List<Menu> menus=Lists.newArrayList();
         List<Menu> menuList;
         if (Const.HR_ACCOUNT_ADMIN_LIST.contains(account.getId())) {
             menuList = menuMapper.findAllEnabled();
@@ -289,7 +211,18 @@ public class MenuService {
             menuList = CollectionUtil.intersection(menuList, backendMenus);
             menuList = Lists.newArrayList(Sets.newHashSet(menuList));
         }
-        return getMenusMap(menuList);
+        for (Menu menu : menuList) {
+            if (menu.getVisible()) {
+                if (isMobile) {
+                    if (menu.getMobile() && StringUtils.isNotBlank(menu.getMobileHref())) {
+                        menus.add(menu);
+                    }
+                } else {
+                    menus.add(menu);
+                }
+            }
+        }
+        return getMenusMap(menus);
     }
 
     private Map<Backend, List<Menu>> getMenusMap(List<Menu> menuList) {

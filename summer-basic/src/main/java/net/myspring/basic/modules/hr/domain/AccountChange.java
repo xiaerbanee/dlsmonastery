@@ -2,9 +2,6 @@ package net.myspring.basic.modules.hr.domain;
 
 
 import net.myspring.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.basic.modules.sys.domain.ProcessFlow;
-import net.myspring.basic.modules.sys.domain.ProcessType;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -22,25 +19,8 @@ public class AccountChange extends CompanyEntity<AccountChange> {
     private String processStatus;
     private Account account;
     private String accountId;
-    private ProcessType processType;
     private String processTypeId;
-    private ProcessFlow processFlow;
     private String processFlowId;
-
-    public enum AccountChangeType {
-        // 基础信息
-        手机,
-        身份证,
-        银行卡号,
-        底薪,
-        // 调职调岗
-        部门,
-        岗位,
-        上级,
-        转正,
-        入职,
-        离职;
-    }
 
     public String getType() {
         return type;
@@ -122,13 +102,6 @@ public class AccountChange extends CompanyEntity<AccountChange> {
         this.accountId = accountId;
     }
 
-    public ProcessType getProcessType() {
-        return processType;
-    }
-
-    public void setProcessType(ProcessType processType) {
-        this.processType = processType;
-    }
 
     public String getProcessTypeId() {
         return processTypeId;
@@ -137,15 +110,6 @@ public class AccountChange extends CompanyEntity<AccountChange> {
     public void setProcessTypeId(String processTypeId) {
         this.processTypeId = processTypeId;
     }
-
-    public ProcessFlow getProcessFlow() {
-        return processFlow;
-    }
-
-    public void setProcessFlow(ProcessFlow processFlow) {
-        this.processFlow = processFlow;
-    }
-
     public String getProcessFlowId() {
         return processFlowId;
     }

@@ -11,7 +11,6 @@ import java.util.*;
  * Created by liuj on 2017/4/1.
  */
 public class CustomUserDetails implements UserDetails {
-    private String password;
     private final String username;
     private final Set<GrantedAuthority> authorities;
     private final boolean accountNonExpired;
@@ -20,11 +19,13 @@ public class CustomUserDetails implements UserDetails {
     private final boolean enabled;
     private final String accountId;
     private final String companyId;
+    private final String companyName;
     private final String positionId;
     private final String officeId;
     private final String employeeId;
+    private String password;
 
-    public CustomUserDetails(String username,String password,boolean enabled,boolean accountNonExpired,boolean credentialsNonExpired,boolean accountNonLocked,Collection<? extends GrantedAuthority> authorities,String accountId,String companyId,String positionId,String officeId,String employeeId) {
+    public CustomUserDetails(String username,String password,boolean enabled,boolean accountNonExpired,boolean credentialsNonExpired,boolean accountNonLocked,Collection<? extends GrantedAuthority> authorities,String accountId,String companyId,String positionId,String officeId,String employeeId,String companyName) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
         }
@@ -40,6 +41,7 @@ public class CustomUserDetails implements UserDetails {
         this.positionId = positionId;
         this.officeId=officeId;
         this.employeeId=employeeId;
+        this.companyName=companyName;
     }
 
 
@@ -96,5 +98,9 @@ public class CustomUserDetails implements UserDetails {
 
     public String getEmployeeId() {
         return employeeId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
     }
 }

@@ -2,6 +2,8 @@ package net.myspring.future.modules.basic.mapper;
 
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.basic.domain.Chain;
+import net.myspring.future.modules.basic.dto.ChainDto;
+import net.myspring.future.modules.basic.web.Query.ChainQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -13,7 +15,7 @@ import java.util.Map;
 @Mapper
 public interface ChainMapper extends MyMapper<Chain,String> {
 
-    Page<Chain> findPage(Pageable pageable, @Param("p") Map<String, Object> map);
+    Page<ChainDto> findPage(Pageable pageable, @Param("p")ChainQuery chainQuery);
 
     List<Chain> findLabels(List<String> ids);
 

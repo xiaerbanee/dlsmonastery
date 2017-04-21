@@ -7,6 +7,7 @@ import net.myspring.uaa.dto.WeixinSessionDto;
 import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.mapper.AccountDtoMapper;
 import net.myspring.uaa.mapper.AccountWeixinDtoMapper;
+import net.myspring.uaa.mapper.CompanyMapper;
 import net.myspring.util.base.ObjectUtil;
 import net.myspring.util.collection.CollectionUtil;
 import org.apache.commons.lang.ObjectUtils;
@@ -39,6 +40,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private AccountWeixinDtoMapper accountWeixinDtoMapper;
     @Autowired
     private WeixinManager weixinManager;
+    @Autowired
+    private CompanyMapper companyMapper;
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -68,6 +71,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             accountDto = accountMapper.findByLoginName(username);
         }
         if(accountDto != null) {
+            accountDto.setCompanyName(companyMapper.findNameById(accountDto.getCompanyId()));
             LocalDate leaveDate = accountDto.getLeaveDate();
             boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
@@ -84,7 +88,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                     accountDto.getCompanyId(),
                     accountDto.getPositionId(),
                     accountDto.getOfficeId(),
-                    accountDto.getEmployeeId()
+                    accountDto.getEmployeeId(),
+                    accountDto.getCompanyName()
             );
         }
         return customUserDetails;

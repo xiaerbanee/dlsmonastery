@@ -23,6 +23,26 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
 		return list;
 	}
 
+	public static String getReplaced(String str) {
+		List<String> beforeList = Lists.newArrayList();
+		beforeList.add("，");
+		beforeList.add(" ");
+		beforeList.add("　");
+		beforeList.add("\n");
+		beforeList.add("	");
+		return getReplaced(str, beforeList, ",");
+	}
+
+	public static String getReplaced(String str, List<String> beforeList, String after) {
+		String result = trim(str);
+		if (StringUtils.isNotBlank(result)) {
+			for (String before : beforeList) {
+				result = StringUtils.replace(result, before, after);
+			}
+		}
+		return result;
+	}
+
 	public static String getFormatId(String id, String prefix) {
 		return getFormatId(id, prefix, "000000000000");
 	}

@@ -5,7 +5,6 @@ import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.dto.DutyAnnualDto;
 import net.myspring.basic.modules.hr.service.DutyAnnualService;
 import net.myspring.basic.modules.hr.web.query.DutyAnnualQuery;
-import net.myspring.basic.modules.sys.domain.FolderFile;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -17,8 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.io.File;
 
 @RestController
 @RequestMapping(value = "hr/dutyAnnual")

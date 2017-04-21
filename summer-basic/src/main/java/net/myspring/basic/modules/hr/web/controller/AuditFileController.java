@@ -2,14 +2,12 @@ package net.myspring.basic.modules.hr.web.controller;
 
 import gui.ava.html.image.generator.HtmlImageGenerator;
 import net.myspring.basic.common.enums.BoolEnum;
-import net.myspring.basic.common.enums.FolderDefaultEnum;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.service.AuditFileService;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
-import net.myspring.basic.modules.sys.domain.ProcessType;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
