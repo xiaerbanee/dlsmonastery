@@ -1,7 +1,7 @@
 package net.myspring.general.modules.sys.mapper;
 
-import net.myspring.basic.common.mybatis.MyMapper;
-import net.myspring.basic.modules.sys.domain.District;
+import net.myspring.general.common.mybatis.MyMapper;
+import net.myspring.general.modules.sys.domain.District;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

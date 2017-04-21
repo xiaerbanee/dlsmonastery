@@ -1,6 +1,8 @@
 package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.common.utils.Const;
 import net.myspring.general.modules.sys.domain.Folder;
@@ -24,23 +26,14 @@ public class FolderService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public Folder findByParentIdAndName(String parentId, String name) {
-        return folderMapper.findByParentIdAndName(parentId, name);
-    }
-
-    public Folder findOne(String id){
-        return folderMapper.findOne(id);
-    }
-
     public FolderForm findForm(String id){
         Folder folder = folderMapper.findOne(id);
         FolderForm folderForm = BeanUtil.map(folder, FolderForm.class);
-        cacheUtils.initCacheInput(folderForm);
         return folderForm;
     }
 
-    public void deleteOne(String id){
-        folderMapper.deleteById(id);
+    public void logicDeleteOne(String id){
+        folderMapper.logicDeleteOne(id);
     }
 
     @Transactional
@@ -66,9 +59,9 @@ public class FolderService {
                 folder = folderMapper.findByParentIdAndName(parent.getId(), p);
                 if (folder == null) {
                     FolderForm folderForm = new FolderForm();
-                    folderForm.setParent(parent);
+                    folderForm.setParentId(parent.getId());
                     folderForm.setName(p);
-                    folderForm.setParentIds(folderForm.getParent().getParentIds() + folderForm.getParent().getId() + ",");
+                    folderForm.setParentIds(parent.getParentIds() + parent.getId() + ",");
                     folderMapper.save(folder);
                 }
                 parent = folder;
@@ -99,17 +92,21 @@ public class FolderService {
     }
 
     @Transactional
-    public Folder save(FolderForm folderForm) {
+    public RestResponse save(FolderForm folderForm) {
         Folder parent = folderMapper.findOne(folderForm.getParentId());
+        // 无法将上级部门设置为自己或者自己的下级部门
+        folderForm.setParentIds(parent.getParentIds() + folderForm.getParentId() + ",");
+        if (!folderForm.isCreate() && folderForm.getParentIds().contains("," + folderForm.getId() + ",")) {
+            return new RestResponse("无法将上级目录设置为自己或者自己的下级目录",ResponseCodeEnum.invalid.name());
+        }
         String oldParentIds = folderForm.getParentIds();
-        folderForm.setParent(parent);
         Folder folder=BeanUtil.map(folderForm,Folder.class);
         folderMapper.save(folder);
         List<Folder> list = folderMapper.findByParentIdsLike("%," + folderForm.getId() + ",%");
         for (Folder e : list) {
             e.setParentIds(e.getParentIds().replace(oldParentIds, folderForm.getParentIds()));
         }
-        return folder;
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     private void sortList(List<Folder> list, List<Folder> sourceList, String parentId) {

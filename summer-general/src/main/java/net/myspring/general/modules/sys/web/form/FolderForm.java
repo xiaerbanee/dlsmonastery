@@ -12,12 +12,13 @@ import java.util.List;
  */
 
 public class FolderForm extends DataForm<Folder>{
-    private Folder parent;
     private String name;
     private String parentIds;
     private String parentId;
-    private List<FolderDto> folderList= Lists.newArrayList();
     private String remarks;
+
+    private List<FolderDto> folderList = Lists.newArrayList();
+
 
     public String getRemarks() {
         return remarks;
@@ -25,22 +26,6 @@ public class FolderForm extends DataForm<Folder>{
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public List<FolderDto> getFolderList() {
-        return folderList;
-    }
-
-    public void setFolderList(List<FolderDto> folderList) {
-        this.folderList = folderList;
-    }
-
-    public Folder getParent() {
-        return parent;
-    }
-
-    public void setParent(Folder parent) {
-        this.parent = parent;
     }
 
     public String getName() {
@@ -65,5 +50,13 @@ public class FolderForm extends DataForm<Folder>{
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public List<FolderDto> getFolderList() {
+        return folderList;
+    }
+
+    public void setFolderList(List<FolderDto> folderList) {
+        this.folderList = folderList;
     }
 }
