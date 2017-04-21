@@ -39,16 +39,9 @@ public class AccountWeixinController {
 
     @Autowired
     private AccountWeixinService accountWeixinService;
-    @Autowired
-    private AccountService accountService;
 
     @RequestMapping(value = "findByAccountId")
     public AccountWeixinDto findByAccountId(String accountId) {
         return accountWeixinService.findByAccountId(accountId);
-    }
-
-    @RequestMapping(value = "bind")
-    public RestResponse accountBind(WeixinAccountForm weixinAccountForm) {
-        return accountWeixinService.bind(weixinAccountForm);
     }
 }
