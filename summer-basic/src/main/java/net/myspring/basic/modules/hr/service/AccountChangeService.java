@@ -4,7 +4,6 @@ import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.AccountChange;
-import net.myspring.basic.modules.hr.domain.AccountTask;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.mapper.*;
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
@@ -26,8 +25,6 @@ public class AccountChangeService {
     private PositionMapper positionMapper;
     @Autowired
     private OfficeMapper officeMapper;
-    @Autowired
-    private AccountTaskMapper accountTaskMapper;
     @Autowired
     private EmployeeMapper employeeMapper;
     @Autowired
@@ -58,28 +55,5 @@ public class AccountChangeService {
         Page<AccountChangeDto> page=accountChangeMapper.findPage(pageable,accountChangeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
-    }
-
-
-
-    // 通知审批人
-    public void notify(AccountChange accountChange) {
-        String name = "员工信息调整";
-        AccountTask accountTask = accountTaskMapper.findByNameAndExtendId(name,accountChange.getId());
-        if(accountTask==null){
-            accountTask =new AccountTask();
-            accountTask.setName(name);
-            accountTask.setExtendId(accountChange.getId());
-            accountTask.setOfficeId(SecurityUtils.getOfficeId());
-            accountTaskMapper.save(accountTask);
-        }else {
-            if(AuditTypeEnum.PASS.getValue().equals(accountChange.getProcessStatus()) ||AuditTypeEnum.NOT_PASS.getValue().equals(accountChange.getProcessStatus())){
-                accountTask.setStatus("已通过");
-                accountTask.setEnabled(false);
-            }else{
-                accountTask.setStatus(accountChange.getProcessStatus());
-            }
-            accountTaskMapper.update(accountTask);
-        }
     }
 }

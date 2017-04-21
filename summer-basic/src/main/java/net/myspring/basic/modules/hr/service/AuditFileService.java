@@ -3,10 +3,8 @@ package net.myspring.basic.modules.hr.service;
 import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.domain.AccountTask;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
-import net.myspring.basic.modules.hr.mapper.AccountTaskMapper;
 import net.myspring.basic.modules.hr.mapper.AuditFileMapper;
 import net.myspring.basic.modules.hr.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
@@ -24,8 +22,6 @@ public class AuditFileService {
 
     @Autowired
     private AuditFileMapper auditFileMapper;
-    @Autowired
-    private AccountTaskMapper accountTaskMapper;
     @Autowired
     private OfficeMapper officeMapper;
     @Autowired
@@ -50,26 +46,6 @@ public class AuditFileService {
             cacheUtils.initCacheInput(auditFileForm);
         }
         return auditFileForm;
-    }
-
-    public void notify(AuditFile auditFile) {
-        String name = "文件审批";
-        AccountTask accountTask = accountTaskMapper.findByNameAndExtendId(name, auditFile.getId());
-        if (accountTask == null) {
-            accountTask = new AccountTask();
-            accountTask.setName(name);
-            accountTask.setExtendId(auditFile.getId());
-            accountTask.setOfficeId(SecurityUtils.getOfficeId());
-            accountTaskMapper.save(accountTask);
-        } else {
-            if (AuditTypeEnum.PASS.getValue().equals(auditFile.getProcessStatus()) || AuditTypeEnum.NOT_PASS.getValue().equals(auditFile.getProcessStatus())) {
-                accountTask.setStatus("已审核");
-                accountTask.setEnabled(false);
-            } else {
-                accountTask.setStatus(auditFile.getProcessStatus());
-            }
-            accountTaskMapper.update(accountTask);
-        }
     }
 
     public void logicDeleteOne(String id) {
