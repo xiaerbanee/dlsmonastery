@@ -1,9 +1,12 @@
 package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Lists;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.general.common.utils.CacheUtils;
+import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.dto.FolderFileDto;
 import net.myspring.general.modules.sys.mapper.FolderFileMapper;
@@ -38,27 +41,32 @@ public class FolderFileService {
     @Autowired
     private FolderFileMapper folderFileMapper;
     @Autowired
-    private GridFsTemplate tempGridFsTemplate;
-    @Autowired
     private GridFsTemplate storageGridFsTemplate;
     @Autowired
     private GridFsTemplate previewGridFsTemplate;
+    @Autowired
+    private GridFsTemplate exportGridFsTemplate;
 
     @Transactional
     public List<FolderFileDto> save(String folderId, Map<String, MultipartFile> fileMap) {
+        DBObject dbObject = new BasicDBObject();
+        dbObject.put("createdBy", SecurityUtils.getAccountId());
+        dbObject.put("companyId",SecurityUtils.getCompanyId());
+        dbObject.put("positionId",SecurityUtils.getPositionId());
+        dbObject.put("officeId",SecurityUtils.getOfficeId());
         List<FolderFile> list = Lists.newArrayList();
         try {
             for (MultipartFile multipartFile : fileMap.values()) {
                 if (multipartFile.getSize() > 0) {
                     //保存到mongoDb
-                    GridFSFile gridFSFile = storageGridFsTemplate.store(multipartFile.getInputStream(),multipartFile.getOriginalFilename(),multipartFile.getContentType());
+                    GridFSFile gridFSFile = storageGridFsTemplate.store(multipartFile.getInputStream(),multipartFile.getOriginalFilename(),multipartFile.getContentType(),dbObject);
                     GridFSFile preview = null;
                     //如果是图片类型
                     if(multipartFile.getContentType().startsWith("image/")) {
                         BufferedImage image = Scalr.resize(ImageIO.read(multipartFile.getInputStream()), 290);
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         ImageIO.write(image, "png", baos);
-                        preview = previewGridFsTemplate.store(new ByteArrayInputStream(baos.toByteArray()),multipartFile.getOriginalFilename(),multipartFile.getContentType());
+                        preview = previewGridFsTemplate.store(new ByteArrayInputStream(baos.toByteArray()),multipartFile.getOriginalFilename(),multipartFile.getContentType(),dbObject);
                     }
                     // 保存到数据库
                     FolderFile folderFile = new FolderFile();
@@ -81,16 +89,16 @@ public class FolderFileService {
         return BeanUtil.map(list,FolderFileDto.class);
     }
 
-    public GridFSDBFile getGridFSDBFile(String type,String id) {
+    public GridFSDBFile getGridFSDBFile(String type,String mongoId) {
         GridFsTemplate gridFsTemplate;
         if("storage".equals(type)) {
             gridFsTemplate = storageGridFsTemplate;
-        } else if("preview".equals(type)) {
+        } else  if("preview".equals(type)) {
             gridFsTemplate = previewGridFsTemplate;
         } else {
-            gridFsTemplate = tempGridFsTemplate;
+            gridFsTemplate = exportGridFsTemplate;
         }
-        return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(id)));
+        return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(mongoId)));
     }
 
     public FolderFile findOne(String id) {
