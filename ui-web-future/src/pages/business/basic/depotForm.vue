@@ -413,7 +413,6 @@
       if(!this.isCreate){
         axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
-          console.log(response.data);
           this.inputForm.doorHead = response.data.doorHead?1:0;
           this.inputForm.rebate = response.data.rebate?1:0;
           this.inputForm.hasGuide = response.data.hasGuide?1:0;
@@ -440,15 +439,15 @@
             this.inputForm.pricesystemId=response.data.pricesystem.id;
           }
           if(response.data.town){
-            this.towns=new Array(response.data.town)
+            this.towns=new Array(response.data.town);
             this.inputForm.townId=response.data.town.id;
           }
           if(response.data.cmccCarrierShop){
-            this.cmccCarrierShops=new Array(response.data.cmccCarrierShop)
+            this.cmccCarrierShops=new Array(response.data.cmccCarrierShop);
             this.inputForm.cmccCarrierShopId=response.data.cmccCarrierShop.id;
           }
           if(response.data.ctccCarrierShop){
-            this.ctccCarrierShops=new Array(response.data.ctccCarrierShop)
+            this.ctccCarrierShops=new Array(response.data.ctccCarrierShop);
             this.inputForm.ctccCarrierShopId=response.data.ctccCarrierShop.id;
           }
           if(response.data.accountList!=null&&response.data.accountList.length>0){
@@ -456,7 +455,7 @@
             this.inputForm.accountIdList=util.getIdList(this.accounts);
           }
           if(response.data.parent){
-            this.shops=new Array(response.data.parent)
+            this.shops=new Array(response.data.parent);
             this.inputForm.parentId=response.data.parent.id;
           }
         })
