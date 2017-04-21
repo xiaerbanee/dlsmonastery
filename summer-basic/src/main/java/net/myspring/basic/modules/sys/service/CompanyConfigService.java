@@ -50,4 +50,12 @@ public class CompanyConfigService {
         cacheUtils.initCacheInput(companyConfigDto);
         return companyConfigDto;
     }
+
+    public String getValueByCode(String code){
+        CompanyConfig companyConfig=companyConfigMapper.findByCode(code);
+        if(companyConfig!=null){
+            return companyConfig.getValue();
+        }
+        return "";
+    }
 }

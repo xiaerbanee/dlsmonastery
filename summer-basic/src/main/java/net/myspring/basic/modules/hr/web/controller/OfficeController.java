@@ -54,6 +54,14 @@ public class OfficeController {
          return officeDtos;
     }
 
+    @RequestMapping(value = "getOfficeFilterIds")
+    public List<String> getOfficeFilterIds(String accountId){
+        List<String> officeIdList=Lists.newArrayList();
+        if(StringUtils.isNotBlank(accountId)){
+            officeIdList=officeService.getOfficeFilterIds(accountId);
+        }
+        return officeIdList;
+    }
 
     @RequestMapping(value = "save")
     public RestResponse save(OfficeForm officeForm, BindingResult bindingResult) {
