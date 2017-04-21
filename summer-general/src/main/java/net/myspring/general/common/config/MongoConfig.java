@@ -32,7 +32,7 @@ public class MongoConfig {
     }
 
     @Bean
-    public GridFsTemplate gridFsTemplate() {
+    public GridFsTemplate exportGridFsTemplate() {
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
         GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter);
@@ -53,14 +53,6 @@ public class MongoConfig {
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
         GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"preview");
-        return gridFsTemplate;
-    }
-
-    @Bean
-    public GridFsTemplate tempGridFsTemplate() {
-        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
-        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"temp");
         return gridFsTemplate;
     }
 }

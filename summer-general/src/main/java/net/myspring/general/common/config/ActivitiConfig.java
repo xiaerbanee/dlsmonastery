@@ -8,6 +8,7 @@ import net.myspring.general.common.activiti.CustomUserManagerFactory;
 import org.activiti.engine.impl.interceptor.SessionFactory;
 import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.activiti.spring.boot.AbstractProcessEngineAutoConfiguration;
+import org.activiti.spring.boot.ActivitiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,5 +45,10 @@ public class ActivitiConfig extends AbstractProcessEngineAutoConfiguration {
         customSessionFactories.add(customUserManagerFactory);
         springProcessEngineConfiguration.setCustomSessionFactories(customSessionFactories);
         return springProcessEngineConfiguration;
+    }
+
+    @Bean
+    public ActivitiProperties activitiProperties() {
+        return new ActivitiProperties();
     }
 }
