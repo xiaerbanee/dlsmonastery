@@ -63,7 +63,6 @@ public class Employee extends CompanyEntity<Employee> {
     private List<String> employeePointIdList = Lists.newArrayList();
     private List<EmployeeSalary> employeeSalaryList = Lists.newArrayList();
     private List<String> employeeSalaryIdList = Lists.newArrayList();
-    private List<EmployeeSalaryBasic> employeeSalaryBasicList = Lists.newArrayList();
     private List<String> employeeSalaryBasicIdList = Lists.newArrayList();
     private List<Salary> salaryList = Lists.newArrayList();
     private List<String> salaryIdList = Lists.newArrayList();
@@ -459,14 +458,6 @@ public class Employee extends CompanyEntity<Employee> {
 
     public void setEmployeeSalaryIdList(List<String> employeeSalaryIdList) {
         this.employeeSalaryIdList = employeeSalaryIdList;
-    }
-
-    public List<EmployeeSalaryBasic> getEmployeeSalaryBasicList() {
-        return employeeSalaryBasicList;
-    }
-
-    public void setEmployeeSalaryBasicList(List<EmployeeSalaryBasic> employeeSalaryBasicList) {
-        this.employeeSalaryBasicList = employeeSalaryBasicList;
     }
 
     public List<String> getEmployeeSalaryBasicIdList() {

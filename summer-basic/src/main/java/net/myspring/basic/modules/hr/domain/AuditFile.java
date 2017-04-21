@@ -2,9 +2,6 @@ package net.myspring.basic.modules.hr.domain;
 
 
 import net.myspring.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.basic.modules.sys.domain.ProcessFlow;
-import net.myspring.basic.modules.sys.domain.ProcessType;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -19,9 +16,7 @@ public class AuditFile extends CompanyEntity<AuditFile> {
     private Integer version = 0;
     private String processInstanceId;
     private String processStatus;
-    private ProcessType processType;
     private String processTypeId;
-    private ProcessFlow processFlow;
     private String processFlowId;
 
     public String getTitle() {
@@ -80,14 +75,6 @@ public class AuditFile extends CompanyEntity<AuditFile> {
         this.processStatus = processStatus;
     }
 
-    public ProcessType getProcessType() {
-        return processType;
-    }
-
-    public void setProcessType(ProcessType processType) {
-        this.processType = processType;
-    }
-
     public String getProcessTypeId() {
         return processTypeId;
     }
@@ -95,15 +82,6 @@ public class AuditFile extends CompanyEntity<AuditFile> {
     public void setProcessTypeId(String processTypeId) {
         this.processTypeId = processTypeId;
     }
-
-    public ProcessFlow getProcessFlow() {
-        return processFlow;
-    }
-
-    public void setProcessFlow(ProcessFlow processFlow) {
-        this.processFlow = processFlow;
-    }
-
     public String getProcessFlowId() {
         return processFlowId;
     }

@@ -49,7 +49,6 @@ public class OfficeChangeService {
             accountTask =new AccountTask();
             accountTask.setName(name);
             accountTask.setExtendId(officeChange.getId());
-            accountTask.setPositionId(officeChange.getProcessFlow().getPositionId());
             accountTask.setOfficeId(SecurityUtils.getOfficeId());
             accountTaskMapper.save(accountTask);
         }else {
@@ -57,7 +56,6 @@ public class OfficeChangeService {
                 accountTask.setStatus("已通过");
                 accountTask.setEnabled(false);
             }else{
-                accountTask.setPositionId(officeChange.getProcessFlow().getPositionId());
                 accountTask.setStatus(officeChange.getProcessStatus());
             }
             accountTaskMapper.update(accountTask);

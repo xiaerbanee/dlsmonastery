@@ -59,7 +59,6 @@ public class AuditFileService {
             accountTask = new AccountTask();
             accountTask.setName(name);
             accountTask.setExtendId(auditFile.getId());
-            accountTask.setPositionId(auditFile.getProcessFlow().getPositionId());
             accountTask.setOfficeId(SecurityUtils.getOfficeId());
             accountTaskMapper.save(accountTask);
         } else {
@@ -67,7 +66,6 @@ public class AuditFileService {
                 accountTask.setStatus("已审核");
                 accountTask.setEnabled(false);
             } else {
-                accountTask.setPositionId(auditFile.getProcessFlow().getPositionId());
                 accountTask.setStatus(auditFile.getProcessStatus());
             }
             accountTaskMapper.update(accountTask);
