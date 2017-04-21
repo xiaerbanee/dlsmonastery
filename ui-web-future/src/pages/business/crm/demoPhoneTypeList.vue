@@ -27,7 +27,7 @@
         <el-table-column prop="extendMap.productTypeNames" :label="$t('demoPhoneTypeList.productTypeNames')"></el-table-column>
         <el-table-column prop="applyEndDate" :label="$t('demoPhoneTypeList.applyEndDate')"></el-table-column>
         <el-table-column prop="renewEndDate" :label="$t('demoPhoneTypeList.renewEndDate')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('demoPhoneTypeList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('demoPhoneTypeList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('demoPhoneTypeList.createdDate')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('demoPhoneTypeList.remarks')"></el-table-column>
         <el-table-column prop="locked" :label="$t('demoPhoneTypeList.locked')" width="120">

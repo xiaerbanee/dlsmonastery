@@ -1,13 +1,7 @@
 package net.myspring.future.modules.basic.dto;
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.dto.DataDto;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Pricesystem;
-import net.myspring.future.modules.basic.domain.PricesystemDetail;
-import net.myspring.future.modules.crm.domain.PricesystemChange;
-
-import java.util.List;
 
 /**
  * Created by lihx on 2017/4/17.
@@ -15,13 +9,7 @@ import java.util.List;
 public class PricesystemDto extends DataDto<Pricesystem> {
     private String name;
     private Integer sort;
-    private Integer version;
-    private List<Depot> depotList = Lists.newArrayList();
-    private List<String> depotIdList = Lists.newArrayList();
-    private List<PricesystemChange> pricesystemChangeList = Lists.newArrayList();
-    private List<String> pricesystemChangeIdList = Lists.newArrayList();
-    private List<PricesystemDetail> pricesystemDetailList = Lists.newArrayList();
-    private List<String> pricesystemDetailIdList = Lists.newArrayList();
+    private Boolean enabled;
 
     public String getName() {
         return name;
@@ -39,59 +27,11 @@ public class PricesystemDto extends DataDto<Pricesystem> {
         this.sort = sort;
     }
 
-    public Integer getVersion() {
-        return version;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public List<Depot> getDepotList() {
-        return depotList;
-    }
-
-    public void setDepotList(List<Depot> depotList) {
-        this.depotList = depotList;
-    }
-
-    public List<String> getDepotIdList() {
-        return depotIdList;
-    }
-
-    public void setDepotIdList(List<String> depotIdList) {
-        this.depotIdList = depotIdList;
-    }
-
-    public List<PricesystemChange> getPricesystemChangeList() {
-        return pricesystemChangeList;
-    }
-
-    public void setPricesystemChangeList(List<PricesystemChange> pricesystemChangeList) {
-        this.pricesystemChangeList = pricesystemChangeList;
-    }
-
-    public List<String> getPricesystemChangeIdList() {
-        return pricesystemChangeIdList;
-    }
-
-    public void setPricesystemChangeIdList(List<String> pricesystemChangeIdList) {
-        this.pricesystemChangeIdList = pricesystemChangeIdList;
-    }
-
-    public List<PricesystemDetail> getPricesystemDetailList() {
-        return pricesystemDetailList;
-    }
-
-    public void setPricesystemDetailList(List<PricesystemDetail> pricesystemDetailList) {
-        this.pricesystemDetailList = pricesystemDetailList;
-    }
-
-    public List<String> getPricesystemDetailIdList() {
-        return pricesystemDetailIdList;
-    }
-
-    public void setPricesystemDetailIdList(List<String> pricesystemDetailIdList) {
-        this.pricesystemDetailIdList = pricesystemDetailIdList;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

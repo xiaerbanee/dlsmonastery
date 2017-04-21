@@ -32,7 +32,7 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="productIme.ime" :label="$t('demoPhoneList.ime')"></el-table-column>
-        <el-table-column prop="shop.name" :label="$t('demoPhoneList.shopName')"></el-table-column>
+        <el-table-column prop="shopName" :label="$t('demoPhoneList.shopName')"></el-table-column>
         <el-table-column prop="demoPhoneType.name" :label="$t('demoPhoneList.demoPhoneType')"></el-table-column>
         <el-table-column prop="employee.name" :label="$t('demoPhoneList.employeeName')"></el-table-column>
         <el-table-column prop="status" :label="$t('demoPhoneList.status')"></el-table-column>

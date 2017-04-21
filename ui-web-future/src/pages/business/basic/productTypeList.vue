@@ -36,7 +36,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="remarks" :label="$t('productTypeList.remarks')"></el-table-column>
-        <el-table-column prop="created.fullName" :label="$t('productTypeList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('productTypeList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('productTypeList.createdDate')"></el-table-column>
         <el-table-column prop="locked" :label="$t('productTypeList.locked')">
           <template scope="scope">

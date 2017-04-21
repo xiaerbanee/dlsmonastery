@@ -64,7 +64,7 @@
         <el-table-column prop="outId" label="outId"></el-table-column>
         <el-table-column prop="outGroupId" :label="$t('productList.outGroupId')"></el-table-column>
         <el-table-column prop="outGroupName"  :label="$t('productList.outGroupName')"></el-table-column>
-        <el-table-column prop="productType.name" :label="$t('productList.productType')"></el-table-column>
+        <el-table-column prop="productTypeName" :label="$t('productList.productType')"></el-table-column>
         <el-table-column prop="hasIme"  :label="$t('productList.hasIme')">
           <template scope="scope">
             <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
