@@ -1,8 +1,8 @@
 package net.myspring.general.modules.sys.service;
 
-import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.District;
 import net.myspring.basic.modules.sys.dto.DistrictDto;
+import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.modules.sys.mapper.DistrictMapper;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
