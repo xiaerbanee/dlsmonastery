@@ -40,6 +40,13 @@ public class MongoConfig {
         return gridFsTemplate;
     }
 
+    @Bean
+    public GridFsTemplate uploadPreviewGridFsTemplate() {
+        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
+        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"preview");
+        return gridFsTemplate;
+    }
 
     @Bean
     public GridFsTemplate downloadGridFsTemplate() {
