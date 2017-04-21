@@ -35,7 +35,6 @@ public class Account extends CompanyEntity<Account> {
     private List<String> menuIdList = Lists.newArrayList();
     private List<Office> officeList = Lists.newArrayList();
     private List<String> officeIdList = Lists.newArrayList();
-    private List<AccountTask> accountTaskList = Lists.newArrayList();
     private List<String> accountTaskIdList = Lists.newArrayList();
     private List<Employee> employeeList = Lists.newArrayList();
     private List<String> employeeIdList = Lists.newArrayList();
@@ -215,14 +214,6 @@ public class Account extends CompanyEntity<Account> {
 
     public void setOfficeIdList(List<String> officeIdList) {
         this.officeIdList = officeIdList;
-    }
-
-    public List<AccountTask> getAccountTaskList() {
-        return accountTaskList;
-    }
-
-    public void setAccountTaskList(List<AccountTask> accountTaskList) {
-        this.accountTaskList = accountTaskList;
     }
 
     public List<String> getAccountTaskIdList() {
