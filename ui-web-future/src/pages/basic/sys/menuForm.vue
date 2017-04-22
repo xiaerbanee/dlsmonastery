@@ -13,14 +13,11 @@
             <el-form-item :label="$t('menuForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('menuForm.menuCode')" prop="menuCode">
-              <el-input v-model="inputForm.menuCode"></el-input>
+            <el-form-item :label="$t('menuForm.code')" prop="code">
+              <el-input v-model="inputForm.code"></el-input>
             </el-form-item>
             <el-form-item :label="$t('menuForm.sort')" prop="sort">
               <el-input v-model="inputForm.sort"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('menuForm.href')" prop="href">
-              <el-input v-model="inputForm.href"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="10">
@@ -60,9 +57,8 @@
               id:'',
               menuCategoryId:'',
               name:'',
-              menuCode:'',
+              code:'',
               sort:'',
-              href:'',
               mobile:true,
               visible:true,
               permissionStr:"",
@@ -70,11 +66,9 @@
             },
             rules: {
               menuCategoryId: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
-              category: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
               name: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
               menuCode: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
               sort: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
-              href: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}]
             }
           }
       },

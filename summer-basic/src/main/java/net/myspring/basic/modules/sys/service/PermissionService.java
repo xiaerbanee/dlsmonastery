@@ -51,6 +51,12 @@ public class PermissionService {
     @Autowired
     private InitDomainUtils initDomainUtils;
 
+    public List<PermissionDto> findByMenuId(String menuId){
+        List<Permission> permissionList=permissionMapper.findByMenuId(menuId);
+        List<PermissionDto> permissionDtoList=BeanUtil.map(permissionList,PermissionDto.class);
+        return permissionDtoList;
+    }
+
     public List<Permission> findByPositionId(String positionId) {
         return permissionMapper.findByPositionId(positionId);
     }

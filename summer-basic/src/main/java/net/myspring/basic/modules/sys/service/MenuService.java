@@ -102,10 +102,6 @@ public class MenuService {
         return menuForm;
     }
 
-    public List<String> findDistinctCategory() {
-        return menuMapper.findDistinctCategory();
-    }
-
     public Page<MenuDto> findPage(Pageable pageable, MenuQuery menuQuery) {
         Page<MenuDto> menuDtoPage = menuMapper.findPage(pageable, menuQuery);
         cacheUtils.initCacheInput(menuDtoPage.getContent());

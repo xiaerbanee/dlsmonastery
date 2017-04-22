@@ -34,12 +34,9 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('menuList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('menuList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="name" :label="$t('menuList.name')" ></el-table-column>
-        <el-table-column prop="menuCode" label="菜单code" ></el-table-column>
-        <el-table-column prop="category" :label="$t('menuList.category')" ></el-table-column>
+        <el-table-column prop="code" label="code" ></el-table-column>
         <el-table-column prop="menuCategoryName" :label="$t('menuList.menuCategoryName')" ></el-table-column>
-        <el-table-column prop="categoryCode" label="分组code"></el-table-column>
         <el-table-column prop="sort" :label="$t('menuList.sort')" ></el-table-column>
-        <el-table-column prop="href" :label="$t('menuList.href')"></el-table-column>
         <el-table-column prop="locked" :label="$t('menuList.locked')" width="100">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>

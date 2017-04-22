@@ -58,12 +58,4 @@
         and t5.position_id=#{positionId}
     </select>
 
-    <select id="findDistinctCategory" resultType="String">
-        SELECT DISTINCT
-        t1.category
-        FROM
-        sys_menu t1
-        where enabled = 1
-    </select>
-
 </mapper>
