@@ -1,14 +1,13 @@
-package net.myspring.basic.modules.hr.dto;
+package net.myspring.basic.modules.sys.dto;
 
 import net.myspring.basic.common.dto.DataDto;
 import net.myspring.basic.common.enums.DictMapCategoryEnum;
 import net.myspring.basic.common.utils.Global;
-import net.myspring.basic.modules.hr.domain.Office;
+import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 /**

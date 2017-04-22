@@ -1,18 +1,16 @@
-package net.myspring.basic.modules.hr.service;
+package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
-import net.myspring.basic.modules.hr.domain.Office;
-import net.myspring.basic.modules.hr.dto.OfficeDto;
+import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
-import net.myspring.basic.modules.hr.manager.OfficeManager;
-import net.myspring.basic.modules.hr.mapper.OfficeMapper;
-import net.myspring.basic.modules.hr.web.form.OfficeForm;
-import net.myspring.basic.modules.hr.web.query.OfficeQuery;
+import net.myspring.basic.modules.sys.manager.OfficeManager;
+import net.myspring.basic.modules.sys.mapper.OfficeMapper;
+import net.myspring.basic.modules.sys.web.form.OfficeForm;
+import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

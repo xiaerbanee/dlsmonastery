@@ -66,7 +66,7 @@ public class MenuController {
         menuForm = menuService.findForm(menuForm);
         menuForm.setCategoryList(menuService.findDistinctCategory());
         menuForm.setMenuCategoryList(menuCategoryService.findAll());
-        menuForm.setBools(BoolEnum.getMap());
+        menuForm.setBoolMap(BoolEnum.getMap());
         return menuForm;
     }
 

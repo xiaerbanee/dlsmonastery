@@ -4,7 +4,7 @@ import net.myspring.basic.common.enums.AccountChangeTypeEnum;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.service.AccountChangeService;
-import net.myspring.basic.modules.hr.service.OfficeService;
+import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;

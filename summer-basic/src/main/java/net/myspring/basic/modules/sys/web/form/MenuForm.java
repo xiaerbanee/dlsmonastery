@@ -20,8 +20,8 @@ public class MenuForm extends DataForm<Menu>{
     private MenuCategory menuCategory;
     private String permissionStr;
     private String remarks;
-    private Boolean mobile;
-    private Boolean visible;
+    private boolean mobile;
+    private boolean visible;
     private String href;
     private String sort;
     private String name;
@@ -29,7 +29,7 @@ public class MenuForm extends DataForm<Menu>{
     private String category;
     private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
     private List<String> categoryList= Lists.newArrayList();
-    private Map<Boolean,String> bools= Maps.newHashMap();
+    private Map<Boolean,String> boolMap= Maps.newHashMap();
 
     public String getMenuCode() {
         return menuCode;
@@ -63,12 +63,12 @@ public class MenuForm extends DataForm<Menu>{
         this.categoryList = categoryList;
     }
 
-    public Map<Boolean, String> getBools() {
-        return bools;
+    public Map<Boolean, String> getBoolMap() {
+        return boolMap;
     }
 
-    public void setBools(Map<Boolean, String> bools) {
-        this.bools = bools;
+    public void setBoolMap(Map<Boolean, String> boolMap) {
+        this.boolMap = boolMap;
     }
 
     public String getRemarks() {

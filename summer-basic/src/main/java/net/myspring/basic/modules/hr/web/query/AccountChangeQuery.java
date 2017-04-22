@@ -1,10 +1,8 @@
 package net.myspring.basic.modules.hr.web.query;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.modules.hr.domain.Office;
-import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.basic.modules.sys.domain.Office;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

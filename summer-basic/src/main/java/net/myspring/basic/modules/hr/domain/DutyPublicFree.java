@@ -14,7 +14,6 @@ public class DutyPublicFree extends AuditEntity<DutyPublicFree> {
     private String dateType;
     private String reason;
     private Integer version = 0;
-    private Employee employee;
     private String employeeId;
 
     public LocalDate getFreeDate() {
@@ -47,14 +46,6 @@ public class DutyPublicFree extends AuditEntity<DutyPublicFree> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     public String getEmployeeId() {

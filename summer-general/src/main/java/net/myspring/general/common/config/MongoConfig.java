@@ -25,7 +25,7 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate() {
-        MappingMongoConverter converter =  new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
+        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
         MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory, converter);
         return mongoTemplate;

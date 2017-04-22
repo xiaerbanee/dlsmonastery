@@ -16,7 +16,6 @@ public class DutyOvertime extends AuditEntity<DutyOvertime> {
     private Double hour;
     private Double leftHour;
     private Integer version = 0;
-    private Employee employee;
     private String employeeId;
 
     public LocalDate getDutyDate() {
@@ -65,14 +64,6 @@ public class DutyOvertime extends AuditEntity<DutyOvertime> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     public String getEmployeeId() {

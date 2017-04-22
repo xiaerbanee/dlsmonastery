@@ -11,7 +11,7 @@
         and t3.office_id=office.id
         and t1.process_type_id=t2.id
         AND t1.enabled=1
-        <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
+        <include refid="net.myspring.basic.modules.sys.mapper.OfficeMapper.officeFilter" />
         <if test="p.createdDateStart !=null">
             and t1.created_date >=#{p.createdDateStart}
         </if>

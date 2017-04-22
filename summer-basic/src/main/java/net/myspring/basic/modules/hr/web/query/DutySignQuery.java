@@ -1,12 +1,10 @@
 package net.myspring.basic.modules.hr.web.query;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.modules.hr.domain.Office;
-import net.myspring.basic.modules.hr.dto.OfficeDto;
+import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import org.joda.time.LocalDateTime;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**

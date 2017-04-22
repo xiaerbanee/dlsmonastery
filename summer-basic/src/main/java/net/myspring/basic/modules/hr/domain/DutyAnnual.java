@@ -16,10 +16,7 @@ public class DutyAnnual extends CompanyEntity<DutyAnnual> {
     private Double hour;
     private Double leftHour;
     private Integer version = 0;
-    private Employee employee;
     private String employeeId;
-    private List<DutyRest> dutyRestList = Lists.newArrayList();
-    private List<String> dutyRestIdList = Lists.newArrayList();
 
     public String getAnnualYear() {
         return annualYear;
@@ -53,14 +50,6 @@ public class DutyAnnual extends CompanyEntity<DutyAnnual> {
         this.version = version;
     }
 
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
     public String getEmployeeId() {
         return employeeId;
     }
@@ -69,19 +58,4 @@ public class DutyAnnual extends CompanyEntity<DutyAnnual> {
         this.employeeId = employeeId;
     }
 
-    public List<DutyRest> getDutyRestList() {
-        return dutyRestList;
-    }
-
-    public void setDutyRestList(List<DutyRest> dutyRestList) {
-        this.dutyRestList = dutyRestList;
-    }
-
-    public List<String> getDutyRestIdList() {
-        return dutyRestIdList;
-    }
-
-    public void setDutyRestIdList(List<String> dutyRestIdList) {
-        this.dutyRestIdList = dutyRestIdList;
-    }
 }

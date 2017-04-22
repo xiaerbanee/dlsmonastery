@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.web.controller;
 import net.myspring.basic.modules.sys.domain.BackendModule;
 import net.myspring.basic.modules.sys.dto.BackendDto;
 import net.myspring.basic.modules.sys.dto.BackendModuleDto;
+import net.myspring.basic.modules.sys.service.BackendService;
 import net.myspring.basic.modules.sys.web.form.BackendForm;
 import net.myspring.basic.modules.sys.web.form.BackendModuleForm;
 import net.myspring.basic.modules.sys.web.query.BackendModuleQuery;
@@ -16,13 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import net.myspring.basic.modules.sys.service.BackendModuleService;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequestMapping(value = "sys/backendModule")
 public class BackendModuleController {
 
     @Autowired
     private BackendModuleService backendModuleService;
+    @Autowired
+    private BackendService backendService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<BackendModuleDto> list(Pageable pageable, BackendModuleQuery backendModuleQuery){
@@ -45,6 +51,7 @@ public class BackendModuleController {
     @RequestMapping(value = "findOne")
     public BackendModuleForm findOne(BackendModuleForm backendModuleForm){
         backendModuleForm=backendModuleService.findForm(backendModuleForm);
+        backendModuleForm.setBackendList(backendService.findAll());
         return backendModuleForm;
     }
 

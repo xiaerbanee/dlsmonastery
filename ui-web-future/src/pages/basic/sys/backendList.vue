@@ -3,8 +3,8 @@
     <head-tab active="backendList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:backend:edit'">{{$t('backendList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'sys:backend:view'">{{$t('backendList.filter')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" >{{$t('backendList.add')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" >{{$t('backendList.filter')}}</el-button>
         <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('backendList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -12,7 +12,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.name" auto-complete="off" :placeholder="输入关键字搜索"></el-input>
+                <el-input v-model="formData.name" auto-complete="off" placeholder="输入关键字搜索"></el-input>
               </el-form-item>
             </el-col>
           </el-row>

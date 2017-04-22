@@ -307,8 +307,10 @@ export default {
     priceChangeCommissionList:'调价提成',
     //delete
     hrrecruit:"无效",
-    officeUnitsEdit:'单元编辑'
-
+    officeUnitsEdit:'单元编辑',
+    officeRule:'部门规则',
+    backendModuleList:'项目模块',
+    backendList:'项目管理',
   },
   404: {
     404:"404",
@@ -357,5 +359,6 @@ export default {
     selectSynFactoryDate: "选择工厂同步日期",
     synFactory: "同步",
     factoryOrder: "工厂下单",
+
   },
 }

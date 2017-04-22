@@ -33,6 +33,8 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
     @Autowired
     private OfficeMapper officeMapper;
     @Autowired
+    private OfficeRuleMapper officeRuleMapper;
+    @Autowired
     private DictEnumMapper dictEnumMapper;
     @Autowired
     private MenuMapper menuMapper;
@@ -66,6 +68,7 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
         cacheUtils.initCache("backends",backendMapper.findAll());
         cacheUtils.initCache("backendModules",backendModuleMapper.findAll());
         cacheUtils.initCache("positionBackends",positionBackendMapper.findAll());
+        cacheUtils.initCache("officeRules",officeRuleMapper.findAll());
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");

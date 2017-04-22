@@ -229,7 +229,7 @@ public class DutyService {
                 }
                 dutyAnnual.setLeftHour(dutyAnnual.getLeftHour() - restHour);
                 dutyAnnualMapper.save(dutyAnnual);
-                dutyRest.setDutyAnnual(dutyAnnual);
+                dutyRest.setDutyAnnualId(dutyAnnual.getId());
             }
         }
         dutyRest.setStatus(pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.getValue());

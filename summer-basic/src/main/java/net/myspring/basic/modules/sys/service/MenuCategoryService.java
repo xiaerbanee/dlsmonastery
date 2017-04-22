@@ -63,7 +63,7 @@ public class MenuCategoryService {
     }
 
     public List<MenuCategoryDto> findAll(){
-        List<MenuCategory> menuCategoryList =menuCategoryMapper.findAll();
+        List<MenuCategory> menuCategoryList =menuCategoryMapper.findAllEnabled();
         List<MenuCategoryDto> menuCategoryDtoList = BeanUtil.map(menuCategoryList,MenuCategoryDto.class);
         cacheUtils.initCacheInput(menuCategoryDtoList);
         return menuCategoryDtoList;

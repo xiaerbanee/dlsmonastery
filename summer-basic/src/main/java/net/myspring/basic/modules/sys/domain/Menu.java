@@ -16,7 +16,6 @@ public class Menu extends CompanyEntity<Menu> {
     private String name;
     private String href;
     private String icon;
-    private String code;
     private Integer sort;
     private Boolean mobile;
     private Integer version = 0;
@@ -167,13 +166,5 @@ public class Menu extends CompanyEntity<Menu> {
 
     public void setMenuCategoryId(String menuCategoryId) {
         this.menuCategoryId = menuCategoryId;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getCode() {
-        return code;
     }
 }

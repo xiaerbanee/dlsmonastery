@@ -10,11 +10,6 @@
               <el-option v-for="category in inputForm.menuCategoryList" :key="category.id" :label="category.name" :value="category.id"></el-option>
             </el-select>
             </el-form-item>
-            <el-form-item :label="$t('menuForm.category')" prop="category">
-              <el-select v-model="inputForm.category" filterable allow-create :placeholder="$t('menuForm.selectGroup')">
-                <el-option v-for="category in inputForm.categoryList" :key="category" :label="category" :value="category"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item :label="$t('menuForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
@@ -31,12 +26,12 @@
           <el-col :span="10">
             <el-form-item :label="$t('menuForm.mobile')" prop="mobile">
               <el-radio-group v-model="inputForm.mobile">
-                <el-radio v-for="(value,key) in inputForm.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
+                <el-radio v-for="(value,key) in inputForm.boolMap" :key="key" :label="value">{{key | bool2str}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('menuForm.visible')" prop="visible">
               <el-radio-group v-model="inputForm.visible">
-                <el-radio v-for="(value,key) in inputForm.bools"  :key="key" :label="value">{{key | bool2str}}</el-radio>
+                <el-radio v-for="(value,key) in inputForm.boolMap"  :key="key" :label="value">{{key | bool2str}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('menuForm.permissionStr')" prop="permissionStr">
@@ -64,7 +59,6 @@
             submitData:{
               id:'',
               menuCategoryId:'',
-              category:'',
               name:'',
               menuCode:'',
               sort:'',

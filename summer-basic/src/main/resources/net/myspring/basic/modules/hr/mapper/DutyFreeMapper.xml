@@ -28,7 +28,7 @@
         <if test="p.dutyDateEnd != null">
             AND t1.free_date  &lt;= #{p.dutyDateEnd}
         </if>
-        <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
+        <include refid="net.myspring.basic.modules.sys.mapper.OfficeMapper.officeFilter" />
     </select>
 
     <select id="findByDate" resultType="DutyFree">

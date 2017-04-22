@@ -1,8 +1,8 @@
 package net.myspring.basic.modules.hr.domain;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 import net.myspring.basic.modules.sys.domain.Menu;
 
 import javax.persistence.Entity;
@@ -29,16 +29,6 @@ public class Account extends CompanyEntity<Account> {
     private Employee employee;
     private String employeeId;
     private String dealerId;
-    private List<AccountChange> accountChangeList = Lists.newArrayList();
-    private List<String> accountChangeIdList = Lists.newArrayList();
-    private List<Menu> menuList = Lists.newArrayList();
-    private List<String> menuIdList = Lists.newArrayList();
-    private List<Office> officeList = Lists.newArrayList();
-    private List<String> officeIdList = Lists.newArrayList();
-    private List<String> accountTaskIdList = Lists.newArrayList();
-    private List<Employee> employeeList = Lists.newArrayList();
-    private List<String> employeeIdList = Lists.newArrayList();
-    private List<String> monitorIdList = Lists.newArrayList();
 
     public String getLoginName() {
         return loginName;
@@ -168,83 +158,4 @@ public class Account extends CompanyEntity<Account> {
         this.dealerId = dealerId;
     }
 
-    public List<AccountChange> getAccountChangeList() {
-        return accountChangeList;
-    }
-
-    public void setAccountChangeList(List<AccountChange> accountChangeList) {
-        this.accountChangeList = accountChangeList;
-    }
-
-    public List<String> getAccountChangeIdList() {
-        return accountChangeIdList;
-    }
-
-    public void setAccountChangeIdList(List<String> accountChangeIdList) {
-        this.accountChangeIdList = accountChangeIdList;
-    }
-
-    public List<Menu> getMenuList() {
-        return menuList;
-    }
-
-    public void setMenuList(List<Menu> menuList) {
-        this.menuList = menuList;
-    }
-
-    public List<String> getMenuIdList() {
-        return menuIdList;
-    }
-
-    public void setMenuIdList(List<String> menuIdList) {
-        this.menuIdList = menuIdList;
-    }
-
-    public List<Office> getOfficeList() {
-        return officeList;
-    }
-
-    public void setOfficeList(List<Office> officeList) {
-        this.officeList = officeList;
-    }
-
-    public List<String> getOfficeIdList() {
-        return officeIdList;
-    }
-
-    public void setOfficeIdList(List<String> officeIdList) {
-        this.officeIdList = officeIdList;
-    }
-
-    public List<String> getAccountTaskIdList() {
-        return accountTaskIdList;
-    }
-
-    public void setAccountTaskIdList(List<String> accountTaskIdList) {
-        this.accountTaskIdList = accountTaskIdList;
-    }
-
-    public List<Employee> getEmployeeList() {
-        return employeeList;
-    }
-
-    public void setEmployeeList(List<Employee> employeeList) {
-        this.employeeList = employeeList;
-    }
-
-    public List<String> getEmployeeIdList() {
-        return employeeIdList;
-    }
-
-    public void setEmployeeIdList(List<String> employeeIdList) {
-        this.employeeIdList = employeeIdList;
-    }
-
-    public List<String> getMonitorIdList() {
-        return monitorIdList;
-    }
-
-    public void setMonitorIdList(List<String> monitorIdList) {
-        this.monitorIdList = monitorIdList;
-    }
 }

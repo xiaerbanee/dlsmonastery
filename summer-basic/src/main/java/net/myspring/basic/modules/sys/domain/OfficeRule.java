@@ -1,0 +1,42 @@
+package net.myspring.basic.modules.sys.domain;
+
+import net.myspring.common.domain.TreeEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/**
+ * Created by wangzm on 2017/4/22.
+ */
+@Entity
+@Table(name="sys_office_rule")
+public class OfficeRule extends TreeEntity<OfficeRule> {
+
+    private String name;
+    private String code;
+    private boolean hasPoint;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean getHasPoint() {
+        return hasPoint;
+    }
+
+    public void setHasPoint(boolean hasPoint) {
+        this.hasPoint = hasPoint;
+    }
+}

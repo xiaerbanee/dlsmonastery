@@ -20,13 +20,8 @@ public class Position extends CompanyEntity<Position> {
     private String reportName;
     private Integer sort;
     private String type;
-    private List<Account> accountList = Lists.newArrayList();
-    private List<String> accountIdList = Lists.newArrayList();
     private Job job;
     private String jobId;
-    private List<Permission> permissionList = Lists.newArrayList();
-    private List<String> permissionIdList = Lists.newArrayList();
-    private List<String> processFlowIdList = Lists.newArrayList();
 
     public String getName() {
         return name;
@@ -92,22 +87,6 @@ public class Position extends CompanyEntity<Position> {
         this.type = type;
     }
 
-    public List<Account> getAccountList() {
-        return accountList;
-    }
-
-    public void setAccountList(List<Account> accountList) {
-        this.accountList = accountList;
-    }
-
-    public List<String> getAccountIdList() {
-        return accountIdList;
-    }
-
-    public void setAccountIdList(List<String> accountIdList) {
-        this.accountIdList = accountIdList;
-    }
-
     public Job getJob() {
         return job;
     }
@@ -122,30 +101,6 @@ public class Position extends CompanyEntity<Position> {
 
     public void setJobId(String jobId) {
         this.jobId = jobId;
-    }
-
-    public List<Permission> getPermissionList() {
-        return permissionList;
-    }
-
-    public void setPermissionList(List<Permission> permissionList) {
-        this.permissionList = permissionList;
-    }
-
-    public List<String> getPermissionIdList() {
-        return permissionIdList;
-    }
-
-    public void setPermissionIdList(List<String> permissionIdList) {
-        this.permissionIdList = permissionIdList;
-    }
-
-    public List<String> getProcessFlowIdList() {
-        return processFlowIdList;
-    }
-
-    public void setProcessFlowIdList(List<String> processFlowIdList) {
-        this.processFlowIdList = processFlowIdList;
     }
 
 }

@@ -53,6 +53,12 @@ public class BackendService {
         return backend;
     }
 
+    public List<BackendDto> findAll(){
+        List<Backend> backendList=backendMapper.findAllEnabled();
+        List<BackendDto> backendDtoList=BeanUtil.map(backendList,BackendDto.class);
+        return backendDtoList;
+    }
+
 
     public void logicDeleteOne(String id) {
         backendMapper.logicDeleteOne(id);

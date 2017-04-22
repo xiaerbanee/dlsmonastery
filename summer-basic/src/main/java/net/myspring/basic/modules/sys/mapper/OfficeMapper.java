@@ -1,10 +1,9 @@
-package net.myspring.basic.modules.hr.mapper;
+package net.myspring.basic.modules.sys.mapper;
 
-import net.myspring.basic.common.dto.NameValueDto;
 import net.myspring.basic.common.mybatis.MyMapper;
-import net.myspring.basic.modules.hr.domain.Office;
-import net.myspring.basic.modules.hr.dto.OfficeDto;
-import net.myspring.basic.modules.hr.web.query.OfficeQuery;
+import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.dto.OfficeDto;
+import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;

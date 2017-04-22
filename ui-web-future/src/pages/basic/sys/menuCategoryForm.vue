@@ -3,6 +3,11 @@
     <head-tab active="menuCategoryForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+        <el-form-item label="所属模块" prop="backendModuleId">
+          <el-select v-model="inputForm.backendModuleId" filterable :clearable=true>
+            <el-option v-for="item in inputForm.backendModuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item :label="$t('menuCategoryForm.name')" prop="name">
           <el-input v-model.number="inputForm.name"></el-input>
         </el-form-item>
@@ -30,9 +35,11 @@
               id:'',
               name:'',
               sort:'',
-              remarks:''
+              remarks:'',
+              backendModuleId:""
             },
             rules: {
+              backendModuleId: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')}],
               name: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')}],
               sort: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')},{ type: 'number', message: this.$t('menuCategoryForm.inputLegalValue')}]
             }

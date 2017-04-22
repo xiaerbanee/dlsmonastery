@@ -71,7 +71,7 @@
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/basic/hr/office/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/basic/sys/office/save', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -87,14 +87,14 @@
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/sys/office/search',{params:{name:query}}).then((response)=>{
             this.offices=response.data;
             this.remoteLoading = false;
           })
         }
       }
     },created(){
-      axios.get('/api/basic/hr/office/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/sys/office/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
         console.log(this.inputForm)
         if(response.data.parentId!=null){

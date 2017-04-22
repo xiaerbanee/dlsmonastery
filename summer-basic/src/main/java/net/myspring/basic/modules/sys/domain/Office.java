@@ -1,8 +1,9 @@
-package net.myspring.basic.modules.hr.domain;
+package net.myspring.basic.modules.sys.domain;
 
 
 import com.google.common.collect.Lists;
-import net.myspring.common.domain.CompanyEntity;
+import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.OfficeChange;
 import net.myspring.common.domain.TreeEntity;
 
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name="hr_office")
+@Table(name="sys_office")
 public class Office extends TreeEntity<Office> {
     private String name;
     private Integer version = 0;
@@ -23,10 +24,6 @@ public class Office extends TreeEntity<Office> {
     private String tag;
     private BigDecimal taskPoint;
     private Integer sort;
-    private List<Account> accountList = Lists.newArrayList();
-    private List<String> accountIdList = Lists.newArrayList();
-    private List<OfficeChange> officeChangeList = Lists.newArrayList();
-    private List<String> officeChangeIdList = Lists.newArrayList();
 
     public String getName() {
         return name;
@@ -108,35 +105,4 @@ public class Office extends TreeEntity<Office> {
         this.sort = sort;
     }
 
-    public List<Account> getAccountList() {
-        return accountList;
-    }
-
-    public void setAccountList(List<Account> accountList) {
-        this.accountList = accountList;
-    }
-
-    public List<String> getAccountIdList() {
-        return accountIdList;
-    }
-
-    public void setAccountIdList(List<String> accountIdList) {
-        this.accountIdList = accountIdList;
-    }
-
-    public List<OfficeChange> getOfficeChangeList() {
-        return officeChangeList;
-    }
-
-    public void setOfficeChangeList(List<OfficeChange> officeChangeList) {
-        this.officeChangeList = officeChangeList;
-    }
-
-    public List<String> getOfficeChangeIdList() {
-        return officeChangeIdList;
-    }
-
-    public void setOfficeChangeIdList(List<String> officeChangeIdList) {
-        this.officeChangeIdList = officeChangeIdList;
-    }
 }
