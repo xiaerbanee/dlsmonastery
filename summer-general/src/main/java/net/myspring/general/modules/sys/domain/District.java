@@ -1,14 +1,16 @@
 package net.myspring.general.modules.sys.domain;
 
 import net.myspring.common.domain.CompanyEntity;
+import net.myspring.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_district")
-public class District extends CompanyEntity<District> {
+public class District extends IdEntity<District> {
     private String name;
+    private String parentId;
     private String shortName;
     private Integer level;
     private String cityCode;
@@ -27,6 +29,14 @@ public class District extends CompanyEntity<District> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public String getShortName() {
