@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 public class FolderFileService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
