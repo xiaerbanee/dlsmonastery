@@ -68,6 +68,7 @@ public class FolderService {
         return folder;
     }
 
+    @Transactional(readOnly = true)
     public List<FolderDto> findAll(String accountId) {
         List<FolderDto> folderDtoList=Lists.newArrayList();
         Folder parent = getRoot(accountId);
