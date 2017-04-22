@@ -9,8 +9,6 @@ public class TreeNode {
 	private String label;
 	private List<TreeNode> children = Lists.newArrayList();
 
-	private List<String> checked = Lists.newArrayList();
-
 	public TreeNode(String id, String label){
 		this.id = id;
 		this.label = label;
@@ -38,13 +36,5 @@ public class TreeNode {
 
 	public void setChildren(List<TreeNode> children) {
 		this.children = children;
-	}
-
-	public List<String> getChecked() {
-		return checked;
-	}
-
-	public void setChecked(List<String> checked) {
-		this.checked = checked;
 	}
 }

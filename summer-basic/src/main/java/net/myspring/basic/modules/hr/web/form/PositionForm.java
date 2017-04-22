@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.hr.dto.JobDto;
+import net.myspring.common.tree.Tree;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 
@@ -29,15 +30,15 @@ public class PositionForm extends DataForm<Position> {
     private String sort;
     private String remarks;
     private String permissionIdStr;
-    private TreeNode permissionTree;
+    private Tree permissionTree;
     private List<JobDto> jobList= Lists.newArrayList();
     private Map<Integer,String> dataScopeMap= Maps.newHashMap();
 
-    public TreeNode getPermissionTree() {
+    public Tree getPermissionTree() {
         return permissionTree;
     }
 
-    public void setPermissionTree(TreeNode permissionTree) {
+    public void setPermissionTree(Tree permissionTree) {
         this.permissionTree = permissionTree;
     }
 

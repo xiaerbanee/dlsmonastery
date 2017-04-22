@@ -8,7 +8,7 @@ import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
-import net.myspring.basic.modules.hr.mapper.PositionBackendMapper;
+import net.myspring.basic.modules.hr.mapper.PositionModuleMapper;
 import net.myspring.basic.modules.sys.domain.*;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.dto.MenuDto;
@@ -53,7 +53,7 @@ public class MenuService {
     @Autowired
     private BackendModuleMapper backendModuleMapper;
     @Autowired
-    private PositionBackendMapper positionBackendMapper;
+    private PositionModuleMapper positionBackendMapper;
     @Autowired
     private AccountManager accountManager;
 

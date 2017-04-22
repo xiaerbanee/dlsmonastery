@@ -4,13 +4,12 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import net.myspring.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 import net.myspring.basic.modules.sys.domain.Backend;
 import net.myspring.util.text.StringUtils;
 
 @Entity
-@Table(name="hr_position_backend")
-public class PositionBackend extends CompanyEntity<PositionBackend> {
+@Table(name="hr_position_module")
+public class PositionModule extends CompanyEntity<PositionModule> {
     private Integer version = 0;
     private Position position;
     private String positionId;

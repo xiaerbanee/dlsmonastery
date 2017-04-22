@@ -5,19 +5,17 @@ import com.google.common.collect.Sets;
 import net.myspring.basic.common.dto.NameValueDto;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.InitDomainUtils;
+import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Position;
-import net.myspring.basic.modules.sys.domain.Menu;
-import net.myspring.basic.modules.sys.domain.MenuCategory;
-import net.myspring.basic.modules.sys.domain.Permission;
+import net.myspring.basic.modules.sys.domain.*;
 import net.myspring.basic.modules.sys.dto.PermissionDto;
 import net.myspring.basic.modules.sys.manager.MenuCategoryManager;
 import net.myspring.basic.modules.sys.manager.MenuManager;
 import net.myspring.basic.modules.sys.manager.PermissionManager;
-import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
-import net.myspring.basic.modules.sys.mapper.MenuMapper;
-import net.myspring.basic.modules.sys.mapper.PermissionMapper;
+import net.myspring.basic.modules.sys.mapper.*;
 import net.myspring.basic.modules.sys.web.form.PermissionForm;
 import net.myspring.basic.modules.sys.web.query.PermissionQuery;
+import net.myspring.common.tree.Tree;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -50,10 +48,14 @@ public class PermissionService {
     private CacheUtils cacheUtils;
     @Autowired
     private InitDomainUtils initDomainUtils;
+    @Autowired
+    private BackendMapper backendMapper;
+    @Autowired
+    private BackendModuleMapper backendModuleMapper;
 
-    public List<PermissionDto> findByMenuId(String menuId){
-        List<Permission> permissionList=permissionMapper.findByMenuId(menuId);
-        List<PermissionDto> permissionDtoList=BeanUtil.map(permissionList,PermissionDto.class);
+    public List<PermissionDto> findByMenuId(String menuId) {
+        List<Permission> permissionList = permissionMapper.findByMenuId(menuId);
+        List<PermissionDto> permissionDtoList = BeanUtil.map(permissionList, PermissionDto.class);
         return permissionDtoList;
     }
 
@@ -71,7 +73,7 @@ public class PermissionService {
             Permission permission = permissionManager.findOne(permissionForm.getId());
             permissionForm = BeanUtil.map(permission, PermissionForm.class);
             List<NameValueDto> nameValueDtoList = permissionMapper.findNameValueByPositionId(Lists.newArrayList(permission.getId()));
-            initDomainUtils.initChildIdList(Lists.newArrayList(permissionForm),Position.class,nameValueDtoList);
+            initDomainUtils.initChildIdList(Lists.newArrayList(permissionForm), Position.class, nameValueDtoList);
             cacheUtils.initCacheInput(permissionForm);
         }
         return permissionForm;
@@ -94,13 +96,13 @@ public class PermissionService {
     public Permission save(PermissionForm permissionForm) {
         Permission permission;
         if (permissionForm.isCreate()) {
-            permission=BeanUtil.map(permissionForm, Permission.class);
-            permission=permissionManager.save(permission);
+            permission = BeanUtil.map(permissionForm, Permission.class);
+            permission = permissionManager.save(permission);
             if (CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())) {
                 permissionMapper.savePermissionPosition(permissionForm.getId(), permissionForm.getPositionIdList());
             }
         } else {
-            permission=permissionManager.updateForm(permissionForm);
+            permission = permissionManager.updateForm(permissionForm);
             permissionMapper.deletePermissionPosition(permissionForm.getId());
             if (CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())) {
                 permissionMapper.savePermissionPosition(permissionForm.getId(), permissionForm.getPositionIdList());
@@ -109,43 +111,55 @@ public class PermissionService {
         return permission;
     }
 
-    public TreeNode findPermissionTree(List<String> permissionIds) {
-        Set<String> permissionIdSet = Sets.newHashSet();
-        if (CollectionUtil.isNotEmpty(permissionIds)) {
-            for (String id : permissionIds) {
-                permissionIdSet.add(id);
-            }
-        }
+    public Tree findBackendTree(List<String> backendModuleIdList) {
+        Tree tree = new Tree();
         TreeNode treeNode = new TreeNode("0", "权限列表");
-        List<TreeNode> list = Lists.newArrayList();
-        List<MenuCategory> menuCategories = menuCategoryMapper.findAllEnabled();
+        List<Backend> backendList = backendMapper.findAllEnabled();
+        List<BackendModule> backendModuleList = backendModuleMapper.findAllEnabled();
+        Map<String, List<BackendModule>> backendModuleMap = CollectionUtil.extractToMap(backendModuleList, "backendId");
+        for (Backend backend : backendList) {
+            TreeNode backendTree = new TreeNode("p" + backend.getId(), backend.getName());
+            for (BackendModule backendModule : backendModuleMap.get(backend.getId())) {
+                TreeNode backendModuleTree = new TreeNode("m" + backendModule.getId(), backendModule.getName());
+                backendTree.getChildren().add(backendModuleTree);
+            }
+            tree.getChildren().add(backendTree);
+        }
+        tree.getChildren().add(treeNode);
+        tree.setChecked(Lists.newArrayList(Sets.newHashSet(backendModuleIdList)));
+        return tree;
+    }
+
+    public Tree findPermissionTree(List<String> permissionIds) {
+        Tree tree = new Tree();
+        Set<String> permissionIdSet = Sets.newHashSet(permissionIds);
+        TreeNode treeNode = new TreeNode("0", "权限列表");
+        List<BackendModule> backendModuleList = backendModuleMapper.findByPositionId(SecurityUtils.getPositionId());
+        List<MenuCategory> menuCategories = menuCategoryMapper.findByBackendModuleIds(CollectionUtil.extractToList(backendModuleList, "id"));
+        Map<String, List<MenuCategory>> menuCategoryMap = CollectionUtil.extractToMap(menuCategories, "backendModuleId");
         List<Menu> menus = menuMapper.findByPermissionIsNotEmpty();
         Map<String, List<Menu>> menuMap = CollectionUtil.extractToMapList(menus, "menuCategoryId");
         List<Permission> permissions = permissionMapper.findAllEnabled();
         Map<String, List<Permission>> permissionMap = CollectionUtil.extractToMapList(permissions, "menuId");
-        for (MenuCategory menuCategory : menuCategories) {
-            TreeNode categoryTree = new TreeNode("p" + menuCategory.getId(), menuCategory.getName());
-            List<Menu> menuList = menuMap.get(menuCategory.getId());
-            List<TreeNode> categorychildList = Lists.newArrayList();
-            for (Menu menu : menuList) {
-                TreeNode menuTree = new TreeNode("m" + menu.getId(), menu.getName());
-                categorychildList.add(menuTree);
-                List<TreeNode> menuChildList = Lists.newArrayList();
-                List<Permission> permissionList = permissionMap.get(menu.getId());
-                if (CollectionUtil.isNotEmpty(permissionList)) {
-                    for (Permission permission : permissionList) {
-                        TreeNode permissTree = new TreeNode(permission.getId(), permission.getName());
-                        menuChildList.add(permissTree);
+        for (BackendModule backendModule : backendModuleList) {
+            TreeNode backendModuleTree = new TreeNode("p" + backendModule.getId(), backendModule.getName());
+            for (MenuCategory menuCategory : menuCategoryMap.get(backendModule.getId())) {
+                TreeNode menuCategoryTree = new TreeNode("c" + menuCategory.getId(), menuCategory.getName());
+                for (Menu menu : menuMap.get(menuCategory.getId())) {
+                    TreeNode menuTree = new TreeNode("m" + menu.getId(), menu.getName());
+                    for (Permission permission : permissionMap.get(menu.getId())) {
+                        TreeNode permissionTree = new TreeNode(permission.getId(), permission.getName());
+                        menuTree.getChildren().add(permissionTree);
                     }
+                    menuCategoryTree.getChildren().add(menuTree);
                 }
-                menuTree.setChildren(menuChildList);
+                backendModuleTree.getChildren().add(menuCategoryTree);
             }
-            categoryTree.setChildren(categorychildList);
-            list.add(categoryTree);
+            treeNode.getChildren().add(backendModuleTree);
         }
-        treeNode.setChildren(list);
-        treeNode.setChecked(new ArrayList<>(permissionIdSet));
-        return treeNode;
+        tree.getChildren().add(treeNode);
+        tree.setChecked(Lists.newArrayList(permissionIdSet));
+        return tree;
     }
 
     public void logicDeleteOne(String id) {

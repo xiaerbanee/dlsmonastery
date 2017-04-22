@@ -49,7 +49,7 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
     @Autowired
     private BackendModuleMapper backendModuleMapper;
     @Autowired
-    private PositionBackendMapper positionBackendMapper;
+    private PositionModuleMapper positionBackendMapper;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
@@ -67,7 +67,7 @@ public class CacheInitListener implements ApplicationListener<ApplicationReadyEv
         cacheUtils.initCache("menuCategorys",menuCategoryMapper.findAll());
         cacheUtils.initCache("backends",backendMapper.findAll());
         cacheUtils.initCache("backendModules",backendModuleMapper.findAll());
-        cacheUtils.initCache("positionBackends",positionBackendMapper.findAll());
+        cacheUtils.initCache("positionModules",positionBackendMapper.findAll());
         cacheUtils.initCache("officeRules",officeRuleMapper.findAll());
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));

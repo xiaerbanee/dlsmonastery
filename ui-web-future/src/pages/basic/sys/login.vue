@@ -64,19 +64,6 @@
       },initLogin() {
         var that = this;
         axios.post('/api/basic/hr/account/getAccountMessage').then((response)=>{
-            console.log(response.data);
-          var menus = response.data.menus;
-//          if(menus !=null && menus.length>0) {
-//            for (var i in menus) {
-//              var menuItems =menus[i].menuItems;
-//              for(var j in menuItems) {
-//                for(var k in menuItems[j].menus) {
-//                  var menu = menuItems[j].menus[k];
-//                  menu.name=menu.menuCode
-//                }
-//              }
-//            }
-//          }
           that.$store.dispatch('setAccount',response.data.account);
           that.$store.dispatch('setMenus',response.data.menus);
           that.$store.dispatch('setAuthorityList',response.data.authorityList);

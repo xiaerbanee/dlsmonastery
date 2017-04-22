@@ -27,4 +27,13 @@
             #{item}
         </foreach>
     </select>
+
+    <select id="findByPositionId" resultType="BackendModule">
+        SELECT t1.*
+         FROM  sys_backend_module  t1,sys_backend_module t2
+          where t1.enabled=1
+          and t2.backend_module_id=t1.id
+          and t2.position_id=#{positionId}
+    </select>
+
 </mapper>

@@ -37,8 +37,8 @@
             <template v-for="menuItem in category.menuCategoryList">
             <el-submenu :index="menuItem.id">
             <template slot="title">{{$t('app.'+ menuItem.code)}}</template>
-            <el-menu-item :index="cMenu.menuCode" v-for="(cMenu, cIndex) in menuItem.menuList"  :key="cIndex" :route="cMenu">
-              {{$t('app.'+ cMenu.menuCode)}}
+            <el-menu-item :index="cMenu.code" v-for="(cMenu, cIndex) in menuItem.menuList"  :key="cIndex" :route="cMenu">
+              {{$t('app.'+ cMenu.code)}}
             </el-menu-item>
             </el-submenu>
             </template>
@@ -113,7 +113,6 @@
         }else{
             activeMenu="login";
         }
-
         if(this.secondCategory !=null && this.secondCategory.length>0&&activeMenu!="home"&&activeMenu!="login") {
           if(!this.menuMap[activeMenu]) {
             this.activeCategory = this.secondCategory.menuCategoryList[0].code;
@@ -158,9 +157,9 @@
           for (let j = 0; j < secondCategoryList.length; j++) {
             for (let k = 0; k < secondCategoryList[j].menuList.length; k++) {
               let menu = secondCategoryList[j].menuList[k];
-              menu.name=menu.menuCode;
+              menu.name=menu.code;
               this.activeCategory = this.secondCategory[0].code;
-              this.menuMap[menu.menuCode] = secondCategoryCode;
+              this.menuMap[menu.code] = secondCategoryCode;
             }
           }
         }
