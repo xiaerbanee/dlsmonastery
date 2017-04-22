@@ -25,8 +25,12 @@
         and t1.enabled=1
     </select>
 
+    <insert id="save">
+        INSERT  INTO hr_account_weixin(account_id,company_id,open_id) VALUE (#{accountId},#{companyId},#{openId})
+    </insert>
 
-
-
+    <update id="update">
+        UPDATE  hr_account_weixin SET acount_id=#{accountId},company_id=#{companyId},openId=#{openId}
+    </update>
 
 </mapper>
