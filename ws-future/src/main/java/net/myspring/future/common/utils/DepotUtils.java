@@ -1,4 +1,4 @@
-package net.myspring.future.common.service;
+package net.myspring.future.common.utils;
 
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
@@ -78,7 +78,6 @@ public class DepotUtils {
         HashBiMap<String,Integer> hashBiMap=getTypeMapByCategory(depotCategory);
         return Lists.newArrayList(hashBiMap.values());
     }
-
 
     //根据级别获取
     public static HashBiMap<String,Integer> getTypesByLevel(String levelType) {

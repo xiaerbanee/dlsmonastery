@@ -10,7 +10,7 @@
         <include refid="depotParamFilter" />
     </select>
 
-    <select id="findDepotAccountPage" resultType="Depot">
+    <select id="findDepotAccountPage" resultType="DepotDto">
         select depot.*
         from crm_depot depot
         where
@@ -36,7 +36,7 @@
         </if>
     </select>
 
-    <select id="findShopAccountExportPage" resultType="Depot">
+    <select id="findShopAccountExportPage" resultType="DepotDto">
         select depot.*
         from crm_depot depot
         where

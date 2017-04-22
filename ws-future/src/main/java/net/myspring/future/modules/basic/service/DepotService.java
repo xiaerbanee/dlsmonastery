@@ -5,36 +5,45 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.future.common.dto.NameValueDto;
 import net.myspring.future.common.enums.*;
-import net.myspring.future.common.service.DepotUtils;
+import net.myspring.future.common.service.ServiceException;
+import net.myspring.future.common.utils.DepotUtils;
 import net.myspring.future.common.utils.Const;
+import net.myspring.future.common.utils.IdUtils;
 import net.myspring.future.common.utils.SecurityUtils;
 import net.myspring.future.modules.basic.client.*;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.dto.BasicOfficeDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.mapper.*;
 import net.myspring.future.modules.basic.web.Query.DepotQuery;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.crm.model.DepotInventoryModel;
+import net.myspring.future.modules.crm.model.ReceivableReportForDetail;
+import net.myspring.future.modules.crm.model.ReceivableReportForSummary;
 import net.myspring.future.modules.layout.domain.ShopAttribute;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.mapper.ShopAttributeMapper;
 import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.excel.SimpleExcelColumn;
+import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +84,6 @@ public class DepotService {
     public DepotDto findOne(String id) {
         Depot depot = depotMapper.findOne(id);
         DepotDto depotDto = BeanUtil.map(depot,DepotDto.class);
-//        initDomain(list);
         return depotDto;
     }
 
@@ -101,7 +109,7 @@ public class DepotService {
     }
 
     public DepotQuery getQueryProperty(DepotQuery depotQuery) {
-        depotQuery.setTypeList(DepotTypeEnum.getMap());
+        depotQuery.setTypeMap(DepotTypeEnum.getMap());
         depotQuery.setAreaList(officeClient.findAreaByType("100"));
         depotQuery.setAreaTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_地区属性.name()));
         depotQuery.setSpecialityStoreTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_体验店类型.name()));
@@ -144,7 +152,6 @@ public class DepotService {
         if (CollectionUtil.isNotEmpty(ids)) {
             List<Depot> depotList = depotMapper.findByIds(ids);
             list = BeanUtil.map(depotList,DepotDto.class);
-//            initDomain(list);
         }
         return list;
     }
@@ -161,7 +168,7 @@ public class DepotService {
         return depotDtoList;
     }
 
-    public List<Depot> findProxyShop(DepotQuery depotQuery){
+    public List<DepotDto> findProxyShop(DepotQuery depotQuery){
         List<String> officeIds = officeClient.getOfficeIdsByAccountId(securityUtils.getAccountId());
         if(CollectionUtil.isNotEmpty(officeIds)){
             Set<String> areaIds= Sets.newHashSet();
@@ -175,11 +182,10 @@ public class DepotService {
             depotQuery.setOfficeIdList(officeAndAreaIds);
         }
         List<Depot> depotList = depotMapper.findByFilter(depotQuery);
-//        initDomain(depotList);
-        return depotList;
+        return BeanUtil.map(depotList,DepotDto.class);
     }
 
-    public  List<Depot> findAdShopBsc(String name){
+    public  List<DepotDto> findAdShopBsc(String name){
         DepotQuery depotQuery = new DepotQuery();
         List<String> officeIds = officeClient.getOfficeIdsByAccountId(securityUtils.getAccountId());
         if(CollectionUtil.isNotEmpty(officeIds)){
@@ -195,14 +201,13 @@ public class DepotService {
         }
         depotQuery.setDepotName(name);
         depotQuery.setAdShopBsc(true);
-        depotQuery.setDepoTypeList(DepotUtils.getTypeValueByCategory(DepotCategoryEnum.AD_SHOP.name()));
-        Set<Depot> depotSet = Sets.newHashSet();
-        depotSet.addAll(depotMapper.findByFilter(depotQuery));
+        depotQuery.setTypeList(DepotUtils.getTypeValueByCategory(DepotCategoryEnum.AD_SHOP.name()));
+        Set<DepotDto> depotSet = Sets.newHashSet();
+        depotSet.addAll(BeanUtil.map(depotMapper.findByFilter(depotQuery),DepotDto.class));
         depotQuery.setAdShopBsc(false);
-        depotSet.addAll(depotMapper.findByFilter(depotQuery));
-        List<Depot> depotList=Lists.newArrayList(depotSet);
-//        initDomain(depotList);
-        return depotList;
+        depotSet.addAll(BeanUtil.map(depotMapper.findByFilter(depotQuery),DepotDto.class));
+        List<DepotDto> depotDtoList = Lists.newArrayList(depotSet);
+        return depotDtoList;
     }
 
     public List<DepotDto> setInventory(List<DepotDto> depotDtoList, DepotQuery depotQuery) {
@@ -286,7 +291,6 @@ public class DepotService {
 
     public List<Depot> findByFilter(DepotQuery depotQuery) {
         List<Depot> depotList = depotMapper.findByFilter(depotQuery);
-//        initDomain(depotList);
         return depotList;
     }
 
@@ -363,7 +367,7 @@ public class DepotService {
                     store.setOutGroupName(map.get("groupName").toString());
                     store.setOutDate(LocalDateTimeUtils.parse(map.get("modifyDate").toString()));
                     store.setCode(map.get("code").toString());
-//                    store.setNamePinyin(StringUtils.getFirstSpell(store.getName()));
+                    store.setNamePinyin(StringUtils.getFirstSpell(store.getName()));
 
                     store.setType(DepotUtils.getDepotType(BeanUtil.map(store,DepotForm.class)));
                     depotMapper.update(store);
@@ -408,11 +412,152 @@ public class DepotService {
                     shop.setOutGroupName(map.get("groupName").toString());
                     shop.setOutDate(LocalDateTimeUtils.parse(map.get("modifyDate").toString()));
                     shop.setCode(map.get("code").toString());
-//                    shop.setNamePinyin(StringUtils.getFirstSpell(shop.getName()));
+                    shop.setNamePinyin(StringUtils.getFirstSpell(shop.getName()));
                     shop.setType(DepotUtils.getDepotType(BeanUtil.map(shop,DepotForm.class)));
                     depotMapper.update(shop);
                 }
             }
         }
+    }
+
+    public List<DepotDto> findAdDepot(String adShopName, String billType) {
+        List<DepotDto> depotList;
+        DepotQuery depotQuery = new DepotQuery();//FilterUtils.getDepotFilter(AccountUtils.getAccountId());
+        depotQuery.setName(adShopName);
+        if ("POP".equals(billType)) {
+            depotQuery.setAllowAdApply(true);
+            depotList = BeanUtil.map(depotMapper.findByFilter(depotQuery),DepotDto.class);
+        } else {
+            //代理区域所有门店，直营区域只能是财务关联门店
+            List<Integer> typeValueByCategory = DepotUtils.getTypeValueByCategory(DepotCategoryEnum.SHOP_PROXY_STORE.name());
+            depotQuery.setTypeList(typeValueByCategory);
+            depotList =  BeanUtil.map(depotMapper.findByFilter(depotQuery),DepotDto.class);
+        }
+        Map<Integer, String> map = DepotTypeEnum.getMap();
+        for (DepotDto depotDto : depotList) {
+            if (depotDto != null && depotDto.getType() != null) {
+                depotDto.setTypeLabel(map.get(depotDto.getType()));
+            }
+        }
+        return depotList;
+    }
+
+    public Page<DepotDto> findShopAccount(Pageable pageable, DepotQuery depotQuery) {
+        Page<DepotDto> page = depotMapper.findDepotAccountPage(pageable, depotQuery);
+        Map<String, ShopDeposit> scbzjMap = Maps.newHashMap();
+        Map<String, ShopDeposit> xxbzjMap = Maps.newHashMap();
+        Map<String, ShopDeposit> ysjyjMap = Maps.newHashMap();
+        Map<String, ReceivableReportForSummary> dataStartMap = Maps.newHashMap();
+        Map<String, ReceivableReportForSummary> dataEndMap = Maps.newHashMap();
+        List<ReceivableReportForSummary> dataStartList = Lists.newArrayList();
+        List<ReceivableReportForSummary> dataEndList = Lists.newArrayList();
+        if (CollectionUtil.isNotEmpty(page.getContent())) {
+            String cloudName = companyConfigClient.findByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
+            List<String> outIds = CollectionUtil.extractToList(page.getContent(), "outId");
+            String dateStartJson = cloudClient.findShouldGet(cloudName, outIds, LocalDateUtils.format(depotQuery.getDutyDateStart()));
+            String dateEndJson = cloudClient.findShouldGet(cloudName, outIds, LocalDateUtils.format(depotQuery.getDutyDateEnd().plusDays(1)));
+            try{
+                dataStartList = ObjectMapperUtils.getObjectMapper().readValue(dateStartJson, ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, ReceivableReportForSummary.class));
+                dataEndList = ObjectMapperUtils.getObjectMapper().readValue(dateEndJson, ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, ReceivableReportForSummary.class));
+                dataStartMap = CollectionUtil.extractToMap(dataStartList, "customerId");
+                dataEndMap = CollectionUtil.extractToMap(dataEndList, "customerId");
+            }catch (IOException e){
+                throw  new ServiceException("金蝶返回数据解析失败");
+            }
+            List<ShopDeposit> scbzjList = shopDepositMapper.findByTypeAndShopIds(ShopDepositTypeEnum.市场保证金.name(), CollectionUtil.extractToList(page.getContent(), "id"));
+            List<ShopDeposit> xxbzjList = shopDepositMapper.findByTypeAndShopIds(ShopDepositTypeEnum.形象保证金.name(), CollectionUtil.extractToList(page.getContent(), "id"));
+            List<ShopDeposit> ysjyjxxbzjList = shopDepositMapper.findByTypeAndShopIds(ShopDepositTypeEnum.演示机押金.name(), CollectionUtil.extractToList(page.getContent(), "id"));
+            xxbzjMap = CollectionUtil.extractToMap(xxbzjList, "shopId");
+            scbzjMap = CollectionUtil.extractToMap(scbzjList, "shopId");
+            ysjyjMap=CollectionUtil.extractToMap(ysjyjxxbzjList,"shopId");
+        }
+        for (DepotDto depotDto : page.getContent()) {
+            depotDto.getDepositMap().put("qcys", dataStartMap.get(depotDto.getOutId())== null ? BigDecimal.ZERO : dataStartMap.get(depotDto.getOutId()).getBeginAmount());
+            depotDto.getDepositMap().put("qmys", dataEndMap.get(depotDto.getOutId()) == null ? BigDecimal.ZERO : dataEndMap.get(depotDto.getOutId()).getBeginAmount());
+            depotDto.getDepositMap().put("xxbzj", xxbzjMap.get(depotDto.getId()) == null ? BigDecimal.ZERO : xxbzjMap.get(depotDto.getId()).getAmount());
+            depotDto.getDepositMap().put("scbzj", scbzjMap.get(depotDto.getId()) == null ? BigDecimal.ZERO : scbzjMap.get(depotDto.getId()).getAmount());
+            depotDto.getDepositMap().put("ysjyj", ysjyjMap.get(depotDto.getId()) == null ? BigDecimal.ZERO : ysjyjMap.get(depotDto.getId()).getAmount());
+        }
+        return page;
+    }
+
+    public List<ReceivableReportForDetail> findShopAccountDetail(String customerId, String dateRange) {
+        String cloudName = companyConfigClient.findByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
+        List<ReceivableReportForDetail> receivableReportForDetailList = Lists.newArrayList();
+        String json = cloudClient.receivableReportForDetailList(cloudName, customerId, dateRange);
+        try{
+            receivableReportForDetailList = ObjectMapperUtils.getObjectMapper().readValue(json, ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, ReceivableReportForDetail.class));
+        }catch (IOException e){
+            throw  new ServiceException("金蝶返回数据解析失败");
+        }
+        return receivableReportForDetailList;
+    }
+
+    public  List<DepotDto> findSimpleExcelSheets(Workbook workbook, DepotQuery depotQuery) {
+        List<DepotDto> depotList = depotMapper.findShopAccountExportPage(depotQuery);
+        Map<String, ReceivableReportForSummary> dataStartMap = Maps.newHashMap();
+        Map<String, ReceivableReportForSummary> dataEndMap = Maps.newHashMap();
+        List<ReceivableReportForSummary> dataStartList = Lists.newArrayList();
+        List<ReceivableReportForSummary> dataEndList = Lists.newArrayList();
+        if (CollectionUtil.isNotEmpty(depotList)) {
+            List<String> outIds = CollectionUtil.extractToList(depotList, "outId");
+            List<List<String>> outIdsList= IdUtils.splitList(outIds,400);
+            for(int  i=0;i<outIdsList.size();i++) {
+                String cloudName = companyConfigClient.findByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
+                String dateStartJson = cloudClient.findShouldGet(cloudName, outIdsList.get(i), LocalDateUtils.format(depotQuery.getDutyDateStart()));
+                String dateEndJson = cloudClient.findShouldGet(cloudName, outIdsList.get(i),  LocalDateUtils.format(depotQuery.getDutyDateEnd().plusDays(1)));
+                try{
+                    dataStartList = ObjectMapperUtils.getObjectMapper().readValue(dateStartJson, ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, ReceivableReportForSummary.class));
+                    dataEndList = ObjectMapperUtils.getObjectMapper().readValue(dateEndJson, ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, ReceivableReportForSummary.class));
+                    dataStartMap.putAll(CollectionUtil.extractToMap(dataStartList, "customerId"));
+                    dataEndMap.putAll(CollectionUtil.extractToMap(dataEndList, "customerId"));
+                }catch (IOException e){
+                    throw  new ServiceException("金蝶返回数据解析失败");
+                }
+            }
+        }
+        for (DepotDto depotDto : depotList) {
+            depotDto.getDepositMap().put("qcys", dataStartMap.get(depotDto.getOutId()) == null ? BigDecimal.ZERO :  dataStartMap.get(depotDto.getOutId()).getBeginAmount());
+            depotDto.getDepositMap().put("qmys", dataEndMap.get(depotDto.getOutId()) == null ? BigDecimal.ZERO : dataEndMap.get(depotDto.getOutId()).getBeginAmount());
+        }
+        return depotList;
+    }
+
+    public SimpleExcelBook accountExport(Workbook workbook, DepotQuery depotQuery) {
+        String dateRange = depotQuery.getDutyDateStart() + "~" + depotQuery.getDutyDateEnd();
+        depotQuery.getDutyDateEnd().plusDays(1);
+        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "name", "门店"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "office.name", "机构"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "area.name", "办事处"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depositMap.qcys", "期初应收"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depositMap.qmys", "期末应收"));
+
+        List<SimpleExcelColumn> simpleExcelSheetColumnList = Lists.newArrayList();
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "billType", "业务类型"));
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "billNo", "单据编号"));
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "date", "记账日期"));
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "materialName", "名称"));
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "quantity", "数量"));
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "price", "单价"));
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "amount", "金额"));
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "payableAmount", "预收"));
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "actualPayAmount", "应收"));
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "endAmount", "期末"));
+        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "note", "备注"));
+
+        List<DepotDto> depotList = findSimpleExcelSheets(workbook,depotQuery);
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("应收报表~所有门店", depotList, simpleExcelColumnList);
+        simpleExcelSheetList.add(simpleExcelSheet);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"应收报表.xlsx",simpleExcelSheetList);
+
+        SimpleExcelSheet simpleExcelSheetDetail = null;
+        for(DepotDto depotDto : depotList){
+            List<ReceivableReportForDetail> depotDetail=findShopAccountDetail(depotDto.getOutId(),dateRange);
+            simpleExcelSheetDetail = new SimpleExcelSheet(depotDto.getName(),depotDetail,simpleExcelSheetColumnList);
+            simpleExcelBook.getSimpleExcelSheets().add(simpleExcelSheetDetail);
+        }
+        return simpleExcelBook;
     }
 }

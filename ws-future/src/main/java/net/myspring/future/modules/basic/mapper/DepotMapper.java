@@ -21,9 +21,9 @@ public interface DepotMapper extends MyMapper<Depot,String> {
 
     Page<DepotDto> findPage(Pageable pageable, @Param("p")DepotQuery depotQuery);
 
-    Page<Depot> findDepotAccountPage(Pageable pageable, @Param("p") DepotQuery depotQuery);
+    Page<DepotDto> findDepotAccountPage(Pageable pageable, @Param("p") DepotQuery depotQuery);
 
-    List<Depot> findShopAccountExportPage(@Param("p") DepotQuery depotQuery);
+    List<DepotDto> findShopAccountExportPage(@Param("p") DepotQuery depotQuery);
 
     List<Depot> findByTypes(List<Integer> depotTypes);
 
