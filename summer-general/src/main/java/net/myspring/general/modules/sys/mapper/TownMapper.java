@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface TownMapper extends MyMapper<Town,String> {
+public interface TownMapper {
 
     List<Town> findByLikeName(String name);
 }

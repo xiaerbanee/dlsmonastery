@@ -2,13 +2,15 @@ package net.myspring.general.modules.sys.dto;
 
 
 import net.myspring.general.common.dto.DataDto;
+import net.myspring.general.common.dto.IdDto;
 import net.myspring.general.modules.sys.domain.District;
 
 /**
  * Created by admin on 2017/4/5.
  */
-public class DistrictDto extends DataDto<District> {
+public class DistrictDto extends IdDto<District> {
     private String name;
+    private String parentId;
     private String shortName;
     private Integer level;
     private String cityCode;
@@ -27,6 +29,14 @@ public class DistrictDto extends DataDto<District> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public String getShortName() {

@@ -2,6 +2,7 @@ package net.myspring.general.modules.sys.dto;
 
 import com.google.common.collect.Lists;
 import net.myspring.general.common.dto.DataDto;
+import net.myspring.general.common.dto.IdDto;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * Created by admin on 2017/4/5.
  */
-public class ProcessFlowDto extends DataDto<ProcessFlow> {
+public class ProcessFlowDto extends IdDto<ProcessFlow> {
     private String name;
     private Integer sort;
     private String positionId;

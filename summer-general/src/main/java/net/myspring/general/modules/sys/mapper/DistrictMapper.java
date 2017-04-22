@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface DistrictMapper extends MyMapper<District,String> {
+public interface DistrictMapper {
 
     List<District> findByParentId(String parentId);
 
