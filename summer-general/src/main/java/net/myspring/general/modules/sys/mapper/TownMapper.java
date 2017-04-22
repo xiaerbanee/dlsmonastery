@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 public interface TownMapper {
 
-    List<Town> findByLikeName(String name);
+    List<Town> findByNameLike(String name);
 }
