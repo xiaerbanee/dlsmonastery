@@ -18,11 +18,8 @@ public class ProcessTypeForm extends DataForm<ProcessType> {
     private String name;
     private String viewPermissionId;
     private String createPermissionId;
-    private String companyId = "1";
     private Boolean auditFileType;
-    private String remarks;
-    private List<ProcessFlowDto> processFlowDtoList = Lists.newArrayList();
-    private Map<Boolean,String>  bools= Maps.newHashMap();
+    private List<ProcessFlowForm> processFlowFormList = Lists.newArrayList();
 
     public String getType() {
         return type;
@@ -56,14 +53,6 @@ public class ProcessTypeForm extends DataForm<ProcessType> {
         this.createPermissionId = createPermissionId;
     }
 
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
     public Boolean getAuditFileType() {
         return auditFileType;
     }
@@ -72,19 +61,11 @@ public class ProcessTypeForm extends DataForm<ProcessType> {
         this.auditFileType = auditFileType;
     }
 
-    public Map<Boolean, String> getBools() {
-        return bools;
+    public List<ProcessFlowForm> getProcessFlowFormList() {
+        return processFlowFormList;
     }
 
-    public void setBools(Map<Boolean, String> bools) {
-        this.bools = bools;
-    }
-
-    public List<ProcessFlowDto> getProcessFlowDtoList() {
-        return processFlowDtoList;
-    }
-
-    public void setProcessFlowDtoList(List<ProcessFlowDto> processFlowDtoList) {
-        this.processFlowDtoList = processFlowDtoList;
+    public void setProcessFlowFormList(List<ProcessFlowForm> processFlowFormList) {
+        this.processFlowFormList = processFlowFormList;
     }
 }

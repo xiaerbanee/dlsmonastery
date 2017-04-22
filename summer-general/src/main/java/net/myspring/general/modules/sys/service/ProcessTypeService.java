@@ -7,6 +7,8 @@ import net.myspring.general.modules.sys.dto.ProcessFlowDto;
 import net.myspring.general.modules.sys.dto.ProcessTypeDto;
 import net.myspring.general.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.general.modules.sys.mapper.ProcessTypeMapper;
+import net.myspring.general.modules.sys.web.form.ProcessFlowForm;
+import net.myspring.general.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.general.modules.sys.web.query.ProcessTypeQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
@@ -35,40 +37,42 @@ public class ProcessTypeService {
     @Autowired
     private RepositoryService repositoryService;
 
-    public ProcessType findByName(String name){
-        ProcessType processFlowList=processTypeMapper.findByName(name);
-        return processFlowList;
+    public ProcessTypeDto findByName(String name){
+        ProcessType processType =processTypeMapper.findByName(name);
+        return BeanUtil.map(processType,ProcessTypeDto.class);
     }
 
-    public List<ProcessType> findEnabledAuditFileType(){
-        return processTypeMapper.findEnabledAuditFileType();
+    public List<ProcessTypeDto> findEnabledAuditFileType(){
+        List<ProcessType> processTypeList = processTypeMapper.findEnabledAuditFileType();
+        return BeanUtil.map(processTypeList,ProcessTypeDto.class);
     }
 
-    public ProcessType findOne(String id){
+    public ProcessTypeForm findForm(String id){
         ProcessType processType=processTypeMapper.findOne(id);
-        return processType;
+        return BeanUtil.map(processType,ProcessTypeForm.class);
     }
 
-    public void logicDeleteOne(ProcessType processType) {
+    public void logicDeleteOne(String id) {
+        ProcessType processType = processTypeMapper.findOne(id);
         processType.setEnabled(false);
         processType.setName(processType.getName() +"removed("+System.currentTimeMillis()+")");
         processTypeMapper.update(processType);
     }
 
     @Transactional
-    public void save(ProcessTypeDto processTypeDto){
-        for (int i = processTypeDto.getProcessFlowDtoList().size() - 1; i >= 0; i--) {
-            ProcessFlowDto processFlowDto= processTypeDto.getProcessFlowDtoList().get(i);
-            if (StringUtils.isBlank(processFlowDto.getName())) {
-                processTypeDto.getProcessFlowDtoList().remove(i);
+    public void save(ProcessTypeForm processTypeForm){
+        for (int i = processTypeForm.getProcessFlowFormList().size() - 1; i >= 0; i--) {
+            ProcessFlowForm processFlowForm= processTypeForm.getProcessFlowFormList().get(i);
+            if (StringUtils.isBlank(processFlowForm.getName())) {
+                processTypeForm.getProcessFlowFormList().remove(i);
             }
         }
-        ProcessType processType = BeanUtil.map(processTypeDto,ProcessType.class);
+        ProcessType processType = BeanUtil.map(processTypeForm,ProcessType.class);
         processTypeMapper.save(processType);
-        for(ProcessFlowDto processFlowDto:processTypeDto.getProcessFlowDtoList()) {
-            processFlowDto.setProcessTypeId(processType.getId());
+        for(ProcessFlowForm processFlowForm:processTypeForm.getProcessFlowFormList()) {
+            processFlowForm.setProcessTypeId(processType.getId());
         }
-        processFlowMapper.batchSave(BeanUtil.map(processTypeDto.getProcessFlowDtoList(),ProcessFlow.class));
+        processFlowMapper.batchSave(BeanUtil.map(processTypeForm.getProcessFlowFormList(),ProcessFlow.class));
         // 部署流程
         String processId = "process_type_" + processType.getId();
         BpmnModel model = new BpmnModel();
