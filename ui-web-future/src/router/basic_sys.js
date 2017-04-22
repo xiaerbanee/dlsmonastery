@@ -20,6 +20,8 @@ const backendList  = r => require.ensure([], () => r(require('pages/basic/sys/ba
 const backendForm= r => require.ensure([], () => r(require('pages/basic/sys/backendForm.vue')));
 const backendModuleList  = r => require.ensure([], () => r(require('pages/basic/sys/backendModuleList.vue')));
 const backendModuleForm= r => require.ensure([], () => r(require('pages/basic/sys/backendModuleForm.vue')));
+const officeRuleList  = r => require.ensure([], () => r(require('pages/basic/sys/officeRuleList.vue')));
+const officeRuleForm= r => require.ensure([], () => r(require('pages/basic/sys/officeRuleForm.vue')));
 
 
 
@@ -46,6 +48,8 @@ let routes = [
   {path:'/basic/sys/backendForm',component:backendForm,name:'backendForm',meta: {menu:"backendList"}},
   {path:'/basic/sys/backendModuleList',component:backendModuleList,name:'backendModuleList'},
   {path:'/basic/sys/backendModuleForm',component:backendModuleForm,name:'backendModuleForm',meta: {menu:"backendModuleList"}},
+  {path:'/basic/sys/officeRuleList',component:officeRuleList,name:'officeRuleList'},
+  {path:'/basic/sys/officeRuleForm',component:officeRuleForm,name:'officeRuleForm',meta: {menu:"officeRuleList"}},
 ];
 
 export default routes;

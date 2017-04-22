@@ -2,10 +2,10 @@ package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.basic.modules.hr.dto.DutySignDto;
 import net.myspring.basic.modules.hr.service.DutySignService;
-import net.myspring.basic.modules.hr.service.OfficeService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.DutySignForm;
 import net.myspring.basic.modules.hr.web.query.DutySignQuery;
+import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 /**

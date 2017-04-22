@@ -23,9 +23,7 @@ public class DutySign extends AuditEntity<DutySign> {
     private Integer accuracy;
     private String operatorType;
     private String netType;
-    private Employee employee;
     private String employeeId;
-    private DutyWorktime dutyWorktime;
     private String dutyWorktimeId;
     private String model;
 
@@ -117,28 +115,12 @@ public class DutySign extends AuditEntity<DutySign> {
         this.netType = netType;
     }
 
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
     public String getEmployeeId() {
         return employeeId;
     }
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
-    }
-
-    public DutyWorktime getDutyWorktime() {
-        return dutyWorktime;
-    }
-
-    public void setDutyWorktime(DutyWorktime dutyWorktime) {
-        this.dutyWorktime = dutyWorktime;
     }
 
     public String getDutyWorktimeId() {

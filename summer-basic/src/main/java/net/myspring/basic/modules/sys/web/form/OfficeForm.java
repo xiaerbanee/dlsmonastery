@@ -1,12 +1,10 @@
-package net.myspring.basic.modules.hr.web.form;
+package net.myspring.basic.modules.sys.web.form;
 
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.enums.JointTypeEnum;
-import net.myspring.basic.modules.hr.domain.Office;
+import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.common.form.DataForm;
-import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.util.List;

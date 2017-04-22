@@ -13,7 +13,7 @@
         and account.office_id=office.id
         and t1.enabled=1
         <include refid="dutySignFilter"/>
-        <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
+        <include refid="net.myspring.basic.modules.sys.mapper.OfficeMapper.officeFilter" />
     </select>
 
     <select id="findByAuditable" resultType="net.myspring.basic.modules.hr.dto.DutyDto">

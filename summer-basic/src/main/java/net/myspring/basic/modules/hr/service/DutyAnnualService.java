@@ -72,24 +72,26 @@ public class DutyAnnualService {
     public void save(File file, String annualYear, String remarks){
         Workbook workbook= ExcelUtils.getWorkbook(file);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn("employee.name","用户名"));
-        simpleExcelColumnList.add(new SimpleExcelColumn("employee.account.loginName","登录名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn("name","用户名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn("loginName","登录名"));
         simpleExcelColumnList.add(new SimpleExcelColumn("hour","年假时间"));
         simpleExcelColumnList.add(new SimpleExcelColumn("leftHour","剩余时间"));
         if(workbook!=null){
             List<DutyAnnual> list = ExcelUtils.doRead(workbook.getSheetAt(0), simpleExcelColumnList, DutyAnnual.class);
+            List<DutyAnnualDto> dutyAnnualDtoList=BeanUtil.map(list,DutyAnnualDto.class);
+            cacheUtils.initCacheInput(dutyAnnualDtoList);
             List<Account> accountList= CollectionUtil.extractToList(CollectionUtil.extractToList(list,"employee"),"account");
             List<String> loginNameList=CollectionUtil.extractToList(accountList,"loginName");
             accountList=accountMapper.findByLoginNameList(loginNameList);
             Map<String,Account> accountMap=CollectionUtil.extractToMap(accountList,"loginName");
-            for(DutyAnnual dutyAnnual:list){
-                Account account=accountMap.get(dutyAnnual.getEmployee().getAccount().getLoginName());
-                if(account==null&&!dutyAnnual.getEmployee().getName().equals(account.getEmployee().getName())){
+            for(DutyAnnualDto dutyAnnualDto:dutyAnnualDtoList){
+                Account account=accountMap.get(dutyAnnualDto.getLoginName());
+                if(account==null&&!dutyAnnualDto.getEmployeeName().equals(account.getEmployee().getName())){
                     break;
                 }
-                dutyAnnual.setEmployeeId(account.getEmployeeId());
-                dutyAnnual.setAnnualYear(annualYear.substring(0,annualYear.indexOf("-")));
-                dutyAnnual.setRemarks(remarks);
+                dutyAnnualDto.setEmployeeId(account.getEmployeeId());
+                dutyAnnualDto.setAnnualYear(annualYear.substring(0,annualYear.indexOf("-")));
+                dutyAnnualDto.setRemarks(remarks);
             }
             dutyAnnualMapper.batchSave(list);
         }

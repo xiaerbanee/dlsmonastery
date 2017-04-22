@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.web.controller;
 
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
+import net.myspring.basic.modules.sys.service.BackendModuleService;
 import net.myspring.basic.modules.sys.service.MenuCategoryService;
 import net.myspring.basic.modules.sys.web.form.MenuCategoryForm;
 import net.myspring.basic.modules.sys.web.query.MenuCategoryQuery;
@@ -21,6 +22,8 @@ public class MenuCategoryController {
 
     @Autowired
     private MenuCategoryService menuCategoryService;
+    @Autowired
+    private BackendModuleService backendModuleService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<MenuCategoryDto> list(Pageable pageable, MenuCategoryQuery menuCategoryQuery){
@@ -47,6 +50,7 @@ public class MenuCategoryController {
     @RequestMapping(value = "findOne")
     public MenuCategoryForm findOne(MenuCategoryForm menuCategoryForm){
         menuCategoryForm=menuCategoryService.findForm(menuCategoryForm);
+        menuCategoryForm.setBackendModuleList(backendModuleService.findAll());
         return menuCategoryForm;
     }
 

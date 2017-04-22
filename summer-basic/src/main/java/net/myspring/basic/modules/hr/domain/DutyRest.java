@@ -19,9 +19,7 @@ public class DutyRest extends AuditEntity<DutyRest> {
     private String dateType;
     private BigDecimal hour;
     private Integer version = 0;
-    private Employee employee;
     private String employeeId;
-    private DutyAnnual dutyAnnual;
     private String dutyAnnualId;
 
     @Transient
@@ -85,28 +83,12 @@ public class DutyRest extends AuditEntity<DutyRest> {
         this.version = version;
     }
 
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
     public String getEmployeeId() {
         return employeeId;
     }
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
-    }
-
-    public DutyAnnual getDutyAnnual() {
-        return dutyAnnual;
-    }
-
-    public void setDutyAnnual(DutyAnnual dutyAnnual) {
-        this.dutyAnnual = dutyAnnual;
     }
 
     public String getDutyAnnualId() {

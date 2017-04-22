@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import net.myspring.basic.common.dto.NameValueDto;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.InitDomainUtils;
-import net.myspring.basic.modules.hr.domain.Office;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
@@ -22,7 +21,6 @@ import net.myspring.basic.modules.sys.web.query.PermissionQuery;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.text.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -52,6 +50,12 @@ public class PermissionService {
     private CacheUtils cacheUtils;
     @Autowired
     private InitDomainUtils initDomainUtils;
+
+    public List<PermissionDto> findByMenuId(String menuId){
+        List<Permission> permissionList=permissionMapper.findByMenuId(menuId);
+        List<PermissionDto> permissionDtoList=BeanUtil.map(permissionList,PermissionDto.class);
+        return permissionDtoList;
+    }
 
     public List<Permission> findByPositionId(String positionId) {
         return permissionMapper.findByPositionId(positionId);

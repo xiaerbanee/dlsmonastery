@@ -15,13 +15,7 @@ public class DutyLeave extends AuditEntity<DutyLeave> {
     private String dateType;
     private String attachment;
     private Integer version = 0;
-    private Employee employee;
     private String employeeId;
-
-    @Transient
-    private String dutyDateStart;
-    @Transient
-    private String dutyDateEnd;
 
     public String getLeaveType() {
         return leaveType;
@@ -63,14 +57,6 @@ public class DutyLeave extends AuditEntity<DutyLeave> {
         this.version = version;
     }
 
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
     public String getEmployeeId() {
         return employeeId;
     }
@@ -79,19 +65,4 @@ public class DutyLeave extends AuditEntity<DutyLeave> {
         this.employeeId = employeeId;
     }
 
-    public String getDutyDateStart() {
-        return dutyDateStart;
-    }
-
-    public void setDutyDateStart(String dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
-    }
-
-    public String getDutyDateEnd() {
-        return dutyDateEnd;
-    }
-
-    public void setDutyDateEnd(String dutyDateEnd) {
-        this.dutyDateEnd = dutyDateEnd;
-    }
 }

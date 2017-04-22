@@ -10,33 +10,25 @@
               <el-option v-for="category in inputForm.menuCategoryList" :key="category.id" :label="category.name" :value="category.id"></el-option>
             </el-select>
             </el-form-item>
-            <el-form-item :label="$t('menuForm.category')" prop="category">
-              <el-select v-model="inputForm.category" filterable allow-create :placeholder="$t('menuForm.selectGroup')">
-                <el-option v-for="category in inputForm.categoryList" :key="category" :label="category" :value="category"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item :label="$t('menuForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('menuForm.menuCode')" prop="menuCode">
-              <el-input v-model="inputForm.menuCode"></el-input>
+            <el-form-item :label="$t('menuForm.code')" prop="code">
+              <el-input v-model="inputForm.code"></el-input>
             </el-form-item>
             <el-form-item :label="$t('menuForm.sort')" prop="sort">
               <el-input v-model="inputForm.sort"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('menuForm.href')" prop="href">
-              <el-input v-model="inputForm.href"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="10">
             <el-form-item :label="$t('menuForm.mobile')" prop="mobile">
               <el-radio-group v-model="inputForm.mobile">
-                <el-radio v-for="(value,key) in inputForm.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
+                <el-radio v-for="(value,key) in inputForm.boolMap" :key="key" :label="value">{{key | bool2str}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('menuForm.visible')" prop="visible">
               <el-radio-group v-model="inputForm.visible">
-                <el-radio v-for="(value,key) in inputForm.bools"  :key="key" :label="value">{{key | bool2str}}</el-radio>
+                <el-radio v-for="(value,key) in inputForm.boolMap"  :key="key" :label="value">{{key | bool2str}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('menuForm.permissionStr')" prop="permissionStr">
@@ -64,11 +56,9 @@
             submitData:{
               id:'',
               menuCategoryId:'',
-              category:'',
               name:'',
-              menuCode:'',
+              code:'',
               sort:'',
-              href:'',
               mobile:true,
               visible:true,
               permissionStr:"",
@@ -76,11 +66,9 @@
             },
             rules: {
               menuCategoryId: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
-              category: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
               name: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
               menuCode: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
               sort: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
-              href: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}]
             }
           }
       },

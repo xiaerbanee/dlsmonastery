@@ -1,7 +1,12 @@
 package net.myspring.basic.modules.sys.web.form;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.sys.dto.BackendMenuDto;
+import net.myspring.basic.modules.sys.dto.BackendModuleDto;
+
+import java.util.List;
 
 /**
  * Created by admin on 2017/4/6.
@@ -12,6 +17,24 @@ public class MenuCategoryForm extends DataForm<MenuCategory> {
     private String name;
     private String sort;
     private String remarks;
+    private String backendModuleId;
+    private List<BackendModuleDto> backendModuleList= Lists.newArrayList();
+
+    public String getBackendModuleId() {
+        return backendModuleId;
+    }
+
+    public void setBackendModuleId(String backendModuleId) {
+        this.backendModuleId = backendModuleId;
+    }
+
+    public List<BackendModuleDto> getBackendModuleList() {
+        return backendModuleList;
+    }
+
+    public void setBackendModuleList(List<BackendModuleDto> backendModuleList) {
+        this.backendModuleList = backendModuleList;
+    }
 
     public String getName() {
         return name;

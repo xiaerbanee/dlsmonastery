@@ -307,8 +307,13 @@ export default {
     priceChangeCommissionList:'调价提成',
     //delete
     hrrecruit:"无效",
-    officeUnitsEdit:'单元编辑'
-
+    officeUnitsEdit:'单元编辑',
+    officeRuleList:'部门规则',
+    backendModuleList:'项目模块',
+    backendList:'项目管理',
+    officeRuleForm:"部门规则编辑",
+    backendModuleForm:'项目模块编辑',
+    backendForm:'项目管理编辑',
   },
   404: {
     404:"404",

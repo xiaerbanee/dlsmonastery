@@ -1,16 +1,14 @@
-package net.myspring.basic.modules.hr.manager;
+package net.myspring.basic.modules.sys.manager;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.enums.DataScopeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.Account;
-import net.myspring.basic.modules.hr.domain.Job;
-import net.myspring.basic.modules.hr.domain.Office;
+import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.hr.dto.AccountDto;
-import net.myspring.basic.modules.hr.mapper.OfficeMapper;
-import net.myspring.basic.modules.hr.web.form.JobForm;
-import net.myspring.basic.modules.hr.web.form.OfficeForm;
+import net.myspring.basic.modules.sys.mapper.OfficeMapper;
+import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;

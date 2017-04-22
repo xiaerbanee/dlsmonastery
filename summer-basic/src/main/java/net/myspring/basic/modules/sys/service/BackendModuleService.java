@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import net.myspring.basic.modules.sys.mapper.BackendModuleMapper;
 
+import java.util.List;
+
 @Service
 public class BackendModuleService {
 
@@ -57,6 +59,12 @@ public class BackendModuleService {
         Page<BackendModuleDto> backendModuleDtoPage= backendModuleMapper.findPage(pageable, backendModuleQuery);
         cacheUtils.initCacheInput(backendModuleDtoPage.getContent());
         return backendModuleDtoPage;
+    }
+
+    public List<BackendModuleDto> findAll(){
+        List<BackendModule> backendModuleList=backendModuleMapper.findAllEnabled();
+        List<BackendModuleDto> backendModuleDtoList=BeanUtil.map(backendModuleList,BackendModuleDto.class);
+        return backendModuleDtoList;
     }
 
 }

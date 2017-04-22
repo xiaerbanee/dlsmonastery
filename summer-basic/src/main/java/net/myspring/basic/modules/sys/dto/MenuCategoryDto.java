@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.dto.DataDto;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.util.List;
 
@@ -14,8 +15,27 @@ public class MenuCategoryDto extends DataDto<MenuCategory> {
     private String name;
     private Integer sort;
     private String code;
+    private String backendModuleId;
+    @CacheInput(inputKey = "backendModules",inputInstance = "backendModuleId",outputInstance = "name")
+    private String backendModuleName;
     private List<Menu> menuList = Lists.newArrayList();
     private List<String> menuIdList = Lists.newArrayList();
+
+    public String getBackendModuleId() {
+        return backendModuleId;
+    }
+
+    public void setBackendModuleId(String backendModuleId) {
+        this.backendModuleId = backendModuleId;
+    }
+
+    public String getBackendModuleName() {
+        return backendModuleName;
+    }
+
+    public void setBackendModuleName(String backendModuleName) {
+        this.backendModuleName = backendModuleName;
+    }
 
     public List<Menu> getMenuList() {
         return menuList;

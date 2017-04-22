@@ -10,7 +10,7 @@
         where  employee.account_id=account.id
         and account.office_id=office.id
         and employee.enabled=1
-        <include refid="net.myspring.basic.modules.hr.mapper.OfficeMapper.officeFilter" />
+        <include refid="net.myspring.basic.modules.sys.mapper.OfficeMapper.officeFilter" />
         <if test="p.name !=null" >
             and employee.name like CONCAT('%',#{p.name},'%')
         </if>

@@ -18,8 +18,6 @@ public class DutyWorktime extends CompanyEntity<DutyWorktime> {
     private LocalDate dutyDate;
     private LocalTime dutyTime;
     private Integer version = 0;
-    private List<DutySign> dutySignList = Lists.newArrayList();
-    private List<String> dutySignIdList = Lists.newArrayList();
     private Employee employee;
     private String employeeId;
 
@@ -56,22 +54,6 @@ public class DutyWorktime extends CompanyEntity<DutyWorktime> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public List<DutySign> getDutySignList() {
-        return dutySignList;
-    }
-
-    public void setDutySignList(List<DutySign> dutySignList) {
-        this.dutySignList = dutySignList;
-    }
-
-    public List<String> getDutySignIdList() {
-        return dutySignIdList;
-    }
-
-    public void setDutySignIdList(List<String> dutySignIdList) {
-        this.dutySignIdList = dutySignIdList;
     }
 
     public Employee getEmployee() {

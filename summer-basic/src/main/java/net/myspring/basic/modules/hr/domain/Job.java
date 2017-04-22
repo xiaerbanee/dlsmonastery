@@ -15,8 +15,6 @@ public class Job extends CompanyEntity<Job> {
     private String name;
     private Integer version = 0;
     private String permission;
-    private List<Position> positionList = Lists.newArrayList();
-    private List<String> positionIdList = Lists.newArrayList();
 
     public String getName() {
         return name;
@@ -42,19 +40,4 @@ public class Job extends CompanyEntity<Job> {
         this.permission = permission;
     }
 
-    public List<Position> getPositionList() {
-        return positionList;
-    }
-
-    public void setPositionList(List<Position> positionList) {
-        this.positionList = positionList;
-    }
-
-    public List<String> getPositionIdList() {
-        return positionIdList;
-    }
-
-    public void setPositionIdList(List<String> positionIdList) {
-        this.positionIdList = positionIdList;
-    }
 }

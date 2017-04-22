@@ -11,17 +11,8 @@ import javax.persistence.Table;
 public class DutyRestOvertime extends IdEntity<DutyRestOvertime> {
     private DutyRest dutyRest;
     private String restId;
-    private DutyOvertime dutyOvertime;
     private String overtimeId;
     private Double restHour;
-
-    public DutyOvertime getDutyOvertime() {
-        return dutyOvertime;
-    }
-
-    public void setDutyOvertime(DutyOvertime dutyOvertime) {
-        this.dutyOvertime = dutyOvertime;
-    }
 
     public String getRestId() {
         return restId;

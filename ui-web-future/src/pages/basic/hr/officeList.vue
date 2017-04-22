@@ -72,7 +72,7 @@
         util.getQuery("officeList");
         util.setQuery("officeList",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/office',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/office',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -96,7 +96,7 @@
         if(action=="修改") {
           this.$router.push({ name: 'officeForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/basic/hr/office/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/sys/office/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

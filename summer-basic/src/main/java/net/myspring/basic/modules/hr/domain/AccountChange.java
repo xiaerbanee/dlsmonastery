@@ -17,7 +17,6 @@ public class AccountChange extends CompanyEntity<AccountChange> {
     private Integer version = 0;
     private String processInstanceId;
     private String processStatus;
-    private Account account;
     private String accountId;
     private String processTypeId;
     private String processFlowId;
@@ -84,14 +83,6 @@ public class AccountChange extends CompanyEntity<AccountChange> {
 
     public void setProcessStatus(String processStatus) {
         this.processStatus = processStatus;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
     }
 
     public String getAccountId() {

@@ -17,26 +17,23 @@ import java.util.Map;
 
 public class MenuForm extends DataForm<Menu>{
     private String menuCategoryId;
-    private MenuCategory menuCategory;
     private String permissionStr;
     private String remarks;
-    private Boolean mobile;
-    private Boolean visible;
-    private String href;
+    private boolean mobile;
+    private boolean visible;
     private String sort;
     private String name;
-    private String menuCode;
-    private String category;
+    private String code;
     private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
     private List<String> categoryList= Lists.newArrayList();
-    private Map<Boolean,String> bools= Maps.newHashMap();
+    private Map<Boolean,String> boolMap= Maps.newHashMap();
 
-    public String getMenuCode() {
-        return menuCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setMenuCode(String menuCode) {
-        this.menuCode = menuCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public void setMobile(Boolean mobile) {
@@ -63,12 +60,12 @@ public class MenuForm extends DataForm<Menu>{
         this.categoryList = categoryList;
     }
 
-    public Map<Boolean, String> getBools() {
-        return bools;
+    public Map<Boolean, String> getBoolMap() {
+        return boolMap;
     }
 
-    public void setBools(Map<Boolean, String> bools) {
-        this.bools = bools;
+    public void setBoolMap(Map<Boolean, String> boolMap) {
+        this.boolMap = boolMap;
     }
 
     public String getRemarks() {
@@ -95,14 +92,6 @@ public class MenuForm extends DataForm<Menu>{
         this.visible = visible;
     }
 
-    public String getHref() {
-        return href;
-    }
-
-    public void setHref(String href) {
-        this.href = href;
-    }
-
     public String getSort() {
         return sort;
     }
@@ -119,28 +108,12 @@ public class MenuForm extends DataForm<Menu>{
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getMenuCategoryId() {
         return menuCategoryId;
     }
 
     public void setMenuCategoryId(String menuCategoryId) {
         this.menuCategoryId = menuCategoryId;
-    }
-
-    public MenuCategory getMenuCategory() {
-        return menuCategory;
-    }
-
-    public void setMenuCategory(MenuCategory menuCategory) {
-        this.menuCategory = menuCategory;
     }
 
     public String getPermissionStr() {
