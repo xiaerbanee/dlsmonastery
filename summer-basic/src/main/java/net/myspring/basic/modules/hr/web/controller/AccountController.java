@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.config.ExcelView;
 import net.myspring.basic.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.enums.BoolEnum;
 import net.myspring.basic.common.utils.CacheUtils;
@@ -102,11 +101,10 @@ public class AccountController {
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public ModelAndView export(AccountQuery accountQuery) {
-        ExcelView excelView = new ExcelView();
         Workbook workbook = new SXSSFWorkbook(Const.DEFAULT_PAGE_SIZE);
         List<SimpleExcelSheet> simpleExcelSheetList = accountService.findSimpleExcelSheets(workbook, accountQuery);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "账户信息.xlsx", simpleExcelSheetList);
-        return new ModelAndView(excelView, "simpleExcelBook", simpleExcelBook);
+        return null;
     }
 
     @RequestMapping(value = "getAuthorityList")

@@ -10,20 +10,21 @@ import net.myspring.util.text.StringUtils;
  * Created by admin on 2017/4/5.
  */
 public class FolderFileDto extends DataDto<FolderFile> {
-    private String folderId;
+    private String name;
     private String contentType;
     private Integer size;
     private String physicalName;
-    private String name;
+    private Integer version = 0;
+    private String folderId;
     private String mongoId;
     private String mongoPreviewId;
 
-    public String getFolderId() {
-        return folderId;
+    public String getName() {
+        return name;
     }
 
-    public void setFolderId(String folderId) {
-        this.folderId = folderId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getContentType() {
@@ -50,12 +51,20 @@ public class FolderFileDto extends DataDto<FolderFile> {
         this.physicalName = physicalName;
     }
 
-    public String getName() {
-        return name;
+    public Integer getVersion() {
+        return version;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public String getFolderId() {
+        return folderId;
+    }
+
+    public void setFolderId(String folderId) {
+        this.folderId = folderId;
     }
 
     public String getMongoId() {

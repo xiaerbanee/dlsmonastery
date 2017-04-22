@@ -15,23 +15,10 @@ public class DistrictService {
 
     @Autowired
     private DistrictMapper districtMapper;
-    @Autowired
-    private CacheUtils cacheUtils;
-
-    public District findOne(String id){
-        District district=districtMapper.findOne(id);
-        return district;
-    }
 
     public List<DistrictDto> findByNameLike(String name){
-        List<District> citys = districtMapper.findByLikeName(name);
+        List<District> citys = districtMapper.findByNameLike(name);
         List<DistrictDto> districtDtos= BeanUtil.map(citys,DistrictDto.class);
-        cacheUtils.initCacheInput(districtDtos);
         return districtDtos;
     }
-
-    public List<District> findByProvince(){
-        return districtMapper.findByProvince();
-    }
-
 }

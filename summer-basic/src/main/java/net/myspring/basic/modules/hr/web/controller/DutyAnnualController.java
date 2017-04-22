@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.hr.web.controller;
 
-import net.myspring.basic.common.config.ExcelView;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.dto.DutyAnnualDto;
 import net.myspring.basic.modules.hr.service.DutyAnnualService;
@@ -36,8 +35,7 @@ public class DutyAnnualController {
         Workbook workbook = new SXSSFWorkbook(10000);
         SimpleExcelSheet simpleExcelSheet=dutyAnnualService.findSimpleExcelSheet(workbook);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"年假导入模版.xlsx",simpleExcelSheet);
-        ExcelView excelView = new ExcelView();
-        return new ModelAndView(excelView, "simpleExcelBook", simpleExcelBook);
+        return null;
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)

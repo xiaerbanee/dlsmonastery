@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ActivitiEntity {
-
-	@JsonIgnore
 	private List<Task> tasks;
 
 	private List<HistoricVariableInstance> historicVariableInstances;
@@ -29,7 +27,6 @@ public class ActivitiEntity {
 
 	private HistoricProcessInstance historicProcessInstance;
 
-	@JsonIgnore
 	private ProcessDefinition processDefinition;
 
 	private List<Comment> comments;
@@ -99,34 +96,6 @@ public class ActivitiEntity {
 
 	public void setAccountMap(Map<String, String> accountMap) {
 		this.accountMap = accountMap;
-	}
-
-	public Map<String, Object> getVariableMap() {
-		Map<String, Object> map = Maps.newHashMap();
-		if (historicVariableInstances != null && historicVariableInstances.size() > 0) {
-			for (HistoricVariableInstance historicVariableInstance : historicVariableInstances) {
-				map.put(historicVariableInstance.getVariableName(), historicVariableInstance.getValue());
-			}
-		}
-		return map;
-	}
-
-	public Map<String, Object> getCommentMap() {
-		Map<String, Object> map = Maps.newHashMap();
-		if (comments != null && comments.size() > 0) {
-			for (Comment comment : comments) {
-				CommentEntity commentEntity = (CommentEntity)comment;
-				map.put(comment.getTaskId(), commentEntity.getMessage());
-			}
-		}
-		return map;
-	}
-
-	public boolean isEditable() {
-		if(CollectionUtil.isNotEmpty(getHistoricTaskInstances())){
-			return StringUtils.isBlank(getHistoricTaskInstances().get(getHistoricTaskInstances().size() - 1).getAssignee());
-		}
-		return false;
 	}
 
 }

@@ -8,15 +8,13 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface DistrictMapper extends MyMapper<District,String> {
+public interface DistrictMapper {
 
     List<District> findByParentId(String parentId);
 
     District findByName(String name);
 
-    List<District> findByLikeName(String name);
+    List<District> findByNameLike(String name);
 
     District findByProvinceAndCityAndCounty(@Param("province") String province, @Param("city") String city, @Param("county") String county);
-
-    List<District> findByProvince();
 }
