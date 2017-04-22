@@ -17,4 +17,7 @@ public interface CompanyConfigClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/sys/companyConfig/findByCode")
     BasicCompanyConfigDto findByCode(@RequestParam(value = "code") String code);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/companyConfig/getValueByCode")
+    String getValueByCode(@RequestParam(value = "code") String code);
 }

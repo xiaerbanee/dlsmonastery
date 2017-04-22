@@ -102,7 +102,7 @@ public class DepotService {
 
     public DepotQuery getQueryProperty(DepotQuery depotQuery) {
         depotQuery.setTypeList(DepotTypeEnum.getMap());
-        depotQuery.setAreaList(officeClient.findByType("100"));
+        depotQuery.setAreaList(officeClient.findAreaByType("100"));
         depotQuery.setAreaTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_地区属性.name()));
         depotQuery.setSpecialityStoreTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_体验店类型.name()));
         depotQuery.setPricesystemList(pricesystemMapper.findAll());

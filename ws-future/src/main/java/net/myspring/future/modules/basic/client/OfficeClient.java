@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.client;
 
 import net.myspring.future.modules.basic.dto.BasicOfficeDto;
+import net.myspring.future.modules.basic.dto.OfficeBasicDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,8 +19,8 @@ public interface OfficeClient {
     @RequestMapping(method = RequestMethod.GET, value = "/hr/office/getOfficeFilterIds")
     List<String> getOfficeFilterIds(@RequestParam(value = "accountId") String accountId);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/hr/office/getByType")
-    List<String> findByType(@RequestParam(value = "type") String type);
+    @RequestMapping(method = RequestMethod.GET, value = "/hr/office/findAreaByType")
+    List<String> findAreaByType(@RequestParam(value = "type") String type);
 
     @RequestMapping(method = RequestMethod.GET, value = "/hr/office/getOfficeIdsByAccountId")
     List<String> getOfficeIdsByAccountId(@RequestParam(value = "accountId") String accountId);
@@ -29,4 +30,8 @@ public interface OfficeClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/hr/office/findByAreaIds")
     List<BasicOfficeDto> findByAreaIds(@RequestParam(value = "areaIds") List<String> areaIds);
+
+    @RequestMapping(method = RequestMethod.GET,value = "/hr/office/findByType")
+    List<OfficeBasicDto> findByType(@RequestParam(value = "type")String type);
+
 }
