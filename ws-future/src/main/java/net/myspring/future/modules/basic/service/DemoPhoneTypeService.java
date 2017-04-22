@@ -1,13 +1,12 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.future.common.enums.DepotTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.DemoPhoneType;
 import net.myspring.future.modules.basic.domain.DemoPhoneTypeOffice;
+import net.myspring.future.modules.basic.dto.BasicOfficeDto;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeDto;
-import net.myspring.future.modules.basic.dto.OfficeBasicDto;
 import net.myspring.future.modules.basic.manager.DemoPhoneTypeManager;
 import net.myspring.future.modules.basic.mapper.DemoPhoneTypeMapper;
 import net.myspring.future.modules.basic.mapper.DemoPhoneTypeOfficeMapper;
@@ -50,11 +49,11 @@ public class DemoPhoneTypeService {
     }
 
     public DemoPhoneTypeForm findForm(DemoPhoneTypeForm demoPhoneTypeForm){
-        List<OfficeBasicDto> areaList = officeClient.findByType(Const.OFFICE_TYPE_AREA);
+        List<BasicOfficeDto> areaList = officeClient.findByType(Const.OFFICE_TYPE_AREA);
         List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = demoPhoneTypeOfficeMapper.findByDemoPhoneTypeId(demoPhoneTypeForm.getId());
         CollectionUtil.joinChild(demoPhoneTypeOfficeList, areaList);
         Map<String, DemoPhoneTypeOffice> demoPhoneTypeOfficeMap = CollectionUtil.extractToMap(demoPhoneTypeOfficeList, "officeId");
-        for (OfficeBasicDto area : areaList) {
+        for (BasicOfficeDto area : areaList) {
             if (area.getTaskPoint()!=null&&Const.MIN_AREA_POINT.compareTo(area.getTaskPoint()) < 0) {
                 DemoPhoneTypeOffice demoPhoneTypeOffice = demoPhoneTypeOfficeMap.get(area.getId());
                 if (demoPhoneTypeOffice == null) {

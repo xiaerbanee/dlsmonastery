@@ -1,12 +1,10 @@
 package net.myspring.future.modules.basic.client;
 
 import net.myspring.future.modules.basic.dto.BasicOfficeDto;
-import net.myspring.future.modules.basic.dto.OfficeBasicDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import redis.clients.jedis.BinaryClient;
 
 import java.util.List;
 
@@ -32,6 +30,9 @@ public interface OfficeClient {
     List<BasicOfficeDto> findByAreaIds(@RequestParam(value = "areaIds") List<String> areaIds);
 
     @RequestMapping(method = RequestMethod.GET,value = "/hr/office/findByType")
-    List<OfficeBasicDto> findByType(@RequestParam(value = "type")String type);
+    List<BasicOfficeDto> findByType(@RequestParam(value = "type")String type);
+
+    @RequestMapping(method = RequestMethod.GET,value = "/hr/office/findSortList")
+    List<BasicOfficeDto> findSortList();
 
 }

@@ -20,6 +20,7 @@ public class Const {
     public static final String CHAR_COMMA = ",";
     public static final String CHAR_ENTER = "\n";
     public static final String CHAR_COLON = ":";
+    public static final String CHAR_SLASH_LINE = "/";
 
     public static final int DEFAULT_PAGE_SIZE = 5000;
     public static final Integer DEFAULT_PREIX_LENGTH = 2;
