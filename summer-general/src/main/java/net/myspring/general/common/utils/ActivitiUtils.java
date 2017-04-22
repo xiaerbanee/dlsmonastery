@@ -3,9 +3,11 @@ package net.myspring.general.common.utils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.general.common.activiti.ActivitiEntity;
+import net.myspring.general.common.dto.ActivitiDto;
 import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.util.cahe.CacheReadUtils;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
@@ -29,17 +31,6 @@ import java.util.Set;
 @Component
 public class ActivitiUtils {
     private static Map<String, ProcessDefinitionEntity> processDefinitions = Maps.newHashMap();
-    private static Map<String, String> types = Maps.newHashMap();
-    static {
-        types.put("userTask", "用户任务");
-        types.put("serviceTask", "系统任务");
-        types.put("startEvent", "开始节点");
-        types.put("endEvent", "结束节点");
-        types.put("exclusiveGateway", "条件判断节点(系统自动根据条件处理)");
-        types.put("inclusiveGateway", "并行处理任务");
-        types.put("callActivity", "子流程");
-    }
-
     @Autowired
     private RuntimeService runtimeService;
     @Autowired
@@ -51,17 +42,7 @@ public class ActivitiUtils {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    /**
-     * 转换流程节点类型为中文说明
-     *
-     * @param type 英文名称
-     * @return 翻译后的中文名称
-     */
-    public String parseToZhType(String type) {
-        return types.get(type) == null ? type : types.get(type);
-    }
-
-    public ActivitiEntity getActivitiEntity(String processInstanceId) {
+    public ActivitiDto getActivitiDto(String processInstanceId) {
         ActivitiEntity activitiEntity = new ActivitiEntity();
         if (StringUtils.isNotBlank(processInstanceId)) {
             List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).active().list();
@@ -100,7 +81,8 @@ public class ActivitiUtils {
             }
             activitiEntity.setAccountMap(accountMap);
         }
-        return activitiEntity;
+        ActivitiDto activitiDto = BeanUtil.map(activitiEntity,ActivitiDto.class);
+        return activitiDto;
     }
 
     public Boolean claim(Task task) {

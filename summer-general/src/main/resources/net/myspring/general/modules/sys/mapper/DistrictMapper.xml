@@ -18,12 +18,7 @@
         select t1.*  from sys_district t1 where t1.province = #{province} and t1.city =#{city} and t1.county = #{county}
     </select>
 
-    <select id="findByProvince" resultType="District">
-        SELECT DISTINCT t1.province
-        FROM sys_district t1
-    </select>
-
-    <select id="findByLikeName" resultType="District">
+    <select id="findByNameLike" resultType="District">
         SELECT t1.*
         FROM sys_district t1
         WHERE t1.province like CONCAT('%',#{name},'%')  or t1.city like CONCAT('%',#{name},'%') or t1.county like CONCAT('%',#{name},'%')

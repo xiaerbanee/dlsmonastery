@@ -1,11 +1,14 @@
 package net.myspring.future.modules.basic.web.Query;
 
 import com.google.common.collect.HashBiMap;
+import net.myspring.future.common.dto.NameValueDto;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.domain.Pricesystem;
+import net.myspring.future.modules.basic.dto.BasicOfficeDto;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -26,18 +29,93 @@ public class DepotQuery {
     private String adPricesystemId;
     private String expressCompanyId;
     private String districtName;
-    private String adShopBsc;
+    private Boolean adShopBsc;
     private String adShop;
     private Boolean isHidden;
-    private HashBiMap<Integer, String> typeList;
+    private HashBiMap<Integer, String> typeMap;
     private List<String> areaList;
-    private List<String> areaTypeList;
+    private List<NameValueDto> areaTypeList;
     private List<Pricesystem> pricesystemList;
-    private List<String> specialityStoreTypeList;
+    private List<NameValueDto> specialityStoreTypeList;
     private List<Chain> chainList;
     private Map<Boolean,String> bools;
     private List<AdPricesystem> adPricesystemList;
     private List<ExpressCompany> expressCompanyList;
+    private LocalDate dutyDateStart;
+    private LocalDate dutyDateEnd;
+//后台
+    private List<String> officeIdList;
+    private List<BasicOfficeDto> basicOfficeDtoList;
+    private String depotName;
+    private List<Integer> typeList;
+    private Boolean allowAdApply;
+    private List<String> depotIdList;
+    private String dateRange;
+
+    public LocalDate getDutyDateStart() {
+        return dutyDateStart;
+    }
+
+    public void setDutyDateStart(LocalDate dutyDateStart) {
+        this.dutyDateStart = dutyDateStart;
+    }
+
+    public LocalDate getDutyDateEnd() {
+        return dutyDateEnd;
+    }
+
+    public void setDutyDateEnd(LocalDate dutyDateEnd) {
+        this.dutyDateEnd = dutyDateEnd;
+    }
+
+    public String getDateRange() {
+        return dateRange;
+    }
+
+    public void setDateRange(String dateRange) {
+        this.dateRange = dateRange;
+    }
+
+    public List<BasicOfficeDto> getBasicOfficeDtoList() {
+        return basicOfficeDtoList;
+    }
+
+    public void setBasicOfficeDtoList(List<BasicOfficeDto> basicOfficeDtoList) {
+        this.basicOfficeDtoList = basicOfficeDtoList;
+    }
+
+    public List<String> getDepotIdList() {
+        return depotIdList;
+    }
+
+    public void setDepotIdList(List<String> depotIdList) {
+        this.depotIdList = depotIdList;
+    }
+
+
+    public Boolean getAllowAdApply() {
+        return allowAdApply;
+    }
+
+    public void setAllowAdApply(Boolean allowAdApply) {
+        this.allowAdApply = allowAdApply;
+    }
+
+    public String getDepotName() {
+        return depotName;
+    }
+
+    public void setDepotName(String depotName) {
+        this.depotName = depotName;
+    }
+
+    public List<String> getOfficeIdList() {
+        return officeIdList;
+    }
+
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
+    }
 
     public List<ExpressCompany> getExpressCompanyList() {
         return expressCompanyList;
@@ -167,11 +245,11 @@ public class DepotQuery {
         this.districtName = districtName;
     }
 
-    public String getAdShopBsc() {
+    public Boolean getAdShopBsc() {
         return adShopBsc;
     }
 
-    public void setAdShopBsc(String adShopBsc) {
+    public void setAdShopBsc(Boolean adShopBsc) {
         this.adShopBsc = adShopBsc;
     }
 
@@ -191,14 +269,6 @@ public class DepotQuery {
         isHidden = hidden;
     }
 
-    public HashBiMap<Integer, String> getTypeList() {
-        return typeList;
-    }
-
-    public void setTypeList(HashBiMap<Integer, String> typeList) {
-        this.typeList = typeList;
-    }
-
     public List<String> getAreaList() {
         return areaList;
     }
@@ -207,11 +277,11 @@ public class DepotQuery {
         this.areaList = areaList;
     }
 
-    public List<String> getAreaTypeList() {
+    public List<NameValueDto> getAreaTypeList() {
         return areaTypeList;
     }
 
-    public void setAreaTypeList(List<String> areaTypeList) {
+    public void setAreaTypeList(List<NameValueDto> areaTypeList) {
         this.areaTypeList = areaTypeList;
     }
 
@@ -223,11 +293,11 @@ public class DepotQuery {
         this.pricesystemList = pricesystemList;
     }
 
-    public List<String> getSpecialityStoreTypeList() {
+    public List<NameValueDto> getSpecialityStoreTypeList() {
         return specialityStoreTypeList;
     }
 
-    public void setSpecialityStoreTypeList(List<String> specialityStoreTypeList) {
+    public void setSpecialityStoreTypeList(List<NameValueDto> specialityStoreTypeList) {
         this.specialityStoreTypeList = specialityStoreTypeList;
     }
 
@@ -237,5 +307,21 @@ public class DepotQuery {
 
     public void setChainList(List<Chain> chainList) {
         this.chainList = chainList;
+    }
+
+    public HashBiMap<Integer, String> getTypeMap() {
+        return typeMap;
+    }
+
+    public void setTypeMap(HashBiMap<Integer, String> typeMap) {
+        this.typeMap = typeMap;
+    }
+
+    public List<Integer> getTypeList() {
+        return typeList;
+    }
+
+    public void setTypeList(List<Integer> typeList) {
+        this.typeList = typeList;
     }
 }

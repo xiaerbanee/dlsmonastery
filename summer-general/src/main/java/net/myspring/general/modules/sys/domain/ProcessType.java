@@ -62,5 +62,4 @@ public class ProcessType extends CompanyEntity<ProcessType> {
     public void setAuditFileType(Boolean auditFileType) {
         this.auditFileType = auditFileType;
     }
-
 }

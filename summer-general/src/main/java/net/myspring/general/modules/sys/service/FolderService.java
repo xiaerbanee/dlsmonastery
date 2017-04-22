@@ -20,10 +20,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@Transactional
 public class FolderService {
     @Autowired
     private FolderMapper folderMapper;
 
+    @Transactional(readOnly = true)
     public FolderForm findForm(String id){
         Folder folder = folderMapper.findOne(id);
         FolderForm folderForm = BeanUtil.map(folder, FolderForm.class);
@@ -34,7 +36,6 @@ public class FolderService {
         folderMapper.logicDeleteOne(id);
     }
 
-    @Transactional
     public Folder getRoot(String accountId) {
         Folder folder = folderMapper.findByCreatedByAndParentIds(accountId, Const.ROOT_PARENT_IDS);
         if (folder == null) {
@@ -46,7 +47,6 @@ public class FolderService {
         return folder;
     }
 
-    @Transactional
     public Folder getAccountFolder(String accountId, String path) {
         Folder parent = getRoot(accountId);
         Folder folder = null;
@@ -68,6 +68,7 @@ public class FolderService {
         return folder;
     }
 
+    @Transactional(readOnly = true)
     public List<FolderDto> findAll(String accountId) {
         List<FolderDto> folderDtoList=Lists.newArrayList();
         Folder parent = getRoot(accountId);
@@ -89,7 +90,6 @@ public class FolderService {
         return folderDtoList;
     }
 
-    @Transactional
     public RestResponse save(FolderForm folderForm) {
         String oldParentIds = folderForm.getParentIds();
         Folder parent = folderMapper.findOne(folderForm.getParentId());

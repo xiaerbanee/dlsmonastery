@@ -51,7 +51,6 @@ public class AdApplyService {
         Map<String,Object> filter = Maps.newHashMap();
         filter.put("adShop",true);
         List<String> adApplyIdList = adApplyMapper.findAllId();
-        List<Depot> depotList = depotMapper.findByFilter(filter);
         List<AdApply> adApplys = Lists.newArrayList();
 
         return adApplys;

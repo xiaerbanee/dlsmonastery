@@ -10,7 +10,7 @@
         <include refid="depotParamFilter" />
     </select>
 
-    <select id="findDepotAccountPage" resultType="Depot">
+    <select id="findDepotAccountPage" resultType="DepotDto">
         select depot.*
         from crm_depot depot
         where
@@ -36,7 +36,7 @@
         </if>
     </select>
 
-    <select id="findShopAccountExportPage" resultType="Depot">
+    <select id="findShopAccountExportPage" resultType="DepotDto">
         select depot.*
         from crm_depot depot
         where
@@ -80,36 +80,20 @@
         SELECT t1.*
         FROM crm_depot t1
         where t1.enabled=1
-        and t1.office_id=#{officeId}
+        and t1.office_id = #{officeId}
     </select>
 
     <select id="findByAccountId" resultType="Depot">
         select
             t1.*
         from
-              crm_depot t1,
-              crm_account_depot t2,
-              hr_account t3
+            crm_depot t1,
+            crm_account_depot t2
         where
-             t1.enabled =1
+            t1.enabled =1
             and t1.is_hidden=0
             and t1.id=t2.depot_id
-            and t3.id=t2.account_id
-            and t3.id=#{accountId}
-    </select>
-
-    <select id="findByFilter" resultType="Depot">
-        select depot.*
-        from
-        crm_depot depot,hr_office office
-        where
-        depot.enabled=1
-        and depot.office_id=office.id
-        and depot.is_hidden=0
-        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter"/>
-        <include refid="depotParamFilter" />
-        order by depot.name
-        limit 0,20
+            and t2.account_id=#{accountId}
     </select>
 
     <select id="findByFilterAll" resultType="Depot">
@@ -118,6 +102,7 @@
         crm_depot depot
         where
         depot.is_hidden=0
+        and depot.enabled = 1
         <if test="p.types !=null and p.types.size() !=0">
             and depot.type IN
             <foreach collection="p.types" index="index" item="item" open="(" separator="," close=")">
@@ -126,6 +111,18 @@
         </if>
         <include refid="depotFilter"/>
         order by depot.id
+    </select>
+
+    <select id="findByFilter" resultType="Depot">
+        select depot.*
+        from
+        crm_depot depot
+        where
+        depot.enabled=1
+        and depot.is_hidden=0
+        <include refid="depotParamFilter" />
+        order by depot.name
+        limit 0,20
     </select>
 
     <select id="findChainIds" resultType="String">
@@ -138,9 +135,12 @@
     </select>
 
     <select id="findByChainId" resultType="Depot">
-        select t1.*  from crm_depot t1 where t1.enabled = 1 and t1.chain_id = #{chainId}
+        select t1.*
+        from crm_depot t1
+        where
+        t1.enabled = 1
+        and t1.chain_id = #{chainId}
     </select>
-
 
     <select id="findAllByOffice" resultType="Depot">
         select t1.*

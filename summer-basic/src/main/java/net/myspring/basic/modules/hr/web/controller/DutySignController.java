@@ -1,9 +1,12 @@
 package net.myspring.basic.modules.hr.web.controller;
 
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.config.ExcelView;
+import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.modules.hr.domain.DutySign;
 import net.myspring.basic.modules.hr.dto.DutySignDto;
 import net.myspring.basic.modules.hr.service.DutySignService;
-import net.myspring.basic.modules.sys.service.OfficeService;
+import net.myspring.basic.modules.hr.service.OfficeService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.DutySignForm;
 import net.myspring.basic.modules.hr.web.query.DutySignQuery;
@@ -11,14 +14,19 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.json.ObjectMapperUtils;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
 
 /**
  * Created by liuj on 2016/11/30.
@@ -73,7 +81,6 @@ public class DutySignController {
         Workbook workbook = new SXSSFWorkbook(10000);
         SimpleExcelSheet simpleExcelSheet = dutySignService.findSimpleExcelSheet(workbook,dutySignQuery);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "签到列表.xlsx", simpleExcelSheet);
-        ExcelView excelView = new ExcelView();
-        return new ModelAndView(excelView, "simpleExcelBook", simpleExcelBook);
+        return null;
     }
 }

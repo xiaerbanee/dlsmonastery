@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.general.modules.sys.mapper.TownMapper">
 
-    <select id="findByLikeName" resultType="Town">
+    <select id="findByNameLike" resultType="Town">
         SELECT t1.*
         FROM sys_town t1
         WHERE t1.town_name like CONCAT('%',#{name},'%')

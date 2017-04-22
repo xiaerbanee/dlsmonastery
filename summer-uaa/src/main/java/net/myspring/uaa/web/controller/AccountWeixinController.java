@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by liuj on 2017/3/19.
  */
 @RestController
-@RequestMapping(value = "hr/accountWeixin")
+@RequestMapping(value = "accountWeixin")
 public class AccountWeixinController {
 
     @Autowired

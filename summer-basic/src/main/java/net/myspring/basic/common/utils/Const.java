@@ -26,23 +26,5 @@ public class Const {
     public static final String OFFICE_TYPE_AREA = "100";
     public static final String XCXAUDIT= "xcxtest";
 
-    public static  final String ITEM_ACTION_DETAIL = "详细";
-    public static  final String ITEM_ACTION_EDIT = "修改";
-    public static  final String ITEM_ACTION_DELETE = "删除";
-    public static  final String ITEM_ACTION_AUDIT = "审核";
-    public static  final String ITEM_ACTION_BILL = "开单";
-    public static  final String ITEM_ACTION_SIGN_IN = "签收";
-    public static  final String ITEM_ACTION_SHIP= "发货";
-    public static  final String ITEM_ACTION_CARRIER_EDIT="商城订单";
-    public static  final String ITEM_ACTION_SRETURN="销售退货";
-    public static  final String ITEM_ACTION_SHIP_BACK="重发";
-    public static final String ITEM_ACTION_SHIP_PRINT="快递单";
-    public static  final String ITEM_ACTION_PASS = "通过";
-    public static  final String ITEM_ACTION_NOT_PASS = "不通过";
-    public static  final String ITEM_ACTION_INSPECTION = "抽检";
-    public static  final String ITEM_ACTION_PRINT = "打印";
-    public static  final String ITEM_ACTION_RESET = "重置";
-    public static  final String ITEM_ACTION_REPEAT = "重发";
-    public static  final String ITEM_ACTION_UPLOAD = "上传";
 
 }

@@ -1,7 +1,11 @@
 package net.myspring.util.text;
 
 import com.google.common.collect.Lists;
-import net.myspring.util.time.LocalDateUtils;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -75,5 +79,28 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
 		} else {
 			return String.valueOf(object);
 		}
+	}
+
+	public static String getFirstSpell(String chinese) {
+		StringBuffer pybf = new StringBuffer();
+		char[] arr = chinese.toCharArray();
+		HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
+		defaultFormat.setCaseType(HanyuPinyinCaseType.UPPERCASE);
+		defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] > 128) {
+				try {
+					String[] temp = PinyinHelper.toHanyuPinyinStringArray(arr[i], defaultFormat);
+					if (temp != null) {
+						pybf.append(temp[0].charAt(0));
+					}
+				} catch (BadHanyuPinyinOutputFormatCombination e) {
+					e.printStackTrace();
+				}
+			} else {
+				pybf.append(arr[i]);
+			}
+		}
+		return pybf.toString().replaceAll("\\W", "").trim();
 	}
 }

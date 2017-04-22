@@ -17,13 +17,13 @@ import java.util.Map;
 @Mapper
 public interface DepotMapper extends MyMapper<Depot,String> {
 
-    List<DepotInventoryModel> findInventoryData(@Param("p") Map<String, Object> map);
+    List<DepotInventoryModel> findInventoryData(@Param("p") DepotQuery depotQuery);
 
-    Page<DepotDto> findPage(Pageable pageable, @Param("p") DepotQuery depotQuery);
+    Page<DepotDto> findPage(Pageable pageable, @Param("p")DepotQuery depotQuery);
 
-    Page<Depot> findDepotAccountPage(Pageable pageable, @Param("p") Map<String, Object> map);
+    Page<DepotDto> findDepotAccountPage(Pageable pageable, @Param("p") DepotQuery depotQuery);
 
-    List<Depot> findShopAccountExportPage(@Param("p") Map<String, Object> map);
+    List<DepotDto> findShopAccountExportPage(@Param("p") DepotQuery depotQuery);
 
     List<Depot> findByTypes(List<Integer> depotTypes);
 
@@ -31,11 +31,11 @@ public interface DepotMapper extends MyMapper<Depot,String> {
 
     List<Depot> findByAccountId(String accountId);
 
-    List<Depot> findByFilter(@Param("p") Map<String, Object> map);
+    List<Depot> findByFilterAll(@Param("p") DepotQuery depotQuery);
 
-    List<Depot> findByFilterAll(@Param("p") Map<String, Object> map);
+    List<Depot> findByFilter(@Param("p")DepotQuery depotQuery);
 
-    List<String> findChainIds(@Param("p") Map<String, Object> map);
+    List<String> findChainIds(@Param("p") DepotQuery depotQuery);
 
     List<Depot> findByChainId(String chainId);
 
