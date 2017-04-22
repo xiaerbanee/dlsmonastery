@@ -35,8 +35,7 @@ public class DutyAnnualController {
         Workbook workbook = new SXSSFWorkbook(10000);
         SimpleExcelSheet simpleExcelSheet=dutyAnnualService.findSimpleExcelSheet(workbook);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"年假导入模版.xlsx",simpleExcelSheet);
-        ExcelView excelView = new ExcelView();
-        return new ModelAndView(excelView, "simpleExcelBook", simpleExcelBook);
+        return null;
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)

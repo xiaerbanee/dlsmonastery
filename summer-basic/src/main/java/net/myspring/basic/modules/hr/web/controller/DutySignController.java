@@ -72,7 +72,6 @@ public class DutySignController {
         Workbook workbook = new SXSSFWorkbook(10000);
         SimpleExcelSheet simpleExcelSheet = dutySignService.findSimpleExcelSheet(workbook,dutySignQuery);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "签到列表.xlsx", simpleExcelSheet);
-        ExcelView excelView = new ExcelView();
-        return new ModelAndView(excelView, "simpleExcelBook", simpleExcelBook);
+        return null;
     }
 }
