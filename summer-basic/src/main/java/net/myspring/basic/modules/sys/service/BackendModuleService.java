@@ -10,6 +10,7 @@ import net.myspring.basic.modules.sys.web.form.BackendForm;
 import net.myspring.basic.modules.sys.web.form.BackendModuleForm;
 import net.myspring.basic.modules.sys.web.query.BackendModuleQuery;
 import net.myspring.basic.modules.sys.web.query.BackendQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,6 +51,11 @@ public class BackendModuleService {
         return backendModule;
     }
 
+    public List<String> findBackendModuleIdByPosition(String positionId){
+        List<BackendModule> backendModuleList=backendModuleMapper.findByPositionId(positionId);
+        List<String> backendModuleIds= CollectionUtil.extractToList(backendModuleList,"id");
+        return backendModuleIds;
+    }
 
     public void logicDeleteOne(String id) {
         backendModuleMapper.logicDeleteOne(id);

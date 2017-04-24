@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item label="类型" prop="type">
               <el-select v-model="inputForm.type" filterable>
-                <el-option v-for="item in inputForm.officeRuleEnumList" :key="item.type" :label="item.name" :value="item.type"></el-option>
+                <el-option v-for="item in inputForm.officeRuleEnumList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeRuleForm.name')" prop="name">
@@ -20,6 +20,9 @@
             </el-form-item>
             <el-form-item :label="$t('officeRuleForm.code')" prop="code">
               <el-input v-model="inputForm.code"></el-input>
+            </el-form-item>
+            <el-form-item label="属性" prop="value">
+              <el-input v-model="inputForm.value"></el-input>
             </el-form-item>
             <el-form-item label="是否有点位" prop="hasPoint">
               <el-radio-group v-model="inputForm.hasPoint">
@@ -51,7 +54,8 @@
           name:'',
           code:'',
           hasPoint:true,
-          remarks:''
+          remarks:'',
+          value:"",
         },
         rules: {
           name: [{ required: true, message: this.$t('officeRuleForm.prerequisiteMessage')}],
@@ -87,7 +91,8 @@
         if(response.data.parenId){
           this.inputForm.officeRuleList=new Array({id:response.data.parenId,name:response.data.parentName});
         }
-      this.inputForm.hasPoint=this.inputForm.hasPoint?"1":"0"
+        this.inputForm.hasPoint=this.inputForm.hasPoint?"1":"0"
+        console.log(this.inputForm.officeRuleEnumList)
       })
     }
   }

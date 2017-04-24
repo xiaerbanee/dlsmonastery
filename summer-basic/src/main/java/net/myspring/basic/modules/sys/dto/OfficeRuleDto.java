@@ -1,27 +1,46 @@
 package net.myspring.basic.modules.sys.dto;
 
 import net.myspring.basic.common.dto.TreeDto;
+import net.myspring.basic.common.enums.OfficeRuleEnum;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
+
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/4/22.
  */
 public class OfficeRuleDto extends TreeDto<OfficeRule> {
-    private String parentId;
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
     private String name;
     private String code;
+    private Integer type;
+    private Integer value;
 
-    @Override
-    public String getParentId() {
-        return parentId;
+    public String getTypeLabel() {
+        if(type!=null){
+            Map<Integer, String> map = OfficeRuleEnum.getMap();
+            return map.get(type);
+        }
+        return "";
     }
 
-    @Override
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
     public String getParentName() {

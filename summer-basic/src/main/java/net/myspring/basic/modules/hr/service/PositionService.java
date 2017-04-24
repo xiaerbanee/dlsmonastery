@@ -75,11 +75,18 @@ public class PositionService {
         }else{
             position=positionManager.updateForm(positionForm);
         }
-        positionMapper.deleteByPosition(positionForm.getId());
+        positionMapper.deleteModuleByPosition(positionForm.getId());
         if(CollectionUtil.isNotEmpty(positionForm.getPermissionIdList())){
-            positionMapper.savePositionAndPermission(positionForm.getId(),positionForm.getPermissionIdList());
+            positionMapper.savePositionAndBankendModule(positionForm.getId(),positionForm.getPermissionIdList());
         }
         return position;
+    }
+
+    public void savePositionAndModule(PositionForm positionForm){
+        positionMapper.deletePermissionByPosition(positionForm.getId());
+        if(CollectionUtil.isNotEmpty(positionForm.getPermissionIdList())){
+            positionMapper.savePositionAndBankendModule(positionForm.getId(),positionForm.getPermissionIdList());
+        }
     }
 
     public void delete(String id){

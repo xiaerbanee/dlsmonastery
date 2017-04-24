@@ -79,7 +79,13 @@
           officeType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
           jointType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}]
         },
-        remoteLoading: false
+        remoteLoading: false,
+        treeData:[],
+        checked:[],
+        defaultProps: {
+          label: 'label',
+          children: 'children'
+        }
       };
     },
     methods: {
@@ -110,11 +116,21 @@
             this.remoteLoading = false;
           })
         }
+      },
+      handleCheckChange(data, checked, indeterminate) {
+        var permissions=new Array()
+        var check=this.$refs.tree.getCheckedKeys();
+        for(var index in check){
+          if(check[index].indexOf("p")!=0&& check[index]!=0){
+            permissions.push(check[index])
+          }
+        }
+        this.inputForm.permissionIdStr=permissions.join();
       }
     }, created(){
       axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
         this.inputForm = response.data;
-        console.log(this.inputForm)
+        console.log(this.inputForm.officeTypeList)
         if (response.data.parentId != null) {
           this.offices = new Array({id: response.data.parentId, name: response.data.parentName})
         }

@@ -61,7 +61,7 @@ public class OfficeRuleController {
         officeRuleForm=officeRuleService.findForm(officeRuleForm);
         officeRuleForm.setBoolMap(BoolEnum.getMap());
         officeRuleForm.setOfficeRuleList(officeRuleService.findAll());
-        officeRuleForm.setOfficeRuleEnumList(OfficeRuleEnum.values());
+        officeRuleForm.setOfficeRuleEnumList(OfficeRuleEnum.getOfficeRuleEnumList());
         return officeRuleForm;
     }
 
