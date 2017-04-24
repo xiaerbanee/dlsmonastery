@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
+import net.myspring.common.tree.TreeNode;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.util.List;
@@ -23,11 +24,38 @@ public class OfficeForm extends DataForm<Office> {
     private String point;
     private String taskPoint;
     private String sort;
+    private TreeNode officeTree;
+    private List<String> officeIdList=Lists.newArrayList();
+    private String officeIdStr;
     private List<OfficeRuleDto>  officeTypeList= Lists.newArrayList();
     private List<String> jointTypeList= Lists.newArrayList();
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
+
+    public TreeNode getOfficeTree() {
+        return officeTree;
+    }
+
+    public void setOfficeTree(TreeNode officeTree) {
+        this.officeTree = officeTree;
+    }
+
+    public List<String> getOfficeIdList() {
+        return officeIdList;
+    }
+
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
+    }
+
+    public String getOfficeIdStr() {
+        return officeIdStr;
+    }
+
+    public void setOfficeIdStr(String officeIdStr) {
+        this.officeIdStr = officeIdStr;
+    }
 
     public String getParentName() {
         return parentName;

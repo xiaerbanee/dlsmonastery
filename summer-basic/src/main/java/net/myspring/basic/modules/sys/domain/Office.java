@@ -24,6 +24,15 @@ public class Office extends TreeEntity<Office> {
     private String tag;
     private BigDecimal taskPoint;
     private Integer sort;
+    private String officeRuleId;
+
+    public String getOfficeRuleId() {
+        return officeRuleId;
+    }
+
+    public void setOfficeRuleId(String officeRuleId) {
+        this.officeRuleId = officeRuleId;
+    }
 
     public String getName() {
         return name;

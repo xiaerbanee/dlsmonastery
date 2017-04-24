@@ -74,7 +74,7 @@ public class OfficeRuleService {
         String parentIds="";
         OfficeRule parent=officeRuleMapper.findOne(parentId);
         if(parent!=null){
-            parentIds=parent.getParentIds()+ Const.CHAR_COMMA+parentId;
+            parentIds=parent.getParentIds()+parentId;
         }
         return parentIds;
     }

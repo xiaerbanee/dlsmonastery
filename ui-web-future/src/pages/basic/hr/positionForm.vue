@@ -117,6 +117,7 @@
       handleCheckChange(data, checked, indeterminate) {
         var permissions=new Array()
         var check=this.$refs.tree.getCheckedKeys();
+        console.log(check)
         for(var index in check){
           if(check[index].indexOf("p")!=0&& check[index]!=0){
             permissions.push(check[index])
@@ -136,6 +137,7 @@
       }
     },created(){
       axios.get('/api/basic/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          console.log(response.data);
         this.inputForm=response.data;
         this.treeData =new Array(response.data.permissionTree);
         this.checked = response.data.permissionTree.checked;

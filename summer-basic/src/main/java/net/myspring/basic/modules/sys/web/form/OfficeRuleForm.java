@@ -2,11 +2,13 @@ package net.myspring.basic.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.enums.OfficeRuleEnum;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +22,36 @@ public class OfficeRuleForm extends DataForm<OfficeRule> {
     private String parentName;
     private String name;
     private String code;
+    private Integer type;
+    private Integer value;
     private Map<Boolean,String> boolMap= Maps.newHashMap();
     private boolean hasPoint;
     private List<OfficeRuleDto> officeRuleList= Lists.newArrayList();
+    private List<OfficeRuleEnum> officeRuleEnumList=Lists.newArrayList();
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
+    public List<OfficeRuleEnum> getOfficeRuleEnumList() {
+        return officeRuleEnumList;
+    }
+
+    public void setOfficeRuleEnumList(List<OfficeRuleEnum> officeRuleEnumList) {
+        this.officeRuleEnumList = officeRuleEnumList;
+    }
 
     public List<OfficeRuleDto> getOfficeRuleList() {
         return officeRuleList;

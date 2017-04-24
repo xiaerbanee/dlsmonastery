@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.service.JobService;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
 import net.myspring.basic.modules.sys.domain.Permission;
+import net.myspring.basic.modules.sys.service.BackendModuleService;
 import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -41,6 +42,8 @@ public class PositionController {
     private JobService jobService;
     @Autowired
     private PermissionService permissionService;
+    @Autowired
+    private BackendModuleService backendModuleService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<PositionDto> findPage(Pageable pageable, PositionQuery positionQuery) {
@@ -57,8 +60,8 @@ public class PositionController {
     @RequestMapping(value = "findOne")
     public PositionForm findOne(PositionForm positionForm) {
         positionForm= positionService.findForm(positionForm);
-        List<String> permissionIdList = positionForm.isCreate()? Lists.newArrayList() : positionService.findPermissionByPosition(positionForm.getId());
-        positionForm.setPermissionTree(permissionService.findBackendTree(permissionIdList));
+        List<String> backendModuleIdList = positionForm.isCreate()? Lists.newArrayList() : backendModuleService.findBackendModuleIdByPosition(positionForm.getId());
+        positionForm.setPermissionTree(permissionService.findBackendTree(backendModuleIdList));
         positionForm.setJobList( jobService.findAll());
         positionForm.setDataScopeMap(DataScopeEnum.getMap());
         return positionForm;
@@ -66,16 +69,26 @@ public class PositionController {
 
     @RequestMapping(value = "getTreeNode")
     public TreeNode getTreeNode(String id) {
-        List<Permission> permissionList=permissionService.findByPositionId(id);
-        List<String> permissionIIds = CollectionUtil.extractToList(permissionList, "id");
-        TreeNode treeNode=permissionService.findPermissionTree(permissionIIds);
-        return treeNode;
+        if(StringUtils.isNotBlank(id)){
+            List<Permission> permissionList=permissionService.findByPositionId(id);
+            List<String> permissionIIds = CollectionUtil.extractToList(permissionList, "id");
+            TreeNode treeNode=permissionService.findPermissionTree(permissionIIds);
+            return treeNode;
+        }
+       return null;
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(PositionForm positionForm, String permissionIdStr) {
         positionForm.setPermissionIdList(StringUtils.getSplitList(permissionIdStr, Const.CHAR_COMMA));
         positionService.save(positionForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "saveAuthorityList")
+    public RestResponse saveAuthorityList(PositionForm positionForm, String permissionIdStr) {
+        positionForm.setPermissionIdList(StringUtils.getSplitList(permissionIdStr, Const.CHAR_COMMA));
+        positionService.savePositionAndModule(positionForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
