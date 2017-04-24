@@ -10,6 +10,11 @@
                 <el-option v-for="item in inputForm.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="类型" prop="type">
+              <el-select v-model="inputForm.type" filterable>
+                <el-option v-for="item in inputForm.officeRuleEnumList" :key="item.type" :label="item.name" :value="item.type"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('officeRuleForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>

@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.BoolEnum;
 import net.myspring.basic.common.enums.DictMapCategoryEnum;
 import net.myspring.basic.common.enums.JointTypeEnum;
+import net.myspring.basic.common.enums.OfficeRuleEnum;
 import net.myspring.basic.common.utils.Global;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
@@ -60,6 +61,7 @@ public class OfficeRuleController {
         officeRuleForm=officeRuleService.findForm(officeRuleForm);
         officeRuleForm.setBoolMap(BoolEnum.getMap());
         officeRuleForm.setOfficeRuleList(officeRuleService.findAll());
+        officeRuleForm.setOfficeRuleEnumList(OfficeRuleEnum.values());
         return officeRuleForm;
     }
 
