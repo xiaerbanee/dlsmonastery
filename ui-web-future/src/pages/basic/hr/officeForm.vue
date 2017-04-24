@@ -14,8 +14,8 @@
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
             <el-form-item :label="$t('officeForm.type')" prop="type">
-              <el-select v-model="inputForm.type" filterable>
-                <el-option v-for="item in inputForm.officeTypeList" :key="item.value" :label="item.name" :value="item.value"></el-option>
+              <el-select v-model="inputForm.type" filterable @change="typeChange">
+                <el-option v-for="item in inputForm.officeTypeList" :key="item.value" :label="item.name" :value="item.value |toString "></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.jointType')" prop="jointType">
@@ -37,13 +37,14 @@
               </el-button>
             </el-form-item>
           </el-col>
-          <el-col :span = "10" v-show="">
+          <el-col :span = "10" v-show="treeData.length>0">
             <el-form-item  label="授权" prop="businessOfficeStr">
               <el-tree
                 :data="treeData"
                 show-checkbox
                 node-key="id"
                 ref="tree"
+                check-strictly="true"
                 :default-checked-keys="checked"
                 :default-expanded-keys="checked"
                 @check-change="handleCheckChange"
@@ -80,6 +81,7 @@
           jointType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}]
         },
         remoteLoading: false,
+        officeTypeMap:new Map(),
         treeData:[],
         checked:[],
         defaultProps: {
@@ -126,13 +128,32 @@
           }
         }
         this.inputForm.permissionIdStr=permissions.join();
+      },typeChange(evl){
+          var officeType=this.officeTypeMap.get(evl);
+          if(officeType!=null&&officeType.typeLabel=="后勤部门"){
+            axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
+              this.treeData =new Array(response.data);
+              this.checked = response.data.checked;
+              this.inputForm.permissionIdStr = response.data.checked.join();
+            })
+          }else {
+            this.treeData =new Array();
+            this.checked = new Array();
+            this.inputForm.permissionIdStr = "";
+          }
       }
     }, created(){
       axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
         this.inputForm = response.data;
-        console.log(this.inputForm.officeTypeList)
+        console.log(response.data)
         if (response.data.parentId != null) {
           this.offices = new Array({id: response.data.parentId, name: response.data.parentName})
+        }
+        if(this.inputForm.officeTypeList!=null&&this.inputForm.officeTypeList.length>0){
+            for(var index in this.inputForm.officeTypeList){
+              var officeType=this.inputForm.officeTypeList[index];
+              this.officeTypeMap.set(officeType.value.toString(),officeType);
+            }
         }
       })
     }

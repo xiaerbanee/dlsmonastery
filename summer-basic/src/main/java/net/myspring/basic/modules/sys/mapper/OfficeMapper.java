@@ -32,4 +32,6 @@ public interface OfficeMapper extends MyMapper<Office,String> {
     List<Office> findByAreaIds(List<String> areaIds);
 
     Page<OfficeDto> findPage(@Param("pageable") Pageable pageable, @Param("p")OfficeQuery officeQuery);
+
+    List<String> findBusinessIdById(String id);
 }

@@ -102,6 +102,13 @@
         </if>
     </select>
 
+    <select id="findBusinessIdById" resultType="String">
+        SELECT  t1.*
+        FROM sys_office_business t1
+        where t1.enabled=1
+        and t1.office_id=#{id}
+    </select>
+
     <sql id="officeFilter">
         <if test="p.officeIds !=null and p.officeIds.size() !=0">
             and office.id IN

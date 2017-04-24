@@ -13,6 +13,8 @@ import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.common.tree.TreeNode;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +84,16 @@ public class OfficeController {
         officeForm.setOfficeTypeList(officeService.findTypeList());
         officeForm.setJointTypeList(JointTypeEnum.getList());
         return officeForm;
+    }
+
+    @RequestMapping(value = "getOfficeTree")
+    public TreeNode getOfficeTree(String id){
+        if(StringUtils.isNotBlank(id)){
+            List<String> officeIds=officeService.findBusinessIdById(id);
+            TreeNode treeNode=officeService.getOfficeTree(officeIds);
+            return treeNode;
+        }
+        return null;
     }
 
     @RequestMapping(value = "delete")
