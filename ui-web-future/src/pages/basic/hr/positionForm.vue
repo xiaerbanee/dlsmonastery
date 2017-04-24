@@ -13,7 +13,7 @@
             <el-form-item :label="$t('positionForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
-            <el-form-item :label="项目权限" prop="backendIdList">
+            <el-form-item label="项目权限" prop="backendIdList">
               <el-select v-model="inputForm.backendIdList" multiple filterable remote :placeholder="$t('positionForm.inputWord')" :remote-method="remoteBackend" :loading="remoteLoading">
                 <el-option v-for="item in backendList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
@@ -62,6 +62,7 @@
   export default{
     data(){
       return{
+        remoteLoading:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{},
@@ -117,7 +118,7 @@
         var permissions=new Array()
         var check=this.$refs.tree.getCheckedKeys();
         for(var index in check){
-          if(check[index].indexOf("p")!=0&& check[index].indexOf("m")!=0){
+          if(check[index].indexOf("p")!=0&& check[index]!=0){
             permissions.push(check[index])
           }
         }
@@ -136,7 +137,7 @@
     },created(){
       axios.get('/api/basic/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
-        this.treeData =new Array( response.data.permissionTree);
+        this.treeData =new Array(response.data.permissionTree);
         this.checked = response.data.permissionTree.checked;
         this.inputForm.permissionIdStr = response.data.permissionTree.checked.join();
       })

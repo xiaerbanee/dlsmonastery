@@ -3,14 +3,10 @@ package net.myspring.basic.modules.hr.web.form;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.enums.DataScopeEnum;
-import net.myspring.basic.modules.hr.domain.Job;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.hr.dto.JobDto;
-import net.myspring.common.tree.Tree;
 import net.myspring.common.tree.TreeNode;
-import net.myspring.util.collection.CollectionUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -30,15 +26,15 @@ public class PositionForm extends DataForm<Position> {
     private String sort;
     private String remarks;
     private String permissionIdStr;
-    private Tree permissionTree;
+    private TreeNode permissionTree;
     private List<JobDto> jobList= Lists.newArrayList();
     private Map<Integer,String> dataScopeMap= Maps.newHashMap();
 
-    public Tree getPermissionTree() {
+    public TreeNode getPermissionTree() {
         return permissionTree;
     }
 
-    public void setPermissionTree(Tree permissionTree) {
+    public void setPermissionTree(TreeNode permissionTree) {
         this.permissionTree = permissionTree;
     }
 

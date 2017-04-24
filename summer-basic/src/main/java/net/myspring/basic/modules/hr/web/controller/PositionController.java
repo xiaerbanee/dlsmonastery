@@ -55,7 +55,7 @@ public class PositionController {
     public PositionForm findOne(PositionForm positionForm) {
         positionForm= positionService.findForm(positionForm);
         List<String> permissionIdList = positionForm.isCreate()? Lists.newArrayList() : positionService.findPermissionByPosition(positionForm.getId());
-        positionForm.setPermissionTree(permissionService.findPermissionTree(permissionIdList));
+        positionForm.setPermissionTree(permissionService.findBackendTree(permissionIdList));
         positionForm.setJobList( jobService.findAll());
         positionForm.setDataScopeMap(DataScopeEnum.getMap());
         return positionForm;

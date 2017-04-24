@@ -15,7 +15,6 @@ import net.myspring.basic.modules.sys.manager.PermissionManager;
 import net.myspring.basic.modules.sys.mapper.*;
 import net.myspring.basic.modules.sys.web.form.PermissionForm;
 import net.myspring.basic.modules.sys.web.query.PermissionQuery;
-import net.myspring.common.tree.Tree;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -24,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -111,27 +109,24 @@ public class PermissionService {
         return permission;
     }
 
-    public Tree findBackendTree(List<String> backendModuleIdList) {
-        Tree tree = new Tree();
-        TreeNode treeNode = new TreeNode("0", "权限列表");
+    public TreeNode findBackendTree(List<String> backendModuleIdList) {
+        TreeNode treeNode = new TreeNode("0", "项目列表");
         List<Backend> backendList = backendMapper.findAllEnabled();
         List<BackendModule> backendModuleList = backendModuleMapper.findAllEnabled();
-        Map<String, List<BackendModule>> backendModuleMap = CollectionUtil.extractToMap(backendModuleList, "backendId");
+        Map<String, List<BackendModule>> backendModuleMap = CollectionUtil.extractToMapList(backendModuleList, "backendId");
         for (Backend backend : backendList) {
             TreeNode backendTree = new TreeNode("p" + backend.getId(), backend.getName());
             for (BackendModule backendModule : backendModuleMap.get(backend.getId())) {
-                TreeNode backendModuleTree = new TreeNode("m" + backendModule.getId(), backendModule.getName());
+                TreeNode backendModuleTree = new TreeNode(backendModule.getId(), backendModule.getName());
                 backendTree.getChildren().add(backendModuleTree);
             }
-            tree.getChildren().add(backendTree);
+            treeNode.getChildren().add(backendTree);
         }
-        tree.getChildren().add(treeNode);
-        tree.setChecked(Lists.newArrayList(Sets.newHashSet(backendModuleIdList)));
-        return tree;
+        treeNode.setChecked(Lists.newArrayList(Sets.newHashSet(backendModuleIdList)));
+        return treeNode;
     }
 
-    public Tree findPermissionTree(List<String> permissionIds) {
-        Tree tree = new Tree();
+    public TreeNode findPermissionTree(List<String> permissionIds) {
         Set<String> permissionIdSet = Sets.newHashSet(permissionIds);
         TreeNode treeNode = new TreeNode("0", "权限列表");
         List<BackendModule> backendModuleList = backendModuleMapper.findByPositionId(SecurityUtils.getPositionId());
@@ -157,9 +152,8 @@ public class PermissionService {
             }
             treeNode.getChildren().add(backendModuleTree);
         }
-        tree.getChildren().add(treeNode);
-        tree.setChecked(Lists.newArrayList(permissionIdSet));
-        return tree;
+        treeNode.setChecked(Lists.newArrayList(permissionIdSet));
+        return treeNode;
     }
 
     public void logicDeleteOne(String id) {

@@ -30,11 +30,9 @@
         t1.*
         FROM
         sys_permission t1,
-        hr_position_permission t2,
-        hr_position t3
+        hr_position_permission t2
         where
-        t3.id=t2.position_id
-        and t2.permission_id=t1.id
+        t1.id=t2.permission_id
         and t2.position_id=#{positionId}
     </select>
 
