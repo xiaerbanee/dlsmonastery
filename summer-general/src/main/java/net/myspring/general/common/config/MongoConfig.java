@@ -35,7 +35,7 @@ public class MongoConfig {
     public GridFsTemplate exportGridFsTemplate() {
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter);
+        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"export");
         return gridFsTemplate;
     }
 
