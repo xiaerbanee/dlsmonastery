@@ -69,10 +69,13 @@ public class PositionController {
 
     @RequestMapping(value = "getTreeNode")
     public TreeNode getTreeNode(String id) {
-        List<Permission> permissionList=permissionService.findByPositionId(id);
-        List<String> permissionIIds = CollectionUtil.extractToList(permissionList, "id");
-        TreeNode treeNode=permissionService.findPermissionTree(permissionIIds);
-        return treeNode;
+        if(StringUtils.isNotBlank(id)){
+            List<Permission> permissionList=permissionService.findByPositionId(id);
+            List<String> permissionIIds = CollectionUtil.extractToList(permissionList, "id");
+            TreeNode treeNode=permissionService.findPermissionTree(permissionIIds);
+            return treeNode;
+        }
+       return null;
     }
 
     @RequestMapping(value = "save")
