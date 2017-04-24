@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "hr/office")
+@RequestMapping(value = "sys/office")
 public class OfficeController {
 
     @Autowired
@@ -79,7 +79,7 @@ public class OfficeController {
     @RequestMapping(value = "findOne")
     public OfficeForm findOne(OfficeForm officeForm){
         officeForm=officeService.findForm(officeForm);
-        officeForm.setOfficeTypeList(Global.getDictMapList(DictMapCategoryEnum.机构分类.name()));
+        officeForm.setOfficeTypeList(officeService.findTypeList());
         officeForm.setJointTypeList(JointTypeEnum.getList());
         return officeForm;
     }

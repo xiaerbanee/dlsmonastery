@@ -15,6 +15,15 @@ public class OfficeRule extends TreeEntity<OfficeRule> {
     private String name;
     private String code;
     private boolean hasPoint;
+    private Integer value;
+
+    public Integer getValue() {
+        return value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
 
     public String getName() {
         return name;

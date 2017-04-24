@@ -4,10 +4,13 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
+import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.mapper.OfficeMapper;
+import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
 import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -30,6 +33,8 @@ public class OfficeService {
     private CacheUtils cacheUtils;
     @Autowired
     private AccountManager accountManager;
+    @Autowired
+    private OfficeRuleMapper officeRuleMapper;
 
 
     public List<Office> findByType(String type) {
@@ -96,5 +101,11 @@ public class OfficeService {
         List<OfficeDto> officeDtoList= BeanUtil.map(officeList,OfficeDto.class);
         cacheUtils.initCacheInput(officeDtoList);
         return officeDtoList;
+    }
+
+    public List<OfficeRuleDto> findTypeList(){
+        List<OfficeRule> officeRuleList=officeRuleMapper.findAllEnabled();
+        List<OfficeRuleDto> officeRuleDtoList=BeanUtil.map(officeRuleList,OfficeRuleDto.class);
+        return officeRuleDtoList;
     }
 }

@@ -3,12 +3,12 @@ package net.myspring.basic.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.common.form.DataForm;
+import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by admin on 2017/4/6.
@@ -23,7 +23,7 @@ public class OfficeForm extends DataForm<Office> {
     private String point;
     private String taskPoint;
     private String sort;
-    private Map<String,String>  officeTypeList= Maps.newHashMap();
+    private List<OfficeRuleDto>  officeTypeList= Lists.newArrayList();
     private List<String> jointTypeList= Lists.newArrayList();
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
@@ -37,11 +37,11 @@ public class OfficeForm extends DataForm<Office> {
         this.parentName = parentName;
     }
 
-    public Map<String, String> getOfficeTypeList() {
+    public List<OfficeRuleDto> getOfficeTypeList() {
         return officeTypeList;
     }
 
-    public void setOfficeTypeList(Map<String, String> officeTypeList) {
+    public void setOfficeTypeList(List<OfficeRuleDto> officeTypeList) {
         this.officeTypeList = officeTypeList;
     }
 

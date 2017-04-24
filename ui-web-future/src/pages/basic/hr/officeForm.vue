@@ -13,7 +13,7 @@
         </el-form-item>
         <el-form-item :label="$t('officeForm.type')" prop="type">
           <el-select v-model="inputForm.type" filterable >
-            <el-option v-for="officeType in inputForm.officeTypeList" :key="officeType.value" :label="officeType.name" :value="officeType.value"></el-option>
+            <el-option v-for="(key,value) in inputForm.officeTypeList" :key="value" :label="key" :value="value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('officeForm.jointType')" prop="jointType">
@@ -56,7 +56,6 @@
           sort:''
         },
         rules: {
-          parentId: [{ required: true, message: this.$t('officeForm.prerequisiteMessage')}],
           name: [{ required: true, message: this.$t('officeForm.prerequisiteMessage')}],
           officeType: [{ required: true, message: this.$t('officeForm.prerequisiteMessage')}],
           jointType:[{ required: true, message: this.$t('officeForm.prerequisiteMessage')}]

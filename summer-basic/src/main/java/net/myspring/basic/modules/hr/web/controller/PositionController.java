@@ -9,9 +9,12 @@ import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.service.JobService;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
+import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.common.tree.TreeNode;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -61,6 +64,14 @@ public class PositionController {
         return positionForm;
     }
 
+    @RequestMapping(value = "getTreeNode")
+    public TreeNode getTreeNode(String id) {
+        List<Permission> permissionList=permissionService.findByPositionId(id);
+        List<String> permissionIIds = CollectionUtil.extractToList(permissionList, "id");
+        TreeNode treeNode=permissionService.findPermissionTree(permissionIIds);
+        return treeNode;
+    }
+
     @RequestMapping(value = "save")
     public RestResponse save(PositionForm positionForm, String permissionIdStr) {
         positionForm.setPermissionIdList(StringUtils.getSplitList(permissionIdStr, Const.CHAR_COMMA));
@@ -78,7 +89,10 @@ public class PositionController {
 
     @RequestMapping(value = "search")
     public List<PositionDto> search(String name) {
-        List<PositionDto> positionDtoList = positionService.findByNameLike(name);
+        List<PositionDto> positionDtoList =Lists.newArrayList();
+        if(StringUtils.isNotBlank(name)){
+            positionDtoList =positionService.findByNameLike(name);
+        }
         return positionDtoList;
     }
 
