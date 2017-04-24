@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DictMapCategoryEnum;
 import net.myspring.basic.common.enums.JointTypeEnum;
+import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.Global;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeBasicDto;
@@ -72,7 +73,8 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(OfficeForm officeForm, BindingResult bindingResult) {
+    public RestResponse save(OfficeForm officeForm) {
+        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), Const.CHAR_COMMA));
         officeService.save(officeForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }

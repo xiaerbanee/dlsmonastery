@@ -73,7 +73,8 @@
           jointType: '',
           point: '',
           taskPoint: '',
-          sort: ''
+          sort: '',
+          officeIdStr:""
         },
         rules: {
           name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
@@ -120,14 +121,14 @@
         }
       },
       handleCheckChange(data, checked, indeterminate) {
-        var permissions=new Array()
+        var officeIdList=new Array()
         var check=this.$refs.tree.getCheckedKeys();
         for(var index in check){
-          if(check[index].indexOf("p")!=0&& check[index]!=0){
-            permissions.push(check[index])
+          if(check[index]!=0){
+            officeIdList.push(check[index])
           }
         }
-        this.inputForm.permissionIdStr=permissions.join();
+        this.inputForm.officeIdStr=officeIdList.join();
       },typeChange(evl){
           var officeType=this.officeTypeMap.get(evl);
           if(officeType!=null&&officeType.typeLabel=="后勤部门"){

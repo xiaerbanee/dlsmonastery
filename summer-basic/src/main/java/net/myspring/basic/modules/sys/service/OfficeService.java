@@ -5,15 +5,16 @@ import com.google.common.collect.Sets;
 import net.myspring.basic.common.enums.OfficeRuleEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
-import net.myspring.basic.common.utils.OfficeUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
-import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
+import net.myspring.basic.modules.sys.mapper.OfficeBusinessMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
 import net.myspring.basic.modules.sys.web.form.OfficeForm;
@@ -25,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.tree.Tree;
 
 import java.util.List;
 import java.util.Map;
@@ -43,6 +43,8 @@ public class OfficeService {
     private AccountManager accountManager;
     @Autowired
     private OfficeRuleMapper officeRuleMapper;
+    @Autowired
+    private OfficeBusinessMapper officeBusinessMapper;
 
 
     public List<Office> findByType(String type) {
@@ -85,7 +87,7 @@ public class OfficeService {
             officeForm= BeanUtil.map(office,OfficeForm.class);
             OfficeRule officeRule=officeRuleMapper.findOne(office.getOfficeRuleId());
             if(officeRule!=null&& OfficeRuleEnum.后勤部门.getType().equals(officeRule.getType())){
-                List<String> businessOffices=officeMapper.findBusinessIdById(office.getId());
+                List<String> businessOffices=officeBusinessMapper.findBusinessIdById(office.getId());
                 officeForm.setOfficeTree(getOfficeTree(businessOffices));
             }
             cacheUtils.initCacheInput(officeForm);
@@ -102,6 +104,21 @@ public class OfficeService {
         } else {
             office=officeManager.updateForm(officeForm);
         }
+        List<String> businessOfficeIdList=officeBusinessMapper.findBusinessIdById(office.getId());
+        List<String>removeIdList=CollectionUtil.subtract(businessOfficeIdList,officeForm.getOfficeIdList());
+        List<String> addIdList=CollectionUtil.subtract(officeForm.getOfficeIdList(),businessOfficeIdList);
+        List<OfficeBusiness> officeBusinessList=Lists.newArrayList();
+        for(String businessOfficeId:addIdList){
+            OfficeBusiness officeBusiness = new OfficeBusiness(office.getId(), businessOfficeId);
+            officeBusiness.setCompanyId(SecurityUtils.getCompanyId());
+            officeBusinessList.add(officeBusiness);
+        }
+        if(CollectionUtil.isNotEmpty(removeIdList)){
+            officeBusinessMapper.removeByBusinessOfficeIds(removeIdList);
+        }
+        if(CollectionUtil.isNotEmpty(addIdList)){
+            officeBusinessMapper.batchSave(officeBusinessList);
+        }
         return office;
     }
 
@@ -117,7 +134,7 @@ public class OfficeService {
     }
 
     public List<String> findBusinessIdById(String id){
-        return  officeMapper.findBusinessIdById(id);
+        return  officeBusinessMapper.findBusinessIdById(id);
     }
 
     public List<OfficeRuleDto> findTypeList(){
