@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:position:edit'">{{$t('positionList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'hr:position:view'">{{$t('positionList.filter')}}</el-button>
-        <el-button type="primary" @click="formEdit = true" icon="plus">岗位权限编辑</el-button>
+        <el-button type="primary" @click="itemAuthAdd" icon="plus">岗位权限编辑</el-button>
         <search-tag  :formData="formData" :formLabel = "formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('positionList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -92,6 +92,8 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'positionForm'})
+      },itemAuthAdd(){
+          this.$router.push({name:"positionAuthorityForm"})
       },itemEdit(){
         this.$router.push({ name: 'positionEdit'})
       },itemAction:function(id,action){

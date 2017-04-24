@@ -50,7 +50,7 @@
 
     <insert id="savePositionAndBankendModule">
         INSERT INTO hr_position_module(backend_module_id,position_id) VALUES
-        <foreach collection="permissionIds" index="index" item="item" open="" separator="," close="">
+        <foreach collection="modules" index="index" item="item" open="" separator="," close="">
             (#{item},#{positionId})
         </foreach>
     </insert>
