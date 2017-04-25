@@ -1,6 +1,5 @@
 package net.myspring.cloud.modules.input.web.controller;
 
-import net.myspring.cloud.common.annotation.Token;
 import net.myspring.cloud.common.enums.K3CloudBillTypeEnum;
 import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.input.service.BatchBillService;
@@ -40,7 +39,6 @@ public class BatchBillController {
     private BatchBillService batchBillService;
 
     @RequestMapping(value = "form")
-    @Token(save = true)
     public BatchBIllForm form (BatchBIllForm batchBIllForm, String companyName) {
         if (StringUtils.isNotBlank(companyName)) {
             List<BdMaterial> materials = bdMaterialService.findAll(null);
@@ -56,7 +54,6 @@ public class BatchBillController {
     }
 
     @RequestMapping(value = "save")
-    @Token(remove = true)
     public RestResponse save(String data, String storeCode, String billDate, RedirectAttributes redirectAttributes, ServletRequest request) {
         RestResponse restResponse = new RestResponse();
         if("false".equals(request.getAttribute("doubleSubmit").toString())) {
