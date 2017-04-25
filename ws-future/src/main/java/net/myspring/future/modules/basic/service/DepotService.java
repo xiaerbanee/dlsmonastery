@@ -77,8 +77,6 @@ public class DepotService {
     private CompanyConfigClient companyConfigClient;
     @Autowired
     private CloudClient cloudClient;
-    @Autowired
-    private SecurityUtils securityUtils;
 
 
     public DepotDto findOne(String id) {
@@ -169,7 +167,7 @@ public class DepotService {
     }
 
     public List<DepotDto> findProxyShop(DepotQuery depotQuery){
-        List<String> officeIds = officeClient.getOfficeIdsByAccountId(securityUtils.getAccountId());
+        List<String> officeIds = officeClient.getOfficeIdsByAccountId(SecurityUtils.getAccountId());
         if(CollectionUtil.isNotEmpty(officeIds)){
             Set<String> areaIds= Sets.newHashSet();
             for(String officeId:officeIds){
@@ -187,7 +185,7 @@ public class DepotService {
 
     public  List<DepotDto> findAdShopBsc(String name){
         DepotQuery depotQuery = new DepotQuery();
-        List<String> officeIds = officeClient.getOfficeIdsByAccountId(securityUtils.getAccountId());
+        List<String> officeIds = officeClient.getOfficeIdsByAccountId(SecurityUtils.getAccountId());
         if(CollectionUtil.isNotEmpty(officeIds)){
             Set<String> areaIds = Sets.newHashSet();
             for(String officeId:officeIds){
