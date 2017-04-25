@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.cloud.modules.input.mapper.BasAssistantMapper">
+    <select id="findFNumberByNameAndDataValue" resultType="String">
+      select
+         t.FNUMBER
+       from
+       T_BAS_ASSISTANTDATAENTRY_L t1,
+       T_BAS_ASSISTANTDATAENTRY t,
+       T_BAS_ASSISTANTDATA_L t2
+       where t.FENTRYID=t1.FENTRYID
+       and t.FID = t2.FID
+       and t2.FNAME = #{name}
+       and t1.FDATAVALUE = #{dataValue}
+    </select>
+
+    <select id="findByType" resultType="BasAssistant">
+        SELECT
+        t.FENTRYID,
+        t.FNUMBER,
+        t1.FDATAVALUE
+        FROM
+        T_BAS_ASSISTANTDATAENTRY t,
+        T_BAS_ASSISTANTDATAENTRY_L t1,
+        T_BAS_ASSISTANTDATA_L t2
+        WHERE
+        t.FENTRYID = t1.FENTRYID
+        AND t.FID = t2.FID
+        AND t2.FNAME = #{type}
+    </select>
+</mapper>

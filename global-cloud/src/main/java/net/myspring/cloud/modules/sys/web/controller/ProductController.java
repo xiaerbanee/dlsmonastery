@@ -2,8 +2,8 @@ package net.myspring.cloud.modules.sys.web.controller;
 
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
-import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
-import net.myspring.cloud.modules.kingdee.service.BdMaterialService;
+import net.myspring.cloud.modules.input.domain.BdMaterial;
+import net.myspring.cloud.modules.input.service.BdMaterialService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.ProductService;
 import net.myspring.common.response.RestResponse;
