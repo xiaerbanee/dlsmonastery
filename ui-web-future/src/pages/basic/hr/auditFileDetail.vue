@@ -17,7 +17,7 @@
             <el-form-item :label="$t('auditFileDetail.title')" prop="title">
               {{detailForm.title}}
             </el-form-item>
-            <el-form-item :label="$t('auditFileDetail.processStatus')" prop="title">
+            <el-form-item :label="$t('auditFileDetail.processStatus')" prop="processStatus">
               {{detailForm.processStatus}}
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.remarks')" prop="remarks">
