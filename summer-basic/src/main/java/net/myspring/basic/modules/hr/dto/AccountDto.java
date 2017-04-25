@@ -48,8 +48,7 @@ public class AccountDto extends DataDto<Account> {
     private String employeeStatus;
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "dataScope")
     private Integer positionDataScope;
-    @CacheInput(inputKey = "offices",inputInstance = "officeIdList",outputInstance = "name")
-    private List<String> officeListName=Lists.newArrayList();
+    private String dataOfficeName;
 
     public String getEmployeeName() {
         return employeeName;
@@ -195,13 +194,6 @@ public class AccountDto extends DataDto<Account> {
         this.positionDataScope = positionDataScope;
     }
 
-    public String getDataOfficeName(){
-        if( CollectionUtil.isNotEmpty(officeListName)){
-            return StringUtils.join(officeListName, Const.CHAR_COMMA);
-        }
-        return "";
-    }
-
     public List<String> getOfficeIdList() {
         return officeIdList;
     }
@@ -210,12 +202,11 @@ public class AccountDto extends DataDto<Account> {
         this.officeIdList = officeIdList;
     }
 
-    public List<String> getOfficeListName() {
-        return officeListName;
+    public String getDataOfficeName() {
+        return dataOfficeName;
     }
 
-    public void setOfficeListName(List<String> officeListName) {
-        this.officeListName = officeListName;
+    public void setDataOfficeName(String dataOfficeName) {
+        this.dataOfficeName = dataOfficeName;
     }
-
 }

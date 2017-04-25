@@ -45,5 +45,10 @@ public class ProcessTypeController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "findAll")
+    public List<ProcessTypeDto> findAll(){
+        return processTypeService.findAll();
+    }
+
 
 }

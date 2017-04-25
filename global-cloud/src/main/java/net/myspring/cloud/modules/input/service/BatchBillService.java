@@ -44,8 +44,7 @@ public class BatchBillService {
     private ArReceivableMapper arReceivableMapper;
     @Autowired
     private AccountClient accountClient;
-    @Autowired
-    private SecurityUtils securityUtils;
+
 
     //批量开单
     public List<String> save(List<List<Object>> datas, String storeFNumber, LocalDate billDate) {
@@ -121,7 +120,7 @@ public class BatchBillService {
     //批量销售出库单json
     private String getSaleOutStock(BatchBillDto batchBillDto) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-//        root.put("Creator", accountClient.getName());
+        root.put("Creator", accountClient.getName(SecurityUtils.getAccountId()));
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
@@ -171,7 +170,7 @@ public class BatchBillService {
     //批量销售退货单json
     private String getReturnStock(BatchBillDto batchBillDto) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-//        root.put("Creator", ThreadLocalContext.get().getAccount().getLoginName());
+        root.put("Creator", accountClient.getName(SecurityUtils.getAccountId()));
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);

@@ -50,6 +50,7 @@ public class AuditFileController {
 
     @RequestMapping(value = "save")
     public RestResponse save(AuditFileForm auditFileForm, BindingResult result) {
+        auditFileService.save(auditFileForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
@@ -65,8 +66,6 @@ public class AuditFileController {
     public AuditFileForm detail(AuditFileForm auditFileForm) {
         auditFileForm=auditFileService.findForm(auditFileForm);
         auditFileForm.setBoolMap(BoolEnum.getMap());
-//        auditFileForm.setFolder(folderService.getAccountFolder(SecurityUtils.getAccountId(), FolderDefaultEnum.AUDIT_FILE.toString()));
-//        auditFileForm.setProcessTypesList(processTypeService.findEnabledAuditFileType());
         return auditFileForm;
     }
 

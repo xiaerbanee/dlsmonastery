@@ -23,8 +23,8 @@
         </if>
     </select>
 
-    <select id="findAccountOfficeByIds" resultType="net.myspring.basic.common.dto.NameValueDto">
-        SELECT account_id as 'name',office_id AS 'value'
+    <select id="findAccountOfficeByIds" resultType="String">
+        SELECT office_id
         FROM hr_account_office
         where account_id IN
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
@@ -69,14 +69,17 @@
 
     <select id="findPage" resultType="AccountDto">
         SELECT
-        t1.*
+        t1.*,   group_concat(DISTINCT t3.name) as 'dataOfficeName'
         FROM
-        hr_account t1,hr_office office
+        hr_account t1,sys_office office,hr_account_office t2,sys_office t3
         WHERE
         t1.enabled=1
         and t1.office_id=office.id
+        and t1.id=t2.account_id
+        and t2.office_id=t3.id
         <include refid="net.myspring.basic.modules.sys.mapper.OfficeMapper.officeFilter" />
         <include refid="accountFilter"/>
+        GROUP BY t1.id
     </select>
 
     <insert id="saveAccountOffice">
@@ -119,7 +122,7 @@
         <if test="p.officeName != null">
             and t1.office_id in(
             select t2.id
-            from hr_office t2
+            from sys_office t2
             where t2.name=#{p.officeName}
             )
         </if>

@@ -43,7 +43,6 @@ public class AccountController {
     private AccountService accountService;
     @Autowired
     private PositionService positionService;
-
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
