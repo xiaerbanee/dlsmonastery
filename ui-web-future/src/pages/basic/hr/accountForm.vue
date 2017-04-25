@@ -127,7 +127,7 @@
       },remoteDataScopeOffice(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/sys/office/search',{params:{name:query}}).then((response)=>{
             this.dataScopeOffices=response.data;
             this.remoteLoading = false;
           })
@@ -143,7 +143,7 @@
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/sys/office/search',{params:{name:query}}).then((response)=>{
             this.offices = response.data;
             this.remoteLoading = false;
           })
