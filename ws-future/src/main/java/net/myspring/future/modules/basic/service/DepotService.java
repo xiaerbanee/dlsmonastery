@@ -77,8 +77,6 @@ public class DepotService {
     private CompanyConfigClient companyConfigClient;
     @Autowired
     private CloudClient cloudClient;
-    @Autowired
-    private SecurityUtils securityUtils;
 
 
     public DepotDto findOne(String id) {
