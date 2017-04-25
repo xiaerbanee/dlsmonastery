@@ -10,4 +10,5 @@ import org.apache.ibatis.annotations.Param;
 public interface ArReceivableMapper {
 
     String findFBillNoByfSourceBillNo(@Param("fSourceBillNo")String fSourceBillNo);
+
 }

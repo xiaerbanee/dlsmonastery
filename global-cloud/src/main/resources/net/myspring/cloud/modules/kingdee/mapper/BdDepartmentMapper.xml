@@ -18,13 +18,14 @@
 
     <select id="findAll" resultType="BdDepartment">
         select
-        t.FDEPTID,
-        t.FNUMBER,
-        t1.FFULLNAME as FNAME
+            t.FDEPTID,
+            t.FNUMBER,
+            t1.FFULLNAME as FNAME
         from
-         T_BD_DEPARTMENT t,
-         T_BD_DEPARTMENT_L t1
+            T_BD_DEPARTMENT t,
+            T_BD_DEPARTMENT_L t1
         where
-        t.FDEPTID = t1.FDEPTID
+            t.FDEPTID = t1.FDEPTID
     </select>
+
 </mapper>

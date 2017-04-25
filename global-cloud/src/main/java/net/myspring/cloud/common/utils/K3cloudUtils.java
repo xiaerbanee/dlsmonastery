@@ -1,6 +1,7 @@
 package net.myspring.cloud.common.utils;
 
 import com.google.common.collect.Maps;
+import net.myspring.cloud.common.service.ServiceException;
 import net.myspring.cloud.modules.kingdee.dto.K3CloudSave;
 import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -219,66 +220,66 @@ public class K3cloudUtils {
 
 
     // Save
-//    public static K3CloudSave save(K3CloudSave k3CloudSave) {
-//        AccountDto accountDto = k3CloudSave.getAccount();
-//        if (StringUtils.isBlank(accountDto.getOutId()) || StringUtils.isBlank(accountDto.getOutPassword())) {
-//            throw new ServiceException("请确保已填写财务账号和密码");
-//        }
-//        if (!login(accountDto)) {
-//            throw new ServiceException("财务账户或者密码不正确");
-//        }
-//        String result = K3cloudUtils.save(k3CloudSave.getFormId(), k3CloudSave.getContent());
-//        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(result);
-//        if (BoolEnum.TRUE.getValue().toString().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
-//            String billNo = jsonObject.getJSONObject("Result").getString("Number");
-//            Map<String, Object> root = Maps.newLinkedHashMap();
-//            root.put("CreateOrgId", 0);
-//            root.put("Numbers", billNo);
-//            String content = ObjectMapperUtils.writeValueAsString(root);
-//            K3cloudUtils.submit(k3CloudSave.getFormId(), content);
-//            if (k3CloudSave.getAutoAudit()) {
-//                K3cloudUtils.audit(k3CloudSave.getFormId(), content);
-//            }
-//            k3CloudSave.setBillNo(billNo);
-//            return k3CloudSave;
-//        } else {
-//            throw new ServiceException("金蝶开单失败：" + result);
-//        }
-//    }
+    public static K3CloudSave save(K3CloudSave k3CloudSave) {
+        AccountDto accountDto = k3CloudSave.getAccount();
+        if (StringUtils.isBlank(accountDto.getOutId()) || StringUtils.isBlank(accountDto.getOutPassword())) {
+            throw new ServiceException("请确保已填写财务账号和密码");
+        }
+        if (!login(accountDto)) {
+            throw new ServiceException("财务账户或者密码不正确");
+        }
+        String result = K3cloudUtils.save(k3CloudSave.getFormId(), k3CloudSave.getContent());
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(result);
+        if ("TRUE".equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
+            String billNo = jsonObject.getJSONObject("Result").getString("Number");
+            Map<String, Object> root = Maps.newLinkedHashMap();
+            root.put("CreateOrgId", 0);
+            root.put("Numbers", billNo);
+            String content = ObjectMapperUtils.writeValueAsString(root);
+            K3cloudUtils.submit(k3CloudSave.getFormId(), content);
+            if (k3CloudSave.getAutoAudit()) {
+                K3cloudUtils.audit(k3CloudSave.getFormId(), content);
+            }
+            k3CloudSave.setBillNo(billNo);
+            return k3CloudSave;
+        } else {
+            throw new ServiceException("金蝶开单失败：" + result);
+        }
+    }
 
     // Save
-//    public static K3CloudSaveExtend save(K3CloudSaveExtend k3CloudSaveExtend) {
-//        AccountDto accountDto = k3CloudSaveExtend.getAccount();
-//        if (StringUtils.isBlank(accountDto.getOutId()) || StringUtils.isBlank(accountDto.getOutPassword())) {
-//            throw new ServiceException("请确保已填写财务账号和密码");
-//        }
-//        if (!login(accountDto)) {
-//            throw new ServiceException("财务账户或者密码不正确");
-//        }
-//        String result = K3cloudUtils.save(k3CloudSaveExtend.getFormId(), k3CloudSaveExtend.getContent());
-//        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(result);
-//        if (BoolEnum.TRUE.getValue().toString().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
-//            String billNo = jsonObject.getJSONObject("Result").getString("Number");
-//            Map<String, Object> root = Maps.newLinkedHashMap();
-//            root.put("CreateOrgId", 0);
-//            root.put("Numbers", billNo);
-//            String content = ObjectMapperUtils.writeValueAsString(root);
-//            K3cloudUtils.submit(k3CloudSaveExtend.getFormId(), content);
-//            K3cloudUtils.audit(k3CloudSaveExtend.getFormId(), content);
-//            k3CloudSaveExtend.setBillNo(billNo);
-//            String nextBillNo = k3CloudSaveExtend.getNextBillNo();
-//            root = Maps.newLinkedHashMap();
-//            root.put("CreateOrgId", 0);
-//            root.put("Numbers", nextBillNo);
-//            k3CloudSaveExtend.setBillNo(k3CloudSaveExtend.getBillNo() + "," + "应收单:" + nextBillNo);
-//            content = ObjectMapperUtils.writeValueAsString(root);
-//            K3cloudUtils.submit(k3CloudSaveExtend.getNextFormId(), content);
-//            K3cloudUtils.audit(k3CloudSaveExtend.getNextFormId(), content);
-//            return k3CloudSaveExtend;
-//        } else {
-//            throw new ServiceException("金蝶开单失败：" + result);
-//        }
-//    }
+    public static K3CloudSaveExtend save(K3CloudSaveExtend k3CloudSaveExtend) {
+        AccountDto accountDto = k3CloudSaveExtend.getAccount();
+        if (StringUtils.isBlank(accountDto.getOutId()) || StringUtils.isBlank(accountDto.getOutPassword())) {
+            throw new ServiceException("请确保已填写财务账号和密码");
+        }
+        if (!login(accountDto)) {
+            throw new ServiceException("财务账户或者密码不正确");
+        }
+        String result = K3cloudUtils.save(k3CloudSaveExtend.getFormId(), k3CloudSaveExtend.getContent());
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(result);
+        if ("TRUE".equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
+            String billNo = jsonObject.getJSONObject("Result").getString("Number");
+            Map<String, Object> root = Maps.newLinkedHashMap();
+            root.put("CreateOrgId", 0);
+            root.put("Numbers", billNo);
+            String content = ObjectMapperUtils.writeValueAsString(root);
+            K3cloudUtils.submit(k3CloudSaveExtend.getFormId(), content);
+            K3cloudUtils.audit(k3CloudSaveExtend.getFormId(), content);
+            k3CloudSaveExtend.setBillNo(billNo);
+            String nextBillNo = k3CloudSaveExtend.getNextBillNo();
+            root = Maps.newLinkedHashMap();
+            root.put("CreateOrgId", 0);
+            root.put("Numbers", nextBillNo);
+            k3CloudSaveExtend.setBillNo(k3CloudSaveExtend.getBillNo() + "," + "应收单:" + nextBillNo);
+            content = ObjectMapperUtils.writeValueAsString(root);
+            K3cloudUtils.submit(k3CloudSaveExtend.getNextFormId(), content);
+            K3cloudUtils.audit(k3CloudSaveExtend.getNextFormId(), content);
+            return k3CloudSaveExtend;
+        } else {
+            throw new ServiceException("金蝶开单失败：" + result);
+        }
+    }
 
     public static Map<String, Object> getMap(String key, Object value) {
         Map<String, Object> map = Maps.newHashMap();

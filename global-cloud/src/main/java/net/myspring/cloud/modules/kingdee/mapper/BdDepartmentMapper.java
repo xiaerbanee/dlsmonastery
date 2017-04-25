@@ -15,4 +15,5 @@ public interface BdDepartmentMapper {
     BdDepartment findByCustomerId(@Param("customerId") String customerId);
 
     List<BdDepartment> findAll();
+
 }

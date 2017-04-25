@@ -26,4 +26,8 @@ public class BdCustomerService {
         return bdCustomerMapper.findByName(name);
     }
 
+    public List<String> findName(){
+        return bdCustomerMapper.findName();
+    }
+
 }
