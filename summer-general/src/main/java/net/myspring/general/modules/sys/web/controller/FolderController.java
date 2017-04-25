@@ -51,7 +51,7 @@ public class FolderController {
         return restResponse;
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public FolderForm findOne(FolderForm folderForm){
         folderForm=folderService.findForm(folderForm.getId());
         folderForm.setFolderList(folderService.findAll(SecurityUtils.getAccountId()));

@@ -29,8 +29,8 @@ public class JobController {
         return page;
     }
 
-    @RequestMapping(value = "findOne")
-    public JobForm findOne(JobForm jobForm){
+    @RequestMapping(value = "findForm")
+    public JobForm findForm(JobForm jobForm){
         jobForm=jobService.findForm(jobForm);
         return jobForm;
     }

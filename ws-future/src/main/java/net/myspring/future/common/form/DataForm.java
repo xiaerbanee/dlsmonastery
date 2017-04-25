@@ -1,5 +1,6 @@
 package net.myspring.future.common.form;
 
+import net.myspring.future.common.utils.SecurityUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.time.LocalDateTime;
@@ -37,5 +38,9 @@ public class DataForm<T> extends IdForm<T> {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getCompanyId() {
+        return SecurityUtils.getCompanyId();
     }
 }

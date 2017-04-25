@@ -79,6 +79,7 @@ public class FolderFileService {
                     if(preview != null) {
                         folderFile.setMongoPreviewId(StringUtils.toString(preview.getId()));
                     }
+                    folderFile.setCompanyId(SecurityUtils.getCompanyId());
                     folderFileMapper.save(folderFile);
                     list.add(folderFile);
                 }

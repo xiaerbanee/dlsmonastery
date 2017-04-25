@@ -49,7 +49,7 @@ public class KingdeeBookController {
         return page;
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public KingdeeBookDto findOne(String id){
         KingdeeBookDto kingdeeBookDto = kingdeeBookService.findOne(id);
         return kingdeeBookDto;

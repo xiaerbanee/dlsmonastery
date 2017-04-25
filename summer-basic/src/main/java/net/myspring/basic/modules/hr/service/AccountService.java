@@ -156,7 +156,12 @@ public class AccountService {
         List<String> authorityList = Lists.newArrayList();
         String positionId=SecurityUtils.getPositionId();
         if (StringUtils.isNotBlank(positionId)) {
-            List<Permission> permissionList=permissionMapper.findByPositionId(positionId);
+            List<Permission> permissionList=Lists.newArrayList();
+            if(Const.HR_ACCOUNT_ADMIN_LIST.contains(SecurityUtils.getAccountId())){
+                permissionList=permissionMapper.findAllEnabled();
+            }else {
+                permissionList=permissionMapper.findByPositionId(positionId);
+            }
             authorityList= CollectionUtil.extractToList(permissionList,"permission");
         }
         return authorityList;

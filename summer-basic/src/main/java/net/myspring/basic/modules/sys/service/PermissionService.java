@@ -130,30 +130,37 @@ public class PermissionService {
         Set<String> permissionIdSet = Sets.newHashSet(permissionIds);
         TreeNode treeNode = new TreeNode("0", "权限列表");
         List<BackendModule> backendModuleList = backendModuleMapper.findByPositionId(SecurityUtils.getPositionId());
+        List<Backend> backendList=backendMapper.findByIds(CollectionUtil.extractToList(backendModuleList,"backendId"));
+        Map<String,List<BackendModule>> backendModuleMap=CollectionUtil.extractToMapList(backendModuleList,"backendId");
         List<MenuCategory> menuCategories = menuCategoryMapper.findByBackendModuleIds(CollectionUtil.extractToList(backendModuleList, "id"));
         Map<String, List<MenuCategory>> menuCategoryMap = CollectionUtil.extractToMapList(menuCategories, "backendModuleId");
         List<Menu> menus = menuMapper.findByPermissionIsNotEmpty();
         Map<String, List<Menu>> menuMap = CollectionUtil.extractToMapList(menus, "menuCategoryId");
         List<Permission> permissions = permissionMapper.findAllEnabled();
         Map<String, List<Permission>> permissionMap = CollectionUtil.extractToMapList(permissions, "menuId");
-        for (BackendModule backendModule : backendModuleList) {
-            TreeNode backendModuleTree = new TreeNode("p" + backendModule.getId(), backendModule.getName());
-            for (MenuCategory menuCategory : menuCategoryMap.get(backendModule.getId())) {
-                TreeNode menuCategoryTree = new TreeNode("c" + menuCategory.getId(), menuCategory.getName());
-                List<Menu> menuList = menuMap.get(menuCategory.getId());
-                if(menuList!=null){
-                    for (Menu menu : menuList) {
-                        TreeNode menuTree = new TreeNode("m" + menu.getId(), menu.getName());
-                        for (Permission permission : permissionMap.get(menu.getId())) {
-                            TreeNode permissionTree = new TreeNode(permission.getId(), permission.getName());
-                            menuTree.getChildren().add(permissionTree);
+        for(Backend backend:backendList){
+            TreeNode backendTree = new TreeNode("b" + backend.getId(), backend.getName());
+            List<BackendModule> backendModules=backendModuleMap.get(backend.getId());
+            for (BackendModule backendModule : backendModules) {
+                TreeNode backendModuleTree = new TreeNode("p" + backendModule.getId(), backendModule.getName());
+                for (MenuCategory menuCategory : menuCategoryMap.get(backendModule.getId())) {
+                    TreeNode menuCategoryTree = new TreeNode("c" + menuCategory.getId(), menuCategory.getName());
+                    List<Menu> menuList = menuMap.get(menuCategory.getId());
+                    if(menuList!=null){
+                        for (Menu menu : menuList) {
+                            TreeNode menuTree = new TreeNode("m" + menu.getId(), menu.getName());
+                            for (Permission permission : permissionMap.get(menu.getId())) {
+                                TreeNode permissionTree = new TreeNode(permission.getId(), permission.getName());
+                                menuTree.getChildren().add(permissionTree);
+                            }
+                            menuCategoryTree.getChildren().add(menuTree);
                         }
-                        menuCategoryTree.getChildren().add(menuTree);
+                        backendModuleTree.getChildren().add(menuCategoryTree);
                     }
-                    backendModuleTree.getChildren().add(menuCategoryTree);
                 }
+                backendTree.getChildren().add(backendModuleTree);
             }
-            treeNode.getChildren().add(backendModuleTree);
+            treeNode.getChildren().add(backendTree);
         }
         treeNode.setChecked(Lists.newArrayList(permissionIdSet));
         return treeNode;

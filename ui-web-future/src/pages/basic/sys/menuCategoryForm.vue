@@ -67,7 +67,7 @@
           })
         }
       },created(){
-        axios.get('/api/basic/sys/menuCategory/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/sys/menuCategory/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
       }

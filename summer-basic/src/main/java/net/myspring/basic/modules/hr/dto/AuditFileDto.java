@@ -14,7 +14,7 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String title;
     private String processStatus;
     private String memo;
-    private String processTypeName;
+    private String processTypeId;
     private String areaId;
     private String officeId;
 
@@ -23,6 +23,9 @@ public class AuditFileDto extends DataDto<AuditFile> {
 
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
+
+    @CacheInput(inputKey = "processTypes",inputInstance = "processTypeId",outputInstance = "name")
+    private String processTypeName;
 
     public String getAreaId() {
         if(StringUtils.isBlank(areaId)&&StringUtils.isNotBlank(officeId)){

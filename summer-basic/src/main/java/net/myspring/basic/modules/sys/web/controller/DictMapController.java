@@ -37,8 +37,8 @@ public class DictMapController {
         return page;
     }
 
-    @RequestMapping(value = "findOne")
-    public DictMapForm findOne(DictMapForm dictMapForm) {
+    @RequestMapping(value = "findForm")
+    public DictMapForm findForm(DictMapForm dictMapForm) {
         dictMapForm=dictMapService.findForm(dictMapForm);
         dictMapForm.setCategoryList(dictMapService.findDistinctCategory());
         return dictMapForm;

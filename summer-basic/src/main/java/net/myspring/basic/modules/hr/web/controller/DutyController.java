@@ -40,7 +40,7 @@ public class DutyController {
         return getDutyDtoList();
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public DutyForm detail(DutyForm dutyForm) {
         dutyForm.setItem(dutyService.findDutyItem(dutyForm.getId(), dutyForm.getDutyType()));
         dutyForm.setBoolMap(BoolEnum.getMap());

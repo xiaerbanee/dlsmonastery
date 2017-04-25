@@ -62,7 +62,7 @@
       handleCheckChange(data, checked, indeterminate) {
       },
     }, created(){
-      axios.get('/api/basic/hr/job/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+      axios.get('/api/basic/hr/job/findForm', {params: {id: this.$route.query.id}}).then((response) => {
         util.copyValue(response.data, this.inputForm);
       })
     }

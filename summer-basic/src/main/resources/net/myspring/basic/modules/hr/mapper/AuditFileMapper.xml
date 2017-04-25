@@ -4,12 +4,11 @@
 
     <select id="findPage" resultType="AuditFileDto">
         SELECT
-        t1.*,t2.name as 'processTypeName',t3.office_id
-        FROM hr_audit_file t1,hr_account t3,hr_office office,sys_process_type t2
+        t1.*,t3.office_id
+        FROM hr_audit_file t1,hr_account t3,sys_office office
         WHERE
         t1.created_by=t3.id
         and t3.office_id=office.id
-        and t1.process_type_id=t2.id
         AND t1.enabled=1
         <include refid="net.myspring.basic.modules.sys.mapper.OfficeMapper.officeFilter" />
         <if test="p.createdDateStart !=null">
@@ -17,19 +16,6 @@
         </if>
         <if test="p.createdDateEnd !=null">
             and t1.created_date &lt;=#{p.createdDateEnd}
-        </if>
-        <if test="p.positionId !=null || p.processflowName !=null">
-            and t1.process_flow_id in(
-            select id
-            from sys_process_flow
-            where 1=1
-            <if test="p.positionId !=null">
-                and  position_id=#{p.positionId}
-            </if>
-            <if test="p.processflowName !=null">
-                and `name`=#{p.processflowName}
-            </if>
-            )
         </if>
         <if test="p.processTypeId !=null">
             and t1.process_type_id =#{p.processTypeId}

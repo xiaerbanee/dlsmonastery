@@ -31,7 +31,7 @@ public class ProductMonthPriceController {
     public String getFormProperty() {
         return null;
     }
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public String findOne(ProductMonthPrice productMonthPrice){
         return null;
     }

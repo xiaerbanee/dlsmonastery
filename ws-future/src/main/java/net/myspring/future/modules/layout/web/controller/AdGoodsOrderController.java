@@ -55,7 +55,7 @@ public class  AdGoodsOrderController {
         return null;
     }
 
-    @RequestMapping(value = "findOne", method = RequestMethod.GET)
+    @RequestMapping(value = "findForm", method = RequestMethod.GET)
     public String findOne(AdGoodsOrder adGoodsOrder) {
 
         return null;

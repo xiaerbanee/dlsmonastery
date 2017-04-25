@@ -34,7 +34,7 @@ public class DutyFreeController {
     }
 
     @RequestMapping(value="findOne")
-    public DutyFreeForm findOne(DutyFreeForm dutyFreeForm){
+    public DutyFreeForm findForm(DutyFreeForm dutyFreeForm){
         dutyFreeForm.setDateList(DutyDateTypeEnum.getList());
         return dutyFreeForm;
     }

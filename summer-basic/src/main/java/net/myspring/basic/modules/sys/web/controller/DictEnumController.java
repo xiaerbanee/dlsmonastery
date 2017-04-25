@@ -44,8 +44,8 @@ public class DictEnumController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findOne")
-    public DictEnumForm findOne(DictEnumForm dictEnumForm){
+    @RequestMapping(value = "findForm")
+    public DictEnumForm findForm(DictEnumForm dictEnumForm){
         dictEnumForm=dictEnumService.findForm(dictEnumForm);
         dictEnumForm.setCategoryList(dictEnumService.findDistinctCategory());
         return dictEnumForm;

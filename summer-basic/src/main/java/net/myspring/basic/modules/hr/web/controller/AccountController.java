@@ -76,8 +76,8 @@ public class AccountController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findOne")
-    public AccountForm findOne(AccountForm accountForm) {
+    @RequestMapping(value = "findForm")
+    public AccountForm findForm(AccountForm accountForm) {
         accountForm = accountService.findForm(accountForm);
         accountForm.setPositionDtoList(positionService.findAll());
         accountForm.setBoolMap( BoolEnum.getMap());
