@@ -11,15 +11,12 @@ import java.util.List;
 
 @Entity
 @Table(name="sys_menu")
-public class Menu extends CompanyEntity<Menu> {
-    private String category;
+public class Menu extends DataEntity<Menu> {
     private String name;
-    private String href;
-    private String icon;
     private Integer sort;
-    private boolean mobile;
+    private Boolean mobile;
     private Integer version = 0;
-    private boolean visible;
+    private Boolean visible;
     private String mobileHref;
     private String mobileIcon;
     private String menuCategoryId;
@@ -33,36 +30,12 @@ public class Menu extends CompanyEntity<Menu> {
         this.code = code;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getHref() {
-        return href;
-    }
-
-    public void setHref(String href) {
-        this.href = href;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public Integer getSort() {

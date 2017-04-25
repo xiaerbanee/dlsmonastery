@@ -1,12 +1,16 @@
 package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.modules.hr.client.ProcessTypeClient;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.mapper.AuditFileMapper;
+import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
+import net.myspring.general.modules.sys.dto.ActivitiAuthenticatedDto;
+import net.myspring.general.modules.sys.form.ActivitiAuthenticatedForm;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,10 @@ public class AuditFileService {
     private OfficeMapper officeMapper;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private ActivitiClient activitiClient;
+    @Autowired
+    private ProcessTypeClient processTypeClient;
 
 
     public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery) {
@@ -46,7 +54,23 @@ public class AuditFileService {
             auditFileForm = BeanUtil.map(auditFile, AuditFileForm.class);
             cacheUtils.initCacheInput(auditFileForm);
         }
+        auditFileForm.setProcessTypeList(processTypeClient.findAll());
         return auditFileForm;
+    }
+
+    public AuditFile save(AuditFileForm auditFileForm) {
+        AuditFile auditFile;
+        if (auditFileForm.isCreate()) {
+            String businessKey = auditFileForm.getId();
+            ActivitiAuthenticatedDto authenticated = activitiClient.authenticated(new ActivitiAuthenticatedForm(auditFileForm.getId(),"文件审批",businessKey,auditFileForm.getProcessTypeId()));
+            auditFileForm.setProcessStatus(authenticated.getProcessStatus());
+            auditFileForm.setProcessFlowId(authenticated.getProcessFlowId());
+            auditFileForm.setPositionId(authenticated.getPositionId());
+            auditFile=BeanUtil.map(auditFileForm,AuditFile.class);
+            auditFileMapper.save(auditFile);
+            return auditFile;
+        }
+        return null;
     }
 
     public void logicDeleteOne(String id) {

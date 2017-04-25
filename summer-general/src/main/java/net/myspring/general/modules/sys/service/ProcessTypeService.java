@@ -148,4 +148,9 @@ public class ProcessTypeService {
         return page;
     }
 
+    public List<ProcessTypeDto>  findAll(){
+        List<ProcessType> processTypeList=processTypeMapper.findAllEnabled();
+        return BeanUtil.map(processTypeList,ProcessTypeDto.class);
+    }
+
 }

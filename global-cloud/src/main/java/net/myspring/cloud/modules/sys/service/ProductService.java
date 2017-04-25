@@ -5,7 +5,7 @@ import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.HandSonTableUtils;
-import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
+import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.sys.domain.Product;
 import net.myspring.cloud.modules.sys.dto.ProductDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
@@ -13,9 +13,7 @@ import net.myspring.cloud.modules.sys.mapper.ProductMapper;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

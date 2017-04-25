@@ -7,7 +7,7 @@
           <el-col :span="6">
             <el-form-item :label="$t('auditFileForm.processTypeName')" prop="processTypeId">
               <el-select v-model="inputForm.processTypeId" filterable clearable :placeholder="$t('auditFileForm.inputWord')">
-                <el-option v-for="type in formProperty.processTypes" :key="type.id" :label="type.name" :value="type.id"></el-option>
+                <el-option v-for="type in inputForm.processTypeList" :key="type.id" :label="type.name" :value="type.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('auditFileForm.title')" prop="title">
@@ -45,7 +45,8 @@
         submitDisabled:false,
         formProperty:{},
         fileList:[],
-        inputForm:{
+        inputForm:{},
+        submitData:{
           id:'',
           processTypeId:'',
           title:'',
@@ -69,7 +70,8 @@
           console.log( this.inputForm.attachment)
           if (valid) {
             this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
-            axios.post('/api/basic/hr/auditFile/save', qs.stringify(this.inputForm)).then((response)=> {
+            util.copyValue(this.inputForm, this.submitData);
+            axios.post('/api/basic/hr/auditFile/save', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -85,10 +87,6 @@
             this.submitDisabled = false;
           }
         })
-      },getFormProperty(){
-        axios.get('/api/basic/hr/auditFile/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
       },
       handlePreview(file) {
         window.open(file.url);
@@ -98,9 +96,9 @@
         this.fileList = fileList;
       }
     },created(){
-      this.getFormProperty();
      axios.get('/api/basic/hr/auditFile/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        util.copyValue(response.data,this.inputForm);
+         this.inputForm = response.data;
+         console.log(this.inputForm)
       })
     }
   }

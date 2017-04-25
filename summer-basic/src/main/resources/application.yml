@@ -26,6 +26,12 @@ eureka:
 
 security:
   oauth2:
+    client:
+      accessTokenUri: http://localhost:1200/uaa/oauth/token
+      clientId: summer-client
+      clientSecret: summer-client@123456
+      grant-type: client_credentials
+      scope: server
     resource:
       jwt:
         keyValue: |

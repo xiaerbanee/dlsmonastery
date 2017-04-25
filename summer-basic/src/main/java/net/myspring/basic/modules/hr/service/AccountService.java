@@ -1,13 +1,10 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.common.dto.NameValueDto;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
-import net.myspring.basic.common.utils.InitDomainUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
-import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
@@ -50,9 +47,6 @@ public class AccountService {
     @Autowired
     private EmployeeManager employeeManager;
 
-    @Autowired
-    private InitDomainUtils initDomainUtils;
-
     public Account findOne(String id) {
         Account account = accountManager.findOne(id);
         return account;
@@ -61,9 +55,8 @@ public class AccountService {
     public AccountForm findForm(AccountForm accountForm) {
         if(!accountForm.isCreate()){
             Account account = accountMapper.findOne(accountForm.getId());
-            List<NameValueDto> nameValueDtoList = accountMapper.findAccountOfficeByIds(Lists.newArrayList(account.getId()));
-            initDomainUtils.initChildIdList(account,Office.class,nameValueDtoList);
             accountForm = BeanUtil.map(account, AccountForm.class);
+            accountForm.setOfficeIdList(accountMapper.findAccountOfficeByIds(Lists.newArrayList(account.getId())));
             cacheUtils.initCacheInput(accountForm);
         }
         return accountForm;
@@ -78,8 +71,6 @@ public class AccountService {
 
     public Page<AccountDto> findPage(Pageable pageable, AccountQuery accountQuery) {
         Page<AccountDto> accountDtoPage = accountMapper.findPage(pageable, accountQuery);
-        List<NameValueDto> nameValueDtoList = accountMapper.findAccountOfficeByIds(CollectionUtil.extractToList(accountDtoPage.getContent(), "id"));
-        initDomainUtils.initChildIdList(accountDtoPage.getContent(),Office.class,nameValueDtoList);
         cacheUtils.initCacheInput(accountDtoPage.getContent());
         return accountDtoPage;
     }

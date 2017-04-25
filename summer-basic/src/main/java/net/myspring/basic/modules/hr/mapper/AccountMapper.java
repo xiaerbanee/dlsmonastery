@@ -42,5 +42,5 @@ public interface AccountMapper extends MyMapper<Account,String> {
 
     List<Account> findByLoginNameList(List<String> loginNames);
 
-    List<NameValueDto> findAccountOfficeByIds(List<String> accountId);
+    List<String> findAccountOfficeByIds(List<String> accountId);
 }

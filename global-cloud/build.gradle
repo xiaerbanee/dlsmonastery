@@ -48,7 +48,10 @@ dependencies {
 	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.5.0'
 	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+
 	compile group: 'org.json', name: 'json', version: '20160810'
+	compile 'net.sf.json-lib:json-lib:2.4:JDK15'
 }
 
 dependencyManagement {

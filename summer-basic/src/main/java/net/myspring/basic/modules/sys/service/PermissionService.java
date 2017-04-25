@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.dto.NameValueDto;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.InitDomainUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.sys.domain.*;
@@ -45,8 +44,6 @@ public class PermissionService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private InitDomainUtils initDomainUtils;
-    @Autowired
     private BackendMapper backendMapper;
     @Autowired
     private BackendModuleMapper backendModuleMapper;
@@ -71,7 +68,6 @@ public class PermissionService {
             Permission permission = permissionManager.findOne(permissionForm.getId());
             permissionForm = BeanUtil.map(permission, PermissionForm.class);
             List<NameValueDto> nameValueDtoList = permissionMapper.findNameValueByPositionId(Lists.newArrayList(permission.getId()));
-            initDomainUtils.initChildIdList(Lists.newArrayList(permissionForm), Position.class, nameValueDtoList);
             cacheUtils.initCacheInput(permissionForm);
         }
         return permissionForm;
