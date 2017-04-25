@@ -86,9 +86,6 @@ public class DutyAnnualService {
             Map<String,Account> accountMap=CollectionUtil.extractToMap(accountList,"loginName");
             for(DutyAnnualDto dutyAnnualDto:dutyAnnualDtoList){
                 Account account=accountMap.get(dutyAnnualDto.getLoginName());
-                if(account==null&&!dutyAnnualDto.getEmployeeName().equals(account.getEmployee().getName())){
-                    break;
-                }
                 dutyAnnualDto.setEmployeeId(account.getEmployeeId());
                 dutyAnnualDto.setAnnualYear(annualYear.substring(0,annualYear.indexOf("-")));
                 dutyAnnualDto.setRemarks(remarks);

@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
+import net.myspring.basic.modules.hr.mapper.PositionMapper;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.domain.Permission;
@@ -144,28 +145,22 @@ public class AccountService {
     }
 
     public List<String> getAuthorityList() {
-        List<String> authorityList = Lists.newArrayList();
-        String positionId=SecurityUtils.getPositionId();
-        if (StringUtils.isNotBlank(positionId)) {
-            List<Permission> permissionList=Lists.newArrayList();
-            if(Const.HR_ACCOUNT_ADMIN_LIST.contains(SecurityUtils.getAccountId())){
-                permissionList=permissionMapper.findAllEnabled();
-            }else {
-                permissionList=permissionMapper.findByPositionId(positionId);
-            }
-            authorityList= CollectionUtil.extractToList(permissionList,"permission");
+        String positionId = SecurityUtils.getPositionId();
+        List<String> authorityList;
+        List<Permission> permissionList;
+        if(Const.HR_ACCOUNT_ADMIN_LIST.contains(SecurityUtils.getAccountId())){
+            permissionList=permissionMapper.findAllEnabled();
+        }else {
+            permissionList=permissionMapper.findByPositionId(positionId);
         }
+        authorityList= CollectionUtil.extractToList(permissionList,"permission");
         return authorityList;
     }
 
-    public AccountDto getAccount(){
-        String accountId=SecurityUtils.getAccountId();
-        if(StringUtils.isNotBlank(accountId)){
-            AccountDto accountDto=BeanUtil.map(accountMapper.findOne(accountId),AccountDto.class);
-            return accountDto;
-        }else {
-            return null;
-        }
+    public AccountDto getAccountDto(String accountId){
+        AccountDto accountDto=BeanUtil.map(accountMapper.findOne(accountId),AccountDto.class);
+        cacheUtils.initCacheInput(accountDto);
+        return accountDto;
     }
 
 }

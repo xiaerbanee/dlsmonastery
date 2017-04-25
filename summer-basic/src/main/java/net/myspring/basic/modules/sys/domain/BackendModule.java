@@ -19,9 +19,7 @@ public class BackendModule extends DataEntity<BackendModule> {
     private Backend backend;
     private String backendId;
     private String code;
-    private List<PositionModule> positionModuleList = Lists.newArrayList();
     private List<String> positionModuleIdList = Lists.newArrayList();
-    private List<MenuCategory> menuCategoryList = Lists.newArrayList();
     private List<String> menuCategoryIdList = Lists.newArrayList();
 
     public String getCode() {
@@ -64,28 +62,12 @@ public class BackendModule extends DataEntity<BackendModule> {
         this.backendId = backendId;
     }
 
-    public List<PositionModule> getPositionModuleList() {
-        return positionModuleList;
-    }
-
-    public void setPositionModuleList(List<PositionModule> positionModuleList) {
-        this.positionModuleList = positionModuleList;
-    }
-
     public List<String> getPositionModuleIdList() {
         return positionModuleIdList;
     }
 
     public void setPositionModuleIdList(List<String> positionModuleIdList) {
         this.positionModuleIdList = positionModuleIdList;
-    }
-
-    public List<MenuCategory> getMenuCategoryList() {
-        return menuCategoryList;
-    }
-
-    public void setMenuCategoryList(List<MenuCategory> menuCategoryList) {
-        this.menuCategoryList = menuCategoryList;
     }
 
     public List<String> getMenuCategoryIdList() {

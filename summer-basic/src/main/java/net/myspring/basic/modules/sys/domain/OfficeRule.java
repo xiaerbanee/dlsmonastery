@@ -13,7 +13,7 @@ import javax.persistence.Table;
 public class OfficeRule extends TreeEntity<OfficeRule> {
     private String name;
     private String code;
-    private boolean hasPoint;
+    private Boolean hasPoint;
     private Integer value;
     private Integer type;
 

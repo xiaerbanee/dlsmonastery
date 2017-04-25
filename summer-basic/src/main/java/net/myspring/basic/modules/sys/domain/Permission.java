@@ -15,7 +15,6 @@ public class Permission extends CompanyEntity<Permission> {
     private String name;
     private String permission;
     private Integer version = 0;
-    private Menu menu;
     private String menuId;
 
     private String url;
@@ -43,14 +42,6 @@ public class Permission extends CompanyEntity<Permission> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Menu getMenu() {
-        return menu;
-    }
-
-    public void setMenu(Menu menu) {
-        this.menu = menu;
     }
 
     public String getMenuId() {

@@ -112,10 +112,11 @@ public class AccountController {
         return authorityList;
     }
 
-    @RequestMapping(value = "getAccountMessage")
-    public Map<String, Object> getAccount() {
+    @RequestMapping(value = "getAccountInfo")
+    public Map<String, Object> getAccountInfo() {
+        String accountId = SecurityUtils.getAccountId();
         Map<String, Object> map = Maps.newHashMap();
-        AccountDto accountDto = accountService.getAccount();
+        AccountDto accountDto = accountService.getAccountDto(accountId);
         List<String> authorityList = accountService.getAuthorityList();
         BackendMenuDto menus = menuService.getMenuMap(SecurityUtils.getAccountId());
         map.put("account", accountDto);
@@ -127,7 +128,7 @@ public class AccountController {
     @RequestMapping(value = "/home")
     public Map<String, Object> home() {
         Map<String, Object> map = Maps.newHashMap();
-        AccountDto accountDto = accountService.getAccount();
+        AccountDto accountDto = accountService.getAccountDto(SecurityUtils.getAccountId());
         cacheUtils.initCacheInput(accountDto);
         LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
         List<DutyDto> dutyList = dutyService.findByAuditable(accountDto.getId(), AuditTypeEnum.APPLY.getValue(), lastMonth);

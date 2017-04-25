@@ -12,7 +12,6 @@ public class DutyTrip extends AuditEntity<DutyTrip> {
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private Integer version = 0;
-    private Employee employee;
     private String employeeId;
 
     public LocalDate getDateStart() {
@@ -37,14 +36,6 @@ public class DutyTrip extends AuditEntity<DutyTrip> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     public String getEmployeeId() {

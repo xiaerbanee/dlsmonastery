@@ -165,7 +165,7 @@ public class MenuService {
         backendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
         Map<String, List<BackendModule>> backendModuleMap = Maps.newHashMap();
         for (Backend backend : backendMenuMap.keySet()) {
-            backendModuleMap.put(backend.getId(), backend.getBackendModuleList());
+            //backendModuleMap.put(backend.getId(), backend.getBackendModuleList());
         }
         backendMenuDto.setBackendModuleMap(backendModuleMap);
         return backendMenuDto;
@@ -227,25 +227,25 @@ public class MenuService {
             Map<String, List<Menu>> menuMap = CollectionUtil.extractToMapList(menuList, "menuCategoryId");
             List<MenuCategory> menuCategoryList = menuCategoryMapper.findByIds(Lists.newArrayList(menuMap.keySet()));
             for (MenuCategory menuCategory : menuCategoryList) {
-                menuCategory.setMenuList(menuMap.get(menuCategory.getId()));
+               // menuCategory.setMenuList(menuMap.get(menuCategory.getId()));
             }
             Map<String, List<MenuCategory>> menuCategoryMap = CollectionUtil.extractToMapList(menuCategoryList, "backendModuleId");
             if (CollectionUtil.isNotEmpty(menuCategoryMap)) {
                 List<BackendModule> backendModuleList = backendModuleMapper.findByIds(Lists.newArrayList(menuCategoryMap.keySet()));
                 for (BackendModule backendModule : backendModuleList) {
-                    backendModule.setMenuCategoryList(menuCategoryMap.get(backendModule.getId()));
+                    //backendModule.setMenuCategoryList(menuCategoryMap.get(backendModule.getId()));
                 }
                 Map<String, List<BackendModule>> backendModuleMap = CollectionUtil.extractToMapList(backendModuleList, "backendId");
                 if (CollectionUtil.isNotEmpty(backendModuleMap)) {
                     List<Backend> backendList = backendMapper.findByIds(Lists.newArrayList(backendModuleMap.keySet()));
                     for (Backend backend : backendList) {
-                        backend.setBackendModuleList(backendModuleMap.get(backend.getId()));
+                      //  backend.setBackendModuleList(backendModuleMap.get(backend.getId()));
                         List<Menu> menus = Lists.newArrayList();
-                        for (BackendModule backendModule : backend.getBackendModuleList()) {
-                            for (MenuCategory menuCategory : backendModule.getMenuCategoryList()) {
-                                menus.addAll(menuCategory.getMenuList());
-                            }
-                        }
+                      //  for (BackendModule backendModule : backend.getBackendModuleList()) {
+                      //      for (MenuCategory menuCategory : backendModule.getMenuCategoryList()) {
+                      //            menus.addAll(menuCategory.getMenuList());
+                      //      }
+                      //  }
                         backendMenuMap.put(backend, menus);
                     }
                 }

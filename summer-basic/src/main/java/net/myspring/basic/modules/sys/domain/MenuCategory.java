@@ -17,7 +17,7 @@ public class MenuCategory extends DataEntity<MenuCategory> {
     private Integer version = 0;
     private String code;
     private String backendModuleId;
-    private List<Menu> menuList = Lists.newArrayList();
+    private List<String> menuIdList= Lists.newArrayList();
 
     public String getName() {
         return name;
@@ -67,11 +67,11 @@ public class MenuCategory extends DataEntity<MenuCategory> {
         this.backendModuleId = backendModuleId;
     }
 
-    public List<Menu> getMenuList() {
-        return menuList;
+    public List<String> getMenuIdList() {
+        return menuIdList;
     }
 
-    public void setMenuList(List<Menu> menuList) {
-        this.menuList = menuList;
+    public void setMenuIdList(List<String> menuIdList) {
+        this.menuIdList = menuIdList;
     }
 }

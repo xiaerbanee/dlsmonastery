@@ -17,11 +17,8 @@ import java.util.Map;
  * Created by liuj on 2017/3/19.
  */
 public class AccountDto extends DataDto<Account> {
-
     private String loginName;
     private String type;
-
-
     private String positionId;
     private String officeId;
     private String leaderId;
@@ -29,7 +26,6 @@ public class AccountDto extends DataDto<Account> {
     private String companyId;
     private boolean viewReport;
     private List<String> officeIdList= Lists.newArrayList();
-
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "dataScope")
     private Integer dataScope;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
