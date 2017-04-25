@@ -11,7 +11,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name="sys_office_rule")
 public class OfficeRule extends TreeEntity<OfficeRule> {
-
     private String name;
     private String code;
     private boolean hasPoint;

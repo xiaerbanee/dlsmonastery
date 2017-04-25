@@ -15,8 +15,6 @@ import javax.persistence.Table;
 public class Company extends CompanyEntity<Company> {
     private String name;
     private String code;
-    private String outDbId;
-    private String outDbName;
     private String brand;
 
     public String getName() {
@@ -33,22 +31,6 @@ public class Company extends CompanyEntity<Company> {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getOutDbId() {
-        return outDbId;
-    }
-
-    public void setOutDbId(String outDbId) {
-        this.outDbId = outDbId;
-    }
-
-    public String getOutDbName() {
-        return outDbName;
-    }
-
-    public void setOutDbName(String outDbName) {
-        this.outDbName = outDbName;
     }
 
     public String getBrand() {

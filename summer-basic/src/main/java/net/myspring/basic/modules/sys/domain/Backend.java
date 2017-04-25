@@ -15,11 +15,10 @@ import com.google.common.collect.Lists;
 public class Backend extends CompanyEntity<Backend> {
     private String name;
     private Integer version = 0;
-    private List<PositionModule> positionBackendList = Lists.newArrayList();
-    private List<String> positionBackendIdList = Lists.newArrayList();
+    private List<PositionModule> positionModuleList = Lists.newArrayList();
+    private List<String> positionModuleIdList = Lists.newArrayList();
     private List<BackendModule> backendModuleList = Lists.newArrayList();
     private List<String> backendModuleIdList = Lists.newArrayList();
-
     public String getName() {
         return name;
     }
@@ -36,20 +35,20 @@ public class Backend extends CompanyEntity<Backend> {
         this.version = version;
     }
 
-    public List<PositionModule> getPositionBackendList() {
-        return positionBackendList;
+    public List<PositionModule> getPositionModuleList() {
+        return positionModuleList;
     }
 
-    public void setPositionBackendList(List<PositionModule> positionBackendList) {
-        this.positionBackendList = positionBackendList;
+    public void setPositionModuleList(List<PositionModule> positionModuleList) {
+        this.positionModuleList = positionModuleList;
     }
 
-    public List<String> getPositionBackendIdList() {
-        return positionBackendIdList;
+    public List<String> getPositionModuleIdList() {
+        return positionModuleIdList;
     }
 
-    public void setPositionBackendIdList(List<String> positionBackendIdList) {
-        this.positionBackendIdList = positionBackendIdList;
+    public void setPositionModuleIdList(List<String> positionModuleIdList) {
+        this.positionModuleIdList = positionModuleIdList;
     }
 
     public List<BackendModule> getBackendModuleList() {

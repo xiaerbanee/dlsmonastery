@@ -18,21 +18,12 @@ public class Office extends TreeEntity<Office> {
     private Integer version = 0;
     private String type;
     private BigDecimal point;
-    private String dingId;
     private Integer level;
     private String jointType;
     private String tag;
     private BigDecimal taskPoint;
     private Integer sort;
     private String officeRuleId;
-
-    public String getOfficeRuleId() {
-        return officeRuleId;
-    }
-
-    public void setOfficeRuleId(String officeRuleId) {
-        this.officeRuleId = officeRuleId;
-    }
 
     public String getName() {
         return name;
@@ -64,14 +55,6 @@ public class Office extends TreeEntity<Office> {
 
     public void setPoint(BigDecimal point) {
         this.point = point;
-    }
-
-    public String getDingId() {
-        return dingId;
-    }
-
-    public void setDingId(String dingId) {
-        this.dingId = dingId;
     }
 
     public Integer getLevel() {
@@ -114,4 +97,11 @@ public class Office extends TreeEntity<Office> {
         this.sort = sort;
     }
 
+    public String getOfficeRuleId() {
+        return officeRuleId;
+    }
+
+    public void setOfficeRuleId(String officeRuleId) {
+        this.officeRuleId = officeRuleId;
+    }
 }

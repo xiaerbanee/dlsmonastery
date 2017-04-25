@@ -13,38 +13,11 @@ import java.util.List;
 public class MenuCategory extends CompanyEntity<MenuCategory> {
     private String name;
     private String icon;
-    private String enName;
-    private String inaName;
     private Integer sort;
     private Integer version = 0;
     private String code;
     private String backendModuleId;
     private List<Menu> menuList = Lists.newArrayList();
-
-    public List<Menu> getMenuList() {
-        return menuList;
-    }
-
-    public void setMenuList(List<Menu> menuList) {
-        this.menuList = menuList;
-    }
-
-
-    public String getBackendModuleId() {
-        return backendModuleId;
-    }
-
-    public void setBackendModuleId(String backendModuleId) {
-        this.backendModuleId = backendModuleId;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getName() {
         return name;
@@ -60,22 +33,6 @@ public class MenuCategory extends CompanyEntity<MenuCategory> {
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public String getEnName() {
-        return enName;
-    }
-
-    public void setEnName(String enName) {
-        this.enName = enName;
-    }
-
-    public String getInaName() {
-        return inaName;
-    }
-
-    public void setInaName(String inaName) {
-        this.inaName = inaName;
     }
 
     public Integer getSort() {
@@ -94,6 +51,27 @@ public class MenuCategory extends CompanyEntity<MenuCategory> {
         this.version = version;
     }
 
+    public String getCode() {
+        return code;
+    }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
 
+    public String getBackendModuleId() {
+        return backendModuleId;
+    }
+
+    public void setBackendModuleId(String backendModuleId) {
+        this.backendModuleId = backendModuleId;
+    }
+
+    public List<Menu> getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List<Menu> menuList) {
+        this.menuList = menuList;
+    }
 }
