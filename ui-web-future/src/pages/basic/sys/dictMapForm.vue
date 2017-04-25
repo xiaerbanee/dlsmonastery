@@ -67,7 +67,7 @@
           })
         }
       },created(){
-          axios.get('/api/basic/sys/dictMap/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/sys/dictMap/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
       }

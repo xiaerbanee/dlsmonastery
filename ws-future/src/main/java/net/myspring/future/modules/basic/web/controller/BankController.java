@@ -48,7 +48,7 @@ public class BankController {
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public BankForm findOne(BankForm bankForm){
         bankForm=bankService.findForm(bankForm);
         return bankForm;

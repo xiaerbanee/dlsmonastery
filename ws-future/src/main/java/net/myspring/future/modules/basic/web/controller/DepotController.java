@@ -121,7 +121,7 @@ public class DepotController {
     }
 
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public DepotDto findOne(String depotId){
         DepotDto depotDto = depotService.findOne(depotId);
         return depotDto;

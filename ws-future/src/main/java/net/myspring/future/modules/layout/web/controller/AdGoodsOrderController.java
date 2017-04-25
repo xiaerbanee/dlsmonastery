@@ -3,16 +3,16 @@ package net.myspring.future.modules.layout.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.utils.SecurityUtils;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +55,7 @@ public class  AdGoodsOrderController {
         return null;
     }
 
-    @RequestMapping(value = "findOne", method = RequestMethod.GET)
+    @RequestMapping(value = "findForm", method = RequestMethod.GET)
     public String findOne(AdGoodsOrder adGoodsOrder) {
 
         return null;

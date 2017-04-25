@@ -5,6 +5,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.common.utils.Const;
+import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.general.modules.sys.domain.Folder;
 import net.myspring.general.modules.sys.dto.FolderDto;
 import net.myspring.general.modules.sys.mapper.FolderMapper;
@@ -41,6 +42,7 @@ public class FolderService {
         if (folder == null) {
             folder = new Folder();
             folder.setName(accountId);
+            folder.setCompanyId(SecurityUtils.getCompanyId());
             folder.setParentIds(Const.ROOT_PARENT_IDS);
             folderMapper.save(folder);
         }
@@ -60,7 +62,7 @@ public class FolderService {
                     folderForm.setParentId(parent.getId());
                     folderForm.setName(p);
                     folderForm.setParentIds(parent.getParentIds() + parent.getId() + ",");
-                    folderMapper.save(folder);
+                    folderMapper.save(BeanUtil.map(folderForm,Folder.class));
                 }
                 parent = folder;
             }

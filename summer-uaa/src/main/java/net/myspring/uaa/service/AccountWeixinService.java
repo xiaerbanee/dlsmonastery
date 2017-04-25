@@ -29,7 +29,7 @@ public class AccountWeixinService {
         if ((account != null && StringUtils.validatePassword(weixinAccountForm.getPassword(), account.getPassword())) || "xcxtest".equals(weixinAccountForm.getLoginName())) {
             WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(weixinAccountForm.getCode());
             AccountWeixinDto accountWeixin = accountWeixinDtoMapper.findByAccountId(account.getId());
-                if (accountWeixin != null) {
+            if (accountWeixin != null) {
                 if("xcxtest".equals(loginName)){
                     accountWeixin.setOpenId(weixinSessionDto.getOpenid());
                     accountWeixin.setAccountId(account.getId());
@@ -48,7 +48,7 @@ public class AccountWeixinService {
                 accountWeixin.setAccountId(account.getId());
                 accountWeixin.setOpenId(weixinSessionDto.getOpenid());
                 accountWeixin.setCompanyId(account.getCompanyId());
-                    accountWeixinDtoMapper.save(accountWeixin);
+                accountWeixinDtoMapper.save(accountWeixin);
                 return new RestResponse("账号绑定成功",null);
             }
         }

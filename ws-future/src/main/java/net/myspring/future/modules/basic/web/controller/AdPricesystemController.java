@@ -47,7 +47,7 @@ public class AdPricesystemController {
         return ObjectMapperUtils.writeValueAsString(restResponse);
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public String findOne(AdPricesystemForm adPricesystemForm){
         adPricesystemForm=adPricesystemService.findForm(adPricesystemForm);
         return ObjectMapperUtils.writeValueAsString(adPricesystemForm);

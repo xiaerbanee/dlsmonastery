@@ -132,7 +132,7 @@ public class GoodsOrderController {
         return null;
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public String findOne(GoodsOrder goodsOrder) {
         return null;
     }

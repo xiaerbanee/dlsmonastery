@@ -82,7 +82,7 @@
         var permissions=new Array()
         var check=this.$refs.tree.getCheckedKeys();
         for(var index in check){
-          if(check[index].indexOf("p")==-1&&check[index].indexOf("m")==-1&&check[index].indexOf("c")==-1&& check[index]!=0){
+          if(check[index].match("\^(0|[1-9][0-9]*)$")&& check[index]!=0){
             permissions.push(check[index])
           }
         }

@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 
@@ -26,6 +27,15 @@ public class AuditFileQuery {
     private String content;
     private String title;
     private String processflowName;
+    private List<String> processFlowIdList=Lists.newArrayList();
+
+    public List<String> getProcessFlowIdList() {
+        return processFlowIdList;
+    }
+
+    public void setProcessFlowIdList(List<String> processFlowIdList) {
+        this.processFlowIdList = processFlowIdList;
+    }
 
     public String getId() {
         return id;
@@ -36,15 +46,16 @@ public class AuditFileQuery {
     }
 
     public String getPositionId() {
+        if(auditType == null || auditType.equals("1")) {
+            this.positionId = SecurityUtils.getPositionId();
+        }else {
+            this.positionId="";
+        }
         return positionId;
     }
 
     public void setPositionId(String positionId) {
-        if(auditType == null || auditType.equals("1")) {
-            this.positionId = positionId;
-        }else {
-            this.positionId="";
-        }
+        this.positionId = positionId;
     }
 
     public String getAuditType() {

@@ -16,7 +16,7 @@ public class ShopPromotionController {
         return null;
    }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public String findOne() {
         return null;
     }

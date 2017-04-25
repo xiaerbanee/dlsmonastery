@@ -148,7 +148,7 @@
     },created(){
        this.getFormProperty();
       if(!this.isCreate){
-        axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/hr/employee/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.employeeForm);
           util.copyValue(response.data.account,this.accountForm);
           this.employeeForm.sexLabel=response.data.sex=="男"?1:0;

@@ -49,7 +49,7 @@ public class PriceChangeController {
         return null;
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public String findOne(PriceChange priceChange){
         return null;
     }

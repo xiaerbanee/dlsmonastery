@@ -57,8 +57,8 @@ public class PositionController {
         return positionQuery;
     }
 
-    @RequestMapping(value = "findOne")
-    public PositionForm findOne(PositionForm positionForm) {
+    @RequestMapping(value = "findForm")
+    public PositionForm findForm(PositionForm positionForm) {
         positionForm= positionService.findForm(positionForm);
         List<String> backendModuleIdList = positionForm.isCreate()? Lists.newArrayList() : backendModuleService.findBackendModuleIdByPosition(positionForm.getId());
         positionForm.setPermissionTree(permissionService.findBackendTree(backendModuleIdList));

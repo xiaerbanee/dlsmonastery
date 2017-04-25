@@ -43,7 +43,7 @@ public class PricesystemController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public PricesystemForm findOne(PricesystemForm pricesystemForm) {
         pricesystemService.initPricesystemDetail(pricesystemForm);
         return pricesystemForm;

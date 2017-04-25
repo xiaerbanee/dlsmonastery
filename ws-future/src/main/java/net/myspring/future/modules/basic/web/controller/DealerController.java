@@ -35,7 +35,7 @@ public class DealerController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public DealerForm findOne(DealerForm dealerForm) {
         dealerForm=dealerService.findForm(dealerForm);
         return dealerForm;

@@ -40,7 +40,7 @@ public class DutyAnnualController {
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
     public RestResponse importFile(@RequestParam(value = "folderFileId", required = true) String folderFileId, String annualYear, String remarks) {
-//        FolderFile folderFile = folderFileService.findOne(folderFileId);
+//        FolderFile folderFile = folderFileService.findForm(folderFileId);
 //        File file  = new File(folderFileService.getUploadPath(folderFile));
 //        dutyAnnualService.save(file, annualYear, remarks);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());

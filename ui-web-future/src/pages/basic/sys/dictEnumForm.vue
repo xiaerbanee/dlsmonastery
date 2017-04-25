@@ -66,7 +66,7 @@
           })
         }
       },created(){
-          axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/sys/dictEnum/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
       }

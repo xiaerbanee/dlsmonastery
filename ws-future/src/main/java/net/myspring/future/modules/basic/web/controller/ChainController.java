@@ -48,7 +48,7 @@ public class ChainController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public ChainForm findOne(ChainForm chainForm){
         chainForm=chainService.findForm(chainForm);
         return chainForm;

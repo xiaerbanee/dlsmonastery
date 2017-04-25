@@ -136,7 +136,7 @@
         }
       }
     },created(){
-      axios.get('/api/basic/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/hr/position/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
           console.log(response.data);
         this.inputForm=response.data;
         this.treeData =new Array(response.data.permissionTree);

@@ -47,8 +47,8 @@ public class BackendController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findOne")
-    public BackendForm findOne(BackendForm backendForm){
+    @RequestMapping(value = "findForm")
+    public BackendForm findForm(BackendForm backendForm){
         backendForm=backendService.findForm(backendForm);
         return backendForm;
     }

@@ -49,7 +49,7 @@ public class ProductTypeController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public ProductTypeForm findOne(ProductTypeForm productTypeForm){
         productTypeForm.setBoolMap(BoolEnum.getMap());
         return productTypeForm;

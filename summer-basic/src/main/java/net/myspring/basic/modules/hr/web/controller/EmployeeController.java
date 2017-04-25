@@ -55,8 +55,8 @@ public class EmployeeController {
         return restResponse;
     }
 
-    @RequestMapping(value = "findOne")
-    public EmployeeForm findOne(EmployeeForm employeeForm){
+    @RequestMapping(value = "findForm")
+    public EmployeeForm findForm(EmployeeForm employeeForm){
         employeeForm=employeeService.findForm(employeeForm);
         employeeForm.setPositionList(positionService.findAll());
         employeeForm.setEducationList( Global.getDictEnumValueList(DictEnumCategoryEnum.EDUCATION.getValue()));

@@ -47,8 +47,8 @@ public class MenuCategoryController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findOne")
-    public MenuCategoryForm findOne(MenuCategoryForm menuCategoryForm){
+    @RequestMapping(value = "findForm")
+    public MenuCategoryForm findForm(MenuCategoryForm menuCategoryForm){
         menuCategoryForm=menuCategoryService.findForm(menuCategoryForm);
         menuCategoryForm.setBackendModuleList(backendModuleService.findAll());
         return menuCategoryForm;

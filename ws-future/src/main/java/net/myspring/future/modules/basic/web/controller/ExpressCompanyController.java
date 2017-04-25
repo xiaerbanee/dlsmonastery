@@ -45,7 +45,7 @@ public class ExpressCompanyController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public ExpressCompanyForm findOne(ExpressCompanyForm expressCompanyForm){
         expressCompanyForm=expressCompanyService.findForm(expressCompanyForm);
         expressCompanyForm.setExpressTypeList(ExpressCompanyTypeEnum.getList());

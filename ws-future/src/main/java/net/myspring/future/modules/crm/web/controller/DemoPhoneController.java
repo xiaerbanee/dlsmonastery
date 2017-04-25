@@ -33,7 +33,7 @@ public class DemoPhoneController {
         return null;
     }
 
-    @RequestMapping(value = "findOne")
+    @RequestMapping(value = "findForm")
     public String findOne(DemoPhone demoPhone){
         return null;
     }

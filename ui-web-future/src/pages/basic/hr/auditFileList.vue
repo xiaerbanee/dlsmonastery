@@ -64,7 +64,6 @@
         <el-table-column prop="createdDate" sortable :label="$t('auditFileList.createdDate')"></el-table-column>
         <el-table-column prop="lastModifiedByName" :label="$t('auditFileList.lastModifiedBy')"></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('auditFileList.lastModifiedDate')"></el-table-column>
-        <el-table-column prop="processTypeName":label="$t('auditFileList.processTypeName')"></el-table-column>
         <el-table-column prop="title" :label="$t('auditFileList.title')"></el-table-column>
         <el-table-column prop="processStatus" :label="$t('auditFileList.processStatus')" width="150">
           <template scope="scope">
