@@ -47,3 +47,5 @@ weixin:
   appsecret: e7822bbf9d836b0b909342662fb4e0ee
   app:
     name: mktsp
+  audit:
+    menuId: 14,15,16,17,34,130,131,170
