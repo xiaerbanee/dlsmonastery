@@ -11,10 +11,8 @@ import net.myspring.util.text.StringUtils;
 @Table(name="hr_position_module")
 public class PositionModule extends CompanyEntity<PositionModule> {
     private Integer version = 0;
-    private Position position;
     private String positionId;
-    private Backend backend;
-    private String backendId;
+    private String backendModuleId;
 
     public Integer getVersion() {
         return version;
@@ -24,18 +22,7 @@ public class PositionModule extends CompanyEntity<PositionModule> {
         this.version = version;
     }
 
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
     public String getPositionId() {
-        if(StringUtils.isBlank(positionId) && position!=null) {
-            positionId = position.getId();
-        }
         return positionId;
     }
 
@@ -43,22 +30,11 @@ public class PositionModule extends CompanyEntity<PositionModule> {
         this.positionId = positionId;
     }
 
-    public Backend getBackend() {
-        return backend;
+    public String getBackendModuleId() {
+        return backendModuleId;
     }
 
-    public void setBackend(Backend backend) {
-        this.backend = backend;
-    }
-
-    public String getBackendId() {
-        if(StringUtils.isBlank(backendId) && backend!=null) {
-            backendId = backend.getId();
-        }
-        return backendId;
-    }
-
-    public void setBackendId(String backendId) {
-        this.backendId = backendId;
+    public void setBackendModuleId(String backendModuleId) {
+        this.backendModuleId = backendModuleId;
     }
 }

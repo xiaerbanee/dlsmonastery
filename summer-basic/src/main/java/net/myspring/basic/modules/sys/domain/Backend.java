@@ -16,7 +16,6 @@ import net.myspring.common.domain.DataEntity;
 public class Backend extends DataEntity<Backend> {
     private String name;
     private Integer version = 0;
-    private List<BackendModule> backendModuleList = Lists.newArrayList();
     private List<String> backendModuleIdList = Lists.newArrayList();
     public String getName() {
         return name;
@@ -32,14 +31,6 @@ public class Backend extends DataEntity<Backend> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public List<BackendModule> getBackendModuleList() {
-        return backendModuleList;
-    }
-
-    public void setBackendModuleList(List<BackendModule> backendModuleList) {
-        this.backendModuleList = backendModuleList;
     }
 
     public List<String> getBackendModuleIdList() {

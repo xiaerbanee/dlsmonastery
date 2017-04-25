@@ -3,8 +3,10 @@
     <template v-if="!$route.meta.hidden">
       <!-- header start  -->
       <header class="db-header">
-        <router-link class="logo" :to="{path: '/'}">{{account.companyName}}</router-link>
-        <div class="main_category" v-for="firstCategory in menus.backendList" :key="firstCategory.id" :data-backend-id="firstCategory.id" @click="mainCategory">{{firstCategory.name}}</div>
+        <div class="main_category">
+          <router-link class="logo" :to="{path: '/'}">{{companyName}}</router-link>
+          <div class="main_item_category" v-for="firstCategory in menus.backendList" :key="firstCategory.id"><a  :data-backend-id="firstCategory.id" @click="mainCategory">{{firstCategory.name}}</a></div>
+        </div>
         <div class="user-info" v-if="account.id">
           <span><a href="javscript:void(0);" @click="changeLang('zh-cn')">中文</a> / <a href="javscript:void(0);" @click="changeLang('id')">Indonesia</a></span>
           <span v-text="account.loginName"></span>
@@ -74,6 +76,7 @@
         activeMenu: '',
         activeCategory:'',
         secondCategory:[],
+        companyName:this.$store.state.global.token.companyName
       };
     },computed: mapState({
       account: state => state.global.account,
@@ -172,15 +175,25 @@
 <style lang="scss">
   @import './styles/_variables.scss';
   .main_category{
+    position:absolute;
+    left:30px;
+    width:auto;
+    height:auto;
+  }
+  .main_item_category{
     display: inline-block;
     width:100px;
     height:30px;
     margin-right:20px;
-    background-color:white;
-    border-radius: 5px;
     text-align: center;
-    color:#184E7E;
+    color:#fff;
     line-height: 30px;
-    font-size:16px;
+    font-size:17px;
+    z-index: 9999;
+  }
+  .main_item_category a:hover{
+    color:#20A0FF;
+    padding-bottom:16px;
+    border-bottom:4px solid #20A0FF;
   }
 </style>

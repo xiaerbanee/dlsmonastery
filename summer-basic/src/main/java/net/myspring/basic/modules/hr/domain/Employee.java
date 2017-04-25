@@ -37,7 +37,6 @@ public class Employee extends CompanyEntity<Employee> {
     private String originId;
     private String dutyCode;
     private String salerName;
-    private Account account;
     private String accountId;
 
     public String getCode() {
@@ -222,15 +221,6 @@ public class Employee extends CompanyEntity<Employee> {
 
     public void setSalerName(String salerName) {
         this.salerName = salerName;
-    }
-
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
     }
 
     public String getAccountId() {
