@@ -48,6 +48,7 @@ Vue.use(VueProgressBar, options)
 // set locales
 Vue.locale('zh-cn',locale.zhCn);
 Vue.locale("id",locale.id);
+Vue.config.lang = store.state.global.lang;
 
 Vue.directive('permit', function (el, binding) {
   var  hasPermit=false;
