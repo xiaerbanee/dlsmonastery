@@ -15,7 +15,7 @@ spring:
     max-total: 50
   data:
     mongodb:
-      uri: mongodb://168.192.1.88:1600/file
+      uri: mongodb://168.192.1.20:1600/file
 mybatis:
   config-location: classpath:/mybatis-config.xml
 server:

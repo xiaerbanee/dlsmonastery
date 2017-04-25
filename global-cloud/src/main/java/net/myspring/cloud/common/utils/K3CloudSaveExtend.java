@@ -1,7 +1,7 @@
 package net.myspring.cloud.common.utils;
 
 
-import net.myspring.cloud.modules.kingdee.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSave;
 
 /**
  * Created by liuj on 2016-06-20.

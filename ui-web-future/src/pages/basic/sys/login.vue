@@ -11,10 +11,6 @@
         <el-input :placeholder="$t('login.inputPassword')" type="password" v-model="password"></el-input>
       </div>
       <div class="input-group">
-        <label>{{$t('login.rememberMe')}}</label>
-        <el-switch  v-model="rememberMe"  on-text="" off-text=""></el-switch>
-      </div>
-      <div class="input-group">
         <el-button @click.native="login" type="primary" :loading="isBtnLoading">{{btnText}}</el-button>
       </div>
     </div>
@@ -26,13 +22,14 @@
       return {
         username: '',
         password: '',
-        rememberMe: true,
         isBtnLoading: false
       };
     },
     computed: {
       btnText() {
-        if (this.isBtnLoading) return this.$t('login.loginFor');
+        if (this.isBtnLoading) {
+          return this.$t('login.loginFor');
+        }
         return this.$t('login.login');
       }
     },
