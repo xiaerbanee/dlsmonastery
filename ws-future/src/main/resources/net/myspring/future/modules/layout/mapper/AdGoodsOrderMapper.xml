@@ -12,7 +12,6 @@
         and t1.shop_id=depot.id
         and depot.office_id=office.id
         <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
-        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter" />
         <if test="p.billType !=null">
             and t1.bill_type =#{p.billType}
         </if>

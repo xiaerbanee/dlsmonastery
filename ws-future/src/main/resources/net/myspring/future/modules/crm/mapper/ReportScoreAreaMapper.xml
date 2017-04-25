@@ -11,7 +11,6 @@
         t1.date_rank >0
         and t1.month_rank >0
         and t1.office_id=office.id
-        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter" />
         <if test="p.scoreDate != null">
             AND t1.score_date  = #{p.scoreDate}
         </if>

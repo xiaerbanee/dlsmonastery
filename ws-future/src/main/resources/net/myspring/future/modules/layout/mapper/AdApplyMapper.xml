@@ -8,7 +8,6 @@
         and adApply.shop_id=depot.id
         and depot.office_id=office.id
         <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
-        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter" />
         <include refid="filter"></include>
     </select>
 
