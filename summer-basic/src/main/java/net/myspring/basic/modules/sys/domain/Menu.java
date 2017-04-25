@@ -11,10 +11,8 @@ import java.util.List;
 
 @Entity
 @Table(name="sys_menu")
-public class Menu extends CompanyEntity<Menu> {
+public class Menu extends DataEntity<Menu> {
     private String name;
-    private String href;
-    private String icon;
     private Integer sort;
     private Boolean mobile;
     private Integer version = 0;
@@ -38,22 +36,6 @@ public class Menu extends CompanyEntity<Menu> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getHref() {
-        return href;
-    }
-
-    public void setHref(String href) {
-        this.href = href;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public Integer getSort() {

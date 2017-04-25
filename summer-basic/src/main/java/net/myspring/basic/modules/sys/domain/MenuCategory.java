@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name="sys_menu_category")
-public class MenuCategory extends CompanyEntity<MenuCategory> {
+public class MenuCategory extends DataEntity<MenuCategory> {
     private String name;
     private String icon;
     private Integer sort;

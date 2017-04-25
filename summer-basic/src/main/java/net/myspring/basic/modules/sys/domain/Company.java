@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_company")
-public class Company extends CompanyEntity<Company> {
+public class Company extends DataEntity<Company> {
     private String name;
     private String code;
     private String brand;

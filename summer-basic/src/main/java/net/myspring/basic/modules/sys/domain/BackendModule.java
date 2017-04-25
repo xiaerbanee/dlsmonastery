@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.domain;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import net.myspring.basic.modules.hr.domain.PositionModule;
 import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 import java.util.List;
@@ -12,12 +13,14 @@ import net.myspring.util.text.StringUtils;
 
 @Entity
 @Table(name="sys_backend_module")
-public class BackendModule extends CompanyEntity<BackendModule> {
+public class BackendModule extends DataEntity<BackendModule> {
     private String name;
     private Integer version = 0;
     private Backend backend;
-    private String code;
     private String backendId;
+    private String code;
+    private List<PositionModule> positionModuleList = Lists.newArrayList();
+    private List<String> positionModuleIdList = Lists.newArrayList();
     private List<MenuCategory> menuCategoryList = Lists.newArrayList();
     private List<String> menuCategoryIdList = Lists.newArrayList();
 
@@ -59,6 +62,22 @@ public class BackendModule extends CompanyEntity<BackendModule> {
 
     public void setBackendId(String backendId) {
         this.backendId = backendId;
+    }
+
+    public List<PositionModule> getPositionModuleList() {
+        return positionModuleList;
+    }
+
+    public void setPositionModuleList(List<PositionModule> positionModuleList) {
+        this.positionModuleList = positionModuleList;
+    }
+
+    public List<String> getPositionModuleIdList() {
+        return positionModuleIdList;
+    }
+
+    public void setPositionModuleIdList(List<String> positionModuleIdList) {
+        this.positionModuleIdList = positionModuleIdList;
     }
 
     public List<MenuCategory> getMenuCategoryList() {

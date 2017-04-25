@@ -18,6 +18,9 @@ public class Permission extends CompanyEntity<Permission> {
     private Menu menu;
     private String menuId;
 
+    private String url;
+    private String method;
+
     public String getName() {
         return name;
     }
@@ -56,5 +59,21 @@ public class Permission extends CompanyEntity<Permission> {
 
     public void setMenuId(String menuId) {
         this.menuId = menuId;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 }

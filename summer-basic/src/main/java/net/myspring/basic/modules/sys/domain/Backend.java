@@ -9,14 +9,13 @@ import net.myspring.common.domain.CompanyEntity;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.domain.DataEntity;
 
 @Entity
 @Table(name = "sys_backend")
-public class Backend extends CompanyEntity<Backend> {
+public class Backend extends DataEntity<Backend> {
     private String name;
     private Integer version = 0;
-    private List<PositionModule> positionModuleList = Lists.newArrayList();
-    private List<String> positionModuleIdList = Lists.newArrayList();
     private List<BackendModule> backendModuleList = Lists.newArrayList();
     private List<String> backendModuleIdList = Lists.newArrayList();
     public String getName() {
@@ -33,22 +32,6 @@ public class Backend extends CompanyEntity<Backend> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public List<PositionModule> getPositionModuleList() {
-        return positionModuleList;
-    }
-
-    public void setPositionModuleList(List<PositionModule> positionModuleList) {
-        this.positionModuleList = positionModuleList;
-    }
-
-    public List<String> getPositionModuleIdList() {
-        return positionModuleIdList;
-    }
-
-    public void setPositionModuleIdList(List<String> positionModuleIdList) {
-        this.positionModuleIdList = positionModuleIdList;
     }
 
     public List<BackendModule> getBackendModuleList() {
