@@ -14,6 +14,9 @@ import java.util.Map;
  */
 public class MyProvider extends CrudProvider {
     private Logger logger = LoggerFactory.getLogger(MyProvider.class);
+    public static final String LOGIC_DELETE_ONE="logicDeleteOne";
+    public static final String LOGIC_DELETE_BY_IDS="logicDeleteByIds";
+    public static final String FIND_ALL_ENABLED="findAllEnabled";
 
     public String logicDeleteOne(Object id) {
         String sql =  "UPDATE " + getTableDto().getJdbcTable() + " SET enabled=0 WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "=#{id}";

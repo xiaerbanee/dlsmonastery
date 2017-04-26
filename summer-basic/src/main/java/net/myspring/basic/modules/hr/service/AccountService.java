@@ -49,7 +49,7 @@ public class AccountService {
     private EmployeeManager employeeManager;
 
     public Account findOne(String id) {
-        Account account = accountManager.findOne(id);
+        Account account = accountMapper.findOne(id);
         return account;
     }
 
@@ -96,7 +96,7 @@ public class AccountService {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
                 accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
             } else {
-                accountForm.setPassword(accountManager.findOne(accountForm.getId()).getPassword());
+                accountForm.setPassword(accountMapper.findOne(accountForm.getId()).getPassword());
             }
            account=accountManager.updateForm(accountForm);
         }

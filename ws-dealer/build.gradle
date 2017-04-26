@@ -28,7 +28,7 @@ repositories {
 
 dependencies {
 	compile project(':global-util')
-	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.1.9.RELEASE'
+	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.2.0.RELEASE'
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.cloud:spring-cloud-starter-oauth2')
 	compile('org.springframework.cloud:spring-cloud-starter-security')

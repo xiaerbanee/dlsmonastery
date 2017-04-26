@@ -19,6 +19,19 @@ import java.util.Map;
 public class CrudProvider<T, ID extends Serializable> extends BaseProvider<T,ID> {
 
     private Logger logger = LoggerFactory.getLogger(CrudProvider.class);
+    public static final String SAVE="save";
+    public static final String BATCH_SAVE="batchSave";
+    public static final String FIND_ONE="findOne";
+    public static final String EXISTS="exists";
+    public static final String FIND_ALL="findAll";
+    public static final String FIND_BY_IDS="findByIds";
+    public static final String COUNT="count";
+    public static final String DELETE_BY_ID="deleteById";
+    public static final String DELETE_BY_IDS="deleteByIds";
+    public static final String DELETE_BY_ENTITY="deleteByEntity";
+    public static final String BATCH_DELETE="batchDelete";
+    public static final String DELETE_ALL="deleteAll";
+    public static final String UPDATE="update";
 
     public String save(T entity) {
         List<String> jdbcColumns = Lists.newArrayList();

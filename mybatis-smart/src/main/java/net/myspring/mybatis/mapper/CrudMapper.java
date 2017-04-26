@@ -14,6 +14,7 @@ import java.util.List;
  */
 public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID> {
 
+
     /**
      * Saves a given entity. Use the returned instance for further operations as the save operation might have changed the
      * entity instance completely.
@@ -21,7 +22,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @param entity
      * @return the saved result
      */
-    @InsertProvider(type=CrudProvider.class, method = "save")
+    @InsertProvider(type=CrudProvider.class, method = CrudProvider.SAVE)
     @Options(useGeneratedKeys = true)
     <S extends T> int save(S entity);
 
@@ -32,7 +33,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @return the saved result
      * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
-    @InsertProvider(type=CrudProvider.class, method = "batchSave")
+    @InsertProvider(type=CrudProvider.class, method =CrudProvider.BATCH_SAVE)
     @Options(useGeneratedKeys = true)
     <S extends T> int batchSave(Iterable<S> entities);
 
@@ -43,7 +44,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @return the entity with the given id or {@literal null} if none found
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @SelectProvider(type=CrudProvider.class, method = "findOne")
+    @SelectProvider(type=CrudProvider.class, method = CrudProvider.FIND_ONE)
     T findOne(ID id);
 
     /**
@@ -53,7 +54,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @return true if an entity with the given id exists, {@literal false} otherwise
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @SelectProvider(type=CrudProvider.class, method = "exists")
+    @SelectProvider(type=CrudProvider.class, method = CrudProvider.EXISTS)
     Boolean exists(ID id);
 
     /**
@@ -61,7 +62,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      *
      * @return all entities
      */
-    @SelectProvider(type=CrudProvider.class, method = "findAll")
+    @SelectProvider(type=CrudProvider.class, method = CrudProvider.FIND_ALL)
     List<T> findAll();
 
     /**
@@ -70,7 +71,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @param ids
      * @return
      */
-    @SelectProvider(type=CrudProvider.class, method = "findByIds")
+    @SelectProvider(type=CrudProvider.class, method = CrudProvider.FIND_BY_IDS)
     List<T> findByIds(Iterable<ID> ids);
 
     /**
@@ -78,7 +79,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      *
      * @return the number of entities
      */
-    @SelectProvider(type=CrudProvider.class, method = "count")
+    @SelectProvider(type=CrudProvider.class, method =CrudProvider.COUNT)
     Long count();
 
     /**
@@ -87,7 +88,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @param id must not be {@literal null}.
      * @throws IllegalArgumentException in case the given {@code id} is {@literal null}
      */
-    @DeleteProvider(type=CrudProvider.class, method = "deleteById")
+    @DeleteProvider(type=CrudProvider.class, method =CrudProvider.DELETE_BY_ID)
     int deleteById(ID id);
 
     /**
@@ -96,7 +97,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @param ids
      * @return
      */
-    @DeleteProvider(type=CrudProvider.class, method = "deleteByIds")
+    @DeleteProvider(type=CrudProvider.class, method =CrudProvider.DELETE_BY_IDS)
     int deleteByIds(Iterable<ID> ids);
 
 
@@ -106,7 +107,7 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @param entity
      * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
-    @DeleteProvider(type=CrudProvider.class, method = "deleteByEntity")
+    @DeleteProvider(type=CrudProvider.class, method = CrudProvider.DELETE_BY_ENTITY)
     int deleteByEntity(T entity);
 
 
@@ -116,13 +117,13 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      * @param entities
      * @throws IllegalArgumentException in case the given {@link Iterable} is {@literal null}.
      */
-    @DeleteProvider(type=CrudProvider.class, method = "batchDelete")
+    @DeleteProvider(type=CrudProvider.class, method = CrudProvider.BATCH_DELETE)
     int batchDelete(Iterable<? extends T> entities);
 
     /**
      * Deletes all entities managed by the repository.
      */
-    @DeleteProvider(type=CrudProvider.class, method = "deleteAll")
+    @DeleteProvider(type=CrudProvider.class, method =CrudProvider.DELETE_ALL)
     int deleteAll();
 
     /**
@@ -130,10 +131,10 @@ public interface CrudMapper<T, ID extends Serializable> extends BaseMapper<T, ID
      *
      * @param entity
      */
-    @UpdateProvider(type=CrudProvider.class, method = "update")
+    @UpdateProvider(type=CrudProvider.class, method =CrudProvider.UPDATE)
     <S extends T> int update(S entity);
 
-    @UpdateProvider(type=CrudProvider.class, method = "update")
+    @UpdateProvider(type=CrudProvider.class, method = CrudProvider.UPDATE)
     <S extends BaseForm<T>> int updateForm(S entity);
 
 }

@@ -160,7 +160,7 @@ public class MenuService {
 
     public ForeendMenuDto getMenuMap(String accountId) {
         ForeendMenuDto foreendMenuDto = new ForeendMenuDto();
-        Account account = accountManager.findOne(accountId);
+        Account account = accountMapper.findOne(accountId);
         Map<BackendMenuDto, List<Menu>> backendMenuMap = getMenusMap(account, false);
         foreendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
         Map<String, List<BackendModuleMenuDto>> backendModuleMap = Maps.newHashMap();
@@ -173,7 +173,7 @@ public class MenuService {
 
     public List<Map<String, Object>> findMobileMenuMap(String accountId) {
         Map<BackendMenuDto, List<Menu>> backendMenuMap = Maps.newHashMap();
-        Account account = accountManager.findOne(accountId);
+        Account account = accountMapper.findOne(accountId);
         if (Const.XCXAUDIT.equals(account.getLoginName())) {
             List<String> menuIds = StringUtils.getSplitList(weixinAuditMenuId, Const.CHAR_COMMA);
             List<Menu> menus = menuMapper.findByIds(menuIds);
