@@ -28,15 +28,15 @@ public interface AccountMapper {
     @SelectProvider(type=MyProvider.class, method = MyProvider.FIND_ONE)
     Account findOne(String id);
 
-    @CacheEvict(value = "accounts",key="#p0")
+    @CacheEvict(value = "accounts",key="#p0.id")
     @InsertProvider(type=CrudProvider.class, method = MyProvider.SAVE)
     int save(Account account);
 
-    @CacheEvict(value = "accounts",key="#p0")
+    @CacheEvict(value = "accounts",key="#p0.id")
     @UpdateProvider(type=CrudProvider.class, method =MyProvider.UPDATE)
     int update(Account account);
 
-    @CacheEvict(value = "accounts",key="#p0")
+    @CacheEvict(value = "accounts",key="#p0.id")
     @UpdateProvider(type=CrudProvider.class, method = MyProvider.UPDATE)
     int updateForm(AccountForm accountForm);
 
