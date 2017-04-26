@@ -214,6 +214,5 @@
   .highlight{
     color:#20A0FF;
     padding-bottom:16px;
-    border-bottom:4px solid #20A0FF;
   }
 </style>
