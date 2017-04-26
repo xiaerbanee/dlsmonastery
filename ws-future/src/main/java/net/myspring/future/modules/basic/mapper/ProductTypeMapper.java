@@ -3,7 +3,7 @@ package net.myspring.future.modules.basic.mapper;
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
-import net.myspring.future.modules.basic.web.Query.ProductTypeQuery;
+import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;

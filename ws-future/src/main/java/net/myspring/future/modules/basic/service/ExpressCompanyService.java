@@ -1,13 +1,12 @@
 package net.myspring.future.modules.basic.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.DistrictClient;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.manager.ExpressCompanyManager;
 import net.myspring.future.modules.basic.mapper.ExpressCompanyMapper;
-import net.myspring.future.modules.basic.web.Query.ExpressCompanyQuery;
+import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
 import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional

@@ -1,21 +1,15 @@
 package net.myspring.future.modules.basic.web.controller;
 
-import com.google.common.collect.Lists;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.dto.PricesystemDto;
 import net.myspring.future.modules.basic.service.PricesystemService;
-import net.myspring.future.modules.basic.web.Query.ChainQuery;
-import net.myspring.future.modules.basic.web.Query.PricesystemQuery;
+import net.myspring.future.modules.basic.web.query.PricesystemQuery;
 import net.myspring.future.modules.basic.web.form.PricesystemForm;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "crm/pricesystem")

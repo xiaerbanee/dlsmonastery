@@ -1,16 +1,16 @@
 <template>
   <div>
     <head-tab active="chainForm"></head-tab>
-    <div>
+    <!--<div>
       <el-form :model="inputForm" :inline="true" ref="inputForm" :rules="rules"  class="form input-form">
         <el-form-item :label="$t('chainForm.name')" prop="name">
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('chainForm.account')" prop="accountIdList">
+        &lt;!&ndash;<el-form-item :label="$t('chainForm.account')" prop="accountIdList">
           <el-select v-model="inputForm.accountIdList" multiple filterable remote :placeholder="$t('chainForm.inputWord')" :remote-method="remoteAccount" :loading="remoteLoading" :clearable=true >
             <el-option v-for="account in accounts" :key="account.id" :label="account.fullName" :value="account.id"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>&ndash;&gt;
         <el-form-item :label="$t('chainForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
@@ -56,8 +56,27 @@
           <el-button type="primary" @click="search()">{{$t('chainForm.sure')}}</el-button>
         </div>
       </el-dialog>
+    </div>-->
+
+    <div>
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+        <el-form-item :label="$t('chainForm.name')" prop="name">
+          <el-input v-model="inputForm.name"></el-input>
+        </el-form-item>
+        <!--<el-form-item :label="$t('chainForm.account')" prop="accountIdList">
+          <el-select v-model="inputForm.accountIdList" filterable remote multiple :placeholder="$t('bankForm.inputWord')" :remote-method="remoteAccount" :loading="remoteLoading" >
+            <el-option v-for="item in accounts" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>-->
+        <el-form-item :label="$t('chainForm.remarks')" prop="remarks">
+          <el-input v-model="inputForm.remarks"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('chainForm.save')}}</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <el-table :data="content" :height="pageHeight" ref='table' style="margin-top:5px;" v-loading="pageLoading"  @selection-change="selectionChange"  :element-loading-text="$t('chainForm.loading')" @sort-change="sortChange" stripe border>
+    <!--<el-table :data="content" :height="pageHeight" ref='table' style="margin-top:5px;" v-loading="pageLoading"  @selection-change="selectionChange"  :element-loading-text="$t('chainForm.loading')" @sort-change="sortChange" stripe border>
       <el-table-column type="selection" width="55" ></el-table-column>
       <el-table-column  prop="name" :label="$t('chainForm.name')" width="250"></el-table-column>
       <el-table-column prop="adPricesystemId" :label="$t('chainForm.isAdPricesystem')" >
@@ -70,8 +89,8 @@
       <el-table-column prop="typeLabel" :label="$t('chainForm.shopType')"  ></el-table-column>
       <el-table-column prop="chain.name" :label="$t('chainForm.chainName')"></el-table-column>
       <el-table-column prop="areaType" :label="$t('chainForm.areaType')"></el-table-column>
-    </el-table>
-    <pageable :page="page" v-on:pageChange="pageChange"></pageable>
+    </el-table>-->
+    <!--<pageable :page="page" v-on:pageChange="pageChange"></pageable>-->
   </div>
 </template>
 <script>
@@ -155,7 +174,7 @@
             this.submitDisabled = false;
           }
         })
-      },getDepots(){
+      }/*,getDepots(){
         this.pageLoading=true;
         this.pageUpdated = false;
         this.formLabel.type.value = this.formProperty.types[this.formData.type];
@@ -201,7 +220,7 @@
       },search() {
         this.formVisible = false;
         this.getDepots();
-      },selectionChange(selection){
+      }*/,selectionChange(selection){
         this.selects=new Array();
         for(var key in selection){
           this.selects.push(selection[key].id)
@@ -220,7 +239,7 @@
           })
         }
       }
-    },created(){
+    }/*,created(){
       this.pageHeight = window.outerHeight -350;
       axios.get('/api/ws/future/basic/depot/getQuery').then((response) =>{
         this.formProperty=response.data;
@@ -235,6 +254,6 @@
         }
         })
       }
-    }
+    }*/
   }
 </script>

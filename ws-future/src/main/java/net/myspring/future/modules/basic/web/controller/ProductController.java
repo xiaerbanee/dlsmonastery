@@ -1,27 +1,22 @@
 package net.myspring.future.modules.basic.web.controller;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.BoolEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
-import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.basic.service.ProductTypeService;
-import net.myspring.future.modules.basic.web.Query.ChainQuery;
-import net.myspring.future.modules.basic.web.Query.ProductQuery;
+import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.util.text.StringUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/product")

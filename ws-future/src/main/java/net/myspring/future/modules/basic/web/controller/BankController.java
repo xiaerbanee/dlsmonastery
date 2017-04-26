@@ -5,7 +5,7 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.dto.BankDto;
 import net.myspring.future.modules.basic.service.BankService;
-import net.myspring.future.modules.basic.web.Query.BankQuery;
+import net.myspring.future.modules.basic.web.query.BankQuery;
 import net.myspring.future.modules.basic.web.form.BankForm;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -24,10 +24,10 @@ public class ChainManager {
         return chainMapper.findOne(id);
     }
 
-    @Cacheable(value = "chains",key="#p0.id")
+    @CachePut(value = "chains",key="#p0.id")
     public Chain save(Chain chain){
         chainMapper.save(chain);
-        return  chain;
+        return chain;
     }
 
     @CachePut(value = "chains",key="#p0.id")

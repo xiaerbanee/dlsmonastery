@@ -1,9 +1,6 @@
-package net.myspring.future.modules.basic.web.Query;
+package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Lists;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import net.myspring.future.common.enums.BoolEnum;
-import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
 

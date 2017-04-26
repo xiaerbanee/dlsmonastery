@@ -1,9 +1,9 @@
-package net.myspring.future.modules.basic.web.Query;
+package net.myspring.future.modules.basic.web.query;
 
 /**
  * Created by lihx on 2017/4/18.
  */
-public class PricesystemQuery {
+public class DealerQuery {
     private String name;
 
     public String getName() {

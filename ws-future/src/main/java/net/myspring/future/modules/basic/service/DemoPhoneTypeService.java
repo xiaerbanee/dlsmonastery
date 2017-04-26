@@ -11,7 +11,7 @@ import net.myspring.future.modules.basic.manager.DemoPhoneTypeManager;
 import net.myspring.future.modules.basic.mapper.DemoPhoneTypeMapper;
 import net.myspring.future.modules.basic.mapper.DemoPhoneTypeOfficeMapper;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
-import net.myspring.future.modules.basic.web.Query.DemoPhoneTypeQuery;
+import net.myspring.future.modules.basic.web.query.DemoPhoneTypeQuery;
 import net.myspring.future.modules.basic.web.form.DemoPhoneTypeDetailForm;
 import net.myspring.future.modules.basic.web.form.DemoPhoneTypeForm;
 import net.myspring.util.collection.CollectionUtil;

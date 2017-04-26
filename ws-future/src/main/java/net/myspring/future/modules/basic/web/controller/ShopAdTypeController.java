@@ -5,7 +5,7 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
 import net.myspring.future.modules.basic.service.ShopAdTypeService;
-import net.myspring.future.modules.basic.web.Query.ShopAdTypeQuery;
+import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

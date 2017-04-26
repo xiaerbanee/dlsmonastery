@@ -1,7 +1,6 @@
-package net.myspring.future.modules.basic.web.Query;
+package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Maps;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.Map;
 

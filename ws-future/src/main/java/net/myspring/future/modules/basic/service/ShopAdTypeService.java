@@ -1,12 +1,11 @@
 package net.myspring.future.modules.basic.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
 import net.myspring.future.modules.basic.manager.ShopAdTypeManager;
 import net.myspring.future.modules.basic.mapper.ShopAdTypeMapper;
-import net.myspring.future.modules.basic.web.Query.ShopAdTypeQuery;
+import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ShopAdTypeService {
