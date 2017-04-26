@@ -65,7 +65,6 @@ public class CacheService {
         cacheUtils.initCache("backends",backendMapper.findAll());
         cacheUtils.initCache("backendModules",backendModuleMapper.findAll());
         cacheUtils.initCache("positionModules",positionBackendMapper.findAll());
-        cacheUtils.initCache("officeRules",officeRuleMapper.findAll());
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");
