@@ -67,7 +67,7 @@ public class PermissionService {
         if (!permissionForm.isCreate()) {
             Permission permission = permissionManager.findOne(permissionForm.getId());
             permissionForm = BeanUtil.map(permission, PermissionForm.class);
-            List<NameValueDto> nameValueDtoList = permissionMapper.findNameValueByPositionId(Lists.newArrayList(permission.getId()));
+            permissionForm.setPositionIdList(permissionMapper.findPositionIdByPermissions(Lists.newArrayList(permission.getId())));
             cacheUtils.initCacheInput(permissionForm);
         }
         return permissionForm;

@@ -1,5 +1,6 @@
 package net.myspring.general.modules.sys.web.controller;
 
+import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.general.modules.sys.dto.ActivitiAuditDto;
 import net.myspring.general.modules.sys.dto.ActivitiAuthenticatedDto;
 import net.myspring.general.modules.sys.form.ActivitiAuditForm;
@@ -32,7 +33,7 @@ public class ActivitiController {
     }
 
     @RequestMapping(value = "audit")
-    public ActivitiAuditDto audit(ActivitiAuditForm activitiAuditForm){
+    public ActivitiAuditDto audit(@RequestBody ActivitiAuditForm activitiAuditForm){
         if(StringUtils.isNotBlank(activitiAuditForm.getProcessTypeId())&&StringUtils.isNotBlank(activitiAuditForm.getProcessInstanceId())){
             return activitiService.audit(activitiAuditForm);
         }

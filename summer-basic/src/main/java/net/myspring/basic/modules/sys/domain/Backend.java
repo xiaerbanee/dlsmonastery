@@ -15,8 +15,18 @@ import net.myspring.common.domain.DataEntity;
 @Table(name = "sys_backend")
 public class Backend extends DataEntity<Backend> {
     private String name;
+    private String code;
     private Integer version = 0;
     private List<String> backendModuleIdList = Lists.newArrayList();
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getName() {
         return name;
     }

@@ -50,7 +50,6 @@ public class ActivitiService {
         ProcessFlow processFlow = processFlowMapper.findByProductTypeAndName(activitiAuthenticatedForm.getProcessTypeId(), processStatus);
         activitiDto.setProcessFlowId(processFlow==null?"":processFlow.getId());
         activitiDto.setProcessFlowId(processFlow.getPositionId());
-        notify(activitiAuthenticatedForm.getName(),activitiAuthenticatedForm.getId(),processFlow.getPositionId(),processStatus);
         return activitiDto;
     }
 
@@ -70,9 +69,6 @@ public class ActivitiService {
         activitiAuditDto.setProcessFlowId(processFlow.getId());
         activitiAuditDto.setPositionId(processFlow.getPositionId());
         activitiAuditDto.setProcessStatus(getProcessStatus(processFlow, activitiAuditForm.getPass()));
-        if(activitiAuditForm.getPass()){
-            notify(activitiAuditForm.getName(),activitiAuditForm.getId(),processFlow.getPositionId(),getProcessStatus(processFlow,activitiAuditForm.getPass()));
-        }
         return activitiAuditDto;
     }
 
