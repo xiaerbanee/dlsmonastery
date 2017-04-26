@@ -59,9 +59,8 @@ public class OfficeService {
 
     public List<String> getOfficeFilterIds(String accountId){
         List<String> officeIdList= Lists.newArrayList();
-        Account account=accountManager.findOne(accountId);
-        if(account!=null){
-            officeIdList= officeManager.officeFilter(account);
+        if(accountId!=null){
+            officeIdList= officeManager.officeFilter(accountId);
         }
         return officeIdList;
     }
@@ -86,7 +85,7 @@ public class OfficeService {
             Office office = officeMapper.findOne(officeForm.getId());
             officeForm= BeanUtil.map(office,OfficeForm.class);
             OfficeRule officeRule=officeRuleMapper.findOne(office.getOfficeRuleId());
-            if(officeRule!=null&& OfficeRuleEnum.后勤部门.getType().equals(officeRule.getType())){
+            if(officeRule!=null&& OfficeRuleEnum.support.name().equals(officeRule.getType())){
                 List<String> businessOffices=officeBusinessMapper.findBusinessIdById(office.getId());
                 officeForm.setOfficeTree(getOfficeTree(businessOffices));
             }

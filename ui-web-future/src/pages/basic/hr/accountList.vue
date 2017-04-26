@@ -45,9 +45,7 @@
         <el-table-column prop="employeeName" :label="$t('accountList.employeeName')"></el-table-column>
         <el-table-column prop="leaderName" sortable :label="$t('accountList.leader')" width="120"></el-table-column>
         <el-table-column prop="officeName" :label="$t('accountList.officeName')"></el-table-column>
-        <el-table-column prop="dataOfficeName" :label="$t('accountList.dataScopeOffice')"></el-table-column>
         <el-table-column prop="positionName" :label="$t('accountList.positionName')"></el-table-column>
-        <el-table-column prop="dataScopeLabel" :label="$t('accountList.positionDataScope')" width="120"></el-table-column>
         <el-table-column prop="viewReport" :label="$t('accountList.viewReport')">
           <template scope="scope">
             <el-tag :type="scope.row.viewReport ? 'primary' : 'danger'">{{scope.row.viewReport | bool2str}}</el-tag>

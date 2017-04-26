@@ -17,7 +17,7 @@ public interface OfficeMapper extends MyMapper<Office,String> {
 
     List<Office> findByType(String type);
 
-    List<Office> findByAccountId(String accountId);
+    Office findByAccountId(String accountId);
 
     List<Office> findByAccountIds(List<String> accountIds);
 
@@ -33,5 +33,4 @@ public interface OfficeMapper extends MyMapper<Office,String> {
 
     Page<OfficeDto> findPage(@Param("pageable") Pageable pageable, @Param("p")OfficeQuery officeQuery);
 
-    int saveBusinessOfficeList(@Param("officeId")String officeId,@Param("businessOffices")List<String> businessOfficeIds);
 }

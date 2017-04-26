@@ -1,10 +1,7 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import net.myspring.basic.common.enums.DataScopeEnum;
 import net.myspring.basic.common.utils.Const;
-import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.service.JobService;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
@@ -16,21 +13,16 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import net.myspring.basic.modules.hr.service.PositionService;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "hr/position")
@@ -63,7 +55,6 @@ public class PositionController {
         List<String> backendModuleIdList = positionForm.isCreate()? Lists.newArrayList() : backendModuleService.findBackendModuleIdByPosition(positionForm.getId());
         positionForm.setPermissionTree(permissionService.findBackendTree(backendModuleIdList));
         positionForm.setJobList( jobService.findAll());
-        positionForm.setDataScopeMap(DataScopeEnum.getMap());
         return positionForm;
     }
 

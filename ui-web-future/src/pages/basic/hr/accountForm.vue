@@ -30,11 +30,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('accountForm.dataScopeOffice')" prop="officeIdList">
-              <el-select v-model="inputForm.officeIdList" multiple filterable remote :placeholder="$t('accountForm.inputWord')" :remote-method="remoteDataScopeOffice" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="office in dataScopeOffices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item :label="$t('accountForm.viewReport')" prop="viewReport">
               <el-radio-group v-model="inputForm.viewReport">
                 <el-radio :label=1>{{$t('accountForm.true')}}</el-radio>

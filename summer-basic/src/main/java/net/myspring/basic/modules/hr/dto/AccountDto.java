@@ -2,12 +2,9 @@ package net.myspring.basic.modules.hr.dto;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.dto.DataDto;
-import net.myspring.basic.common.enums.DataScopeEnum;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -42,9 +39,6 @@ public class AccountDto extends DataDto<Account> {
     private String employeeName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "status")
     private String employeeStatus;
-    @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "dataScope")
-    private Integer positionDataScope;
-    private String dataOfficeName;
 
     public String getEmployeeName() {
         return employeeName;
@@ -150,14 +144,6 @@ public class AccountDto extends DataDto<Account> {
         this.regularDate = regularDate;
     }
 
-    public String getDataScopeLabel(){
-        Map<Integer, String> map = DataScopeEnum.getMap();
-        if(CollectionUtil.isNotEmpty(map)){
-            return map.get(positionDataScope);
-        }
-        return "";
-    }
-
     public String getType() {
         return type;
     }
@@ -166,7 +152,7 @@ public class AccountDto extends DataDto<Account> {
         this.type = type;
     }
 
-    public boolean isViewReport() {
+    public boolean getViewReport() {
         return viewReport;
     }
 
@@ -182,27 +168,11 @@ public class AccountDto extends DataDto<Account> {
         this.employeeStatus = employeeStatus;
     }
 
-    public Integer getPositionDataScope() {
-        return positionDataScope;
-    }
-
-    public void setPositionDataScope(Integer positionDataScope) {
-        this.positionDataScope = positionDataScope;
-    }
-
     public List<String> getOfficeIdList() {
         return officeIdList;
     }
 
     public void setOfficeIdList(List<String> officeIdList) {
         this.officeIdList = officeIdList;
-    }
-
-    public String getDataOfficeName() {
-        return dataOfficeName;
-    }
-
-    public void setDataOfficeName(String dataOfficeName) {
-        this.dataOfficeName = dataOfficeName;
     }
 }

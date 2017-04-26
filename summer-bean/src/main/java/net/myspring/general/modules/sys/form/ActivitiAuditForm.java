@@ -10,15 +10,25 @@ public class ActivitiAuditForm {
     private String processTypeId;
     private String comment;
     private boolean pass;
+    private String accountId;
 
     public ActivitiAuditForm(){};
-    public ActivitiAuditForm(String id,String name,String processInstanceId,String processTypeId,String comment,boolean pass){
+    public ActivitiAuditForm(String id,String name,String processInstanceId,String processTypeId,String comment,boolean pass,String accountId){
         this.pass=pass;
         this.id=id;
         this.name=name;
+        this.accountId=accountId;
         this.processInstanceId=processInstanceId;
         this.processTypeId=processTypeId;
         this.comment=comment;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getId() {

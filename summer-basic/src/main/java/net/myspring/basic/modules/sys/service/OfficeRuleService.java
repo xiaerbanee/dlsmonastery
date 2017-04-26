@@ -51,11 +51,7 @@ public class OfficeRuleService {
 
     public OfficeRule save(OfficeRuleForm officeRuleForm) {
         OfficeRule officeRule;
-        if(StringUtils.isBlank(officeRuleForm.getParentId())){
-            officeRuleForm.setParentIds(Const.ROOT_PARENT_IDS);
-        }else {
-            officeRuleForm.setParentIds(getParentIds(officeRuleForm.getParentId()));
-        }
+        setParentIdsAndLevel(officeRuleForm);
         if (officeRuleForm.isCreate()) {
             officeRule=BeanUtil.map(officeRuleForm,OfficeRule.class);
             officeRuleMapper.save(officeRule);
@@ -70,12 +66,17 @@ public class OfficeRuleService {
         officeRuleMapper.logicDeleteOne(officeRuleForm.getId());
     }
 
-    private String getParentIds(String parentId){
-        String parentIds="";
-        OfficeRule parent=officeRuleMapper.findOne(parentId);
-        if(parent!=null){
-            parentIds=parent.getParentIds()+parentId;
+    private void setParentIdsAndLevel(OfficeRuleForm officeRuleForm){
+        if(StringUtils.isBlank(officeRuleForm.getParentId())){
+            officeRuleForm.setParentIds(Const.ROOT_PARENT_IDS);
+            officeRuleForm.setLevel(1);
+        }else {
+            OfficeRule parent=officeRuleMapper.findOne(officeRuleForm.getParentId());
+            if(parent!=null){
+                String parentIds=parent.getParentIds()+officeRuleForm.getParentId();
+                officeRuleForm.setParentIds(parentIds);
+                officeRuleForm.setLevel(parent.getLevel()==null?1:parent.getLevel()+1);
+            }
         }
-        return parentIds;
     }
 }

@@ -7,14 +7,24 @@ public class ActivitiAuthenticatedForm {
     private String id;
     private String name;
     private String key;
+    private String accountId;
     private String processTypeId;
 
     public ActivitiAuthenticatedForm(){};
-    public ActivitiAuthenticatedForm(String id,String name,String key,String processTypeId){
+    public ActivitiAuthenticatedForm(String id,String name,String key,String processTypeId,String accountId){
         this.id=id;
         this.name=name;
         this.key=key;
         this.processTypeId=processTypeId;
+        this.accountId=accountId;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getId() {

@@ -51,7 +51,8 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "periksa"
+    audit: "periksa",
+    remarks: "keterangan / komen",
   },
   accountForm: {
     accountForm: "FORMULIR AKUN",

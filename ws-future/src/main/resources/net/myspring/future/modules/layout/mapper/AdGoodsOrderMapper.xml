@@ -44,9 +44,8 @@
         <if test="p.officeName != null">
             and t1.created_by in (
             select t2.id
-            from hr_account t2 , hr_account_office t3, hr_office t4
-            where t2.id = t3.account_id
-            and t3.office_id = t4.id
+            from hr_account t2 ,  hr_office t4
+            and t2.office_id = t4.id
             and t4.name like CONCAT('%',#{p.officeName},'%')
             )
         </if>
