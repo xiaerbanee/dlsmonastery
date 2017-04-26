@@ -27,10 +27,8 @@
         <el-table-column prop="createdByName" :label="$t('chainList.createdBy')"></el-table-column>
         <el-table-column fixed="right" :label="$t('chainList.operation')" width="140">
           <template scope="scope">
-            <!--<div v-for="action in scope.row.actionList" :key="action" class="action">-->
-              <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
-              <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
-            <!--</div>-->
+              <el-button size="small" v-permit="'crm:chain:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('chainList.edit')}}</el-button>
+              <el-button size="small" v-permit="'crm:chain:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('chainList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -80,9 +78,9 @@
       },itemAdd(){
         this.$router.push({ name: 'chainForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'chainForm', query: { id: id }})
-        } else if(action=="删除") {
+        } else if(action=="delete") {
           axios.get('/api/ws/future/basic/chain/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
             this.pageRequest();
