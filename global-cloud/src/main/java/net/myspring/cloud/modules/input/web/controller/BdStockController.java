@@ -18,7 +18,7 @@ import java.util.List;
  * Created by lihx on 2017/4/5.
  */
 @RestController
-@RequestMapping(value = "kingdee/bdStock")
+@RequestMapping(value = "input/bdStock")
 public class BdStockController {
     @Autowired
     private BdStockService bdStockService;

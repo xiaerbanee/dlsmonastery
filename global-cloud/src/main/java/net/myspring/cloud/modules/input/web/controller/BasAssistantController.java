@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by lihx on 2017/4/6.
  */
 @RestController
-@RequestMapping(value = "kingdee/basAssistant")
+@RequestMapping(value = "input/basAssistant")
 public class BasAssistantController {
     @Autowired
     private BasAssistantService basAssistantService;

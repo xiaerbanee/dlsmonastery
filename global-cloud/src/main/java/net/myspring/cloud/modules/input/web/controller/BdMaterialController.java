@@ -17,7 +17,7 @@ import java.util.List;
  * Created by lihx on 2017/4/5.
  */
 @RestController
-@RequestMapping(value = "kingdee/bdMaterial")
+@RequestMapping(value = "input/bdMaterial")
 public class BdMaterialController {
     @Autowired
     private BdMaterialService bdMaterialService;

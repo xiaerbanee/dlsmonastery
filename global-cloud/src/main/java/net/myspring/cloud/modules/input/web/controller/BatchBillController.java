@@ -27,7 +27,7 @@ import java.util.List;
  * Created by lihx on 2017/4/25.
  */
 @Controller
-@RequestMapping(value = "kingdee/batchBill")
+@RequestMapping(value = "input/batchBill")
 public class BatchBillController {
     @Autowired
     private BdMaterialService bdMaterialService;
@@ -54,7 +54,7 @@ public class BatchBillController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(String data, String storeCode, String billDate, RedirectAttributes redirectAttributes, ServletRequest request) {
+    public RestResponse save(String data, String storeCode, String billDate,ServletRequest request) {
         RestResponse restResponse = new RestResponse();
         if("false".equals(request.getAttribute("doubleSubmit").toString())) {
             data = HtmlUtils.htmlUnescape(data);

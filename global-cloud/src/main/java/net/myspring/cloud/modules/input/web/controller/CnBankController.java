@@ -17,7 +17,7 @@ import java.util.List;
  * Created by lihx on 2017/4/6.
  */
 @RestController
-@RequestMapping(value = "kingdee/cnBank")
+@RequestMapping(value = "input/cnBank")
 public class CnBankController {
     @Autowired
     private CnBankService cnBankService;

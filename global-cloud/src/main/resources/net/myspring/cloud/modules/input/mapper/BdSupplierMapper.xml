@@ -11,4 +11,14 @@
        where
        t1.FSUPPLIERID = t2.FSUPPLIERID
     </select>
+
+    <select id="findNameBySupplierId" resultType="String">
+        select
+        t2.FNAME
+        from
+        T_BD_SUPPLIER t1
+        left join T_BD_SUPPLIER_L t2 on t1.FSUPPLIERID = t2.FSUPPLIERID
+        where
+        t2.FSUPPLIERID = #{supplierId}
+    </select>
 </mapper>
