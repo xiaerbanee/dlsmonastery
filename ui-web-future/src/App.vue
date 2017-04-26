@@ -119,8 +119,6 @@
             activeMenu="login";
         }
         if(this.secondCategory !=null && this.secondCategory.length>0&&activeMenu!="home"&&activeMenu!="login") {
-            console.log(this.menuMap[activeMenu]);
-          console.log( this.secondCategory);
           if(!this.menuMap[activeMenu]) {
             this.activeCategory = this.secondCategory[0].code;
 
@@ -156,7 +154,6 @@
         this.secondCategory = [];
         this.id = event.target.dataset.backendId;
         this.secondCategory = this.menus.backendModuleMap[this.id];
-        console.log(this.secondCategory )
         this.getCategory();
       },
       getCategory(){
