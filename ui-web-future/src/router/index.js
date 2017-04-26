@@ -3,9 +3,9 @@ import Router from 'vue-router'
 import common from './common'
 import basicHr from './basic_hr'
 import basicSys from './basic_sys'
-import businessBasic from './business_basic'
-import businessCrm from './business_crm'
-import businessLayout from './business_layout'
+import businessBasic from './future_basic'
+import businessCrm from './future_crm'
+import businessLayout from './future_layout'
 
 Vue.use(Router)
 

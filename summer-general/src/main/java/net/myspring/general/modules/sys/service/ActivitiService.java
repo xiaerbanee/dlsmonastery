@@ -76,6 +76,7 @@ public class ActivitiService {
         ProcessTask processTask = processTaskMapper.findByNameAndExtendId(name,extendId);
         if(processTask==null){
             processTask =new ProcessTask();
+            processTask.setAutoAuditing(false);
             processTask.setName(name);
             processTask.setExtendId(extendId);
             processTask.setPositionId(positionId);

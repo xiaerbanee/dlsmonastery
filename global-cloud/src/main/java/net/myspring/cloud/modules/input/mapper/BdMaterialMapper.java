@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface BdMaterialMapper {
 
-    List<BdMaterial> findAll(@Param("maxOutDate")LocalDateTime maxOutDate);
+    List<BdMaterial> findAll();
 
-
+    List<BdMaterial> findByDate(@Param("maxOutDate")LocalDateTime maxOutDate);
 }

@@ -1,12 +1,11 @@
 package net.myspring.future.modules.basic.web.controller;
 
-import com.google.common.collect.Maps;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeDto;
 import net.myspring.future.modules.basic.service.DemoPhoneTypeService;
 import net.myspring.future.modules.basic.service.ProductTypeService;
-import net.myspring.future.modules.basic.web.Query.DemoPhoneTypeQuery;
+import net.myspring.future.modules.basic.web.query.DemoPhoneTypeQuery;
 import net.myspring.future.modules.basic.web.form.DemoPhoneTypeDetailForm;
 import net.myspring.future.modules.basic.web.form.DemoPhoneTypeForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/demoPhoneType")

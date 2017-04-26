@@ -5,15 +5,13 @@ import net.myspring.future.modules.basic.domain.Dealer;
 import net.myspring.future.modules.basic.dto.DealerDto;
 import net.myspring.future.modules.basic.manager.DealerManager;
 import net.myspring.future.modules.basic.mapper.DealerMapper;
-import net.myspring.future.modules.basic.web.Query.DealerQuery;
+import net.myspring.future.modules.basic.web.query.DealerQuery;
 import net.myspring.future.modules.basic.web.form.DealerForm;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 public class DealerService {

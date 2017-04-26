@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by lihx on 2017/4/6.
  */
 @RestController
-@RequestMapping(value = "kingdee/hrEmpinfo")
+@RequestMapping(value = "input/hrEmpinfo")
 public class HrEmpInfoController {
     @Autowired
     private HrEmpInfoService hrEmpInfoService;

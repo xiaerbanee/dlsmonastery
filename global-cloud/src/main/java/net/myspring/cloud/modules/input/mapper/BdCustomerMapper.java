@@ -13,9 +13,15 @@ import java.util.List;
 @Mapper
 public interface BdCustomerMapper {
 
-    List<BdCustomer> findAll(@Param("maxOutDate")LocalDateTime maxOutDate);
+    List<BdCustomer> findAll();
+
+    List<BdCustomer> findByDate(@Param("maxOutDate")LocalDateTime maxOutDate);
 
     List<BdCustomer> findByName(@Param("name") String name);
 
     List<String> findName();
+
+    BdCustomer findById(@Param("id")String id);
+
+    List<BdCustomer> findByPrimaryGroup(@Param("primaryGroup")String primaryGroup);
 }

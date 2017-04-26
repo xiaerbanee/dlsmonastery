@@ -2,12 +2,11 @@ package net.myspring.future.modules.basic.service;
 
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Chain;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ChainDto;
 import net.myspring.future.modules.basic.manager.ChainManager;
 import net.myspring.future.modules.basic.mapper.ChainMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.web.Query.ChainQuery;
+import net.myspring.future.modules.basic.web.query.ChainQuery;
 import net.myspring.future.modules.basic.web.form.ChainForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -16,9 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -66,7 +62,7 @@ public class ChainService {
         }else{
             chain=chainManager.updateForm(chainForm);
         }
-        List<Depot> depotList = depotMapper.findByIds(chainForm.getPageIds());
+        /*List<Depot> depotList = depotMapper.findByIds(chainForm.getPageIds());
         for(Depot depot:depotList){
             if(!chainForm.getDepotIdList().contains(depot.getId())){
                 depot.setChainId(null);
@@ -77,7 +73,7 @@ public class ChainService {
                     depotMapper.update(depot);
                 }
             }
-        }
+        }*/
         if(CollectionUtil.isNotEmpty(chainForm.getAccountIdList())){
             if(!chainForm.isCreate()){
                 chainMapper.deleteByChainId(chain.getId());

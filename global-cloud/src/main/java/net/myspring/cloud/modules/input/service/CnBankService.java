@@ -18,8 +18,12 @@ public class CnBankService {
     @Autowired
     private CnBankMapper cnBankMapper;
 
-    public List<CnBank> findAll(LocalDateTime maxOutDate){
-        return cnBankMapper.findAll(maxOutDate);
+    public List<CnBank> findAll(){
+        return cnBankMapper.findAll();
+    }
+
+    public List<CnBank> findByDate(LocalDateTime maxOutDate){
+        return cnBankMapper.findByDate(maxOutDate);
     }
 
 }

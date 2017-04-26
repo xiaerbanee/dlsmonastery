@@ -18,8 +18,12 @@ public class BdMaterialService {
     @Autowired
     private BdMaterialMapper bdMaterialMapper;
 
-    public List<BdMaterial> findAll(LocalDateTime maxOutDate){
-        return bdMaterialMapper.findAll(maxOutDate);
+    public List<BdMaterial> findAll(){
+        return bdMaterialMapper.findAll();
+    }
+
+    public List<BdMaterial> findByDate(LocalDateTime maxOutDate){
+        return bdMaterialMapper.findByDate(maxOutDate);
     }
 
 }

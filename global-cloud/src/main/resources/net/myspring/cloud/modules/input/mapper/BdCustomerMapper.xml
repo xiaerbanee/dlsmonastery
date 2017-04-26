@@ -3,24 +3,41 @@
 <mapper namespace="net.myspring.cloud.modules.input.mapper.BdCustomerMapper">
     <select id="findAll" resultType="BdCustomer">
         SELECT
-        t1.FCUSTID,
-        t1.FNUMBER,
-        t2.FNAME,
-        t1.FPRIMARYGROUP,
-        t4.FNAME AS fprimaryGroupName,
-        t1.FMODIFYDATE
+            t1.FCUSTID,
+            t1.FNUMBER,
+            t2.FNAME,
+            t1.FPRIMARYGROUP,
+            t4.FNAME AS fprimaryGroupName,
+            t1.FMODIFYDATE
         FROM
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2,
+            T_BD_CUSTOMERGROUP t3,
+            T_BD_CUSTOMERGROUP_L t4
         WHERE
-        t1.FCUSTID = t2.FCUSTID
-        AND t1.FPRIMARYGROUP = t3.FID
-        AND t3.FID = t4.FID
-        <if test="maxOutDate != null ">
+            t1.FCUSTID = t2.FCUSTID
+            AND t1.FPRIMARYGROUP = t3.FID
+            AND t3.FID = t4.FID
+    </select>
+
+    <select id="findByDate" resultType="BdCustomer">
+        SELECT
+            t1.FCUSTID,
+            t1.FNUMBER,
+            t2.FNAME,
+            t1.FPRIMARYGROUP,
+            t4.FNAME AS fprimaryGroupName,
+            t1.FMODIFYDATE
+        FROM
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2,
+            T_BD_CUSTOMERGROUP t3,
+            T_BD_CUSTOMERGROUP_L t4
+        WHERE
+            t1.FCUSTID = t2.FCUSTID
+            AND t1.FPRIMARYGROUP = t3.FID
+            AND t3.FID = t4.FID
             AND t1.FMODIFYDATE > #{maxOutDate}
-        </if>
     </select>
 
     <select id="findByName" resultType="BdCustomer">
@@ -49,5 +66,40 @@
         FROM
         T_BD_CUSTOMER t1,
         LEFT JOIN T_BD_CUSTOMER_L t2 ON t1.FCUSTID = t2.FCUSTID
+    </select>
+
+    <select id="findById" resultType="BdCustomer">
+        SELECT
+        t1.FCUSTID,
+        t1.FNUMBER,
+        t1.FPRIMARYGROUP,
+        t1.FMODIFYDATE,
+        t2.FNAME
+        FROM
+        T_BD_CUSTOMER t1,
+        T_BD_CUSTOMER_L t2
+        where
+        t1.FCUSTID = t2.FCUSTID
+        and t1.FCUSTID = #{id}
+    </select>
+
+    <select id="findByPrimaryGroup" resultType="BdCustomer">
+        select
+        t1.FCUSTID,
+        t1.FNUMBER,
+        t1.FPRIMARYGROUP,
+        t1.FMODIFYDATE,
+        t2.FNAME,
+        t4.FNAME as fprimaryGroupName
+        from
+        T_BD_CUSTOMER t1,
+        T_BD_CUSTOMER_L t2,
+        T_BD_CUSTOMERGROUP t3,
+        T_BD_CUSTOMERGROUP_L t4
+        where
+        t1.FCUSTID=t2.FCUSTID
+        and t1.FPRIMARYGROUP=t3.FID
+        and t3.FID=t4.FID
+        and t1.FPRIMARYGROUP = #{primaryGroup}
     </select>
 </mapper>

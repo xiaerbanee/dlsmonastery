@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.input.mapper;
 
 import net.myspring.cloud.modules.input.domain.BdSupplier;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ import java.util.List;
 public interface BdSupplierMapper {
 
     List<BdSupplier> findAll();
+
+    String findNameBySupplierId(@Param("supplierId")String supplierId);
 }

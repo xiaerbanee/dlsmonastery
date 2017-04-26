@@ -17,7 +17,7 @@ import java.util.List;
  * Created by lihx on 2017/4/5.
  */
 @RestController
-@RequestMapping(value = "kingdee/bdMaterial")
+@RequestMapping(value = "input/bdMaterial")
 public class BdMaterialController {
     @Autowired
     private BdMaterialService bdMaterialService;
@@ -28,7 +28,7 @@ public class BdMaterialController {
         if(StringUtils.isNotBlank(maxOutDate)){
             localDateTime= LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
-        List<BdMaterial>  materialList = bdMaterialService.findAll(localDateTime);
+        List<BdMaterial>  materialList = bdMaterialService.findByDate(localDateTime);
         return materialList;
     }
 }

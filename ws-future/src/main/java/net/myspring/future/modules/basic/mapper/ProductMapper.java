@@ -3,7 +3,7 @@ package net.myspring.future.modules.basic.mapper;
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
-import net.myspring.future.modules.basic.web.Query.ProductQuery;
+import net.myspring.future.modules.basic.web.query.ProductQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface ProductMapper extends MyMapper<Product,String> {

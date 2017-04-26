@@ -17,18 +17,18 @@ import java.util.List;
  * Created by lihx on 2017/4/5.
  */
 @RestController
-@RequestMapping(value = "kingdee/bdCustomer")
+@RequestMapping(value = "input/bdCustomer")
 public class BdCustomerController {
     @Autowired
     private BdCustomerService bdCustomerService;
 
     @RequestMapping(value = "getCustomerList", method = RequestMethod.GET)
     public List<BdCustomer> getCustomerList(String maxOutDate) {
-        LocalDateTime localDateTime=null;
+        LocalDateTime localDateTime = null;
         if(StringUtils.isNotBlank(maxOutDate)){
-            localDateTime= LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
+            localDateTime = LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
-        List<BdCustomer> customerList = bdCustomerService.findAll(localDateTime);
+        List<BdCustomer> customerList = bdCustomerService.findByDate(localDateTime);
 
         return customerList;
     }

@@ -141,17 +141,9 @@ export default {
           this.labelData=response.data;
       })
     },synFactory(){
-      if(this.synDate!==''){
-        this.synDate=util.formatLocalDate(this.synDate);
-        window.open("http://ncoppo.com:1234/future/syn?companyName="+this.account.companyName.toUpperCase( )+"&date=" + this.synDate,"_blank");
-      }
-    },factoryOrder(){
-      if(this.account.companyName.toUpperCase( )=='JXVIVO'){
-        window.open("http://ncoppo.com:1234/factory/vivo/factoryOrder");
-      }
-      if(this.account.companyName.toUpperCase( )=='IDVIVO'){
-        window.open("http://idvivo.com:1234/factory/vivo/idFactoryOrder");
-      }
+      axios.get('/api/basic/sys/cache/init').then((response) =>{
+        this.$message(response.data.message);
+      })
     }
   },
   created(){

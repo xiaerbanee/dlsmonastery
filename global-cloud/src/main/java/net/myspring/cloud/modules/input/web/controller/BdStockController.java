@@ -18,7 +18,7 @@ import java.util.List;
  * Created by lihx on 2017/4/5.
  */
 @RestController
-@RequestMapping(value = "kingdee/bdStock")
+@RequestMapping(value = "input/bdStock")
 public class BdStockController {
     @Autowired
     private BdStockService bdStockService;
@@ -29,7 +29,7 @@ public class BdStockController {
         if(StringUtils.isNotBlank(maxOutDate)){
             localDateTime = LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
-        List<BdStock> stockList = bdStockService.findAll(localDateTime);
+        List<BdStock> stockList = bdStockService.findByDate(localDateTime);
         return stockList;
     }
 

@@ -1,24 +1,16 @@
 package net.myspring.future.modules.basic.web.controller;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.service.AdPricesystemService;
-import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.web.Query.AdPricesystemQuery;
+import net.myspring.future.modules.basic.web.query.AdPricesystemQuery;
 import net.myspring.future.modules.basic.web.form.AdPricesystemForm;
 import net.myspring.util.json.ObjectMapperUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "basic/adPricesystem")

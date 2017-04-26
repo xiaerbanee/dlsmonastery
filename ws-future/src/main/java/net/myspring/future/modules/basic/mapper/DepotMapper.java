@@ -3,7 +3,7 @@ package net.myspring.future.modules.basic.mapper;
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.web.Query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.model.DepotInventoryModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface DepotMapper extends MyMapper<Depot,String> {

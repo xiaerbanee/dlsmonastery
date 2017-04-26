@@ -10,7 +10,7 @@ import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.dto.BankDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.mapper.BankMapper;
-import net.myspring.future.modules.basic.web.Query.BankQuery;
+import net.myspring.future.modules.basic.web.query.BankQuery;
 import net.myspring.future.modules.basic.web.form.BankForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;

@@ -12,8 +12,10 @@ import java.util.List;
 @Mapper
 public interface BdDepartmentMapper {
 
-    BdDepartment findByCustomerId(@Param("customerId") String customerId);
+    BdDepartment findByCustomerId(@Param("customerId")String customerId);
 
     List<BdDepartment> findAll();
+
+    String findNameByDepartmentId(@Param("departmentId")String departmentId);
 
 }
