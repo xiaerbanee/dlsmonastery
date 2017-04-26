@@ -1,21 +1,23 @@
 import elementId from 'element-ui/lib/locale/lang/id'
 import basicHrId from"./basic_hr_id";
 import basicSysId from "./basic_sys_id"
-import businessBasicId from "./business_basic_id"
-import businessCrmId from "./business_crm_id"
-import businessLayoutId from "./business_layout_id"
+import businessBasicId from "./future_basic_id"
+import businessCrmId from "./future_crm_id"
+import businessLayoutId from "./future_layout_id"
 import commonId from "./common_id"
+import futureEnumId from "./future_enum_id"
 
 import elementZhCn from 'element-ui/lib/locale/lang/zh-CN'
 import basicHrZhCn from"./basic_hr_zh-CN";
 import basicSysZhCn from "./basic_sys_zh-CN"
-import businessBasicZhCn from "./business_basic_zh-CN"
-import businessCrmZhCn from "./business_crm_zh-CN"
-import businessLayoutZhCn from "./business_layout_zh-CN"
+import businessBasicZhCn from "./future_basic_zh-CN"
+import businessCrmZhCn from "./future_crm_zh-CN"
+import businessLayoutZhCn from "./future_layout_zh-CN"
 import commonZhCn from "./common_zh-CN"
+import futureEnumZhCn from "./future_enum_zh-CN"
 
-var idArray = [elementId,basicHrId,basicSysId,businessBasicId,businessCrmId,businessLayoutId,commonId];
-var zhCnArray = [elementZhCn,basicHrZhCn,basicSysZhCn,businessBasicZhCn,businessCrmZhCn,businessLayoutZhCn,commonZhCn];
+var idArray = [elementId,basicHrId,basicSysId,businessBasicId,businessCrmId,businessLayoutId,commonId,futureEnumId];
+var zhCnArray = [elementZhCn,basicHrZhCn,basicSysZhCn,businessBasicZhCn,businessCrmZhCn,businessLayoutZhCn,commonZhCn,futureEnumZhCn];
 
 var id = merge(idArray);
 var zhCn = merge(zhCnArray);
