@@ -75,34 +75,42 @@ public class AuditingInterceptor implements Interceptor {
     }
 
     private void setFieldValue(TableDto tableDto, Object entity, SqlCommandType sqlCommandType) throws NoSuchFieldException {
-        if (SqlCommandType.UPDATE == sqlCommandType || SqlCommandType.INSERT == sqlCommandType) {
-            LocalDateTime localDateTime = LocalDateTime.now();
-            if (SqlCommandType.INSERT == sqlCommandType) {
-                if (tableDto.getCreatedByColumn() != null) {
-                    Field field = ReflectionUtils.findField(entity.getClass(),tableDto.getCreatedByColumn().getJavaInstance());
-                    field.setAccessible(true);
-                    ReflectionUtils.setField(field,entity,mybatisContext.getAccountId());
+        Boolean autoAuditing = true;
+        if(tableDto.getAutoAuditingColumn() != null) {
+            Field field = ReflectionUtils.findField(entity.getClass(),tableDto.getAutoAuditingColumn().getJavaInstance());
+            field.setAccessible(true);
+            autoAuditing = (Boolean)ReflectionUtils.getField(field,entity);
+        }
+        if(autoAuditing) {
+            if (SqlCommandType.UPDATE == sqlCommandType || SqlCommandType.INSERT == sqlCommandType) {
+                LocalDateTime localDateTime = LocalDateTime.now();
+                if (SqlCommandType.INSERT == sqlCommandType) {
+                    if (tableDto.getCreatedByColumn() != null) {
+                        Field field = ReflectionUtils.findField(entity.getClass(),tableDto.getCreatedByColumn().getJavaInstance());
+                        field.setAccessible(true);
+                        ReflectionUtils.setField(field,entity,mybatisContext.getAccountId());
+                    }
+                    if (tableDto.getCreatedDateColumn() != null) {
+                        Field field =ReflectionUtils.findField(entity.getClass(),tableDto.getCreatedDateColumn().getJavaInstance());
+                        field.setAccessible(true);
+                        ReflectionUtils.setField(field,entity, localDateTime);
+                    }
+                    if (tableDto.getVersionColumn() != null) {
+                        Field field =  ReflectionUtils.findField(entity.getClass(),tableDto.getVersionColumn().getJavaInstance());
+                        field.setAccessible(true);
+                        ReflectionUtils.setField(field,entity, 0L);
+                    }
                 }
-                if (tableDto.getCreatedDateColumn() != null) {
-                    Field field =ReflectionUtils.findField(entity.getClass(),tableDto.getCreatedDateColumn().getJavaInstance());
+                if (tableDto.getLastModifiedByColumn() != null) {
+                    Field field =  ReflectionUtils.findField(entity.getClass(),tableDto.getLastModifiedByColumn().getJavaInstance());
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field,entity, mybatisContext.getAccountId());
+                }
+                if (tableDto.getLastModifiedDateColumn() != null) {
+                    Field field =  ReflectionUtils.findField(entity.getClass(),tableDto.getLastModifiedDateColumn().getJavaInstance());
                     field.setAccessible(true);
                     ReflectionUtils.setField(field,entity, localDateTime);
                 }
-                if (tableDto.getVersionColumn() != null) {
-                    Field field =  ReflectionUtils.findField(entity.getClass(),tableDto.getVersionColumn().getJavaInstance());
-                    field.setAccessible(true);
-                    ReflectionUtils.setField(field,entity, 0L);
-                }
-            }
-            if (tableDto.getLastModifiedByColumn() != null) {
-                Field field =  ReflectionUtils.findField(entity.getClass(),tableDto.getLastModifiedByColumn().getJavaInstance());
-                field.setAccessible(true);
-                ReflectionUtils.setField(field,entity, mybatisContext.getAccountId());
-            }
-            if (tableDto.getLastModifiedDateColumn() != null) {
-                Field field =  ReflectionUtils.findField(entity.getClass(),tableDto.getLastModifiedDateColumn().getJavaInstance());
-                field.setAccessible(true);
-                ReflectionUtils.setField(field,entity, localDateTime);
             }
         }
     }
