@@ -2,6 +2,7 @@ package net.myspring.general.modules.sys.domain;
 
 import net.myspring.common.domain.CompanyEntity;
 
+import javax.persistence.AutoAuditing;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -11,11 +12,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name="sys_process_task")
 public class ProcessTask  extends CompanyEntity<ProcessTask>{
+    @AutoAuditing
+    private Boolean autoAuditing = true;
     private String name;
     private String extendId;
     private String status;
     private String officeId;
     private String positionId;
+
+    public Boolean getAutoAuditing() {
+        return autoAuditing;
+    }
+
+    public void setAutoAuditing(Boolean autoAuditing) {
+        this.autoAuditing = autoAuditing;
+    }
 
     public String getName() {
         return name;
