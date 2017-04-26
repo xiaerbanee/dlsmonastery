@@ -1,5 +1,6 @@
 package net.myspring.future.common.utils;
 
+import com.google.common.collect.Maps;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,9 +43,13 @@ public class SecurityUtils {
     }
 
     private  static Map<String, Object> getAdditionalInformation() {
-        final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        Jwt jwt = JwtHelper.decode(details.getTokenValue());
-        Map<String,Object> map = ObjectMapperUtils.readValue(jwt.getClaims(),Map.class);
+        Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
+        Map<String,Object> map = Maps.newHashMap();
+        if(details instanceof  OAuth2AuthenticationDetails) {
+            OAuth2AuthenticationDetails oAuth2AuthenticationDetails = (OAuth2AuthenticationDetails)details;
+            Jwt jwt = JwtHelper.decode(oAuth2AuthenticationDetails.getTokenValue());
+            map = ObjectMapperUtils.readValue(jwt.getClaims(),Map.class);
+        }
         return map;
     }
 }
