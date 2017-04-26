@@ -44,7 +44,6 @@
             and office.parent_ids like CONCAT('%,',#{p.parentOfficeId},',%')
         </if>
         and t1.report_date = DATE_FORMAT(#{p.reportDateEnd},"%Y-%m-%d")
-        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter"/>
         <if test="p.levelDiff!=null and p.levelDiff!=0">
             group by office${p.levelDiff}.id,t1.report_type
         </if>
@@ -92,7 +91,6 @@
             )
         </if>
         and t1.report_date = DATE_FORMAT(#{p.reportDateEnd},"%Y-%m-%d")
-        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter"/>
         <if test="p.productTypeId !=null">
             group by t1.product_id,t1.report_type
         </if>

@@ -9,7 +9,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name="hr_duty_rest_overtime")
 public class DutyRestOvertime extends IdEntity<DutyRestOvertime> {
-    private DutyRest dutyRest;
     private String restId;
     private String overtimeId;
     private Double restHour;
@@ -36,13 +35,5 @@ public class DutyRestOvertime extends IdEntity<DutyRestOvertime> {
 
     public void setRestHour(Double restHour) {
         this.restHour = restHour;
-    }
-
-    public DutyRest getDutyRest() {
-        return dutyRest;
-    }
-
-    public void setDutyRest(DutyRest dutyRest) {
-        this.dutyRest = dutyRest;
     }
 }

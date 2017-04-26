@@ -1,22 +1,21 @@
 package net.myspring.basic.modules.sys.dto;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.domain.Backend;
-import net.myspring.basic.modules.sys.domain.BackendModule;
+import net.myspring.basic.modules.sys.domain.MenuCategory;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * Created by wangzm on 2017/4/19.
+ * Created by wangzm on 2017/4/26.
  */
-public class BackendMenuDto {
+public class BackendModuleMenuDto {
 
     private String id;
     private String name;
+    private String backendId;
     private String code;
-    private List<BackendModuleMenuDto> backendModuleList = Lists.newArrayList();
+    private List<MenuCategoryMenuDto> menuCategoryList= Lists.newArrayList();
 
     public String getName() {
         return name;
@@ -24,6 +23,14 @@ public class BackendMenuDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getBackendId() {
+        return backendId;
+    }
+
+    public void setBackendId(String backendId) {
+        this.backendId = backendId;
     }
 
     public String getCode() {
@@ -42,11 +49,11 @@ public class BackendMenuDto {
         this.id = id;
     }
 
-    public List<BackendModuleMenuDto> getBackendModuleList() {
-        return backendModuleList;
+    public List<MenuCategoryMenuDto> getMenuCategoryList() {
+        return menuCategoryList;
     }
 
-    public void setBackendModuleList(List<BackendModuleMenuDto> backendModuleList) {
-        this.backendModuleList = backendModuleList;
+    public void setMenuCategoryList(List<MenuCategoryMenuDto> menuCategoryList) {
+        this.menuCategoryList = menuCategoryList;
     }
 }

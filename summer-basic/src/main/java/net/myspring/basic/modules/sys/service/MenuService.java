@@ -10,8 +10,7 @@ import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.PositionModuleMapper;
 import net.myspring.basic.modules.sys.domain.*;
-import net.myspring.basic.modules.sys.dto.BackendMenuDto;
-import net.myspring.basic.modules.sys.dto.MenuDto;
+import net.myspring.basic.modules.sys.dto.*;
 import net.myspring.basic.modules.sys.manager.MenuManager;
 import net.myspring.basic.modules.sys.mapper.*;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
@@ -26,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.event.ListDataEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -158,41 +158,41 @@ public class MenuService {
         return menu;
     }
 
-    public BackendMenuDto getMenuMap(String accountId) {
-        BackendMenuDto backendMenuDto = new BackendMenuDto();
+    public ForeendMenuDto getMenuMap(String accountId) {
+        ForeendMenuDto foreendMenuDto = new ForeendMenuDto();
         Account account = accountManager.findOne(accountId);
-        Map<Backend, List<Menu>> backendMenuMap = getMenusMap(account,false);
-        backendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
-        Map<String, List<BackendModule>> backendModuleMap = Maps.newHashMap();
-        for (Backend backend : backendMenuMap.keySet()) {
+        Map<BackendMenuDto, List<Menu>> backendMenuMap = getMenusMap(account, false);
+        foreendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
+        Map<String, List<BackendModuleMenuDto>> backendModuleMap = Maps.newHashMap();
+        for (BackendMenuDto backend : backendMenuMap.keySet()) {
             backendModuleMap.put(backend.getId(), backend.getBackendModuleList());
         }
-        backendMenuDto.setBackendModuleMap(backendModuleMap);
-        return backendMenuDto;
+        foreendMenuDto.setBackendModuleMap(backendModuleMap);
+        return foreendMenuDto;
     }
 
     public List<Map<String, Object>> findMobileMenuMap(String accountId) {
-        Map<Backend, List<Menu>> backendMenuMap = Maps.newHashMap();
+        Map<BackendMenuDto, List<Menu>> backendMenuMap = Maps.newHashMap();
         Account account = accountManager.findOne(accountId);
         if (Const.XCXAUDIT.equals(account.getLoginName())) {
             List<String> menuIds = StringUtils.getSplitList(weixinAuditMenuId, Const.CHAR_COMMA);
             List<Menu> menus = menuMapper.findByIds(menuIds);
             backendMenuMap = getMenusMap(menus);
         } else {
-            backendMenuMap = getMenusMap(account,true);
+            backendMenuMap = getMenusMap(account, true);
         }
         List<Map<String, Object>> list = Lists.newArrayList();
-        for (Backend backend : backendMenuMap.keySet()) {
+        for (BackendMenuDto backendMenuDto : backendMenuMap.keySet()) {
             Map<String, Object> item = Maps.newHashMap();
-            item.put("category", backend);
-            item.put("menus", backendMenuMap.get(backend));
+            item.put("category", backendMenuDto);
+            item.put("menus", backendMenuMap.get(backendMenuDto));
             list.add(item);
         }
         return list;
     }
 
-    private Map<Backend, List<Menu>> getMenusMap(Account account,boolean isMobile) {
-        List<Menu> menus=Lists.newArrayList();
+    private Map<BackendMenuDto, List<Menu>> getMenusMap(Account account, boolean isMobile) {
+        List<Menu> menus = Lists.newArrayList();
         List<Menu> menuList;
         if (Const.HR_ACCOUNT_ADMIN_LIST.contains(account.getId())) {
             menuList = menuMapper.findAllEnabled();
@@ -221,32 +221,34 @@ public class MenuService {
         return getMenusMap(menus);
     }
 
-    private Map<Backend, List<Menu>> getMenusMap(List<Menu> menuList) {
-        Map<Backend, List<Menu>> backendMenuMap = Maps.newHashMap();
+    private Map<BackendMenuDto, List<Menu>> getMenusMap(List<Menu> menuList) {
+        Map<BackendMenuDto, List<Menu>> backendMenuMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(menuList)) {
             Map<String, List<Menu>> menuMap = CollectionUtil.extractToMapList(menuList, "menuCategoryId");
             List<MenuCategory> menuCategoryList = menuCategoryMapper.findByIds(Lists.newArrayList(menuMap.keySet()));
-            for (MenuCategory menuCategory : menuCategoryList) {
-                menuCategory.setMenuList(menuMap.get(menuCategory.getId()));
+            List<MenuCategoryMenuDto> categoryMenuDtoList = BeanUtil.map(menuCategoryList, MenuCategoryMenuDto.class);
+            for (MenuCategoryMenuDto menuCategoryMenuDto : categoryMenuDtoList) {
+                menuCategoryMenuDto.setMenuList(menuMap.get(menuCategoryMenuDto.getId()));
             }
-            Map<String, List<MenuCategory>> menuCategoryMap = CollectionUtil.extractToMapList(menuCategoryList, "backendModuleId");
+            Map<String, List<MenuCategoryMenuDto>> menuCategoryMap = CollectionUtil.extractToMapList(categoryMenuDtoList, "backendModuleId");
             if (CollectionUtil.isNotEmpty(menuCategoryMap)) {
                 List<BackendModule> backendModuleList = backendModuleMapper.findByIds(Lists.newArrayList(menuCategoryMap.keySet()));
-                for (BackendModule backendModule : backendModuleList) {
-                    backendModule.setMenuCategoryList(menuCategoryMap.get(backendModule.getId()));
+                List<BackendModuleMenuDto> moduleMenuDtoList = BeanUtil.map(backendModuleList, BackendModuleMenuDto.class);
+                for (BackendModuleMenuDto backendModuleMenuDto : moduleMenuDtoList) {
+                    backendModuleMenuDto.setMenuCategoryList(menuCategoryMap.get(backendModuleMenuDto.getId()));
                 }
-                Map<String, List<BackendModule>> backendModuleMap = CollectionUtil.extractToMapList(backendModuleList, "backendId");
+                Map<String, List<BackendModuleMenuDto>> backendModuleMap = CollectionUtil.extractToMapList(moduleMenuDtoList, "backendId");
                 if (CollectionUtil.isNotEmpty(backendModuleMap)) {
                     List<Backend> backendList = backendMapper.findByIds(Lists.newArrayList(backendModuleMap.keySet()));
-                    for (Backend backend : backendList) {
-                        backend.setBackendModuleList(backendModuleMap.get(backend.getId()));
+                    for (BackendMenuDto backendMenuDto : BeanUtil.map(backendList, BackendMenuDto.class)) {
+                        backendMenuDto.setBackendModuleList(backendModuleMap.get(backendMenuDto.getId()));
                         List<Menu> menus = Lists.newArrayList();
-                        for (BackendModule backendModule : backend.getBackendModuleList()) {
-                            for (MenuCategory menuCategory : backendModule.getMenuCategoryList()) {
+                        for (BackendModuleMenuDto backendModule : backendMenuDto.getBackendModuleList()) {
+                            for (MenuCategoryMenuDto menuCategory : backendModule.getMenuCategoryList()) {
                                 menus.addAll(menuCategory.getMenuList());
                             }
                         }
-                        backendMenuMap.put(backend, menus);
+                        backendMenuMap.put(backendMenuDto, menus);
                     }
                 }
             }

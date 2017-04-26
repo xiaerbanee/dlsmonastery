@@ -22,11 +22,6 @@ public class DutyRest extends AuditEntity<DutyRest> {
     private String employeeId;
     private String dutyAnnualId;
 
-    @Transient
-    private Double overtimeLeftHour;
-    @Transient
-    private Double annualLeftHour;
-
     public String getType() {
         return type;
     }
@@ -97,21 +92,5 @@ public class DutyRest extends AuditEntity<DutyRest> {
 
     public void setDutyAnnualId(String dutyAnnualId) {
         this.dutyAnnualId = dutyAnnualId;
-    }
-
-    public Double getOvertimeLeftHour() {
-        return overtimeLeftHour;
-    }
-
-    public void setOvertimeLeftHour(Double overtimeLeftHour) {
-        this.overtimeLeftHour = overtimeLeftHour;
-    }
-
-    public Double getAnnualLeftHour() {
-        return annualLeftHour;
-    }
-
-    public void setAnnualLeftHour(Double annualLeftHour) {
-        this.annualLeftHour = annualLeftHour;
     }
 }

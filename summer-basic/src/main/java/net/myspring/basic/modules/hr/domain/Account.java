@@ -17,16 +17,12 @@ public class Account extends CompanyEntity<Account> {
     private Integer version = 0;
     private String password;
     private String leaderId;
-    private Account leader;
     private String type;
     private String outId;
     private String outPassword;
     private Boolean viewReport;
-    private Position position;
     private String positionId;
-    private Office office;
     private String officeId;
-    private Employee employee;
     private String employeeId;
     private String dealerId;
 
@@ -62,14 +58,6 @@ public class Account extends CompanyEntity<Account> {
         this.leaderId = leaderId;
     }
 
-    public Account getLeader() {
-        return leader;
-    }
-
-    public void setLeader(Account leader) {
-        this.leader = leader;
-    }
-
     public String getType() {
         return type;
     }
@@ -102,14 +90,6 @@ public class Account extends CompanyEntity<Account> {
         this.viewReport = viewReport;
     }
 
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
     public String getPositionId() {
         return positionId;
     }
@@ -118,28 +98,12 @@ public class Account extends CompanyEntity<Account> {
         this.positionId = positionId;
     }
 
-    public Office getOffice() {
-        return office;
-    }
-
-    public void setOffice(Office office) {
-        this.office = office;
-    }
-
     public String getOfficeId() {
         return officeId;
     }
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     public String getEmployeeId() {
@@ -157,5 +121,4 @@ public class Account extends CompanyEntity<Account> {
     public void setDealerId(String dealerId) {
         this.dealerId = dealerId;
     }
-
 }

@@ -18,7 +18,6 @@ public class OfficeChange extends CompanyEntity<OfficeChange> {
     private Integer version = 0;
     private String processInstanceId;
     private String processStatus;
-    private Office office;
     private String officeId;
     private String processTypeId;
     private String processFlowId;
@@ -85,14 +84,6 @@ public class OfficeChange extends CompanyEntity<OfficeChange> {
 
     public void setProcessStatus(String processStatus) {
         this.processStatus = processStatus;
-    }
-
-    public Office getOffice() {
-        return office;
-    }
-
-    public void setOffice(Office office) {
-        this.office = office;
     }
 
     public String getOfficeId() {

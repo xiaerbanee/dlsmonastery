@@ -32,6 +32,6 @@ public interface PermissionMapper extends MyMapper<Permission,String> {
 
     int deletePermissionPosition(@Param("permissionId")String permissionId);
 
-    List<NameValueDto> findNameValueByPositionId(List<String> permissionIds);
+    List<String> findPositionIdByPermissions(List<String> permissionIds);
 
 }

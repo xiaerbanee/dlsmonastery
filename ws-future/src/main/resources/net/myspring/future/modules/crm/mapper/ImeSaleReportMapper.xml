@@ -53,7 +53,6 @@
             AND product.has_ime=1
             )
         </if>
-        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter"/>
         <if test="p.levelDiff!=null and p.levelDiff!=0">
             group by office${p.levelDiff}.id,t1.report_type
             order by office${p.levelDiff}.name
@@ -103,7 +102,6 @@
         </if>
         and t1.report_date >= #{p.reportDateStart}
         and t1.report_date &lt;= #{p.reportDateEnd}
-        <include refid="net.myspring.future.modules.hr.mapper.OfficeMapper.officeFilter"/>
         <if test="p.productTypeId !=null">
             group by t1.product_id,t1.report_type
             order by product.name

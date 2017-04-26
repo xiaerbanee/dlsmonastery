@@ -60,7 +60,7 @@
         });
       },initLogin() {
         var that = this;
-        axios.post('/api/basic/hr/account/getAccountMessage').then((response)=>{
+        axios.post('/api/basic/hr/account/getAccountInfo').then((response)=>{
           that.$store.dispatch('setAccount',response.data.account);
           that.$store.dispatch('setMenus',response.data.menus);
           that.$store.dispatch('setAuthorityList',response.data.authorityList);

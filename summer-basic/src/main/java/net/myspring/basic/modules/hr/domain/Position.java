@@ -20,7 +20,6 @@ public class Position extends CompanyEntity<Position> {
     private String reportName;
     private Integer sort;
     private String type;
-    private Job job;
     private String jobId;
 
     public String getName() {
@@ -85,14 +84,6 @@ public class Position extends CompanyEntity<Position> {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Job getJob() {
-        return job;
-    }
-
-    public void setJob(Job job) {
-        this.job = job;
     }
 
     public String getJobId() {

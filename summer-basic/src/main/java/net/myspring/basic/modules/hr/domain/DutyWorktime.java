@@ -18,7 +18,6 @@ public class DutyWorktime extends CompanyEntity<DutyWorktime> {
     private LocalDate dutyDate;
     private LocalTime dutyTime;
     private Integer version = 0;
-    private Employee employee;
     private String employeeId;
 
     private String dutyTimeStart;
@@ -54,14 +53,6 @@ public class DutyWorktime extends CompanyEntity<DutyWorktime> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     public String getEmployeeId() {

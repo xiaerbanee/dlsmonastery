@@ -11,21 +11,12 @@ import javax.persistence.Table;
 @Table(name="hr_account_message")
 public class AccountMessage extends CompanyEntity<AccountMessage> {
     private String toAccountId;
-    private Account toAccount;
     private String title;
     private String content;
     private String url;
     private String attachment;
     private Boolean readed;
     private Integer version = 0;
-
-    public Account getToAccount() {
-        return toAccount;
-    }
-
-    public void setToAccount(Account toAccount) {
-        this.toAccount = toAccount;
-    }
 
     public String getToAccountId() {
         return toAccountId;

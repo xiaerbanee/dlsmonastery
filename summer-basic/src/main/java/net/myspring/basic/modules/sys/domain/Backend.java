@@ -15,9 +15,18 @@ import net.myspring.common.domain.DataEntity;
 @Table(name = "sys_backend")
 public class Backend extends DataEntity<Backend> {
     private String name;
+    private String code;
     private Integer version = 0;
-    private List<BackendModule> backendModuleList = Lists.newArrayList();
     private List<String> backendModuleIdList = Lists.newArrayList();
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getName() {
         return name;
     }
@@ -32,14 +41,6 @@ public class Backend extends DataEntity<Backend> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public List<BackendModule> getBackendModuleList() {
-        return backendModuleList;
-    }
-
-    public void setBackendModuleList(List<BackendModule> backendModuleList) {
-        this.backendModuleList = backendModuleList;
     }
 
     public List<String> getBackendModuleIdList() {
