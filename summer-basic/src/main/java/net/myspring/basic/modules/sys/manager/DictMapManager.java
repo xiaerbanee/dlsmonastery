@@ -29,7 +29,7 @@ public class DictMapManager {
         return dictMapMapper.findOne(id);
     }
 
-    @Cacheable(value = "dictMaps",key="#p0.id")
+    @CachePut(value = "dictMaps",key="#p0.id")
     public DictMap save(DictMap dictMap){
         dictMapMapper.save(dictMap);
         return  dictMap;

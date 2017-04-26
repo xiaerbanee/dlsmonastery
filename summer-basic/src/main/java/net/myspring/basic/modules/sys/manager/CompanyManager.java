@@ -26,13 +26,13 @@ public class CompanyManager {
         return companyMapper.findOne(id);
     }
 
-    @Cacheable(value = "companys",key="#p0.id")
+    @CachePut(value = "companys",key="#p0.id")
     public Company save(Company company){
         companyMapper.save(company);
         return  company;
     }
 
-    @Cacheable(value = "companys",key="#p0.id")
+    @CachePut(value = "companys",key="#p0.id")
     public Company saveForm(CompanyForm companyForm){
         companyMapper.save(BeanUtil.map(companyForm,Company.class));
         return  companyMapper.findOne(companyForm.getId());
