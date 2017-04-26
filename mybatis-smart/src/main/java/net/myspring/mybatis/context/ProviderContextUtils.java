@@ -50,8 +50,8 @@ public class ProviderContextUtils {
                 List<Field> fields = Lists.newArrayList();
                 getFields(fields, clazz);
                 for (Field field : fields) {
+                    ColumnDto columnDto = getColumnDto(field);
                     if (isJdbcColumn(field)) {
-                        ColumnDto columnDto = getColumnDto(field);
                         //检查是否是ID
                         if (field.getAnnotation(Id.class) != null) {
                             tableDto.setIdColumn(columnDto);
@@ -71,11 +71,11 @@ public class ProviderContextUtils {
                         if (field.getAnnotation(Version.class) != null) {
                             tableDto.setVersionColumn(columnDto);
                         }
-                        if(field.getAnnotation(AutoAuditing.class) != null) {
-                            tableDto.setAutoAuditingColumn(columnDto);
-                        }
                         columnDto.setTableDto(tableDto);
                         tableDto.getColumnList().add(columnDto);
+                    }
+                    if(field.getAnnotation(AutoAuditing.class) != null) {
+                        tableDto.setAutoAuditingColumn(columnDto);
                     }
                 }
                 tableDtoMap.put(key, tableDto);
