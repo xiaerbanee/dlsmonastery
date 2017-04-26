@@ -28,7 +28,7 @@ public class CnBankController {
         if(StringUtils.isNotBlank(maxOutDate)){
             localDateTime = LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
-        List<CnBank> bankList = cnBankService.findAll(localDateTime);
+        List<CnBank> bankList = cnBankService.findByDate(localDateTime);
         return bankList;
     }
 }

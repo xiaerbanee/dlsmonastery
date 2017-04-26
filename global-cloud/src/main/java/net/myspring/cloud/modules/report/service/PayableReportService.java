@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.report.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.BillTypeEnum;
+import net.myspring.cloud.common.enums.PayableBillTypeEnum;
 import net.myspring.cloud.modules.input.domain.BdDepartment;
 import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.input.domain.BdSupplier;
@@ -38,9 +38,12 @@ public class PayableReportService {
     public List<PayableForDetailDto> getDetailList(LocalDate dateStart, LocalDate dateEnd, String supplierId, String departmentId ) {
         List<PayableForDetailDto> dataList = Lists.newArrayList();
         List<PayableForSummaryDto> payableForSummaryDtoList = payableReportMapper.findByEndDateAndIn(dateStart,Lists.newArrayList(supplierId),Lists.newArrayList(departmentId));
-        String supplierName = bdSupplierMapper.findNameBySupplierId(supplierId);
-        String departmentName = bdDepartmentMapper.findNameByDepartmentId(departmentId);
-        PayableForSummaryDto summary = new PayableForSummaryDto(supplierId,supplierName,departmentId,departmentName,BigDecimal.ZERO);
+        PayableForSummaryDto summary = new PayableForSummaryDto();
+        summary.setSupplierId(supplierId);
+        summary.setSupplierName(bdSupplierMapper.findNameBySupplierId(supplierId));
+        summary.setDepartmentId(departmentId);
+        summary.setDepartmentName(bdDepartmentMapper.findNameByDepartmentId(departmentId));
+        summary.setBeginAmount(BigDecimal.ZERO);
         for(PayableForSummaryDto payableForSummaryDto : payableForSummaryDtoList){
             if (payableForSummaryDto.getSupplierId() != null){
                 summary.setBeginAmount(payableForSummaryDto.getBeginAmount());
@@ -115,22 +118,22 @@ public class PayableReportService {
             payableDetail.setBillNo(detailForBill.getBillNo());
             payableDetail.setNote(detailForBill.getNote());
             //应付
-            if(detailForBill.getBillType().equals(BillTypeEnum.标准采购入库.name())){
+            if(detailForBill.getBillType().equals(PayableBillTypeEnum.标准采购入库.name())){
                 payableDetail.setPayableAmount(detailForBill.getAmount());
                 beginShouldGive = beginShouldGive.add(payableDetail.getPayableAmount());
                 payableDetail.setEndAmount(beginShouldGive);
                 dataList.add(payableDetail);
-            }else if(detailForBill.getBillType().equals(BillTypeEnum.标准退料单.name())){
+            }else if(detailForBill.getBillType().equals(PayableBillTypeEnum.标准退料单.name())){
                 payableDetail.setPayableAmount(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
                 beginShouldGive = beginShouldGive.add(payableDetail.getPayableAmount());
                 payableDetail.setEndAmount(beginShouldGive);
                 dataList.add(payableDetail);
-            }else if(detailForBill.getBillType().equals(BillTypeEnum.标准应付单.name())) {
+            }else if(detailForBill.getBillType().equals(PayableBillTypeEnum.标准应付单.name())) {
                 payableDetail.setPayableAmount(detailForBill.getAmount());
                 beginShouldGive = beginShouldGive.add(payableDetail.getPayableAmount());
                 payableDetail.setEndAmount(beginShouldGive);
                 dataList.add(payableDetail);
-            }else if(detailForBill.getBillType().equals(BillTypeEnum.其他应付单.name())) {
+            }else if(detailForBill.getBillType().equals(PayableBillTypeEnum.其他应付单.name())) {
                 payableDetail.setMaterialName(detailForBill.getMaterialId());//费用名称
                 payableDetail.setQuantity(detailForBill.getQuantity());//费用编码
                 payableDetail.setPayableAmount(detailForBill.getAmount());
@@ -138,18 +141,18 @@ public class PayableReportService {
                 payableDetail.setEndAmount(beginShouldGive);
                 dataList.add(payableDetail);
             //实付
-            }else if(detailForBill.getBillType().equals(BillTypeEnum.采购业务付款单.name())) {
+            }else if(detailForBill.getBillType().equals(PayableBillTypeEnum.采购业务付款单.name())) {
                 payableDetail.setActualPayAmount(detailForBill.getAmount());
                 beginShouldGive = beginShouldGive.subtract(payableDetail.getActualPayAmount());
                 payableDetail.setEndAmount(beginShouldGive);
                 dataList.add(payableDetail);
-            }else if(detailForBill.getBillType().equals(BillTypeEnum.采购业务退款单.name())) {
+            }else if(detailForBill.getBillType().equals(PayableBillTypeEnum.采购业务退款单.name())) {
                 payableDetail.setActualPayAmount(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
                 beginShouldGive = beginShouldGive.subtract(payableDetail.getActualPayAmount());
                 payableDetail.setEndAmount(beginShouldGive);
                 dataList.add(payableDetail);
             }
-            List<BdMaterial> materialList = bdMaterialMapper.findAll(null);
+            List<BdMaterial> materialList = bdMaterialMapper.findAll();
             Map<String,String> materialMap = Maps.newHashMap();
             for(BdMaterial material : materialList){
                 materialMap.put(material.getfMasterId(),material.getfName());

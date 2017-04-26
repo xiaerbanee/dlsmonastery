@@ -24,11 +24,11 @@ public class BdCustomerController {
 
     @RequestMapping(value = "getCustomerList", method = RequestMethod.GET)
     public List<BdCustomer> getCustomerList(String maxOutDate) {
-        LocalDateTime localDateTime=null;
+        LocalDateTime localDateTime = null;
         if(StringUtils.isNotBlank(maxOutDate)){
-            localDateTime= LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
+            localDateTime = LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
-        List<BdCustomer> customerList = bdCustomerService.findAll(localDateTime);
+        List<BdCustomer> customerList = bdCustomerService.findByDate(localDateTime);
 
         return customerList;
     }

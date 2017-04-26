@@ -29,7 +29,7 @@ public class BdStockController {
         if(StringUtils.isNotBlank(maxOutDate)){
             localDateTime = LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
-        List<BdStock> stockList = bdStockService.findAll(localDateTime);
+        List<BdStock> stockList = bdStockService.findByDate(localDateTime);
         return stockList;
     }
 

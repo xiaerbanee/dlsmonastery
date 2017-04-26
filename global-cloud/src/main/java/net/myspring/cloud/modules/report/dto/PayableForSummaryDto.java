@@ -14,17 +14,6 @@ public class PayableForSummaryDto {
     private BigDecimal actualPayAmount;
     private BigDecimal endAmount;
 
-    public PayableForSummaryDto(String supplierId, String supplierName, String departmentId, String departmentName, BigDecimal beginAmount) {
-        this.supplierId = supplierId;
-        this.supplierName = supplierName;
-        this.departmentId = departmentId;
-        this.departmentName = departmentName;
-        this.beginAmount = beginAmount;
-    }
-
-    public PayableForSummaryDto() {
-    }
-
     public String getSupplierId() {
         return supplierId;
     }

@@ -18,8 +18,25 @@
         t1.FMATERIALID = t2.FMATERIALID
         AND t1.FMATERIALGROUP = t3.FID
         AND t3.FID = t4.FID
-        <if test="maxOutDate != null ">
-            AND t1.FMODIFYDATE>#{maxOutDate}
-        </if>
+    </select>
+
+    <select id="findByDate" resultType="BdMaterial">
+        SELECT
+        t1.FMASTERID,
+        t1.FNUMBER,
+        t2.FNAME,
+        t1.FMATERIALGROUP,
+        t4.FNAME AS fmaterialGroupName,
+        t1.FMODIFYDATE
+        FROM
+        T_BD_MATERIAL t1,
+        T_BD_MATERIAL_L t2,
+        T_BD_MATERIALGROUP t3,
+        T_BD_MATERIALGROUP_L t4
+        WHERE
+        t1.FMATERIALID = t2.FMATERIALID
+        AND t1.FMATERIALGROUP = t3.FID
+        AND t3.FID = t4.FID
+        AND t1.FMODIFYDATE > #{maxOutDate}
     </select>
 </mapper>

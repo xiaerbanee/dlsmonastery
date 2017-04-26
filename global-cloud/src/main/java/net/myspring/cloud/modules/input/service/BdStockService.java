@@ -18,8 +18,12 @@ public class BdStockService {
     @Autowired
     private BdStockMapper bdStockMapper;
 
-    public List<BdStock> findAll(LocalDateTime maxOutDate){
-        return bdStockMapper.findAll(maxOutDate);
+    public List<BdStock> findAll(){
+        return bdStockMapper.findAll();
+    }
+
+    public List<BdStock> findByDate(LocalDateTime maxOutDate){
+        return bdStockMapper.findByDate(maxOutDate);
     }
 
 }

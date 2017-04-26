@@ -8,7 +8,7 @@ public class BdCustomer {
     private String fNumber;
     private String fName;
     //客户分组
-    private Long fPrimaryGroup;
+    private String fPrimaryGroup;
     private String fPrimaryGroupName;
     private LocalDate fModifyDate;
 
@@ -36,11 +36,11 @@ public class BdCustomer {
         this.fName = fName;
     }
 
-    public Long getfPrimaryGroup() {
+    public String getfPrimaryGroup() {
         return fPrimaryGroup;
     }
 
-    public void setfPrimaryGroup(Long fPrimaryGroup) {
+    public void setfPrimaryGroup(String fPrimaryGroup) {
         this.fPrimaryGroup = fPrimaryGroup;
     }
 

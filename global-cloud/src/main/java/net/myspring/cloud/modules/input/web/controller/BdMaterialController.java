@@ -28,7 +28,7 @@ public class BdMaterialController {
         if(StringUtils.isNotBlank(maxOutDate)){
             localDateTime= LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
-        List<BdMaterial>  materialList = bdMaterialService.findAll(localDateTime);
+        List<BdMaterial>  materialList = bdMaterialService.findByDate(localDateTime);
         return materialList;
     }
 }

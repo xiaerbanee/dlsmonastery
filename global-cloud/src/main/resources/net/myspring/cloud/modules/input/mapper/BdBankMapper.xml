@@ -12,8 +12,19 @@
         T_CN_BANKACNT_L t2
         WHERE
         t1.FBANKACNTID = t2.FBANKACNTID
-        <if test="maxOutDate != null ">
-            AND t1.FMODIFYDATE > #{maxOutDate}
-        </if>
+    </select>
+
+    <select id="findByDate" resultType="CnBank">
+        SELECT
+        t1.FBANKACNTID,
+        t1.FNUMBER,
+        t1.FMODIFYDATE,
+        t2.FNAME
+        FROM
+        T_CN_BANKACNT t1,
+        T_CN_BANKACNT_L t2
+        WHERE
+        t1.FBANKACNTID = t2.FBANKACNTID
+        AND t1.FMODIFYDATE > #{maxOutDate}
     </select>
 </mapper>

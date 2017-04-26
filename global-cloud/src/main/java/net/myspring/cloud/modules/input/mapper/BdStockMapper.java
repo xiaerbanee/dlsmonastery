@@ -12,5 +12,8 @@ import java.util.List;
  */
 @Mapper
 public interface BdStockMapper {
-    List<BdStock> findAll(@Param("maxOutDate")LocalDateTime maxOutDate);
+
+    List<BdStock> findAll();
+
+    List<BdStock> findByDate(@Param("maxOutDate")LocalDateTime maxOutDate);
 }

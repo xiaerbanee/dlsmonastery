@@ -13,5 +13,7 @@ import java.util.List;
 @Mapper
 public interface CnBankMapper {
 
-    List<CnBank> findAll(@Param("maxOutDate")LocalDateTime maxOutDate);
+    List<CnBank> findAll();
+
+    List<CnBank> findByDate(@Param("maxOutDate")LocalDateTime maxOutDate);
 }

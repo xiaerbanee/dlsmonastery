@@ -18,8 +18,12 @@ public class BdCustomerService {
     @Autowired
     private BdCustomerMapper bdCustomerMapper;
 
-    public List<BdCustomer> findAll(LocalDateTime maxOutDate){
-        return bdCustomerMapper.findAll(maxOutDate);
+    public List<BdCustomer> findAll(){
+        return bdCustomerMapper.findAll();
+    }
+
+    public List<BdCustomer> findByDate(LocalDateTime maxOutDate){
+        return bdCustomerMapper.findByDate(maxOutDate);
     }
 
     public List<BdCustomer> findByName(String name){
