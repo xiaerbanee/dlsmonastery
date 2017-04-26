@@ -25,25 +25,25 @@ import java.util.Map;
 public interface AccountMapper {
 
     @Cacheable(value = "accounts",key="#p0")
-    @SelectProvider(type=CrudProvider.class, method = "findOne")
+    @SelectProvider(type=MyProvider.class, method = MyProvider.FIND_ONE)
     Account findOne(String id);
 
     @CacheEvict(value = "accounts",key="#p0")
-    @InsertProvider(type=CrudProvider.class, method = "save")
+    @InsertProvider(type=CrudProvider.class, method = MyProvider.SAVE)
     int save(Account account);
 
     @CacheEvict(value = "accounts",key="#p0")
-    @UpdateProvider(type=CrudProvider.class, method = "update")
+    @UpdateProvider(type=CrudProvider.class, method =MyProvider.UPDATE)
     int update(Account account);
 
     @CacheEvict(value = "accounts",key="#p0")
-    @UpdateProvider(type=CrudProvider.class, method = "update")
+    @UpdateProvider(type=CrudProvider.class, method = MyProvider.UPDATE)
     int updateForm(AccountForm accountForm);
 
-    @UpdateProvider(type=MyProvider.class, method = "logicDeleteOne")
+    @UpdateProvider(type=MyProvider.class, method = MyProvider.LOGIC_DELETE_ONE)
     int logicDeleteOne(String id);
 
-    @SelectProvider(type=CrudProvider.class, method = "findAll")
+    @SelectProvider(type=CrudProvider.class, method =MyProvider.FIND_ALL)
     List<Account> findAll();
 
     Account findByLoginName(String loginName);
