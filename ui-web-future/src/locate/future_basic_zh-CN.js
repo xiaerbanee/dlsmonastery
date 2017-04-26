@@ -376,6 +376,7 @@ export default {
     shouldGetRule: "运费规则",
     address: "地点",
     contact: "联系人",
+    contator: "联系人",
     phone: "电话",
     mobilePhone: "手机",
     add: "添加",

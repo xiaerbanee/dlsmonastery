@@ -14,6 +14,20 @@
               <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('expressCompanyList.likeSearch')"></el-input>
               </el-form-item>
+              <el-form-item :label="formLabel.expressType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.expressType" filterable clearable :placeholder="$t('expressCompanyList.inputKey')">
+                  <el-option v-for="expressType in formData.expressTypeList" :key="expressType" :label="expressType" :value="expressType"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.reachPlace.label" :label-width="formLabelWidth">
+                <el-input v-model="formData.reachPlace" auto-complete="off" :placeholder="$t('expressCompanyList.likeSearch')"></el-input>
+              </el-form-item>
+              <el-form-item :label="formLabel.mobilePhone.label" :label-width="formLabelWidth">
+                <el-input v-model="formData.mobilePhone" auto-complete="off" :placeholder="$t('expressCompanyList.likeSearch')"></el-input>
+              </el-form-item>
+              <el-form-item :label="formLabel.contator.label" :label-width="formLabelWidth">
+                <el-input v-model="formData.contator" auto-complete="off" :placeholder="$t('expressCompanyList.likeSearch')"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -29,7 +43,7 @@
         <el-table-column prop="address" :label="$t('expressCompanyList.address')" sortable></el-table-column>
         <el-table-column prop="phone" :label="$t('expressCompanyList.phone')"sortable></el-table-column>
         <el-table-column prop="mobilePhone" :label="$t('expressCompanyList.mobilePhone')" sortable></el-table-column>
-        <el-table-column prop="contator" :label="$t('expressCompanyList.contact')" sortable></el-table-column>
+        <el-table-column prop="contact" :label="$t('expressCompanyList.contact')" sortable></el-table-column>
         <el-table-column prop="shouldGetRule" :label="$t('expressCompanyList.shouldGetRule')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('expressCompanyList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressCompanyList.operation')" width="140">
@@ -49,12 +63,23 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
-          name:''
+          name:'',
+          expressType:"",
+          reachPlace:"",
+          mobilePhone:"",
+          contator:""
         },formLabel:{
           name:{label:this.$t('expressCompanyList.name')},
+          mobilePhone:{label:this.$t('expressCompanyList.mobilePhone')},
+          address:{label:this.$t('expressCompanyList.address')},
+          reachPlace:{label:this.$t('expressCompanyList.reachPlace')},
+          contator:{label:this.$t('expressCompanyList.contator')},
+          expressType:{label:this.$t('expressCompanyList.expressType')},
+
         },
         formProperty:{},
         formLabelWidth: '120px',
@@ -65,9 +90,11 @@
     },
     methods: {
       pageRequest() {
+
         this.pageLoading = true;
         util.setQuery("expressCompanyList",this.formData);
-        axios.get('/api/ws/future/basic/expressCompany',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/ws/future/basic/expressCompany',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -89,16 +116,16 @@
           this.$router.push({ name: 'expressCompanyForm', query: { id: id }})
         } else if(action=="删除") {
           axios.get('/api/ws/future/basic/expressCompany/delete',{params:{id:id}}).then((response) =>{
-              this.$message(response.data.message);
+            this.$message(response.data.message);
             this.pageRequest();
           })
         }
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
       axios.get('/api/ws/future/basic/expressCompany/getQuery').then((response) =>{
-        this.formProperty=response.data;
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
         this.pageRequest();
       });
     }

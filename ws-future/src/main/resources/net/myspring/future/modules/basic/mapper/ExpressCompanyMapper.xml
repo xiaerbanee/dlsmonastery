@@ -13,6 +13,19 @@
             AND t1.name LIKE CONCAT('%',#{p.name},'%')
         </if>
 
+        <if test="p.expressType != null and p.expressType != ''">
+            AND (t1.express_type = #{p.expressType} OR t1.express_type IS NULL)
+        </if>
+        <if test="p.reachPlace != null">
+            AND( t1.reach_place LIKE CONCAT('%',#{p.reachPlace},'%') OR t1.reach_place IS NULL)
+        </if>
+        <if test="p.mobilePhone != null">
+            AND ( t1.mobile_phone LIKE CONCAT('%',#{p.mobilePhone},'%')  OR t1.mobile_phone IS NULL)
+        </if>
+        <if test="p.contator != null">
+            AND( t1.contator LIKE CONCAT('%',#{p.contator},'%')  OR t1.contator IS NULL)
+        </if>
+
     </select>
 
     <select id="findLabels" resultType="ExpressCompany">

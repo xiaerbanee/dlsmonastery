@@ -51,5 +51,9 @@ public class ExpressCompanyController {
         expressCompanyForm.setExpressTypeList(ExpressCompanyTypeEnum.getList());
         return expressCompanyForm;
     }
-
+    @RequestMapping(value="getQuery")
+    public  ExpressCompanyQuery getQuery(ExpressCompanyQuery expressCompanyQuery){
+        expressCompanyQuery.setExpressTypeList(expressCompanyService.findExpressTypeList());
+        return expressCompanyQuery;
+    }
 }

@@ -376,6 +376,7 @@ export default {
     shouldGetRule: "Pengiriman Aturan",
     address: "alamat",
     contact: "kontak",
+    contator: "kontak",
     phone: "telepon",
     mobilePhone: "hape",
     add: "tambah",

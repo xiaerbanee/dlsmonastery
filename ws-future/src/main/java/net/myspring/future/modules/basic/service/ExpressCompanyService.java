@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.DistrictClient;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
@@ -76,4 +77,9 @@ public class ExpressCompanyService {
         }
         return expressCompany;
     }
+
+    public List<String> findExpressTypeList() {
+        return ExpressCompanyTypeEnum.getList();
+    }
+
 }
