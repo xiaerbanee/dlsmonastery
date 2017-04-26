@@ -5,7 +5,7 @@
       <header class="db-header">
         <div class="main_category">
           <router-link class="logo" :to="{path: '/'}">{{companyName}}</router-link>
-          <div class="main_item_category" v-for="firstCategory in menus.backendList" :key="firstCategory.id"><a  :data-backend-id="firstCategory.id" @click="mainCategory">{{firstCategory.name}}</a></div>
+          <div class="main_item_category" v-for="firstCategory in menus.backendList" :key="firstCategory.id"><a  :class="firstCategory.class" href="#" :data-backend-id="firstCategory.id" @click="mainCategory">{{firstCategory.name}}</a></div>
         </div>
         <div class="user-info" v-if="account.id">
           <span><a href="javscript:void(0);" @click="changeLang('zh-cn')">中文</a> / <a href="javscript:void(0);" @click="changeLang('id')">Indonesia</a></span>
@@ -76,7 +76,8 @@
         activeMenu: '',
         activeCategory:'',
         secondCategory:[],
-        companyName:this.$store.state.global.token.companyName
+        companyName:this.$store.state.global.token.companyName,
+        id:""
       };
     },computed: mapState({
       account: state => state.global.account,
@@ -91,6 +92,7 @@
             copyItem=item;
             this.secondCategory=secondCategory[item];
             if( this.secondCategory.length>0){
+                this.id=this.secondCategory[0].id;
               this.activeCategory = this.secondCategory[0].code;
               this.getCategory();
             }
@@ -117,8 +119,11 @@
             activeMenu="login";
         }
         if(this.secondCategory !=null && this.secondCategory.length>0&&activeMenu!="home"&&activeMenu!="login") {
+            console.log(this.menuMap[activeMenu]);
+          console.log( this.secondCategory);
           if(!this.menuMap[activeMenu]) {
-            this.activeCategory = this.secondCategory.menuCategoryList[0].code;
+            this.activeCategory = this.secondCategory[0].code;
+
           } else {
               this.activeCategory =  this.menuMap[activeMenu];
           }
@@ -149,11 +154,20 @@
       },
       mainCategory(event){
         this.secondCategory = [];
-        var id = event.target.dataset.backendId;
-        this.secondCategory = this.menus.backendModuleMap[id];
+        this.id = event.target.dataset.backendId;
+        this.secondCategory = this.menus.backendModuleMap[this.id];
+        console.log(this.secondCategory )
         this.getCategory();
       },
       getCategory(){
+        var backendList=this.menus.backendList;
+        for(let i in backendList){
+          if(this.id==backendList[i].id){
+            backendList[i].class="highlight";
+          }else{
+            backendList[i].class=" ";
+          }
+        }
         for (let i = 0; i < this.secondCategory.length; i++) {
           let secondCategoryList = this.secondCategory[i].menuCategoryList;
           let secondCategoryCode = this.secondCategory[i].code;
@@ -192,8 +206,13 @@
     z-index: 9999;
   }
   .main_item_category a:hover{
-    color:#20A0FF;
+    color:#fff;
     padding-bottom:16px;
     border-bottom:4px solid #20A0FF;
+    cursor:pointer
+  }
+  .highlight{
+    color:#20A0FF;
+    padding-bottom:16px;
   }
 </style>
