@@ -1,7 +1,6 @@
-package net.myspring.future.modules.basic.web.Query;
+package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Lists;
-import org.elasticsearch.license.LicensesStatus;
 
 import java.util.List;
 

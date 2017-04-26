@@ -14,7 +14,7 @@ import net.myspring.future.modules.basic.client.*;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.mapper.*;
-import net.myspring.future.modules.basic.web.Query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.crm.model.DepotInventoryModel;
 import net.myspring.future.modules.crm.model.ReceivableReportForDetail;
@@ -41,7 +41,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

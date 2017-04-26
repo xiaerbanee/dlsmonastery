@@ -1,4 +1,4 @@
-package net.myspring.future.modules.basic.web.Query;
+package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Lists;
 

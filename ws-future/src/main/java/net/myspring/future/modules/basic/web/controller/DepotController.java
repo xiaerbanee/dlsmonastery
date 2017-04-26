@@ -6,19 +6,15 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.config.ExcelView;
-import net.myspring.future.common.enums.DepotCategoryEnum;
-import net.myspring.future.common.enums.DepotTypeEnum;
 import net.myspring.future.common.utils.Const;
 import net.myspring.future.common.utils.DepotUtils;
-import net.myspring.future.common.utils.SecurityUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.validator.DepotValidator;
-import net.myspring.future.modules.basic.web.Query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.form.DepotForm;
-import net.myspring.future.modules.crm.model.DepotInventoryModel;
 import net.myspring.future.modules.crm.model.ReceivableReportForDetail;
 import net.myspring.future.modules.layout.service.ShopAttributeService;
 import net.myspring.util.collection.CollectionUtil;
@@ -27,7 +23,6 @@ import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +33,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -102,14 +96,9 @@ public class DepotController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(DepotForm depotForm,BindingResult bindingResult) {
-        depotValidator.validate(depotForm, bindingResult);
+    public RestResponse save(DepotForm depotForm) {
         RestResponse restResponse = new RestResponse("保存成功",null);
-        if (bindingResult.hasErrors()) {
-            restResponse.setBindingResult(bindingResult);
-        } else {
-            depotService.save(depotForm);
-        }
+        depotService.save(depotForm);
         return restResponse;
     }
 

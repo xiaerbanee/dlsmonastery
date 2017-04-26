@@ -8,9 +8,9 @@ import net.myspring.cloud.modules.report.dto.ReceivableForSummaryDto;
 import net.myspring.cloud.modules.report.service.ReceivableReportService;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by lihx on 2016/12/20.
  */
-@Controller
+@RestController
 @RequestMapping(value="cloud/receivableReport")
 public class ReceivableReportController {
     @Autowired

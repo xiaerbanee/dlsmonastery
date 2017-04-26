@@ -1,22 +1,16 @@
 package net.myspring.future.modules.basic.web.controller;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
-import net.myspring.future.modules.basic.web.Query.ExpressCompanyQuery;
+import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
 import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "basic/expressCompany")

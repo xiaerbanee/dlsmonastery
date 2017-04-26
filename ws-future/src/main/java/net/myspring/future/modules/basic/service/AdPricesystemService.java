@@ -1,6 +1,5 @@
 package net.myspring.future.modules.basic.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -8,18 +7,15 @@ import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.manager.AdPricesystemManager;
 import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.web.Query.AdPricesystemQuery;
+import net.myspring.future.modules.basic.web.query.AdPricesystemQuery;
 import net.myspring.future.modules.basic.web.form.AdPricesystemForm;
 import net.myspring.util.mapper.BeanUtil;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AdPricesystemService {
