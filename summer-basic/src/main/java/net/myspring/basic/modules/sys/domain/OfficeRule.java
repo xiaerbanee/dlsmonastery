@@ -15,13 +15,22 @@ public class OfficeRule extends TreeEntity<OfficeRule> {
     private String code;
     private Boolean hasPoint;
     private Integer value;
-    private Integer type;
+    private String type;
+    private Integer level;
 
-    public Integer getType() {
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 

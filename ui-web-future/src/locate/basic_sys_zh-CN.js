@@ -530,12 +530,13 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    business:"业务部门",
+    support:"后勤部门"
   },
   officeRuleList: {
     officeRuleList: "部门规则列表",
     id: "编码",
     name: "名称",
-    category: "分类",
     add: "添加",
     filter: "过滤",
     export: "导出",
@@ -559,5 +560,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    business:"业务部门",
+    support:"后勤部门"
   },
 }

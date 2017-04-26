@@ -52,6 +52,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    remarks:"备注"
   },
   accountForm: {
     accountForm: "账户管理编辑",

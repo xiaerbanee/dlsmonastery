@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.client.ProcessTypeClient;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
@@ -62,7 +63,7 @@ public class AuditFileService {
         AuditFile auditFile;
         if (auditFileForm.isCreate()) {
             String businessKey = auditFileForm.getId();
-            ActivitiAuthenticatedDto authenticated = activitiClient.authenticated(new ActivitiAuthenticatedForm(auditFileForm.getId(),"文件审批",businessKey,auditFileForm.getProcessTypeId()));
+            ActivitiAuthenticatedDto authenticated = activitiClient.authenticated(new ActivitiAuthenticatedForm(auditFileForm.getId(),"文件审批",businessKey,auditFileForm.getProcessTypeId(), SecurityUtils.getAccountId()));
             auditFileForm.setProcessStatus(authenticated.getProcessStatus());
             auditFileForm.setProcessFlowId(authenticated.getProcessFlowId());
             auditFileForm.setPositionId(authenticated.getPositionId());

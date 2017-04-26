@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item label="类型" prop="type">
               <el-select v-model="inputForm.type" filterable>
-                <el-option v-for="item in inputForm.officeRuleEnumList" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.officeRuleNameList" :key="item" :label="$t('officeRuleForm.'+item)"  :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeRuleForm.name')" prop="name">
@@ -50,6 +50,7 @@
         inputForm:{},
         submitData:{
           id:'',
+          type:"",
           parentId:'',
           name:'',
           code:'',

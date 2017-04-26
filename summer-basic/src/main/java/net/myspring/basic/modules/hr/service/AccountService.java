@@ -100,10 +100,6 @@ public class AccountService {
             }
            account=accountManager.updateForm(accountForm);
         }
-        accountMapper.deleteAccountOffice(accountForm.getId());
-        if (CollectionUtil.isNotEmpty(accountForm.getOfficeIdList())) {
-            accountMapper.saveAccountOffice(accountForm.getId(), accountForm.getOfficeIdList());
-        }
         if ("主账号".equals(accountForm.getType())) {
             employeeManager.updateAccountId(accountForm.getEmployeeId(), account.getId());
         }

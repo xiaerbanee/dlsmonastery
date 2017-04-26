@@ -6,7 +6,7 @@
         SELECT employee.*,account.office_id,account.position_id,account.leader_id
         FROM hr_employee employee,
         hr_account account,
-        hr_office office
+        sys_office office
         where  employee.account_id=account.id
         and account.office_id=office.id
         and employee.enabled=1

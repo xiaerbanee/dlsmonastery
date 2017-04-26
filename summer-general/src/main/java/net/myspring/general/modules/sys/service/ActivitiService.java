@@ -41,7 +41,7 @@ public class ActivitiService {
 
     public ActivitiAuthenticatedDto authenticatedActiviti(ActivitiAuthenticatedForm activitiAuthenticatedForm){
         ActivitiAuthenticatedDto activitiDto=new ActivitiAuthenticatedDto();
-        identityService.setAuthenticatedUserId(SecurityUtils.getAccountId());
+        identityService.setAuthenticatedUserId(activitiAuthenticatedForm.getAccountId());
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process_type_" + activitiAuthenticatedForm.getProcessTypeId(), activitiAuthenticatedForm.getKey());
         String processInstanceId = processInstance.getId();
         activitiDto.setProcessInstanceId(processInstanceId);
@@ -49,7 +49,7 @@ public class ActivitiService {
         activitiDto.setProcessStatus(processStatus);
         ProcessFlow processFlow = processFlowMapper.findByProductTypeAndName(activitiAuthenticatedForm.getProcessTypeId(), processStatus);
         activitiDto.setProcessFlowId(processFlow==null?"":processFlow.getId());
-        activitiDto.setProcessFlowId(processFlow.getPositionId());
+        activitiDto.setPositionId(processFlow.getPositionId());
         return activitiDto;
     }
 

@@ -94,11 +94,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item :label="$t('employeeForm.dataScopeOffices')" prop="officeIdList">
-              <el-select v-model="accountForm.officeIdList" multiple filterable remote :placeholder="$t('employeeForm.inputWord')" :remote-method="remoteDataScopeOffice" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="office in dataScopeOffices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('employeeForm.save')}}</el-button>
             </el-form-item>
@@ -211,14 +206,6 @@
             this.remoteLoading = false;
           })
         }
-      },remoteDataScopeOffice(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
-            this.dataScopeOffices=response.data;
-            this.remoteLoading = false;
-          })
-        }
       },remoteEmployee(query) {
         if (query !== '') {
           this.remoteLoading = true;
@@ -230,23 +217,15 @@
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/basic/sys/office/search',{params:{name:query}}).then((response)=>{
             this.offices=response.data;
-            this.remoteLoading = false;
-          })
-        }
-      },remoteDepot(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/crm/depot/search',{params:{name:query}}).then((response)=>{
-            this.depots=response.data;
             this.remoteLoading = false;
           })
         }
       },remoteDistrict(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/basic/sys/district/search',{params:{key:query}}).then((response)=>{
+          axios.get('/api/general/sys/district/search',{params:{key:query}}).then((response)=>{
             this.origins=response.data;
             this.remoteLoading = false;
           })

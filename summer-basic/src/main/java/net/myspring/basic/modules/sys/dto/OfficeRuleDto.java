@@ -16,22 +16,14 @@ public class OfficeRuleDto extends TreeDto<OfficeRule> {
     private String parentName;
     private String name;
     private String code;
-    private Integer type;
+    private String type;
     private Integer value;
 
-    public String getTypeLabel() {
-        if(type!=null){
-            Map<Integer, String> map = OfficeRuleEnum.getMap();
-            return map.get(type);
-        }
-        return "";
-    }
-
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 

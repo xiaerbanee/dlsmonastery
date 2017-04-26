@@ -13,18 +13,8 @@
             <el-form-item :label="$t('positionForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="项目权限" prop="backendIdList">
-              <el-select v-model="inputForm.backendIdList" multiple filterable remote :placeholder="$t('positionForm.inputWord')" :remote-method="remoteBackend" :loading="remoteLoading">
-                <el-option v-for="item in backendList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item :label="$t('positionForm.reportName')" prop="reportName">
               <el-input v-model="inputForm.reportName"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('positionForm.dataScope')" prop="dataScope">
-              <el-select v-model="inputForm.dataScope" filterable >
-                <el-option v-for="(value,key) in inputForm.dataScopeMap"  :key="key" :label="value" :value="key"></el-option>
-              </el-select>
             </el-form-item>
             <el-form-item :label="$t('positionForm.permission')" prop="permission">
               <el-input v-model="inputForm.permission"></el-input>

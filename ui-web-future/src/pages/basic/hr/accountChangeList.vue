@@ -39,6 +39,7 @@
         <el-table-column  prop="oldValue" :label="$t('accountChangeList.oldValue')" sortable></el-table-column>
         <el-table-column  prop="newValue" :label="$t('accountChangeList.newValue')" sortable></el-table-column>
         <el-table-column  prop="processStatus" :label="$t('accountChangeList.processStatus')" sortable ></el-table-column>
+        <el-table-column  prop="remarks" :label="$t('accountChangeList.remarks')" sortable ></el-table-column>
         <el-table-column :label="$t('accountChangeList.operation')" width="140">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>

@@ -22,18 +22,27 @@ public class OfficeRuleForm extends DataForm<OfficeRule> {
     private String parentName;
     private String name;
     private String code;
-    private Integer type;
+    private String type;
     private Integer value;
+    private Integer level;
     private Map<Boolean,String> boolMap= Maps.newHashMap();
     private boolean hasPoint;
     private List<OfficeRuleDto> officeRuleList= Lists.newArrayList();
-    private List<OfficeRuleEnum> officeRuleEnumList=Lists.newArrayList();
+    private List<String> officeRuleNameList=Lists.newArrayList();
 
-    public Integer getType() {
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -45,12 +54,12 @@ public class OfficeRuleForm extends DataForm<OfficeRule> {
         this.value = value;
     }
 
-    public List<OfficeRuleEnum> getOfficeRuleEnumList() {
-        return officeRuleEnumList;
+    public List<String> getOfficeRuleNameList() {
+        return officeRuleNameList;
     }
 
-    public void setOfficeRuleEnumList(List<OfficeRuleEnum> officeRuleEnumList) {
-        this.officeRuleEnumList = officeRuleEnumList;
+    public void setOfficeRuleNameList(List<String> officeRuleNameList) {
+        this.officeRuleNameList = officeRuleNameList;
     }
 
     public List<OfficeRuleDto> getOfficeRuleList() {

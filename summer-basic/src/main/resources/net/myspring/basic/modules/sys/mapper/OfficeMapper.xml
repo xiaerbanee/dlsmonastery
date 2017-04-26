@@ -11,20 +11,18 @@
 
     <select id="findByAccountId" resultType="Office">
         SELECT t1.*
-        FROM sys_office t1,hr_account_office t2,hr_account t3
+        FROM sys_office t1,hr_account t3
         where t1.enabled=1
-        and t1.id=t2.office_id
-        and t2.account_id = t3.id
-        and account_id=#{accountId}
+        and t1.id=t3.office_id
+        and t3.id=#{accountId}
     </select>
 
     <select id="findByAccountIds" resultType="Office">
         SELECT t1.*
-        FROM sys_office t1,hr_account_office t2,hr_account t3
+        FROM sys_office t1,hr_account t3
         where t1.enabled=1
-        and t1.id=t2.office_id
-        and t2.account_id = t3.id
-        and account_id in
+        and t1.id=t3.office_id
+        and t3.account_id in
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>

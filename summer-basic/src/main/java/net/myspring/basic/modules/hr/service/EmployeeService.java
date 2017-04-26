@@ -48,7 +48,7 @@ public class EmployeeService {
     }
 
     public Page<EmployeeDto> findPage(Pageable pageable, EmployeeQuery employeeQuery){
-        employeeQuery.setOfficeIds(officeManager.officeFilter(accountManager.findOne(SecurityUtils.getAccountId())));
+        employeeQuery.setOfficeIds(officeManager.officeFilter(SecurityUtils.getAccountId()));
         Page<EmployeeDto> page=employeeMapper.findPage(pageable,employeeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
