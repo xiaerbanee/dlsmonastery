@@ -68,7 +68,7 @@ public class GlVoucherService {
         List<String> departments = Lists.newArrayList();
         List<String> userNames = Lists.newArrayList();
         List<String> supplierNames = Lists.newArrayList();
-        for(CnBank bank: cnBankMapper.findAll(null)){
+        for(CnBank bank: cnBankMapper.findAll()){
             bankNames.add(bank.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + bank.getfName());
         }
         for(HrEmpInfo user: hrEmpInfoMapper.findAllUser()){
@@ -83,7 +83,7 @@ public class GlVoucherService {
         for(BdSupplier bdSupplier: bdSupplierMapper.findAll()){
             supplierNames.add(bdSupplier.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + bdSupplier.getfName());
         }
-        for(BdCustomer bdCustomer: bdCustomerMapper.findAll(null)){
+        for(BdCustomer bdCustomer: bdCustomerMapper.findAll()){
             customers.add(bdCustomer.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + bdCustomer.getfName());
         }
         for(BasAssistant basAssistant: basAssistantMapper.findByType("费用类")){

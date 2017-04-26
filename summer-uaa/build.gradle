@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-	compile project(':summer-bean')
+	compile project(':global-util')
 	runtime('mysql:mysql-connector-java')
 	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.1.8.RELEASE'
 	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.5.0'

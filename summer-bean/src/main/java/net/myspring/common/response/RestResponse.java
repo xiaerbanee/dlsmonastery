@@ -1,9 +1,7 @@
 package net.myspring.common.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Map;
@@ -18,8 +16,6 @@ public class RestResponse {
 
     private Map<String,Object> extra = Maps.newHashMap();
 
-    @JsonIgnore
-    private BindingResult bindingResult;
 
     public RestResponse(String message,String code) {
         this.message = message;
@@ -27,14 +23,6 @@ public class RestResponse {
     }
 
     public RestResponse() {
-    }
-
-    public BindingResult getBindingResult() {
-        return bindingResult;
-    }
-
-    public void setBindingResult(BindingResult bindingResult) {
-        this.bindingResult = bindingResult;
     }
 
     public String getMessage() {

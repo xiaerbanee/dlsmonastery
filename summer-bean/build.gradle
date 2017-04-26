@@ -30,7 +30,6 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
 	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
 	compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.1.RELEASE'
-	compile project(':global-util')
 	compile 'com.google.guava:guava:19.0'
 	compile "org.apache.commons:commons-lang3:3.4"
 

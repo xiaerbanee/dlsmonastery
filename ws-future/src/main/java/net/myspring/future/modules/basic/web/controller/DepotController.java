@@ -96,14 +96,9 @@ public class DepotController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(DepotForm depotForm,BindingResult bindingResult) {
-        depotValidator.validate(depotForm, bindingResult);
+    public RestResponse save(DepotForm depotForm) {
         RestResponse restResponse = new RestResponse("保存成功",null);
-        if (bindingResult.hasErrors()) {
-            restResponse.setBindingResult(bindingResult);
-        } else {
-            depotService.save(depotForm);
-        }
+        depotService.save(depotForm);
         return restResponse;
     }
 

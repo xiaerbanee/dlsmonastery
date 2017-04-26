@@ -1,13 +1,9 @@
 package net.myspring.basic.modules.sys.domain;
 
-import com.google.common.collect.Lists;
-import net.myspring.basic.modules.hr.domain.Account;
-import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.List;
 
 @Entity
 @Table(name="sys_menu")

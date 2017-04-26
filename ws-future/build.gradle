@@ -29,7 +29,7 @@ repositories {
 
 
 dependencies {
-	compile project(':summer-bean')
+	compile project(':global-util')
 	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.1.8.RELEASE'
 	compile "org.elasticsearch.client:x-pack-transport:5.3.0"
 	compile group: 'org.elasticsearch', name: 'elasticsearch', version: '5.3.0'

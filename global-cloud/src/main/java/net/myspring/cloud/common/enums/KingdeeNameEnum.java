@@ -7,6 +7,7 @@ public enum  KingdeeNameEnum {
     JXOPPO,
     JXVIVO,
     JXDJ,
+    WZOPPO2016,
     WZOPPO,
     INAVIVO,
     ZTEST_JXOPPO,

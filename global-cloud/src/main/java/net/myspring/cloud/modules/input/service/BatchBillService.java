@@ -51,12 +51,12 @@ public class BatchBillService {
         Map<String, String> customerMap = Maps.newHashMap();
         Map<String, String> customerIdMap = Maps.newHashMap();
         Map<String, String> materialMap = Maps.newHashMap();
-        List<BdCustomer> bdCustomerList = bdCustomerMapper.findAll(null);
+        List<BdCustomer> bdCustomerList = bdCustomerMapper.findAll();
         for (BdCustomer bdCustomer : bdCustomerList) {
             customerMap.put(bdCustomer.getfName(), bdCustomer.getfNumber());
             customerIdMap.put(bdCustomer.getfName(), bdCustomer.getfCustId());
         }
-        List<BdMaterial> bdMaterialList = bdMaterialMapper.findAll(null);
+        List<BdMaterial> bdMaterialList = bdMaterialMapper.findAll();
         for (BdMaterial bdMaterial : bdMaterialList) {
             materialMap.put(bdMaterial.getfName(), bdMaterial.getfNumber());
         }
