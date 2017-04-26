@@ -16,7 +16,7 @@ public class MyProvider extends CrudProvider {
     private Logger logger = LoggerFactory.getLogger(MyProvider.class);
 
     public String logicDeleteOne(Object id) {
-        String sql =  "UPDATE " + getTableDto().getJdbcTable() + "SET enabled=0 WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "=#{id}";
+        String sql =  "UPDATE " + getTableDto().getJdbcTable() + "  SET enabled=0 WHERE " + getTableDto().getIdColumn().getJdbcColumn() + "=#{id}";
         logger.info(sql);
         return sql;
     }
@@ -27,7 +27,7 @@ public class MyProvider extends CrudProvider {
         for(int i =0;i<list.size();i++) {
             values.add("#{list[" + i + "]}");
         }
-        String sql = "UPDATE " + getTableDto().getJdbcTable() + "SET enabled=0 WHERE " + getTableDto().getIdColumn().getJdbcColumn() + " IN (" + StringUtils.join(values,",") + ")";
+        String sql = "UPDATE " + getTableDto().getJdbcTable() + "  SET enabled=0 WHERE " + getTableDto().getIdColumn().getJdbcColumn() + " IN (" + StringUtils.join(values,",") + ")";
         logger.info(sql);
         return sql;
     }
