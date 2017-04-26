@@ -93,7 +93,6 @@
             this.secondCategory=secondCategory[item];
             if( this.secondCategory.length>0){
                 this.id=this.secondCategory[0].id;
-                console.log(this.secondCategory[0])
               this.activeCategory = this.secondCategory[0].code;
               this.getCategory();
             }
@@ -120,8 +119,11 @@
             activeMenu="login";
         }
         if(this.secondCategory !=null && this.secondCategory.length>0&&activeMenu!="home"&&activeMenu!="login") {
+            console.log(this.menuMap[activeMenu]);
+          console.log( this.secondCategory);
           if(!this.menuMap[activeMenu]) {
-            this.activeCategory = this.secondCategory.menuCategoryList[0].code;
+            this.activeCategory = this.secondCategory[0].code;
+
           } else {
               this.activeCategory =  this.menuMap[activeMenu];
           }
@@ -154,6 +156,7 @@
         this.secondCategory = [];
         this.id = event.target.dataset.backendId;
         this.secondCategory = this.menus.backendModuleMap[this.id];
+        console.log(this.secondCategory )
         this.getCategory();
       },
       getCategory(){
