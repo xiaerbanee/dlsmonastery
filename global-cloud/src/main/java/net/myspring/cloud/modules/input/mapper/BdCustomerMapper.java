@@ -22,4 +22,6 @@ public interface BdCustomerMapper {
     List<String> findName();
 
     BdCustomer findById(@Param("id")String id);
+
+    List<BdCustomer> findByPrimaryGroup(@Param("primaryGroup")String primaryGroup);
 }
