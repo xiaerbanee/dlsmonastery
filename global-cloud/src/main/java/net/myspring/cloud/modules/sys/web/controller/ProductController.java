@@ -65,7 +65,7 @@ public class ProductController {
             LocalDateTime maxOutDate = productService.findMaxOutDate(companyId);
             DynamicDataSourceContext.get().setAutomaticSetCompany(false);
             DynamicDataSourceContext.get().setCompanyId(companyId);
-            List<BdMaterial> bdMaterials = bdMaterialService.findAll(maxOutDate);
+            List<BdMaterial> bdMaterials = bdMaterialService.findByDate(maxOutDate);
             if(CollectionUtil.isNotEmpty(bdMaterials)){
                 productService.syn(bdMaterials);
                return new RestResponse("同步成功",null);

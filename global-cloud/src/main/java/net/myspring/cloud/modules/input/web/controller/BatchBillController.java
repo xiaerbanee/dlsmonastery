@@ -41,14 +41,14 @@ public class BatchBillController {
     @RequestMapping(value = "form")
     public BatchBIllForm form (BatchBIllForm batchBIllForm, String companyName) {
         if (StringUtils.isNotBlank(companyName)) {
-            List<BdMaterial> materials = bdMaterialService.findAll(null);
+            List<BdMaterial> materials = bdMaterialService.findAll();
             for(BdMaterial bdMaterial : materials){
                 batchBIllForm.getMaterialMap().put(bdMaterial.getfName(),bdMaterial.getfNumber());
             }
             batchBIllForm.setCustomerNameList(bdCustomerService.findName());
             batchBIllForm.setProductNameList(CollectionUtil.extractToList(materials,"fName"));
             batchBIllForm.setTypeList(K3CloudBillTypeEnum.values());
-            batchBIllForm.setStoreList(bdStockService.findAll(null));
+            batchBIllForm.setStoreList(bdStockService.findAll());
         }
         return batchBIllForm;
     }
