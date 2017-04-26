@@ -1,15 +1,11 @@
 package net.myspring.basic.modules.sys.domain;
 
+import com.google.common.collect.Lists;
+import net.myspring.common.domain.DataEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import net.myspring.basic.modules.hr.domain.PositionModule;
-import net.myspring.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 import java.util.List;
-import com.google.common.collect.Lists;
-import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.text.StringUtils;
 
 @Entity
 @Table(name="sys_backend_module")
