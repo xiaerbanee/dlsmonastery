@@ -1,6 +1,8 @@
 package net.myspring.basic.common.utils;
 
 import com.google.common.collect.Maps;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,16 @@ public class SecurityUtils {
     public static String getEmployeeId() {
         return StringUtils.toString(getAdditionalInformation().get("employeeId"));
     }
-
+    
+    public static DBObject getDbObject(){
+        DBObject dbObject = new BasicDBObject();
+        dbObject.put("createdBy", getAccountId());
+        dbObject.put("companyId",getCompanyId());
+        dbObject.put("positionId",getPositionId());
+        dbObject.put("officeId",getOfficeId());
+        return dbObject;
+    }
+    
     private  static Map<String, Object> getAdditionalInformation() {
         Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
         Map<String,Object> map = Maps.newHashMap();

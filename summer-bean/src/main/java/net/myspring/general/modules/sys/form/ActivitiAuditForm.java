@@ -1,5 +1,7 @@
 package net.myspring.general.modules.sys.form;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Created by wangzm on 2017/4/25.
  */
@@ -64,6 +66,9 @@ public class ActivitiAuditForm {
     }
 
     public String getComment() {
+        if(StringUtils.isEmpty(comment)){
+            this.comment="";
+        }
         return comment;
     }
 

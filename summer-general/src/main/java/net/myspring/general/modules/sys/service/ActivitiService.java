@@ -52,8 +52,6 @@ public class ActivitiService {
         ProcessFlow processFlow = processFlowMapper.findByProductTypeAndName(activitiAuthenticatedForm.getProcessTypeId(), processStatus);
         activitiDto.setProcessFlowId(processFlow==null?"":processFlow.getId());
         activitiDto.setPositionId(processFlow.getPositionId());
-        ProcessTask processTask =new ProcessTask();
-
         return activitiDto;
     }
 
@@ -69,9 +67,9 @@ public class ActivitiService {
         ProcessFlow processFlow = null;
         if (task != null) {
             processFlow = processFlowMapper.findByProductTypeAndName(activitiAuditForm.getProcessTypeId(), task.getName());
+            activitiAuditDto.setProcessFlowId(processFlow.getId());
+            activitiAuditDto.setPositionId(processFlow.getPositionId());
         }
-        activitiAuditDto.setProcessFlowId(processFlow.getId());
-        activitiAuditDto.setPositionId(processFlow.getPositionId());
         activitiAuditDto.setProcessStatus(getProcessStatus(processFlow, activitiAuditForm.getPass()));
         if(activitiAuditForm.getPass()){
             String processStatus = getProcessStatus(processFlow, activitiAuditForm.getPass());

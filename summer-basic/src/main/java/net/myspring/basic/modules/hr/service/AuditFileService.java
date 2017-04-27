@@ -72,6 +72,7 @@ public class AuditFileService {
             ActivitiAuthenticatedDto authenticated = activitiClient.authenticated(new ActivitiAuthenticatedForm(auditFileForm.getId(), name, businessKey, auditFileForm.getProcessTypeId(), SecurityUtils.getAccountId(),SecurityUtils.getOfficeId(),SecurityUtils.getCompanyId()));
             auditFileForm.setProcessStatus(authenticated.getProcessStatus());
             auditFileForm.setProcessFlowId(authenticated.getProcessFlowId());
+            auditFileForm.setProcessInstanceId(authenticated.getProcessInstanceId());
             auditFileForm.setPositionId(authenticated.getPositionId());
             auditFile = BeanUtil.map(auditFileForm, AuditFile.class);
             auditFileMapper.save(auditFile);

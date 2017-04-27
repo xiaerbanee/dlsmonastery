@@ -2,7 +2,7 @@
   <div>
     <head-tab active="auditFileDetail"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
+      <el-form :model="submitData" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('auditFileDetail.createdBy')" prop="createdBy">

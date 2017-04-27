@@ -91,17 +91,6 @@ public class FolderFileService {
         return BeanUtil.map(list,FolderFileDto.class);
     }
 
-    public String uploadToMongoDb(OutputStream  outputStream, String fileName){
-        DBObject dbObject = new BasicDBObject();
-        dbObject.put("createdBy", SecurityUtils.getAccountId());
-        dbObject.put("companyId",SecurityUtils.getCompanyId());
-        dbObject.put("positionId",SecurityUtils.getPositionId());
-        dbObject.put("officeId",SecurityUtils.getOfficeId());
-        ByteArrayInputStream swapStream = new ByteArrayInputStream(((org.apache.commons.io.output.ByteArrayOutputStream)outputStream).toByteArray());
-        GridFSFile gridFSFile = exportGridFsTemplate.store(swapStream,fileName,"application/octet-stream; charset=utf-8",dbObject);
-        return StringUtils.toString(gridFSFile.getId());
-    }
-
     public GridFSDBFile getGridFSDBFile(String type,String mongoId) {
         GridFsTemplate gridFsTemplate;
         if("storage".equals(type)) {
