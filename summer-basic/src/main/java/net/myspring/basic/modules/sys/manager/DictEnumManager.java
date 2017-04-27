@@ -61,9 +61,4 @@ public class DictEnumManager {
         }
     }
 
-    public List<String> findValueByCategory(String category){
-        List<DictEnum> dictEnumList=dictEnumMapper.findByCategory(category);
-        return CollectionUtil.extractToList(dictEnumList,"value");
-    }
-
 }

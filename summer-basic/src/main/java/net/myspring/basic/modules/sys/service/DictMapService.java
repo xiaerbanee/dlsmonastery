@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.service;
 
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.DictEnum;
@@ -59,12 +60,13 @@ public class DictMapService {
         return  dictMap;
     }
 
-    public  List<DictMap> findByCategory(String category){
-        List<DictMap> dictMapList= Lists.newArrayList();
-        if(StringUtils.isNotBlank(category)){
-            dictMapList=dictMapMapper.findByCategory(category);
+    public HashBiMap<String,String> getDictMapList(String category) {
+        List<DictMap> dictMaps = dictMapMapper.findByCategory(category);
+        HashBiMap<String,String> map = HashBiMap.create();
+        for (DictMap dictMap : dictMaps) {
+            map.put(dictMap.toString(),dictMap.getName());
         }
-        return dictMapList;
+        return map;
     }
 
     public void logicDeleteOne(String id) {
