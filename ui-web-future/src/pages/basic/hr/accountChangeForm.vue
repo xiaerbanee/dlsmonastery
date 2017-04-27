@@ -12,13 +12,13 @@
             </el-form-item>
             <el-form-item :label="$t('accountChangeForm.type')"  prop="type">
               <el-select v-model="inputForm.type" filterable clearable :placeholder="$t('accountChangeForm.selectGroup')"  @change="getOldValue">
-                <el-option v-for="item in inputForm.typeList" :key="item":label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.typeList" :key="item" :label="$t('AccountChangeTypeEnum.'+item)" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('accountChangeForm.oldValue')" prop="oldValue">
               {{inputForm.oldValue}}
             </el-form-item>
-            <el-form-item v-show="inputForm.type=='手机' ||inputForm.type=='身份证' || inputForm.type=='银行卡号' ||inputForm.type=='底薪'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
+            <el-form-item v-show="inputForm.type=='MOBILE_PHONE' ||inputForm.type=='ID_CARD' || inputForm.type=='BANK_CARD' ||inputForm.type=='BASE_SALARY'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
               <el-input v-model="inputForm.newValue" ></el-input>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='有无导购' || inputForm.type=='是否让利'" :label="$t('accountChangeForm.account')"  prop="newValue">
@@ -26,22 +26,22 @@
                 <el-option v-for="(value,key) in inputForm.boolMap"  :key="key" :label="value" :value="key"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-show="inputForm.type=='部门'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
+            <el-form-item v-show="inputForm.type=='DEPARTMENT'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
               <el-select v-model="inputForm.newValue" filterable remote clearable :placeholder="$t('accountChangeForm.selectKeyShow20time')"  :remote-method="remoteOffice" :loading="remoteLoading">
                 <el-option v-for="item in offices"  :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-show="inputForm.type=='岗位'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
+            <el-form-item v-show="inputForm.type=='POSITION'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
               <el-select v-model="inputForm.newValue" filterable :placeholder="$t('accountChangeForm.inputWord')" >
                 <el-option v-for="item in inputForm.positionList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item  v-show="inputForm.type=='上级'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
+            <el-form-item  v-show="inputForm.type=='LEADER'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
               <el-select v-model="inputForm.newValue" filterable remote clearable :placeholder="$t('accountChangeForm.inputWord')"  :remote-method="remoteAccount" :loading="remoteLoading">
                 <el-option v-for="item in accounts" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-show="inputForm.type=='转正'||inputForm.type=='入职'||inputForm.type=='离职'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
+            <el-form-item v-show="inputForm.type=='REGULAR_WORKER'||inputForm.type=='ENTRY_WORKER'||inputForm.type=='LEAVE_WORKER'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
               <el-date-picker v-model="inputForm.newValue" type="date" align="right" :placeholder="$t('accountChangeForm.selectDateRange')"  ></el-date-picker>
             </el-form-item>
             <el-form-item :label="$t('accountChangeForm.remarks')"  prop="remarks">
@@ -131,10 +131,10 @@
         }
       },getAccount(id){
         if(id){
-            var type=this.inputForm.type
+            var type=this.inputForm.type;
           axios.get('/api/basic/hr/accountChange/findData',{params: {accountId:id}}).then((response)=>{
             this.inputForm=response.data;
-            this.inputForm.type=type
+            this.inputForm.type=type;
             if(response.data.accountId!=null){
               this.accounts=new Array({id:response.data.accountId,loginName:response.data.accountName})
             }
@@ -143,25 +143,25 @@
         }
       },getOldValue(){
         this.inputForm.newValue = "";
-        if(this.inputForm.type == "手机"){
+        if(this.inputForm.type == "MOBILE_PHONE"){
           this.inputForm.oldValue = this.inputForm.employee.mobilePhone;
-        }else if(this.inputForm.type == "身份证"){
+        }else if(this.inputForm.type == "ID_CARD"){
           this.inputForm.oldValue = this.inputForm.employee.idcard;
-        }else if(this.inputForm.type == "银行卡号"){
+        }else if(this.inputForm.type == "BANK_CARD"){
           this.inputForm.oldValue = this.inputForm.employee.bankNumber;
-        }else if(this.inputForm.type == "底薪"){
+        }else if(this.inputForm.type == "BASE_SALARY"){
           this.inputForm.oldValue = this.inputForm.employee.salary;
-        }else if(this.inputForm.type == "部门"){
+        }else if(this.inputForm.type == "DEPARTMENT"){
           this.inputForm.oldValue = this.inputForm.officeName;
-        }else if(this.inputForm.type == "岗位"){
+        }else if(this.inputForm.type == "POSITION"){
           this.inputForm.oldValue = this.inputForm.positionName;
-        }else if(this.inputForm.type == "上级"){
+        }else if(this.inputForm.type == "LEADER"){
           this.inputForm.oldValue = this.inputForm.leaderName;
-        } else if(this.inputForm.type == "转正"){
+        } else if(this.inputForm.type == "REGULAR_WORKER"){
           this.inputForm.oldValue = this.inputForm.employee.regularDate ;
-        }else if(this.inputForm.type == "入职"){
+        }else if(this.inputForm.type == "ENTRY_WORKER"){
           this.inputForm.oldValue = this.inputForm.employee.entryDate;
-        }else if(this.inputForm.type == "离职"){
+        }else if(this.inputForm.type == "LEAVE_WORKER"){
           this.inputForm.oldValue = this.inputForm.employee.leaveDate;
         }
       }

@@ -26,7 +26,7 @@ public class DutyPublicFreeService {
 
     public DutyPublicFree save(DutyPublicFreeForm dutyPublicFreeForm) {
         dutyPublicFreeForm.setEmployeeId(SecurityUtils.getEmployeeId());
-        dutyPublicFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
+        dutyPublicFreeForm.setStatus(AuditTypeEnum.APPLYING.toString());
         DutyPublicFree dutyPublicFree = BeanUtil.map(dutyPublicFreeForm, DutyPublicFree.class);
         dutyPublicFreeMapper.save(dutyPublicFree);
         return dutyPublicFree;

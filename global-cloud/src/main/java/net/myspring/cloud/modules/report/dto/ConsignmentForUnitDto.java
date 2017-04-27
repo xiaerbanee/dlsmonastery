@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * Created by lihx on 2016/12/15.
  */
-public class ConsignmentDto {
+public class ConsignmentForUnitDto {
     private String customerId;
     private String customerName;
     private String materialId;

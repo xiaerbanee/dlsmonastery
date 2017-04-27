@@ -1,15 +1,11 @@
 package net.myspring.basic.modules.hr.domain;
 
-
-import com.google.common.collect.Lists;
 import net.myspring.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "hr_employee")
@@ -21,7 +17,6 @@ public class Employee extends CompanyEntity<Employee> {
     private LocalDate regularDate;
     private LocalDate leaveDate;
     private String status;
-    private String dingId;
     private String name;
     private BigDecimal salary;
     private Integer version = 0;
@@ -94,15 +89,6 @@ public class Employee extends CompanyEntity<Employee> {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    public String getDingId() {
-        return dingId;
-    }
-
-    public void setDingId(String dingId) {
-        this.dingId = dingId;
-    }
-
     public String getName() {
         return name;
     }

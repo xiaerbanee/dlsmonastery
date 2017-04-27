@@ -12,11 +12,9 @@ import java.math.BigDecimal;
 public class Office extends TreeEntity<Office> {
     private String name;
     private Integer version = 0;
-    private String type;
     private BigDecimal point;
     private Integer level;
     private String jointType;
-    private String tag;
     private BigDecimal taskPoint;
     private Integer sort;
     private String officeRuleId;
@@ -35,14 +33,6 @@ public class Office extends TreeEntity<Office> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public BigDecimal getPoint() {
@@ -68,15 +58,6 @@ public class Office extends TreeEntity<Office> {
     public void setJointType(String jointType) {
         this.jointType = jointType;
     }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
     public BigDecimal getTaskPoint() {
         return taskPoint;
     }

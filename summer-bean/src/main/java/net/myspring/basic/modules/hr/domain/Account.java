@@ -1,13 +1,10 @@
 package net.myspring.basic.modules.hr.domain;
 
-import com.google.common.collect.Lists;
-import net.myspring.basic.modules.sys.domain.Office;
+
 import net.myspring.common.domain.CompanyEntity;
-import net.myspring.basic.modules.sys.domain.Menu;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.List;
 
 
 @Entity
@@ -20,7 +17,6 @@ public class Account extends CompanyEntity<Account> {
     private String type;
     private String outId;
     private String outPassword;
-    private Boolean viewReport;
     private String positionId;
     private String officeId;
     private String employeeId;
@@ -81,15 +77,6 @@ public class Account extends CompanyEntity<Account> {
     public void setOutPassword(String outPassword) {
         this.outPassword = outPassword;
     }
-
-    public Boolean getViewReport() {
-        return viewReport;
-    }
-
-    public void setViewReport(Boolean viewReport) {
-        this.viewReport = viewReport;
-    }
-
     public String getPositionId() {
         return positionId;
     }

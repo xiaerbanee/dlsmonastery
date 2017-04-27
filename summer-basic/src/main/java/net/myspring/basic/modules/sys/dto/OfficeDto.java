@@ -92,7 +92,7 @@ public class OfficeDto extends DataDto<Office> {
 
     public String getTypeLabel(){
         if(StringUtils.isNotBlank(type)){
-            Map<String,String> map= Global.getDictMapList(DictMapCategoryEnum.机构分类.name());
+            Map<String,String> map= Global.getDictMapList(DictMapCategoryEnum.ORGANIZATION_TYPE.name());
             return map.get(type);
         }
         return "";

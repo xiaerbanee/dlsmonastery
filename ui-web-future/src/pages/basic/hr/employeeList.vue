@@ -29,7 +29,7 @@
             <el-col :span="12">
               <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" clearable filterable :placeholder="$t('employeeList.selectGroup')">
-                  <el-option v-for="item in formData.statusList"  :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.statusList"  :key="item" :label="$t('EmployeeStatusEnum.'+item)" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.officeId.label"  :label-width="formLabelWidth">

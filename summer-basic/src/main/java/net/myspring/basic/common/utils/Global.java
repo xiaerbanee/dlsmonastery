@@ -44,7 +44,7 @@ public class Global {
 		List<DictMap> dictMaps = dictMap.get(category);
 		HashBiMap<String,String> map = HashBiMap.create();
 		for (DictMap dictMap : dictMaps) {
-			map.put(dictMap.getValue(),dictMap.getName());
+			map.put(dictMap.toString(),dictMap.getName());
 		}
 		return map;
 	}

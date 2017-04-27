@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.event.ListDataEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -158,22 +157,22 @@ public class MenuService {
         return menu;
     }
 
-    public ForeendMenuDto getMenuMap(String accountId) {
-        ForeendMenuDto foreendMenuDto = new ForeendMenuDto();
-        Account account = accountManager.findOne(accountId);
+    public FrontendMenuDto getMenuMap(String accountId) {
+        FrontendMenuDto frontendMenuDto = new FrontendMenuDto();
+        Account account = accountMapper.findOne(accountId);
         Map<BackendMenuDto, List<Menu>> backendMenuMap = getMenusMap(account, false);
-        foreendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
+        frontendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
         Map<String, List<BackendModuleMenuDto>> backendModuleMap = Maps.newHashMap();
         for (BackendMenuDto backend : backendMenuMap.keySet()) {
             backendModuleMap.put(backend.getId(), backend.getBackendModuleList());
         }
-        foreendMenuDto.setBackendModuleMap(backendModuleMap);
-        return foreendMenuDto;
+        frontendMenuDto.setBackendModuleMap(backendModuleMap);
+        return frontendMenuDto;
     }
 
     public List<Map<String, Object>> findMobileMenuMap(String accountId) {
         Map<BackendMenuDto, List<Menu>> backendMenuMap = Maps.newHashMap();
-        Account account = accountManager.findOne(accountId);
+        Account account = accountMapper.findOne(accountId);
         if (Const.XCXAUDIT.equals(account.getLoginName())) {
             List<String> menuIds = StringUtils.getSplitList(weixinAuditMenuId, Const.CHAR_COMMA);
             List<Menu> menus = menuMapper.findByIds(menuIds);

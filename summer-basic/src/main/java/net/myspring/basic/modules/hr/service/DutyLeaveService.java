@@ -44,7 +44,7 @@ public class DutyLeaveService {
             LocalDate date = LocalDate.parse(dutyLeaveForm.getDutyDateStart());
             if (dutyLeaveMapper.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, dutyLeaveForm.getDateType())  == null) {
                 dutyLeaveForm.setDutyDate(date);
-                dutyLeaveForm.setStatus(AuditTypeEnum.APPLY.getValue());
+                dutyLeaveForm.setStatus(AuditTypeEnum.APPLYING.toString());
                 dutyLeaveForm.setEmployeeId(SecurityUtils.getEmployeeId());
                 DutyLeave dutyLeave=BeanUtil.map(dutyLeaveForm,DutyLeave.class);
                 dutyLeaveMapper.save(dutyLeave);
@@ -56,11 +56,11 @@ public class DutyLeaveService {
             LocalDate dateEnd = LocalDate.parse(dutyLeaveForm.getDutyDateEnd());
             List<LocalDate> dateList = LocalDateUtils.getDateList(dateStart, dateEnd);
             for (LocalDate date : dateList) {
-                if (dutyLeaveMapper.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, DutyDateTypeEnum.全天.toString()) == null) {
+                if (dutyLeaveMapper.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, DutyDateTypeEnum.DAY.toString()) == null) {
                     DutyLeave item = new DutyLeave();
-                    item.setDateType(DutyDateTypeEnum.全天.toString());
+                    item.setDateType(DutyDateTypeEnum.DAY.toString());
                     item.setDutyDate(date);
-                    item.setStatus(AuditTypeEnum.APPLY.getValue());
+                    item.setStatus(AuditTypeEnum.APPLYING.toString());
                     item.setLeaveType(dutyLeaveForm.getLeaveType());
                     item.setAttachment(dutyLeaveForm.getAttachment());
                     item.setRemarks(dutyLeaveForm.getRemarks());

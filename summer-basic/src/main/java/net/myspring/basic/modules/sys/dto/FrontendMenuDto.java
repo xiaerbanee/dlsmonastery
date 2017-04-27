@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by wangzm on 2017/4/26.
  */
-public class ForeendMenuDto {
+public class FrontendMenuDto {
     private List<BackendMenuDto> backendList;
     private Map<String,List<BackendModuleMenuDto>> backendModuleMap= Maps.newHashMap();
 

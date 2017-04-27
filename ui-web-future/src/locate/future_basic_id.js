@@ -92,6 +92,7 @@ export default {
     audit: "ubah"
   },
   chainForm: {
+    id:"ID",
     chainForm: "Sistem rantai editing",
     name: "nama",
     account: "akun",
@@ -355,6 +356,7 @@ export default {
     shouldGetRule: "Pengiriman Aturan",
     address: "alamat",
     contact: "kontak",
+    contator: "kontak",
     phone: "telepon",
     mobilePhone: "hape",
     inputKey: "silahkan masukkan kata kunci",

@@ -2,7 +2,6 @@ package net.myspring.basic.modules.hr.web.form;
 
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.common.form.DataForm;
 import net.myspring.basic.modules.hr.dto.JobDto;
@@ -28,7 +27,6 @@ public class PositionForm extends DataForm<Position> {
     private String permissionIdStr;
     private TreeNode permissionTree;
     private List<JobDto> jobList= Lists.newArrayList();
-    private Map<Integer,String> dataScopeMap= Maps.newHashMap();
 
     public TreeNode getPermissionTree() {
         return permissionTree;
@@ -44,14 +42,6 @@ public class PositionForm extends DataForm<Position> {
 
     public void setJobList(List<JobDto> jobList) {
         this.jobList = jobList;
-    }
-
-    public Map<Integer,String> getDataScopeMap() {
-        return dataScopeMap;
-    }
-
-    public void setDataScopeMap(Map<Integer,String> dataScopeMap) {
-        this.dataScopeMap = dataScopeMap;
     }
 
     public List<String> getPermissionIdList() {

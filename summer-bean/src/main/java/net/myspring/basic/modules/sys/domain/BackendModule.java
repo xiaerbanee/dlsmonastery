@@ -12,9 +12,9 @@ import java.util.List;
 public class BackendModule extends DataEntity<BackendModule> {
     private String name;
     private Integer version = 0;
-    private Backend backend;
     private String backendId;
     private String code;
+    private String icon;
     private List<String> positionModuleIdList = Lists.newArrayList();
     private List<String> menuCategoryIdList = Lists.newArrayList();
 
@@ -24,6 +24,14 @@ public class BackendModule extends DataEntity<BackendModule> {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getName() {
@@ -40,14 +48,6 @@ public class BackendModule extends DataEntity<BackendModule> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Backend getBackend() {
-        return backend;
-    }
-
-    public void setBackend(Backend backend) {
-        this.backend = backend;
     }
 
     public String getBackendId() {

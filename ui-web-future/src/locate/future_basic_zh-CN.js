@@ -113,6 +113,7 @@ export default {
     inputLegalValue: "请输入合法的数值",
   },
   chainList: {
+    id:"连锁编号",
     chainList: "连锁体系",
     name: "连锁体系列表",
     add: "添加",
@@ -355,6 +356,7 @@ export default {
     shouldGetRule: "运费规则",
     address: "地点",
     contact: "联系人",
+    contator: "联系人",
     phone: "电话",
     mobilePhone: "手机",
     inputKey: "请输入关键字",

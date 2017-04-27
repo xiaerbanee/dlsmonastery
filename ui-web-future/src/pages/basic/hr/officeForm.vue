@@ -20,7 +20,7 @@
             </el-form-item>
             <el-form-item :label="$t('officeForm.jointType')" prop="jointType">
               <el-select v-model="inputForm.jointType" filterable>
-                <el-option v-for="item in inputForm.jointTypeList" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.jointTypeList" :key="item" :label="$t('JointTypeEnum.'+item)" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.point')" prop="point">

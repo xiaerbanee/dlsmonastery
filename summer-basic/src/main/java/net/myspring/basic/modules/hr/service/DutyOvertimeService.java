@@ -40,7 +40,7 @@ public class DutyOvertimeService {
 
     public DutyOvertime save(DutyOvertimeForm dutyOvertimeForm) {
         dutyOvertimeForm.setLeftHour(dutyOvertimeForm.getHour());
-        dutyOvertimeForm.setStatus(AuditTypeEnum.APPLY.getValue());
+        dutyOvertimeForm.setStatus(AuditTypeEnum.APPLYING.toString());
         dutyOvertimeForm.setEmployeeId(SecurityUtils.getEmployeeId());
         DutyOvertime dutyOvertime = BeanUtil.map(dutyOvertimeForm, DutyOvertime.class);
         dutyOvertimeMapper.save(dutyOvertime);
@@ -83,7 +83,7 @@ public class DutyOvertimeService {
         }
         LocalDateTime dateStart = LocalDateTimeUtils.getFirstDayOfMonth(currentDate.minusMonths(3));
         LocalDateTime dateEnd = currentDate;
-        List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASS.getValue());
+        List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
         if (CollectionUtil.isNotEmpty(overtimeList)) {
             for (DutyOvertime dutyOvertime : overtimeList) {
                 overtimeHour = overtimeHour + dutyOvertime.getLeftHour();
@@ -99,7 +99,7 @@ public class DutyOvertimeService {
         }
         LocalDateTime dateStart = LocalDateTimeUtils.getFirstDayOfMonth(currentDate.minusMonths(3));
         LocalDateTime dateEnd =  LocalDateTimeUtils.getLastDayOfMonth(currentDate.minusMonths(3));
-        List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASS.getValue());
+        List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
         if (CollectionUtil.isNotEmpty(overtimeList)) {
             for (DutyOvertime dutyOvertime : overtimeList) {
                 overtimeHour = overtimeHour + dutyOvertime.getLeftHour();
