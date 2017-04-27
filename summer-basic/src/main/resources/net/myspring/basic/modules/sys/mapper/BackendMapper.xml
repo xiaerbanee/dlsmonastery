@@ -17,4 +17,33 @@
         where t1.enabled=1
         and t1.name like concat('%',#{name},'%')
     </select>
+
+    <select id="findByMenuList" resultMap="BackendMenu">
+        SELECT t1.*,t2.
+        FROM sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4
+        where t4.menu_category_id=t3.id
+        and t3.backend_module_id=t2.id
+        and t2.backend_id=t1.id
+        and t1.enabled=1
+        and t2.enabled=1
+        and t3.enabled=1
+        and t4.enabled=1
+        and t4.id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        group by t1.id
+    </select>
+
+    <resultMap id="BackendMenu" type="BackendMenuDto">
+        <id column="id" property="id"/>
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <collection property="backendModuleList" ofType="BackendModuleMenuDto">
+            <id property="id" column="id"/>
+            <result column="name" property="name" />
+            <result column="code" property="code" />
+        </collection>
+    </resultMap>
+
 </mapper>
