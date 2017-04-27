@@ -92,6 +92,7 @@ export default {
     audit: "ubah"
   },
   chainForm: {
+    id:"ID",
     chainForm: "Sistem rantai editing",
     name: "nama",
     account: "akun",

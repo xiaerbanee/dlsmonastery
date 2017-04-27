@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -24,6 +25,7 @@ import java.util.Map;
  */
 @Component
 public class AccountManager {
+
 
     @Autowired
     private AccountMapper accountMapper;

@@ -113,6 +113,7 @@ export default {
     inputLegalValue: "请输入合法的数值",
   },
   chainList: {
+    id:"连锁编号",
     chainList: "连锁体系",
     name: "连锁体系列表",
     add: "添加",

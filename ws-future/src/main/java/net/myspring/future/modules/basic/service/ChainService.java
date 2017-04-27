@@ -41,8 +41,7 @@ public class ChainService {
     }
 
     public void delete(Chain chain) {
-        chain.setEnabled(false);
-        chainMapper.update(chain);
+        chainMapper.logicDeleteOne(chain.getId());
     }
 
     public ChainForm findForm(ChainForm chainForm){
