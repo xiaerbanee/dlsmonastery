@@ -18,8 +18,10 @@
         and t1.name like concat('%',#{name},'%')
     </select>
 
-    <select id="findByMenuList" resultMap="BackendMenu">
-        SELECT t1.*,t2.
+    <select id="findByMenuList" resultMap="BackendMenuMap">
+        SELECT t1.id,t1.name,t1.code,t2.id as 'moduleId',t2.name as 'moduleName',t2.code as 'moduleCode',
+        t3.id as 'categoryId',t3.name as 'categoryName',t3.code as 'categoryCode',
+        t4.id as 'menuId',t4.name as 'menuName' ,t4.code as 'menuCode'
         FROM sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4
         where t4.menu_category_id=t3.id
         and t3.backend_module_id=t2.id
@@ -35,15 +37,31 @@
         group by t1.id
     </select>
 
-    <resultMap id="BackendMenu" type="BackendMenuDto">
+    <resultMap id="BackendMenuMap" type="BackendMenuDto">
         <id column="id" property="id"/>
         <result column="name" property="name" />
         <result column="code" property="code" />
-        <collection property="backendModuleList" ofType="BackendModuleMenuDto">
-            <id property="id" column="id"/>
-            <result column="name" property="name" />
-            <result column="code" property="code" />
-        </collection>
+        <collection property="backendModuleList" resultMap="BackendModuleMenuMap"/>
+    </resultMap>
+
+    <resultMap id="BackendModuleMenuMap" type="BackendModuleMenuDto">
+        <id column="moduleId" property="id"/>
+        <result column="moduleName" property="name" />
+        <result column="moduleCode" property="code" />
+        <collection property="menuCategoryList" resultMap="menuCategoryMap"/>
+    </resultMap>
+
+    <resultMap id="menuCategoryMap" type="menuCategoryMenuDto">
+        <id column="categoryId" property="id"/>
+        <result column="categoryName" property="name" />
+        <result column="categoryCode" property="code" />
+        <collection property="menuList" resultMap="menuMap"/>
+    </resultMap>
+
+    <resultMap id="menuMap" type="menuCategoryMenuDto">
+        <id column="menuId" property="id"/>
+        <result column="menuName" property="name" />
+        <result column="menuCode" property="code" />
     </resultMap>
 
 </mapper>
