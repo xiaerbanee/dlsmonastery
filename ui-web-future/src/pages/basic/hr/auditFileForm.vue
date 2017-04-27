@@ -67,7 +67,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
         this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
-          console.log( this.inputForm.attachment)
+          console.log( this.fileList)
           if (valid) {
             this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
             util.copyValue(this.inputForm, this.submitData);

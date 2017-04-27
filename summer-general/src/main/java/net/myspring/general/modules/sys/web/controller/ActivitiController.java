@@ -5,6 +5,7 @@ import net.myspring.general.modules.sys.dto.ActivitiAuditDto;
 import net.myspring.general.modules.sys.dto.ActivitiAuthenticatedDto;
 import net.myspring.general.modules.sys.form.ActivitiAuditForm;
 import net.myspring.general.modules.sys.form.ActivitiAuthenticatedForm;
+import net.myspring.general.modules.sys.form.ActivitiNotifyForm;
 import net.myspring.general.modules.sys.service.ActivitiService;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +27,28 @@ public class ActivitiController {
 
     @RequestMapping(value = "authenticated")
     public ActivitiAuthenticatedDto authenticatedActiviti(@RequestBody ActivitiAuthenticatedForm activitiAuthenticatedForm){
+        ActivitiAuthenticatedDto activitiAuthenticatedDto=new ActivitiAuthenticatedDto();
         if(StringUtils.isNotBlank(activitiAuthenticatedForm.getProcessTypeId())){
-            return activitiService.authenticatedActiviti(activitiAuthenticatedForm);
+            activitiAuthenticatedDto=activitiService.authenticatedActiviti(activitiAuthenticatedForm);
         }
-        return null;
+        return activitiAuthenticatedDto;
     }
 
     @RequestMapping(value = "audit")
     public ActivitiAuditDto audit(@RequestBody ActivitiAuditForm activitiAuditForm){
+        ActivitiAuditDto activitiAuditDto=new ActivitiAuditDto();
         if(StringUtils.isNotBlank(activitiAuditForm.getProcessTypeId())&&StringUtils.isNotBlank(activitiAuditForm.getProcessInstanceId())){
-            return activitiService.audit(activitiAuditForm);
+            activitiAuditDto= activitiService.audit(activitiAuditForm);
         }
-        return null;
+        return activitiAuditDto;
+    }
+
+    @RequestMapping(value = "notify")
+    public boolean notify(@RequestBody ActivitiNotifyForm activitiNotifyForm){
+        if(StringUtils.isNotBlank(activitiNotifyForm.getExtendId())&&StringUtils.isNotBlank(activitiNotifyForm.getName())){
+            activitiService.notify(activitiNotifyForm);
+            return true;
+        }
+        return false;
     }
 }

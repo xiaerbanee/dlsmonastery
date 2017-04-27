@@ -82,4 +82,25 @@ public class FolderFileDto extends DataDto<FolderFile> {
     public void setMongoPreviewId(String mongoPreviewId) {
         this.mongoPreviewId = mongoPreviewId;
     }
+
+    public String getExtendType() {
+        if(StringUtils.isNotBlank(name)){
+            return name.substring(name.lastIndexOf(".") + 1).toLowerCase();
+        }
+        return "";
+    }
+
+    public Boolean isImage() {
+        String extend = getExtendType();
+        return "jpg".equals(extend) || "jpeg".equals(extend) || "gif".equals(extend) || "png".equals(extend) || "bmp".equals(extend);
+    }
+
+    public String getUrl() {
+        String url="/api/general/sys/folderFile/download?id=";
+        if(isImage()) {
+            return url+getMongoPreviewId()+"&type=preview";
+        }else {
+            return url+getMongoId()+"&type=storage";
+        }
+    }
 }

@@ -93,7 +93,6 @@
             <tbody >
                 <el-date-picker v-model="synDate" align="right" :placeholder="$t('home.selectSynFactoryDate')" type="date"></el-date-picker>
                 <el-button type="primary"  @click="synFactory">{{$t('home.synFactory')}}</el-button>
-                <el-button type="primary"  @click="factoryOrder">{{$t('home.factoryOrder')}}</el-button>
             </tbody>
           </table>
         </el-card>

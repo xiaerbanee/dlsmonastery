@@ -6,34 +6,34 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('auditFileDetail.createdBy')" prop="createdBy">
-              {{detailForm.created.loginName}}
+              {{inputForm.createdByName}}
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.createdDate')" prop="createdDate">
-              {{detailForm.createdDate}}
+              {{inputForm.createdDate}}
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.id')" prop="id">
-              {{detailForm.id}}
+              {{inputForm.id}}
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.title')" prop="title">
-              {{detailForm.title}}
+              {{inputForm.title}}
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.processStatus')" prop="processStatus">
-              {{detailForm.processStatus}}
+              {{inputForm.processStatus}}
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.remarks')" prop="remarks">
-              {{detailForm.remarks}}
+              {{inputForm.remarks}}
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.attachment')" prop="attachment">
-              <el-upload  action="/api/basic/sys/folderFile/upload?uploadPath=/文件审批" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload  action="/api/general/sys/folderFile/upload?uploadPath=/文件审批" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
               </el-upload>
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.isPass')" prop="pass" v-if="isAudit">
-              <el-radio-group v-model="inputForm.pass">
-                <el-radio v-for="(value,key) in inputForm.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
+              <el-radio-group v-model="submitData.pass">
+                <el-radio v-for="(value,key) in inputForm.boolMap" :key="key" :label="value">{{key | bool2str}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.comment')" prop="comment" v-if="isAudit">
-              <el-input v-model="inputForm.comment"></el-input>
+              <el-input v-model="submitData.comment"></el-input>
             </el-form-item>
             <el-form-item v-if="isAudit">
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('auditFileDetail.save')}}</el-button>
@@ -71,14 +71,11 @@
         isCreate:this.$route.query.id==null,
         isAudit:this.$route.query.action=="audit",
         submitDisabled:false,
-        inputForm:{
+        inputForm:{},
+        submitData:{
           id:this.$route.query.id,
           content:"",
-          bools:[],
           pass:"",
-        },
-        detailForm:{
-        created:{loginName:''},
         },
         rules: {
           pass: [{ required: true, message: this.$t('auditFileDetail.prerequisiteMessage')}],
@@ -96,8 +93,8 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/hr/auditFile/audit',qs.stringify(this.inputForm)).then((response)=> {
-              this.$message(response.data.message);
+            axios.post('/api/basic/hr/auditFile/audit',qs.stringify(this.submitData)).then((response)=> {
+               this.$message(response.data.message);
                this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})
             });
           }else{
@@ -106,15 +103,10 @@
         })
       }
     },created(){
-        axios.get('/api/basic/hr/auditFile/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data.auditFile,this.inputForm);
-          console.log(response.data.auditFile.content)
-          console.log(this.inputForm.content)
-          this.detailForm=response.data.auditFile
-          this.inputForm.bools=response.data.bools;
-          this.activityEntity = response.data.activityEntity;
-          if(this.detailForm.attachment != null) {
-             axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.detailForm.attachment}}).then((response)=>{
+        axios.get('/api/basic/hr/auditFile/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm=response.data;
+          if(this.inputForm.attachment != null) {
+             axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
                this.fileList= response.data;
              });
           }

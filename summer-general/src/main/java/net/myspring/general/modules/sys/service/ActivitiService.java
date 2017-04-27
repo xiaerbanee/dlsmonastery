@@ -9,6 +9,7 @@ import net.myspring.general.modules.sys.dto.ActivitiAuditDto;
 import net.myspring.general.modules.sys.dto.ActivitiAuthenticatedDto;
 import net.myspring.general.modules.sys.form.ActivitiAuditForm;
 import net.myspring.general.modules.sys.form.ActivitiAuthenticatedForm;
+import net.myspring.general.modules.sys.form.ActivitiNotifyForm;
 import net.myspring.general.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.general.modules.sys.mapper.ProcessTaskMapper;
 import net.myspring.util.text.StringUtils;
@@ -20,6 +21,7 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -50,6 +52,8 @@ public class ActivitiService {
         ProcessFlow processFlow = processFlowMapper.findByProductTypeAndName(activitiAuthenticatedForm.getProcessTypeId(), processStatus);
         activitiDto.setProcessFlowId(processFlow==null?"":processFlow.getId());
         activitiDto.setPositionId(processFlow.getPositionId());
+        ProcessTask processTask =new ProcessTask();
+
         return activitiDto;
     }
 
@@ -69,27 +73,51 @@ public class ActivitiService {
         activitiAuditDto.setProcessFlowId(processFlow.getId());
         activitiAuditDto.setPositionId(processFlow.getPositionId());
         activitiAuditDto.setProcessStatus(getProcessStatus(processFlow, activitiAuditForm.getPass()));
-        return activitiAuditDto;
-    }
-
-    public void notify(String name,String extendId,String positionId,String processStatus) {
-        ProcessTask processTask = processTaskMapper.findByNameAndExtendId(name,extendId);
-        if(processTask==null){
-            processTask =new ProcessTask();
-            processTask.setAutoAuditing(false);
-            processTask.setName(name);
-            processTask.setExtendId(extendId);
-            processTask.setPositionId(positionId);
-            processTask.setOfficeId(SecurityUtils.getOfficeId());
-            processTaskMapper.save(processTask);
-        }else {
+        if(activitiAuditForm.getPass()){
+            String processStatus = getProcessStatus(processFlow, activitiAuditForm.getPass());
+            ProcessTask processTask = processTaskMapper.findByNameAndExtendId(activitiAuditForm.getName(),activitiAuditForm.getId());
             if(AuditTypeEnum.PASS.getValue().equals(processStatus) ||AuditTypeEnum.NOT_PASS.getValue().equals(processStatus)){
                 processTask.setStatus("已审核");
                 processTask.setEnabled(false);
             }else{
-                processTask.setPositionId(positionId);
+                processTask.setPositionId(processFlow.getPositionId());
                 processTask.setStatus(processStatus);
             }
+            processTask.setAutoAuditing(false);
+            processTask.setLastModifiedBy(activitiAuditForm.getAccountId());
+            processTask.setLastModifiedDate(LocalDateTime.now());
+            processTaskMapper.update(processTask);
+        }
+        return activitiAuditDto;
+    }
+
+    public void notify(ActivitiNotifyForm activitiNotifyForm) {
+        ProcessTask processTask = processTaskMapper.findByNameAndExtendId(activitiNotifyForm.getName(),activitiNotifyForm.getExtendId());
+        if(processTask==null){
+            processTask=new ProcessTask();
+            processTask.setAutoAuditing(false);
+            processTask.setName(activitiNotifyForm.getName());
+            processTask.setCreatedBy(activitiNotifyForm.getAccountId());
+            processTask.setCreatedDate(LocalDateTime.now());
+            processTask.setLastModifiedDate(LocalDateTime.now());
+            processTask.setLastModifiedBy(activitiNotifyForm.getAccountId());
+            processTask.setVersion(0);
+            processTask.setExtendId(activitiNotifyForm.getExtendId());
+            processTask.setPositionId(activitiNotifyForm.getPositionId());
+            processTask.setOfficeId(activitiNotifyForm.getOfficeId());
+            processTask.setCompanyId(activitiNotifyForm.getCompanyId());
+            processTaskMapper.save(processTask);
+        }else {
+            if(AuditTypeEnum.PASS.getValue().equals(activitiNotifyForm.getProcessStatus()) ||AuditTypeEnum.NOT_PASS.getValue().equals(activitiNotifyForm.getProcessStatus())){
+                processTask.setStatus("已审核");
+                processTask.setEnabled(false);
+            }else{
+                processTask.setPositionId(activitiNotifyForm.getPositionId());
+                processTask.setStatus(activitiNotifyForm.getProcessStatus());
+            }
+            processTask.setAutoAuditing(false);
+            processTask.setLastModifiedDate(LocalDateTime.now());
+            processTask.setLastModifiedBy(activitiNotifyForm.getAccountId());
             processTaskMapper.update(processTask);
         }
     }

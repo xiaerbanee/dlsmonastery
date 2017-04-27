@@ -4,6 +4,7 @@ import net.myspring.general.modules.sys.dto.ActivitiAuditDto;
 import net.myspring.general.modules.sys.dto.ActivitiAuthenticatedDto;
 import net.myspring.general.modules.sys.form.ActivitiAuditForm;
 import net.myspring.general.modules.sys.form.ActivitiAuthenticatedForm;
+import net.myspring.general.modules.sys.form.ActivitiNotifyForm;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,4 +23,7 @@ public interface ActivitiClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/sys/activiti/audit")
     ActivitiAuditDto audit(ActivitiAuditForm activitiAuditForm);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/activiti/notify")
+    boolean notify(ActivitiNotifyForm activitiNotifyForm);
 }

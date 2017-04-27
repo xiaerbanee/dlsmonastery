@@ -9,14 +9,34 @@ public class ActivitiAuthenticatedForm {
     private String key;
     private String accountId;
     private String processTypeId;
+    private String officeId;
+    private String companyId;
 
     public ActivitiAuthenticatedForm(){};
-    public ActivitiAuthenticatedForm(String id,String name,String key,String processTypeId,String accountId){
+    public ActivitiAuthenticatedForm(String id,String name,String key,String processTypeId,String accountId,String officeId,String companyId){
         this.id=id;
         this.name=name;
+        this.officeId=officeId;
         this.key=key;
+        this.companyId=companyId;
         this.processTypeId=processTypeId;
         this.accountId=accountId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
     }
 
     public String getAccountId() {
