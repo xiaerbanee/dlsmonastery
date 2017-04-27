@@ -6,7 +6,6 @@ package net.myspring.cloud.common.dto;
 public class NameValueDto {
     private String name;
     private String value;
-    private Boolean checked;
 
     public String getName() {
         return name;
@@ -24,11 +23,4 @@ public class NameValueDto {
         this.value = value;
     }
 
-    public Boolean getChecked() {
-        return checked;
-    }
-
-    public void setChecked(Boolean checked) {
-        this.checked = checked;
-    }
 }

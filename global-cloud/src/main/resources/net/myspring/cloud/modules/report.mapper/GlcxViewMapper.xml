@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.cloud.modules.report.mapper.GlcxViewMapper">
+    <select id="findDepartment" resultType="NameValueDto">
+        SELECT DISTINCT
+            fdeptnum AS value,
+            fdeptname AS name
+        FROM
+            glcx
+        WHERE
+            fdeptnum NOT IN ('')
+        ORDER BY Fdeptnum
+    </select>
+
+    <select id="findEntityByPeriod" resultType="RetailForUnitDto">
+        SELECT
+            FYEAR as year,
+            FPERIOD as month,
+            faccnumber as accNumber,
+            faccname as accName,
+            Fdeptnum as deptNum,
+            Fdeptname as deptName,
+            Ffynum as fyNum,
+            Ffyname as fyName,
+            SUM (famount) AS amount
+        FROM
+          glcx
+        WHERE
+            flx = ''
+            AND Fyear = #{year} and Fperiod = #{month}
+            AND faccname = #{accName}
+            <if test="fyNum != '' and fyNum != null">
+                AND Ffynum = #{fyNum}
+            </if>
+        GROUP BY
+            FYEAR,
+            FPERIOD,
+            faccnumber,
+            faccname,
+            Fdeptnum,
+            Fdeptname,
+            Ffynum,
+            Ffyname
+    </select>
+    <select id="findEntityBySumPeriod" resultType="RetailForUnitDto">
+        SELECT
+        faccnumber as accNumber,
+        faccname as accName,
+        Fdeptnum as deptNum,
+        Fdeptname as deptName,
+        Ffynum as fyNum,
+        Ffyname as fyName,
+        SUM (famount) AS amount
+        FROM
+        glcx
+        WHERE
+        flx = ''
+        AND FYEAR*100+ FPERIOD BETWEEN  #{dateStart} AND #{dateEnd}
+        AND faccname = #{accName}
+        <if test="fyNum != '' and fyNum != null">
+            AND Ffynum = #{fyNum}
+        </if>
+        GROUP BY
+        faccnumber,
+        faccname,
+        Fdeptnum,
+        Fdeptname,
+        Ffynum,
+        Ffyname
+    </select>
+
+    <select id="findEntityByPeriodForTotalDepartment" resultType="RetailForUnitDto">
+        SELECT
+            FYEAR as year,
+            FPERIOD as month,
+            faccnumber as accNumber,
+            faccname as accName,
+            Ffynum as fyNum,
+            Ffyname as fyName,
+            SUM (famount) AS amount
+        FROM
+            glcx
+        WHERE
+            flx = ''
+            AND Fyear = #{year} and Fperiod = #{month}
+            AND faccname = #{accName}
+            <if test="fyNum != '' and fyNum != null">
+                AND Ffynum = #{fyNum}
+            </if>
+        GROUP BY
+            FYEAR,
+            FPERIOD,
+            faccnumber,
+            faccname,
+            Ffynum,
+            Ffyname
+    </select>
+    <select id="findEntityBySumPeriodForTotalDepartment" resultType="RetailForUnitDto">
+        SELECT
+        faccnumber as accNumber,
+        faccname as accName,
+        Ffynum as fyNum,
+        Ffyname as fyName,
+        SUM (famount) AS amount
+        FROM
+          glcx
+        WHERE
+        flx = ''
+        AND FYEAR*100+ FPERIOD BETWEEN  #{dateStart} AND #{dateEnd}
+        AND faccname = #{accName}
+        <if test="fyNum != '' and fyNum != null">
+            AND Ffynum = #{fyNum}
+        </if>
+        GROUP BY
+        faccnumber,
+        faccname,
+        Ffynum,
+        Ffyname
+    </select>
+
+    <select id="findByAccName" resultType="DynamicSubject">
+        SELECT DISTINCT
+            faccnumber as accNumber,
+            faccname as accName,
+            Ffynum as fyNum,
+            Ffyname as fyName
+        FROM
+            glcx
+        WHERE
+            flx = '' AND faccname = #{accName}
+    </select>
+</mapper>

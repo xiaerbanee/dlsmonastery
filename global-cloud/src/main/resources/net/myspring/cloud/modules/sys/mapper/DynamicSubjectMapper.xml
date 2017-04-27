@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.cloud.modules.sys.mapper.DynamicSubjectMapper">
+    <select id="findAll" resultType="DynamicSubject">
+        select
+        t1.acc_number as accNumber,
+        t1.acc_name as accName,
+        t1.fy_num as fyNum,
+        t1.fy_name as fyName
+        from
+        cloud_dynamic_subject t1
+    </select>
+
+   <select id="findByAccName" resultType="DynamicSubject">
+       select
+          t1.acc_number as accNumber,
+          t1.acc_name as accName,
+          t1.fy_num as fyNum,
+          t1.fy_name as fyName
+       from
+          cloud_dynamic_subject t1
+       where
+          t1.acc_name = #{accName}
+       order by t1.fy_num
+   </select>
+
+    <select id="findByFyName" resultType="DynamicSubject">
+        select
+            t1.acc_number as accNumber,
+            t1.acc_name as accName,
+            t1.fy_num as fyNum,
+            t1.fy_name as fyName
+        from
+            cloud_dynamic_subject t1
+        where
+            t1.fy_name = #{fyName}
+    </select>
+
+    <insert id="add">
+        insert INTO
+        cloud_dynamic_subject(acc_number,acc_name,fy_num,fy_name)
+        values
+       (#{accNumber},#{accName},#{fyNum},#{fyName})
+    </insert>
+</mapper>

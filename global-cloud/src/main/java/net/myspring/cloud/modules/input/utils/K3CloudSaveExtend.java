@@ -1,4 +1,4 @@
-package net.myspring.cloud.common.utils;
+package net.myspring.cloud.modules.input.utils;
 
 
 import net.myspring.cloud.modules.input.dto.K3CloudSave;
