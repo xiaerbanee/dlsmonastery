@@ -14,6 +14,7 @@ import net.myspring.general.modules.sys.web.query.FolderFileQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
+import org.apache.commons.io.output.*;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
+import java.io.*;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,17 @@ public class FolderFileService {
             logger.error(e.getMessage());
         }
         return BeanUtil.map(list,FolderFileDto.class);
+    }
+
+    public String uploadToMongoDb(OutputStream  outputStream, String fileName){
+        DBObject dbObject = new BasicDBObject();
+        dbObject.put("createdBy", SecurityUtils.getAccountId());
+        dbObject.put("companyId",SecurityUtils.getCompanyId());
+        dbObject.put("positionId",SecurityUtils.getPositionId());
+        dbObject.put("officeId",SecurityUtils.getOfficeId());
+        ByteArrayInputStream swapStream = new ByteArrayInputStream(((org.apache.commons.io.output.ByteArrayOutputStream)outputStream).toByteArray());
+        GridFSFile gridFSFile = exportGridFsTemplate.store(swapStream,fileName,"application/octet-stream; charset=utf-8",dbObject);
+        return StringUtils.toString(gridFSFile.getId());
     }
 
     public GridFSDBFile getGridFSDBFile(String type,String mongoId) {

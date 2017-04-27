@@ -7,6 +7,7 @@ import net.myspring.general.common.exception.ServiceException;
 import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.dto.FolderFileDto;
+import net.myspring.general.modules.sys.form.ExcelExportForm;
 import net.myspring.general.modules.sys.service.FolderFileService;
 import net.myspring.general.modules.sys.service.FolderService;
 import net.myspring.general.modules.sys.web.query.FolderFileQuery;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,8 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +59,12 @@ public class FolderFileController {
         return list;
     }
 
+    @RequestMapping(value = "/uploadToMongoDb")
+    public String upload(@RequestBody ExcelExportForm excelExportForm) {
+        String mongoDbId=folderFileService.uploadToMongoDb(excelExportForm.getOutputStream(),excelExportForm.getFileName());
+        return mongoDbId;
+    }
+
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public void download(String token,String type,String id,HttpServletResponse response) {
         GridFSDBFile gridFSDBFile = folderFileService.getGridFSDBFile(type,id);
@@ -71,7 +78,6 @@ public class FolderFileController {
             }
         }
     }
-
 
     @RequestMapping(value = "/findByIds")
     public List<FolderFileDto> findByIds(String ids) {

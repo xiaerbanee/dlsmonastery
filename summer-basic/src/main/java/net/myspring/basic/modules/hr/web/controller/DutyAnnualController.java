@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping(value = "hr/dutyAnnual")
 public class DutyAnnualController {
@@ -31,11 +33,9 @@ public class DutyAnnualController {
     }
 
     @RequestMapping(value = "import/template", method = RequestMethod.GET)
-    public ModelAndView impotTemplate() {
+    public String impotTemplate() throws IOException {
         Workbook workbook = new SXSSFWorkbook(10000);
-        SimpleExcelSheet simpleExcelSheet=dutyAnnualService.findSimpleExcelSheet(workbook);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"年假导入模版.xlsx",simpleExcelSheet);
-        return null;
+        return dutyAnnualService.findSimpleExcelSheet(workbook);
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)

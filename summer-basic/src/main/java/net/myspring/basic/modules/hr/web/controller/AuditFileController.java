@@ -70,8 +70,9 @@ public class AuditFileController {
     }
 
     @RequestMapping(value = "audit")
-    public RestResponse audit(AuditFile auditFile, boolean pass, String comment) {
-        RestResponse restResponse = new RestResponse("审核成功",ResponseCodeEnum.audited.name());
+    public RestResponse audit(String id, boolean pass, String comment) {
+        RestResponse restResponse = new RestResponse("文件审核成功",null);
+        auditFileService.audit(id, pass, comment);
         return restResponse;
     }
 
