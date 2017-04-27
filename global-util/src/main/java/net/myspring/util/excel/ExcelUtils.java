@@ -14,10 +14,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -31,18 +28,20 @@ import java.util.Map;
  * Created by liuj on 2017/2/16.
  */
 public class ExcelUtils {
-    public static void doWrite(Workbook workbook,Collection<SimpleExcelSheet> simpleExcelSheets) {
+    public static ByteArrayInputStream doWrite(Workbook workbook, Collection<SimpleExcelSheet> simpleExcelSheets) {
         if(CollectionUtils.isNotEmpty(simpleExcelSheets)) {
             for(SimpleExcelSheet simpleExcelSheet:simpleExcelSheets) {
                 Sheet sheet = workbook.createSheet(simpleExcelSheet.getSheetName());
                 doWriteSheet(sheet,simpleExcelSheet);
             }
         }
+        return getInputStream(workbook);
     }
 
-    public static void doWrite(Workbook workbook,SimpleExcelSheet simpleExcelSheet) {
+    public static ByteArrayInputStream doWrite(Workbook workbook,SimpleExcelSheet simpleExcelSheet) {
         Sheet sheet = workbook.createSheet(simpleExcelSheet.getSheetName());
         doWriteSheet(sheet,simpleExcelSheet);
+        return getInputStream(workbook);
     }
 
     public static Workbook getWorkbook(File file) {
@@ -282,5 +281,18 @@ public class ExcelUtils {
         } else {
             cell.setCellValue(String.valueOf(value));
         }
+    }
+
+
+
+    private static ByteArrayInputStream getInputStream(Workbook workbook) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            workbook.write(byteArrayOutputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        return byteArrayInputStream;
     }
 }
