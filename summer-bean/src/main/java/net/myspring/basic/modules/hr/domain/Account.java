@@ -20,7 +20,6 @@ public class Account extends CompanyEntity<Account> {
     private String type;
     private String outId;
     private String outPassword;
-    private Boolean viewReport;
     private String positionId;
     private String officeId;
     private String employeeId;
@@ -81,15 +80,6 @@ public class Account extends CompanyEntity<Account> {
     public void setOutPassword(String outPassword) {
         this.outPassword = outPassword;
     }
-
-    public Boolean getViewReport() {
-        return viewReport;
-    }
-
-    public void setViewReport(Boolean viewReport) {
-        this.viewReport = viewReport;
-    }
-
     public String getPositionId() {
         return positionId;
     }

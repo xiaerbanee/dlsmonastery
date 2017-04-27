@@ -12,8 +12,7 @@ import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
-import net.myspring.basic.modules.sys.dto.BackendMenuDto;
-import net.myspring.basic.modules.sys.dto.ForeendMenuDto;
+import net.myspring.basic.modules.sys.dto.FrontMenuDto;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -107,19 +106,13 @@ public class AccountController {
         return null;
     }
 
-    @RequestMapping(value = "getAuthorityList")
-    public List<String> getAuthorityList() {
-        List<String> authorityList = accountService.getAuthorityList();
-        return authorityList;
-    }
-
     @RequestMapping(value = "getAccountInfo")
     public Map<String, Object> getAccountInfo() {
         String accountId = SecurityUtils.getAccountId();
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccountDto(accountId);
         List<String> authorityList = accountService.getAuthorityList();
-        ForeendMenuDto menus = menuService.getMenuMap(SecurityUtils.getAccountId());
+        FrontMenuDto menus = menuService.getMenuMap(SecurityUtils.getAccountId());
         map.put("account", accountDto);
         map.put("authorityList", authorityList);
         map.put("menus", menus);

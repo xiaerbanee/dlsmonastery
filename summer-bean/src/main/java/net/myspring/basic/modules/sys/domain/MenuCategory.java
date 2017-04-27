@@ -12,7 +12,6 @@ import java.util.List;
 @Table(name="sys_menu_category")
 public class MenuCategory extends DataEntity<MenuCategory> {
     private String name;
-    private String icon;
     private Integer sort;
     private Integer version = 0;
     private String code;
@@ -25,14 +24,6 @@ public class MenuCategory extends DataEntity<MenuCategory> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public Integer getSort() {

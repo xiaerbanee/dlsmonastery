@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.event.ListDataEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -158,8 +157,8 @@ public class MenuService {
         return menu;
     }
 
-    public ForeendMenuDto getMenuMap(String accountId) {
-        ForeendMenuDto foreendMenuDto = new ForeendMenuDto();
+    public FrontMenuDto getMenuMap(String accountId) {
+        FrontMenuDto foreendMenuDto = new FrontMenuDto();
         Account account = accountMapper.findOne(accountId);
         Map<BackendMenuDto, List<Menu>> backendMenuMap = getMenusMap(account, false);
         foreendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
