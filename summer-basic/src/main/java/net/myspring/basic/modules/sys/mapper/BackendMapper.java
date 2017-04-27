@@ -21,5 +21,5 @@ public interface BackendMapper extends MyMapper<Backend,String> {
 
     List<Backend> findByNameLike(String name);
 
-    List<BackendMenuDto> findByMenuList(List<Menu> menuList);
+    List<BackendMenuDto> findByMenuList(List<String> menuList);
 }

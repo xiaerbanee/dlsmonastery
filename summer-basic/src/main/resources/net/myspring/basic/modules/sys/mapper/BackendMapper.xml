@@ -34,7 +34,6 @@
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
-        group by t1.id
     </select>
 
     <resultMap id="BackendMenuMap" type="BackendMenuDto">
@@ -58,7 +57,7 @@
         <collection property="menuList" resultMap="menuMap"/>
     </resultMap>
 
-    <resultMap id="menuMap" type="menuCategoryMenuDto">
+    <resultMap id="menuMap" type="menu">
         <id column="menuId" property="id"/>
         <result column="menuName" property="name" />
         <result column="menuCode" property="code" />

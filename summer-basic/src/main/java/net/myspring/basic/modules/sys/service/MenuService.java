@@ -198,7 +198,7 @@ public class MenuService {
             String positionId = account.getPositionId();
             List<Permission> permissions = permissionMapper.findByPositionId(positionId);
             List<String> menuIds = CollectionUtil.extractToList(permissions, "menuId");
-            menuList = menuMapper.findByMenuIdsAndMobile(menuIds,isMobile);
+            menuList = menuMapper.findByMenuIdsAndMobile(menuIds, isMobile);
             List<Menu> permissionIsEmptyMenus = menuMapper.findByPermissionIsEmpty();
             menuList = CollectionUtil.union(menuList, permissionIsEmptyMenus);
             menuList = Lists.newArrayList(Sets.newHashSet(menuList));
@@ -209,32 +209,16 @@ public class MenuService {
     private Map<BackendMenuDto, List<Menu>> getMenusMap(List<Menu> menuList) {
         Map<BackendMenuDto, List<Menu>> backendMenuMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(menuList)) {
-            Map<String, List<Menu>> menuMap = CollectionUtil.extractToMapList(menuList, "menuCategoryId");
-            List<MenuCategory> menuCategoryList = menuCategoryMapper.findByIds(Lists.newArrayList(menuMap.keySet()));
-            List<MenuCategoryMenuDto> categoryMenuDtoList = BeanUtil.map(menuCategoryList, MenuCategoryMenuDto.class);
-            for (MenuCategoryMenuDto menuCategoryMenuDto : categoryMenuDtoList) {
-                menuCategoryMenuDto.setMenuList(menuMap.get(menuCategoryMenuDto.getId()));
-            }
-            Map<String, List<MenuCategoryMenuDto>> menuCategoryMap = CollectionUtil.extractToMapList(categoryMenuDtoList, "backendModuleId");
-            if (CollectionUtil.isNotEmpty(menuCategoryMap)) {
-                List<BackendModule> backendModuleList = backendModuleMapper.findByIds(Lists.newArrayList(menuCategoryMap.keySet()));
-                List<BackendModuleMenuDto> moduleMenuDtoList = BeanUtil.map(backendModuleList, BackendModuleMenuDto.class);
-                for (BackendModuleMenuDto backendModuleMenuDto : moduleMenuDtoList) {
-                    backendModuleMenuDto.setMenuCategoryList(menuCategoryMap.get(backendModuleMenuDto.getId()));
-                }
-                Map<String, List<BackendModuleMenuDto>> backendModuleMap = CollectionUtil.extractToMapList(moduleMenuDtoList, "backendId");
-                if (CollectionUtil.isNotEmpty(backendModuleMap)) {
-                    List<Backend> backendList = backendMapper.findByIds(Lists.newArrayList(backendModuleMap.keySet()));
-                    for (BackendMenuDto backendMenuDto : BeanUtil.map(backendList, BackendMenuDto.class)) {
-                        backendMenuDto.setBackendModuleList(backendModuleMap.get(backendMenuDto.getId()));
-                        List<Menu> menus = Lists.newArrayList();
-                        for (BackendModuleMenuDto backendModule : backendMenuDto.getBackendModuleList()) {
-                            for (MenuCategoryMenuDto menuCategory : backendModule.getMenuCategoryList()) {
-                                menus.addAll(menuCategory.getMenuList());
-                            }
+            List<BackendMenuDto> backendList = backendMapper.findByMenuList(CollectionUtil.extractToList(menuList, "id"));
+            if (CollectionUtil.isNotEmpty(backendList)) {
+                for (BackendMenuDto backendMenuDto : backendList) {
+                    List<Menu> menus = Lists.newArrayList();
+                    for (BackendModuleMenuDto backendModule : backendMenuDto.getBackendModuleList()) {
+                        for (MenuCategoryMenuDto menuCategory : backendModule.getMenuCategoryList()) {
+                            menus.addAll(menuCategory.getMenuList());
                         }
-                        backendMenuMap.put(backendMenuDto, menus);
                     }
+                    backendMenuMap.put(backendMenuDto, menus);
                 }
             }
         }
