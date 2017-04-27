@@ -58,7 +58,7 @@ public class DutyAnnualService {
     }
 
     public SimpleExcelSheet findSimpleExcelSheet(Workbook workbook){
-        List<Employee> employeeList = employeeMapper.findByStatusAndregularDate(EmployeeStatusEnum.在职.name(), LocalDateTime.now().minusYears(1));
+        List<Employee> employeeList = employeeMapper.findByStatusAndregularDate(EmployeeStatusEnum.JOB.name(), LocalDateTime.now().minusYears(1));
         List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"name","用户名"));

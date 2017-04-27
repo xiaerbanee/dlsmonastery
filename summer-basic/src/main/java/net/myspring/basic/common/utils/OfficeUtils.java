@@ -152,7 +152,7 @@ public class OfficeUtils {
     public static Map<Integer, String> getOfficeDictMap(){
         DictMapMapper dictMapMapper = SummerBasicApplication.getApplicationContext().getBean(DictMapMapper.class);
         //机构分类
-        List<DictMap> dictMaps = dictMapMapper.findByCategory(DictMapCategoryEnum.机构分类.name());
+        List<DictMap> dictMaps = dictMapMapper.findByCategory(DictMapCategoryEnum.ORGANIZATION_TYPE.name());
         Map<Integer, String> map = Maps.newTreeMap();
         for (DictMap dictMap : dictMaps) {
             map.put(Integer.valueOf(dictMap.getValue()), dictMap.getName());

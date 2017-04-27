@@ -9,7 +9,9 @@ import java.util.List;
  * Created by liuj on 2016/12/31.
  */
 public enum DutyDateTypeEnum {
-    全天, 上午, 下午;
+    DAY,
+    MORNING,
+    AFTERNOON;
 
     private static List<String> list= Lists.newArrayList();
 

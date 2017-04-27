@@ -74,17 +74,17 @@ public class DutyService {
 
     public Object findDutyItem(String id, String dutyType) {
         Object item;
-        if (DutyTypeEnum.请假.name().equals(dutyType)) {
+        if (DutyTypeEnum.LEAVE.name().equals(dutyType)) {
             item = dutyLeaveMapper.findOne(id);
-        } else if (DutyTypeEnum.免打卡.name().equals(dutyType)) {
+        } else if (DutyTypeEnum.FEE.name().equals(dutyType)) {
             item = dutyFreeMapper.findOne(id);
-        } else if (DutyTypeEnum.加班.name().equals(dutyType)) {
+        } else if (DutyTypeEnum.OVER_TIME.name().equals(dutyType)) {
             item = dutyOvertimeMapper.findOne(id);
-        } else if (DutyTypeEnum.公休.name().equals(dutyType)) {
+        } else if (DutyTypeEnum.PUBLIC_OFF.name().equals(dutyType)) {
             item = dutyPublicFreeMapper.findOne(id);
-        } else if (DutyTypeEnum.出差.name().equals(dutyType)) {
+        } else if (DutyTypeEnum.TRIP.name().equals(dutyType)) {
             item = dutyTripMapper.findOne(id);
-        } else if (DutyTypeEnum.签到.name().equals(dutyType)) {
+        } else if (DutyTypeEnum.SIGN.name().equals(dutyType)) {
             item = dutySignMapper.findOne(id);
         } else {
             item = dutyRestMapper.findOne(id);
@@ -94,71 +94,71 @@ public class DutyService {
 
     public void audit(Map<String,String> map){
         for(Map.Entry<String,String> entry:map.entrySet()){
-            audit(entry.getKey(),entry.getValue(),true,null);
+            audit(entry.getKey(),entry.toString(),true,null);
         }
     }
 
     public void audit(String id, String dutyType, Boolean pass, String auditRemarks) {
         String auditBy = SecurityUtils.getAccountId();
-        if (DutyTypeEnum.请假.toString().equals(dutyType)) {
+        if (DutyTypeEnum.LEAVE.toString().equals(dutyType)) {
             DutyLeave dutyLeave = dutyLeaveMapper.findOne(id);
-            if (AuditTypeEnum.APPLY.getValue().equals(dutyLeave.getStatus())) {
-                dutyLeave.setStatus(pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.getValue());
+            if (AuditTypeEnum.APPLYING.toString().equals(dutyLeave.getStatus())) {
+                dutyLeave.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutyLeave.setAuditBy(auditBy);
                 dutyLeave.setAuditDate(LocalDateTime.now());
                 dutyLeave.setAuditRemarks(auditRemarks);
                 dutyLeave.setLocked(true);
                 dutyLeaveMapper.update(dutyLeave);
             }
-        } else if (DutyTypeEnum.免打卡.toString().equals(dutyType)) {
+        } else if (DutyTypeEnum.FEE.toString().equals(dutyType)) {
             DutyFree dutyFree = dutyFreeMapper.findOne(id);
-            if (AuditTypeEnum.APPLY.getValue().equals(dutyFree.getStatus())) {
-                dutyFree.setStatus(pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.getValue());
+            if (AuditTypeEnum.APPLYING.toString().equals(dutyFree.getStatus())) {
+                dutyFree.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutyFree.setAuditBy(auditBy);
                 dutyFree.setAuditDate(LocalDateTime.now());
                 dutyFree.setLocked(true);
                 dutyFree.setAuditRemarks(auditRemarks);
                 dutyFreeMapper.update(dutyFree);
             }
-        } else if (DutyTypeEnum.公休.toString().equals(dutyType)) {
+        } else if (DutyTypeEnum.PUBLIC_OFF.toString().equals(dutyType)) {
             DutyPublicFree dutyPublicFree = dutyPublicFreeMapper.findOne(id);
-            if (AuditTypeEnum.APPLY.getValue().equals(dutyPublicFree.getStatus())) {
-                dutyPublicFree.setStatus(pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.getValue());
+            if (AuditTypeEnum.APPLYING.toString().equals(dutyPublicFree.getStatus())) {
+                dutyPublicFree.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutyPublicFree.setAuditBy(auditBy);
                 dutyPublicFree.setAuditDate(LocalDateTime.now());
                 dutyPublicFree.setLocked(true);
                 dutyPublicFree.setAuditRemarks(auditRemarks);
                 dutyPublicFreeMapper.update(dutyPublicFree);
             }
-        } else if (DutyTypeEnum.出差.toString().equals(dutyType)) {
+        } else if (DutyTypeEnum.TRIP.toString().equals(dutyType)) {
             DutyTrip dutyTrip = dutyTripMapper.findOne(id);
-            if (AuditTypeEnum.APPLY.getValue().equals(dutyTrip.getStatus())) {
-                dutyTrip.setStatus(pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.getValue());
+            if (AuditTypeEnum.APPLYING.toString().equals(dutyTrip.getStatus())) {
+                dutyTrip.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutyTrip.setAuditBy(auditBy);
                 dutyTrip.setAuditDate(LocalDateTime.now());
                 dutyTrip.setLocked(true);
                 dutyTrip.setAuditRemarks(auditRemarks);
                 dutyTripMapper.update(dutyTrip);
             }
-        } else if (DutyTypeEnum.加班.toString().equals(dutyType)) {
+        } else if (DutyTypeEnum.OVER_TIME.toString().equals(dutyType)) {
             DutyOvertime dutyOvertime = dutyOvertimeMapper.findOne(id);
-            if (AuditTypeEnum.APPLY.getValue().equals(dutyOvertime.getStatus())) {
-                dutyOvertime.setStatus(pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.getValue());
+            if (AuditTypeEnum.APPLYING.toString().equals(dutyOvertime.getStatus())) {
+                dutyOvertime.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutyOvertime.setAuditBy(auditBy);
                 dutyOvertime.setAuditDate(LocalDateTime.now());
                 dutyOvertime.setAuditRemarks(auditRemarks);
                 dutyOvertime.setLocked(true);
                 dutyOvertimeMapper.update(dutyOvertime);
             }
-        } else if (DutyTypeEnum.调休.toString().equals(dutyType)) {
+        } else if (DutyTypeEnum.OFF.toString().equals(dutyType)) {
             DutyRest dutyRest = dutyRestMapper.findOne(id);
-            if (AuditTypeEnum.APPLY.getValue().equals(dutyRest.getStatus())) {
+            if (AuditTypeEnum.APPLYING.toString().equals(dutyRest.getStatus())) {
                 restAudit(dutyRest, auditBy, pass, auditRemarks);
             }
-        } else if (DutyTypeEnum.签到.toString().equals(dutyType)) {
+        } else if (DutyTypeEnum.SIGN.toString().equals(dutyType)) {
             DutySign dutySign = dutySignMapper.findOne(id);
-            if (AuditTypeEnum.APPLY.getValue().equals(dutySign.getStatus())) {
-                dutySign.setStatus(pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.getValue());
+            if (AuditTypeEnum.APPLYING.toString().equals(dutySign.getStatus())) {
+                dutySign.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutySign.setAuditBy(auditBy);
                 dutySign.setAuditRemarks(auditRemarks);
                 dutySign.setLocked(true);
@@ -168,7 +168,7 @@ public class DutyService {
                     dutyWorktime.setEmployeeId(account.getEmployeeId());
                     dutyWorktime.setDutyDate(dutySign.getCreatedDate().toLocalDate());
                     dutyWorktime.setDutyTime(dutySign.getCreatedDate().toLocalTime());
-                    dutyWorktime.setType(WorkTimeTypeEnum.外勤.toString());
+                    dutyWorktime.setType(WorkTimeTypeEnum.WORK_DONE_OUTSIDE.toString());
                     dutyWorktimeMapper.save(dutyWorktime);
                     dutySign.setDutyWorktimeId(dutyWorktime.getId());
                 }
@@ -180,10 +180,10 @@ public class DutyService {
     private Boolean restAudit(DutyRest dutyRest, String auditById, Boolean pass, String auditRemarks) {
         if (pass) {
             Double restHour = 0.0;
-            if (DutyRestTypeEnum.加班调休.toString().equals(dutyRest.getType())) {
+            if (DutyRestTypeEnum.OVER_TIME_OFF.toString().equals(dutyRest.getType())) {
                 LocalDate dateStart = LocalDate.now().minusMonths(3);
                 LocalDate dateEnd = dutyRest.getDutyDate();
-                List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByDutyDateAndStatus(dutyRest.getEmployeeId(), dateStart, dateEnd, AuditTypeEnum.PASS.getValue());
+                List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByDutyDateAndStatus(dutyRest.getEmployeeId(), dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
                 List<DutyRestOvertime> dutyRestOvertimes = Lists.newArrayList();
                 restHour = dutyRest.getHour().doubleValue();
                 Double overTime = 0.0;
@@ -222,7 +222,7 @@ public class DutyService {
                    dutyRestOvertimeMapper.batchSave(dutyRestOvertimes);
                }
             } else {
-                restHour = DutyDateTypeEnum.全天.toString().equals(dutyRest.getDateType()) ? 8.0 : 4.0;
+                restHour = DutyDateTypeEnum.DAY.toString().equals(dutyRest.getDateType()) ? 8.0 : 4.0;
                 DutyAnnual dutyAnnual = dutyAnnualMapper.findByEmployee(dutyRest.getEmployeeId());
                 if(dutyAnnual==null||dutyAnnual.getLeftHour()<restHour){
                     return false;
@@ -232,7 +232,7 @@ public class DutyService {
                 dutyRest.setDutyAnnualId(dutyAnnual.getId());
             }
         }
-        dutyRest.setStatus(pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.getValue());
+        dutyRest.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
         dutyRest.setAuditBy(auditById);
         dutyRest.setAuditDate(LocalDateTime.now());
         dutyRest.setAuditRemarks(auditRemarks);
@@ -256,7 +256,7 @@ public class DutyService {
             calendarEventDto.setId(dutyWorktime.getId());
             calendarEventDto.setStart(dutyWorktime.getDutyDate());
             calendarEventDto.setTitle("卡:" + LocalTimeUtils.format(dutyWorktime.getDutyTime()));
-            calendarEventDto.setCssClass(getCssClass(AuditTypeEnum.APPLY.getValue()));
+            calendarEventDto.setCssClass(getCssClass(AuditTypeEnum.APPLYING.toString()));
             list.add(calendarEventDto);
         }
         for (DutyLeave dutyLeave : leaveList) {
@@ -322,9 +322,9 @@ public class DutyService {
 
 
     private String getCssClass(String status) {
-        if (AuditTypeEnum.APPLY.getValue().equals(status)) {
+        if (AuditTypeEnum.APPLYING.toString().equals(status)) {
             return "warning";
-        } else if (AuditTypeEnum.PASS.getValue().equals(status)) {
+        } else if (AuditTypeEnum.PASSED.toString().equals(status)) {
             return "info";
         } else {
             return "danger";

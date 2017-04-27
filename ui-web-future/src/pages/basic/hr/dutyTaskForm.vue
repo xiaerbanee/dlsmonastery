@@ -90,7 +90,7 @@
               <el-input v-model="showForm.dateType"disabled ></el-input>
             </el-form-item>
           </div>
-          <div v-if="showForm.type === '加班调休'">
+          <div v-if="showForm.type === 'OVER_TIME_OFF'">
             <el-form-item :label="$t('dutyTaskForm.restTimeStart')" prop="timeStart">
               <el-input v-model="showForm.timeStart"disabled ></el-input>
             </el-form-item>

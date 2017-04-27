@@ -132,7 +132,7 @@ public class AccountController {
         AccountDto accountDto = accountService.getAccountDto(SecurityUtils.getAccountId());
         cacheUtils.initCacheInput(accountDto);
         LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
-        List<DutyDto> dutyList = dutyService.findByAuditable(accountDto.getId(), AuditTypeEnum.APPLY.getValue(), lastMonth);
+        List<DutyDto> dutyList = dutyService.findByAuditable(accountDto.getId(), AuditTypeEnum.APPLYING.toString(), lastMonth);
         List<AccountMessageDto> accountMessages = accountMessageService.findByAccount(accountDto.getId(), lastMonth);
         map.put("dutySize", dutyList.size());
         map.put("accountMessageSize", accountMessages.size());

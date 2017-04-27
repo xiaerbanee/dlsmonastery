@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item :label="$t('accountChangeForm.type')"  prop="type">
               <el-select v-model="inputForm.type" filterable clearable :placeholder="$t('accountChangeForm.selectGroup')"  @change="getOldValue">
-                <el-option v-for="item in inputForm.typeList" :key="item":label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.typeList" :key="item" :label="$t('AccountChangeTypeEnum.'+item)" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('accountChangeForm.oldValue')" prop="oldValue">
