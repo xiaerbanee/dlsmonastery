@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.domain.Backend;
 import net.myspring.basic.modules.sys.domain.BackendModule;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ public class BackendMenuDto {
     private String id;
     private String name;
     private String code;
+    @JsonIgnore
     private List<BackendModuleMenuDto> backendModuleList = Lists.newArrayList();
 
     public String getName() {

@@ -112,7 +112,7 @@ public class AccountController {
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccountDto(accountId);
         List<String> authorityList = accountService.getAuthorityList();
-        FrontendMenuDto menus = menuService.getMenuMap(SecurityUtils.getAccountId());
+        Map<String, Object> menus = menuService.getMenuMap(SecurityUtils.getAccountId());
         map.put("account", accountDto);
         map.put("authorityList", authorityList);
         map.put("menus", menus);

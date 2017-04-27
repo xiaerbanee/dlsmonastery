@@ -11,22 +11,59 @@ import java.util.Map;
  * Created by wangzm on 2017/4/26.
  */
 public class FrontendMenuDto {
-    private List<BackendMenuDto> backendList;
-    private Map<String,List<BackendModuleMenuDto>> backendModuleMap= Maps.newLinkedHashMap();
 
-    public List<BackendMenuDto> getBackendList() {
-        return backendList;
+    private String id;
+    private String name;
+    private String code;
+    private String menuCategoryCode;
+    private String backendModuleCode;
+    private String backendCode;
+
+    public String getId() {
+        return id;
     }
 
-    public void setBackendList(List<BackendMenuDto> backendList) {
-        this.backendList = backendList;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public Map<String, List<BackendModuleMenuDto>> getBackendModuleMap() {
-        return backendModuleMap;
+    public String getName() {
+        return name;
     }
 
-    public void setBackendModuleMap(Map<String, List<BackendModuleMenuDto>> backendModuleMap) {
-        this.backendModuleMap = backendModuleMap;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMenuCategoryCode() {
+        return menuCategoryCode;
+    }
+
+    public void setMenuCategoryCode(String menuCategoryCode) {
+        this.menuCategoryCode = menuCategoryCode;
+    }
+
+    public String getBackendModuleCode() {
+        return backendModuleCode;
+    }
+
+    public void setBackendModuleCode(String backendModuleCode) {
+        this.backendModuleCode = backendModuleCode;
+    }
+
+    public String getBackendCode() {
+        return backendCode;
+    }
+
+    public void setBackendCode(String backendCode) {
+        this.backendCode = backendCode;
     }
 }

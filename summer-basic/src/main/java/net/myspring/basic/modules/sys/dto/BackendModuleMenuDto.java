@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.dto;
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Backend;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.List;
 
@@ -13,8 +14,9 @@ public class BackendModuleMenuDto {
 
     private String id;
     private String name;
-    private String backendId;
+    private String backendCode;
     private String code;
+    @JsonIgnore
     private List<MenuCategoryMenuDto> menuCategoryList= Lists.newArrayList();
 
     public String getName() {
@@ -25,12 +27,12 @@ public class BackendModuleMenuDto {
         this.name = name;
     }
 
-    public String getBackendId() {
-        return backendId;
+    public String getBackendCode() {
+        return backendCode;
     }
 
-    public void setBackendId(String backendId) {
-        this.backendId = backendId;
+    public void setBackendCode(String backendCode) {
+        this.backendCode = backendCode;
     }
 
     public String getCode() {
