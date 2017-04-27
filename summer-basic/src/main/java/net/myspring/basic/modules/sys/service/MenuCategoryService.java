@@ -53,7 +53,7 @@ public class MenuCategoryService {
 
     public MenuCategory save(MenuCategoryForm menuCategoryForm){
         MenuCategory menuCategory;
-        if(!menuCategoryForm.isCreate()) {
+        if(menuCategoryForm.isCreate()) {
             menuCategory=BeanUtil.map(menuCategoryForm, MenuCategory.class);
             menuCategory=menuCategoryManager.save(menuCategory);
         } else {
