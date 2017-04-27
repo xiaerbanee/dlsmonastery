@@ -1,13 +1,10 @@
 package net.myspring.basic.modules.hr.domain;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.List;
 
 @Entity
 @Table(name="hr_job")
