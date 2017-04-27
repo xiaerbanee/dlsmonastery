@@ -22,29 +22,7 @@ import java.util.Map;
  * Created by liuj on 2017/3/19.
  */
 @Mapper
-public interface AccountMapper {
-
-    @Cacheable(value = "accounts",key="#p0")
-    @SelectProvider(type=MyProvider.class, method = MyProvider.FIND_ONE)
-    Account findOne(String id);
-
-    @CacheEvict(value = "accounts",key="#p0.id")
-    @InsertProvider(type=CrudProvider.class, method = MyProvider.SAVE)
-    int save(Account account);
-
-    @CacheEvict(value = "accounts",key="#p0.id")
-    @UpdateProvider(type=CrudProvider.class, method =MyProvider.UPDATE)
-    int update(Account account);
-
-    @CacheEvict(value = "accounts",key="#p0.id")
-    @UpdateProvider(type=CrudProvider.class, method = MyProvider.UPDATE)
-    int updateForm(AccountForm accountForm);
-
-    @UpdateProvider(type=MyProvider.class, method = MyProvider.LOGIC_DELETE_ONE)
-    int logicDeleteOne(String id);
-
-    @SelectProvider(type=CrudProvider.class, method =MyProvider.FIND_ALL)
-    List<Account> findAll();
+public interface AccountMapper extends MyMapper<Account,String> {
 
     Account findByLoginName(String loginName);
 

@@ -26,24 +26,37 @@ import java.util.Map;
 @Component
 public class AccountManager {
 
+
     @Autowired
     private AccountMapper accountMapper;
 
+    @Cacheable(value = "accounts",key="#p0")
+    public Account findOne(String id) {
+        return accountMapper.findOne(id);
+    }
+
+    @CachePut(value = "accounts",key="#p0.id")
     public Account save(Account account){
         accountMapper.save(account);
-        account = accountMapper.findOne(account.getId());
         return  account;
     }
 
+    @Caching(
+            put = {
+                    @CachePut(value = "accounts", key = "#p0.id"),
+            },
+            evict = {
+                    @CacheEvict(value = "accountOffices",key = "#p0.id")
+            }
+    )
     public Account update(Account account){
         accountMapper.update(account);
-        account = accountMapper.findOne(account.getId());
-        return  account;
+        return  accountMapper.findOne(account.getId());
     }
 
+    @CachePut(value = "accounts",key="#p0.id")
     public Account updateForm(AccountForm accountForm){
         accountMapper.updateForm(accountForm);
-        Account account = accountMapper.findOne(accountForm.getId());
-        return  account;
+        return  accountMapper.findOne(accountForm.getId());
     }
 }
