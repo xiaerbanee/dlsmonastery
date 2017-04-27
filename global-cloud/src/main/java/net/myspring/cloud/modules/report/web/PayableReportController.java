@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "cloud/payableReport")
-public class PayableReconciliationController {
+public class PayableReportController {
     @Autowired
     private PayableReportService payableReportService;
 

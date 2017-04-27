@@ -254,7 +254,7 @@ export default {
     menuCategory: "菜单分组",
     category: "分类",
     name: "名称",
-    menuCode: "code",
+    code: "code",
     sort: "排序",
     href: "链接",
     mobile: "手机菜单",
