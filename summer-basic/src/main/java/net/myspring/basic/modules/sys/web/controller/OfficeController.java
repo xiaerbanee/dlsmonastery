@@ -2,10 +2,8 @@ package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.enums.DictMapCategoryEnum;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.utils.Const;
-import net.myspring.basic.common.utils.Global;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeBasicDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
@@ -15,14 +13,15 @@ import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;

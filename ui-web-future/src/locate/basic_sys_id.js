@@ -254,7 +254,7 @@ export default {
     menuCategory: "pilihan kategori",
     category: "kategori",
     name: "nama",
-    menuCode: "code",
+    code: "code",
     sort: "pengurutan",
     href: "link",
     mobile: "telepon",

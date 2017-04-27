@@ -3,10 +3,9 @@ package net.myspring.basic.modules.hr.web.controller;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
-import net.myspring.basic.common.utils.Global;
-import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.service.AccountService;
+import net.myspring.basic.modules.hr.service.EmployeeService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
@@ -14,14 +13,10 @@ import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.sys.service.DictEnumService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.util.json.ObjectMapperUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import net.myspring.basic.modules.hr.service.EmployeeService;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,7 +54,7 @@ public class EmployeeController {
     public EmployeeForm findForm(EmployeeForm employeeForm){
         employeeForm=employeeService.findForm(employeeForm);
         employeeForm.setPositionList(positionService.findAll());
-        employeeForm.setEducationList( Global.getDictEnumValueList(DictEnumCategoryEnum.EDUCATION.toString()));
+        employeeForm.setEducationList( dictEnumService.findValueByCategory(DictEnumCategoryEnum.EDUCATION.toString()));
         AccountForm accountForm=new AccountForm();
         accountForm.setId(employeeForm.getAccountId());
         employeeForm.setAccount(accountService.findForm(accountForm));

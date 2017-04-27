@@ -7,6 +7,7 @@ import net.myspring.basic.modules.sys.manager.DictEnumManager;
 import net.myspring.basic.modules.sys.mapper.DictEnumMapper;
 import net.myspring.basic.modules.sys.web.form.DictEnumForm;
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class DictEnumService {
     private CacheUtils cacheUtils;
 
     public List<String> findValueByCategory(String category){
-        return  dictEnumManager.findValueByCategory(category);
+        List<DictEnum> dictEnumList=dictEnumMapper.findByCategory(category);
+        return CollectionUtil.extractToList(dictEnumList,"value");
     }
 
     public  List<DictEnumDto> findByCategory(String category){

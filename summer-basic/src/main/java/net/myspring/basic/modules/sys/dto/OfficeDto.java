@@ -1,14 +1,10 @@
 package net.myspring.basic.modules.sys.dto;
 
 import net.myspring.basic.common.dto.DataDto;
-import net.myspring.basic.common.enums.DictMapCategoryEnum;
-import net.myspring.basic.common.utils.Global;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.util.cahe.annotation.CacheInput;
-import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 /**
  * Created by admin on 2017/4/5.
@@ -21,6 +17,7 @@ public class OfficeDto extends DataDto<Office> {
     private boolean locked;
     private boolean enabled;
     private String type;
+    private String typeLabel;
     private BigDecimal taskPoint;
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
@@ -90,11 +87,11 @@ public class OfficeDto extends DataDto<Office> {
         this.parentName = parentName;
     }
 
-    public String getTypeLabel(){
-        if(StringUtils.isNotBlank(type)){
-            Map<String,String> map= Global.getDictMapList(DictMapCategoryEnum.ORGANIZATION_TYPE.name());
-            return map.get(type);
-        }
-        return "";
+    public String getTypeLabel() {
+        return typeLabel;
+    }
+
+    public void setTypeLabel(String typeLabel) {
+        this.typeLabel = typeLabel;
     }
 }
