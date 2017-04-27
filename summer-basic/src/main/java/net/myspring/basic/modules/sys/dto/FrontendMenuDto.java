@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class FrontendMenuDto {
     private List<BackendMenuDto> backendList;
-    private Map<String,List<BackendModuleMenuDto>> backendModuleMap= Maps.newHashMap();
+    private Map<String,List<BackendModuleMenuDto>> backendModuleMap= Maps.newLinkedHashMap();
 
     public List<BackendMenuDto> getBackendList() {
         return backendList;
