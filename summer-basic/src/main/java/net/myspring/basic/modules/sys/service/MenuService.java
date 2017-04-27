@@ -191,33 +191,19 @@ public class MenuService {
     }
 
     private Map<BackendMenuDto, List<Menu>> getMenusMap(Account account, boolean isMobile) {
-        List<Menu> menus = Lists.newArrayList();
-        List<Menu> menuList;
+        List<Menu> menuList = Lists.newArrayList();
         if (Const.HR_ACCOUNT_ADMIN_LIST.contains(account.getId())) {
             menuList = menuMapper.findAllEnabled();
         } else {
             String positionId = account.getPositionId();
             List<Permission> permissions = permissionMapper.findByPositionId(positionId);
             List<String> menuIds = CollectionUtil.extractToList(permissions, "menuId");
-            menuList = menuMapper.findByIds(menuIds);
+            menuList = menuMapper.findByMenuIdsAndMobile(menuIds,isMobile);
             List<Menu> permissionIsEmptyMenus = menuMapper.findByPermissionIsEmpty();
-            List<Menu> backendMenus = menuMapper.findBackendMenuByPosition(account.getPositionId());
             menuList = CollectionUtil.union(menuList, permissionIsEmptyMenus);
-            menuList = CollectionUtil.intersection(menuList, backendMenus);
             menuList = Lists.newArrayList(Sets.newHashSet(menuList));
         }
-        for (Menu menu : menuList) {
-            if (menu.getVisible()) {
-                if (isMobile) {
-                    if (menu.getMobile() && StringUtils.isNotBlank(menu.getMobileHref())) {
-                        menus.add(menu);
-                    }
-                } else {
-                    menus.add(menu);
-                }
-            }
-        }
-        return getMenusMap(menus);
+        return getMenusMap(menuList);
     }
 
     private Map<BackendMenuDto, List<Menu>> getMenusMap(List<Menu> menuList) {

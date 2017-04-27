@@ -27,6 +27,21 @@
         select t1.*  from sys_menu t1 where t1.enabled = 1 and t1.menu_category_id = #{menuCategoryId}
     </select>
 
+    <select id="findByMenuIdsAndMobile" resultType="Menu">
+        SELECT t1.*
+        FROM sys_menu t1
+        where t1.enabled=1
+        and t1.visible=1
+        <if test="isMobile">
+            and t1.mobile=#{isMobile}
+            and t1.mobile_href is not null
+        </if>
+        and t1.id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <select id="findByPermissionIsEmpty" resultType="Menu">
         SELECT
         t1.*
