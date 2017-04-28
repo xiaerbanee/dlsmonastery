@@ -6,16 +6,16 @@ export default {
       cloudManager:"金蝶管理"
     },
     backendModule:{
-      sysCategory:"系统设置",
-      hrCategory:"人事管理",
-      saleCategory:"基础资料",
-      ywCategory:"业务管理",
-      qhCategory:"企划管理",
-      jcCategory:"基础功能",
-      cloudReportCategory:"财务报表",
-      jdbbCategory:"报表管理",
-      cloudInputCategory:"财务录单",
-      cloudSysCategory:"系统设置"
+      sysCategory:"系统",
+      hrCategory:"人事",
+      saleCategory:"基础",
+      ywCategory:"业务",
+      qhCategory:"企划",
+      jcCategory:"基础",
+      cloudReportCategory:"财务",
+      jdbbCategory:"报表",
+      cloudInputCategory:"财务",
+      cloudSysCategory:"系统"
     },
     menuCategory:{
       hrCategory:"人事管理",
