@@ -14,7 +14,6 @@ public class BackendModuleMenuDto {
 
     private String id;
     private String name;
-    private String backendCode;
     private String code;
     private List<MenuCategoryMenuDto> menuCategoryList= Lists.newArrayList();
 
@@ -24,14 +23,6 @@ public class BackendModuleMenuDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getBackendCode() {
-        return backendCode;
-    }
-
-    public void setBackendCode(String backendCode) {
-        this.backendCode = backendCode;
     }
 
     public String getCode() {
