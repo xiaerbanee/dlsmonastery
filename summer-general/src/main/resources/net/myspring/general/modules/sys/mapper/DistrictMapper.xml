@@ -24,4 +24,11 @@
         WHERE t1.province like CONCAT('%',#{name},'%')  or t1.city like CONCAT('%',#{name},'%') or t1.county like CONCAT('%',#{name},'%')
     </select>
 
+    <select id="searchFullText" resultType="District">
+        SELECT t1.*
+        FROM sys_district t1
+        WHERE  CONCAT ( t1.province, ', ', t1.city, ', ', t1.county,'(',t1.id,')' ) like CONCAT('%',#{name},'%')
+    </select>
+
+
 </mapper>

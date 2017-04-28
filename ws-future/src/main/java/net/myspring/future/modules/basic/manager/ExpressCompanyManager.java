@@ -24,7 +24,7 @@ public class ExpressCompanyManager {
         return expressCompanyMapper.findOne(id);
     }
 
-    @Cacheable(value = "expressCompanys",key="#p0.id")
+    @CachePut(value = "expressCompanys",key="#p0.id")
     public ExpressCompany save(ExpressCompany expressCompany){
         expressCompanyMapper.save(expressCompany);
         return  expressCompany;
