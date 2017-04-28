@@ -12,6 +12,7 @@ import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.dto.FrontendMenuDto;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -112,7 +113,7 @@ public class AccountController {
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccountDto(accountId);
         List<String> authorityList = accountService.getAuthorityList();
-        FrontendMenuDto menus = menuService.getMenuMap(SecurityUtils.getAccountId());
+        List<BackendMenuDto> menus = menuService.getMenuMap(SecurityUtils.getAccountId());
         map.put("account", accountDto);
         map.put("authorityList", authorityList);
         map.put("menus", menus);

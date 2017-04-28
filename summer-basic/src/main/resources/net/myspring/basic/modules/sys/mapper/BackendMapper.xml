@@ -47,6 +47,7 @@
         <id column="moduleId" property="id"/>
         <result column="moduleName" property="name" />
         <result column="moduleCode" property="code" />
+        <result column="code" property="backendCode" />
         <collection property="menuCategoryList" resultMap="menuCategoryMap"/>
     </resultMap>
 
@@ -54,13 +55,18 @@
         <id column="categoryId" property="id"/>
         <result column="categoryName" property="name" />
         <result column="categoryCode" property="code" />
+        <result column="code" property="backendCode" />
+        <result column="moduleCode" property="backendModuleCode" />
         <collection property="menuList" resultMap="menuMap"/>
     </resultMap>
 
-    <resultMap id="menuMap" type="Menu">
+    <resultMap id="menuMap" type="FrontendMenuDto">
         <id column="menuId" property="id"/>
         <result column="menuName" property="name" />
         <result column="menuCode" property="code" />
+        <result column="code" property="backendCode" />
+        <result column="moduleCode" property="backendModuleCode" />
+        <result column="categoryCode" property="menuCategoryCode" />
     </resultMap>
 
 </mapper>

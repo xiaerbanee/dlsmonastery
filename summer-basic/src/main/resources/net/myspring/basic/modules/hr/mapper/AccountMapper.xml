@@ -23,15 +23,6 @@
         </if>
     </select>
 
-    <select id="findAccountOfficeByIds" resultType="String">
-        SELECT office_id
-        FROM hr_account_office
-        where account_id IN
-        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
     <select id="findAccountPassword" resultType="string">
         SELECT t1.password
         FROM hr_account t1
@@ -78,19 +69,6 @@
         <include refid="net.myspring.basic.modules.sys.mapper.OfficeMapper.officeFilter" />
         <include refid="accountFilter"/>
     </select>
-
-    <insert id="saveAccountOffice">
-        INSERT INTO hr_account_office(account_id,office_id) VALUES
-        <foreach collection="officeIds" index="index" item="item" open="" separator="," close="">
-            (#{accountId},#{item})
-        </foreach>
-    </insert>
-
-    <delete id="deleteAccountOffice">
-        DELETE FROM
-        hr_account_office
-        where account_id=#{accountId}
-    </delete>
 
     <select id="findLabels" resultType="Account">
         SELECT t1.id,t1.login_name,t1.position_id,t1.office_id,t1.employee_id
