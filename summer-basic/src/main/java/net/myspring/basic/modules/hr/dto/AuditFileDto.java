@@ -2,7 +2,6 @@ package net.myspring.basic.modules.hr.dto;
 
 import net.myspring.basic.common.dto.DataDto;
 import net.myspring.basic.common.utils.Const;
-import net.myspring.basic.common.utils.OfficeUtils;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.StringUtils;
@@ -28,9 +27,6 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String processTypeName;
 
     public String getAreaId() {
-        if(StringUtils.isBlank(areaId)&&StringUtils.isNotBlank(officeId)){
-            this.areaId= OfficeUtils.getOfficeIdByOfficeType(officeId, Const.OFFICE_TYPE_AREA);
-        }
         return areaId;
     }
 

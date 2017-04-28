@@ -5,13 +5,16 @@ import com.google.common.collect.Sets;
 import net.myspring.basic.common.enums.OfficeRuleEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.mapper.OfficeBusinessMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
 import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
@@ -19,6 +22,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by admin on 2017/4/6.
@@ -53,12 +57,12 @@ public class OfficeManager {
         return  officeMapper.findOne(office.getId());
     }
 
-    @CachePut(key="#p0.id")
+    @CachePut(value = "offices",key="#p0.id")
     public Office updateForm(OfficeForm officeForm){
         officeMapper.updateForm(officeForm);
         return  officeMapper.findOne(officeForm.getId());
     }
-    
+
     public List<String> officeFilter(String accountId){
         List<String> officeIdList= Lists.newArrayList();
         Office office = officeMapper.findByAccountId(accountId);
@@ -84,10 +88,10 @@ public class OfficeManager {
         if(officeRule!=null){
             office=findByOfficeIdAndRuleId(officeId,officeRule.getId());
         }
-        return office;   
+        return office;
     }
 
-    public Office findByOfficeIdAndRuleId(String officeId,String ruleId){
-            return officeMapper.findByOfficeIdAndRuleId(officeId,ruleId);
+    public Office findByOfficeIdAndRuleId(String officeId, String ruleId) {
+        return officeMapper.findByOfficeIdAndRuleId(officeId, ruleId);
     }
 }
