@@ -33,4 +33,6 @@ public interface OfficeMapper extends MyMapper<Office,String> {
 
     Page<OfficeDto> findPage(@Param("pageable") Pageable pageable, @Param("p")OfficeQuery officeQuery);
 
+    Office findByOfficeIdAndRuleId(@Param("officeId") String officeId,@Param("officeRuleId") String officeRuleId);
+
 }

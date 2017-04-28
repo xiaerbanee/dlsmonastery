@@ -157,32 +157,29 @@ public class MenuService {
         return menu;
     }
 
-    public Map<String, Object> getMenuMap(String accountId) {
-        Map<String, Object> map = Maps.newLinkedHashMap();
+      public FrontendMenuDto getMenuMap(String accountId) {
+        FrontendMenuDto frontendMenuDto = new FrontendMenuDto();
         Account account = accountMapper.findOne(accountId);
         Map<BackendMenuDto, List<Menu>> backendMenuMap = getMenusMap(account, false);
-        map.put("backendList", backendMenuMap.keySet());
-        List<BackendModuleMenuDto> backendModuleList=Lists.newArrayList();
-        List<MenuCategoryMenuDto> menuCategoryList=Lists.newArrayList();
-        List<Menu> menuList=Lists.newArrayList();
-        for (BackendMenuDto backend:backendMenuMap.keySet()) {
-           backendModuleList.addAll(backend.getBackendModuleList());
-           for(BackendModuleMenuDto backendModule:backend.getBackendModuleList()){
-               menuCategoryList.addAll(backendModule.getMenuCategoryList());
-           }
+        frontendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
+        Map<String, List<BackendModuleMenuDto>> backendModuleMap = Maps.newHashMap();
+        for (BackendMenuDto backend : backendMenuMap.keySet()) {
+            backendModuleMap.put(backend.getId(), backend.getBackendModuleList());
         }
-        for(Map.Entry<BackendMenuDto, List<Menu>> entry:backendMenuMap.entrySet()){
-            menuList.addAll(entry.getValue());
-        }
-        map.put("backendModuleList", backendModuleList);
-        map.put("menuCategoryList", menuCategoryList);
-        map.put("menuList", menuList);
-        return map;
+        frontendMenuDto.setBackendModuleMap(backendModuleMap);
+        return frontendMenuDto;
     }
 
     public List<Map<String, Object>> findMobileMenuMap(String accountId) {
+        Map<BackendMenuDto, List<Menu>> backendMenuMap = Maps.newHashMap();
         Account account = accountMapper.findOne(accountId);
-        Map<BackendMenuDto, List<Menu>> backendMenuMap = backendMenuMap = getMenusMap(account, true);
+        if (Const.XCXAUDIT.equals(account.getLoginName())) {
+            List<String> menuIds = StringUtils.getSplitList(weixinAuditMenuId, Const.CHAR_COMMA);
+            List<Menu> menus = menuMapper.findByIds(menuIds);
+            backendMenuMap = getMenusMap(menus);
+        } else {
+            backendMenuMap = getMenusMap(account, true);
+        }
         List<Map<String, Object>> list = Lists.newArrayList();
         for (BackendMenuDto backendMenuDto : backendMenuMap.keySet()) {
             Map<String, Object> item = Maps.newHashMap();
