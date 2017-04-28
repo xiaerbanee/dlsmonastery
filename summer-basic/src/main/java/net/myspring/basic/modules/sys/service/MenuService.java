@@ -164,15 +164,19 @@ public class MenuService {
         map.put("backendList", backendMenuMap.keySet());
         List<BackendModuleMenuDto> backendModuleList=Lists.newArrayList();
         List<MenuCategoryMenuDto> menuCategoryList=Lists.newArrayList();
+        List<Menu> menuList=Lists.newArrayList();
         for (BackendMenuDto backend:backendMenuMap.keySet()) {
            backendModuleList.addAll(backend.getBackendModuleList());
            for(BackendModuleMenuDto backendModule:backend.getBackendModuleList()){
                menuCategoryList.addAll(backendModule.getMenuCategoryList());
            }
         }
+        for(Map.Entry<BackendMenuDto, List<Menu>> entry:backendMenuMap.entrySet()){
+            menuList.addAll(entry.getValue());
+        }
         map.put("backendModuleList", backendModuleList);
         map.put("menuCategoryList", menuCategoryList);
-        map.put("menuList", backendMenuMap.values());
+        map.put("menuList", menuList);
         return map;
     }
 
