@@ -58,6 +58,7 @@ export default {
     cloudReportCategory:"财务报表",
     payableReport:"应付对账报表",
     cloudSysCategory:"系统设置",
+    kingdeeBookList:"账套管理",
     404:"404",
     companyConfigForm: "Preferensi Editor",
     companyConfigList: "Pengaturan parameter",

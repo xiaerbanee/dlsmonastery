@@ -24,4 +24,6 @@ public interface KingdeeBookMapper extends CrudMapper<KingdeeBook,String> {
 
     List<String> findNames();
 
+    List<String> findTypes();
+
 }

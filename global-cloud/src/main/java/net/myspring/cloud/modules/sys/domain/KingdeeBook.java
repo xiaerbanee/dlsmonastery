@@ -10,7 +10,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name="sys_kingdee_book")
 public class KingdeeBook extends CompanyEntity<KingdeeBook> {
-    private String companyId;
     private String name;
     private String type;
     private String kingdeeUrl;
@@ -19,14 +18,6 @@ public class KingdeeBook extends CompanyEntity<KingdeeBook> {
     private String kingdeePassword;
     private String kingdeeDbid;
     private Integer version;
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
 
     public String getName() {
         return name;
