@@ -29,23 +29,17 @@
         <aside class="db-menu-wrapper">
           <div class="db-menu-category">
             <div id="fixed">
-              <dl><dd>
-                <template v-for="backendModule in backendModuleList" ：key="backendModule.id">
-                  <div v-show="backendModule.backendCode == activeBackend">
-                    <a :data-code="backendModule.code" @click="changeBackendModule">{{backendModule.name}}</a>
-                  </div>
-                </template>
-              </dd></dl>
+              <dl><dd><a v-for="backendModule in backendModuleList" :key="backendModule.id" :data-code="backendModule.code" @click="changeBackendModule">{{backendModule.name}}</a></dd></dl>
             </div>
           </div>
-          <el-menu :default-active="activeMenu" class="db-menu-bar" router unique-opened>
+          <el-menu class="db-menu-bar" router unique-opened>
             <template v-for="menuCategory in menuCategoryList" ：key="category.id">
-                <el-submenu  v-show="menuCategory.backendModuleCode == activeBackendModule"  :index="menuCategory.id">
-                  <template slot="title">{{$t('app.'+ menuCategory.code)}}</template>
-                  <el-menu-item :index="menu.code" v-for="(menu, index) in menuCategory.menuList"  :key="index" :route="menu">
-                    {{$t('app.'+ menu.code)}}
-                  </el-menu-item>
-                </el-submenu>
+              <el-submenu :index="menuCategory.id">
+                <template slot="title">{{$t('app.'+ menuCategory.code)}}</template>
+                <el-menu-item :index="menu.code" v-for="(menu, index) in menuCategory.menuList"  :key="index" :route="menu">
+                  {{$t('app.'+ menu.code)}}
+                </el-menu-item>
+              </el-submenu>
             </template>
           </el-menu>
         </aside>
@@ -73,13 +67,13 @@
   export default {
     data() {
       return {
-        menuMap:{},
+        backendMap:{},
+        backendModuleMap:{},
         backendList:[],
         activeBackend:'',
         backendModuleList:[],
         activeBackendModule:'',
-        menuCategoryList:[],
-        activeMenu:''
+        menuCategoryList:[]
       };
     },computed: mapState({
       account: state => state.global.account,
@@ -94,55 +88,36 @@
       '$route'(to) {
         //初始化菜单
         if(this.backendList.length==0 && this.menus.length != 0) {
-          var menuMap = {};
-          var backendModuleList = new Array();
-          var menuCategoryList = new Array();
+          var backendMap = {};
+          var backendModuleMap = {};
           for (var i in this.menus) {
             var backend= this.menus[i];
+            backendMap[backend.code] = backend;
             for(var j in backend.backendModuleList) {
               var backendModule = backend.backendModuleList[j];
-              backendModule.backendCode= backend.code;
-              backendModuleList.push(backendModule);
+              backendModuleMap[backendModule.code] = backendModule;
               for(var k in backendModule.menuCategoryList) {
                 var menuCategory = backendModule.menuCategoryList[k];
-                menuCategory.backendModuleCode = backendModule.code;
-                menuCategoryList.push(menuCategory);
                 for(var l in menuCategory.menuList) {
                   var menu = menuCategory.menuList[l];
                   menu.name = menu.code;
-                  menuMap[menu.code]=menu;
                 }
               }
             }
           }
           this.backendList = this.menus;
-          menuMap["home"] = {
-            "backendCode":this.backendList[0].code,
-            "backendModuleCode":this.backendList[0].backendModuleList[0].code
-          };
-          this.menuMap = menuMap;
-          this.backendModuleList = backendModuleList;
-          this.menuCategoryList = menuCategoryList;
+          this.backendMap = backendMap;
+          this.backendModuleMap = backendModuleMap;
+
+          var activeBackend = this.backendList[0].code;
+          this.backendList[0].class="backend-item-active";
+          this.setActiveClass(this.backendList,activeBackend,"backend-item-active");
+          var activeBackendModule = this.backendList[0].backendModuleList[0].code;
+          this.backendModuleList = this.backendMap[activeBackend].backendModuleList;
+          this.menuCategoryList = this.backendModuleMap[activeBackendModule].menuCategoryList;
+          this.activeBackend=activeBackend;
+          this.activeBackendModule=activeBackendModule;
         }
-        if( to.name!="login"){
-          var activeMenu = to.meta.menu;
-          if(activeMenu==null) {
-            if(this.$route.name){
-              activeMenu = this.$route.name;
-            }else{
-              activeMenu="home"
-            }
-          }
-        }else{
-          activeMenu="login";
-        }
-        if(this.menuMap[activeMenu] != null) {
-            var activeBackend = this.menuMap[activeMenu].backendCode;
-            var activeBackendModule = this.menuMap[activeMenu].backendModuleCode;
-            this.activeBackend=activeBackend;
-            this.activeBackendModule=activeBackendModule;
-        }
-        this.activeMenu = activeMenu;
       }
     },
     methods: {
@@ -160,21 +135,27 @@
         Vue.config.lang = lang;
         this.$router.push({ name: "home"});
       },changeBackendModule(event) {
-        this.activeBackendModule=event.target.dataset.code;
+        var activeBackendModule = event.target.dataset.code;
+        this.menuCategoryList = this.backendModuleMap[activeBackendModule].menuCategoryList;
+        this.activeBackendModule=activeBackendModule;
       },
       changeBackend(event){
         var activeBackend = event.target.dataset.code;
-        var activeBackendModule = null;
-        for(var i  in this.backendList) {
-            var backend = this.backendList[i];
-            if(backend.code == activeBackend) {
-                activeBackendModule = backend.backendModuleList[0].code;
-                break;
-            }
-        }
+        this.setActiveClass(this.backendList,activeBackend,"backend-item-active");
+        var activeBackendModule = this.backendMap[activeBackend].backendModuleList[0].code;
+        this.backendModuleList = this.backendMap[activeBackend].backendModuleList;
+        this.menuCategoryList = this.backendModuleMap[activeBackendModule].menuCategoryList;
         this.activeBackend=activeBackend;
         this.activeBackendModule=activeBackendModule;
 
+      },setActiveClass(itemList,activeCode,activeClass) {
+          for(var i in itemList) {
+              if(itemList[i].code == activeCode) {
+                  itemList[i].class = activeClass;
+              } else {
+                  itemList[i].class="";
+              }
+          }
       }
     }
   };
@@ -211,4 +192,7 @@
     color:#20A0FF;
     padding-bottom:16px;
   }
+ .db-menu-bar .el-menu-item.is-active  {
+   color:#48576a;
+ }
 </style>
