@@ -2,7 +2,7 @@ package net.myspring.basic.modules.sys.dto;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Menu;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 

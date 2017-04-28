@@ -48,6 +48,9 @@
         <el-table-column prop="remarks" :label="$t('expressCompanyList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressCompanyList.operation')" width="140">
           <template scope="scope">
+            <el-button size="small"  v-permit="'crm:expressCompany:edit'" @click.native="itemEdit(scope.row.id)">{{$t('expressCompanyList.edit')}}</el-button>
+            <el-button size="small"  v-permit="'crm:expressCompany:edit'" @click.native="itemDelete(scope.row.id)">{{$t('expressCompanyList.delete')}}</el-button>
+
             <div v-for="action in scope.row.actionList" :key="action" class="action">
               <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
             </div>
@@ -111,15 +114,13 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'expressCompanyForm'})
-      },itemAction:function(id,action){
-        if(action=="修改") {
-          this.$router.push({ name: 'expressCompanyForm', query: { id: id }})
-        } else if(action=="删除") {
+      },itemEdit:function(id){
+          this.$router.push({ name: 'expressCompanyForm', query: { id: id }});
+      },itemDelete:function(id){
           axios.get('/api/ws/future/basic/expressCompany/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
-        }
+          });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

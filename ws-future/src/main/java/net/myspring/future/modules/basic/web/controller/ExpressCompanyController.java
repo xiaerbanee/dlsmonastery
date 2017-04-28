@@ -43,6 +43,7 @@ public class ExpressCompanyController {
     public ExpressCompanyForm findOne(ExpressCompanyForm expressCompanyForm){
         expressCompanyForm=expressCompanyService.findForm(expressCompanyForm);
         expressCompanyForm.setExpressTypeList(ExpressCompanyTypeEnum.getList());
+//        expressCompanyForm.set
         return expressCompanyForm;
     }
     @RequestMapping(value="getQuery")
@@ -50,4 +51,5 @@ public class ExpressCompanyController {
         expressCompanyQuery.setExpressTypeList(expressCompanyService.findExpressTypeList());
         return expressCompanyQuery;
     }
+
 }
