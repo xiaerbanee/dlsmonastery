@@ -14,7 +14,6 @@ public class OfficeRule extends TreeEntity<OfficeRule> {
     private String name;
     private String code;
     private Boolean hasPoint;
-    private Integer value;
     private String type;
     private Integer level;
 
@@ -32,14 +31,6 @@ public class OfficeRule extends TreeEntity<OfficeRule> {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
     }
 
     public String getName() {
