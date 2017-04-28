@@ -15,9 +15,6 @@ public class FrontendMenuDto {
     private String id;
     private String name;
     private String code;
-    private String menuCategoryCode;
-    private String backendModuleCode;
-    private String backendCode;
 
     public String getId() {
         return id;
@@ -43,27 +40,4 @@ public class FrontendMenuDto {
         this.code = code;
     }
 
-    public String getMenuCategoryCode() {
-        return menuCategoryCode;
-    }
-
-    public void setMenuCategoryCode(String menuCategoryCode) {
-        this.menuCategoryCode = menuCategoryCode;
-    }
-
-    public String getBackendModuleCode() {
-        return backendModuleCode;
-    }
-
-    public void setBackendModuleCode(String backendModuleCode) {
-        this.backendModuleCode = backendModuleCode;
-    }
-
-    public String getBackendCode() {
-        return backendCode;
-    }
-
-    public void setBackendCode(String backendCode) {
-        this.backendCode = backendCode;
-    }
 }
