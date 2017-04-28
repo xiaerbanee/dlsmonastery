@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.report.mapper;
 
-import net.myspring.cloud.modules.report.dto.RetailForUnitDto;
+import net.myspring.cloud.modules.report.domain.Retail;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,21 +13,21 @@ import java.util.List;
 public interface RetailReportMapper {
     //只针对手机产品（CHLB10）
     //销售出库单
-    List<RetailForUnitDto> findXSCKDByPeriod(@Param("year") Integer year, @Param("month") Integer month);
+    List<Retail> findXSCKDByPeriod(@Param("year") Integer year, @Param("month") Integer month);
     //销售退货单
-    List<RetailForUnitDto> findXSTHDByPeriod(@Param("year") Integer year, @Param("month") Integer month);
+    List<Retail> findXSTHDByPeriod(@Param("year") Integer year, @Param("month") Integer month);
     //销售出库单
-    List<RetailForUnitDto> findXSCKDBySumPeriod(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd);
+    List<Retail> findXSCKDBySumPeriod(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd);
     //销售退货单
-    List<RetailForUnitDto> findXSTHDBySumPeriod(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd);
+    List<Retail> findXSTHDBySumPeriod(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd);
 
     //合计
     //销售出库单
-    List<RetailForUnitDto> findXSCKDByPeriodForTotalDepartment(@Param("year") Integer year, @Param("month") Integer month);
+    List<Retail> findXSCKDByPeriodForTotalDepartment(@Param("year") Integer year, @Param("month") Integer month);
     //销售退货单
-    List<RetailForUnitDto> findXSTHDByPeriodForTotalDepartment(@Param("year") Integer year, @Param("month") Integer month);
+    List<Retail> findXSTHDByPeriodForTotalDepartment(@Param("year") Integer year, @Param("month") Integer month);
     //销售出库单
-    List<RetailForUnitDto> findXSCKDBySumPeriodForTotalDepartment(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd);
+    List<Retail> findXSCKDBySumPeriodForTotalDepartment(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd);
     //销售退货单
-    List<RetailForUnitDto> findXSTHDBySumPeriodForTotalDepartment(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd);
+    List<Retail> findXSTHDBySumPeriodForTotalDepartment(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd);
 }

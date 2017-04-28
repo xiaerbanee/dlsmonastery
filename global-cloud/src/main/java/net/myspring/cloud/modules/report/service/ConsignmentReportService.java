@@ -8,8 +8,8 @@ import net.myspring.cloud.modules.input.domain.BdCustomer;
 import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
-import net.myspring.cloud.modules.report.dto.ConsignmentForUnitDto;
-import net.myspring.cloud.modules.report.dto.ConsignmentForShowDto;
+import net.myspring.cloud.modules.report.domain.Consignment;
+import net.myspring.cloud.modules.report.dto.ConsignmentDto;
 import net.myspring.cloud.modules.report.mapper.ConsignmentReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,50 +30,50 @@ public class ConsignmentReportService {
     @Autowired
     private BdMaterialMapper bdMaterialMapper;
 
-    public List<ConsignmentForShowDto> findConsignmentReport(LocalDate dateStart, LocalDate dateEnd) {
-        List<ConsignmentForShowDto> modelList = Lists.newArrayList();
+    public List<ConsignmentDto> findConsignmentReport(LocalDate dateStart, LocalDate dateEnd) {
+        List<ConsignmentDto> modelList = Lists.newArrayList();
         //期间
-        List<ConsignmentForUnitDto> transferInList = consignmentReportMapper.findTransferInByPeriod(dateStart,dateEnd);
-        List<ConsignmentForUnitDto> transferOutList = consignmentReportMapper.findTransferOutByPeriod(dateStart,dateEnd);
-        List<ConsignmentForUnitDto> outStockList = consignmentReportMapper.findOutStockByPeriod(dateStart,dateEnd);
-        List<ConsignmentForUnitDto> returnStockList = consignmentReportMapper.findReturnStockByPeriod(dateStart,dateEnd);
+        List<Consignment> transferInList = consignmentReportMapper.findTransferInByPeriod(dateStart,dateEnd);
+        List<Consignment> transferOutList = consignmentReportMapper.findTransferOutByPeriod(dateStart,dateEnd);
+        List<Consignment> outStockList = consignmentReportMapper.findOutStockByPeriod(dateStart,dateEnd);
+        List<Consignment> returnStockList = consignmentReportMapper.findReturnStockByPeriod(dateStart,dateEnd);
         //期初
-        List<ConsignmentForUnitDto> initialItemList = getInitialItem(dateStart);
+        List<Consignment> initialItemList = getInitialItem(dateStart);
         //合成一个List,形成客户+物料+单价三个维度
-        Map<String,ConsignmentForUnitDto> itemMap = Maps.newHashMap();
-        for(ConsignmentForUnitDto initItem: initialItemList){
+        Map<String,Consignment> itemMap = Maps.newHashMap();
+        for(Consignment initItem: initialItemList){
             String key = initItem.getCustomerId()+initItem.getMaterialId()+initItem.getPrice();
             if(!itemMap.containsKey(key)){
                 itemMap.put(key,initItem);
             }
         }
-        for(ConsignmentForUnitDto transferIn: transferInList){
+        for(Consignment transferIn: transferInList){
             String key = transferIn.getCustomerId()+transferIn.getMaterialId()+transferIn.getPrice();
             if(!itemMap.containsKey(key)){
                 itemMap.put(key,transferIn);
             }
         }
-        for(ConsignmentForUnitDto transferOut: transferOutList){
+        for(Consignment transferOut: transferOutList){
             String key = transferOut.getCustomerId()+transferOut.getMaterialId()+transferOut.getPrice();
             if(!itemMap.containsKey(key)){
                 itemMap.put(key,transferOut);
             }
         }
-        for(ConsignmentForUnitDto outStock: outStockList){
+        for(Consignment outStock: outStockList){
             String key = outStock.getCustomerId()+outStock.getMaterialId()+outStock.getPrice();
             if(!itemMap.containsKey(key)){
                 itemMap.put(key,outStock);
             }
         }
-        for(ConsignmentForUnitDto returnStock: returnStockList){
+        for(Consignment returnStock: returnStockList){
             String key = returnStock.getCustomerId()+returnStock.getMaterialId()+returnStock.getPrice();
             if(!itemMap.containsKey(key)){
                 itemMap.put(key,returnStock);
             }
         }
         //计算
-        for(ConsignmentForUnitDto map : itemMap.values()){
-            ConsignmentForShowDto model = new ConsignmentForShowDto();
+        for(Consignment map : itemMap.values()){
+            ConsignmentDto model = new ConsignmentDto();
             model.setCustomerCode(map.getCustomerId());
             model.setCustomerName(map.getCustomerName());
             model.setGoodsCode(map.getMaterialId());
@@ -88,7 +88,7 @@ public class ConsignmentReportService {
             BigDecimal amountReturnStock = BigDecimal.ZERO;
             String initKey = map.getCustomerId()+map.getMaterialId()+map.getPrice();
             boolean flagInit = true;
-            for(ConsignmentForUnitDto initialItem : initialItemList){
+            for(Consignment initialItem : initialItemList){
                 String initialKey = initialItem.getCustomerId()+initialItem.getMaterialId()+initialItem.getPrice();
                 if(initKey.equals(initialKey)){
                     flagInit = false;
@@ -107,7 +107,7 @@ public class ConsignmentReportService {
                 model.setConsignmentInitialQuantity(BigDecimal.ZERO);
             }
             boolean flagTransfer = true;
-            for(ConsignmentForUnitDto transferIn : transferInList){
+            for(Consignment transferIn : transferInList){
                 String transferInKey = transferIn.getCustomerId()+transferIn.getMaterialId()+transferIn.getPrice();
                 if(initKey.equals(transferInKey)){
                     flagTransfer = false;
@@ -116,7 +116,7 @@ public class ConsignmentReportService {
                     model.setConsignmentSendPrice(transferIn.getPrice());
                 }
             }
-            for(ConsignmentForUnitDto transferOut : transferOutList){
+            for(Consignment transferOut : transferOutList){
                 String transferOutKey = transferOut.getCustomerId()+transferOut.getMaterialId()+transferOut.getPrice();
                 if(initKey.equals(transferOutKey)){
                     flagTransfer = false;
@@ -133,7 +133,7 @@ public class ConsignmentReportService {
             model.setConsignmentSendQuantity(quantityTransferIn.subtract(quantityTransferOut));
 
             boolean flagStock = true;
-            for(ConsignmentForUnitDto outStock : outStockList){
+            for(Consignment outStock : outStockList){
                 String outStockKey = outStock.getCustomerId()+outStock.getMaterialId()+outStock.getPrice();
                 if(initKey.equals(outStockKey)){
                     flagStock = false;
@@ -142,7 +142,7 @@ public class ConsignmentReportService {
                     quantityOutStock = quantityOutStock.add(outStock.getQuantity());
                 }
             }
-            for(ConsignmentForUnitDto returnStock : returnStockList){
+            for(Consignment returnStock : returnStockList){
                 String returnStockKey = returnStock.getCustomerId()+returnStock.getMaterialId()+returnStock.getPrice();
                 if(initKey.equals(returnStockKey)){
                     flagStock = false;
@@ -167,7 +167,7 @@ public class ConsignmentReportService {
             modelList.add(model);
         }
         //小计+排序+根据客户id设置number
-        List<ConsignmentForShowDto> modelSortList = Lists.newLinkedList();
+        List<ConsignmentDto> modelSortList = Lists.newLinkedList();
         List<BdCustomer> customers = bdCustomerMapper.findByPrimaryGroup(CustomerGroupEnum.成品寄售客户.getPrimaryGroup());
         for(BdCustomer customer : customers){
             BigDecimal amountInit = BigDecimal.ZERO;
@@ -178,7 +178,7 @@ public class ConsignmentReportService {
             BigDecimal quantitySettlement = BigDecimal.ZERO;
             BigDecimal amountNotSettled = BigDecimal.ZERO;
             BigDecimal quantityNotSettled = BigDecimal.ZERO;
-            for(ConsignmentForShowDto model : modelList){
+            for(ConsignmentDto model : modelList){
                 if(customer.getfCustId().equals(model.getCustomerCode())){
                     model.setCustomerCode(customer.getfNumber());
                     amountInit = amountInit.add(model.getConsignmentInitialAmount());
@@ -192,7 +192,7 @@ public class ConsignmentReportService {
                     modelSortList.add(model);
                 }
             }
-            ConsignmentForShowDto model = new ConsignmentForShowDto();
+            ConsignmentDto model = new ConsignmentDto();
             model.setCustomerCode(customer.getfNumber());
             model.setCustomerName(customer.getfName());
             model.setGoodsCode("小计");
@@ -213,7 +213,7 @@ public class ConsignmentReportService {
         }
         //物料id换成number
         List<BdMaterial> materials = bdMaterialMapper.findAll();
-        for(ConsignmentForShowDto item : modelSortList){
+        for(ConsignmentDto item : modelSortList){
             for(BdMaterial material : materials ){
                 if (material.getfMasterId().equals(item.getGoodsCode())){
                     item.setGoodsCode(material.getfNumber());
@@ -223,77 +223,77 @@ public class ConsignmentReportService {
         return modelSortList;
     }
 
-    private List<ConsignmentForUnitDto> getInitialItem(LocalDate dateStart) {
-        List<ConsignmentForUnitDto> itemList = Lists.newArrayList();
-        List<ConsignmentForUnitDto> initItemList = consignmentReportMapper.findInitialization();
-        List<ConsignmentForUnitDto> transferInByEndDateList = consignmentReportMapper.findTransferInByEndDate(dateStart);
-        List<ConsignmentForUnitDto> transferOutByEndDateList = consignmentReportMapper.findTransferOutByEndDate(dateStart);
-        List<ConsignmentForUnitDto> outStockByEndDateList = consignmentReportMapper.findOutStockByEndDate(dateStart);
-        List<ConsignmentForUnitDto> returnStockByEndDateList = consignmentReportMapper.findReturnStockByEndDate(dateStart);
-        Map<String, ConsignmentForUnitDto> itemMap = Maps.newHashMap();
-        for (ConsignmentForUnitDto initItem : initItemList) {
+    private List<Consignment> getInitialItem(LocalDate dateStart) {
+        List<Consignment> itemList = Lists.newArrayList();
+        List<Consignment> initItemList = consignmentReportMapper.findInitialization();
+        List<Consignment> transferInByEndDateList = consignmentReportMapper.findTransferInByEndDate(dateStart);
+        List<Consignment> transferOutByEndDateList = consignmentReportMapper.findTransferOutByEndDate(dateStart);
+        List<Consignment> outStockByEndDateList = consignmentReportMapper.findOutStockByEndDate(dateStart);
+        List<Consignment> returnStockByEndDateList = consignmentReportMapper.findReturnStockByEndDate(dateStart);
+        Map<String, Consignment> itemMap = Maps.newHashMap();
+        for (Consignment initItem : initItemList) {
             String key = initItem.getCustomerId() + initItem.getMaterialId() + initItem.getPrice();
             if (!itemMap.containsKey(key)) {
                 itemMap.put(key, initItem);
             }
         }
-        for (ConsignmentForUnitDto transferIn : transferInByEndDateList) {
+        for (Consignment transferIn : transferInByEndDateList) {
             String key = transferIn.getCustomerId() + transferIn.getMaterialId() + transferIn.getPrice();
             if (!itemMap.containsKey(key)) {
                 itemMap.put(key, transferIn);
             }
         }
-        for (ConsignmentForUnitDto transferOut : transferOutByEndDateList) {
+        for (Consignment transferOut : transferOutByEndDateList) {
             String key = transferOut.getCustomerId() + transferOut.getMaterialId() + transferOut.getPrice();
             if (!itemMap.containsKey(key)) {
                 itemMap.put(key, transferOut);
             }
         }
-        for (ConsignmentForUnitDto outStock : outStockByEndDateList) {
+        for (Consignment outStock : outStockByEndDateList) {
             String key = outStock.getCustomerId() + outStock.getMaterialId() + outStock.getPrice();
             if (!itemMap.containsKey(key)) {
                 itemMap.put(key, outStock);
             }
         }
-        for (ConsignmentForUnitDto returnStock : returnStockByEndDateList) {
+        for (Consignment returnStock : returnStockByEndDateList) {
             String key = returnStock.getCustomerId() + returnStock.getMaterialId() + returnStock.getPrice();
             if (!itemMap.containsKey(key)) {
                 itemMap.put(key, returnStock);
             }
         }
-        for (ConsignmentForUnitDto map : itemMap.values()) {
+        for (Consignment map : itemMap.values()) {
             BigDecimal  quantity = BigDecimal.ZERO;
             BigDecimal  amount = BigDecimal.ZERO;
             String initKey = map.getCustomerId() + map.getMaterialId() + map.getPrice();
-            for(ConsignmentForUnitDto initItem : initItemList){
+            for(Consignment initItem : initItemList){
                 String initItemKey = initItem.getCustomerId()+initItem.getMaterialId()+initItem.getPrice();
                 if (initKey.equals(initItemKey)) {
                     quantity = quantity.add(initItem.getQuantity());
                     amount = amount.add(initItem.getAmount());
                 }
             }
-            for (ConsignmentForUnitDto transferIn : transferInByEndDateList) {
+            for (Consignment transferIn : transferInByEndDateList) {
                 String transferInKey = transferIn.getCustomerId() + transferIn.getMaterialId() + transferIn.getPrice();
                 if (initKey.equals(transferInKey)) {
                     quantity = quantity.add(transferIn.getQuantity());
                     amount = amount.add(transferIn.getAmount());
                 }
             }
-            for (ConsignmentForUnitDto transferOut : transferOutByEndDateList) {
+            for (Consignment transferOut : transferOutByEndDateList) {
                 String transferOutKey = transferOut.getCustomerId() + transferOut.getMaterialId() + transferOut.getPrice();
                 if (initKey.equals(transferOutKey)) {
                     quantity = quantity.subtract(transferOut.getQuantity());
                     amount = amount.subtract(transferOut.getAmount());
                 }
             }
-            for (ConsignmentForUnitDto outStock : outStockByEndDateList) {
+            for (Consignment outStock : outStockByEndDateList) {
                 String outStockKey = outStock.getCustomerId() + outStock.getMaterialId() + outStock.getPrice();
                 if (initKey.equals(outStockKey)) {
                     quantity = quantity.subtract(outStock.getQuantity());
                     amount = amount.subtract(outStock.getAmount());
                 }
             }
-            for (ConsignmentForUnitDto returnStock : returnStockByEndDateList) {
+            for (Consignment returnStock : returnStockByEndDateList) {
                 String returnStockKey = returnStock.getCustomerId() + returnStock.getMaterialId() + returnStock.getPrice();
                 if (initKey.equals(returnStockKey)) {
                     amount = amount.add(returnStock.getAmount());

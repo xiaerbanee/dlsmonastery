@@ -6,7 +6,7 @@ import java.math.BigDecimal;
  * 委托代销报表
  * Created by liuj on 2016-09-26.
  */
-public class ConsignmentForShowDto {
+public class ConsignmentDto {
     private String customerCode;
     private String customerName;
     private String goodsCode;

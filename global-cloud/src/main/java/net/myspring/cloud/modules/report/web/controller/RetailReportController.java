@@ -1,9 +1,9 @@
-package net.myspring.cloud.modules.report.web;
+package net.myspring.cloud.modules.report.web.controller;
 
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.handsontable.NestedHeaderCell;
-import net.myspring.cloud.modules.report.dto.RetailForUnitDto;
+import net.myspring.cloud.modules.report.domain.Retail;
 import net.myspring.cloud.modules.report.service.RetailReportForAssistService;
 import net.myspring.cloud.modules.report.service.RetailReportService;
 import net.myspring.util.text.StringUtils;
@@ -56,7 +56,7 @@ public class RetailReportController {
     @RequestMapping(value = "export")
     public ModelAndView export(String monthStart, String monthEnd, String companyName) {
         List<List<Object>> ReportDataList = Lists.newArrayList();
-        List<RetailForUnitDto> ReportDataForAssistList = Lists.newArrayList();
+        List<Retail> ReportDataForAssistList = Lists.newArrayList();
         YearMonth start = YearMonth.now().minusMonths(3L);
         YearMonth end = YearMonth.now().minusMonths(1L);
         if (StringUtils.isNotBlank(monthStart)) {start = YearMonth.parse(monthStart);}

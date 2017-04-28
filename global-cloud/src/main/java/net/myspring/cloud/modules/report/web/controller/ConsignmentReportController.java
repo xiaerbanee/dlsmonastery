@@ -1,11 +1,11 @@
-package net.myspring.cloud.modules.report.web;
+package net.myspring.cloud.modules.report.web.controller;
 
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.ConsignmentReportHeadEnum;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
-import net.myspring.cloud.modules.report.dto.ConsignmentForShowDto;
+import net.myspring.cloud.modules.report.dto.ConsignmentDto;
 import net.myspring.cloud.modules.report.service.ConsignmentReportService;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class ConsignmentReportController {
 
     @RequestMapping(value = "report")
     public String report(Model model, String dateRange, String companyName) {
-        List<ConsignmentForShowDto> consignmentReport = Lists.newArrayList();
+        List<ConsignmentDto> consignmentReport = Lists.newArrayList();
         LocalDate dateStart = LocalDate.now().minusWeeks(1);
         LocalDate dateEnd = LocalDate.now().minusDays(1);
         if (StringUtils.isNotBlank(dateRange)) {
@@ -47,7 +47,7 @@ public class ConsignmentReportController {
 
     @RequestMapping(value = "export")
     public ModelAndView export(String dateRange, String companyName) {
-        List<ConsignmentForShowDto> body = Lists.newArrayList();
+        List<ConsignmentDto> body = Lists.newArrayList();
         LocalDate dateStart = LocalDate.now().minusWeeks(1);
         LocalDate dateEnd = LocalDate.now().minusDays(1);
         if (StringUtils.isNotBlank(dateRange)) {

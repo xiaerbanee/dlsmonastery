@@ -1,4 +1,4 @@
-package net.myspring.cloud.modules.report.dto;
+package net.myspring.cloud.modules.report.domain;
 
 import net.myspring.cloud.modules.sys.domain.DynamicSubject;
 
@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  * Created by lihx on 2017/2/8.
  */
-public class RetailForUnitDto extends DynamicSubject {
+public class Retail extends DynamicSubject {
     private Integer year;
     private Integer month;
     private String deptNum;

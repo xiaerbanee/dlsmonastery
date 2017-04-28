@@ -1,11 +1,13 @@
-package net.myspring.cloud.modules.report.web;
+package net.myspring.cloud.modules.report.web.controller;
 
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.DateFormat;
+import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.report.dto.PayableForDetailDto;
 import net.myspring.cloud.modules.report.dto.PayableForSummaryDto;
 import net.myspring.cloud.modules.report.service.PayableReportService;
+import net.myspring.cloud.modules.report.web.form.PayableSummaryReportForm;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -18,13 +20,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "cloud/payableReport")
+@RequestMapping(value = "report/payableReport")
 public class PayableReportController {
     @Autowired
     private PayableReportService payableReportService;
 
     @RequestMapping(value = "summaryList")
-    public String summaryList(Model model,String dateRange, String companyName){
+    public PayableSummaryReportForm summaryList(String dateRange){
         LocalDate dateStart = LocalDate.now().minusDays(7L);
         LocalDate dateEnd = LocalDate.now().minusDays(1L);
         if (StringUtils.isNotEmpty(dateRange)) {
@@ -33,13 +35,15 @@ public class PayableReportController {
             dateEnd = LocalDate.parse(dates[1], DateTimeFormatter.ofPattern(DateFormat.DATE.getValue()));
         }
         List<PayableForSummaryDto> payableSummaryList = Lists.newArrayList();
-        if (StringUtils.isNotBlank(companyName)) {
+        String companyId = SecurityUtils.getCompanyId();
+        if (StringUtils.isNotBlank(companyId)) {
             payableSummaryList = payableReportService.getSummaryList(dateStart, dateEnd);
         }
-        model.addAttribute("payableSummary", payableSummaryList);
-        model.addAttribute("dateRange", dateStart + CharEnum.WAVE_LINE.getValue() + dateEnd);
-        model.addAttribute("companyName",companyName);
-        return "cloud/payableSummaryList";
+        PayableSummaryReportForm form = new PayableSummaryReportForm();
+        form.setPayableSummaryList(payableSummaryList);
+        form.setDateRange(dateStart + CharEnum.WAVE_LINE.getValue() + dateEnd);
+        form.setCompanyName(companyId);
+        return form;
     }
 
     @RequestMapping(value = "detailList")

@@ -23,6 +23,8 @@
         <package name="net.myspring.cloud.modules.sys.dto"/>
         <package name="net.myspring.cloud.modules.input.domain"/>
         <package name="net.myspring.cloud.modules.input.dto"/>
+        <package name="net.myspring.cloud.modules.report.domain"/>
+        <package name="net.myspring.cloud.modules.report.dto"/>
     </typeAliases>
     <typeHandlers>
         <typeHandler handler="org.apache.ibatis.type.InstantTypeHandler" />

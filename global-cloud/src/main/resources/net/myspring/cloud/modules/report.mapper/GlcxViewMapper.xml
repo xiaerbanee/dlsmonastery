@@ -14,7 +14,7 @@
         ORDER BY Fdeptnum
     </select>
 
-    <select id="findEntityByPeriod" resultType="RetailForUnitDto">
+    <select id="findEntityByPeriod" resultType="Retail">
         SELECT
             FYEAR as year,
             FPERIOD as month,
@@ -44,7 +44,7 @@
             Ffynum,
             Ffyname
     </select>
-    <select id="findEntityBySumPeriod" resultType="RetailForUnitDto">
+    <select id="findEntityBySumPeriod" resultType="Retail">
         SELECT
         faccnumber as accNumber,
         faccname as accName,
@@ -71,7 +71,7 @@
         Ffyname
     </select>
 
-    <select id="findEntityByPeriodForTotalDepartment" resultType="RetailForUnitDto">
+    <select id="findEntityByPeriodForTotalDepartment" resultType="Retail">
         SELECT
             FYEAR as year,
             FPERIOD as month,
@@ -97,7 +97,7 @@
             Ffynum,
             Ffyname
     </select>
-    <select id="findEntityBySumPeriodForTotalDepartment" resultType="RetailForUnitDto">
+    <select id="findEntityBySumPeriodForTotalDepartment" resultType="Retail">
         SELECT
         faccnumber as accNumber,
         faccname as accName,
