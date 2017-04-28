@@ -14,26 +14,7 @@ public class MenuCategoryMenuDto {
     private String id;
     private String code;
     private String name;
-    private String backendModuleCode;
-    private String backendCode;
-    @JsonIgnore
     private List<Menu> menuList= Lists.newArrayList();
-
-    public String getBackendModuleCode() {
-        return backendModuleCode;
-    }
-
-    public void setBackendModuleCode(String backendModuleCode) {
-        this.backendModuleCode = backendModuleCode;
-    }
-
-    public String getBackendCode() {
-        return backendCode;
-    }
-
-    public void setBackendCode(String backendCode) {
-        this.backendCode = backendCode;
-    }
 
     public String getCode() {
         return code;

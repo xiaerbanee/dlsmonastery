@@ -100,6 +100,17 @@
         </if>
     </select>
 
+    <select id="findByOfficeIdAndRuleId" resultType="Office">
+        SELECT t1.*
+        FROM sys_office t1,sys_office_rule t2
+        where t1.enabled=1
+        and t2.enabled=1
+        and t2.type='business'
+        and t1.office_rule_id=t2.id
+        and (t1.parent_ids like concat(',',#{officeId},',') or t1.id=#{officeId})
+        and t1.office_rule_id=#{officeRuleId}
+    </select>
+
     <sql id="officeFilter">
         <if test="p.officeIds !=null and p.officeIds.size() !=0">
             and office.id IN

@@ -61,6 +61,8 @@ public class OfficeManager {
         return  officeMapper.findOne(officeForm.getId());
     }
 
+
+
     public List<String> officeFilter(String accountId){
         List<String> officeIdList= Lists.newArrayList();
         Office office = officeMapper.findByAccountId(accountId);
@@ -78,5 +80,18 @@ public class OfficeManager {
         }
         officeIdList=Lists.newArrayList(Sets.newHashSet(officeIdList));
         return officeIdList;
+    }
+
+        public Office findByOfficeIdAndRuleName(String officeId,String ruleName){
+        Office office=null;
+        OfficeRule officeRule=officeRuleMapper.findByName(ruleName);
+        if(officeRule!=null){
+            office=findByOfficeIdAndRuleId(officeId,officeRule.getId());
+        }
+        return office;
+    }
+
+    public Office findByOfficeIdAndRuleId(String officeId,String ruleId){
+            return officeMapper.findByOfficeIdAndRuleId(officeId,ruleId);
     }
 }

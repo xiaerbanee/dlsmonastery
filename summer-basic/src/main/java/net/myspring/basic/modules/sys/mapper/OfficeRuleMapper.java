@@ -16,4 +16,6 @@ import org.springframework.data.domain.Pageable;
 public interface OfficeRuleMapper extends MyMapper<OfficeRule,String>{
 
     Page<OfficeRuleDto> findPage(Pageable pageable, @Param("p")OfficeRuleQuery officeRuleQuery);
+
+    OfficeRule findByName(String name);
 }

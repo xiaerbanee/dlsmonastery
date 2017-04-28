@@ -17,7 +17,6 @@ public class BackendMenuDto {
     private String id;
     private String name;
     private String code;
-    @JsonIgnore
     private List<BackendModuleMenuDto> backendModuleList = Lists.newArrayList();
 
     public String getName() {
