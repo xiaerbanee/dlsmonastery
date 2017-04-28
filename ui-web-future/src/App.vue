@@ -4,10 +4,10 @@
       <!-- header start  -->
       <header class="db-header">
         <div class="backend">
-          <router-link class="logo" :to="{path: '/'}">{{token.companyName}}</router-link>
-          <div class="main_item_category" v-for="backend in menus.backendList" :key="backend.id"><a  :class="backend.class" href="#" :data-backend-id="backend.id" @click="changeBackend">{{backend.name}}</a></div>
+          <div class="backend-item"><router-link  :to="{path: '/'}">{{token.companyName}}</router-link></div>
+          <div class="backend-item" v-for="backend in menus.backendList" :key="backend.id"><a  :class="backend.class" href="#" :data-backend-id="backend.id" @click="changeBackend">{{backend.name}}</a></div>
         </div>
-        <div class="user-info" v-if="account.id">
+        <div class="user-info">
           <span><a href="javscript:void(0);" @click="changeLang('zh-cn')">中文</a> / <a href="javscript:void(0);" @click="changeLang('id')">Indonesia</a></span>
           <span>{{account.loginName}}</span>
           <el-dropdown trigger="click">
@@ -151,7 +151,7 @@
         var backendList=this.menus.backendList;
         for(let i in backendList){
           if(this.id==backendList[i].id){
-            backendList[i].class="highlight";
+            backendList[i].class="backend-item-active";
           }else{
             backendList[i].class=" ";
           }
@@ -182,7 +182,8 @@
     width:auto;
     height:auto;
   }
-  .main_item_category{
+  .backend-item{
+    font-size: 2.4rem;
     display: inline-block;
     width:100px;
     height:30px;
@@ -193,13 +194,13 @@
     font-size:17px;
     z-index: 9999;
   }
-  .main_item_category a:hover{
+  .backend-item a:hover{
     color:#fff;
     padding-bottom:16px;
     border-bottom:4px solid #20A0FF;
     cursor:pointer
   }
-  .highlight{
+  .backend-item-active{
     color:#20A0FF;
     padding-bottom:16px;
   }
