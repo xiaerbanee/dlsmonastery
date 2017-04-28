@@ -1,56 +1,51 @@
 package net.myspring.basic.modules.sys.manager;
 
 import net.myspring.basic.modules.sys.domain.Menu;
-import net.myspring.basic.modules.sys.domain.MenuCategory;
-import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.mapper.MenuMapper;
-import net.myspring.basic.modules.sys.web.form.MenuCategoryForm;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by admin on 2017/4/5.
  */
 @Component
+@CacheConfig(cacheNames = "menus")
 public class MenuManager {
 
     @Autowired
     private MenuMapper menuMapper;
 
-    @Cacheable(value = "menus",key="#p0")
+    @Cacheable(key="#p0")
     public Menu findOne(String id) {
         return menuMapper.findOne(id);
     }
 
-    @CachePut(value = "menus",key="#p0.id")
+    @CachePut(key="#p0.id")
     public Menu save(Menu menu){
         menuMapper.save(menu);
         return  menu;
     }
 
-    @CachePut(value = "menus",key="#p0.id")
+    @CachePut(key="#p0.id")
     public Menu update(Menu menu){
         menuMapper.update(menu);
         return  menuMapper.findOne(menu.getId());
     }
 
-    @CachePut(value = "menus",key="#p0.id")
+    @CachePut(key="#p0.id")
     public Menu updateForm(MenuForm menuForm){
         menuMapper.updateForm(menuForm);
         return  menuMapper.findOne(menuForm.getId());
     }
 
-    @CacheEvict(value = "menus",key="#p0")
+    @CacheEvict(key="#p0")
     public int deleteById(String id) {
         return menuMapper.deleteById(id);
     }

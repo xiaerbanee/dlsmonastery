@@ -21,13 +21,13 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * Created by admin on 2017/4/6.
  */
 @Component
+@CacheConfig(cacheNames = "offices")
 public class OfficeManager {
 
     @Autowired
@@ -39,54 +39,53 @@ public class OfficeManager {
     @Autowired
     private OfficeBusinessMapper officeBusinessMapper;
 
-    @Cacheable(value = "offices", key = "#p0")
+    @Cacheable(key="#p0")
     public Office findOne(String id) {
         return officeMapper.findOne(id);
     }
 
-    @CachePut(value = "offices", key = "#p0.id")
-    public Office save(Office office) {
+    @CachePut(key="#p0.id")
+    public Office save(Office office){
         officeMapper.save(office);
-        return office;
+        return  office;
     }
 
-    @CachePut(value = "offices", key = "#p0.id")
-    public Office update(Office office) {
+    @CachePut(key="#p0.id")
+    public Office update(Office office){
         officeMapper.update(office);
-        return officeMapper.findOne(office.getId());
+        return  officeMapper.findOne(office.getId());
     }
 
-    @CachePut(value = "offices", key = "#p0.id")
-    public Office updateForm(OfficeForm officeForm) {
+    @CachePut(value = "offices",key="#p0.id")
+    public Office updateForm(OfficeForm officeForm){
         officeMapper.updateForm(officeForm);
-        return officeMapper.findOne(officeForm.getId());
+        return  officeMapper.findOne(officeForm.getId());
     }
 
-
-    public List<String> officeFilter(String accountId) {
-        List<String> officeIdList = Lists.newArrayList();
+    public List<String> officeFilter(String accountId){
+        List<String> officeIdList= Lists.newArrayList();
         Office office = officeMapper.findByAccountId(accountId);
         OfficeRule officeRule = officeRuleMapper.findOne(office.getId());
-        if (!Const.HR_ACCOUNT_ADMIN_LIST.contains(accountId)) {
-            if (OfficeRuleEnum.BUSINESS_OFFICE.name().equalsIgnoreCase(officeRule.getType())) {
+        if(!Const.HR_ACCOUNT_ADMIN_LIST.contains(accountId)){
+            if(OfficeRuleEnum.BUSINESS_OFFICE.name().equalsIgnoreCase(officeRule.getType())){
                 officeIdList.add(office.getId());
-                officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()), "id"));
-            } else {
+                officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()),"id"));
+            }else {
                 officeIdList.addAll(officeBusinessMapper.findBusinessIdById(office.getId()));
             }
-            if (CollectionUtil.isNotEmpty(officeIdList)) {
+            if(CollectionUtil.isNotEmpty(officeIdList)) {
                 officeIdList.add("0");
             }
         }
-        officeIdList = Lists.newArrayList(Sets.newHashSet(officeIdList));
+        officeIdList=Lists.newArrayList(Sets.newHashSet(officeIdList));
         return officeIdList;
     }
 
-    public Office findByOfficeIdAndRuleName(String officeId, String ruleName) {
-        Office office = null;
-        OfficeRule officeRule = officeRuleMapper.findByName(ruleName);
-        if (officeRule != null) {
-            office = findByOfficeIdAndRuleId(officeId, officeRule.getId());
+    public Office findByOfficeIdAndRuleName(String officeId,String ruleName){
+        Office office=null;
+        OfficeRule officeRule=officeRuleMapper.findByName(ruleName);
+        if(officeRule!=null){
+            office=findByOfficeIdAndRuleId(officeId,officeRule.getId());
         }
         return office;
     }

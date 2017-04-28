@@ -24,8 +24,8 @@ public class ConsignmentReportController {
     @Autowired
     private ConsignmentReportService consignmentReportService;
 
-    @RequestMapping(value = "list")
-    public String list(Model model, String dateRange, String companyName) {
+    @RequestMapping(value = "report")
+    public String report(Model model, String dateRange, String companyName) {
         List<ConsignmentForShowDto> consignmentReport = Lists.newArrayList();
         LocalDate dateStart = LocalDate.now().minusWeeks(1);
         LocalDate dateEnd = LocalDate.now().minusDays(1);

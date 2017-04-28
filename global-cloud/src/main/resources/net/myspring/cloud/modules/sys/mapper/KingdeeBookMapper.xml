@@ -18,4 +18,10 @@
         from sys_kingdee_book t1
         where t1.enabled = 1
     </select>
+
+    <select id="findNames" resultType="String">
+        select t1.name
+        from sys_kingdee_book t1
+        where t1.enabled = 1
+    </select>
 </mapper>

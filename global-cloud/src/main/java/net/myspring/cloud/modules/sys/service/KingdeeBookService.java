@@ -34,6 +34,15 @@ public class KingdeeBookService {
         return accountChangeDtoPage;
     }
 
+    public KingdeeBookQuery getQuery(){
+        KingdeeBookQuery kingdeeBookQuery = new KingdeeBookQuery();
+        List<String> nameList = kingdeeBookMapper.findNames();
+        cacheUtils.initCacheInput(nameList);
+        kingdeeBookQuery.setNameList(nameList);
+        return kingdeeBookQuery;
+
+    }
+
     public KingdeeBookDto findOne(String id){
         KingdeeBook kingdeeBook = kingdeeBookMapper.findOne(id);
         KingdeeBookDto kingdeeBookDto = BeanUtil.map(kingdeeBook,KingdeeBookDto.class);
