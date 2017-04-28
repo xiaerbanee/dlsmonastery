@@ -54,13 +54,6 @@
           page:0,
           size:25,
           name:'',
-          type:'',
-          hasIme:'',
-          allowBill:'',
-          productType:'',
-          allowOrder:'',
-          outGroupName:'',
-          netType:'',
         },formLabel:{
           name:{label:this.$t('pricesystemList.name')},
           hasIme:{label:this.$t('pricesystemList.isIme')},
@@ -118,6 +111,7 @@
       util.copyValue(this.$route.query,this.formData);
       axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
         this.formProperty=response.data;
+
       });
       this.pageRequest();
     }

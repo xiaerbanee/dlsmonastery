@@ -11,12 +11,12 @@ import java.util.List;
  */
 public class ChainForm extends DataForm<Chain> {
     private String name;
-    private String type;
+    /*private String type;
     private String areaType;
     private String officeId;
     private String adPricesystemId;
     private List<String> pageIds= Lists.newArrayList();
-    private List<String> accountIdList=Lists.newArrayList();
+    private List<String> accountIdList=Lists.newArrayList();*/
     private List<String> depotIdList=Lists.newArrayList();
 
     public List<String> getDepotIdList() {
@@ -27,7 +27,7 @@ public class ChainForm extends DataForm<Chain> {
         this.depotIdList = depotIdList;
     }
 
-    public List<String> getAccountIdList() {
+    /*public List<String> getAccountIdList() {
         return accountIdList;
     }
 
@@ -41,7 +41,7 @@ public class ChainForm extends DataForm<Chain> {
 
     public void setPageIds(List<String> pageIds) {
         this.pageIds = pageIds;
-    }
+    }*/
 
     public String getName() {
         return name;
@@ -51,7 +51,7 @@ public class ChainForm extends DataForm<Chain> {
         this.name = name;
     }
 
-    public String getType() {
+    /*public String getType() {
         return type;
     }
 
@@ -81,5 +81,5 @@ public class ChainForm extends DataForm<Chain> {
 
     public void setAdPricesystemId(String adPricesystemId) {
         this.adPricesystemId = adPricesystemId;
-    }
+    }*/
 }

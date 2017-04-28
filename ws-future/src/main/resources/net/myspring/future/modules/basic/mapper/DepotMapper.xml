@@ -349,18 +349,18 @@
     </select>
 
     <sql id="depotParamFilter">
-        <if test="p.types !=null and p.types.size() !=0">
+        <!--<if test="p.types !=null and p.types.size() !=0">
             and depot.type IN
             <foreach collection="p.types" index="index" item="item" open="(" separator="," close=")">
                 #{p.types[${index}]}
             </foreach>
-        </if>
+        </if>-->
         <if test="p.depotName != null">
             and (depot.name like CONCAT('%',#{p.depotName},'%') or depot.name_pinyin like CONCAT('%',#{p.depotName},'%'))
         </if>
-        <if test="p.townType != null">
+        <!--<if test="p.townType != null">
             and depot.town_type=#{p.townType}
-        </if>
+        </if>-->
         <if test="p.type != null">
             and depot.type=#{p.type}
         </if>
@@ -413,20 +413,20 @@
         <if test="p.adShop !=null">
             and depot.ad_shop=#{p.adShop}
         </if>
-        <if test="p.isHidden !=null">
+        <!--<if test="p.isHidden !=null">
             and depot.is_hidden=#{p.isHidden}
-        </if>
+        </if>-->
         <if test="p.allowAdApply != null">
             and depot.allow_ad_apply = #{p.allowAdApply}
         </if>
         <if test="p.name != null">
             and (depot.name like CONCAT('%',#{p.name},'%') or depot.name_pinyin like CONCAT('%',#{p.name},'%'))
         </if>
-        <if test="p.types !=null and p.types.size() !=0">
+        <!--<if test="p.types !=null and p.types.size() !=0">
             and depot.type IN
             <foreach collection="p.types" index="index" item="item" open="(" separator="," close=")">
                 #{p.types[${index}]}
             </foreach>
-        </if>
+        </if>-->
     </sql>
 </mapper>

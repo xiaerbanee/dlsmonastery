@@ -21,6 +21,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -116,12 +118,23 @@ public class DepotController {
         return depotDto;
     }
 
+    @RequestMapping(value = "searchShop")
+    public  List<DepotDto> searchShop(String name){
+        String category = "SHOP";
+        List<Depot> depots = search(name,category);
+        List<DepotDto> depotDtos = new ArrayList<>();
+        for(Depot depot:depots){
+            depotDtos.add(BeanUtil.map(depot,DepotDto.class));
+        }
+        return  depotDtos;
+    }
+
     @RequestMapping(value = "search")
     public List<Depot> search(String name,String category) {
         List<Depot> depotList = Lists.newArrayList();
 //        Map<String,Object> filter = FilterUtils.getDepotFilter(AccountUtils.getAccountId());
         DepotQuery depotQuery = new DepotQuery();
-        if(depotQuery.getDepotIdList().size()>0 || StringUtils.isNotBlank(name)) {
+        if(/*depotQuery.getDepotIdList().size()>0 || */StringUtils.isNotBlank(name)) {
             depotQuery.setName(name);
             if (StringUtils.isNotBlank(category)) {
                 HashBiMap<String, Integer> typeMap = DepotUtils.getTypeMapByCategory(category);
