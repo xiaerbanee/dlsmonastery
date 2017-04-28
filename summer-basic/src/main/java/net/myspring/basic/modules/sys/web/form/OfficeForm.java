@@ -19,7 +19,6 @@ public class OfficeForm extends DataForm<Office> {
 
     private String parentId;
     private String name;
-    private String type;
     private String jointType;
     private String point;
     private String taskPoint;
@@ -27,8 +26,9 @@ public class OfficeForm extends DataForm<Office> {
     private TreeNode officeTree;
     private List<String> officeIdList=Lists.newArrayList();
     private String officeIdStr;
-    private List<OfficeRuleDto>  officeTypeList= Lists.newArrayList();
+    private List<OfficeRuleDto>  officeRuleList= Lists.newArrayList();
     private List<String> jointTypeList= Lists.newArrayList();
+    private String officeRuleId;
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
@@ -65,12 +65,12 @@ public class OfficeForm extends DataForm<Office> {
         this.parentName = parentName;
     }
 
-    public List<OfficeRuleDto> getOfficeTypeList() {
-        return officeTypeList;
+    public List<OfficeRuleDto> getOfficeRuleList() {
+        return officeRuleList;
     }
 
-    public void setOfficeTypeList(List<OfficeRuleDto> officeTypeList) {
-        this.officeTypeList = officeTypeList;
+    public void setOfficeRuleList(List<OfficeRuleDto> officeRuleList) {
+        this.officeRuleList = officeRuleList;
     }
 
     public List<String> getJointTypeList() {
@@ -97,12 +97,12 @@ public class OfficeForm extends DataForm<Office> {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getOfficeRuleId() {
+        return officeRuleId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setOfficeRuleId(String officeRuleId) {
+        this.officeRuleId = officeRuleId;
     }
 
     public String getJointType() {

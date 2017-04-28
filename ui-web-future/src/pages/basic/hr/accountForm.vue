@@ -30,12 +30,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('accountForm.viewReport')" prop="viewReport">
-              <el-radio-group v-model="inputForm.viewReport">
-                <el-radio :label=1>{{$t('accountForm.true')}}</el-radio>
-                <el-radio :label=0>{{$t('accountForm.false')}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
             <el-form-item :label="$t('accountForm.outId')" prop="outId">
               <el-input v-model="inputForm.outId"></el-input>
             </el-form-item>
