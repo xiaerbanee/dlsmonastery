@@ -17,20 +17,19 @@
           <el-button type="primary" @click="search()">搜索</el-button>
         </div>
       </el-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="id" label="供应商名称" sortable width="150"></el-table-column>
-        <el-table-column prop="category" label="门店名称"></el-table-column>
-        <el-table-column prop="value" label="期初应付"></el-table-column>
-        <el-table-column prop="remarks" label="应付金额"></el-table-column>
-        <el-table-column prop="createdByName" label="实付金额"></el-table-column>
-        <el-table-column prop="createdDate" label="期末应付"></el-table-column>
+      <el-table :data="page.payableSummaryList" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
+        <el-table-column fixed prop="supplierName" label="供应商名称" sortable width="150"></el-table-column>
+        <el-table-column prop="departmentName" label="门店名称"></el-table-column>
+        <el-table-column prop="beginAmount" label="期初应付"></el-table-column>
+        <el-table-column prop="payableAmount" label="应付金额"></el-table-column>
+        <el-table-column prop="actualPayAmount" label="实付金额"></el-table-column>
+        <el-table-column prop="endAmount" label="期末应付"></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template scope="scope">
             <el-button size="small">详细</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
@@ -53,11 +52,11 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        util.getQuery("dictEnumList");
+        this.formData.createdDateBTW = util.formatDateRange(this.formData.createdDate);
+        util.getQuery("payableReport");
         util.copyValue(this.formData,this.submitData);
-        util.setQuery("dictEnumList",this.submitData);
-        axios.get('/api/basic/sys/dictEnum',{params:this.submitData}).then((response) => {
+        util.setQuery("payableReport",this.submitData);
+        axios.get('/api/global/cloud/report/payableReport/summaryList',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -67,13 +66,8 @@
       }
     },created () {
       var that = this;
-      that.formData = that.submitData;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/sys/dictEnum/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
-      });
+      that.pageRequest();
     }
   };
 </script>

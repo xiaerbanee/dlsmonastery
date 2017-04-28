@@ -1,4 +1,4 @@
-package net.myspring.cloud.modules.report.web;
+package net.myspring.cloud.modules.report.web.controller;
 
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.enums.CharEnum;

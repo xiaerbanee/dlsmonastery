@@ -8,10 +8,8 @@ import org.apache.ibatis.annotations.Param;
 import java.time.LocalDate;
 import java.util.List;
 
-
 @Mapper
 public interface PayableReportMapper {
-
     //详细表
     //付款单
     List<PayableForDetailDto> findFKDByPeriodForEntry(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("supplierId") String supplierId, @Param("departmentId") String departmentId);
