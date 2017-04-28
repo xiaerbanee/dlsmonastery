@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.Backend;
 import net.myspring.basic.modules.sys.mapper.BackendMapper;
 import net.myspring.basic.modules.sys.web.form.BackendForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,35 +17,36 @@ import java.util.List;
  * Created by wangzm on 2017/4/19.
  */
 @Component
+@CacheConfig(cacheNames = "backends")
 public class BackendManager {
     
     @Autowired
     private BackendMapper backendMapper;
 
-    @Cacheable(value = "backends",key="#p0")
+    @Cacheable(key="#p0")
     public Backend findOne(String id){
         return backendMapper.findOne(id);
     }
 
-    @CachePut(value = "backends",key="#p0.id")
+    @CachePut(key="#p0.id")
     public Backend save(Backend backend){
         backendMapper.save(backend);
         return  backend;
     }
 
-    @CachePut(value = "backends",key="#p0.id")
+    @CachePut(key="#p0.id")
     public Backend update(Backend backend){
         backendMapper.update(backend);
         return  backendMapper.findOne(backend.getId());
     }
 
-    @CachePut(value = "backends",key="#p0.id")
+    @CachePut(key="#p0.id")
     public Backend updateForm(BackendForm backendForm){
         backendMapper.updateForm(backendForm);
         return  backendMapper.findOne(backendForm.getId());
     }
 
-    @CacheEvict(value = "backends",key="#p0")
+    @CacheEvict(key="#p0")
     public int deleteById(String id) {
         return backendMapper.deleteById(id);
     }

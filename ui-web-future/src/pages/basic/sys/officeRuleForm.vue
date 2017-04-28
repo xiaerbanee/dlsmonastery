@@ -21,9 +21,6 @@
             <el-form-item :label="$t('officeRuleForm.code')" prop="code">
               <el-input v-model="inputForm.code"></el-input>
             </el-form-item>
-            <el-form-item label="属性" prop="value">
-              <el-input v-model="inputForm.value"></el-input>
-            </el-form-item>
             <el-form-item label="是否有点位" prop="hasPoint">
               <el-radio-group v-model="inputForm.hasPoint">
                 <el-radio v-for="(value,key) in inputForm.boolMap" :key="key" :label="value">{{key | bool2str}}</el-radio>
@@ -56,7 +53,6 @@
           code:'',
           hasPoint:true,
           remarks:'',
-          value:"",
         },
         rules: {
           name: [{ required: true, message: this.$t('officeRuleForm.prerequisiteMessage')}],

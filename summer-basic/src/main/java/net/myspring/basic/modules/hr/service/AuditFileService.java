@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.mapper.AuditFileMapper;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
+import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
@@ -41,10 +42,15 @@ public class AuditFileService {
     private ActivitiClient activitiClient;
     @Autowired
     private ProcessTypeClient processTypeClient;
+    @Autowired
+    private OfficeManager officeManager;
 
 
     public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery) {
         Page<AuditFileDto> page = auditFileMapper.findPage(pageable, auditFileQuery);
+        for(AuditFileDto auditFileDto:page.getContent()){
+            auditFileDto.setAreaId(officeManager.findByOfficeIdAndRuleName(auditFileDto.getOfficeId(),"办事处"));
+        }
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

@@ -20,6 +20,7 @@ zuul:
     ws-future: /api/ws/future/**
     ws-dealer: /api/ws/dealer/**
     global-tool: /api/global/tool/**
+    global-cloud: /api/global/cloud/**
   add-proxy-headers: true
 
 hystrix:

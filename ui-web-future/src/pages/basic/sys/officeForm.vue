@@ -13,9 +13,9 @@
             <el-form-item :label="$t('officeForm.officeName')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('officeForm.type')" prop="type">
-              <el-select v-model="inputForm.type" filterable @change="typeChange">
-                <el-option v-for="item in inputForm.officeTypeList" :key="item.value" :label="item.name" :value="item.value |toString "></el-option>
+            <el-form-item :label="$t('officeForm.type')" prop="officeRuleId">
+              <el-select v-model="inputForm.officeRuleId" filterable @change="typeChange">
+                <el-option v-for="item in inputForm.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.jointType')" prop="jointType">
@@ -69,7 +69,7 @@
           id: this.$route.query.id,
           parentId: '',
           name: '',
-          type: '',
+          officeRuleId: '',
           jointType: '',
           point: '',
           taskPoint: '',

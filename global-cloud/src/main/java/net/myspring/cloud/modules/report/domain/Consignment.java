@@ -1,11 +1,11 @@
-package net.myspring.cloud.modules.report.dto;
+package net.myspring.cloud.modules.report.domain;
 
 import java.math.BigDecimal;
 
 /**
  * Created by lihx on 2016/12/15.
  */
-public class ConsignmentForUnitDto {
+public class Consignment {
     private String customerId;
     private String customerName;
     private String materialId;

@@ -3,6 +3,8 @@ package net.myspring.cloud.modules.sys.web.form;
 import net.myspring.cloud.common.form.DataForm;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 
+import java.util.List;
+
 /**
  * Created by lihx on 2017/4/14.
  */
@@ -15,6 +17,9 @@ public class KingdeeBookForm extends DataForm<KingdeeBook> {
     private String kingdeeUsername;
     private String kingdeePassword;
     private String kingdeeDbid;
+
+    private List<String> nameList;
+    private List<String> typeList;
 
     public String getCompanyId() {
         return companyId;
@@ -78,5 +83,21 @@ public class KingdeeBookForm extends DataForm<KingdeeBook> {
 
     public void setKingdeeDbid(String kingdeeDbid) {
         this.kingdeeDbid = kingdeeDbid;
+    }
+
+    public List<String> getNameList() {
+        return nameList;
+    }
+
+    public void setNameList(List<String> nameList) {
+        this.nameList = nameList;
+    }
+
+    public List<String> getTypeList() {
+        return typeList;
+    }
+
+    public void setTypeList(List<String> typeList) {
+        this.typeList = typeList;
     }
 }

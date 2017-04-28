@@ -32,9 +32,6 @@ import java.util.Set;
 @Service
 @Transactional
 public class MenuService {
-
-    @Value("${weixin.audit.menuId}")
-    private String weixinAuditMenuId;
     @Autowired
     private MenuManager menuManager;
     @Autowired
@@ -44,17 +41,9 @@ public class MenuService {
     @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
-    private MenuCategoryMapper menuCategoryMapper;
-    @Autowired
     private AccountMapper accountMapper;
     @Autowired
     private BackendMapper backendMapper;
-    @Autowired
-    private BackendModuleMapper backendModuleMapper;
-    @Autowired
-    private PositionModuleMapper positionBackendMapper;
-    @Autowired
-    private AccountManager accountManager;
 
     public List<MenuDto> findAll() {
         List<Menu> menuList = menuMapper.findAll();
@@ -62,23 +51,6 @@ public class MenuService {
         cacheUtils.initCacheInput(menuDtoList);
         return menuDtoList;
     }
-
-    private Map<MenuCategory, List<Menu>> getMenuMap(List<Menu> menus) {
-        List<MenuCategory> menuCategories = menuCategoryMapper.findAll();
-        Map<String, MenuCategory> menuCategoryMap = CollectionUtil.extractToMap(menuCategories, "id");
-        Map<MenuCategory, List<Menu>> map = Maps.newHashMap();
-        if (CollectionUtil.isNotEmpty(menus)) {
-            for (Menu menu : menus) {
-                MenuCategory menuCategory = menuCategoryMap.get(menu.getMenuCategoryId());
-                if (!map.containsKey(menuCategory)) {
-                    map.put(menuCategory, Lists.newArrayList());
-                }
-                map.get(menuCategory).add(menu);
-            }
-        }
-        return map;
-    }
-
 
     public Menu findOne(String id) {
         Menu menu = menuMapper.findOne(id);
@@ -157,41 +129,14 @@ public class MenuService {
         return menu;
     }
 
-      public FrontendMenuDto getMenuMap(String accountId) {
-        FrontendMenuDto frontendMenuDto = new FrontendMenuDto();
+    public List<BackendMenuDto> getMenuMap(String accountId) {
         Account account = accountMapper.findOne(accountId);
-        Map<BackendMenuDto, List<Menu>> backendMenuMap = getMenusMap(account, false);
-        frontendMenuDto.setBackendList(Lists.newArrayList(backendMenuMap.keySet()));
-        Map<String, List<BackendModuleMenuDto>> backendModuleMap = Maps.newHashMap();
-        for (BackendMenuDto backend : backendMenuMap.keySet()) {
-            backendModuleMap.put(backend.getId(), backend.getBackendModuleList());
-        }
-        frontendMenuDto.setBackendModuleMap(backendModuleMap);
-        return frontendMenuDto;
+        return getMenusMap(account, false);
     }
 
-    public List<Map<String, Object>> findMobileMenuMap(String accountId) {
-        Map<BackendMenuDto, List<Menu>> backendMenuMap = Maps.newHashMap();
-        Account account = accountMapper.findOne(accountId);
-        if (Const.XCXAUDIT.equals(account.getLoginName())) {
-            List<String> menuIds = StringUtils.getSplitList(weixinAuditMenuId, Const.CHAR_COMMA);
-            List<Menu> menus = menuMapper.findByIds(menuIds);
-            backendMenuMap = getMenusMap(menus);
-        } else {
-            backendMenuMap = getMenusMap(account, true);
-        }
-        List<Map<String, Object>> list = Lists.newArrayList();
-        for (BackendMenuDto backendMenuDto : backendMenuMap.keySet()) {
-            Map<String, Object> item = Maps.newHashMap();
-            item.put("category", backendMenuDto);
-            item.put("menus", backendMenuMap.get(backendMenuDto));
-            list.add(item);
-        }
-        return list;
-    }
-
-    private Map<BackendMenuDto, List<Menu>> getMenusMap(Account account, boolean isMobile) {
-        List<Menu> menuList = Lists.newArrayList();
+    private List<BackendMenuDto> getMenusMap(Account account, boolean isMobile) {
+        List<BackendMenuDto> backendList = Lists.newLinkedList();
+        List<Menu> menuList;
         if (Const.HR_ACCOUNT_ADMIN_LIST.contains(account.getId())) {
             menuList = menuMapper.findAllEnabled();
         } else {
@@ -203,25 +148,9 @@ public class MenuService {
             menuList = CollectionUtil.union(menuList, permissionIsEmptyMenus);
             menuList = Lists.newArrayList(Sets.newHashSet(menuList));
         }
-        return getMenusMap(menuList);
-    }
-
-    private Map<BackendMenuDto, List<Menu>> getMenusMap(List<Menu> menuList) {
-        Map<BackendMenuDto, List<Menu>> backendMenuMap = Maps.newHashMap();
-        if (CollectionUtil.isNotEmpty(menuList)) {
-            List<BackendMenuDto> backendList = backendMapper.findByMenuList(CollectionUtil.extractToList(menuList, "id"));
-            if (CollectionUtil.isNotEmpty(backendList)) {
-                for (BackendMenuDto backendMenuDto : backendList) {
-                    List<Menu> menus = Lists.newArrayList();
-                    for (BackendModuleMenuDto backendModule : backendMenuDto.getBackendModuleList()) {
-                        for (MenuCategoryMenuDto menuCategory : backendModule.getMenuCategoryList()) {
-                            menus.addAll(menuCategory.getMenuList());
-                        }
-                    }
-                    backendMenuMap.put(backendMenuDto, menus);
-                }
-            }
+        if(CollectionUtil.isNotEmpty(menuList)){
+            backendList = backendMapper.findByMenuList(CollectionUtil.extractToList(menuList, "id"));
         }
-        return backendMenuMap;
+        return backendList;
     }
 }

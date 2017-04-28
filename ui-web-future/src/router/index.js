@@ -6,6 +6,8 @@ import basicSys from './basic_sys'
 import businessBasic from './future_basic'
 import businessCrm from './future_crm'
 import businessLayout from './future_layout'
+import cloudSys from './cloud_sys'
+import cloudReport from './cloud_report'
 
 Vue.use(Router)
 
@@ -21,6 +23,8 @@ const routes = [
   ...businessBasic,
   ...businessCrm,
   ...businessLayout,
+  ...cloudSys,
+  ...cloudReport,
   redirect
 ]
 

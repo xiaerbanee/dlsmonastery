@@ -3,13 +3,13 @@
     <template v-if="!$route.meta.hidden">
       <!-- header start  -->
       <header class="db-header">
-        <div class="main_category">
-          <router-link class="logo" :to="{path: '/'}">{{companyName}}</router-link>
-          <div class="main_item_category" v-for="firstCategory in menus.backendList" :key="firstCategory.id"><a  :class="firstCategory.class" href="#" :data-backend-id="firstCategory.id" @click="mainCategory">{{firstCategory.name}}</a></div>
+        <div class="backend">
+          <div class="backend-item"><router-link  :to="{path: '/'}">{{token.companyName}}</router-link></div>
+          <div class="backend-item" v-for="backend in backendList" :key="backend.id"><a  :class="backend.class" href="#" :data-code="backend.code" @click="changeBackend">{{backend.name}}</a></div>
         </div>
-        <div class="user-info" v-if="account.id">
+        <div class="user-info">
           <span><a href="javscript:void(0);" @click="changeLang('zh-cn')">中文</a> / <a href="javscript:void(0);" @click="changeLang('id')">Indonesia</a></span>
-          <span v-text="account.loginName"></span>
+          <span>{{account.loginName}}</span>
           <el-dropdown trigger="click">
             <span class="el-dropdown-link">
               <img :src="account.avatar">
@@ -29,22 +29,17 @@
         <aside class="db-menu-wrapper">
           <div class="db-menu-category">
             <div id="fixed">
-              <dl><dd><a v-for="item in secondCategory" :key="item.id" :data-choose-category="item.code" @click="chooseCategory">{{item.name}}</a></dd></dl>
+              <dl><dd><a v-for="backendModule in backendModuleList" :key="backendModule.id" :data-code="backendModule.code" @click="changeBackendModule">{{backendModule.name}}</a></dd></dl>
             </div>
           </div>
-          <!--<div v-show="secondCategory.name== activeCategory">-->
-          <el-menu :default-active="activeMenu" class="db-menu-bar" router unique-opened>
-            <template v-for="category in secondCategory" ：key="category.id">
-              <div  v-show="category.code == activeCategory">
-                <template v-for="menuItem in category.menuCategoryList">
-                  <el-submenu :index="menuItem.id">
-                    <template slot="title">{{$t('app.'+ menuItem.code)}}</template>
-                    <el-menu-item :index="cMenu.code" v-for="(cMenu, cIndex) in menuItem.menuList"  :key="cIndex" :route="cMenu">
-                      {{$t('app.'+ cMenu.code)}}
-                    </el-menu-item>
-                  </el-submenu>
-                </template>
-              </div>
+          <el-menu class="db-menu-bar" router unique-opened>
+            <template v-for="menuCategory in menuCategoryList" ：key="category.id">
+              <el-submenu :index="menuCategory.id">
+                <template slot="title">{{$t('app.'+ menuCategory.code)}}</template>
+                <el-menu-item :index="menu.code" v-for="(menu, index) in menuCategory.menuList"  :key="index" :route="menu">
+                  {{$t('app.'+ menu.code)}}
+                </el-menu-item>
+              </el-submenu>
             </template>
           </el-menu>
         </aside>
@@ -72,61 +67,57 @@
   export default {
     data() {
       return {
-        menuMap:{},
-        activeMenu: '',
-        activeCategory:'',
-        secondCategory:[],
-        companyName:this.$store.state.global.token.companyName,
-        id:""
+        backendMap:{},
+        backendModuleMap:{},
+        backendList:[],
+        activeBackend:'',
+        backendModuleList:[],
+        activeBackendModule:'',
+        menuCategoryList:[]
       };
     },computed: mapState({
       account: state => state.global.account,
       menus: state => state.global.menus,
-      lang: state => state.global.lang
+      lang: state => state.global.lang,
+      token: state => state.global.token
     }),
     created() {
-      var secondCategory = this.menus.backendModuleMap;
-      for(let item in secondCategory){
-        let copyItem="";
-        if(!copyItem){
-          copyItem=item;
-          this.secondCategory=secondCategory[item];
-          if( this.secondCategory.length>0){
-            this.id=this.secondCategory[0].id;
-            this.activeCategory = this.secondCategory[0].code;
-            this.getCategory();
-          }
-        }
-        return;
-      }
-
-      // set default lang
-      Vue.config.lang = this.lang;
     },mounted(){
     },
     watch: {
-      '$route'(to, from) {
-        if( to.name!="login"){
-          var activeMenu = to.meta.menu;
-          if(activeMenu==null) {
-            if(this.$route.name){
-              activeMenu = this.$route.name;
-            }else{
-              activeMenu="home"
+      '$route'(to) {
+        //初始化菜单
+        if(this.backendList.length==0 && this.menus.length != 0) {
+          var backendMap = {};
+          var backendModuleMap = {};
+          for (var i in this.menus) {
+            var backend= this.menus[i];
+            backendMap[backend.code] = backend;
+            for(var j in backend.backendModuleList) {
+              var backendModule = backend.backendModuleList[j];
+              backendModuleMap[backendModule.code] = backendModule;
+              for(var k in backendModule.menuCategoryList) {
+                var menuCategory = backendModule.menuCategoryList[k];
+                for(var l in menuCategory.menuList) {
+                  var menu = menuCategory.menuList[l];
+                  menu.name = menu.code;
+                }
+              }
             }
           }
-        }else{
-          activeMenu="login";
-        }
-        if(this.secondCategory !=null && this.secondCategory.length>0&&activeMenu!="home"&&activeMenu!="login") {
-          if(!this.menuMap[activeMenu]) {
-            this.activeCategory = this.secondCategory[0].code;
+          this.backendList = this.menus;
+          this.backendMap = backendMap;
+          this.backendModuleMap = backendModuleMap;
 
-          } else {
-            this.activeCategory =  this.menuMap[activeMenu];
-          }
+          var activeBackend = this.backendList[0].code;
+          this.backendList[0].class="backend-item-active";
+          this.setActiveClass(this.backendList,activeBackend,"backend-item-active");
+          var activeBackendModule = this.backendList[0].backendModuleList[0].code;
+          this.backendModuleList = this.backendMap[activeBackend].backendModuleList;
+          this.menuCategoryList = this.backendModuleMap[activeBackendModule].menuCategoryList;
+          this.activeBackend=activeBackend;
+          this.activeBackendModule=activeBackendModule;
         }
-        this.activeMenu = activeMenu;
       }
     },
     methods: {
@@ -139,44 +130,32 @@
           this.$store.dispatch('clearGlobal');
           this.$router.push({ name: 'login' });
         }).catch(() => {});
-      },chooseCategory(e) {
-        for(var i in this.secondCategory){
-          if(e.target.dataset.chooseCategory==  this.secondCategory[i].code){
-            this.activeCategory = this.secondCategory[i].code;
-          }
-        }
       },changeLang(lang) {
         this.$store.dispatch('setLang',lang);
         Vue.config.lang = lang;
         this.$router.push({ name: "home"});
+      },changeBackendModule(event) {
+        var activeBackendModule = event.target.dataset.code;
+        this.menuCategoryList = this.backendModuleMap[activeBackendModule].menuCategoryList;
+        this.activeBackendModule=activeBackendModule;
       },
-      mainCategory(event){
-        this.secondCategory = [];
-        this.id = event.target.dataset.backendId;
-        this.secondCategory = this.menus.backendModuleMap[this.id];
-        this.getCategory();
-      },
-      getCategory(){
-        var backendList=this.menus.backendList;
-        for(let i in backendList){
-          if(this.id==backendList[i].id){
-            backendList[i].class="highlight";
-          }else{
-            backendList[i].class=" ";
+      changeBackend(event){
+        var activeBackend = event.target.dataset.code;
+        this.setActiveClass(this.backendList,activeBackend,"backend-item-active");
+        var activeBackendModule = this.backendMap[activeBackend].backendModuleList[0].code;
+        this.backendModuleList = this.backendMap[activeBackend].backendModuleList;
+        this.menuCategoryList = this.backendModuleMap[activeBackendModule].menuCategoryList;
+        this.activeBackend=activeBackend;
+        this.activeBackendModule=activeBackendModule;
+
+      },setActiveClass(itemList,activeCode,activeClass) {
+          for(var i in itemList) {
+              if(itemList[i].code == activeCode) {
+                  itemList[i].class = activeClass;
+              } else {
+                  itemList[i].class="";
+              }
           }
-        }
-        for (let i = 0; i < this.secondCategory.length; i++) {
-          let secondCategoryList = this.secondCategory[i].menuCategoryList;
-          let secondCategoryCode = this.secondCategory[i].code;
-          for (let j = 0; j < secondCategoryList.length; j++) {
-            for (let k = 0; k < secondCategoryList[j].menuList.length; k++) {
-              let menu = secondCategoryList[j].menuList[k];
-              menu.name=menu.code;
-              this.activeCategory = this.secondCategory[0].code;
-              this.menuMap[menu.code] = secondCategoryCode;
-            }
-          }
-        }
       }
     }
   };
@@ -185,13 +164,14 @@
 
 <style lang="scss">
   @import './styles/_variables.scss';
-  .main_category{
+  .backend{
     position:absolute;
     left:30px;
     width:auto;
     height:auto;
   }
-  .main_item_category{
+  .backend-item{
+    font-size: 2.4rem;
     display: inline-block;
     width:100px;
     height:30px;
@@ -202,14 +182,17 @@
     font-size:17px;
     z-index: 9999;
   }
-  .main_item_category a:hover{
+  .backend-item a:hover{
     color:#fff;
     padding-bottom:16px;
     border-bottom:4px solid #20A0FF;
     cursor:pointer
   }
-  .highlight{
+  .backend-item-active{
     color:#20A0FF;
     padding-bottom:16px;
   }
+ .db-menu-bar .el-menu-item.is-active  {
+   color:#48576a;
+ }
 </style>

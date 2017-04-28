@@ -5,6 +5,7 @@ import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,34 +17,35 @@ import java.util.List;
  * Created by lihx on 2017/4/20.
  */
 @Component
+@CacheConfig(cacheNames = "depots")
 public class DepotManager {
     @Autowired
     private DepotMapper depotMapper;
 
-    @Cacheable(value = "depots",key="#p0")
+    @Cacheable(key="#p0")
     public Depot findOne(String id) {
         return depotMapper.findOne(id);
     }
 
-    @Cacheable(value = "depots",key="#p0.id")
+    @Cacheable(key="#p0.id")
     public Depot save(Depot depot){
         depotMapper.save(depot);
         return  depot;
     }
 
-    @CachePut(value = "depots",key="#p0.id")
+    @CachePut(key="#p0.id")
     public Depot update(Depot depot){
         depotMapper.update(depot);
         return  depotMapper.findOne(depot.getId());
     }
 
-    @CachePut(value = "depots",key="#p0.id")
+    @CachePut(key="#p0.id")
     public Depot updateForm(DepotForm depotForm){
         depotMapper.updateForm(depotForm);
         return  depotMapper.findOne(depotForm.getId());
     }
 
-    @CacheEvict(value = "depots",key="#p0")
+    @CacheEvict(key="#p0")
     public int deleteById(String id) {
         return depotMapper.deleteById(id);
     }

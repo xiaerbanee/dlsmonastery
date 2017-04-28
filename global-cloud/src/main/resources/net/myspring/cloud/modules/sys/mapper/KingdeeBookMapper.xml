@@ -5,6 +5,15 @@
         select t1.*
         from sys_kingdee_book t1
         where t1.enabled = 1
+        <if test="p.companyId != null and p.companyId != '' ">
+            and t1.companyId = #{p.companyId}
+        </if>
+        <if test="p.name != null and p.name != '' ">
+            and t1.name = #{p.name}
+        </if>
+        <if test="p.type != null and p.type != '' ">
+            and t1.type = #{p.type}
+        </if>
     </select>
 
     <select id="findNameByCompanyId" resultType="String">
@@ -15,6 +24,18 @@
 
     <select id="findKingdeePostUrls" resultType="String">
         select t1.kingdee_post_url
+        from sys_kingdee_book t1
+        where t1.enabled = 1
+    </select>
+
+    <select id="findNames" resultType="String">
+        select t1.name
+        from sys_kingdee_book t1
+        where t1.enabled = 1
+    </select>
+
+    <select id="findTypes" resultType="String">
+        select distinct t1.type
         from sys_kingdee_book t1
         where t1.enabled = 1
     </select>

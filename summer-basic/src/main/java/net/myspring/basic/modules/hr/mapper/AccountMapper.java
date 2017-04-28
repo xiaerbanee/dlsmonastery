@@ -38,13 +38,7 @@ public interface AccountMapper extends MyMapper<Account,String> {
 
     List<Account> findByFilter(@Param("p")AccountQuery accountQuery);
 
-    int saveAccountOffice(@Param("accountId")String accountId,@Param("officeIds")List<String> officeIds);
-
-    int deleteAccountOffice(@Param("accountId")String accountId);
-
     List<Account> findLabels(List<String> ids);
 
     List<Account> findByLoginNameList(List<String> loginNames);
-
-    List<String> findAccountOfficeByIds(List<String> accountId);
 }

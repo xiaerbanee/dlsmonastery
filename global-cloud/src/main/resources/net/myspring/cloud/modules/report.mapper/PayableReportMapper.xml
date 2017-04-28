@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.report.mapper.PayableReportMapper">
 
-    <select id="findFKDByPeriodForEntry" resultType="PayableReconciliationForDetail">
+    <select id="findFKDByPeriodForEntry" resultType="PayableForDetailDto">
         SELECT
             b.FCONTACTUNIT AS supplierId,
             b.fpurchasedeptid AS departmentId,
@@ -24,7 +24,7 @@
         and b.FCONTACTUNIT = #{supplierId}
         and b.fpurchasedeptid = #{departmentId}
     </select>
-    <select id="findFKTKDByPeriodForEntry" resultType="PayableReconciliationForDetail">
+    <select id="findFKTKDByPeriodForEntry" resultType="PayableForDetailDto">
         SELECT
             b.FCONTACTUNIT AS supplierId,
             b.fpurchasedeptid AS departmentId,
@@ -44,7 +44,7 @@
         and b.FCONTACTUNIT = #{supplierId}
         and b.fpurchasedeptid = #{departmentId}
     </select>
-    <select id="findQTYFDByPeriodForEntry" resultType="PayableReconciliationForDetail">
+    <select id="findQTYFDByPeriodForEntry" resultType="PayableForDetailDto">
         SELECT
             b.FCONTACTUNIT AS supplierId,
             a.fcostDepartmentId AS departmentId,
@@ -79,7 +79,7 @@
             and b.FCONTACTUNIT = #{supplierId}
             and a.fcostDepartmentId = #{departmentId}
     </select>
-    <select id="findCGTLDByPeriodForEntryF" resultType="PayableReconciliationForDetail">
+    <select id="findCGTLDByPeriodForEntryF" resultType="PayableForDetailDto">
         SELECT
             b.FSUPPLIERID AS supplierId,
             b.fmrDeptId AS departmentId,
@@ -105,7 +105,7 @@
             and b.fmrDeptId = #{departmentId}
             AND f.FERPCLSID = '1'
     </select>
-    <select id="findCGRKDByPeriodForEntryF" resultType="PayableReconciliationForDetail">
+    <select id="findCGRKDByPeriodForEntryF" resultType="PayableForDetailDto">
           SELECT
                 b.FSUPPLIERID AS supplierId,
                 b.fpurchaseDeptId AS departmentId,
@@ -131,7 +131,7 @@
               b.fpurchaseDeptId = #{departmentId} AND
               f.FERPCLSID = '1'
     </select>
-    <select id="findYFDByPeriodForEntry" resultType="PayableReconciliationForDetail">
+    <select id="findYFDByPeriodForEntry" resultType="PayableForDetailDto">
         SELECT
             b.FSUPPLIERID AS supplierId,
             b.fpurchaseDeptId AS departmentId,
@@ -154,7 +154,7 @@
             and b.fpurchaseDeptId = #{departmentId}
             AND f.FERPCLSID = '6'
     </select>
-    <select id="findCGTLDByPeriodForEntryFSum" resultType="PayableReconciliationForDetail">
+    <select id="findCGTLDByPeriodForEntryFSum" resultType="PayableForDetailDto">
         SELECT
             b.FSUPPLIERID AS supplierId,
             b.fmrDeptId AS departmentId,
@@ -184,7 +184,7 @@
             b.FBILLNO,
             b.FDOCUMENTSTATUS
     </select>
-    <select id="findCGRKDByPeriodForEntryFSum" resultType="PayableReconciliationForDetail">
+    <select id="findCGRKDByPeriodForEntryFSum" resultType="PayableForDetailDto">
         SELECT
             b.FSUPPLIERID AS supplierId,
             b.fpurchaseDeptId AS departmentId,
@@ -214,7 +214,7 @@
             b.FBILLNO,
             b.FDOCUMENTSTATUS
     </select>
-    <select id="findYFDByPeriodForEntrySum" resultType="PayableReconciliationForDetail">
+    <select id="findYFDByPeriodForEntrySum" resultType="PayableForDetailDto">
         SELECT
             b.FSUPPLIERID AS supplierId,
             b.fpurchaseDeptId AS departmentId,
@@ -243,7 +243,7 @@
             b.FDOCUMENTSTATUS
     </select>
 
-    <select id="findByEndDate" resultType="PayableReconciliationForSummary">
+    <select id="findByEndDate" resultType="PayableForSummaryDto">
        SELECT
 	       a.supplyid AS supplierId,
 	       a.departmentId AS departmentId,
@@ -322,7 +322,7 @@
 	  a.supplierId,
 	  a.departmentId
     </select>
-    <select id="findByEndDateAndIn" resultType="PayableReconciliationForSummary">
+    <select id="findByEndDateAndIn" resultType="PayableForSummaryDto">
         SELECT
             a.supplyid AS supplierId,
             a.departmentId AS departmentId,
@@ -450,7 +450,7 @@
         a.departmentId
     </select>
 
-    <select id="findFKDByPeriodForSum" resultType="PayableReconciliationForSummary">
+    <select id="findFKDByPeriodForSum" resultType="PayableForSummaryDto">
         SELECT
             b.FCONTACTUNIT AS supplierId,
             b.fpurchasedeptid AS departmentId,
@@ -465,7 +465,7 @@
             b.FCONTACTUNIT,
             b.fpurchasedeptid
     </select>
-    <select id="findFKTKDByPeriodForSum" resultType="PayableReconciliationForSummary">
+    <select id="findFKTKDByPeriodForSum" resultType="PayableForSummaryDto">
         SELECT
             b.FCONTACTUNIT AS supplierId,
             b.fpurchasedeptid AS departmentId,
@@ -480,7 +480,7 @@
             b.FCONTACTUNIT,
             b.fpurchasedeptid
     </select>
-    <select id="findQTYFDByPeriodForSum" resultType="PayableReconciliationForSummary">
+    <select id="findQTYFDByPeriodForSum" resultType="PayableForSummaryDto">
         SELECT
             b.FCONTACTUNIT AS supplierId,
             a.fcostDepartmentId AS departmentId,
@@ -495,7 +495,7 @@
             b.FCONTACTUNIT,
             a.fcostDepartmentId
     </select>
-    <select id="findCGTLDByPeriodForSum" resultType="PayableReconciliationForSummary">
+    <select id="findCGTLDByPeriodForSum" resultType="PayableForSummaryDto">
         SELECT
             b.FSUPPLIERID AS supplierId,
             b.fmrDeptId AS departmentId,
@@ -513,7 +513,7 @@
             b.FSUPPLIERID,
             b.fmrDeptId
     </select>
-    <select id="findCGRKDByPeriodForSum" resultType="PayableReconciliationForSummary">
+    <select id="findCGRKDByPeriodForSum" resultType="PayableForSummaryDto">
         SELECT
             b.FSUPPLIERID AS supplierId,
             b.fpurchaseDeptId AS departmentId,
@@ -531,7 +531,7 @@
             b.FSUPPLIERID,
             b.fpurchaseDeptId
     </select>
-    <select id="findYFDByPeriodForSum" resultType="PayableReconciliationForSummary">
+    <select id="findYFDByPeriodForSum" resultType="PayableForSummaryDto">
         SELECT
             b.FSUPPLIERID AS supplierId,
             b.fpurchaseDeptId AS departmentId,

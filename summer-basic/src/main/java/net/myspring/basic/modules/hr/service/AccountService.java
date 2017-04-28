@@ -57,7 +57,6 @@ public class AccountService {
         if(!accountForm.isCreate()){
             Account account = accountMapper.findOne(accountForm.getId());
             accountForm = BeanUtil.map(account, AccountForm.class);
-            accountForm.setOfficeIdList(accountMapper.findAccountOfficeByIds(Lists.newArrayList(account.getId())));
             cacheUtils.initCacheInput(accountForm);
         }
         return accountForm;

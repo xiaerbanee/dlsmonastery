@@ -4,6 +4,7 @@ import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.basic.web.form.ProductForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,34 +16,35 @@ import java.util.List;
  * Created by lihx on 2017/4/20.
  */
 @Component
+@CacheConfig(cacheNames = "products")
 public class ProductManager {
     @Autowired
     private ProductMapper productMapper;
 
-    @Cacheable(value = "products",key="#p0")
+    @Cacheable(key="#p0")
     public Product findOne(String id) {
         return productMapper.findOne(id);
     }
 
-    @Cacheable(value = "products",key="#p0.id")
+    @Cacheable(key="#p0.id")
     public Product save(Product product){
         productMapper.save(product);
         return  product;
     }
 
-    @CachePut(value = "products",key="#p0.id")
+    @CachePut(key="#p0.id")
     public Product update(Product product){
         productMapper.update(product);
         return  productMapper.findOne(product.getId());
     }
 
-    @CachePut(value = "products",key="#p0.id")
+    @CachePut(key="#p0.id")
     public Product updateForm(ProductForm productForm){
         productMapper.updateForm(productForm);
         return  productMapper.findOne(productForm.getId());
     }
 
-    @CacheEvict(value = "products",key="#p0")
+    @CacheEvict(key="#p0")
     public int deleteById(String id) {
         return productMapper.deleteById(id);
     }
