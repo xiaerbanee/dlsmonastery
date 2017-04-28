@@ -80,15 +80,4 @@ public class MenuController {
         menuQuery.setMenuCategoryList(menuCategoryService.findAll());
         return menuQuery;
     }
-
-
-    @RequestMapping(value = "getMenus")
-    public Object getMenus(String requestClient){
-        Boolean isMobile = "weixin".equals(requestClient);
-        if(isMobile) {
-            return menuService.findMobileMenuMap(SecurityUtils.getAccountId());
-        } else {
-            return menuService.getMenuMap(SecurityUtils.getAccountId());
-        }
-    }
 }

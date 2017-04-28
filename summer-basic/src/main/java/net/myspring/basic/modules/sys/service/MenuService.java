@@ -32,9 +32,6 @@ import java.util.Set;
 @Service
 @Transactional
 public class MenuService {
-
-    @Value("${weixin.audit.menuId}")
-    private String weixinAuditMenuId;
     @Autowired
     private MenuManager menuManager;
     @Autowired
@@ -44,17 +41,9 @@ public class MenuService {
     @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
-    private MenuCategoryMapper menuCategoryMapper;
-    @Autowired
     private AccountMapper accountMapper;
     @Autowired
     private BackendMapper backendMapper;
-    @Autowired
-    private BackendModuleMapper backendModuleMapper;
-    @Autowired
-    private PositionModuleMapper positionBackendMapper;
-    @Autowired
-    private AccountManager accountManager;
 
     public List<MenuDto> findAll() {
         List<Menu> menuList = menuMapper.findAll();
@@ -62,23 +51,6 @@ public class MenuService {
         cacheUtils.initCacheInput(menuDtoList);
         return menuDtoList;
     }
-
-    private Map<MenuCategory, List<Menu>> getMenuMap(List<Menu> menus) {
-        List<MenuCategory> menuCategories = menuCategoryMapper.findAll();
-        Map<String, MenuCategory> menuCategoryMap = CollectionUtil.extractToMap(menuCategories, "id");
-        Map<MenuCategory, List<Menu>> map = Maps.newHashMap();
-        if (CollectionUtil.isNotEmpty(menus)) {
-            for (Menu menu : menus) {
-                MenuCategory menuCategory = menuCategoryMap.get(menu.getMenuCategoryId());
-                if (!map.containsKey(menuCategory)) {
-                    map.put(menuCategory, Lists.newArrayList());
-                }
-                map.get(menuCategory).add(menu);
-            }
-        }
-        return map;
-    }
-
 
     public Menu findOne(String id) {
         Menu menu = menuMapper.findOne(id);
@@ -170,28 +142,8 @@ public class MenuService {
         return frontendMenuDto;
     }
 
-    public List<Map<String, Object>> findMobileMenuMap(String accountId) {
-        Map<BackendMenuDto, List<Menu>> backendMenuMap = Maps.newHashMap();
-        Account account = accountMapper.findOne(accountId);
-        if (Const.XCXAUDIT.equals(account.getLoginName())) {
-            List<String> menuIds = StringUtils.getSplitList(weixinAuditMenuId, Const.CHAR_COMMA);
-            List<Menu> menus = menuMapper.findByIds(menuIds);
-            backendMenuMap = getMenusMap(menus);
-        } else {
-            backendMenuMap = getMenusMap(account, true);
-        }
-        List<Map<String, Object>> list = Lists.newArrayList();
-        for (BackendMenuDto backendMenuDto : backendMenuMap.keySet()) {
-            Map<String, Object> item = Maps.newHashMap();
-            item.put("category", backendMenuDto);
-            item.put("menus", backendMenuMap.get(backendMenuDto));
-            list.add(item);
-        }
-        return list;
-    }
-
     private Map<BackendMenuDto, List<Menu>> getMenusMap(Account account, boolean isMobile) {
-        List<Menu> menuList = Lists.newArrayList();
+        List<Menu> menuList;
         if (Const.HR_ACCOUNT_ADMIN_LIST.contains(account.getId())) {
             menuList = menuMapper.findAllEnabled();
         } else {
