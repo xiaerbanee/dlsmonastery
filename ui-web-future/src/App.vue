@@ -3,9 +3,9 @@
     <template v-if="!$route.meta.hidden">
       <!-- header start  -->
       <header class="db-header">
-        <div class="main_category">
+        <div class="backend">
           <router-link class="logo" :to="{path: '/'}">{{token.companyName}}</router-link>
-          <div class="main_item_category" v-for="firstCategory in menus.backendList" :key="firstCategory.id"><a  :class="firstCategory.class" href="#" :data-backend-id="firstCategory.id" @click="mainCategory">{{firstCategory.name}}</a></div>
+          <div class="main_item_category" v-for="backend in menus.backendList" :key="backend.id"><a  :class="backend.class" href="#" :data-backend-id="backend.id" @click="changeBackend">{{backend.name}}</a></div>
         </div>
         <div class="user-info" v-if="account.id">
           <span><a href="javscript:void(0);" @click="changeLang('zh-cn')">中文</a> / <a href="javscript:void(0);" @click="changeLang('id')">Indonesia</a></span>
@@ -29,12 +29,11 @@
         <aside class="db-menu-wrapper">
           <div class="db-menu-category">
             <div id="fixed">
-              <dl><dd><a v-for="item in secondCategory" :key="item.id" :data-choose-category="item.code" @click="chooseCategory">{{item.name}}</a></dd></dl>
+              <dl><dd><a v-for="item in backendModule" :key="item.id" :data-choose-category="item.code" @click="changeModule">{{item.name}}</a></dd></dl>
             </div>
           </div>
-          <!--<div v-show="secondCategory.name== activeCategory">-->
           <el-menu :default-active="activeMenu" class="db-menu-bar" router unique-opened>
-            <template v-for="category in secondCategory" ：key="category.id">
+            <template v-for="category in backendModule" ：key="category.id">
               <div  v-show="category.code == activeCategory">
                 <template v-for="menuItem in category.menuCategoryList">
                   <el-submenu :index="menuItem.id">
@@ -75,7 +74,7 @@
         menuMap:{},
         activeMenu: '',
         activeCategory:'',
-        secondCategory:[],
+        backendModule:[],
         id:""
       };
     },computed: mapState({
@@ -85,15 +84,15 @@
       token: state => state.global.token
     }),
     created() {
-      var secondCategory = this.menus.backendModuleMap;
-      for(let item in secondCategory){
+      var backendModule = this.menus.backendModuleMap;
+      for(let item in backendModule){
         let copyItem="";
         if(!copyItem){
           copyItem=item;
-          this.secondCategory=secondCategory[item];
-          if( this.secondCategory.length>0){
-            this.id=this.secondCategory[0].id;
-            this.activeCategory = this.secondCategory[0].code;
+          this.backendModule=backendModule[item];
+          if( this.backendModule.length>0){
+            this.id=this.backendModule[0].id;
+            this.activeCategory = this.backendModule[0].code;
             this.getCategory();
           }
         }
@@ -118,14 +117,6 @@
         }else{
           activeMenu="login";
         }
-        if(this.secondCategory !=null && this.secondCategory.length>0&&activeMenu!="home"&&activeMenu!="login") {
-          if(!this.menuMap[activeMenu]) {
-            this.activeCategory = this.secondCategory[0].code;
-
-          } else {
-            this.activeCategory =  this.menuMap[activeMenu];
-          }
-        }
         this.activeMenu = activeMenu;
       }
     },
@@ -139,10 +130,10 @@
           this.$store.dispatch('clearGlobal');
           this.$router.push({ name: 'login' });
         }).catch(() => {});
-      },chooseCategory(e) {
-        for(var i in this.secondCategory){
-          if(e.target.dataset.chooseCategory==  this.secondCategory[i].code){
-            this.activeCategory = this.secondCategory[i].code;
+      },changeModule(e) {
+        for(var i in this.backendModule){
+          if(e.target.dataset.chooseCategory==  this.backendModule[i].code){
+            this.activeCategory = this.backendModule[i].code;
           }
         }
       },changeLang(lang) {
@@ -150,10 +141,10 @@
         Vue.config.lang = lang;
         this.$router.push({ name: "home"});
       },
-      mainCategory(event){
-        this.secondCategory = [];
+      changeBackend(event){
+        this.backendModule = [];
         this.id = event.target.dataset.backendId;
-        this.secondCategory = this.menus.backendModuleMap[this.id];
+        this.backendModule = this.menus.backendModuleMap[this.id];
         this.getCategory();
       },
       getCategory(){
@@ -165,15 +156,15 @@
             backendList[i].class=" ";
           }
         }
-        for (let i = 0; i < this.secondCategory.length; i++) {
-          let secondCategoryList = this.secondCategory[i].menuCategoryList;
-          let secondCategoryCode = this.secondCategory[i].code;
-          for (let j = 0; j < secondCategoryList.length; j++) {
-            for (let k = 0; k < secondCategoryList[j].menuList.length; k++) {
-              let menu = secondCategoryList[j].menuList[k];
+        for (let i = 0; i < this.backendModule.length; i++) {
+          let backendModuleList = this.backendModule[i].menuCategoryList;
+          let backendModuleCode = this.backendModule[i].code;
+          for (let j = 0; j < backendModuleList.length; j++) {
+            for (let k = 0; k < backendModuleList[j].menuList.length; k++) {
+              let menu = backendModuleList[j].menuList[k];
               menu.name=menu.code;
-              this.activeCategory = this.secondCategory[0].code;
-              this.menuMap[menu.code] = secondCategoryCode;
+              this.activeCategory = this.backendModule[0].code;
+              this.menuMap[menu.code] = backendModuleCode;
             }
           }
         }
@@ -185,7 +176,7 @@
 
 <style lang="scss">
   @import './styles/_variables.scss';
-  .main_category{
+  .backend{
     position:absolute;
     left:30px;
     width:auto;
