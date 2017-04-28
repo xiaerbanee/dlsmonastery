@@ -4,12 +4,12 @@
       <!-- header start  -->
       <header class="db-header">
         <div class="main_category">
-          <router-link class="logo" :to="{path: '/'}">{{companyName}}</router-link>
+          <router-link class="logo" :to="{path: '/'}">{{token.companyName}}</router-link>
           <div class="main_item_category" v-for="firstCategory in menus.backendList" :key="firstCategory.id"><a  :class="firstCategory.class" href="#" :data-backend-id="firstCategory.id" @click="mainCategory">{{firstCategory.name}}</a></div>
         </div>
         <div class="user-info" v-if="account.id">
           <span><a href="javscript:void(0);" @click="changeLang('zh-cn')">中文</a> / <a href="javscript:void(0);" @click="changeLang('id')">Indonesia</a></span>
-          <span v-text="account.loginName"></span>
+          <span>{{account.loginName}}</span>
           <el-dropdown trigger="click">
             <span class="el-dropdown-link">
               <img :src="account.avatar">
@@ -76,13 +76,13 @@
         activeMenu: '',
         activeCategory:'',
         secondCategory:[],
-        companyName:this.$store.state.global.token.companyName,
         id:""
       };
     },computed: mapState({
       account: state => state.global.account,
       menus: state => state.global.menus,
-      lang: state => state.global.lang
+      lang: state => state.global.lang,
+      token: state => state.global.token
     }),
     created() {
       var secondCategory = this.menus.backendModuleMap;
