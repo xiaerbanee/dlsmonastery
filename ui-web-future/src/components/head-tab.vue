@@ -33,7 +33,8 @@
         }
     },methods: {
       headTabClick (event) {
-       this.$router.push({ name: event.target.dataset.tabName})
+        let name=event.target.dataset.tabName;
+        this.$router.push({ name: name, query: this.tabs.get(name)})
       },
       headTabRemove(event) {
         this.tabs.delete(event.target.dataset.tabName);
