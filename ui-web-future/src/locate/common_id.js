@@ -10,6 +10,9 @@ export default {
   head_tab: {
     home: "首页",
   },
+  su_district:{
+    inputKey:"请输入关键字",
+  },
   app: {
     personMessage: "个人信息",
     settings: "设置",
