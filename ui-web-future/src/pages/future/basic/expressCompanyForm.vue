@@ -8,22 +8,24 @@
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.expressType')" prop="expressType">
           <el-select v-model="inputForm.expressType" filterable :placeholder="$t('expressCompanyForm.selectType')">
-            <el-option v-for="item in formProperty.expressType" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in inputForm.expressTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
+
         <el-form-item :label="$t('expressCompanyForm.district')" prop="districtId">
-          <el-select v-model="inputForm.districtId"  filterable remote :placeholder="$t('expressCompanyForm.inputWord')" :remote-method="remoteDistrict" :loading="remoteLoading"  :clearable=true >
-            <el-option v-for="item in districts"  :key="item.id" :label="item.fullName" :value="item.id"></el-option>
-          </el-select>
+          <su-district v-model="inputForm.districtId">
+          </su-district>
         </el-form-item>
+
+
         <el-form-item :label="$t('expressCompanyForm.reachPlace')" prop="reachPlace">
-          <el-input v-model="inputForm.reachPlace"></el-input>
+          <el-input v-model="inputForm.reachPlace" type="textarea"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.shouldGetRule')" prop="shouldGetRule">
           <el-input v-model="inputForm.shouldGetRule"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.address')" prop="address">
-          <el-input v-model="inputForm.address" ></el-input>
+          <el-input v-model="inputForm.address" type="textarea"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.phone')" prop="phone">
           <el-input v-model="inputForm.phone"></el-input>
@@ -31,11 +33,11 @@
         <el-form-item :label="$t('expressCompanyForm.mobilePhone')" prop="mobilePhone">
           <el-input v-model="inputForm.mobilePhone"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('expressCompanyForm.contact')" prop="contator">
+        <el-form-item :label="$t('expressCompanyForm.contator')" prop="contator">
           <el-input v-model="inputForm.contator" ></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.remarks')" prop="remarks">
-          <el-input v-model="inputForm.remarks"></el-input>
+          <el-input v-model="inputForm.remarks" type="textarea"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('expressCompanyForm.save')}}</el-button>
@@ -50,8 +52,8 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
-            inputForm:{
+            inputForm:{},
+            submitData:{
               id:'',
               name:'',
               expressType:"",
@@ -64,11 +66,9 @@
               contator:"",
               remarks:''
             },
-            rules: {
+              rules: {
               name: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}]
-            },
-            districts:[],
-            remoteLoading:false
+            }
           }
       },
       methods:{
@@ -77,7 +77,8 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/ws/future/basic/expressCompany/save',qs.stringify(this.inputForm)).then((response)=> {
+              util.copyValue(this.inputForm, this.submitData);
+              axios.post('/api/ws/future/basic/expressCompany/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -90,30 +91,11 @@
               this.submitDisabled = false;
             }
           })
-        },remoteDistrict(query) {
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/basic/sys/district/search',{params:{key:query}}).then((response)=>{
-              this.districts=response.data;
-              this.remoteLoading = false;
-            })
-          } else {
-            this.districts = [];
-          }
         }
       },created(){
-        axios.get('/api/ws/future/basic/expressCompany/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate){
-          axios.get('/api/ws/future/basic/expressCompany/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(response.data.district){
-              this.districts=new Array(response.data.district);
-              this.inputForm.districtId=response.data.district.id;
-           }
-          })
-        }
+          axios.get('/api/ws/future/basic/expressCompany/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm = response.data;
+          });
       }
     }
 </script>

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "sys/district")
@@ -20,5 +21,14 @@ public class DistrictController {
         List<DistrictDto> districtDtoList =districtService.findByNameLike(key);
         return districtDtoList;
     }
+
+    @RequestMapping(value = "searchFullText")
+    public List<DistrictDto> searchFullText(String key) {
+        return districtService.searchFullText(key);
+    }
+
+
+
+
 
 }

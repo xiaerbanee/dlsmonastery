@@ -14,6 +14,7 @@ import VueProgressBar from 'vue-progressbar'
 import pageable from './components/pageable';
 import headTab from './components/head-tab';
 import searchTag from './components/search-tag';
+import suDistrict from './components/su-district';
 
 import App from './app.vue';
 import fullCalendar from 'vue-fullcalendar'
@@ -35,6 +36,7 @@ Vue.component('pageable', pageable);
 Vue.component('full-calendar', fullCalendar);
 Vue.component('head-tab', headTab);
 Vue.component('search-tag', searchTag);
+Vue.component('su-district', suDistrict);
 
 // progressBar
 const options = {
