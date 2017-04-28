@@ -35,16 +35,16 @@
           <!--<div v-show="secondCategory.name== activeCategory">-->
           <el-menu :default-active="activeMenu" class="db-menu-bar" router unique-opened>
             <template v-for="category in secondCategory" ：key="category.id">
-            <div  v-show="category.code == activeCategory">
-            <template v-for="menuItem in category.menuCategoryList">
-            <el-submenu :index="menuItem.id">
-            <template slot="title">{{$t('app.'+ menuItem.code)}}</template>
-            <el-menu-item :index="cMenu.code" v-for="(cMenu, cIndex) in menuItem.menuList"  :key="cIndex" :route="cMenu">
-              {{$t('app.'+ cMenu.code)}}
-            </el-menu-item>
-            </el-submenu>
-            </template>
-            </div>
+              <div  v-show="category.code == activeCategory">
+                <template v-for="menuItem in category.menuCategoryList">
+                  <el-submenu :index="menuItem.id">
+                    <template slot="title">{{$t('app.'+ menuItem.code)}}</template>
+                    <el-menu-item :index="cMenu.code" v-for="(cMenu, cIndex) in menuItem.menuList"  :key="cIndex" :route="cMenu">
+                      {{$t('app.'+ cMenu.code)}}
+                    </el-menu-item>
+                  </el-submenu>
+                </template>
+              </div>
             </template>
           </el-menu>
         </aside>
@@ -87,17 +87,17 @@
     created() {
       var secondCategory = this.menus.backendModuleMap;
       for(let item in secondCategory){
-          let copyItem="";
-          if(!copyItem){
-            copyItem=item;
-            this.secondCategory=secondCategory[item];
-            if( this.secondCategory.length>0){
-                this.id=this.secondCategory[0].id;
-              this.activeCategory = this.secondCategory[0].code;
-              this.getCategory();
-            }
+        let copyItem="";
+        if(!copyItem){
+          copyItem=item;
+          this.secondCategory=secondCategory[item];
+          if( this.secondCategory.length>0){
+            this.id=this.secondCategory[0].id;
+            this.activeCategory = this.secondCategory[0].code;
+            this.getCategory();
           }
-          return;
+        }
+        return;
       }
 
       // set default lang
@@ -116,14 +116,14 @@
             }
           }
         }else{
-            activeMenu="login";
+          activeMenu="login";
         }
         if(this.secondCategory !=null && this.secondCategory.length>0&&activeMenu!="home"&&activeMenu!="login") {
           if(!this.menuMap[activeMenu]) {
             this.activeCategory = this.secondCategory[0].code;
 
           } else {
-              this.activeCategory =  this.menuMap[activeMenu];
+            this.activeCategory =  this.menuMap[activeMenu];
           }
         }
         this.activeMenu = activeMenu;
