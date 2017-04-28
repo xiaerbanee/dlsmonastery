@@ -5,7 +5,7 @@
       <header class="db-header">
         <div class="backend">
           <div class="backend-item"><router-link  :to="{path: '/'}">{{token.companyName}}</router-link></div>
-          <div class="backend-item" v-for="backend in backendList" :key="backend.id"><a  :class="backend.class" href="#" :data-code="backend.code" @click="changeBackend">{{backend.name}}</a></div>
+          <div class="backend-item" v-for="backend in backendList" :key="backend.id"><a  :class="backend.class" href="#" :data-code="backend.code" @click="changeBackend">{{$t('menus.backend.' + backend.code)}}</a></div>
         </div>
         <div class="user-info">
           <span><a href="javscript:void(0);" @click="changeLang('zh-cn')">中文</a> / <a href="javscript:void(0);" @click="changeLang('id')">Indonesia</a></span>
@@ -29,15 +29,15 @@
         <aside class="db-menu-wrapper">
           <div class="db-menu-category">
             <div id="fixed">
-              <dl><dd><a v-for="backendModule in backendModuleList" :key="backendModule.id" :data-code="backendModule.code" @click="changeBackendModule">{{backendModule.name}}</a></dd></dl>
+              <dl><dd><a v-for="backendModule in backendModuleList" :key="backendModule.id" :data-code="backendModule.code" @click="changeBackendModule">{{$t('menus.backendModule.' + backendModule.code)}}</a></dd></dl>
             </div>
           </div>
           <el-menu class="db-menu-bar" router unique-opened>
             <template v-for="menuCategory in menuCategoryList" ：key="category.id">
               <el-submenu :index="menuCategory.id">
-                <template slot="title">{{$t('app.'+ menuCategory.code)}}</template>
+                <template slot="title">{{$t('menus.menuCategory.' + menuCategory.code)}}</template>
                 <el-menu-item :index="menu.code" v-for="(menu, index) in menuCategory.menuList"  :key="index" :route="menu">
-                  {{$t('app.'+ menu.code)}}
+                  {{$t('menus.menu.' + menu.code)}}
                 </el-menu-item>
               </el-submenu>
             </template>
