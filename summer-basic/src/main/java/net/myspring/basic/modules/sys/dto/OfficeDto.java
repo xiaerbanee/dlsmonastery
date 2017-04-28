@@ -16,12 +16,15 @@ public class OfficeDto extends DataDto<Office> {
     private String parentId;
     private boolean locked;
     private boolean enabled;
-    private String type;
     private String typeLabel;
     private BigDecimal taskPoint;
+    private String officeRuleId;
+    @CacheInput(inputKey = "officeRules",inputInstance = "officeRuleId",outputInstance = "name")
+    private String officeRuleName;
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
+
 
     public BigDecimal getTaskPoint() {
         return taskPoint;
@@ -31,12 +34,20 @@ public class OfficeDto extends DataDto<Office> {
         this.taskPoint = taskPoint;
     }
 
-    public String getType() {
-        return type;
+    public String getOfficeRuleId() {
+        return officeRuleId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setOfficeRuleId(String officeRuleId) {
+        this.officeRuleId = officeRuleId;
+    }
+
+    public String getOfficeRuleName() {
+        return officeRuleName;
+    }
+
+    public void setOfficeRuleName(String officeRuleName) {
+        this.officeRuleName = officeRuleName;
     }
 
     public String getName() {

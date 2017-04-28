@@ -21,8 +21,7 @@ const employeePhoneList = r => require.ensure([],() => r(require('pages/basic/hr
 const employeePhoneForm = r => require.ensure([],() => r(require('pages/basic/hr/employeePhoneForm.vue')));
 const employeePhoneDepositList = r => require.ensure([],() => r(require('pages/basic/hr/employeePhoneDepositList.vue')));
 const employeePhoneDepositForm = r => require.ensure([],() => r(require('pages/basic/hr/employeePhoneDepositForm.vue')));
-const officeList = r => require.ensure([],() => r(require('pages/basic/hr/officeList.vue')));
-const officeForm = r => require.ensure([],() => r(require('pages/basic/hr/officeForm.vue')));
+
 const recruitList = r => require.ensure([],() => r(require('pages/basic/hr/recruitList.vue')));
 const recruitForm = r => require.ensure([],() => r(require('pages/basic/hr/recruitForm.vue')));
 const recruitBatchForm = r => require.ensure([],() => r(require('pages/basic/hr/recruitBatchForm.vue')));
@@ -71,8 +70,7 @@ let routes = [
   {path:'/basic/hr/auditFileList',component:auditFileList,name:'auditFileList'},
   {path:'/basic/hr/auditFileForm',component:auditFileForm,name:'auditFileForm',meta: {menu:"auditFileList"}},
   {path:'/basic/hr/auditFileDetail',component:auditFileDetail,name:'auditFileDetail',meta: {menu:"auditFileList"}},
-  {path:'/basic/hr/officeList',component:officeList,name:'officeList'},
-  {path:'/basic/hr/officeForm',component:officeForm,name:'officeForm',meta: {menu:"officeList"}},
+
   {path:'/basic/hr/accountTaskList',component:accountTaskList,name:'accountTaskList'},
   {path:'/basic/hr/recruitList',component:recruitList,name:'recruitList'},
   {path:'/basic/hr/recruitForm',component:recruitForm,name:'recruitForm',meta: {menu:"recruitList"}},

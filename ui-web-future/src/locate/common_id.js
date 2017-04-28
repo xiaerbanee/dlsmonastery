@@ -13,6 +13,11 @@ export default {
   su_district:{
     inputKey:"请输入关键字",
   },
+  menuManager:{
+    basicManager:"基础管理",
+    businessManager:"业务管理",
+    cloudManager:"金蝶管理",
+  },
   app: {
     personMessage: "个人信息",
     settings: "设置",
@@ -58,6 +63,8 @@ export default {
     cloudReportCategory:"财务报表",
     payableReport:"应付对账报表",
     cloudSysCategory:"系统设置",
+    kingdeeBookList:"账套管理",
+    kingdeeBookForm:"账套编辑",
     404:"404",
     companyConfigForm: "Preferensi Editor",
     companyConfigList: "Pengaturan parameter",

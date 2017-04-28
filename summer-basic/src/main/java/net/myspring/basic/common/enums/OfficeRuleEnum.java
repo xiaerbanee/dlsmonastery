@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public enum OfficeRuleEnum {
     BUSINESS_OFFICE,
-    REAR_OFFICE;
+    SUPPORT_OFFICE;
 
     private static List<String> list= Lists.newArrayList();
 

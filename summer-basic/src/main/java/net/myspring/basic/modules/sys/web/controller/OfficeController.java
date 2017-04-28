@@ -82,7 +82,7 @@ public class OfficeController {
     @RequestMapping(value = "findForm")
     public OfficeForm findForm(OfficeForm officeForm){
         officeForm=officeService.findForm(officeForm);
-        officeForm.setOfficeTypeList(officeService.findTypeList());
+        officeForm.setOfficeRuleList(officeService.findTypeList());
         officeForm.setJointTypeList(JointTypeEnum.getList());
         return officeForm;
     }

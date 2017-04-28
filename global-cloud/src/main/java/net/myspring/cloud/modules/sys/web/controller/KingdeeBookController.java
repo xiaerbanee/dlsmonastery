@@ -35,9 +35,9 @@ public class KingdeeBookController {
     }
 
     @RequestMapping(value = "findForm")
-    public KingdeeBookDto findOne(String id){
-        KingdeeBookDto kingdeeBookDto = kingdeeBookService.findOne(id);
-        return kingdeeBookDto;
+    public KingdeeBookForm findForm(KingdeeBookForm kingdeeBookForm){
+         kingdeeBookForm = kingdeeBookService.findForm(kingdeeBookForm);
+        return kingdeeBookForm;
     }
 
     @RequestMapping(value = "delete")

@@ -7,10 +7,14 @@
           <el-input v-model="inputForm.companyId"></el-input>
         </el-form-item>
         <el-form-item label="账套" prop="name">
-          <el-input v-model="inputForm.name"></el-input>
+          <el-select v-model="inputForm.name" filterable placeholder="请选择" :clearable=true>
+            <el-option v-for="name in inputForm.nameList" :key="name" :label="name" :value="name"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="账套类型" prop="type">
-          <el-input v-model="inputForm.type"></el-input>
+          <el-select v-model="inputForm.type" filterable placeholder="请选择" :clearable=true>
+            <el-option v-for="type in inputForm.typeList" :key="type" :label="type" :value="type"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="URL" prop="kingdeeUrl">
           <el-input v-model="inputForm.kingdeeUrl"></el-input>
