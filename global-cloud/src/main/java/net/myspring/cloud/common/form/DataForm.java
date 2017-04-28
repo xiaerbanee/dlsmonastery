@@ -1,7 +1,7 @@
 package net.myspring.cloud.common.form;
 
 import net.myspring.cloud.common.utils.SecurityUtils;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 
