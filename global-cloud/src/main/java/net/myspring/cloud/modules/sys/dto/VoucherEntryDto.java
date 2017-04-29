@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.sys.dto;
 
 import com.google.common.collect.Lists;
-import net.myspring.cloud.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.VoucherEntry;
 
 import java.math.BigDecimal;

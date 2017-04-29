@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.sys.web.form;
 
 import net.myspring.basic.modules.sys.domain.Company;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 
 /**
  * Created by wangzm on 2017/4/12.

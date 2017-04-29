@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.mapper;
 
 
-import net.myspring.basic.common.mybatis.MyMapper;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.DutyLeave;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface DutyLeaveMapper extends MyMapper<DutyLeave,String> {

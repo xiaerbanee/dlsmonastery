@@ -1,6 +1,5 @@
-package net.myspring.cloud.common.form;
+package net.myspring.common.form;
 
-import net.myspring.cloud.common.utils.SecurityUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
@@ -38,9 +37,5 @@ public class DataForm<T> extends IdForm<T> {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public String getCompanyId() {
-        return SecurityUtils.getCompanyId();
     }
 }

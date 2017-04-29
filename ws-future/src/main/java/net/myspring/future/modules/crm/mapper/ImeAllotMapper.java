@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.mapper;
 
-import net.myspring.future.common.mybatis.MyMapper;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.future.modules.crm.domain.ImeAllot;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

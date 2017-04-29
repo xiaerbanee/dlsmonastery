@@ -1,9 +1,8 @@
 package net.myspring.basic.modules.sys.dto;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Position;
-import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.util.cahe.annotation.CacheInput;
 

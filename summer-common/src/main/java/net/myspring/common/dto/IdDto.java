@@ -1,4 +1,4 @@
-package net.myspring.basic.common.dto;
+package net.myspring.common.dto;
 
 import java.io.Serializable;
 

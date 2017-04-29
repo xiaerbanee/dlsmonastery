@@ -1,4 +1,4 @@
-package net.myspring.general.common.dto;
+package net.myspring.common.dto;
 
 /**
  * Created by liuj on 2017/4/8.
@@ -7,6 +7,15 @@ public class NameValueDto {
     private String name;
     private String value;
     private Boolean checked;
+
+    public NameValueDto() {
+
+    }
+
+    public NameValueDto(String name,String value) {
+        this.name = name;
+        this.value = value;
+    }
 
     public String getName() {
         return name;

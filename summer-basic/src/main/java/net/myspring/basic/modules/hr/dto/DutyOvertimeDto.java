@@ -1,10 +1,9 @@
 package net.myspring.basic.modules.hr.dto;
 
-import net.myspring.basic.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.DutyOvertime;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**

@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.sys.web.form;
 
-import net.myspring.cloud.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 
 import java.util.List;

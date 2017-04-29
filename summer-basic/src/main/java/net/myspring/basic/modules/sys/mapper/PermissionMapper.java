@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.sys.mapper;
 
-import net.myspring.basic.common.dto.NameValueDto;
-import net.myspring.basic.common.mybatis.MyMapper;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.PermissionDto;
 import net.myspring.basic.modules.sys.web.query.PermissionQuery;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface PermissionMapper extends MyMapper<Permission,String> {

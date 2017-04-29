@@ -27,6 +27,8 @@ repositories {
 
 
 dependencies {
+	compile project(':global-util')
+	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.2.3.RELEASE'
 	compile('org.springframework.boot:spring-boot-starter')
 	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
 	compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.1.RELEASE'

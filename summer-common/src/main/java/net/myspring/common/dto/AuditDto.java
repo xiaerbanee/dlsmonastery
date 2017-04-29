@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  *******************************************************************************/
-package net.myspring.general.common.dto;
+package net.myspring.common.dto;
 
 
 import net.myspring.util.cahe.annotation.CacheInput;

@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  *******************************************************************************/
-package net.myspring.util.exception;
+package net.myspring.common.exception;
 
 /**
  * Service层公用的Exception.

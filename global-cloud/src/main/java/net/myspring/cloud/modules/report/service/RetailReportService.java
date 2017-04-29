@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.report.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.dto.NameValueDto;
+import net.myspring.common.dto.NameValueDto;
 import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.RetailReportEnum;
 import net.myspring.cloud.common.enums.RetailReportForCostEnum;

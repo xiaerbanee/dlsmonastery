@@ -4,8 +4,7 @@ package net.myspring.basic.modules.sys.web.form;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.domain.Menu;
-import net.myspring.basic.modules.sys.domain.MenuCategory;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
 
 import java.util.List;

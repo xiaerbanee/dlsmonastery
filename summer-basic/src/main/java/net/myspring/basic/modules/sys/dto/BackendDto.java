@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.sys.dto;
 
-import net.myspring.basic.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.sys.domain.Backend;
 
 /**

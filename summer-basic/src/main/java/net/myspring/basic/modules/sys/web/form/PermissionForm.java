@@ -3,7 +3,7 @@ package net.myspring.basic.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Permission;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 

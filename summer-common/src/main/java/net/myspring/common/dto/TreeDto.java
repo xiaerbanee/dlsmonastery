@@ -1,4 +1,4 @@
-package net.myspring.cloud.common.dto;
+package net.myspring.common.dto;
 
 /**
  * Created by liuj on 2016-07-25.

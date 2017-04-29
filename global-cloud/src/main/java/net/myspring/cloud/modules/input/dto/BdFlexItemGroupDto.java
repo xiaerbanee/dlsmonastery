@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.input.dto;
 
-import net.myspring.cloud.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.modules.input.domain.BdFlexItemGroup;
 import net.myspring.util.text.StringUtils;

@@ -2,7 +2,7 @@ package net.myspring.basic.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.sys.dto.BackendModuleDto;
 
 import java.util.List;

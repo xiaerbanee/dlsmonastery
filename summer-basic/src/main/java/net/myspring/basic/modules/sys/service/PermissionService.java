@@ -2,10 +2,8 @@ package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import net.myspring.basic.common.dto.NameValueDto;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.sys.domain.*;
 import net.myspring.basic.modules.sys.dto.PermissionDto;
 import net.myspring.basic.modules.sys.manager.MenuCategoryManager;

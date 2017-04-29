@@ -1,7 +1,7 @@
 package net.myspring.future.modules.basic.dto;
 
 import com.google.common.collect.Lists;
-import net.myspring.future.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.Dealer;
 import net.myspring.future.modules.basic.domain.Depot;
 

@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.sys.mapper;
 
-import net.myspring.basic.common.mybatis.MyMapper;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;

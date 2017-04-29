@@ -1,7 +1,7 @@
-package net.myspring.basic.common.form;
+package net.myspring.common.form;
 
 import net.myspring.mybatis.form.BaseForm;
-import org.apache.commons.lang.StringUtils;
+import net.myspring.util.text.StringUtils;
 
 /**
  * Created by liuj on 2017/4/12.

@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.mapper;
 
-import net.myspring.future.common.mybatis.MyMapper;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.model.ProductImeHistoryModel;
 import org.apache.ibatis.annotations.Mapper;

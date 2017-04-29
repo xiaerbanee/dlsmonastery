@@ -38,7 +38,7 @@
         and t1.created_date &lt;= #{createdDateEnd}
     </select>
 
-    <select id="findByEmployeeIds" resultType="net.myspring.future.common.dto.NameValueDto">
+    <select id="findByEmployeeIds" resultType="net.myspring.common.dto.NameValueDto">
         select t1.employee_id as name,count(*) as value
         FROM crm_product_ime_sale t1
         WHERE t1.employee_id IN

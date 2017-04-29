@@ -1,4 +1,4 @@
-package net.myspring.general.common.dto;
+package net.myspring.general.modules.sys.dto;
 
 import com.google.common.collect.Maps;
 import net.myspring.util.collection.CollectionUtil;

@@ -2,8 +2,7 @@ package net.myspring.basic.modules.sys.web.form;
 
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.common.tree.TreeNode;

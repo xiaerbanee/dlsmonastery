@@ -1,11 +1,9 @@
 package net.myspring.basic.modules.hr.dto;
 
 
-import net.myspring.basic.common.dto.DataDto;
-import net.myspring.basic.common.utils.Const;
+import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.AccountChange;
 import net.myspring.util.cahe.annotation.CacheInput;
-import net.myspring.util.text.StringUtils;
 
 public class AccountChangeDto extends DataDto<AccountChange> {
 

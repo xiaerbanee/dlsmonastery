@@ -1,7 +1,7 @@
 package net.myspring.future.modules.basic.dto;
 
 import com.google.common.collect.Maps;
-import net.myspring.future.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.crm.model.DepotInventoryModel;
 import net.myspring.util.cahe.annotation.CacheInput;

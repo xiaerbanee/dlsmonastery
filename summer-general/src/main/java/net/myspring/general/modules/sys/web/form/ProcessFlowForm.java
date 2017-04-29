@@ -1,7 +1,7 @@
 package net.myspring.general.modules.sys.web.form;
 
-import net.myspring.general.common.dto.IdDto;
-import net.myspring.general.common.form.IdForm;
+import net.myspring.common.dto.IdDto;
+import net.myspring.common.form.IdForm;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
 
 /**

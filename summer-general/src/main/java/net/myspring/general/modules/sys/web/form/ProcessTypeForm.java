@@ -2,7 +2,7 @@ package net.myspring.general.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.general.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.general.modules.sys.domain.ProcessType;
 import net.myspring.general.modules.sys.dto.ProcessFlowDto;
 

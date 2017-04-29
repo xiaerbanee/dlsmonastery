@@ -1,12 +1,8 @@
 package net.myspring.basic.modules.sys.dto;
 
-import net.myspring.basic.common.dto.TreeDto;
-import net.myspring.basic.common.enums.OfficeRuleEnum;
+import net.myspring.common.dto.TreeDto;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.util.cahe.annotation.CacheInput;
-import net.myspring.util.text.StringUtils;
-
-import java.util.Map;
 
 /**
  * Created by wangzm on 2017/4/22.

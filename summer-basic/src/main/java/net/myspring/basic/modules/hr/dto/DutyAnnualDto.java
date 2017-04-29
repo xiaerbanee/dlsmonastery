@@ -1,13 +1,8 @@
 package net.myspring.basic.modules.hr.dto;
 
-import net.myspring.basic.common.dto.DataDto;
-import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.DutyAnnual;
-import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.util.cahe.annotation.CacheInput;
-import net.myspring.util.text.StringUtils;
-
-import java.time.LocalDate;
 
 /**
  * Created by admin on 2017/4/5.

@@ -1,17 +1,10 @@
 package net.myspring.basic.modules.hr.mapper;
 
-import net.myspring.basic.common.dto.NameValueDto;
-import net.myspring.basic.common.mybatis.MyMapper;
-import net.myspring.basic.common.mybatis.MyProvider;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.AccountDto;
-import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
-import net.myspring.mybatis.mapper.CrudMapper;
-import net.myspring.mybatis.provider.CrudProvider;
 import org.apache.ibatis.annotations.*;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -1,6 +1,6 @@
 package net.myspring.future.modules.basic.web.form;
 
-import net.myspring.future.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
 

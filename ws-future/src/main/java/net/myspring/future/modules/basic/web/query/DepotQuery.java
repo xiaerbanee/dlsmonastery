@@ -1,7 +1,7 @@
 package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.HashBiMap;
-import net.myspring.future.common.dto.NameValueDto;
+import net.myspring.common.dto.NameValueDto;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.ExpressCompany;

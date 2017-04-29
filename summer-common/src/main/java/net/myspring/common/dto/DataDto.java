@@ -1,4 +1,4 @@
-package net.myspring.cloud.common.dto;
+package net.myspring.common.dto;
 
 import net.myspring.util.cahe.annotation.CacheInput;
 
@@ -73,5 +73,4 @@ public class DataDto<T> extends IdDto<T> {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
 }

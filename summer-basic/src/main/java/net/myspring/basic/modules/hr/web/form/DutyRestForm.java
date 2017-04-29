@@ -2,9 +2,8 @@ package net.myspring.basic.modules.hr.web.form;
 
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.enums.DutyRestTypeEnum;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.hr.domain.DutyRest;
-import net.myspring.basic.common.form.DataForm;
 
 /**
  * Created by admin on 2017/4/6.

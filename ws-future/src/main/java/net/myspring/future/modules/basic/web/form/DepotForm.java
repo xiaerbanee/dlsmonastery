@@ -1,8 +1,8 @@
 package net.myspring.future.modules.basic.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.future.common.dto.NameValueDto;
-import net.myspring.future.common.form.DataForm;
+import net.myspring.common.dto.NameValueDto;
+import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Pricesystem;
