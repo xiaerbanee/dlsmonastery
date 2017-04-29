@@ -82,7 +82,7 @@
           jointType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}]
         },
         remoteLoading: false,
-        officeTypeMap:new Map(),
+        officeRuleMap:new Map(),
         treeData:[],
         checked:[],
         defaultProps: {
@@ -130,8 +130,8 @@
         }
         this.inputForm.officeIdStr=officeIdList.join();
       },typeChange(evl){
-          var officeType=this.officeTypeMap.get(evl);
-          if(officeType!=null&&officeType.typeLabel=="后勤部门"){
+          var officeRule=this.officeRuleMap.get(evl);
+          if(officeRule!=null&&officeRule.type=="SUPPORT"){
             axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
               this.treeData =new Array(response.data);
               this.checked = response.data.checked;
@@ -150,10 +150,10 @@
         if (response.data.parentId != null) {
           this.offices = new Array({id: response.data.parentId, name: response.data.parentName})
         }
-        if(this.inputForm.officeTypeList!=null&&this.inputForm.officeTypeList.length>0){
-            for(var index in this.inputForm.officeTypeList){
-              var officeType=this.inputForm.officeTypeList[index];
-              this.officeTypeMap.set(officeType.value.toString(),officeType);
+        if(this.inputForm.officeRuleList!=null&&this.inputForm.officeRuleList.length>0){
+            for(var index in this.inputForm.officeRuleList){
+              var officeRule=this.inputForm.officeRuleList[index];
+              this.officeRuleMap.set(officeRule.id.toString(),officeRule);
             }
         }
       })

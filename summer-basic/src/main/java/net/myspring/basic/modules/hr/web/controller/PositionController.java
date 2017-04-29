@@ -79,7 +79,7 @@ public class PositionController {
     @RequestMapping(value = "saveAuthorityList")
     public RestResponse saveAuthorityList(PositionForm positionForm, String permissionIdStr) {
         positionForm.setPermissionIdList(StringUtils.getSplitList(permissionIdStr, Const.CHAR_COMMA));
-        positionService.savePositionAndModule(positionForm);
+        positionService.savePositionAndPermission(positionForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 

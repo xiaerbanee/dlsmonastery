@@ -85,7 +85,7 @@ public class OfficeService {
             Office office = officeMapper.findOne(officeForm.getId());
             officeForm= BeanUtil.map(office,OfficeForm.class);
             OfficeRule officeRule=officeRuleMapper.findOne(office.getOfficeRuleId());
-            if(officeRule!=null&& OfficeRuleEnum.SUPPORT_OFFICE.toString().equals(officeRule.getType())){
+            if(officeRule!=null&& OfficeRuleEnum.SUPPORT.name().equals(officeRule.getType())){
                 List<String> businessOffices=officeBusinessMapper.findBusinessIdById(office.getId());
                 officeForm.setOfficeTree(getOfficeTree(businessOffices));
             }
