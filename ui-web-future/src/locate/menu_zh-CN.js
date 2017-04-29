@@ -12,11 +12,11 @@ export default {
       businessBasicModule:"基础",
       businessWorkModule:"业务",
       businessPlanningModule:"企划",
-      factoryBasicModule:"基础",
-      cloudReportModule:"报表",
       businessReportModule:"报表",
+      cloudReportModule:"报表",
       cloudInputModule:"财务",
-      cloudSysModule:"系统"
+      cloudSysModule:"系统",
+      factoryBasicModule:"基础",
     },
     menuCategory:{
       hrCategory:"人事管理",
