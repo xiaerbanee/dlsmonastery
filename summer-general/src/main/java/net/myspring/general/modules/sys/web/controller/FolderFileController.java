@@ -2,12 +2,12 @@ package net.myspring.general.modules.sys.web.controller;
 
 import com.mongodb.gridfs.GridFSDBFile;
 import net.myspring.general.modules.sys.domain.Folder;
-import net.myspring.general.common.exception.ServiceException;
 import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.general.modules.sys.dto.FolderFileDto;
 import net.myspring.general.modules.sys.service.FolderFileService;
 import net.myspring.general.modules.sys.service.FolderService;
 import net.myspring.general.modules.sys.web.query.FolderFileQuery;
+import net.myspring.util.exception.ServiceException;
 import net.myspring.util.text.EncodeUtil;
 import net.myspring.util.text.StringUtils;
 import org.slf4j.Logger;

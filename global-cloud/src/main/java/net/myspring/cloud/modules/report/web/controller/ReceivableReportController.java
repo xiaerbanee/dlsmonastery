@@ -3,9 +3,11 @@ package net.myspring.cloud.modules.report.web.controller;
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.DateFormat;
+import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.report.dto.ReceivableForDetailDto;
 import net.myspring.cloud.modules.report.dto.ReceivableForSummaryDto;
 import net.myspring.cloud.modules.report.service.ReceivableReportService;
+import net.myspring.cloud.modules.report.web.form.ReceivableSummaryReportForm;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -22,13 +24,13 @@ import java.util.List;
  * Created by lihx on 2016/12/20.
  */
 @RestController
-@RequestMapping(value="cloud/receivableReport")
+@RequestMapping(value="report/receivableReport")
 public class ReceivableReportController {
     @Autowired
     private ReceivableReportService receivableReportService;
 
     @RequestMapping(value="summaryList")
-    public String summaryList(Model model, String dateRange, String companyName) {
+    public ReceivableSummaryReportForm summaryList(String dateRange) {
         List<ReceivableForSummaryDto> receivableReportForSummaryList = Lists.newArrayList();
         LocalDate dateStart = LocalDate.now().minusDays(7L);
         LocalDate dateEnd = LocalDate.now().minusDays(1L);
@@ -37,13 +39,14 @@ public class ReceivableReportController {
             dateStart = LocalDate.parse(dates[0], DateTimeFormatter.ofPattern(DateFormat.DATE.getValue()));
             dateEnd = LocalDate.parse(dates[1], DateTimeFormatter.ofPattern(DateFormat.DATE.getValue()));
         }
-        if (StringUtils.isNotBlank(companyName)) {
+        String companyId = SecurityUtils.getCompanyId();
+        if (StringUtils.isNotBlank(companyId)) {
             receivableReportForSummaryList = receivableReportService.getSummaryList(dateStart, dateEnd);
         }
-        model.addAttribute("receivableReportForSummaryList", receivableReportForSummaryList);
-        model.addAttribute("dateRange", dateStart + CharEnum.WAVE_LINE.getValue() + dateEnd);
-        model.addAttribute("companyName", companyName);
-        return "cloud/receivableReportForSummaryList";
+        ReceivableSummaryReportForm form = new ReceivableSummaryReportForm();
+        form.setReceivableForSummaryList(receivableReportForSummaryList);
+        form.setDateRange(dateStart + CharEnum.WAVE_LINE.getValue() + dateEnd);
+        return form;
     }
 
     @RequestMapping(value = "detailList")

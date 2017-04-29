@@ -21,7 +21,6 @@ public class AccountDto extends DataDto<Account> {
     private String leaderId;
     private String employeeId;
     private String companyId;
-    private boolean viewReport;
     private List<String> officeIdList= Lists.newArrayList();
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
@@ -140,14 +139,6 @@ public class AccountDto extends DataDto<Account> {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public boolean getViewReport() {
-        return viewReport;
-    }
-
-    public void setViewReport(boolean viewReport) {
-        this.viewReport = viewReport;
     }
 
     public String getEmployeeStatus() {
