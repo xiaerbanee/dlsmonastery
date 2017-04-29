@@ -19,12 +19,18 @@ public class AuditFileDto extends DataDto<AuditFile> {
 
     @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
-
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
-
     @CacheInput(inputKey = "processTypes",inputInstance = "processTypeId",outputInstance = "name")
     private String processTypeName;
+
+    public String getProcessTypeId() {
+        return processTypeId;
+    }
+
+    public void setProcessTypeId(String processTypeId) {
+        this.processTypeId = processTypeId;
+    }
 
     public String getAreaId() {
         return areaId;
