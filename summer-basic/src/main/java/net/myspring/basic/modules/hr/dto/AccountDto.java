@@ -5,8 +5,10 @@ import net.myspring.basic.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.time.LocalDateTimeUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +23,6 @@ public class AccountDto extends DataDto<Account> {
     private String leaderId;
     private String employeeId;
     private String companyId;
-    private boolean viewReport;
     private List<String> officeIdList= Lists.newArrayList();
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
@@ -30,7 +31,7 @@ public class AccountDto extends DataDto<Account> {
     @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
     private String leaderName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "regularDate")
-    private String regularDate;
+    private LocalDate regularDate;
     @CacheInput(inputKey = "companys",inputInstance = "companyId",outputInstance = "name")
     private String companyName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
@@ -126,11 +127,11 @@ public class AccountDto extends DataDto<Account> {
         this.leaderName = leaderName;
     }
 
-    public String getRegularDate() {
+    public LocalDate getRegularDate() {
         return regularDate;
     }
 
-    public void setRegularDate(String regularDate) {
+    public void setRegularDate(LocalDate regularDate) {
         this.regularDate = regularDate;
     }
 
@@ -142,13 +143,6 @@ public class AccountDto extends DataDto<Account> {
         this.type = type;
     }
 
-    public boolean getViewReport() {
-        return viewReport;
-    }
-
-    public void setViewReport(boolean viewReport) {
-        this.viewReport = viewReport;
-    }
 
     public String getEmployeeStatus() {
         return employeeStatus;

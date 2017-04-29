@@ -35,6 +35,4 @@ public interface OfficeMapper extends MyMapper<Office,String> {
 
     Office findByOfficeIdAndRuleId(@Param("officeId") String officeId,@Param("officeRuleId") String officeRuleId);
 
-    List<Office> getTopLevelOffice(List<String> officeIds);
-
 }
