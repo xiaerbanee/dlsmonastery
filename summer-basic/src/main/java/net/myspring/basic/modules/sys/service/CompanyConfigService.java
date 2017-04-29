@@ -54,7 +54,7 @@ public class CompanyConfigService {
     public String getValueByCode(String code){
         CompanyConfig companyConfig=companyConfigMapper.findByCode(code);
         if(companyConfig!=null){
-            return companyConfig.toString();
+            return companyConfig.getValue();
         }
         return "";
     }
