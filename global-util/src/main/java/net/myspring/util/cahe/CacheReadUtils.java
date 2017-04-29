@@ -1,5 +1,6 @@
 package net.myspring.util.cahe;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -9,6 +10,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -20,7 +22,10 @@ import org.springframework.util.ReflectionUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
@@ -92,15 +97,16 @@ public class CacheReadUtils {
                             if(cacheMap.containsKey(key)) {
                                 Map<String,Object> map = (Map<String, Object>) ((List)cacheMap.get(key)).get(1);
                                 Object cacheInputFieldValue = map.get(cacheInputObject.getCacheInputField().getOutputInstance());
+                                Field outputField =cacheInputObject.getCacheInputField().getOutputField();
                                 if(isCollection) {
-                                    Object localFieldValue = ReflectionUtil.getFieldValue(cacheInputObject.getObject(), cacheInputObject.getCacheInputField().getOutputField());
+                                    Object localFieldValue = ReflectionUtil.getFieldValue(cacheInputObject.getObject(), outputField);
                                     if (CollectionUtil.isEmpty((Collection) localFieldValue)) {
                                         localFieldValue = Lists.newArrayList();
                                     }
-                                    ((Collection) localFieldValue).add(cacheInputFieldValue);
-                                    ReflectionUtils.setField(cacheInputObject.getCacheInputField().getOutputField(), cacheInputObject.getObject(), localFieldValue);
+                                    ((Collection) localFieldValue).add(getConvertObject(cacheInputFieldValue,outputField.getClass()));
+                                    ReflectionUtils.setField(outputField, cacheInputObject.getObject(), localFieldValue);
                                 } else {
-                                    ReflectionUtils.setField(cacheInputObject.getCacheInputField().getOutputField(), cacheInputObject.getObject(), cacheInputFieldValue);
+                                    ReflectionUtils.setField(outputField, cacheInputObject.getObject(), getConvertObject(cacheInputFieldValue,outputField.getClass()));
                                 }
                             }
                         }
@@ -111,6 +117,41 @@ public class CacheReadUtils {
             logger.info("read cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
             logger.info("read cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");
         }
+    }
+
+    private static Object getConvertObject(Object input,Class clazz) {
+        Object result;
+        if(input instanceof String) {
+           String inputStr = (String)input;
+            if(clazz == String.class) {
+                result =inputStr;
+            } else if(clazz == LocalDate.class) {
+                result = LocalDateUtils.parse(inputStr);
+            } else if(clazz == LocalDateTime.class) {
+                result = LocalDateTimeUtils.parse(inputStr);
+            } else if(clazz == LocalTime.class) {
+                result = LocalTime.parse(inputStr);
+            } else if(clazz == Integer.class) {
+                result = Integer.valueOf(inputStr);
+            } else if(clazz == Long.class) {
+                result = Long.valueOf(inputStr);
+            } else if(clazz == Double.class) {
+                result = Double.valueOf(inputStr);
+            } else if(clazz == BigDecimal.class) {
+                result = new BigDecimal(inputStr);
+            } else if(clazz == Boolean.class) {
+                result = Boolean.valueOf(inputStr);
+            } else if(clazz == Float.class) {
+                result = Float.valueOf(inputStr);
+            } else if(clazz == Short.class) {
+                result = Short.valueOf(inputStr);
+            } else {
+                result =inputStr;
+            }
+        } else {
+            result = input;
+        }
+        return result;
     }
 
     public static Map<String,Object> getCacheMap(RedisTemplate redisTemplate, List<String> keyList) {
