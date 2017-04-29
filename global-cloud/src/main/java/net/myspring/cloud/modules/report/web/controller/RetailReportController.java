@@ -21,7 +21,7 @@ import java.util.List;
  * Created by lihx on 2017/2/10.
  */
 @Controller
-@RequestMapping(value = "cloud/retailReport17")
+@RequestMapping(value = "report/retailReport17")
 public class RetailReportController {
     @Autowired
     private RetailReportForAssistService retailReportForAssistService;

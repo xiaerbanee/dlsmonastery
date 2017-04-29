@@ -84,7 +84,7 @@ export default {
   },
   OfficeRuleEnum:{
     BUSINESS_OFFICE:"业务部门",
-    REAR_OFFICE:"后勤部门",
+    SUPPORT_OFFICE:"后勤部门",
   },
   WorkTimeTypeEnum:{
     PUNCH_THE_CLOCK:"打卡",

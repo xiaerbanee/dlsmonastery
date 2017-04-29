@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "cloud/consignmentReport")
+@RequestMapping(value = "report/consignmentReport")
 public class ConsignmentReportController {
     @Autowired
     private ConsignmentReportService consignmentReportService;
