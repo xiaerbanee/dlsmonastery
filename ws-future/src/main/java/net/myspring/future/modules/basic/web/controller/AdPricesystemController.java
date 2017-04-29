@@ -20,28 +20,28 @@ public class AdPricesystemController {
     private AdPricesystemService adPricesystemService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Pageable pageable, AdPricesystemQuery adPricesystemQuery){
+    public Page list(Pageable pageable, AdPricesystemQuery adPricesystemQuery){
         Page<AdPricesystemDto> page = adPricesystemService.findPage(pageable,adPricesystemQuery);
-        return ObjectMapperUtils.writeValueAsString(page);
+        return page;
     }
 
     @RequestMapping(value = "save")
-    public String save(AdPricesystemForm adPricesystemForm){
+    public RestResponse save(AdPricesystemForm adPricesystemForm){
         adPricesystemService.save(adPricesystemForm);
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("保存成功", ResponseCodeEnum.saved.name()));
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
 
     }
 
     @RequestMapping(value = "delete")
-    public String delete(AdPricesystemForm adPricesystemForm) {
+    public RestResponse delete(AdPricesystemForm adPricesystemForm) {
         adPricesystemService.delete(adPricesystemForm);
         RestResponse restResponse=new RestResponse("删除成功",ResponseCodeEnum.removed.name());
-        return ObjectMapperUtils.writeValueAsString(restResponse);
+        return restResponse;
     }
 
     @RequestMapping(value = "findForm")
-    public String findOne(AdPricesystemForm adPricesystemForm){
+    public AdPricesystemForm findOne(AdPricesystemForm adPricesystemForm){
         adPricesystemForm=adPricesystemService.findForm(adPricesystemForm);
-        return ObjectMapperUtils.writeValueAsString(adPricesystemForm);
+        return adPricesystemForm;
     }
 }

@@ -23,7 +23,7 @@ import java.util.List;
 public class ObjectMapperUtils {
     private static Logger logger = LoggerFactory.getLogger(ObjectMapperUtils.class);
 
-    private static ObjectMapper objectMapper = getObjectMapper();
+    private static final ObjectMapper objectMapper = getObjectMapper();
 
     public static ObjectMapper getObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -62,26 +62,6 @@ public class ObjectMapperUtils {
         T t = null;
         try {
             t = objectMapper.readValue(json, clazz);
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-        }
-        return t;
-    }
-
-    public static  <T>  List<T> readValueToBeanList(String json, Class<T> clazz) {
-        JavaType javaType = ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, clazz);
-        return readValueToBeanList(objectMapper, json, javaType);
-    }
-
-
-    public static  <T> List<T> readValueToBeanList(ObjectMapper objectMapper, String json, JavaType javaType) {
-        List<T> t = Lists.newArrayList();
-        try {
-            Object o = objectMapper.readValue(json, javaType);
-            if(o!=null){
-                t= (List<T>) o;
-            }
         } catch (IOException e) {
             e.printStackTrace();
             logger.error(e.getMessage());

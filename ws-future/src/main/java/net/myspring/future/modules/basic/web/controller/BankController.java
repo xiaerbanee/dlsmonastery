@@ -37,9 +37,9 @@ public class BankController {
     }
 
     @RequestMapping(value = "syn")
-    public String syn(){
+    public RestResponse syn(){
         bankService.syn();
-        return ObjectMapperUtils.writeValueAsString(new RestResponse("同步成功",null));
+        return new RestResponse("同步成功",null);
     }
 
     @RequestMapping(value = "delete")
