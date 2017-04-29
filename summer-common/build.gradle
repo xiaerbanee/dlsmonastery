@@ -15,7 +15,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 jar {
-	baseName = 'summer-bean'
+	baseName = 'summer-common'
 	version = '1.0.0-RELEASE'
 }
 
