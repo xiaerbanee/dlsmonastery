@@ -17,9 +17,9 @@ public class LocalDateTimeUtils {
     public static final String FORMATTER_MINUTE = "yyyy-MM-dd HH:mm";
     public static final String FORMATTER_MILLISECOND = "yyyy-MM-dd HH:mm:ss.SSS";
 
-    private static Pattern PATTERN_REGEX_MINUTE = Pattern.compile("^\\d4-\\d2-\\d2 \\d2:\\d2$");
-    private static Pattern PATTERN_REGEX_SECOND = Pattern.compile("^\\d4-\\d2-\\d2 \\d2:\\d2:\\d2$");
-    private static Pattern PATTERN_REGEX_MILLISECOND = Pattern.compile("^\\d4-\\d2-\\d2 \\d2:\\d2\\.\\d3$");
+    private static Pattern PATTERN_REGEX_MINUTE = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}$");
+    private static Pattern PATTERN_REGEX_SECOND = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$");
+    private static Pattern PATTERN_REGEX_MILLISECOND = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}\\.\\d{3}$");
 
 
     public static String format(LocalDateTime localDateTime) {

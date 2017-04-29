@@ -15,9 +15,9 @@ public class LocalTimeUtils {
     public static final String FORMATTER_MINUTE = "HH:mm";
     public static final String FORMATTER_MILLISECOND= "HH:mm:ss.SSS";
 
-    private static Pattern PATTERN_REGEX_MINUTE =Pattern.compile("^\\d2:\\d2$");
-    private static Pattern PATTERN_REGEX_SECOND =Pattern.compile("^\\d2:\\d2:\\d2$");
-    private static Pattern PATTERN_REGEX_MILLISECOND =Pattern.compile("^\\d2:\\d2\\.\\d3$");
+    private static Pattern PATTERN_REGEX_MINUTE =Pattern.compile("^\\d{2}:\\d{2}$");
+    private static Pattern PATTERN_REGEX_SECOND =Pattern.compile("^\\d{2}:\\d{2}:\\d{2}$");
+    private static Pattern PATTERN_REGEX_MILLISECOND =Pattern.compile("^\\d{2}:\\d{2}\\.\\d{3}$");
 
 
     public static String format(LocalTime localTime) {
