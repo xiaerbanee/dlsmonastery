@@ -40,16 +40,9 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-                .withClient("summer-client")
-                .secret("summer-client@123456")
-                .authorizedGrantTypes("client_credentials", "refresh_token")
-                .scopes("server")
-         .and().withClient("web_app")
+        clients.inMemory().withClient("web_app")
                 .secret("web_app")
-                .scopes("FOO")
                 .autoApprove(true)
-                .authorities("FOO_READ", "FOO_WRITE")
                 .authorizedGrantTypes("implicit","refresh_token", "password", "authorization_code")
                 .accessTokenValiditySeconds(120*60);
     }

@@ -18,7 +18,6 @@ public class TableDto {
     private ColumnDto lastModifiedByColumn;
     private ColumnDto LastModifiedDateColumn;
     private ColumnDto versionColumn;
-    private ColumnDto autoAuditingColumn;
     private Map<String,ColumnDto> columnMap = Maps.newHashMap();
 
     public String getJdbcTable() {
@@ -84,16 +83,6 @@ public class TableDto {
     public void setVersionColumn(ColumnDto versionColumn) {
         this.versionColumn = versionColumn;
     }
-
-
-    public ColumnDto getAutoAuditingColumn() {
-        return autoAuditingColumn;
-    }
-
-    public void setAutoAuditingColumn(ColumnDto autoAuditingColumn) {
-        this.autoAuditingColumn = autoAuditingColumn;
-    }
-
 
     public Map<String, ColumnDto> getColumnMap() {
         return columnMap;

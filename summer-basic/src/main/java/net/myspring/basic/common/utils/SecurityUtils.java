@@ -53,12 +53,9 @@ public class SecurityUtils {
     
     private  static Map<String, Object> getAdditionalInformation() {
         Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
-        Map<String,Object> map = Maps.newHashMap();
-        if(details instanceof  OAuth2AuthenticationDetails) {
-            OAuth2AuthenticationDetails oAuth2AuthenticationDetails = (OAuth2AuthenticationDetails)details;
-            Jwt jwt = JwtHelper.decode(oAuth2AuthenticationDetails.getTokenValue());
-            map = ObjectMapperUtils.readValue(jwt.getClaims(),Map.class);
-        }
+        OAuth2AuthenticationDetails oAuth2AuthenticationDetails = (OAuth2AuthenticationDetails)details;
+        Jwt jwt = JwtHelper.decode(oAuth2AuthenticationDetails.getTokenValue());
+        Map<String,Object> map = ObjectMapperUtils.readValue(jwt.getClaims(),Map.class);
         return map;
     }
 }

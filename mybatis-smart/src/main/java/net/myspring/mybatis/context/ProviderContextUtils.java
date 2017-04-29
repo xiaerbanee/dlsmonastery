@@ -74,9 +74,6 @@ public class ProviderContextUtils {
                         columnDto.setTableDto(tableDto);
                         tableDto.getColumnList().add(columnDto);
                     }
-                    if(field.getAnnotation(AutoAuditing.class) != null) {
-                        tableDto.setAutoAuditingColumn(columnDto);
-                    }
                 }
                 tableDtoMap.put(key, tableDto);
             }
