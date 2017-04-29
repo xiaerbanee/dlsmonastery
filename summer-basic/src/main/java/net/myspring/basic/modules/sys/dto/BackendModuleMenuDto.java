@@ -15,7 +15,16 @@ public class BackendModuleMenuDto {
     private String id;
     private String name;
     private String code;
+    private String icon;
     private List<MenuCategoryMenuDto> menuCategoryList= Lists.newArrayList();
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
     public String getName() {
         return name;
