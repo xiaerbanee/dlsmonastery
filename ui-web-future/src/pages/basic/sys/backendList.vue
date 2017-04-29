@@ -23,6 +23,7 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('backendList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('backendList.id')" sortable width="150"></el-table-column>
+        <el-table-column prop="code" :label="$t('backendList.code')"></el-table-column>
         <el-table-column prop="name" :label="$t('backendList.name')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('backendList.remarks')"></el-table-column>
         <el-table-column prop="createdByName" :label="$t('backendList.createdBy')"></el-table-column>

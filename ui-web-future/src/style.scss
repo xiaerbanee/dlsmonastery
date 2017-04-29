@@ -119,20 +119,35 @@
     overflow: hidden;
     cursor: pointer;
   }
-  a.crm {
-    background: transparent url(./assets/category/crm.png) top center no-repeat;
+  a.basicHr {
+    background: transparent url(./assets/category/basicHr.png) top center no-repeat;
   }
-  a.hr {
-    background: transparent url(./assets/category/hr.png) top center no-repeat;
+  a.basicSys {
+    background: transparent url(./assets/category/basicSys.png) top center no-repeat;
   }
-  a.out {
-    background: transparent url(./assets/category/out.png) top center no-repeat;
+  a.businessSale {
+    background: transparent url(./assets/category/businessSale.png) top center no-repeat;
   }
-  a.sal {
-    background: transparent url(./assets/category/sal.png) top center no-repeat;
+  a.cloudInput {
+    background: transparent url(./assets/category/cloudInput.png) top center no-repeat;
   }
-  a.sys {
-    background: transparent url(./assets/category/sys.png) top center no-repeat;
+  a.cloudReport {
+    background: transparent url(./assets/category/cloudReport.png) top center no-repeat;
+  }
+  a.cloudSys {
+    background: transparent url(./assets/category/cloudSys.png) top center no-repeat;
+  }
+  a.factoryBasic {
+    background: transparent url(./assets/category/factoryBasic.png) top center no-repeat;
+  }
+  a.businessReport {
+    background: transparent url(./assets/category/businessReport.png) top center no-repeat;
+  }
+  a.businessPlanning {
+    background: transparent url(./assets/category/businessPlanning.png) top center no-repeat;
+  }
+  a.businessWork {
+    background: transparent url(./assets/category/businessWork.png) top center no-repeat;
   }
   a:hover {
     background-color: #1C588E;

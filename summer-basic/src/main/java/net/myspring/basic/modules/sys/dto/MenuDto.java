@@ -1,16 +1,8 @@
 package net.myspring.basic.modules.sys.dto;
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.dto.DataDto;
-import net.myspring.basic.common.utils.Const;
-import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.sys.domain.Menu;
-import net.myspring.basic.modules.sys.domain.MenuCategory;
-import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.util.cahe.annotation.CacheInput;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
 
 /**
  * Created by admin on 2017/4/5.

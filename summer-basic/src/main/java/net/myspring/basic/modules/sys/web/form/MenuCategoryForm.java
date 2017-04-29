@@ -3,7 +3,6 @@ package net.myspring.basic.modules.sys.web.form;
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.common.form.DataForm;
-import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.dto.BackendModuleDto;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
  */
 
 public class MenuCategoryForm extends DataForm<MenuCategory> {
-
     private String name;
     private Integer sort;
     private String remarks;

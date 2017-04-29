@@ -9,10 +9,19 @@ import net.myspring.util.cahe.annotation.CacheInput;
  * Created by wangzm on 2017/4/19.
  */
 public class BackendModuleDto extends DataDto<BackendModule> {
+    private String code;
     private String name;
     private String backendId;
     @CacheInput(inputKey = "backends",inputInstance = "backendId",outputInstance = "name")
     private String backendName;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getName() {
         return name;

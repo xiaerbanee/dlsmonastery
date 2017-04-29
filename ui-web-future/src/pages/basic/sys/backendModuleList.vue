@@ -26,8 +26,9 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('backendModuleList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('backendModuleList.id')" sortable width="150"></el-table-column>
+        <el-table-column prop="code" :label="$t('backendModuleList.code')"></el-table-column>
         <el-table-column prop="name" :label="$t('backendModuleList.name')"></el-table-column>
-        <el-table-column prop="backendName" label="项目名称"></el-table-column>
+        <el-table-column prop="backendName" :label="$t('backendModuleList.backendName')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('backendModuleList.remarks')"></el-table-column>
         <el-table-column prop="createdByName" :label="$t('backendModuleList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('backendModuleList.createdDate')"></el-table-column>

@@ -25,8 +25,10 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('menuCategoryList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('menuCategoryList.name')" sortable width="150"></el-table-column>
-        <el-table-column  prop="backendModuleName" label="所属模块"></el-table-column>
+        <el-table-column fixed prop="code" :label="$t('menuCategoryList.code')" sortable width="200"></el-table-column>
+        <el-table-column prop="name" :label="$t('menuCategoryList.name')"></el-table-column>
+        <el-table-column prop="backendModuleCode" :label="$t('menuCategoryList.backendModuleCode')"></el-table-column>
+        <el-table-column prop="backendModuleName" :label="$t('menuCategoryList.backendModuleName')"></el-table-column>
         <el-table-column prop="sort" :label="$t('menuCategoryList.sort')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('menuCategoryList.remarks')"></el-table-column>
         <el-table-column prop="locked" :label="$t('menuCategoryList.locked')" width="120">

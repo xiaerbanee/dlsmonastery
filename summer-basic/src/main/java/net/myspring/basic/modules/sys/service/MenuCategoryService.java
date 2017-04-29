@@ -34,7 +34,7 @@ public class MenuCategoryService {
 
     public MenuCategoryForm findForm(MenuCategoryForm menuCategoryForm){
         if(!menuCategoryForm.isCreate()){
-            MenuCategory menuCategory=menuCategoryMapper.findOne(menuCategoryForm.getId());
+            MenuCategory menuCategory = menuCategoryMapper.findOne(menuCategoryForm.getId());
             menuCategoryForm= BeanUtil.map(menuCategory,MenuCategoryForm.class);
             cacheUtils.initCacheInput(menuCategoryForm);
         }

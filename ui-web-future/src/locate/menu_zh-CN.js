@@ -3,19 +3,20 @@ export default {
     backend:{
       basicManager:"基础管理",
       businessManager:"业务管理",
-      cloudManager:"金蝶管理"
+      cloudManager:"金蝶管理",
+      factoryManager:"工厂对接",
     },
     backendModule:{
-      sysCategory:"系统",
-      hrCategory:"人事",
-      saleCategory:"基础",
-      ywCategory:"业务",
-      qhCategory:"企划",
-      jcCategory:"基础",
-      cloudReportCategory:"财务",
-      jdbbCategory:"报表",
-      cloudInputCategory:"财务",
-      cloudSysCategory:"系统"
+      basicSysModule:"系统",
+      basicHrModule:"人事",
+      businessBasicModule:"基础",
+      businessWorkModule:"业务",
+      businessPlanningModule:"企划",
+      businessReportModule:"报表",
+      cloudReportModule:"报表",
+      cloudInputModule:"财务",
+      cloudSysModule:"系统",
+      factoryBasicModule:"基础",
     },
     menuCategory:{
       hrCategory:"人事管理",

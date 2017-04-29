@@ -1,13 +1,18 @@
 package net.myspring.util.cahe;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.time.LocalDateTimeUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.ReflectionUtils;
@@ -15,6 +20,8 @@ import org.springframework.util.ReflectionUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +31,7 @@ import java.util.Set;
  * Created by liuj on 2017/3/31.
  */
 public class CacheReadUtils {
+    private static Logger logger = LoggerFactory.getLogger(CacheReadUtils.class);
     //表结构缓存
     private static Map<String, List<CacheInputField>> cacheInputMap = Maps.newHashMap();
 
@@ -32,6 +40,8 @@ public class CacheReadUtils {
     }
 
     public static void initCacheInput(RedisTemplate redisTemplate, Collection objects) {
+        LocalDateTime start = LocalDateTime.now();
+        logger.info("read cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         Class clazz;
         List<Object> list;
         if (CollectionUtils.isNotEmpty(objects)) {
@@ -80,7 +90,8 @@ public class CacheReadUtils {
                         boolean isCollection = cacheInputObject.getCacheInputField().getCollection();
                         for(String key:cacheInputObject.getKeyList()) {
                             if(cacheMap.containsKey(key)) {
-                                Object cacheInputFieldValue = ReflectionUtil.getFieldValue(cacheMap.get(key),cacheInputObject.getCacheInputField().getOutputInstance());
+                                Map<String,Object> map = (Map<String, Object>) ((List)cacheMap.get(key)).get(1);
+                                Object cacheInputFieldValue = map.get(cacheInputObject.getCacheInputField().getOutputInstance());
                                 if(isCollection) {
                                     Object localFieldValue = ReflectionUtil.getFieldValue(cacheInputObject.getObject(), cacheInputObject.getCacheInputField().getOutputField());
                                     if (CollectionUtil.isEmpty((Collection) localFieldValue)) {
@@ -96,6 +107,9 @@ public class CacheReadUtils {
                     }
                 }
             }
+            LocalDateTime end = LocalDateTime.now();
+            logger.info("read cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
+            logger.info("read cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");
         }
     }
 
@@ -131,13 +145,8 @@ public class CacheReadUtils {
     private static Object deSerialize(byte[] bytes) {
         Object object = null;
         if (bytes != null) {
-            try {
-                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-                ObjectInputStream ois = new ObjectInputStream(byteArrayInputStream);
-                object = ois.readObject();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            String json = new String(bytes);
+            object = ObjectMapperUtils.readValue(json,Object.class);
         }
         return object;
     }

@@ -273,7 +273,10 @@ export default {
   },
   menuCategoryList: {
     menuCategoryList: "菜单分组",
+    code:"code",
     name: "名称",
+    backendModuleCode:"所属模块",
+    backendModuleName:"所属模块名称",
     sort: "排序",
     add: "添加",
     filter: "过滤",
@@ -486,6 +489,7 @@ export default {
   },
   backendModuleForm: {
     backendModuleForm: "后台项目模块编辑",
+    code:"code",
     name: "名称",
     inputKey: "请输入关键字",
     inputWord: "请输入关键词",
@@ -500,7 +504,9 @@ export default {
   backendModuleList: {
     backendModuleList: "后台项目模块",
     id: "编号",
+    code:"code",
     name: "名称",
+    backendName:"项目名称",
     add: "添加",
     filter: "过滤",
     export: "导出",
@@ -527,6 +533,7 @@ export default {
   },
   backendForm: {
     backendForm: "后台项目编辑",
+    code:"code",
     name: "名称",
     inputKey: "请输入关键字",
     inputWord: "请输入关键词",
@@ -542,6 +549,7 @@ export default {
     backendList: "后台项目",
     name: "名称",
     id: "编号",
+    code:"code",
     add: "添加",
     filter: "过滤",
     export: "导出",
