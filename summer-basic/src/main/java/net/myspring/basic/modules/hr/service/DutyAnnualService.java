@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.service;
 import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.common.utils.CacheUtils;
@@ -15,6 +16,7 @@ import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.DutyAnnualMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
+import net.myspring.basic.modules.hr.web.form.DutyAnnualForm;
 import net.myspring.basic.modules.hr.web.query.DutyAnnualQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -27,6 +29,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +55,8 @@ public class DutyAnnualService {
     private CacheUtils cacheUtils;
     @Autowired
     private GridFsTemplate exportGridFsTemplate;
+    @Autowired
+    private GridFsTemplate storageGridFsTemplate;
 
     public Double getAvailableHour(String  employeeId) {
         DutyAnnual dutyAnnual = dutyAnnualMapper.findByEmployee(employeeId);
@@ -83,28 +89,28 @@ public class DutyAnnualService {
         return StringUtils.toString(gridFSFile.getId());
     }
 
-    public void save(File file, String annualYear, String remarks){
-        Workbook workbook= getWorkbook(file);
+    public void save(String mongoId, String annualYear, String remarks){
+        GridFSDBFile gridFSDBFile = storageGridFsTemplate.findOne(new Query(Criteria.where("_id").is(mongoId)));
+        Workbook workbook= ExcelUtils.getWorkbook(gridFSDBFile.getFilename(),gridFSDBFile.getInputStream());
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn("name","用户名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn("employeeName","用户名"));
         simpleExcelColumnList.add(new SimpleExcelColumn("loginName","登录名"));
         simpleExcelColumnList.add(new SimpleExcelColumn("hour","年假时间"));
         simpleExcelColumnList.add(new SimpleExcelColumn("leftHour","剩余时间"));
         if(workbook!=null){
-            List<DutyAnnual> list = doRead(workbook.getSheetAt(0), simpleExcelColumnList, DutyAnnual.class);
-            List<DutyAnnualDto> dutyAnnualDtoList=BeanUtil.map(list,DutyAnnualDto.class);
-            cacheUtils.initCacheInput(dutyAnnualDtoList);
-            List<Account> accountList= CollectionUtil.extractToList(CollectionUtil.extractToList(list,"employee"),"account");
-            List<String> loginNameList=CollectionUtil.extractToList(accountList,"loginName");
-            accountList=accountMapper.findByLoginNameList(loginNameList);
-            Map<String,Account> accountMap=CollectionUtil.extractToMap(accountList,"loginName");
-            for(DutyAnnualDto dutyAnnualDto:dutyAnnualDtoList){
-                Account account=accountMap.get(dutyAnnualDto.getLoginName());
-                dutyAnnualDto.setEmployeeId(account.getEmployeeId());
-                dutyAnnualDto.setAnnualYear(annualYear.substring(0,annualYear.indexOf("-")));
-                dutyAnnualDto.setRemarks(remarks);
+            List<DutyAnnualForm> list = doRead(workbook.getSheetAt(0), simpleExcelColumnList, DutyAnnualForm.class);
+            List<Employee> employeeList=employeeMapper.findByNameList(CollectionUtil.extractToList(list,"employeeName"));
+            Map<String,Employee> employeeMap=CollectionUtil.extractToMap(employeeList,"name");
+            List<DutyAnnual> dutyAnnualList=Lists.newArrayList();
+            for(DutyAnnualForm dutyAnnualForm:list){
+                if(StringUtils.isNotBlank(dutyAnnualForm.getEmployeeName())){
+                    dutyAnnualForm.setAnnualYear(annualYear);
+                    dutyAnnualForm.setEmployeeId(employeeMap.get(dutyAnnualForm.getEmployeeName()).getId());
+                    dutyAnnualForm.setRemarks(remarks);
+                    dutyAnnualList.add(BeanUtil.map(dutyAnnualForm,DutyAnnual.class));
+                }
             }
-            dutyAnnualMapper.batchSave(list);
+            dutyAnnualMapper.batchSave(dutyAnnualList);
         }
     }
 }

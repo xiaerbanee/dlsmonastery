@@ -20,6 +20,8 @@ public interface EmployeeMapper extends MyMapper<Employee,String> {
 
     List<Employee> findByNameLike(String name);
 
+    List<Employee> findByNameList(List<String> employeeNameList);
+
     List<Employee> findByStatusAndregularDate(@Param("status") String status,@Param("regularDate") LocalDateTime regularDate);
 
     int updateAccountId(@Param("employeeId")String employeeId,@Param("accountId")String accountId);

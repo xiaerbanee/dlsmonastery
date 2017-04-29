@@ -69,6 +69,16 @@
         and t1.name like CONCAT('%',#{name},'%')
     </select>
 
+    <select id="findByNameList" resultType="Employee">
+        SELECT t1.*
+        FROM hr_employee t1
+        where t1.enabled=1
+        and t1.name IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <select id="findByStatusAndregularDate" resultType="Employee">
         SELECT t1.*
         FROM  hr_employee t1

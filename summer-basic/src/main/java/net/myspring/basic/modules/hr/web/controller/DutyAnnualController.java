@@ -13,6 +13,8 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -39,10 +41,8 @@ public class DutyAnnualController {
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
-    public RestResponse importFile(@RequestParam(value = "folderFileId", required = true) String folderFileId, String annualYear, String remarks) {
-//        FolderFile folderFile = folderFileService.findForm(folderFileId);
-//        File file  = new File(folderFileService.getUploadPath(folderFile));
-//        dutyAnnualService.save(file, annualYear, remarks);
+    public RestResponse importFile(@RequestParam(value = "mongoId", required = true) String mongoId, String annualYear, String remarks) {
+        dutyAnnualService.save(mongoId, annualYear, remarks);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
