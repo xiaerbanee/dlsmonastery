@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.input.web.form;
 
+import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.K3CloudBillTypeEnum;
 import net.myspring.cloud.modules.input.domain.BdStock;
 
@@ -9,12 +10,12 @@ import java.util.Map;
 /**
  * Created by lihx on 2017/4/25.
  */
-public class BatchBIllForm {
+public class BatchBillForm {
     private List<String> customerNameList;
     private List<String> productNameList;
     private K3CloudBillTypeEnum[] typeList;
     private List<BdStock> storeList;
-    private Map<String,String> materialMap;
+    private Map<String,String> materialMap = Maps.newHashMap();
 
     public List<String> getCustomerNameList() {
         return customerNameList;
