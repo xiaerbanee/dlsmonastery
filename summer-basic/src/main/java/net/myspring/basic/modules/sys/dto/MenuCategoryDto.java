@@ -16,10 +16,36 @@ public class MenuCategoryDto extends DataDto<MenuCategory> {
     private Integer sort;
     private String code;
     private String backendModuleId;
+    @CacheInput(inputKey = "backendModules",inputInstance = "backendModuleId",outputInstance = "code")
+    private String backendModuleCode;
     @CacheInput(inputKey = "backendModules",inputInstance = "backendModuleId",outputInstance = "name")
     private String backendModuleName;
     private List<Menu> menuList = Lists.newArrayList();
     private List<String> menuIdList = Lists.newArrayList();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getBackendModuleId() {
         return backendModuleId;
@@ -27,6 +53,14 @@ public class MenuCategoryDto extends DataDto<MenuCategory> {
 
     public void setBackendModuleId(String backendModuleId) {
         this.backendModuleId = backendModuleId;
+    }
+
+    public String getBackendModuleCode() {
+        return backendModuleCode;
+    }
+
+    public void setBackendModuleCode(String backendModuleCode) {
+        this.backendModuleCode = backendModuleCode;
     }
 
     public String getBackendModuleName() {
@@ -51,29 +85,5 @@ public class MenuCategoryDto extends DataDto<MenuCategory> {
 
     public void setMenuIdList(List<String> menuIdList) {
         this.menuIdList = menuIdList;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 }

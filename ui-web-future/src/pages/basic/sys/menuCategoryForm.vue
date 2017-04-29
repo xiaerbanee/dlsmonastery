@@ -4,8 +4,8 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item label="所属模块" prop="backendModuleId">
-          <el-select v-model="inputForm.backendModuleId" filterable :clearable=true>
-            <el-option v-for="item in inputForm.backendModuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select v-model="inputForm.backendModuleId" clearable>
+            <el-option v-for="item in inputForm.backendModuleList" :key="item.id" :label="item.code" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('menuCategoryForm.name')" prop="name">

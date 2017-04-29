@@ -3,6 +3,9 @@
     <head-tab active="backendModuleForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+        <el-form-item :label="$t('backendModuleForm.code')" prop="name">
+          <el-input v-model.number="inputForm.code"></el-input>
+        </el-form-item>
         <el-form-item :label="$t('backendModuleForm.name')" prop="name">
           <el-input v-model.number="inputForm.name"></el-input>
         </el-form-item>
@@ -29,6 +32,7 @@
             inputForm:{},
             submitData:{
               id:'',
+              code:'',
               backendId:'',
               name:'',
               remarks:''
@@ -36,7 +40,7 @@
             rules: {
               backendId: [{ required: true, message: this.$t('backendModuleForm.prerequisiteMessage')}],
               name: [{ required: true, message: this.$t('backendModuleForm.prerequisiteMessage')}],
-              remarks: [{ required: true, message: this.$t('backendModuleForm.prerequisiteMessage')}]
+              code: [{ required: true, message: this.$t('backendModuleForm.prerequisiteMessage')}]
             }
           }
       },

@@ -13,9 +13,18 @@ import java.util.List;
  * Created by wangzm on 2017/4/19.
  */
 public class BackendModuleForm extends DataForm<BackendModule> {
+    private String code;
     private String name;
     private String backendId;
     private List<BackendDto> backendList= Lists.newArrayList();
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public List<BackendDto> getBackendList() {
         return backendList;

@@ -273,7 +273,10 @@ export default {
   },
   menuCategoryList: {
     menuCategoryList: "daftar kategori pilihan",
+    code:"code",
     name: "nama",
+    backendModuleCode:"所属模块",
+    backendModuleName:"所属模块名称",
     sort: "pengurutan",
     add: "tambah",
     filter: "saring",
@@ -486,6 +489,7 @@ export default {
   },
   backendForm: {
     backendForm: "backend Kamus Editor",
+    code:"code",
     name: "nama",
     inputKey: "silahkan masukkan kata kunci",
     inputWord: "silahkan masukkan kata kunci",
@@ -501,6 +505,7 @@ export default {
     backendList: "pencacahan kamus",
     id: "ID",
     name: "nama",
+    code:"code",
     add: "tambah",
     filter: "saring",
     export: "ekspor / mengeluarkan",
@@ -527,6 +532,7 @@ export default {
   },
   backendModuleForm: {
     backendModuleForm: "backendModule Kamus Editor",
+    code:"code",
     name: "name",
     inputKey: "silahkan masukkan kata kunci",
     inputWord: "silahkan masukkan kata kunci",
@@ -541,7 +547,9 @@ export default {
   backendModuleList: {
     backendModuleList: "pencacahan kamus",
     id: "ID",
+    code:"code",
     name: "nama",
+    backendName:"项目名称",
     add: "tambah",
     filter: "saring",
     export: "ekspor / mengeluarkan",

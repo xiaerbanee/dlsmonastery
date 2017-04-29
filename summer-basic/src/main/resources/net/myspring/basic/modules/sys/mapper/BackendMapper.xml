@@ -19,11 +19,24 @@
     </select>
 
     <select id="findByMenuList" resultMap="BackendMenuMap">
-        SELECT t1.id,t1.name,t1.code,t2.id as 'moduleId',t2.name as 'moduleName',t2.code as 'moduleCode',t2.icon as 'moduleIcon'
-        t3.id as 'categoryId',t3.name as 'categoryName',t3.code as 'categoryCode',
-        t4.id as 'menuId',t4.name as 'menuName' ,t4.code as 'menuCode'
-        FROM sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4
-        where t4.menu_category_id=t3.id
+        SELECT
+            t1.id,
+            t1.name,
+            t1.code,
+            t2.id as 'moduleId',
+            t2.name as 'moduleName',
+            t2.code as 'moduleCode',
+            t2.icon as 'moduleIcon',
+            t3.id as 'categoryId',
+            t3.name as 'categoryName',
+            t3.code as 'categoryCode',
+            t4.id as 'menuId',
+            t4.name as 'menuName',
+            t4.code as 'menuCode'
+        FROM
+            sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4
+        where
+        t4.menu_category_id=t3.id
         and t3.backend_module_id=t2.id
         and t2.backend_id=t1.id
         and t1.enabled=1
