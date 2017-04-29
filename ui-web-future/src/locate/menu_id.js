@@ -192,6 +192,7 @@ export default {
       officeRuleList:"部门规则",
       batchBillForm:"批量开单",
       payableReport:"应付对账报表",
+      receivableReport:"应收对账报表",
       kingdeeBookList:"账套管理"
     }
   }

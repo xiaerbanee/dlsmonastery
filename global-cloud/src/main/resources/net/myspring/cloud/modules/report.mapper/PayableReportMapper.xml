@@ -245,7 +245,7 @@
 
     <select id="findByEndDate" resultType="PayableForSummaryDto">
        SELECT
-	       a.supplyid AS supplierId,
+	       a.supplierId AS supplierId,
 	       a.departmentId AS departmentId,
 	      SUM (a.fsamount) AS beginAmount
     FROM
