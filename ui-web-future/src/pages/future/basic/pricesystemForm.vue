@@ -60,7 +60,7 @@
         form.validate((valid) => {
           if (valid) {
             this.inputForm.pricesystemDetailList=this.filterPricesystemDetailList;
-            axios.post('/api/ws/future/basic/pricesystem/save', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/crm/pricesystem/save', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -91,7 +91,7 @@
         this.filterPricesystemDetailList = tempList;
       }
     },created(){
-        axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/pricesystem/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
           this.inputForm.pricesystemDetailList=response.data.pricesystemDetailList;
           this.searchDetail();

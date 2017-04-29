@@ -154,10 +154,10 @@
         <if test="p.outGroupName !=null">
             and t1.out_group_name =#{p.outGroupName}
         </if>
-        <if test="p.outGroupIds !=null and p.outGroupIds.size() !=0">
+        <if test="p.outGroupNameList !=null and p.outGroupNameList.size() !=0">
             and t1.out_group_id in
-            <foreach collection="p.outGroupIds" index="index" item="item" open="(" separator="," close=")">
-                #{p.outGroupIds[${index}]}
+            <foreach collection="p.outGroupNameList" index="index" item="item" open="(" separator="," close=")">
+                #{p.outGroupNameList[${index}]}
             </foreach>
         </if>
         <if test="p.netType !=null">

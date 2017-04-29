@@ -29,7 +29,7 @@
         <aside class="db-menu-wrapper">
           <div class="db-menu-category">
             <div id="fixed">
-              <dl><dd><a v-for="backendModule in backendModuleList" :key="backendModule.id" :data-code="backendModule.code" @click="changeBackendModule">{{$t('menus.backendModule.' + backendModule.code)}}</a></dd></dl>
+              <dl><dd><a :class="backendModule.icon" v-for="backendModule in backendModuleList" :key="backendModule.id" :data-code="backendModule.code" @click="changeBackendModule">{{$t('menus.backendModule.' + backendModule.code)}}</a></dd></dl>
             </div>
           </div>
           <el-menu class="db-menu-bar" router unique-opened>

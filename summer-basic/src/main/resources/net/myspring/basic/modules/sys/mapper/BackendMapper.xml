@@ -19,6 +19,11 @@
     </select>
 
     <select id="findByMenuList" resultMap="BackendMenuMap">
+        SELECT t1.id,t1.name,t1.code,t2.id as 'moduleId',t2.name as 'moduleName',t2.code as 'moduleCode',t2.icon as 'moduleIcon',
+            t3.id as 'categoryId',t3.name as 'categoryName',t3.code as 'categoryCode',
+        t4.id as 'menuId',t4.name as 'menuName' ,t4.code as 'menuCode'
+        FROM sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4
+        where t4.menu_category_id=t3.id
         SELECT
             t1.id,
             t1.name,
@@ -60,7 +65,7 @@
         <id column="moduleId" property="id"/>
         <result column="moduleName" property="name" />
         <result column="moduleCode" property="code" />
-        <result column="moduleIcod" property="icon" />
+        <result column="moduleIcon" property="icon" />
         <collection property="menuCategoryList" resultMap="menuCategoryMap"/>
     </resultMap>
 
