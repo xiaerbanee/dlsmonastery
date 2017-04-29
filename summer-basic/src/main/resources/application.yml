@@ -50,7 +50,7 @@ security:
           LciRTa884uQnkFwSguOEUYf3ni8GNRJauIuW0rVXhMOs78pKvCKmo53M0tqeC6ul
           +QIDAQAB
           -----END PUBLIC KEY-----
-          
+
 weixin:
   appid: wx9306888de0cb1c04
   appsecret: e7822bbf9d836b0b909342662fb4e0ee

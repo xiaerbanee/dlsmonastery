@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  *******************************************************************************/
-package net.myspring.cloud.common.service;
+package net.myspring.util.exception;
 
 /**
  * Service层公用的Exception.
@@ -13,8 +13,6 @@ package net.myspring.cloud.common.service;
  * @author calvin
  */
 public class ServiceException extends RuntimeException {
-
-    private static final long serialVersionUID = 3583566093089790852L;
 
     public ServiceException() {
         super();
