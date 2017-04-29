@@ -12,6 +12,7 @@ import java.util.Map;
  */
 public class ProductQuery {
     private String name;
+    private String code;
     private String type;
     private String hasIme;
     private String allowBill;
@@ -64,6 +65,13 @@ public class ProductQuery {
         this.name = name;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
     public String getType() {
         return type;
     }

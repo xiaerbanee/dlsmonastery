@@ -24,7 +24,7 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('pricesystemList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('pricesystemList.name')" sortable width="200"></el-table-column>
-        <el-table-column prop="sort" :label="$t('pricesystemList.sort')"></el-table-column>
+        <el-table-column prop="sort" :label="$t('pricesystemList.sort')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('pricesystemList.remarks')"></el-table-column>
         <el-table-column prop="enabled" :label="$t('pricesystemList.enabled')" >
           <template scope="scope">
@@ -35,9 +35,8 @@
         <el-table-column prop="lastModifiedDate" :label="$t('pricesystemList.lastModifiedDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('pricesystemList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" v-permit="'crm:pricesystem:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('pricesystemList.edit')}}</el-button>
+            <el-button size="small" v-permit="'crm:pricesystem:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('pricesystemList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -77,7 +76,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("pricesystemList",this.formData);
-        axios.get('/api/ws/future/basic/pricesystem',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/crm/pricesystem',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -95,12 +94,12 @@
       },itemAdd(){
         this.$router.push({ name: 'pricesystemForm'})
       },toSee(){
-        this.router.push({name:'价格体系一览'})
+        this.$router.push({name:'价格体系一览'})
       },itemAction:function(id,action){
-          if(action=="修改") {
+          if(action=="edit") {
             this.$router.push({ name: 'pricesystemForm', query: { id: id }})
-          }else if(action == "删除"){
-            axios.get('/api/ws/future/basic/pricesystem/delete',{params:{id:id}}).then((response) =>{
+          }else if(action == "delete"){
+            axios.get('/api/ws/future/crm/pricesystem/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
               this.pageRequest();
             })
@@ -109,7 +108,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
+      axios.get('/api/ws/future/crm/product').then((response) =>{
         this.formProperty=response.data;
 
       });

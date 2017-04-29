@@ -108,7 +108,7 @@ public class PricesystemService {
     }
 
     public void initPricesystemDetail(PricesystemForm pricesystemForm){
-        String value = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.getCode());
+        String value = "371148";
         List<String> outGroupIds = IdUtils.getIdList(value);
         List<Product> productList = productMapper.findByOutGroupIds(outGroupIds);
         List<PricesystemDetailForm> pricesystemDetailList=Lists.newArrayList();
