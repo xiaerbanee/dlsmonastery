@@ -106,7 +106,7 @@ public class CacheReadUtils {
                                     ((Collection) localFieldValue).add(getConvertObject(cacheInputFieldValue,outputField.getClass()));
                                     ReflectionUtils.setField(outputField, cacheInputObject.getObject(), localFieldValue);
                                 } else {
-                                    ReflectionUtils.setField(outputField, cacheInputObject.getObject(), getConvertObject(cacheInputFieldValue,outputField.getClass()));
+                                    ReflectionUtils.setField(outputField, cacheInputObject.getObject(), getConvertObject(cacheInputFieldValue,outputField.getType()));
                                 }
                             }
                         }

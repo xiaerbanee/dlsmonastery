@@ -68,7 +68,7 @@ public class OfficeManager {
         Office office = officeMapper.findByAccountId(accountId);
         OfficeRule officeRule = officeRuleMapper.findOne(office.getId());
         if (!Const.HR_ACCOUNT_ADMIN_LIST.contains(accountId)) {
-            if (OfficeRuleEnum.BUSINESS_OFFICE.name().equalsIgnoreCase(officeRule.getType())) {
+            if (OfficeRuleEnum.BUSINESS.name().equalsIgnoreCase(officeRule.getType())) {
                 officeIdList.add(office.getId());
                 officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()), "id"));
             } else {

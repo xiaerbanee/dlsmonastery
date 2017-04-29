@@ -29,9 +29,18 @@ public class OfficeForm extends DataForm<Office> {
     private List<OfficeRuleDto>  officeRuleList= Lists.newArrayList();
     private List<String> jointTypeList= Lists.newArrayList();
     private String officeRuleId;
+    private String supportOfficeIf;
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
+
+    public String getSupportOfficeIf() {
+        return supportOfficeIf;
+    }
+
+    public void setSupportOfficeIf(String supportOfficeIf) {
+        this.supportOfficeIf = supportOfficeIf;
+    }
 
     public TreeNode getOfficeTree() {
         return officeTree;
