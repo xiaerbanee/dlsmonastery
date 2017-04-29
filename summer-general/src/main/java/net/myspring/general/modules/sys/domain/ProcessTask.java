@@ -2,7 +2,6 @@ package net.myspring.general.modules.sys.domain;
 
 import net.myspring.common.domain.CompanyEntity;
 
-import javax.persistence.AutoAuditing;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -13,9 +12,6 @@ import javax.persistence.Transient;
 @Entity
 @Table(name="sys_process_task")
 public class ProcessTask  extends CompanyEntity<ProcessTask>{
-    @AutoAuditing
-    @Transient
-    private Boolean autoAuditing = true;
     private String name;
     private String extendId;
     private String status;
@@ -29,14 +25,6 @@ public class ProcessTask  extends CompanyEntity<ProcessTask>{
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Boolean getAutoAuditing() {
-        return autoAuditing;
-    }
-
-    public void setAutoAuditing(Boolean autoAuditing) {
-        this.autoAuditing = autoAuditing;
     }
 
     public String getName() {

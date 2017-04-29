@@ -28,4 +28,12 @@ public class MongoConfig {
         GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"export");
         return gridFsTemplate;
     }
+
+    @Bean
+    public GridFsTemplate storageGridFsTemplate() {
+        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
+        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"storage");
+        return gridFsTemplate;
+    }
 }

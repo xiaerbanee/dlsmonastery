@@ -23,8 +23,6 @@ public class AccountDto extends DataDto<Account> {
     private String companyId;
     private boolean viewReport;
     private List<String> officeIdList= Lists.newArrayList();
-    @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "dataScope")
-    private Integer dataScope;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
@@ -32,7 +30,7 @@ public class AccountDto extends DataDto<Account> {
     @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
     private String leaderName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "regularDate")
-    private LocalDate regularDate;
+    private String regularDate;
     @CacheInput(inputKey = "companys",inputInstance = "companyId",outputInstance = "name")
     private String companyName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
@@ -88,14 +86,6 @@ public class AccountDto extends DataDto<Account> {
         this.positionId = positionId;
     }
 
-    public Integer getDataScope() {
-        return dataScope;
-    }
-
-    public void setDataScope(Integer dataScope) {
-        this.dataScope = dataScope;
-    }
-
     public String getLeaderId() {
         return leaderId;
     }
@@ -136,11 +126,11 @@ public class AccountDto extends DataDto<Account> {
         this.leaderName = leaderName;
     }
 
-    public LocalDate getRegularDate() {
+    public String getRegularDate() {
         return regularDate;
     }
 
-    public void setRegularDate(LocalDate regularDate) {
+    public void setRegularDate(String regularDate) {
         this.regularDate = regularDate;
     }
 

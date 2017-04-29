@@ -44,12 +44,9 @@ public class ExcelUtils {
         return getInputStream(workbook);
     }
 
-    public static Workbook getWorkbook(File file) {
+    public static Workbook getWorkbook(String fileName, InputStream inputStream) {
         Workbook workbook = null;
-        String fileName = file.getName();
-        InputStream inputStream;
         try {
-            inputStream = new FileInputStream(file);
             if (inputStream != null) {
                 if (StringUtils.isBlank(fileName)) {
                     throw new RuntimeException("文件不可为空");

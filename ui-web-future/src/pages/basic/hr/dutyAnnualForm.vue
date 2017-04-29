@@ -6,10 +6,10 @@
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item :label="$t('dutyAnnualForm.exportTemplate')">
-              <a style="text-decoration:underline;color:blue" href="javascript:volid(0);" @click="downLoad">{{$t('dutyAnnualForm.downLoad')}}</a>
+              <a style="text-decoration:underline;color:blue" href="javascript:void(0);" @click="downLoad">{{$t('dutyAnnualForm.downLoad')}}</a>
             </el-form-item>
-            <el-form-item :label="$t('dutyAnnualForm.exportData')" prop="folderFileId">
-              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/年假管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" >
+            <el-form-item :label="$t('dutyAnnualForm.exportData')" prop="mongoId">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/年假管理" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" >
                 <el-button size="small" type="primary">{{$t('dutyAnnualForm.clickUpload')}}</el-button>
               </el-upload>
             </el-form-item>
@@ -36,12 +36,13 @@
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         fileList:[],
+        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
         inputForm:{
           annualYear:''
         },
         submitData:{
           id:'',
-          folderFileId:'',
+          mongoId:'',
           annualYear:'',
           remarks:''
         },
@@ -53,7 +54,7 @@
     },
     methods:{
       formSubmit(){
-       this.inputForm.folderFileId = util.getFolderFileIdStr(this.fileList);
+       this.inputForm.mongoId = util.getMongoId(this.fileList);
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {

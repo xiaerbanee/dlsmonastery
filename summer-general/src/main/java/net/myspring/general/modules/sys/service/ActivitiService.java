@@ -2,7 +2,6 @@ package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Maps;
 import net.myspring.general.common.enums.AuditTypeEnum;
-import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
 import net.myspring.general.modules.sys.domain.ProcessTask;
 import net.myspring.general.modules.sys.dto.ActivitiAuditDto;
@@ -12,7 +11,6 @@ import net.myspring.general.modules.sys.form.ActivitiAuthenticatedForm;
 import net.myspring.general.modules.sys.form.ActivitiNotifyForm;
 import net.myspring.general.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.general.modules.sys.mapper.ProcessTaskMapper;
-import net.myspring.util.text.StringUtils;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -21,7 +19,6 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -81,9 +78,6 @@ public class ActivitiService {
                 processTask.setPositionId(processFlow.getPositionId());
                 processTask.setStatus(processStatus);
             }
-            processTask.setAutoAuditing(false);
-            processTask.setLastModifiedBy(activitiAuditForm.getAccountId());
-            processTask.setLastModifiedDate(LocalDateTime.now());
             processTaskMapper.update(processTask);
         }
         return activitiAuditDto;
@@ -93,12 +87,7 @@ public class ActivitiService {
         ProcessTask processTask = processTaskMapper.findByNameAndExtendId(activitiNotifyForm.getName(),activitiNotifyForm.getExtendId());
         if(processTask==null){
             processTask=new ProcessTask();
-            processTask.setAutoAuditing(false);
             processTask.setName(activitiNotifyForm.getName());
-            processTask.setCreatedBy(activitiNotifyForm.getAccountId());
-            processTask.setCreatedDate(LocalDateTime.now());
-            processTask.setLastModifiedDate(LocalDateTime.now());
-            processTask.setLastModifiedBy(activitiNotifyForm.getAccountId());
             processTask.setVersion(0);
             processTask.setExtendId(activitiNotifyForm.getExtendId());
             processTask.setPositionId(activitiNotifyForm.getPositionId());
@@ -113,9 +102,6 @@ public class ActivitiService {
                 processTask.setPositionId(activitiNotifyForm.getPositionId());
                 processTask.setStatus(activitiNotifyForm.getProcessStatus());
             }
-            processTask.setAutoAuditing(false);
-            processTask.setLastModifiedDate(LocalDateTime.now());
-            processTask.setLastModifiedBy(activitiNotifyForm.getAccountId());
             processTaskMapper.update(processTask);
         }
     }
