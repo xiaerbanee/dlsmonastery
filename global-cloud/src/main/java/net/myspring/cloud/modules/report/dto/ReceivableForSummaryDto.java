@@ -11,8 +11,8 @@ public class ReceivableForSummaryDto {
     private String primaryGroup;
     private String primaryGroupName;
     private BigDecimal beginAmount;
-    private BigDecimal payableAmount;
-    private BigDecimal actualPayAmount;
+    private BigDecimal receivableAmount;
+    private BigDecimal actualReceivable;
     private BigDecimal endAmount;
 
     public String getCustomerId() {
@@ -55,20 +55,20 @@ public class ReceivableForSummaryDto {
         this.beginAmount = beginAmount;
     }
 
-    public BigDecimal getPayableAmount() {
-        return payableAmount;
+    public BigDecimal getReceivableAmount() {
+        return receivableAmount;
     }
 
-    public void setPayableAmount(BigDecimal payableAmount) {
-        this.payableAmount = payableAmount;
+    public void setReceivableAmount(BigDecimal receivableAmount) {
+        this.receivableAmount = receivableAmount;
     }
 
-    public BigDecimal getActualPayAmount() {
-        return actualPayAmount;
+    public BigDecimal getActualReceivable() {
+        return actualReceivable;
     }
 
-    public void setActualPayAmount(BigDecimal actualPayAmount) {
-        this.actualPayAmount = actualPayAmount;
+    public void setActualReceivable(BigDecimal actualReceivable) {
+        this.actualReceivable = actualReceivable;
     }
 
     public BigDecimal getEndAmount() {
