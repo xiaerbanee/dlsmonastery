@@ -190,9 +190,10 @@ export default {
       backendModuleList:"项目模块",
       backendList:"项目管理",
       officeRuleList:"部门规则",
-      batchBillForm:"批量开单",
-      payableReport:"应付对账报表",
-      kingdeeBookList:"账套管理"
+      cloudBatchBillForm:"批量开单",
+      cloudPayableReport:"应付对账报表",
+      cloudReceivableReport:"应收对账报表",
+      cloudKingdeeBookList:"账套管理"
     }
   }
 }
