@@ -13,6 +13,9 @@ export default {
   su_district:{
     inputKey:"请输入关键字",
   },
+  su_table:{
+    loading:"拼命加载中",
+  },
   menuManager:{
     basicManager:"基础管理",
     businessManager:"业务管理",

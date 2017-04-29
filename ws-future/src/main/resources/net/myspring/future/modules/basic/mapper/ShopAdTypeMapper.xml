@@ -13,10 +13,11 @@
         SELECT t1.*
         FROM crm_shop_ad_type t1
         where t1.enabled=1
-        <if test="p.name!=null">
+
+        <if test="p.name!=null and p.name!=''">
             and t1.name like concat('%',#{p.name},'%')
         </if>
-        <if test="p.totalPriceType!=null">
+        <if test="p.totalPriceType!=null  and p.totalPriceType!=''  ">
             and t1.total_price_type=#{p.totalPriceType}
         </if>
     </select>

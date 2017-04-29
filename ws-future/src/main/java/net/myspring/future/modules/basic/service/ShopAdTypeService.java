@@ -1,12 +1,13 @@
 package net.myspring.future.modules.basic.service;
 
+import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
 import net.myspring.future.modules.basic.manager.ShopAdTypeManager;
 import net.myspring.future.modules.basic.mapper.ShopAdTypeMapper;
-import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
+import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -63,5 +64,9 @@ public class ShopAdTypeService {
 
     public void delete(ShopAdTypeForm shopAdTypeForm) {
         shopAdTypeMapper.logicDeleteOne(shopAdTypeForm.getId());
+    }
+
+    public List<String> findTotalPriceTypeList() {
+        return TotalPriceTypeEnum.getValues();
     }
 }

@@ -5,8 +5,8 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
 import net.myspring.future.modules.basic.service.ShopAdTypeService;
-import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
+import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "crm/shopAdType")
+@RequestMapping(value = "basic/shopAdType")
 public class ShopAdTypeController {
 
     @Autowired
@@ -24,8 +24,7 @@ public class ShopAdTypeController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ShopAdTypeDto> list(Pageable pageable, ShopAdTypeQuery shopAdTypeQuery){
-        Page<ShopAdTypeDto> page = shopAdTypeService.findPage(pageable,shopAdTypeQuery);
-        return page;
+        return  shopAdTypeService.findPage(pageable, shopAdTypeQuery);
     }
 
     @RequestMapping(value = "delete")
@@ -50,6 +49,12 @@ public class ShopAdTypeController {
     @RequestMapping(value="getListProperty")
     public ShopAdTypeQuery getListProperty(ShopAdTypeQuery shopAdTypeQuery){
         shopAdTypeQuery.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
+        return shopAdTypeQuery;
+    }
+
+    @RequestMapping(value="getQuery")
+    public ShopAdTypeQuery getQuery(ShopAdTypeQuery shopAdTypeQuery){
+        shopAdTypeQuery.setTotalPriceTypeList(shopAdTypeService.findTotalPriceTypeList());
         return shopAdTypeQuery;
     }
 
