@@ -30,7 +30,7 @@
         <el-table-column prop="code" label="Code" ></el-table-column>
         <el-table-column prop="type" label="类型" width="100">
           <template scope="scope">
-            {{$t('officeRuleList.'+ scope.row.type)}}
+            {{$t('OfficeRuleEnum.'+ scope.row.type)}}
           </template>
         </el-table-column>
         <el-table-column prop="parentName" label="上级" ></el-table-column>

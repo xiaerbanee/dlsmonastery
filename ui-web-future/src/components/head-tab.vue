@@ -6,7 +6,7 @@
           <div class="el-tabs__nav">
             <div class="el-tabs__item" :class="homeActive" data-tab-name="home" @click.stop="headTabClick">{{$t('head_tab.home')}}</div>
             <div  class="el-tabs__item is-closable"  :class="tabItem.class" v-for="tabItem in tabList"   :key="tabItem.name" :data-tab-name="tabItem.name" @click.stop="headTabClick" >
-              {{$t('app.' + tabItem.name)}}<span class="el-icon-close" :data-tab-name="tabItem.name" @click.stop="headTabRemove"></span>
+              {{$t('menus.menu.' + tabItem.name)}}<span class="el-icon-close" :data-tab-name="tabItem.name" @click.stop="headTabRemove"></span>
             </div>
           </div>
         </div>

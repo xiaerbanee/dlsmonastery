@@ -96,9 +96,9 @@ public class ReceivableReportService {
                 }
             }
             //应收
-            item.setPayableAmount(QTYSDAmount.add(XSCKDAmount.subtract(XSTHDAmount)));
+            item.setReceivableAmount(QTYSDAmount.add(XSCKDAmount.subtract(XSTHDAmount)));
             //实收
-            item.setActualPayAmount(SKDAmount.subtract(SKTKDAmount));
+            item.setActualReceivable(SKDAmount.subtract(SKTKDAmount));
         }
         List<BdCustomer> customerList =  bdCustomerMapper.findAll();
         for (ReceivableForSummaryDto summary : tempList){
