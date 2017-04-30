@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.2.RELEASE'
+		springBootVersion = '1.5.3.RELEASE'
 	}
 	repositories {
 		maven{ url 'http://117.40.139.3:8081/repository/maven-public/'}
@@ -31,7 +31,7 @@ dependencies {
 	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.2.3.RELEASE'
 	compile('org.springframework.boot:spring-boot-starter')
 	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
-	compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.1.RELEASE'
+	compile ('org.springframework.data:spring-data-commons')
 	compile 'com.google.guava:guava:19.0'
 	compile "org.apache.commons:commons-lang3:3.4"
 

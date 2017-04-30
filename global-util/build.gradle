@@ -1,16 +1,18 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.2.RELEASE'
+		springBootVersion = '1.5.3.RELEASE'
 	}
 	repositories {
 		maven{ url 'http://117.40.139.3:8081/repository/maven-public/'}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath "io.spring.gradle:dependency-management-plugin:1.0.0.RELEASE"
 	}
 }
 
 apply plugin: 'java'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
 jar {
@@ -44,4 +46,10 @@ dependencies {
 	compile 'net.sf.dozer:dozer:5.5.1'
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+dependencyManagement {
+	imports {
+		mavenBom 'io.spring.platform:platform-bom:Brussels-SR2'
+	}
 }

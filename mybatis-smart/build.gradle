@@ -1,12 +1,13 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.2.RELEASE'
+		springBootVersion = '1.5.3.RELEASE'
 	}
 	repositories {
 		maven{ url 'http://117.40.139.3:8081/repository/maven-public/'}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath "io.spring.gradle:dependency-management-plugin:1.0.0.RELEASE"
 	}
 }
 
@@ -14,6 +15,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
 def env = System.getProperty("env") ?: "releases"
@@ -32,13 +34,20 @@ repositories {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
 	compile("org.springframework.boot:spring-boot-starter-aop")
-	compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.1.1'
+	compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.2.0'
 	compile('org.mybatis:mybatis-typehandlers-jsr310:1.0.1')
 	compile 'com.google.guava:guava:20.0'
 	compile "org.apache.commons:commons-lang3:3.4"
-    compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.1.RELEASE'
+    compile ('org.springframework.data:spring-data-commons')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+dependencyManagement {
+	imports {
+		mavenBom 'io.spring.platform:platform-bom:Brussels-SR2'
+	}
+}
+
 
 uploadArchives {
 	repositories.mavenDeployer {
