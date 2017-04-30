@@ -1,5 +1,6 @@
 package net.myspring.basic.common.domain;
 
+import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Column;
@@ -10,7 +11,7 @@ import javax.persistence.Column;
 public class CompanyEntity<T> extends DataEntity<T> {
 
     @Column(updatable = false)
-    private String companyId;
+    private String companyId = SecurityUtils.getCompanyId();
 
     public String getCompanyId() {
         return companyId;
