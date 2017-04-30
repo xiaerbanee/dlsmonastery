@@ -1,10 +1,4 @@
-package net.myspring.common.domain;
-
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.persistence.Transient;
-import java.util.List;
+package net.myspring.future.common.domain;
 
 /**
  * Created by liuj on 2016-07-25.

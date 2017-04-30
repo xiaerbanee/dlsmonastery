@@ -2,8 +2,8 @@ package net.myspring.future.modules.crm.domain;
 
 
 import com.google.common.collect.Lists;
-import net.myspring.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
+import net.myspring.future.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

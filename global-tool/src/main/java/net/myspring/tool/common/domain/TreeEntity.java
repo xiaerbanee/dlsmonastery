@@ -1,9 +1,9 @@
-package net.myspring.future.common.dto;
+package net.myspring.tool.common.domain;
 
 /**
  * Created by liuj on 2016-07-25.
  */
-public class TreeDto<T> extends DataDto<T> {
+public class TreeEntity<T> extends CompanyEntity<T> {
     private String parentId;
     private String parentIds;
 

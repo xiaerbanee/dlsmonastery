@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.domain;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import net.myspring.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.CompanyEntity;
 import net.myspring.basic.modules.sys.domain.Backend;
 import net.myspring.common.domain.DataEntity;
 import net.myspring.util.text.StringUtils;

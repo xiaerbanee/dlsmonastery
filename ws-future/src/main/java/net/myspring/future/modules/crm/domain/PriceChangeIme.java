@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.domain.AuditEntity;
+import net.myspring.future.common.domain.AuditEntity;
 import net.myspring.future.modules.basic.domain.Depot;
 
 import javax.persistence.Entity;

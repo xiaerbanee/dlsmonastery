@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  *******************************************************************************/
-package net.myspring.common.domain;
+package net.myspring.basic.common.domain;
 
 import java.time.LocalDateTime;
 

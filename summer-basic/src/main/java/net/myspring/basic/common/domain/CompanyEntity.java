@@ -1,4 +1,6 @@
-package net.myspring.common.domain;
+package net.myspring.basic.common.domain;
+
+import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Column;
 
