@@ -2,12 +2,9 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.crm.model.AdApplyModel;
 import net.myspring.future.modules.layout.domain.AdApply;
-import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.mapper.AdApplyMapper;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
@@ -58,11 +55,6 @@ public class AdApplyService {
 
     public Map<String,Object> findBillAdApplyMap(String billType){
         return null;
-    }
-
-    public List<AdGoodsOrder> bill(AdApplyModel adApplyModel){
-       List<AdGoodsOrder> adGoodsOrderList=Lists.newArrayList();
-       return adGoodsOrderList;
     }
 
     public List<SimpleExcelSheet> findSimpleExcelSheets(Workbook workbook, Map<String, Object> map) {

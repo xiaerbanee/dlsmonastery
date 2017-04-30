@@ -1,4 +1,4 @@
-package net.myspring.future.modules.basic.validator;
+package net.myspring.future.modules.basic.web.validator;
 
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.layout.domain.ShopAttribute;

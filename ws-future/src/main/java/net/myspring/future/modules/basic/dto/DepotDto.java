@@ -2,12 +2,10 @@ package net.myspring.future.modules.basic.dto;
 
 import com.google.common.collect.Maps;
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.basic.domain.*;
-import net.myspring.future.modules.crm.model.DepotInventoryModel;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,24 +46,6 @@ public class DepotDto extends DataDto<Depot> {
     private Boolean locked;
     //后台
     private Integer type;
-    private DepotInventoryModel depotInventoryModel;
-    private List<DepotInventoryModel> depotInventoryModelList;
-
-    public List<DepotInventoryModel> getDepotInventoryModelList() {
-        return depotInventoryModelList;
-    }
-
-    public void setDepotInventoryModelList(List<DepotInventoryModel> depotInventoryModelList) {
-        this.depotInventoryModelList = depotInventoryModelList;
-    }
-
-    public DepotInventoryModel getDepotInventoryModel() {
-        return depotInventoryModel;
-    }
-
-    public void setDepotInventoryModel(DepotInventoryModel depotInventoryModel) {
-        this.depotInventoryModel = depotInventoryModel;
-    }
 
     public Integer getType() {
         return type;

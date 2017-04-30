@@ -3,7 +3,6 @@ package net.myspring.future.modules.crm.service;
 import net.myspring.future.modules.crm.domain.ImeSaleReport;
 import net.myspring.future.modules.crm.mapper.ImeSaleReportMapper;
 import net.myspring.future.modules.crm.mapper.ImeStockReportMapper;
-import net.myspring.future.modules.crm.model.InventoryMainModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,22 +20,6 @@ public class ImeSaleReportService {
     public ImeSaleReport findOne(String id){
         ImeSaleReport imeSaleReport=imeSaleReportMapper.findOne(id);
         return imeSaleReport;
-    }
-
-    //按照机构汇总
-    public InventoryMainModel findOfficeInventoryMainModel(Map<String, Object> map) {
-        return null;
-    }
-
-    //按照型号汇总
-    public InventoryMainModel findProductInventoryMainModel(Map<String, Object> map) {
-        return null;
-    }
-
-
-
-    private void setPercentage(InventoryMainModel inventoryMainModel) {
-
     }
 
     private String division(Integer totalQty, Integer qty) {
