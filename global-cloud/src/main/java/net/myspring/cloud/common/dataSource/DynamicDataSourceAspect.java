@@ -8,7 +8,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
-import org.apache.commons.lang3.StringUtils;
+import net.myspring.util.text.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;

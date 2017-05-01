@@ -2,7 +2,7 @@ package net.myspring.common.mybatis;
 
 import com.google.common.collect.Lists;
 import net.myspring.mybatis.provider.CrudProvider;
-import org.apache.commons.lang3.StringUtils;
+import net.myspring.util.text.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -8,7 +8,7 @@ import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.enums.DataSourceTypeEnum;
 import net.myspring.tool.common.utils.SecurityUtils;
-import org.apache.commons.lang3.StringUtils;
+import net.myspring.util.text.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;

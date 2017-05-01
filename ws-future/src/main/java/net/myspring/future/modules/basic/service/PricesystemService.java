@@ -20,7 +20,7 @@ import net.myspring.future.modules.basic.web.form.PricesystemDetailForm;
 import net.myspring.future.modules.basic.web.form.PricesystemForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
-import org.apache.commons.lang3.StringUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -8,7 +8,7 @@ import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.persistence.entity.CommentEntity;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Comment;
-import org.apache.commons.lang3.StringUtils;
+import net.myspring.util.text.StringUtils;
 
 import java.util.List;
 import java.util.Map;

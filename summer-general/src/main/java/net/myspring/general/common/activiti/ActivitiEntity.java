@@ -11,7 +11,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
-import org.apache.commons.lang3.StringUtils;
+import net.myspring.util.text.StringUtils;
 
 import java.util.List;
 import java.util.Map;
