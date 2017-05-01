@@ -54,7 +54,7 @@ public class DutyAnnualService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private GridFsTemplate exportGridFsTemplate;
+    private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private GridFsTemplate storageGridFsTemplate;
 
@@ -85,7 +85,7 @@ public class DutyAnnualService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("年假导入模版",employeeDtoList,simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"年假导入模版"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = exportGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8",SecurityUtils.getDbObject());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8",SecurityUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());
     }
 

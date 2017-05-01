@@ -47,7 +47,7 @@ public class FolderFileService {
     @Autowired
     private GridFsTemplate previewGridFsTemplate;
     @Autowired
-    private GridFsTemplate exportGridFsTemplate;
+    private GridFsTemplate tempGridFsTemplate;
 
     public List<FolderFileDto> save(String folderId, Map<String, MultipartFile> fileMap) {
         DBObject dbObject = new BasicDBObject();
@@ -98,7 +98,7 @@ public class FolderFileService {
         } else  if("preview".equals(type)) {
             gridFsTemplate = previewGridFsTemplate;
         } else {
-            gridFsTemplate = exportGridFsTemplate;
+            gridFsTemplate = tempGridFsTemplate;
         }
         return gridFsTemplate.findOne(new Query(Criteria.where("_id").is(mongoId)));
     }
