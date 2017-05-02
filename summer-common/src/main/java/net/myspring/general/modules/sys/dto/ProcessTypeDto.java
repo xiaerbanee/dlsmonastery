@@ -1,9 +1,5 @@
 package net.myspring.general.modules.sys.dto;
 
-import jdk.internal.org.objectweb.asm.commons.SerialVersionUIDAdder;
-
-import java.io.Serializable;
-
 /**
  * Created by wangzm on 2017/4/25.
  */
