@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class AuditFileForm extends DataForm<AuditFile> {
     private String processTypeId;
-    private Map<Boolean, String> boolMap= Maps.newHashMap();
+    private Map<String, String> boolMap= Maps.newHashMap();
     private String title;
     private String content;
     private String attachment;
@@ -129,11 +129,11 @@ public class AuditFileForm extends DataForm<AuditFile> {
         this.attachment = attachment;
     }
 
-    public Map<Boolean, String> getBoolMap() {
+    public Map<String, String> getBoolMap() {
         return boolMap;
     }
 
-    public void setBoolMap(Map<Boolean, String> boolMap) {
+    public void setBoolMap(Map<String, String> boolMap) {
         this.boolMap = boolMap;
     }
 

@@ -26,7 +26,7 @@ public class PricesystemManager {
         return pricesystemMapper.findOne(id);
     }
 
-    @Cacheable(key="#p0.id")
+    @CachePut(key="#p0.id")
     public Pricesystem save(Pricesystem pricesystem){
         pricesystemMapper.save(pricesystem);
         return  pricesystem;

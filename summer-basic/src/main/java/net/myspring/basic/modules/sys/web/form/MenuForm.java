@@ -25,7 +25,7 @@ public class MenuForm extends DataForm<Menu>{
     private String code;
     private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
     private List<String> categoryList= Lists.newArrayList();
-    private Map<Boolean,String> boolMap= Maps.newHashMap();
+    private Map<String,String> boolMap= Maps.newHashMap();
 
     public String getCode() {
         return code;
@@ -59,11 +59,11 @@ public class MenuForm extends DataForm<Menu>{
         this.categoryList = categoryList;
     }
 
-    public Map<Boolean, String> getBoolMap() {
+    public Map<String, String> getBoolMap() {
         return boolMap;
     }
 
-    public void setBoolMap(Map<Boolean, String> boolMap) {
+    public void setBoolMap(Map<String, String> boolMap) {
         this.boolMap = boolMap;
     }
 

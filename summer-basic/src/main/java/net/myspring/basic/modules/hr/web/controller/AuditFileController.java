@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import gui.ava.html.image.generator.HtmlImageGenerator;
-import net.myspring.basic.common.enums.BoolEnum;
+import net.myspring.common.enums.BoolEnum;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;

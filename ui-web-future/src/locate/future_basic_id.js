@@ -409,7 +409,7 @@ export default {
     pricesystemForm: "Harga Sistem Edit",
     name: "nama",
     sort: "penurutan",
-    input2Key: "至少2位关键字",
+    input2Key: "Setidaknya 2 kata kunci",
     productName: "nama barang",
     price: "harga",
     priceRequestNumber: "Harga harus nilai numerik",

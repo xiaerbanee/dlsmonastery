@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.sys.web.controller;
 
-import net.myspring.basic.common.enums.BoolEnum;
+import net.myspring.common.enums.BoolEnum;
 import net.myspring.basic.common.enums.OfficeRuleEnum;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.basic.modules.sys.service.OfficeRuleService;

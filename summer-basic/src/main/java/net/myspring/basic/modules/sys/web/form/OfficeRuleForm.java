@@ -22,7 +22,7 @@ public class OfficeRuleForm extends DataForm<OfficeRule> {
     private String code;
     private String type;
     private Integer level;
-    private Map<Boolean,String> boolMap= Maps.newHashMap();
+    private Map<String,String> boolMap= Maps.newHashMap();
     private boolean hasPoint;
     private List<OfficeRuleDto> officeRuleList= Lists.newArrayList();
     private List<String> officeRuleNameList=Lists.newArrayList();
@@ -67,11 +67,11 @@ public class OfficeRuleForm extends DataForm<OfficeRule> {
         this.hasPoint = hasPoint;
     }
 
-    public Map<Boolean, String> getBoolMap() {
+    public Map<String, String> getBoolMap() {
         return boolMap;
     }
 
-    public void setBoolMap(Map<Boolean, String> boolMap) {
+    public void setBoolMap(Map<String, String> boolMap) {
         this.boolMap = boolMap;
     }
 

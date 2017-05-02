@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.service;
 
-import net.myspring.basic.common.enums.AuditTypeEnum;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.DutyTrip;
@@ -10,7 +10,6 @@ import net.myspring.basic.modules.hr.web.form.DutyTripForm;
 import net.myspring.basic.modules.hr.web.query.DutyTripQuery;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

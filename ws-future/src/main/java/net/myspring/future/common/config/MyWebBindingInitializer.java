@@ -1,6 +1,5 @@
-package net.myspring.basic.common.config;
+package net.myspring.future.common.config;
 
-import net.myspring.basic.common.utils.Const;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -15,7 +14,6 @@ import java.beans.PropertyEditorSupport;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**

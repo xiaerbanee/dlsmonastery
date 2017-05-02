@@ -22,13 +22,13 @@ public class ProductTypeForm extends DataForm<ProductType>{
     private BigDecimal price1;
     private BigDecimal price2;
     private BigDecimal price3;
-    private Map<Boolean,String> boolMap= Maps.newHashMap();
+    private Map<String,String> boolMap= Maps.newHashMap();
 
-    public Map<Boolean, String> getBoolMap() {
+    public Map<String, String> getBoolMap() {
         return boolMap;
     }
 
-    public void setBoolMap(Map<Boolean, String> boolMap) {
+    public void setBoolMap(Map<String, String> boolMap) {
         this.boolMap = boolMap;
     }
 

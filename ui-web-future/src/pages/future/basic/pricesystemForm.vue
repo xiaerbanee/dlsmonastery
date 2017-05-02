@@ -51,6 +51,7 @@
           name:'',
           sort:'',
           remarks:'',
+          enabled:false,
           pricesystemDetailList:[]
         },
         pageLoading: false,
@@ -75,6 +76,7 @@
             }
             this.inputForm.pricesystemDetailList=tempList;
             util.copyValue(this.inputForm,this.submitData);
+            this.submitData.enabled = true;
             axios.post('/api/ws/future/crm/pricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){

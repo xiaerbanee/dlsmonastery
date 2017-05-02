@@ -13,15 +13,15 @@ import java.util.List;
  */
 public class PricesystemForm extends DataForm<Pricesystem> {
     private String name;
-    private String sort;
+    private Integer sort;
     private boolean enabled;
     private List<PricesystemDetailForm> pricesystemDetailList= Lists.newArrayList();
 
-    public String getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(String sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 

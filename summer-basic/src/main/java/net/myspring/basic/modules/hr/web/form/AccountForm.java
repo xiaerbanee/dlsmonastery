@@ -36,7 +36,7 @@ public class AccountForm extends DataForm<Account>{
     private String remarks;
     private String positionId;
     private List<PositionDto> positionDtoList= Lists.newArrayList();
-    private Map<Boolean,String> boolMap= Maps.newHashMap();
+    private Map<String,String> boolMap= Maps.newHashMap();
 
     public String getPassword() {
         return password;
@@ -176,11 +176,11 @@ public class AccountForm extends DataForm<Account>{
         this.positionDtoList = positionDtoList;
     }
 
-    public Map<Boolean, String> getBoolMap() {
+    public Map<String, String> getBoolMap() {
         return boolMap;
     }
 
-    public void setBoolMap(Map<Boolean, String> boolMap) {
+    public void setBoolMap(Map<String, String> boolMap) {
         this.boolMap = boolMap;
     }
 }
