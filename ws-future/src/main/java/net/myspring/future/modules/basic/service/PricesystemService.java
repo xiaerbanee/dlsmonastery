@@ -87,7 +87,7 @@ public class PricesystemService {
                         return p1.getProductName().compareTo(p2.getProductName());
                     }
                 });
-                String expressProductId ="2307" /*companyConfigClient.getValueByCode(CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.getCode())*/;
+                String expressProductId =companyConfigClient.getValueByCode(CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.getCode());
                 for(int i = 0;i<pricesystemDetails.size();i++) {
                     if(StringUtils.isNotBlank(expressProductId) && expressProductId.equals(pricesystemDetails.get(i).getProductId())) {
                         pricesystemDetails.get(i).setSort(0);

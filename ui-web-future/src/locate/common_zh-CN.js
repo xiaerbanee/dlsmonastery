@@ -6,6 +6,11 @@ export default {
     yesterday: "昨天",
     latestWeek: "最近一周",
     latestMonth: "最近一个月",
+    waringMsgBeforeDelRecord:"此操作将删除该记录, 是否继续?",
+    typeOfWarningBeforeDelRecord:"提示",
+    confirmButton:"确定",
+    cancelButton:"取消",
+
   },
   head_tab: {
     home: "首页",

@@ -99,9 +99,11 @@
           if(action=="edit") {
             this.$router.push({ name: 'pricesystemForm', query: { id: id }})
           }else if(action == "delete"){
-            axios.get('/api/ws/future/crm/pricesystem/delete',{params:{id:id}}).then((response) =>{
-              this.$message(response.data.message);
-              this.pageRequest();
+            util.confirmBeforeDelRecord(this).then(() => {
+              axios.get('/api/ws/future/crm/pricesystem/delete', {params: {id: id}}).then((response) => {
+                this.$message(response.data.message);
+                this.pageRequest();
+              })
             })
         }
       }

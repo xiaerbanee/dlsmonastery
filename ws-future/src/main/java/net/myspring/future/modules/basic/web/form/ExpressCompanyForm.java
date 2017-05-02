@@ -4,14 +4,23 @@ package net.myspring.future.modules.basic.web.form;
 import com.google.common.collect.Lists;
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.List;
 
 public class ExpressCompanyForm extends DataForm<ExpressCompany>{
+
+    @NotEmpty(message="expressCompanyForm.nameNotEmptyMessage")
+    @Length(max=64, message="expressCompanyForm.nameTooLongMessage")
     private String  name;
+
     private String  expressType;
+
     private String  districtId;
+
     private String  reachPlace;
+
     private String  shouldGetRule;
     private String  address;
     private String  phone;

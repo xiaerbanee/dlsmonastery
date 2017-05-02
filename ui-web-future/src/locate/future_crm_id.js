@@ -607,6 +607,9 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "必填信息",
+    nameNotEmptyMessage:"姓名不能为空",
+    nameTooLongMessage:"姓名字段过长",
+
   },
   expressList: {
     expressList: "manajemen pengiriman",
