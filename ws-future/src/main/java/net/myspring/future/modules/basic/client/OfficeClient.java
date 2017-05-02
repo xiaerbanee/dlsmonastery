@@ -29,8 +29,8 @@ public interface OfficeClient {
     @RequestMapping(method = RequestMethod.GET, value = "/hr/office/findByAreaIds")
     List<BasicOfficeDto> findByAreaIds(@RequestParam(value = "areaIds") List<String> areaIds);
 
-    @RequestMapping(method = RequestMethod.GET,value = "/hr/office/findByType")
-    List<BasicOfficeDto> findByType(@RequestParam(value = "type")String type);
+    @RequestMapping(method = RequestMethod.GET,value = "/hr/office/findByOfficeRuleName")
+    List<BasicOfficeDto> findByOfficeRuleName(@RequestParam(value = "officeRuleName")String officeRuleName);
 
     @RequestMapping(method = RequestMethod.GET,value = "/hr/office/findSortList")
     List<BasicOfficeDto> findSortList();

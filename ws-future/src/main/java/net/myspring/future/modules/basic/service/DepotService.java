@@ -1,16 +1,17 @@
 package net.myspring.future.modules.basic.service;
 
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.common.dto.NameValueDto;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.Const;
-import net.myspring.future.common.utils.DepotUtils;
 import net.myspring.future.common.utils.SecurityUtils;
 import net.myspring.future.modules.basic.client.*;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.mapper.*;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -64,6 +65,8 @@ public class DepotService {
     private CompanyConfigClient companyConfigClient;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private DepotManager depotManager;
 
 
     public DepotDto findOne(String id) {
@@ -95,7 +98,6 @@ public class DepotService {
 
     public DepotQuery getQueryProperty(DepotQuery depotQuery) {
         depotQuery.setTypeMap(DepotTypeEnum.getMap());
-        depotQuery.setAreaList(officeClient.findAreaByType("100"));
         depotQuery.setAreaTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_地区属性.name()));
         depotQuery.setSpecialityStoreTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_体验店类型.name()));
         depotQuery.setPricesystemList(pricesystemMapper.findAll());
@@ -111,9 +113,7 @@ public class DepotService {
         depotForm.setChannelTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_渠道类型.name()));
         depotForm.setAreaTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_地区属性.name()));
         depotForm.setCarrierTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_运营商属性.name()));
-        depotForm.getCarrierTypeList().add(new NameValueDto(" "," "));
         depotForm.setChainTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_连锁属性.name()));
-        depotForm.getChainTypeList().add(new NameValueDto(" "," "));
         depotForm.setTurnoverTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_营业额分类.name()));
         depotForm.setSalePointTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_售点类型.name()));
         depotForm.setShopAreaTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_店面尺寸.name()));
@@ -153,51 +153,17 @@ public class DepotService {
         return depotDtoList;
     }
 
-    public List<DepotDto> findProxyShop(DepotQuery depotQuery){
-        List<String> officeIds = officeClient.getOfficeIdsByAccountId(SecurityUtils.getAccountId());
-        if(CollectionUtil.isNotEmpty(officeIds)){
-            Set<String> areaIds= Sets.newHashSet();
-            for(String officeId:officeIds){
-                String areaId = officeClient.getOfficeIdByOfficeType(officeId, Const.OFFICE_TYPE_AREA);
-                if(StringUtils.isNotBlank(areaId)){
-                    areaIds.add(areaId);
-                }
-            }
-            List<String> officeAndAreaIds = CollectionUtil.extractToList(officeClient.findByAreaIds(Lists.newArrayList(areaIds)),"id");
-            depotQuery.setOfficeIdList(officeAndAreaIds);
-        }
-        List<Depot> depotList = depotMapper.findByFilter(depotQuery);
-        return BeanUtil.map(depotList,DepotDto.class);
-    }
-
-    public  List<DepotDto> findAdShopBsc(String name){
-        DepotQuery depotQuery = new DepotQuery();
-        List<String> officeIds = officeClient.getOfficeIdsByAccountId(SecurityUtils.getAccountId());
-        if(CollectionUtil.isNotEmpty(officeIds)){
-            Set<String> areaIds = Sets.newHashSet();
-            for(String officeId:officeIds){
-                String areaId = officeClient.getOfficeIdByOfficeType(officeId, Const.OFFICE_TYPE_AREA);
-                if(StringUtils.isNotBlank(areaId)){
-                    areaIds.add(areaId);
-                }
-            }
-            List<String> officeAndAreaIds = CollectionUtil.extractToList(officeClient.findByAreaIds(Lists.newArrayList(areaIds)),"id");
-            depotQuery.setOfficeIdList(officeAndAreaIds);
-        }
-        depotQuery.setDepotName(name);
-        depotQuery.setAdShopBsc(true);
-        depotQuery.setTypeList(DepotUtils.getTypeValueByCategory(DepotCategoryEnum.AD_SHOP.name()));
-        Set<DepotDto> depotSet = Sets.newHashSet();
-        depotSet.addAll(BeanUtil.map(depotMapper.findByFilter(depotQuery),DepotDto.class));
-        depotQuery.setAdShopBsc(false);
-        depotSet.addAll(BeanUtil.map(depotMapper.findByFilter(depotQuery),DepotDto.class));
-        List<DepotDto> depotDtoList = Lists.newArrayList(depotSet);
-        return depotDtoList;
-    }
-
     public List<Depot> findStores() {
-        List<Integer> depotTypes = DepotUtils.getTypeValueByCategory(DepotCategoryEnum.STORE.name());
+        List<Integer> depotTypes = depotManager.getTypeValueByCategory(DepotCategoryEnum.STORE.name());
         return depotMapper.findByTypes(depotTypes);
+    }
+
+    public DepotQuery filterDepotIds() {
+        Map<String,Object> filterDepot = depotManager.filterDepotIds();
+        DepotQuery depotQuery=new DepotQuery();
+        depotQuery.setDepotIdList((List<String>) filterDepot.get("depotIdList"));
+        depotQuery.setOfficeIdList((List<String>) filterDepot.get("officeIdList"));
+        return depotQuery;
     }
 
     public List<Depot> findByFilter(DepotQuery depotQuery) {
@@ -227,9 +193,9 @@ public class DepotService {
                 }
             }
         }
-        depotForm.setType(DepotUtils.getDepotType(depotForm));
+        depot = BeanUtil.map(depotForm,Depot.class);
+        depotForm.setType(depotManager.getDepotType(depot));
         if (depotForm.isCreate()) {
-            depot = BeanUtil.map(depotForm,Depot.class);
             depotMapper.save(depot);
         } else {
             depotMapper.updateForm(depotForm);
@@ -242,7 +208,6 @@ public class DepotService {
         return depot;
     }
 
-    @Transactional
     public void synStore(){
         String cloudName = companyConfigClient.findByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
         LocalDateTime dateTime = depotMapper.getMaxOutDate(DataOutTypeEnum.大库.name());
@@ -279,8 +244,7 @@ public class DepotService {
                     store.setOutDate(LocalDateTimeUtils.parse(map.get("modifyDate").toString()));
                     store.setCode(map.get("code").toString());
                     store.setNamePinyin(StringUtils.getFirstSpell(store.getName()));
-
-                    store.setType(DepotUtils.getDepotType(BeanUtil.map(store,DepotForm.class)));
+                    store.setType(depotManager.getDepotType(store));
                     depotMapper.update(store);
                 }
             }
@@ -324,7 +288,7 @@ public class DepotService {
                     shop.setOutDate(LocalDateTimeUtils.parse(map.get("modifyDate").toString()));
                     shop.setCode(map.get("code").toString());
                     shop.setNamePinyin(StringUtils.getFirstSpell(shop.getName()));
-                    shop.setType(DepotUtils.getDepotType(BeanUtil.map(shop,DepotForm.class)));
+                    shop.setType(depotManager.getDepotType(shop));
                     depotMapper.update(shop);
                 }
             }
@@ -333,14 +297,14 @@ public class DepotService {
 
     public List<DepotDto> findAdDepot(String adShopName, String billType) {
         List<DepotDto> depotList;
-        DepotQuery depotQuery = new DepotQuery();//FilterUtils.getDepotFilter(AccountUtils.getAccountId());
+        DepotQuery depotQuery = filterDepotIds();
         depotQuery.setName(adShopName);
         if ("POP".equals(billType)) {
             depotQuery.setAllowAdApply(true);
             depotList = BeanUtil.map(depotMapper.findByFilter(depotQuery),DepotDto.class);
         } else {
             //代理区域所有门店，直营区域只能是财务关联门店
-            List<Integer> typeValueByCategory = DepotUtils.getTypeValueByCategory(DepotCategoryEnum.SHOP_PROXY_STORE.name());
+            List<Integer> typeValueByCategory = depotManager.getTypeValueByCategory(DepotCategoryEnum.SHOP_PROXY_STORE.name());
             depotQuery.setTypeList(typeValueByCategory);
             depotList =  BeanUtil.map(depotMapper.findByFilter(depotQuery),DepotDto.class);
         }
@@ -351,5 +315,10 @@ public class DepotService {
             }
         }
         return depotList;
+    }
+
+    public HashBiMap<String, Integer> getTypeMapByCategory(String category){
+        HashBiMap<String, Integer> typeMapByCategory = depotManager.getTypeMapByCategory(category);
+        return typeMapByCategory;
     }
 }

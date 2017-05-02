@@ -49,7 +49,7 @@ public class DemoPhoneTypeService {
     }
 
     public DemoPhoneTypeForm findForm(DemoPhoneTypeForm demoPhoneTypeForm){
-        List<BasicOfficeDto> areaList = officeClient.findByType(Const.OFFICE_TYPE_AREA);
+        List<BasicOfficeDto> areaList = officeClient.findByOfficeRuleName("办事处");
         List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = demoPhoneTypeOfficeMapper.findByDemoPhoneTypeId(demoPhoneTypeForm.getId());
         Map<String, DemoPhoneTypeOffice> demoPhoneTypeOfficeMap = CollectionUtil.extractToMap(demoPhoneTypeOfficeList, "officeId");
         for (BasicOfficeDto area : areaList) {

@@ -14,7 +14,7 @@ public class AccountChangeQuery {
     private List<String> officeIds= Lists.newArrayList();
     private LocalDateTime createdDateStart;
     private LocalDateTime createdDateEnd;
-    private String type;
+    private String officeRuleName;
     private String createdByName;
     private String officeId;
     private List<String> typeList=Lists.newArrayList();
@@ -78,14 +78,6 @@ public class AccountChangeQuery {
         this.createdDateEnd = createdDateEnd;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getCreatedByName() {
         return createdByName;
     }
@@ -100,5 +92,13 @@ public class AccountChangeQuery {
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
+    }
+
+    public String getOfficeRuleName() {
+        return officeRuleName;
+    }
+
+    public void setOfficeRuleName(String officeRuleName) {
+        this.officeRuleName = officeRuleName;
     }
 }
