@@ -2,10 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.sys.mapper.OfficeMapper">
 
-    <select id="findByType" resultType="Office">
+    <select id="findByOfficeRuleName" resultType="Office">
         SELECT t1.*
-        FROM sys_office t1
-        where t1.type=#{type}
+        FROM sys_office t1,sys_office_rule t2
+        where t1.office_rule_id=t2.id
+        and t2.name=#{officeRuleName}
         and t1.enabled =1
     </select>
 

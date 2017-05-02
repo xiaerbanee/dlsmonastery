@@ -15,7 +15,7 @@ import java.util.Map;
 @Mapper
 public interface OfficeMapper extends MyMapper<Office,String> {
 
-    List<Office> findByType(String type);
+    List<Office> findByOfficeRuleName(String officeRuleName);
 
     Office findByAccountId(String accountId);
 

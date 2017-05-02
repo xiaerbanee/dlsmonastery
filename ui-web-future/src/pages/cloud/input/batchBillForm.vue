@@ -5,11 +5,6 @@
   <div>
     <head-tab active="batchBillForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item>
-          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">保存</el-button>
-        </el-form-item>
-      </el-form>
     </div>
   </div>
 </template>
