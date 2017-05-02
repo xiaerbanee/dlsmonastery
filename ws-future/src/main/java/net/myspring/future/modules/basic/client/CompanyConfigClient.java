@@ -1,6 +1,6 @@
 package net.myspring.future.modules.basic.client;
 
-import net.myspring.future.common.dto.NameValueDto;
+import net.myspring.common.dto.NameValueDto;
 import net.myspring.future.modules.basic.dto.BasicCompanyConfigDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;

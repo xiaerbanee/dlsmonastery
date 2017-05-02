@@ -1,11 +1,15 @@
 package net.myspring.basic.modules.hr.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Position;
+import net.myspring.basic.modules.hr.domain.PositionModule;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.manager.PositionManager;
+import net.myspring.basic.modules.hr.manager.PositionModuleManager;
 import net.myspring.basic.modules.hr.mapper.PositionMapper;
+import net.myspring.basic.modules.hr.mapper.PositionModuleMapper;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -27,6 +31,8 @@ public class PositionService {
     private PositionMapper positionMapper;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private PositionModuleMapper positionModuleMapper;
 
 
     public List<PositionDto> findAll(){
@@ -77,12 +83,16 @@ public class PositionService {
         }
         positionMapper.deleteModuleByPosition(positionForm.getId());
         if(CollectionUtil.isNotEmpty(positionForm.getPermissionIdList())){
-            positionMapper.savePositionAndBankendModule(positionForm.getId(),positionForm.getPermissionIdList());
+            List<PositionModule> positionModuleList= Lists.newArrayList();
+            for(String moduleId:positionForm.getPermissionIdList()){
+                positionModuleList.add(new PositionModule(position.getId(),moduleId));
+            }
+            positionModuleMapper.batchSave(positionModuleList);
         }
         return position;
     }
 
-    public void savePositionAndModule(PositionForm positionForm){
+    public void savePositionAndPermission(PositionForm positionForm){
         positionMapper.deletePermissionByPosition(positionForm.getId());
         if(CollectionUtil.isNotEmpty(positionForm.getPermissionIdList())){
             positionMapper.savePositionAndPermission(positionForm.getId(),positionForm.getPermissionIdList());

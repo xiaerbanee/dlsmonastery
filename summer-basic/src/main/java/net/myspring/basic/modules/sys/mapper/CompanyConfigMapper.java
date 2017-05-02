@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.sys.mapper;
 
-import net.myspring.basic.common.mybatis.MyMapper;
-import net.myspring.basic.modules.sys.domain.Company;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.CompanyConfig;
 import net.myspring.basic.modules.sys.dto.CompanyConfigDto;
 import net.myspring.basic.modules.sys.web.query.CompanyConfigQuery;

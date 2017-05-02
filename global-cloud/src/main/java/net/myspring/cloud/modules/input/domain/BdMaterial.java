@@ -1,6 +1,5 @@
 package net.myspring.cloud.modules.input.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class BdMaterial {
@@ -14,14 +13,6 @@ public class BdMaterial {
     //分组名称
     private String fMaterialGroupName;
     private LocalDateTime fModifyDate;
-    //存货类别
-    private String fCateGoryId;
-
-    //一级价
-    private BigDecimal price1;
-
-    //广告让利
-    private BigDecimal rlPrice;
 
     public String getfMasterId() {
         return fMasterId;
@@ -71,27 +62,4 @@ public class BdMaterial {
         this.fModifyDate = fModifyDate;
     }
 
-    public String getfCateGoryId() {
-        return fCateGoryId;
-    }
-
-    public void setfCateGoryId(String fCateGoryId) {
-        this.fCateGoryId = fCateGoryId;
-    }
-
-    public BigDecimal getPrice1() {
-        return price1;
-    }
-
-    public void setPrice1(BigDecimal price1) {
-        this.price1 = price1;
-    }
-
-    public BigDecimal getRlPrice() {
-        return rlPrice;
-    }
-
-    public void setRlPrice(BigDecimal rlPrice) {
-        this.rlPrice = rlPrice;
-    }
 }

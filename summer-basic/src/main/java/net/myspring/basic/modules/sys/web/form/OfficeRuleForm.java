@@ -2,13 +2,11 @@ package net.myspring.basic.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.enums.OfficeRuleEnum;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

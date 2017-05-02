@@ -1,20 +1,20 @@
 package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.enums.K3CloudBillTypeEnum;
+import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.input.service.BatchBillService;
 import net.myspring.cloud.modules.input.service.BdCustomerService;
 import net.myspring.cloud.modules.input.service.BdMaterialService;
 import net.myspring.cloud.modules.input.service.BdStockService;
-import net.myspring.cloud.modules.input.web.form.BatchBIllForm;
+import net.myspring.cloud.modules.input.web.form.BatchBillForm;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.ServletRequest;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/25.
  */
-@Controller
+@RestController
 @RequestMapping(value = "input/batchBill")
 public class BatchBillController {
     @Autowired
@@ -39,18 +39,19 @@ public class BatchBillController {
     private BatchBillService batchBillService;
 
     @RequestMapping(value = "form")
-    public BatchBIllForm form (BatchBIllForm batchBIllForm, String companyName) {
-        if (StringUtils.isNotBlank(companyName)) {
+    public BatchBillForm form (BatchBillForm batchBillForm) {
+        String companyId = SecurityUtils.getCompanyId();
+        if (StringUtils.isNotBlank(companyId)) {
             List<BdMaterial> materials = bdMaterialService.findAll();
             for(BdMaterial bdMaterial : materials){
-                batchBIllForm.getMaterialMap().put(bdMaterial.getfName(),bdMaterial.getfNumber());
+                batchBillForm.getMaterialMap().put(bdMaterial.getfName(),bdMaterial.getfNumber());
             }
-            batchBIllForm.setCustomerNameList(bdCustomerService.findName());
-            batchBIllForm.setProductNameList(CollectionUtil.extractToList(materials,"fName"));
-            batchBIllForm.setTypeList(K3CloudBillTypeEnum.values());
-            batchBIllForm.setStoreList(bdStockService.findAll());
+            batchBillForm.setCustomerNameList(bdCustomerService.findName());
+            batchBillForm.setProductNameList(CollectionUtil.extractToList(materials,"fName"));
+            batchBillForm.setTypeList(K3CloudBillTypeEnum.values());
+            batchBillForm.setStoreList(bdStockService.findAll());
         }
-        return batchBIllForm;
+        return batchBillForm;
     }
 
     @RequestMapping(value = "save")

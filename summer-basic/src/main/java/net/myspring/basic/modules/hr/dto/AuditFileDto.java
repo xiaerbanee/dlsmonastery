@@ -1,10 +1,8 @@
 package net.myspring.basic.modules.hr.dto;
 
-import net.myspring.basic.common.dto.DataDto;
-import net.myspring.basic.common.utils.Const;
+import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.util.cahe.annotation.CacheInput;
-import net.myspring.util.text.StringUtils;
 
 /**
  * Created by admin on 2017/4/5.

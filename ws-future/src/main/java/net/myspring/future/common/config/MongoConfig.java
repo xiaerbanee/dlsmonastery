@@ -22,10 +22,10 @@ public class MongoConfig {
     private MongoMappingContext mongoMappingContext;
 
     @Bean
-    public GridFsTemplate exportGridFsTemplate() {
+    public GridFsTemplate tempGridFsTemplate() {
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mongoMappingContext);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"export");
+        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDbFactory, converter,"temp");
         return gridFsTemplate;
     }
 

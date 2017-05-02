@@ -1,6 +1,6 @@
 package net.myspring.future.modules.basic.dto;
 
-import net.myspring.future.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;

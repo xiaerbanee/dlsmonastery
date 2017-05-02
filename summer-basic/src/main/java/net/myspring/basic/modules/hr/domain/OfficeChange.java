@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.domain;
 
 
 import net.myspring.basic.modules.sys.domain.Office;
-import net.myspring.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

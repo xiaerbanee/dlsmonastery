@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.domain;
 
-import net.myspring.common.domain.AuditEntity;
+import net.myspring.basic.common.domain.AuditEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

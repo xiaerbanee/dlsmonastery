@@ -1,11 +1,8 @@
 package net.myspring.basic.modules.hr.dto;
 
-import net.myspring.basic.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.util.cahe.annotation.CacheInput;
-import net.myspring.util.collection.CollectionUtil;
-
-import java.util.Map;
 
 /**
  * Created by admin on 2017/4/5.

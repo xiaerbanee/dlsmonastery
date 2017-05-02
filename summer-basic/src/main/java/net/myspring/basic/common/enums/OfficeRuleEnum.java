@@ -12,8 +12,8 @@ import java.util.Map;
  * Created by wangzm on 2017/4/24.
  */
 public enum OfficeRuleEnum {
-    BUSINESS_OFFICE,
-    SUPPORT_OFFICE;
+    BUSINESS,
+    SUPPORT;
 
     private static List<String> list= Lists.newArrayList();
 

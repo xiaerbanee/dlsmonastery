@@ -4,7 +4,7 @@ package net.myspring.basic.modules.hr.web.form;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.hr.domain.AuditFile;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.general.modules.sys.dto.ProcessTypeDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 

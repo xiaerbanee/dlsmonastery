@@ -1,6 +1,6 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.future.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.layout.domain.AdApply;
 

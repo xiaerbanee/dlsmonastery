@@ -1,14 +1,13 @@
 package net.myspring.basic.modules.hr.dto;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.util.cahe.annotation.CacheInput;
-import net.myspring.util.collection.CollectionUtil;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by liuj on 2017/3/19.
@@ -29,7 +28,7 @@ public class AccountDto extends DataDto<Account> {
     @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
     private String leaderName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "regularDate")
-    private String regularDate;
+    private LocalDate regularDate;
     @CacheInput(inputKey = "companys",inputInstance = "companyId",outputInstance = "name")
     private String companyName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
@@ -125,11 +124,11 @@ public class AccountDto extends DataDto<Account> {
         this.leaderName = leaderName;
     }
 
-    public String getRegularDate() {
+    public LocalDate getRegularDate() {
         return regularDate;
     }
 
-    public void setRegularDate(String regularDate) {
+    public void setRegularDate(LocalDate regularDate) {
         this.regularDate = regularDate;
     }
 
@@ -140,6 +139,7 @@ public class AccountDto extends DataDto<Account> {
     public void setType(String type) {
         this.type = type;
     }
+
 
     public String getEmployeeStatus() {
         return employeeStatus;

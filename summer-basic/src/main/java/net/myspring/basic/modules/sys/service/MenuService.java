@@ -1,32 +1,31 @@
 package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.hr.domain.Account;
-import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
-import net.myspring.basic.modules.hr.mapper.PositionModuleMapper;
-import net.myspring.basic.modules.sys.domain.*;
-import net.myspring.basic.modules.sys.dto.*;
+import net.myspring.basic.modules.sys.domain.Menu;
+import net.myspring.basic.modules.sys.domain.Permission;
+import net.myspring.basic.modules.sys.dto.BackendMenuDto;
+import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.manager.MenuManager;
-import net.myspring.basic.modules.sys.mapper.*;
+import net.myspring.basic.modules.sys.mapper.BackendMapper;
+import net.myspring.basic.modules.sys.mapper.MenuMapper;
+import net.myspring.basic.modules.sys.mapper.PermissionMapper;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
 import net.myspring.basic.modules.sys.web.query.MenuQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @Service

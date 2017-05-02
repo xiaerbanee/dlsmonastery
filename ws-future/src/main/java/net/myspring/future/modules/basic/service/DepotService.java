@@ -3,46 +3,34 @@ package net.myspring.future.modules.basic.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.myspring.future.common.dto.NameValueDto;
+import net.myspring.common.dto.NameValueDto;
 import net.myspring.future.common.enums.*;
-import net.myspring.future.common.utils.DepotUtils;
 import net.myspring.future.common.utils.Const;
-import net.myspring.future.common.utils.IdUtils;
+import net.myspring.future.common.utils.DepotUtils;
 import net.myspring.future.common.utils.SecurityUtils;
 import net.myspring.future.modules.basic.client.*;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.mapper.*;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.form.DepotForm;
-import net.myspring.future.modules.crm.model.DepotInventoryModel;
-import net.myspring.future.modules.crm.model.ReceivableReportForDetail;
-import net.myspring.future.modules.crm.model.ReceivableReportForSummary;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.layout.domain.ShopAttribute;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.mapper.ShopAttributeMapper;
 import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.excel.SimpleExcelBook;
-import net.myspring.util.excel.SimpleExcelColumn;
-import net.myspring.util.excel.SimpleExcelSheet;
-import net.myspring.util.exception.ServiceException;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
-import net.myspring.util.time.LocalDateUtils;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -207,80 +195,6 @@ public class DepotService {
         return depotDtoList;
     }
 
-    public List<DepotDto> setInventory(List<DepotDto> depotDtoList, DepotQuery depotQuery) {
-        List<DepotInventoryModel> depotInventoryModels = depotMapper.findInventoryData(depotQuery);
-        Map<String, List<DepotInventoryModel>> depotInventoryModelMap = Maps.newHashMap();
-        for (DepotInventoryModel depotInventoryModel : depotInventoryModels) {
-            if (!depotInventoryModelMap.containsKey(depotInventoryModel.getShopId())) {
-                depotInventoryModelMap.put(depotInventoryModel.getShopId(), Lists.newArrayList());
-            }
-            depotInventoryModelMap.get(depotInventoryModel.getShopId()).add(depotInventoryModel);
-        }
-        for (DepotDto depotDto : depotDtoList) {
-            DepotInventoryModel depotInventoryModel = new DepotInventoryModel();
-            List<DepotInventoryModel> depotInventoryModelList = depotInventoryModelMap.get(depotDto.getId());
-            if (CollectionUtil.isNotEmpty(depotInventoryModelList)) {
-                for (DepotInventoryModel depotInventoryModelData : depotInventoryModelList) {
-                    switch (depotInventoryModelData.getType()) {
-                        case "核销库存":
-                            depotInventoryModel.addSaleStockQty(depotInventoryModelData.getQty());
-                            break;
-                        case "电子保卡库存":
-                            depotInventoryModel.addBaoKaStockQty(depotInventoryModelData.getQty());
-                            break;
-                        case "核销销量":
-                            depotInventoryModel.addSaleSalesQty(depotInventoryModelData.getQty());
-                            break;
-                        case "电子保卡销量":
-                            depotInventoryModel.addBaoKaSalesQty(depotInventoryModelData.getQty());
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-            depotDto.setDepotInventoryModel(depotInventoryModel);
-        }
-        return depotDtoList;
-    }
-
-    public DepotDto setInventoryDetail(DepotDto depotDto, DepotQuery depotQuery) {
-        List<DepotInventoryModel> depotInventoryModels = depotMapper.findInventoryData(depotQuery);
-        Map<String, List<DepotInventoryModel>> depotInventoryModelMap = Maps.newHashMap();
-        for (DepotInventoryModel depotInventoryModelData : depotInventoryModels) {
-            if (!depotInventoryModelMap.containsKey(depotInventoryModelData.getProductTypeName())) {
-                depotInventoryModelMap.put(depotInventoryModelData.getProductTypeName(), Lists.newArrayList());
-            }
-            depotInventoryModelMap.get(depotInventoryModelData.getProductTypeName()).add(depotInventoryModelData);
-        }
-        List<DepotInventoryModel> depotInventoryModelList = Lists.newArrayList();
-        for (Map.Entry<String, List<DepotInventoryModel>> entry : depotInventoryModelMap.entrySet()) {
-            DepotInventoryModel depotInventoryModel = new DepotInventoryModel();
-            depotInventoryModel.setProductTypeName(entry.getKey());
-            for (DepotInventoryModel depotInventoryModelData : entry.getValue()) {
-                switch (depotInventoryModelData.getType()) {
-                    case "核销库存":
-                        depotInventoryModel.addSaleStockQty(depotInventoryModelData.getQty());
-                        break;
-                    case "电子保卡库存":
-                        depotInventoryModel.addBaoKaStockQty(depotInventoryModelData.getQty());
-                        break;
-                    case "核销销量":
-                        depotInventoryModel.addSaleSalesQty(depotInventoryModelData.getQty());
-                        break;
-                    case "电子保卡销量":
-                        depotInventoryModel.addBaoKaSalesQty(depotInventoryModelData.getQty());
-                        break;
-                    default:
-                        break;
-                }
-            }
-            depotInventoryModelList.add(depotInventoryModel);
-        }
-        depotDto.setDepotInventoryModelList(depotInventoryModelList);
-        return depotDto;
-    }
-
     public List<Depot> findStores() {
         List<Integer> depotTypes = DepotUtils.getTypeValueByCategory(DepotCategoryEnum.STORE.name());
         return depotMapper.findByTypes(depotTypes);
@@ -437,124 +351,5 @@ public class DepotService {
             }
         }
         return depotList;
-    }
-
-    public Page<DepotDto> findShopAccount(Pageable pageable, DepotQuery depotQuery) {
-        Page<DepotDto> page = depotMapper.findDepotAccountPage(pageable, depotQuery);
-        Map<String, ShopDeposit> scbzjMap = Maps.newHashMap();
-        Map<String, ShopDeposit> xxbzjMap = Maps.newHashMap();
-        Map<String, ShopDeposit> ysjyjMap = Maps.newHashMap();
-        Map<String, ReceivableReportForSummary> dataStartMap = Maps.newHashMap();
-        Map<String, ReceivableReportForSummary> dataEndMap = Maps.newHashMap();
-        List<ReceivableReportForSummary> dataStartList = Lists.newArrayList();
-        List<ReceivableReportForSummary> dataEndList = Lists.newArrayList();
-        if (CollectionUtil.isNotEmpty(page.getContent())) {
-            String cloudName = companyConfigClient.findByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
-            List<String> outIds = CollectionUtil.extractToList(page.getContent(), "outId");
-            String dateStartJson = cloudClient.findShouldGet(cloudName, outIds, LocalDateUtils.format(depotQuery.getDutyDateStart()));
-            String dateEndJson = cloudClient.findShouldGet(cloudName, outIds, LocalDateUtils.format(depotQuery.getDutyDateEnd().plusDays(1)));
-            try{
-                dataStartList = ObjectMapperUtils.getObjectMapper().readValue(dateStartJson, ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, ReceivableReportForSummary.class));
-                dataEndList = ObjectMapperUtils.getObjectMapper().readValue(dateEndJson, ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, ReceivableReportForSummary.class));
-                dataStartMap = CollectionUtil.extractToMap(dataStartList, "customerId");
-                dataEndMap = CollectionUtil.extractToMap(dataEndList, "customerId");
-            }catch (IOException e){
-                throw  new ServiceException("金蝶返回数据解析失败");
-            }
-            List<ShopDeposit> scbzjList = shopDepositMapper.findByTypeAndShopIds(ShopDepositTypeEnum.市场保证金.name(), CollectionUtil.extractToList(page.getContent(), "id"));
-            List<ShopDeposit> xxbzjList = shopDepositMapper.findByTypeAndShopIds(ShopDepositTypeEnum.形象保证金.name(), CollectionUtil.extractToList(page.getContent(), "id"));
-            List<ShopDeposit> ysjyjxxbzjList = shopDepositMapper.findByTypeAndShopIds(ShopDepositTypeEnum.演示机押金.name(), CollectionUtil.extractToList(page.getContent(), "id"));
-            xxbzjMap = CollectionUtil.extractToMap(xxbzjList, "shopId");
-            scbzjMap = CollectionUtil.extractToMap(scbzjList, "shopId");
-            ysjyjMap=CollectionUtil.extractToMap(ysjyjxxbzjList,"shopId");
-        }
-        for (DepotDto depotDto : page.getContent()) {
-            depotDto.getDepositMap().put("qcys", dataStartMap.get(depotDto.getOutId())== null ? BigDecimal.ZERO : dataStartMap.get(depotDto.getOutId()).getBeginAmount());
-            depotDto.getDepositMap().put("qmys", dataEndMap.get(depotDto.getOutId()) == null ? BigDecimal.ZERO : dataEndMap.get(depotDto.getOutId()).getBeginAmount());
-            depotDto.getDepositMap().put("xxbzj", xxbzjMap.get(depotDto.getId()) == null ? BigDecimal.ZERO : xxbzjMap.get(depotDto.getId()).getAmount());
-            depotDto.getDepositMap().put("scbzj", scbzjMap.get(depotDto.getId()) == null ? BigDecimal.ZERO : scbzjMap.get(depotDto.getId()).getAmount());
-            depotDto.getDepositMap().put("ysjyj", ysjyjMap.get(depotDto.getId()) == null ? BigDecimal.ZERO : ysjyjMap.get(depotDto.getId()).getAmount());
-        }
-        return page;
-    }
-
-    public List<ReceivableReportForDetail> findShopAccountDetail(String customerId, String dateRange) {
-        String cloudName = companyConfigClient.findByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
-        List<ReceivableReportForDetail> receivableReportForDetailList = Lists.newArrayList();
-        String json = cloudClient.receivableReportForDetailList(cloudName, customerId, dateRange);
-        try{
-            receivableReportForDetailList = ObjectMapperUtils.getObjectMapper().readValue(json, ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, ReceivableReportForDetail.class));
-        }catch (IOException e){
-            throw  new ServiceException("金蝶返回数据解析失败");
-        }
-        return receivableReportForDetailList;
-    }
-
-    public  List<DepotDto> findSimpleExcelSheets(Workbook workbook, DepotQuery depotQuery) {
-        List<DepotDto> depotList = depotMapper.findShopAccountExportPage(depotQuery);
-        Map<String, ReceivableReportForSummary> dataStartMap = Maps.newHashMap();
-        Map<String, ReceivableReportForSummary> dataEndMap = Maps.newHashMap();
-        List<ReceivableReportForSummary> dataStartList = Lists.newArrayList();
-        List<ReceivableReportForSummary> dataEndList = Lists.newArrayList();
-        if (CollectionUtil.isNotEmpty(depotList)) {
-            List<String> outIds = CollectionUtil.extractToList(depotList, "outId");
-            List<List<String>> outIdsList= IdUtils.splitList(outIds,400);
-            for(int  i=0;i<outIdsList.size();i++) {
-                String cloudName = companyConfigClient.findByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
-                String dateStartJson = cloudClient.findShouldGet(cloudName, outIdsList.get(i), LocalDateUtils.format(depotQuery.getDutyDateStart()));
-                String dateEndJson = cloudClient.findShouldGet(cloudName, outIdsList.get(i),  LocalDateUtils.format(depotQuery.getDutyDateEnd().plusDays(1)));
-                try{
-                    dataStartList = ObjectMapperUtils.getObjectMapper().readValue(dateStartJson, ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, ReceivableReportForSummary.class));
-                    dataEndList = ObjectMapperUtils.getObjectMapper().readValue(dateEndJson, ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, ReceivableReportForSummary.class));
-                    dataStartMap.putAll(CollectionUtil.extractToMap(dataStartList, "customerId"));
-                    dataEndMap.putAll(CollectionUtil.extractToMap(dataEndList, "customerId"));
-                }catch (IOException e){
-                    throw  new ServiceException("金蝶返回数据解析失败");
-                }
-            }
-        }
-        for (DepotDto depotDto : depotList) {
-            depotDto.getDepositMap().put("qcys", dataStartMap.get(depotDto.getOutId()) == null ? BigDecimal.ZERO :  dataStartMap.get(depotDto.getOutId()).getBeginAmount());
-            depotDto.getDepositMap().put("qmys", dataEndMap.get(depotDto.getOutId()) == null ? BigDecimal.ZERO : dataEndMap.get(depotDto.getOutId()).getBeginAmount());
-        }
-        return depotList;
-    }
-
-    public SimpleExcelBook accountExport(Workbook workbook, DepotQuery depotQuery) {
-        String dateRange = depotQuery.getDutyDateStart() + "~" + depotQuery.getDutyDateEnd();
-        depotQuery.getDutyDateEnd().plusDays(1);
-        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "name", "门店"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "office.name", "机构"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "area.name", "办事处"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depositMap.qcys", "期初应收"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depositMap.qmys", "期末应收"));
-
-        List<SimpleExcelColumn> simpleExcelSheetColumnList = Lists.newArrayList();
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "billType", "业务类型"));
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "billNo", "单据编号"));
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "date", "记账日期"));
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "materialName", "名称"));
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "quantity", "数量"));
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "price", "单价"));
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "amount", "金额"));
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "payableAmount", "预收"));
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "actualPayAmount", "应收"));
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "endAmount", "期末"));
-        simpleExcelSheetColumnList.add(new SimpleExcelColumn(workbook, "note", "备注"));
-
-        List<DepotDto> depotList = findSimpleExcelSheets(workbook,depotQuery);
-        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("应收报表~所有门店", depotList, simpleExcelColumnList);
-        simpleExcelSheetList.add(simpleExcelSheet);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"应收报表.xlsx",simpleExcelSheetList);
-
-        SimpleExcelSheet simpleExcelSheetDetail = null;
-        for(DepotDto depotDto : depotList){
-            List<ReceivableReportForDetail> depotDetail=findShopAccountDetail(depotDto.getOutId(),dateRange);
-            simpleExcelSheetDetail = new SimpleExcelSheet(depotDto.getName(),depotDetail,simpleExcelSheetColumnList);
-            simpleExcelBook.getSimpleExcelSheets().add(simpleExcelSheetDetail);
-        }
-        return simpleExcelBook;
     }
 }

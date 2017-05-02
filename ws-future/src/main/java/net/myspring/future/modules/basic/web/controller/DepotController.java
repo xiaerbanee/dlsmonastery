@@ -5,33 +5,26 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.config.ExcelView;
 import net.myspring.future.common.utils.Const;
 import net.myspring.future.common.utils.DepotUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.validator.DepotValidator;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.basic.web.validator.DepotValidator;
 import net.myspring.future.modules.basic.web.form.DepotForm;
-import net.myspring.future.modules.crm.model.ReceivableReportForDetail;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.layout.service.ShopAttributeService;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.excel.SimpleExcelBook;
-import net.myspring.util.excel.SimpleExcelColumn;
-import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -81,21 +74,6 @@ public class DepotController {
         return depotForm;
     }
 
-    @RequestMapping(value = "inventory")
-    public Page<DepotDto> inventory(Pageable pageable,DepotQuery depotQuery) {
-//        searchEntity.getParams().putAll(FilterUtils.getDepotFilter(AccountUtils.getAccountId()));
-        Page<DepotDto> page = depotService.findPage(pageable,depotQuery);
-        depotQuery.setDepotIdList(CollectionUtil.extractToList(page.getContent(),"id"));
-        depotService.setInventory(page.getContent(),depotQuery);
-        return page;
-    }
-
-    @RequestMapping(value = "inventoryDetail")
-    public DepotDto inventoryDetail(DepotDto depotDto,DepotQuery depotQuery) {
-        depotQuery.setDepotIdList( Lists.newArrayList(depotDto.getId()));
-        depotService.setInventoryDetail(depotDto,depotQuery);
-        return depotDto;
-    }
 
     @RequestMapping(value = "save")
     public RestResponse save(DepotForm depotForm) {
@@ -209,67 +187,4 @@ public class DepotController {
         return shopList;
     }
 
-    @RequestMapping(value = "depotAccountData",method = RequestMethod.GET)
-    public Page<DepotDto> depotAccountData(Pageable pageable,DepotQuery depotQuery){
-        if(depotQuery.getDutyDateStart() == null && depotQuery.getDutyDateEnd() == null){
-            depotQuery.setDutyDateStart(LocalDate.now().plusDays(-70));
-            depotQuery.setDutyDateEnd(LocalDate.now().plusMonths(1));
-        }
-//        searchEntity.getParams().putAll(FilterUtils.getDepotFilter(AccountUtils.getAccountId()));
-        Page<DepotDto> page = depotService.findShopAccount(pageable,depotQuery);
-        return page;
-    }
-
-    @RequestMapping(value = "depotAccountDetail",method = RequestMethod.GET)
-    public List<ReceivableReportForDetail> depotAccountDetail(Depot depot,DepotQuery depotQuery) {
-        String dateStart = LocalDateUtils.format(LocalDate.now().plusDays(-70));
-        String dateEnd = LocalDateUtils.format(LocalDate.now().plusMonths(1));
-        String dateRange = depotQuery.getDateRange();
-        if(StringUtils.isNotBlank(dateRange)) {
-            String[] dateRangeBetween = dateRange.split(" - ");
-            dateStart = dateRangeBetween[0];
-            dateEnd = dateRangeBetween[1];
-        }
-        dateRange=dateStart+"~"+dateEnd;
-        List<ReceivableReportForDetail> receivableReportForDetail=depotService.findShopAccountDetail(depot.getOutId(),dateRange);
-        return  receivableReportForDetail;
-    }
-
-    //导出所有直营门店的应收
-    @RequestMapping(value = "shopExport", method = RequestMethod.GET)
-    public ModelAndView shopExport(DepotQuery depotQuery) {
-        ExcelView excelView = new ExcelView();
-        if(depotQuery.getDutyDateStart() == null && depotQuery.getDutyDateEnd() == null){
-            depotQuery.setDutyDateStart(LocalDate.now().plusDays(-70));
-            depotQuery.setDutyDateEnd(LocalDate.now().plusMonths(1));
-        }
-//        searchEntity.getParams().putAll(FilterUtils.getDepotFilter(AccountUtils.getAccountId()));
-        Workbook workbook = new SXSSFWorkbook(Const.DEFAULT_PAGE_SIZE);
-        List<DepotDto> depotList=depotService.findSimpleExcelSheets(workbook,depotQuery);
-        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "name", "门店"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "office.name", "机构"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "area.name", "办事处"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "extendMap.qcys", "期初应收"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "extendMap.qmys", "期末应收"));
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("应收报表~所有门店", depotList, simpleExcelColumnList);
-        simpleExcelSheetList.add(simpleExcelSheet);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"应收报表.xlsx",simpleExcelSheetList);
-        return new ModelAndView(excelView, "simpleExcelBook", simpleExcelBook);
-    }
-
-    //导出应收(明细)
-    @RequestMapping(value = "accountExport", method = RequestMethod.GET)
-    public ModelAndView accountExport(DepotQuery depotQuery) {
-        ExcelView excelView = new ExcelView();
-        if(depotQuery.getDutyDateStart() == null && depotQuery.getDutyDateEnd() == null){
-            depotQuery.setDutyDateStart(LocalDate.now().plusDays(-70));
-            depotQuery.setDutyDateEnd(LocalDate.now().plusMonths(1));
-        }
-//        searchEntity.getParams().putAll(FilterUtils.getDepotFilter(AccountUtils.getAccountId()));
-        Workbook workbook = new SXSSFWorkbook(Const.DEFAULT_PAGE_SIZE);
-        SimpleExcelBook simpleExcelBook = depotService.accountExport(workbook,depotQuery);
-        return new ModelAndView(excelView, "simpleExcelBook", simpleExcelBook);
-    }
 }

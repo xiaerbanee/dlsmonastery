@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.web.form;
 
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.hr.domain.PositionModule;
 
 /**

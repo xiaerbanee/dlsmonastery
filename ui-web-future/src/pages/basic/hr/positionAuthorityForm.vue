@@ -6,7 +6,7 @@
         <el-row :gutter = "20">
           <el-col :span = "7">
             <el-form-item label="岗位" prop="id">
-              <el-select v-model="inputForm.id" filterable clearable remote placeholder="请输入关键字" :remote-method="remotePosition" @change="getTreeNode(inputForm.id)" :loading="remoteLoading">
+              <el-select v-model="inputForm.id" filterable :clearable=true remote placeholder="请输入关键字" :remote-method="remotePosition" @change="getTreeNode(inputForm.id)" :loading="remoteLoading">
                 <el-option v-for="item in positions" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>

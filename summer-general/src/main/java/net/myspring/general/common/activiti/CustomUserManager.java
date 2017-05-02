@@ -9,7 +9,7 @@ import org.activiti.engine.impl.UserQueryImpl;
 import org.activiti.engine.impl.persistence.entity.IdentityInfoEntity;
 import org.activiti.engine.impl.persistence.entity.UserEntity;
 import org.activiti.engine.impl.persistence.entity.UserEntityManager;
-import org.apache.commons.lang3.StringUtils;
+import net.myspring.util.text.StringUtils;
 
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package net.myspring.general.modules.sys.domain;
 
-import net.myspring.common.domain.TreeEntity;
+import net.myspring.general.common.domain.TreeEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

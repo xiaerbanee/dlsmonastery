@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.sys.domain;
 
 
-import net.myspring.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

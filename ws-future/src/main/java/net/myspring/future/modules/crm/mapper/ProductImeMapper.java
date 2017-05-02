@@ -1,8 +1,7 @@
 package net.myspring.future.modules.crm.mapper;
 
-import net.myspring.future.common.mybatis.MyMapper;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.model.ProductImeHistoryModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -28,8 +27,6 @@ public interface ProductImeMapper extends MyMapper<ProductIme, String> {
     List<ProductIme> findByStoreAndBoxList(@Param("storeId") String storeId, @Param("list") List<String> boxList);
 
     List<ProductIme> findByStoreAndBoxImeAndIme(@Param("storeId") String storeId, @Param("boxList") List<String> boxIme, @Param("imeList") List<String> imeList);
-
-    List<ProductImeHistoryModel> findProductImeHistoryModel(String id);
 
     Page<ProductIme> findPage(Pageable pageable, @Param("p") Map<String, Object> map);
 

@@ -8,12 +8,10 @@ import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.mapper.AccountDtoMapper;
 import net.myspring.uaa.mapper.AccountWeixinDtoMapper;
 import net.myspring.uaa.mapper.CompanyMapper;
-import net.myspring.util.base.ObjectUtil;
 import net.myspring.util.collection.CollectionUtil;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,12 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**

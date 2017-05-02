@@ -2,10 +2,12 @@ package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.dto.PricesystemDto;
 import net.myspring.future.modules.basic.service.PricesystemService;
 import net.myspring.future.modules.basic.web.query.PricesystemQuery;
 import net.myspring.future.modules.basic.web.form.PricesystemForm;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +41,10 @@ public class PricesystemController {
 
     @RequestMapping(value = "findForm")
     public PricesystemForm findOne(PricesystemForm pricesystemForm) {
+        if(pricesystemForm.getId() != null){
+            Pricesystem pricesystem = pricesystemService.findOne(pricesystemForm.getId());
+            pricesystemForm = BeanUtil.map(pricesystem,PricesystemForm.class);
+        }
         pricesystemService.initPricesystemDetail(pricesystemForm);
         return pricesystemForm;
     }

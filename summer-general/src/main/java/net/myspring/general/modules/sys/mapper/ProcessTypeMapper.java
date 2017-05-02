@@ -1,6 +1,6 @@
 package net.myspring.general.modules.sys.mapper;
 
-import net.myspring.general.common.mybatis.MyMapper;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.general.modules.sys.domain.ProcessType;
 import net.myspring.general.modules.sys.dto.ProcessTypeDto;
 import net.myspring.general.modules.sys.web.query.ProcessTypeQuery;

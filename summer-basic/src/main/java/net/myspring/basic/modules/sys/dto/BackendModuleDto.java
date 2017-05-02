@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.sys.dto;
 
-import net.myspring.basic.common.dto.DataDto;
-import net.myspring.basic.modules.sys.domain.Backend;
+import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.sys.domain.BackendModule;
 import net.myspring.util.cahe.annotation.CacheInput;
 

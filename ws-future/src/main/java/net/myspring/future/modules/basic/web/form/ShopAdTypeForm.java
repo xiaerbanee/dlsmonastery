@@ -1,7 +1,7 @@
 package net.myspring.future.modules.basic.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.future.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 
 import java.math.BigDecimal;

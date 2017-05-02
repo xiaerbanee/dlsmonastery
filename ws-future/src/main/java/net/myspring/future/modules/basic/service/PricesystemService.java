@@ -9,6 +9,7 @@ import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.PricesystemDto;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.manager.PricesystemDetailManager;
 import net.myspring.future.modules.basic.manager.PricesystemManager;
 import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
@@ -19,7 +20,7 @@ import net.myspring.future.modules.basic.web.form.PricesystemDetailForm;
 import net.myspring.future.modules.basic.web.form.PricesystemForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
-import org.apache.commons.lang3.StringUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,17 +75,17 @@ public class PricesystemService {
                 PricesystemDetailForm pricesystemDetailForm = pricesystemForm.getPricesystemDetailList().get(i);
                 if (pricesystemDetailForm.getPrice() != null && pricesystemDetailForm.getPrice().compareTo(BigDecimal.ZERO) > 0) {
                     pricesystemDetailForm.setPricesystemId(pricesystem.getId());
-                    pricesystemDetailForm.setProductId(pricesystemDetailForm.getProduct().getId());
+                    pricesystemDetailForm.setProductId(pricesystemDetailForm.getProductId());
                     pricesystemDetails.add(pricesystemDetailForm);
                 }
             }
             if (CollectionUtil.isNotEmpty(pricesystemDetails)) {
                 Collections.sort(pricesystemDetails,new Comparator<PricesystemDetailForm>(){
                     public int compare(PricesystemDetailForm p1, PricesystemDetailForm p2) {
-                        return p1.getProduct().getName().compareTo(p2.getProduct().getName());
+                        return p1.getProductName().compareTo(p2.getProductName());
                     }
                 });
-                String expressProductId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.getCode());
+                String expressProductId ="2307" /*companyConfigClient.getValueByCode(CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.getCode())*/;
                 for(int i = 0;i<pricesystemDetails.size();i++) {
                     if(StringUtils.isNotBlank(expressProductId) && expressProductId.equals(pricesystemDetails.get(i).getProductId())) {
                         pricesystemDetails.get(i).setSort(0);
@@ -114,8 +115,21 @@ public class PricesystemService {
         List<PricesystemDetailForm> pricesystemDetailList=Lists.newArrayList();
         for(Product product:productList){
             PricesystemDetailForm pricesystemDetailForm=new PricesystemDetailForm();
-            pricesystemDetailForm.setProduct(product);
+            if(pricesystemForm.getId() != null){
+                PricesystemDetail pricesystemDetail=pricesystemDetailMapper.findByPricesystemIdAndProductId(pricesystemForm.getId(),product.getId());
+                if(pricesystemDetail != null) {
+                    pricesystemDetailForm = BeanUtil.map(pricesystemDetail, PricesystemDetailForm.class);
+                    pricesystemDetailForm.setProductName(product.getName());
+                }else{
+                    continue;
+                }
+            }else{
+                pricesystemDetailForm.setProductName(product.getName());
+                pricesystemDetailForm.setProductId(product.getId());
+
+            }
             pricesystemDetailList.add(pricesystemDetailForm);
+
         }
         pricesystemForm.setPricesystemDetailList(pricesystemDetailList);
     }

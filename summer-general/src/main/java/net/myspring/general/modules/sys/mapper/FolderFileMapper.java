@@ -1,7 +1,7 @@
 package net.myspring.general.modules.sys.mapper;
 
 import net.myspring.general.modules.sys.dto.FolderFileDto;
-import net.myspring.general.common.mybatis.MyMapper;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.web.query.FolderFileQuery;
 import org.apache.ibatis.annotations.Mapper;

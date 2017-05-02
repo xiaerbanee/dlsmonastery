@@ -1,8 +1,7 @@
 package net.myspring.basic.modules.hr.web.form;
 
 import com.google.common.collect.Maps;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 
 import java.util.Map;

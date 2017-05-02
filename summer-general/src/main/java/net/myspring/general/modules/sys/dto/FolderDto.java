@@ -1,7 +1,7 @@
 package net.myspring.general.modules.sys.dto;
 
 import com.google.common.collect.Lists;
-import net.myspring.general.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 import net.myspring.general.modules.sys.domain.Folder;
 import net.myspring.general.modules.sys.domain.FolderFile;
 

@@ -1,12 +1,10 @@
 package net.myspring.basic.modules.sys.mapper;
 
-import net.myspring.basic.common.mybatis.MyMapper;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.Backend;
-import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.dto.BackendDto;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.web.query.BackendQuery;
-import net.myspring.mybatis.mapper.CrudMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;

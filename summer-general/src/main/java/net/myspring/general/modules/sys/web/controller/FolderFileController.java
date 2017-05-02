@@ -7,8 +7,7 @@ import net.myspring.general.modules.sys.dto.FolderFileDto;
 import net.myspring.general.modules.sys.service.FolderFileService;
 import net.myspring.general.modules.sys.service.FolderService;
 import net.myspring.general.modules.sys.web.query.FolderFileQuery;
-import net.myspring.util.exception.ServiceException;
-import net.myspring.util.text.EncodeUtil;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.util.text.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springside.modules.utils.text.EncodeUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +59,7 @@ public class FolderFileController {
         if(gridFSDBFile != null) {
             try {
                 response.setContentType(gridFSDBFile.getContentType());
-                response.setHeader("Content-disposition", "attachment; filename=\"" + EncodeUtil.urlEncode(gridFSDBFile.getFilename()) + "\"");
+                response.setHeader("Content-disposition", "attachment; filename=\"" + URLEncoder.encode(gridFSDBFile.getFilename(),"UTF-8") + "\"");
                 FileCopyUtils.copy(gridFSDBFile.getInputStream(), response.getOutputStream());
             } catch (IOException e) {
                 throw new ServiceException(e.getMessage());

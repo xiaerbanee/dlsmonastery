@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.sys.domain;
 
-import net.myspring.common.domain.CompanyEntity;
+import net.myspring.cloud.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

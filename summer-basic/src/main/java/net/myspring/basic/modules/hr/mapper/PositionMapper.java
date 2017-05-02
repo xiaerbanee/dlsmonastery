@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.mapper;
 
-import net.myspring.basic.common.mybatis.MyMapper;
+import net.myspring.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface PositionMapper extends MyMapper<Position,String> {

@@ -51,7 +51,6 @@ public class DemoPhoneTypeService {
     public DemoPhoneTypeForm findForm(DemoPhoneTypeForm demoPhoneTypeForm){
         List<BasicOfficeDto> areaList = officeClient.findByType(Const.OFFICE_TYPE_AREA);
         List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = demoPhoneTypeOfficeMapper.findByDemoPhoneTypeId(demoPhoneTypeForm.getId());
-        CollectionUtil.joinChild(demoPhoneTypeOfficeList, areaList);
         Map<String, DemoPhoneTypeOffice> demoPhoneTypeOfficeMap = CollectionUtil.extractToMap(demoPhoneTypeOfficeList, "officeId");
         for (BasicOfficeDto area : areaList) {
             if (area.getTaskPoint()!=null&&Const.MIN_AREA_POINT.compareTo(area.getTaskPoint()) < 0) {

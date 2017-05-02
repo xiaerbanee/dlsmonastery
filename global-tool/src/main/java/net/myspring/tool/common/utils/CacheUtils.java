@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import net.myspring.common.domain.IdEntity;
 import net.myspring.util.cahe.CacheReadUtils;
 import net.myspring.util.collection.CollectionUtil;
-import org.apache.commons.lang3.StringUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;

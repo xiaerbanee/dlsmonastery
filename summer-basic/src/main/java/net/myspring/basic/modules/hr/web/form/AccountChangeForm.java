@@ -1,20 +1,13 @@
 package net.myspring.basic.modules.hr.web.form;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountChange;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.PositionDto;
-import net.myspring.basic.modules.hr.manager.AccountManager;
-import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.util.cahe.annotation.CacheInput;
-import net.myspring.util.text.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by admin on 2017/4/6.

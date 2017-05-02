@@ -12,7 +12,7 @@ import net.myspring.general.modules.sys.mapper.FolderMapper;
 import net.myspring.general.modules.sys.web.form.FolderForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
-import org.apache.commons.lang3.StringUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,7 +1,7 @@
 package net.myspring.future.modules.basic.client;
 
 import com.sun.org.glassfish.gmbal.NameValue;
-import net.myspring.future.common.dto.NameValueDto;
+import net.myspring.common.dto.NameValueDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

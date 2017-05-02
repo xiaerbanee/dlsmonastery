@@ -43,6 +43,7 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
         clients.inMemory().withClient("web_app")
                 .secret("web_app")
                 .autoApprove(true)
+                .scopes("FOO")
                 .authorizedGrantTypes("implicit","refresh_token", "password", "authorization_code")
                 .accessTokenValiditySeconds(120*60);
     }

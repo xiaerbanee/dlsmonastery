@@ -2,8 +2,7 @@ package net.myspring.basic.modules.sys.web.form;
 
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import net.myspring.basic.common.form.DataForm;
+import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.common.tree.TreeNode;
@@ -29,9 +28,18 @@ public class OfficeForm extends DataForm<Office> {
     private List<OfficeRuleDto>  officeRuleList= Lists.newArrayList();
     private List<String> jointTypeList= Lists.newArrayList();
     private String officeRuleId;
+    private String supportOfficeIf;
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
+
+    public String getSupportOfficeIf() {
+        return supportOfficeIf;
+    }
+
+    public void setSupportOfficeIf(String supportOfficeIf) {
+        this.supportOfficeIf = supportOfficeIf;
+    }
 
     public TreeNode getOfficeTree() {
         return officeTree;

@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.2.RELEASE'
+		springBootVersion = '1.5.3.RELEASE'
 	}
 	repositories {
 		maven{ url 'http://117.40.139.3:8081/repository/maven-public/'}
@@ -32,6 +32,6 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Camden.SR6"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Dalston.RELEASE"
 	}
 }

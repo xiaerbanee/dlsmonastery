@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.2.RELEASE'
+		springBootVersion = '1.5.3.RELEASE'
 	}
 	repositories {
 		maven{ url 'http://117.40.139.3:8081/repository/maven-public/'}
@@ -26,9 +26,8 @@ repositories {
 }
 
 dependencies {
-	compile project(':global-util')
+	compile project(':summer-common')
 	runtime('mysql:mysql-connector-java')
-	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.2.3.RELEASE'
 	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.5.0'
 	compile('org.springframework.cloud:spring-cloud-starter-oauth2')
 	compile('org.springframework.cloud:spring-cloud-starter-security')
@@ -40,6 +39,6 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Camden.SR6"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Dalston.RELEASE"
 	}
 }

@@ -3,8 +3,6 @@ package net.myspring.mybatis.provider;
 import com.google.common.collect.Lists;
 import net.myspring.mybatis.dto.ColumnDto;
 import net.myspring.mybatis.dto.TableDto;
-import net.myspring.mybatis.form.BaseForm;
-import net.myspring.mybatis.interceptor.VersionInterceptor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

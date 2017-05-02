@@ -1,7 +1,7 @@
 package net.myspring.tool.modules.oppo.domain;
 
 
-import net.myspring.common.domain.CompanyEntity;
+import net.myspring.tool.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
