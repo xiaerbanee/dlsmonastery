@@ -60,6 +60,8 @@ public class PricesystemService {
     }
 
     public void logicDeleteOne(PricesystemForm pricesystemForm) {
+        Pricesystem pricesystem = pricesystemMapper.findOne(pricesystemForm.getId());
+        pricesystemForm  = BeanUtil.map(pricesystem,PricesystemForm.class);
         pricesystemForm.setName(pricesystemForm.getName()+"(废弃时间"+new Date()+")");
         pricesystemForm.setEnabled(false);
         pricesystemMapper.updateForm(pricesystemForm);

@@ -33,7 +33,7 @@
         </el-table-column>
         <el-table-column prop="lastModifiedByName" :label="$t('pricesystemList.lastModifiedBy')"></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('pricesystemList.lastModifiedDate')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('pricesystemList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('pricesystemList.operation')" width="160">
           <template scope="scope">
             <el-button size="small" v-permit="'crm:pricesystem:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('pricesystemList.edit')}}</el-button>
             <el-button size="small" v-permit="'crm:pricesystem:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('pricesystemList.delete')}}</el-button>
