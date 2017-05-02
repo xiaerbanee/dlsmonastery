@@ -40,7 +40,7 @@ public class ShopAdTypeController {
     }
 
     @RequestMapping(value = "findForm")
-    public ShopAdTypeForm findOne(ShopAdTypeForm shopAdTypeForm){
+    public ShopAdTypeForm findForm(ShopAdTypeForm shopAdTypeForm){
         shopAdTypeForm=shopAdTypeService.findForm(shopAdTypeForm);
         shopAdTypeForm.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
        return shopAdTypeForm;

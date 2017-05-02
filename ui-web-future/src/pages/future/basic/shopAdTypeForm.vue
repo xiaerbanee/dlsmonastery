@@ -2,18 +2,23 @@
   <div>
     <head-tab active="shopAdTypeForm"></head-tab>
     <div >
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="formData" ref="formData" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('shopAdTypeForm.name')" prop="name">
-          <el-input v-model="inputForm.name"></el-input>
+          <el-input v-model="formData.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('shopAdTypeForm.totalPriceType')" prop="totalPriceType" >
-          <el-radio v-model='inputForm.totalPriceType' class="radio"  v-for="item in formProperty.totalPriceTypes" :key="item" :label="item">{{item}}</el-radio>
+
+            <el-select v-model="formData.totalPriceType" filterable clearable :placeholder="$t('shopAdTypeList.inputKey')">
+              <el-option v-for="item in formData.totalPriceTypeList" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+
         </el-form-item>
+
         <el-form-item :label="$t('shopAdTypeForm.price')" prop="price">
-          <el-input v-model.number="inputForm.price"></el-input>
+          <el-input v-model.number="formData.price"></el-input>
         </el-form-item>
         <el-form-item :label="$t('shopAdTypeForm.remarks')" prop="remarks">
-          <el-input v-model="inputForm.remarks"></el-input>
+          <el-input v-model="formData.remarks" type="textarea" :rows="5"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('shopAdTypeForm.save')}}</el-button>
@@ -28,8 +33,8 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
-            inputForm:{
+            formData:{},
+            submitData:{
               id:'',
               name:'',
               totalPriceType:'按数量',
@@ -45,10 +50,12 @@
       methods:{
         formSubmit(){
           this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+          var form = this.$refs["formData"];
+          util.copyValue(this.formData,this.submitData);
           form.validate((valid) => {
             if (valid) {
-              axios.get('/api/ws/future/basic/shopAdType/save', {params: this.inputForm}).then((response)=> {
+                console.log({params: this.submitData});
+              axios.post('/api/ws/future/basic/shopAdType/save', {params: this.submitData}).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -63,14 +70,11 @@
           })
         }
       },created(){
-        axios.get('/api/ws/future/basic/shopAdType/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate){
-          axios.get('/api/ws/future/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
+
+          axios.get('/api/ws/future/basic/shopAdType/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.formData = response.data;
           })
-        }
+
       }
     }
 </script>
