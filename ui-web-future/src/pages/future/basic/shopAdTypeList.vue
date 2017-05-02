@@ -62,25 +62,24 @@
     }, methods: {
       search() {
         this.formVisible = false;
-        util.copyValue(this.formData,this.queryData);
-        this.queryData = Object.assign({}, this.queryData);
+        this.queryData = util.cloneAndCopy(this.formData, this.queryData);
+
       },itemAdd(){
         this.$router.push({ name: 'shopAdTypeForm'})
       },itemEdit:function(id){
         this.$router.push({ name: 'shopAdTypeForm', query: { id: id }})
       },itemDelete:function(id){
-       axios.get('/api/ws/future/basic/shopAdType/delete',{params:{id:id}}).then((response) =>{
+       util.confirmBeforeDelRecord(this).then(() => {
+          axios.get('/api/ws/future/basic/shopAdType/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
-            this.pageRequest();
+            this.queryData = util.cloneAndCopy(this.formData, this.queryData);
           })
+        });
       }
     },created () {
-      //util.copyValue(this.$route.query,this.queryData);
       axios.get('/api/ws/future/basic/shopAdType/getQuery').then((response) =>{
         this.formData=response.data;
-        util.copyValue(this.formData,this.queryData);
-        this.queryData = Object.assign({}, this.queryData);
-//        this.pageRequest();
+        this.queryData = util.cloneAndCopy(this.formData, this.queryData);
       });
     }
   };

@@ -54,8 +54,7 @@
           util.copyValue(this.formData,this.submitData);
           form.validate((valid) => {
             if (valid) {
-                console.log({params: this.submitData});
-              axios.post('/api/ws/future/basic/shopAdType/save', {params: this.submitData}).then((response)=> {
+              axios.post('/api/ws/future/basic/shopAdType/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -70,6 +69,7 @@
           })
         }
       },created(){
+
 
           axios.get('/api/ws/future/basic/shopAdType/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
             this.formData = response.data;

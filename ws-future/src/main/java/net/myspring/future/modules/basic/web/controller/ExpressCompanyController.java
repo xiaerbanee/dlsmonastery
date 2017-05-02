@@ -5,12 +5,17 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
-import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
 import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
+import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "basic/expressCompany")
@@ -34,7 +39,11 @@ public class ExpressCompanyController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(ExpressCompanyForm expressCompanyForm) {
+    public RestResponse save(@Valid  ExpressCompanyForm expressCompanyForm, BindingResult result) {
+
+        if(result.hasErrors()){
+            return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        }
         expressCompanyService.save(expressCompanyForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }

@@ -26,7 +26,7 @@ public class ShopAdTypeManager {
         return shopAdTypeMapper.findOne(id);
     }
 
-    @Cacheable(key="#p0.id")
+    @CachePut(key="#p0.id")
     public ShopAdType save(ShopAdType shopAdType){
         shopAdTypeMapper.save(shopAdType);
         return  shopAdType;
