@@ -71,6 +71,29 @@ util.copyValue = function (from, to) {
   }
 }
 
+util.cloneAndCopy = function (from, to) {
+  let result = Object.assign({}, to);
+  if (from != null) {
+
+    for (var key in result) {
+      if (from[key] != null) {
+        result[key] = from[key];
+      }
+    }
+  }
+  return result;
+}
+
+util.confirmBeforeDelRecord = function(vueObj){
+  return vueObj.$confirm(vueObj.$t('util.waringMsgBeforeDelRecord'), vueObj.$t('util.typeOfWarningBeforeDelRecord'), {
+    confirmButtonText: vueObj.$t('util.confirmButton'),
+    cancelButtonText:  vueObj.$t('util.cancelButton'),
+
+    type: 'warning'
+  });
+}
+
+
 util.getQuery = function (routerName) {
   var query = {};
   if (routerName != "home") {
