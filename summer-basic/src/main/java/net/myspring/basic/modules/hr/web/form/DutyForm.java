@@ -12,7 +12,7 @@ import java.util.Map;
 public class DutyForm extends DataForm<DutyDto> {
     private String dutyType;
     private Object item;
-    private Map<Boolean,String> boolMap= Maps.newHashMap();
+    private Map<String,String> boolMap= Maps.newHashMap();
 
     public String getDutyType() {
         return dutyType;
@@ -30,11 +30,11 @@ public class DutyForm extends DataForm<DutyDto> {
         this.item = item;
     }
 
-    public Map<Boolean, String> getBoolMap() {
+    public Map<String, String> getBoolMap() {
         return boolMap;
     }
 
-    public void setBoolMap(Map<Boolean, String> boolMap) {
+    public void setBoolMap(Map<String, String> boolMap) {
         this.boolMap = boolMap;
     }
 }

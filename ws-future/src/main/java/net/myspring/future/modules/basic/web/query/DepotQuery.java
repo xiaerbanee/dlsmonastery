@@ -38,7 +38,7 @@ public class DepotQuery {
     private List<Pricesystem> pricesystemList;
     private List<NameValueDto> specialityStoreTypeList;
     private List<Chain> chainList;
-    private Map<Boolean,String> bools;
+    private Map<String,String> bools;
     private List<AdPricesystem> adPricesystemList;
     private List<ExpressCompany> expressCompanyList;
     private LocalDate dutyDateStart;
@@ -133,11 +133,11 @@ public class DepotQuery {
         this.adPricesystemList = adPricesystemList;
     }
 
-    public Map<Boolean, String> getBools() {
+    public Map<String, String> getBools() {
         return bools;
     }
 
-    public void setBools(Map<Boolean, String> bools) {
+    public void setBools(Map<String, String> bools) {
         this.bools = bools;
     }
 

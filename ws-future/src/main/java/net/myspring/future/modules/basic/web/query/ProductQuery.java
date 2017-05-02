@@ -22,7 +22,7 @@ public class ProductQuery {
     private String netType;
     private List<String> netTypeList= Lists.newArrayList();
     private List<Product> outGroupNameList=Lists.newArrayList();
-    private Map<Boolean,String> boolMap;
+    private Map<String,String> boolMap;
     private List<ProductType> productTypeList=Lists.newArrayList();
 
     public List<ProductType> getProductTypeList() {
@@ -49,11 +49,11 @@ public class ProductQuery {
         this.outGroupNameList = outGroupNameList;
     }
 
-    public Map<Boolean, String> getBoolMap() {
+    public Map<String, String> getBoolMap() {
         return boolMap;
     }
 
-    public void setBoolMap(Map<Boolean, String> boolMap) {
+    public void setBoolMap(Map<String, String> boolMap) {
         this.boolMap = boolMap;
     }
 

@@ -67,7 +67,7 @@ public class DepotForm extends DataForm<Depot>{
     private List<NameValueDto> businessCenterTypeList;
     private List<NameValueDto> shopMonthTotalList;
     private List<NameValueDto> specialityStoreTypeList;
-    private Map<Boolean,String> boolMap;
+    private Map<String,String> boolMap;
     private List<NameValueDto> typeList;
     private List<Pricesystem> pricesystemList;
     private List<Chain> chainList;
@@ -483,11 +483,11 @@ public class DepotForm extends DataForm<Depot>{
         this.specialityStoreTypeList = specialityStoreTypeList;
     }
 
-    public Map<Boolean,String> getBoolMap() {
+    public Map<String,String> getBoolMap() {
         return boolMap;
     }
 
-    public void setBoolMap(Map<Boolean,String> boolMap) {
+    public void setBoolMap(Map<String,String> boolMap) {
         this.boolMap = boolMap;
     }
 
