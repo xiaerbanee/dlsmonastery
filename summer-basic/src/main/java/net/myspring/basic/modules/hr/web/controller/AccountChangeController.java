@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.basic.common.enums.AccountChangeTypeEnum;
+import net.myspring.basic.common.enums.OfficeRuleEnum;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.service.AccountChangeService;
@@ -37,7 +38,7 @@ public class AccountChangeController {
 
     @RequestMapping(value="getQuery")
     public AccountChangeQuery getQuery(AccountChangeQuery accountChangeQuery){
-        accountChangeQuery.setAreaList(officeService.findByType(Const.OFFICE_TYPE_AREA));
+        accountChangeQuery.setAreaList(officeService.findByOfficeRuleName("办事处"));
         accountChangeQuery.setTypeList(AccountChangeTypeEnum.getList());
         return accountChangeQuery;
     }

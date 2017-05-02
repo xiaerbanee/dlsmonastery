@@ -47,8 +47,8 @@ public class OfficeService {
     private OfficeBusinessMapper officeBusinessMapper;
 
 
-    public List<Office> findByType(String type) {
-        return officeMapper.findByType(type);
+    public List<Office> findByOfficeRuleName(String officeRuleName) {
+        return officeMapper.findByOfficeRuleName(officeRuleName);
     }
 
     public Page<OfficeDto> findPage(Pageable pageable, OfficeQuery officeQuery) {

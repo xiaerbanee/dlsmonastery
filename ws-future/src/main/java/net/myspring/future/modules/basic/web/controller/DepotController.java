@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.utils.Const;
-import net.myspring.future.common.utils.DepotUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
@@ -53,7 +52,6 @@ public class DepotController {
     @RequestMapping(value = "getQuery")
     public DepotQuery getQuery(DepotQuery depotQuery) {
         depotQuery = depotService.getQueryProperty(depotQuery);
-        depotQuery.setBasicOfficeDtoList(officeClient.findSortList());
         LocalDate dateStart = LocalDate.from(LocalDate.now().plusDays(-70));
         LocalDate dateEnd = LocalDate.from(LocalDate.now().plusMonths(1));
         String dateRange = LocalDateUtils.format(dateStart) + " - " + LocalDateUtils.format(dateEnd);
@@ -110,36 +108,16 @@ public class DepotController {
     @RequestMapping(value = "search")
     public List<Depot> search(String name,String category) {
         List<Depot> depotList = Lists.newArrayList();
-//        Map<String,Object> filter = FilterUtils.getDepotFilter(AccountUtils.getAccountId());
-        DepotQuery depotQuery = new DepotQuery();
-        if(/*depotQuery.getDepotIdList().size()>0 || */StringUtils.isNotBlank(name)) {
+        DepotQuery depotQuery = depotService.filterDepotIds();
+        if(depotQuery.getDepotIdList().size()>0 || StringUtils.isNotBlank(name)) {
             depotQuery.setName(name);
             if (StringUtils.isNotBlank(category)) {
-                HashBiMap<String, Integer> typeMap = DepotUtils.getTypeMapByCategory(category);
+                HashBiMap<String, Integer> typeMap = depotService.getTypeMapByCategory(category);
                 depotQuery.setTypeList(CollectionUtil.extractToList(typeMap.entrySet(),"value"));
             }
             depotList = depotService.findByFilter(depotQuery);
         }
         return depotList;
-    }
-
-    @RequestMapping(value = "proxyShop")
-    public List<Map<String, String>> adShop(String key) {
-        List<Map<String, String>> list = Lists.newArrayList();
-        if(StringUtils.isNotBlank(key)) {
-            DepotQuery depotQuery = new DepotQuery();
-            depotQuery.setDepotName(key);
-            depotQuery.setType(key);
-            List<DepotDto> depots = depotService.findProxyShop(depotQuery);
-            for (DepotDto depot : depots) {
-                Map<String,String> map = Maps.newHashMap();
-                map.put("id", depot.getId());
-                map.put("fullName", depot.getAreaName() + Const.CHAR_SLASH_LINE+depot.getName());
-                map.put("name", depot.getAreaName() + Const.CHAR_SLASH_LINE+depot.getName());
-                list.add(map);
-            }
-        }
-        return list;
     }
 
     @RequestMapping(value = "adShop")
@@ -158,28 +136,10 @@ public class DepotController {
         return list;
     }
 
-    @RequestMapping(value = "adShopBsc")
-    public List<Map<String, String>> adShopBsc(String key) {
-        List<Map<String, String>> list = Lists.newArrayList();
-        List<DepotDto> depots;
-        if(StringUtils.isNotBlank(key)) {
-            depots = depotService.findAdShopBsc(key);
-            for (DepotDto depot : depots) {
-                Map<String, String> map = Maps.newHashMap();
-                map.put("id", depot.getId());
-                map.put("fullName", depot.getAreaName() + Const.CHAR_SLASH_LINE + depot.getName());
-                map.put("name", depot.getAreaName() + Const.CHAR_SLASH_LINE + depot.getName());
-                list.add(map);
-            }
-        }
-        return list;
-    }
-
     @RequestMapping(value = "shop")
     public List<Depot> shop(String name) {
         List<Depot> shopList = Lists.newArrayList();
-//        Map<String,Object> filter = FilterUtils.getDepotFilter(AccountUtils.getAccountId());
-        DepotQuery depotQuery = new DepotQuery();
+        DepotQuery depotQuery = depotService.filterDepotIds();
         if(StringUtils.isNotBlank(name)|| depotQuery.getDepotIdList().size() > 0) {
             depotQuery.setName(name);
             shopList = depotService.findByFilter(depotQuery);

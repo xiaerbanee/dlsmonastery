@@ -62,11 +62,11 @@ public class OfficeController {
         return officeIdList;
     }
 
-    @RequestMapping(value = "findByType")
-    public List<OfficeBasicDto> findByType(String type){
+    @RequestMapping(value = "findByOfficeRuleName")
+    public List<OfficeBasicDto> findByOfficeRuleName(String officeRuleName){
         List<OfficeBasicDto> officeList=Lists.newArrayList();
-        if(StringUtils.isNotBlank(type)){
-            officeList= BeanUtil.map(officeService.findByType(type),OfficeBasicDto.class);
+        if(StringUtils.isNotBlank(officeRuleName)){
+            officeList= BeanUtil.map(officeService.findByOfficeRuleName(officeRuleName),OfficeBasicDto.class);
         }
         return officeList;
     }
