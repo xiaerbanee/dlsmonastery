@@ -2,6 +2,7 @@ package net.myspring.tool.common.domain;
 
 import net.myspring.common.domain.DataEntity;
 import net.myspring.tool.common.utils.SecurityUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
 
@@ -11,9 +12,12 @@ import javax.persistence.Column;
 public class CompanyEntity<T> extends DataEntity<T> {
 
     @Column(updatable = false)
-    private String companyId= SecurityUtils.getCompanyId();
+    private String companyId;
 
     public String getCompanyId() {
+        if(StringUtils.isBlank(companyId) && StringUtils.isBlank(id)) {
+            companyId = SecurityUtils.getCompanyId();
+        }
         return companyId;
     }
 
