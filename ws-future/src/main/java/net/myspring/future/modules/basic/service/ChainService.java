@@ -43,8 +43,8 @@ public class ChainService {
         return page;
     }
 
-    public void delete(Chain chain) {
-        chainMapper.logicDeleteOne(chain.getId());
+    public void delete(ChainForm chainForm) {
+        chainMapper.logicDeleteOne(chainForm.getId());
     }
 
     public ChainForm findForm(ChainForm chainForm){
@@ -73,24 +73,18 @@ public class ChainService {
         }else{
             chain=chainManager.updateForm(chainForm);
         }
-        /*List<Depot> depotList = depotMapper.findByIds(chainForm.getPageIds());
-        for(Depot depot:depotList){
-            if(!chainForm.getDepotIdList().contains(depot.getId())){
-                depot.setChainId(null);
-                depotMapper.update(depot);
-            }else {
-                if(!chain.getId().equals(depot.getChainId())){
-                    depot.setChainId(chain.getId());
-                    depotMapper.update(depot);
-                }
-            }
-        }*/
-        /*if(CollectionUtil.isNotEmpty(chainForm.getAccountIdList())){
-            if(!chainForm.isCreate()){
-                chainMapper.deleteByChainId(chain.getId());
-            }
-            chainMapper.saveAccountAndChain(chain.getId(),chainForm.getAccountIdList());
-        }*/
+
+        List<Depot> depotListBefore = depotMapper.findByChainId(chain.getId());
+        for(Depot depot:depotListBefore){
+            depot.setChainId(null);
+            depotMapper.update(depot);
+        }
+
+        List<Depot> depotListNow = depotMapper.findByIds(chainForm.getDepotIdList());
+        for(Depot depot:depotListNow){
+            depot.setChainId(chain.getId());
+            depotMapper.update(depot);
+        }
         return chain;
     }
 }

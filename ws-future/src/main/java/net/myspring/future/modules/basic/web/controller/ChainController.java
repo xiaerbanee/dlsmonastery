@@ -31,8 +31,8 @@ public class ChainController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(Chain chain, BindingResult bindingResult) {
-        chainService.delete(chain);
+    public RestResponse delete(ChainForm chainForm, BindingResult bindingResult) {
+        chainService.delete(chainForm);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 

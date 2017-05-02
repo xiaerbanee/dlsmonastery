@@ -241,6 +241,7 @@ public class DepotManager {
 
     public Map<String,Object> filterDepotIds(){
         Map<String,Object> filterMap= Maps.newLinkedHashMap();
+        String accountId = SecurityUtils.getAccountId();
         List<Depot> depotList=depotMapper.findByAccountId(SecurityUtils.getAccountId());
         filterMap.put("depotIdList",CollectionUtil.extractToList(depotList,"id"));
         List<String> officeIdList=officeClient.getOfficeFilterIds(SecurityUtils.getAccountId());
