@@ -19,7 +19,7 @@
     "numbro": "^1.9.3",
     "pikaday": "^1.5.1",
     "qs": "^6.3.1",
-    "vue": "^2.2.6",
+    "vue": "^2.3.0",
     "vue-fullcalendar": "^1.0.9",
     "vue-i18n": "^5.0.2",
     "vue-quill-editor": "^1.1.1",
