@@ -127,6 +127,10 @@
           cancelButtonText: this.$t('app.cancel'),
           type: 'info'
         }).then(() => {
+          this.account={};
+          this.menus=[];
+          this.lang="";
+          this.token = {};
           this.$store.dispatch('clearGlobal');
           this.$router.push({ name: 'login' });
         }).catch(() => {});
