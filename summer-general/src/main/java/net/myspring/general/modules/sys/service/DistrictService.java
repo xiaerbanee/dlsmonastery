@@ -24,18 +24,4 @@ public class DistrictService {
         List<DistrictDto> districtDtos= BeanUtil.map(citys,DistrictDto.class);
         return districtDtos;
     }
-
-    @Transactional(readOnly = true)
-    public List<DistrictDto> searchFullText(String name){
-        List<District> districts = districtMapper.searchFullText(name);
-
-        List<DistrictDto> districtDtos= BeanUtil.map(districts,DistrictDto.class);
-        if(districtDtos!=null){
-            for(DistrictDto dd : districtDtos){
-                dd.refreshFullName();
-            }
-        }
-        return districtDtos;
-    }
-
 }

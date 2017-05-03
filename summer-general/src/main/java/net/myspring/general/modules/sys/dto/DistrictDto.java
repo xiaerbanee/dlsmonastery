@@ -23,14 +23,9 @@ public class DistrictDto extends IdDto<District> {
     private String province;
     private String city;
     private String county;
-    private String fullName;
 
     public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+        return province +", "+ city+", " + county;
     }
 
     public String getName() {
@@ -135,10 +130,5 @@ public class DistrictDto extends IdDto<District> {
 
     public void setCounty(String county) {
         this.county = county;
-    }
-
-    public String refreshFullName(){
-        fullName = province +", "+ city+", " + county+"("+getId()+")";
-        return fullName;
     }
 }
