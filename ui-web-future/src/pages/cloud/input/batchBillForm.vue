@@ -4,8 +4,7 @@
 <template>
   <div>
     <head-tab active="batchBillForm"></head-tab>
-    <div>
-    </div>
+    <div ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
   </div>
 </template>
 <script>
@@ -15,40 +14,61 @@
       return {
         submitDisabled:false,
         table:null,
+        customerNameList:{},
         settings: {
           rowHeaders:true,
-          allowInsertRow:false,
           autoColumnSize:true,
           stretchH: 'all',
-          contextMenu: ['row_above', 'row_below', 'remove_row'],
-          data:[],
+          height: 650,
           colHeaders: ["编码","门店","货品","价格","数量","类型","备注"],
           columns: [
             {type: "text", allowEmpty: false, strict: true },
-            {type: "autocomplete", allowEmpty: false, strict: true, source: this.formProperty.customerNameList},
-            {type: "autocomplete", allowEmpty: true, strict: true, source: this.formProperty.productNameList},
+            {
+              type: "autocomplete",
+              allowEmpty: false,
+              strict: true,
+              customerNameList: [],
+              source: function (query, process) {
+                var that = this;
+                  var shopNames = new Array();
+                    axios.get('/api/global/cloud/input/batchBill/form').then((response) => {
+                        console.log(response.data.customerNameList);
+                      if (response.data.customerNameList > 0) {
+                        for (var index in response.data.customerNameList) {
+                          var shopName = response.data[index];
+                          shopNames.push(shopName);
+                          if (that.customerNameList.indexOf(shopName) < 0) {
+                            that.customerNameList.push(shopName);
+                          }
+                        }
+                      }
+                      process(shopNames);
+                    });
+              },
+            },
+            {type: "autocomplete", allowEmpty: true, strict: true},
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
             {type: "numeric", allowEmpty: false},
-            {type: "autocomplete", allowEmpty: false, strict: true, source: this.formProperty.typeList},
+            {type: "autocomplete", allowEmpty: false, strict: true },
             {type: "text", allowEmpty: true, strict: true }
           ],
         },
         formData:{
 
         },formLabel:{
-
         },
         formLabelWidth: '120px',
-        formProperty:{
-          customerNameList:[],
-          productNameList:[],
-          typeList:[],
-        },
         formVisible: false
       };
     },
     mounted () {
-      this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+      axios.get('/api/global/cloud/input/batchBill/form').then((response) =>{
+        this.customerNameList = response.data.customerNameList;
+
+        console.log(this.customerNameList);
+        this.table = new Handsontable(this.$refs["handsontable"], this.settings);
+      });
+
     },
     methods: {
       search() {
