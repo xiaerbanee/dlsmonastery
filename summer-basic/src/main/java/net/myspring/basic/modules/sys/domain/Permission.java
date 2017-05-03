@@ -1,13 +1,14 @@
 package net.myspring.basic.modules.sys.domain;
 
 import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_permission")
-public class Permission extends CompanyEntity<Permission> {
+public class Permission extends DataEntity<Permission> {
     private String name;
     private String permission;
     private Integer version = 0;

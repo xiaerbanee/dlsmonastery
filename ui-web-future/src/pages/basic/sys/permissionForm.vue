@@ -14,9 +14,9 @@
         <el-form-item :label="$t('permissionForm.permission')" prop="permission">
           <el-input v-model="inputForm.permission"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('permissionForm.position')" prop="positionIdList">
-          <el-select v-model="inputForm.positionIdList" multiple filterable remote :placeholder="$t('permissionForm.inputWord')" :remote-method="remotePosition" :loading="remoteLoading">
-            <el-option v-for="position in positions" :key="position.id" :label="position.name" :value="position.id"></el-option>
+        <el-form-item label="角色" prop="roleIdList">
+          <el-select v-model="inputForm.roleIdList" multiple filterable remote :placeholder="$t('permissionForm.inputWord')" :remote-method="remoteRole" :loading="remoteLoading">
+            <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('permissionForm.remarks')" prop="remarks">
@@ -35,14 +35,14 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            positions:[],
+            roleList:[],
             inputForm:{},
             submitData:{
               id:'',
               menuId:'',
               name:'',
               permission:'',
-              positionIdList:'',
+              roleIdList:'',
               remarks:''
             },
             rules: {
@@ -73,27 +73,27 @@
               this.submitDisabled = false;
             }
           })
-        },remotePosition(query){
+        },remoteRole(query){
          if (query !== '') {
            this.remoteLoading = true;
-           axios.get('/api/hr/position/search',{params:{name:query}}).then((response)=>{
-             this.positions=response.data;
+           axios.get('/api/basic/sys/role/search',{params:{name:query}}).then((response)=>{
+             this.roleList=response.data;
               this.remoteLoading = false;
            })
          } else {
-           this.positions = [];
+           this.roleList = [];
          }
        }
       },created(){
         axios.get('/api/basic/sys/permission/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-          if(response.data.positionIdList !=null){
-            let positions=new Array();
-            for(var i=response.data.positionIdList.length-1;i>=0;i--){
-              positions.push({id:response.data.positionIdList[i],name:response.data.positionNameList[i]})
+          if(response.data.roleIdList !=null){
+            let roleList=new Array();
+            for(var i=response.data.roleIdList.length-1;i>=0;i--){
+              roleList.push({id:response.data.roleIdList[i],name:response.data.roleNameList[i]})
             }
-            this.positions=positions;
-            this.inputForm.positionIdList=response.data.positionIdList
+            this.roleList=roleList;
+            this.inputForm.roleIdList=response.data.roleIdList
           }
         })
       }

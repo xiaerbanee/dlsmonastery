@@ -47,7 +47,7 @@ public class CacheService {
     @Autowired
     private BackendModuleMapper backendModuleMapper;
     @Autowired
-    private PositionModuleMapper positionBackendMapper;
+    private RoleModuleMapper positionBackendMapper;
 
     public void init() {
         LocalDateTime start = LocalDateTime.now();

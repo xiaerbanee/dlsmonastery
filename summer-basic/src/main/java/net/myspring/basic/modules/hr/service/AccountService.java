@@ -5,16 +5,21 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.AccountPermission;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
+import net.myspring.basic.modules.hr.mapper.AccountPermissionMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.mapper.PositionMapper;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.Permission;
+import net.myspring.basic.modules.sys.domain.RolePermission;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
+import net.myspring.basic.modules.sys.web.form.RoleForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
@@ -47,6 +52,8 @@ public class AccountService {
     private PermissionMapper permissionMapper;
     @Autowired
     private EmployeeManager employeeManager;
+    @Autowired
+    private AccountPermissionMapper accountPermissionMapper;
 
     public Account findOne(String id) {
         Account account = accountMapper.findOne(id);
@@ -75,13 +82,10 @@ public class AccountService {
         return accountDtoPage;
     }
 
-    public List<AccountDto> findByOffice(String officeId) {
-        List<AccountDto> accountDtoList = Lists.newArrayList();
-        if (StringUtils.isNotBlank(officeId)) {
-            List<Account> accountList = accountMapper.findByOfficeIds(Lists.newArrayList(officeId));
-            accountDtoList = BeanUtil.map(accountList, AccountDto.class);
-            cacheUtils.initCacheInput(accountList);
-        }
+    public List<AccountDto> findByFilter(AccountQuery accountQuery) {
+        List<Account> accountList = accountMapper.findByFilter(accountQuery);
+        List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
+        cacheUtils.initCacheInput(accountList);
         return accountDtoList;
     }
 
@@ -140,13 +144,19 @@ public class AccountService {
     }
 
     public List<String> getAuthorityList() {
-        String positionId = SecurityUtils.getPositionId();
+        String roleId = SecurityUtils.getRoleId();
+        String accountId=SecurityUtils.getAccountId();
         List<String> authorityList;
         List<Permission> permissionList;
         if(Const.HR_ACCOUNT_ADMIN_LIST.contains(SecurityUtils.getAccountId())){
             permissionList=permissionMapper.findAllEnabled();
         }else {
-            permissionList=permissionMapper.findByPositionId(positionId);
+            List<String> accountPermissions=accountPermissionMapper.findPermissionIdByAccount(accountId);
+            if(CollectionUtil.isNotEmpty(accountPermissions)){
+                permissionList=permissionMapper.findByRoleAndAccount(roleId,accountId);
+            }else {
+                permissionList=permissionMapper.findByRoleId(roleId);
+            }
         }
         authorityList= CollectionUtil.extractToList(permissionList,"permission");
         return authorityList;
@@ -156,6 +166,22 @@ public class AccountService {
         AccountDto accountDto=BeanUtil.map(accountMapper.findOne(accountId),AccountDto.class);
         cacheUtils.initCacheInput(accountDto);
         return accountDto;
+    }
+
+    public void saveAccountAndPermission(AccountForm accountForm){
+        List<String> permissionIdList=accountPermissionMapper.findPermissionIdByAccount(accountForm.getId());
+        List<String>removeIdList=CollectionUtil.subtract(permissionIdList,accountForm.getPermissionIdList());
+        List<String> addIdList=CollectionUtil.subtract(accountForm.getPermissionIdList(),permissionIdList);
+        List<AccountPermission> accountPermissions=Lists.newArrayList();
+        if(CollectionUtil.isNotEmpty(removeIdList)){
+            accountPermissionMapper.removeByPermissionList(removeIdList);
+        }
+        if(CollectionUtil.isNotEmpty(addIdList)){
+            for(String permissionId:addIdList){
+                accountPermissions.add(new AccountPermission(accountForm.getId(), permissionId));
+            }
+            accountPermissionMapper.batchSave(accountPermissions);
+        }
     }
 
 }

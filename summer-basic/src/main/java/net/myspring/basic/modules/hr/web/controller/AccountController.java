@@ -1,23 +1,32 @@
 package net.myspring.basic.modules.hr.web.controller;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.AccountMessageDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
+import net.myspring.basic.modules.sys.dto.FrontendMenuDto;
 import net.myspring.basic.modules.sys.service.MenuService;
-import net.myspring.common.response.ResponseCodeEnum;
-import net.myspring.common.response.RestResponse;
+import net.myspring.basic.modules.sys.service.PermissionService;
+import net.myspring.basic.modules.sys.web.form.RoleForm;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.enums.BoolEnum;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
+import net.myspring.common.tree.TreeNode;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +64,8 @@ public class AccountController {
     private DutyOvertimeService dutyOvertimeService;
     @Autowired
     private MenuService menuService;
+    @Autowired
+    private PermissionService permissionService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AccountDto> list(Pageable pageable, AccountQuery accountQuery) {
@@ -98,6 +109,14 @@ public class AccountController {
         return accountDtoList;
     }
 
+    @RequestMapping(value = "searchFilter")
+    public List<AccountDto> searchFilter(AccountQuery accountQuery) {
+        accountQuery.setOfficeId(SecurityUtils.getOfficeId());
+        List<AccountDto> accountDtoList = accountService.findByFilter(accountQuery);
+        return accountDtoList;
+    }
+
+
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public ModelAndView export(AccountQuery accountQuery) {
         Workbook workbook = new SXSSFWorkbook(Const.DEFAULT_PAGE_SIZE);
@@ -137,6 +156,25 @@ public class AccountController {
         map.put("expiredHour", dutyOvertimeService.getExpiredHour(employeeId, LocalDateTime.now()));
         map.put("account", accountDto);
         return map;
+    }
+
+    @RequestMapping(value = "saveAuthorityList")
+    public RestResponse saveAuthorityList(AccountForm accountForm) {
+        accountForm.setPermissionIdList(StringUtils.getSplitList(accountForm.getPermissionIdStr(), Const.CHAR_COMMA));
+        accountService.saveAccountAndPermission(accountForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "getTreeNode")
+    public TreeNode getTreeNode() {
+        TreeNode treeNode=permissionService.findPermissionTree(SecurityUtils.getRoleId(), Lists.newArrayList());
+        return treeNode;
+    }
+
+    @RequestMapping(value = "getTreeCheckData")
+    public TreeNode getTreeCheckData(String id) {
+        TreeNode treeNode=permissionService.getAccountPermissionCheckData(id);
+        return treeNode;
     }
 
 }

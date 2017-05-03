@@ -29,30 +29,4 @@
         </if>
     </select>
 
-    <select id="findPermissionByPosition" resultType="String">
-        select permission_id from hr_position_permission where position_id = #{positionId}
-    </select>
-
-    <delete id="deletePermissionByPosition">
-        delete FROM hr_position_permission where position_id = #{positionId}
-    </delete>
-
-    <delete id="deleteModuleByPosition">
-        delete FROM hr_position_module where position_id = #{positionId}
-    </delete>
-
-    <insert id="savePositionAndPermission">
-        INSERT INTO hr_position_permission(permission_id,position_id) VALUES
-        <foreach collection="permissionIds" index="index" item="item" open="" separator="," close="">
-            (#{item},#{positionId})
-        </foreach>
-    </insert>
-
-    <insert id="savePositionAndBankendModule">
-        INSERT INTO hr_position_module(backend_module_id,position_id) VALUES
-        <foreach collection="modules" index="index" item="item" open="" separator="," close="">
-            (#{item},#{positionId})
-        </foreach>
-    </insert>
-
 </mapper>

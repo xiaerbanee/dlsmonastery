@@ -20,11 +20,20 @@ public class AccountDto {
     private String officeId;
     private String employeeId;
     private String companyName;
+    private String roleId;
 
     private boolean enabled;
     private boolean locked;
 
     private LocalDate leaveDate;
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
 
     public String getCompanyName() {
         return companyName;

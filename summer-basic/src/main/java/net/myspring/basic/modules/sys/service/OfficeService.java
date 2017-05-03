@@ -7,7 +7,9 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.OfficeLeader;
 import net.myspring.basic.modules.hr.manager.AccountManager;
+import net.myspring.basic.modules.hr.mapper.OfficeLeaderMapper;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
@@ -45,6 +47,8 @@ public class OfficeService {
     private OfficeRuleMapper officeRuleMapper;
     @Autowired
     private OfficeBusinessMapper officeBusinessMapper;
+    @Autowired
+    private OfficeLeaderMapper officeLeaderMapper;
 
 
     public List<Office> findByOfficeRuleName(String officeRuleName) {
@@ -89,6 +93,8 @@ public class OfficeService {
                 List<String> businessOffices=officeBusinessMapper.findBusinessIdById(office.getId());
                 officeForm.setOfficeTree(getOfficeTree(businessOffices));
             }
+            List<OfficeLeader> officeLeaderList=officeLeaderMapper.findByOfficeId(officeForm.getId());
+            officeForm.setLeaderIdList(CollectionUtil.extractToList(officeLeaderList,"leaderId"));
             cacheUtils.initCacheInput(officeForm);
         }
         return officeForm;
@@ -102,6 +108,7 @@ public class OfficeService {
             office=officeManager.save(office);
         } else {
             office=officeManager.updateForm(officeForm);
+            officeLeaderMapper.removeOfficeLeaderByOffice(office.getId());
         }
         List<String> businessOfficeIdList=officeBusinessMapper.findBusinessIdById(office.getId());
         List<String>removeIdList=CollectionUtil.subtract(businessOfficeIdList,officeForm.getOfficeIdList());
@@ -117,6 +124,13 @@ public class OfficeService {
         }
         if(CollectionUtil.isNotEmpty(addIdList)){
             officeBusinessMapper.batchSave(officeBusinessList);
+        }
+        if(CollectionUtil.isNotEmpty(officeForm.getLeaderIdList())){
+            List<OfficeLeader> officeLeaderList=Lists.newArrayList();
+            for(String leaderId:officeForm.getLeaderIdList()){
+                officeLeaderList.add(new OfficeLeader(office.getId(),leaderId));
+            }
+            officeLeaderMapper.batchSave(officeLeaderList);
         }
         return office;
     }

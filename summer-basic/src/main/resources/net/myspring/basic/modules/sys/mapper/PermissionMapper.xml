@@ -25,22 +25,49 @@
     </select>
 
 
-    <select id="findByPositionId" resultType="Permission">
+    <select id="findByRoleId" resultType="Permission">
         SELECT
             t1.*
         FROM
             sys_permission t1,
-            hr_position_permission t2,
-            hr_position_module t3,
+            sys_role_permission t2,
+            sys_role_module t3,
             sys_menu_category t4,
             sys_menu t5
         WHERE
             t1.id = t2.permission_id
-        AND t2.position_id = #{positionId}
-        AND t2.position_id = t3.position_id
+        AND t2.role_id = #{roleId}
+        AND t2.role_id = t3.role_id
         AND t3.backend_module_id = t4.backend_module_id
         AND t4.id = t5.menu_category_id
         AND t1.menu_id = t5.id
+        AND t1.enabled = 1
+        AND t3.enabled = 1
+        AND t4.enabled = 1
+        AND t5.enabled = 1
+    </select>
+
+    <select id="findByRoleAndAccount" resultType="Permission">
+            SELECT
+            t1.*
+        FROM
+            sys_permission t1,
+            sys_role_permission t2,
+            sys_role_module t3,
+            sys_menu_category t4,
+            sys_menu t5,
+            hr_account_permission t6,
+            hr_account t7
+        WHERE
+            t1.id = t2.permission_id
+        AND t2.role_id = #{roleId}
+        AND t2.role_id = t3.role_id
+        AND t3.backend_module_id = t4.backend_module_id
+        AND t4.id = t5.menu_category_id
+        AND t1.menu_id = t5.id
+        and t6.permission_id=t1.id
+        and t6.account_id=t7.id
+        and t7.id=#{accountId}
         AND t1.enabled = 1
         AND t3.enabled = 1
         AND t4.enabled = 1
@@ -87,26 +114,6 @@
         t1.permission LIKE CONCAT('%',#{permissionStr},'%')
     </select>
 
-    <insert id="savePermissionPosition">
-        INSERT INTO hr_position_permission(permission_id,position_id) VALUES
-        <foreach collection="positionIds" index="index" item="item" open="" separator="," close="">
-            (#{permissionId},#{item})
-        </foreach>
-    </insert>
 
-    <delete id="deletePermissionPosition">
-        DELETE FROM
-        hr_position_permission
-        where permission_id=#{permissionId}
-    </delete>
-
-    <select id="findPositionIdByPermissions" resultType="String">
-        SELECT position_id
-        FROM hr_position_permission
-        where permission_id IN
-        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
 
 </mapper>

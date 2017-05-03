@@ -43,43 +43,15 @@ public class PositionController {
         return page;
     }
 
-    @RequestMapping(value = "getQuery")
-    public PositionQuery getQuery(PositionQuery positionQuery) {
-        positionQuery.setJobList(jobService.findAll());
-        return positionQuery;
-    }
-
     @RequestMapping(value = "findForm")
     public PositionForm findForm(PositionForm positionForm) {
         positionForm= positionService.findForm(positionForm);
-        List<String> backendModuleIdList = positionForm.isCreate()? Lists.newArrayList() : backendModuleService.findBackendModuleIdByPosition(positionForm.getId());
-        positionForm.setPermissionTree(permissionService.findBackendTree(backendModuleIdList));
-        positionForm.setJobList( jobService.findAll());
         return positionForm;
-    }
-
-    @RequestMapping(value = "getTreeNode")
-    public TreeNode getTreeNode(String id) {
-        if(StringUtils.isNotBlank(id)){
-            List<Permission> permissionList=permissionService.findByPositionId(id);
-            List<String> permissionIIds = CollectionUtil.extractToList(permissionList, "id");
-            TreeNode treeNode=permissionService.findPermissionTree(permissionIIds);
-            return treeNode;
-        }
-       return null;
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(PositionForm positionForm, String permissionIdStr) {
-        positionForm.setPermissionIdList(StringUtils.getSplitList(permissionIdStr, Const.CHAR_COMMA));
         positionService.save(positionForm);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
-    }
-
-    @RequestMapping(value = "saveAuthorityList")
-    public RestResponse saveAuthorityList(PositionForm positionForm, String permissionIdStr) {
-        positionForm.setPermissionIdList(StringUtils.getSplitList(permissionIdStr, Const.CHAR_COMMA));
-        positionService.savePositionAndPermission(positionForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
