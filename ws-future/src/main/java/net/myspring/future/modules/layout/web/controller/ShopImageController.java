@@ -1,19 +1,18 @@
 package net.myspring.future.modules.layout.web.controller;
 
 
-import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.layout.domain.ShopImage;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
 import net.myspring.future.modules.layout.service.ShopImageService;
 import net.myspring.future.modules.layout.web.query.ShopImageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "layout/shopImage")
