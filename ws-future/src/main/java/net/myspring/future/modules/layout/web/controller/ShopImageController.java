@@ -28,13 +28,8 @@ public class ShopImageController {
         return shopImageService.findPage(pageable,shopImageQuery);
     }
 
-    @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public String detail() {
-        return null;
-    }
-
-    @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
-    public String getFormProperty() {
+    @RequestMapping(value = "findOne")
+    public String findOne() {
         return null;
     }
 

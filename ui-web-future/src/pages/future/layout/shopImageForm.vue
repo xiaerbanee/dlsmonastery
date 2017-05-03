@@ -98,7 +98,7 @@
         this.shops = [];
       }
     },getFormProperty(){
-        axios.get('/api/crm/shopImage/getFormProperty').then((response)=>{
+        axios.get('/api/ws/future/layout/shopImage/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
       },findOne(){
@@ -119,10 +119,15 @@
         this.fileList = fileList;
       }
     },created(){
-      this.getFormProperty();
-      if(!this.isCreate){
-        this.findOne();
-      }
+      axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        util.copyValue(response.data,this.inputForm);
+        this.shops=new Array(response.data.shopName);
+        if(this.inputForm.image != null) {
+          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
+            this.fileList= response.data;
+          });
+        }
+      })
     }
   }
 </script>
