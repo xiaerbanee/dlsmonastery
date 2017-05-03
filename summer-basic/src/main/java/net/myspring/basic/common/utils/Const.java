@@ -23,8 +23,5 @@ public class Const {
 
     public static final int DEFAULT_PAGE_SIZE = 5000;
 
-    public static final String OFFICE_TYPE_AREA = "100";
-    public static final String XCXAUDIT= "xcxtest";
-
 
 }
