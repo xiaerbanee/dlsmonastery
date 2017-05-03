@@ -7,8 +7,6 @@ const accountChangeList  = r => require.ensure([], () => r(require('pages/basic/
 const accountChangeForm  = r => require.ensure([], () => r(require('pages/basic/hr/accountChangeForm.vue')));
 const positionList = r => require.ensure([],() => r(require('pages/basic/hr/positionList.vue')));
 const positionForm = r => require.ensure([],() => r(require('pages/basic/hr/positionForm.vue')));
-const jobList = r => require.ensure([],() => r(require('pages/basic/hr/jobList.vue')));
-const jobForm = r => require.ensure([],() => r(require('pages/basic/hr/jobForm.vue')));
 const dutySignList = r => require.ensure([],() => r(require('pages/basic/hr/dutySignList.vue')));
 const dutyAnnualList = r => require.ensure([],() => r(require('pages/basic/hr/dutyAnnualList.vue')));
 const dutyAnnualForm = r => require.ensure([],() => r(require('pages/basic/hr/dutyAnnualForm.vue')));
@@ -57,8 +55,6 @@ let routes = [
   {path:'/basic/hr/employeePhoneDepositForm',component:employeePhoneDepositForm,name:'employeePhoneDepositForm',meta: {menu:"employeePhoneDepositList"}},
   {path:'/basic/hr/positionList',component:positionList,name:'positionList'},
   {path:'/basic/hr/positionForm',component:positionForm,name:'positionForm',meta: {menu:"positionList"}},
-  {path:'/basic/hr/jobList',component:jobList,name:'jobList'},
-  {path:'/basic/hr/jobForm',component:jobForm,name:'jobForm',meta:{menu:"jobList"}},
   {path:'/basic/hr/dutySignList',component:dutySignList,name:'dutySignList'},
   {path:'/basic/hr/dutyAnnualList',component:dutyAnnualList,name:'dutyAnnualList'},
   {path:'/basic/hr/dutyAnnualForm',component:dutyAnnualForm,name:'dutyAnnualForm',meta:{menu:"dutyAnnualList"}},
