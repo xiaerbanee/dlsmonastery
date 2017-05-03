@@ -29,7 +29,7 @@ public class MyWebBindingInitializer {
         binder.registerCustomEditor(String.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
-                setValue(StringUtils.isBlank(text) ? null : HtmlUtils.htmlEscape(text));
+                setValue(StringUtils.isBlank(text) ? null : HtmlUtils.htmlEscape(text.trim()));
             }
             @Override
             public String getAsText() {

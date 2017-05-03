@@ -14,25 +14,25 @@ import java.util.List;
 @FeignClient("summer-basic")
 public interface OfficeClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/hr/office/getOfficeFilterIds")
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getOfficeFilterIds")
     List<String> getOfficeFilterIds(@RequestParam(value = "accountId") String accountId);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/hr/office/findAreaByType")
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/findAreaByType")
     List<String> findAreaByType(@RequestParam(value = "type") String type);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/hr/office/getOfficeIdsByAccountId")
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getOfficeIdsByAccountId")
     List<String> getOfficeIdsByAccountId(@RequestParam(value = "accountId") String accountId);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/hr/office/getOfficeIdByOfficeType")
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getOfficeIdByOfficeType")
     String getOfficeIdByOfficeType(@RequestParam(value = "officeId") String officeId,@RequestParam(value = "officeType")String officeType);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/hr/office/findByAreaIds")
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/findByAreaIds")
     List<BasicOfficeDto> findByAreaIds(@RequestParam(value = "areaIds") List<String> areaIds);
 
-    @RequestMapping(method = RequestMethod.GET,value = "/hr/office/findByOfficeRuleName")
+    @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findByOfficeRuleName")
     List<BasicOfficeDto> findByOfficeRuleName(@RequestParam(value = "officeRuleName")String officeRuleName);
 
-    @RequestMapping(method = RequestMethod.GET,value = "/hr/office/findSortList")
+    @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findSortList")
     List<BasicOfficeDto> findSortList();
 
 }

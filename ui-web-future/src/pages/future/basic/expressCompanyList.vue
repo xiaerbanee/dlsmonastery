@@ -117,10 +117,14 @@
       },itemEdit:function(id){
           this.$router.push({ name: 'expressCompanyForm', query: { id: id }});
       },itemDelete:function(id){
+
+        util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/ws/future/basic/expressCompany/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           });
+        });
+
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

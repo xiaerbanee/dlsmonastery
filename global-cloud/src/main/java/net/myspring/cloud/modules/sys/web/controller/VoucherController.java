@@ -56,7 +56,6 @@ public class VoucherController {
     public Map<String,Object> list(Pageable pageable, VoucherQuery voucherQuery, String companyId) {
         Map<String,Object> map = Maps.newHashMap();
         if(StringUtils.isNotBlank(companyId)) {
-            DynamicDataSourceContext.get().setAutomaticSetCompany(false);
             DynamicDataSourceContext.get().setCompanyId(companyId);
             voucherQuery.setCompanyId(companyId);
         }else{
@@ -79,7 +78,6 @@ public class VoucherController {
         Map<String,Object> map = Maps.newHashMap();
         if (voucherDto.getId() != null) {
             voucherDto = voucherService.findOne(voucherDto.getId());
-            DynamicDataSourceContext.get().setAutomaticSetCompany(false);
             DynamicDataSourceContext.get().setCompanyId(companyId);
         }
         if(StringUtils.isNotBlank(companyId)){

@@ -11,13 +11,13 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.totalPriceType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.totalPriceType" filterable clearable :placeholder="$t('shopAdTypeList.inputKey')">
-                  <el-option v-for="item in formProperty.totalPriceTypes" :key="item" :label="item" :value="item"></el-option>
-                </el-select>
-              </el-form-item>
               <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('shopAdTypeList.likeSearch')"></el-input>
+              </el-form-item>
+              <el-form-item :label="formLabel.totalPriceType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.totalPriceType" filterable clearable :placeholder="$t('shopAdTypeList.inputKey')">
+                  <el-option v-for="item in formData.totalPriceTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -26,20 +26,18 @@
           <el-button type="primary" @click="search()">{{$t('shopAdTypeList.sure')}}</el-button>
         </div>
       </el-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAdTypeList.loading')" @sort-change="sortChange" stripe border>
+      <su-table v-model="queryData"  getUrl="/api/ws/future/basic/shopAdType" >
         <el-table-column fixed prop="name" :label="$t('shopAdTypeList.name')" sortable ></el-table-column>
         <el-table-column prop="totalPriceType" :label="$t('shopAdTypeList.totalPriceType')"></el-table-column>
         <el-table-column prop="price" :label="$t('shopAdTypeList.price')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopAdTypeList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('shopAdTypeList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small"  v-permit="'crm:shopAdType:edit'" @click.native="itemEdit(scope.row.id)">{{$t('shopAdTypeList.edit')}}</el-button>
+            <el-button size="small"  v-permit="'crm:shopAdType:delete'" @click.native="itemDelete(scope.row.id)">{{$t('shopAdTypeList.delete')}}</el-button>
           </template>
         </el-table-column>
-      </el-table>
-      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
+      </su-table>
     </div>
   </div>
 </template>
@@ -48,63 +46,41 @@
     data() {
       return {
         page:{},
-        formData:{
-          page:0,
-          size:25,
-          totalPriceType:'',
-          name:'',
+        formData:{},
+        queryData:{
+            totalPriceType:'',
+            name:'',
         },formLabel:{
-          totalPriceType:{label:this.$t('shopAdTypeList.totalPriceType'),value:''},
+          totalPriceType:{label:this.$t('shopAdTypeList.totalPriceType')},
           name:{label:this.$t('shopAdTypeList.name')},
         },
         pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
-    };
-    },
-    methods: {
-      pageRequest() {
-        this.pageLoading = true;
-        this.formLabel.totalPriceType.value = util.getLabel(this.formProperty.totalPriceTypes, this.formData.totalPriceType);
-        util.setQuery("shopAdTypeList",this.formData);
-        axios.get('/api/ws/future/basic/shopAdType',{params:this.formData}).then((response) => {
-          this.page = response.data;
-          this.pageLoading = false;
-        })
-      },pageChange(pageNumber,pageSize) {
-        this.formData.page = pageNumber;
-        this.formData.size = pageSize;
-        this.pageRequest();
-      },sortChange(column) {
-        this.formData.order=util.getOrder(column);
-        this.formData.page=0;
-        this.pageRequest();
-      },search() {
+      };
+    }, methods: {
+      search() {
         this.formVisible = false;
-        this.pageRequest();
+        this.queryData = util.cloneAndCopy(this.formData, this.queryData);
+
       },itemAdd(){
         this.$router.push({ name: 'shopAdTypeForm'})
-      },itemAction:function(id,action){
-        if(action=="修改") {
-          this.$router.push({ name: 'shopAdTypeForm', query: { id: id }})
-        } else if(action=="删除") {
+      },itemEdit:function(id){
+        this.$router.push({ name: 'shopAdTypeForm', query: { id: id }})
+      },itemDelete:function(id){
+       util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/ws/future/basic/shopAdType/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
-            this.pageRequest();
+            this.queryData = util.cloneAndCopy(this.formData, this.queryData);
           })
-        }
-      },getQuery(){
-        axios.get('/api/ws/future/basic/shopAdType/getQuery').then((response) =>{
-          this.formProperty=response.data;
-          this.pageRequest();
-      });
+        });
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.getQuery();
+      axios.get('/api/ws/future/basic/shopAdType/getQuery').then((response) =>{
+        this.formData=response.data;
+        this.queryData = util.cloneAndCopy(this.formData, this.queryData);
+      });
     }
   };
 </script>

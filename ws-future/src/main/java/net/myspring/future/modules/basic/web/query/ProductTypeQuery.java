@@ -10,13 +10,13 @@ import java.util.Map;
 public class ProductTypeQuery {
     private String code;
     private String name;
-    private Map<Boolean,String> boolMap= Maps.newHashMap();
+    private Map<String,String> boolMap= Maps.newHashMap();
 
-    public Map<Boolean, String> getBoolMap() {
+    public Map<String, String> getBoolMap() {
         return boolMap;
     }
 
-    public void setBoolMap(Map<Boolean, String> boolMap) {
+    public void setBoolMap(Map<String, String> boolMap) {
         this.boolMap = boolMap;
     }
 

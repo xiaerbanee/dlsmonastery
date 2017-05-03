@@ -39,7 +39,6 @@ public class ProductController {
     public Map<String,Object> getFormProperty(String companyId){
         Map<String,Object> map= Maps.newHashMap();
         if (StringUtils.isNotBlank(companyId)) {
-            DynamicDataSourceContext.get().setAutomaticSetCompany(false);
             DynamicDataSourceContext.get().setCompanyId(companyId);
             map.putAll(productService.getFormProperty());
         }
@@ -63,7 +62,6 @@ public class ProductController {
     public RestResponse syn(String companyId) {
         if (StringUtils.isNotBlank(companyId)) {
             LocalDateTime maxOutDate = productService.findMaxOutDate(companyId);
-            DynamicDataSourceContext.get().setAutomaticSetCompany(false);
             DynamicDataSourceContext.get().setCompanyId(companyId);
             List<BdMaterial> bdMaterials = bdMaterialService.findByDate(maxOutDate);
             if(CollectionUtil.isNotEmpty(bdMaterials)){

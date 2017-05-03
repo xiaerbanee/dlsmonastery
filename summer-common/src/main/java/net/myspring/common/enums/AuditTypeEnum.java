@@ -1,4 +1,4 @@
-package net.myspring.basic.common.enums;
+package net.myspring.common.enums;
 
 import com.google.common.collect.Lists;
 import net.myspring.util.collection.CollectionUtil;
@@ -17,8 +17,8 @@ public enum AuditTypeEnum {
 
     public static List<String> getList(){
         if(CollectionUtil.isEmpty(list)){
-            for(AccountChangeTypeEnum accountChangeTypeEnum:AccountChangeTypeEnum.values()){
-                list.add(accountChangeTypeEnum.name());
+            for(AuditTypeEnum auditTypeEnum:AuditTypeEnum.values()){
+                list.add(auditTypeEnum.name());
             }
         }
         return list;

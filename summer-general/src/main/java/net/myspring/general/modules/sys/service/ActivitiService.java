@@ -1,7 +1,7 @@
 package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Maps;
-import net.myspring.general.common.enums.AuditTypeEnum;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
 import net.myspring.general.modules.sys.domain.ProcessTask;
 import net.myspring.general.modules.sys.dto.ActivitiAuditDto;
@@ -71,7 +71,7 @@ public class ActivitiService {
         if(activitiAuditForm.getPass()){
             String processStatus = getProcessStatus(processFlow, activitiAuditForm.getPass());
             ProcessTask processTask = processTaskMapper.findByNameAndExtendId(activitiAuditForm.getName(),activitiAuditForm.getId());
-            if(AuditTypeEnum.PASS.getValue().equals(processStatus) ||AuditTypeEnum.NOT_PASS.getValue().equals(processStatus)){
+            if(AuditTypeEnum.PASSED.name().equals(processStatus) ||AuditTypeEnum.NOT_PASS.name().equals(processStatus)){
                 processTask.setStatus("已审核");
                 processTask.setEnabled(false);
             }else{
@@ -95,7 +95,7 @@ public class ActivitiService {
             processTask.setCompanyId(activitiNotifyForm.getCompanyId());
             processTaskMapper.save(processTask);
         }else {
-            if(AuditTypeEnum.PASS.getValue().equals(activitiNotifyForm.getProcessStatus()) ||AuditTypeEnum.NOT_PASS.getValue().equals(activitiNotifyForm.getProcessStatus())){
+            if(AuditTypeEnum.PASSED.name().equals(activitiNotifyForm.getProcessStatus()) ||AuditTypeEnum.NOT_PASS.name().equals(activitiNotifyForm.getProcessStatus())){
                 processTask.setStatus("已审核");
                 processTask.setEnabled(false);
             }else{
@@ -110,7 +110,7 @@ public class ActivitiService {
         if (processFlow != null) {
             return processFlow.getName();
         } else {
-            return pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.getValue();
+            return pass ? AuditTypeEnum.PASSED.name() : AuditTypeEnum.NOT_PASS.name();
         }
     }
 }

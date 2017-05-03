@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.common.enums.AuditTypeEnum;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.DutySign;

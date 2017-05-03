@@ -3,7 +3,7 @@ package net.myspring.future.modules.basic.web.controller;
 import com.google.common.collect.Lists;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.BoolEnum;
+import net.myspring.common.enums.BoolEnum;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
 import net.myspring.future.modules.basic.service.ProductTypeService;

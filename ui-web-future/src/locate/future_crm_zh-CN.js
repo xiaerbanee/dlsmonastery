@@ -516,6 +516,8 @@ export default {
     save: "保存",
     filter: "过滤",
     prerequisiteMessage: "必填信息",
+    nameNotEmptyMessage:"姓名不能为空",
+    nameTooLongMessage:"姓名字段过长",
   },
   expressList: {
     expressList: "快递管理",

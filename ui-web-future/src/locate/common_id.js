@@ -6,12 +6,20 @@ export default {
     yesterday:"昨天",
     latestWeek:"最近一周",
     latestMonth:"最近一个月",
+    waringMsgBeforeDelRecord:"此操作将永久删除该记录, 是否继续?",
+    typeOfWarningBeforeDelRecord:"提示",
+    confirmButton:"确定",
+    cancelButton:"取消",
+
   },
   head_tab: {
     home: "首页",
   },
   su_district:{
     inputKey:"请输入关键字",
+  },
+  su_table:{
+    loading:"拼命加载中",
   },
   menuManager:{
     basicManager:"基础管理",

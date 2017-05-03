@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "crm/shopPromotion")
+@RequestMapping(value = "layout/shopPromotion")
 public class ShopPromotionController {
 
     @RequestMapping(method = RequestMethod.GET)

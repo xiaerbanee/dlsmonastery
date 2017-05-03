@@ -1,6 +1,7 @@
 package net.myspring.general.common.activiti;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.util.collection.CollectionUtil;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -31,7 +32,7 @@ public class ActivitiEntity {
 
 	private List<Comment> comments;
 
-	private Map<String,String> accountMap = Maps.newHashMap();
+	private List<String> accountIdList = Lists.newArrayList();
 
 	public List<Task> getTasks() {
 		return tasks;
@@ -90,12 +91,11 @@ public class ActivitiEntity {
 		this.comments = comments;
 	}
 
-	public Map<String, String> getAccountMap() {
-		return accountMap;
+	public List<String> getAccountIdList() {
+		return accountIdList;
 	}
 
-	public void setAccountMap(Map<String, String> accountMap) {
-		this.accountMap = accountMap;
+	public void setAccountIdList(List<String> accountIdList) {
+		this.accountIdList = accountIdList;
 	}
-
 }

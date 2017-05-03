@@ -22,7 +22,7 @@
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item  :label="$t('shopImageForm.image')" prop="image">
-              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/形象更换" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/形象更换" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopImageForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopImageForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -60,6 +60,7 @@
           imageType: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
           imageSize: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}]
         },
+        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
       }
     },
     methods:{
@@ -69,7 +70,7 @@
         form.validate((valid) => {
           this.inputForm.image = util.getFolderFileIdStr(this.fileList);
           if (valid) {
-            axios.post('/api/crm/shopImage/save', qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/ws/future/layout/shopImage/save', qs.stringify(this.inputForm)).then((response)=> {
               console.log(response.data)
               if(response.data.message){
                 this.$message(response.data.message);
@@ -89,7 +90,7 @@
       },remoteShop(query) {
       if (query !== '') {
         this.remoteLoading = true;
-        axios.get('/api/crm/depot/shop',{params:{name:query}}).then((response)=>{
+        axios.get('/api/ws/future/basic/depot/shop',{params:{name:query}}).then((response)=>{
           this.shops=response.data;
           this.remoteLoading = false;
         })
@@ -97,7 +98,7 @@
         this.shops = [];
       }
     },getFormProperty(){
-        axios.get('/api/crm/shopImage/getFormProperty').then((response)=>{
+        axios.get('/api/ws/future/layout/shopImage/getFormProperty').then((response)=>{
           this.formProperty=response.data;
         });
       },findOne(){
@@ -105,7 +106,7 @@
           util.copyValue(response.data,this.inputForm);
           this.shops=new Array(response.data.shop);
           if(this.inputForm.image != null) {
-            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
               this.fileList= response.data;
             });
           }
@@ -118,10 +119,15 @@
         this.fileList = fileList;
       }
     },created(){
-      this.getFormProperty();
-      if(!this.isCreate){
-        this.findOne();
-      }
+      axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        util.copyValue(response.data,this.inputForm);
+        this.shops=new Array(response.data.shopName);
+        if(this.inputForm.image != null) {
+          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
+            this.fileList= response.data;
+          });
+        }
+      })
     }
   }
 </script>

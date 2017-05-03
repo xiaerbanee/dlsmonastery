@@ -1,6 +1,7 @@
 package net.myspring.general.modules.sys.dto;
 
 import com.google.common.collect.Maps;
+import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.collection.CollectionUtil;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -27,7 +28,10 @@ public class ActivitiDto {
 
     private List<Comment> comments;
 
-    private Map<String,String> accountMap;
+    private List<String> accountIdList;
+
+    @CacheInput(inputKey = "accounts",inputInstance = "accountIdList",outputInstance = "loginName")
+    private List<String> accountNameList;
 
     public List<HistoricVariableInstance> getHistoricVariableInstances() {
         return historicVariableInstances;
@@ -69,12 +73,28 @@ public class ActivitiDto {
         this.comments = comments;
     }
 
-    public Map<String, String> getAccountMap() {
-        return accountMap;
+    public List<String> getAccountIdList() {
+        return accountIdList;
     }
 
-    public void setAccountMap(Map<String, String> accountMap) {
-        this.accountMap = accountMap;
+    public void setAccountIdList(List<String> accountIdList) {
+        this.accountIdList = accountIdList;
+    }
+
+    public List<String> getAccountNameList() {
+        return accountNameList;
+    }
+
+    public void setAccountNameList(List<String> accountNameList) {
+        this.accountNameList = accountNameList;
+    }
+
+    public Map<String, String> getAccountMap() {
+        Map<String,String> accountMap = Maps.newHashMap();
+        for(int i=0;i<accountIdList.size();i++) {
+            accountMap.put(accountIdList.get(i),accountNameList.get(i));
+        }
+        return accountMap;
     }
 
     public Map<String, Object> getVariableMap() {

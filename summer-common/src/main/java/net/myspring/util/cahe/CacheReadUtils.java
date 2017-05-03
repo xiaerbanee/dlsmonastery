@@ -149,7 +149,7 @@ public class CacheReadUtils {
         return result;
     }
 
-    public static Map<String,Object> getCacheMap(RedisTemplate redisTemplate, List<String> keyList) {
+    private static Map<String,Object> getCacheMap(RedisTemplate redisTemplate, List<String> keyList) {
         RedisCallback<List<Object>> pipelineCallback = connection -> {
             connection.openPipeline();
             for (String key : keyList) {
@@ -167,15 +167,6 @@ public class CacheReadUtils {
             }
         }
         return cacheMap;
-    }
-
-    public static Map<String,Object> getCacheMap(RedisTemplate redisTemplate, List<String> keyList,String fieldName) {
-        Map<String,Object> cacheMap = getCacheMap(redisTemplate,keyList);
-        Map<String,Object> map = Maps.newHashMap();
-        for(String key:cacheMap.keySet()) {
-            map.put(key,ReflectionUtil.getFieldValue(cacheMap.get(key),fieldName));
-        }
-        return map;
     }
 
     private static Object deSerialize(byte[] bytes) {

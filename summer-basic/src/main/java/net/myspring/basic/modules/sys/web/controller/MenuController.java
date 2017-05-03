@@ -1,12 +1,6 @@
 package net.myspring.basic.modules.sys.web.controller;
 
-import com.google.common.collect.Maps;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import net.myspring.basic.common.enums.BoolEnum;
-import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.sys.domain.Menu;
-import net.myspring.basic.modules.sys.domain.Permission;
-import net.myspring.basic.modules.sys.dto.BackendMenuDto;
+import net.myspring.common.enums.BoolEnum;
 import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.dto.PermissionDto;
 import net.myspring.basic.modules.sys.service.MenuCategoryService;
@@ -17,8 +11,6 @@ import net.myspring.basic.modules.sys.web.query.MenuQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.json.ObjectMapperUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by liuj on 2016/11/23.

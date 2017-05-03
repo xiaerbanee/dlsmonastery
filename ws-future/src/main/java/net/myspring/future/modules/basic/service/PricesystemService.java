@@ -60,6 +60,8 @@ public class PricesystemService {
     }
 
     public void logicDeleteOne(PricesystemForm pricesystemForm) {
+        Pricesystem pricesystem = pricesystemMapper.findOne(pricesystemForm.getId());
+        pricesystemForm  = BeanUtil.map(pricesystem,PricesystemForm.class);
         pricesystemForm.setName(pricesystemForm.getName()+"(废弃时间"+new Date()+")");
         pricesystemForm.setEnabled(false);
         pricesystemMapper.updateForm(pricesystemForm);
@@ -85,7 +87,7 @@ public class PricesystemService {
                         return p1.getProductName().compareTo(p2.getProductName());
                     }
                 });
-                String expressProductId ="2307" /*companyConfigClient.getValueByCode(CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.getCode())*/;
+                String expressProductId =companyConfigClient.getValueByCode(CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.getCode());
                 for(int i = 0;i<pricesystemDetails.size();i++) {
                     if(StringUtils.isNotBlank(expressProductId) && expressProductId.equals(pricesystemDetails.get(i).getProductId())) {
                         pricesystemDetails.get(i).setSort(0);
