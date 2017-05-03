@@ -21,6 +21,14 @@ public class ShopImageDto extends DataDto<ShopImage>{
     @CacheInput(inputKey = "offices", inputInstance = "areaId", outputInstance = "name")
     private String areaName;
 
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
     public String getShopName() {
         return shopName;
     }

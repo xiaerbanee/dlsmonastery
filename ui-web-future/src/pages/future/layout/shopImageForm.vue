@@ -6,13 +6,13 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopImageForm.shopName')" prop="shopId">
-              <el-select v-model="inputForm.shopId" filterable remote :placeholder="$t('shopImageForm.inputWord')" :remote-method="remoteShop" :loading="remoteLoading" :clearable=true >
+              <el-select v-model="inputForm.shopName" filterable remote :placeholder="$t('shopImageForm.inputWord')" :remote-method="remoteShop" :loading="remoteLoading" :clearable=true >
                 <el-option v-for="shop in shops" :key="shop.id" :label="shop.name" :value="shop.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageType')" prop="imageType">
               <el-select v-model="inputForm.imageType" filterable clearable :placeholder="$t('shopImageForm.inputType')">
-                <el-option v-for="item in formProperty.shopImageTypes" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in formProperty" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageSize')" prop="imageSize">
@@ -50,13 +50,14 @@
         inputForm:{
           id:'',
           shopId:'',
+          shopName:'',
           imageType:'',
           imageSize:'',
           image:'',
           remarks:''
         },
         rules: {
-          shopId: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
+          shopName: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
           imageType: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
           imageSize: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}]
         },
@@ -70,6 +71,7 @@
         form.validate((valid) => {
           this.inputForm.image = util.getFolderFileIdStr(this.fileList);
           if (valid) {
+              console.log(this.inputForm);
             axios.post('/api/ws/future/layout/shopImage/save', qs.stringify(this.inputForm)).then((response)=> {
               console.log(response.data)
               if(response.data.message){
@@ -98,19 +100,9 @@
         this.shops = [];
       }
     },getFormProperty(){
-        axios.get('/api/ws/future/layout/shopImage/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
+        axios.get('/api/basic/sys/companyConfig/getValueByCode',{params:{code:"SHOP_IMAGE_TYPE"}}).then((response)=>{
+          this.formProperty=response.data.split(',');
         });
-      },findOne(){
-        axios.get('/api/crm/shopImage/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-          this.shops=new Array(response.data.shop);
-          if(this.inputForm.image != null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
-              this.fileList= response.data;
-            });
-          }
-        })
       },handlePreview(file) {
         window.open(file.url);
       },handleChange(file, fileList) {
@@ -128,6 +120,7 @@
           });
         }
       })
+      this.getFormProperty();
     }
   }
 </script>

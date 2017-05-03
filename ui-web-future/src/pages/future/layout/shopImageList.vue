@@ -91,7 +91,7 @@
         if(action=="edit") {
           this.$router.push({ name: 'shopImageForm', query: { id: id }})
         } else if(action=="delete") {
-          axios.get('/api/ws/future/layout/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/ws/future/layout/shopImage/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
