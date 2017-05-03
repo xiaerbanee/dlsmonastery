@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 @Table(name="sys_process_task")
 public class ProcessTask  extends CompanyEntity<ProcessTask>{
     private String name;
+    private String processInstanceId;
     private String extendId;
     private String status;
     private String officeId;
@@ -33,6 +34,14 @@ public class ProcessTask  extends CompanyEntity<ProcessTask>{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
     }
 
     public String getExtendId() {

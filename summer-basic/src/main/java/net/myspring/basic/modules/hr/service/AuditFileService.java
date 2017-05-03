@@ -1,32 +1,23 @@
 package net.myspring.basic.modules.hr.service;
 
-import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.client.ProcessTypeClient;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.mapper.AuditFileMapper;
-import net.myspring.basic.modules.sys.client.ActivitiClient;
-import net.myspring.basic.modules.sys.manager.OfficeManager;
-import net.myspring.basic.modules.sys.mapper.OfficeMapper;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
-import net.myspring.general.modules.sys.dto.ActivitiAuditDto;
-import net.myspring.general.modules.sys.dto.ActivitiAuthenticatedDto;
-import net.myspring.general.modules.sys.form.ActivitiAuditForm;
-import net.myspring.general.modules.sys.form.ActivitiAuthenticatedForm;
-import net.myspring.general.modules.sys.form.ActivitiNotifyForm;
+import net.myspring.basic.modules.sys.client.ActivitiClient;
+import net.myspring.basic.modules.sys.manager.OfficeManager;
+import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
+import net.myspring.general.modules.sys.dto.ActivitiStartDto;
+import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
+import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -35,13 +26,9 @@ public class AuditFileService {
     @Autowired
     private AuditFileMapper auditFileMapper;
     @Autowired
-    private OfficeMapper officeMapper;
-    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private ActivitiClient activitiClient;
-    @Autowired
-    private ProcessTypeClient processTypeClient;
     @Autowired
     private OfficeManager officeManager;
 
@@ -66,7 +53,6 @@ public class AuditFileService {
             auditFileForm = BeanUtil.map(auditFile, AuditFileForm.class);
             cacheUtils.initCacheInput(auditFileForm);
         }
-        auditFileForm.setProcessTypeList(processTypeClient.findAll());
         return auditFileForm;
     }
 
@@ -75,14 +61,14 @@ public class AuditFileService {
         if (auditFileForm.isCreate()) {
             String name="文件审批";
             String businessKey = auditFileForm.getId();
-            ActivitiAuthenticatedDto authenticated = activitiClient.authenticated(new ActivitiAuthenticatedForm(auditFileForm.getId(), name, businessKey, auditFileForm.getProcessTypeId(), SecurityUtils.getAccountId(),SecurityUtils.getOfficeId(),SecurityUtils.getCompanyId()));
-            auditFileForm.setProcessStatus(authenticated.getProcessStatus());
-            auditFileForm.setProcessFlowId(authenticated.getProcessFlowId());
-            auditFileForm.setProcessInstanceId(authenticated.getProcessInstanceId());
-            auditFileForm.setPositionId(authenticated.getPositionId());
+            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm(name, businessKey, auditFileForm.getProcessTypeId()));
+            auditFileForm.setProcessStatus(activitiStartDto.getProcessStatus());
+            auditFileForm.setProcessFlowId(activitiStartDto.getProcessFlowId());
+            auditFileForm.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
+            auditFileForm.setPositionId(activitiStartDto.getPositionId());
             auditFile = BeanUtil.map(auditFileForm, AuditFile.class);
             auditFileMapper.save(auditFile);
-            activitiClient.notify(new ActivitiNotifyForm(name,auditFile.getId(),auditFile.getProcessStatus(),SecurityUtils.getPositionId(),SecurityUtils.getCompanyId(),SecurityUtils.getAccountId(),SecurityUtils.getOfficeId()));
+            activitiClient.setExtendId(activitiStartDto.getProcessInstanceId(), auditFile.getId());
             return auditFile;
         }
         return null;
@@ -91,14 +77,13 @@ public class AuditFileService {
     public void audit(String id, boolean pass, String comment) {
         String name="文件审批";
         AuditFile auditFile = auditFileMapper.findOne(id);
-        ActivitiAuditDto activitiAuditDto = activitiClient.audit(new ActivitiAuditForm(id, name, auditFile.getProcessInstanceId(), auditFile.getProcessTypeId(), comment, pass, SecurityUtils.getAccountId()));
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(id, name, auditFile.getProcessInstanceId(), auditFile.getProcessTypeId(), comment, pass));
         AuditFileForm auditFileForm = BeanUtil.map(auditFile, AuditFileForm.class);
         auditFileForm.setLocked(true);
-        auditFileForm.setProcessFlowId(activitiAuditDto.getProcessFlowId());
-        auditFileForm.setProcessStatus(activitiAuditDto.getProcessStatus());
-        auditFileForm.setPositionId(activitiAuditDto.getPositionId());
+        auditFileForm.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+        auditFileForm.setProcessStatus(activitiCompleteDto.getProcessStatus());
+        auditFileForm.setPositionId(activitiCompleteDto.getPositionId());
         auditFileMapper.updateForm(auditFileForm);
-        activitiClient.notify(new ActivitiNotifyForm(name,auditFile.getId(),auditFile.getProcessStatus(),SecurityUtils.getPositionId(),SecurityUtils.getCompanyId(),SecurityUtils.getAccountId(),SecurityUtils.getOfficeId()));
 
     }
 

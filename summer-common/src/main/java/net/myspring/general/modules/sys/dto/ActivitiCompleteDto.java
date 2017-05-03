@@ -3,7 +3,7 @@ package net.myspring.general.modules.sys.dto;
 /**
  * Created by wangzm on 2017/4/25.
  */
-public class ActivitiAuditDto {
+public class ActivitiCompleteDto {
     private String processStatus;
     private String processFlowId;
     private String positionId;
