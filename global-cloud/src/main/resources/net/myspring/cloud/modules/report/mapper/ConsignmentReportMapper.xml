@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.report.mapper.ConsignmentReportMapper">
 
-	<select id="findInitialization" resultType="ConsignmentForUnitDto">
+	<select id="findInitialization" resultType="Consignment">
 		SELECT
 			e.FCUSTID as customerId,
 			e.FNAME as customerName,
@@ -20,7 +20,7 @@
 		JOIN T_BD_MATERIAL_L f ON a.FMATERIALID = f.FMATERIALID
 	</select>
 
-	<select id="findTransferInByPeriod" resultType="ConsignmentForUnitDto">
+	<select id="findTransferInByPeriod" resultType="Consignment">
 		SELECT
 			e.FCUSTID as customerId,
 			e.FNAME as customerName,
@@ -40,7 +40,7 @@
 			b.FDATE &gt;=#{dateStart} and
 			b.FDATE &lt;=#{dateEnd}
 	</select>
-	<select id="findTransferOutByPeriod" resultType="ConsignmentForUnitDto">
+	<select id="findTransferOutByPeriod" resultType="Consignment">
 		SELECT
 			e.FCUSTID as customerId,
 			e.FNAME as customerName,
@@ -60,7 +60,7 @@
 			b.FDATE &gt;=#{dateStart} and
 			b.FDATE &lt;=#{dateEnd}
 	</select>
-	<select id="findOutStockByPeriod" resultType="ConsignmentForUnitDto">
+	<select id="findOutStockByPeriod" resultType="Consignment">
 		SELECT
 			b.FCUSTOMERID AS customerId,
 			e.FNAME as customerName,
@@ -81,7 +81,7 @@
 			b.FDATE &gt;=#{dateStart} and
 			b.FDATE &lt;=#{dateEnd}
 	</select>
-	<select id="findReturnStockByPeriod" resultType="ConsignmentForUnitDto">
+	<select id="findReturnStockByPeriod" resultType="Consignment">
 		SELECT
 			b.FRETCUSTID AS customerId,
 			e.FNAME as customerName,
@@ -102,7 +102,7 @@
 			b.FDATE &lt;=#{dateEnd}
 	</select>
 
-	<select id="findTransferInByEndDate" resultType="ConsignmentForUnitDto">
+	<select id="findTransferInByEndDate" resultType="Consignment">
 		SELECT
 		e.FCUSTID as customerId,
 		e.FNAME as customerName,
@@ -121,7 +121,7 @@
 		WHERE
 		b.FDATE &lt; #{dateEnd}
 	</select>
-	<select id="findTransferOutByEndDate" resultType="ConsignmentForUnitDto">
+	<select id="findTransferOutByEndDate" resultType="Consignment">
 		SELECT
 		e.FCUSTID as customerId,
 		e.FNAME as customerName,
@@ -140,7 +140,7 @@
 		WHERE
 		b.FDATE &lt; #{dateEnd}
 	</select>
-	<select id="findOutStockByEndDate" resultType="ConsignmentForUnitDto">
+	<select id="findOutStockByEndDate" resultType="Consignment">
 		SELECT
 		b.FCUSTOMERID AS customerId,
 		e.FNAME as customerName,
@@ -159,7 +159,7 @@
 		WHERE
 		b.FDATE &lt; #{dateEnd}
 	</select>
-	<select id="findReturnStockByEndDate" resultType="ConsignmentForUnitDto">
+	<select id="findReturnStockByEndDate" resultType="Consignment">
 		SELECT
 		b.FRETCUSTID AS customerId,
 		e.FNAME as customerName,

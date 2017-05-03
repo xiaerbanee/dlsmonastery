@@ -33,6 +33,7 @@ public interface PayableReportMapper {
     //汇总表
     //期初
     List<PayableForSummaryDto> findByEndDate(@Param("date")LocalDate date);
+
     List<PayableForSummaryDto> findByEndDateAndIn(@Param("date")LocalDate date, @Param("supplierIdList")List<String> supplierIdList, @Param("departmentIdList")List<String> departmentIdList);
 
     //付款单

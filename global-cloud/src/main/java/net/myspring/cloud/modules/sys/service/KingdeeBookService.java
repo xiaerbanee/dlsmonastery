@@ -52,13 +52,6 @@ public class KingdeeBookService {
         return kingdeeBookForm;
     }
 
-    public KingdeeBookDto findOne(String id){
-        KingdeeBook kingdeeBook = kingdeeBookMapper.findOne(id);
-        KingdeeBookDto kingdeeBookDto = BeanUtil.map(kingdeeBook,KingdeeBookDto.class);
-        cacheUtils.initCacheInput(kingdeeBookDto);
-        return kingdeeBookDto;
-    }
-
     public void deleteById(String id) {
         kingdeeBookMapper.deleteById(id);
     }

@@ -322,9 +322,10 @@
 	  a.supplierId,
 	  a.departmentId
     </select>
+
     <select id="findByEndDateAndIn" resultType="PayableForSummaryDto">
         SELECT
-            a.supplyid AS supplierId,
+            a.supplierId AS supplierId,
             a.departmentId AS departmentId,
             SUM (a.fsamount) AS beginAmount
         FROM
@@ -404,7 +405,7 @@
                 <foreach collection="supplierIdList" item="item" index="index" open="(" separator="," close=")">
                     #{item}
                 </foreach>
-                and b.fcostDepartmentId in
+                and a.fcostDepartmentId in
                 <foreach collection="departmentIdList" item="item" index="index" open="(" separator="," close=")">
                     #{item}
                 </foreach>
@@ -436,11 +437,11 @@
             JOIN T_AP_REFUNDBILL b ON a.FID = b.FID
             WHERE
                 b.FDATE &lt; #{date}
-                and a.FCONTACTUNIT in
+                and b.FCONTACTUNIT in
                 <foreach collection="supplierIdList" item="item" index="index" open="(" separator="," close=")">
                     #{item}
                 </foreach>
-                and a.fpurchasedeptid in
+                and b.fpurchasedeptid in
                 <foreach collection="departmentIdList" item="item" index="index" open="(" separator="," close=")">
                     #{item}
                 </foreach>

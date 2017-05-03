@@ -32,7 +32,7 @@
         select
             t1.FFULLNAME
         from
-            T_BD_DEPARTMENT t,
+            T_BD_DEPARTMENT t
         left join T_BD_DEPARTMENT_L t1 on t.FDEPTID = t1.FDEPTID
         where
         t.FDEPTID = #{departmentId}

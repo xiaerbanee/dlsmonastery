@@ -1,7 +1,8 @@
 package net.myspring.cloud.modules.report.mapper;
 
-import net.myspring.common.dto.NameValueDto;
+
 import net.myspring.cloud.modules.report.domain.Retail;
+import net.myspring.cloud.modules.report.dto.NameValueDto;
 import net.myspring.cloud.modules.sys.domain.DynamicSubject;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

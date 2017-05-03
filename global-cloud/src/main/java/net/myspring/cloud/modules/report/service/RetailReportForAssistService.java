@@ -2,10 +2,10 @@ package net.myspring.cloud.modules.report.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.common.dto.NameValueDto;
 import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.handsontable.NestedHeaderCell;
+import net.myspring.cloud.modules.report.dto.NameValueDto;
 import net.myspring.cloud.modules.report.mapper.GlcxViewMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
