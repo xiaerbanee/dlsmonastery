@@ -1,8 +1,12 @@
 package net.myspring.future.modules.layout.service;
 
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.layout.domain.ShopImage;
+import net.myspring.future.modules.layout.dto.ShopImageDto;
 import net.myspring.future.modules.layout.mapper.ShopImageMapper;
+import net.myspring.future.modules.layout.web.query.ShopImageQuery;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +23,12 @@ public class ShopImageService {
     private ShopImageMapper shopImageMapper;
     @Autowired
     private DepotMapper depotMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
 
-    public Page findPage(Pageable pageable, Map<String,Object> map){
-        Page<ShopImage> page=shopImageMapper.findPage(pageable,map);
+    public Page findPage(Pageable pageable, ShopImageQuery shopImageQuery){
+        Page<ShopImageDto> page=shopImageMapper.findPage(pageable,shopImageQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 

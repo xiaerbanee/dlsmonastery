@@ -2,17 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.layout.mapper.ShopImageMapper">
 
-    <select id="findPage" resultType="ShopImage">
+    <select id="findPage" resultType="ShopImageDto">
         SELECT
-        t1.*
+        depot.name depotName,depot.office_Id officeId,depot.area_Id areaId,t1.*
         FROM
         crm_shop_image t1,
         crm_depot depot
         WHERE
         t1.enabled=1
         and t1.shop_id=depot.id
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter"/>
-        <if test="p.shopId != null">
+        <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter"/>-->
+        <!--<if test="p.shopId != null">
             AND t1.shop_id >= #{p.shopId}
         </if>
         <if test="p.createdDateStart != null">
@@ -20,7 +20,7 @@
         </if>
         <if test="p.createdDateEnd != null">
             AND t1.created_date &lt;=#{p.createdDateEnd}
-        </if>
+        </if>-->
         <if test="p.shopName != null">
             AND depot.name LIKE CONCAT('%',#{p.shopName},'%')
         </if>

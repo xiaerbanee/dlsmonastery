@@ -71,7 +71,7 @@
         this.pageLoading = true;
         this.formLabel.officeId.value = util.getLabel(this.formProperty.areaList, this.formData.officeId);
         util.setQuery("shopImageList",this.formData);
-        axios.get('/api/crm/shopImage',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/layout/shopImage',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -92,13 +92,13 @@
         if(action=="修改") {
           this.$router.push({ name: 'shopImageForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/crm/shopImage/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/ws/future/layout/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
         }
       },getQuery(){
-        axios.get('/api/crm/shopImage/getQuery').then((response) =>{
+        axios.get('/api/ws/future/layout/shopImage').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });
@@ -106,7 +106,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      this.getQuery();
+      this.pageRequest();
     }
   };
 </script>
