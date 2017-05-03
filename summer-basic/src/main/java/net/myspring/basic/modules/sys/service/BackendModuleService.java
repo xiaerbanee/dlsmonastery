@@ -51,8 +51,8 @@ public class BackendModuleService {
         return backendModule;
     }
 
-    public List<String> findBackendModuleIdByPosition(String positionId){
-        List<BackendModule> backendModuleList=backendModuleMapper.findByPositionId(positionId);
+    public List<String> findBackendModuleIdByRoleId(String roleId){
+        List<BackendModule> backendModuleList=backendModuleMapper.findByRoleId(roleId);
         List<String> backendModuleIds= CollectionUtil.extractToList(backendModuleList,"id");
         return backendModuleIds;
     }

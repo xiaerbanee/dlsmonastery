@@ -4,13 +4,18 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.AccountPermission;
+import net.myspring.basic.modules.hr.mapper.AccountPermissionMapper;
+import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.sys.domain.*;
-import net.myspring.basic.modules.sys.dto.PermissionDto;
+import net.myspring.basic.modules.sys.dto.*;
 import net.myspring.basic.modules.sys.manager.MenuCategoryManager;
 import net.myspring.basic.modules.sys.manager.MenuManager;
 import net.myspring.basic.modules.sys.manager.PermissionManager;
 import net.myspring.basic.modules.sys.mapper.*;
 import net.myspring.basic.modules.sys.web.form.PermissionForm;
+import net.myspring.basic.modules.sys.web.form.RoleForm;
 import net.myspring.basic.modules.sys.web.query.PermissionQuery;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
@@ -32,7 +37,7 @@ public class PermissionService {
     @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
-    private MenuCategoryManager menuCategoryManager;
+    private RolePermissionMapper rolePermissionMapper;
     @Autowired
     private MenuCategoryMapper menuCategoryMapper;
     @Autowired
@@ -45,6 +50,8 @@ public class PermissionService {
     private BackendMapper backendMapper;
     @Autowired
     private BackendModuleMapper backendModuleMapper;
+    @Autowired
+    private AccountPermissionMapper accountPermissionMapper;
 
     public List<PermissionDto> findByMenuId(String menuId) {
         List<Permission> permissionList = permissionMapper.findByMenuId(menuId);
@@ -52,8 +59,8 @@ public class PermissionService {
         return permissionDtoList;
     }
 
-    public List<Permission> findByPositionId(String positionId) {
-        return permissionMapper.findByPositionId(positionId);
+    public List<Permission> findByRoleId(String roleId) {
+        return permissionMapper.findByRoleId(roleId);
     }
 
     public Permission findOne(String id) {
@@ -65,7 +72,6 @@ public class PermissionService {
         if (!permissionForm.isCreate()) {
             Permission permission = permissionManager.findOne(permissionForm.getId());
             permissionForm = BeanUtil.map(permission, PermissionForm.class);
-            permissionForm.setPositionIdList(permissionMapper.findPositionIdByPermissions(Lists.newArrayList(permission.getId())));
             cacheUtils.initCacheInput(permissionForm);
         }
         return permissionForm;
@@ -90,15 +96,16 @@ public class PermissionService {
         if (permissionForm.isCreate()) {
             permission = BeanUtil.map(permissionForm, Permission.class);
             permission = permissionManager.save(permission);
-            if (CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())) {
-                permissionMapper.savePermissionPosition(permissionForm.getId(), permissionForm.getPositionIdList());
-            }
         } else {
             permission = permissionManager.updateForm(permissionForm);
-            permissionMapper.deletePermissionPosition(permissionForm.getId());
-            if (CollectionUtil.isNotEmpty(permissionForm.getPositionIdList())) {
-                permissionMapper.savePermissionPosition(permissionForm.getId(), permissionForm.getPositionIdList());
+            rolePermissionMapper.deleteByPermissionId(permissionForm.getId());
+        }
+        if (CollectionUtil.isNotEmpty(permissionForm.getRoleIdList())) {
+            List<RolePermission> rolePermissionList=Lists.newArrayList();
+            for(String roleId:permissionForm.getRoleIdList()){
+                rolePermissionList.add(new RolePermission(permissionForm.getId(),roleId));
             }
+            rolePermissionMapper.batchSave(rolePermissionList);
         }
         return permission;
     }
@@ -120,32 +127,28 @@ public class PermissionService {
         return treeNode;
     }
 
-    public TreeNode findPermissionTree(List<String> permissionIds) {
-        Set<String> permissionIdSet = Sets.newHashSet(permissionIds);
+    public TreeNode findPermissionTree(String roleId,List<String> permissionIdList) {
+        Set<String> permissionIdSet = Sets.newHashSet(permissionIdList);
         TreeNode treeNode = new TreeNode("0", "权限列表");
-        List<BackendModule> backendModuleList = backendModuleMapper.findByPositionId(SecurityUtils.getPositionId());
-        List<Backend> backendList=backendMapper.findByIds(CollectionUtil.extractToList(backendModuleList,"backendId"));
-        Map<String,List<BackendModule>> backendModuleMap=CollectionUtil.extractToMapList(backendModuleList,"backendId");
-        List<MenuCategory> menuCategories = menuCategoryMapper.findByBackendModuleIds(CollectionUtil.extractToList(backendModuleList, "id"));
-        Map<String, List<MenuCategory>> menuCategoryMap = CollectionUtil.extractToMapList(menuCategories, "backendModuleId");
-        List<Menu> menus = menuMapper.findByPermissionIsNotEmpty();
-        Map<String, List<Menu>> menuMap = CollectionUtil.extractToMapList(menus, "menuCategoryId");
-        List<Permission> permissions = permissionMapper.findAllEnabled();
-        Map<String, List<Permission>> permissionMap = CollectionUtil.extractToMapList(permissions, "menuId");
-        for(Backend backend:backendList){
+        List<BackendMenuDto> backendMenuDtoList = backendMapper.findByRoleId(roleId);
+        List<Permission> permissionList=permissionMapper.findAllEnabled();
+        Map<String,List<Permission>> permissionMap=CollectionUtil.extractToMapList(permissionList,"menuId");
+        for(BackendMenuDto backend:backendMenuDtoList){
             TreeNode backendTree = new TreeNode("b" + backend.getId(), backend.getName());
-            List<BackendModule> backendModules=backendModuleMap.get(backend.getId());
-            for (BackendModule backendModule : backendModules) {
+            for (BackendModuleMenuDto backendModule : backend.getBackendModuleList()) {
                 TreeNode backendModuleTree = new TreeNode("p" + backendModule.getId(), backendModule.getName());
-                for (MenuCategory menuCategory : menuCategoryMap.get(backendModule.getId())) {
+                for (MenuCategoryMenuDto menuCategory : backendModule.getMenuCategoryList()) {
                     TreeNode menuCategoryTree = new TreeNode("c" + menuCategory.getId(), menuCategory.getName());
-                    List<Menu> menuList = menuMap.get(menuCategory.getId());
+                    List<FrontendMenuDto> menuList = menuCategory.getMenuList();
                     if(menuList!=null){
-                        for (Menu menu : menuList) {
+                        for (FrontendMenuDto menu : menuList) {
                             TreeNode menuTree = new TreeNode("m" + menu.getId(), menu.getName());
-                            for (Permission permission : permissionMap.get(menu.getId())) {
-                                TreeNode permissionTree = new TreeNode(permission.getId(), permission.getName());
-                                menuTree.getChildren().add(permissionTree);
+                            List<Permission> permissions = permissionMap.get(menu.getId());
+                            if(CollectionUtil.isNotEmpty(permissions)){
+                                for (Permission permission : permissions) {
+                                    TreeNode permissionTree = new TreeNode(permission.getId(), permission.getName());
+                                    menuTree.getChildren().add(permissionTree);
+                                }
                             }
                             menuCategoryTree.getChildren().add(menuTree);
                         }
@@ -157,6 +160,13 @@ public class PermissionService {
             treeNode.getChildren().add(backendTree);
         }
         treeNode.setChecked(Lists.newArrayList(permissionIdSet));
+        return treeNode;
+    }
+
+    public TreeNode getAccountPermissionCheckData(String accountId){
+        TreeNode treeNode = new TreeNode("0", "权限列表");
+        List<String> accountPermissionList=accountPermissionMapper.findPermissionIdByAccount(accountId);
+        treeNode.setChecked(accountPermissionList);
         return treeNode;
     }
 

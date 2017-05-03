@@ -28,17 +28,27 @@ public class OfficeForm extends DataForm<Office> {
     private List<OfficeRuleDto>  officeRuleList= Lists.newArrayList();
     private List<String> jointTypeList= Lists.newArrayList();
     private String officeRuleId;
-    private String supportOfficeIf;
+    private List<String> leaderIdList=Lists.newArrayList();
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
+    @CacheInput(inputKey = "accounts",inputInstance = "leaderIdList",outputInstance = "loginName")
+    private List<String> leaderNameList=Lists.newArrayList();
 
-    public String getSupportOfficeIf() {
-        return supportOfficeIf;
+    public List<String> getLeaderNameList() {
+        return leaderNameList;
     }
 
-    public void setSupportOfficeIf(String supportOfficeIf) {
-        this.supportOfficeIf = supportOfficeIf;
+    public void setLeaderNameList(List<String> leaderNameList) {
+        this.leaderNameList = leaderNameList;
+    }
+
+    public List<String> getLeaderIdList() {
+        return leaderIdList;
+    }
+
+    public void setLeaderIdList(List<String> leaderIdList) {
+        this.leaderIdList = leaderIdList;
     }
 
     public TreeNode getOfficeTree() {

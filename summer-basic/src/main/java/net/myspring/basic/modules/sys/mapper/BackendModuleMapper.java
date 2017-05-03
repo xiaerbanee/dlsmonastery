@@ -18,6 +18,6 @@ public interface BackendModuleMapper extends MyMapper<BackendModule,String>{
 
     List<BackendModule> findByBackendIds(List<String> backendIds);
 
-    List<BackendModule> findByPositionId(String positionId);
+    List<BackendModule> findByRoleId(String roleId);
 
 }

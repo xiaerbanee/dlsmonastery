@@ -20,8 +20,6 @@ public interface MenuMapper extends MyMapper<Menu,String> {
 
     List<Menu> findByPermissionIsNotEmpty();
 
-    List<Menu> findBackendMenuByPosition(String positionId);
-
     List<Menu> findByMenuCategoryId( String menuCategoryId);
 
     List<Menu> findByMenuIdsAndMobile(@Param("list")List<String> menuIds,@Param("isMobile")boolean isMobile);

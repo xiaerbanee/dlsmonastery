@@ -35,6 +35,10 @@ public class SecurityUtils {
     public static String getEmployeeId() {
         return StringUtils.toString(getAdditionalInformation().get("employeeId"));
     }
+
+    public static String getRoleId() {
+        return StringUtils.toString(getAdditionalInformation().get("roleId"));
+    }
     
     public static DBObject getDbObject(){
         DBObject dbObject = new BasicDBObject();

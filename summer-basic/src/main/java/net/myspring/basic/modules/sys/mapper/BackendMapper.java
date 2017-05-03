@@ -20,4 +20,6 @@ public interface BackendMapper extends MyMapper<Backend,String> {
     List<Backend> findByNameLike(String name);
 
     List<BackendMenuDto> findByMenuList(List<String> menuList);
+
+    List<BackendMenuDto> findByRoleId(String roleId);
 }

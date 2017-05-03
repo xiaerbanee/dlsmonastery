@@ -17,15 +17,4 @@ public interface PositionMapper extends MyMapper<Position,String> {
     Page<PositionDto> findPage(Pageable pageable, @Param("p")PositionQuery positionQuery);
 
     List<Position> findByNameLike(@Param("name") String name);
-
-    List<String> findPermissionByPosition(@Param("positionId") String positionId);
-
-    int deletePermissionByPosition(@Param("positionId") String positionId);
-
-    int deleteModuleByPosition(@Param("positionId") String positionId);
-
-    int savePositionAndPermission(@Param("positionId") String positionId,@Param("permissionIds") List<String> permissionIds);
-
-    int savePositionAndBankendModule(@Param("positionId") String positionId,@Param("modules") List<String> moduleIds);
-
 }

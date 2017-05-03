@@ -1,13 +1,13 @@
 <template>
   <div>
-    <head-tab active="岗位权限管理"></head-tab>
+    <head-tab active="roleAuthorityForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter = "20">
           <el-col :span = "7">
-            <el-form-item label="岗位" prop="id">
-              <el-select v-model="inputForm.id" filterable :clearable=true remote placeholder="请输入关键字" :remote-method="remotePosition" @change="getTreeNode(inputForm.id)" :loading="remoteLoading">
-                <el-option v-for="item in positions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-form-item label="角色" prop="id">
+              <el-select v-model="inputForm.id" filterable :clearable=true remote placeholder="请输入关键字" :remote-method="remoteRole" @change="getTreeNode(inputForm.id)" :loading="remoteLoading">
+                <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -46,9 +46,9 @@
           permissionIdStr:""
         },
         rules: {
-          id: [{ required: true, message: "岗位"}],
+          id: [{ required: true, message: "必填属性"}],
         },
-        positions:[],
+        roleList:[],
         treeData:[],
         checked:[],
         defaultProps: {
@@ -64,14 +64,14 @@
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/basic/hr/position/saveAuthorityList',qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/basic/sys/role/saveAuthorityList',qs.stringify(this.submitData)).then((response)=> {
                 console.log(response.data)
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
                 this.submitDisabled = false;
               } else {
-                this.$router.push({name:'positionList',query:util.getQuery("positionList")})
+                this.$router.push({name:'roleList',query:util.getQuery("roleList")})
               }
             });
           }else{
@@ -87,18 +87,18 @@
           }
         }
         this.inputForm.permissionIdStr=permissions.join();
-      },remotePosition(query){
+      },remoteRole(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/basic/hr/position/search',{params:{name:query}}).then((response)=>{
-            this.positions=response.data;
+          axios.get('/api/basic/sys/role/search',{params:{name:query}}).then((response)=>{
+            this.roleList=response.data;
             this.remoteLoading = false;
           })
         } else {
-          this.positions = [];
+          this.roleList = [];
         }
       },getTreeNode(id){
-          axios.get('/api/basic/hr/position/getTreeNode',{params:{id:id}}).then((response)=>{
+          axios.get('/api/basic/sys/role/getTreeNode',{params:{id:id}}).then((response)=>{
             this.treeData =response.data.children;
             this.checked = response.data.checked;
           })

@@ -16,8 +16,17 @@ public class AccountQuery {
     private String positionName;
     private String employeeName;
     private String leaderName;
+    private String officeId;
     private List<String> officeIds;
     private List<PositionDto> positionList= Lists.newArrayList();
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
 
     public List<PositionDto> getPositionList() {
         return positionList;

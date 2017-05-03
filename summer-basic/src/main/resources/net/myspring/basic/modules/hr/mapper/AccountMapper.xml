@@ -94,6 +94,9 @@
         <if test="p.loginName != null">
             AND t1.login_name LIKE CONCAT('%',#{p.loginName},'%')
         </if>
+        <if test="p.officeId != null">
+            AND t1.office_id = #{p.officeId}
+        </if>
         <if test="p.officeName != null">
             and t1.office_id in(
             select t2.id

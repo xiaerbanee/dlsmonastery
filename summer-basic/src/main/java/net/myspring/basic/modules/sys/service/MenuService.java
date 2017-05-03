@@ -4,8 +4,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
+import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
+import net.myspring.basic.modules.hr.mapper.AccountPermissionMapper;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
@@ -43,6 +45,8 @@ public class MenuService {
     private AccountMapper accountMapper;
     @Autowired
     private BackendMapper backendMapper;
+    @Autowired
+    private AccountPermissionMapper accountPermissionMapper;
 
     public List<MenuDto> findAll() {
         List<Menu> menuList = menuMapper.findAll();
@@ -135,20 +139,26 @@ public class MenuService {
 
     private List<BackendMenuDto> getMenusMap(Account account, boolean isMobile) {
         List<BackendMenuDto> backendList = Lists.newLinkedList();
-        List<Menu> menuList;
+        List<String> menuIdList;
         if (Const.HR_ACCOUNT_ADMIN_LIST.contains(account.getId())) {
-            menuList = menuMapper.findAllEnabled();
+            List<Menu> menuList = menuMapper.findAllEnabled();
+            menuIdList=CollectionUtil.extractToList(menuList,"id");
         } else {
-            String positionId = account.getPositionId();
-            List<Permission> permissions = permissionMapper.findByPositionId(positionId);
-            List<String> menuIds = CollectionUtil.extractToList(permissions, "menuId");
-            menuList = menuMapper.findByMenuIdsAndMobile(menuIds, isMobile);
+            String roleId = account.getPositionId();
+            List<Permission> permissionList;
+            List<String> accountPermissions=accountPermissionMapper.findPermissionIdByAccount(SecurityUtils.getAccountId());
+            if(CollectionUtil.isNotEmpty(accountPermissions)){
+                permissionList=permissionMapper.findByRoleAndAccount(roleId,SecurityUtils.getAccountId());
+            }else {
+                permissionList=permissionMapper.findByRoleId(roleId);
+            }
+            menuIdList = CollectionUtil.extractToList(permissionList, "menuId");
             List<Menu> permissionIsEmptyMenus = menuMapper.findByPermissionIsEmpty();
-            menuList = CollectionUtil.union(menuList, permissionIsEmptyMenus);
-            menuList = Lists.newArrayList(Sets.newHashSet(menuList));
+            menuIdList = CollectionUtil.union(menuIdList, CollectionUtil.extractToList(permissionIsEmptyMenus,"id"));
+            menuIdList = Lists.newArrayList(Sets.newHashSet(menuIdList));
         }
-        if(CollectionUtil.isNotEmpty(menuList)){
-            backendList = backendMapper.findByMenuList(CollectionUtil.extractToList(menuList, "id"));
+        if(CollectionUtil.isNotEmpty(menuIdList)){
+            backendList = backendMapper.findByMenuList(menuIdList);
         }
         return backendList;
     }
