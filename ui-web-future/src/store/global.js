@@ -80,29 +80,29 @@ export default {
       if(tabArray.length>=8) {
         tabArray = tabArray.splice(tabArray.length-8);
       }
-      state.tabs = new Map(tabArray);
       localStorage.setItem('tabs', JSON.stringify(tabArray))
+      state.tabs = new Map(tabArray);
     },
     setLang(state,lang){
-      state.lang = lang;
       localStorage.setItem('lang', lang)
+      state.lang = lang;
     },
     setMenus(state,menus) {
-      state.menus = menus;
       localStorage.setItem('menus', JSON.stringify(menus))
+      state.menus = menus;
     },
     setAuthorityList(state,authorityList) {
-      state.authorityList = authorityList;
       localStorage.setItem('authorityList', JSON.stringify(authorityList))
+      state.authorityList = authorityList;
     },
     setAccount(state,account) {
-      state.account = account;
       localStorage.setItem('account', JSON.stringify(account))
+      state.account = account;
     },
     setToken(state,token) {
       token.exp = new Date().getTime();
-      state.token = token;
       localStorage.setItem('token', JSON.stringify(token));
+      state.token = token;
     },
     setIsRefreshToken(state,isRefreshToken) {
       state.isRefreshToken = isRefreshToken;
