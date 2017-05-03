@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "crm/shopImage")
+@RequestMapping(value = "layout/shopImage")
 public class ShopImageController {
 
 
