@@ -63,7 +63,6 @@
 
 <script>
   import Vue from 'vue';
-  import { mapState } from 'vuex'
   export default {
     data() {
       return {
@@ -74,14 +73,17 @@
         backendModuleList:[],
         activeBackendModule:'',
         menuCategoryList:[]
+        account: {},
+         menus:[],
+         lang:"",
+         token:{}
       };
-    },computed: mapState({
-      account: state => state.global.account,
-      menus: state => state.global.menus,
-      lang: state => state.global.lang,
-      token: state => state.global.token
-    }),
+    },
     created() {
+        this.account = this.$store.state.global.account;
+        this.menus = this.$store.state.global.menus;
+        this.lang = this.$store.state.global.lang;
+        this.token = this.$store.state.global.token;
     },mounted(){
     },
     watch: {
@@ -127,10 +129,6 @@
           cancelButtonText: this.$t('app.cancel'),
           type: 'info'
         }).then(() => {
-          this.account={};
-          this.menus=[];
-          this.lang="";
-          this.token = {};
           this.$store.dispatch('clearGlobal');
           this.$router.push({ name: 'login' });
         }).catch(() => {});
