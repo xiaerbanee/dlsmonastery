@@ -7,6 +7,7 @@ import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Created by wangzm on 2017/4/25.
@@ -21,5 +22,5 @@ public interface ActivitiClient {
     ActivitiCompleteDto complete(ActivitiCompleteForm activitiCompleteForm);
 
     @RequestMapping(method = RequestMethod.GET, value = "/sys/activiti/setExtendId")
-    boolean setExtendId(String processInstanceId,String extendId);
+    boolean setExtendId(@RequestParam("processInstanceId") String processInstanceId, @RequestParam("extendId")String extendId);
 }
