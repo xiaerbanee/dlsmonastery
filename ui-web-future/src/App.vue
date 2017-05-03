@@ -128,7 +128,6 @@
           type: 'info'
         }).then(() => {
           this.$store.dispatch('clearGlobal');
-          this.$router.push({ name: 'login' });
           window.location.reload();
         }).catch(() => {});
       },changeLang(lang) {
