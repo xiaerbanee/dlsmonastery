@@ -27,9 +27,9 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopImageList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="shop.extendMap.areaName" :label="$t('shopImageList.areaName')" sortable width="150"></el-table-column>
-        <el-table-column prop="shop.extendMap.officeName" :label="$t('shopImageList.officeName')"></el-table-column>
-        <el-table-column prop="shop.name"  :label="$t('shopImageList.shopName')"></el-table-column>
+        <el-table-column fixed prop="areaName" :label="$t('shopImageList.areaName')" sortable width="150"></el-table-column>
+        <el-table-column prop="officeName" :label="$t('shopImageList.officeName')"></el-table-column>
+        <el-table-column prop="shopName"  :label="$t('shopImageList.shopName')"></el-table-column>
         <el-table-column prop="imageType"  :label="$t('shopImageList.imageType')"></el-table-column>
         <el-table-column prop="image"  :label="$t('shopImageList.image')"></el-table-column>
         <el-table-column prop="imageSize"  :label="$t('shopImageList.imageSize')"></el-table-column>
