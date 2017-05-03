@@ -72,11 +72,11 @@
         activeBackend:'',
         backendModuleList:[],
         activeBackendModule:'',
-        menuCategoryList:[]
+        menuCategoryList:[],
         account: {},
-         menus:[],
-         lang:"",
-         token:{}
+        menus:[],
+        lang:"",
+        token:{}
       };
     },
     created() {
