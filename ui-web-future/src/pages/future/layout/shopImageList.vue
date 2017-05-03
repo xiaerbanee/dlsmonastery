@@ -34,11 +34,10 @@
         <el-table-column prop="image"  :label="$t('shopImageList.image')"></el-table-column>
         <el-table-column prop="imageSize"  :label="$t('shopImageList.imageSize')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopImageList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('shopImageList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('shopImageList.operation')" width="160">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" v-permit="'crm:shopImage:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopImageList.edit')}}</el-button>
+            <el-button size="small" v-permit="'crm:shopImage:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopImageList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -89,9 +88,9 @@
       },itemAdd(){
         this.$router.push({ name: 'shopImageForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'shopImageForm', query: { id: id }})
-        } else if(action=="删除") {
+        } else if(action=="delete") {
           axios.get('/api/ws/future/layout/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
