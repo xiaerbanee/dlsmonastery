@@ -39,7 +39,7 @@ public class ActivitiUtils {
     @Autowired
     private RepositoryService repositoryService;
     @Autowired
-    private RedisTemplate redisTemplate;
+    private CacheUtils cacheUtils;
 
     public ActivitiDto getActivitiDto(String processInstanceId) {
         ActivitiEntity activitiEntity = new ActivitiEntity();
@@ -60,27 +60,18 @@ public class ActivitiUtils {
             activitiEntity.setHistoricTaskInstances(historyService.createHistoricTaskInstanceQuery().processInstanceId(processInstanceId).orderByHistoricTaskInstanceEndTime().asc().list());
             activitiEntity.setHistoricVariableInstances(historyService.createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list());
             activitiEntity.setComments(taskService.getProcessInstanceComments(processInstanceId));
-            Map<String, String> accountMap = Maps.newHashMap();
+            List<String> accountIdList = Lists.newArrayList();
             if (CollectionUtil.isNotEmpty(activitiEntity.getHistoricTaskInstances())) {
-                List<String> accountKeyList = Lists.newArrayList();
                 for (HistoricTaskInstance historicTaskInstance : activitiEntity.getHistoricTaskInstances()) {
                     if (StringUtils.isNotBlank(historicTaskInstance.getAssignee())) {
-                        accountKeyList.add("accounts:" + historicTaskInstance.getAssignee());
-                    }
-                }
-                Map<String,Object> accountCacheMap = Maps.newHashMap();
-                if(CollectionUtil.isNotEmpty(accountKeyList)) {
-                    accountCacheMap = CacheReadUtils.getCacheMap(redisTemplate,accountKeyList,"loginName");
-                }
-                for (HistoricTaskInstance historicTaskInstance : activitiEntity.getHistoricTaskInstances()) {
-                    if (StringUtils.isNotBlank(historicTaskInstance.getAssignee())) {
-                        accountMap.put(historicTaskInstance.getId(), StringUtils.toString(accountCacheMap.get("accounts:" + historicTaskInstance.getAssignee())));
+                        accountIdList.add(historicTaskInstance.getAssignee());
                     }
                 }
             }
-            activitiEntity.setAccountMap(accountMap);
+            activitiEntity.setAccountIdList(accountIdList);
         }
         ActivitiDto activitiDto = BeanUtil.map(activitiEntity,ActivitiDto.class);
+        cacheUtils.initCacheInput(activitiDto);
         return activitiDto;
     }
 
