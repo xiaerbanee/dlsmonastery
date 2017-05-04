@@ -11,7 +11,6 @@ import net.myspring.cloud.modules.report.web.query.PayableReportQuery;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,15 +39,12 @@ public class PayableReportController {
     }
 
     @RequestMapping(value = "detailList")
-    public PayableReportForm detailList(PayableReportQuery payableReportQuery){
+    public List<PayableForDetailDto> detailList(PayableReportQuery payableReportQuery){
         LocalDate dateStart = payableReportQuery.getStartDate();
         LocalDate dateEnd = payableReportQuery.getEndDate();
         String supplyId = payableReportQuery.getSupplierId();
         String departmentId = payableReportQuery.getDepartmentId();
-        List<PayableForDetailDto> payableForDetailList  = payableReportService.getDetailList(dateStart, dateEnd,supplyId,departmentId);
-        PayableReportForm form = new PayableReportForm();
-        form.setPayableDetailList(payableForDetailList);
-        return form;
+        return payableReportService.getDetailList(dateStart, dateEnd,supplyId,departmentId);
     }
 
     @RequestMapping(value = "exportSummary")

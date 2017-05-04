@@ -30,10 +30,10 @@ public class ReceivableReportService {
     @Autowired
     private BdCustomerMapper bdCustomerMapper;
 
-    public List<ReceivableForSummaryDto> getSummaryList(LocalDate dateStart, LocalDate dateEnd){
+    public List<ReceivableForSummaryDto> getSummaryList(LocalDate dateStart, LocalDate dateEnd,String primaryGroupId){
         List<ReceivableForSummaryDto> tempList = Lists.newLinkedList();
-        List<ReceivableForSummaryDto> dataForStartDate = receivableReportMapper.findByEndDate(dateStart);
-        List<ReceivableForSummaryDto> dataForEndDate = receivableReportMapper.findByEndDate(dateEnd.plusDays(1));
+        List<ReceivableForSummaryDto> dataForStartDate = receivableReportMapper.findByEndDate(dateStart,primaryGroupId);
+        List<ReceivableForSummaryDto> dataForEndDate = receivableReportMapper.findByEndDate(dateEnd.plusDays(1),primaryGroupId);
         //期初结余
         Map<String,BigDecimal> dateStartMap = Maps.newHashMap();
         for(ReceivableForSummaryDto startItem : dataForStartDate){
@@ -53,11 +53,11 @@ public class ReceivableReportService {
             }
             tempList.add(summaryModel);
         }
-        List<ReceivableForSummaryDto> QTYSDListForPeriodList = receivableReportMapper.findQTYSDByPeriodForSum(dateStart, dateEnd);
-        List<ReceivableForSummaryDto> XSTHDListForPeriodList = receivableReportMapper.findXSTHDByPeriodForSum(dateStart, dateEnd);
-        List<ReceivableForSummaryDto> XSCKDListForPeriodList = receivableReportMapper.findXSCKDByPeriodForSum(dateStart, dateEnd);
-        List<ReceivableForSummaryDto> SKDForPeriodList = receivableReportMapper.findSKDByPeriodForSum(dateStart, dateEnd);
-        List<ReceivableForSummaryDto> SKTKDForPeriodList = receivableReportMapper.findSKTKDByPeriodForSum(dateStart, dateEnd);
+        List<ReceivableForSummaryDto> QTYSDListForPeriodList = receivableReportMapper.findQTYSDByPeriodForSum(dateStart, dateEnd,primaryGroupId);
+        List<ReceivableForSummaryDto> XSTHDListForPeriodList = receivableReportMapper.findXSTHDByPeriodForSum(dateStart, dateEnd,primaryGroupId);
+        List<ReceivableForSummaryDto> XSCKDListForPeriodList = receivableReportMapper.findXSCKDByPeriodForSum(dateStart, dateEnd,primaryGroupId);
+        List<ReceivableForSummaryDto> SKDForPeriodList = receivableReportMapper.findSKDByPeriodForSum(dateStart, dateEnd,primaryGroupId);
+        List<ReceivableForSummaryDto> SKTKDForPeriodList = receivableReportMapper.findSKTKDByPeriodForSum(dateStart, dateEnd,primaryGroupId);
         for(ReceivableForSummaryDto item : tempList) {
             String key = item.getCustomerId();
             BigDecimal QTYSDAmount = BigDecimal.ZERO;
@@ -194,33 +194,33 @@ public class ReceivableReportService {
             receivableDetail.setNote(detailForBill.getNote());
             //实收
             if(detailForBill.getBillType().equals(ReceivableBillTypeEnum.销售收款单.name())){
-                receivableDetail.setActualPayAmount(detailForBill.getAmount());
-                endShouldGet = endShouldGet.subtract(receivableDetail.getActualPayAmount());
+                receivableDetail.setActualReceivableAmount(detailForBill.getAmount());
+                endShouldGet = endShouldGet.subtract(receivableDetail.getActualReceivableAmount());
                 receivableDetail.setEndAmount(endShouldGet);
                 dataList.add(receivableDetail);
             }else if(detailForBill.getBillType().equals(ReceivableBillTypeEnum.销售业务退款单.name())){
-                receivableDetail.setActualPayAmount(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
-                endShouldGet = endShouldGet.subtract(receivableDetail.getActualPayAmount());
+                receivableDetail.setActualReceivableAmount(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
+                endShouldGet = endShouldGet.subtract(receivableDetail.getActualReceivableAmount());
                 receivableDetail.setEndAmount(endShouldGet);
                 dataList.add(receivableDetail);
             //不计入期末期初
             }else if(detailForBill.getBillType().equals(ReceivableBillTypeEnum.现销退货单.name())) {
-                receivableDetail.setPayableAmount(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
-                receivableDetail.setEndAmount(endShouldGet.add(receivableDetail.getPayableAmount()));
+                receivableDetail.setReceivableAmount(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
+                receivableDetail.setEndAmount(endShouldGet.add(receivableDetail.getReceivableAmount()));
                 dataList.add(receivableDetail);
             }else if(detailForBill.getBillType().equals(ReceivableBillTypeEnum.现销出库单.name())){
-                receivableDetail.setPayableAmount(detailForBill.getAmount());
-                receivableDetail.setEndAmount(endShouldGet.add(receivableDetail.getPayableAmount()));
+                receivableDetail.setReceivableAmount(detailForBill.getAmount());
+                receivableDetail.setEndAmount(endShouldGet.add(receivableDetail.getReceivableAmount()));
                 dataList.add(receivableDetail);
              //应收
             }else if(detailForBill.getBillType().equals(ReceivableBillTypeEnum.标准销售退货单.name())) {
-                receivableDetail.setPayableAmount(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
-                endShouldGet = endShouldGet.add(receivableDetail.getPayableAmount());
+                receivableDetail.setReceivableAmount(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
+                endShouldGet = endShouldGet.add(receivableDetail.getReceivableAmount());
                 receivableDetail.setEndAmount(endShouldGet);
                 dataList.add(receivableDetail);
             }else{
-                receivableDetail.setPayableAmount(detailForBill.getAmount());
-                endShouldGet = endShouldGet.add(receivableDetail.getPayableAmount());
+                receivableDetail.setReceivableAmount(detailForBill.getAmount());
+                endShouldGet = endShouldGet.add(receivableDetail.getReceivableAmount());
                 receivableDetail.setEndAmount(endShouldGet);
                 dataList.add(receivableDetail);
             }

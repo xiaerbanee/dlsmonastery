@@ -46,12 +46,17 @@ public class BatchBillController {
             for(BdMaterial bdMaterial : materials){
                 batchBillForm.getMaterialMap().put(bdMaterial.getfName(),bdMaterial.getfNumber());
             }
-            batchBillForm.setCustomerNameList(bdCustomerService.findName());
+//            batchBillForm.setCustomerNameList(bdCustomerService.findName());
             batchBillForm.setProductNameList(CollectionUtil.extractToList(materials,"fName"));
             batchBillForm.setTypeList(K3CloudBillTypeEnum.values());
             batchBillForm.setStoreList(bdStockService.findAll());
         }
         return batchBillForm;
+    }
+
+    @RequestMapping(value = "getBillTypeEnum")
+    public K3CloudBillTypeEnum[] getBillTypeEnum(){
+        return K3CloudBillTypeEnum.values();
     }
 
     @RequestMapping(value = "save")

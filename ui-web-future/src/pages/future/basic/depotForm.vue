@@ -450,7 +450,7 @@
             this.ctccCarrierShops=new Array(response.data.ctccCarrierShop);
             this.inputForm.ctccCarrierShopId=response.data.ctccCarrierShop.id;
           }
-          if(response.data.accountList!=null&&response.data.accountList.length>0){
+          if(response.data.accountList!==null&&response.data.accountList.length>0){
             this.accounts=response.data.accountList;
             this.inputForm.accountIdList=util.getIdList(this.accounts);
           }

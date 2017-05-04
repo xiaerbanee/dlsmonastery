@@ -29,7 +29,6 @@ public class BdCustomerController {
             localDateTime = LocalDateTime.parse(maxOutDate, DateTimeFormatter.ofPattern(DateFormat.DATE_TIME.getValue()));
         }
         List<BdCustomer> customerList = bdCustomerService.findByDate(localDateTime);
-
         return customerList;
     }
 
@@ -37,6 +36,11 @@ public class BdCustomerController {
     public List<BdCustomer> getByName(String customerName) {
         List<BdCustomer> customerList = bdCustomerService.findByName(customerName);
         return customerList;
+    }
+
+    @RequestMapping(value = "getNameByNameLike")
+    public List<String> getNameByNameLike(String name){
+        return bdCustomerService.findNameByNameLike(name);
     }
 
 }

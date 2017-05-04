@@ -3,11 +3,11 @@
     <head-tab active="payableReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search" >过滤</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" >过滤&导出</el-button>
         <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog v-model="detailVisible" size="large">
-        <el-table :data="detail.payableDetailList" :row-class-name="tableRowClassName" v-loading="detailLoading" element-loading-text="拼命加载中....." border>
+        <el-table :data="detail" :row-class-name="tableRowClassName" v-loading="detailLoading" element-loading-text="拼命加载中....." border>
           <el-table-column prop="billType" label="业务类型"></el-table-column>
           <el-table-column prop="billNo" label="单据编号"></el-table-column>
           <el-table-column prop="date" label="单据日期"></el-table-column>
@@ -28,11 +28,17 @@
               <el-form-item :label="formLabel.dateRangeBTW.label" :label-width="formLabelWidth">
                 <el-date-picker v-model="formData.dateRange" type="daterange" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-date-picker>
               </el-form-item>
+              <el-form-item :label="formLabel.supplierIds.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.supplierIds" multiple placeholder="请选择">
+                  <el-option v-for="item in summary.payableSummaryList" :key="item.supplierId" :label="item.supplierName" :value="item.supplierId"></el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">搜索</el-button>
+          <el-button type="primary" @click="exportSummary()">导出</el-button>
         </div>
       </el-dialog>
       <el-table :data="summary.payableSummaryList" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
@@ -44,7 +50,7 @@
         <el-table-column prop="endAmount" label="期末应付"></el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template scope="scope">
-            <el-button size="small" @click="itemAction(scope.row.supplierId,scope.row.departmentId)">详细</el-button>
+            <el-button size="small" @click="detailAction(scope.row.supplierId,scope.row.departmentId)">详细</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -64,22 +70,25 @@
   export default {
     data() {
       return {
-        summary:{},
-        detail:{},
-        formData:{
-          dateRange:'',
-          dateRangeBTW:'',
+        summary: {},
+        detail: {},
+        formData: {
+          dateRange: '',
+          dateRangeBTW: '',
+          supplierIds: [],
         },
-        submitData:{
-          dateRangeBTW:'',
+        submitData: {
+          dateRangeBTW: '',
+          supplierIds: [],
         },
-        submitDetail:{
-          dateRangeBTW:'',
-          supplierId:'',
-          departmentId:''
+        submitDetail: {
+          dateRangeBTW: '',
+          supplierId: '',
+          departmentId: ''
         },
         formLabel:{
           dateRangeBTW:{label:"日期"},
+          supplierIds:{label:"供应商名称",value:""},
         },
         pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
@@ -87,6 +96,7 @@
         detailVisible:false,
         pageLoading: false,
         detailLoading:false,
+        pageHeight:'',
       };
     },
     methods: {
@@ -104,7 +114,7 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
-      },itemAction:function(supplierId,departmentId){
+      },detailAction:function(supplierId,departmentId){
         this.detailLoading = true;
         if(supplierId !== null) {
             util.copyValue(this.formData,this.submitDetail);

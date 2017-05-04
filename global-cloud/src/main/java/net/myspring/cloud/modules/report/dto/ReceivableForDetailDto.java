@@ -17,8 +17,8 @@ public class ReceivableForDetailDto {
     private BigDecimal quantity;
     private BigDecimal price;
     private BigDecimal amount;
-    private BigDecimal payableAmount;
-    private BigDecimal actualPayAmount;
+    private BigDecimal receivableAmount;
+    private BigDecimal actualReceivableAmount;
     private BigDecimal endAmount;
     private String note;
     private String css;
@@ -110,20 +110,36 @@ public class ReceivableForDetailDto {
         this.amount = amount;
     }
 
-    public BigDecimal getPayableAmount() {
-        return payableAmount;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setPayableAmount(BigDecimal payableAmount) {
-        this.payableAmount = payableAmount;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
-    public BigDecimal getActualPayAmount() {
-        return actualPayAmount;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setActualPayAmount(BigDecimal actualPayAmount) {
-        this.actualPayAmount = actualPayAmount;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public BigDecimal getReceivableAmount() {
+        return receivableAmount;
+    }
+
+    public void setReceivableAmount(BigDecimal receivableAmount) {
+        this.receivableAmount = receivableAmount;
+    }
+
+    public BigDecimal getActualReceivableAmount() {
+        return actualReceivableAmount;
+    }
+
+    public void setActualReceivableAmount(BigDecimal actualReceivableAmount) {
+        this.actualReceivableAmount = actualReceivableAmount;
     }
 
     public BigDecimal getEndAmount() {

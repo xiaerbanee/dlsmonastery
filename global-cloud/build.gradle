@@ -40,6 +40,9 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-aop")
 	compile 'org.springframework.boot:spring-boot-starter-data-redis'
 	compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	compile 'org.apache.poi:poi:3.10-FINAL'
+	compile 'org.apache.poi:poi-ooxml:3.10-FINAL'
+	compile 'org.apache.poi:poi-ooxml-schemas:3.10-FINAL'
 	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
 	compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.2.0'
 	compile 'org.springframework.cloud:spring-cloud-stream'
