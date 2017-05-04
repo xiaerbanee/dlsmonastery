@@ -21,6 +21,10 @@ export default {
   su_table:{
     loading:"拼命加载中",
   },
+  su_date_ranger_picker:{
+    selectDateRange:"选择日期范围",
+  },
+
   menuManager:{
     basicManager:"基础管理",
     businessManager:"业务管理",

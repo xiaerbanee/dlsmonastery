@@ -11,12 +11,10 @@
             <el-option v-for="item in inputForm.expressTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-
         <el-form-item :label="$t('expressCompanyForm.district')" prop="districtId">
           <su-district v-model="inputForm.districtId">
           </su-district>
         </el-form-item>
-
 
         <el-form-item :label="$t('expressCompanyForm.reachPlace')" prop="reachPlace">
           <el-input v-model="inputForm.reachPlace" type="textarea"></el-input>

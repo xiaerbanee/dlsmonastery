@@ -16,6 +16,8 @@ import headTab from './components/head-tab';
 import searchTag from './components/search-tag';
 import suDistrict from './components/su-district';
 import suTable from './components/su-table';
+import suDateRangePicker from './components/su-date-range-picker';
+
 
 import App from './app.vue';
 import fullCalendar from 'vue-fullcalendar'
@@ -39,6 +41,7 @@ Vue.component('head-tab', headTab);
 Vue.component('search-tag', searchTag);
 Vue.component('su-district', suDistrict);
 Vue.component('su-table', suTable);
+Vue.component('su-date-range-picker', suDateRangePicker);
 
 // progressBar
 const options = {
