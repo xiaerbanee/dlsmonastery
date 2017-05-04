@@ -43,16 +43,4 @@ public class ChainManager {
         chainMapper.updateForm(chainForm);
         return  chainMapper.findOne(chainForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return chainMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
-
 }

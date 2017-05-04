@@ -43,15 +43,4 @@ public class DealerManager {
         dealerMapper.updateForm(dealerForm);
         return  dealerMapper.findOne(dealerForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return dealerMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
 }

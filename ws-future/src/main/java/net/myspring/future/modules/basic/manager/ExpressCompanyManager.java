@@ -43,15 +43,4 @@ public class ExpressCompanyManager {
         expressCompanyMapper.updateForm(expressCompanyForm);
         return  expressCompanyMapper.findOne(expressCompanyForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return expressCompanyMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
 }

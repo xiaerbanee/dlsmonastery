@@ -46,15 +46,4 @@ public class RoleManager {
         roleMapper.updateForm(roleForm);
         return  roleMapper.findOne(roleForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return roleMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
 }

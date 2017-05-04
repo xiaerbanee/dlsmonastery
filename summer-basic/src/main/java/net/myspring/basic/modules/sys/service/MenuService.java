@@ -83,7 +83,7 @@ public class MenuService {
     }
 
     public void delete(String id) {
-        menuMapper.deleteById(id);
+        menuMapper.logicDeleteOne(id);
     }
 
     public Menu save(MenuForm menuForm) {
@@ -122,13 +122,8 @@ public class MenuService {
                 }
             }
         }
-        if (CollectionUtil.isNotEmpty(oldPermissions)) {
-            for (Permission permission : oldPermissions) {
-                if (!permissions.contains(permission)) {
-                    permissionMapper.deleteById(permission.getId());
-                }
-            }
-        }
+        List<String> removePermissionIds=CollectionUtil.subtract(CollectionUtil.extractToList(oldPermissions,"id"),CollectionUtil.extractToList(permissions,"id"));
+        permissionMapper.logicDeleteByIds(removePermissionIds);
         return menu;
     }
 

@@ -43,15 +43,4 @@ public class BankManager {
         bankMapper.updateForm(bankForm);
         return  bankMapper.findOne(bankForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return bankMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
 }

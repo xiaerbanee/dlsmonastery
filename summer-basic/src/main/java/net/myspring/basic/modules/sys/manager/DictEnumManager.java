@@ -44,16 +44,4 @@ public class DictEnumManager {
         dictEnumMapper.updateForm(dictEnumForm);
         return  dictEnumMapper.findOne(dictEnumForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return dictEnumMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
-
 }
