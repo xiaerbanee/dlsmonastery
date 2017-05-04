@@ -6,6 +6,7 @@ import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
 import net.myspring.common.mybatis.MyProvider;
+import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Mapper
 @CacheDefaults(cacheName = "dictEnums")
-public interface DictEnumMapper {
+public interface DictEnumMapper extends BaseMapper<DictEnum,String>{
 
     @CacheResult
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ONE)
