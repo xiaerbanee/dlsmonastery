@@ -1,6 +1,7 @@
 package net.myspring.tool.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.myspring.common.cache.MyKeyRedisSerializer;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -58,9 +59,9 @@ public class CacheConfig extends CachingConfigurerSupport {
     RedisTemplate<Object, Object> redisTemplate() {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        redisTemplate.setKeySerializer(stringRedisSerializer);
-        redisTemplate.setHashKeySerializer(stringRedisSerializer);
+        MyKeyRedisSerializer myKeyRedisSerializer= new MyKeyRedisSerializer();
+        redisTemplate.setKeySerializer(myKeyRedisSerializer);
+        redisTemplate.setHashKeySerializer(myKeyRedisSerializer);
 
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper objectMapper = ObjectMapperUtils.getObjectMapper();
