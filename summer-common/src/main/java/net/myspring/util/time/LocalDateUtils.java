@@ -63,4 +63,9 @@ public class LocalDateUtils {
         }
     }
 
+    public static String formatLocalDate(LocalDate localDate,String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return localDate.format(formatter);
+    }
+
 }

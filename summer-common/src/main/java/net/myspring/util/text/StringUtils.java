@@ -1,6 +1,7 @@
 package net.myspring.util.text;
 
 import com.google.common.collect.Lists;
+import net.myspring.util.time.LocalDateUtils;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -8,6 +9,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.springside.modules.utils.text.EncodeUtil;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
@@ -101,5 +103,13 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			}
 		}
 		return pybf.toString().replaceAll("\\W", "").trim();
+	}
+
+	public static String getNextBusinessId(String maxBusinessId) {
+		if(maxBusinessId==null) {
+			String businessId = LocalDateUtils.formatLocalDate(LocalDate.now(),"yyMMdd") + "00000";
+			maxBusinessId = String.valueOf(businessId);
+		}
+		return String.valueOf(Long.valueOf(maxBusinessId)+1);
 	}
 }
