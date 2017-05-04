@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopImageForm.shopName')" prop="shopId">
-              <el-select v-model="inputForm.shopName" filterable remote :placeholder="$t('shopImageForm.inputWord')" :remote-method="remoteShop" :loading="remoteLoading" :clearable=true >
+              <el-select v-model="inputForm.shopId" filterable remote :placeholder="$t('shopImageForm.inputWord')" :remote-method="remoteShop" :loading="remoteLoading" :clearable=true :disabled="shopDisabled">
                 <el-option v-for="shop in shops" :key="shop.id" :label="shop.name" :value="shop.id"></el-option>
               </el-select>
             </el-form-item>
@@ -43,6 +43,7 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
+        shopDisabled:false,
         remoteLoading:false,
         formProperty:{},
         fileList:[],
@@ -112,8 +113,11 @@
       }
     },created(){
       axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        util.copyValue(response.data,this.inputForm);
-        this.shops=new Array(response.data.shopName);
+        this.inputForm = response.data;
+        this.shops=[];
+        if(this.inputForm.id != null){
+            this.shopDisabled = true;
+        }
         if(this.inputForm.image != null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
             this.fileList= response.data;

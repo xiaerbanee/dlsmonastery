@@ -97,7 +97,7 @@
           })
         }
       },getQuery(){
-        axios.get('/api/ws/future/layout/shopImage').then((response) =>{
+        axios.get('/api/ws/future/layout/shopImage/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });

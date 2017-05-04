@@ -39,21 +39,19 @@ public class ShopImageService {
         return page;
     }
 
-    public ShopImageForm findOne(String id){
-        ShopImage shopImage=shopImageMapper.findOne(id);
-        ShopImageForm shopImageForm = BeanUtil.map(shopImage,ShopImageForm.class);
-        String shopName = depotMapper.findOne(shopImageForm.getShopId()).getName();
-        shopImageForm.setShopName(shopName);
+    public ShopImageForm findForm(ShopImageForm shopImageForm){
+        if(!shopImageForm.isCreate()){
+            ShopImage shopImage=shopImageMapper.findOne(shopImageForm.getId());
+            shopImageForm = BeanUtil.map(shopImage,ShopImageForm.class);
+            String shopName = depotMapper.findOne(shopImageForm.getShopId()).getName();
+            shopImageForm.setShopName(shopName);
+        }
         return shopImageForm;
     }
 
-    public List<String> getProperty(){
-        List<String> imageTypeProperties = new ArrayList<>();
-        String[] shopImageTypes = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.getCode()).split(",");
-        for(String shopImageType:shopImageTypes){
-            imageTypeProperties.add(shopImageType);
-        }
-        return imageTypeProperties;
+    public List<String> getQuery(){
+        List<String> areaLists = new ArrayList<>();
+        return areaLists;
     }
 
     public ShopImage save(ShopImageForm shopImageForm) {
