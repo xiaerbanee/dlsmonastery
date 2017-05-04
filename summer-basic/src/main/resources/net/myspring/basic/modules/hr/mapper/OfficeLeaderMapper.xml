@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.basic.modules.hr.mapper.OfficeLeaderMapper">
+
+    <delete id="removeOfficeLeaderByOffice">
+        DELETE  FROM  hr_office_leader where office_id=#{officeId}
+    </delete>
+
+    <select id="findByOfficeId" resultType="OfficeLeader">
+        SELECT t1.*
+        FROM hr_office_leader t1
+        where t1.enabled=1
+        and t1.office_id=#{officeId}
+    </select>
+
+</mapper>

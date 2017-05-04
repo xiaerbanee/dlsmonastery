@@ -1,23 +1,17 @@
-package net.myspring.basic.modules.hr.dto;
+package net.myspring.basic.modules.sys.dto;
 
+import net.myspring.basic.modules.sys.domain.Role;
 import net.myspring.common.dto.DataDto;
-import net.myspring.basic.modules.hr.domain.Job;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 /**
- * Created by admin on 2017/4/5.
+ * Created by wangzm on 2017/5/2.
  */
-public class JobDto extends DataDto<Job> {
+public class RoleDto extends DataDto<Role> {
+
     private String name;
     private String permission;
     private boolean locked;
-
-    public boolean getLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
 
     public String getName() {
         return name;
@@ -33,5 +27,13 @@ public class JobDto extends DataDto<Job> {
 
     public void setPermission(String permission) {
         this.permission = permission;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }

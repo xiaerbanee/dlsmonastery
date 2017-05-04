@@ -1,36 +1,37 @@
 <template>
   <div>
-    <head-tab active="jobList"></head-tab>
+    <head-tab active="roleList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:job:edit'">{{$t('jobList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'hr:job:view'">{{$t('jobList.filter')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" >添加</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" >过滤</el-button>
+        <el-button type="primary" @click="itemAuthAdd" icon="plus">角色权限编辑</el-button>
         <search-tag  :formData="formData" :formLabel = "formLabel"></search-tag>
       </el-row>
-      <el-dialog :title="$t('jobList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <el-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('jobList.likeSearch')"></el-input>
+                <el-input v-model="formData.name" auto-complete="off" ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="search()">{{$t('jobList.sure')}}</el-button>
+          <el-button type="primary" @click="search()">确定</el-button>
         </div>
       </el-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('jobList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('jobList.jobName')" sortable></el-table-column>
-        <el-table-column prop="permission" :label="$t('jobList.permission')" ></el-table-column>
-        <el-table-column prop="locked" :label="$t('jobList.locked')">
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
+        <el-table-column fixed prop="name" label="名称" sortable width="150"></el-table-column>
+        <el-table-column prop="permission" label="权限"></el-table-column>
+        <el-table-column prop="locked" label="锁定" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="remarks" :label="$t('jobList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('jobList.operation')" width="140">
+        <el-table-column prop="remarks" label="备注"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="140">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
@@ -50,11 +51,10 @@
         submitData:{
           page:0,
           size:25,
-          name:''
+          name:'',
         },formLabel:{
-          name:{label:this.$t('jobList.jobName')}
+          name:{label:"名称"},
         },
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -63,10 +63,10 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("jobList");
-        util.setQuery("jobList",this.formData);
+        util.getQuery("roleList");
+        util.setQuery("roleList",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/job',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/role',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -82,12 +82,16 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAdd(){
-        this.$router.push({ name: 'jobForm'})
+        this.$router.push({ name: 'roleForm'})
+      },itemAuthAdd(){
+          this.$router.push({name:"roleAuthorityForm"})
+      },itemEdit(){
+        this.$router.push({ name: 'roleEdit'})
       },itemAction:function(id,action){
         if(action=="修改") {
-          this.$router.push({ name: 'jobForm', query: { id: id }})
+          this.$router.push({ name: 'roleForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/basic/hr/job/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/basic/sys/role/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

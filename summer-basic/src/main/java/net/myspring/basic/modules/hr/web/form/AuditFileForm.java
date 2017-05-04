@@ -1,15 +1,12 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.common.form.DataForm;
-import net.myspring.general.modules.sys.dto.ProcessTypeDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +28,6 @@ public class AuditFileForm extends DataForm<AuditFile> {
     private String createdByName;
     private LocalDateTime createdDate;
     private boolean locked;
-    private List<ProcessTypeDto> processTypeList=Lists.newArrayList();
 
     public boolean isLocked() {
         return locked;
@@ -63,14 +59,6 @@ public class AuditFileForm extends DataForm<AuditFile> {
 
     public void setCreatedByName(String createdByName) {
         this.createdByName = createdByName;
-    }
-
-    public List<ProcessTypeDto> getProcessTypeList() {
-        return processTypeList;
-    }
-
-    public void setProcessTypeList(List<ProcessTypeDto> processTypeList) {
-        this.processTypeList = processTypeList;
     }
 
     public String getProcessInstanceId() {

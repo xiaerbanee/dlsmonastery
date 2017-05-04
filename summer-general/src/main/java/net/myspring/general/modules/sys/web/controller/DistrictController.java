@@ -21,14 +21,4 @@ public class DistrictController {
         List<DistrictDto> districtDtoList =districtService.findByNameLike(key);
         return districtDtoList;
     }
-
-    @RequestMapping(value = "searchFullText")
-    public List<DistrictDto> searchFullText(String key) {
-        return districtService.searchFullText(key);
-    }
-
-
-
-
-
 }

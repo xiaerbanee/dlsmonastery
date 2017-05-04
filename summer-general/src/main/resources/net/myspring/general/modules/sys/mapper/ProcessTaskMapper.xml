@@ -10,4 +10,12 @@
         and t1.extend_id=#{extendId}
     </select>
 
+    <update id="setExtendId">
+        UPDATE
+          sys_process_task t1
+          SET
+          t1.extend_id = #{extendId}
+          WHERE
+          t1.process_instance_id = #{processInstanceId}
+    </update>
 </mapper>

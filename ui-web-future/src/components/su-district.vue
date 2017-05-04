@@ -20,7 +20,7 @@
       remoteDistrict(query) {
         if ( query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/general/sys/district/searchFullText',{params:{key:query}}).then((response)=>{
+          axios.get('/api/general/sys/district/search',{params:{key:query}}).then((response)=>{
             this.districts=response.data;
             this.remoteLoading = false;
           })

@@ -15,21 +15,29 @@ import java.util.List;
 
 public class PermissionForm extends DataForm<Permission> {
 
-    private List<String> positionIdList=Lists.newArrayList();
+    private List<String> roleIdList=Lists.newArrayList();
     private String menuId;
     private String name;
     private String permission;
     private String remarks;
     private List<MenuDto> menuList= Lists.newArrayList();
-    @CacheInput(inputKey = "positions",inputInstance = "positionIdList",outputInstance = "name")
-    private List<String> positionNameList=Lists.newArrayList();
+    @CacheInput(inputKey = "roles",inputInstance = "roleIdList",outputInstance = "name")
+    private List<String> roleNameList=Lists.newArrayList();
 
-    public List<String> getPositionNameList() {
-        return positionNameList;
+    public List<String> getRoleIdList() {
+        return roleIdList;
     }
 
-    public void setPositionNameList(List<String> positionNameList) {
-        this.positionNameList = positionNameList;
+    public void setRoleIdList(List<String> roleIdList) {
+        this.roleIdList = roleIdList;
+    }
+
+    public List<String> getRoleNameList() {
+        return roleNameList;
+    }
+
+    public void setRoleNameList(List<String> roleNameList) {
+        this.roleNameList = roleNameList;
     }
 
     public List<MenuDto> getMenuList() {
@@ -38,14 +46,6 @@ public class PermissionForm extends DataForm<Permission> {
 
     public void setMenuList(List<MenuDto> menuList) {
         this.menuList = menuList;
-    }
-
-    public List<String> getPositionIdList() {
-        return positionIdList;
-    }
-
-    public void setPositionIdList(List<String> positionIdList) {
-        this.positionIdList = positionIdList;
     }
 
     public String getMenuId() {
@@ -79,4 +79,6 @@ public class PermissionForm extends DataForm<Permission> {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
+
 }

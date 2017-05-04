@@ -1,18 +1,14 @@
 package net.myspring.general.modules.sys.web.controller;
 
-import net.myspring.general.common.utils.SecurityUtils;
-import net.myspring.general.modules.sys.dto.ActivitiAuditDto;
-import net.myspring.general.modules.sys.dto.ActivitiAuthenticatedDto;
-import net.myspring.general.modules.sys.form.ActivitiAuditForm;
-import net.myspring.general.modules.sys.form.ActivitiAuthenticatedForm;
-import net.myspring.general.modules.sys.form.ActivitiNotifyForm;
+import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
+import net.myspring.general.modules.sys.dto.ActivitiStartDto;
+import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
+import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.general.modules.sys.service.ActivitiService;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -25,30 +21,27 @@ public class ActivitiController {
     @Autowired
     protected ActivitiService  activitiService;
 
-    @RequestMapping(value = "authenticated")
-    public ActivitiAuthenticatedDto authenticatedActiviti(@RequestBody ActivitiAuthenticatedForm activitiAuthenticatedForm){
-        ActivitiAuthenticatedDto activitiAuthenticatedDto=new ActivitiAuthenticatedDto();
-        if(StringUtils.isNotBlank(activitiAuthenticatedForm.getProcessTypeId())){
-            activitiAuthenticatedDto=activitiService.authenticatedActiviti(activitiAuthenticatedForm);
+    @RequestMapping(value = "start")
+    public ActivitiStartDto start(@RequestBody ActivitiStartForm activitiStartForm){
+        ActivitiStartDto activitiStartDto=new ActivitiStartDto();
+        if(StringUtils.isNotBlank(activitiStartForm.getProcessTypeId())){
+            activitiStartDto=activitiService.start(activitiStartForm);
         }
-        return activitiAuthenticatedDto;
+        return activitiStartDto;
     }
 
-    @RequestMapping(value = "audit")
-    public ActivitiAuditDto audit(@RequestBody ActivitiAuditForm activitiAuditForm){
-        ActivitiAuditDto activitiAuditDto=new ActivitiAuditDto();
-        if(StringUtils.isNotBlank(activitiAuditForm.getProcessTypeId())&&StringUtils.isNotBlank(activitiAuditForm.getProcessInstanceId())){
-            activitiAuditDto= activitiService.audit(activitiAuditForm);
+    @RequestMapping(value = "complete")
+    public ActivitiCompleteDto complete(@RequestBody ActivitiCompleteForm activitiCompleteForm){
+        ActivitiCompleteDto activitiCompleteDto=new ActivitiCompleteDto();
+        if(StringUtils.isNotBlank(activitiCompleteForm.getProcessTypeId())&&StringUtils.isNotBlank(activitiCompleteForm.getProcessInstanceId())){
+            activitiCompleteDto= activitiService.complete(activitiCompleteForm);
         }
-        return activitiAuditDto;
+        return activitiCompleteDto;
     }
 
-    @RequestMapping(value = "notify")
-    public boolean notify(@RequestBody ActivitiNotifyForm activitiNotifyForm){
-        if(StringUtils.isNotBlank(activitiNotifyForm.getExtendId())&&StringUtils.isNotBlank(activitiNotifyForm.getName())){
-            activitiService.notify(activitiNotifyForm);
-            return true;
-        }
-        return false;
+    @RequestMapping(value = "setExtendId")
+    public boolean setExtendId(String processInstanceId,String extendId){
+        activitiService.setExtendId(processInstanceId,extendId);
+        return true;
     }
 }

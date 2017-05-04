@@ -3,7 +3,7 @@ package net.myspring.general.modules.sys.dto;
 /**
  * Created by wangzm on 2017/4/25.
  */
-public class ActivitiAuthenticatedDto {
+public class ActivitiStartDto {
     private String processInstanceId;
     private String processStatus;
     private String processFlowId;

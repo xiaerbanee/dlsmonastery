@@ -1,10 +1,13 @@
 package net.myspring.future.modules.layout.web.controller;
 
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.layout.domain.ShopImage;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
 import net.myspring.future.modules.layout.service.ShopImageService;
+import net.myspring.future.modules.layout.web.form.ShopImageForm;
 import net.myspring.future.modules.layout.web.query.ShopImageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,24 +32,29 @@ public class ShopImageController {
     }
 
     @RequestMapping(value = "findOne")
-    public String findOne() {
-        return null;
+    public ShopImageForm findOne(ShopImageForm shopImageForm) {
+        if(!shopImageForm.isCreate()) {
+            shopImageForm = shopImageService.findOne(shopImageForm.getId());
+        }
+        return shopImageForm;
     }
 
-    @RequestMapping(value = "getQuery", method = RequestMethod.GET)
-    public String getQuery() {
-        return null;
+    @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
+    public List<String> getFormProperty() {
+        return shopImageService.getProperty();
     }
 
     @RequestMapping(value = "save")
-    @ResponseBody
-    public String save() {
-        return null;
+    public RestResponse save(ShopImageForm shopImageForm) {
+        shopImageService.save(shopImageForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete", method = RequestMethod.GET)
-    public String logicDelete() {
-        return null;
+    public RestResponse logicDelete(ShopImageForm shopImageForm) {
+        shopImageService.logicDelete(shopImageForm.getId());
+        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
     }
 
     public List<String> getActionList() {

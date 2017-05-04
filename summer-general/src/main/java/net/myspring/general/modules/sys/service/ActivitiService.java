@@ -2,13 +2,15 @@ package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Maps;
 import net.myspring.common.enums.AuditTypeEnum;
+import net.myspring.common.exception.ServiceException;
+import net.myspring.general.common.utils.ActivitiUtils;
+import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
 import net.myspring.general.modules.sys.domain.ProcessTask;
-import net.myspring.general.modules.sys.dto.ActivitiAuditDto;
-import net.myspring.general.modules.sys.dto.ActivitiAuthenticatedDto;
-import net.myspring.general.modules.sys.form.ActivitiAuditForm;
-import net.myspring.general.modules.sys.form.ActivitiAuthenticatedForm;
-import net.myspring.general.modules.sys.form.ActivitiNotifyForm;
+import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
+import net.myspring.general.modules.sys.dto.ActivitiStartDto;
+import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
+import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.general.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.general.modules.sys.mapper.ProcessTaskMapper;
 import org.activiti.engine.IdentityService;
@@ -26,7 +28,8 @@ import java.util.Map;
  */
 @Service
 public class ActivitiService {
-
+    @Autowired
+    protected ActivitiUtils activitiUtils;
     @Autowired
     protected TaskService taskService;
     @Autowired
@@ -38,72 +41,68 @@ public class ActivitiService {
     @Autowired
     private ProcessTaskMapper processTaskMapper;
 
-    public ActivitiAuthenticatedDto authenticatedActiviti(ActivitiAuthenticatedForm activitiAuthenticatedForm){
-        ActivitiAuthenticatedDto activitiDto=new ActivitiAuthenticatedDto();
-        identityService.setAuthenticatedUserId(activitiAuthenticatedForm.getAccountId());
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process_type_" + activitiAuthenticatedForm.getProcessTypeId(), activitiAuthenticatedForm.getKey());
+    public ActivitiStartDto start(ActivitiStartForm activitiStartForm){
+        //启动流程
+        ActivitiStartDto activitiStartDto=new ActivitiStartDto();
+        identityService.setAuthenticatedUserId(SecurityUtils.getAccountId());
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process_type_" + activitiStartForm.getProcessTypeId(), activitiStartForm.getBusinessKey());
         String processInstanceId = processInstance.getId();
-        activitiDto.setProcessInstanceId(processInstanceId);
+        activitiStartDto.setProcessInstanceId(processInstanceId);
         String processStatus = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult().getName();
-        activitiDto.setProcessStatus(processStatus);
-        ProcessFlow processFlow = processFlowMapper.findByProductTypeAndName(activitiAuthenticatedForm.getProcessTypeId(), processStatus);
-        activitiDto.setProcessFlowId(processFlow==null?"":processFlow.getId());
-        activitiDto.setPositionId(processFlow.getPositionId());
-        return activitiDto;
+        activitiStartDto.setProcessStatus(processStatus);
+        ProcessFlow processFlow = processFlowMapper.findByProcessTypeAndName(activitiStartForm.getProcessTypeId(), processStatus);
+        activitiStartDto.setProcessFlowId(processFlow==null?"":processFlow.getId());
+        activitiStartDto.setPositionId(processFlow.getPositionId());
+        //创建任务
+        ProcessTask processTask = new ProcessTask();
+        processTask.setName(activitiStartForm.getName());
+        processTask.setProcessInstanceId(processInstanceId);
+        processTask.setStatus(processStatus);
+        processTask.setOfficeId(SecurityUtils.getOfficeId());
+        processTask.setPositionId(activitiStartDto.getPositionId());
+        processTaskMapper.save(processTask);
+        return activitiStartDto;
     }
 
-    public ActivitiAuditDto audit(ActivitiAuditForm activitiAuditForm) {
-        ActivitiAuditDto activitiAuditDto=new ActivitiAuditDto();
-        Task task = taskService.createTaskQuery().processInstanceId(activitiAuditForm.getProcessInstanceId()).singleResult();
+    public ActivitiCompleteDto complete(ActivitiCompleteForm activitiCompleteForm) {
+        ActivitiCompleteDto activitiCompleteDto=new ActivitiCompleteDto();
+        Task task = taskService.createTaskQuery().processInstanceId(activitiCompleteForm.getProcessInstanceId()).singleResult();
+        if (!activitiUtils.claim(task)) {
+            throw new ServiceException("无法签收任务，您没有办理此任务的权限或者已经被其他人签收");
+        }
         // 添加批注
-        taskService.addComment(task.getId(), activitiAuditForm.getProcessInstanceId(), activitiAuditForm.getComment());
+        taskService.addComment(task.getId(), activitiCompleteForm.getProcessInstanceId(), activitiCompleteForm.getComment());
         Map<String, Object> map = Maps.newHashMap();
-        map.put(task.getTaskDefinitionKey() + "_Pass", activitiAuditForm.getPass());
+        map.put(task.getTaskDefinitionKey() + "_Pass", activitiCompleteForm.getPass());
         taskService.complete(task.getId(), map);
-        task = taskService.createTaskQuery().processInstanceId(activitiAuditForm.getProcessInstanceId()).singleResult();
+        task = taskService.createTaskQuery().processInstanceId(activitiCompleteForm.getProcessInstanceId()).singleResult();
         ProcessFlow processFlow = null;
         if (task != null) {
-            processFlow = processFlowMapper.findByProductTypeAndName(activitiAuditForm.getProcessTypeId(), task.getName());
-            activitiAuditDto.setProcessFlowId(processFlow.getId());
-            activitiAuditDto.setPositionId(processFlow.getPositionId());
+            processFlow = processFlowMapper.findByProcessTypeAndName(activitiCompleteForm.getProcessTypeId(), task.getName());
+            activitiCompleteDto.setProcessFlowId(processFlow.getId());
+            activitiCompleteDto.setPositionId(processFlow.getPositionId());
         }
-        activitiAuditDto.setProcessStatus(getProcessStatus(processFlow, activitiAuditForm.getPass()));
-        if(activitiAuditForm.getPass()){
-            String processStatus = getProcessStatus(processFlow, activitiAuditForm.getPass());
-            ProcessTask processTask = processTaskMapper.findByNameAndExtendId(activitiAuditForm.getName(),activitiAuditForm.getId());
-            if(AuditTypeEnum.PASSED.name().equals(processStatus) ||AuditTypeEnum.NOT_PASS.name().equals(processStatus)){
-                processTask.setStatus("已审核");
+        activitiCompleteDto.setProcessStatus(getProcessStatus(processFlow, activitiCompleteForm.getPass()));
+        ProcessTask processTask = processTaskMapper.findByNameAndExtendId(activitiCompleteForm.getName(),activitiCompleteForm.getId());
+        if(activitiCompleteForm.getPass()){
+            String processStatus = getProcessStatus(processFlow, activitiCompleteForm.getPass());
+            if(AuditTypeEnum.PASSED.name().equals(processStatus)){
+                processTask.setStatus(AuditTypeEnum.PASSED.name());
                 processTask.setEnabled(false);
             }else{
                 processTask.setPositionId(processFlow.getPositionId());
                 processTask.setStatus(processStatus);
             }
-            processTaskMapper.update(processTask);
+        } else {
+            processTask.setStatus(AuditTypeEnum.NOT_PASS.name());
+            processTask.setEnabled(false);
         }
-        return activitiAuditDto;
+        processTaskMapper.update(processTask);
+        return activitiCompleteDto;
     }
 
-    public void notify(ActivitiNotifyForm activitiNotifyForm) {
-        ProcessTask processTask = processTaskMapper.findByNameAndExtendId(activitiNotifyForm.getName(),activitiNotifyForm.getExtendId());
-        if(processTask==null){
-            processTask=new ProcessTask();
-            processTask.setName(activitiNotifyForm.getName());
-            processTask.setVersion(0);
-            processTask.setExtendId(activitiNotifyForm.getExtendId());
-            processTask.setPositionId(activitiNotifyForm.getPositionId());
-            processTask.setOfficeId(activitiNotifyForm.getOfficeId());
-            processTask.setCompanyId(activitiNotifyForm.getCompanyId());
-            processTaskMapper.save(processTask);
-        }else {
-            if(AuditTypeEnum.PASSED.name().equals(activitiNotifyForm.getProcessStatus()) ||AuditTypeEnum.NOT_PASS.name().equals(activitiNotifyForm.getProcessStatus())){
-                processTask.setStatus("已审核");
-                processTask.setEnabled(false);
-            }else{
-                processTask.setPositionId(activitiNotifyForm.getPositionId());
-                processTask.setStatus(activitiNotifyForm.getProcessStatus());
-            }
-            processTaskMapper.update(processTask);
-        }
+    public void setExtendId(String processInstanceId,String extendId) {
+        processTaskMapper.setExtendId(processInstanceId,extendId);
     }
 
     private  String getProcessStatus(ProcessFlow processFlow, Boolean pass) {

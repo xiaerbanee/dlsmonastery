@@ -10,6 +10,11 @@
                 <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="部门管理人" prop="leaderIdList">
+              <el-select v-model="inputForm.leaderIdList" filterable remote multiple :placeholder="$t('officeForm.inputWord')" :remote-method="remoteOfficeLeader" :loading="remoteLoading" :clearable=true>
+                <el-option v-for="item in accountList" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('officeForm.officeName')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
@@ -44,7 +49,7 @@
                 show-checkbox
                 node-key="id"
                 ref="tree"
-                check-strictly="true"
+                check-strictly
                 :default-checked-keys="checked"
                 :default-expanded-keys="checked"
                 @check-change="handleCheckChange"
@@ -64,6 +69,7 @@
         isCreate: this.$route.query.id == null,
         submitDisabled: false,
         offices: [],
+        accountList: [],
         inputForm: {},
         submitData: {
           id: this.$route.query.id,
@@ -74,7 +80,8 @@
           point: '',
           taskPoint: '',
           sort: '',
-          officeIdStr:""
+          officeIdStr:"",
+          leaderIdList:"",
         },
         rules: {
           name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
@@ -119,6 +126,14 @@
             this.remoteLoading = false;
           })
         }
+      }, remoteOfficeLeader(query){
+        if (query !== '') {
+          this.remoteLoading = true;
+          axios.get('/api/basic/hr/account/search', {params: {key: query}}).then((response) => {
+            this.accountList = response.data;
+            this.remoteLoading = false;
+          })
+        }
       },
       handleCheckChange(data, checked, indeterminate) {
         var officeIdList=new Array()
@@ -149,6 +164,13 @@
         console.log(response.data)
         if (response.data.parentId != null) {
           this.offices = new Array({id: response.data.parentId, name: response.data.parentName})
+        }
+        if (response.data.leaderIdList != null) {
+            let officeLeaderList=new Array();
+          for(var index in response.data.leaderIdList){
+              officeLeaderList.push({id:response.data.leaderIdList[index],loginName:response.data.leaderNameList[index]});
+          }
+          this.accountList=officeLeaderList;
         }
         if(this.inputForm.officeRuleList!=null&&this.inputForm.officeRuleList.length>0){
             for(var index in this.inputForm.officeRuleList){

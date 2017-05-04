@@ -5,42 +5,22 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter = "20">
           <el-col :span = "7">
-            <el-form-item :label="$t('positionForm.jobId')" prop="jobId">
-              <el-select v-model="inputForm.jobId" filterable >
-                <el-option v-for="job in inputForm.jobList" :key="job.id" :label="job.name" :value="job.id"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item :label="$t('positionForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('positionForm.reportName')" prop="reportName">
-              <el-input v-model="inputForm.reportName"></el-input>
+            <el-form-item label="绑定角色" prop="roleId">
+              <el-select v-model="inputForm.roleId" filterable remote :placeholder="$t('accountForm.inputWord')" :remote-method="remoteRole" :loading="remoteLoading" :clearable=true>
+                <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item :label="$t('positionForm.permission')" prop="permission">
               <el-input v-model="inputForm.permission"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('positionForm.sort')" prop="sort">
-              <el-input v-model="inputForm.sort"></el-input>
             </el-form-item>
             <el-form-item :label="$t('positionForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('positionForm.save')}}</el-button>
-            </el-form-item>
-          </el-col>
-          <el-col :span = "10">
-            <el-form-item  :label="$t('positionForm.permissionIdStr')" prop="permissionIdStr">
-              <el-tree
-                :data="treeData"
-                show-checkbox
-                node-key="id"
-                ref="tree"
-                :default-checked-keys="checked"
-                :default-expanded-keys="checked"
-                @check-change="handleCheckChange"
-                :props="defaultProps">
-              </el-tree>
             </el-form-item>
           </el-col>
         </el-row>
@@ -58,29 +38,16 @@
         inputForm:{},
         submitData:{
           id:this.$route.query.id,
-          jobId:'',
           name:'',
-          reportName:'',
-          dataScope:'',
           permission:'',
-          sort:'',
           remarks:'',
-          permissionIdStr:""
+          roleId:'',
         },
+        roleList:[],
         rules: {
-          jobId: [{ required: true, message: this.$t('positionForm.prerequisiteMessage')}],
           name: [{ required: true, message: this.$t('positionForm.prerequisiteMessage')}],
-          dataScope: [{ required: true, message: this.$t('positionForm.prerequisiteMessage')}],
           permission: [{ required: true, message: this.$t('positionForm.prerequisiteMessage')}],
-          sort: [{ required: true, message: this.$t('positionForm.prerequisiteMessage')}],
         },
-        backendList:[],
-        treeData:[],
-        checked:[],
-        defaultProps: {
-          label: 'label',
-          children: 'children'
-        }
       };
     },
     methods:{
@@ -103,35 +70,23 @@
             this.submitDisabled = false;
           }
         })
-      },
-      handleCheckChange(data, checked, indeterminate) {
-        var permissions=new Array()
-        var check=this.$refs.tree.getCheckedKeys();
-        console.log(check)
-        for(var index in check){
-          if(check[index].indexOf("p")!=0&& check[index]!=0){
-            permissions.push(check[index])
-          }
-        }
-        this.inputForm.permissionIdStr=permissions.join();
-      },remoteBackend(query){
+      },remoteRole(query){
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/sys/backend/search',{params:{name:query}}).then((response)=>{
-            this.backendList=response.data;
+          axios.get('/api/basic/sys/role/search',{params:{name:query}}).then((response)=>{
+            this.roleList=response.data;
             this.remoteLoading = false;
-        })
+          })
         } else {
-          this.backendList = [];
+          this.roleList = [];
         }
       }
     },created(){
       axios.get('/api/basic/hr/position/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          console.log(response.data);
         this.inputForm=response.data;
-        this.treeData =new Array(response.data.permissionTree);
-        this.checked = response.data.permissionTree.checked;
-        this.inputForm.permissionIdStr = response.data.permissionTree.checked.join();
+        if(response.data.roleId!=null){
+            this.roleList = new Array({id:response.data.roleId,name:response.data.roleName});
+        }
       })
 
     }

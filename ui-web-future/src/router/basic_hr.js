@@ -7,9 +7,6 @@ const accountChangeList  = r => require.ensure([], () => r(require('pages/basic/
 const accountChangeForm  = r => require.ensure([], () => r(require('pages/basic/hr/accountChangeForm.vue')));
 const positionList = r => require.ensure([],() => r(require('pages/basic/hr/positionList.vue')));
 const positionForm = r => require.ensure([],() => r(require('pages/basic/hr/positionForm.vue')));
-const positionAuthorityForm = r => require.ensure([],() => r(require('pages/basic/hr/positionAuthorityForm.vue')));
-const jobList = r => require.ensure([],() => r(require('pages/basic/hr/jobList.vue')));
-const jobForm = r => require.ensure([],() => r(require('pages/basic/hr/jobForm.vue')));
 const dutySignList = r => require.ensure([],() => r(require('pages/basic/hr/dutySignList.vue')));
 const dutyAnnualList = r => require.ensure([],() => r(require('pages/basic/hr/dutyAnnualList.vue')));
 const dutyAnnualForm = r => require.ensure([],() => r(require('pages/basic/hr/dutyAnnualForm.vue')));
@@ -35,6 +32,7 @@ const auditFileList= r => require.ensure([], () => r(require('pages/basic/hr/aud
 const auditFileForm= r => require.ensure([], () => r(require('pages/basic/hr/auditFileForm.vue')));
 const auditFileDetail= r => require.ensure([], () => r(require('pages/basic/hr/auditFileDetail.vue')));
 const accountTaskList= r => require.ensure([], () => r(require('pages/basic/hr/accountTaskList.vue')));
+const accountAuthorityForm= r => require.ensure([], () => r(require('pages/basic/hr/accountAuthorityForm.vue')));
 
 
 let routes = [
@@ -57,9 +55,6 @@ let routes = [
   {path:'/basic/hr/employeePhoneDepositForm',component:employeePhoneDepositForm,name:'employeePhoneDepositForm',meta: {menu:"employeePhoneDepositList"}},
   {path:'/basic/hr/positionList',component:positionList,name:'positionList'},
   {path:'/basic/hr/positionForm',component:positionForm,name:'positionForm',meta: {menu:"positionList"}},
-  {path:'/basic/hr/positionAuthorityForm',component:positionAuthorityForm,name:'positionAuthorityForm',meta: {menu:"positionList"}},
-  {path:'/basic/hr/jobList',component:jobList,name:'jobList'},
-  {path:'/basic/hr/jobForm',component:jobForm,name:'jobForm',meta:{menu:"jobList"}},
   {path:'/basic/hr/dutySignList',component:dutySignList,name:'dutySignList'},
   {path:'/basic/hr/dutyAnnualList',component:dutyAnnualList,name:'dutyAnnualList'},
   {path:'/basic/hr/dutyAnnualForm',component:dutyAnnualForm,name:'dutyAnnualForm',meta:{menu:"dutyAnnualList"}},
@@ -75,6 +70,7 @@ let routes = [
   {path:'/basic/hr/recruitList',component:recruitList,name:'recruitList'},
   {path:'/basic/hr/recruitForm',component:recruitForm,name:'recruitForm',meta: {menu:"recruitList"}},
   {path:'/basic/hr/recruitBatchForm',component:recruitBatchForm,name:'recruitBatchForm',meta: {menu:"recruitList"}},
+  {path:'/basic/hr/accountAuthorityForm',component:accountAuthorityForm,name:'accountAuthorityForm',meta: {menu:"accountList"}},
 ];
 
 export default routes;

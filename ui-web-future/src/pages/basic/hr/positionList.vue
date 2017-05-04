@@ -29,7 +29,6 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('positionList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('positionList.positionName')" sortable width="150"></el-table-column>
-        <el-table-column prop="jobName" :label="$t('positionList.jobName')"></el-table-column>
         <el-table-column prop="permission" :label="$t('positionList.permission')"></el-table-column>
         <el-table-column prop="locked" :label="$t('positionList.locked')" width="120">
           <template scope="scope">
@@ -107,11 +106,8 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/hr/position/getQuery').then((response) =>{
-        this.formData=response.data;
-        util.copyValue(this.$route.query,this.formData);
-        this.pageRequest();
-      });
+      util.copyValue(this.$route.query,this.formData);
+      this.pageRequest();
     }
   };
 </script>

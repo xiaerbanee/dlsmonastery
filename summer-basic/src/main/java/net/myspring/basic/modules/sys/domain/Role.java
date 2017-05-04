@@ -1,16 +1,17 @@
-package net.myspring.basic.modules.hr.domain;
+package net.myspring.basic.modules.sys.domain;
 
-
-import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * Created by wangzm on 2017/5/2.
+ */
+@Table(name = "sys_role")
 @Entity
-@Table(name="hr_job")
-public class Job extends CompanyEntity<Job> {
+public class Role extends DataEntity<Role> {
     private String name;
-    private Integer version = 0;
     private String permission;
 
     public String getName() {
@@ -21,14 +22,6 @@ public class Job extends CompanyEntity<Job> {
         this.name = name;
     }
 
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
     public String getPermission() {
         return permission;
     }
@@ -36,5 +29,4 @@ public class Job extends CompanyEntity<Job> {
     public void setPermission(String permission) {
         this.permission = permission;
     }
-
 }

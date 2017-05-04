@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface ProcessFlowMapper extends MyMapper<ProcessFlow,String> {
 
-    ProcessFlow findByProductTypeAndName(@Param("processTypeId") String processTypeId, @Param("name") String name);
+    ProcessFlow findByProcessTypeAndName(@Param("processTypeId") String processTypeId, @Param("name") String name);
 
     List<ProcessFlow> findByProcessType(String processTypeId);
 }

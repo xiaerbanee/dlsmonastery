@@ -128,7 +128,7 @@
           type: 'info'
         }).then(() => {
           this.$store.dispatch('clearGlobal');
-          this.$router.push({ name: 'login' });
+          window.location.reload();
         }).catch(() => {});
       },changeLang(lang) {
         this.$store.dispatch('setLang',lang);
@@ -149,13 +149,13 @@
         this.activeBackendModule=activeBackendModule;
 
       },setActiveClass(itemList,activeCode,activeClass) {
-          for(var i in itemList) {
-              if(itemList[i].code == activeCode) {
-                  itemList[i].class = activeClass;
-              } else {
-                  itemList[i].class="";
-              }
+        for(var i in itemList) {
+          if(itemList[i].code == activeCode) {
+            itemList[i].class = activeClass;
+          } else {
+            itemList[i].class="";
           }
+        }
       }
     }
   };
@@ -192,7 +192,7 @@
     color:#20A0FF;
     padding-bottom:16px;
   }
- .db-menu-bar .el-menu-item.is-active  {
-   color:#48576a;
- }
+  .db-menu-bar .el-menu-item.is-active  {
+    color:#48576a;
+  }
 </style>

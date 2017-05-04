@@ -14,7 +14,9 @@ import java.util.List;
 @Mapper
 public interface PermissionMapper extends MyMapper<Permission,String> {
 
-    List<Permission> findByPositionId(String positionId);
+    List<Permission> findByRoleId(String roleId);
+
+    List<Permission> findByRoleAndAccount(@Param("roleId")String roleId,@Param("accountId")String accountId);
 
     List<Permission> findByMenuId(String menuId);
 
@@ -25,11 +27,4 @@ public interface PermissionMapper extends MyMapper<Permission,String> {
     List<Permission> findByPermissionLike(String permissionStr);
 
     Page<PermissionDto> findPage(Pageable pageable, @Param("p")PermissionQuery permissionQuery);
-
-    int savePermissionPosition(@Param("permissionId")String permissionId,@Param("positionIds")List<String> positionIds);
-
-    int deletePermissionPosition(@Param("permissionId")String permissionId);
-
-    List<String> findPositionIdByPermissions(List<String> permissionIds);
-
 }
