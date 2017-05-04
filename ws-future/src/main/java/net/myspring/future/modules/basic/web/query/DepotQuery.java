@@ -6,7 +6,6 @@ import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.domain.Pricesystem;
-import net.myspring.future.modules.basic.dto.BasicOfficeDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,7 +44,6 @@ public class DepotQuery {
     private LocalDate dutyDateEnd;
 //后台
     private List<String> officeIdList;
-    private List<BasicOfficeDto> basicOfficeDtoList;
     private String depotName;
     private List<Integer> typeList;
     private Boolean allowAdApply;
@@ -74,14 +72,6 @@ public class DepotQuery {
 
     public void setDateRange(String dateRange) {
         this.dateRange = dateRange;
-    }
-
-    public List<BasicOfficeDto> getBasicOfficeDtoList() {
-        return basicOfficeDtoList;
-    }
-
-    public void setBasicOfficeDtoList(List<BasicOfficeDto> basicOfficeDtoList) {
-        this.basicOfficeDtoList = basicOfficeDtoList;
     }
 
     public List<String> getDepotIdList() {
