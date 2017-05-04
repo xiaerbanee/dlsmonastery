@@ -38,7 +38,7 @@ public interface DictEnumMapper extends BaseMapper<DictEnum,String>{
 
     @CachePut(cacheKeyGenerator = IdCacheKeyGenerator.class)
     @UpdateProvider(type = MyProvider.class, method = "update")
-   int update(@CacheValue DictEnum dictEnum);
+    int update(@CacheValue DictEnum dictEnum);
 
     List<DictEnum> findByCategory(String category);
 
