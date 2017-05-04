@@ -1,11 +1,8 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.common.form.DataForm;
-import net.myspring.basic.modules.hr.dto.JobDto;
-import net.myspring.common.tree.TreeNode;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.util.List;

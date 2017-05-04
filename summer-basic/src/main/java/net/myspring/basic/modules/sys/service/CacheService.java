@@ -23,8 +23,6 @@ public class CacheService {
     @Autowired
     private DictMapMapper dictMapMapper;
     @Autowired
-    private JobMapper jobMapper;
-    @Autowired
     private EmployeeMapper employeeMapper;
     @Autowired
     private PositionMapper positionMapper;
@@ -54,7 +52,6 @@ public class CacheService {
         logger.info("init cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         cacheUtils.initCache("accounts",accountMapper.findAll());
         cacheUtils.initCache("dictMaps",dictMapMapper.findAll());
-        cacheUtils.initCache("jobs",jobMapper.findAll());
         cacheUtils.initCache("employees",employeeMapper.findAll());
         cacheUtils.initCache("offices",officeMapper.findAll());
         cacheUtils.initCache("dictEnums",dictEnumMapper.findAll());

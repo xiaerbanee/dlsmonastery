@@ -1,24 +1,19 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.hr.dto.PositionDto;
-import net.myspring.basic.modules.hr.service.JobService;
+import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
-import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.service.BackendModuleService;
 import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.common.tree.TreeNode;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import net.myspring.basic.modules.hr.service.PositionService;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,8 +25,6 @@ public class PositionController {
 
     @Autowired
     private PositionService positionService;
-    @Autowired
-    private JobService jobService;
     @Autowired
     private PermissionService permissionService;
     @Autowired
