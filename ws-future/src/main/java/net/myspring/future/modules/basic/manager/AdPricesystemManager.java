@@ -44,14 +44,4 @@ public class AdPricesystemManager {
         return  adPricesystemMapper.findOne(adPricesystemForm.getId());
     }
 
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return adPricesystemMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
 }

@@ -14,7 +14,6 @@ public class DictEnumForm extends DataForm<DictEnum> {
     private Integer sort;
     private String category;
     private String value;
-    private String remarks;
     private List<String> categoryList= Lists.newArrayList();
 
     public String getRemarks() {

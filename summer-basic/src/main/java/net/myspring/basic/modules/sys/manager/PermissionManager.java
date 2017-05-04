@@ -44,16 +44,4 @@ public class PermissionManager {
         permissionMapper.updateForm(permissionForm);
         return  permissionMapper.findOne(permissionForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return permissionMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
-
 }

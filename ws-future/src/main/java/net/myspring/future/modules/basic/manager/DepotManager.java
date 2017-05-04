@@ -60,20 +60,10 @@ public class DepotManager {
         return  depotMapper.findOne(depotForm.getId());
     }
 
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return depotMapper.deleteById(id);
-    }
 
     public List<String> getDepotIds(String accountId) {
         List<Depot> depotList=depotMapper.findByAccountId(accountId);
         return CollectionUtil.extractToList(depotList,"id");
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
     }
 
     //根据类型获取depotType

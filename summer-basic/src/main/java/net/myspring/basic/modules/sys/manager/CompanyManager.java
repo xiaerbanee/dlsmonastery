@@ -51,15 +51,4 @@ public class CompanyManager {
         companyMapper.updateForm(companyForm);
         return  companyMapper.findOne(companyForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return companyMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
 }

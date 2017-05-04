@@ -43,15 +43,4 @@ public class ShopAdTypeManager {
         shopAdTypeMapper.updateForm(shopAdTypeForm);
         return  shopAdTypeMapper.findOne(shopAdTypeForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return shopAdTypeMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
 }

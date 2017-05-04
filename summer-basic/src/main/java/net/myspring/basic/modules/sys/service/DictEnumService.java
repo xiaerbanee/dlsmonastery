@@ -3,13 +3,12 @@ package net.myspring.basic.modules.sys.service;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
-import net.myspring.basic.modules.sys.manager.DictEnumManager;
 import net.myspring.basic.modules.sys.mapper.DictEnumMapper;
 import net.myspring.basic.modules.sys.web.form.DictEnumForm;
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.text.StringUtils;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +18,6 @@ import java.util.List;
 
 @Service
 public class DictEnumService {
-
-    @Autowired
-    private DictEnumManager dictEnumManager;
     @Autowired
     private DictEnumMapper dictEnumMapper;
     @Autowired
@@ -42,7 +38,7 @@ public class DictEnumService {
 
     public DictEnumForm findForm(DictEnumForm dictEnumForm) {
         if(!dictEnumForm.isCreate()) {
-            DictEnum dictEnum =dictEnumManager.findOne(dictEnumForm.getId());
+            DictEnum dictEnum =dictEnumMapper.findOne(dictEnumForm.getId());
             dictEnumForm= BeanUtil.map(dictEnum,DictEnumForm.class);
             cacheUtils.initCacheInput(dictEnumForm);
         }
@@ -53,9 +49,11 @@ public class DictEnumService {
         DictEnum dictEnum;
         if(dictEnumForm.isCreate()) {
             dictEnum = BeanUtil.map(dictEnumForm, DictEnum.class);
-            dictEnum = dictEnumManager.save(dictEnum);
+            dictEnumMapper.save(dictEnum);
         } else {
-            dictEnum = dictEnumManager.updateForm(dictEnumForm);
+            dictEnum = dictEnumMapper.findOne(dictEnumForm.getId());
+            ReflectionUtil.copyProperties(dictEnumForm,dictEnum);
+            dictEnumMapper.update(dictEnum);
         }
         return dictEnum;
     }

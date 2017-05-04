@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.sys.domain.Office;
-import net.myspring.basic.modules.sys.dto.OfficeBasicDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.sys.web.form.OfficeForm;
@@ -63,10 +62,10 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "findByOfficeRuleName")
-    public List<OfficeBasicDto> findByOfficeRuleName(String officeRuleName){
-        List<OfficeBasicDto> officeList=Lists.newArrayList();
+    public List<OfficeDto> findByOfficeRuleName(String officeRuleName){
+        List<OfficeDto> officeList=Lists.newArrayList();
         if(StringUtils.isNotBlank(officeRuleName)){
-            officeList= BeanUtil.map(officeService.findByOfficeRuleName(officeRuleName),OfficeBasicDto.class);
+            officeList= BeanUtil.map(officeService.findByOfficeRuleName(officeRuleName),OfficeDto.class);
         }
         return officeList;
     }

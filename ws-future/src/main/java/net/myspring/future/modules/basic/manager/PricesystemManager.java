@@ -43,15 +43,4 @@ public class PricesystemManager {
         pricesystemMapper.updateForm(pricesystemForm);
         return  pricesystemMapper.findOne(pricesystemForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return pricesystemMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
 }

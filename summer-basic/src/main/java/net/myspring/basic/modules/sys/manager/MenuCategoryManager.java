@@ -44,15 +44,4 @@ public class MenuCategoryManager {
         menuCategoryMapper.updateForm(menuCategoryForm);
         return  menuCategoryMapper.findOne(menuCategoryForm.getId());
     }
-
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return menuCategoryMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
 }

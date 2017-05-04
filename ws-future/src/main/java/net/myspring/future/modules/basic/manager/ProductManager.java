@@ -44,14 +44,4 @@ public class ProductManager {
         return  productMapper.findOne(productForm.getId());
     }
 
-    @CacheEvict(key="#p0")
-    public int deleteById(String id) {
-        return productMapper.deleteById(id);
-    }
-
-    public void deleteByIds(List<String> ids) {
-        for(String id:ids){
-            deleteById(id);
-        }
-    }
 }
