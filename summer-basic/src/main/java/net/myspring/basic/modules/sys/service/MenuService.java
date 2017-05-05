@@ -123,7 +123,9 @@ public class MenuService {
             }
         }
         List<String> removePermissionIds = CollectionUtil.subtract(CollectionUtil.extractToList(oldPermissions,"id"),CollectionUtil.extractToList(permissions,"id"));
-        permissionMapper.logicDeleteByIds(removePermissionIds);
+        if(CollectionUtil.isNotEmpty(removePermissionIds)){
+            permissionMapper.logicDeleteByIds(removePermissionIds);
+        }
         return menu;
     }
 
