@@ -22,15 +22,17 @@ public class ShopPrint extends CompanyEntity<ShopPrint> {
     private String officeId;
     private String processTypeId;
     private String processFlowId;
-    private String positionId;
+    private String processPositionId;
 
-    public String getPositionId() {
-        return positionId;
+
+    public String getProcessPositionId() {
+        return processPositionId;
     }
 
-    public void setPositionId(String positionId) {
-        this.positionId = positionId;
+    public void setProcessPositionId(String processPositionId) {
+        this.processPositionId = processPositionId;
     }
+
 
 
     public String getPrintType() {
