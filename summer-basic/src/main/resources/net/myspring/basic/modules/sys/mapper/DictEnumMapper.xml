@@ -23,7 +23,7 @@
         </if>
     </select>
 
-    <select id="findByCategory" resultType="DictEnum">
+    <select id="findByCategory" resultType="DictEnumCacheDto">
         SELECT
         t1.*
         FROM

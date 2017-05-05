@@ -2,20 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.general.modules.sys.mapper.ProcessTaskMapper">
 
-    <select id="findByNameAndExtendId" resultType="ProcessTask">
+    <select id="findByProcessInstanceId" resultType="ProcessTask">
         SELECT t1.*
         FROM sys_process_task t1
         where t1.enabled=1
-        and t1.name=#{name}
-        and t1.extend_id=#{extendId}
+        and t1.process_instance_id=#{processInstanceId}
     </select>
 
-    <update id="setExtendId">
-        UPDATE
-          sys_process_task t1
-          SET
-          t1.extend_id = #{extendId}
-          WHERE
-          t1.process_instance_id = #{processInstanceId}
-    </update>
 </mapper>

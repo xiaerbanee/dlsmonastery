@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * Created by wangzm on 2017/5/4.
  */
-public class OfficeDto {
+public class DictMapCacheDto {
     private String id;
     private String name;
     private BigDecimal taskPoint;

@@ -14,11 +14,11 @@ import javax.persistence.Transient;
 public class ProcessTask  extends CompanyEntity<ProcessTask>{
     private String name;
     private String processInstanceId;
-    private String extendId;
+    private String message;
     private String status;
     private String officeId;
     private String positionId;
-    private Integer version;
+    private Integer version=0;
 
     public Integer getVersion() {
         return version;
@@ -44,12 +44,12 @@ public class ProcessTask  extends CompanyEntity<ProcessTask>{
         this.processInstanceId = processInstanceId;
     }
 
-    public String getExtendId() {
-        return extendId;
+    public String getMessage() {
+        return message;
     }
 
-    public void setExtendId(String extendId) {
-        this.extendId = extendId;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getStatus() {
