@@ -32,11 +32,11 @@ public class CacheUtils {
         CacheReadUtils.initCacheInput(redisTemplate,objects);
     }
 
-    public void initCache(String keyPrefix, List<Object> entities) {
+    public void initCache(String keyPrefix, List entities) {
         initCache(keyPrefix,entities,"id");
     }
 
-    public  void  initCache(String keyPrefix, List<Object> entities,String keyField) {
+    public  void  initCache(String keyPrefix, List entities,String keyField) {
         if(CollectionUtil.isNotEmpty(entities)) {
             Map<byte[],byte[]> tuple = Maps.newHashMap();
             for(Object object:entities) {

@@ -18,8 +18,7 @@ public class CompanyConfigUtil {
 
     public static CompanyConfigCacheDto findByCode(RedisTemplate redisTemplate, String code) {
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        byte[] bytes = (byte[]) redisTemplate.opsForValue().get(("companyConfig:"+code).getBytes());
-        CompanyConfigCacheDto companyConfigCacheDto = ObjectMapperUtils.readValue(objectMapper,new String(bytes), CompanyConfigCacheDto.class);
+        CompanyConfigCacheDto companyConfigCacheDto = (CompanyConfigCacheDto) redisTemplate.opsForValue().get(("companyConfigCodes:" + code));
         return companyConfigCacheDto;
     }
 

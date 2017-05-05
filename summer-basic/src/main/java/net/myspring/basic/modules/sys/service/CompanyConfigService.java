@@ -53,7 +53,7 @@ public class CompanyConfigService {
     }
 
     public String getValueByCode(String code){
-        CompanyConfigCacheDto companyConfig=companyConfigMapper.findByCode(code);
+        CompanyConfig companyConfig=companyConfigMapper.findByCode(code);
         if(companyConfig!=null){
             return companyConfig.getValue();
         }

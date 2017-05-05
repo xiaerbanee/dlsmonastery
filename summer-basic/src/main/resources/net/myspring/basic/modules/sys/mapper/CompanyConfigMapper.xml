@@ -17,11 +17,17 @@
         </if>
     </select>
 
-    <select id="findByCode" resultType="CompanyConfigCacheDto">
+    <select id="findByCode" resultType="CompanyConfig">
         SELECT t1.*
         FROM sys_company_config t1
         where t1.enabled=1
         and t1.code=#{code}
+    </select>
+
+    <select id="findAllCache" resultType="CompanyConfigCacheDto">
+           SELECT t1.*
+        FROM sys_company_config t1
+        where t1.enabled=1
     </select>
 
 
