@@ -3,7 +3,6 @@ package net.myspring.basic.modules.sys.mapper;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.sys.domain.DictEnum;
-import net.myspring.basic.modules.sys.dto.DictEnumCacheDto;
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
 import net.myspring.common.mybatis.MyProvider;
 import net.myspring.mybatis.mapper.BaseMapper;
@@ -44,7 +43,7 @@ public interface DictEnumMapper extends BaseMapper<DictEnum,String>{
     List<DictEnum> findAllEnabled();
 
     @CacheResult
-    List<DictEnumCacheDto> findByCategory(String category);
+    List<DictEnum> findByCategory(String category);
 
     Page<DictEnumDto> findPage(Pageable pageable, @Param("p")DictEnumQuery dictEnumQuery);
 
