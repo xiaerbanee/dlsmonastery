@@ -1499,6 +1499,8 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    print:"出库单",
+    shipPrint:"快递单",
   },
   storeAllotDetail: {
     storeAllotDetail: "大库调拨详细",

@@ -1,6 +1,5 @@
 package net.myspring.general.modules.sys.mapper;
 
-import net.myspring.common.mybatis.MyMapper;
 import net.myspring.general.modules.sys.domain.District;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -17,4 +16,6 @@ public interface DistrictMapper {
     List<District> findByNameLike(String name);
 
     District findByProvinceAndCityAndCounty(@Param("province") String province, @Param("city") String city, @Param("county") String county);
+
+    List<District> findById(String id);
 }

@@ -48,5 +48,7 @@ public interface CompanyConfigMapper extends BaseMapper<CompanyConfig,String> {
 
     Page<CompanyConfigDto> findPage(Pageable pageable, @Param("p")CompanyConfigQuery companyConfigQuery);
 
-    CompanyConfigCacheDto findByCode(String code);
+    CompanyConfig findByCode(String code);
+
+    List<CompanyConfigCacheDto> findAllCache();
 }

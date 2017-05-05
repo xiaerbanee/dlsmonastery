@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.sys.web.controller;
 
-import net.myspring.basic.modules.sys.dto.DictEnumCacheDto;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.service.DictEnumService;
 import net.myspring.basic.modules.sys.web.form.DictEnumForm;
