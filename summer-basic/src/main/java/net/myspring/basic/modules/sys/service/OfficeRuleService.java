@@ -8,6 +8,7 @@ import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
 import net.myspring.basic.modules.sys.web.form.OfficeRuleForm;
 import net.myspring.basic.modules.sys.web.query.OfficeRuleQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,8 +57,10 @@ public class OfficeRuleService {
             officeRule=BeanUtil.map(officeRuleForm,OfficeRule.class);
             officeRuleMapper.save(officeRule);
         } else {
-            officeRuleMapper.updateForm(officeRuleForm);
-            officeRule=officeRuleMapper.findOne(officeRuleForm.getId());
+            officeRule = officeRuleMapper.findOne(officeRuleForm.getId());
+            ReflectionUtil.copyProperties(officeRuleForm,officeRule);
+            officeRuleMapper.update(officeRule);
+
         }
         return officeRule;
     }

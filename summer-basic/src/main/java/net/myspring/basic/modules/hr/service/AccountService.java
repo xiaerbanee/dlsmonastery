@@ -7,23 +7,18 @@ import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountPermission;
 import net.myspring.basic.modules.hr.dto.AccountDto;
-import net.myspring.basic.modules.hr.manager.AccountManager;
-import net.myspring.basic.modules.hr.manager.EmployeeManager;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.AccountPermissionMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
-import net.myspring.basic.modules.hr.mapper.PositionMapper;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
-import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.Permission;
-import net.myspring.basic.modules.sys.domain.RolePermission;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
-import net.myspring.basic.modules.sys.web.form.RoleForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +40,9 @@ public class AccountService {
     @Autowired
     private AccountMapper accountMapper;
     @Autowired
-    private AccountManager accountManager;
-    @Autowired
-    private EmployeeMapper employeeMapper;
-    @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
-    private EmployeeManager employeeManager;
+    private EmployeeMapper employeeMapper;
     @Autowired
     private AccountPermissionMapper accountPermissionMapper;
 
@@ -93,18 +84,20 @@ public class AccountService {
         Account account;
         if (accountForm.isCreate()) {
             accountForm.setPassword(StringUtils.getEncryptPassword(Const.DEFAULT_PASSWORD));
-            account=BeanUtil.map(accountForm, Account.class);
-            account= accountManager.save(account);
+            account = BeanUtil.map(accountForm, Account.class);
+            accountMapper.save(account);
         } else {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
                 accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
             } else {
                 accountForm.setPassword(accountMapper.findOne(accountForm.getId()).getPassword());
             }
-           account=accountManager.updateForm(accountForm);
+            account = accountMapper.findOne(accountForm.getId());
+            ReflectionUtil.copyProperties(accountForm,account);
+            accountMapper.update(account);
         }
         if ("主账号".equals(accountForm.getType())) {
-            employeeManager.updateAccountId(accountForm.getEmployeeId(), account.getId());
+            employeeMapper.updateAccountId(accountForm.getEmployeeId(), account.getId());
         }
         return account;
     }

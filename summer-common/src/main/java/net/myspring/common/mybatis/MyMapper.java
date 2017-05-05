@@ -2,8 +2,6 @@ package net.myspring.common.mybatis;
 
 import net.myspring.mybatis.form.BaseForm;
 import net.myspring.mybatis.mapper.BaseMapper;
-import net.myspring.mybatis.mapper.CrudMapper;
-import net.myspring.mybatis.provider.CrudProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.io.Serializable;

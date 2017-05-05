@@ -6,16 +6,13 @@ import net.myspring.basic.common.enums.OfficeRuleEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.OfficeLeader;
-import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.mapper.OfficeLeaderMapper;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
-import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.mapper.OfficeBusinessMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
@@ -24,6 +21,7 @@ import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,11 +36,7 @@ public class OfficeService {
     @Autowired
     private OfficeMapper officeMapper;
     @Autowired
-    private OfficeManager officeManager;
-    @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private AccountManager accountManager;
     @Autowired
     private OfficeRuleMapper officeRuleMapper;
     @Autowired
@@ -64,7 +58,7 @@ public class OfficeService {
     public List<String> getOfficeFilterIds(String accountId){
         List<String> officeIdList= Lists.newArrayList();
         if(accountId!=null){
-            officeIdList= officeManager.officeFilter(accountId);
+            officeIdList= officeFilter(accountId);
         }
         return officeIdList;
     }
@@ -105,9 +99,11 @@ public class OfficeService {
         Office office;
         if (officeForm.isCreate()) {
             office=BeanUtil.map(officeForm,Office.class);
-            office=officeManager.save(office);
+            officeMapper.save(office);
         } else {
-            office=officeManager.updateForm(officeForm);
+            office = officeMapper.findOne(officeForm.getId());
+            ReflectionUtil.copyProperties(officeForm,office);
+            officeMapper.update(office);
             officeLeaderMapper.removeOfficeLeaderByOffice(office.getId());
         }
         List<String> businessOfficeIdList=officeBusinessMapper.findBusinessIdById(office.getId());
@@ -172,5 +168,41 @@ public class OfficeService {
                 getTreeNodeList(officeList,treeNode.getChildren(),office.getParentIds()+office.getId()+Const.CHAR_COMMA);
             }
         }
+    }
+
+    public List<String> officeFilter(String accountId) {
+        List<String> officeIdList = Lists.newArrayList();
+        Office office = officeMapper.findByAccountId(accountId);
+        OfficeRule officeRule = officeRuleMapper.findOne(office.getId());
+        if (!Const.HR_ACCOUNT_ADMIN_LIST.contains(accountId)) {
+            if (OfficeRuleEnum.BUSINESS.name().equalsIgnoreCase(officeRule.getType())) {
+                officeIdList.add(office.getId());
+                officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()), "id"));
+            } else {
+                officeIdList.addAll(officeBusinessMapper.findBusinessIdById(office.getId()));
+            }
+            if (CollectionUtil.isNotEmpty(officeIdList)) {
+                officeIdList.add("0");
+            }
+        }
+        officeIdList = Lists.newArrayList(Sets.newHashSet(officeIdList));
+        return officeIdList;
+    }
+
+    public String findByOfficeIdAndRuleName(String officeId, String ruleName) {
+        String id = null;
+        OfficeRule officeRule = officeRuleMapper.findByName(ruleName);
+        if (officeRule != null) {
+            id = findByOfficeIdAndRuleId(officeId, officeRule.getId());
+        }
+        return id;
+    }
+
+    public String findByOfficeIdAndRuleId(String officeId, String ruleId) {
+        Office office = officeMapper.findByOfficeIdAndRuleId(officeId, ruleId);
+        if (office != null) {
+            return office.getId();
+        }
+        return null;
     }
 }

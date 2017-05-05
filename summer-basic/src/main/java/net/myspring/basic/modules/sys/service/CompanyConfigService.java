@@ -3,11 +3,11 @@ package net.myspring.basic.modules.sys.service;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.CompanyConfig;
 import net.myspring.basic.modules.sys.dto.CompanyConfigDto;
-import net.myspring.basic.modules.sys.manager.CompanyConfigManager;
 import net.myspring.basic.modules.sys.mapper.CompanyConfigMapper;
 import net.myspring.basic.modules.sys.web.form.CompanyConfigForm;
 import net.myspring.basic.modules.sys.web.query.CompanyConfigQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +22,6 @@ public class CompanyConfigService {
 
     @Autowired
     private CompanyConfigMapper companyConfigMapper;
-    @Autowired
-    private CompanyConfigManager companyConfigManager;
 
     @Autowired
     private CacheUtils cacheUtils;
@@ -37,15 +35,17 @@ public class CompanyConfigService {
    public CompanyConfigForm save(CompanyConfigForm companyConfigForm){
        if(companyConfigForm.isCreate()){
            CompanyConfig companyConfig= BeanUtil.map(companyConfigForm,CompanyConfig.class);
-           companyConfigManager.save(companyConfig);
+           companyConfigMapper.save(companyConfig);
        }else{
-           companyConfigManager.updateForm(companyConfigForm);
+           CompanyConfig companyConfig = companyConfigMapper.findOne(companyConfigForm.getId());
+           ReflectionUtil.copyProperties(companyConfigForm,companyConfig);
+           companyConfigMapper.update(companyConfig);
        }
        return companyConfigForm;
    }
 
     public CompanyConfigDto findForm(String id){
-        CompanyConfig companyConfig= companyConfigManager.findOne(id);
+        CompanyConfig companyConfig= companyConfigMapper.findOne(id);
         CompanyConfigDto companyConfigDto = BeanUtil.map(companyConfig, CompanyConfigDto.class);
         cacheUtils.initCacheInput(companyConfigDto);
         return companyConfigDto;

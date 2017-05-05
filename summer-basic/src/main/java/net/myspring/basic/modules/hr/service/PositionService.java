@@ -1,17 +1,13 @@
 package net.myspring.basic.modules.hr.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.Position;
-import net.myspring.basic.modules.sys.domain.RoleModule;
 import net.myspring.basic.modules.hr.dto.PositionDto;
-import net.myspring.basic.modules.hr.manager.PositionManager;
 import net.myspring.basic.modules.hr.mapper.PositionMapper;
-import net.myspring.basic.modules.hr.mapper.RoleModuleMapper;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,9 +17,7 @@ import java.util.List;
 
 @Service
 public class PositionService {
-
-    @Autowired
-    private PositionManager positionManager;
+    
     @Autowired
     private PositionMapper positionMapper;
     @Autowired
@@ -51,13 +45,13 @@ public class PositionService {
     }
 
     public Position findOne(String id){
-        Position position = positionManager.findOne(id);
+        Position position = positionMapper.findOne(id);
         return position;
     }
 
     public PositionForm findForm(PositionForm positionForm){
         if(!positionForm.isCreate()){
-            Position position = positionManager.findOne(positionForm.getId());
+            Position position = positionMapper.findOne(positionForm.getId());
             positionForm= BeanUtil.map(position,PositionForm.class);
             cacheUtils.initCacheInput(positionForm);
         }
@@ -68,9 +62,11 @@ public class PositionService {
         Position position;
         if(positionForm.isCreate()){
             position=BeanUtil.map(positionForm,Position.class);
-            position=positionManager.save(position);
+            positionMapper.save(position);
         }else{
-            position=positionManager.updateForm(positionForm);
+            position = positionMapper.findOne(positionForm.getId());
+            ReflectionUtil.copyProperties(positionForm,position);
+            positionMapper.update(position);
         }
         return position;
     }

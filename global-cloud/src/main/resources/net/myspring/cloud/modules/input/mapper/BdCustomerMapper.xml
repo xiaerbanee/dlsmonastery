@@ -20,7 +20,7 @@
             AND t3.FID = t4.FID
     </select>
 
-    <select id="findPrimaryGroupAndPrimaryGroupName" resultType="NameValue">
+    <select id="findPrimaryGroupAndPrimaryGroupName" resultType="NameValueDto">
         SELECT
         t1.FPRIMARYGROUP as value,
         t4.FNAME AS name
