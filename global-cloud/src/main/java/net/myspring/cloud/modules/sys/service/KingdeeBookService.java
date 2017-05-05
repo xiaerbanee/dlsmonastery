@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.sys.service;
 
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
+import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.dto.KingdeeBookDto;
@@ -8,6 +9,7 @@ import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.cloud.modules.sys.web.form.KingdeeBookForm;
 import net.myspring.cloud.modules.sys.web.query.KingdeeBookQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,5 +67,15 @@ public class KingdeeBookService {
             count = kingdeeBookMapper.updateForm(kingdeeBookForm);
         }
         return count;
+    }
+
+    public boolean isWZOPPO(String companyId){
+        if (StringUtils.isNoneBlank(companyId)){
+            String kingdeeBookName = kingdeeBookMapper.findNameByCompanyId(companyId);
+            if(KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookName) || KingdeeNameEnum.WZOPPO2016.name().equals(kingdeeBookName)){
+                return true;
+            }
+        }
+        return false;
     }
 }

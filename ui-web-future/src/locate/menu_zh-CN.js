@@ -89,6 +89,7 @@ export default {
       cloudReportCategory:"财务报表",
       payableReport:"应付对账报表",
       receivableReport:"应收对账报表",
+      consignmentReport:"委托代销报表",
       cloudSysCategory:"系统设置",
       kingdeeBookList:"账套管理",
       kingdeeBookForm:"账套编辑",
