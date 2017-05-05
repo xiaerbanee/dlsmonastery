@@ -12,7 +12,6 @@ import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
-import net.myspring.future.modules.basic.manager.ProductManager;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
@@ -23,6 +22,7 @@ import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,19 +41,14 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
     @Autowired
-    private ProductTypeMapper productTypeMapper;
-    @Autowired
     private CompanyConfigClient companyConfigClient;
     @Autowired
     private DepotMapper depotMapper;
     @Autowired
-    private ProductImeMapper productImeMapper;
-    @Autowired
     private CloudClient cloudClient;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private ProductManager productManager;
+    
 
     public Page<ProductDto> findPage(Pageable pageable, ProductQuery productQuery) {
         Page<ProductDto> page = productMapper.findPage(pageable, productQuery);
@@ -155,13 +150,15 @@ public class ProductService {
     }
 
     public Product save(ProductForm productForm) {
-        Product product=productManager.updateForm(productForm);
+        Product product= productMapper.findOne(productForm.getId());
+        ReflectionUtil.copyProperties(productForm,product);
+        productMapper.update(product);
         return product;
     }
 
     public ProductForm findForm(ProductForm productForm){
         if(!productForm.isCreate()){
-            Product product=productManager.findOne(productForm.getId());
+            Product product=productMapper.findOne(productForm.getId());
             productForm=BeanUtil.map(product,ProductForm.class);
             cacheUtils.initCacheInput(productForm);
         }

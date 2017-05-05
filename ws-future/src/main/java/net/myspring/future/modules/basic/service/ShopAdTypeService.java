@@ -4,11 +4,11 @@ import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
-import net.myspring.future.modules.basic.manager.ShopAdTypeManager;
 import net.myspring.future.modules.basic.mapper.ShopAdTypeMapper;
 import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +21,6 @@ public class ShopAdTypeService {
 
     @Autowired
     private ShopAdTypeMapper shopAdTypeMapper;
-    @Autowired
-    private ShopAdTypeManager shopAdTypeManager;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -38,7 +36,7 @@ public class ShopAdTypeService {
 
     public ShopAdTypeForm findForm(ShopAdTypeForm shopAdTypeForm){
         if(!shopAdTypeForm.isCreate()){
-            ShopAdType shopAdType=shopAdTypeManager.findOne(shopAdTypeForm.getId());
+            ShopAdType shopAdType=shopAdTypeMapper.findOne(shopAdTypeForm.getId());
             shopAdTypeForm=BeanUtil.map(shopAdType,ShopAdTypeForm.class);
             cacheUtils.initCacheInput(shopAdTypeForm);
         }
@@ -55,9 +53,11 @@ public class ShopAdTypeService {
         ShopAdType shopAdType;
         if (shopAdTypeForm.isCreate()) {
             shopAdType= BeanUtil.map(shopAdTypeForm,ShopAdType.class);
-            shopAdType= shopAdTypeManager.save(shopAdType);
+            shopAdTypeMapper.save(shopAdType);
         } else {
-            shopAdType= shopAdTypeManager.updateForm(shopAdTypeForm);
+            shopAdType= shopAdTypeMapper.findOne(shopAdTypeForm.getId());
+            ReflectionUtil.copyProperties(shopAdTypeForm,shopAdType);
+            shopAdTypeMapper.update(shopAdType);
         }
         return shopAdType;
     }

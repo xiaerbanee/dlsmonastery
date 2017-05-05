@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
-import net.myspring.future.modules.basic.manager.ProductTypeManager;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
@@ -13,6 +12,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,8 +27,7 @@ public class ProductTypeService {
 
     @Autowired
     private ProductTypeMapper productTypeMapper;
-    @Autowired
-    private ProductTypeManager productTypeManager;
+
     @Autowired
     private ProductMapper productMapper;
     @Autowired
@@ -36,7 +35,7 @@ public class ProductTypeService {
 
 
     public ProductType findOne(String id) {
-        ProductType productType = productTypeManager.findOne(id);
+        ProductType productType = productTypeMapper.findOne(id);
         return productType;
     }
 
@@ -49,10 +48,12 @@ public class ProductTypeService {
         ProductType productType;
         if (productTypeForm.isCreate()) {
             productType= BeanUtil.map(productTypeForm,ProductType.class);
-            productType= productTypeManager.save(productType);
+            productTypeMapper.save(productType);
         } else {
             productMapper.updateProductTypeToNull(productTypeForm.getId());
-            productType= productTypeManager.updateForm(productTypeForm);
+            productType= productTypeMapper.findOne(productTypeForm.getId());
+            ReflectionUtil.copyProperties(productTypeForm,productType);
+            productTypeMapper.update(productType);
         }
         if (CollectionUtil.isNotEmpty(productTypeForm.getProductIdList())) {
             productMapper.updateProductTypeId(productType.getId(), productTypeForm.getProductIdList());

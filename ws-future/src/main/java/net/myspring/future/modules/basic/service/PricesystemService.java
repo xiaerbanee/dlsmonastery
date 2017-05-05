@@ -9,9 +9,6 @@ import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.PricesystemDto;
-import net.myspring.future.modules.basic.dto.ProductDto;
-import net.myspring.future.modules.basic.manager.PricesystemDetailManager;
-import net.myspring.future.modules.basic.manager.PricesystemManager;
 import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.PricesystemMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
@@ -20,6 +17,7 @@ import net.myspring.future.modules.basic.web.form.PricesystemDetailForm;
 import net.myspring.future.modules.basic.web.form.PricesystemForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,12 +40,6 @@ public class PricesystemService {
     private ProductMapper productMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private PricesystemManager pricesystemManager;
-    @Autowired
-    private PricesystemDetailManager pricesystemDetailManager;
-
-
 
     public Page<PricesystemDto> findPage(Pageable pageable, PricesystemQuery pricesystemQuery) {
         Page<PricesystemDto> page = pricesystemMapper.findPage(pageable, pricesystemQuery);
@@ -64,7 +56,8 @@ public class PricesystemService {
         pricesystemForm  = BeanUtil.map(pricesystem,PricesystemForm.class);
         pricesystemForm.setName(pricesystemForm.getName()+"(废弃时间"+new Date()+")");
         pricesystemForm.setEnabled(false);
-        pricesystemMapper.updateForm(pricesystemForm);
+        ReflectionUtil.copyProperties(pricesystemForm,pricesystem);
+        pricesystemMapper.update(pricesystem);
     }
 
     public Pricesystem save(PricesystemForm pricesystemForm) {
@@ -72,7 +65,7 @@ public class PricesystemService {
         if(pricesystemForm.isCreate()) {
             List<PricesystemDetailForm> pricesystemDetails = Lists.newArrayList();
             pricesystem= BeanUtil.map(pricesystemForm,Pricesystem.class);
-            pricesystem=pricesystemManager.save(pricesystem);
+            pricesystemMapper.save(pricesystem);
             for (int i = 0; i < pricesystemForm.getPricesystemDetailList().size(); i++) {
                 PricesystemDetailForm pricesystemDetailForm = pricesystemForm.getPricesystemDetailList().get(i);
                 if (pricesystemDetailForm.getPrice() != null && pricesystemDetailForm.getPrice().compareTo(BigDecimal.ZERO) > 0) {
@@ -96,11 +89,13 @@ public class PricesystemService {
                     }
                 }
                 for(int i = 0;i<pricesystemDetails.size();i++) {
-                    pricesystemDetailManager.save(BeanUtil.map(pricesystemDetails.get(i),PricesystemDetail.class));
+                    pricesystemDetailMapper.save(BeanUtil.map(pricesystemDetails.get(i),PricesystemDetail.class));
                 }
             }
         }else {
-            pricesystem=pricesystemManager.updateForm(pricesystemForm);
+            pricesystem=pricesystemMapper.findOne(pricesystemForm.getId());
+            ReflectionUtil.copyProperties(pricesystemForm,pricesystem);
+            pricesystemMapper.update(pricesystem);
         }
         return pricesystem;
     }

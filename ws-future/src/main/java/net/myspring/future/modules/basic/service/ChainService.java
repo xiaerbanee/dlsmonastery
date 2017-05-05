@@ -4,12 +4,12 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ChainDto;
-import net.myspring.future.modules.basic.manager.ChainManager;
 import net.myspring.future.modules.basic.mapper.ChainMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.web.query.ChainQuery;
 import net.myspring.future.modules.basic.web.form.ChainForm;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +29,6 @@ public class ChainService {
     private DepotMapper depotMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private ChainManager chainManager;
 
     public Chain findOne(String id) {
         Chain chain = chainMapper.findOne(id);
@@ -49,7 +47,7 @@ public class ChainService {
 
     public ChainForm findForm(ChainForm chainForm){
         if(!chainForm.isCreate()){
-            Chain chain=chainManager.findOne(chainForm.getId());
+            Chain chain=chainMapper.findOne(chainForm.getId());
             chainForm= BeanUtil.map(chain,ChainForm.class);
             cacheUtils.initCacheInput(chainForm);
         }
@@ -69,9 +67,11 @@ public class ChainService {
         Chain chain;
         if(chainForm.isCreate()){
             chain=BeanUtil.map(chainForm,Chain.class);
-            chain=chainManager.save(chain);
+            chainMapper.save(chain);
         }else{
-            chain=chainManager.updateForm(chainForm);
+            chain = chainMapper.findOne(chainForm.getId());
+            ReflectionUtil.copyProperties(chainForm,chain);
+            chainMapper.update(chain);
         }
 
         List<Depot> depotListBefore = depotMapper.findByChainId(chain.getId());
