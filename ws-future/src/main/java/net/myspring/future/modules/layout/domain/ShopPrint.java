@@ -2,7 +2,6 @@ package net.myspring.future.modules.layout.domain;
 
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -23,6 +22,16 @@ public class ShopPrint extends CompanyEntity<ShopPrint> {
     private String officeId;
     private String processTypeId;
     private String processFlowId;
+    private String positionId;
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
+
 
     public String getPrintType() {
         return printType;
