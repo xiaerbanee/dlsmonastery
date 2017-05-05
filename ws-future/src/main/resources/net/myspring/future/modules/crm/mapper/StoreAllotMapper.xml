@@ -2,10 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.crm.mapper.StoreAllotMapper">
 
-    <select id="findPage" resultType="StoreAllot">
-        SELECT t1.*
-        FROM  crm_store_allot t1
+    <select id="findPage" resultType="StoreAllotDto">
+        SELECT depot1.name fromStoreName, depot2.name toStoreName, t1.*
+        FROM  crm_store_allot t1, crm_depot depot1, crm_depot depot2
         where t1.enabled=1
+        and (t1.from_store_id=depot1.id and  t1.to_store_id=depot2.id)
         <include refid="storeAllotFilter" />
     </select>
 
@@ -38,8 +39,12 @@
         <if test="p.toStoreId!=null">
             and t1.to_store_id=#{p.toStoreId}
         </if>
-        <if test="p.businessId!=null">
-            and t1.business_id  like concat('%',#{p.businessId},'%')
+
+        <if test="p.businessIdList!=null">
+            and t1.business_id in
+            <foreach item="item" index="index" collection="p.businessIdList" open="(" separator="," close=")">
+                #{p.businessIdList[${index}]}
+            </foreach>
         </if>
         <if test="p.outCode!=null">
             and t1.out_code like concat('%',#{p.outCode},'%')
@@ -50,14 +55,7 @@
         <if test="p.createdDateEnd!=null">
             and t1.created_date &lt;= #{p.createdDateEnd}
         </if>
-        <if test="p.createdBy !=null">
-            and t1.created_by in(
-            select id
-            from hr_account
-            where login_name like concat('%',#{p.createdBy},'%')
-            and endabled=1
-            )
-        </if>
+
     </sql>
 
 </mapper>

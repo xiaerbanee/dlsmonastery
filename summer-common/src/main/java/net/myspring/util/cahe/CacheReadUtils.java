@@ -92,6 +92,9 @@ public class CacheReadUtils {
                             if(cacheMap.containsKey(key)) {
                                 Map<String,Object> map = (Map<String, Object>) ((List)cacheMap.get(key)).get(1);
                                 Object cacheInputFieldValue = map.get(cacheInputObject.getCacheInputField().getOutputInstance());
+                                if(cacheInputFieldValue instanceof  List) {
+                                    cacheInputFieldValue  = ((List)cacheInputFieldValue).get(1);
+                                }
                                 Field outputField =cacheInputObject.getCacheInputField().getOutputField();
                                 if(isCollection) {
                                     Object localFieldValue = ReflectionUtil.getFieldValue(cacheInputObject.getObject(), outputField);

@@ -1,13 +1,16 @@
 package net.myspring.future.modules.layout.service;
 
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
+import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.mapper.ShopAllotDetailMapper;
 import net.myspring.future.modules.layout.mapper.ShopAllotMapper;
+import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ShopAllotService {
@@ -31,6 +33,9 @@ public class ShopAllotService {
     private PricesystemDetailMapper pricesystemDetailMapper;
     @Autowired
     private ShopAllotDetailMapper shopAllotDetailMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
+
 
     public ShopAllot findOne(String id){
         ShopAllot shopAllot = shopAllotMapper.findOne(id);
@@ -41,8 +46,10 @@ public class ShopAllotService {
         return shopAllot;
     }
 
-    public Page<ShopAllot> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<ShopAllot> page = shopAllotMapper.findPage(pageable, map);
+
+    public Page<ShopAllotDto> findPage(Pageable pageable, ShopAllotQuery shopAllotQuery) {
+        Page<ShopAllotDto> page = shopAllotMapper.findPage(pageable, shopAllotQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 

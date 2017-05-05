@@ -1,13 +1,18 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.domain.StoreAllotIme;
+import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.mapper.StoreAllotImeMapper;
 import net.myspring.future.modules.crm.mapper.StoreAllotMapper;
+import net.myspring.future.modules.crm.web.form.StoreAllotForm;
+import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.mapper.BeanUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +32,8 @@ public class StoreAllotService {
     private StoreAllotMapper storeAllotMapper;
     @Autowired
     private StoreAllotImeMapper storeAllotImeMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
 
 
     public StoreAllot findOne(String id) {
@@ -58,8 +65,9 @@ public class StoreAllotService {
     public void delete(StoreAllot storeAllot) {
     }
 
-    public Page<StoreAllot> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<StoreAllot> page = storeAllotMapper.findPage(pageable, map);
+    public Page<StoreAllotDto> findPage(Pageable pageable, StoreAllotQuery storeAllotQuery) {
+        Page<StoreAllotDto> page = storeAllotMapper.findPage(pageable, storeAllotQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
@@ -96,4 +104,15 @@ public class StoreAllotService {
         return simpleExcelSheetList;
     }
 
+
+
+    public StoreAllotForm findFormWithoutStoreAllotDetails(StoreAllotForm storeAllotForm) {
+       if(storeAllotForm.isCreate()){
+           return storeAllotForm;
+       }
+       StoreAllot storeAllot=storeAllotMapper.findOne(storeAllotForm.getId());
+       StoreAllotForm result= BeanUtil.map(storeAllot, StoreAllotForm.class);
+       cacheUtils.initCacheInput(result);
+       return result;
+    }
 }

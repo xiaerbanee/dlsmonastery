@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.layout.mapper.ShopAllotMapper">
 
-    <select id="findPage" resultType="ShopAllot">
-        SELECT  t1.*
-        FROM  crm_shop_allot t1,crm_depot depot
+    <select id="findPage" resultType="ShopAllotDto">
+        SELECT  depot2.name shopName, t1.*
+        FROM  crm_shop_allot t1,crm_depot depot1, crm_depot depot2
         where t1.enabled=1
-        and (t1.from_shop_id=depot.id or t1.to_shop_id=depot.id)
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
+        and (t1.from_shop_id=depot1.id and  t1.to_shop_id=depot2.id)
+        <include refid="shopAllotFilter" />
     </select>
 
     <select id="findMaxBusinessId" resultType="String">

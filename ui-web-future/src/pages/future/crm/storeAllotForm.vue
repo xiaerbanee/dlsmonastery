@@ -5,32 +5,28 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
             <el-form-item :label="$t('storeAllotForm.allotType')" prop="allotType" >
               <el-select v-model="inputForm.allotType"  clearable @change="getStoreAllot">
-                <el-option v-for="item in formProperty.storeAllotTypes" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.allotTypeList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.fromStore')" prop="fromStore">
-              <el-select v-model="inputForm.fromStoreId"  clearable>
-                <el-option v-for="fromStore in formProperty.fromStores" :key="fromStore.id" :label="fromStore.name" :value="fromStore.id"></el-option>
-              </el-select>
+              <su-depot type="store" v-model="inputForm.fromStoreId"  ></su-depot>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.toStore')" prop="toStore">
-              <el-select v-model="inputForm.toStoreId"  clearable >
-                <el-option v-for="toStore in formProperty.toStores" :key="toStore.id" :label="toStore.name" :value="toStore.id"></el-option>
-              </el-select>
+              <su-depot type="store" v-model="inputForm.toStoreId"  ></su-depot>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.shipType')" prop="shipType">
               <el-select v-model="inputForm.shipType"  clearable >
-                <el-option v-for="item in formProperty.shipTypes":key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.shipTypeList":key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.expressCompany')" prop="expressCompany">
               <el-select v-model="inputForm.expressCompanyId"  clearable >
-                <el-option v-for="item in formProperty.expressCompanys" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in inputForm.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.syn')" prop="syn">
               <el-radio-group v-model="inputForm.syn">
-                <el-radio v-for="(value,key) in formProperty.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
+                <el-radio v-for="(value,key) in inputForm.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.remarks')" prop="remarks">
@@ -74,10 +70,10 @@
         submitDisabled:false,
         loading: false,
         remoteLoading:false,
-        formProperty:{},
         products:[],
         selectedProducts:new Map(),
-        inputForm:{
+        inputForm:{},
+        formData:{
           id:'',
           allotType:'',
           fromStoreId:'',
@@ -86,7 +82,7 @@
           expressCompanyId:'',
           syn:'',
           remarks:'',
-          storeAllotDetailList:[]
+          storeAllotDetailFormList:[]
         },
         rules: {
           allotType: [{ required: true, message: this.$t('storeAllotForm.prerequisiteMessage')}],
@@ -124,15 +120,15 @@
           axios.get('/api/crm/storeAllot/getStoreAllotData',{params: {id:this.$route.query.id,allotType:"快速调拨"}}).then((response)=>{
               util.copyValue(response.data,this.inputForm);
               console.log(response.data)
-              if(response.data.storeAllotDetailList!=null&&response.data.storeAllotDetailList.size()>0){
-                  this.inputForm.storeAllotDetailList=response.data.storeAllotDetailList
+              if(response.data.storeAllotDetailFormList!=null&&response.data.storeAllotDetailFormList.size()>0){
+                  this.inputForm.storeAllotDetailFormList=response.data.storeAllotDetailFormList
               }
           })
         }
       },removeDomain(item) {
-          var index = this.inputForm.storeAllotDetailList.indexOf(item)
+          var index = this.inputForm.storeAllotDetailFormList.indexOf(item)
           if (index !== -1) {
-            this.inputForm.storeAllotDetailList.splice(index, 1)
+            this.inputForm.storeAllotDetailFormList.splice(index, 1)
           }
         },renderAction(createElement) {
           return createElement(
@@ -147,7 +143,7 @@
             }
           );
         },addDomain(){
-        this.inputForm.storeAllotDetailList.push({productId:"",cloudQty:"",qty:""});
+        this.inputForm.storeAllotDetailFormList.push({productId:"",cloudQty:"",qty:""});
           return false;
         },remoteProduct(query){
           if (query !== '') {
@@ -158,8 +154,8 @@
                 dataMap.set(response.data[index].id,response.data[index]);
                 this.selectedProducts.set(response.data[index].id,response.data[index]);
               });
-             this.inputForm.storeAllotDetailList.map((v,index)=>{
-                var productId = this.inputForm.storeAllotDetailList[index].productId;
+             this.inputForm.storeAllotDetailFormList.map((v,index)=>{
+                var productId = this.inputForm.storeAllotDetailFormList[index].productId;
                  if(!dataMap.has(productId) && this.selectedProducts.has(productId) ) {
                   dataMap.set(productId,this.selectedProducts.get(productId));
                  }
@@ -177,19 +173,14 @@
         });
       }
       },created(){
-        axios.get('/api/crm/storeAllot/getFormProperty').then((res)=>{
-            this.formProperty=res.data;
-            this.formProperty.fromStores=res.data.stores;
-            this.formProperty.toStores=res.data.stores;
+        axios.get('/api/ws/future/crm/storeAllot/findForm' , {params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm=response.data;
         });
+
         if(this.isCreate){
           for(var i = 0;i<3;i++) {
-             this.inputForm.storeAllotDetailList.push({productId:"",cloudQty:"",qty:""});
+             this.inputForm.storeAllotDetailFormList.push({productId:"",productName:"", cloudQty:"",qty:""});
           }
-        } else {
-          axios.get('/api/crm/storeAllot/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          })
         }
       }
   }

@@ -3,7 +3,7 @@ package net.myspring.future.modules.layout.service;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.dto.ShopDepositDto;
+import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.basic.mapper.BankMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
