@@ -4,7 +4,6 @@ import net.myspring.cloud.modules.input.domain.BdCustomer;
 import net.myspring.cloud.modules.report.dto.NameValueDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.access.method.P;
 
 import java.time.LocalDateTime;
 import java.util.List;
