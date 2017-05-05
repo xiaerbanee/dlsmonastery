@@ -2,14 +2,11 @@ package net.myspring.basic.modules.sys.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.Backend;
-import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.dto.BackendDto;
-import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.web.form.BackendForm;
-import net.myspring.basic.modules.sys.web.form.DictEnumForm;
 import net.myspring.basic.modules.sys.web.query.BackendQuery;
-import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,14 +44,15 @@ public class BackendService {
             backend = BeanUtil.map(backendForm, Backend.class);
             backendMapper.save(backend);
         } else {
-            backendMapper.updateForm(backendForm);
-            backend=backendMapper.findOne(backendForm.getId());
+            backend = backendMapper.findOne(backendForm.getId());
+            ReflectionUtil.copyProperties(backendForm,backend);
+            backendMapper.update(backend);
         }
         return backend;
     }
 
     public List<BackendDto> findAll(){
-        List<Backend> backendList=backendMapper.findAllEnabled();
+        List<Backend> backendList = backendMapper.findAllEnabled();
         List<BackendDto> backendDtoList=BeanUtil.map(backendList,BackendDto.class);
         return backendDtoList;
     }

@@ -4,12 +4,11 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
-import net.myspring.basic.modules.hr.manager.AccountManager;
 import net.myspring.basic.modules.hr.manager.EmployeeManager;
-import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
+import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,9 +27,7 @@ public class EmployeeService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private AccountManager accountManager;
-    @Autowired
-    private OfficeManager officeManager;
+    private OfficeService officeService;
 
 
     public Employee findOne(String id){
@@ -48,7 +45,7 @@ public class EmployeeService {
     }
 
     public Page<EmployeeDto> findPage(Pageable pageable, EmployeeQuery employeeQuery){
-        employeeQuery.setOfficeIds(officeManager.officeFilter(SecurityUtils.getAccountId()));
+        employeeQuery.setOfficeIds(officeService.officeFilter(SecurityUtils.getAccountId()));
         Page<EmployeeDto> page=employeeMapper.findPage(pageable,employeeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

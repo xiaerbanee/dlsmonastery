@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.sys.mapper;
 
 import net.myspring.common.cache.IdCacheKeyGenerator;
-import net.myspring.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
@@ -39,6 +38,9 @@ public interface DictEnumMapper extends BaseMapper<DictEnum,String>{
     @CachePut(cacheKeyGenerator = IdCacheKeyGenerator.class)
     @UpdateProvider(type = MyProvider.class, method = MyProvider.UPDATE)
     int update(@CacheValue DictEnum dictEnum);
+
+    @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL_ENABLED)
+    List<DictEnum> findAllEnabled();
 
     List<DictEnum> findByCategory(String category);
 

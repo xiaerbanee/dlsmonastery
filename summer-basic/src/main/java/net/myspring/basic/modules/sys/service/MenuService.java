@@ -12,7 +12,6 @@ import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.dto.MenuDto;
-import net.myspring.basic.modules.sys.manager.MenuManager;
 import net.myspring.basic.modules.sys.mapper.BackendMapper;
 import net.myspring.basic.modules.sys.mapper.MenuMapper;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
@@ -20,6 +19,7 @@ import net.myspring.basic.modules.sys.web.form.MenuForm;
 import net.myspring.basic.modules.sys.web.query.MenuQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,8 +33,6 @@ import java.util.Set;
 @Service
 @Transactional
 public class MenuService {
-    @Autowired
-    private MenuManager menuManager;
     @Autowired
     private MenuMapper menuMapper;
     @Autowired
@@ -92,9 +90,11 @@ public class MenuService {
         Menu menu;
         if (menuForm.isCreate()) {
             menu = BeanUtil.map(menuForm, Menu.class);
-            menu = menuManager.save(menu);
+            menuMapper.save(menu);
         } else {
-            menu = menuManager.updateForm(menuForm);
+            menu = menuMapper.findOne(menuForm.getId());
+            ReflectionUtil.copyProperties(menuForm,menu);
+            menuMapper.update(menu);
             oldPermissions = Sets.newHashSet(permissionMapper.findByMenuId(menuForm.getId()));
         }
         if (StringUtils.isNotBlank(menuForm.getPermissionStr())) {
@@ -122,7 +122,7 @@ public class MenuService {
                 }
             }
         }
-        List<String> removePermissionIds=CollectionUtil.subtract(CollectionUtil.extractToList(oldPermissions,"id"),CollectionUtil.extractToList(permissions,"id"));
+        List<String> removePermissionIds = CollectionUtil.subtract(CollectionUtil.extractToList(oldPermissions,"id"),CollectionUtil.extractToList(permissions,"id"));
         permissionMapper.logicDeleteByIds(removePermissionIds);
         return menu;
     }

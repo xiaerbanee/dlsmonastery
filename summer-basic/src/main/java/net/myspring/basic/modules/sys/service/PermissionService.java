@@ -3,23 +3,16 @@ package net.myspring.basic.modules.sys.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.domain.Account;
-import net.myspring.basic.modules.hr.domain.AccountPermission;
 import net.myspring.basic.modules.hr.mapper.AccountPermissionMapper;
-import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.sys.domain.*;
 import net.myspring.basic.modules.sys.dto.*;
-import net.myspring.basic.modules.sys.manager.MenuCategoryManager;
-import net.myspring.basic.modules.sys.manager.MenuManager;
-import net.myspring.basic.modules.sys.manager.PermissionManager;
 import net.myspring.basic.modules.sys.mapper.*;
 import net.myspring.basic.modules.sys.web.form.PermissionForm;
-import net.myspring.basic.modules.sys.web.form.RoleForm;
 import net.myspring.basic.modules.sys.web.query.PermissionQuery;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,19 +24,11 @@ import java.util.Set;
 
 @Service
 public class PermissionService {
-
-    @Autowired
-    private PermissionManager permissionManager;
+    
     @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
-    @Autowired
-    private MenuCategoryMapper menuCategoryMapper;
-    @Autowired
-    private MenuManager menuManager;
-    @Autowired
-    private MenuMapper menuMapper;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -64,13 +49,13 @@ public class PermissionService {
     }
 
     public Permission findOne(String id) {
-        Permission permission = permissionManager.findOne(id);
+        Permission permission = permissionMapper.findOne(id);
         return permission;
     }
 
     public PermissionForm findForm(PermissionForm permissionForm) {
         if (!permissionForm.isCreate()) {
-            Permission permission = permissionManager.findOne(permissionForm.getId());
+            Permission permission = permissionMapper.findOne(permissionForm.getId());
             permissionForm = BeanUtil.map(permission, PermissionForm.class);
             cacheUtils.initCacheInput(permissionForm);
         }
@@ -95,9 +80,11 @@ public class PermissionService {
         Permission permission;
         if (permissionForm.isCreate()) {
             permission = BeanUtil.map(permissionForm, Permission.class);
-            permission = permissionManager.save(permission);
+            permissionMapper.save(permission);
         } else {
-            permission = permissionManager.updateForm(permissionForm);
+            permission = permissionMapper.findOne(permissionForm.getId());
+            ReflectionUtil.copyProperties(permissionForm,permission);
+            permissionMapper.update(permission);
             rolePermissionMapper.deleteByPermissionId(permissionForm.getId());
         }
         if (CollectionUtil.isNotEmpty(permissionForm.getRoleIdList())) {
@@ -131,7 +118,7 @@ public class PermissionService {
         Set<String> permissionIdSet = Sets.newHashSet(permissionIdList);
         TreeNode treeNode = new TreeNode("0", "权限列表");
         List<BackendMenuDto> backendMenuDtoList = backendMapper.findByRoleId(roleId);
-        List<Permission> permissionList=permissionMapper.findAllEnabled();
+        List<Permission> permissionList = permissionMapper.findAllEnabled();
         Map<String,List<Permission>> permissionMap=CollectionUtil.extractToMapList(permissionList,"menuId");
         for(BackendMenuDto backend:backendMenuDtoList){
             TreeNode backendTree = new TreeNode("b" + backend.getId(), backend.getName());

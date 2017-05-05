@@ -1,15 +1,13 @@
 package net.myspring.basic.modules.sys.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
-import net.myspring.basic.modules.sys.manager.MenuCategoryManager;
 import net.myspring.basic.modules.sys.mapper.MenuCategoryMapper;
 import net.myspring.basic.modules.sys.web.form.MenuCategoryForm;
 import net.myspring.basic.modules.sys.web.query.MenuCategoryQuery;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.text.StringUtils;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +22,9 @@ public class MenuCategoryService {
     private MenuCategoryMapper menuCategoryMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private MenuCategoryManager menuCategoryManager;
 
     public MenuCategory findOne(String id){
-        MenuCategory menuCategory=menuCategoryMapper.findOne(id);
+        MenuCategory menuCategory = menuCategoryMapper.findOne(id);
         return menuCategory;
     }
 
@@ -55,15 +51,17 @@ public class MenuCategoryService {
         MenuCategory menuCategory;
         if(menuCategoryForm.isCreate()) {
             menuCategory=BeanUtil.map(menuCategoryForm, MenuCategory.class);
-            menuCategory=menuCategoryManager.save(menuCategory);
+            menuCategoryMapper.save(menuCategory);
         } else {
-            menuCategory=menuCategoryManager.updateForm(menuCategoryForm);
+            menuCategory = menuCategoryMapper.findOne(menuCategoryForm.getId());
+            ReflectionUtil.copyProperties(menuCategoryForm,menuCategory);
+            menuCategoryMapper.update(menuCategory);
         }
         return menuCategory;
     }
 
     public List<MenuCategoryDto> findAll(){
-        List<MenuCategory> menuCategoryList =menuCategoryMapper.findAllEnabled();
+        List<MenuCategory> menuCategoryList = menuCategoryMapper.findAllEnabled();
         List<MenuCategoryDto> menuCategoryDtoList = BeanUtil.map(menuCategoryList,MenuCategoryDto.class);
         cacheUtils.initCacheInput(menuCategoryDtoList);
         return menuCategoryDtoList;
