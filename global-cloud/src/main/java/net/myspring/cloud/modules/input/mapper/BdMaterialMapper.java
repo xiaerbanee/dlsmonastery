@@ -21,4 +21,8 @@ public interface BdMaterialMapper {
     List<String> findNameByNameLike(@Param("name")String name);
 
     List<NameValueDto> findNameAndNumber();
+
+    List<NameValueDto> findCategory();
+
+    List<NameValueDto> findGroup();
 }

@@ -39,7 +39,7 @@ public class ConsignmentReportController {
             form.setConsignmentDtoList(consignmentReport);
             form.setDateRange(dateStart + " - " + dateEnd);
         }else {
-            form.setDateRange("请选择温州的账套");
+            form.setDateRange("仅限于温州的账套使用");
         }
         return form;
     }

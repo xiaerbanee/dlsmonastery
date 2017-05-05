@@ -70,7 +70,7 @@ public class KingdeeBookService {
     }
 
     public boolean isWZOPPO(String companyId){
-        if (StringUtils.isNoneBlank(companyId)){
+        if (StringUtils.isNotBlank(companyId)){
             String kingdeeBookName = kingdeeBookMapper.findNameByCompanyId(companyId);
             if(KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookName) || KingdeeNameEnum.WZOPPO2016.name().equals(kingdeeBookName)){
                 return true;

@@ -86,6 +86,7 @@ export default {
       cloudInputCategory:"财务录单",
       cloudBatchBillCategory:"批量录入",
       batchBillForm:"批量开单",
+      batchMaterialForm:"物料添加",
       cloudReportCategory:"财务报表",
       payableReport:"应付对账报表",
       receivableReport:"应收对账报表",
