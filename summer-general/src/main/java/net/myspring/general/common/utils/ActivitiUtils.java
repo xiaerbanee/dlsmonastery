@@ -15,8 +15,10 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.Expression;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.impl.persistence.entity.CommentEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -41,7 +43,7 @@ public class ActivitiUtils {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public ActivitiDto getActivitiDto(String processInstanceId) {
+    public ActivitiEntity getActivitiEntity(String processInstanceId) {
         ActivitiEntity activitiEntity = new ActivitiEntity();
         if (StringUtils.isNotBlank(processInstanceId)) {
             List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).active().list();
@@ -59,20 +61,18 @@ public class ActivitiUtils {
             }
             activitiEntity.setHistoricTaskInstances(historyService.createHistoricTaskInstanceQuery().processInstanceId(processInstanceId).orderByHistoricTaskInstanceEndTime().asc().list());
             activitiEntity.setHistoricVariableInstances(historyService.createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list());
-            activitiEntity.setComments(taskService.getProcessInstanceComments(processInstanceId));
-            List<String> accountIdList = Lists.newArrayList();
-            if (CollectionUtil.isNotEmpty(activitiEntity.getHistoricTaskInstances())) {
-                for (HistoricTaskInstance historicTaskInstance : activitiEntity.getHistoricTaskInstances()) {
-                    if (StringUtils.isNotBlank(historicTaskInstance.getAssignee())) {
-                        accountIdList.add(historicTaskInstance.getAssignee());
-                    }
+            List<Comment> comments = taskService.getProcessInstanceComments(processInstanceId);
+            activitiEntity.setComments(comments);
+            if (CollectionUtil.isNotEmpty(comments)) {
+                Map<String,String> commonMap=Maps.newLinkedHashMap();
+                for (Comment comment : comments) {
+                    CommentEntity commentEntity = (CommentEntity)comment;
+                    commonMap.put(comment.getTaskId(), commentEntity.getMessage());
                 }
+                activitiEntity.setCommonMap(commonMap);
             }
-            activitiEntity.setAccountIdList(accountIdList);
         }
-        ActivitiDto activitiDto = BeanUtil.map(activitiEntity,ActivitiDto.class);
-        cacheUtils.initCacheInput(activitiDto);
-        return activitiDto;
+        return activitiEntity;
     }
 
     public Boolean claim(Task task) {

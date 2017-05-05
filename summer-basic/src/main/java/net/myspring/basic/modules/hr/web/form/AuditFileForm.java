@@ -1,12 +1,15 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.common.form.DataForm;
+import net.myspring.general.modules.sys.dto.ActivitiDetailDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +31,15 @@ public class AuditFileForm extends DataForm<AuditFile> {
     private String createdByName;
     private LocalDateTime createdDate;
     private boolean locked;
+    private List<ActivitiDetailDto> activitiDetailList= Lists.newArrayList();
+
+    public List<ActivitiDetailDto> getActivitiDetailList() {
+        return activitiDetailList;
+    }
+
+    public void setActivitiDetailList(List<ActivitiDetailDto> activitiDetailList) {
+        this.activitiDetailList = activitiDetailList;
+    }
 
     public boolean isLocked() {
         return locked;
