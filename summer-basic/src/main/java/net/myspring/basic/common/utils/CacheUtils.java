@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.myspring.common.domain.IdEntity;
 import net.myspring.util.cahe.CacheReadUtils;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -31,13 +32,17 @@ public class CacheUtils {
         CacheReadUtils.initCacheInput(redisTemplate,objects);
     }
 
-    public  void  initCache(String keyPrefix, List<? extends IdEntity> entities) {
+    public void initCache(String keyPrefix, List<Object> entities) {
+        initCache(keyPrefix,entities,"id");
+    }
+
+    public  void  initCache(String keyPrefix, List<Object> entities,String keyField) {
         if(CollectionUtil.isNotEmpty(entities)) {
             Map<byte[],byte[]> tuple = Maps.newHashMap();
-            for(IdEntity idEntity:entities) {
-                if(StringUtils.isNotBlank(idEntity.getId())) {
-                    String key = keyPrefix + ":" + idEntity.getId();
-                    tuple.put(redisTemplate.getKeySerializer().serialize(key),redisTemplate.getValueSerializer().serialize(idEntity));
+            for(Object object:entities) {
+                if(object != null) {
+                    String key = keyPrefix + ":" + ReflectionUtil.getFieldValue(object,keyField);
+                    tuple.put(redisTemplate.getKeySerializer().serialize(key),redisTemplate.getValueSerializer().serialize(object));
                 }
             }
             if(tuple.size()>0) {
