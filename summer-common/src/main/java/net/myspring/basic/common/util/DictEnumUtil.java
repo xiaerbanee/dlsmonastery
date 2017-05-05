@@ -17,14 +17,8 @@ public class DictEnumUtil {
 
     public static List<DictEnumCacheDto> findByCateogry(RedisTemplate redisTemplate, String category) {
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        RedisCallback<List<Object>> pipelineCallback = connection -> {
-            connection.openPipeline();
-            connection.get(("dictEnums:"+category).getBytes());
-            return connection.closePipeline();
-        };
-        List<byte[]> cacheList = (List<byte[]>) redisTemplate.execute(pipelineCallback);
-        String json = new String(cacheList.get(0));
-        List<DictEnumCacheDto> dictEnumDto = ObjectMapperUtils.readValue(json, ArrayList.class);
+        byte[] bytes = (byte[]) redisTemplate.opsForValue().get(("dictEnums:"+category).getBytes());
+        List<DictEnumCacheDto> dictEnumDto = ObjectMapperUtils.readValue(objectMapper,new String(bytes), ArrayList.class);
         return dictEnumDto;
     }
 
