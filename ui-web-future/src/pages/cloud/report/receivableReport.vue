@@ -3,7 +3,7 @@
     <head-tab active="receivableReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤&导出</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
         <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog v-model="detailVisible" size="large">
@@ -28,8 +28,8 @@
               <el-form-item :label="formLabel.dateRangeBTW.label" :label-width="formLabelWidth">
                 <el-date-picker v-model="formData.dateRange" type="daterange" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-date-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.primaryGroupIds.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.primaryGroupIds" multiple placeholder="请选择">
+              <el-form-item :label="formLabel.primaryGroupName.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.primaryGroupId" multiple placeholder="请选择">
                   <el-option v-for="item in summary.receivableSummaryList" :key="item.customerId" :label="item.customerName" :value="item.customerId"></el-option>
                 </el-select>
               </el-form-item>
@@ -38,7 +38,6 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">搜索</el-button>
-          <el-button type="primary" @click="exportSummary()">导出</el-button>
         </div>
       </el-dialog>
       <el-table :data="summary.receivableSummaryList" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
@@ -75,12 +74,12 @@
         formData: {
           dateRange: '',
           dateRangeBTW: '',
-          primaryGroupIds: [],
+          primaryGroupId: [],
           primaryGroupName:'',
         },
         submitData: {
           dateRangeBTW: '',
-          primaryGroupIds: [],
+          primaryGroupId: [],
         },
         submitDetail: {
           dateRangeBTW: '',

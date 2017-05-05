@@ -122,7 +122,7 @@ public class ReceivableReportService {
         summaryItem.setBeginAmount(BigDecimal.ZERO);
         for(ReceivableForSummaryDto item : summaryItemList){
             if(item.getCustomerId() != null){
-                summaryItem = item;
+                summaryItem.setBeginAmount(item.getBeginAmount());
             }
         }
         List<ReceivableForDetailDto> detailForBillList = Lists.newArrayList();
@@ -167,7 +167,8 @@ public class ReceivableReportService {
         detailForMaterialList.addAll(XXCKDListForPeriodList);
         detailForMaterialList.addAll(SKDByPeriodForEntryList);
         detailForMaterialList.addAll(SKTKDByPeriodForEntryList);
-        ReceivableForDetailDto head = new ReceivableForDetailDto(summaryItem.getCustomerName(),summaryItem.getCustomerId());
+        ReceivableForDetailDto head = new ReceivableForDetailDto();
+        head.setBillType(summaryItem.getCustomerName());
         head.setCss("");
         dataList.add(head);
 
