@@ -36,9 +36,7 @@ public class DictEnumService {
 
     public  List<DictEnumCacheDto> findByCategory(String category){
         List<DictEnumCacheDto> dictEnumList=dictEnumMapper.findByCategory(category);
-        List<DictEnumCacheDto> dictEnumDtoList= BeanUtil.map(dictEnumList,DictEnumCacheDto.class);
-        cacheUtils.initCacheInput(dictEnumDtoList);
-        return dictEnumDtoList;
+        return dictEnumList;
     }
 
 
