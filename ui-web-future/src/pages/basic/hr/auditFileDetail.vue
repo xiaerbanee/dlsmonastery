@@ -41,21 +41,11 @@
           </el-col>
           <el-col :span="10" :offset="2">
             <span v-html="inputForm.content"></span>
-            <el-table :data="activityEntity.historicTaskInstances">
-              <el-table-column prop="name":label="$t('auditFileDetail.stageName')"></el-table-column>
-              <el-table-column :label="$t('auditFileDetail.auditMan')" >
-                <template scope="scope">{{activityEntity.accountMap?activityEntity.accountMap[scope.row.id]:''}}</template>
-              </el-table-column>
-              <el-table-column :label="$t('auditFileDetail.auditDate')">
-                <template scope="scope">
-                    {{scope.row.endTime | formatLocalDateTime}}
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('auditFileDetail.auditRemarks')">
-                <template scope="scope">
-                  {{activityEntity.commentMap?activityEntity.commentMap[scope.row.id]:''}}
-                </template>
-              </el-table-column>
+            <el-table :data="inputForm.activitiDetailList">
+              <el-table-column prop="processStatus":label="$t('auditFileDetail.stageName')"></el-table-column>
+              <el-table-column prop="auditByName" :label="$t('auditFileDetail.auditMan')" ></el-table-column>
+              <el-table-column prop="auditDate" :label="$t('auditFileDetail.auditDate')"></el-table-column>
+              <el-table-column prop="comment" :label="$t('auditFileDetail.auditRemarks')"></el-table-column>
             </el-table>
           </el-col>
         </el-row>

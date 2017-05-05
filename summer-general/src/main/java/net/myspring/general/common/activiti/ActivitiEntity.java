@@ -32,7 +32,7 @@ public class ActivitiEntity {
 
 	private List<Comment> comments;
 
-	private List<String> accountIdList = Lists.newArrayList();
+	private Map<String,String> commonMap=Maps.newLinkedHashMap();
 
 	public List<Task> getTasks() {
 		return tasks;
@@ -91,11 +91,11 @@ public class ActivitiEntity {
 		this.comments = comments;
 	}
 
-	public List<String> getAccountIdList() {
-		return accountIdList;
+	public Map<String, String> getCommonMap() {
+		return commonMap;
 	}
 
-	public void setAccountIdList(List<String> accountIdList) {
-		this.accountIdList = accountIdList;
+	public void setCommonMap(Map<String, String> commonMap) {
+		this.commonMap = commonMap;
 	}
 }

@@ -1,5 +1,7 @@
 package net.myspring.general.modules.sys.dto;
 
+import net.myspring.util.cahe.annotation.CacheInput;
+
 import java.time.LocalDateTime;
 
 /**
@@ -10,6 +12,9 @@ public class ActivitiDetailDto {
     private String auditBy;
     private LocalDateTime auditDate;
     private String comment;
+
+    @CacheInput(inputKey = "accounts",inputInstance = "auditBy",outputInstance = "loginName")
+    private String auditByName;
 
     public String getProcessStatus() {
         return processStatus;
@@ -41,5 +46,13 @@ public class ActivitiDetailDto {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getAuditByName() {
+        return auditByName;
+    }
+
+    public void setAuditByName(String auditByName) {
+        this.auditByName = auditByName;
     }
 }
