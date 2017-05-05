@@ -29,8 +29,8 @@
                 <el-date-picker v-model="formData.dateRange" type="daterange" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-date-picker>
               </el-form-item>
               <el-form-item :label="formLabel.primaryGroupName.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.primaryGroupId" multiple placeholder="请选择">
-                  <el-option v-for="item in summary.receivableSummaryList" :key="item.customerId" :label="item.customerName" :value="item.customerId"></el-option>
+                <el-select v-model="formData.primaryGroupId" placeholder="请选择客户分组">
+                  <el-option v-for="item in formData.primaryGroup" :key="item.value" :label="item.name" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -74,12 +74,11 @@
         formData: {
           dateRange: '',
           dateRangeBTW: '',
-          primaryGroupId: [],
           primaryGroupName:'',
+          primaryGroup:{},
         },
         submitData: {
           dateRangeBTW: '',
-          primaryGroupId: [],
         },
         submitDetail: {
           dateRangeBTW: '',
@@ -109,6 +108,7 @@
           this.summary = response.data;
           this.formData.dateRangeBTW = response.data.dateRange;
           this.formData.primaryGroupName = response.data.primaryGroupName;
+          this.formData.primaryGroup = response.data.primaryGroup;
           this.pageLoading = false;
         })
       },search() {

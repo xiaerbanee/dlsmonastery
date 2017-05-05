@@ -42,6 +42,7 @@ public class ReceivableReportController {
         List<ReceivableForSummaryDto> receivableReportForSummaryList = receivableReportService.getSummaryList(dateStart, dateEnd,primaryGroupId);
         form.setReceivableSummaryList(receivableReportForSummaryList);
         form.setDateRange(dateStart + " - " + dateEnd);
+        form.setPrimaryGroup(groupList);
         return form;
     }
 
