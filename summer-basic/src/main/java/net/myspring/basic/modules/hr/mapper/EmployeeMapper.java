@@ -34,6 +34,10 @@ public interface EmployeeMapper extends BaseMapper<Employee,String> {
     @UpdateProvider(type = MyProvider.class, method = MyProvider.UPDATE)
     int update(@CacheValue Employee employee);
 
+    @CachePut(cacheKeyGenerator = IdCacheKeyGenerator.class)
+    @UpdateProvider(type = MyProvider.class, method = MyProvider.UPDATE)
+    int updateAccountId(@Param("employeeId")String employeeId,@Param("accountId")String accountId);
+
     @UpdateProvider(type=MyProvider.class, method = MyProvider.LOGIC_DELETE_ONE)
     int logicDeleteOne(String id);
 
@@ -50,8 +54,5 @@ public interface EmployeeMapper extends BaseMapper<Employee,String> {
     List<Employee> findByNameList(List<String> employeeNameList);
 
     List<Employee> findByStatusAndregularDate(@Param("status") String status,@Param("regularDate") LocalDateTime regularDate);
-
-    int updateAccountId(@Param("employeeId")String employeeId,@Param("accountId")String accountId);
-
 
 }

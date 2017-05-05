@@ -13,6 +13,7 @@ import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
+import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.mapper.OfficeBusinessMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
@@ -36,6 +37,8 @@ public class OfficeService {
     @Autowired
     private OfficeMapper officeMapper;
     @Autowired
+    private OfficeManager officeManager;
+    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private OfficeRuleMapper officeRuleMapper;
@@ -58,7 +61,7 @@ public class OfficeService {
     public List<String> getOfficeFilterIds(String accountId){
         List<String> officeIdList= Lists.newArrayList();
         if(accountId!=null){
-            officeIdList= officeFilter(accountId);
+            officeIdList= officeManager.officeFilter(accountId);
         }
         return officeIdList;
     }
@@ -168,41 +171,5 @@ public class OfficeService {
                 getTreeNodeList(officeList,treeNode.getChildren(),office.getParentIds()+office.getId()+Const.CHAR_COMMA);
             }
         }
-    }
-
-    public List<String> officeFilter(String accountId) {
-        List<String> officeIdList = Lists.newArrayList();
-        Office office = officeMapper.findByAccountId(accountId);
-        OfficeRule officeRule = officeRuleMapper.findOne(office.getId());
-        if (!Const.HR_ACCOUNT_ADMIN_LIST.contains(accountId)) {
-            if (OfficeRuleEnum.BUSINESS.name().equalsIgnoreCase(officeRule.getType())) {
-                officeIdList.add(office.getId());
-                officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()), "id"));
-            } else {
-                officeIdList.addAll(officeBusinessMapper.findBusinessIdById(office.getId()));
-            }
-            if (CollectionUtil.isNotEmpty(officeIdList)) {
-                officeIdList.add("0");
-            }
-        }
-        officeIdList = Lists.newArrayList(Sets.newHashSet(officeIdList));
-        return officeIdList;
-    }
-
-    public String findByOfficeIdAndRuleName(String officeId, String ruleName) {
-        String id = null;
-        OfficeRule officeRule = officeRuleMapper.findByName(ruleName);
-        if (officeRule != null) {
-            id = findByOfficeIdAndRuleId(officeId, officeRule.getId());
-        }
-        return id;
-    }
-
-    public String findByOfficeIdAndRuleId(String officeId, String ruleId) {
-        Office office = officeMapper.findByOfficeIdAndRuleId(officeId, ruleId);
-        if (office != null) {
-            return office.getId();
-        }
-        return null;
     }
 }
