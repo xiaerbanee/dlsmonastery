@@ -35,13 +35,14 @@ import java.util.Map;
 public class DepotController {
 
     @Autowired
-    private DepotService depotService;
-    @Autowired
     private ShopAttributeService shopAttributeService;
     @Autowired
     private DepotValidator depotValidator;
     @Autowired
     private OfficeClient officeClient;
+
+    @Autowired
+    private DepotService depotService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DepotDto>  list(Pageable pageable, DepotQuery depotQuery){
@@ -65,13 +66,11 @@ public class DepotController {
         return depotForm;
     }
 
-
     @RequestMapping(value = "detail")
     public DepotForm detail(DepotForm depotForm) {
         depotForm.setShopAttributeList(shopAttributeService.findByShopId(depotForm.getId()));
         return depotForm;
     }
-
 
     @RequestMapping(value = "save")
     public RestResponse save(DepotForm depotForm) {
@@ -86,7 +85,6 @@ public class DepotController {
         depotService.synShop();
         return new RestResponse("同步成功",null);
     }
-
 
     @RequestMapping(value = "findForm")
     public DepotDto findOne(String depotId){
@@ -103,6 +101,16 @@ public class DepotController {
             depotDtos.add(BeanUtil.map(depot,DepotDto.class));
         }
         return  depotDtos;
+    }
+
+    @RequestMapping(value = "searchShopById")
+    public  List<DepotDto> searchShopById(String id){
+        DepotDto depotDto =  depotService.findOne(id);
+        List<DepotDto> depotList = Lists.newArrayList();
+        if(depotDto != null){
+            depotList.add(depotDto);
+        }
+        return depotList;
     }
 
     @RequestMapping(value = "search")

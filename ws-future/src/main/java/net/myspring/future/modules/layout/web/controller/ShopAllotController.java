@@ -1,20 +1,27 @@
 package net.myspring.future.modules.layout.web.controller;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import net.myspring.future.common.enums.AuditStatusEnum;
+import net.myspring.future.modules.layout.dto.ShopAllotDto;
+import net.myspring.future.modules.layout.service.ShopAllotService;
+import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "crm/shopAllot")
 public class ShopAllotController {
 
+    @Autowired
+    private ShopAllotService shopAllotService;
+
     @RequestMapping(method = RequestMethod.GET)
-    public String list( ){
-        return null;
+    public Page<ShopAllotDto> list(Pageable pageable, ShopAllotQuery shopAllotQuery){
+        Page<ShopAllotDto> page = shopAllotService.findPage(pageable, shopAllotQuery);
+        return page;
     }
 
     @RequestMapping(value = "delete")
@@ -47,18 +54,15 @@ public class ShopAllotController {
         return null;
     }
 
-    @RequestMapping(value="getFormProperty")
-    public String getFormProperty() {
-        return null;
-    }
 
     @RequestMapping(value="getQuery")
-    public String getQuery() {
-        return null;
+    public ShopAllotQuery getQuery(ShopAllotQuery shopAllotQuery) {
+        shopAllotQuery.setStatusList(AuditStatusEnum.getList());
+        return shopAllotQuery;
     }
 
-    private List<String> getActionList() {
-        return null;
-    }
+
+
+
 
 }

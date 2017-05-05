@@ -7,14 +7,10 @@
           <el-alert :title="message" type="error" show-icon v-if="message !==''"></el-alert>
         </template>
         <el-form-item :label="$t('shopAllotForm.fromShop')" prop="fromShopId">
-          <el-select v-model="inputForm.fromShopId" filterable remote  :placeholder="$t('shopAllotForm.inputWord')" :remote-method="remoteFromShop" :loading="remoteLoading" @change="onchange" >
-            <el-option v-for="item in fromShops" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+            <su-depot type="shop" v-model="inputForm.fromShopId"  ></su-depot>
         </el-form-item>
         <el-form-item :label="$t('shopAllotForm.toShop')" prop="toShopId">
-          <el-select v-model="inputForm.toShopId" filterable remote  :placeholder="$t('shopAllotForm.inputWord')" :remote-method="remoteToShop" :loading="remoteLoading" @change="onchange" >
-            <el-option v-for="item in toShops" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <su-depot type="shop" v-model="inputForm.toShopId"  ></su-depot>
         </el-form-item>
         <el-form-item :label="$t('shopAllotForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>

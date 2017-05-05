@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,8 +19,15 @@ public class DistrictService {
 
     @Transactional(readOnly = true)
     public List<DistrictDto> findByNameLike(String name){
-        List<District> citys = districtMapper.findByNameLike(name);
-        List<DistrictDto> districtDtos= BeanUtil.map(citys,DistrictDto.class);
+        List<District> districts = districtMapper.findByNameLike(name);
+        List<DistrictDto> districtDtos= BeanUtil.map(districts, DistrictDto.class);
+        return districtDtos;
+    }
+
+    @Transactional(readOnly = true)
+    public List<DistrictDto> findById(String id){
+        List<District> districts = districtMapper.findById(id);
+        List<DistrictDto> districtDtos= BeanUtil.map(districts,DistrictDto.class);
         return districtDtos;
     }
 }
