@@ -24,12 +24,6 @@ public class PayableForDetailDto {
     private String css;
     private String documentStatus;
 
-    public PayableForDetailDto(String billType, String billNo) {
-        this.billType = billType;
-        this.billNo = billNo;
-    }
-    public PayableForDetailDto(){}
-
     public String getBillType() {
         return billType;
     }

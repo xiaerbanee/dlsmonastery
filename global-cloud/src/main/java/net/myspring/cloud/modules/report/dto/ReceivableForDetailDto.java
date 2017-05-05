@@ -24,12 +24,6 @@ public class ReceivableForDetailDto {
     private String css;
     private String documentStatus;
 
-    public ReceivableForDetailDto(String customerName, String customerId) {
-        this.billType = customerName+"("+customerId+")";
-    }
-
-    public ReceivableForDetailDto() {}
-
     public String getMasterId() {
         return customerId;
     }

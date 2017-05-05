@@ -81,7 +81,9 @@ public class PayableReportService {
         detailForMaterialList.addAll(cgrkdList);
         detailForMaterialList.addAll(cgtldList);
         detailForMaterialList.addAll(yfdList);
-        PayableForDetailDto head = new PayableForDetailDto(summary.getSupplierName(),summary.getDepartmentName());
+        PayableForDetailDto head = new PayableForDetailDto();
+        head.setBillType(summary.getSupplierName());
+        head.setBillNo(summary.getDepartmentName());
         head.setCss("");
         dataList.add(head);
         
