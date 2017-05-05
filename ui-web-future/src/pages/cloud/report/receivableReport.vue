@@ -6,21 +6,6 @@
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
         <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
       </el-row>
-      <el-dialog v-model="detailVisible" size="large">
-        <el-table :data="detail" :row-class-name="tableRowClassName" v-loading="detailLoading" element-loading-text="拼命加载中....." border>
-          <el-table-column prop="billType" label="业务类型"></el-table-column>
-          <el-table-column prop="billNo" label="单据编号"></el-table-column>
-          <el-table-column prop="date" label="单据日期"></el-table-column>
-          <el-table-column prop="materialName" label="商品名称"></el-table-column>
-          <el-table-column prop="quantity" label="数量"></el-table-column>
-          <el-table-column prop="price" label="单价"></el-table-column>
-          <el-table-column prop="amount" label="金额"></el-table-column>
-          <el-table-column prop="receivableAmount" label="应收"></el-table-column>
-          <el-table-column prop="actualReceivableAmount" label="实收"></el-table-column>
-          <el-table-column prop="endAmount" label="期末"></el-table-column>
-          <el-table-column prop="note" label="摘要"></el-table-column>
-        </el-table>
-      </el-dialog>
       <el-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="7">
@@ -39,6 +24,21 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">搜索</el-button>
         </div>
+      </el-dialog>
+      <el-dialog v-model="detailVisible" size="large">
+        <el-table :data="detail" :row-class-name="tableRowClassName" v-loading="detailLoading" element-loading-text="拼命加载中....." border>
+          <el-table-column prop="billType" label="业务类型"></el-table-column>
+          <el-table-column prop="billNo" label="单据编号"></el-table-column>
+          <el-table-column prop="date" label="单据日期"></el-table-column>
+          <el-table-column prop="materialName" label="商品名称"></el-table-column>
+          <el-table-column prop="quantity" label="数量"></el-table-column>
+          <el-table-column prop="price" label="单价"></el-table-column>
+          <el-table-column prop="amount" label="金额"></el-table-column>
+          <el-table-column prop="receivableAmount" label="应收"></el-table-column>
+          <el-table-column prop="actualReceivableAmount" label="实收"></el-table-column>
+          <el-table-column prop="endAmount" label="期末"></el-table-column>
+          <el-table-column prop="note" label="摘要"></el-table-column>
+        </el-table>
       </el-dialog>
       <el-table :data="summary.receivableSummaryList" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
         <el-table-column fixed prop="primaryGroupName" label="客户分组" sortable width="150"></el-table-column>
@@ -64,6 +64,11 @@
   .el-table .danger-row {
     background: #FF8888;
   }
+
+  .el-table .warning-row {
+    background: #FFEE99;
+  }
+
 </style>
 <script>
   export default {
@@ -130,6 +135,8 @@
           return "info-row";
         }else if(row.css === "danger"){
           return "danger-row"
+        }else if(row.css === "warning"){
+          return "warning-row"
         }
       }
     },created () {

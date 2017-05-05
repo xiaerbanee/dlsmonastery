@@ -71,4 +71,14 @@ public class PayableReportController {
         }
         return null;
     }
+
+    @RequestMapping(value = "exportDetail")
+    public ModelAndView exportDetail(PayableReportQuery payableReportQuery){
+        LocalDate dateStart = payableReportQuery.getStartDate();
+        LocalDate dateEnd = payableReportQuery.getEndDate();
+        String supplyId = payableReportQuery.getSupplierId();
+        String departmentId = payableReportQuery.getDepartmentId();
+        payableReportService.getDetailList(dateStart, dateEnd,supplyId,departmentId);
+        return null;
+    }
 }
