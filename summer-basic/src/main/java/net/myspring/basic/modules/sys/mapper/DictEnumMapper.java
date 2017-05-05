@@ -25,19 +25,19 @@ public interface DictEnumMapper extends BaseMapper<DictEnum,String>{
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ONE)
     DictEnum findOne(String id);
 
-    @SelectProvider(type = MyProvider.class, method = "findAll")
+    @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL)
     List<DictEnum> findAll();
 
     @CachePut(cacheKeyGenerator = IdCacheKeyGenerator.class)
-    @InsertProvider(type = MyProvider.class, method = "save")
+    @InsertProvider(type = MyProvider.class, method =MyProvider.SAVE)
     @Options(useGeneratedKeys = true)
     int save(@CacheValue DictEnum dictEnum);
 
-    @UpdateProvider(type=MyProvider.class,method = "logicDeleteOne")
+    @UpdateProvider(type=MyProvider.class,method =MyProvider.LOGIC_DELETE_ONE)
     int logicDeleteOne(String id);
 
     @CachePut(cacheKeyGenerator = IdCacheKeyGenerator.class)
-    @UpdateProvider(type = MyProvider.class, method = "update")
+    @UpdateProvider(type = MyProvider.class, method = MyProvider.UPDATE)
     int update(@CacheValue DictEnum dictEnum);
 
     List<DictEnum> findByCategory(String category);
