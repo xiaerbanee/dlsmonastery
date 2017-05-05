@@ -17,7 +17,7 @@
         </if>
     </select>
 
-    <select id="findByCode" resultType="CompanyConfig">
+    <select id="findByCode" resultType="CompanyConfigCacheDto">
         SELECT t1.*
         FROM sys_company_config t1
         where t1.enabled=1

@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.mapper;
 
+import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.sys.domain.CompanyConfig;
 import net.myspring.basic.modules.sys.dto.CompanyConfigDto;
@@ -47,5 +48,5 @@ public interface CompanyConfigMapper extends BaseMapper<CompanyConfig,String> {
 
     Page<CompanyConfigDto> findPage(Pageable pageable, @Param("p")CompanyConfigQuery companyConfigQuery);
 
-    CompanyConfig findByCode(String code);
+    CompanyConfigCacheDto findByCode(String code);
 }

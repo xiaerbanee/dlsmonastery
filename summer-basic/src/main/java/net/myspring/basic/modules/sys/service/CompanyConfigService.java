@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.CompanyConfig;
+import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.CompanyConfigDto;
 import net.myspring.basic.modules.sys.mapper.CompanyConfigMapper;
 import net.myspring.basic.modules.sys.web.form.CompanyConfigForm;
@@ -52,7 +53,7 @@ public class CompanyConfigService {
     }
 
     public String getValueByCode(String code){
-        CompanyConfig companyConfig=companyConfigMapper.findByCode(code);
+        CompanyConfigCacheDto companyConfig=companyConfigMapper.findByCode(code);
         if(companyConfig!=null){
             return companyConfig.getValue();
         }
