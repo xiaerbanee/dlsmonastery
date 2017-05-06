@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.modules.input.domain.BdStock;
 import net.myspring.cloud.modules.input.mapper.BdStockMapper;
+import net.myspring.cloud.modules.report.dto.NameValueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,4 +27,7 @@ public class BdStockService {
         return bdStockMapper.findByDate(maxOutDate);
     }
 
+    public List<NameValueDto> findNameAndNumber(){
+        return bdStockMapper.findNameAndNumber();
+    }
 }

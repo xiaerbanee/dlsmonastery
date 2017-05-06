@@ -29,8 +29,8 @@
             {type: "text", allowEmpty: false, strict: true },
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
             {type: "numeric", allowEmpty: false,format:"0,0.00"},
+            {type: "autocomplete", allowEmpty: false, strict: true, materialGroupList:[],source: this.materialGroupList},
             {type: "autocomplete", allowEmpty: false, strict: true, materialCategoryList:[],source:this.materialCategoryList},
-            {type: "autocomplete", allowEmpty: false, strict: true, materialGroupList:[],source: this.materialGroupList}
           ],
           stretchH: 'all',
           contextMenu: ['row_above', 'row_below', 'remove_row'],
@@ -45,8 +45,8 @@
     },
     mounted () {
       axios.get("/api/global/cloud/input/batchMaterial/form").then((response)=>{
-        this.settings.columns[4].source = response.data.materialCategoryList;
-        this.settings.columns[5].source = response.data.materialGroupList;
+        this.settings.columns[4].source = response.data.materialGroupList;
+        this.settings.columns[5].source = response.data.materialCategoryList;
         this.table = new Handsontable(this.$refs["handsontable"], this.settings)
       })
     },

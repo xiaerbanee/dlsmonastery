@@ -16,6 +16,13 @@
         </if>
     </select>
 
+    <select id="findByCompanyId" resultType="KingdeeBook">
+        select t1.*
+        from sys_kingdee_book t1
+        where t1.enabled = 1
+        and t1.companyId = #{companyId}
+    </select>
+
     <select id="findNameByCompanyId" resultType="String">
         SELECT t1.name
         from sys_kingdee_book t1

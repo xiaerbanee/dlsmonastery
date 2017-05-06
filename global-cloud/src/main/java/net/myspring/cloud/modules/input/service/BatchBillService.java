@@ -8,18 +8,16 @@ import net.myspring.cloud.common.enums.K3CloudBillTypeEnum;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.*;
-import net.myspring.cloud.modules.input.client.AccountClient;
+import net.myspring.cloud.modules.input.mapper.*;
+import net.myspring.cloud.modules.input.web.form.BatchBillForm;
 import net.myspring.cloud.modules.input.domain.BdCustomer;
 import net.myspring.cloud.modules.input.domain.BdDepartment;
 import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.input.dto.BatchBillDetailDto;
 import net.myspring.cloud.modules.input.dto.BatchBillDto;
-import net.myspring.cloud.modules.input.mapper.ArReceivableMapper;
-import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
-import net.myspring.cloud.modules.input.mapper.BdDepartmentMapper;
-import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.utils.K3CloudSaveExtend;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
+import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -46,8 +44,7 @@ public class BatchBillService {
     @Autowired
     private ArReceivableMapper arReceivableMapper;
     @Autowired
-    private AccountClient accountClient;
-
+    private CacheUtils cacheUtils;
 
     //批量开单
     public List<String> save(List<List<Object>> datas, String storeFNumber, LocalDate billDate) {
@@ -95,25 +92,27 @@ public class BatchBillService {
         List<BatchBillDto> batchBillDtoList = Lists.newArrayList(billMap.values());
         List<String> codeList = Lists.newArrayList();
         //财务出库开单
+        AccountDto accountDto = new AccountDto();
+        cacheUtils.initCacheInput(accountDto);
         if (CollectionUtil.isNotEmpty(batchBillDtoList)) {
             for (BatchBillDto batchBillDto : batchBillDtoList) {
                 K3CloudSaveExtend k3CloudSaveExtend;
                 if (K3CloudBillTypeEnum.销售出库单.name().equals(batchBillDto.getType()) || K3CloudBillTypeEnum.现销出库单.name().equals(batchBillDto.getType())) {
-                    k3CloudSaveExtend = new K3CloudSaveExtend(K3CloudFormIdEnum.SAL_OUTSTOCK.name(), getSaleOutStock(batchBillDto), K3CloudFormIdEnum.AR_receivable.name()) {
+                    k3CloudSaveExtend = new K3CloudSaveExtend(K3CloudFormIdEnum.SAL_OUTSTOCK.name(), getSaleOutStock(batchBillDto,accountDto), K3CloudFormIdEnum.AR_receivable.name()) {
                         @Override
                         public String getNextBillNo() {
                             return arReceivableMapper.findFBillNoByfSourceBillNo(getBillNo());
                         }
                     };
                 } else {
-                    k3CloudSaveExtend = new K3CloudSaveExtend(K3CloudFormIdEnum.SAL_RETURNSTOCK.name(), getReturnStock(batchBillDto), K3CloudFormIdEnum.AR_receivable.name()) {
+                    k3CloudSaveExtend = new K3CloudSaveExtend(K3CloudFormIdEnum.SAL_RETURNSTOCK.name(), getReturnStock(batchBillDto,accountDto), K3CloudFormIdEnum.AR_receivable.name()) {
                         @Override
                         public String getNextBillNo() {
                             return arReceivableMapper.findFBillNoByfSourceBillNo(getBillNo());
                         }
                     };
                 }
-                String billNo = K3cloudUtils.save(k3CloudSaveExtend).getBillNo();
+                String billNo = K3cloudUtils.save(k3CloudSaveExtend,accountDto).getBillNo();
                 codeList.add(billNo);
             }
         }
@@ -121,9 +120,9 @@ public class BatchBillService {
     }
 
     //批量销售出库单json
-    private String getSaleOutStock(BatchBillDto batchBillDto) {
+    private String getSaleOutStock(BatchBillDto batchBillDto,AccountDto accountDto) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountClient.getName(SecurityUtils.getAccountId()));
+        root.put("Creator", accountDto.getName());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
@@ -171,9 +170,9 @@ public class BatchBillService {
     }
 
     //批量销售退货单json
-    private String getReturnStock(BatchBillDto batchBillDto) {
+    private String getReturnStock(BatchBillDto batchBillDto,AccountDto accountDto) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountClient.getName(SecurityUtils.getAccountId()));
+        root.put("Creator", accountDto.getName());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
@@ -224,5 +223,10 @@ public class BatchBillService {
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
         return result;
+    }
+
+    public BatchBillForm getFormProperty(BatchBillForm batchBillForm){
+        batchBillForm.setTypeList(K3CloudBillTypeEnum.values());
+        return batchBillForm;
     }
 }

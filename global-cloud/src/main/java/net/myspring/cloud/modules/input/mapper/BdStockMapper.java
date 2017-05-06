@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.mapper;
 
 import net.myspring.cloud.modules.input.domain.BdStock;
+import net.myspring.cloud.modules.report.dto.NameValueDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,4 +17,6 @@ public interface BdStockMapper {
     List<BdStock> findAll();
 
     List<BdStock> findByDate(@Param("maxOutDate")LocalDateTime maxOutDate);
+
+    List<NameValueDto> findNameAndNumber();
 }

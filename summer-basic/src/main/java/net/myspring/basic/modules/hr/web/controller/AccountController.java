@@ -2,7 +2,6 @@ package net.myspring.basic.modules.hr.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
@@ -13,19 +12,14 @@ import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
-import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
-import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
-import net.myspring.basic.modules.sys.dto.FrontendMenuDto;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.basic.modules.sys.service.PermissionService;
-import net.myspring.basic.modules.sys.web.form.RoleForm;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.StringUtils;
@@ -34,7 +28,6 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -118,7 +111,6 @@ public class AccountController {
         List<AccountDto> accountDtoList = accountService.findByFilter(accountQuery);
         return accountDtoList;
     }
-
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public ModelAndView export(AccountQuery accountQuery) {

@@ -19,8 +19,7 @@ public class BatchMaterialController {
     private BatchMaterialService batchMaterialService;
 
     @RequestMapping(value = "form")
-    public BatchMaterialForm form() {
-        BatchMaterialForm batchMaterialForm = new BatchMaterialForm();
+    public BatchMaterialForm form(BatchMaterialForm batchMaterialForm) {
         batchMaterialForm = batchMaterialService.getFormProperty(batchMaterialForm);
         return batchMaterialForm;
     }

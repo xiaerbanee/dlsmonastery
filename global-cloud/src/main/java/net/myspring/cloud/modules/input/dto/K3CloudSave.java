@@ -1,8 +1,7 @@
 package net.myspring.cloud.modules.input.dto;
 
 
-import net.myspring.cloud.common.utils.ThreadLocalContext;
-import net.myspring.cloud.modules.sys.dto.AccountDto;
+import net.myspring.cloud.modules.remote.dto.AccountDto;
 
 /**
  * Created by liuj on 2016-06-20.
@@ -26,9 +25,6 @@ public class K3CloudSave {
     }
 
     public AccountDto getAccount() {
-        if (accountDto == null) {
-            accountDto = ThreadLocalContext.get().getAccountDto();
-        }
         return accountDto;
     }
 

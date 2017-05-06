@@ -15,7 +15,7 @@ public class BdMaterialDto {
     private String fMaterialGroupName;
     private LocalDateTime fModifyDate;
     //存货类别
-    private String fCateGoryId;
+    private String fCategoryId;
 
     //一级价
     private BigDecimal price1;
@@ -71,12 +71,12 @@ public class BdMaterialDto {
         this.fModifyDate = fModifyDate;
     }
 
-    public String getfCateGoryId() {
-        return fCateGoryId;
+    public String getfCategoryId() {
+        return fCategoryId;
     }
 
-    public void setfCateGoryId(String fCateGoryId) {
-        this.fCateGoryId = fCateGoryId;
+    public void setfCategoryId(String fCategoryId) {
+        this.fCategoryId = fCategoryId;
     }
 
     public BigDecimal getPrice1() {

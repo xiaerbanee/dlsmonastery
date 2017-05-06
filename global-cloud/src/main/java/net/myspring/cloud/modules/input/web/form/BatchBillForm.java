@@ -1,36 +1,43 @@
 package net.myspring.cloud.modules.input.web.form;
 
-import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.K3CloudBillTypeEnum;
-import net.myspring.cloud.modules.input.domain.BdStock;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lihx on 2017/4/25.
  */
 public class BatchBillForm {
-    private List<String> customerNameList;
-    private List<String> productNameList;
+
     private K3CloudBillTypeEnum[] typeList;
-    private List<BdStock> storeList;
-    private Map<String,String> materialMap = Maps.newHashMap();
 
-    public List<String> getCustomerNameList() {
-        return customerNameList;
+    //save
+    private String storeNumber;
+    private String billDateBTW;
+    private List<String> data;
+
+    public String getStoreNumber() {
+        return storeNumber;
     }
 
-    public void setCustomerNameList(List<String> customerNameList) {
-        this.customerNameList = customerNameList;
+    public void setStoreNumber(String storeNumber) {
+        this.storeNumber = storeNumber;
     }
 
-    public List<String> getProductNameList() {
-        return productNameList;
+    public String getBillDateBTW() {
+        return billDateBTW;
     }
 
-    public void setProductNameList(List<String> productNameList) {
-        this.productNameList = productNameList;
+    public void setBillDateBTW(String billDateBTW) {
+        this.billDateBTW = billDateBTW;
+    }
+
+    public List<String> getData() {
+        return data;
+    }
+
+    public void setData(List<String> data) {
+        this.data = data;
     }
 
     public K3CloudBillTypeEnum[] getTypeList() {
@@ -41,19 +48,4 @@ public class BatchBillForm {
         this.typeList = typeList;
     }
 
-    public List<BdStock> getStoreList() {
-        return storeList;
-    }
-
-    public void setStoreList(List<BdStock> storeList) {
-        this.storeList = storeList;
-    }
-
-    public Map<String, String> getMaterialMap() {
-        return materialMap;
-    }
-
-    public void setMaterialMap(Map<String, String> materialMap) {
-        this.materialMap = materialMap;
-    }
 }

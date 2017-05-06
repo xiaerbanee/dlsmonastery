@@ -39,4 +39,15 @@
         AND t3.FID = t4.FID
         AND t1.FMODIFYDATE > #{maxOutDate}
     </select>
+
+    <select id="findNameAndNumber" resultType="NameValueDto">
+        SELECT
+        t1.FNUMBER as value,
+        t2.FNAME as name
+        FROM
+        T_BD_STOCK t1,
+        T_BD_STOCK_L t2
+        WHERE
+        t1.FSTOCKID = t2.FSTOCKID
+    </select>
 </mapper>

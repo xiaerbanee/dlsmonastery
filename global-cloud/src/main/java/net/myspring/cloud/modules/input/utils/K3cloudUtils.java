@@ -1,10 +1,13 @@
 package net.myspring.cloud.modules.input.utils;
 
 import com.google.common.collect.Maps;
+import net.myspring.cloud.GlobalCloudApplication;
 import net.myspring.cloud.common.utils.Const;
-import net.myspring.cloud.common.utils.ThreadLocalContext;
+import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.K3CloudSave;
-import net.myspring.cloud.modules.sys.dto.AccountDto;
+import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -42,7 +45,9 @@ public class K3cloudUtils {
 
     // HttpURLConnection
     private static HttpURLConnection initUrlConn(String url, JSONArray paras) throws Exception {
-        URL postUrl = new URL(ThreadLocalContext.get().getKingdeeBookDto().getKingdeePostUrl().concat(url));
+        KingdeeBookMapper kingdeeBookMapper = GlobalCloudApplication.getApplicationContext().getBean(KingdeeBookMapper.class);
+        KingdeeBook kingdeeBook = kingdeeBookMapper.findByCompanyId(SecurityUtils.getCompanyId());
+        URL postUrl = new URL(kingdeeBook.getKingdeePostUrl().concat(url));
         HttpURLConnection connection = (HttpURLConnection) postUrl.openConnection();
         if (CookieVal != null) {
             connection.setRequestProperty("Cookie", CookieVal);
@@ -217,13 +222,14 @@ public class K3cloudUtils {
         if (StringUtils.isBlank(outId) || StringUtils.isBlank(outPassword)) {
             return false;
         }
-        return login(ThreadLocalContext.get().getKingdeeBookDto().getKingdeeDbid(), outId, outPassword);
+        KingdeeBookMapper kingdeeBookMapper = GlobalCloudApplication.getApplicationContext().getBean(KingdeeBookMapper.class);
+        KingdeeBook kingdeeBook = kingdeeBookMapper.findByCompanyId(SecurityUtils.getCompanyId());
+        return login(kingdeeBook.getKingdeeDbid(), outId, outPassword);
     }
 
 
     // Save
-    public static K3CloudSave save(K3CloudSave k3CloudSave) {
-        AccountDto accountDto = k3CloudSave.getAccount();
+    public static K3CloudSave save(K3CloudSave k3CloudSave,AccountDto accountDto) {
         if (StringUtils.isBlank(accountDto.getOutId()) || StringUtils.isBlank(accountDto.getOutPassword())) {
             throw new ServiceException("请确保已填写财务账号和密码");
         }
@@ -250,8 +256,7 @@ public class K3cloudUtils {
     }
 
     // Save
-    public static K3CloudSaveExtend save(K3CloudSaveExtend k3CloudSaveExtend) {
-        AccountDto accountDto = k3CloudSaveExtend.getAccount();
+    public static K3CloudSaveExtend save(K3CloudSaveExtend k3CloudSaveExtend,AccountDto accountDto) {
         if (StringUtils.isBlank(accountDto.getOutId()) || StringUtils.isBlank(accountDto.getOutPassword())) {
             throw new ServiceException("请确保已填写财务账号和密码");
         }

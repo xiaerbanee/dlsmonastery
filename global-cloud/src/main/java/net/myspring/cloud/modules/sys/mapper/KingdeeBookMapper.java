@@ -22,6 +22,8 @@ public interface KingdeeBookMapper extends CrudMapper<KingdeeBook,String> {
 
     List<String> findKingdeePostUrls();
 
+    KingdeeBook findByCompanyId(@Param("companyId")String companyId);
+
     List<String> findNames();
 
     List<String> findTypes();
