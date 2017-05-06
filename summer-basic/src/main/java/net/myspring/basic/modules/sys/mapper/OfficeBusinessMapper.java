@@ -48,4 +48,6 @@ public interface OfficeBusinessMapper extends BaseMapper<OfficeBusiness,String> 
     List<String> findBusinessIdById(String id);
 
     int removeByBusinessOfficeIds(List<String> businessOfficeIds);
+
+    int removeByOfficeId(String officeId);
 }

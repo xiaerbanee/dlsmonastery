@@ -25,6 +25,11 @@
         <el-table-column fixed prop="parentName" :label="$t('officeList.parentName')" sortable></el-table-column>
         <el-table-column prop="name" :label="$t('officeList.name')" ></el-table-column>
         <el-table-column prop="typeLabel" :label="$t('officeList.typeLabel')" ></el-table-column>
+        <el-table-column prop="type" label="类型" width="100">
+          <template scope="scope">
+            {{$t('OfficeRuleEnum.'+ scope.row.type)}}
+          </template>
+        </el-table-column>
         <el-table-column prop="locked" :label="$t('officeList.locked')">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>

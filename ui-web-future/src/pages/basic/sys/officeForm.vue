@@ -15,11 +15,16 @@
                 <el-option v-for="item in accountList" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="类型" prop="type">
+              <el-select v-model="inputForm.type" filterable @change="typeChange">
+                <el-option v-for="item in inputForm.officeTypeList" :key="item" :label="$t('OfficeRuleEnum.'+item)"  :value="item"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('officeForm.officeName')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
             <el-form-item :label="$t('officeForm.type')" prop="officeRuleId">
-              <el-select v-model="inputForm.officeRuleId" filterable @change="typeChange">
+              <el-select v-model="inputForm.officeRuleId" filterable >
                 <el-option v-for="item in inputForm.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -89,7 +94,6 @@
           jointType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}]
         },
         remoteLoading: false,
-        officeRuleMap:new Map(),
         treeData:[],
         checked:[],
         defaultProps: {
@@ -145,8 +149,7 @@
         }
         this.inputForm.officeIdStr=officeIdList.join();
       },typeChange(evl){
-          var officeRule=this.officeRuleMap.get(evl);
-          if(officeRule!=null&&officeRule.type=="SUPPORT"){
+          if(evl!=null&&evl=="SUPPORT"){
             axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
               this.treeData =new Array(response.data);
               this.checked = response.data.checked;
@@ -161,7 +164,6 @@
     }, created(){
       axios.get('/api/basic/sys/office/findForm', {params: {id: this.$route.query.id}}).then((response) => {
         this.inputForm = response.data;
-        console.log(response.data)
         if (response.data.parentId != null) {
           this.offices = new Array({id: response.data.parentId, name: response.data.parentName})
         }
@@ -171,12 +173,6 @@
               officeLeaderList.push({id:response.data.leaderIdList[index],loginName:response.data.leaderNameList[index]});
           }
           this.accountList=officeLeaderList;
-        }
-        if(this.inputForm.officeRuleList!=null&&this.inputForm.officeRuleList.length>0){
-            for(var index in this.inputForm.officeRuleList){
-              var officeRule=this.inputForm.officeRuleList[index];
-              this.officeRuleMap.set(officeRule.id.toString(),officeRule);
-            }
         }
       })
     }
