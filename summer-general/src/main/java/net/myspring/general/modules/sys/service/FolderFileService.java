@@ -50,11 +50,7 @@ public class FolderFileService {
     private GridFsTemplate tempGridFsTemplate;
 
     public List<FolderFileDto> save(String folderId, Map<String, MultipartFile> fileMap) {
-        DBObject dbObject = new BasicDBObject();
-        dbObject.put("createdBy", SecurityUtils.getAccountId());
-        dbObject.put("companyId",SecurityUtils.getCompanyId());
-        dbObject.put("positionId",SecurityUtils.getPositionId());
-        dbObject.put("officeId",SecurityUtils.getOfficeId());
+        DBObject dbObject = SecurityUtils.getDbObject();
         List<FolderFile> list = Lists.newArrayList();
         try {
             for (MultipartFile multipartFile : fileMap.values()) {
