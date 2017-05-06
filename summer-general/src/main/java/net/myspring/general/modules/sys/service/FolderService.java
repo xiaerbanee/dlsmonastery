@@ -1,10 +1,10 @@
 package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.common.constant.TreeConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.general.common.utils.CacheUtils;
-import net.myspring.general.common.utils.Const;
 import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.general.modules.sys.domain.Folder;
 import net.myspring.general.modules.sys.dto.FolderDto;
@@ -38,12 +38,12 @@ public class FolderService {
     }
 
     public Folder getRoot(String accountId) {
-        Folder folder = folderMapper.findByCreatedByAndParentIds(accountId, Const.ROOT_PARENT_IDS);
+        Folder folder = folderMapper.findByCreatedByAndParentIds(accountId, TreeConstant.ROOT_PARENT_IDS);
         if (folder == null) {
             folder = new Folder();
             folder.setName(accountId);
             folder.setCompanyId(SecurityUtils.getCompanyId());
-            folder.setParentIds(Const.ROOT_PARENT_IDS);
+            folder.setParentIds(TreeConstant.ROOT_PARENT_IDS);
             folderMapper.save(folder);
         }
         return folder;
@@ -83,8 +83,8 @@ public class FolderService {
                 if (folderDto.getParentId() == null) {
                     folderDto.setLevelName(folderDto.getName().trim());
                 } else {
-                    String[] space = new String[folderDto.getParentIds().split(Const.CHAR_COMMA).length - parent.getParentIds().split(Const.CHAR_COMMA).length];
-                    Arrays.fill(space, Const.CHAR_SPACE_FULL);
+                    String[] space = new String[folderDto.getParentIds().split(CharConstant.COMMA).length - parent.getParentIds().split(CharConstant.COMMA).length];
+                    Arrays.fill(space, CharConstant.SPACE_FULL);
                     folderDto.setLevelName(StringUtils.join(space) + folderDto.getName().trim());
                 }
             }

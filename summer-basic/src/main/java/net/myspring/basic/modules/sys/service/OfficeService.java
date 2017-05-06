@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.enums.OfficeRuleEnum;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.OfficeLeader;
 import net.myspring.basic.modules.hr.mapper.OfficeLeaderMapper;
@@ -19,6 +18,8 @@ import net.myspring.basic.modules.sys.mapper.OfficeMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
 import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.common.constant.TreeConstant;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -158,7 +159,7 @@ public class OfficeService {
     public TreeNode getOfficeTree(List<String> officeIdList){
         TreeNode treeNode = new TreeNode("0", "部门列表");
         List<Office> officeList=officeMapper.findAll();
-        getTreeNodeList(officeList,treeNode.getChildren(),Const.ROOT_PARENT_IDS);
+        getTreeNodeList(officeList,treeNode.getChildren(), TreeConstant.ROOT_PARENT_IDS);
         treeNode.setChecked(Lists.newArrayList(Sets.newHashSet(officeIdList)));
         return treeNode;
     }
@@ -168,7 +169,7 @@ public class OfficeService {
             if(parentIds.equalsIgnoreCase(office.getParentIds())){
                 TreeNode treeNode=new TreeNode(office.getId(),office.getName());
                 childList.add(treeNode);
-                getTreeNodeList(officeList,treeNode.getChildren(),office.getParentIds()+office.getId()+Const.CHAR_COMMA);
+                getTreeNodeList(officeList,treeNode.getChildren(),office.getParentIds()+office.getId()+ CharConstant.COMMA);
             }
         }
     }

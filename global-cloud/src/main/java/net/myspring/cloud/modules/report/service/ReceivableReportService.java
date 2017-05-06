@@ -9,6 +9,7 @@ import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.report.dto.ReceivableForDetailDto;
 import net.myspring.cloud.modules.report.dto.ReceivableForSummaryDto;
 import net.myspring.cloud.modules.report.mapper.ReceivableReportMapper;
+import net.myspring.common.constant.CharConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
-import static net.myspring.cloud.common.utils.Const.empty;
 
 /**
  * Created by lihx on 2016/12/19.
@@ -232,7 +231,7 @@ public class ReceivableReportService {
                     }else if(detailMaterial.getQuantity() != null){
                         detailMaterial.setQuantity(detailMaterial.getQuantity());
                     }
-                    detailMaterial.setBillType(empty);
+                    detailMaterial.setBillType(CharConstant.EMPTY);
                     detailMaterial.setCss(css);
                     dataList.add(detailMaterial);
                 }

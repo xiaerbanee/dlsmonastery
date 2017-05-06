@@ -3,14 +3,16 @@ package net.myspring.basic.modules.sys.manager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.enums.OfficeRuleEnum;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.mapper.OfficeBusinessMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,12 +28,14 @@ public class OfficeManager {
     private OfficeRuleMapper officeRuleMapper;
     @Autowired
     private OfficeBusinessMapper officeBusinessMapper;
+    @Value("${setting.adminIdList}")
+    private String adminIdList;
 
     public List<String> officeFilter(String accountId) {
         List<String> officeIdList = Lists.newArrayList();
         Office office = officeMapper.findByAccountId(accountId);
         OfficeRule officeRule = officeRuleMapper.findOne(office.getId());
-        if (!Const.HR_ACCOUNT_ADMIN_LIST.contains(accountId)) {
+        if (!StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)) {
             if (OfficeRuleEnum.BUSINESS.name().equalsIgnoreCase(officeRule.getType())) {
                 officeIdList.add(office.getId());
                 officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()), "id"));

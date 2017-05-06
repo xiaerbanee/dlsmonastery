@@ -9,7 +9,7 @@
         FROM
         hr_duty_trip t1,
         hr_account account,
-        hr_office office
+        sys_office office
         WHERE
         t1.created_by=account.id
         and account.office_id=office.id

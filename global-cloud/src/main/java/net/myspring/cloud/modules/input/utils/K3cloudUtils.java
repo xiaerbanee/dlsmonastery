@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.input.utils;
 
 import com.google.common.collect.Maps;
-import net.myspring.cloud.common.utils.Const;
+import net.myspring.cloud.common.constant.K3CloudConstant;
 import net.myspring.cloud.common.utils.ThreadLocalContext;
 import net.myspring.cloud.modules.input.dto.K3CloudSave;
 import net.myspring.cloud.modules.sys.dto.AccountDto;
@@ -84,7 +84,7 @@ public class K3cloudUtils {
         jParas.put(dbid);// 帐套Id
         jParas.put(user);// 用户名
         jParas.put(pwd);// 密码
-        jParas.put(Const.K3Cloud_LANG);// 语言
+        jParas.put(K3CloudConstant.LANG);// 语言
         HttpURLConnection connection = null;
         try {
             connection = initUrlConn(sUrl, jParas);

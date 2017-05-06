@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.report.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.cloud.common.constant.K3CloudConstant;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.RetailReportEnum;
@@ -22,9 +23,6 @@ import java.time.YearMonth;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import static net.myspring.cloud.common.utils.Const.DOUBLE_ZERO;
-import static net.myspring.cloud.common.utils.Const.TOTAL_DEPARTMENT;
 
 @Service
 @KingdeeDataSource
@@ -168,8 +166,8 @@ public class RetailReportService {
             }
             List<Retail> incomeForAddDepartmentList = Lists.newArrayList();
             for(Retail income : incomeList){
-                income.setDeptName(TOTAL_DEPARTMENT);
-                income.setDeptNum(DOUBLE_ZERO);
+                income.setDeptName(K3CloudConstant.TOTAL_DEPARTMENT);
+                income.setDeptNum(K3CloudConstant.DOUBLE_ZERO);
                 incomeForAddDepartmentList.add(income);
             }
             List<Retail> costList = Lists.newArrayList();
@@ -178,29 +176,29 @@ public class RetailReportService {
             }
             List<Retail> costForAddDepartmentList = Lists.newArrayList();
             for(Retail cost : costList){
-                cost.setDeptName(TOTAL_DEPARTMENT);
-                cost.setDeptNum(DOUBLE_ZERO);
+                cost.setDeptName(K3CloudConstant.TOTAL_DEPARTMENT);
+                cost.setDeptNum(K3CloudConstant.DOUBLE_ZERO);
                 costForAddDepartmentList.add(cost);
             }
             List<Retail> managementFeeList = glcxViewMapper.findEntityByPeriodForTotalDepartment(year,month,"管理费用",null);
             List<Retail> managementFeeForAddDepartmentList = Lists.newArrayList();
             for(Retail managementFee : managementFeeList){
-                managementFee.setDeptName(TOTAL_DEPARTMENT);
-                managementFee.setDeptNum(DOUBLE_ZERO);
+                managementFee.setDeptName(K3CloudConstant.TOTAL_DEPARTMENT);
+                managementFee.setDeptNum(K3CloudConstant.DOUBLE_ZERO);
                 managementFeeForAddDepartmentList.add(managementFee);
             }
             List<Retail> xsckdQuantityList =  retailReportMapper.findXSCKDByPeriodForTotalDepartment(year, month);
             List<Retail> xsckdQuantityForAddDepartmentList = Lists.newArrayList();
             for(Retail xsckdQuantity : xsckdQuantityList){
-                xsckdQuantity.setDeptName(TOTAL_DEPARTMENT);
-                xsckdQuantity.setDeptNum(DOUBLE_ZERO);
+                xsckdQuantity.setDeptName(K3CloudConstant.TOTAL_DEPARTMENT);
+                xsckdQuantity.setDeptNum(K3CloudConstant.DOUBLE_ZERO);
                 xsckdQuantityForAddDepartmentList.add(xsckdQuantity);
             }
             List<Retail> xsthdQuantityList =  retailReportMapper.findXSTHDByPeriodForTotalDepartment(year, month);
             List<Retail> xsthdQuantityForAddDepartmentList = Lists.newArrayList();
             for(Retail xsthdQuantity : xsthdQuantityList){
-                xsthdQuantity.setDeptName(TOTAL_DEPARTMENT);
-                xsthdQuantity.setDeptNum(DOUBLE_ZERO);
+                xsthdQuantity.setDeptName(K3CloudConstant.TOTAL_DEPARTMENT);
+                xsthdQuantity.setDeptNum(K3CloudConstant.DOUBLE_ZERO);
                 xsthdQuantityForAddDepartmentList.add(xsthdQuantity);
             }
             itemDataList.addAll(getSalesProductQuantity(xsckdQuantityForAddDepartmentList,xsthdQuantityForAddDepartmentList));
@@ -220,8 +218,8 @@ public class RetailReportService {
         }
         List<Retail> incomeForAddDepartmentList = Lists.newArrayList();
         for(Retail income : incomeList){
-            income.setDeptName(TOTAL_DEPARTMENT);
-            income.setDeptNum(DOUBLE_ZERO);
+            income.setDeptName(K3CloudConstant.TOTAL_DEPARTMENT);
+            income.setDeptNum(K3CloudConstant.DOUBLE_ZERO);
             incomeForAddDepartmentList.add(income);
         }
         List<Retail> costList = Lists.newArrayList();
@@ -230,29 +228,29 @@ public class RetailReportService {
         }
         List<Retail> costForAddDepartmentList = Lists.newArrayList();
         for(Retail cost : costList){
-            cost.setDeptName(TOTAL_DEPARTMENT);
-            cost.setDeptNum(DOUBLE_ZERO);
+            cost.setDeptName(K3CloudConstant.TOTAL_DEPARTMENT);
+            cost.setDeptNum(K3CloudConstant.DOUBLE_ZERO);
             costForAddDepartmentList.add(cost);
         }
         List<Retail> managementFeeList = glcxViewMapper.findEntityBySumPeriodForTotalDepartment(startDate,endDate,"管理费用",null);
         List<Retail> managementFeeForAddDepartmentList = Lists.newArrayList();
         for(Retail managementFee : managementFeeList){
-            managementFee.setDeptName(TOTAL_DEPARTMENT);
-            managementFee.setDeptNum(DOUBLE_ZERO);
+            managementFee.setDeptName(K3CloudConstant.TOTAL_DEPARTMENT);
+            managementFee.setDeptNum(K3CloudConstant.DOUBLE_ZERO);
             managementFeeForAddDepartmentList.add(managementFee);
         }
         List<Retail> xsckdQuantityList =  retailReportMapper.findXSCKDBySumPeriodForTotalDepartment(startDate, endDate);
         List<Retail> xsckdQuantityForAddDepartmentList = Lists.newArrayList();
         for(Retail xsckdQuantity : xsckdQuantityList){
-            xsckdQuantity.setDeptName(TOTAL_DEPARTMENT);
-            xsckdQuantity.setDeptNum(DOUBLE_ZERO);
+            xsckdQuantity.setDeptName(K3CloudConstant.TOTAL_DEPARTMENT);
+            xsckdQuantity.setDeptNum(K3CloudConstant.DOUBLE_ZERO);
             xsckdQuantityForAddDepartmentList.add(xsckdQuantity);
         }
         List<Retail> xsthdQuantityList =  retailReportMapper.findXSTHDBySumPeriodForTotalDepartment(startDate, endDate);
         List<Retail> xsthdQuantityForAddDepartmentList = Lists.newArrayList();
         for(Retail xsthdQuantity : xsthdQuantityList){
-            xsthdQuantity.setDeptName(TOTAL_DEPARTMENT);
-            xsthdQuantity.setDeptNum(DOUBLE_ZERO);
+            xsthdQuantity.setDeptName(K3CloudConstant.TOTAL_DEPARTMENT);
+            xsthdQuantity.setDeptNum(K3CloudConstant.DOUBLE_ZERO);
             xsthdQuantityForAddDepartmentList.add(xsthdQuantity);
         }
         List<Retail> list = Lists.newArrayList(getSalesProductQuantity(xsckdQuantityForAddDepartmentList,xsthdQuantityForAddDepartmentList));
