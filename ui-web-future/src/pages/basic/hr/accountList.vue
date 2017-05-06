@@ -92,7 +92,6 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("accountList");
         util.setQuery("accountList",this.formData);
         util.copyValue(this.formData,this.submitData);
         axios.get('/api/basic/hr/account',{params:this.submitData}).then((response) => {
@@ -116,7 +115,7 @@
       },itemAdd(){
         this.$router.push({ name: 'accountForm'})
       },exportData(){
-				window.location.href= "/api/basic/hr/account/export?"+qs.stringify(this.formData);
+        window.location.href= "/api/basic/hr/account/export?"+qs.stringify(this.formData);
       },itemAuthAdd(){
         this.$router.push({name:"accountAuthorityForm"})
       },itemAction:function(id,action){
@@ -138,17 +137,16 @@
         } else {
           this.offices = [];
         }
-      },created () {
-        var that=this;
-        that.pageHeight = window.outerHeight -320;
-        axios.get('/api/basic/hr/account/getQuery').then((response) =>{
-          that.formData=response.data;
-          util.copyValue(that.$route.query,that.formData);
-          that.pageRequest();
-        });
       }
-    };
+    },created () {
+      var that=this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/basic/hr/account/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+      });
+    }
+  };
 </script>
 
-
-}
