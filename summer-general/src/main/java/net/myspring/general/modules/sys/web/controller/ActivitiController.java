@@ -52,7 +52,7 @@ public class ActivitiController {
         return activitiCompleteDto;
     }
 
-    @RequestMapping(value = "getActivitiDetail")
+    @RequestMapping(value = "detail")
     public List<ActivitiDetailDto> getActivitiDetail(String processInstanceId){
         List<ActivitiDetailDto> activitiDetailDtoList= activitiService.getActivitiDetail(processInstanceId);
         return activitiDetailDtoList;

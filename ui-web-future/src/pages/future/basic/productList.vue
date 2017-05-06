@@ -17,7 +17,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.hasIme.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.hasIme" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="(item,key) in formProperty.isHasIme" :key="key" :label="item | bool2str" :value="key"></el-option>
+                  <el-option v-for="(item,key) in formProperty.boolMap" :key="key" :label="item | bool2str" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.code.label" :label-width="formLabelWidth">
@@ -25,29 +25,29 @@
               </el-form-item>
               <el-form-item :label="formLabel.allowBill.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.allowBill" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="(item,key) in formProperty.isAllowBill" :key="key" :label="item | bool2str" :value="key"></el-option>
+                  <el-option v-for="(item,key) in formProperty.boolMap" :key="key" :label="item | bool2str " :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="formLabel.productType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.productType" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="type in formProperty.productTypes" :key="type.id" :label="type.name" :value="type.id"></el-option>
+                  <el-option v-for="productType in formProperty.productTypeList" :key="productType.name" :label="productType.name" :value="productType.name"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.allowOrder.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.allowOrder" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="(item,key) in formProperty.isAllowOrder" :key="key" :label="item | bool2str" :value="key"></el-option>
+                  <el-option v-for="(item,key) in formProperty.boolMap" :key="key" :label="item | bool2str " :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.outGroupName.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.outGroupName" filterable clearable :placeholder="$t('productList.inputWord')">
-                  <el-option v-for="item in formProperty.outGroupNames" :key="item.outGroupName" :label="item.outGroupName" :value="item.outGroupName"></el-option>
+                  <el-option v-for="product  in formProperty.outGroupNameList" :key="product.outGroupName" :label="product.outGroupName" :value="product.outGroupName"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.netType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.netType" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="netType in formProperty.netTypes" :key="netType" :label="netType" :value="netType"></el-option>
+                  <el-option v-for="netType in formProperty.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -58,7 +58,7 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('productList.name')" sortable width="200"></el-table-column>
+        <el-table-column fixed prop="name" :label="$t('productList.name')" sortable width="300"></el-table-column>
         <el-table-column prop="code" :label="$t('productList.code')"></el-table-column>
         <el-table-column prop="netType" :label="$t('productList.netType')"></el-table-column>
         <el-table-column prop="outId" label="outId"></el-table-column>
@@ -89,9 +89,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('productList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+              <el-button size="small"  v-permit="'crm:shopAdType:edit'" @click.native="itemEdit(scope.row.id)">{{$t('shopAdTypeList.edit')}}</el-button>
+              <el-button size="small"  v-permit="'crm:shopAdType:delete'" @click.native="itemDelete(scope.row.id)">{{$t('shopAdTypeList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -162,10 +161,15 @@
           this.$message(response.data.message);
           this.pageRequest();
         })
-      },itemAction:function(id,action){
-        if(action=="修改") {
+      },itemEdit:function(id){
           this.$router.push({ name: 'productForm', query: { id: id }})
-        }
+      },itemDelete:function(id){
+            util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/basic/product/delete',{params:{id:id}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          })
+        });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

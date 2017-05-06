@@ -10,6 +10,7 @@ import net.myspring.future.modules.layout.mapper.ShopImageMapper;
 import net.myspring.future.modules.layout.web.form.ShopImageForm;
 import net.myspring.future.modules.layout.web.query.ShopImageQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,8 +44,7 @@ public class ShopImageService {
         if(!shopImageForm.isCreate()){
             ShopImage shopImage=shopImageMapper.findOne(shopImageForm.getId());
             shopImageForm = BeanUtil.map(shopImage,ShopImageForm.class);
-            String shopName = depotMapper.findOne(shopImageForm.getShopId()).getName();
-            shopImageForm.setShopName(shopName);
+            cacheUtils.initCacheInput(shopImageForm);
         }
         return shopImageForm;
     }
@@ -55,12 +55,14 @@ public class ShopImageService {
     }
 
     public ShopImage save(ShopImageForm shopImageForm) {
-        ShopImage shopImage = new ShopImage();
+        ShopImage shopImage;
         if(shopImageForm.isCreate()){
             shopImage =  BeanUtil.map(shopImageForm,ShopImage.class);
             shopImageMapper.save(shopImage);
         }else{
-            shopImageMapper.updateForm(shopImageForm);
+            shopImage = shopImageMapper.findOne(shopImageForm.getId());
+            ReflectionUtil.copyProperties(shopImageForm,shopImage);
+            shopImageMapper.update(shopImage);
         }
         return shopImage;
     }

@@ -12,6 +12,7 @@ import net.myspring.basic.modules.sys.service.OfficeRuleService;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
@@ -77,6 +78,7 @@ public class OfficeController {
 
     @RequestMapping(value = "save")
     public RestResponse save(OfficeForm officeForm) {
+        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
         if(OfficeTypeEnum.BUSINESS.name().equals(officeForm.getType())){
             OfficeRule topOfficeRule = officeRuleService.findMaxLevel();
             OfficeRule officeRule=officeRuleService.findOne(officeForm.getOfficeRuleId());

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "crm/shopAd")
+@RequestMapping(value = "basic/shopAd")
 public class ShopAdController {
 
 
@@ -24,6 +24,7 @@ public class ShopAdController {
     public String getFormProperty( ) {
         return null;
     }
+
     @RequestMapping(value = "getQuery", method = RequestMethod.GET)
     public String getQuery( ) {
         return null;

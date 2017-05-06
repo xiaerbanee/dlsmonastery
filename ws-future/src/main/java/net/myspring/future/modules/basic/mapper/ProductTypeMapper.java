@@ -6,6 +6,7 @@ import net.myspring.common.mybatis.MyProvider;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
+import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
@@ -60,5 +61,6 @@ public interface ProductTypeMapper extends BaseMapper<ProductType,String> {
     int updateDemoPhoneTypeToNull(String demoPhoneTypeId);
 
     List<ProductType> findAllScoreType();
+
 
 }

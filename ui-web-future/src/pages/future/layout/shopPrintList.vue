@@ -38,21 +38,26 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopPrintList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('shopPrintList.code')" sortable width="150"></el-table-column>
-        <el-table-column prop="office.name" :label="$t('shopPrintList.officeId')"></el-table-column>
+        <el-table-column prop="officeName" :label="$t('shopPrintList.officeId')"></el-table-column>
         <el-table-column prop="printType" :label="$t('shopPrintList.printType')"></el-table-column>
         <el-table-column prop="qty" :label="$t('shopPrintList.qty')"></el-table-column>
-        <el-table-column prop="content":label="$t('shopPrintList.content')"></el-table-column>
-        <el-table-column prop="address" :label="$t('shopPrintList.address')"></el-table-column>
+        <el-table-column prop="content":label="$t('shopPrintList.content')" width="450"></el-table-column>
+        <el-table-column prop="address" :label="$t('shopPrintList.address')" width="150"></el-table-column>
         <el-table-column prop="contator" :label="$t('shopPrintList.contact')"></el-table-column>
         <el-table-column prop="mobilePhone" :label="$t('shopPrintList.mobilePhone')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('shopPrintList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('shopPrintList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopPrintList.createdDate')"></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('shopPrintList.processStatus')"></el-table-column>
+        <el-table-column prop="processStatus" :label="$t('shopPrintList.processStatus')" width="150">
+          <template scope="scope">
+            <el-tag :type="scope.row.processStatus=='已通过' ? 'primary' : 'danger'">{{scope.row.processStatus}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" :label="$t('shopPrintList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" v-permit="'crm:shopPrint:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button>
+            <el-button size="small" v-if="" v-permit="'crm:shopPrint:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopPrintList.audit')}}</el-button>
+            <el-button size="small" v-if="" v-permit="'crm:shopPrint:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPrintList.edit')}}</el-button>
+            <el-button size="small" v-if="" v-permit="'crm:shopPrint:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPrintList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -89,7 +94,7 @@
         this.pageLoading = true;
         this.formLabel.officeId.value = util.getLabel(this.formProperty.areas,this.formData.officeId);
         util.setQuery("shopPrintList",this.formData);
-        axios.get('/api/crm/shopPrint',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/layout/shopPrint',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -107,18 +112,18 @@
       },itemAdd(){
         this.$router.push({ name: 'shopPrintForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'shopPrintForm', query: { id: id }})
-        } else if(action=="删除") {
-          axios.get('/api/crm/shopPrint/delete',{params:{id:id}}).then((response) =>{
+        } else if(action=="delete") {
+          axios.get('/api/ws/future/layout/shopPrint/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
-        }else if(action == "详细"){
+        }else if(action == "detail"){
            this.$router.push({ name: 'shopPrintDetail', query: { id: id }})
         }
       },getQuery(){
-        axios.get('/api/crm/shopPrint/getQuery').then((response) =>{
+        axios.get('/api/ws/future/layout/shopPrint/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });

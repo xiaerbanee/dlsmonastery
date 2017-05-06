@@ -3,8 +3,8 @@ package net.myspring.future.modules.basic.manager;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.enums.*;
-import net.myspring.future.common.utils.Const;
 import net.myspring.future.common.utils.SecurityUtils;
 import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
@@ -150,8 +150,8 @@ public class DepotManager {
 
     public  Integer getDepotType(Depot depot) {
         Integer type = depot.getType()==null?DepotTypeEnum.门店_代理.getValue():depot.getType();
-        List<String> shopDelegateGroupIds = StringUtils.getSplitList(companyConfigClient.findByCode(CompanyConfigCodeEnum.SHOP_DELEGATE_GROUP_IDS.getCode()).getValue(), Const.CHAR_COMMA);
-        List<String> storeDelegateGroupIds= StringUtils.getSplitList(companyConfigClient.findByCode(CompanyConfigCodeEnum.STORE_DELEGATE_GROUP_IDS.getCode()).getValue(), Const.CHAR_COMMA);
+        List<String> shopDelegateGroupIds = StringUtils.getSplitList(companyConfigClient.findByCode(CompanyConfigCodeEnum.SHOP_DELEGATE_GROUP_IDS.getCode()).getValue(), CharConstant.COMMA);
+        List<String> storeDelegateGroupIds= StringUtils.getSplitList(companyConfigClient.findByCode(CompanyConfigCodeEnum.STORE_DELEGATE_GROUP_IDS.getCode()).getValue(), CharConstant.COMMA);
         Depot parent = depotMapper.findOne(depot.getParentId());
         //如果财务类型为空
         if(StringUtils.isBlank(depot.getOutType())) {

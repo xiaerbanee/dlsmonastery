@@ -5,8 +5,8 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item :label="$t('shopPrintForm.officeId')" prop="officeId">
-              <el-select v-model="inputForm.officeId" filterable clearable :placeholder="$t('shopPrintForm.inputWord')">
+            <el-form-item :label="$t('shopPrintForm.officeName')" prop="officeName">
+              <el-select v-model="inputForm.officeId" filterable clearable :placeholder="$t('shopPrintForm.inputWord')" :disabled="shopDiabled">
                 <el-option v-for="area in formProperty.areas" :key="area.id" :label="area.name" :value="area.id"></el-option>
               </el-select>
             </el-form-item>
@@ -55,6 +55,7 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
+        shopDiabled:false,
         formProperty:{},
         fileList:[],
         inputForm:{
@@ -88,7 +89,7 @@
           this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
           if (valid) {
             this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
-            axios.post('/api/crm/shopPrint/save', qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/ws/future/layout/shopPrint/save', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -109,11 +110,11 @@
           this.formProperty=response.data;
         });
       },findOne(){
-        axios.get('/api/crm/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/layout/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
           this.depots=new Array(response.data.depot);
           if(this.inputForm.attachment !=null) {
-            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
               this.fileList= response.data;
             });
           }
@@ -129,6 +130,8 @@
     },created(){
       this.getFormProperty();
       if(!this.isCreate){
+          this.findOne();
+
       }
     }
   }

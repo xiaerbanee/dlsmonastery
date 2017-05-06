@@ -1,9 +1,11 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.enums.BoolEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.CompanyNameEnum;
+import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.IdUtils;
 import net.myspring.future.common.utils.SecurityUtils;
@@ -11,6 +13,7 @@ import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
@@ -212,5 +215,21 @@ public class ProductService {
 
             }
         }
+    }
+
+    public List<String> findNetTypeList(){
+        return NetTypeEnum.getList();
+    }
+
+    public Map<String,String> getMap(){
+        return BoolEnum.getMap();
+    }
+
+    public List<ProductType> findProductTypeList() {
+        return productMapper.findProductTypeList();
+    }
+
+    public void delete(ProductDto productDto) {
+        productMapper.logicDeleteOne(productDto.getId());
     }
 }

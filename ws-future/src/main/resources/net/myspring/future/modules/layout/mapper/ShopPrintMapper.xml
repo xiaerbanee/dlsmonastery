@@ -2,14 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.layout.mapper.ShopPrintMapper">
 
-    <select id="findPage" resultType="ShopPrint">
+    <select id="findPage" resultType="ShopPrintDto">
         SELECT
         t1.*
         FROM
-        crm_shop_print t1,hr_office office
+        crm_shop_print t1
         WHERE
         t1.enabled=1
-        and t1.office_id=office.id
         <if test="p.officeId != null">
             AND t1.office_id= #{p.officeId}
         </if>

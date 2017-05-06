@@ -7,6 +7,7 @@ import net.myspring.future.modules.layout.mapper.ShopPromotionMapper;
 import net.myspring.future.modules.layout.web.form.ShopPromotionForm;
 import net.myspring.future.modules.layout.web.query.ShopPromotionQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,14 +33,16 @@ public class ShopPromotionService {
     }
 
     public ShopPromotion save(ShopPromotionForm shopPromotionForm){
-        ShopPromotion shopPromotion = new ShopPromotion();
+        ShopPromotion shopPromotion;
         if(shopPromotionForm.isCreate()){
             shopPromotion = BeanUtil.map(shopPromotionForm,ShopPromotion.class);
             String maxBusinessId = shopPromotionMapper.findMaxBusinessId(LocalDate.now());
             shopPromotion.setBusinessId(StringUtils.getNextBusinessId(maxBusinessId));
             shopPromotionMapper.save(shopPromotion);
         }else{
-            shopPromotionMapper.updateForm(shopPromotionForm);
+            shopPromotion = shopPromotionMapper.findOne(shopPromotionForm.getId());
+            ReflectionUtil.copyProperties(shopPromotionForm,shopPromotion);
+            shopPromotionMapper.update(shopPromotion);
         }
         return shopPromotion;
     }

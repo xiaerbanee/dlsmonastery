@@ -4,8 +4,8 @@ package net.myspring.future.modules.basic.web.controller;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.utils.Const;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
@@ -137,7 +137,7 @@ public class DepotController {
                 Map<String, String> map = Maps.newHashMap();
                 map.put("id", depotDto.getId());
                 map.put("typeLabel",depotDto.getTypeLabel());
-                map.put("name", depotDto.getAreaName() + Const.CHAR_SLASH_LINE + depotDto.getName());
+                map.put("name", depotDto.getAreaName() + CharConstant.SLASH_LINE + depotDto.getName());
                 list.add(map);
             }
         }
