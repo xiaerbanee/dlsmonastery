@@ -1,13 +1,21 @@
 package net.myspring.future.modules.layout.service;
 
+import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.layout.domain.ShopPromotion;
+import net.myspring.future.modules.layout.dto.ShopPromotionDto;
 import net.myspring.future.modules.layout.mapper.ShopPromotionMapper;
+import net.myspring.future.modules.layout.web.form.ShopPromotionForm;
+import net.myspring.future.modules.layout.web.query.ShopPromotionQuery;
+import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @Service
@@ -16,19 +24,37 @@ public class ShopPromotionService {
 
     @Autowired
     private ShopPromotionMapper shopPromotionMapper;
+    @Autowired
+    private DepotMapper depotMapper;
 
-    public Page<ShopPromotion> findPage(Pageable pageable, Map<String,Object> map){
-        Page<ShopPromotion> page = shopPromotionMapper.findPage(pageable,map);
+    public Page<ShopPromotionDto> findPage(Pageable pageable, ShopPromotionQuery shopPromotionQuery){
+        Page<ShopPromotionDto> page = shopPromotionMapper.findPage(pageable,shopPromotionQuery);
         return  page;
     }
 
-    public ShopPromotion save(ShopPromotion shopPromotion){
+    public ShopPromotion save(ShopPromotionForm shopPromotionForm){
+        ShopPromotion shopPromotion;
+        if(shopPromotionForm.isCreate()){
+            shopPromotion = BeanUtil.map(shopPromotionForm,ShopPromotion.class);
+            String maxBusinessId = shopPromotionMapper.findMaxBusinessId(LocalDate.now());
+            shopPromotion.setBusinessId(StringUtils.getNextBusinessId(maxBusinessId));
+            shopPromotionMapper.save(shopPromotion);
+        }else{
+            shopPromotion = shopPromotionMapper.findOne(shopPromotionForm.getId());
+            ReflectionUtil.copyProperties(shopPromotionForm,shopPromotion);
+            shopPromotionMapper.update(shopPromotion);
+        }
         return shopPromotion;
     }
 
-    public ShopPromotion findOne(String id){
-        ShopPromotion shopPromotion= shopPromotionMapper.findOne(id);
-        return shopPromotion;
+    public ShopPromotionForm findForm(ShopPromotionForm shopPromotionForm){
+        if(!shopPromotionForm.isCreate()){
+            ShopPromotion shopPromotion = shopPromotionMapper.findOne(shopPromotionForm.getId());
+            shopPromotionForm = BeanUtil.map(shopPromotion,ShopPromotionForm.class);
+            String shopName = depotMapper.findOne(shopPromotionForm.getShopId()).getName();
+
+        }
+        return shopPromotionForm;
     }
 
     public void logicDeleteOne(String id){

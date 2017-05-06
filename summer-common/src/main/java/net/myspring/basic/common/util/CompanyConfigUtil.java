@@ -1,12 +1,9 @@
 package net.myspring.basic.common.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.myspring.basic.modules.sys.dto.CompanyConfigDto;
-import net.myspring.basic.modules.sys.dto.DictEnumDto;
+import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-
-import java.util.List;
 
 /**
  * Created by liuj on 2017/5/3.
@@ -14,9 +11,10 @@ import java.util.List;
 public class CompanyConfigUtil {
     private static ObjectMapper objectMapper = ObjectMapperUtils.getObjectMapper();
 
-    public static CompanyConfigDto findByCode(RedisTemplate redisTemplate, String code) {
+    public static CompanyConfigCacheDto findByCode(RedisTemplate redisTemplate, String code) {
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        return null;
+        CompanyConfigCacheDto companyConfigCacheDto = (CompanyConfigCacheDto) redisTemplate.opsForValue().get(("companyConfigCodes:" + code));
+        return companyConfigCacheDto;
     }
 
 }

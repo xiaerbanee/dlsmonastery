@@ -24,7 +24,7 @@
               {{inputForm.remarks}}
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.attachment')" prop="attachment">
-              <el-upload  action="/api/general/sys/folderFile/upload?uploadPath=/文件审批" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload  action="/api/general/sys/folderFile/upload?uploadPath=/文件审批" :headers="headers" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
               </el-upload>
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.isPass')" prop="pass" v-if="isAudit">
@@ -41,21 +41,11 @@
           </el-col>
           <el-col :span="10" :offset="2">
             <span v-html="inputForm.content"></span>
-            <el-table :data="activityEntity.historicTaskInstances">
-              <el-table-column prop="name":label="$t('auditFileDetail.stageName')"></el-table-column>
-              <el-table-column :label="$t('auditFileDetail.auditMan')" >
-                <template scope="scope">{{activityEntity.accountMap?activityEntity.accountMap[scope.row.id]:''}}</template>
-              </el-table-column>
-              <el-table-column :label="$t('auditFileDetail.auditDate')">
-                <template scope="scope">
-                    {{scope.row.endTime | formatLocalDateTime}}
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('auditFileDetail.auditRemarks')">
-                <template scope="scope">
-                  {{activityEntity.commentMap?activityEntity.commentMap[scope.row.id]:''}}
-                </template>
-              </el-table-column>
+            <el-table :data="inputForm.activitiDetailList">
+              <el-table-column prop="processStatus":label="$t('auditFileDetail.stageName')"></el-table-column>
+              <el-table-column prop="auditByName" :label="$t('auditFileDetail.auditMan')" ></el-table-column>
+              <el-table-column prop="auditDate" :label="$t('auditFileDetail.auditDate')"></el-table-column>
+              <el-table-column prop="comment" :label="$t('auditFileDetail.auditRemarks')"></el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -71,6 +61,7 @@
         isCreate:this.$route.query.id==null,
         isAudit:this.$route.query.action=="audit",
         submitDisabled:false,
+        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
         inputForm:{},
         submitData:{
           id:this.$route.query.id,

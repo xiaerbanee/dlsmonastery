@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="12">
            <el-form-item :label="$t('shopPromotionForm.shopId')" prop="shopId">
-             <el-select v-model="inputForm.shopId" filterable remote :placeholder="$t('shopPromotionForm.inputWord')" :remote-method="remoteShop" :loading="remoteLoading" :clearable=true >
+             <el-select v-model="inputForm.shopId" filterable remote :placeholder="$t('shopPromotionForm.inputWord')" :remote-method="remoteShop" :loading="remoteLoading" :clearable=true :disabled = "shopDisabled" >
                <el-option v-for="shop in shops" :key="shop.id" :label="shop.name" :value="shop.id"></el-option>
             </el-select>
             </el-form-item>
@@ -15,7 +15,7 @@
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityType')" prop="activityType">
               <el-select v-model="inputForm.activityType" filterable clearable :placeholder="$t('shopPromotionForm.inputType')">
-                <el-option v-for="type in formProperty.activityType" :key="type" :label="type" :value="type"></el-option>
+                <el-option v-for="type in formProperty" :key="type" :label="type" :value="type"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.amount')" prop="amount">
@@ -75,6 +75,7 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
+        shopDisabled:false,
         formProperty:{},
         fileList1:[],
         fileList2:[],
@@ -140,7 +141,7 @@
       },remoteShop(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/crm/depot/shop',{params:{name:query}}).then((response)=>{
+          axios.get('/api/ws/future/basic/depot/shop',{params:{name:query}}).then((response)=>{
             this.shops=response.data;
             this.remoteLoading = false;
           })
@@ -166,10 +167,11 @@
       },handleRemove3(file, fileList) {
         this.fileList3 = fileList;
       },findOne(){
-        axios.get('/api/crm/shopPromotion/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/layout/shopPromotion/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
-          if(response.data.shop!=null){
-            this.shops=new Array(response.data.shop)
+          if(response.data.shopId!=null){
+            this.shops=new Array(response.data.shopId);
+            this.shopDisabled = true;
           }
           if(this.inputForm.activityImage1 !=null) {
             axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
@@ -188,7 +190,8 @@
           }
         })
       },getFormProperty(){
-        axios.get('/api/crm/shopPromotion/getFormProperty').then((response)=>{
+        axios.get('/api/ws/future/layout/shopPromotion/getQuery').then((response)=>{
+            console.log(response.data);
           this.formProperty=response.data;
         });
       }

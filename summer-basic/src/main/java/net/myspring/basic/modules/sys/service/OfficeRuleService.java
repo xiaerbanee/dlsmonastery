@@ -1,13 +1,14 @@
 package net.myspring.basic.modules.sys.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
 import net.myspring.basic.modules.sys.web.form.OfficeRuleForm;
 import net.myspring.basic.modules.sys.web.query.OfficeRuleQuery;
+import net.myspring.common.constant.TreeConstant;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,8 +57,10 @@ public class OfficeRuleService {
             officeRule=BeanUtil.map(officeRuleForm,OfficeRule.class);
             officeRuleMapper.save(officeRule);
         } else {
-            officeRuleMapper.updateForm(officeRuleForm);
-            officeRule=officeRuleMapper.findOne(officeRuleForm.getId());
+            officeRule = officeRuleMapper.findOne(officeRuleForm.getId());
+            ReflectionUtil.copyProperties(officeRuleForm,officeRule);
+            officeRuleMapper.update(officeRule);
+
         }
         return officeRule;
     }
@@ -68,7 +71,7 @@ public class OfficeRuleService {
 
     private void setParentIdsAndLevel(OfficeRuleForm officeRuleForm){
         if(StringUtils.isBlank(officeRuleForm.getParentId())){
-            officeRuleForm.setParentIds(Const.ROOT_PARENT_IDS);
+            officeRuleForm.setParentIds(TreeConstant.ROOT_PARENT_IDS);
             officeRuleForm.setLevel(1);
         }else {
             OfficeRule parent=officeRuleMapper.findOne(officeRuleForm.getParentId());

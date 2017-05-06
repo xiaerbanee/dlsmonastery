@@ -2,6 +2,8 @@ package net.myspring.basic.modules.sys.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.mapper.*;
+import net.myspring.basic.modules.sys.domain.CompanyConfig;
+import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.mapper.*;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 /**
  * Created by liuj on 2017/4/22.
@@ -46,6 +49,8 @@ public class CacheService {
     private BackendModuleMapper backendModuleMapper;
     @Autowired
     private RoleModuleMapper positionBackendMapper;
+    @Autowired
+    private CompanyConfigMapper companyConfigMapper;
 
     public void init() {
         LocalDateTime start = LocalDateTime.now();
@@ -62,6 +67,9 @@ public class CacheService {
         cacheUtils.initCache("backends",backendMapper.findAll());
         cacheUtils.initCache("backendModules",backendModuleMapper.findAll());
         cacheUtils.initCache("positionModules",positionBackendMapper.findAll());
+        cacheUtils.initCache("officeRules",officeRuleMapper.findAll());
+        List<CompanyConfigCacheDto> companyConfigs=companyConfigMapper.findAllCache();
+        cacheUtils.initCache("companyConfigCodes",companyConfigs,"code");
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");

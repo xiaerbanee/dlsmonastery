@@ -38,6 +38,6 @@ public class ExpressService {
 
     @Transactional
     public void delete(Express express){
-        expressMapper.deleteById(express.getId());
+        expressMapper.logicDeleteOne(express.getId());
     }
 }

@@ -1,15 +1,13 @@
 package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
-import net.myspring.basic.modules.sys.manager.DictMapManager;
 import net.myspring.basic.modules.sys.web.form.DictMapForm;
 import net.myspring.basic.modules.sys.web.query.DictMapQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +19,7 @@ import java.util.List;
 
 @Service
 public class DictMapService {
-
-    @Autowired
-    private DictMapManager dictMapManager;
+    
     @Autowired
     private DictMapMapper dictMapMapper;
     @Autowired
@@ -32,7 +28,7 @@ public class DictMapService {
 
     public DictMapForm findForm(DictMapForm dictMapForm){
         if(!dictMapForm.isCreate()){
-            DictMap dictMap= dictMapManager.findOne(dictMapForm.getId());
+            DictMap dictMap= dictMapMapper.findOne(dictMapForm.getId());
             dictMapForm = BeanUtil.map(dictMap, DictMapForm.class);
             cacheUtils.initCacheInput(dictMapForm);
         }
@@ -53,9 +49,11 @@ public class DictMapService {
         DictMap dictMap;
         if(StringUtils.isBlank(dictMapForm.getId())){
             dictMap=BeanUtil.map(dictMapForm,DictMap.class);
-            dictMap=dictMapManager.save(dictMap);
+            dictMapMapper.save(dictMap);
         }else{
-            dictMap=dictMapManager.updateForm(dictMapForm);
+            dictMap = dictMapMapper.findOne(dictMapForm.getId());
+            ReflectionUtil.copyProperties(dictMapForm,dictMap);
+            dictMapMapper.update(dictMap);
         }
         return  dictMap;
     }

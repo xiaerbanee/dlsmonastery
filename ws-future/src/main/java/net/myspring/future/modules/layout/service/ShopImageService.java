@@ -10,6 +10,7 @@ import net.myspring.future.modules.layout.mapper.ShopImageMapper;
 import net.myspring.future.modules.layout.web.form.ShopImageForm;
 import net.myspring.future.modules.layout.web.query.ShopImageQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,30 +40,29 @@ public class ShopImageService {
         return page;
     }
 
-    public ShopImageForm findOne(String id){
-        ShopImage shopImage=shopImageMapper.findOne(id);
-        ShopImageForm shopImageForm = BeanUtil.map(shopImage,ShopImageForm.class);
-        String shopName = depotMapper.findOne(shopImageForm.getShopId()).getName();
-        shopImageForm.setShopName(shopName);
+    public ShopImageForm findForm(ShopImageForm shopImageForm){
+        if(!shopImageForm.isCreate()){
+            ShopImage shopImage=shopImageMapper.findOne(shopImageForm.getId());
+            shopImageForm = BeanUtil.map(shopImage,ShopImageForm.class);
+            cacheUtils.initCacheInput(shopImageForm);
+        }
         return shopImageForm;
     }
 
-    public List<String> getProperty(){
-        List<String> imageTypeProperties = new ArrayList<>();
-        String[] shopImageTypes = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.getCode()).split(",");
-        for(String shopImageType:shopImageTypes){
-            imageTypeProperties.add(shopImageType);
-        }
-        return imageTypeProperties;
+    public List<String> getQuery(){
+        List<String> areaLists = new ArrayList<>();
+        return areaLists;
     }
 
     public ShopImage save(ShopImageForm shopImageForm) {
-        ShopImage shopImage = new ShopImage();
+        ShopImage shopImage;
         if(shopImageForm.isCreate()){
             shopImage =  BeanUtil.map(shopImageForm,ShopImage.class);
             shopImageMapper.save(shopImage);
         }else{
-            shopImageMapper.updateForm(shopImageForm);
+            shopImage = shopImageMapper.findOne(shopImageForm.getId());
+            ReflectionUtil.copyProperties(shopImageForm,shopImage);
+            shopImageMapper.update(shopImage);
         }
         return shopImage;
     }

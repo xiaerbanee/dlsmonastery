@@ -1,6 +1,6 @@
 package net.myspring.future.modules.basic.client;
 
-import net.myspring.future.modules.basic.dto.BasicOfficeDto;
+import net.myspring.basic.modules.sys.dto.OfficeDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,12 +27,12 @@ public interface OfficeClient {
     String getOfficeIdByOfficeType(@RequestParam(value = "officeId") String officeId,@RequestParam(value = "officeType")String officeType);
 
     @RequestMapping(method = RequestMethod.GET, value = "/sys/office/findByAreaIds")
-    List<BasicOfficeDto> findByAreaIds(@RequestParam(value = "areaIds") List<String> areaIds);
+    List<OfficeDto> findByAreaIds(@RequestParam(value = "areaIds") List<String> areaIds);
 
     @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findByOfficeRuleName")
-    List<BasicOfficeDto> findByOfficeRuleName(@RequestParam(value = "officeRuleName")String officeRuleName);
+    List<OfficeDto> findByOfficeRuleName(@RequestParam(value = "officeRuleName")String officeRuleName);
 
     @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findSortList")
-    List<BasicOfficeDto> findSortList();
+    List<OfficeDto> findSortList();
 
 }

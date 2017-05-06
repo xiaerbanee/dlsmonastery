@@ -4,13 +4,13 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
-import net.myspring.basic.modules.hr.manager.AccountManager;
-import net.myspring.basic.modules.hr.manager.EmployeeManager;
-import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
+import net.myspring.basic.modules.sys.manager.OfficeManager;
+import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,27 +20,23 @@ import java.util.List;
 
 @Service
 public class EmployeeService {
-
-    @Autowired
-    private EmployeeManager employeeManager;
+    
     @Autowired
     private EmployeeMapper employeeMapper;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private AccountManager accountManager;
-    @Autowired
     private OfficeManager officeManager;
 
 
     public Employee findOne(String id){
-        Employee employee=employeeManager.findOne(id);
+        Employee employee = employeeMapper.findOne(id);
         return employee;
     }
 
     public EmployeeForm findForm(EmployeeForm employeeForm){
         if(!employeeForm.isCreate()){
-            Employee employee=employeeManager.findOne(employeeForm.getId());
+            Employee employee=employeeMapper.findOne(employeeForm.getId());
             employeeForm= BeanUtil.map(employee,EmployeeForm.class);
             cacheUtils.initCacheInput(employeeForm);
         }
@@ -65,9 +61,11 @@ public class EmployeeService {
         Employee employee;
         if(employeeForm.isCreate()) {
             employee=BeanUtil.map(employeeForm,Employee.class);
-            employeeManager.save(employee);
+            employeeMapper.save(employee);
         } else {
-            employee=employeeManager.updateForm(employeeForm);
+            employee = employeeMapper.findOne(employeeForm.getId());
+            ReflectionUtil.copyProperties(employeeForm,employee);
+            employeeMapper.update(employee);
         }
         return employee;
     }

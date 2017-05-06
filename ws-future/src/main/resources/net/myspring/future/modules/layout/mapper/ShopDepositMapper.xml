@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.layout.mapper.ShopDepositMapper">
 
-    <select id="findPage" resultType="ShopDeposit">
+    <select id="findPage" resultType="ShopDepositDto">
         SELECT
-        t1.*
+        depot.office_id officeId, depot.area_id areaId, depot.name name, t1.*
         FROM
         crm_shop_deposit t1,crm_depot depot
         WHERE
         t1.enabled=1
         and t1.shop_id = depot.id
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
+       <!-- <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
         <if test="p.shopName != null">
             AND depot.name LIKE CONCAT('%',#{p.shopName},'%')
         </if>
@@ -25,14 +25,6 @@
         </if>
         <if test="p.createdDateEnd !=null">
             and t1.created_date &lt;=#{p.createdDateEnd}
-        </if>
-        <if test="p.createdBy !=null">
-            and t1.created_by in(
-            select id
-            from hr_account
-            where login_name like concat('%',#{p.createdBy},'%')
-            and enabled=1
-            )
         </if>
     </select>
 
@@ -67,5 +59,6 @@
         and t1.enabled =1
         order by t1.created_date desc  LIMIT 0,#{size}
 </select>
+
 
 </mapper>

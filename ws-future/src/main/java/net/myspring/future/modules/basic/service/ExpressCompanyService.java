@@ -5,11 +5,11 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.DistrictClient;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
-import net.myspring.future.modules.basic.manager.ExpressCompanyManager;
 import net.myspring.future.modules.basic.mapper.ExpressCompanyMapper;
 import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,21 +25,19 @@ public class ExpressCompanyService {
     @Autowired
     private ExpressCompanyMapper expressCompanyMapper;
     @Autowired
-    private ExpressCompanyManager expressCompanyManager;
-    @Autowired
     private DistrictClient districtClient;
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public ExpressCompany findOne(String id){
-        ExpressCompany expressCompany=expressCompanyManager.findOne(id);
+        ExpressCompany expressCompany=expressCompanyMapper.findOne(id);
         return expressCompany;
     }
 
     public ExpressCompanyForm findForm(ExpressCompanyForm expressCompanyForm){
         if(!expressCompanyForm.isCreate()){
-            ExpressCompany expressCompany=expressCompanyManager.findOne(expressCompanyForm.getId());
+            ExpressCompany expressCompany=expressCompanyMapper.findOne(expressCompanyForm.getId());
             expressCompanyForm=BeanUtil.map(expressCompany,ExpressCompanyForm.class);
             cacheUtils.initCacheInput(expressCompanyForm);
         }
@@ -70,9 +68,11 @@ public class ExpressCompanyService {
         ExpressCompany expressCompany;
         if(expressCompanyForm.isCreate()){
             expressCompany= BeanUtil.map(expressCompanyForm,ExpressCompany.class);
-            expressCompany=expressCompanyManager.save(expressCompany);
+            expressCompanyMapper.save(expressCompany);
         }else{
-            expressCompany=expressCompanyManager.updateForm(expressCompanyForm);
+            expressCompany=expressCompanyMapper.findOne(expressCompanyForm.getId());
+            ReflectionUtil.copyProperties(expressCompanyForm,expressCompany);
+            expressCompanyMapper.update(expressCompany);
         }
         return expressCompany;
     }

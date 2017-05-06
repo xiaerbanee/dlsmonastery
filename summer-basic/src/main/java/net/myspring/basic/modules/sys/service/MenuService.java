@@ -3,7 +3,6 @@ package net.myspring.basic.modules.sys.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
@@ -12,16 +11,18 @@ import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.dto.MenuDto;
-import net.myspring.basic.modules.sys.manager.MenuManager;
 import net.myspring.basic.modules.sys.mapper.BackendMapper;
 import net.myspring.basic.modules.sys.mapper.MenuMapper;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
 import net.myspring.basic.modules.sys.web.query.MenuQuery;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,6 @@ import java.util.Set;
 @Transactional
 public class MenuService {
     @Autowired
-    private MenuManager menuManager;
-    @Autowired
     private MenuMapper menuMapper;
     @Autowired
     private CacheUtils cacheUtils;
@@ -47,6 +46,8 @@ public class MenuService {
     private BackendMapper backendMapper;
     @Autowired
     private AccountPermissionMapper accountPermissionMapper;
+    @Value("${setting.adminIdList}")
+    private String adminIdList;
 
     public List<MenuDto> findAll() {
         List<Menu> menuList = menuMapper.findAll();
@@ -68,7 +69,7 @@ public class MenuService {
                 List<Permission> permissionList = permissionMapper.findByMenuId(menuForm.getId());
                 String permissionStr = "";
                 for (Permission permission : permissionList) {
-                    permissionStr = permissionStr + permission.getName() + Const.CHAR_SPACE + permission.getPermission() + Const.CHAR_ENTER;
+                    permissionStr = permissionStr + permission.getName() + CharConstant.SPACE+ permission.getPermission() + CharConstant.ENTER;
                 }
                 menuForm.setPermissionStr(permissionStr);
             }
@@ -83,7 +84,7 @@ public class MenuService {
     }
 
     public void delete(String id) {
-        menuMapper.deleteById(id);
+        menuMapper.logicDeleteOne(id);
     }
 
     public Menu save(MenuForm menuForm) {
@@ -92,16 +93,18 @@ public class MenuService {
         Menu menu;
         if (menuForm.isCreate()) {
             menu = BeanUtil.map(menuForm, Menu.class);
-            menu = menuManager.save(menu);
+            menuMapper.save(menu);
         } else {
-            menu = menuManager.updateForm(menuForm);
+            menu = menuMapper.findOne(menuForm.getId());
+            ReflectionUtil.copyProperties(menuForm,menu);
+            menuMapper.update(menu);
             oldPermissions = Sets.newHashSet(permissionMapper.findByMenuId(menuForm.getId()));
         }
         if (StringUtils.isNotBlank(menuForm.getPermissionStr())) {
-            String[] permissionRows = menuForm.getPermissionStr().split(Const.CHAR_ENTER);
+            String[] permissionRows = menuForm.getPermissionStr().split(CharConstant.ENTER);
             for (String permissionRow : permissionRows) {
                 if (StringUtils.isNotBlank(permissionRow)) {
-                    String[] detail = permissionRow.split(Const.CHAR_SPACE);
+                    String[] detail = permissionRow.split(CharConstant.SPACE);
                     if (detail.length >= 2) {
                         String name = detail[0];
                         String permissionStr = detail[detail.length - 1];
@@ -122,12 +125,9 @@ public class MenuService {
                 }
             }
         }
-        if (CollectionUtil.isNotEmpty(oldPermissions)) {
-            for (Permission permission : oldPermissions) {
-                if (!permissions.contains(permission)) {
-                    permissionMapper.deleteById(permission.getId());
-                }
-            }
+        List<String> removePermissionIds = CollectionUtil.subtract(CollectionUtil.extractToList(oldPermissions,"id"),CollectionUtil.extractToList(permissions,"id"));
+        if(CollectionUtil.isNotEmpty(removePermissionIds)){
+            permissionMapper.logicDeleteByIds(removePermissionIds);
         }
         return menu;
     }
@@ -140,7 +140,7 @@ public class MenuService {
     private List<BackendMenuDto> getMenusMap(Account account, boolean isMobile) {
         List<BackendMenuDto> backendList = Lists.newLinkedList();
         List<String> menuIdList;
-        if (Const.HR_ACCOUNT_ADMIN_LIST.contains(account.getId())) {
+        if (StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(account.getId())) {
             List<Menu> menuList = menuMapper.findAllEnabled();
             menuIdList=CollectionUtil.extractToList(menuList,"id");
         } else {

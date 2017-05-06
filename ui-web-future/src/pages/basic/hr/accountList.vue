@@ -138,16 +138,17 @@
         } else {
           this.offices = [];
         }
-      }
-    },created () {
+      },created () {
         var that=this;
-      that.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/hr/account/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
-      });
-    }
-  };
+        that.pageHeight = window.outerHeight -320;
+        axios.get('/api/basic/hr/account/getQuery').then((response) =>{
+          that.formData=response.data;
+          util.copyValue(that.$route.query,that.formData);
+          that.pageRequest();
+        });
+      }
+    };
 </script>
 
+
+}

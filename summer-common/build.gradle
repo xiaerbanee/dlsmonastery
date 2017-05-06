@@ -36,6 +36,7 @@ dependencies {
 	compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	compile('org.springframework.boot:spring-boot-starter')
 	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+	compile 'javax.cache:cache-api'
 	compile ('org.springframework.data:spring-data-commons')
 	compile 'com.google.guava:guava:19.0'
 	compile "org.apache.commons:commons-lang3:3.4"

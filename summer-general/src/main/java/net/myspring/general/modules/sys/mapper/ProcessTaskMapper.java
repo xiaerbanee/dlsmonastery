@@ -11,7 +11,5 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ProcessTaskMapper extends MyMapper<ProcessTask,String> {
 
-    ProcessTask findByNameAndExtendId(@Param("name")String name,@Param("extendId")String extendId);
-
-    int setExtendId(@Param("processInstanceId")String processInstanceId,@Param("extendId")String extendId);
+    ProcessTask findByProcessInstanceId(String processInstanceId);
 }

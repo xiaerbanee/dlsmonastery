@@ -7,12 +7,22 @@ public class ActivitiStartForm {
     private String name;
     private String businessKey;
     private String processTypeId;
+    private String message;
 
     public ActivitiStartForm(){};
-    public ActivitiStartForm(String name,String businessKey, String processTypeId){
+    public ActivitiStartForm(String name,String businessKey, String processTypeId,String message){
         this.name = name;
+        this.message=message;
         this.businessKey=businessKey;
         this.processTypeId=processTypeId;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getName() {

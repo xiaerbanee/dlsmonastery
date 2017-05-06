@@ -3,13 +3,12 @@ package net.myspring.basic.modules.sys.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.JointTypeEnum;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.sys.domain.Office;
-import net.myspring.basic.modules.sys.dto.OfficeBasicDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
@@ -63,17 +62,17 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "findByOfficeRuleName")
-    public List<OfficeBasicDto> findByOfficeRuleName(String officeRuleName){
-        List<OfficeBasicDto> officeList=Lists.newArrayList();
+    public List<OfficeDto> findByOfficeRuleName(String officeRuleName){
+        List<OfficeDto> officeList=Lists.newArrayList();
         if(StringUtils.isNotBlank(officeRuleName)){
-            officeList= BeanUtil.map(officeService.findByOfficeRuleName(officeRuleName),OfficeBasicDto.class);
+            officeList= BeanUtil.map(officeService.findByOfficeRuleName(officeRuleName),OfficeDto.class);
         }
         return officeList;
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(OfficeForm officeForm) {
-        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), Const.CHAR_COMMA));
+        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
         officeService.save(officeForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }

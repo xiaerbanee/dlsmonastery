@@ -16,7 +16,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.activityType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.activityType" filterable clearable :placeholder="$t('shopPromotionList.inputKey')">
-                  <el-option v-for="type in formProperty.activityType" :key="type" :label="type" :value="type"></el-option>
+                  <el-option v-for="type in formProperty" :key="type" :label="type" :value="type"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
@@ -31,7 +31,7 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopPromotionList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="businessId" :label="$t('shopPromotionList.businessId')" sortable width="150"></el-table-column>
-        <el-table-column prop="shop.name" :label="$t('shopPromotionList.shopName')" ></el-table-column>
+        <el-table-column prop="shopName" :label="$t('shopPromotionList.shopName')" ></el-table-column>
         <el-table-column prop="activityType" :label="$t('shopPromotionList.activityType')" ></el-table-column>
         <el-table-column prop="amount" :label="$t('shopPromotionList.amount')" ></el-table-column>
         <el-table-column prop="dayAmount" :label="$t('shopPromotionList.dayAmount')" ></el-table-column>
@@ -45,11 +45,10 @@
         <el-table-column prop="created.loginName" :label="$t('shopPromotionList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopPromotionList.createdDate')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopPromotionList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('shopPromotionList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('shopPromotionList.operation')" width="160">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" v-permit="'crm:shopPromotion:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPromotionList.edit')}}</el-button>
+            <el-button size="small" v-permit="'crm:shopPromotion:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPromotionList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -83,7 +82,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("shopPromotionList",this.formData);
-        axios.get('/api/crm/shopPromotion',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/layout/shopPromotion',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -101,16 +100,16 @@
       },itemAdd(){
         this.$router.push({ name: 'shopPromotionForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'shopPromotionForm', query: { id: id }})
-        } else if(action=="删除") {
-          axios.get('/api/crm/shopPromotion/delete',{params:{id:id}}).then((response) =>{
+        } else if(action=="delete") {
+          axios.get('/api/ws/future/layout/shopPromotion/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
         }
       },getQuery(){
-        axios.get('/api/crm/shopPromotion/getQuery').then((response) =>{
+        axios.get('/api/ws/future/layout/shopPromotion/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });

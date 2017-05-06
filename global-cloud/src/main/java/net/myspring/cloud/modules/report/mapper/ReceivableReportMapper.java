@@ -42,21 +42,22 @@ public interface ReceivableReportMapper {
     List<ReceivableForDetailDto> findSKTKDByPeriodForEntrySum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
 
     //其他应收单
-    List<ReceivableForSummaryDto> findQTYSDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
+    List<ReceivableForSummaryDto> findQTYSDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
     //销售退货单
-    List<ReceivableForSummaryDto>   findXSTHDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
+    List<ReceivableForSummaryDto>   findXSTHDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
     //销售出库单
-    List<ReceivableForSummaryDto> findXSCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
+    List<ReceivableForSummaryDto> findXSCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
     //现销退货单
-    List<ReceivableForSummaryDto>   findXXTHDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
+    List<ReceivableForSummaryDto>   findXXTHDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
     //现销出库单
-    List<ReceivableForSummaryDto> findXXCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
+    List<ReceivableForSummaryDto> findXXCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
     //收款单
-    List<ReceivableForSummaryDto> findSKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
+    List<ReceivableForSummaryDto> findSKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
     //收款退款单
-    List<ReceivableForSummaryDto> findSKTKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
+    List<ReceivableForSummaryDto> findSKTKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
 
     //期初
-    List<ReceivableForSummaryDto> findByEndDate(@Param("dateEnd") LocalDate dateEnd);
+    List<ReceivableForSummaryDto> findByEndDate(@Param("dateEnd")LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
+
     List<ReceivableForSummaryDto> findByEndDateAndIn(@Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") List<String> customerIdList);
 }

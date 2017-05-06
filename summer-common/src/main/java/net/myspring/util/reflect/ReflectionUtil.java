@@ -5,6 +5,9 @@
  *******************************************************************************/
 package net.myspring.util.reflect;
 
+import com.google.common.collect.Lists;
+import net.myspring.util.collection.CollectionUtil;
+
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -19,6 +22,21 @@ public class ReflectionUtil  extends org.springside.modules.utils.reflect.Reflec
 		if (!clazz.getName().equals(Object.class.getName())) {
 			getFields(fields,clazz);
 		}
+	}
+
+	public static void copyProperties(Object from,Object to){
+		List<Field> formFieldList= Lists.newArrayList();
+        List<Field> toFieldList= Lists.newArrayList();
+		getFields(formFieldList,from.getClass());
+        getFields(toFieldList,to.getClass());
+        List<String> toFileName= CollectionUtil.extractToList(toFieldList,"name");
+		for(Field field:formFieldList){
+		    if(CollectionUtil.isNotEmpty(toFileName)&&toFileName.contains(field.getName())){
+                field.setAccessible(true);
+		        Object value=getFieldValue(from,field);
+		        setFieldValue(to,field.getName(),value);
+            }
+        }
 	}
 
 }

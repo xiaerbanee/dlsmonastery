@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.mapper;
 
 import net.myspring.cloud.modules.input.domain.BdCustomer;
+import net.myspring.cloud.modules.report.dto.NameValueDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,11 +16,13 @@ public interface BdCustomerMapper {
 
     List<BdCustomer> findAll();
 
+    List<NameValueDto> findPrimaryGroupAndPrimaryGroupName();
+
     List<BdCustomer> findByDate(@Param("maxOutDate")LocalDateTime maxOutDate);
 
     List<BdCustomer> findByName(@Param("name") String name);
 
-    List<String> findName();
+    List<String> findNameByNameLike(@Param("name") String name);
 
     BdCustomer findById(@Param("id")String id);
 

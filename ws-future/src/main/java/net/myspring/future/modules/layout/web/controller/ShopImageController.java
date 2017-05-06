@@ -33,15 +33,13 @@ public class ShopImageController {
 
     @RequestMapping(value = "findOne")
     public ShopImageForm findOne(ShopImageForm shopImageForm) {
-        if(!shopImageForm.isCreate()) {
-            shopImageForm = shopImageService.findOne(shopImageForm.getId());
-        }
+        shopImageForm = shopImageService.findForm(shopImageForm);
         return shopImageForm;
     }
 
-    @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
-    public List<String> getFormProperty() {
-        return shopImageService.getProperty();
+    @RequestMapping(value = "getQuery", method = RequestMethod.GET)
+    public List<String> getQuery() {
+        return shopImageService.getQuery();
     }
 
     @RequestMapping(value = "save")
@@ -50,7 +48,7 @@ public class ShopImageController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "delete", method = RequestMethod.GET)
+    @RequestMapping(value = "delete")
     public RestResponse logicDelete(ShopImageForm shopImageForm) {
         shopImageService.logicDelete(shopImageForm.getId());
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());

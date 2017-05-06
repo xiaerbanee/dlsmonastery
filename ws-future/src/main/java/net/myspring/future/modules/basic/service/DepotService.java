@@ -19,6 +19,7 @@ import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -194,8 +195,9 @@ public class DepotService {
         if (depotForm.isCreate()) {
             depotMapper.save(depot);
         } else {
-            depotMapper.updateForm(depotForm);
             depot = depotMapper.findOne(depotForm.getId());
+            ReflectionUtil.copyProperties(depotForm,depot);
+            depotMapper.update(depot);
         }
         depotMapper.deleteDepotAccount(depotForm.getId());
         if (CollectionUtil.isNotEmpty(depotForm.getAccountIdList())) {

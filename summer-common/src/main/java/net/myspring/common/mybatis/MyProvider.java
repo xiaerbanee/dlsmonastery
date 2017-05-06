@@ -1,18 +1,23 @@
 package net.myspring.common.mybatis;
 
 import com.google.common.collect.Lists;
+import net.myspring.mybatis.dto.ColumnDto;
+import net.myspring.mybatis.dto.TableDto;
+import net.myspring.mybatis.provider.BaseProvider;
 import net.myspring.mybatis.provider.CrudProvider;
 import net.myspring.util.text.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by liuj on 2017/3/27.
- */
-public class MyProvider extends CrudProvider {
+ */public class MyProvider<T, ID extends Serializable>  extends CrudProvider<T, ID> {
     private Logger logger = LoggerFactory.getLogger(MyProvider.class);
     public static final String LOGIC_DELETE_ONE="logicDeleteOne";
     public static final String LOGIC_DELETE_BY_IDS="logicDeleteByIds";

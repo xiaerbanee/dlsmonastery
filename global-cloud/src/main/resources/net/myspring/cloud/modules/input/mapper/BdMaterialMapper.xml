@@ -39,4 +39,46 @@
         AND t3.FID = t4.FID
         AND t1.FMODIFYDATE > #{maxOutDate}
     </select>
+
+    <select id="findNameByNameLike" resultType="String">
+        SELECT
+        t2.FNAME
+        FROM
+        T_BD_MATERIAL t1,
+        T_BD_MATERIAL_L t2
+        WHERE
+        t1.FMATERIALID = t2.FMATERIALID
+        and t2.FNAME like CONCAT('%',#{name},'%')
+    </select>
+
+    <select id="findNameAndNumber" resultType="NameValueDto">
+        SELECT
+        t1.FNUMBER as value,
+        t2.FNAME as name
+        FROM
+        T_BD_MATERIAL t1,
+        T_BD_MATERIAL_L t2
+        WHERE
+        t1.FMATERIALID = t2.FMATERIALID
+    </select>
+    <select id="findCategory" resultType="NameValueDto">
+        select
+            t.FNUMBER as value,
+            t1.FNAME as name
+        from
+            T_BD_MATERIALCATEGORY t,
+            T_BD_MATERIALCATEGORY_L t1
+        where
+         t.FCATEGORYID=t1.FCATEGORYID
+    </select>
+    <select id="findGroup" resultType="NameValueDto">
+        select
+            t.FNUMBER as value,
+            t1.FNAME as name
+        from
+            T_BD_MaterialGroup t,
+            T_BD_MaterialGroup_L t1
+        where
+            t.FID=t1.FID
+    </select>
 </mapper>

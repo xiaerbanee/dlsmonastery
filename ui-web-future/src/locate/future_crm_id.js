@@ -1604,7 +1604,10 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "periksa"
+    audit: "periksa",
+    print:"出库单",
+    shipPrint:"快递单",
+
   },
   storeAllotShip: {
     storeAllotShip: "alokasi gudang besar",

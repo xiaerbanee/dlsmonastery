@@ -50,6 +50,6 @@ public class ReportScoreService {
 
     @Transactional
     public void delete(ReportScore reportScore){
-        reportScoreMapper.deleteById(reportScore.getId());
+        reportScoreMapper.logicDeleteOne(reportScore.getId());
     }
 }

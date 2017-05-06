@@ -81,7 +81,9 @@ public class PayableReportService {
         detailForMaterialList.addAll(cgrkdList);
         detailForMaterialList.addAll(cgtldList);
         detailForMaterialList.addAll(yfdList);
-        PayableForDetailDto head = new PayableForDetailDto(summary.getSupplierName(),summary.getDepartmentName());
+        PayableForDetailDto head = new PayableForDetailDto();
+        head.setBillType(summary.getSupplierName());
+        head.setBillNo(summary.getDepartmentName());
         head.setCss("");
         dataList.add(head);
         
@@ -90,7 +92,7 @@ public class PayableReportService {
         PayableForDetailDto beginAmount = new PayableForDetailDto();
         beginAmount.setBillType("期初应付");
         beginAmount.setEndAmount(beginShouldGive);
-        beginAmount.setCss("info");
+        beginAmount.setCss("warning");
         dataList.add(beginAmount);
 
         Map<String, List<PayableForDetailDto>> detailForMaterial = Maps.newHashMap();
@@ -176,7 +178,7 @@ public class PayableReportService {
         PayableForDetailDto endAmount = new PayableForDetailDto();
         endAmount.setBillType("期末应付");
         endAmount.setEndAmount(beginShouldGive);
-        endAmount.setCss("");
+        endAmount.setCss("warning");
         dataList.add(endAmount);
         return dataList;
     }

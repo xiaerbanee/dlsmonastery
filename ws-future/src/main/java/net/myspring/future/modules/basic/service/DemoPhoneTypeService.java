@@ -1,13 +1,12 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.DemoPhoneType;
 import net.myspring.future.modules.basic.domain.DemoPhoneTypeOffice;
-import net.myspring.future.modules.basic.dto.BasicOfficeDto;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeDto;
-import net.myspring.future.modules.basic.manager.DemoPhoneTypeManager;
 import net.myspring.future.modules.basic.mapper.DemoPhoneTypeMapper;
 import net.myspring.future.modules.basic.mapper.DemoPhoneTypeOfficeMapper;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
@@ -16,6 +15,7 @@ import net.myspring.future.modules.basic.web.form.DemoPhoneTypeDetailForm;
 import net.myspring.future.modules.basic.web.form.DemoPhoneTypeForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.future.common.utils.Const;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,6 @@ public class DemoPhoneTypeService {
     @Autowired
     private DemoPhoneTypeMapper demoPhoneTypeMapper;
     @Autowired
-    private DemoPhoneTypeManager demoPhoneTypeManager;
-    @Autowired
     private DemoPhoneTypeOfficeMapper demoPhoneTypeOfficeMapper;
     @Autowired
     private OfficeClient officeClient;
@@ -44,15 +42,15 @@ public class DemoPhoneTypeService {
     private CacheUtils cacheUtils;
 
     public DemoPhoneType findOne(String id) {
-        DemoPhoneType demoPhoneType = demoPhoneTypeManager.findOne(id);
+        DemoPhoneType demoPhoneType = demoPhoneTypeMapper.findOne(id);
         return demoPhoneType;
     }
 
     public DemoPhoneTypeForm findForm(DemoPhoneTypeForm demoPhoneTypeForm){
-        List<BasicOfficeDto> areaList = officeClient.findByOfficeRuleName("办事处");
+        List<OfficeDto> areaList = officeClient.findByOfficeRuleName("办事处");
         List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = demoPhoneTypeOfficeMapper.findByDemoPhoneTypeId(demoPhoneTypeForm.getId());
         Map<String, DemoPhoneTypeOffice> demoPhoneTypeOfficeMap = CollectionUtil.extractToMap(demoPhoneTypeOfficeList, "officeId");
-        for (BasicOfficeDto area : areaList) {
+        for (OfficeDto area : areaList) {
             if (area.getTaskPoint()!=null&&Const.MIN_AREA_POINT.compareTo(area.getTaskPoint()) < 0) {
                 DemoPhoneTypeOffice demoPhoneTypeOffice = demoPhoneTypeOfficeMap.get(area.getId());
                 if (demoPhoneTypeOffice == null) {
@@ -69,7 +67,7 @@ public class DemoPhoneTypeService {
 
     public DemoPhoneTypeDetailForm findDetailForm(DemoPhoneTypeDetailForm demoPhoneTypeDetailForm){
         if(!demoPhoneTypeDetailForm.isCreate()){
-            DemoPhoneType demoPhoneType=demoPhoneTypeManager.findOne(demoPhoneTypeDetailForm.getId());
+            DemoPhoneType demoPhoneType=demoPhoneTypeMapper.findOne(demoPhoneTypeDetailForm.getId());
             demoPhoneTypeDetailForm=BeanUtil.map(demoPhoneType,DemoPhoneTypeDetailForm.class);
             cacheUtils.initCacheInput(demoPhoneTypeDetailForm);
         }
@@ -95,10 +93,12 @@ public class DemoPhoneTypeService {
         DemoPhoneType demoPhoneType;
         if (demoPhoneTypeForm.isCreate()) {
             demoPhoneType= BeanUtil.map(demoPhoneTypeForm, DemoPhoneType.class);
-            demoPhoneType=demoPhoneTypeManager.save(demoPhoneType);
+            demoPhoneTypeMapper.save(demoPhoneType);
         } else {
             productTypeMapper.updateDemoPhoneTypeToNull(demoPhoneTypeForm.getId());
-            demoPhoneType=demoPhoneTypeManager.updateForm(demoPhoneTypeForm);
+            demoPhoneType= demoPhoneTypeMapper.findOne(demoPhoneTypeForm.getId());
+            ReflectionUtil.copyProperties(demoPhoneTypeForm,demoPhoneType);
+            demoPhoneTypeMapper.update(demoPhoneType);
         }
         if (CollectionUtil.isNotEmpty(demoPhoneTypeForm.getProductTypeIdList())) {
             productTypeMapper.updateDemoPhoneType(demoPhoneType.getId(), demoPhoneTypeForm.getProductTypeIdList());

@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
+import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
@@ -51,6 +52,7 @@ public class AuditFileService {
         if (!auditFileForm.isCreate()) {
             AuditFile auditFile = auditFileMapper.findOne(auditFileForm.getId());
             auditFileForm = BeanUtil.map(auditFile, AuditFileForm.class);
+            auditFileForm.setActivitiDetailList(activitiClient.getActivitiDetail(auditFile.getProcessInstanceId()));
             cacheUtils.initCacheInput(auditFileForm);
         }
         return auditFileForm;
@@ -61,14 +63,13 @@ public class AuditFileService {
         if (auditFileForm.isCreate()) {
             String name="文件审批";
             String businessKey = auditFileForm.getId();
-            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm(name, businessKey, auditFileForm.getProcessTypeId()));
+            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm(name, businessKey, auditFileForm.getProcessTypeId(),auditFileForm.getTitle()));
             auditFileForm.setProcessStatus(activitiStartDto.getProcessStatus());
             auditFileForm.setProcessFlowId(activitiStartDto.getProcessFlowId());
             auditFileForm.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
             auditFileForm.setPositionId(activitiStartDto.getPositionId());
             auditFile = BeanUtil.map(auditFileForm, AuditFile.class);
             auditFileMapper.save(auditFile);
-            activitiClient.setExtendId(activitiStartDto.getProcessInstanceId(), auditFile.getId());
             return auditFile;
         }
         return null;
