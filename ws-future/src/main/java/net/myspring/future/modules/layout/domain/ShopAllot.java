@@ -27,10 +27,6 @@ public class ShopAllot extends AuditEntity<ShopAllot> {
     private List<ShopAllotDetail> shopAllotDetailList = Lists.newArrayList();
     private List<String> shopAllotDetailIdList = Lists.newArrayList();
 
-
-    private Depot fromShop;
-    private Depot toShop;
-
     public String getFromShopId() {
         return fromShopId;
     }
@@ -117,21 +113,5 @@ public class ShopAllot extends AuditEntity<ShopAllot> {
 
     public void setShopAllotDetailIdList(List<String> shopAllotDetailIdList) {
         this.shopAllotDetailIdList = shopAllotDetailIdList;
-    }
-
-    public Depot getFromShop() {
-        return fromShop;
-    }
-
-    public void setFromShop(Depot fromShop) {
-        this.fromShop = fromShop;
-    }
-
-    public Depot getToShop() {
-        return toShop;
-    }
-
-    public void setToShop(Depot toShop) {
-        this.toShop = toShop;
     }
 }
