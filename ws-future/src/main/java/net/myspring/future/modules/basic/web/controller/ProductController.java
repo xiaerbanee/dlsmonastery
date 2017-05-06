@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "crm/product")
+@RequestMapping(value = "basic/product")
 public class ProductController {
 
     @Autowired
@@ -94,5 +94,20 @@ public class ProductController {
     public RestResponse syn() {
         productService.syn();
         return new RestResponse("同步成功",null);
+    }
+
+    @RequestMapping(value="getQuery")
+    public ProductQuery getQuery(ProductQuery productQuery){
+        productQuery.setNetTypeList(productService.findNetTypeList());
+        productQuery.setBoolMap(productService.getMap());
+        productQuery.setProductTypeList(productService.findProductTypeList());
+        productQuery.setOutGroupNameList(productService.findByOutName());
+        return productQuery;
+    }
+
+    @RequestMapping(value = "delete")
+    public RestResponse delete(ProductDto productDto) {
+        productService.delete(productDto);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 }
