@@ -2,10 +2,13 @@ package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
+import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
 import net.myspring.future.modules.basic.web.form.ProductTypeForm;
 import net.myspring.util.collection.CollectionUtil;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +41,16 @@ public class ProductTypeService {
     public ProductType findOne(String id) {
         ProductType productType = productTypeMapper.findOne(id);
         return productType;
+    }
+
+    public ProductTypeForm findForm(ProductTypeForm productTypeForm){
+        if(!productTypeForm.isCreate()){
+            ProductType productType = productTypeMapper.findOne(productTypeForm.getId());
+            productTypeForm = BeanUtil.map(productType,productTypeForm.getClass());
+            List<Product> productList = productMapper.findByProductTypeId(productTypeForm.getId());
+            productTypeForm.setProductList(BeanUtil.map(productList,ProductDto.class));
+        }
+        return productTypeForm;
     }
 
     public List<ProductType> findAllScoreType(){
@@ -94,4 +108,5 @@ public class ProductTypeService {
         List<ProductType> productTypeList = productTypeMapper.findByNameLike(name);
         return productTypeList;
     }
+
 }

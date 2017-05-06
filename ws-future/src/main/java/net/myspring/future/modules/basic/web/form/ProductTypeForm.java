@@ -4,8 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.ProductType;
+import net.myspring.future.modules.basic.dto.ProductDto;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,14 +18,33 @@ import java.util.Map;
 public class ProductTypeForm extends DataForm<ProductType>{
     private String name;
     private String reportName;
-    private String scoreType;
+    private Boolean scoreType;
     private String code;
     private BigDecimal baokaPrice;
     private List<String> productIdList= Lists.newArrayList();
+    @CacheInput(inputKey = "products",inputInstance = "productIdList",outputInstance = "name")
+    private List<String> productNameList = new ArrayList<>();
     private BigDecimal price1;
     private BigDecimal price2;
     private BigDecimal price3;
     private Map<String,String> boolMap= Maps.newHashMap();
+    private List<ProductDto> productList=Lists.newArrayList();
+
+    public List<ProductDto> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<ProductDto> productList) {
+        this.productList = productList;
+    }
+
+    public List<String> getProductNameList(){
+        return productNameList;
+    }
+
+    public void setProductNameList(List<String> productIdList){
+        this.productIdList = productIdList;
+    }
 
     public Map<String, String> getBoolMap() {
         return boolMap;
@@ -48,11 +70,11 @@ public class ProductTypeForm extends DataForm<ProductType>{
         this.reportName = reportName;
     }
 
-    public String getScoreType() {
+    public Boolean getScoreType() {
         return scoreType;
     }
 
-    public void setScoreType(String scoreType) {
+    public void setScoreType(Boolean scoreType) {
         this.scoreType = scoreType;
     }
 

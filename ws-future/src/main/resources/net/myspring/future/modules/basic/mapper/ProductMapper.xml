@@ -109,14 +109,12 @@
         </foreach>
     </select>
 
-    <select id="findByProductTypeIds" resultType="Product">
+    <select id="findByProductTypeId" resultType="Product">
         SELECT t1.*
         FROM crm_product t1
         where t1.enabled=1
-        and t1.product_type_id in
-        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+        and t1.product_type_id = #{productTypeId}
+
     </select>
 
     <update id="updateProductTypeId">

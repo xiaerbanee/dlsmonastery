@@ -24,7 +24,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneTypeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('demoPhoneTypeList.name')"></el-table-column>
         <el-table-column prop="limitQty" :label="$t('demoPhoneTypeList.limitQty')"></el-table-column>
-        <el-table-column prop="extendMap.productTypeNames" :label="$t('demoPhoneTypeList.productTypeNames')"></el-table-column>
+        <el-table-column prop="productTypeNames" :label="$t('demoPhoneTypeList.productTypeNames')"></el-table-column>
         <el-table-column prop="applyEndDate" :label="$t('demoPhoneTypeList.applyEndDate')"></el-table-column>
         <el-table-column prop="renewEndDate" :label="$t('demoPhoneTypeList.renewEndDate')"></el-table-column>
         <el-table-column prop="createdByName" :label="$t('demoPhoneTypeList.createdBy')" sortable></el-table-column>
@@ -42,9 +42,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('demoPhoneTypeList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" v-permit="'crm:demoPhoneType:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('demoPhoneTypeList.edit')}}</el-button>
+            <el-button size="small" v-permit="'crm:demoPhoneType:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('demoPhoneTypeList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -74,7 +73,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("demoPhoneTypeList",this.formData);
-        axios.get('/api/crm/demoPhoneType',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/crm/demoPhoneType',{params:this.formData}).then((response) => {
           console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
@@ -93,10 +92,10 @@
       },itemAdd(){
         this.$router.push({ name: 'demoPhoneTypeForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'demoPhoneTypeForm', query: { id: id }})
-        } else if(action=="删除") {
-          axios.get('/api/crm/demoPhoneType/delete',{params:{id:id}}).then((response) =>{
+        } else if(action=="delete") {
+          axios.get('/api/ws/future/crm/demoPhoneType/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })

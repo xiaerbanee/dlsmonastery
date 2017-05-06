@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "crm/product")
+@RequestMapping(value = "basic/product")
 public class ProductController {
 
     @Autowired

@@ -61,4 +61,6 @@ public interface ProductTypeMapper extends BaseMapper<ProductType,String> {
 
     List<ProductType> findAllScoreType();
 
+    List<ProductType> findByDemoPhoneTypeId(String demoPhoneTypeId);
+
 }

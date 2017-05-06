@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.layout.mapper.ShopDepositMapper">
 
-    <select id="findPage" resultType="ShopDepositDto">
+    <select id="findPage" resultType="net.myspring.future.modules.layout.dto.ShopDepositDto">
         SELECT
         depot.office_id officeId, depot.area_id areaId, depot.name name, t1.*
         FROM
