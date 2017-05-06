@@ -6,13 +6,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.DepotCategoryEnum;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.web.validator.DepotValidator;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.basic.web.validator.DepotValidator;
 import net.myspring.future.modules.layout.service.ShopAttributeService;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -93,9 +94,9 @@ public class DepotController {
     }
 
     @RequestMapping(value = "searchShop")
-    public  List<DepotDto> searchShop(String name){
+    public  List<DepotDto> searchShop(String key){
         String category = "SHOP";
-        List<Depot> depots = search(name,category);
+        List<Depot> depots = search(key,category);
         List<DepotDto> depotDtos = new ArrayList<>();
         for(Depot depot:depots){
             depotDtos.add(BeanUtil.map(depot,DepotDto.class));
@@ -103,8 +104,18 @@ public class DepotController {
         return  depotDtos;
     }
 
-    @RequestMapping(value = "searchShopById")
-    public  List<DepotDto> searchShopById(String id){
+    @RequestMapping(value = "searchStore")
+    public  List<DepotDto> searchStore(String key){
+        List<Depot> depots = search(key, DepotCategoryEnum.STORE.name());
+        List<DepotDto> depotDtos = new ArrayList<>();
+        for(Depot depot:depots){
+            depotDtos.add(BeanUtil.map(depot,DepotDto.class));
+        }
+        return  depotDtos;
+    }
+
+    @RequestMapping(value = "searchById")
+    public  List<DepotDto> searchById(String id){
         DepotDto depotDto =  depotService.findOne(id);
         List<DepotDto> depotList = Lists.newArrayList();
         if(depotDto != null){

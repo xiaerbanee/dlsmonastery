@@ -4,6 +4,9 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.util.cahe.annotation.CacheInput;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StoreAllotDto extends DataDto<StoreAllot> {
 
 
@@ -20,6 +23,47 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     private String outCode;
     private String status;
     private Boolean enabled;
+    private String expressOrderId;
+
+    private String expressOrderCodes;
+
+    public String getExpressOrderCodes() {
+        return expressOrderCodes;
+    }
+
+    public void setExpressOrderCodes(String expressOrderCodes) {
+        this.expressOrderCodes = expressOrderCodes;
+    }
+
+    public String getExpressOrderId() {
+        return expressOrderId;
+    }
+
+    public void setExpressOrderId(String expressOrderId) {
+        this.expressOrderId = expressOrderId;
+    }
+
+
+    private List<StoreAllotDetailDto> storeAllotDetailDtoList = new ArrayList<>();
+
+    public List<StoreAllotDetailDto> getStoreAllotDetailDtoList() {
+        return storeAllotDetailDtoList;
+    }
+
+    public void setStoreAllotDetailDtoList(List<StoreAllotDetailDto> storeAllotDetailDtoList) {
+        this.storeAllotDetailDtoList = storeAllotDetailDtoList;
+    }
+
+    public List<StoreAllotImeDto> getStoreAllotImeDtoList() {
+        return storeAllotImeDtoList;
+    }
+
+    public void setStoreAllotImeDtoList(List<StoreAllotImeDto> storeAllotImeDtoList) {
+        this.storeAllotImeDtoList = storeAllotImeDtoList;
+    }
+
+    private List<StoreAllotImeDto> storeAllotImeDtoList = new ArrayList<>();
+
 
 
     public String getFromStoreName() {

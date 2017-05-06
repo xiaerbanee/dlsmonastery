@@ -12,4 +12,7 @@ public class StoreAllotDetailController {
     @Autowired
     private StoreAllotDetailService storeAllotDetailService;
 
+
+
+
 }

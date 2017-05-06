@@ -9,7 +9,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.fromStore')" prop="fromStore">
-              <su-depot type="store" v-model="inputForm.fromStoreId"  ></su-depot>
+              <su-depot type="store" v-model="inputForm.fromStoreId" @input="getStoreAllot"></su-depot>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.toStore')" prop="toStore">
               <su-depot type="store" v-model="inputForm.toStoreId"  ></su-depot>
@@ -20,28 +20,25 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.expressCompany')" prop="expressCompany">
-              <el-select v-model="inputForm.expressCompanyId"  clearable >
-                <el-option v-for="item in inputForm.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+              <su-express-company v-model="inputForm.expressCompanyId"></su-express-company>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.syn')" prop="syn">
               <el-radio-group v-model="inputForm.syn">
-                <el-radio v-for="(value,key) in inputForm.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
+                  <el-radio :label="true">{{$t('storeAllotForm.yes')}}</el-radio>
+                  <el-radio :label="false">{{$t('storeAllotForm.no')}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.remarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks"></el-input>
+              <el-input type="textarea" v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled"  @click="formSubmit()">{{$t('storeAllotForm.save')}}</el-button>
             </el-form-item>
             <template>
-              <el-table :data="inputForm.storeAllotDetailList" border stripe>
+              <el-table :data="inputForm.storeAllotDetailFormList" border stripe>
                 <el-table-column :label="$t('storeAllotForm.productName')">
                   <template scope="scope">
-                    <el-select v-model="scope.row.productId" remote filterable :placeholder="$t('storeAllotForm.inputKeyOf100Item')" :loading="loading" :remote-method="remoteProduct" @change="getCloudQty(scope.row)">
-                      <el-option v-for="item in products" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                    </el-select>
+                    <su-product v-model ="scope.row.productId" ></su-product>
                   </template>
                 </el-table-column>
                 <el-table-column  :label="$t('storeAllotForm.cloudQty')" prop="cloudQty"></el-table-column>
@@ -50,7 +47,7 @@
                     <input type="text" v-model="scope.row.billQty" class="el-input__inner"/>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('storeAllotForm.operation')" :render-header="renderAction"  >
+                <el-table-column :render-header="renderAction"  >
                   <template scope="scope">
                     <el-button size="small" type="danger" @click.prevent="removeDomain(scope.row)">{{$t('storeAllotForm.delete')}}</el-button>
                   </template>
@@ -68,21 +65,19 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        loading: false,
-        remoteLoading:false,
         products:[],
         selectedProducts:new Map(),
         inputForm:{},
-        formData:{
+        submitData:{
           id:'',
           allotType:'',
           fromStoreId:'',
           toStoreId:'',
           shipType:'',
           expressCompanyId:'',
-          syn:'',
+          syn:true,
           remarks:'',
-          storeAllotDetailFormList:[]
+          storeAllotDetailFormList:[],
         },
         rules: {
           allotType: [{ required: true, message: this.$t('storeAllotForm.prerequisiteMessage')}],
@@ -100,7 +95,8 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/crm/storeAllot/save', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+            util.copyValue(this.inputForm, this.submitData);
+            axios.post('/api/ws/future/crm/storeAllot/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -115,9 +111,12 @@
             this.submitDisabled = false;
           }
         })
-      },getStoreAllot(value){
-        if(value=="快速调拨"){
-          axios.get('/api/crm/storeAllot/getStoreAllotData',{params: {id:this.$route.query.id,allotType:"快速调拨"}}).then((response)=>{
+      },getStoreAllot(){
+
+          console.log("getStoreAllot"+this.inputForm.fromStoreId);
+          console.log("getStoreAllot"+this.inputForm.allotType);
+        if(''=="快速调拨"){
+          axios.get('/api/crm/storeAllot/getStoreAllotData',{params: {id:this.$route.query.id, allotType:this.allotType}}).then((response)=>{
               util.copyValue(response.data,this.inputForm);
               console.log(response.data)
               if(response.data.storeAllotDetailFormList!=null&&response.data.storeAllotDetailFormList.size()>0){
@@ -125,12 +124,13 @@
               }
           })
         }
+        return true;
       },removeDomain(item) {
           var index = this.inputForm.storeAllotDetailFormList.indexOf(item)
           if (index !== -1) {
             this.inputForm.storeAllotDetailFormList.splice(index, 1)
           }
-        },renderAction(createElement) {
+      },renderAction(createElement) {
           return createElement(
             'a',{
                attrs: {
@@ -143,45 +143,23 @@
             }
           );
         },addDomain(){
-        this.inputForm.storeAllotDetailFormList.push({productId:"",cloudQty:"",qty:""});
+          this.inputForm.storeAllotDetailFormList.push({productId:"",cloudQty:"",qty:""});
           return false;
-        },remoteProduct(query){
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/crm/product/searchAll',{params:{name:query}}).then((response)=>{
-              var dataMap = new Map();
-              response.data.map((v,index)=>{
-                dataMap.set(response.data[index].id,response.data[index]);
-                this.selectedProducts.set(response.data[index].id,response.data[index]);
-              });
-             this.inputForm.storeAllotDetailFormList.map((v,index)=>{
-                var productId = this.inputForm.storeAllotDetailFormList[index].productId;
-                 if(!dataMap.has(productId) && this.selectedProducts.has(productId) ) {
-                  dataMap.set(productId,this.selectedProducts.get(productId));
-                 }
-              });
-              this.products = new Array();
-              for(let value of dataMap.values()){
-                this.products.push(value);
-              }
-              this.remoteLoading = false;
-            })
-          }
-      },getCloudQty(row){
+        },getCloudQty(row){
         axios.get('/api/crm/storeAllot/getCloudQty?productId='+row.productId+"&fromStoreId="+this.inputForm.fromStoreId).then((res)=>{
             row.cloudQty=res.data
         });
       }
       },created(){
-        axios.get('/api/ws/future/crm/storeAllot/findForm' , {params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm=response.data;
-        });
-
-        if(this.isCreate){
-          for(var i = 0;i<3;i++) {
-             this.inputForm.storeAllotDetailFormList.push({productId:"",productName:"", cloudQty:"",qty:""});
+        axios.get('/api/ws/future/crm/storeAllot/findForm', {params: {id: this.$route.query.id}}).then((response) => {
+          this.inputForm = response.data;
+          if (this.isCreate) {
+            this.inputForm.storeAllotDetailFormList=[];
+            for (var i = 0; i < 3; i++) {
+              this.inputForm.storeAllotDetailFormList.push({productId: "", cloudQty: "", qty: ""});
+            }
           }
-        }
-      }
+        });
+    }
   }
 </script>

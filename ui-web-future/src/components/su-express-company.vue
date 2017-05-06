@@ -10,8 +10,6 @@
     props: {
       value: {
         required: true
-      }, type: {
-        required: true
       }
     },
     data() {
@@ -24,24 +22,10 @@
     } ,
     computed:{
       url: function() {
-          if(this.type == 'shop'){
-
-            return {
-              search:'/api/ws/future/basic/depot/searchShop',
-              searchById:'/api/ws/future/basic/depot/searchById',
-            }
-          }else if(this.type == 'store'){
               return {
-                search:'/api/ws/future/basic/depot/searchStore',
-                searchById:'/api/ws/future/basic/depot/searchById',
+                search:'/api/ws/future/basic/expressCompany/search',
+                searchById:'/api/ws/future/basic/expressCompany/searchById',
               }
-          }else{
-            return {
-              search:'',
-              searchById:'',
-            }
-          }
-
       }
     },
     methods:{

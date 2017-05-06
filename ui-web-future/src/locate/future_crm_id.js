@@ -1551,6 +1551,10 @@ export default {
     createdBy: "创建人",
     createdDate: "创建时间",
     remarks: "备注",
+    productIme:"串码",
+    productMeid:"Meid",
+    sendByName:"发货人",
+    sendDate:"发货时间",
   },
   storeAllotForm: {
     storeAllotForm: "transfer gudang besar",
@@ -1573,7 +1577,10 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    yes:"是",
+    no:"否",
+
   },
   storeAllotList: {
     storeAllotList: "transfer gudang besar",

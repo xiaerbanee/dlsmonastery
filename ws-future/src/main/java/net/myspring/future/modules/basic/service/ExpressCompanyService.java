@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.service;
 
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.SecurityUtils;
 import net.myspring.future.modules.basic.client.DistrictClient;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
@@ -81,4 +82,7 @@ public class ExpressCompanyService {
         return ExpressCompanyTypeEnum.getList();
     }
 
+    public List<ExpressCompanyDto> findByNameLike(String name) {
+        return expressCompanyMapper.findByNameLike(SecurityUtils.getCompanyId(), name);
+    }
 }

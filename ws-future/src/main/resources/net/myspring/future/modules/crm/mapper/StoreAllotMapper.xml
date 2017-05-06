@@ -10,6 +10,14 @@
         <include refid="storeAllotFilter" />
     </select>
 
+    <select id="findStoreAllotDtoById" resultType="StoreAllotDto">
+        SELECT depot1.name fromStoreName, depot2.name toStoreName, t1.*
+        FROM  crm_store_allot t1, crm_depot depot1, crm_depot depot2
+        where t1.enabled=1
+        and (t1.from_store_id=depot1.id and  t1.to_store_id=depot2.id)
+        and t1.id = #{id};
+    </select>
+
     <select id="findByFilter" resultType="StoreAllot">
         SELECT t1.*
         FROM  crm_store_allot t1

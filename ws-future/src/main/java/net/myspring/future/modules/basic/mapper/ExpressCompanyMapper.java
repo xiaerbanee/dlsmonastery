@@ -1,9 +1,7 @@
 package net.myspring.future.modules.basic.mapper;
 
 import net.myspring.common.cache.IdCacheKeyGenerator;
-import net.myspring.common.mybatis.MyMapper;
 import net.myspring.common.mybatis.MyProvider;
-import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
@@ -50,4 +48,6 @@ public interface ExpressCompanyMapper extends BaseMapper<ExpressCompany,String> 
     List<ExpressCompany> findLabels(List<String> ids);
 
     List<ExpressCompany> findByExpressType(String type);
+
+    List<ExpressCompanyDto> findByNameLike(@Param("companyId") String companyId, @Param("name") String name);
 }

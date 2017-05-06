@@ -45,4 +45,16 @@
         and t1.express_type=#{type}
     </select>
 
+    <select id="findByNameLike" resultType="ExpressCompanyDto">
+        SELECT t1.*
+        FROM  crm_express_company t1
+        where t1.enabled=1
+        and t1.company_id=#{companyId}
+        <if test="name != null">
+            AND t1.name LIKE concat('%',#{name},'%');
+        </if>
+    </select>
+
+
+
 </mapper>

@@ -1,13 +1,19 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.enums.StoreAllotTypeEnum;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
+import net.myspring.future.modules.crm.domain.ExpressOrder;
+import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
+import net.myspring.future.modules.crm.service.ExpressOrderService;
 import net.myspring.future.modules.crm.service.StoreAllotDetailService;
+import net.myspring.future.modules.crm.service.StoreAllotImeService;
 import net.myspring.future.modules.crm.service.StoreAllotService;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
@@ -32,6 +38,11 @@ public class StoreAllotController {
     @Autowired
     private StoreAllotDetailService storeAllotDetailService;
 
+    @Autowired
+    private StoreAllotImeService storeAllotImeService;
+    @Autowired
+    private ExpressOrderService expressOrderService;
+
     @RequestMapping(method = RequestMethod.GET)
     public Page<StoreAllotDto> list(Pageable pageable, StoreAllotQuery storeAllotQuery){
         Page<StoreAllotDto> page = storeAllotService.findPage(pageable, storeAllotQuery);
@@ -39,8 +50,26 @@ public class StoreAllotController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save() {
-        return null;
+    public RestResponse save(StoreAllotForm storeAllotForm) {
+
+        //TODO 需要完善金蝶的控制
+//        if(AccountUtils.getAccount().getOutId()==null) {
+//            return new Message("message_store_allot_no_bind_finance",Message.Type.danger);
+//        }
+        if(!storeAllotForm.isCreate()){
+            throw new ServiceException("error.storeAllot.cantEdit");
+        }
+
+        StoreAllot storeAllot = storeAllotService.saveForm(storeAllotForm);
+        if(storeAllotForm.getSyn()){
+//            k3cloudSynService.syn(store.getId(), K3CloudSynEntity.ExtendType.大库调拨.name());
+//            if(store.getExpressOrder()!=null){
+//                ExpressOrder expressOrder = store.getExpressOrder();
+//                expressOrder.setOutCode(k3cloudSynService.getOutCode(store.getId(), K3CloudSynEntity.ExtendType.大库调拨.name()));
+//                expressOrderService.save(expressOrder);
+//            }
+        }
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findForm")
@@ -50,6 +79,19 @@ public class StoreAllotController {
         result.setShipTypeList(ShipTypeEnum.getList());
         result.setStoreAllotDetailFormList(storeAllotDetailService.genStoreAllotDetailListForEdit(storeAllotForm));
         result.setShowAllotType(Boolean.FALSE);
+        result.setSyn(Boolean.TRUE);
+        return result;
+    }
+
+    @RequestMapping(value = "findForOverview")
+    public StoreAllotDto findForOverview(String id) {
+        StoreAllotDto result = storeAllotService.findStoreAllotDtoById(id);
+        if(result.getExpressOrderId() != null){
+            ExpressOrder expressOrder = expressOrderService.findOne(result.getExpressOrderId());
+            result.setExpressOrderCodes(expressOrder.getExpressCodes());
+        }
+        result.setStoreAllotDetailDtoList(storeAllotDetailService.findByStoreAllotId(id));
+        result.setStoreAllotImeDtoList(storeAllotImeService.findByStoreAllotId(id));
         return result;
     }
 

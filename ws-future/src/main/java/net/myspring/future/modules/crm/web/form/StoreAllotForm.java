@@ -14,7 +14,8 @@ public class StoreAllotForm extends DataForm<StoreAllot> {
     private String toStoreId;
     private String shipType;
     private String expressCompanyId;
-    private Boolean syn = Boolean.TRUE;
+
+    private Boolean syn = Boolean.TRUE;  //默认同步至财务
     private List<String> shipTypeList = new ArrayList<>();
     private List<String> allotTypeList = new ArrayList<>();
     private List<StoreAllotDetailForm> storeAllotDetailFormList = new ArrayList<>();
@@ -33,6 +34,14 @@ public class StoreAllotForm extends DataForm<StoreAllot> {
 
     public void setShowAllotType(Boolean showAllotType) {
         this.showAllotType = showAllotType;
+    }
+
+    public Boolean getSyn() {
+        return syn;
+    }
+
+    public void setSyn(Boolean syn) {
+        this.syn = syn;
     }
 
     public String getFromStoreId() {
@@ -67,13 +76,6 @@ public class StoreAllotForm extends DataForm<StoreAllot> {
         this.expressCompanyId = expressCompanyId;
     }
 
-    public Boolean getSyn() {
-        return syn;
-    }
-
-    public void setSyn(Boolean syn) {
-        this.syn = syn;
-    }
 
 
     public List<String> getShipTypeList() {
@@ -99,10 +101,6 @@ public class StoreAllotForm extends DataForm<StoreAllot> {
     public void setStoreAllotDetailFormList(List<StoreAllotDetailForm> storeAllotDetailFormList) {
         this.storeAllotDetailFormList = storeAllotDetailFormList;
     }
-
-
-
-
 
 
 }

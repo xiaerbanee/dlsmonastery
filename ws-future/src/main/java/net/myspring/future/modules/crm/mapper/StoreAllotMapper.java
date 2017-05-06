@@ -18,8 +18,11 @@ public interface StoreAllotMapper extends MyMapper<StoreAllot,String> {
 
     Page<StoreAllotDto> findPage(Pageable pageable, @Param("p") StoreAllotQuery storeAllotQuery);
 
+    
+
     List<StoreAllot> findByFilter(@Param("p") Map<String, Object> map);
 
     String findMaxBusinessId(@Param("localDate") LocalDate localDate);
 
+    StoreAllotDto findStoreAllotDtoById(String id);
 }

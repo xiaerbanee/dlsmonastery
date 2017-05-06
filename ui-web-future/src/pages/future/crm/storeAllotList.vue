@@ -107,9 +107,9 @@
         window.location.href= "/api/crm/storeAllot/export?"+qs.stringify(this.formData);
       },itemAdd(){
         this.$router.push({ name: 'storeAllotForm'})
-      },itemView(){
+      },itemView(id){
         this.$router.push({ name: 'storeAllotDetail', query: { id: id }})
-      },itemDelete(){
+      },itemDelete(id){
         util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/ws/future/crm/storeAllot/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
@@ -117,9 +117,9 @@
           })
         });
 
-      },itemShip(){
+      },itemShip(id){
         this.$router.push({ name: 'storeAllotShip', query: { id: id }});
-      },itemPrint(){
+      },itemPrint(id){
       },itemShipPrint(){
       },itemAction:function(id,action){
         if(action=="修改") {

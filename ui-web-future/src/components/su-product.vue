@@ -10,8 +10,6 @@
     props: {
       value: {
         required: true
-      }, type: {
-        required: true
       }
     },
     data() {
@@ -24,39 +22,24 @@
     } ,
     computed:{
       url: function() {
-          if(this.type == 'shop'){
-
-            return {
-              search:'/api/ws/future/basic/depot/searchShop',
-              searchById:'/api/ws/future/basic/depot/searchById',
-            }
-          }else if(this.type == 'store'){
               return {
-                search:'/api/ws/future/basic/depot/searchStore',
-                searchById:'/api/ws/future/basic/depot/searchById',
+                search:'/api/ws/future/basic/product/searchFullText',
+                searchById:'/api/ws/future/basic/product/searchById',
               }
-          }else{
-            return {
-              search:'',
-              searchById:'',
-            }
-          }
-
       }
     },
     methods:{
       remoteSearch(query) {
         if(this.searchLock) return;
-        if ( query !== '') {
+        if (query !== '') {
           this.remoteLoading = true;
-          axios.get(this.url.search, {params:{key:query}}).then((response)=>{
-            this.options=response.data;
+          axios.get(this.url.search,{params:{key:query}}).then((response)=>{
+            this.options = response.data;
             this.remoteLoading = false;
-          })
+          });
         } else {
           this.options = [];
         }
-
       }, valueChanged(newVal) {
         this.$emit('input', newVal);
         return true;

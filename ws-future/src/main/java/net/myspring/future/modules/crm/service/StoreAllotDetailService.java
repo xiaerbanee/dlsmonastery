@@ -1,5 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
+import com.google.common.collect.Lists;
+import net.myspring.future.modules.crm.domain.StoreAllotDetail;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import net.myspring.future.modules.crm.mapper.StoreAllotDetailMapper;
 import net.myspring.future.modules.crm.web.form.StoreAllotDetailForm;
@@ -22,6 +24,12 @@ public class StoreAllotDetailService {
         return storeAllotDetailMapper.findByStoreAllotIds(storeAllotIds);
     }
 
+    public List<StoreAllotDetailDto> findByStoreAllotId(String storeAllotId) {
+        List<String> storeAllotIds = new ArrayList<>();
+        storeAllotIds.add(storeAllotId);
+        return storeAllotDetailMapper.findByStoreAllotIds(storeAllotIds);
+    }
+
     public List<StoreAllotDetailForm> genStoreAllotDetailListForEdit(StoreAllotForm storeAllotForm) {
         List<StoreAllotDetailForm> result = new ArrayList<>();
         if(storeAllotForm.isCreate()){
@@ -35,8 +43,19 @@ public class StoreAllotDetailService {
 
         }
         return result;
+    }
 
+    public void saveStoreAllotDetails(String storeAllotId, List<StoreAllotDetailForm> storeAllotDetailFormList) {
 
-
+        List<StoreAllotDetail> toBeSaved = Lists.newArrayList();
+        for(int i=storeAllotDetailFormList.size()-1 ; i >= 0; i--){
+            StoreAllotDetailForm storeAllotDetailForm = storeAllotDetailFormList.get(i);
+            if(storeAllotDetailForm.getBillQty() != null || storeAllotDetailForm.getBillQty() > 0) {
+                StoreAllotDetail storeAllotDetail = BeanUtil.map(storeAllotDetailForm, StoreAllotDetail.class);
+                storeAllotDetail.setStoreAllotId(storeAllotId);
+                toBeSaved.add(storeAllotDetail);
+            }
+        }
+        storeAllotDetailMapper.batchSave(toBeSaved);
     }
 }

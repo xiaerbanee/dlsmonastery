@@ -1468,6 +1468,8 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    yes:"是",
+    no:"否",
   },
   storeAllotList: {
     storeAllotList: "大库调拨",
@@ -1515,6 +1517,10 @@ export default {
     createdBy: "创建人",
     createdDate: "创建时间",
     remarks: "备注",
+    productIme:"串码",
+    productMeid:"Meid",
+    sendByName:"发货人",
+    sendDate:"发货时间",
   },
   storeAllotShip: {
     storeAllotShip: "大库调拨发货",

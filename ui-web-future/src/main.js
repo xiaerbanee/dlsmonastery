@@ -19,6 +19,8 @@ import suTable from './components/su-table';
 import suDateRangePicker from './components/su-date-range-picker';
 import suDepot from './components/su-depot';
 import suProcessDetails from './components/su-process-details';
+import suExpressCompany from './components/su-express-company';
+import suProduct from './components/su-product';
 
 
 
@@ -47,7 +49,8 @@ Vue.component('su-table', suTable);
 Vue.component('su-date-range-picker', suDateRangePicker);
 Vue.component('su-depot', suDepot);
 Vue.component('su-process-details', suProcessDetails);
-
+Vue.component('su-express-company', suExpressCompany);
+Vue.component('su-product', suProduct);
 
 // progressBar
 const options = {
