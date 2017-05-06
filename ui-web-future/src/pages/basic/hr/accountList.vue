@@ -92,7 +92,6 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("accountList");
         util.setQuery("accountList",this.formData);
         util.copyValue(this.formData,this.submitData);
         axios.get('/api/basic/hr/account',{params:this.submitData}).then((response) => {
