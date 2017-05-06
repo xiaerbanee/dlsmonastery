@@ -17,7 +17,6 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static net.myspring.cloud.common.utils.Const.*;
 
 /**
  * 零售报表工具类
@@ -78,7 +77,7 @@ public class RetailReportForAssistService {
                 itemTime.add(CharEnum.SPACE.getValue());
                 tempStart = tempStart.plusMonths(1);
             }
-            itemTime.add(ACCUMULATE);
+            itemTime.add(K3CloudConstant.ACCUMULATE);
             itemTime.add(CharEnum.SPACE.getValue());
         }
         retailReportModels.add(itemTime);

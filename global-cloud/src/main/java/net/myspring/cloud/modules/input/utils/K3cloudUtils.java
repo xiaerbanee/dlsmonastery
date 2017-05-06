@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.utils;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.constant.K3CloudConstant;
 import net.myspring.cloud.GlobalCloudApplication;
-import net.myspring.cloud.common.utils.Const;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.K3CloudSave;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
@@ -223,13 +222,14 @@ public class K3cloudUtils {
         if (StringUtils.isBlank(outId) || StringUtils.isBlank(outPassword)) {
             return false;
         }
-        return login(ThreadLocalContext.get().getKingdeeBookDto().getKingdeeDbid(), outId, outPassword);
+        KingdeeBookMapper kingdeeBookMapper = GlobalCloudApplication.getApplicationContext().getBean(KingdeeBookMapper.class);
+        KingdeeBook kingdeeBook = kingdeeBookMapper.findByCompanyId(SecurityUtils.getCompanyId());
+        return login(kingdeeBook.getKingdeeDbid(), outId, outPassword);
     }
 
 
     // Save
-    public static K3CloudSave save(K3CloudSave k3CloudSave) {
-        AccountDto accountDto = k3CloudSave.getAccount();
+    public static K3CloudSave save(K3CloudSave k3CloudSave,AccountDto accountDto) {
         if (StringUtils.isBlank(accountDto.getOutId()) || StringUtils.isBlank(accountDto.getOutPassword())) {
             throw new ServiceException("请确保已填写财务账号和密码");
         }
