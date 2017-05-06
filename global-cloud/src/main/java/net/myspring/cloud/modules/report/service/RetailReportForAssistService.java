@@ -5,7 +5,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.handsontable.NestedHeaderCell;
-import net.myspring.cloud.modules.report.dto.NameValueDto;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.report.mapper.GlcxViewMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,9 +29,9 @@ public class RetailReportForAssistService {
     private GlcxViewMapper glcxViewMapper;
 
     //"合计"部门
-    public NameValueDto getAddDepartment() {
-        NameValueDto department = new NameValueDto();
-        department.setValue(DOUBLE_ZERO);
+    public NameNumberDto getAddDepartment() {
+        NameNumberDto department = new NameNumberDto();
+        department.setNumber(DOUBLE_ZERO);
         department.setName(TOTAL_DEPARTMENT);
         return department;
     }
@@ -39,7 +39,7 @@ public class RetailReportForAssistService {
     //excel table for head
     public List<List<Object>> getRetailReportHead(YearMonth start, YearMonth end) {
         List<List<Object>> retailReportModels = Lists.newArrayList();
-        List<NameValueDto> departmentList = Lists.newArrayList();
+        List<NameNumberDto> departmentList = Lists.newArrayList();
         departmentList.add(getAddDepartment());
         departmentList.addAll(glcxViewMapper.findDepartment());
         //表头--部门代码
@@ -47,8 +47,8 @@ public class RetailReportForAssistService {
         itemDepartmentCode.add(CharEnum.SPACE.getValue());
         //计算起始月份和最后月份差
         Integer betweenMonth = Period.between(LocalDate.of(start.getYear(), start.getMonth(), 1), LocalDate.of(end.getYear(), end.getMonth(), 1)).getMonths() + 2;
-        for (NameValueDto department : departmentList) {
-            itemDepartmentCode.add(department.getValue());
+        for (NameNumberDto department : departmentList) {
+            itemDepartmentCode.add(department.getNumber());
             //占格为相差月份*2格+累计占格 2格
             for (int i = 0; i < 2 * betweenMonth - 1; i++) {
                 itemDepartmentCode.add(CharEnum.SPACE.getValue());
@@ -58,7 +58,7 @@ public class RetailReportForAssistService {
         //表头--部门名称
         List<Object> itemDepartmentName = Lists.newArrayList();
         itemDepartmentName.add(CharEnum.SPACE.getValue());
-        for (NameValueDto department : departmentList) {
+        for (NameNumberDto department : departmentList) {
             itemDepartmentName.add(department.getName());
             //占格为相差月份*2格+累计占格 2格
             for (int i = 0; i < 2 * betweenMonth - 1; i++) {
@@ -69,7 +69,7 @@ public class RetailReportForAssistService {
         //表头--时间
         List<Object> itemTime = Lists.newArrayList();
         itemTime.add(CharEnum.SPACE.getValue());
-        for (NameValueDto department : departmentList) {
+        for (NameNumberDto department : departmentList) {
             YearMonth tempStart = start;
             //占格  累计 2格 + 月份2格
             while (tempStart.isBefore(end) || tempStart.equals(end)) {
@@ -84,7 +84,7 @@ public class RetailReportForAssistService {
         //表头---金额+占比
         List<Object> itemAccountAndParent = Lists.newArrayList();
         itemAccountAndParent.add(SUBJECT_NAME);
-        for (NameValueDto department : departmentList) {
+        for (NameNumberDto department : departmentList) {
             YearMonth tempStart = start;
             while (tempStart.isBefore(end) || tempStart.equals(end)) {
                 itemAccountAndParent.add(AMOUNT);
@@ -100,7 +100,7 @@ public class RetailReportForAssistService {
 
     //handsontable for nested head
     public List<List<NestedHeaderCell>> getNestedHeads(YearMonth start, YearMonth end) {
-        List<NameValueDto> departmentList = Lists.newArrayList();
+        List<NameNumberDto> departmentList = Lists.newArrayList();
         departmentList.add(getAddDepartment());
         departmentList.addAll(glcxViewMapper.findDepartment());
         List<List<NestedHeaderCell>> data = Lists.newArrayList();
@@ -112,10 +112,10 @@ public class RetailReportForAssistService {
         cellForMonthList.add(getNestedHeadCell("", 0));
         List<NestedHeaderCell> cellForAmountAndPercentList = Lists.newArrayList();
         cellForAmountAndPercentList.add(getNestedHeadCell(SUBJECT_NAME, 0));
-        for (NameValueDto department : departmentList) {
+        for (NameNumberDto department : departmentList) {
             YearMonth tempStart = start;
             Integer betweenMonth = Period.between(LocalDate.of(start.getYear(), start.getMonth(), 1), LocalDate.of(end.getYear(), end.getMonth(), 1)).getMonths() + 2;
-            cellForDepartmentCodeList.add(getNestedHeadCell(department.getValue(), betweenMonth * 2));
+            cellForDepartmentCodeList.add(getNestedHeadCell(department.getNumber(), betweenMonth * 2));
             cellForDepartmentList.add(getNestedHeadCell(department.getName(), betweenMonth * 2));
             while (tempStart.isBefore(end.plusMonths(1))) {
                 cellForMonthList.add(getNestedHeadCell(tempStart.format(DateTimeFormatter.ofPattern(DateFormat.MONTH.getValue())), 2));

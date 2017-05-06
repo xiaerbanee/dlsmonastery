@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.report.web.controller;
 
 import net.myspring.cloud.modules.input.service.BdCustomerService;
-import net.myspring.cloud.modules.report.dto.NameValueDto;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.report.dto.ReceivableForDetailDto;
 import net.myspring.cloud.modules.report.dto.ReceivableForSummaryDto;
 import net.myspring.cloud.modules.report.service.ReceivableReportService;
@@ -32,9 +32,9 @@ public class ReceivableReportController {
         LocalDate dateStart = receivableReportQuery.getStartDate();
         LocalDate dateEnd = receivableReportQuery.getEndDate();
         String primaryGroupId = "";
-        List<NameValueDto> groupList = bdCustomerService.findPrimaryGroupAndPrimaryGroupName();
+        List<NameNumberDto> groupList = bdCustomerService.findPrimaryGroupAndPrimaryGroupName();
         if (StringUtils.isBlank(receivableReportQuery.getPrimaryGroupId())) {
-            primaryGroupId = groupList.get(1).getValue();
+            primaryGroupId = groupList.get(1).getNumber();
             form.setPrimaryGroupName(groupList.get(1).getName());
         }else {
             primaryGroupId = receivableReportQuery.getPrimaryGroupId();

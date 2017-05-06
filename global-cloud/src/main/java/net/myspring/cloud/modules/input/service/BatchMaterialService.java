@@ -8,14 +8,13 @@ import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
-import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.input.dto.BdMaterialDto;
 import net.myspring.cloud.modules.input.dto.K3CloudSave;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.input.web.form.BatchMaterialForm;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
-import net.myspring.cloud.modules.report.dto.NameValueDto;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -25,7 +24,10 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * 物料添加
+ * Created by lihx on 2016/10/10.
+ */
 @Service
 @KingdeeDataSource
 public class BatchMaterialService {
@@ -38,11 +40,11 @@ public class BatchMaterialService {
         Map<String, BdMaterialDto> materialMap = Maps.newLinkedHashMap();
         Map<String, String> materialCategoryMap = Maps.newHashMap();
         Map<String, String> materialGroupMap = Maps.newHashMap();
-        for (NameValueDto bdMaterial : bdMaterialMapper.findCategory()) {
-            materialCategoryMap.put(bdMaterial.getName(), bdMaterial.getValue());
+        for (NameNumberDto bdMaterial : bdMaterialMapper.findCategory()) {
+            materialCategoryMap.put(bdMaterial.getName(), bdMaterial.getNumber());
         }
-        for (NameValueDto bdMaterial : bdMaterialMapper.findGroup()) {
-            materialGroupMap.put(bdMaterial.getName(), bdMaterial.getValue());
+        for (NameNumberDto bdMaterial : bdMaterialMapper.findGroup()) {
+            materialGroupMap.put(bdMaterial.getName(), bdMaterial.getNumber());
         }
         for (List<Object> row : datas) {
             String productNumber = HandSonTableUtils.getValue(row, 0);
@@ -99,8 +101,8 @@ public class BatchMaterialService {
     }
 
     public BatchMaterialForm getFormProperty(BatchMaterialForm batchMaterialForm){
-        List<NameValueDto> materialCategories = bdMaterialMapper.findCategory();
-        List<NameValueDto> materialGroups = bdMaterialMapper.findGroup();
+        List<NameNumberDto> materialCategories = bdMaterialMapper.findCategory();
+        List<NameNumberDto> materialGroups = bdMaterialMapper.findGroup();
         batchMaterialForm.setMaterialCategoryList(CollectionUtil.extractToList(materialCategories, "name"));
         batchMaterialForm.setMaterialGroupList(CollectionUtil.extractToList(materialGroups, "name"));
         return batchMaterialForm;

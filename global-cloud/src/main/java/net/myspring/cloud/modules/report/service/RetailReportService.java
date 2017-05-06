@@ -8,7 +8,7 @@ import net.myspring.cloud.common.enums.RetailReportEnum;
 import net.myspring.cloud.common.enums.RetailReportForCostEnum;
 import net.myspring.cloud.common.enums.RetailReportForIncomeEnum;
 import net.myspring.cloud.modules.report.domain.Retail;
-import net.myspring.cloud.modules.report.dto.NameValueDto;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.report.mapper.GlcxViewMapper;
 import net.myspring.cloud.modules.report.mapper.RetailReportMapper;
 import net.myspring.cloud.modules.sys.domain.DynamicSubject;
@@ -39,49 +39,49 @@ public class RetailReportService {
     private DynamicSubjectForRetailReportService dynamicSubjectForRetailReportService;
 
     //显示的科目
-    private Map<String,NameValueDto> showEnum(){
+    private Map<String,NameNumberDto> showEnum(){
         List<DynamicSubject> newSubjectList = glcxViewMapper.findByAccName("管理费用");
         List<DynamicSubject> dynamicSubjectList = dynamicSubjectForRetailReportService.findCloudDynamicSubjectList(newSubjectList);
-        Map<String,NameValueDto> showItemMap = Maps.newLinkedHashMap();
+        Map<String,NameNumberDto> showItemMap = Maps.newLinkedHashMap();
         RetailReportEnum[] enumList = RetailReportEnum.values();
         for(int i=0; i< enumList.length; i++){
             if(enumList[i].equals(RetailReportEnum.income_total)){
                 for(RetailReportForIncomeEnum incomeEnum : RetailReportForIncomeEnum.values()){
-                    NameValueDto tree = new NameValueDto();
+                    NameNumberDto tree = new NameNumberDto();
                     tree.setName(incomeEnum.getAccName());
-                    tree.setValue(incomeEnum.getFyNum());
+                    tree.setNumber(incomeEnum.getFyNum());
                     showItemMap.put(incomeEnum.getFyName(),tree);
                 }
-                NameValueDto tree = new NameValueDto();
+                NameNumberDto tree = new NameNumberDto();
                 tree.setName(enumList[i].getAccName());
-                tree.setValue(enumList[i].getFyNum());
+                tree.setNumber(enumList[i].getFyNum());
                 showItemMap.put(enumList[i].getFyName(),tree);
             }else if(enumList[i].equals(RetailReportEnum.cost_total)){
                 for(RetailReportForCostEnum costEnum : RetailReportForCostEnum.values()){
-                    NameValueDto tree = new NameValueDto();
+                    NameNumberDto tree = new NameNumberDto();
                     tree.setName(costEnum.getAccName());
-                    tree.setValue(costEnum.getFyNum());
+                    tree.setNumber(costEnum.getFyNum());
                     showItemMap.put(costEnum.getFyName(),tree);
                 }
-                NameValueDto tree = new NameValueDto();
+                NameNumberDto tree = new NameNumberDto();
                 tree.setName(enumList[i].getAccName());
-                tree.setValue(enumList[i].getFyNum());
+                tree.setNumber(enumList[i].getFyNum());
                 showItemMap.put(enumList[i].getFyName(),tree);
             }else if(enumList[i].equals(RetailReportEnum.daily_operating_expenses_total)){
                 for(DynamicSubject fee: dynamicSubjectList){
-                    NameValueDto tree = new NameValueDto();
+                    NameNumberDto tree = new NameNumberDto();
                     tree.setName(fee.getAccName());
-                    tree.setValue(fee.getFyNum());
+                    tree.setNumber(fee.getFyNum());
                     showItemMap.put(fee.getFyName(),tree);
                 }
-                NameValueDto tree = new NameValueDto();
+                NameNumberDto tree = new NameNumberDto();
                 tree.setName(enumList[i].getAccName());
-                tree.setValue(enumList[i].getFyNum());
+                tree.setNumber(enumList[i].getFyNum());
                 showItemMap.put(enumList[i].getFyName(),tree);
             }else{
-                NameValueDto tree = new NameValueDto();
+                NameNumberDto tree = new NameNumberDto();
                 tree.setName(enumList[i].getAccName());
-                tree.setValue(enumList[i].getFyNum());
+                tree.setNumber(enumList[i].getFyNum());
                 showItemMap.put(enumList[i].getFyName(),tree);
             }
         }
@@ -101,7 +101,7 @@ public class RetailReportService {
     //页面显示数据
     public List<List<Object>> getRetailReport(YearMonth start, YearMonth end) {
         List<List<Object>> retailReportModels = Lists.newArrayList();
-        List<NameValueDto> departmentList = Lists.newArrayList();
+        List<NameNumberDto> departmentList = Lists.newArrayList();
         departmentList.add(retailReportForAssistService.getAddDepartment());
         departmentList.addAll(glcxViewMapper.findDepartment());
         List<Retail> itemDataList = findAmountAndPercentForAddDepartment(start, end);
@@ -124,15 +124,15 @@ public class RetailReportService {
             }
         }
         //数据
-        for (Map.Entry<String,NameValueDto> showEnum : showEnum().entrySet()) {
+        for (Map.Entry<String,NameNumberDto> showEnum : showEnum().entrySet()) {
             List<Object> item = Lists.newArrayList();
             item.add(showEnum.getKey());
-            for (NameValueDto department : departmentList) {
+            for (NameNumberDto department : departmentList) {
                 YearMonth tempStart = start;
                 while (tempStart.isBefore(end) || tempStart.equals(end)) {
                     int year = tempStart.getYear();
                     int month = tempStart.getMonthValue();
-                    String key = showEnum.getValue().getName() + CharEnum.UNDER_LINE.getValue() +showEnum.getValue().getValue()+ CharEnum.UNDER_LINE.getValue() + department.getName() + CharEnum.UNDER_LINE.getValue() + year + CharEnum.UNDER_LINE.getValue() + month;
+                    String key = showEnum.getValue().getName() + CharEnum.UNDER_LINE.getValue() +showEnum.getValue().getNumber()+ CharEnum.UNDER_LINE.getValue() + department.getName() + CharEnum.UNDER_LINE.getValue() + year + CharEnum.UNDER_LINE.getValue() + month;
                     if (retailReportItemMap.containsKey(key)) {
                         item.add(retailReportItemMap.get(key).getAmount());
                         item.add(retailReportItemMap.get(key).getPercent());
@@ -143,7 +143,7 @@ public class RetailReportService {
                     tempStart = tempStart.plusMonths(1);
                 }
                 //累计
-                String key2 = showEnum.getValue().getName() + CharEnum.UNDER_LINE.getValue() + showEnum.getValue().getValue() + CharEnum.UNDER_LINE.getValue()+department.getName();
+                String key2 = showEnum.getValue().getName() + CharEnum.UNDER_LINE.getValue() + showEnum.getValue().getNumber() + CharEnum.UNDER_LINE.getValue()+department.getName();
                 if (sumRetailReportItemMap.containsKey(key2))  {
                     item.add(sumRetailReportItemMap.get(key2).getAmount());
                     item.add(sumRetailReportItemMap.get(key2).getPercent());

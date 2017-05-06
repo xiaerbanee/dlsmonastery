@@ -7,7 +7,8 @@
        t1.FNUMBER,
        t2.FNAME
        from
-       T_BD_SUPPLIER t1,T_BD_SUPPLIER_L t2
+        T_BD_SUPPLIER t1,
+        T_BD_SUPPLIER_L t2
        where
        t1.FSUPPLIERID = t2.FSUPPLIERID
     </select>
@@ -20,5 +21,16 @@
         left join T_BD_SUPPLIER_L t2 on t1.FSUPPLIERID = t2.FSUPPLIERID
         where
         t2.FSUPPLIERID = #{supplierId}
+    </select>
+
+    <select id="findNameAndNumber" resultType="NameValueDto">
+        select
+        t1.FNUMBER as number,
+        t2.FNAME as name
+        from
+        T_BD_SUPPLIER t1,
+        T_BD_SUPPLIER_L t2
+        where
+        t1.FSUPPLIERID = t2.FSUPPLIERID
     </select>
 </mapper>

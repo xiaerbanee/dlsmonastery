@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.report.web.form;
 
-import net.myspring.cloud.modules.report.dto.NameValueDto;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.report.dto.ReceivableForSummaryDto;
 
 import java.util.List;
@@ -13,13 +13,13 @@ public class ReceivableReportForm {
     private String dateRange;
     private String primaryGroupName;
 
-    private List<NameValueDto> primaryGroup;
+    private List<NameNumberDto> primaryGroup;
 
-    public List<NameValueDto> getPrimaryGroup() {
+    public List<NameNumberDto> getPrimaryGroup() {
         return primaryGroup;
     }
 
-    public void setPrimaryGroup(List<NameValueDto> primaryGroup) {
+    public void setPrimaryGroup(List<NameNumberDto> primaryGroup) {
         this.primaryGroup = primaryGroup;
     }
 

@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.mapper;
 
 import net.myspring.cloud.modules.input.domain.BdDepartment;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,5 +18,7 @@ public interface BdDepartmentMapper {
     List<BdDepartment> findAll();
 
     String findNameByDepartmentId(@Param("departmentId")String departmentId);
+
+    List<NameNumberDto> findNameAndNumber();
 
 }

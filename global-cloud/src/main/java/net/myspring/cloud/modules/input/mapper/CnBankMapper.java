@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.mapper;
 
 import net.myspring.cloud.modules.input.domain.CnBank;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,4 +17,6 @@ public interface CnBankMapper {
     List<CnBank> findAll();
 
     List<CnBank> findByDate(@Param("maxOutDate")LocalDateTime maxOutDate);
+
+    List<NameNumberDto> findNameAndNumber();
 }

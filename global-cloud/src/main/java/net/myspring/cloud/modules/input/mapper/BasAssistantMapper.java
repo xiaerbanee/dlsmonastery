@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.mapper;
 
 import net.myspring.cloud.modules.input.domain.BasAssistant;
+import net.myspring.common.dto.NameValueDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,4 +16,5 @@ public interface BasAssistantMapper {
     String findFNumberByNameAndDataValue(@Param("name") String name, @Param("dataValue") String dataValue);
 
     List<BasAssistant> findByType(@Param("type")String type);
+
 }

@@ -53,7 +53,7 @@
 
     <select id="findNameAndNumber" resultType="NameValueDto">
         SELECT
-        t1.FNUMBER as value,
+        t1.FNUMBER as number,
         t2.FNAME as name
         FROM
         T_BD_MATERIAL t1,
@@ -63,7 +63,7 @@
     </select>
     <select id="findCategory" resultType="NameValueDto">
         select
-            t.FNUMBER as value,
+            t.FNUMBER as number,
             t1.FNAME as name
         from
             T_BD_MATERIALCATEGORY t,
@@ -73,7 +73,7 @@
     </select>
     <select id="findGroup" resultType="NameValueDto">
         select
-            t.FNUMBER as value,
+            t.FNUMBER as number,
             t1.FNAME as name
         from
             T_BD_MaterialGroup t,

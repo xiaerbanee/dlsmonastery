@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.input.mapper;
 
 import net.myspring.cloud.modules.input.domain.BdMaterial;
-import net.myspring.cloud.modules.report.dto.NameValueDto;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,9 +20,9 @@ public interface BdMaterialMapper {
 
     List<String> findNameByNameLike(@Param("name")String name);
 
-    List<NameValueDto> findNameAndNumber();
+    List<NameNumberDto> findNameAndNumber();
 
-    List<NameValueDto> findCategory();
+    List<NameNumberDto> findCategory();
 
-    List<NameValueDto> findGroup();
+    List<NameNumberDto> findGroup();
 }

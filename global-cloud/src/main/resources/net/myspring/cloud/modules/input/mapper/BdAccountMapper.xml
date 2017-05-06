@@ -26,4 +26,16 @@
         t1.FACCTID = t2.FACCTID
         and t2.FLOCALEID = 2052
     </select>
+
+    <select id="findNameAndNumber" resultType="NameNumberDto">
+        select
+        t1.FNUMBER as number,
+        t2.FNAME as name
+        from
+        T_BD_ACCOUNT t1,
+        T_BD_ACCOUNT_L t2
+        where
+        t1.FACCTID = t2.FACCTID
+        and t2.FLOCALEID = 2052
+    </select>
 </mapper>

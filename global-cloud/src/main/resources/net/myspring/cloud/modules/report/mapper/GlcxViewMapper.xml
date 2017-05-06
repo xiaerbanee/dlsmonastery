@@ -5,7 +5,7 @@
 <mapper namespace="net.myspring.cloud.modules.report.mapper.GlcxViewMapper">
     <select id="findDepartment" resultType="NameValueDto">
         SELECT DISTINCT
-            fdeptnum AS value,
+            fdeptnum AS number,
             fdeptname AS name
         FROM
             glcx

@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.modules.input.domain.BdCustomer;
 import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
-import net.myspring.cloud.modules.report.dto.NameValueDto;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +35,7 @@ public class BdCustomerService {
         return bdCustomerMapper.findNameByNameLike(name);
     }
 
-    public List<NameValueDto> findPrimaryGroupAndPrimaryGroupName(){
+    public List<NameNumberDto> findPrimaryGroupAndPrimaryGroupName(){
         return bdCustomerMapper.findPrimaryGroupAndPrimaryGroupName();
     }
 

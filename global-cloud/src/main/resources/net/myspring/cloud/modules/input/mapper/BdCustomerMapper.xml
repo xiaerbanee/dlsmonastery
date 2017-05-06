@@ -22,7 +22,7 @@
 
     <select id="findPrimaryGroupAndPrimaryGroupName" resultType="NameValueDto">
         SELECT
-            t1.FPRIMARYGROUP as value,
+            t1.FPRIMARYGROUP as number,
             t4.FNAME AS name
         FROM
             T_BD_CUSTOMER t1,
@@ -60,66 +60,88 @@
 
     <select id="findByName" resultType="BdCustomer">
         SELECT
-        t1.FCUSTID,
-        t1.FNUMBER,
-        t2.FNAME,
-        t1.FPRIMARYGROUP,
-        t4.FNAME AS fprimaryGroupName,
-        t1.FMODIFYDATE
+            t1.FCUSTID,
+            t1.FNUMBER,
+            t2.FNAME,
+            t1.FPRIMARYGROUP,
+            t4.FNAME AS fprimaryGroupName,
+            t1.FMODIFYDATE
         FROM
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2,
+            T_BD_CUSTOMERGROUP t3,
+            T_BD_CUSTOMERGROUP_L t4
         WHERE
-        t1.FCUSTID = t2.FCUSTID
-        AND t1.FPRIMARYGROUP = t3.FID
-        AND t3.FID = t4.FID
-        AND t2.FNAME = #{name}
+            t1.FCUSTID = t2.FCUSTID
+            AND t1.FPRIMARYGROUP = t3.FID
+            AND t3.FID = t4.FID
+            AND t2.FNAME = #{name}
     </select>
 
     <select id="findNameByNameLike" resultType="String">
         select
-        t2.FNAME
+            t2.FNAME
         FROM
-        T_BD_CUSTOMER t1
+            T_BD_CUSTOMER t1
         LEFT JOIN T_BD_CUSTOMER_L t2 ON t1.FCUSTID = t2.FCUSTID
         where
-        t2.FNAME like CONCAT('%',#{name},'%')
+            t2.FNAME like CONCAT('%',#{name},'%')
     </select>
 
     <select id="findById" resultType="BdCustomer">
         SELECT
-        t1.FCUSTID,
-        t1.FNUMBER,
-        t1.FPRIMARYGROUP,
-        t1.FMODIFYDATE,
-        t2.FNAME
+            t1.FCUSTID,
+            t1.FNUMBER,
+            t1.FPRIMARYGROUP,
+            t1.FMODIFYDATE,
+            t2.FNAME
         FROM
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2
         where
-        t1.FCUSTID = t2.FCUSTID
-        and t1.FCUSTID = #{id}
+            t1.FCUSTID = t2.FCUSTID
+            and t1.FCUSTID = #{id}
     </select>
 
     <select id="findByPrimaryGroup" resultType="BdCustomer">
         select
-        t1.FCUSTID,
-        t1.FNUMBER,
-        t1.FPRIMARYGROUP,
-        t1.FMODIFYDATE,
-        t2.FNAME,
-        t4.FNAME as fprimaryGroupName
+            t1.FCUSTID,
+            t1.FNUMBER,
+            t1.FPRIMARYGROUP,
+            t1.FMODIFYDATE,
+            t2.FNAME,
+            t4.FNAME as fprimaryGroupName
         from
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2,
+            T_BD_CUSTOMERGROUP t3,
+            T_BD_CUSTOMERGROUP_L t4
         where
-        t1.FCUSTID=t2.FCUSTID
-        and t1.FPRIMARYGROUP=t3.FID
-        and t3.FID=t4.FID
-        and t1.FPRIMARYGROUP = #{primaryGroup}
+            t1.FCUSTID=t2.FCUSTID
+            and t1.FPRIMARYGROUP=t3.FID
+            and t3.FID=t4.FID
+            and t1.FPRIMARYGROUP = #{primaryGroup}
+    </select>
+
+    <select id="findNumberByName" resultType="String">
+        select
+            t.FNUMBER
+        from
+            T_BD_ACCOUNT t,
+            T_BD_ACCOUNT_L  tl
+        where
+            t.FACCTID=tl.FACCTID
+            and  tl.FNAME=#{name}
+    </select>
+
+    <select id="findNameAndNumber" resultType="NameValueDto">
+        select
+            t.FNUMBER as number,
+           tl.FNAME as name
+        from
+            T_BD_ACCOUNT t,
+            T_BD_ACCOUNT_L  tl
+        where
+            t.FACCTID=tl.FACCTID
     </select>
 </mapper>

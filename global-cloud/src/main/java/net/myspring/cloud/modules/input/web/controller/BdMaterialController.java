@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.input.web.controller;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.input.service.BdMaterialService;
-import net.myspring.cloud.modules.report.dto.NameValueDto;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +39,7 @@ public class BdMaterialController {
     }
 
     @RequestMapping(value = "getNameAndNumber")
-    public List<NameValueDto> getNameAndNumber(){
+    public List<NameNumberDto> getNameAndNumber(){
         return bdMaterialService.getNameAndNumber();
     }
 }

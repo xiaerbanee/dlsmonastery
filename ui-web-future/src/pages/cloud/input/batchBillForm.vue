@@ -2,7 +2,7 @@
   <div>
     <head-tab active="batchBillForm"></head-tab>
     <div>
-      <el-form :model="formData" method="get" >
+      <el-form :model="formData" method="get">
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item :label="formLabel.storeNumber.label"  :label-width="formLabelWidth">
@@ -13,7 +13,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item :label="formLabel.billDateBTW.label" :label-width="formLabelWidth">
-              <el-billDate-picker v-model="formData.billDate" type="billDate" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-billDate-picker>
+              <el-date-picker v-model="formData.billDate" type="date" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -117,16 +117,11 @@
                     for (let index in productMap){
                       if(productMap[index].name === name){
                         td.innerHTML = productMap[index].value;
-//                            this.table.setDataAtCell(row,1,productMap[index].value,source);
+                            this.table.setDataAtCell(row,1,productMap[index].value,source);
                       }
                     }
 //                    this.table.render();
                   });
-
-//                  if(this.productMap[name]!=null) {
-//                    console.log(this.productMap[name]);
-////                    $('#grid').handsontable('setDataAtCell', row, 0, codeMap[name]);
-//                  }
                 }
               }
             }

@@ -11,4 +11,14 @@
         T_BD_SETTLETYPE_L tl
         where t.FID = tl.FID
     </select>
+
+    <select id="findNameAndNumber" resultType="NameValueDto">
+        select
+        t.FNUMBER as number,
+        tl.FNAME as name
+        from
+        T_BD_SETTLETYPE t,
+        T_BD_SETTLETYPE_L tl
+        where t.FID = tl.FID
+    </select>
 </mapper>
