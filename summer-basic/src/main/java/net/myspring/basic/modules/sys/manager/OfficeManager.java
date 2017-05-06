@@ -2,7 +2,7 @@ package net.myspring.basic.modules.sys.manager;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import net.myspring.basic.common.enums.OfficeRuleEnum;
+import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.mapper.OfficeBusinessMapper;
@@ -34,9 +34,8 @@ public class OfficeManager {
     public List<String> officeFilter(String accountId) {
         List<String> officeIdList = Lists.newArrayList();
         Office office = officeMapper.findByAccountId(accountId);
-        OfficeRule officeRule = officeRuleMapper.findOne(office.getId());
         if (!StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)) {
-            if (OfficeRuleEnum.BUSINESS.name().equalsIgnoreCase(officeRule.getType())) {
+            if (OfficeTypeEnum.BUSINESS.name().equalsIgnoreCase(office.getType())) {
                 officeIdList.add(office.getId());
                 officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()), "id"));
             } else {

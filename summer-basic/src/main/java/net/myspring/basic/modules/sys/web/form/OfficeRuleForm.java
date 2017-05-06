@@ -20,7 +20,6 @@ public class OfficeRuleForm extends DataForm<OfficeRule> {
     private String parentName;
     private String name;
     private String code;
-    private String type;
     private Integer level;
     private Map<String,String> boolMap= Maps.newHashMap();
     private boolean hasPoint;
@@ -33,14 +32,6 @@ public class OfficeRuleForm extends DataForm<OfficeRule> {
 
     public void setLevel(Integer level) {
         this.level = level;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public List<String> getOfficeRuleNameList() {

@@ -23,17 +23,36 @@ public class OfficeForm extends DataForm<Office> {
     private String taskPoint;
     private String sort;
     private TreeNode officeTree;
+    private String type;
     private List<String> officeIdList=Lists.newArrayList();
     private String officeIdStr;
     private List<OfficeRuleDto>  officeRuleList= Lists.newArrayList();
     private List<String> jointTypeList= Lists.newArrayList();
     private String officeRuleId;
     private List<String> leaderIdList=Lists.newArrayList();
+    private List<String> officeTypeList=Lists.newArrayList();
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
     @CacheInput(inputKey = "accounts",inputInstance = "leaderIdList",outputInstance = "loginName")
     private List<String> leaderNameList=Lists.newArrayList();
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<String> getOfficeTypeList() {
+        return officeTypeList;
+    }
+
+    public void setOfficeTypeList(List<String> officeTypeList) {
+        this.officeTypeList = officeTypeList;
+    }
 
     public List<String> getLeaderNameList() {
         return leaderNameList;

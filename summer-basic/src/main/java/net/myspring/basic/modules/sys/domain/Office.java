@@ -18,6 +18,15 @@ public class Office extends TreeEntity<Office> {
     private BigDecimal taskPoint;
     private Integer sort;
     private String officeRuleId;
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getName() {
         return name;

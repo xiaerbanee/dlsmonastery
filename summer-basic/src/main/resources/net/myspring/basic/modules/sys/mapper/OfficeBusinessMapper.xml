@@ -15,4 +15,8 @@
             #{item}
         </foreach>
     </update>
+
+    <delete id="removeByOfficeId">
+        DELETE FROM sys_office_business where office_id=#{officeId}
+    </delete>
 </mapper>

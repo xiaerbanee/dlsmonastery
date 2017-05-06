@@ -12,15 +12,6 @@ public class OfficeRuleDto extends TreeDto<OfficeRule> {
     private String parentName;
     private String name;
     private String code;
-    private String type;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String getParentName() {
         return parentName;

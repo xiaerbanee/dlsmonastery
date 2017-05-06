@@ -28,11 +28,6 @@
         <el-table-column fixed prop="id" :label="$t('officeRuleList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="name" :label="$t('officeRuleList.name')" ></el-table-column>
         <el-table-column prop="code" label="Code" ></el-table-column>
-        <el-table-column prop="type" label="类型" width="100">
-          <template scope="scope">
-            {{$t('OfficeRuleEnum.'+ scope.row.type)}}
-          </template>
-        </el-table-column>
         <el-table-column prop="parentName" label="上级" ></el-table-column>
         <el-table-column prop="hasPoint" label="是否有点位" width="100">
           <template scope="scope">

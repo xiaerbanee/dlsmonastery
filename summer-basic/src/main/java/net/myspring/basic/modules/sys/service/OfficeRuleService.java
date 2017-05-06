@@ -34,6 +34,8 @@ public class OfficeRuleService {
         return page;
     }
 
+
+
     public List<OfficeRuleDto> findAll(){
         List<OfficeRule> officeRuleList=officeRuleMapper.findAllEnabled();
         List<OfficeRuleDto> officeRuleDtoList=BeanUtil.map(officeRuleList,OfficeRuleDto.class);
@@ -49,6 +51,15 @@ public class OfficeRuleService {
         return officeRuleForm;
     }
 
+    public OfficeRule findMaxLevel(){
+        OfficeRule officeRule=officeRuleMapper.findMaxLevel();
+        return officeRule;
+    }
+
+    public OfficeRule findOne(String id){
+        OfficeRule officeRule=officeRuleMapper.findOne(id);
+        return officeRule;
+    }
 
     public OfficeRule save(OfficeRuleForm officeRuleForm) {
         OfficeRule officeRule;
