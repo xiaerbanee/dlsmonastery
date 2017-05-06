@@ -35,9 +35,8 @@ public class ShopPrintService {
     public ShopPrintForm findForm(ShopPrintForm  shopPrintForm){
         if(!shopPrintForm.isCreate()){
             ShopPrint shopPrint = shopPrintMapper.findOne(shopPrintForm.getId());
-            ShopPrintDto shopPrintDto = BeanUtil.map(shopPrint,ShopPrintDto.class);
-            cacheUtils.initCacheInput(shopPrintDto);
-            shopPrintForm = BeanUtil.map(shopPrintDto,ShopPrintForm.class);
+            shopPrintForm = BeanUtil.map(shopPrint,ShopPrintForm.class);
+            cacheUtils.initCacheInput(shopPrintForm);
         }
         return shopPrintForm;
     }

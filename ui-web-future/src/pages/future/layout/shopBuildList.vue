@@ -39,8 +39,8 @@
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('shopBuildList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('shopBuildList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+                <su-date-range-picker v-model="formData.createdDateRange" ></su-date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -53,27 +53,28 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopBuildList.loading')" @sort-change="sortChange" @selection-change="handleSelectionChange" stripe border>
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column fixed prop="id" :label="$t('shopBuildList.code')" sortable></el-table-column>
-        <el-table-column prop="shop.extendMap.officeName" :label="$t('shopBuildList.officeName')" ></el-table-column>
-        <el-table-column prop="shop.name" :label="$t('shopBuildList.shopName')" ></el-table-column>
+        <el-table-column prop="officeName" :label="$t('shopBuildList.officeName')" ></el-table-column>
+        <el-table-column prop="shopName" :label="$t('shopBuildList.shopName')" ></el-table-column>
         <el-table-column prop="fixtureType" :label="$t('shopBuildList.fixtureType')" ></el-table-column>
-        <el-table-column prop="content" :label="$t('shopBuildList.content')" width="140"></el-table-column>
+        <el-table-column prop="content" :label="$t('shopBuildList.content')" width="150"></el-table-column>
         <el-table-column prop="oldContents"  :label="$t('shopBuildList.oldContents')"   ></el-table-column>
         <el-table-column prop="newContents" :label="$t('shopBuildList.newContents')" ></el-table-column>
         <el-table-column prop="processStatus" :label="$t('shopBuildList.processFlow')" width="150">
           <template scope="scope">
-            <el-tag :type="scope.row.processStatus === '未通过' ? 'primary' : 'success'"  close-transition>{{scope.row.processStatus}}</el-tag>
+            <el-tag :type="scope.row.processStatus === '已通过' ? 'primary' : 'danger'"  close-transition>{{scope.row.processStatus}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('shopBuildList.createdBy')"  ></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('shopBuildList.createdBy')"  ></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopBuildList.createdDate')" sortable ></el-table-column>
-        <el-table-column prop="lastModified.loginName" :label="$t('shopBuildList.lastModifiedBy')"></el-table-column>
-        <el-table-column prop="lastModifiedDate" :label="$t('shopBuildList.lastModifiedDate')" sortable width="150" ></el-table-column>
+        <el-table-column prop="lastModifiedByName" :label="$t('shopBuildList.lastModifiedBy')"></el-table-column>
+        <el-table-column prop="lastModifiedDate" :label="$t('shopBuildList.lastModifiedDate')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopBuildList.remarks')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('shopBuildList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" v-permit="'crm:shopBuild:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button>
+            <el-button size="small" v-if="scope.row.isAuditable" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
+            <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button>
+            <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -91,13 +92,12 @@
           page:0,
           size:25,
           officeId:'',
-          auditType:"1",
+          auditType:"0",
           shopName:'',
           processFlow:'',
           fixtureType:'',
           createdBy:'',
-          createdDate:'',
-          createdDateBTW:'',
+          createdDateRange:'',
         },formLabel:{
           officeId:{label: this.$t('shopBuildList.officeName'),value:''},
           auditType:{label: this.$t('shopBuildList.auditType'),value:''},
@@ -105,7 +105,7 @@
           processFlow:{label:this.$t('shopBuildList.processFlow'),value:''},
           fixtureType:{label:this.$t('shopBuildList.fixtureType'),value:''},
           createdBy:{label: this.$t('shopBuildList.createdBy')},
-          createdDateBTW:{label: this.$t('shopBuildList.createdDate')},
+          createdDateRange:{label: this.$t('shopBuildList.createdDate')},
         },auditTypes:{
           0:this.$t('shopBuildList.all'),
           1:this.$t('shopBuildList.waitAudit')
@@ -122,10 +122,9 @@
         this.pageLoading = true;
         this.formLabel.officeId.value = util.getLabel(this.formProperty.areas, this.formData.officeId);
         this.formLabel.processFlow.value = util.getLabel(this.formProperty.processFlows, this.formData.processFlow);
-        this.formData.createdDateBTW = util.formatDateRange(this.formData.createdDate);
         this.formLabel.auditType.value = this.auditTypes[this.formData.auditType];
-        util.setQuery("shopBuildList",this.formData);
-        axios.get('/api/crm/shopBuild',{params:this.formData}).then((response) => {
+        console.log(this.formData);
+        axios.get('/api/ws/future/layout/shopBuild',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -145,16 +144,16 @@
       },itemAdd(){
         this.$router.push({ name: 'shopBuildForm'});
       },itemAction:function(id,action){
-        if(action=="详细") {
+        if(action=="detail") {
           this.$router.push({ name: 'shopBuildDetail', query:{id: id}});
-        }else if(action=="删除") {
+        }else if(action=="delete") {
           axios.get('/api/crm/shopBuild/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
-        }else if(action == "修改"){
+        }else if(action == "edit"){
           this.$router.push({name: 'shopBuildForm', query:{id: id}});
-        }else if(action == "审核"){
+        }else if(action == "audit"){
           this.$router.push({name: 'shopBuildDetail', query:{id: id}});
         }
      },handleSelectionChange(val) {
@@ -184,7 +183,6 @@
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
       this.pageRequest();
-      this.getQuery();
     }
   };
 </script>

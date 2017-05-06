@@ -1,5 +1,12 @@
 package net.myspring.future.modules.layout.web.controller;
 
+import net.myspring.future.modules.layout.dto.ShopBuildDto;
+import net.myspring.future.modules.layout.service.ShopBuildService;
+import net.myspring.future.modules.layout.web.form.ShopBuildForm;
+import net.myspring.future.modules.layout.web.query.ShopBuildQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -8,13 +15,17 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "crm/shopBuild")
+@RequestMapping(value = "layout/shopBuild")
 public class ShopBuildController {
+
+    @Autowired
+    private ShopBuildService shopBuildService;
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list() {
-        return null;
+    public Page<ShopBuildDto> list(Pageable pageable, ShopBuildQuery shopBuildQuery) {
+        Page<ShopBuildDto> page = shopBuildService.findPage(pageable,shopBuildQuery);
+        return page;
     }
 
     @RequestMapping(value = "getFormProperty")
@@ -42,8 +53,8 @@ public class ShopBuildController {
         return null;
     }
     @RequestMapping(value = "detail")
-    public String detail() {
-        return null;
+    public ShopBuildForm detail(ShopBuildForm shopBuildForm) {
+        return shopBuildService.findForm(shopBuildForm);
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)

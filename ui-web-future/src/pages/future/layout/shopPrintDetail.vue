@@ -45,22 +45,7 @@
         </el-row>
       </el-form>
     </div>
-    <el-table :data="activitiEntity.historicTaskInstances">
-      <el-table-column prop="name" :label="$t('shopPrintDetail.nodeName')"></el-table-column>
-      <el-table-column :label="$t('shopPrintDetail.auditMan')" >
-        <template scope="scope">{{activitiEntity.accountMap?activitiEntity.accountMap[scope.row.id]:''}}</template>
-      </el-table-column>
-      <el-table-column :label="$t('shopPrintDetail.auditDate')">
-        <template scope="scope">
-          {{scope.row.endTime | formatLocalDateTime}}
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('shopPrintDetail.auditRemarks')">
-        <template scope="scope">
-          {{activitiEntity.commentMap?activitiEntity.commentMap[scope.row.id]:''}}
-        </template>
-      </el-table-column>
-    </el-table>
+    <su-process-details v-model="shopPrint.processInstanceId"></su-process-details>
   </div>
 </template>
 

@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.service;
 
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.layout.domain.ShopPromotion;
 import net.myspring.future.modules.layout.dto.ShopPromotionDto;
@@ -25,7 +26,7 @@ public class ShopPromotionService {
     @Autowired
     private ShopPromotionMapper shopPromotionMapper;
     @Autowired
-    private DepotMapper depotMapper;
+    private CacheUtils cacheUtils;
 
     public Page<ShopPromotionDto> findPage(Pageable pageable, ShopPromotionQuery shopPromotionQuery){
         Page<ShopPromotionDto> page = shopPromotionMapper.findPage(pageable,shopPromotionQuery);
@@ -51,8 +52,7 @@ public class ShopPromotionService {
         if(!shopPromotionForm.isCreate()){
             ShopPromotion shopPromotion = shopPromotionMapper.findOne(shopPromotionForm.getId());
             shopPromotionForm = BeanUtil.map(shopPromotion,ShopPromotionForm.class);
-            String shopName = depotMapper.findOne(shopPromotionForm.getShopId()).getName();
-
+            cacheUtils.initCacheInput(shopPromotionForm);
         }
         return shopPromotionForm;
     }

@@ -141,10 +141,10 @@
           this.formProperty=response.data;
         });
       },findOne(){
-        axios.get('/api/crm/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/layout/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
           if(this.inputForm.scenePhoto !=null) {
-            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
               this.fileList= response.data;
             });
           }

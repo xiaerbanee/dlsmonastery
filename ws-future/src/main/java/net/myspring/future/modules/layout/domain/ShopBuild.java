@@ -276,4 +276,5 @@ public class ShopBuild extends CompanyEntity<ShopBuild> {
     public void setShop(Depot shop) {
         this.shop = shop;
     }
+
 }

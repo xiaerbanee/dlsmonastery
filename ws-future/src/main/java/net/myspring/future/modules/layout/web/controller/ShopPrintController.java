@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.web.controller;
 
 
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.layout.dto.ShopPrintDto;
 import net.myspring.future.modules.layout.service.ShopPrintService;
@@ -32,7 +33,7 @@ public class ShopPrintController {
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public RestResponse save(ShopPrintForm shopPrintForm) {
         shopPrintService.save(shopPrintForm);
-            return null;
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value="getQuery",method = RequestMethod.GET)

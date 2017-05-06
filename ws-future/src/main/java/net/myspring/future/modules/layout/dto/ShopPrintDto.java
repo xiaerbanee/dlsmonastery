@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.utils.SecurityUtils;
 import net.myspring.future.modules.layout.domain.ShopPrint;
 import net.myspring.util.cahe.annotation.CacheInput;
 
@@ -19,10 +20,8 @@ public class ShopPrintDto extends DataDto<ShopPrint>{
     private String address;
     private String content;
     private String attachment;
-    private String processInstanceId;
     private String processStatus;
-    private String processTypeId;
-    private String processFlowId;
+    private String processPositionId;
 
     public String getOfficeId() {
         return officeId;
@@ -96,13 +95,6 @@ public class ShopPrintDto extends DataDto<ShopPrint>{
         this.attachment = attachment;
     }
 
-    public String getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public void setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
-    }
 
     public String getProcessStatus() {
         return processStatus;
@@ -112,20 +104,27 @@ public class ShopPrintDto extends DataDto<ShopPrint>{
         this.processStatus = processStatus;
     }
 
-    public String getProcessTypeId() {
-        return processTypeId;
+    public String getProcessPositionId() {
+        return processPositionId;
     }
 
-    public void setProcessTypeId(String processTypeId) {
-        this.processTypeId = processTypeId;
+    public void setProcessPositionId(String processPositionId) {
+        this.processPositionId = processPositionId;
     }
 
-    public String getProcessFlowId() {
-        return processFlowId;
+    public Boolean getIsAuditable(){
+        if(SecurityUtils.getPositionId().equals(getProcessPositionId())||SecurityUtils.getAccountId().equalsIgnoreCase("1")){
+            return true;
+        }else{
+            return false;
+        }
     }
 
-    public void setProcessFlowId(String processFlowId) {
-        this.processFlowId = processFlowId;
+    public Boolean getIsEditable(){
+        if(SecurityUtils.getAccountId().equals(getCreatedBy())||SecurityUtils.getAccountId().equalsIgnoreCase("1")){
+            return true;
+        }else {
+            return false;
+        }
     }
-
 }

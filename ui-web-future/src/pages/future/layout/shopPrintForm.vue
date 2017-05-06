@@ -106,8 +106,9 @@
           }
         })
       },getFormProperty(){
-        axios.get('/api/crm/shopPrint/getFormProperty').then((response)=>{
+        axios.get('/api/basic/sys/dictMap/getQuery',{params:{category:"门店_广告印刷"}}).then((response)=>{
           this.formProperty=response.data;
+          console.log(this.formProperty);
         });
       },findOne(){
         axios.get('/api/ws/future/layout/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{

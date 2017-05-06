@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.layout.domain.ShopPrint;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 public class ShopPrintForm extends DataForm<ShopPrint>{
 
     private String officeId;
+    @CacheInput(inputKey = "offices", inputInstance = "officeId", outputInstance = "name")
     private String officeName;
     private String printType;
     private Integer qty;
@@ -20,6 +22,7 @@ public class ShopPrintForm extends DataForm<ShopPrint>{
     private String content;
     private String attachment;
     private String createdByName;
+    private String processInstanceId;
     private LocalDateTime createdDate;
 
     public String getOfficeId() {
@@ -108,5 +111,13 @@ public class ShopPrintForm extends DataForm<ShopPrint>{
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
     }
 }
