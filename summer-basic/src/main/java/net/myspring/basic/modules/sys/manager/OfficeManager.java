@@ -3,7 +3,6 @@ package net.myspring.basic.modules.sys.manager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.mapper.OfficeBusinessMapper;
