@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.crm.mapper.BankInMapper">
 
-    <select id="findPage" resultType="BankIn">
+    <select id="findPage" resultType="BankInDto">
         SELECT
-        t1.*
+        depot.name shopName, bank.name bankName, depot.parent_id shopParentId, t1.*
         FROM
-        crm_bank_in t1,crm_depot depot
+        crm_bank_in t1,crm_depot depot, crm_bank bank
         WHERE
         t1.enabled=1
-        and t1.shop_id=depot.id
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
+        and t1.shop_id=depot.id and t1.bank_id = bank.id
+        <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
         <if test="p.id !=null">
             and t1.id=#{p.id}
         </if>
@@ -57,14 +57,6 @@
         </if>
         <if test="p.inputDateEnd !=null">
             and t1.input_date &lt;= #{p.inputDateEnd}
-        </if>
-        <if test="p.createdBy !=null">
-            and t1.created_by in(
-            select id
-            from hr_account
-            where login_name like concat('%',#{p.createdBy},'%')
-            and enabled=1
-            )
         </if>
     </select>
 
