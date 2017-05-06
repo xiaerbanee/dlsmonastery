@@ -7,6 +7,7 @@ import net.myspring.future.modules.basic.dto.ProductTypeDto;
 import net.myspring.future.modules.basic.manager.ProductTypeManager;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
+import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
 import net.myspring.future.modules.basic.web.form.ProductTypeForm;
 import net.myspring.util.collection.CollectionUtil;

@@ -16,12 +16,12 @@
             </el-form-item>
             <el-form-item :label="$t('productForm.productTypeName')" prop="productTypeName">
               <el-select v-model="inputForm.productTypeId"  clearable filterable remote :placeholder="$t('productForm.inputWord')" :remote-method="remoteProductType" :loading="remoteLoading">
-                <el-option v-for="productType in productTypes" :key="productType.id"  :label="productType.name" :value="productType.id"></el-option>
+                <el-option v-for="productType in productTypeList" :key="productType.id"  :label="productType.name" :value="productType.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item  :label="$t('productForm.netType')" prop="netType">
-              <el-select v-model="inputForm.netType"  clearable  :placeholder="$t('productForm.select')">
-                <el-option v-for="netType in formProperty.netTypes" :key="netType" :label="netType" :value="netType"></el-option>
+              <el-select v-model="inputForm.netType"   clearable  :placeholder="$t('productForm.select')">
+                <el-option v-for="netType in inputForm.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('productForm.hasIme')" prop="hasIme">
@@ -33,7 +33,7 @@
             <el-form-item :label="$t('productForm.allowOrder')" prop="allowOrder">
               <el-radio-group v-model="inputForm.allowOrder">
                 <el-radio :label=1>{{$t('productForm.true')}}</el-radio>
-                <el-radio :label=0>{{$t('productForm.false')}}</el-radio>
+                <el-radio :label=0 checked>{{$t('productForm.false')}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('productForm.allowBill')" prop="allowBill">
@@ -78,8 +78,9 @@
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         formProperty:{},
-        productTypes:[],
-        inputForm:{
+        productTypeList:[],
+        inputForm:{},
+        submitData:{
           id:'',
           name:'',
           code:'',
@@ -126,26 +127,21 @@
         if (query !== '') {
           this.remoteLoading = true;
           axios.get('/api/ws/future/basic/productType/search',{params:{name:query}}).then((response)=>{
-            this.productTypes = response.data;
+            this.productTypeList = response.data;
             this.remoteLoading = false;
           })
         }
       }
     },created(){
-       axios.get('/api/ws/future/basic/product/getFormProperty').then((response)=>{
-        this.formProperty = response.data;
-      });
-      if(!this.isCreate){
-        axios.get('/api/ws/future/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
+        axios.get('/api/ws/future/basic/product/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm=response.data;
           this.inputForm.hasIme = response.data.hasIme?1:0;
           this.inputForm.allowOrder = response.data.allowOrder?1:0;
           this.inputForm.allowBill = response.data.allowBill?1:0;
           if(response.data.productType != null){
-            this.productTypes = new Array(response.data.productType)
+            this.productTypeList = new Array(response.data.productType)
           }
         })
-      }
     }
   }
 </script>

@@ -1,12 +1,15 @@
 package net.myspring.future.modules.basic.domain;
 
 
+import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
+import net.myspring.future.modules.basic.web.form.ProductForm;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Entity

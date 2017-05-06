@@ -2,7 +2,9 @@ package net.myspring.future.modules.basic.mapper;
 
 import net.myspring.common.mybatis.MyMapper;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductDto;
+import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -48,4 +50,7 @@ public interface ProductMapper extends MyMapper<Product,String> {
     List<Product> findByOutGroupIdsAndAllowOrder(@Param("outGroupIds") List<String> outGroupIds, @Param("allowOrder") boolean allowOrder);
 
     LocalDateTime getMaxOutDate();
+
+    List<ProductType> findProductTypeList();
+
 }

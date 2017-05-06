@@ -7,7 +7,7 @@
         FROM
         hr_duty_sign t1,
         hr_account account,
-        hr_office office
+        sys_office office
         WHERE
         t1.created_by=account.id
         and account.office_id=office.id
@@ -78,7 +78,7 @@
         <if test="p.officeName != null">
             and t1.employee_id in (
             select t2.id
-            from hr_employee t2 , hr_account_office t3, hr_office t4
+            from hr_employee t2 , hr_account_office t3, sys_office t4
             where t2.account_id = t3.account_id
             and t3.office_id = t4.id
             and t4.name like CONCAT('%',#{p.officeName},'%')
