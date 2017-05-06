@@ -9,7 +9,7 @@
               {{shopPrint.id}}
             </el-form-item>
             <el-form-item :label="$t('shopPrintDetail.officeName')">
-              {{shopPrint.office.name}}
+              {{shopPrint.officeName}}
             </el-form-item>
             <el-form-item :label="$t('shopPrintDetail.printType')">
               {{shopPrint.printType}}
@@ -33,7 +33,7 @@
               {{shopPrint.mobilePhone}}
             </el-form-item>
             <el-form-item :label="$t('shopPrintDetail.createdBy')" >
-              {{shopPrint.created.loginName}}
+              {{shopPrint.createdByName}}
             </el-form-item>
             <el-form-item :label="$t('shopPrintDetail.createdDate')"  >
               {{shopPrint.createdDate}}
@@ -69,20 +69,18 @@
     data(){
       return{
         isCreate:this.$route.query.id==null,
-        shopPrint:{office:{name:""},created:{loginName:''},attachment:""},
+        shopPrint:{id:"",attachment:""},
         activitiEntity:{historicTaskInstances:[]},
         fileList:[]
       }
     },
     methods:{
       findOne(){
-        axios.get('/api/crm/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.shopPrint = response.data.shopPrint;
-          console.log(this.shopPrint.attachment)
+        axios.get('/api/ws/future/layout/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.shopPrint = response.data;
           if(this.shopPrint.attachment != null) {
-            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.shopPrint.attachment}}).then((response)=>{
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.shopPrint.attachment}}).then((response)=>{
               this.fileList = response.data;
-              console.log(response.data)
             });
           }
           if(response.data.activitiEntity.historicTaskInstances){
