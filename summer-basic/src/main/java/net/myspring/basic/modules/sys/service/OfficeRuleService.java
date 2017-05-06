@@ -1,12 +1,12 @@
 package net.myspring.basic.modules.sys.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
 import net.myspring.basic.modules.sys.web.form.OfficeRuleForm;
 import net.myspring.basic.modules.sys.web.query.OfficeRuleQuery;
+import net.myspring.common.constant.TreeConstant;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -34,6 +34,8 @@ public class OfficeRuleService {
         return page;
     }
 
+
+
     public List<OfficeRuleDto> findAll(){
         List<OfficeRule> officeRuleList=officeRuleMapper.findAllEnabled();
         List<OfficeRuleDto> officeRuleDtoList=BeanUtil.map(officeRuleList,OfficeRuleDto.class);
@@ -49,6 +51,15 @@ public class OfficeRuleService {
         return officeRuleForm;
     }
 
+    public OfficeRule findMaxLevel(){
+        OfficeRule officeRule=officeRuleMapper.findMaxLevel();
+        return officeRule;
+    }
+
+    public OfficeRule findOne(String id){
+        OfficeRule officeRule=officeRuleMapper.findOne(id);
+        return officeRule;
+    }
 
     public OfficeRule save(OfficeRuleForm officeRuleForm) {
         OfficeRule officeRule;
@@ -71,7 +82,7 @@ public class OfficeRuleService {
 
     private void setParentIdsAndLevel(OfficeRuleForm officeRuleForm){
         if(StringUtils.isBlank(officeRuleForm.getParentId())){
-            officeRuleForm.setParentIds(Const.ROOT_PARENT_IDS);
+            officeRuleForm.setParentIds(TreeConstant.ROOT_PARENT_IDS);
             officeRuleForm.setLevel(1);
         }else {
             OfficeRule parent=officeRuleMapper.findOne(officeRuleForm.getParentId());

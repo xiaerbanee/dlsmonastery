@@ -1,8 +1,6 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.basic.common.enums.AccountChangeTypeEnum;
-import net.myspring.basic.common.enums.OfficeRuleEnum;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.service.AccountChangeService;
 import net.myspring.basic.modules.sys.service.OfficeService;

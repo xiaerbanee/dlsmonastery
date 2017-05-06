@@ -2,7 +2,6 @@ package net.myspring.future.modules.basic.domain;
 
 
 import net.myspring.common.domain.IdEntity;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 

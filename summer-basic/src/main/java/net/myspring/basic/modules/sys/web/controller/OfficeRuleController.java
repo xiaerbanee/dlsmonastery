@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.sys.web.controller;
 
 import net.myspring.common.enums.BoolEnum;
-import net.myspring.basic.common.enums.OfficeRuleEnum;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.basic.modules.sys.service.OfficeRuleService;
 import net.myspring.basic.modules.sys.web.form.OfficeRuleForm;
@@ -43,7 +42,6 @@ public class OfficeRuleController {
         officeRuleForm=officeRuleService.findForm(officeRuleForm);
         officeRuleForm.setBoolMap(BoolEnum.getMap());
         officeRuleForm.setOfficeRuleList(officeRuleService.findAll());
-        officeRuleForm.setOfficeRuleNameList(OfficeRuleEnum.getList());
         return officeRuleForm;
     }
 

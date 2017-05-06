@@ -3,9 +3,7 @@ package net.myspring.basic.modules.hr.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.AccountMessageDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
@@ -15,6 +13,7 @@ import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.basic.modules.sys.service.PermissionService;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -112,9 +111,10 @@ public class AccountController {
         return accountDtoList;
     }
 
+
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public ModelAndView export(AccountQuery accountQuery) {
-        Workbook workbook = new SXSSFWorkbook(Const.DEFAULT_PAGE_SIZE);
+        Workbook workbook = new SXSSFWorkbook(5000);
         List<SimpleExcelSheet> simpleExcelSheetList = accountService.findSimpleExcelSheets(workbook, accountQuery);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "账户信息.xlsx", simpleExcelSheetList);
         return null;
@@ -155,7 +155,7 @@ public class AccountController {
 
     @RequestMapping(value = "saveAuthorityList")
     public RestResponse saveAuthorityList(AccountForm accountForm) {
-        accountForm.setPermissionIdList(StringUtils.getSplitList(accountForm.getPermissionIdStr(), Const.CHAR_COMMA));
+        accountForm.setPermissionIdList(StringUtils.getSplitList(accountForm.getPermissionIdStr(), CharConstant.COMMA));
         accountService.saveAccountAndPermission(accountForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }

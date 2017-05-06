@@ -11,13 +11,15 @@ import 'element-ui/lib/theme-default/index.css';
 import VueQuillEditor from 'vue-quill-editor'
 import VueProgressBar from 'vue-progressbar'
 
-import pageable from './components/pageable';
-import headTab from './components/head-tab';
-import searchTag from './components/search-tag';
+import pageable from './components/common/pageable';
+import headTab from './components/common/head-tab';
+import searchTag from './components/common/search-tag';
 import suDistrict from './components/su-district';
 import suTable from './components/su-table';
 import suDateRangePicker from './components/su-date-range-picker';
 import suDepot from './components/su-depot';
+import suProcessDetails from './components/su-process-details';
+
 
 
 import App from './app.vue';
@@ -44,6 +46,8 @@ Vue.component('su-district', suDistrict);
 Vue.component('su-table', suTable);
 Vue.component('su-date-range-picker', suDateRangePicker);
 Vue.component('su-depot', suDepot);
+Vue.component('su-process-details', suProcessDetails);
+
 
 // progressBar
 const options = {

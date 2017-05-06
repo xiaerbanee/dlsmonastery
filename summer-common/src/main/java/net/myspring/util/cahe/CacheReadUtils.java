@@ -119,35 +119,31 @@ public class CacheReadUtils {
 
     private static Object getConvertObject(Object input,Class clazz) {
         Object result;
-        if(input instanceof String) {
-           String inputStr = (String)input;
-            if(clazz == String.class) {
-                result =inputStr;
-            } else if(clazz == LocalDate.class) {
-                result = LocalDateUtils.parse(inputStr);
-            } else if(clazz == LocalDateTime.class) {
-                result = LocalDateTimeUtils.parse(inputStr);
-            } else if(clazz == LocalTime.class) {
-                result = LocalTime.parse(inputStr);
-            } else if(clazz == Integer.class) {
-                result = Integer.valueOf(inputStr);
-            } else if(clazz == Long.class) {
-                result = Long.valueOf(inputStr);
-            } else if(clazz == Double.class) {
-                result = Double.valueOf(inputStr);
-            } else if(clazz == BigDecimal.class) {
-                result = new BigDecimal(inputStr);
-            } else if(clazz == Boolean.class) {
-                result = Boolean.valueOf(inputStr);
-            } else if(clazz == Float.class) {
-                result = Float.valueOf(inputStr);
-            } else if(clazz == Short.class) {
-                result = Short.valueOf(inputStr);
-            } else {
-                result =inputStr;
-            }
+        String inputStr = StringUtils.toString(input);
+        if(clazz == String.class) {
+            result =inputStr;
+        } else if(clazz == LocalDate.class) {
+            result = LocalDateUtils.parse(inputStr);
+        } else if(clazz == LocalDateTime.class) {
+            result = LocalDateTimeUtils.parse(inputStr);
+        } else if(clazz == LocalTime.class) {
+            result = LocalTime.parse(inputStr);
+        } else if(clazz == Integer.class) {
+            result = Integer.valueOf(inputStr);
+        } else if(clazz == Long.class) {
+            result = Long.valueOf(inputStr);
+        } else if(clazz == Double.class) {
+            result = Double.valueOf(inputStr);
+        } else if(clazz == BigDecimal.class) {
+            result = new BigDecimal(inputStr);
+        } else if(clazz == Boolean.class) {
+            result = Boolean.valueOf(inputStr);
+        } else if(clazz == Float.class) {
+            result = Float.valueOf(inputStr);
+        } else if(clazz == Short.class) {
+            result = Short.valueOf(inputStr);
         } else {
-            result = input;
+            result =inputStr;
         }
         return result;
     }

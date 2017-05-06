@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.mapper;
 
+import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
@@ -50,4 +51,8 @@ public interface OfficeRuleMapper extends BaseMapper<OfficeRule,String> {
     OfficeRule findByName(String name);
 
     List<OfficeRule> findByType(String type);
+
+    OfficeRule findMaxLevel();
+
+    OfficeRule findNextOfficeRule(String id);
 }

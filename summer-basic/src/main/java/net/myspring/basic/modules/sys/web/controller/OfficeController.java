@@ -3,12 +3,16 @@ package net.myspring.basic.modules.sys.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.JointTypeEnum;
+import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
+import net.myspring.basic.modules.sys.service.OfficeRuleService;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
@@ -31,6 +35,8 @@ public class OfficeController {
 
     @Autowired
     private OfficeService officeService;
+    @Autowired
+    private OfficeRuleService officeRuleService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<OfficeDto> list(Pageable pageable, OfficeQuery officeQuery) {
@@ -72,6 +78,21 @@ public class OfficeController {
 
     @RequestMapping(value = "save")
     public RestResponse save(OfficeForm officeForm) {
+        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
+        if(OfficeTypeEnum.BUSINESS.name().equals(officeForm.getType())){
+            OfficeRule topOfficeRule = officeRuleService.findMaxLevel();
+            OfficeRule officeRule=officeRuleService.findOne(officeForm.getOfficeRuleId());
+            Office parent=officeService.findOne(officeForm.getParentId());
+            if(parent!=null&&topOfficeRule.getId().equals(officeForm.getOfficeRuleId())){
+                return new RestResponse("顶级业务部门不能设置上级", null);
+            }else if(parent!=null){
+                if(officeRule.getParentId()!=parent.getOfficeRuleId()){
+                    return new RestResponse("业务部门上级类型不正确", null);
+                }
+            }else {
+                return new RestResponse("非顶级业务部门必须设置上级", null);
+            }
+        }
         officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), Const.CHAR_COMMA));
         officeService.save(officeForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
@@ -83,6 +104,7 @@ public class OfficeController {
         officeForm=officeService.findForm(officeForm);
         officeForm.setOfficeRuleList(officeService.findTypeList());
         officeForm.setJointTypeList(JointTypeEnum.getList());
+        officeForm.setOfficeTypeList(OfficeTypeEnum.getList());
         return officeForm;
     }
 

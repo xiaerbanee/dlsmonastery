@@ -5,6 +5,7 @@ import net.myspring.common.mybatis.MyMapper;
 import net.myspring.common.mybatis.MyProvider;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.mybatis.mapper.BaseMapper;
@@ -70,7 +71,7 @@ public interface ProductMapper extends BaseMapper<Product,String> {
 
     List<Product> findByOutGroupIds(List<String> outGroupIds);
 
-    List<Product> findByProductTypeIds(List<Long> productTypeIds);
+    List<Product> findByProductTypeId(String productTypeId);
 
     int updateProductTypeId(@Param("productTypeId") String id, @Param("list") List<String> ids);
 
@@ -81,4 +82,6 @@ public interface ProductMapper extends BaseMapper<Product,String> {
     List<Product> findByOutGroupIdsAndAllowOrder(@Param("outGroupIds") List<String> outGroupIds, @Param("allowOrder") boolean allowOrder);
 
     LocalDateTime getMaxOutDate();
+
+    List<ProductType> findProductTypeList();
 }

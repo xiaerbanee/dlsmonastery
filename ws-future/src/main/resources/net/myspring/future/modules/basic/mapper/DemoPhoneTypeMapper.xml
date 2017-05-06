@@ -10,12 +10,17 @@
     </select>
 
     <select id="findPage" resultType="DemoPhoneTypeDto">
-        SELECT t1.*
-        FROM crm_demo_phone_type t1
-        where t1.enabled=1
+        SELECT
+        t1.*, GROUP_CONCAT(distinct t2.NAME) AS productTypeNames
+        FROM
+        crm_demo_phone_type t1
+        LEFT JOIN crm_product_type t2 ON t1.id = t2.demo_phone_type_id
+        WHERE
+        t1.enabled = 1
         <if test="p.name !=null">
-            AND t1.name LIKE concat('%',#{p.name},'%');
+            AND t1.name LIKE concat('%',#{p.name},'%')
         </if>
+        GROUP BY t1.id
     </select>
 
     <select id="findLabels" resultType="DemoPhoneType">

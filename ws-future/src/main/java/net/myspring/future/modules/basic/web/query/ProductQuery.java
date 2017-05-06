@@ -11,15 +11,15 @@ import java.util.Map;
  * Created by lihx on 2017/4/19.
  */
 public class ProductQuery {
-    private String name;
-    private String code;
+    private String name;  //名称
+    private String code;  //编码
     private String type;
-    private String hasIme;
-    private String allowBill;
-    private String productType;
-    private String allowOrder;
-    private String outGroupName;
-    private String netType;
+    private String hasIme;  //包含串码
+    private String allowBill;  //允许开单
+    private String productType; //产品型号
+    private String allowOrder;  //允许开单
+    private String outGroupName;  //产品类型
+    private String netType;  //网络制式
     private List<String> netTypeList= Lists.newArrayList();
     private List<Product> outGroupNameList=Lists.newArrayList();
     private Map<String,String> boolMap;
@@ -72,6 +72,7 @@ public class ProductQuery {
     public void setCode(String code) {
         this.code = code;
     }
+
     public String getType() {
         return type;
     }

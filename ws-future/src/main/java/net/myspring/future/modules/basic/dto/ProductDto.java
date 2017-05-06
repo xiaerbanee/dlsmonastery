@@ -15,7 +15,6 @@ public class ProductDto extends DataDto<Product> {
     private String outGroupId;
     private String outGroupName;
     private String productTypeId;
-    @CacheInput(inputKey = "productTypes", inputInstance = "productTypeId", outputInstance = "name")
     private String productTypeName;
     private String hasIme;
     private Boolean allowOrder;

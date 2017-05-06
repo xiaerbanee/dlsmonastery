@@ -22,4 +22,22 @@
         and t1.type=#{type}
     </select>
 
+    <select id="findMaxLevel" resultType="OfficeRule">
+        SELECT t1.*
+        FROM sys_office_rule t1
+        where t1.enabled=1
+        order BY  t1.level DESC
+        limit 0,1
+    </select>
+
+    <select id="findNextOfficeRule" resultType="OfficeRule">
+        SELECT t1.*
+        FROM sys_office_rule t1
+        where t1.enabled=1
+        and t1.level > (
+          SELECT level FROM sys_office_rule where id=#{id}
+        )
+        limit 0,1
+    </select>
+
 </mapper>

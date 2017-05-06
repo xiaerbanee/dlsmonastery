@@ -7,8 +7,8 @@
           <el-input  v-model.number="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneTypeForm.productType')" prop="productTypeIdList">
-          <el-select v-model="inputForm.productTypeIdList" clearable  multiple filterable :placeholder="$t('demoPhoneTypeForm.inputWord')">
-            <el-option v-for="productType in formProperty.productTypes" :key="productType.id" :label="productType.name" :value="productType.id"></el-option>
+          <el-select v-model="inputForm.productTypeIdList" multiple filterable remote :placeholder="$t('demoPhoneTypeForm.inputWord')" :remote-method="remoteProduct" :loading="remoteLoading" :clearable=true>
+            <el-option v-for="productType in productTypes" :key="productType.id" :label="productType.name" :value="productType.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneTypeForm.limitQty')" prop="limitQty">
@@ -27,8 +27,8 @@
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('demoPhoneTypeForm.save')}}</el-button>
         </el-form-item>
         <el-table :data="inputForm.demoPhoneTypeOfficeList"  style="margin-top:5px;"   stripe border  v-if="!isCreate">
-          <el-table-column prop="office.name" :label="$t('demoPhoneTypeForm.officeName')"></el-table-column>
-          <el-table-column prop="office.taskPoint" :label="$t('demoPhoneTypeForm.taskPoint')"></el-table-column>
+          <el-table-column prop="officeName" :label="$t('demoPhoneTypeForm.officeName')"></el-table-column>
+          <el-table-column prop="officeTaskPoint" :label="$t('demoPhoneTypeForm.taskPoint')"></el-table-column>
           <el-table-column prop="qty" :label="$t('demoPhoneTypeForm.qty')">
             <template scope="scope">
               <el-input  v-model="scope.row.qty"></el-input>
@@ -56,6 +56,8 @@
           remarks:'',
           demoPhoneTypeOfficeList:[]
         },
+        remoteLoading:false,
+        productTypes:[],
         rules: {
           name: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}],
           productType: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}],
@@ -72,7 +74,7 @@
         this.inputForm.renewEndDate=util.formatLocalDate( this.inputForm.renewEndDate)
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/crm/demoPhoneType/save', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/crm/demoPhoneType/save', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -85,19 +87,26 @@
             this.submitDisabled = false;
           }
         })
-      },getFormProperty(){
-        axios.get('/api/crm/demoPhoneType/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
+      },remoteProduct(query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          axios.get('/api/ws/future/crm/demoPhoneType/search',{params:{name:query}}).then((response)=>{
+            this.productTypes = response.data;
+            this.remoteLoading = false;
+          });
+        }
       },findOne(){
-          axios.get('/api/crm/demoPhoneType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            this.inputForm.demoPhoneTypeOfficeList=response.data.demoPhoneTypeOfficeList
-            this.inputForm.productTypeIdList=util.getIdList(response.data.productTypeList)
-          })
+        axios.get('/api/ws/future/crm/demoPhoneType/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          util.copyValue(response.data,this.inputForm);
+          this.inputForm.demoPhoneTypeOfficeList=response.data.demoPhoneTypeOfficeList;
+          this.inputForm.productTypeIdList=util.getIdList(response.data.productTypeList)
+          if(response.data.productTypeList!=null && response.data.productTypeList.length >0){
+              this.productTypes = response.data.productTypeList;
+              this.inputForm.productIdList = util.getIdList(this.products);
+          }
+        })
       }
     },created(){
-      this.getFormProperty();
       if(!this.isCreate){
         this.findOne()
       }

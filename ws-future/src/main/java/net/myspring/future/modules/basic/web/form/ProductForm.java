@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.web.form;
 import com.google.common.collect.Lists;
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.ProductType;
 
 import java.util.List;
 

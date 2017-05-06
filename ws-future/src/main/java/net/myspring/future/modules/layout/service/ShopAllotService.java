@@ -22,17 +22,10 @@ import java.util.List;
 
 @Service
 public class ShopAllotService {
-
     @Autowired
     private ShopAllotMapper shopAllotMapper;
     @Autowired
     private DepotMapper depotMapper;
-    @Autowired
-    private ProductMapper productMapper;
-    @Autowired
-    private PricesystemDetailMapper pricesystemDetailMapper;
-    @Autowired
-    private ShopAllotDetailMapper shopAllotDetailMapper;
     @Autowired
     private CacheUtils cacheUtils;
 

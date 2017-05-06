@@ -24,6 +24,13 @@ export default {
   su_date_ranger_picker:{
     selectDateRange:"选择日期范围",
   },
+  su_process_details:{
+    loading:"拼命加载中",
+    processStatus:"节点名称",
+    auditByName:"审批人",
+    auditDate:"审批时间",
+    comment:"审批备注",
+  },
 
   menuManager:{
     basicManager:"基础管理",

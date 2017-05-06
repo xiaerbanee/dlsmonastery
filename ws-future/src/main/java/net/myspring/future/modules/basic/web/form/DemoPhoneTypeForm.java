@@ -5,6 +5,7 @@ import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.DemoPhoneType;
 import net.myspring.future.modules.basic.domain.DemoPhoneTypeOffice;
 import net.myspring.future.modules.basic.domain.ProductType;
+import net.myspring.future.modules.basic.dto.DemoPhoneTypeOfficeDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +19,7 @@ public class DemoPhoneTypeForm extends DataForm<DemoPhoneType> {
     private Integer limitQty;
     private LocalDate applyEndDate;
     private LocalDate renewEndDate;
-    private List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList= Lists.newArrayList();
+    private List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeList= Lists.newArrayList();
     private List<ProductType> productTypeList=Lists.newArrayList();
 
     public List<ProductType> getProductTypeList() {
@@ -69,11 +70,11 @@ public class DemoPhoneTypeForm extends DataForm<DemoPhoneType> {
         this.renewEndDate = renewEndDate;
     }
 
-    public List<DemoPhoneTypeOffice> getDemoPhoneTypeOfficeList() {
+    public List<DemoPhoneTypeOfficeDto> getDemoPhoneTypeOfficeList() {
         return demoPhoneTypeOfficeList;
     }
 
-    public void setDemoPhoneTypeOfficeList(List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList) {
+    public void setDemoPhoneTypeOfficeList(List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeList) {
         this.demoPhoneTypeOfficeList = demoPhoneTypeOfficeList;
     }
 }

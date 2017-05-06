@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.utils;
 
 import com.google.common.collect.Maps;
+import net.myspring.cloud.common.constant.K3CloudConstant;
 import net.myspring.cloud.GlobalCloudApplication;
 import net.myspring.cloud.common.utils.Const;
 import net.myspring.cloud.common.utils.SecurityUtils;
@@ -89,7 +90,7 @@ public class K3cloudUtils {
         jParas.put(dbid);// 帐套Id
         jParas.put(user);// 用户名
         jParas.put(pwd);// 密码
-        jParas.put(Const.K3Cloud_LANG);// 语言
+        jParas.put(K3CloudConstant.LANG);// 语言
         HttpURLConnection connection = null;
         try {
             connection = initUrlConn(sUrl, jParas);
@@ -222,14 +223,13 @@ public class K3cloudUtils {
         if (StringUtils.isBlank(outId) || StringUtils.isBlank(outPassword)) {
             return false;
         }
-        KingdeeBookMapper kingdeeBookMapper = GlobalCloudApplication.getApplicationContext().getBean(KingdeeBookMapper.class);
-        KingdeeBook kingdeeBook = kingdeeBookMapper.findByCompanyId(SecurityUtils.getCompanyId());
-        return login(kingdeeBook.getKingdeeDbid(), outId, outPassword);
+        return login(ThreadLocalContext.get().getKingdeeBookDto().getKingdeeDbid(), outId, outPassword);
     }
 
 
     // Save
-    public static K3CloudSave save(K3CloudSave k3CloudSave,AccountDto accountDto) {
+    public static K3CloudSave save(K3CloudSave k3CloudSave) {
+        AccountDto accountDto = k3CloudSave.getAccount();
         if (StringUtils.isBlank(accountDto.getOutId()) || StringUtils.isBlank(accountDto.getOutPassword())) {
             throw new ServiceException("请确保已填写财务账号和密码");
         }
@@ -256,7 +256,8 @@ public class K3cloudUtils {
     }
 
     // Save
-    public static K3CloudSaveExtend save(K3CloudSaveExtend k3CloudSaveExtend,AccountDto accountDto) {
+    public static K3CloudSaveExtend save(K3CloudSaveExtend k3CloudSaveExtend) {
+        AccountDto accountDto = k3CloudSaveExtend.getAccount();
         if (StringUtils.isBlank(accountDto.getOutId()) || StringUtils.isBlank(accountDto.getOutPassword())) {
             throw new ServiceException("请确保已填写财务账号和密码");
         }

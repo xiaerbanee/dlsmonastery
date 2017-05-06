@@ -2,7 +2,6 @@ package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.common.utils.SecurityUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountPermission;
@@ -14,6 +13,7 @@ import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
@@ -22,6 +22,7 @@ import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,8 @@ public class AccountService {
     private EmployeeMapper employeeMapper;
     @Autowired
     private AccountPermissionMapper accountPermissionMapper;
+    @Value("${setting.adminIdList}")
+    private String adminIdList;
 
     public Account findOne(String id) {
         Account account = accountMapper.findOne(id);
@@ -83,7 +86,7 @@ public class AccountService {
     public Account save(AccountForm accountForm) {
         Account account;
         if (accountForm.isCreate()) {
-            accountForm.setPassword(StringUtils.getEncryptPassword(Const.DEFAULT_PASSWORD));
+            accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getLoginName()));
             account = BeanUtil.map(accountForm, Account.class);
             accountMapper.save(account);
         } else {
@@ -141,7 +144,7 @@ public class AccountService {
         String accountId=SecurityUtils.getAccountId();
         List<String> authorityList;
         List<Permission> permissionList;
-        if(Const.HR_ACCOUNT_ADMIN_LIST.contains(SecurityUtils.getAccountId())){
+        if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(SecurityUtils.getAccountId())){
             permissionList=permissionMapper.findAllEnabled();
         }else {
             List<String> accountPermissions=accountPermissionMapper.findPermissionIdByAccount(accountId);

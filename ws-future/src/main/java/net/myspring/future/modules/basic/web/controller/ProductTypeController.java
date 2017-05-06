@@ -7,8 +7,10 @@ import net.myspring.common.enums.BoolEnum;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
 import net.myspring.future.modules.basic.service.ProductTypeService;
+import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
 import net.myspring.future.modules.basic.web.form.ProductTypeForm;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "crm/productType")
+@RequestMapping(value = "basic/productType")
 public class ProductTypeController {
 
     @Autowired
@@ -45,8 +47,8 @@ public class ProductTypeController {
     }
 
     @RequestMapping(value = "findForm")
-    public ProductTypeForm findOne(ProductTypeForm productTypeForm){
-        productTypeForm.setBoolMap(BoolEnum.getMap());
+    public ProductTypeForm findForm(ProductTypeForm productTypeForm){
+        productTypeForm = productTypeService.findForm(productTypeForm);
         return productTypeForm;
     }
 
