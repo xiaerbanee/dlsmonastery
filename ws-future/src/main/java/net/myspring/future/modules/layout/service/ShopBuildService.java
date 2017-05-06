@@ -1,10 +1,19 @@
 package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.layout.domain.ShopBuild;
+import net.myspring.future.modules.layout.dto.ShopBuildDto;
 import net.myspring.future.modules.layout.mapper.ShopBuildMapper;
+import net.myspring.future.modules.layout.web.form.ShopBuildForm;
+import net.myspring.future.modules.layout.web.query.ShopBuildQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,15 +28,26 @@ public class ShopBuildService {
 
     @Autowired
     private ShopBuildMapper shopBuildMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
+    @Autowired
+    private DepotMapper depotMapper;
 
-    public Page<ShopBuild> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<ShopBuild> page = shopBuildMapper.findPage(pageable, map);
+
+    public Page<ShopBuildDto> findPage(Pageable pageable, ShopBuildQuery shopBuildQuery) {
+        Page<ShopBuildDto> page = shopBuildMapper.findPage(pageable, shopBuildQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
-    public ShopBuild findOne(String id){
-        ShopBuild shopBuild=shopBuildMapper.findOne(id);
-        return shopBuild;
+    public ShopBuildForm findForm(ShopBuildForm shopBuildForm){
+        if(!shopBuildForm.isCreate()){
+            ShopBuild shopBuild=shopBuildMapper.findOne(shopBuildForm.getId());
+            shopBuildForm = BeanUtil.map(shopBuild,ShopBuildForm.class);
+            cacheUtils.initCacheInput(shopBuildForm);
+        }
+
+        return shopBuildForm;
     }
 
     public ShopBuild save(ShopBuild shopBuild) {

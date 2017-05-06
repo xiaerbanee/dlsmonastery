@@ -2,19 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.layout.mapper.ShopBuildMapper">
 
-    <select id="findPage" resultType="ShopBuild">
+    <select id="findPage" resultType="ShopBuildDto">
         SELECT
-        t1.*
+        depot.office_id officeId,t1.*
         FROM
-        crm_shop_build t1,crm_depot depot,hr_office office
+        crm_shop_build t1,crm_depot depot
         WHERE
         t1.enabled=1
         and t1.shop_id=depot.id
-        and depot.office_id=office.id
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
-        <if test="p.processFlow !=null">
-            and t1.process_flow_id = #{p.processFlow}
-        </if>
         <if test="p.fixtureType !=null">
             and t1.fixture_type=#{p.fixtureType}
         </if>
@@ -31,6 +26,9 @@
         <if test="p.createdDateEnd !=null">
             and  t1.created_date &lt;=#{p.createdDateEnd}
         </if>
+        <if test="p.positionId !=null">
+            and t1.process_position_id =#{p.positionId}
+        </if>
         <if test="p.createdBy !=null">
             AND t1.created_by in(
             select t3.id
@@ -38,15 +36,8 @@
             where t3.login_name like concat('%',#{p.createdBy},'%')
             )
         </if>
-        <if test="p.positionId !=null">
-           and t1.process_flow_id in (
-                select t2.id
-                from sys_process_flow t2
-                where t2.position_id = #{p.positionId}
-            )
-        </if>
         <if test="p.officeId !=null">
-            and office.id = #{p.officeId}
+            and depot.office_id = #{p.officeId}
         </if>
     </select>
     <select id="findByFilter" resultType="ShopBuild">

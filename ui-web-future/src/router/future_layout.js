@@ -57,7 +57,7 @@ let routes = [
   {path:'/future/layout/shopAllotList',component:shopAllotList,name:'shopAllotList'},
   {path:'/future/layout/shopAllotForm',component:shopAllotForm,name:'shopAllotForm',meta: {menu:"shopAllotList"}},
   {path:'/future/layout/shopAllotDetail',component:shopAllotDetail,name:'shopAllotDetail',meta: {menu:"shopAllotList"}},
-  {path:'/future/layout/shopBuildList',component:shopAllotList,name:'shopBuildList'},
+  {path:'/future/layout/shopBuildList',component:shopBuildList,name:'shopBuildList'},
   {path:'/future/layout/shopBuildForm',component:shopBuildForm,name:'shopBuildForm',meta: {menu:"shopBuildList"}},
   {path:'/future/layout/shopBuildDetail',component:shopBuildDetail,name:'shopBuildDetail',meta: {menu:"shopBuildList"}},
   {path:'/future/layout/shopDepositList',component:shopDepositList,name:'shopDepositList'},
