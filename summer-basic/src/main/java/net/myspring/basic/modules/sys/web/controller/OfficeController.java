@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
-import net.myspring.basic.common.utils.Const;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
@@ -93,7 +92,7 @@ public class OfficeController {
                 return new RestResponse("非顶级业务部门必须设置上级", null);
             }
         }
-        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), Const.CHAR_COMMA));
+        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
         officeService.save(officeForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
