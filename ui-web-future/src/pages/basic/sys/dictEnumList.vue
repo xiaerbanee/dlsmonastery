@@ -12,7 +12,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
-                <date-range-picker  :dateRange="formData.createdDate" v-on:change="createdDateChange"></date-range-picker>
+                <date-range-picker  :value="formData.createdDate" v-on:change="createdDateChange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('dictEnumList.inputKey')">

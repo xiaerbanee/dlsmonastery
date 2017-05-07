@@ -5,7 +5,7 @@
 </template>
 <script>
   export default {
-    props: ['dateRange'],
+    props: ['value'],
     data() {
       return {
         pickerDateOption : util.pickerDateOption,
@@ -22,9 +22,9 @@
       }
     },created () {
         var range = [];
-        if(util.isNotBlank(this.dateRange)) {
-          range[0] = new Date(this.dateRange.split(" - ")[0].replace(/-/,"/"));
-          range[1] = new Date(this.dateRange.split(" - ")[1].replace(/-/,"/"));
+        if(util.isNotBlank(this.value)) {
+          range[0] = new Date(this.value.split(" - ")[0].replace(/-/,"/"));
+          range[1] = new Date(this.value.split(" - ")[1].replace(/-/,"/"));
         }
         this.innerDateRange =range;
     }
