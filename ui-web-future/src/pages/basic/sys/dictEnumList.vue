@@ -11,8 +11,8 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('dictEnumList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+                <date-range-picker  :dateRange="formData.createdDate" v-on:change="dateRangeChange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
@@ -63,12 +63,11 @@
           page:0,
           size:25,
           createdDate:'',
-          createdDateBTW:'',
           category:'',
           value:''
         },
         formLabel:{
-          createdDateBTW:{label: this.$t('dictEnumList.createdDate')},
+          createdDate:{label: this.$t('dictEnumList.createdDate')},
           category:{label: this.$t('dictEnumList.category')},
           value:{label: this.$t('dictEnumList.value')}
         },
@@ -81,8 +80,6 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        util.getQuery("dictEnumList");
         util.copyValue(this.formData,this.submitData);
         util.setQuery("dictEnumList",this.submitData);
         axios.get('/api/basic/sys/dictEnum',{params:this.submitData}).then((response) => {
@@ -111,10 +108,11 @@
             this.pageRequest();
           })
         }
+      },dateRangeChange:function (dateRange) {
+        this.formData.createdDate =dateRange;
       }
     },created () {
       var that = this;
-      that.formData = that.submitData;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/basic/sys/dictEnum/getQuery').then((response) =>{
         that.formData=response.data;
