@@ -94,6 +94,8 @@ router.beforeEach((to, from, next) => {
     next();
   } else {
     if(checkLogin()) {
+      //增加tab
+      util.setQuery(to.name, to.query);
       next();
     } else {
       store.dispatch('clearGlobal');
