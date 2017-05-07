@@ -28,6 +28,8 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 
@@ -120,7 +122,7 @@ public class ActivitiService {
                 if (StringUtils.isNotBlank(historicTaskInstance.getAssignee())) {
                     ActivitiDetailDto activitiDetailDto=new ActivitiDetailDto();
                     activitiDetailDto.setAuditBy(historicTaskInstance.getAssignee());
-                    activitiDetailDto.setAuditDate(LocalDateTimeUtils.dateToLocalDateTime(historicTaskInstance.getEndTime()));
+                    activitiDetailDto.setAuditDate(LocalDateTime.ofInstant(historicTaskInstance.getEndTime().toInstant(), ZoneId.systemDefault()));
                     activitiDetailDto.setProcessStatus(historicTaskInstance.getName());
                     activitiDetailDto.setComment(activitiEntity.getCommonMap().get(historicTaskInstance.getId()));
                     activitiDetailDtoList.add(activitiDetailDto);
