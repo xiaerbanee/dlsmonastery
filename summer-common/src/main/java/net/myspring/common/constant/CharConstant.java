@@ -17,5 +17,7 @@ public class CharConstant {
     public static final String COLON = ":";
     public static final String TILDE = "~";
     public static final String SLASH_LINE = "/";
+    public static final String DATE_RANGE_SPLITTER = " - ";
+
 
 }

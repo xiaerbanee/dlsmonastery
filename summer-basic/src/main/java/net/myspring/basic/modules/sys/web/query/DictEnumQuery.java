@@ -1,9 +1,12 @@
 package net.myspring.basic.modules.sys.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,17 +50,17 @@ public class DictEnumQuery  {
         this.categoryList = categoryList;
     }
 
-    public LocalDateTime getCreatedDateStart() {
+    public LocalDate getCreatedDateStart() {
         if(StringUtils.isNotBlank(createdDate)) {
-            return LocalDateTimeUtils.parse(createdDate.split(" - ")[0] + " 00:00:00");
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
     }
 
-    public LocalDateTime getCreatedDateEnd() {
+    public LocalDate getCreatedDateEnd() {
         if(StringUtils.isNotBlank(createdDate)) {
-            return LocalDateTimeUtils.parse(createdDate.split(" - ")[1] + " 23:59:59");
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }

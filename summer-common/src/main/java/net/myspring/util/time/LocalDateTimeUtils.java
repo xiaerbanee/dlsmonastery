@@ -64,4 +64,5 @@ public class LocalDateTimeUtils {
     public static LocalDateTime getLastDayOfMonth(LocalDateTime localDateTime) {
         return localDateTime.withDayOfMonth(localDateTime.toLocalDate().lengthOfMonth());
     }
+
 }
