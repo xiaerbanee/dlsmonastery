@@ -37,8 +37,8 @@ public class ShopPrintController {
     }
 
     @RequestMapping(value="getQuery",method = RequestMethod.GET)
-    public String getQuery() {
-        return null;
+    public ShopPrintQuery getQuery(ShopPrintQuery shopPrintQuery) {
+        return shopPrintService.findQuery(shopPrintQuery);
     }
 
     @RequestMapping(value="getFormProperty",method = RequestMethod.GET)
@@ -49,6 +49,13 @@ public class ShopPrintController {
     @RequestMapping(value = "detail", method = RequestMethod.GET)
     public ShopPrintForm detail(ShopPrintForm shopPrintForm) {
         return shopPrintService.findForm(shopPrintForm);
+    }
+
+    @RequestMapping(value = "delete")
+    public RestResponse logicDelete(ShopPrintForm shopPrintForm){
+        shopPrintService.logicDelete(shopPrintForm.getId());
+        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
     }
 
     @RequestMapping(value = "audit", method = RequestMethod.GET)

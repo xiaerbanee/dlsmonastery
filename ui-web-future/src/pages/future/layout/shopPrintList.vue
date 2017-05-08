@@ -13,17 +13,17 @@
             <el-col :span="24">
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.officeId" filterable clearable :placeholder="$t('shopPrintList.inputKey')">
-                  <el-option v-for="area in formProperty.areas" :key="area.id" :label="area.name" :value="area.id"></el-option>
+                  <el-option v-for="area in formData.officeIdList" :key="area.id" :label="area.name" :value="area.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.printType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.printType" filterable clearable :placeholder="$t('shopPrintList.inputKey')">
-                  <el-option v-for="printType in formProperty.printTypes" :key="printType.name" :label="printType.name" :value="printType.name"></el-option>
+                  <el-option v-for="printType in formData.printTypeList" :key="printType.name" :label="printType.name" :value="printType.name"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.processStatus.label" :label-width="formLabelWidth">
               <el-select v-model="formData.processStatus" filterable clearable :placeholder="$t('shopPrintList.inputKey')">
-                <el-option v-for="item in formProperty.processStatus" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in formData.processStatusList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
@@ -70,14 +70,16 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
-          officeId:"",
-          printType:"",
-          processStatus:"",
-          createdBy:""
-        },formLabel:{
+          officeId:'',
+          printType:'',
+          processStatus:'',
+          createdBy:''
+        },
+        formLabel:{
           officeId:{label:this.$t('shopPrintList.officeId'),value:""},
           printType:{label:this.$t('shopPrintList.printType'),value:""},
           processStatus:{label:this.$t('shopPrintList.processStatus')},
@@ -93,8 +95,9 @@
       pageRequest() {
         this.pageLoading = true;
         this.formLabel.officeId.value = util.getLabel(this.formProperty.areas,this.formData.officeId);
-        util.setQuery("shopPrintList",this.formData);
-        axios.get('/api/ws/future/layout/shopPrint',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("shopPrintList",this.submitData);
+        axios.get('/api/ws/future/layout/shopPrint',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -115,23 +118,29 @@
         if(action=="edit") {
           this.$router.push({ name: 'shopPrintForm', query: { id: id }})
         } else if(action=="delete") {
-          axios.get('/api/ws/future/layout/shopPrint/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/layout/shopPrint/delete', {params: {id: id}}).then((response) => {
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
           })
         }else if(action == "detail"){
            this.$router.push({ name: 'shopPrintDetail', query: { id: id }})
         }
-      },getQuery(){
+      }/*,getQuery(){
         axios.get('/api/ws/future/layout/shopPrint/getQuery').then((response) =>{
           this.formProperty=response.data;
           this.pageRequest();
         });
-      }
+      }*/
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.getQuery();
+        var that = this;
+        that.pageHeight = window.outerHeight -320;
+        axios.get('/api/ws/future/layout/shopPrint/getQuery').then((response) =>{
+          that.formData=response.data;
+          util.copyValue(that.$route.query,that.formData);
+          that.pageRequest();
+        });
     }
   };
 </script>
