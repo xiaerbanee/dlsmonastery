@@ -102,7 +102,7 @@
   </div>
 </template>
 <script>
-  import districtSelect from 'components/basic/district-select'
+  import districtSelect from 'components/general/district-select'
   export default{
     components:{districtSelect},
     data(){
