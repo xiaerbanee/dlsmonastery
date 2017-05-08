@@ -17,7 +17,7 @@
         if(!newVal) {
             newVal = "";
         }
-        this.$emit('change', newVal);
+        this.$emit('input', newVal);
         return true;
       }
     },created () {
