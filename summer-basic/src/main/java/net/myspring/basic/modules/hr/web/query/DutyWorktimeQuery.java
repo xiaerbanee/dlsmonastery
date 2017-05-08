@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -12,8 +13,6 @@ import java.util.Map;
  */
 public class DutyWorktimeQuery {
     private String dutyDate;
-    private LocalDate dutyDateStart;
-    private LocalDate dutyDateEnd;
     private String accountId;
 
     public String getDutyDate() {
@@ -24,35 +23,27 @@ public class DutyWorktimeQuery {
         this.dutyDate = dutyDate;
     }
 
-    public LocalDate getDutyDateStart() {
-        if(dutyDateStart==null&& StringUtils.isNotBlank(dutyDate)){
-            String[] tempParamValues = dutyDate.split(" - ");
-            this.dutyDateStart= LocalDateUtils.parse(tempParamValues[0]);
-        }
-        return dutyDateStart;
-    }
-
-    public void setDutyDateStart(LocalDate dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
-    }
-
-    public LocalDate getDutyDateEnd() {
-        if(dutyDateEnd==null&& StringUtils.isNotBlank(dutyDate)){
-            String[] tempParamValues = dutyDate.split(" - ");
-            this.dutyDateEnd= LocalDateUtils.parse(tempParamValues[1]);
-        }
-        return dutyDateEnd;
-    }
-
-    public void setDutyDateEnd(LocalDate dutyDateEnd) {
-        this.dutyDateEnd = dutyDateEnd;
-    }
-
     public String getAccountId() {
         return accountId;
     }
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
+    }
+
+    public LocalDate getDutyDateStart() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getDutyDateEnd() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }

@@ -11,14 +11,14 @@
         WHERE
         t1.created_by=account.id
         and t1.enabled=1
-        <if test="p.createdBy != null">
+        <if test="p.createdBy !=null ">
             AND t1.created_by=#{p.createdBy}
         </if>
         <if test="p.dutyDateStart != null">
-            AND t1.duty_date >= #{p.dutyDateStart}
+            AND t1.duty_date > #{p.dutyDateStart}
         </if>
         <if test="p.dutyDateEnd != null">
-            AND t1.duty_date  &lt;= #{p.dutyDateEnd}
+            AND t1.duty_date  &lt; #{p.dutyDateEnd}
         </if>
         <if test="p.dateType != null">
             AND t1.date_type=#{p.dateType}

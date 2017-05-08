@@ -35,10 +35,10 @@
 
     <sql id="dutyWorktimeFilter">
         <if test="p.dutyDateStart != null">
-            AND t1.duty_date >= #{p.dutyDateStart}
+            AND t1.duty_date > #{p.dutyDateStart}
         </if>
         <if test="p.dutyDateEnd != null">
-            AND t1.duty_date  &lt;= #{p.dutyDateEnd}
+            AND t1.duty_date  &lt; #{p.dutyDateEnd}
         </if>
         <if test="p.accountId != null">
             and t1.employee_id in (

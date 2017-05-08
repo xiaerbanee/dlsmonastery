@@ -3,6 +3,9 @@ package net.myspring.basic.modules.hr.web.query;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.modules.hr.dto.PositionDto;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,12 +18,9 @@ public class EmployeeQuery {
     private String name;
     private String status;
     private String mobilePhone;
-    private LocalDate entryDateStart;
-    private LocalDate entryDateEnd;
-    private LocalDate regularDateStart;
-    private LocalDate regularDateEnd;
-    private LocalDate leaveDateStart;
-    private LocalDate leaveDateEnd;
+    private String entryDate;
+    private String regularDate;
+    private String leaveDate;
     private String positionId;
     private String leaderName;
     private String officeId;
@@ -75,52 +75,76 @@ public class EmployeeQuery {
         this.mobilePhone = mobilePhone;
     }
 
-    public LocalDate getEntryDateStart() {
-        return entryDateStart;
+    public void setEntryDate(String entryDate) {
+        this.entryDate = entryDate;
     }
 
-    public void setEntryDateStart(LocalDate entryDateStart) {
-        this.entryDateStart = entryDateStart;
+    public String getEntryDate() {
+        return entryDate;
+    }
+
+    public LocalDate getEntryDateStart() {
+        if(StringUtils.isNotBlank(entryDate)) {
+            return LocalDateUtils.parse(entryDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
     }
 
     public LocalDate getEntryDateEnd() {
-        return entryDateEnd;
+        if(StringUtils.isNotBlank(entryDate)) {
+            return LocalDateUtils.parse(entryDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 
-    public void setEntryDateEnd(LocalDate entryDateEnd) {
-        this.entryDateEnd = entryDateEnd;
+    public void setLeaveDate(String leaveDate) {
+        this.leaveDate = leaveDate;
     }
 
-    public LocalDate getRegularDateStart() {
-        return regularDateStart;
-    }
-
-    public void setRegularDateStart(LocalDate regularDateStart) {
-        this.regularDateStart = regularDateStart;
-    }
-
-    public LocalDate getRegularDateEnd() {
-        return regularDateEnd;
-    }
-
-    public void setRegularDateEnd(LocalDate regularDateEnd) {
-        this.regularDateEnd = regularDateEnd;
+    public String getLeaveDate() {
+        return leaveDate;
     }
 
     public LocalDate getLeaveDateStart() {
-        return leaveDateStart;
-    }
-
-    public void setLeaveDateStart(LocalDate leaveDateStart) {
-        this.leaveDateStart = leaveDateStart;
+        if(StringUtils.isNotBlank(leaveDate)) {
+            return LocalDateUtils.parse(leaveDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
     }
 
     public LocalDate getLeaveDateEnd() {
-        return leaveDateEnd;
+        if(StringUtils.isNotBlank(leaveDate)) {
+            return LocalDateUtils.parse(leaveDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 
-    public void setLeaveDateEnd(LocalDate leaveDateEnd) {
-        this.leaveDateEnd = leaveDateEnd;
+    public void setRegularDate(String regularDate) {
+        this.regularDate = regularDate;
+    }
+
+    public String getRegularDate() {
+        return regularDate;
+    }
+
+    public LocalDate getRegularDateStart() {
+        if(StringUtils.isNotBlank(regularDate)) {
+            return LocalDateUtils.parse(regularDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getRegularDateEnd() {
+        if(StringUtils.isNotBlank(regularDate)) {
+            return LocalDateUtils.parse(regularDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 
     public String getPositionId() {

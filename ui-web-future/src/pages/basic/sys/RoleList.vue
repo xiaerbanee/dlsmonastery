@@ -63,10 +63,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("roleList");
-        util.setQuery("roleList",this.formData);
+        util.setQuery("roleList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/role',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/role?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

@@ -70,10 +70,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("positionList");
-        util.setQuery("positionList",this.formData);
+        util.setQuery("positionList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/position',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/hr/position?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
