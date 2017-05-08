@@ -26,15 +26,15 @@
               <el-input v-model="employeeForm.bankName"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.entryDate')" prop="entryDate">
-              <el-date-picker  v-model="employeeForm.entryDate" type="date" align="left" :placeholder="$t('employeeForm.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
+              <date-picker v-model="employeeForm.entryDate"></date-picker>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.regularDate')" prop="regularDate">
-              <el-date-picker  v-model="employeeForm.regularDate" type="date" align="left" :placeholder="$t('employeeForm.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
+              <date-picker v-model="employeeForm.regularDate"></date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('employeeForm.leaveDate')" prop="leaveDate">
-              <el-date-picker  v-model="employeeForm.leaveDate" type="date" align="left" :placeholder="$t('employeeForm.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
+              <date-picker v-model="employeeForm.leaveDate"></date-picker>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.school')" prop="school">
               <el-input v-model="employeeForm.school"></el-input>
@@ -46,7 +46,7 @@
               <el-input v-model="employeeForm.mobilePhone"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.birthday')" prop="birthday">
-              <el-date-picker  v-model="employeeForm.birthday" type="date" align="left" :placeholder="$t('employeeForm.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
+              <date-picker v-model="employeeForm.birthday"></date-picker>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.sex')" prop="sex">
               <el-radio-group v-model="employeeForm.sex">
@@ -109,7 +109,11 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            employeeForm:{},
+            employeeForm:{
+              entryDate:'',
+              regularDate:'',
+              leaveDate:'',
+            },
             accountForm:{},
             employeeSubmitData:{
               id:'',
@@ -181,7 +185,6 @@
                         this.$message("员工"+response.data.message);
                         this.accountForm.employeeId=response.data.extra.employeeId;
                         util.copyValue(this.accountForm,this.accountSubmitData);
-                      console.log(this.accountSubmitData)
                         axios.post('/api/basic/hr/account/save', qs.stringify(this.accountSubmitData)).then((response)=> {
                         this.$message("账户"+response.data.message);
                     });
