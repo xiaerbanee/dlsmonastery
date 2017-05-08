@@ -29,8 +29,8 @@ public class RetailReportController {
     private RetailReportService retailReportService;
 
 
-    @RequestMapping(value = "list")
-    public String list(Model model, String monthStart, String monthEnd, String companyName) {
+    @RequestMapping(value = "report")
+    public String report(Model model, String monthStart, String monthEnd, String companyName) {
         List<List<Object>> retailShopReport = Lists.newArrayList();
         List<List<NestedHeaderCell>> nestedHeader = Lists.newArrayList();
         YearMonth start = YearMonth.now().minusMonths(3L);
