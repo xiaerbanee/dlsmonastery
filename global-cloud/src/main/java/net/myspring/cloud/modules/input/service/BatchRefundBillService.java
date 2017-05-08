@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
@@ -24,6 +23,7 @@ import net.myspring.common.enums.BoolEnum;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +68,7 @@ public class BatchRefundBillService {
         for (List<Object> row : datas) {
             String customerName = StringUtils.toString(row.get(0));
             String bankName = HandSonTableUtils.getValue(row, 1);
-            LocalDate billDate = LocalDate.parse(HandSonTableUtils.getValue(row, 2), DateTimeFormatter.ofPattern(DateFormat.DATE.getValue()));
+            LocalDate billDate = LocalDateUtils.parse(HandSonTableUtils.getValue(row, 2));
             String priceStr = HandSonTableUtils.getValue(row, 3);
             BigDecimal amount = StringUtils.isEmpty(priceStr) ? BigDecimal.ZERO : new BigDecimal(priceStr);
             String settleType = HandSonTableUtils.getValue(row, 4);

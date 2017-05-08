@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
@@ -19,12 +18,12 @@ import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -78,11 +77,11 @@ public class BatchCashDepositJournalService {
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
-        model.put("FDATE", billDate.format(DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
+        model.put("FDATE", LocalDateUtils.format(billDate));
         model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "SGRJZ02_SYS"));
         model.put("FPAYORGID", K3cloudUtils.getMap("FNumber", "100"));
         model.put("FAcctBookId", K3cloudUtils.getMap("FNumber", "001"));
-        model.put("FSTARTPERIOD", billDate.format(DateTimeFormatter.ofPattern(DateFormat.MONTH_SINGLE.getValue())));
+        model.put("FSTARTPERIOD", LocalDateUtils.format(billDate,LocalDateUtils.FORMATTER_MONTH_SINGLE));
         model.put("FACCOUNTID", K3cloudUtils.getMap("FNumber", "1001"));
         model.put("FCURRENCYID", K3cloudUtils.getMap("FNumber", "PRE001"));
         model.put("FMAINBOOKID", K3cloudUtils.getMap("FNumber", "PRE001"));

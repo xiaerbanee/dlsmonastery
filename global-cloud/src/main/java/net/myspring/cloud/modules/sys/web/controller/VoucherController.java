@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.sys.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
-import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.VoucherFormDto;
@@ -16,6 +15,7 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.ServletRequest;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +120,7 @@ public class VoucherController {
             VoucherFormDto voucherFormDto = glVoucherService.getGlVoucherDto();
             restResponse.setErrors(voucherService.check(datas, voucherFormDto));
             if (restResponse.getErrors().size()>0) {
-                voucherForm.setfDate(LocalDate.parse(billDate, DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
+                voucherForm.setfDate(LocalDateUtils.parse(billDate));
 //                VoucherForm voucherForm = voucherService.save(datas,voucherForm,voucherFormDto);
                 if(VoucherStatusEnum.地区财务审核.name().equals(voucherForm.getStatus())){
                     voucherForm.setStatus(VoucherStatusEnum.省公司财务审核.name());

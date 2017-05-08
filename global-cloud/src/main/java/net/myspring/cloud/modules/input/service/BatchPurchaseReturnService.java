@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.dto.K3CloudSave;
@@ -13,12 +12,12 @@ import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class BatchPurchaseReturnService {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "TLD01_SYS"));
-        model.put("FDate", billDate.format(DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
+        model.put("FDate", LocalDateUtils.format(billDate));
         model.put("FBusinessType", "CG");
         model.put("FMRTYPE", "B");
         model.put("FMRMODE", "A");

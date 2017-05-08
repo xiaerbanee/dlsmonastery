@@ -3,11 +3,11 @@ package net.myspring.cloud.modules.report.service;
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.constant.K3CloudConstant;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.handsontable.NestedHeaderCell;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.report.mapper.GlcxViewMapper;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.util.time.YearMonthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +73,7 @@ public class RetailReportForAssistService {
             YearMonth tempStart = start;
             //占格  累计 2格 + 月份2格
             while (tempStart.isBefore(end) || tempStart.equals(end)) {
-                itemTime.add(tempStart.format(DateTimeFormatter.ofPattern(DateFormat.MONTH.getValue())));
+                itemTime.add(YearMonthUtils.format(tempStart));
                 itemTime.add(CharConstant.SPACE);
                 tempStart = tempStart.plusMonths(1);
             }
@@ -118,7 +118,7 @@ public class RetailReportForAssistService {
             cellForDepartmentCodeList.add(getNestedHeadCell(department.getNumber(), betweenMonth * 2));
             cellForDepartmentList.add(getNestedHeadCell(department.getName(), betweenMonth * 2));
             while (tempStart.isBefore(end.plusMonths(1))) {
-                cellForMonthList.add(getNestedHeadCell(tempStart.format(DateTimeFormatter.ofPattern(DateFormat.MONTH.getValue())), 2));
+                cellForMonthList.add(getNestedHeadCell(YearMonthUtils.format(tempStart), 2));
                 cellForAmountAndPercentList.add(getNestedHeadCell(K3CloudConstant.AMOUNT, 0));
                 cellForAmountAndPercentList.add(getNestedHeadCell(K3CloudConstant.PROPORTION, 0));
                 tempStart = tempStart.plusMonths(1);

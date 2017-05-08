@@ -1,7 +1,6 @@
 package net.myspring.cloud.modules.report.web.controller;
 
 import com.google.common.collect.Lists;
-import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.modules.report.dto.PayableForDetailDto;
 import net.myspring.cloud.modules.report.dto.PayableForSummaryDto;
 import net.myspring.cloud.modules.report.service.PayableReportService;
@@ -10,13 +9,13 @@ import net.myspring.cloud.modules.report.web.query.PayableReportQuery;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -56,8 +55,8 @@ public class PayableReportController {
         LocalDate dateEnd = LocalDate.now().minusDays(1L);
         if (StringUtils.isNotEmpty(dateRange)) {
             String[] dates = dateRange.split(CharConstant.UNDER_LINE);
-            dateStart = LocalDate.parse(dates[0], DateTimeFormatter.ofPattern(DateFormat.DATE.getValue()));
-            dateEnd = LocalDate.parse(dates[1], DateTimeFormatter.ofPattern(DateFormat.DATE.getValue()));
+            dateStart = LocalDateUtils.parse(dates[0]);
+            dateEnd = LocalDateUtils.parse(dates[1]);
         }
         if (StringUtils.isNotBlank(companyName)) {
             summaryDataList = payableReportService.getSummaryList(dateStart, dateEnd);

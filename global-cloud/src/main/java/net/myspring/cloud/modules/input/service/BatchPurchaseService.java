@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
@@ -18,6 +17,7 @@ import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +61,7 @@ public class BatchPurchaseService {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "RKD01_SYS"));
-        model.put("FDate",  billDate.format(DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
+        model.put("FDate",  LocalDateUtils.format(billDate));
         model.put("FBusinessType", "CG");
         model.put("FStockOrgId", K3cloudUtils.getMap("FNumber", "100"));
         model.put("FDemandOrgId", K3cloudUtils.getMap("FNumber", "100"));
@@ -147,7 +147,7 @@ public class BatchPurchaseService {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "TLD01_SYS"));
-        model.put("FDate", billDate.format(DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
+        model.put("FDate", LocalDateUtils.format(billDate));
         model.put("FBusinessType", "CG");
         model.put("FMRTYPE", "B");
         model.put("FMRMODE", "A");

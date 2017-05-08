@@ -1,7 +1,6 @@
 package net.myspring.cloud.modules.report.web.controller;
 
 import com.google.common.collect.Lists;
-import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.handsontable.NestedHeaderCell;
 import net.myspring.cloud.modules.report.domain.Retail;
 import net.myspring.cloud.modules.report.service.RetailReportForAssistService;
@@ -9,13 +8,13 @@ import net.myspring.cloud.modules.report.service.RetailReportService;
 import net.myspring.cloud.modules.report.web.form.RetailReportForm;
 import net.myspring.cloud.modules.report.web.query.RetailReportQuery;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.YearMonthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -37,8 +36,8 @@ public class RetailReportController {
         List<List<NestedHeaderCell>> nestedHeader = retailReportForAssistService.getNestedHeads(start, end);
         List<List<Object>> retailShopReport = retailReportService.getRetailReport(start, end);
         RetailReportForm retailReportForm = new RetailReportForm();
-        retailReportForm.setStartMonth(start.format(DateTimeFormatter.ofPattern(DateFormat.MONTH.getValue())));
-        retailReportForm.setEndMonth(end.format(DateTimeFormatter.ofPattern(DateFormat.MONTH.getValue())));
+        retailReportForm.setStartMonth(YearMonthUtils.format(start));
+        retailReportForm.setEndMonth(YearMonthUtils.format(end));
         retailReportForm.setRetailReport(retailShopReport);
         retailReportForm.setNestedHeader(nestedHeader);;
         return retailReportForm;
