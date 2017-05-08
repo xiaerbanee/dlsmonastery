@@ -12,7 +12,6 @@ import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.mapper.BdStockMapper;
-import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.input.web.query.BatchDeliveryQuery;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.common.constant.CharConstant;
@@ -79,7 +78,7 @@ public class BatchDeliveryService {
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchDeliveryDto misDelivery : billList) {
                 K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.STK_MisDelivery.name(), getMisDeliveryReturn(misDelivery,accountDto));
-                String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
+                String billNo = null;
                 billNos.add(billNo);
             }
         }
@@ -93,12 +92,12 @@ public class BatchDeliveryService {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", misDelivery.getBillDate());
-        model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "QTCKD01_SYS"));
-        model.put("FStockOrgId", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FPickOrgId", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FOwnerIdHead", K3cloudUtils.getMap("FNumber", "100"));
+        model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "QTCKD01_SYS"));
+        model.put("FStockOrgId", CollectionUtil.getMap("FNumber", "100"));
+        model.put("FPickOrgId", CollectionUtil.getMap("FNumber", "100"));
+        model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", "100"));
 
-        model.put("FDeptId", K3cloudUtils.getMap("FNumber", misDelivery.getDepartment()));
+        model.put("FDeptId", CollectionUtil.getMap("FNumber", misDelivery.getDepartment()));
         //库存方向
         if (MisDeliveryTypeEnum.出库.name().equals(misDelivery.getMisDeliveryType())) {
             model.put("FStockDirect", "GENERAL");
@@ -106,11 +105,11 @@ public class BatchDeliveryService {
             model.put("FStockDirect", "RETURN");
         }
         model.put("FOwnerTypeIdHead", "BD_OwnerOrg");
-        model.put("FBaseCurrId", K3cloudUtils.getMap("FNumber", "PRE001"));
+        model.put("FBaseCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
         List<Object> entity = Lists.newArrayList();
         Map<String, Object> detail = Maps.newLinkedHashMap();
-        detail.put("FMaterialId", K3cloudUtils.getMap("FNumber", misDelivery.getProduct()));
-        detail.put("FStockId", K3cloudUtils.getMap("FNumber", misDelivery.getDepot()));
+        detail.put("FMaterialId", CollectionUtil.getMap("FNumber", misDelivery.getProduct()));
+        detail.put("FStockId", CollectionUtil.getMap("FNumber", misDelivery.getDepot()));
         detail.put("FQty", misDelivery.getQty());
         detail.put("FEntryNote", misDelivery.getRemark());
         entity.add(detail);

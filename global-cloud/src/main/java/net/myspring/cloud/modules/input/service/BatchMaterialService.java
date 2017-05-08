@@ -10,7 +10,6 @@ import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.BdMaterialDto;
 import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
-import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.input.web.query.BatchMaterialQuery;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
@@ -75,7 +74,7 @@ public class BatchMaterialService {
             cacheUtils.initCacheInput(accountDto);
             for (BdMaterialDto bdMaterial : materials) {
                 K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial));
-                String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
+                String billNo =null;
                 codeList.add(billNo);
             }
         }
@@ -92,9 +91,9 @@ public class BatchMaterialService {
         model.put("F_PAEZ_Decimal", bdMaterial.getPrice1());
         model.put("F_PAEZ_Decimal1", bdMaterial.getRlPrice());
         Map<String, Object> detail = Maps.newLinkedHashMap();
-        detail.put("FCategoryID", K3cloudUtils.getMap("FNumber", bdMaterial.getfCategoryId()));
-        detail.put("FMaterialGroup", K3cloudUtils.getMap("FNumber", bdMaterial.getfMaterialGroupName()));
-        detail.put("FTaxRateId", K3cloudUtils.getMap("FNumber", "SL04_SYS"));
+        detail.put("FCategoryID", CollectionUtil.getMap("FNumber", bdMaterial.getfCategoryId()));
+        detail.put("FMaterialGroup", CollectionUtil.getMap("FNumber", bdMaterial.getfMaterialGroupName()));
+        detail.put("FTaxRateId", CollectionUtil.getMap("FNumber", "SL04_SYS"));
         model.put("BD_MATERIAL__SubHeadEntity", detail);
         root.put("Model", model);
         return ObjectMapperUtils.writeValueAsString(root);

@@ -8,8 +8,8 @@ import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
-import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -46,19 +46,19 @@ public class BatchPurchaseReturnService {
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
-        model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "TLD01_SYS"));
+        model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "TLD01_SYS"));
         model.put("FDate", LocalDateUtils.format(billDate));
         model.put("FBusinessType", "CG");
         model.put("FMRTYPE", "B");
         model.put("FMRMODE", "A");
         model.put("FREPLENISHMODE", "B");
-        model.put("FStockOrgId", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FRequireOrgId", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FPurchaseOrgId", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FMRDeptId", K3cloudUtils.getMap("FNumber", department));
-        model.put("FPURCHASEDEPTID", K3cloudUtils.getMap("FNumber", department));
+        model.put("FStockOrgId", CollectionUtil.getMap("FNumber", "100"));
+        model.put("FRequireOrgId", CollectionUtil.getMap("FNumber", "100"));
+        model.put("FPurchaseOrgId", CollectionUtil.getMap("FNumber", "100"));
+        model.put("FMRDeptId", CollectionUtil.getMap("FNumber", department));
+        model.put("FPURCHASEDEPTID", CollectionUtil.getMap("FNumber", department));
 
-        model.put("FSupplierID", K3cloudUtils.getMap("FNumber", supplier));
+        model.put("FSupplierID", CollectionUtil.getMap("FNumber", supplier));
         model.put("FDESCRIPTION", "接口");
         List<Object> entity = Lists.newArrayList();
         for (List<String> row : dataList) {
@@ -68,13 +68,13 @@ public class BatchPurchaseReturnService {
             Integer qty = Integer.valueOf(StringUtils.toString(row.get(2)).trim());
             String remarks = StringUtils.toString(row.get(3)).trim();
             Map<String, Object> detail = Maps.newLinkedHashMap();
-            detail.put("FMaterialId", K3cloudUtils.getMap("FNumber", productMap.get(productName)));
+            detail.put("FMaterialId", CollectionUtil.getMap("FNumber", productMap.get(productName)));
             detail.put("FRMREALQTY", qty);
             detail.put("FREPLENISHQTY", qty);
             detail.put("FKEAPAMTQTY", qty);
             detail.put("FPRICEUNITQTY", qty);
-            detail.put("FStockId", K3cloudUtils.getMap("FNumber", store));
-            detail.put("FStockStatusId", K3cloudUtils.getMap("FNumber", "KCZT01_SYS"));
+            detail.put("FStockId", CollectionUtil.getMap("FNumber", store));
+            detail.put("FStockStatusId", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
             detail.put("FNOTE", remarks);
             detail.put("FPrice", price);
             detail.put("FAmount_LC", new BigDecimal(qty).multiply(price));
@@ -98,18 +98,18 @@ public class BatchPurchaseReturnService {
             detail.put("FAmount", new BigDecimal(qty).multiply(price));
             // 是否赠品
             detail.put("FGiveAway", price.compareTo(BigDecimal.ZERO) == 0 ? 1 : 0);
-            detail.put("FExchangeTypeId", K3cloudUtils.getMap("FNumber", "HLTX01_SYS"));
-            detail.put("FLocalCurrId", K3cloudUtils.getMap("FNumber", "PRE001"));
+            detail.put("FExchangeTypeId", CollectionUtil.getMap("FNumber", "HLTX01_SYS"));
+            detail.put("FLocalCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
             detail.put("FNOTE", remarks);
-            detail.put("FPoRequireOrgId", K3cloudUtils.getMap("FNumber", "100"));
-            detail.put("FSetPriceUnitID", K3cloudUtils.getMap("FNumber", "Pcs"));
+            detail.put("FPoRequireOrgId", CollectionUtil.getMap("FNumber", "100"));
+            detail.put("FSetPriceUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
             entity.add(detail);
         }
         model.put("PUR_MRB__FPURMRBENTRY", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
         K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.PUR_MRB.name(), result);
-        String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
+        String billNo =null;
         codeList.add(billNo);
         return codeList;
     }

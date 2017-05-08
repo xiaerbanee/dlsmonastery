@@ -15,7 +15,6 @@ import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.input.mapper.BdDepartmentMapper;
 import net.myspring.cloud.modules.input.mapper.CnBankMapper;
-import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.common.constant.CharConstant;
@@ -114,7 +113,7 @@ public class BatchRefundBillService {
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchRefundBillDto arRefundBill : billList) {
                 K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_REFUNDBILL.name(), getARRefundBill(arRefundBill,accountDto));
-                String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
+                String billNo = null;
                 billNos.add(billNo);
             }
         }
@@ -122,7 +121,7 @@ public class BatchRefundBillService {
         if (CollectionUtil.isNotEmpty(cashBillList)) {
             for (BatchRefundBillDto arRefundBill : cashBillList) {
                 K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_REFUNDBILL.name(), getCashARRefundBill(arRefundBill,accountDto));
-                String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
+                String billNo = null;
                 billNos.add(billNo);
             }
         }
@@ -137,15 +136,15 @@ public class BatchRefundBillService {
         Map<String, Object> model = getHeader(arRefundBill);
         List<Object> entity = Lists.newArrayList();
         Map<String, Object> detail = Maps.newLinkedHashMap();
-        detail.put("FSETTLETYPEID", K3cloudUtils.getMap("FNumber", "JSFS04_SYS"));
-        detail.put("FPURPOSEID", K3cloudUtils.getMap("FNumber", "SFKYT01_SYS"));
+        detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", "JSFS04_SYS"));
+        detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
         if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(SecurityUtils.getCompanyId()))) {
-            detail.put("F_YLG_Base", K3cloudUtils.getMap("FNumber", arRefundBill.getSubject()));
+            detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", arRefundBill.getSubject()));
         }
         detail.put("FREFUNDAMOUNTFOR", arRefundBill.getAmount());
         detail.put("FREFUNDAMOUNTFOR_E", arRefundBill.getAmount());
         detail.put("FREALREFUNDAMOUNTFOR_D", arRefundBill.getAmount());
-        detail.put("FACCOUNTID", K3cloudUtils.getMap("FNumber", arRefundBill.getBankName()));
+        detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", arRefundBill.getBankName()));
         detail.put("FNOTE", arRefundBill.getNote());
         entity.add(detail);
         model.put("AR_REFUNDBILL__FREFUNDBILLENTRY", entity);
@@ -163,10 +162,10 @@ public class BatchRefundBillService {
         Map<String, Object> model = getHeader(arRefundBill);
         List<Object> entity = Lists.newArrayList();
         Map<String, Object> detail = Maps.newLinkedHashMap();
-        detail.put("FSETTLETYPEID", K3cloudUtils.getMap("FNumber", "JSFS01_SYS"));
-        detail.put("FPURPOSEID", K3cloudUtils.getMap("FNumber", "SFKYT01_SYS"));
+        detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", "JSFS01_SYS"));
+        detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
         if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(SecurityUtils.getCompanyId()))) {
-            detail.put("F_YLG_Base", K3cloudUtils.getMap("FNumber", arRefundBill.getSubject()));
+            detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", arRefundBill.getSubject()));
         }
         detail.put("FREFUNDAMOUNTFOR", arRefundBill.getAmount());
         detail.put("FREFUNDAMOUNTFOR_E", arRefundBill.getAmount());
@@ -184,18 +183,18 @@ public class BatchRefundBillService {
     private Map<String, Object> getHeader(BatchRefundBillDto arRefundBill) {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
-        model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "SKTKDLX01_SYS"));
+        model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "SKTKDLX01_SYS"));
         model.put("FDATE", arRefundBill.getBillDate());
         model.put("FCONTACTUNITTYPE", "BD_Customer");
-        model.put("FCONTACTUNIT", K3cloudUtils.getMap("FNumber", arRefundBill.getCustomerName()));
+        model.put("FCONTACTUNIT", CollectionUtil.getMap("FNumber", arRefundBill.getCustomerName()));
         model.put("FRECTUNITTYPE", "BD_Customer");
-        model.put("FRECTUNIT", K3cloudUtils.getMap("FNumber", arRefundBill.getCustomerName()));
-        model.put("FCURRENCYID", K3cloudUtils.getMap("FNumber", "PRE001"));
-        model.put("FSETTLECUR", K3cloudUtils.getMap("FNumber", "PRE001"));
-        model.put("FPAYORGID", K3cloudUtils.getMap("FNumber", 100));
-        model.put("FSETTLEORGID", K3cloudUtils.getMap("FNumber", 100));
-        model.put("FSALEORGID", K3cloudUtils.getMap("FNumber", 100));
-        model.put("FSALEDEPTID", K3cloudUtils.getMap("FNumber", arRefundBill.getDepartment()));
+        model.put("FRECTUNIT", CollectionUtil.getMap("FNumber", arRefundBill.getCustomerName()));
+        model.put("FCURRENCYID", CollectionUtil.getMap("FNumber", "PRE001"));
+        model.put("FSETTLECUR", CollectionUtil.getMap("FNumber", "PRE001"));
+        model.put("FPAYORGID", CollectionUtil.getMap("FNumber", 100));
+        model.put("FSETTLEORGID", CollectionUtil.getMap("FNumber", 100));
+        model.put("FSALEORGID", CollectionUtil.getMap("FNumber", 100));
+        model.put("FSALEDEPTID", CollectionUtil.getMap("FNumber", arRefundBill.getDepartment()));
         model.put("FREFUNDTOTALAMOUNTFOR", arRefundBill.getAmount());
         model.put("FREALREFUNDAMOUNTFOR", arRefundBill.getAmount());
         model.put("FSETTLERATE", 1);

@@ -12,10 +12,13 @@ import net.myspring.cloud.modules.input.domain.BasAssistant;
 import net.myspring.cloud.modules.input.domain.HrEmpInfo;
 import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
-import net.myspring.cloud.modules.input.mapper.*;
-import net.myspring.cloud.modules.input.utils.K3cloudUtils;
+import net.myspring.cloud.modules.input.mapper.BasAssistantMapper;
+import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
+import net.myspring.cloud.modules.input.mapper.BdDepartmentMapper;
+import net.myspring.cloud.modules.input.mapper.HrEmpInfoMapper;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -78,14 +81,14 @@ public class BatchCashDepositJournalService {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDATE", LocalDateUtils.format(billDate));
-        model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "SGRJZ02_SYS"));
-        model.put("FPAYORGID", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FAcctBookId", K3cloudUtils.getMap("FNumber", "001"));
+        model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "SGRJZ02_SYS"));
+        model.put("FPAYORGID", CollectionUtil.getMap("FNumber", "100"));
+        model.put("FAcctBookId", CollectionUtil.getMap("FNumber", "001"));
         model.put("FSTARTPERIOD", LocalDateUtils.format(billDate,LocalDateUtils.FORMATTER_MONTH_SINGLE));
-        model.put("FACCOUNTID", K3cloudUtils.getMap("FNumber", "1001"));
-        model.put("FCURRENCYID", K3cloudUtils.getMap("FNumber", "PRE001"));
-        model.put("FMAINBOOKID", K3cloudUtils.getMap("FNumber", "PRE001"));
-        model.put("FEXCHANGETYPE", K3cloudUtils.getMap("FNumber", "HLTX01_SYS"));
+        model.put("FACCOUNTID", CollectionUtil.getMap("FNumber", "1001"));
+        model.put("FCURRENCYID", CollectionUtil.getMap("FNumber", "PRE001"));
+        model.put("FMAINBOOKID", CollectionUtil.getMap("FNumber", "PRE001"));
+        model.put("FEXCHANGETYPE", CollectionUtil.getMap("FNumber", "HLTX01_SYS"));
         model.put("FEXCHANGERATE", 1);
 
         BigDecimal debitAmounts = BigDecimal.ZERO;
@@ -114,20 +117,20 @@ public class BatchCashDepositJournalService {
             creditAmounts = creditAmounts.add(creditAmount);
 
             Map<String, Object> detail = Maps.newLinkedHashMap();
-            detail.put("F_PAEC_Base", K3cloudUtils.getMap("FNumber", departMap.get(department)));
-            detail.put("F_PAEC_Base1", K3cloudUtils.getMap("FStaffNumber", secUserMap.get(user)));
-            detail.put("F_PAEC_Assistant", K3cloudUtils.getMap("FNumber", otherTypeMap.get(otherType)));
-            detail.put("F_PAEC_Assistant1", K3cloudUtils.getMap("FNumber", expenseMap.get(expenseType)));
+            detail.put("F_PAEC_Base", CollectionUtil.getMap("FNumber", departMap.get(department)));
+            detail.put("F_PAEC_Base1", CollectionUtil.getMap("FStaffNumber", secUserMap.get(user)));
+            detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", otherTypeMap.get(otherType)));
+            detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", expenseMap.get(expenseType)));
             if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(SecurityUtils.getCompanyId())) && StringUtils.isNotBlank(F_PAEC_Base2)) {
-                detail.put("F_PAEC_Base2", K3cloudUtils.getMap("FNumber", customerMap.get(F_PAEC_Base2)));
+                detail.put("F_PAEC_Base2", CollectionUtil.getMap("FNumber", customerMap.get(F_PAEC_Base2)));
             }
-            detail.put("FSETTLETYPEID", K3cloudUtils.getMap("FNumber", "JSFS01_SYS"));
+            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", "JSFS01_SYS"));
             detail.put("FCREDITAMOUNT", creditAmount);
 
             // 借方金额
             detail.put("FDEBITAMOUNT", debitAmount);
-            detail.put("FVOUCHERGROUPID", K3cloudUtils.getMap("FNumber", "PRE001"));
-            detail.put("FOPPOSITEACCOUNTID", K3cloudUtils.getMap("FNumber", subject));
+            detail.put("FVOUCHERGROUPID", CollectionUtil.getMap("FNumber", "PRE001"));
+            detail.put("FOPPOSITEACCOUNTID", CollectionUtil.getMap("FNumber", subject));
             detail.put("FCOMMENT", remarks);
             entity.add(detail);
         }
@@ -140,7 +143,7 @@ public class BatchCashDepositJournalService {
         root.put("Model", model);
         String JournalResult = ObjectMapperUtils.writeValueAsString(root);
         K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.CN_JOURNAL.name(), JournalResult);
-        String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
+        String billNo =null;
         return billNo;
     }
 }

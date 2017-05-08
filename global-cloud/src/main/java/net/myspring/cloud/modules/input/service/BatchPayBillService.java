@@ -10,7 +10,6 @@ import net.myspring.cloud.modules.input.dto.BatchPayBillDto;
 import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.*;
-import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
@@ -102,7 +101,7 @@ public class BatchPayBillService {
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchPayBillDto payBill : billList) {
                 K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AP_PAYBILL.name(), getPayBill(payBill,accountDto));
-                String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
+                String billNo = null;
                 billNos.add(billNo);
             }
         }
@@ -117,31 +116,31 @@ public class BatchPayBillService {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", payBill.getDate());
-        model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "FKDLX01_SYS"));
+        model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "FKDLX01_SYS"));
         model.put("FCONTACTUNITTYPE", "BD_Supplier");
-        model.put("FCONTACTUNIT", K3cloudUtils.getMap("FNumber", payBill.getSupplier()));
+        model.put("FCONTACTUNIT", CollectionUtil.getMap("FNumber", payBill.getSupplier()));
         model.put("FRECTUNITTYPE", "BD_Supplier");
-        model.put("FRECTUNIT", K3cloudUtils.getMap("FNumber", payBill.getSupplier()));
-        model.put("FCURRENCYID", K3cloudUtils.getMap("FNumber", "PRE001"));
-        model.put("FSETTLECUR", K3cloudUtils.getMap("FNumber", "PRE001"));
+        model.put("FRECTUNIT", CollectionUtil.getMap("FNumber", payBill.getSupplier()));
+        model.put("FCURRENCYID", CollectionUtil.getMap("FNumber", "PRE001"));
+        model.put("FSETTLECUR", CollectionUtil.getMap("FNumber", "PRE001"));
         model.put("FSETTLERATE", 1);
-        model.put("FPAYORGID", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FSETTLEORGID", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FPURCHASEDEPTID", K3cloudUtils.getMap("FNumber", payBill.getDepartment()));
+        model.put("FPAYORGID", CollectionUtil.getMap("FNumber", "100"));
+        model.put("FSETTLEORGID", CollectionUtil.getMap("FNumber", "100"));
+        model.put("FPURCHASEDEPTID", CollectionUtil.getMap("FNumber", payBill.getDepartment()));
         model.put("FPAYTOTALAMOUNTFOR_H", payBill.getAmout());
         model.put("FREALPAYAMOUNTFOR_H", payBill.getAmout());
         model.put("FEXCHANGERATE", 1);
 
         List<Object> entity = Lists.newArrayList();
         Map<String, Object> detail = Maps.newLinkedHashMap();
-        detail.put("FSETTLETYPEID", K3cloudUtils.getMap("FNumber", payBill.getSettleType()));
+        detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", payBill.getSettleType()));
         if (StringUtils.isNotBlank(payBill.getBank())) {
-            detail.put("FACCOUNTID", K3cloudUtils.getMap("FNumber", payBill.getBank()));
+            detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", payBill.getBank()));
         }
         detail.put("FPAYTOTALAMOUNTFOR", payBill.getAmout());
         detail.put("FREALPAYAMOUNTFOR_D", payBill.getAmout());
         detail.put("FSETTLEPAYAMOUNTFOR", payBill.getAmout());
-        detail.put("F_YLG_Base", K3cloudUtils.getMap("FNumber", payBill.getSubject()));
+        detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", payBill.getSubject()));
         detail.put("FCOMMENT", payBill.getNote());
         entity.add(detail);
         model.put("AP_PAYBILL__FPAYBILLENTRY", entity);
