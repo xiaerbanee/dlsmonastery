@@ -4,6 +4,7 @@ package net.myspring.basic.modules.sys.web.form;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.constant.TreeConstant;
 import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
@@ -37,6 +38,7 @@ public class OfficeForm extends DataForm<Office> {
     private List<String> officeTypeList=Lists.newArrayList();
     private Integer level;
     private String parentIds;
+    private Office parent;
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
@@ -54,7 +56,22 @@ public class OfficeForm extends DataForm<Office> {
         this.level = level;
     }
 
+    public Office getParent() {
+        return parent;
+    }
+
+    public void setParent(Office parent) {
+        this.parent = parent;
+    }
+
     public String getParentIds() {
+        if(StringUtils.isBlank(parentIds)){
+            if(parent!=null){
+                this.parentIds=parent.getParentIds()+parent.getId()+CharConstant.COMMA;
+            }else {
+                this.parentIds= TreeConstant.ROOT_PARENT_IDS;
+            }
+        }
         return parentIds;
     }
 

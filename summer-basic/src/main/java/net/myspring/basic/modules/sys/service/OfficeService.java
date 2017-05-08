@@ -20,6 +20,7 @@ import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.constant.TreeConstant;
+import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -59,10 +60,10 @@ public class OfficeService {
         return page;
     }
 
-    public List<String> getOfficeFilterIds(String accountId){
-        List<String> officeIdList= Lists.newArrayList();
-        if(accountId!=null){
-            officeIdList= officeManager.officeFilter(accountId);
+    public List<String> getOfficeFilterIds(String accountId) {
+        List<String> officeIdList = Lists.newArrayList();
+        if (accountId != null) {
+            officeIdList = officeManager.officeFilter(accountId);
         }
         return officeIdList;
     }
@@ -83,58 +84,76 @@ public class OfficeService {
     }
 
     public OfficeForm findForm(OfficeForm officeForm) {
-        if(!officeForm.isCreate()){
+        if (!officeForm.isCreate()) {
             Office office = officeMapper.findOne(officeForm.getId());
-            officeForm= BeanUtil.map(office,OfficeForm.class);
-            if(OfficeTypeEnum.SUPPORT.name().equals(office.getType())){
-                List<OfficeBusiness> businessOffices=officeBusinessMapper.findBusinessIdById(office.getId());
-                officeForm.setOfficeTree(getOfficeTree(CollectionUtil.extractToList(businessOffices,"id")));
+            officeForm = BeanUtil.map(office, OfficeForm.class);
+            if (OfficeTypeEnum.SUPPORT.name().equals(office.getType())) {
+                List<OfficeBusiness> businessOffices = officeBusinessMapper.findBusinessIdById(office.getId());
+                officeForm.setOfficeTree(getOfficeTree(CollectionUtil.extractToList(businessOffices, "id")));
             }
-            List<OfficeLeader> officeLeaderList=officeLeaderMapper.findByOfficeId(officeForm.getId());
-            officeForm.setLeaderIdList(CollectionUtil.extractToList(officeLeaderList,"leaderId"));
+            List<OfficeLeader> officeLeaderList = officeLeaderMapper.findByOfficeId(officeForm.getId());
+            officeForm.setLeaderIdList(CollectionUtil.extractToList(officeLeaderList, "leaderId"));
             cacheUtils.initCacheInput(officeForm);
         }
         return officeForm;
     }
 
+    public RestResponse check(OfficeForm officeForm) {
+        Office parent = officeMapper.findOne(officeForm.getParentId());
+        if (OfficeTypeEnum.BUSINESS.name().equals(officeForm.getType())) {
+            OfficeRule topOfficeRule = officeRuleMapper.findTopOfficeRule();
+            OfficeRule officeRule = officeRuleMapper.findOne(officeForm.getOfficeRuleId());
+            if (parent != null && topOfficeRule.getId().equals(officeForm.getOfficeRuleId())) {
+                return new RestResponse("顶级业务部门不能设置上级", null,false);
+            } else if (parent != null) {
+                if (!officeRule.getParentId().equals(parent.getOfficeRuleId())) {
+                    return new RestResponse("业务部门上级类型不正确", null,false);
+                }
+            } else {
+                return new RestResponse("非顶级业务部门必须设置上级", null,false);
+            }
+        }
+        officeForm.setParent(parent);
+        return new RestResponse("验证成功", null);
+    }
 
     public Office save(OfficeForm officeForm) {
         Office office;
         if (officeForm.isCreate()) {
-            office=BeanUtil.map(officeForm,Office.class);
+            office = BeanUtil.map(officeForm, Office.class);
             officeMapper.save(office);
         } else {
             office = officeMapper.findOne(officeForm.getId());
-            ReflectionUtil.copyProperties(officeForm,office);
+            ReflectionUtil.copyProperties(officeForm, office);
             officeMapper.update(office);
             officeLeaderMapper.removeOfficeLeaderByOffice(office.getId());
         }
-        List<OfficeBusiness> businessOfficeList=officeBusinessMapper.findAllBusinessIdById(office.getId());
-        if(OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())){
-            List<String> businessOfficeIdList=CollectionUtil.extractToList(businessOfficeList,"businessOfficeId");
-            List<String>removeIdList=CollectionUtil.subtract(businessOfficeIdList,officeForm.getOfficeIdList());
-            List<String> addIdList=CollectionUtil.subtract(officeForm.getOfficeIdList(),businessOfficeIdList);
-            List<OfficeBusiness> officeBusinessList=Lists.newArrayList();
-            for(String businessOfficeId:addIdList){
+        List<OfficeBusiness> businessOfficeList = officeBusinessMapper.findAllBusinessIdById(office.getId());
+        if (OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())) {
+            List<String> businessOfficeIdList = CollectionUtil.extractToList(businessOfficeList, "businessOfficeId");
+            List<String> removeIdList = CollectionUtil.subtract(businessOfficeIdList, officeForm.getOfficeIdList());
+            List<String> addIdList = CollectionUtil.subtract(officeForm.getOfficeIdList(), businessOfficeIdList);
+            List<OfficeBusiness> officeBusinessList = Lists.newArrayList();
+            for (String businessOfficeId : addIdList) {
                 OfficeBusiness officeBusiness = new OfficeBusiness(office.getId(), businessOfficeId);
                 officeBusiness.setCompanyId(SecurityUtils.getCompanyId());
                 officeBusinessList.add(officeBusiness);
             }
-            officeBusinessMapper.setEnabledByOfficeId(true,office.getId());
-            if(CollectionUtil.isNotEmpty(removeIdList)){
+            officeBusinessMapper.setEnabledByOfficeId(true, office.getId());
+            if (CollectionUtil.isNotEmpty(removeIdList)) {
                 officeBusinessMapper.removeByBusinessOfficeIds(removeIdList);
             }
-            if(CollectionUtil.isNotEmpty(addIdList)){
+            if (CollectionUtil.isNotEmpty(addIdList)) {
                 officeBusinessMapper.batchSave(officeBusinessList);
             }
-        }else if(CollectionUtil.isNotEmpty(businessOfficeList)){
-            officeBusinessMapper.setEnabledByOfficeId(false,office.getId());
+        } else if (CollectionUtil.isNotEmpty(businessOfficeList)) {
+            officeBusinessMapper.setEnabledByOfficeId(false, office.getId());
         }
 
-        if(CollectionUtil.isNotEmpty(officeForm.getLeaderIdList())){
-            List<OfficeLeader> officeLeaderList=Lists.newArrayList();
-            for(String leaderId:officeForm.getLeaderIdList()){
-                officeLeaderList.add(new OfficeLeader(office.getId(),leaderId));
+        if (CollectionUtil.isNotEmpty(officeForm.getLeaderIdList())) {
+            List<OfficeLeader> officeLeaderList = Lists.newArrayList();
+            for (String leaderId : officeForm.getLeaderIdList()) {
+                officeLeaderList.add(new OfficeLeader(office.getId(), leaderId));
             }
             officeLeaderMapper.batchSave(officeLeaderList);
         }
@@ -147,35 +166,35 @@ public class OfficeService {
 
     public List<OfficeDto> findByFilter(Map<String, Object> map) {
         List<Office> officeList = officeMapper.findByFilter(map);
-        List<OfficeDto> officeDtoList= BeanUtil.map(officeList,OfficeDto.class);
+        List<OfficeDto> officeDtoList = BeanUtil.map(officeList, OfficeDto.class);
         cacheUtils.initCacheInput(officeDtoList);
         return officeDtoList;
     }
 
-    public List<OfficeBusiness> findBusinessIdById(String id){
-        return  officeBusinessMapper.findBusinessIdById(id);
+    public List<OfficeBusiness> findBusinessIdById(String id) {
+        return officeBusinessMapper.findBusinessIdById(id);
     }
 
-    public List<OfficeRuleDto> findOfficeRuleList(){
-        List<OfficeRule> officeRuleList=officeRuleMapper.findAllEnabled();
-        List<OfficeRuleDto> officeRuleDtoList=BeanUtil.map(officeRuleList,OfficeRuleDto.class);
+    public List<OfficeRuleDto> findOfficeRuleList() {
+        List<OfficeRule> officeRuleList = officeRuleMapper.findAllEnabled();
+        List<OfficeRuleDto> officeRuleDtoList = BeanUtil.map(officeRuleList, OfficeRuleDto.class);
         return officeRuleDtoList;
     }
 
-    public TreeNode getOfficeTree(List<String> officeIdList){
+    public TreeNode getOfficeTree(List<String> officeIdList) {
         TreeNode treeNode = new TreeNode("0", "部门列表");
-        List<Office> officeList=officeMapper.findAll();
-        getTreeNodeList(officeList,treeNode.getChildren(), TreeConstant.ROOT_PARENT_IDS);
+        List<Office> officeList = officeMapper.findAll();
+        getTreeNodeList(officeList, treeNode.getChildren(), TreeConstant.ROOT_PARENT_IDS);
         treeNode.setChecked(Lists.newArrayList(Sets.newHashSet(officeIdList)));
         return treeNode;
     }
 
-    public void getTreeNodeList(List<Office> officeList,List<TreeNode> childList,String parentIds) {
-        for(Office office:officeList){
-            if(parentIds.equalsIgnoreCase(office.getParentIds())){
-                TreeNode treeNode=new TreeNode(office.getId(),office.getName());
+    public void getTreeNodeList(List<Office> officeList, List<TreeNode> childList, String parentIds) {
+        for (Office office : officeList) {
+            if (parentIds.equalsIgnoreCase(office.getParentIds())) {
+                TreeNode treeNode = new TreeNode(office.getId(), office.getName());
                 childList.add(treeNode);
-                getTreeNodeList(officeList,treeNode.getChildren(),office.getParentIds()+office.getId()+ CharConstant.COMMA);
+                getTreeNodeList(officeList, treeNode.getChildren(), office.getParentIds() + office.getId() + CharConstant.COMMA);
             }
         }
     }
