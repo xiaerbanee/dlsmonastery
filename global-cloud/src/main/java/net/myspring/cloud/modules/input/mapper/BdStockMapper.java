@@ -19,4 +19,6 @@ public interface BdStockMapper {
     List<BdStock> findByDate(@Param("maxOutDate")LocalDateTime maxOutDate);
 
     List<NameNumberDto> findNameAndNumber();
+
+    List<String> findNameByNameLike(@Param("name")String name);
 }

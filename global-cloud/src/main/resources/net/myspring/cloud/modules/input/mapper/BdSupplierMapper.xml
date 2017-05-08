@@ -23,7 +23,7 @@
         t2.FSUPPLIERID = #{supplierId}
     </select>
 
-    <select id="findNameAndNumber" resultType="NameValueDto">
+    <select id="findNameAndNumber" resultType="NameNumberDto">
         select
         t1.FNUMBER as number,
         t2.FNAME as name
