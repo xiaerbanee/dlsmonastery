@@ -6,12 +6,12 @@
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutyPublicFreeList.filter')}}</el-button>
         <search-tag  :formData="formData" :formLabel = "formLabel"></search-tag>
       </el-row>
-      <el-dialog :title="$t('dutyPublicFreeList.filter')" v-model="formVisible" class="search-form">
+      <el-dialog :title="$t('dutyPublicFreeList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="7">
             <el-col :span="12">
-              <el-form-item :label="formLabel.dutyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.dutyDate" type="daterange" align="right" :placeholder="$t('dutyPublicFreeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -43,19 +43,15 @@
         page:{},
         formData:{
           dutyDate:'',
-          dutyDateBTW:'',
         },
         submitData:{
           page:0,
           size:25,
           dutyDate:'',
-          dutyDateBTW:'',
         },
         formLabel:{
-          dutyDateBTW:{label:this.$t('dutyPublicFreeList.freeDate')},
+          dutyDate:{label:this.$t('dutyPublicFreeList.freeDate')},
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -64,11 +60,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("dutyPublicFreeList");
-        util.setQuery("dutyPublicFreeList",this.formData);
+        util.setQuery("dutyPublicFreeList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutyPublicFree',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutyPublicFree?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

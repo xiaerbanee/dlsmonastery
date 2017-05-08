@@ -39,4 +39,9 @@ public class BdStockController {
         return bdStockService.findNameAndNumber();
     }
 
+    @RequestMapping(value = "getNameByNameLike")
+    public List<String> getNameByNameLike(String name){
+        return bdStockService.findNameByNameLike(name);
+    }
+
 }

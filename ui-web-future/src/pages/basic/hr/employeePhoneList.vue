@@ -22,7 +22,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('employeePhoneList.selectStatus')">
-                  <el-option  v-for="item in searchProperty.status" :key="item" :label="item" :value="item"></el-option>
+                  <el-option  v-for="item in formData.status" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -61,10 +61,9 @@
       return {
         page:{},
         formData:{
+        },submitData:{
           page:0,
           size:25,
-          createdDate:'',
-          createdDateBTW:'',
           name:'',
           status:'',
           areaName:'',
@@ -74,9 +73,7 @@
           status:{label:this.$t('employeePhoneList.status')},
           areaName:{label:this.$t('employeePhoneList.areaName')},
           depotName:{label:this.$t('employeePhoneList.depotName')},
-          createdDateBTW:{label:this.$t('employeePhoneList.createdDate')}
         },
-        searchProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -85,9 +82,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        util.setQuery("employeePhoneList",this.formData);
-        axios.get('/api/basic/hr/employeePhone',{params:this.formData}).then((response) => {
+        util.setQuery("employeePhoneList",this.submitData);
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/hr/employeePhone?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -111,11 +108,11 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
       axios.get('/api/basic/hr/employeePhone/getQuery').then((response) =>{
-        this.searchProperty=response.data;
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>

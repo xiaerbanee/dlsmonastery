@@ -3,16 +3,19 @@ package net.myspring.basic.modules.hr.web.query;
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.hr.dto.PositionDto;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.joda.time.LocalDateTime;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
  * Created by lihx on 2017/4/7.
  */
 public class DutySignQuery {
-    private LocalDateTime dutyDateStart;
-    private LocalDateTime dutyDateEnd;
+    private String dutyDate;
     private String createdBy;
     private String address;
     private String employeeName;
@@ -21,6 +24,14 @@ public class DutySignQuery {
     private List<String> officeIds;
     private List<Office> officeList= Lists.newArrayList();
     private List<PositionDto> positionList= Lists.newArrayList();
+
+    public void setDutyDate(String dutyDate) {
+        this.dutyDate = dutyDate;
+    }
+
+    public String getDutyDate() {
+        return dutyDate;
+    }
 
     public List<Office> getOfficeList() {
         return officeList;
@@ -36,30 +47,6 @@ public class DutySignQuery {
 
     public void setPositionList(List<PositionDto> positionList) {
         this.positionList = positionList;
-    }
-
-    public LocalDateTime getDutyDateStart() {
-        return dutyDateStart;
-    }
-
-    public void setDutyDateStart(LocalDateTime dutyDateStart) {
-        if(dutyDateStart == null) {
-            this.dutyDateStart = LocalDateTime.now().minusMonths(1);
-        }else{
-            this.dutyDateStart = dutyDateStart;
-        }
-    }
-
-    public LocalDateTime getDutyDateEnd() {
-        return dutyDateEnd;
-    }
-
-    public void setDutyDateEnd(LocalDateTime dutyDateEnd) {
-        if(dutyDateEnd == null){
-            this.dutyDateEnd = LocalDateTime.now();
-        }else{
-            this.dutyDateEnd = dutyDateEnd;
-        }
     }
 
     public String getCreatedBy() {
@@ -108,5 +95,21 @@ public class DutySignQuery {
 
     public void setOfficeIds(List<String> officeIds) {
         this.officeIds = officeIds;
+    }
+
+    public LocalDate getDutyDateStart() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getDutyDateEnd() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }

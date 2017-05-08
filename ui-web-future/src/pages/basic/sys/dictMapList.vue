@@ -11,8 +11,8 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('dictMapList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('dictMapList.inputKey')">
@@ -55,20 +55,19 @@
     data() {
       return {
         page:{},
-        formData:{},
-        submitData:{
+        formData:{
+          createdDate:'',
+        }, submitData:{
           page:0,
           size:25,
           createdDate:'',
-          createdDateBTW:'',
           category:'',
           value:''
         },formLabel:{
-          createdDateBTW:{label: this.$t('dictMapList.createdDate')},
+          createdDate:{label: this.$t('dictMapList.createdDate')},
           category:{label: this.$t('dictMapList.category')},
           value:{label: this.$t('dictMapList.value')}
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading:false
@@ -77,10 +76,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        util.setQuery("dictMapList",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/dictMap',{params:this.submitData}).then((response) => {
+        util.setQuery("dictMapList",this.submitData);
+        axios.get('/api/basic/sys/dictMap?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

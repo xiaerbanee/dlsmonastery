@@ -30,4 +30,8 @@ public class BdStockService {
     public List<NameNumberDto> findNameAndNumber(){
         return bdStockMapper.findNameAndNumber();
     }
+
+    public List<String> findNameByNameLike(String name){
+        return bdStockMapper.findNameByNameLike(name);
+    }
 }

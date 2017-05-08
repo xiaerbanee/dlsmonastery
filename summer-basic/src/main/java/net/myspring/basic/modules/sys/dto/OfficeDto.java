@@ -12,11 +12,11 @@ import java.math.BigDecimal;
 public class OfficeDto extends DataDto<Office> {
 
     private String name;
+    private String type;
     private BigDecimal point;
     private String parentId;
     private boolean locked;
     private boolean enabled;
-    private String typeLabel;
     private BigDecimal taskPoint;
     private String officeRuleId;
     @CacheInput(inputKey = "officeRules",inputInstance = "officeRuleId",outputInstance = "name")
@@ -25,6 +25,13 @@ public class OfficeDto extends DataDto<Office> {
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public BigDecimal getTaskPoint() {
         return taskPoint;
@@ -98,11 +105,4 @@ public class OfficeDto extends DataDto<Office> {
         this.parentName = parentName;
     }
 
-    public String getTypeLabel() {
-        return typeLabel;
-    }
-
-    public void setTypeLabel(String typeLabel) {
-        this.typeLabel = typeLabel;
-    }
 }

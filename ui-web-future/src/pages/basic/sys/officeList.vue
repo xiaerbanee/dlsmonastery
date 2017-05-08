@@ -25,7 +25,7 @@
         <el-table-column fixed prop="parentName" :label="$t('officeList.parentName')" sortable></el-table-column>
         <el-table-column prop="name" :label="$t('officeList.name')" ></el-table-column>
         <el-table-column prop="officeRuleName" label="业务类型" ></el-table-column>
-        <el-table-column prop="type" label="类型" width="100">
+        <el-table-column prop="type" label="类型">
           <template scope="scope">
             {{$t('OfficeRuleEnum.'+ scope.row.type)}}
           </template>
@@ -75,10 +75,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("officeList");
-        util.setQuery("officeList",this.formData);
+        util.setQuery("officeList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/office',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/office?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

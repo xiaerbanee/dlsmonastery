@@ -1,5 +1,9 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -8,8 +12,7 @@ import java.util.List;
  */
 public class DutyTripQuery {
     private String createdBy;
-    private LocalDate dutyDateStart;
-    private LocalDate dutyDateEnd;
+    private String dutyDate;
     private List<String> officeIds;
 
     public String getCreatedBy() {
@@ -20,20 +23,12 @@ public class DutyTripQuery {
         this.createdBy = createdBy;
     }
 
-    public LocalDate getDutyDateStart() {
-        return dutyDateStart;
+    public String getDutyDate() {
+        return dutyDate;
     }
 
-    public void setDutyDateStart(LocalDate dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
-    }
-
-    public LocalDate getDutyDateEnd() {
-        return dutyDateEnd;
-    }
-
-    public void setDutyDateEnd(LocalDate dutyDateEnd) {
-        this.dutyDateEnd = dutyDateEnd;
+    public void setDutyDate(String dutyDate) {
+        this.dutyDate = dutyDate;
     }
 
     public List<String> getOfficeIds() {
@@ -42,5 +37,21 @@ public class DutyTripQuery {
 
     public void setOfficeIds(List<String> officeIds) {
         this.officeIds = officeIds;
+    }
+
+    public LocalDate getDutyDateStart() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getDutyDateEnd() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }

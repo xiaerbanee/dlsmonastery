@@ -16,17 +16,11 @@
         <if test="p.createdBy !=null ">
             AND t1.created_by=#{p.createdBy}
         </if>
-        <if test="p.freeDateStart != null">
-            AND t1.free_date >= #{p.freeDateStart}
-        </if>
-        <if test="p.freeDateEnd != null">
-            AND t1.free_date  &lt;= #{p.freeDateEnd}
-        </if>
         <if test="p.dutyDateStart != null">
-            AND t1.free_date >= #{p.dutyDateStart}
+            AND t1.free_date > #{p.dutyDateStart}
         </if>
         <if test="p.dutyDateEnd != null">
-            AND t1.free_date  &lt;= #{p.dutyDateEnd}
+            AND t1.free_date  &lt; #{p.dutyDateEnd}
         </if>
         <include refid="net.myspring.basic.modules.sys.mapper.OfficeMapper.officeFilter" />
     </select>

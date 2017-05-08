@@ -51,6 +51,17 @@
         and t2.FNAME like CONCAT('%',#{name},'%')
     </select>
 
+    <select id="findNumberByNumberLike" resultType="String">
+        SELECT
+        t1.FNUMBER
+        FROM
+        T_BD_MATERIAL t1,
+        T_BD_MATERIAL_L t2
+        WHERE
+        t1.FMATERIALID = t2.FMATERIALID
+        and t1.FNUMBER like CONCAT('%',#{number},'%')
+    </select>
+
     <select id="findNameAndNumber" resultType="NameNumberDto">
         SELECT
         t1.FNUMBER as number,

@@ -53,7 +53,6 @@
         formLabel:{
           name:{label: this.$t('backendModuleList.name')},
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -62,11 +61,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        util.getQuery("backendList");
         util.copyValue(this.formData,this.submitData);
         util.setQuery("backendList",this.submitData);
-        axios.get('/api/basic/sys/backend',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/backend?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

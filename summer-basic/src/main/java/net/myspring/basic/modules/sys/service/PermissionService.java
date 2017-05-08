@@ -85,14 +85,25 @@ public class PermissionService {
             permission = permissionMapper.findOne(permissionForm.getId());
             ReflectionUtil.copyProperties(permissionForm,permission);
             permissionMapper.update(permission);
-            rolePermissionMapper.deleteByPermissionId(permissionForm.getId());
         }
+        List<RolePermission> rolePermissionList=rolePermissionMapper.findAllByPermissionId(permission.getId());
         if (CollectionUtil.isNotEmpty(permissionForm.getRoleIdList())) {
-            List<RolePermission> rolePermissionList=Lists.newArrayList();
-            for(String roleId:permissionForm.getRoleIdList()){
-                rolePermissionList.add(new RolePermission(permissionForm.getId(),roleId));
+            List<String> roleIdList = CollectionUtil.extractToList(rolePermissionList, "roleId");
+            List<String> removeIdList = CollectionUtil.subtract(roleIdList, permissionForm.getRoleIdList());
+            List<String> addIdList = CollectionUtil.subtract(permissionForm.getRoleIdList(), roleIdList);
+            List<RolePermission> rolePermissions=Lists.newArrayList();
+            for(String roleId:addIdList){
+                rolePermissions.add(new RolePermission(permission.getId(),roleId));
             }
-            rolePermissionMapper.batchSave(rolePermissionList);
+            rolePermissionMapper.setEnabledByPermissionId(true, permission.getId());
+            if (CollectionUtil.isNotEmpty(removeIdList)) {
+                rolePermissionMapper.setEnabledByRoleIdList(false,removeIdList);
+            }
+            if (CollectionUtil.isNotEmpty(addIdList)) {
+                rolePermissionMapper.batchSave(rolePermissions);
+            }
+        } else if (CollectionUtil.isNotEmpty(rolePermissionList)) {
+            rolePermissionMapper.setEnabledByPermissionId(false, permission.getId());
         }
         return permission;
     }

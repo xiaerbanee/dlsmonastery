@@ -10,8 +10,8 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('folderFileList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -40,29 +40,25 @@
         page:{},
         formData:{
           createdDate:'',
-          createdDateBTW:'',},
+        },
         submitData:{
           page:0,
           size:25,
           createdDate:'',
-          createdDateBTW:'',
         },formLabel:{
-          createdDateBTW:{label: this.$t('folderFileList.createdDate')}
+          createdDate:{label: this.$t('folderFileList.createdDate')}
         },
         formLabelWidth: '120px',
         formVisible: false,
-        pageLoading: false,
-        pickerDateOption:util.pickerDateOption
+        pageLoading: false
       };
     },
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        util.getQuery("folderFileList");
-        util.setQuery("folderFileList",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/folderFile',{params:this.submitData}).then((response) => {
+        util.setQuery("folderFileList",this.submitData);
+        axios.get('/api/basic/sys/folderFile?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

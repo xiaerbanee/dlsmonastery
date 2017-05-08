@@ -31,6 +31,10 @@ public class BdMaterialService {
         return bdMaterialMapper.findNameByNameLike(name);
     }
 
+    public List<String> getNumberByNumberLike(String number){
+        return bdMaterialMapper.findNumberByNumberLike(number);
+    }
+
     public List<NameNumberDto> getNameAndNumber(){
         return bdMaterialMapper.findNameAndNumber();
     }

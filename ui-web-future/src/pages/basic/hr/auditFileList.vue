@@ -27,8 +27,8 @@
                   <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('auditFileList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -40,7 +40,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.processTypeId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.processTypeId" filterable clearable :placeholder="$t('auditFileList.inputKey')">
-                  <el-option v-for="item in formProperty.processTypes" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in formData.processTypes" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.content.label" :label-width="formLabelWidth">
@@ -90,13 +90,14 @@
       return {
         page:{},
         formData:{
+          createdDate:'',
+        },submitData:{
           page:0,
           size:25,
           id:'',
           auditType:1,
           officeName:'',
           officeId:'',
-          createdDateBTW:'',
           createdDate:'',
           createdByName:'',
           stageName:'',
@@ -108,7 +109,7 @@
           auditType:{label:this.$t('auditFileList.auditType'),value:''},
           officeName:{label:this.$t('auditFileList.officeName')},
           officeId:{label:this.$t('auditFileList.officeId'),value:''},
-          createdDateBTW:{label:this.$t('auditFileList.createdDate')},
+          createdDate:{label:this.$t('auditFileList.createdDate')},
           createdByName:{label:this.$t('auditFileList.applyAccount')},
           stageName:{label:this.$t('auditFileList.stageName')},
           processTypeId:{label:this.$t('auditFileList.processTypeName'),value:''},
@@ -118,8 +119,6 @@
           0:this.$t('auditFileList.all'),
           1:this.$t('auditFileList.waitAudit')
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         offices:[],
         formLabelWidth: '120px',
         formVisible: false,
@@ -131,12 +130,11 @@
       pageRequest() {
         this.pageLoading = true;
         this.formLabel.auditType.value=this.auditTypes[this.formData.auditType];
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
         this.formLabel.officeId.value=util.getLabel(this.offices,this.formData.officeId);
-        this.formLabel.processTypeId.value=util.getLabel(this.formProperty.processTypes,this.formData.processTypeId);
-        util.getQuery("auditFileList");
-        util.setQuery("auditFileList",this.formData);
-        axios.get('/api/basic/hr/auditFile',{params:this.formData}).then((response) => {
+        this.formLabel.processTypeId.value=util.getLabel(this.formData.processTypes,this.formData.processTypeId);
+        util.setQuery("auditFileList",this.submitData);
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/hr/auditFile?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -176,12 +174,13 @@
         }
       }
     },created () {
+        var that=this;
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
       axios.get('/api/basic/hr/auditFile/getQuery').then((response) =>{
-        this.formProperty=response.data;
-      });
-      this.pageRequest();
+      this.formData=response.data;
+      util.copyValue(that.$route.query,this.formData);
+      that.pageRequest();
+    });
     }
   };
 </script>

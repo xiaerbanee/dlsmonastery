@@ -2,13 +2,48 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.sys.mapper.RolePermissionMapper">
 
-    <delete id="deleteByRoleId">
-    DELETE FROM sys_role_permission where role_Id=#{roleId}
-</delete>
+    <select id="findByRoleId" resultType="RolePermission">
+        SELECT t1.*
+        FROM  sys_role_permission t1
+        where t1.enabled=1
+        and t1.role_id=#{roleId}
+    </select>
 
-    <delete id="deleteByPermissionId">
-        DELETE FROM sys_role_permission where permission_id=#{permissionId}
-    </delete>
+    <select id="findAllByRoleId" resultType="RolePermission">
+        SELECT t1.*
+        FROM  sys_role_permission t1
+        where  t1.role_id=#{roleId}
+    </select>
+
+
+    <update id="setEnabledByRoleId">
+        UPDATE  sys_role_permission SET enabled=#{enabled} where role_id=#{roleId}
+    </update>
+
+    <update id="setEnabledByPermissionIdList">
+        UPDATE  sys_role_permission SET enabled=#{enabled} where permission_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="findAllByPermissionId" resultType="RolePermission">
+        SELECT t1.*
+        FROM  sys_role_permission t1
+        where  t1.permission_id=#{permissionId}
+    </select>
+
+
+    <update id="setEnabledByPermissionId">
+        UPDATE  sys_role_permission SET enabled=#{enabled} where role_id=#{permissionId}
+    </update>
+
+    <update id="setEnabledByRoleIdList">
+        UPDATE  sys_role_permission SET enabled=#{enabled} where role_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 
 
 </mapper>

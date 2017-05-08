@@ -42,6 +42,7 @@ public class DictEnumQuery  {
     public void setValue(String value) {
         this.value = value;
     }
+
     public List<String> getCategoryList() {
         return categoryList;
     }

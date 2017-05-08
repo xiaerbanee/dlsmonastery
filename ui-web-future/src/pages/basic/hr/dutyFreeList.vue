@@ -8,8 +8,8 @@
       </el-row>
       <el-dialog :title="$t('dutyFreeList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
-              <el-form-item :label="formLabel.dutyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.dutyDate" type="daterange" align="right" :placeholder="$t('dutyFreeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -37,18 +37,15 @@
         page:{},
         formData:{
           dutyDate:'',
-          dutyDateBTW:'',
         },
         submitData:{
           page:0,
           size:25,
           dutyDate:'',
-          dutyDateBTW:'',
         },
         formLabel:{
-          dutyDateBTW:{label:this.$t('dutyFreeList.freeDate')},
+          dutyDate:{label:this.$t('dutyFreeList.freeDate')},
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -57,11 +54,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("dutyFreeList");
-        util.setQuery("dutyFreeList",this.formData);
+        util.setQuery("dutyFreeList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutyFree',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/hr/dutyFree?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

@@ -45,10 +45,10 @@
 
     <sql id="dutyPublicFreeFilter">
         <if test="p.dutyDateStart != null">
-            AND t1.free_date >= #{p.dutyDateStart}
+            AND t1.free_date > #{p.dutyDateStart}
         </if>
         <if test="p.dutyDateEnd != null">
-            AND t1.free_date  &lt;= #{p.dutyDateEnd}
+            AND t1.free_date  &lt; #{p.dutyDateEnd}
         </if>
         <if test="p.employeeName != null">
             and t1.employee_id in (

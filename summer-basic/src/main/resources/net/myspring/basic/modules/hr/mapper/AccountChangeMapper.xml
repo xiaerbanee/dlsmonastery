@@ -12,10 +12,10 @@
             and account.office_id=office.id
             <include refid="net.myspring.basic.modules.sys.mapper.OfficeMapper.officeFilter" />
             <if test="p.createdDateStart !=null">
-                AND t1.created_date>=#{p.createdDateStart}
+                AND t1.created_date> #{p.createdDateStart}
             </if>
             <if test="p.createdDateEnd !=null">
-                AND t1.created_date &lt;=#{p.createdDateEnd}
+                AND t1.created_date &lt; #{p.createdDateEnd}
             </if>
             <if test="p.type != null">
                 and t1.type = #{p.type}

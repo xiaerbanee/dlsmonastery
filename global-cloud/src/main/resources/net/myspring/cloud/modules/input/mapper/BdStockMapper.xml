@@ -50,4 +50,15 @@
         WHERE
         t1.FSTOCKID = t2.FSTOCKID
     </select>
+
+    <select id="findNameByNameLike" resultType="String">
+        SELECT
+        t2.FNAME
+        FROM
+        T_BD_STOCK t1,
+        T_BD_STOCK_L t2
+        WHERE
+        t1.FSTOCKID = t2.FSTOCKID
+        and t2.FNAME like CONCAT('%',#{name},'%')
+    </select>
 </mapper>
