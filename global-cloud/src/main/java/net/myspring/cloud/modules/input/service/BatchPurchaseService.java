@@ -8,7 +8,7 @@ import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.BatchPurchaseDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -124,8 +123,8 @@ public class BatchPurchaseService {
         model.put("STK_InStock__FInStockEntry", entity);
         root.put("Model", model);
         String inStockResult =  ObjectMapperUtils.writeValueAsString(root);
-        K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.STK_InStock.name(), inStockResult);
-        String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+        K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.STK_InStock.name(), inStockResult);
+        String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
         codeList.add(billNo);
         if (CollectionUtil.isNotEmpty(purMrbEntry)) {
             Map<String, Object> purMrbroot = Maps.newLinkedHashMap();
@@ -136,8 +135,8 @@ public class BatchPurchaseService {
             purMrbroot.put("Model", purMrbModel);
             purMrbResult =  ObjectMapperUtils.writeValueAsString(purMrbroot);
 
-            k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.PUR_MRB.name(), purMrbResult);
-            billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+            k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.PUR_MRB.name(), purMrbResult);
+            billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
             codeList.add(billNo);
         }
         return codeList;

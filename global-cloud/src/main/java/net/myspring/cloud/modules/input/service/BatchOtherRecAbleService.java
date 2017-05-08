@@ -12,7 +12,7 @@ import net.myspring.cloud.modules.input.domain.BdAccount;
 import net.myspring.cloud.modules.input.domain.HrEmpInfo;
 import net.myspring.cloud.modules.input.dto.BatchOtherRecAbleDetailDto;
 import net.myspring.cloud.modules.input.dto.BatchOtherRecAbleDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
@@ -126,8 +126,8 @@ public class BatchOtherRecAbleService {
         List<String> billNos = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchOtherRecAbleDto aROtherRecAble : billList) {
-                K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.AR_OtherRecAble.name(), getAROtherRecAble(aROtherRecAble,accountDto));
-                String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_OtherRecAble.name(), getAROtherRecAble(aROtherRecAble,accountDto));
+                String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
                 billNos.add(billNo);
             }
         }

@@ -102,4 +102,10 @@ public class CollectionUtil extends org.springside.modules.utils.collection.Coll
         return list;
     }
 
+    public static Map<String, Object> getMap(String key, Object value) {
+        Map<String, Object> map = Maps.newHashMap();
+        map.put(key, value);
+        return map;
+    }
+
 }

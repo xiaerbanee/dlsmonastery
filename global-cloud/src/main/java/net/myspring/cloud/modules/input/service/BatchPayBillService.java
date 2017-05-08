@@ -7,7 +7,7 @@ import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.dto.BatchPayBillDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
@@ -101,8 +101,8 @@ public class BatchPayBillService {
         List<String> billNos = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchPayBillDto payBill : billList) {
-                K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.AP_PAYBILL.name(), getPayBill(payBill,accountDto));
-                String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AP_PAYBILL.name(), getPayBill(payBill,accountDto));
+                String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
                 billNos.add(billNo);
             }
         }

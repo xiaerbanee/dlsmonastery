@@ -11,7 +11,7 @@ import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.domain.BdCustomer;
 import net.myspring.cloud.modules.input.domain.CnBank;
 import net.myspring.cloud.modules.input.dto.BatchRefundBillDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.input.mapper.BdDepartmentMapper;
 import net.myspring.cloud.modules.input.mapper.CnBankMapper;
@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -114,16 +113,16 @@ public class BatchRefundBillService {
         List<BatchRefundBillDto> billList = Lists.newArrayList(ARRefundBillMap.values());
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchRefundBillDto arRefundBill : billList) {
-                K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.AR_REFUNDBILL.name(), getARRefundBill(arRefundBill,accountDto));
-                String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_REFUNDBILL.name(), getARRefundBill(arRefundBill,accountDto));
+                String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
                 billNos.add(billNo);
             }
         }
         List<BatchRefundBillDto> cashBillList = Lists.newArrayList(cashARRefundBillMap.values());
         if (CollectionUtil.isNotEmpty(cashBillList)) {
             for (BatchRefundBillDto arRefundBill : cashBillList) {
-                K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.AR_REFUNDBILL.name(), getCashARRefundBill(arRefundBill,accountDto));
-                String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_REFUNDBILL.name(), getCashARRefundBill(arRefundBill,accountDto));
+                String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
                 billNos.add(billNo);
             }
         }

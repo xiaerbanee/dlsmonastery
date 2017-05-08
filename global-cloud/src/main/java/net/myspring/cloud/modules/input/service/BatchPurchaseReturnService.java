@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
@@ -108,8 +108,8 @@ public class BatchPurchaseReturnService {
         model.put("PUR_MRB__FPURMRBENTRY", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
-        K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.PUR_MRB.name(), result);
-        String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+        K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.PUR_MRB.name(), result);
+        String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
         codeList.add(billNo);
         return codeList;
     }

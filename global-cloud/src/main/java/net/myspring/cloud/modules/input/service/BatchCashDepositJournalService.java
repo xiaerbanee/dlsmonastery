@@ -10,7 +10,7 @@ import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.domain.BasAssistant;
 import net.myspring.cloud.modules.input.domain.HrEmpInfo;
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
@@ -139,8 +139,8 @@ public class BatchCashDepositJournalService {
         model.put("CN_JOURNAL__FJOURNALENTRY", entity);
         root.put("Model", model);
         String JournalResult = ObjectMapperUtils.writeValueAsString(root);
-        K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.CN_JOURNAL.name(), JournalResult);
-        String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+        K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.CN_JOURNAL.name(), JournalResult);
+        String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
         return billNo;
     }
 }

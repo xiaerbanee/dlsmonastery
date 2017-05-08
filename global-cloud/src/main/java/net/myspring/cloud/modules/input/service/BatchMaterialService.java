@@ -8,7 +8,7 @@ import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.BdMaterialDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.input.web.query.BatchMaterialQuery;
@@ -74,8 +74,8 @@ public class BatchMaterialService {
             AccountDto accountDto = new AccountDto();
             cacheUtils.initCacheInput(accountDto);
             for (BdMaterialDto bdMaterial : materials) {
-                K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial));
-                String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial));
+                String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
                 codeList.add(billNo);
             }
         }

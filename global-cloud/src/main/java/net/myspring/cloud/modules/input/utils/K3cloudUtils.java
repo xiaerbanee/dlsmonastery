@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.constant.K3CloudConstant;
 import net.myspring.cloud.GlobalCloudApplication;
 import net.myspring.cloud.common.utils.SecurityUtils;
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
@@ -229,14 +229,14 @@ public class K3cloudUtils {
 
 
     // Save
-    public static K3CloudSave save(K3CloudSave k3CloudSave,AccountDto accountDto) {
+    public static K3CloudSaveDto save(K3CloudSaveDto k3CloudSaveDto, AccountDto accountDto) {
         if (StringUtils.isBlank(accountDto.getOutId()) || StringUtils.isBlank(accountDto.getOutPassword())) {
             throw new ServiceException("请确保已填写财务账号和密码");
         }
         if (!login(accountDto)) {
             throw new ServiceException("财务账户或者密码不正确");
         }
-        String result = K3cloudUtils.save(k3CloudSave.getFormId(), k3CloudSave.getContent());
+        String result = K3cloudUtils.save(k3CloudSaveDto.getFormId(), k3CloudSaveDto.getContent());
         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(result);
         if ("TRUE".equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
             String billNo = jsonObject.getJSONObject("Result").getString("Number");
@@ -244,12 +244,12 @@ public class K3cloudUtils {
             root.put("CreateOrgId", 0);
             root.put("Numbers", billNo);
             String content = ObjectMapperUtils.writeValueAsString(root);
-            K3cloudUtils.submit(k3CloudSave.getFormId(), content);
-            if (k3CloudSave.getAutoAudit()) {
-                K3cloudUtils.audit(k3CloudSave.getFormId(), content);
+            K3cloudUtils.submit(k3CloudSaveDto.getFormId(), content);
+            if (k3CloudSaveDto.getAutoAudit()) {
+                K3cloudUtils.audit(k3CloudSaveDto.getFormId(), content);
             }
-            k3CloudSave.setBillNo(billNo);
-            return k3CloudSave;
+            k3CloudSaveDto.setBillNo(billNo);
+            return k3CloudSaveDto;
         } else {
             throw new ServiceException("金蝶开单失败：" + result);
         }
