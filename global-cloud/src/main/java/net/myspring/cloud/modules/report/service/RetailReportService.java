@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.constant.K3CloudConstant;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.RetailReportEnum;
 import net.myspring.cloud.common.enums.RetailReportForCostEnum;
 import net.myspring.cloud.common.enums.RetailReportForIncomeEnum;
@@ -13,6 +12,7 @@ import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.report.mapper.GlcxViewMapper;
 import net.myspring.cloud.modules.report.mapper.RetailReportMapper;
 import net.myspring.cloud.modules.report.dto.AccountSubjectDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -119,7 +119,7 @@ public class RetailReportService {
         itemDataList.addAll(findAmountAndPercentForDepartments(start, end));
         Map<String, Retail> retailReportItemMap = Maps.newHashMap();
         for (Retail tempItemData : itemDataList) {
-            String key = tempItemData.getAccName() + CharEnum.UNDER_LINE.getValue() + tempItemData.getFyNum() + CharEnum.UNDER_LINE.getValue() + tempItemData.getDeptName() + CharEnum.UNDER_LINE.getValue() + tempItemData.getYear() + CharEnum.UNDER_LINE.getValue() + tempItemData.getMonth();
+            String key = tempItemData.getAccName() + CharConstant.UNDER_LINE + tempItemData.getFyNum() + CharConstant.UNDER_LINE + tempItemData.getDeptName() + CharConstant.UNDER_LINE + tempItemData.getYear() + CharConstant.UNDER_LINE + tempItemData.getMonth();
             if (!retailReportItemMap.containsKey(key)) {
                 retailReportItemMap.put(key, tempItemData);
             }
@@ -129,7 +129,7 @@ public class RetailReportService {
         sumItemDataList.addAll(findSumAmountAndSumPercentForDepartments(start, end));
         Map<String, Retail> sumRetailReportItemMap = Maps.newHashMap();
         for (Retail sumDirectShopDetail : sumItemDataList) {
-            String key = sumDirectShopDetail.getAccName() + CharEnum.UNDER_LINE.getValue() + sumDirectShopDetail.getFyNum() + CharEnum.UNDER_LINE.getValue() +sumDirectShopDetail.getDeptName();
+            String key = sumDirectShopDetail.getAccName() + CharConstant.UNDER_LINE + sumDirectShopDetail.getFyNum() + CharConstant.UNDER_LINE +sumDirectShopDetail.getDeptName();
             if (!sumRetailReportItemMap.containsKey(key)) {
                 sumRetailReportItemMap.put(key, sumDirectShopDetail);
             }
@@ -143,7 +143,7 @@ public class RetailReportService {
                 while (tempStart.isBefore(end) || tempStart.equals(end)) {
                     int year = tempStart.getYear();
                     int month = tempStart.getMonthValue();
-                    String key = showEnum.getValue().getName() + CharEnum.UNDER_LINE.getValue() +showEnum.getValue().getNumber()+ CharEnum.UNDER_LINE.getValue() + department.getName() + CharEnum.UNDER_LINE.getValue() + year + CharEnum.UNDER_LINE.getValue() + month;
+                    String key = showEnum.getValue().getName() + CharConstant.UNDER_LINE +showEnum.getValue().getNumber()+ CharConstant.UNDER_LINE + department.getName() + CharConstant.UNDER_LINE + year + CharConstant.UNDER_LINE + month;
                     if (retailReportItemMap.containsKey(key)) {
                         item.add(retailReportItemMap.get(key).getAmount());
                         item.add(retailReportItemMap.get(key).getPercent());
@@ -154,7 +154,7 @@ public class RetailReportService {
                     tempStart = tempStart.plusMonths(1);
                 }
                 //累计
-                String key2 = showEnum.getValue().getName() + CharEnum.UNDER_LINE.getValue() + showEnum.getValue().getNumber() + CharEnum.UNDER_LINE.getValue()+department.getName();
+                String key2 = showEnum.getValue().getName() + CharConstant.UNDER_LINE + showEnum.getValue().getNumber() + CharConstant.UNDER_LINE+department.getName();
                 if (sumRetailReportItemMap.containsKey(key2))  {
                     item.add(sumRetailReportItemMap.get(key2).getAmount());
                     item.add(sumRetailReportItemMap.get(key2).getPercent());

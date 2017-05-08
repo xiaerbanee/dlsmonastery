@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
@@ -15,6 +14,7 @@ import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.input.web.query.BatchMaterialQuery;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -55,7 +55,7 @@ public class BatchMaterialService {
             BigDecimal rlprice = StringUtils.isEmpty(RLPriceStr) ? BigDecimal.ZERO : new BigDecimal(RLPriceStr);
             String productGroup = HandSonTableUtils.getValue(row, 4);
             String productCategory = HandSonTableUtils.getValue(row, 5);
-            String billKey = productNumber + CharEnum.COMMA + productName;
+            String billKey = productNumber + CharConstant.COMMA + productName;
             if (!materialMap.containsKey(billKey)) {
                 BdMaterialDto bdMaterial = new BdMaterialDto();
                 bdMaterial.setfName(productName);

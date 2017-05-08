@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.dto;
 
-import net.myspring.cloud.common.enums.CharEnum;
+
+import net.myspring.common.constant.CharConstant;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -40,7 +41,7 @@ public class BatchPayBillDto {
     }
 
     public String getDate() {
-        return String.valueOf(date.getYear()) + CharEnum.MINUS.getValue() + date.getMonthValue() + CharEnum.MINUS.getValue() + date.getDayOfMonth();
+        return String.valueOf(date.getYear()) + CharConstant.MINUS + date.getMonthValue() + CharConstant.MINUS + date.getDayOfMonth();
     }
 
     public void setDate(LocalDate date) {

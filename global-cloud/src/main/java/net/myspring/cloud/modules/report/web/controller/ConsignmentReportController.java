@@ -1,7 +1,6 @@
 package net.myspring.cloud.modules.report.web.controller;
 
 import com.google.common.collect.Lists;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
@@ -51,7 +50,7 @@ public class ConsignmentReportController {
         LocalDate dateStart = LocalDate.now().minusWeeks(1);
         LocalDate dateEnd = LocalDate.now().minusDays(1);
         if (StringUtils.isNotBlank(dateRange)) {
-            String[] dates = dateRange.split(CharEnum.WAVE_LINE.getValue());
+            String[] dates = dateRange.split(CharConstant.UNDER_LINE);
             dateStart = LocalDate.parse(dates[0], DateTimeFormatter.ofPattern(DateFormat.DATE.getValue()));
             dateEnd = LocalDate.parse(dates[1], DateTimeFormatter.ofPattern(DateFormat.DATE.getValue()));
         }

@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
@@ -19,6 +18,7 @@ import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -105,7 +105,7 @@ public class BatchOtherRecAbleService {
             aROtherRecAbleDetail.setAmount(amount);
             aROtherRecAbleDetail.setSubject(subjectMap.get(subjectName));
             aROtherRecAbleDetail.setRemarks(remarks);
-            String billKey = customerName + CharEnum.COMMA+ departName + CharEnum.COMMA+subjectName+ CharEnum.COMMA+amount+ CharEnum.COMMA+remarks;
+            String billKey = customerName + CharConstant.COMMA+ departName + CharConstant.COMMA+subjectName+ CharConstant.COMMA+amount+ CharConstant.COMMA+remarks;
             if (!aROtherRecAbleMap.containsKey(billKey)) {
                 BatchOtherRecAbleDto aROtherRecAble = new BatchOtherRecAbleDto();
                 aROtherRecAble.setBillDate(billDate);

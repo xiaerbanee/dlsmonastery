@@ -1,7 +1,6 @@
 package net.myspring.cloud.modules.report.web.controller;
 
 import com.google.common.collect.Lists;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.modules.report.dto.PayableForDetailDto;
 import net.myspring.cloud.modules.report.dto.PayableForSummaryDto;
@@ -50,13 +49,13 @@ public class PayableReportController {
 
     @RequestMapping(value = "exportSummary")
     public ModelAndView exportSummary(String dateRange,String companyName,String supplyIdList){
-        String[] supplyIds = supplyIdList.split(CharEnum.COMMA.getValue());
+        String[] supplyIds = supplyIdList.split(CharConstant.COMMA);
         List<PayableForSummaryDto> summaryDataList = Lists.newArrayList();
         List<PayableForSummaryDto> exportSummaryList = Lists.newArrayList();
         LocalDate dateStart = LocalDate.now().minusDays(7L);
         LocalDate dateEnd = LocalDate.now().minusDays(1L);
         if (StringUtils.isNotEmpty(dateRange)) {
-            String[] dates = dateRange.split(CharEnum.WAVE_LINE.getValue());
+            String[] dates = dateRange.split(CharConstant.UNDER_LINE);
             dateStart = LocalDate.parse(dates[0], DateTimeFormatter.ofPattern(DateFormat.DATE.getValue()));
             dateEnd = LocalDate.parse(dates[1], DateTimeFormatter.ofPattern(DateFormat.DATE.getValue()));
         }

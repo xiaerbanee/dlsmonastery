@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.input.dto;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.modules.input.domain.BdFlexItemGroup;
 import net.myspring.util.text.StringUtils;
 
@@ -40,6 +40,6 @@ public class BdFlexItemGroupDto extends DataDto<BdFlexItemGroup> {
     }
 
     public List<String> getFNames() {
-        return StringUtils.getSplitList(getfName(), CharEnum.CHAR_SLASH_LINE.getValue());
+        return StringUtils.getSplitList(getfName(), CharConstant.SLASH_LINE);
     }
 }

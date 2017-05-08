@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.MisDeliveryTypeEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
@@ -16,6 +15,7 @@ import net.myspring.cloud.modules.input.mapper.BdStockMapper;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.input.web.query.BatchDeliveryQuery;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -57,7 +57,7 @@ public class BatchDeliveryService {
             String type = HandSonTableUtils.getValue(row, 4);
             String remarks = HandSonTableUtils.getValue(row, 5);
 
-            String billKey = productName + CharEnum.COMMA + depotName + CharEnum.COMMA + qty + CharEnum.COMMA + remarks + CharEnum.COMMA + type;
+            String billKey = productName + CharConstant.COMMA + depotName + CharConstant.COMMA + qty + CharConstant.COMMA + remarks + CharConstant.COMMA + type;
             if (!misDeliveryMap.containsKey(billKey)) {
                 BatchDeliveryDto misDelivery = new BatchDeliveryDto();
                 misDelivery.setBillDate(billDate);

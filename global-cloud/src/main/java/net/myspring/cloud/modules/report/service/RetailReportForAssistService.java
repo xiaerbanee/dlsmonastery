@@ -3,11 +3,11 @@ package net.myspring.cloud.modules.report.service;
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.constant.K3CloudConstant;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.handsontable.NestedHeaderCell;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.report.mapper.GlcxViewMapper;
+import net.myspring.common.constant.CharConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,41 +44,41 @@ public class RetailReportForAssistService {
         departmentList.addAll(glcxViewMapper.findDepartment());
         //表头--部门代码
         List<Object> itemDepartmentCode = Lists.newArrayList();
-        itemDepartmentCode.add(CharEnum.SPACE.getValue());
+        itemDepartmentCode.add(CharConstant.SPACE);
         //计算起始月份和最后月份差
         Integer betweenMonth = Period.between(LocalDate.of(start.getYear(), start.getMonth(), 1), LocalDate.of(end.getYear(), end.getMonth(), 1)).getMonths() + 2;
         for (NameNumberDto department : departmentList) {
             itemDepartmentCode.add(department.getNumber());
             //占格为相差月份*2格+累计占格 2格
             for (int i = 0; i < 2 * betweenMonth - 1; i++) {
-                itemDepartmentCode.add(CharEnum.SPACE.getValue());
+                itemDepartmentCode.add(CharConstant.SPACE);
             }
         }
         retailReportModels.add(itemDepartmentCode);
         //表头--部门名称
         List<Object> itemDepartmentName = Lists.newArrayList();
-        itemDepartmentName.add(CharEnum.SPACE.getValue());
+        itemDepartmentName.add(CharConstant.SPACE);
         for (NameNumberDto department : departmentList) {
             itemDepartmentName.add(department.getName());
             //占格为相差月份*2格+累计占格 2格
             for (int i = 0; i < 2 * betweenMonth - 1; i++) {
-                itemDepartmentName.add(CharEnum.SPACE.getValue());
+                itemDepartmentName.add(CharConstant.SPACE);
             }
         }
         retailReportModels.add(itemDepartmentName);
         //表头--时间
         List<Object> itemTime = Lists.newArrayList();
-        itemTime.add(CharEnum.SPACE.getValue());
+        itemTime.add(CharConstant.SPACE);
         for (NameNumberDto department : departmentList) {
             YearMonth tempStart = start;
             //占格  累计 2格 + 月份2格
             while (tempStart.isBefore(end) || tempStart.equals(end)) {
                 itemTime.add(tempStart.format(DateTimeFormatter.ofPattern(DateFormat.MONTH.getValue())));
-                itemTime.add(CharEnum.SPACE.getValue());
+                itemTime.add(CharConstant.SPACE);
                 tempStart = tempStart.plusMonths(1);
             }
             itemTime.add(K3CloudConstant.ACCUMULATE);
-            itemTime.add(CharEnum.SPACE.getValue());
+            itemTime.add(CharConstant.SPACE);
         }
         retailReportModels.add(itemTime);
         //表头---金额+占比

@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.DateFormat;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
@@ -20,6 +19,7 @@ import net.myspring.cloud.modules.input.mapper.CnBankMapper;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -75,7 +75,7 @@ public class BatchRefundBillService {
             String remarks = HandSonTableUtils.getValue(row, 5);
             String billKey = "";
             if ("电汇".equals(settleType)) {
-                billKey = customerName + CharEnum.COMMA + bankName + CharEnum.COMMA + billDate + CharEnum.COMMA + amount + CharEnum.COMMA + remarks;
+                billKey = customerName + CharConstant.COMMA + bankName + CharConstant.COMMA + billDate + CharConstant.COMMA + amount + CharConstant.COMMA + remarks;
                 if (!ARRefundBillMap.containsKey(billKey)) {
                     BatchRefundBillDto arRefundBill = new BatchRefundBillDto();
                     arRefundBill.setCustomerName(customerMap.get(customerName));
@@ -92,7 +92,7 @@ public class BatchRefundBillService {
                     ARRefundBillMap.get(billKey).setAmount(amount.add(amount));
                 }
             } else {
-                billKey = customerName + CharEnum.COMMA + billDate + CharEnum.COMMA + amount + CharEnum.COMMA + remarks;
+                billKey = customerName + CharConstant.COMMA + billDate + CharConstant.COMMA + amount + CharConstant.COMMA + remarks;
                 if (!cashARRefundBillMap.containsKey(billKey)) {
                     BatchRefundBillDto arRefundBill = new BatchRefundBillDto();
                     arRefundBill.setCustomerName(customerMap.get(customerName));

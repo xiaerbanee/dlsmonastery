@@ -3,11 +3,11 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.modules.input.domain.*;
 import net.myspring.cloud.modules.input.dto.BdFlexItemGroupDto;
 import net.myspring.cloud.modules.input.dto.VoucherFormDto;
 import net.myspring.cloud.modules.input.mapper.*;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,28 +69,28 @@ public class GlVoucherService {
         List<String> userNames = Lists.newArrayList();
         List<String> supplierNames = Lists.newArrayList();
         for(CnBank bank: cnBankMapper.findAll()){
-            bankNames.add(bank.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + bank.getfName());
+            bankNames.add(bank.getfNumber() + CharConstant.SLASH_LINE + bank.getfName());
         }
         for(HrEmpInfo user: hrEmpInfoMapper.findAllUser()){
-            userNames.add(user.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + user.getfName());
+            userNames.add(user.getfNumber() + CharConstant.SLASH_LINE + user.getfName());
         }
         for(BdDepartment department: bdDepartmentMapper.findAll()){
-            departments.add(department.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + department.getfName());
+            departments.add(department.getfNumber() + CharConstant.SLASH_LINE + department.getfName());
         }
         for(BdAccount bdAccount: bdAccountMapper.findAllSubject()){
-            subjects.add(bdAccount.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + bdAccount.getfName());
+            subjects.add(bdAccount.getfNumber() + CharConstant.SLASH_LINE + bdAccount.getfName());
         }
         for(BdSupplier bdSupplier: bdSupplierMapper.findAll()){
-            supplierNames.add(bdSupplier.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + bdSupplier.getfName());
+            supplierNames.add(bdSupplier.getfNumber() + CharConstant.SLASH_LINE + bdSupplier.getfName());
         }
         for(BdCustomer bdCustomer: bdCustomerMapper.findAll()){
-            customers.add(bdCustomer.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + bdCustomer.getfName());
+            customers.add(bdCustomer.getfNumber() + CharConstant.SLASH_LINE + bdCustomer.getfName());
         }
         for(BasAssistant basAssistant: basAssistantMapper.findByType("费用类")){
-            expenseTypes.add(basAssistant.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + basAssistant.getfDataValue());
+            expenseTypes.add(basAssistant.getfNumber() + CharConstant.SLASH_LINE + basAssistant.getfDataValue());
         }
         for(BasAssistant basAssistant: basAssistantMapper.findByType("其他类")){
-            otherTypes.add(basAssistant.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + basAssistant.getfDataValue());
+            otherTypes.add(basAssistant.getfNumber() + CharConstant.SLASH_LINE + basAssistant.getfDataValue());
         }
         map.put("otherTypes", otherTypes);
         map.put("expenseTypes", expenseTypes);
