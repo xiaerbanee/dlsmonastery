@@ -20,7 +20,7 @@
             AND t3.FID = t4.FID
     </select>
 
-    <select id="findPrimaryGroupAndPrimaryGroupName" resultType="NameValueDto">
+    <select id="findPrimaryGroupAndPrimaryGroupName" resultType="NameNumberDto">
         SELECT
             t1.FPRIMARYGROUP as number,
             t4.FNAME AS name
@@ -134,7 +134,7 @@
             and  tl.FNAME=#{name}
     </select>
 
-    <select id="findNameAndNumber" resultType="NameValueDto">
+    <select id="findNameAndNumber" resultType="NameNumberDto">
         select
             t.FNUMBER as number,
            tl.FNAME as name
