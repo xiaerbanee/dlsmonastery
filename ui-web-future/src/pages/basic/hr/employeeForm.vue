@@ -55,9 +55,7 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.origin')" prop="originId">
-              <el-select v-model="employeeForm.originId"  clearable filterable remote :placeholder="$t('employeeForm.inputWord')" :remote-method="remoteDistrict" :loading="remoteLoading">
-                <el-option v-for="item in origins" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
-              </el-select>
+                  <district-select v-model="employeeForm.originId"></district-select>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.salerName')" prop="salerName">
               <el-input v-model.number="employeeForm.salerName"></el-input>
@@ -104,104 +102,103 @@
   </div>
 </template>
 <script>
-    export default{
-      data(){
-          return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            employeeForm:{
-              entryDate:'',
-              regularDate:'',
-              leaveDate:'',
-            },
-            accountForm:{},
-            employeeSubmitData:{
-              id:'',
-              accountId:"",
-              name:'',
-              education:'',
-              code:'',
-              salary:'',
-              bankNumber:'',
-              bankName:'',
-              entryDate:'',
-              regularDate:'',
-              leaveDate:'',
-              school:'',
-              mobilePhone:'',
-              idcard:'',
-              birthday:'',
-              sex:"",
-              originId:'',
-              salerName:'',
-            },
-           accountSubmitData:{
-              id:"",
-              loginName:'',
-              employeeId:"",
-              officeId:"",
-              leaderId:'',
-              positionId:"",
-              type:"主账号",
-              officeIdList:'',
-            },
-            leaders:[],
-            offices:[],
-            depots:[],
-            origins:[],
-            dataScopeOffices:[],
-            remoteLoading:false,
-            employeeRules: {
-              name: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-              mobilePhone: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-              salary: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-              idcard: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-              entryDate: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-            },
-            accountRules: {
-              loginName: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-              officeId: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-              positionId: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-            },
-            loading:false
+  import districtSelect from 'components/general/district-select'
+  export default{
+    components:{districtSelect},
+    data(){
+      return{
+        isCreate:this.$route.query.id==null,
+        submitDisabled:false,
+        employeeForm:{},
+        accountForm:{},
+        employeeSubmitData:{
+          id:'',
+          accountId:"",
+          name:'',
+          education:'',
+          code:'',
+          salary:'',
+          bankNumber:'',
+          bankName:'',
+          entryDate:'',
+          regularDate:'',
+          leaveDate:'',
+          school:'',
+          mobilePhone:'',
+          idcard:'',
+          birthday:'',
+          sex:"",
+          originId:'',
+          salerName:'',
+        },
+        accountSubmitData:{
+          id:"",
+          loginName:'',
+          employeeId:"",
+          officeId:"",
+          leaderId:'',
+          positionId:"",
+          type:"主账号",
+          officeIdList:'',
+        },
+        leaders:[],
+        offices:[],
+        depots:[],
+        origins:[],
+        dataScopeOffices:[],
+        remoteLoading:false,
+        employeeRules: {
+          name: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+          mobilePhone: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+          salary: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+          idcard: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+          entryDate: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+        },
+        accountRules: {
+          loginName: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+          officeId: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+          positionId: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+        },
+        loading:false
+      }
+    },
+    methods:{
+      formSubmit(){
+        this.submitDisabled = true;
+        var employeeForm = this.$refs["employeeForm"];
+        var accountForm = this.$refs["accountForm"];
+        employeeForm.validate((valid) => {
+          if (valid) {
+            this.employeeForm.birthday=util.formatLocalDate(this.employeeForm.birthday)
+            this.employeeForm.entryDate=util.formatLocalDate(this.employeeForm.entryDate)
+            this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
+            this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
+            this.employeeForm.sex=this.employeeForm.sex==1?"男":"女"
+            accountForm.validate((accountValid) => {
+              if (accountValid) {
+                util.copyValue(this.employeeForm,this.employeeSubmitData);
+                axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeSubmitData)).then((response)=> {
+                  this.$message("员工"+response.data.message);
+                  this.accountForm.employeeId=response.data.extra.employeeId;
+                  util.copyValue(this.accountForm,this.accountSubmitData);
+                  console.log(this.accountSubmitData)
+                  axios.post('/api/basic/hr/account/save', qs.stringify(this.accountSubmitData)).then((response)=> {
+                    this.$message("账户"+response.data.message);
+                  });
+                  if(this.isCreate){
+                    employeeForm.resetFields();
+                    this.submitDisabled = false;
+                  } else {
+                    this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
+                  }
+                });
+              }
+            })
+          }else{
+            this.submitDisabled = false;
           }
-      },
-      methods:{
-        formSubmit(){
-          this.submitDisabled = true;
-           var employeeForm = this.$refs["employeeForm"];
-           var accountForm = this.$refs["accountForm"];
-            employeeForm.validate((valid) => {
-            if (valid) {
-              this.employeeForm.birthday=util.formatLocalDate(this.employeeForm.birthday)
-              this.employeeForm.entryDate=util.formatLocalDate(this.employeeForm.entryDate)
-              this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
-              this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
-              this.employeeForm.sex=this.employeeForm.sex==1?"男":"女"
-              accountForm.validate((accountValid) => {
-                if (accountValid) {
-                    util.copyValue(this.employeeForm,this.employeeSubmitData);
-                    axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeSubmitData)).then((response)=> {
-                        this.$message("员工"+response.data.message);
-                        this.accountForm.employeeId=response.data.extra.employeeId;
-                        util.copyValue(this.accountForm,this.accountSubmitData);
-                        axios.post('/api/basic/hr/account/save', qs.stringify(this.accountSubmitData)).then((response)=> {
-                        this.$message("账户"+response.data.message);
-                    });
-                    if(this.isCreate){
-                      employeeForm.resetFields();
-                      this.submitDisabled = false;
-                    } else {
-                      this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
-                    }
-                    });
-                }
-              })
-            }else{
-              this.submitDisabled = false;
-            }
-          })
-        },remoteAccount(query) {
+        })
+      },remoteAccount(query) {
         if (query !== '') {
           this.remoteLoading = true;
           axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
@@ -225,43 +222,33 @@
             this.remoteLoading = false;
           })
         }
-      },remoteDistrict(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/general/sys/district/search',{params:{key:query}}).then((response)=>{
-            this.origins=response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.origins = [];
+      }
+    },created(){
+      axios.get('/api/basic/hr/employee/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        var account=response.data.account;
+        var employee=response.data;
+        if(account.officeId!=null){
+          this.offices=new Array({id:account.officeId,name:account.officeName})
         }
-      }
-      },created(){
-          axios.get('/api/basic/hr/employee/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
-             var account=response.data.account;
-             var employee=response.data;
-             if(account.officeId!=null){
-                this.offices=new Array({id:account.officeId,name:account.officeName})
-              }
-             if(account.officeIdList!=null&&account.officeIdList.length>0){
-               let officeList=new Array();
-               for(var i=account.officeIdList.length-1;i>=0;i--){
-                 officeList.push({id:account.officeIdList[i],name:account.officeListName[i]})
-               }
-               this.dataScopeOffices=officeList;
-                this.accountForm.officeIdList=account.officeIdList;
-                console.log(officeList)
-              }
-              if(account.leaderId!=null){
-                this.leaders=new Array({id:account.leaderId,loginName:account.leaderName})
-              }
-            if(account.leaderId!=null){
-              this.leaders=new Array({id:account.leaderId,loginName:account.leaderName})
-            }
-            this.employeeForm=employee;
-            this.employeeForm.sex=employee.sex=="男"?1:0;
-            this.accountForm=account;
-          })
-      }
+        if(account.officeIdList!=null&&account.officeIdList.length>0){
+          let officeList=new Array();
+          for(var i=account.officeIdList.length-1;i>=0;i--){
+            officeList.push({id:account.officeIdList[i],name:account.officeListName[i]})
+          }
+          this.dataScopeOffices=officeList;
+          this.accountForm.officeIdList=account.officeIdList;
+          console.log(officeList)
+        }
+        if(account.leaderId!=null){
+          this.leaders=new Array({id:account.leaderId,loginName:account.leaderName})
+        }
+        if(account.leaderId!=null){
+          this.leaders=new Array({id:account.leaderId,loginName:account.leaderName})
+        }
+        this.employeeForm=employee;
+        this.employeeForm.sex=employee.sex=="男"?1:0;
+        this.accountForm=account;
+      })
     }
+  }
 </script>
