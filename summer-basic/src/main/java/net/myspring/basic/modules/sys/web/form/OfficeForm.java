@@ -46,8 +46,14 @@ public class OfficeForm extends DataForm<Office> {
     private List<String> leaderNameList=Lists.newArrayList();
 
     public Integer getLevel() {
-        if (level == null && StringUtils.isNotBlank(parentIds)) {
-            level = parentIds.split(CharConstant.COMMA).length;
+        if (level == null && (parent!=null||StringUtils.isNotBlank(parentIds))) {
+            if(StringUtils.isNotBlank(parentIds)){
+                level=parentIds.length();
+            }else {
+                level=parent.getLevel()+1;
+            }
+        }else {
+            this.level=1;
         }
         return level;
     }

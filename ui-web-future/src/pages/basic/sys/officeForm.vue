@@ -164,12 +164,12 @@
             axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
               this.treeData =new Array(response.data);
               this.checked = response.data.checked;
-              this.inputForm.permissionIdStr = response.data.checked.join();
+              this.inputForm.officeIdStr = response.data.checked.join();
             })
           }else {
             this.treeData =new Array();
             this.checked = new Array();
-            this.inputForm.permissionIdStr = "";
+            this.inputForm.officeIdStr = "";
             this.isBusiness=true;
           }
       }
