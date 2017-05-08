@@ -17,6 +17,7 @@ import net.myspring.cloud.modules.input.dto.BatchBillDetailDto;
 import net.myspring.cloud.modules.input.dto.BatchBillDto;
 import net.myspring.cloud.modules.input.utils.K3CloudSaveExtend;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
+import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -225,8 +226,8 @@ public class BatchBillService {
         return result;
     }
 
-    public BatchBillForm getFormProperty(BatchBillForm batchBillForm){
-        batchBillForm.setTypeList(K3CloudBillTypeEnum.values());
-        return batchBillForm;
+    public BatchBillQuery getFormProperty(BatchBillQuery batchBillQuery){
+        batchBillQuery.setTypeList(K3CloudBillTypeEnum.values());
+        return batchBillQuery;
     }
 }
