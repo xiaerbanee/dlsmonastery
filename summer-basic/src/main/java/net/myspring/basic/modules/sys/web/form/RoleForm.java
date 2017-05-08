@@ -15,8 +15,26 @@ public class RoleForm extends DataForm<Role> {
     private String permission;
     private String remarks;
     private String permissionIdStr;
-    private TreeNode permissionTree;
+    private TreeNode treeNode;
     private List<String> permissionIdList= Lists.newArrayList();
+    private String moduleIdStr;
+    private List<String> moduleIdList=Lists.newArrayList();
+
+    public String getModuleIdStr() {
+        return moduleIdStr;
+    }
+
+    public void setModuleIdStr(String moduleIdStr) {
+        this.moduleIdStr = moduleIdStr;
+    }
+
+    public List<String> getModuleIdList() {
+        return moduleIdList;
+    }
+
+    public void setModuleIdList(List<String> moduleIdList) {
+        this.moduleIdList = moduleIdList;
+    }
 
     public List<String> getPermissionIdList() {
         return permissionIdList;
@@ -60,11 +78,11 @@ public class RoleForm extends DataForm<Role> {
         this.permissionIdStr = permissionIdStr;
     }
 
-    public TreeNode getPermissionTree() {
-        return permissionTree;
+    public TreeNode getTreeNode() {
+        return treeNode;
     }
 
-    public void setPermissionTree(TreeNode permissionTree) {
-        this.permissionTree = permissionTree;
+    public void setTreeNode(TreeNode treeNode) {
+        this.treeNode = treeNode;
     }
 }

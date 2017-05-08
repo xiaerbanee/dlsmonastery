@@ -1,8 +1,10 @@
 package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.mapper.RoleModuleMapper;
+import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.Role;
 import net.myspring.basic.modules.sys.domain.RoleModule;
 import net.myspring.basic.modules.sys.domain.RolePermission;
@@ -38,43 +40,65 @@ public class RoleService {
 
 
     public RoleForm findForm(RoleForm roleForm) {
-        if(!roleForm.isCreate()) {
+        if (!roleForm.isCreate()) {
             Role Role = roleMapper.findOne(roleForm.getId());
-            roleForm= BeanUtil.map(Role,RoleForm.class);
+            roleForm = BeanUtil.map(Role, RoleForm.class);
             cacheUtils.initCacheInput(roleForm);
         }
         return roleForm;
     }
 
-    public Role save(RoleForm roleForm){
+    public Role save(RoleForm roleForm) {
         Role role;
-        if(roleForm.isCreate()){
-            role = BeanUtil.map(roleForm,Role.class);
+        if (roleForm.isCreate()) {
+            role = BeanUtil.map(roleForm, Role.class);
             roleMapper.save(role);
-        }else{
+        } else {
             role = roleMapper.findOne(roleForm.getId());
-            ReflectionUtil.copyProperties(roleForm,role);
+            ReflectionUtil.copyProperties(roleForm, role);
             roleMapper.update(role);
         }
-        roleModuleMapper.deleteByRoleId(roleForm.getId());
-        if(CollectionUtil.isNotEmpty(roleForm.getPermissionIdList())){
-            List<RoleModule> positionModuleList= Lists.newArrayList();
-            for(String moduleId:roleForm.getPermissionIdList()){
-                positionModuleList.add(new RoleModule(role.getId(),moduleId));
+        List<RoleModule> roleModuleList = roleModuleMapper.findAllByRoleId(role.getId());
+        if (CollectionUtil.isNotEmpty(roleForm.getModuleIdList())) {
+            List<String> roleModuleIdList = CollectionUtil.extractToList(roleModuleList, "backendModuleId");
+            List<String> removeIdList = CollectionUtil.subtract(roleModuleIdList, roleForm.getModuleIdList());
+            List<String> addIdList = CollectionUtil.subtract(roleForm.getModuleIdList(), roleModuleIdList);
+            List<RoleModule> addRoleModules = Lists.newArrayList();
+            for (String moduleId : addIdList) {
+                addRoleModules.add(new RoleModule(role.getId(), moduleId));
             }
-            roleModuleMapper.batchSave(positionModuleList);
+            roleModuleMapper.setEnabledByRoleId(true, role.getId());
+            if (CollectionUtil.isNotEmpty(removeIdList)) {
+                roleModuleMapper.setEnabledByModuleIdList(false,removeIdList);
+            }
+            if (CollectionUtil.isNotEmpty(addIdList)) {
+                roleModuleMapper.batchSave(addRoleModules);
+            }
+        } else if (CollectionUtil.isNotEmpty(roleModuleList)) {
+            roleModuleMapper.setEnabledByRoleId(false, role.getId());
         }
         return role;
     }
 
-    public void saveRoleAndPermission(RoleForm roleForm){
-        rolePermissionMapper.deleteByRoleId(roleForm.getId());
-        if(CollectionUtil.isNotEmpty(roleForm.getPermissionIdList())){
-            List<RolePermission> rolePermissions= Lists.newArrayList();
-            for(String permissionId:roleForm.getPermissionIdList()){
-                rolePermissions.add(new RolePermission(roleForm.getId(),permissionId));
+    public void saveRoleAndPermission(RoleForm roleForm) {
+        List<RolePermission> rolePermissionList = rolePermissionMapper.findAllByRoleId(roleForm.getId());
+        if (CollectionUtil.isNotEmpty(roleForm.getPermissionIdList())) {
+            List<String> rolePermissionIdList = CollectionUtil.extractToList(rolePermissionList, "permissionId");
+            List<String> removeIdList = CollectionUtil.subtract(rolePermissionIdList, roleForm.getPermissionIdList());
+            List<String> addIdList = CollectionUtil.subtract(roleForm.getPermissionIdList(), rolePermissionIdList);
+            List<RolePermission> rolePermissions = Lists.newArrayList();
+            for (String permissionId : addIdList) {
+                rolePermissions.add(new RolePermission(roleForm.getId(), permissionId));
             }
-            rolePermissionMapper.batchSave(rolePermissions);
+            rolePermissionMapper.setEnabledByRoleId(true, roleForm.getId());
+            if (CollectionUtil.isNotEmpty(removeIdList)) {
+                rolePermissionMapper.setEnabledByPermissionIdList(false,removeIdList);
+            }
+            if (CollectionUtil.isNotEmpty(addIdList)) {
+                rolePermissionMapper.batchSave(rolePermissions);
+            }
+        } else if (CollectionUtil.isNotEmpty(rolePermissionList)) {
+            rolePermissionMapper.setEnabledByRoleId(false, roleForm.getId());
         }
     }
 
@@ -83,15 +107,15 @@ public class RoleService {
     }
 
     public Page<RoleDto> findPage(Pageable pageable, RoleQuery roleQuery) {
-        Page<RoleDto> roleDtoPage= roleMapper.findPage(pageable, roleQuery);
+        Page<RoleDto> roleDtoPage = roleMapper.findPage(pageable, roleQuery);
         cacheUtils.initCacheInput(roleDtoPage.getContent());
         return roleDtoPage;
     }
 
-    public List<RoleDto> findByNameLike(String name){
-        List<Role> roleList=roleMapper.findByNameLike(name);
-        List<RoleDto> roleDtoList= BeanUtil.map(roleList,RoleDto.class);
+    public List<RoleDto> findByNameLike(String name) {
+        List<Role> roleList = roleMapper.findByNameLike(name);
+        List<RoleDto> roleDtoList = BeanUtil.map(roleList, RoleDto.class);
         cacheUtils.initCacheInput(roleDtoList);
-        return  roleDtoList;
+        return roleDtoList;
     }
 }

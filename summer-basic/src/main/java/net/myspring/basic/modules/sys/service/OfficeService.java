@@ -163,7 +163,7 @@ public class OfficeService {
             if (CollectionUtil.isNotEmpty(addIdList)) {
                 officeLeaderMapper.batchSave(leaderList);
             }
-        }else {
+        }else if(CollectionUtil.isNotEmpty(officeLeaderList)){
             officeLeaderMapper.setEnabledByOfficeId(false,office.getId());
         }
         return office;
