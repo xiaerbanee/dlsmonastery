@@ -2,12 +2,16 @@ package net.myspring.basic.modules.sys.web.form;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.enums.OfficeTypeEnum;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.cahe.annotation.CacheInput;
+import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -19,8 +23,8 @@ public class OfficeForm extends DataForm<Office> {
     private String parentId;
     private String name;
     private String jointType;
-    private String point;
-    private String taskPoint;
+    private BigDecimal point;
+    private BigDecimal taskPoint;
     private String sort;
     private TreeNode officeTree;
     private String type;
@@ -31,12 +35,32 @@ public class OfficeForm extends DataForm<Office> {
     private String officeRuleId;
     private List<String> leaderIdList=Lists.newArrayList();
     private List<String> officeTypeList=Lists.newArrayList();
+    private Integer level;
+    private String parentIds;
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
     @CacheInput(inputKey = "accounts",inputInstance = "leaderIdList",outputInstance = "loginName")
     private List<String> leaderNameList=Lists.newArrayList();
 
+    public Integer getLevel() {
+        if (level == null && StringUtils.isNotBlank(parentIds)) {
+            level = parentIds.split(CharConstant.COMMA).length;
+        }
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public String getParentIds() {
+        return parentIds;
+    }
+
+    public void setParentIds(String parentIds) {
+        this.parentIds = parentIds;
+    }
 
     public String getType() {
         return type;
@@ -135,6 +159,9 @@ public class OfficeForm extends DataForm<Office> {
     }
 
     public String getOfficeRuleId() {
+        if(OfficeTypeEnum.SUPPORT.name().equals(type)){
+            this.officeRuleId=null;
+        }
         return officeRuleId;
     }
 
@@ -150,19 +177,19 @@ public class OfficeForm extends DataForm<Office> {
         this.jointType = jointType;
     }
 
-    public String getPoint() {
+    public BigDecimal getPoint() {
         return point;
     }
 
-    public void setPoint(String point) {
+    public void setPoint(BigDecimal point) {
         this.point = point;
     }
 
-    public String getTaskPoint() {
+    public BigDecimal getTaskPoint() {
         return taskPoint;
     }
 
-    public void setTaskPoint(String taskPoint) {
+    public void setTaskPoint(BigDecimal taskPoint) {
         this.taskPoint = taskPoint;
     }
 

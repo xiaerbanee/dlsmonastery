@@ -2,6 +2,7 @@ package net.myspring.common.response;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.util.collection.CollectionUtil;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -61,6 +62,9 @@ public class RestResponse {
     }
 
     public void setErrors(List<RestErrorField> errors) {
+        if(CollectionUtil.isNotEmpty(errors)) {
+            this.success = false;
+        }
         this.errors = errors;
     }
 

@@ -33,7 +33,7 @@ public class ReflectionUtil  extends org.springside.modules.utils.reflect.Reflec
 		for(Field field:formFieldList){
 		    if(CollectionUtil.isNotEmpty(toFileName)&&toFileName.contains(field.getName())){
                 field.setAccessible(true);
-		        Object value=getFieldValue(from,field);
+		        Object value=getProperty(from,field.getName());
 		        setFieldValue(to,field.getName(),value);
             }
         }

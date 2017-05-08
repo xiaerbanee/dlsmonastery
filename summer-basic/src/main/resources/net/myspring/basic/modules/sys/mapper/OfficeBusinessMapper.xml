@@ -2,11 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.basic.modules.sys.mapper.OfficeBusinessMapper">
 
-    <select id="findBusinessIdById" resultType="String">
-        SELECT  t1.business_office_id
+    <select id="findBusinessIdById" resultType="OfficeBusiness">
+        SELECT  t1.*
         FROM sys_office_business t1
         where t1.enabled=1
         and t1.office_id=#{id}
+    </select>
+
+    <select id="findAllBusinessIdById" resultType="OfficeBusiness">
+        SELECT  t1.*
+        FROM sys_office_business t1
+        where  t1.office_id=#{id}
     </select>
 
     <update id="removeByBusinessOfficeIds">
@@ -16,7 +22,8 @@
         </foreach>
     </update>
 
-    <delete id="removeByOfficeId">
-        DELETE FROM sys_office_business where office_id=#{officeId}
-    </delete>
+    <update id="setEnabledByOfficeId">
+        UPDATE  sys_office_business set enabled=#{enabled} where office_id=#{officeId}
+    </update>
+
 </mapper>
