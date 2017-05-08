@@ -45,9 +45,11 @@ public interface OfficeBusinessMapper extends BaseMapper<OfficeBusiness,String> 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL_ENABLED)
     List<OfficeBusiness> findAllEnabled();
 
-    List<String> findBusinessIdById(String id);
+    List<OfficeBusiness> findBusinessIdById(String id);
+
+    List<OfficeBusiness> findAllBusinessIdById(String id);
 
     int removeByBusinessOfficeIds(List<String> businessOfficeIds);
 
-    int removeByOfficeId(String officeId);
+    int setEnabledByOfficeId(@Param("enabled")boolean enabled,@Param("officeId")String officeId);
 }

@@ -23,7 +23,7 @@
             <el-form-item :label="$t('officeForm.officeName')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('officeForm.type')" prop="officeRuleId">
+            <el-form-item label="业务类型" prop="officeRuleId" v-show="isBusiness">
               <el-select v-model="inputForm.officeRuleId" filterable >
                 <el-option v-for="item in inputForm.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
@@ -73,6 +73,7 @@
       return {
         isCreate: this.$route.query.id == null,
         submitDisabled: false,
+        isBusiness:false,
         offices: [],
         accountList: [],
         inputForm: {},
@@ -81,6 +82,7 @@
           parentId: '',
           name: '',
           officeRuleId: '',
+          type:"",
           jointType: '',
           point: '',
           taskPoint: '',
@@ -150,6 +152,7 @@
         this.inputForm.officeIdStr=officeIdList.join();
       },typeChange(evl){
           if(evl!=null&&evl=="SUPPORT"){
+            this.isBusiness=false;
             axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
               this.treeData =new Array(response.data);
               this.checked = response.data.checked;
@@ -159,6 +162,7 @@
             this.treeData =new Array();
             this.checked = new Array();
             this.inputForm.permissionIdStr = "";
+            this.isBusiness=true;
           }
       }
     }, created(){
@@ -166,6 +170,11 @@
         this.inputForm = response.data;
         if (response.data.parentId != null) {
           this.offices = new Array({id: response.data.parentId, name: response.data.parentName})
+        }
+        if(response.data.type =="SUPPORT" ){
+            this.isBusiness=false;
+        }else {
+            this.isBusiness=true;
         }
         if (response.data.leaderIdList != null) {
             let officeLeaderList=new Array();

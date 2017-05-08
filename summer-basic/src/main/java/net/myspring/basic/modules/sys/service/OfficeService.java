@@ -87,8 +87,8 @@ public class OfficeService {
             Office office = officeMapper.findOne(officeForm.getId());
             officeForm= BeanUtil.map(office,OfficeForm.class);
             if(OfficeTypeEnum.SUPPORT.name().equals(office.getType())){
-                List<String> businessOffices=officeBusinessMapper.findBusinessIdById(office.getId());
-                officeForm.setOfficeTree(getOfficeTree(businessOffices));
+                List<OfficeBusiness> businessOffices=officeBusinessMapper.findBusinessIdById(office.getId());
+                officeForm.setOfficeTree(getOfficeTree(CollectionUtil.extractToList(businessOffices,"id")));
             }
             List<OfficeLeader> officeLeaderList=officeLeaderMapper.findByOfficeId(officeForm.getId());
             officeForm.setLeaderIdList(CollectionUtil.extractToList(officeLeaderList,"leaderId"));
@@ -109,8 +109,9 @@ public class OfficeService {
             officeMapper.update(office);
             officeLeaderMapper.removeOfficeLeaderByOffice(office.getId());
         }
-        List<String> businessOfficeIdList=officeBusinessMapper.findBusinessIdById(office.getId());
-        if(OfficeTypeEnum.SUPPORT.equals(officeForm.getType())){
+        List<OfficeBusiness> businessOfficeList=officeBusinessMapper.findAllBusinessIdById(office.getId());
+        if(OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())){
+            List<String> businessOfficeIdList=CollectionUtil.extractToList(businessOfficeList,"businessOfficeId");
             List<String>removeIdList=CollectionUtil.subtract(businessOfficeIdList,officeForm.getOfficeIdList());
             List<String> addIdList=CollectionUtil.subtract(officeForm.getOfficeIdList(),businessOfficeIdList);
             List<OfficeBusiness> officeBusinessList=Lists.newArrayList();
@@ -119,14 +120,15 @@ public class OfficeService {
                 officeBusiness.setCompanyId(SecurityUtils.getCompanyId());
                 officeBusinessList.add(officeBusiness);
             }
+            officeBusinessMapper.setEnabledByOfficeId(true,office.getId());
             if(CollectionUtil.isNotEmpty(removeIdList)){
                 officeBusinessMapper.removeByBusinessOfficeIds(removeIdList);
             }
             if(CollectionUtil.isNotEmpty(addIdList)){
                 officeBusinessMapper.batchSave(officeBusinessList);
             }
-        }else if(CollectionUtil.isNotEmpty(businessOfficeIdList)){
-            officeBusinessMapper.removeByOfficeId(office.getId());
+        }else if(CollectionUtil.isNotEmpty(businessOfficeList)){
+            officeBusinessMapper.setEnabledByOfficeId(false,office.getId());
         }
 
         if(CollectionUtil.isNotEmpty(officeForm.getLeaderIdList())){
@@ -150,11 +152,11 @@ public class OfficeService {
         return officeDtoList;
     }
 
-    public List<String> findBusinessIdById(String id){
+    public List<OfficeBusiness> findBusinessIdById(String id){
         return  officeBusinessMapper.findBusinessIdById(id);
     }
 
-    public List<OfficeRuleDto> findTypeList(){
+    public List<OfficeRuleDto> findOfficeRuleList(){
         List<OfficeRule> officeRuleList=officeRuleMapper.findAllEnabled();
         List<OfficeRuleDto> officeRuleDtoList=BeanUtil.map(officeRuleList,OfficeRuleDto.class);
         return officeRuleDtoList;
