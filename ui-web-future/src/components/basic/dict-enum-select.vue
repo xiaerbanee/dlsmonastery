@@ -14,7 +14,7 @@
         itemList : []
       };
     },methods:{
-        handleChange(newVal) {
+      handleChange(newVal) {
         this.$emit('input', newVal);
       }
     },created () {

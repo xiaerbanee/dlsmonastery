@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class ShopAllotForm extends DataForm<ShopAllot> {
 
+    private String message;
 
     public BigDecimal getMarketAmount() {
         return marketAmount;
