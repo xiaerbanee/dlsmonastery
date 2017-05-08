@@ -17,7 +17,7 @@
       <div class="form input-form" style="margin-top: 20px" v-if="active==1">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px">
           <el-form-item  :label="$t('recruitForm.contactDate')" prop="contactDate">
-            <el-date-picker  v-model="inputForm.contactDate" type="datetime" align="left" ></el-date-picker>
+            <date-time-picker v-model="inputForm.contactDate"></date-time-picker>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.name')" prop="name">
             <el-input v-model="inputForm.name"></el-input>
@@ -38,7 +38,7 @@
             <el-input v-model="inputForm.applyFrom"></el-input>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.firstAppointDate')" prop="firstAppointDate">
-            <el-date-picker  v-model="inputForm.firstAppointDate" type="datetime" align="left" :placeholder="$t('recruitForm.selectFirstAppointDate')"></el-date-picker>
+            <date-time-picker v-model="inputForm.firstAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.contactById')" prop="contactById">
             <el-select v-model="inputForm.contactById" filterable remote :placeholder="$t('recruitForm.selectContactById')" :remote-method="remoteAccount" :loading="remoteLoading" :clearable=true>
@@ -58,7 +58,7 @@
       <div style="margin-top: 20px"  v-if="active==2">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
           <el-form-item :label="$t('recruitForm.firstRealDate')" prop="firstRealDate">
-            <el-date-picker  v-model="inputForm.firstRealDate" type="datetime" align="left" ></el-date-picker>
+            <date-time-picker v-model="inputForm.firstRealDate"></date-time-picker>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.workArea')" prop="workArea">
             <el-input v-model="inputForm.workArea"></el-input>
@@ -72,7 +72,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.birthday')" prop="birthday">
-            <el-date-picker  v-model="inputForm.birthday" type="date" align="left"  format="yyyy-MM-dd" ></el-date-picker>
+            <date-picker v-model="inputForm.birthday" ></date-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.originSelectId')" prop="originSelectId">
             <el-select v-model="inputForm.originSelectId"  clearable filterable remote :placeholder="$t('recruitForm.inputWord')" :remote-method="remoteDistrict" :loading="remoteLoading">
@@ -102,7 +102,7 @@
             <el-input v-model="inputForm.firstComment"></el-input>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.secondAppointDate')" prop="secondAppointDate">
-            <el-date-picker  v-model="inputForm.secondAppointDate" type="datetime" align="left" ></el-date-picker>
+            <date-time-picker v-model="inputForm.secondAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('recruitForm.save')}}</el-button>
@@ -114,7 +114,7 @@
       <div  style="margin-top: 20px"  v-if="active==3">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
           <el-form-item  :label="$t('recruitForm.secondRealDate')" prop="secondRealDate">
-            <el-date-picker  v-model="inputForm.secondRealDate" type="datetime" align="left" ></el-date-picker>
+            <date-time-picker v-model="inputForm.secondRealDate"></date-time-picker>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.secondBy')" prop="secondBy">
             <el-select v-model="inputForm.secondBy" filterable remote clearable :placeholder="$t('recruitForm.selectSecondBy')" :remote-method="remoteAccount" :loading="remoteLoading">
@@ -134,7 +134,7 @@
             <el-input v-model="inputForm.storageRemarks"></el-input>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.physicalAppointDate')" prop="physicalAppointDate">
-            <el-date-picker  v-model="inputForm.physicalAppointDate" type="datetime" align="left" ></el-date-picker>
+            <date-time-picker v-model="inputForm.physicalAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('recruitForm.save')}}</el-button>
@@ -146,16 +146,16 @@
       <div  style="margin-top: 20px"  v-if="active==4">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
           <el-form-item :label="$t('recruitForm.physicalRealDate')" prop="physicalRealDate">
-            <el-date-picker  v-model="inputForm.physicalRealDate" type="datetime" align="left"  ></el-date-picker>
+            <date-time-picker v-model="inputForm.physicalRealDate"></date-time-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.auditAppointDate')" prop="auditAppointDate">
-            <el-date-picker  v-model="inputForm.auditAppointDate" type="datetime" align="left"  ></el-date-picker>
+            <date-time-picker v-model="inputForm.auditAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.auditRealDate')" prop="auditRealDate">
-            <el-date-picker  v-model="inputForm.auditRealDate" type="datetime" align="left"  ></el-date-picker>
+            <date-time-picker v-model="inputForm.auditRealDate"></date-time-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.entryAppointDate')" prop="entryAppointDate">
-            <el-date-picker  v-model="inputForm.entryAppointDate" type="datetime" align="left"></el-date-picker>
+            <date-time-picker v-model="inputForm.entryAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('recruitForm.save')}}</el-button>
@@ -167,7 +167,7 @@
       <div style="margin-top: 20px"  v-if="active==5">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
           <el-form-item :label="$t('recruitForm.entryRealDate')" prop="entryRealDate">
-            <el-date-picker  v-model="inputForm.entryRealDate" type="datetime" align="left" ></el-date-picker>
+            <date-time-picker v-model="inputForm.entryRealDate"></date-time-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.idCard')"  prop="idcard">
             <el-input v-model="inputForm.idcard"></el-input>
@@ -182,7 +182,9 @@
   </div>
 </template>
 <script>
+  import dateTimePicker from "components/common/date-time-picker.vue"
     export default{
+      components:{dateTimePicker},
       data(){
           return{
             isCreate:this.$route.query.id==null,

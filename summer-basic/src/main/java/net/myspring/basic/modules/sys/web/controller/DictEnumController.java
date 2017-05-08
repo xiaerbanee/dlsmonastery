@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "sys/dictEnum")
 public class DictEnumController {
@@ -50,5 +52,10 @@ public class DictEnumController {
     public  DictEnumQuery getQuery(DictEnumQuery dictEnumQuery){
         dictEnumQuery.setCategoryList(dictEnumService.findDistinctCategory());
         return dictEnumQuery;
+    }
+
+    @RequestMapping(value="findByCategory")
+    public List<DictEnumDto> findByCategory(String category){
+        return dictEnumService.findByCategory(category);
     }
 }

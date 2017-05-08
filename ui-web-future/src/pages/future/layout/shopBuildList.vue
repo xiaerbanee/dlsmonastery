@@ -7,7 +7,7 @@
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.filterOrExport')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.batchPass')}}</el-button>
         <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.batchBlack')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('shopBuildList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -28,19 +28,19 @@
               </el-form-item>
               <el-form-item :label="formLabel.processFlow.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.processFlow" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
-                  <el-option v-for="processFlow in formProperty.processFlows" :key="processFlow.id" :label="processFlow.name" :value="processFlow.id"></el-option>
+                  <el-option v-for="processFlow in formData.processFlows" :key="processFlow.id" :label="processFlow.name" :value="processFlow.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.fixtureType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.fixtureType" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
-                  <el-option v-for="fixtureType in formProperty.fixtureTypes" :key="fixtureType" :label="fixtureType" :value="fixtureType"></el-option>
+                  <el-option v-for="fixtureType in formData.fixtureTypes" :key="fixtureType" :label="fixtureType" :value="fixtureType"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('shopBuildList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
-                <su-date-range-picker v-model="formData.createdDateRange" ></su-date-range-picker>
+              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -89,23 +89,27 @@
         pageLoading: false,
         page:{},
         formData:{
+            auditType:'1',
+        },
+        submitData:{
           page:0,
           size:25,
           officeId:'',
-          auditType:"0",
+          auditType:'',
           shopName:'',
           processFlow:'',
           fixtureType:'',
           createdBy:'',
-          createdDateRange:'',
-        },formLabel:{
+          createdDate:'',
+        },
+        formLabel:{
           officeId:{label: this.$t('shopBuildList.officeName'),value:''},
           auditType:{label: this.$t('shopBuildList.auditType'),value:''},
           shopName:{label:this.$t('shopBuildList.shopName')},
           processFlow:{label:this.$t('shopBuildList.processFlow'),value:''},
           fixtureType:{label:this.$t('shopBuildList.fixtureType'),value:''},
           createdBy:{label: this.$t('shopBuildList.createdBy')},
-          createdDateRange:{label: this.$t('shopBuildList.createdDate')},
+          createdDate:{label: this.$t('shopBuildList.createdDate')},
         },auditTypes:{
           0:this.$t('shopBuildList.all'),
           1:this.$t('shopBuildList.waitAudit')
@@ -123,8 +127,9 @@
         this.formLabel.officeId.value = util.getLabel(this.formProperty.areas, this.formData.officeId);
         this.formLabel.processFlow.value = util.getLabel(this.formProperty.processFlows, this.formData.processFlow);
         this.formLabel.auditType.value = this.auditTypes[this.formData.auditType];
-        console.log(this.formData);
-        axios.get('/api/ws/future/layout/shopBuild',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("shopBuildList",this.submitData);
+        axios.get('/api/ws/future/layout/shopBuild',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -180,9 +185,15 @@
       }
     },
     created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+        var that = this;
+        that.pageHeight = window.outerHeight -320;
+        console.log(this.formData);
+        axios.get('api/ws/future/layout/shopBuild/getQuery',{params:this.formData}).then((response) =>{
+           that.formData = response.data;
+           console.log(that.formData);
+           util.copyValue(this.$route.query,that.formData);
+           that.pageRequest();
+        });
     }
   };
 </script>

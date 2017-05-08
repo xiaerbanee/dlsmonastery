@@ -1,7 +1,10 @@
 package net.myspring.future.modules.layout.web.query;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,32 +15,22 @@ import java.time.LocalDateTime;
 public class ShopBuildQuery {
     private String officeId;
     private String auditType;
-    private String positionId;
     private String shopName;
-    private String processStatus;
+    private String processFlow;
     private String fixtureType;
     private String createdBy;
-    private String createdDateRange;
-    private LocalDateTime createdDateStart;
-    private LocalDateTime createdDateEnd;
-
-    public void setCreatedDateRange(String createdDateRange) {
-        if(createdDateRange!=null){
-            String[] tempParamValues = createdDateRange.split(" - ");
-            this.createdDateStart= LocalDateTimeUtils.parse(tempParamValues[0]+ " 00:00:00");
-            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 23:59:59");
-        }
-        this.createdDateRange = createdDateRange;
-
-    }
+    private String createdDate;
 
     public void setAuditType(String auditType){
-        if(auditType.equalsIgnoreCase("1")){
-            this.positionId = SecurityUtils.getPositionId();
-        }else{
-            this.positionId = null;
-        }
         this.auditType = auditType;
+    }
+
+    public String getAuditType() {
+        return auditType;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
     }
 
     public String getOfficeId() {
@@ -46,11 +39,12 @@ public class ShopBuildQuery {
 
 
     public String getPositionId() {
-        return positionId;
-    }
-
-    public void setPositionId(String positionId) {
-        this.positionId = positionId;
+        if(StringUtils.isNotBlank(auditType)){
+            if(auditType.equalsIgnoreCase("1")){
+                return SecurityUtils.getPositionId();
+            }
+        }
+        return null;
     }
 
     public String getShopName() {
@@ -61,12 +55,12 @@ public class ShopBuildQuery {
         this.shopName = shopName;
     }
 
-    public String getProcessStatus() {
-        return processStatus;
+    public String getProcessFlow() {
+        return processFlow;
     }
 
-    public void setProcessStatus(String processStatus) {
-        this.processStatus = processStatus;
+    public void setProcessFlow(String processFlow) {
+        this.processFlow = processFlow;
     }
 
     public String getFixtureType() {
@@ -85,12 +79,28 @@ public class ShopBuildQuery {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getCreatedDateStart() {
-        return createdDateStart;
+    public String getCreatedDate() {
+        return createdDate;
     }
 
-    public LocalDateTime getCreatedDateEnd() {
-        return createdDateEnd;
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDate getCreatedDateStart() {
+        if(StringUtils.isNotBlank(createdDate)) {
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getCreatedDateEnd() {
+        if(StringUtils.isNotBlank(createdDate)) {
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 
 }

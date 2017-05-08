@@ -14,6 +14,7 @@ import VueProgressBar from 'vue-progressbar'
 import pageable from './components/common/pageable';
 import headTab from './components/common/head-tab';
 import searchTag from './components/common/search-tag';
+import datePicker from './components/common/date-picker.vue'
 import dateRangePicker from './components/common/date-range-picker.vue';
 import suDistrict from './components/su-district';
 import suTable from './components/su-table';
@@ -45,6 +46,7 @@ Vue.component('pageable', pageable);
 Vue.component('full-calendar', fullCalendar);
 Vue.component('head-tab', headTab);
 Vue.component('search-tag', searchTag);
+Vue.component('date-picker',datePicker);
 Vue.component('date-range-picker', dateRangePicker);
 Vue.component('su-district', suDistrict);
 Vue.component('su-table', suTable);

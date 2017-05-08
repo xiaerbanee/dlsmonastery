@@ -1,6 +1,9 @@
 package net.myspring.future.modules.layout.service;
 
+import net.myspring.future.common.enums.DictMapCategoryEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.client.DictMapClient;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.layout.domain.ShopPrint;
 import net.myspring.future.modules.layout.dto.ShopPrintDto;
 import net.myspring.future.modules.layout.mapper.ShopPrintMapper;
@@ -22,6 +25,10 @@ public class ShopPrintService {
 
     @Autowired
     private ShopPrintMapper shopPrintMapper;
+    @Autowired
+    private DictMapClient dictMapClient;
+    @Autowired
+    private OfficeClient officeClient;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -54,8 +61,18 @@ public class ShopPrintService {
         return shopPrint;
     }
 
+    public void logicDelete(String id){
+        shopPrintMapper.logicDeleteOne(id);
+    }
+
     public void audit(ShopPrint shopPrint, boolean pass, String comment) {
         shopPrintMapper.update(shopPrint);
+    }
+
+    public ShopPrintQuery findQuery(ShopPrintQuery shopPrintQuery){
+        //shopPrintQuery.setPrintTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_广告印刷.name()));
+        //shopPrintQuery.setOfficeIdList(officeClient.findSortList());
+        return shopPrintQuery;
     }
 
     public void notify(ShopPrint shopPrint) {

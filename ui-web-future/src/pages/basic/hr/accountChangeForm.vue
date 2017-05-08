@@ -42,7 +42,7 @@
               </el-select>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='REGULAR_WORKER'||inputForm.type=='ENTRY_WORKER'||inputForm.type=='LEAVE_WORKER'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
-              <el-date-picker v-model="inputForm.newValue" type="date" align="right" :placeholder="$t('accountChangeForm.selectDateRange')"  ></el-date-picker>
+              <date-picker v-model="inputForm.newValue"></date-picker>
             </el-form-item>
             <el-form-item :label="$t('accountChangeForm.remarks')"  prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>

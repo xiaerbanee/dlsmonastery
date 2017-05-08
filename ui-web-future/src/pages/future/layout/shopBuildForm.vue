@@ -11,14 +11,10 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.shopType')" prop="shopType">
-              <el-select v-model="inputForm.shopType" filterable clearable :placeholder="$t('shopBuildForm.inputType')">y
-                <el-option v-for="shopType in formProperty.shopTypes"  :key="shopType" :label="shopType" :value="shopType"></el-option>
-              </el-select>
+              <dict-enum-select v-model="inputForm.shopType" category="店面类型"></dict-enum-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.fixtureType')" prop="fixtureType">
-              <el-select v-model="inputForm.fixtureType" filterable clearable :placeholder="$t('shopBuildForm.inputType')">
-                <el-option v-for="fixtureType in formProperty.fixtureTypes":key="fixtureType" :label="fixtureType" :value="fixtureType"></el-option>
-              </el-select>
+              <dict-enum-select v-model="inputForm.fixtureType" category="装修类型"></dict-enum-select>
             </el-form-item>
             <div v-show="inputForm.fixtureType.indexOf('包柱')>0">
             <el-form-item :label="$t('shopBuildForm.oldContents')" prop="oldContents">
@@ -31,9 +27,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('shopBuildForm.buildType')" prop="buildType">
-              <el-select v-model="inputForm.buildType" filterable clearable :placeholder="$t('shopBuildForm.inputType')">
-                <el-option v-for="buildType in formProperty.buildTypes" :key="buildType" :label="buildType" :value="buildType"></el-option>
-              </el-select>
+              <dict-enum-select v-model="inputForm.buildType" category="项目建设方式"></dict-enum-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.applyAccount')" prop="applyAccountId">
               <el-select v-model="inputForm.applyAccountId" filterable remote :placeholder="$t('shopBuildForm.inputWord')" :remote-method="remoteAccount" :loading="remoteLoading" :clearable=true>
@@ -47,7 +41,7 @@
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.scenePhoto')" prop="scenePhoto">
-              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -63,7 +57,9 @@
 </template>
 
 <script>
+  import dictEnumSelect from 'components/basic/dict-enum-select'
   export default{
+    components:{dictEnumSelect},
     data(){
       return {
         isCreate: this.$route.query.id == null,
@@ -92,7 +88,8 @@
         },
         shops: [],
         accounts: [],
-        remoteLoading:false
+        remoteLoading:false,
+        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
       }
     },
     methods:{
@@ -131,24 +128,15 @@
       },remoteShop(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/crm/depot/search',{params:{name:query}}).then((response)=>{
+          axios.get('/api/ws/future/basic/depot/shop',{params:{name:query}}).then((response)=>{
             this.shops=response.data;
             this.remoteLoading = false;
           })
         }
       },getFormProperty(){
-        axios.get('/api/crm/shopBuild/getFormProperty').then((response)=>{
+        axios.get('/api/ws/future/layout/shopBuild/getQuery').then((response)=>{
           this.formProperty=response.data;
         });
-      },findOne(){
-        axios.get('/api/ws/future/layout/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-          if(this.inputForm.scenePhoto !=null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
-              this.fileList= response.data;
-            });
-          }
-        })
       },handlePreview(file) {
         window.open(file.url);
       },handleChange(file, fileList) {
@@ -157,10 +145,15 @@
         this.fileList = fileList;
       }
     },created(){
+      axios.get('/api/ws/future/layout/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
+        if(this.inputForm.scenePhoto !=null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
+            this.fileList= response.data;
+          });
+        }
+      });
       this.getFormProperty();
-      if(!this.isCreate){
-        this.findOne();
-      }
     }
   }
 </script>
