@@ -38,6 +38,11 @@ public class BdMaterialController {
         return bdMaterialService.getNameByNameLike(name);
     }
 
+    @RequestMapping(value = "getNumberByNumberLike")
+    public List<String> getNumberByNumberLike(String number){
+        return bdMaterialService.getNumberByNumberLike(number);
+    }
+
     @RequestMapping(value = "getNameAndNumber")
     public List<NameNumberDto> getNameAndNumber(){
         return bdMaterialService.getNameAndNumber();

@@ -43,21 +43,21 @@
           product:'',
           colHeaders: ["编码", "货品", "仓库", "数量", "类型", "备注"],
           columns: [
-            {type: "autocomplete", allowEmpty: false, strict: true, tempCustomerNames:[],
+            {type: "autocomplete", allowEmpty: false, strict: true, tempMaterialCodes:[],
               source:function (query, process) {
                 var that = this;
-                if(that.tempCustomerNames.indexOf(query)>=0) {
-                  process(that.tempCustomerNames);
+                if(that.tempMaterialCodes.indexOf(query)>=0) {
+                  process(that.tempMaterialCodes);
                 } else {
                   var customerNames = new Array();
                   if(query.length>0) {
-                    axios.get('/api/global/cloud/input/bdCustomer/getNameByNameLike?name='+query).then((response)=>{
+                    axios.get('/api/global/cloud/input/bdMaterial/getNumberByNumberLike?number='+query).then((response)=>{
                       if(response.data.length>0) {
                         for(let index in response.data) {
                           var shopName = response.data[index];
                           customerNames.push(shopName);
-                          if(that.tempCustomerNames.indexOf(shopName)<0) {
-                            that.tempCustomerNames.push(shopName);
+                          if(that.tempMaterialCodes.indexOf(shopName)<0) {
+                            that.tempMaterialCodes.push(shopName);
                           }
                         }
                       }
@@ -78,7 +78,7 @@
                 } else {
                   var productNames = new Array();
                   if(query.length>0) {
-                    axios.get('/api/global/cloud/input/batchDelivery/getNameByNameLike?name='+query).then((response)=>{
+                    axios.get('/api/global/cloud/input/bdStock/getNameByNameLike?name='+query).then((response)=>{
                       if(response.data.length>0) {
                         for(let index in response.data) {
                           var productName = response.data[index];
@@ -97,7 +97,7 @@
               }
             },
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
-            {type: "autocomplete", allowEmpty: false, strict: true,tempBillTypes:[], source: this.tempBillTypes},
+            {type: "autocomplete", allowEmpty: false, strict: true,types:[], source: this.types},
             {type: "text", allowEmpty: true, strict: true }
           ],
           afterChange: function (changes, source) {
