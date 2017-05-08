@@ -97,7 +97,6 @@
               }
             },
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
-            {type: "numeric", allowEmpty: false},
             {type: "autocomplete", allowEmpty: false, strict: true,tempBillTypes:[], source: this.tempBillTypes},
             {type: "text", allowEmpty: true, strict: true }
           ],
