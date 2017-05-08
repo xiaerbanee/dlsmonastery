@@ -12,6 +12,7 @@ const expressCompanyList= r  => require.ensure([], () => r(require('pages/future
 const expressCompanyForm  = r => require.ensure([], () => r(require('pages/future/basic/expressCompanyForm.vue')));
 const pricesystemList  = r => require.ensure([], () => r(require('pages/future/basic/pricesystemList.vue')));
 const pricesystemForm = r => require.ensure([], () => r(require('pages/future/basic/pricesystemForm.vue')));
+const pricesystemView = r => require.ensure([], () => r(require('pages/future/basic/pricesystemView.vue')));
 const productList = r  => require.ensure([], () => r(require('pages/future/basic/productList.vue')));
 const productForm = r  => require.ensure([], () => r(require('pages/future/basic/productForm.vue')));
 const productTypeList  = r => require.ensure([], () => r(require('pages/future/basic/productTypeList.vue')));
@@ -34,6 +35,7 @@ let routes = [
   {path:'/future/basic/expressCompanyForm',component:expressCompanyForm,name:'expressCompanyForm',meta: {menu:"expressCompanyList"}},
   {path:'/future/basic/pricesystemList',component:pricesystemList,name:'pricesystemList'},
   {path:'/future/basic/pricesystemForm',component:pricesystemForm,name:'pricesystemForm',meta: {menu:"pricesystemList"}},
+  {path:'/future/basic/pricesystemView',component:pricesystemView,name:'pricesystemView',meta: {menu:"pricesystemList"}},
   {path:'/future/basic/productList',component:productList,name:'productList'},
   {path:'/future/basic/productForm',component:productForm,name:'productForm',meta: {menu:"productList"}},
   {path:'/future/basic/productTypeList',component:productTypeList,name:'productTypeList'},

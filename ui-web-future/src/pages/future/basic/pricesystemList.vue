@@ -94,7 +94,7 @@
       },itemAdd(){
         this.$router.push({ name: 'pricesystemForm'})
       },toSee(){
-        this.$router.push({name:'价格体系一览'})
+        this.$router.push({name:'pricesystemView'})
       },itemAction:function(id,action){
           if(action=="edit") {
             this.$router.push({ name: 'pricesystemForm', query: { id: id }})
