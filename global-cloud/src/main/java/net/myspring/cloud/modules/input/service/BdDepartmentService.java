@@ -2,7 +2,9 @@ package net.myspring.cloud.modules.input.service;
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.modules.input.domain.BdDepartment;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdDepartmentMapper;
+import org.codehaus.jackson.sym.NameN;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +26,9 @@ public class BdDepartmentService {
 
     public List<BdDepartment> findAll(){
         return bdDepartmentMapper.findAll();
+    }
+
+    public List<NameNumberDto> findNameNumber(){
+        return bdDepartmentMapper.findNameAndNumber();
     }
 }

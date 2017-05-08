@@ -3,7 +3,7 @@
 </style>
 <template>
   <div>
-    <head-tab active="batchMaterialForm"></head-tab>
+    <head-tab active="batchMaterialQuery"></head-tab>
     <div>
       <el-row class="button">
         <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>

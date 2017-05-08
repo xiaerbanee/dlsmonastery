@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.input.web.controller;
 
-import net.myspring.cloud.modules.input.service.BatchBillService;
-import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
+import net.myspring.cloud.modules.input.service.BatchDeliveryService;
+import net.myspring.cloud.modules.input.web.query.BatchDeliveryQuery;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,27 +13,26 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * Created by lihx on 2017/4/25.
+ * Created by lihx on 2017/5/8.
  */
 @RestController
-@RequestMapping(value = "input/batchBill")
-public class BatchBillController {
+@RequestMapping(value = "input/batchDelivery")
+public class BatchDeliveryController {
     @Autowired
-    private BatchBillService batchBillService;
+    private BatchDeliveryService batchDeliveryService;
 
     @RequestMapping(value = "form")
-    public BatchBillQuery form (BatchBillQuery batchBillQuery) {
-        batchBillQuery = batchBillService.getFormProperty(batchBillQuery);
-        return batchBillQuery;
+    public BatchDeliveryQuery form (BatchDeliveryQuery batchDeliveryQuery) {
+        batchDeliveryQuery = batchDeliveryService.getFormProperty(batchDeliveryQuery);
+        return batchDeliveryQuery;
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(String data, String storeCode, String billDateBTW) {
         data = HtmlUtils.htmlUnescape(data);
         List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
-        List<String> codeList = batchBillService.save(datas, storeCode, LocalDate.parse(billDateBTW));
-        return new RestResponse("批量开单成功：" + codeList,null,true);
+        List<String> codeList = batchDeliveryService.save(datas, storeCode, LocalDate.parse(billDateBTW));
+        return new RestResponse("其他出库单保存成功：" + codeList,null,true);
     }
 }
