@@ -50,7 +50,7 @@ public class K3cloudManager {
         }
     }
 
-    private  String invoke(KingdeeBook kingdeeBook,String action, String formId, String content) {
+    public  String invoke(KingdeeBook kingdeeBook,String action, String formId, String content) {
         List<Object> list = Lists.newArrayList();
         list.add(formId);
         list.add(content);
