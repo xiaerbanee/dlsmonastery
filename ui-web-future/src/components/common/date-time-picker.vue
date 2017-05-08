@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-date-picker  v-model="innerDate"  align="left"  @change="onChange" format="yyyy-MM-dd"></el-date-picker>
+    <el-date-picker  v-model="innerDateTime"  type="datetime"  align="right"  @change="onChange" ></el-date-picker>
   </div>
 </template>
 <script>
@@ -8,25 +8,25 @@
     props: ['value'],
     data() {
       return {
-        innerDate:null
+        innerDateTime:null
       }
     },
     methods:{
       onChange( newVal) {
         if(!newVal) {
-            newVal = "";
+          newVal = "";
         }
         this.$emit('input', newVal);
         return true;
       },setValue(val) {
-        var date = null;
+          var datetime=null;
         if(util.isNotBlank(val)) {
-          date = new Date(this.value.replace(/-/,"/"));
+          datetime=new Date(Date.parse(val.replace(/-/g, "/")))
         }
-        this.innerDate =date;
+        this.innerDateTime =datetime;
       }
     },created () {
-       this.setValue(this.value);
+      this.setValue(this.value);
     },watch: {
       value :function (val) {
         this.setValue(val);

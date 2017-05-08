@@ -91,8 +91,8 @@
           </div>
           <table class="table">
             <tbody >
-                <el-date-picker v-model="synDate" align="right" :placeholder="$t('home.selectSynFactoryDate')" type="date"></el-date-picker>
-                <el-button type="primary"  @click="synFactory">{{$t('home.synFactory')}}</el-button>
+                <date-picker v-model="synDate"></date-picker>
+=                <el-button type="primary"  @click="synFactory">{{$t('home.synFactory')}}</el-button>
             </tbody>
           </table>
         </el-card>
