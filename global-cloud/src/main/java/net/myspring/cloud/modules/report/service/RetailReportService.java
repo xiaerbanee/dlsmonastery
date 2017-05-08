@@ -12,8 +12,7 @@ import net.myspring.cloud.modules.report.domain.Retail;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.report.mapper.GlcxViewMapper;
 import net.myspring.cloud.modules.report.mapper.RetailReportMapper;
-import net.myspring.cloud.modules.sys.domain.DynamicSubject;
-import net.myspring.cloud.modules.sys.service.DynamicSubjectForRetailReportService;
+import net.myspring.cloud.modules.report.dto.AccountSubjectDto;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,13 +32,27 @@ public class RetailReportService {
     private RetailReportMapper retailReportMapper;
     @Autowired
     private RetailReportForAssistService retailReportForAssistService;
-    @Autowired
-    private DynamicSubjectForRetailReportService dynamicSubjectForRetailReportService;
+
+    private List<AccountSubjectDto> managerFilter(List<AccountSubjectDto> newSubjectList){
+        List<AccountSubjectDto> subjectList = Lists.newArrayList();
+        for(AccountSubjectDto subject : newSubjectList){
+            if(!subject.getFyNum().equals(RetailReportEnum.price_adjustment.getFyNum()) &&
+                    !subject.getFyNum().equals(RetailReportEnum.sales_allowance.getFyNum()) &&
+                    !subject.getFyNum().equals(RetailReportEnum.advertising_fee.getFyNum()) &&
+                    !subject.getFyNum().equals("6602.026") &&
+                    !subject.getFyNum().equals("004") &&
+                    !subject.getFyNum().equals("000") &&
+                    !subject.getFyNum().equals("002")){
+                subjectList.add(subject);
+            }
+        }
+        return subjectList;
+    }
 
     //显示的科目
     private Map<String,NameNumberDto> showEnum(){
-        List<DynamicSubject> newSubjectList = glcxViewMapper.findByAccName("管理费用");
-        List<DynamicSubject> dynamicSubjectList = dynamicSubjectForRetailReportService.findCloudDynamicSubjectList(newSubjectList);
+        List<AccountSubjectDto> newSubjectList = glcxViewMapper.findByAccName("管理费用");
+        List<AccountSubjectDto> accountSubjectDtoList = managerFilter(newSubjectList);
         Map<String,NameNumberDto> showItemMap = Maps.newLinkedHashMap();
         RetailReportEnum[] enumList = RetailReportEnum.values();
         for(int i=0; i< enumList.length; i++){
@@ -66,7 +79,7 @@ public class RetailReportService {
                 tree.setNumber(enumList[i].getFyNum());
                 showItemMap.put(enumList[i].getFyName(),tree);
             }else if(enumList[i].equals(RetailReportEnum.daily_operating_expenses_total)){
-                for(DynamicSubject fee: dynamicSubjectList){
+                for(AccountSubjectDto fee: accountSubjectDtoList){
                     NameNumberDto tree = new NameNumberDto();
                     tree.setName(fee.getAccName());
                     tree.setNumber(fee.getFyNum());

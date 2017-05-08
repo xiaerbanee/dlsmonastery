@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.report.mapper;
 
 import net.myspring.cloud.modules.report.domain.Retail;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
-import net.myspring.cloud.modules.sys.domain.DynamicSubject;
+import net.myspring.cloud.modules.report.dto.AccountSubjectDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,5 +25,5 @@ public interface GlcxViewMapper {
     List<Retail> findEntityBySumPeriodForTotalDepartment(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd, @Param("accName") String accName, @Param("fyNum") String fyNum);
 
     //管理科目
-    List<DynamicSubject> findByAccName(@Param("accName") String accName);
+    List<AccountSubjectDto> findByAccName(@Param("accName") String accName);
 }
