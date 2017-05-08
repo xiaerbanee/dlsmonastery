@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-date-picker  v-model="innerDateRange"  type="daterange" align="right"  @change="onChange" :picker-options="pickerDateOption"></el-date-picker>
+    <el-date-picker  v-model="innerDateRange"  type="daterange"  :placeholder="$t('su_date_ranger_picker.selectDateRange')"  align="right"  @change="onChange" :picker-options="pickerDateOption"></el-date-picker>
   </div>
 </template>
 <script>
@@ -19,14 +19,20 @@
         }
         this.$emit('input', newVal);
         return true;
-      }
-    },created () {
+      },setValue(val) {
         var range = [];
-        if(util.isNotBlank(this.value)) {
-          range[0] = new Date(this.value.split(" - ")[0].replace(/-/,"/"));
-          range[1] = new Date(this.value.split(" - ")[1].replace(/-/,"/"));
+        if(util.isNotBlank(val)) {
+          range[0] = new Date(val.split(" - ")[0].replace(/-/,"/"));
+          range[1] = new Date(val.split(" - ")[1].replace(/-/,"/"));
         }
         this.innerDateRange =range;
+      }
+    },created () {
+      this.setValue(this.value);
+    },watch: {
+        value :function (val) {
+          this.setValue(val);
+        }
     }
   };
 </script>
