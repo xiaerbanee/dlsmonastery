@@ -22,7 +22,7 @@
         and t1.type=#{type}
     </select>
 
-    <select id="findMaxLevel" resultType="OfficeRule">
+    <select id="findTopOfficeRule" resultType="OfficeRule">
         SELECT t1.*
         FROM sys_office_rule t1
         where t1.enabled=1

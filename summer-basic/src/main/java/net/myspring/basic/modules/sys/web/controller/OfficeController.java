@@ -79,24 +79,11 @@ public class OfficeController {
 
     @RequestMapping(value = "save")
     public RestResponse save(OfficeForm officeForm) {
-        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
-        Office parent = officeService.findOne(officeForm.getParentId());
-        if (OfficeTypeEnum.BUSINESS.name().equals(officeForm.getType())) {
-            OfficeRule topOfficeRule = officeRuleService.findMaxLevel();
-            OfficeRule officeRule = officeRuleService.findOne(officeForm.getOfficeRuleId());
-            if (parent != null && topOfficeRule.getId().equals(officeForm.getOfficeRuleId())) {
-                return new RestResponse("顶级业务部门不能设置上级", null);
-            } else if (parent != null) {
-                if (!officeRule.getParentId().equals(parent.getOfficeRuleId())) {
-                    return new RestResponse("业务部门上级类型不正确", null);
-                }
-            } else {
-                return new RestResponse("非顶级业务部门必须设置上级", null);
-            }
-        } else {
-            officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
+        RestResponse restResponse=officeService.check(officeForm);
+        if(!restResponse.getSuccess()){
+            return restResponse;
         }
-        officeForm.setParentIds((parent==null?"0":parent.getParentIds()+parent.getId())+CharConstant.COMMA);
+        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
         officeService.save(officeForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }

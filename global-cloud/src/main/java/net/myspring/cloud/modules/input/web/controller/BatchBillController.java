@@ -33,11 +33,9 @@ public class BatchBillController {
 
     @RequestMapping(value = "save")
     public RestResponse save(String data, String storeCode, String billDateBTW) {
-        RestResponse restResponse = new RestResponse();
         data = HtmlUtils.htmlUnescape(data);
         List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
         List<String> codeList = batchBillService.save(datas, storeCode, LocalDate.parse(billDateBTW));
-        restResponse.setMessage("批量开单成功：" + codeList);
-        return restResponse;
+        return  new RestResponse("批量开单成功：" + codeList,null);
     }
 }

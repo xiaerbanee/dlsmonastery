@@ -51,11 +51,6 @@ public class OfficeRuleService {
         return officeRuleForm;
     }
 
-    public OfficeRule findMaxLevel(){
-        OfficeRule officeRule=officeRuleMapper.findMaxLevel();
-        return officeRule;
-    }
-
     public OfficeRule findOne(String id){
         OfficeRule officeRule=officeRuleMapper.findOne(id);
         return officeRule;
