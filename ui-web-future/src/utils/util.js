@@ -113,7 +113,6 @@ util.isPermit = function (permissionName) {
 
 util.setQuery = function (routerName, query) {
   if (routerName != "home") {
-    var tabs = store.state.global.tabs;
     var params = {routerName: routerName, query: query};
     store.dispatch("setQuery", params);
   }

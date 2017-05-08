@@ -14,6 +14,7 @@ import VueProgressBar from 'vue-progressbar'
 import pageable from './components/common/pageable';
 import headTab from './components/common/head-tab';
 import searchTag from './components/common/search-tag';
+import dateRangePicker from './components/common/date-range-picker.vue';
 import suDistrict from './components/su-district';
 import suTable from './components/su-table';
 import suDateRangePicker from './components/su-date-range-picker';
@@ -44,6 +45,7 @@ Vue.component('pageable', pageable);
 Vue.component('full-calendar', fullCalendar);
 Vue.component('head-tab', headTab);
 Vue.component('search-tag', searchTag);
+Vue.component('date-range-picker', dateRangePicker);
 Vue.component('su-district', suDistrict);
 Vue.component('su-table', suTable);
 Vue.component('su-date-range-picker', suDateRangePicker);
@@ -92,6 +94,7 @@ router.beforeEach((to, from, next) => {
     next();
   } else {
     if(checkLogin()) {
+      //增加tab
       util.setQuery(to.name, to.query);
       next();
     } else {

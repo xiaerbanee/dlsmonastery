@@ -1,0 +1,37 @@
+<template>
+  <div>
+    <el-date-picker  v-model="innerDate"  align="right"  @change="onChange" :picker-options="pickerDateOption"></el-date-picker>
+  </div>
+</template>
+<script>
+  export default {
+    props: ['value'],
+    data() {
+      return {
+        pickerDateOption : util.pickerDateOption,
+        innerDate:null
+      }
+    },
+    methods:{
+      onChange( newVal) {
+        if(!newVal) {
+            newVal = "";
+        }
+        this.$emit('input', newVal);
+        return true;
+      },setValue(val) {
+        var date = null;
+        if(util.isNotBlank(val)) {
+          date = new Date(this.value.replace(/-/,"/"));
+        }
+        this.innerDate =date;
+      }
+    },created () {
+       this.setValue(this.value);
+    },watch: {
+      value :function (val) {
+        this.setValue(val);
+      }
+    }
+  };
+</script>

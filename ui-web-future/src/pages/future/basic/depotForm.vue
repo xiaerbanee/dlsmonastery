@@ -328,8 +328,9 @@
       },remoteAccount(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/hr/account/search',{params:{key:query}}).then((response)=>{
+          axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
             this.accounts=response.data;
+            console.log(this.accounts);
             this.remoteLoading = false;
           })
         } else {
@@ -407,8 +408,9 @@
         }
       }
     },created(){
-      axios.get('/api/ws/future/basic/depot/getFormProperty').then((response)=>{
+      axios.get('/api/ws/future/basic/depot/findForm').then((response)=>{
         this.formProperty=response.data;
+        console.log(response.data)
       });
       if(!this.isCreate){
         axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.$route.query.id}}).then((response)=>{

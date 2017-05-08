@@ -77,7 +77,9 @@
           employeeName:'',
           address:'',
           officeName:'',
-          positionName:''
+          positionName:'',
+          dutyDate:'',
+          dutyDateBTW:'',
         },
         formLabel:{
           dutyDateBTW:{label:this.$t('dutySignList.dutyDate')},

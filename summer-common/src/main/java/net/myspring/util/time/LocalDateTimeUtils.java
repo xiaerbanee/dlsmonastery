@@ -65,10 +65,4 @@ public class LocalDateTimeUtils {
         return localDateTime.withDayOfMonth(localDateTime.toLocalDate().lengthOfMonth());
     }
 
-    public static LocalDateTime dateToLocalDateTime(Date date) {
-        Instant instant = date.toInstant();
-        ZoneId zone = ZoneId.systemDefault();
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zone);
-        return localDateTime;
-    }
 }
