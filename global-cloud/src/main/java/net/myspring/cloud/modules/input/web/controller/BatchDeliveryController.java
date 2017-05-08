@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.modules.input.service.BatchDeliveryService;
+import net.myspring.cloud.modules.input.web.form.BatchDeliveryForm;
 import net.myspring.cloud.modules.input.web.query.BatchDeliveryQuery;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -29,10 +30,12 @@ public class BatchDeliveryController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(String data, String storeCode, String billDateBTW) {
-        data = HtmlUtils.htmlUnescape(data);
+    public RestResponse save(BatchDeliveryForm batchDeliveryForm) {
+        String data = HtmlUtils.htmlUnescape(batchDeliveryForm.getData());
         List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
-        List<String> codeList = batchDeliveryService.save(datas, storeCode, LocalDate.parse(billDateBTW));
+        String departmentNumber = batchDeliveryForm.getDepartmentNumber();
+        String billDate = batchDeliveryForm.getBillDate();
+        List<String> codeList = batchDeliveryService.save(datas, departmentNumber, LocalDate.parse(billDate));
         return new RestResponse("其他出库单保存成功：" + codeList,null,true);
     }
 }

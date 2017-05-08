@@ -10,6 +10,7 @@ import net.myspring.cloud.modules.report.service.ConsignmentReportService;
 import net.myspring.cloud.modules.report.web.form.ConsignmentReportForm;
 import net.myspring.cloud.modules.report.web.query.ConsignmentReportQuery;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +38,7 @@ public class ConsignmentReportController {
             LocalDate dateEnd = consignmentReportQuery.getEndDate();
             List<ConsignmentDto> consignmentReport = consignmentReportService.findConsignmentReport(dateStart, dateEnd);
             form.setConsignmentDtoList(consignmentReport);
-            form.setDateRange(dateStart + " - " + dateEnd);
+            form.setDateRange(dateStart + CharConstant.DATE_RANGE_SPLITTER + dateEnd);
         }else {
             form.setDateRange("仅限于温州的账套使用");
         }

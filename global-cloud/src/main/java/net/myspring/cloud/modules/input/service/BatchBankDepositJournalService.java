@@ -15,6 +15,7 @@ import net.myspring.cloud.modules.input.dto.K3CloudSave;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
+import net.myspring.cloud.modules.input.web.query.BatchBankDepositJournalQuery;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -30,12 +31,12 @@ import java.util.Map;
 
 
 /**
- * 存款日记
+ * 银行存款日记
  * Created by lihx on 2016/10/10.
  */
 @Service
 @KingdeeDataSource
-public class BatchDepositJournalService {
+public class BatchBankDepositJournalService {
     @Autowired
     private BdCustomerMapper bdCustomerMapper;
     @Autowired
@@ -49,105 +50,11 @@ public class BatchDepositJournalService {
     @Autowired
     private CnBankMapper cnBankMapper;
     @Autowired
+    private BdAccountMapper bdAccountMapper;
+    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private KingdeeBookMapper kingdeeBookMapper;
-
-    //手工日记账(现金日记账)
-    public String saveCashJournal(LocalDate billDate, List<List<Object>> datas) {
-        Map<String, String> departMap = Maps.newHashMap();
-        Map<String, String> secUserMap = Maps.newHashMap();
-        Map<String, String> otherTypeMap = Maps.newHashMap();
-        Map<String, String> expenseMap = Maps.newHashMap();
-        Map<String, String> customerMap = Maps.newHashMap();
-        for (NameNumberDto bdCustomer : bdCustomerMapper.findNameAndNumber()) {
-            customerMap.put(bdCustomer.getName(), bdCustomer.getNumber());
-        }
-        for (NameNumberDto bdSettleType : bdDepartmentMapper.findNameAndNumber()) {
-            departMap.put(bdSettleType.getName(), bdSettleType.getNumber());
-        }
-        for (BasAssistant bdSettleType : basAssistantMapper.findByType("其他类")) {
-            otherTypeMap.put(bdSettleType.getfDataValue(), bdSettleType.getfNumber());
-        }
-        for (BasAssistant bdSettleType : basAssistantMapper.findByType("费用类")) {
-            expenseMap.put(bdSettleType.getfDataValue(), bdSettleType.getfNumber());
-        }
-        for (HrEmpInfo secUser : hrEmpInfoMapper.findAllUser()) {
-            secUserMap.put(secUser.getfName(), secUser.getfNumber());
-        }
-        AccountDto accountDto = new AccountDto();
-        cacheUtils.initCacheInput(accountDto);
-        Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountDto.getName());
-        root.put("NeedUpDateFields", Lists.newArrayList());
-        Map<String, Object> model = Maps.newLinkedHashMap();
-        model.put("FID", 0);
-        model.put("FDATE", billDate.format(DateTimeFormatter.ofPattern(DateFormat.DATE.getValue())));
-        model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "SGRJZ02_SYS"));
-        model.put("FPAYORGID", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FAcctBookId", K3cloudUtils.getMap("FNumber", "001"));
-        model.put("FSTARTPERIOD", billDate.format(DateTimeFormatter.ofPattern(DateFormat.MONTH_SINGLE.getValue())));
-        model.put("FACCOUNTID", K3cloudUtils.getMap("FNumber", "1001"));
-        model.put("FCURRENCYID", K3cloudUtils.getMap("FNumber", "PRE001"));
-        model.put("FMAINBOOKID", K3cloudUtils.getMap("FNumber", "PRE001"));
-        model.put("FEXCHANGETYPE", K3cloudUtils.getMap("FNumber", "HLTX01_SYS"));
-        model.put("FEXCHANGERATE", 1);
-
-        BigDecimal debitAmounts = BigDecimal.ZERO;
-        BigDecimal creditAmounts = BigDecimal.ZERO;
-        List<Object> entity = Lists.newArrayList();
-        for (List<Object> row : datas) {
-            String subject = HandSonTableUtils.getValue(row, 0);
-            String debitAmountStr =  HandSonTableUtils.getValue(row, 1);
-            BigDecimal debitAmount = StringUtils.isEmpty(debitAmountStr) ? BigDecimal.ZERO : new BigDecimal(debitAmountStr);
-            String creditAmountStr =  HandSonTableUtils.getValue(row, 2);
-            BigDecimal creditAmount = StringUtils.isEmpty(creditAmountStr) ? BigDecimal.ZERO : new BigDecimal(creditAmountStr);
-            String remarks =  HandSonTableUtils.getValue(row, 3);
-            String user = "";
-            String department = "";
-            String otherType = "";
-            String expenseType = "";
-            String F_PAEC_Base2 = "";
-            user =  HandSonTableUtils.getValue(row, 5);
-            department = HandSonTableUtils.getValue(row, 6);
-            otherType =  HandSonTableUtils.getValue(row, 7);
-            expenseType =  HandSonTableUtils.getValue(row, 8);
-            if (row.size() > 9) {
-                F_PAEC_Base2 =  HandSonTableUtils.getValue(row, 9);
-            }
-            debitAmounts = debitAmounts.add(debitAmount);
-            creditAmounts = creditAmounts.add(creditAmount);
-
-            Map<String, Object> detail = Maps.newLinkedHashMap();
-            detail.put("F_PAEC_Base", K3cloudUtils.getMap("FNumber", departMap.get(department)));
-            detail.put("F_PAEC_Base1", K3cloudUtils.getMap("FStaffNumber", secUserMap.get(user)));
-            detail.put("F_PAEC_Assistant", K3cloudUtils.getMap("FNumber", otherTypeMap.get(otherType)));
-            detail.put("F_PAEC_Assistant1", K3cloudUtils.getMap("FNumber", expenseMap.get(expenseType)));
-            if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(SecurityUtils.getCompanyId())) && StringUtils.isNotBlank(F_PAEC_Base2)) {
-                detail.put("F_PAEC_Base2", K3cloudUtils.getMap("FNumber", customerMap.get(F_PAEC_Base2)));
-            }
-            detail.put("FSETTLETYPEID", K3cloudUtils.getMap("FNumber", "JSFS01_SYS"));
-            detail.put("FCREDITAMOUNT", creditAmount);
-
-            // 借方金额
-            detail.put("FDEBITAMOUNT", debitAmount);
-            detail.put("FVOUCHERGROUPID", K3cloudUtils.getMap("FNumber", "PRE001"));
-            detail.put("FOPPOSITEACCOUNTID", K3cloudUtils.getMap("FNumber", subject));
-            detail.put("FCOMMENT", remarks);
-            entity.add(detail);
-        }
-        model.put("FCREDITSUMAMOUNTLOC", creditAmounts);
-        model.put("FCREDITSUMAMOUNT", creditAmounts);
-        // 借方
-        model.put("FDEBITSUMAMOUNT", debitAmounts);
-        model.put("FDEBITSUMAMOUNTLOC", debitAmounts);
-        model.put("CN_JOURNAL__FJOURNALENTRY", entity);
-        root.put("Model", model);
-        String JournalResult = ObjectMapperUtils.writeValueAsString(root);
-        K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.CN_JOURNAL.name(), JournalResult);
-        String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
-        return billNo;
-    }
 
     // 手工日记账(银行存取款日记账)
     public String saveBankJournal(LocalDate billDate, String subject, List<List<Object>> datas) {
@@ -254,6 +161,12 @@ public class BatchDepositJournalService {
         K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.CN_JOURNAL.name(), BankJournalResult);
         String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
         return billNo;
+    }
+
+    public BatchBankDepositJournalQuery getFormProperty(BatchBankDepositJournalQuery batchBankDepositJournalQuery){
+        List<NameNumberDto> accountSubjectList = bdAccountMapper.findForIsBank();
+        batchBankDepositJournalQuery.setAccountSubject(accountSubjectList);
+        return batchBankDepositJournalQuery;
     }
 
 }

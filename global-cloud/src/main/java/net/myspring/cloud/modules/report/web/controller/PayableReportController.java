@@ -9,6 +9,7 @@ import net.myspring.cloud.modules.report.service.PayableReportService;
 import net.myspring.cloud.modules.report.web.form.PayableReportForm;
 import net.myspring.cloud.modules.report.web.query.PayableReportQuery;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,7 @@ public class PayableReportController {
         List<PayableForSummaryDto> payableSummaryList = payableReportService.getSummaryList(dateStart, dateEnd);
         PayableReportForm form = new PayableReportForm();
         form.setPayableSummaryList(payableSummaryList);
-        form.setDateRange(dateStart + " - " + dateEnd);
+        form.setDateRange(dateStart + CharConstant.DATE_RANGE_SPLITTER + dateEnd);
         return form;
     }
 

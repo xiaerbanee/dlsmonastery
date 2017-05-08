@@ -6,11 +6,12 @@ import net.myspring.cloud.common.handsontable.NestedHeaderCell;
 import net.myspring.cloud.modules.report.domain.Retail;
 import net.myspring.cloud.modules.report.service.RetailReportForAssistService;
 import net.myspring.cloud.modules.report.service.RetailReportService;
+import net.myspring.cloud.modules.report.web.form.RetailReportForm;
+import net.myspring.cloud.modules.report.web.query.RetailReportQuery;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.YearMonth;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/2/10.
  */
-@Controller
+@RestController
 @RequestMapping(value = "report/retailReport17")
 public class RetailReportController {
     @Autowired
@@ -30,27 +31,17 @@ public class RetailReportController {
 
 
     @RequestMapping(value = "report")
-    public String report(Model model, String monthStart, String monthEnd, String companyName) {
-        List<List<Object>> retailShopReport = Lists.newArrayList();
-        List<List<NestedHeaderCell>> nestedHeader = Lists.newArrayList();
-        YearMonth start = YearMonth.now().minusMonths(3L);
-        YearMonth end = YearMonth.now().minusMonths(1L);
-        if (StringUtils.isNotBlank(monthStart)) {
-            start = YearMonth.parse(monthStart);
-        }
-        if (StringUtils.isNotBlank(monthEnd)) {
-            end = YearMonth.parse(monthEnd);
-        }
-        if (StringUtils.isNotBlank(companyName)) {
-            nestedHeader = retailReportForAssistService.getNestedHeads(start, end);
-            retailShopReport = retailReportService.getRetailReport(start, end);
-        }
-        model.addAttribute("monthStart", start.format(DateTimeFormatter.ofPattern(DateFormat.MONTH.getValue())));
-        model.addAttribute("monthEnd", end.format(DateTimeFormatter.ofPattern(DateFormat.MONTH.getValue())));
-        model.addAttribute("companyName", companyName);
-        model.addAttribute("retailShopReport", retailShopReport);
-        model.addAttribute("nestedHeader", nestedHeader);
-        return "cloud/retailReport17";
+    public RetailReportForm report(RetailReportQuery retailReportQuery) {
+        YearMonth start = retailReportQuery.getStartDate();
+        YearMonth end = retailReportQuery.getEndDate();
+        List<List<NestedHeaderCell>> nestedHeader = retailReportForAssistService.getNestedHeads(start, end);
+        List<List<Object>> retailShopReport = retailReportService.getRetailReport(start, end);
+        RetailReportForm retailReportForm = new RetailReportForm();
+        retailReportForm.setStartMonth(start.format(DateTimeFormatter.ofPattern(DateFormat.MONTH.getValue())));
+        retailReportForm.setEndMonth(end.format(DateTimeFormatter.ofPattern(DateFormat.MONTH.getValue())));
+        retailReportForm.setRetailReport(retailShopReport);
+        retailReportForm.setNestedHeader(nestedHeader);;
+        return retailReportForm;
     }
 
     @RequestMapping(value = "export")

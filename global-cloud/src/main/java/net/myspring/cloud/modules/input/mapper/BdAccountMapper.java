@@ -18,4 +18,6 @@ public interface BdAccountMapper {
     List<BdAccount> findAllSubject();
 
     List<NameNumberDto> findNameAndNumber();
+
+    List<NameNumberDto> findForIsBank();
 }

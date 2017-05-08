@@ -4,18 +4,9 @@ package net.myspring.cloud.modules.input.web.form;
 /**
  * Created by lihx on 2017/4/25.
  */
-public class BatchBillForm {
-    private String storeNumber;
+public class BatchCashDepositJournalForm {
     private String billDate;
     private String data;
-
-    public String getStoreNumber() {
-        return storeNumber;
-    }
-
-    public void setStoreNumber(String storeNumber) {
-        this.storeNumber = storeNumber;
-    }
 
     public String getBillDate() {
         return billDate;
