@@ -58,10 +58,7 @@
     data() {
       return {
         page:{},
-        formData:{
-          createdDate:'',
-          createdDateBTW:'',
-        },
+        formData:{},
         submitData:{
           page:0,
           size:25,
