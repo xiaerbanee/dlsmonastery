@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.mapper;
 
+import net.myspring.basic.modules.sys.domain.RoleModule;
 import net.myspring.basic.modules.sys.domain.RolePermission;
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.common.mybatis.MyProvider;
@@ -45,7 +46,17 @@ public interface RolePermissionMapper extends BaseMapper<RolePermission,String> 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL_ENABLED)
     List<RolePermission> findAllEnabled();
 
-    int deleteByRoleId(String roleId);
+    List<RolePermission> findByRoleId(String roleId);
 
-    int deleteByPermissionId(String permissionId);
+    List<RolePermission> findAllByRoleId(String roleId);
+
+    int setEnabledByRoleId(@Param("enabled")boolean enabled,@Param("roleId") String roleId);
+
+    int setEnabledByPermissionIdList(@Param("enabled")boolean enabled,@Param("list") List<String> permissionIdList);
+
+    List<RolePermission> findAllByPermissionId(String permissionId);
+
+    int setEnabledByPermissionId(@Param("enabled")boolean enabled,@Param("permissionId") String permissionId);
+
+    int setEnabledByRoleIdList(@Param("enabled")boolean enabled,@Param("list") List<String> roleIdList);
 }

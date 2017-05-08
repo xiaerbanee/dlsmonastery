@@ -52,7 +52,7 @@ public class RoleController {
 
     @RequestMapping(value = "save")
     public RestResponse save(RoleForm roleForm) {
-        roleForm.setPermissionIdList(StringUtils.getSplitList(roleForm.getPermissionIdStr(), CharConstant.COMMA));
+        roleForm.setModuleIdList(StringUtils.getSplitList(roleForm.getModuleIdStr(), CharConstant.COMMA));
         roleService.save(roleForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
@@ -68,7 +68,7 @@ public class RoleController {
     public RoleForm findForm(RoleForm roleForm){
         roleForm= roleService.findForm(roleForm);
         List<String> backendModuleIdList = roleForm.isCreate()? Lists.newArrayList() : backendModuleService.findBackendModuleIdByRoleId(roleForm.getId());
-        roleForm.setPermissionTree(permissionService.findBackendTree(backendModuleIdList));
+        roleForm.setTreeNode(permissionService.findBackendTree(backendModuleIdList));
         return roleForm;
     }
 

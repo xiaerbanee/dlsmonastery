@@ -128,7 +128,7 @@ public class OfficeService {
             officeMapper.update(office);
         }
         List<OfficeBusiness> businessOfficeList = officeBusinessMapper.findAllBusinessIdById(office.getId());
-        if (OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())&&CollectionUtil.isNotEmpty(officeForm.getLeaderIdList())) {
+        if (OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())&&CollectionUtil.isNotEmpty(officeForm.getOfficeIdList())) {
             List<String> businessOfficeIdList = CollectionUtil.extractToList(businessOfficeList, "businessOfficeId");
             List<String> removeIdList = CollectionUtil.subtract(businessOfficeIdList, officeForm.getOfficeIdList());
             List<String> addIdList = CollectionUtil.subtract(officeForm.getOfficeIdList(), businessOfficeIdList);
@@ -163,7 +163,7 @@ public class OfficeService {
             if (CollectionUtil.isNotEmpty(addIdList)) {
                 officeLeaderMapper.batchSave(leaderList);
             }
-        }else {
+        }else if(CollectionUtil.isNotEmpty(officeLeaderList)){
             officeLeaderMapper.setEnabledByOfficeId(false,office.getId());
         }
         return office;
