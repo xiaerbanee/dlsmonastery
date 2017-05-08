@@ -49,7 +49,7 @@ public interface OfficeBusinessMapper extends BaseMapper<OfficeBusiness,String> 
 
     List<OfficeBusiness> findAllBusinessIdById(String id);
 
-    int removeByBusinessOfficeIds(List<String> businessOfficeIds);
+    int setEnabledByBusinessOfficeIds(List<String> businessOfficeIds);
 
     int setEnabledByOfficeId(@Param("enabled")boolean enabled,@Param("officeId")String officeId);
 }

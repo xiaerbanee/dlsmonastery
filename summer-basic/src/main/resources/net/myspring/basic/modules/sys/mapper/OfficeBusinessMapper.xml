@@ -15,7 +15,7 @@
         where  t1.office_id=#{id}
     </select>
 
-    <update id="removeByBusinessOfficeIds">
+    <update id="setEnabledByBusinessOfficeIds">
         UPDATE  sys_office_business set enabled=0 where business_office_id IN
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item}
