@@ -8,8 +8,8 @@
       </el-row>
       <el-dialog :title="$t('dutyLeaveList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
-              <el-form-item :label="formLabel.dutyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.dutyDate" type="daterange" align="right" :placeholder="$t('dutyLeaveList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.leaveType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.leaveType" filterable clearable :placeholder="$t('dutyLeaveList.inputKey')">
@@ -47,22 +47,20 @@
       return {
         page:{},
         formData:{
+          dutyDate:'',
         },
         submitData:{
           page:0,
           size:25,
           dutyDate:'',
-          dutyDateBTW:'',
           leaveType:'',
           dateType:''
         },
         formLabel:{
-          dutyDateBTW:{label:this.$t('dutyLeaveList.dutyDate')},
+          dutyDate:{label:this.$t('dutyLeaveList.dutyDate')},
           leaveType:{label:this.$t('dutyLeaveList.leaveType')},
           dateType:{label:this.$t('dutyLeaveList.dateType')}
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -71,11 +69,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("dutyLeaveList");
-        util.setQuery("dutyLeaveList",this.formData);
         util.copyValue(this.formData,this.submitData);
-         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutyLeave',{params:this.submitData}).then((response) => {
+        util.setQuery("dutyLeaveList",this.submitData);
+        axios.get('/api/basic/hr/dutyLeave?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -93,12 +89,12 @@
       },getQuery(){
         axios.get('/api/basic/hr/dutyLeave/getQuery').then((response) =>{
           this.formData=response.data;
+          util.copyValue(this.$route.query,this.formData);
           this.pageRequest();
         });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
       this.getQuery();
     }
   };

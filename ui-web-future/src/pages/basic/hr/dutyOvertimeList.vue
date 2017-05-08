@@ -6,12 +6,12 @@
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutyOvertimeList.filter')}}</el-button>
         <search-tag  :formData="formData" :formLabel = "formLabel"></search-tag>
       </el-row>
-      <el-dialog :title="$t('dutyOvertimeList.filter')" v-model="formVisible" class="search-form">
+      <el-dialog :title="$t('dutyOvertimeList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
-          <el-row :gutter="7">
+          <el-row >
             <el-col :span="12">
-              <el-form-item :label="formLabel.dutyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.dutyDate" type="daterange" align="right" :placeholder="$t('dutyOvertimeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -43,19 +43,15 @@
         page:{},
         formData:{
           dutyDate:'',
-          dutyDateBTW:''
         },
         submitData:{
           page:0,
           size:25,
           dutyDate:'',
-          dutyDateBTW:''
         },
         formLabel:{
-          dutyDateBTW:{label:this.$t('dutyOvertimeList.dutyDate')},
+          dutyDate:{label:this.$t('dutyOvertimeList.dutyDate')},
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -64,11 +60,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("dutyOvertimeList");
-        util.setQuery("dutyOvertimeList",this.formData);
+        util.setQuery("dutyOvertimeList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutyOvertime',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/hr/dutyOvertime?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

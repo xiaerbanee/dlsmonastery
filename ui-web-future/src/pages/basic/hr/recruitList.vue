@@ -46,6 +46,7 @@
         pageHeight:600,
         page:{},
         formData:{
+        },submitData:{
           page:0,
           size:25,
         },formLabel:{
@@ -60,8 +61,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("recruitList",this.formData);
-        axios.get('/api/basic/hr/recruit',{params:this.formData}).then((response) => {
+        util.setQuery("recruitList",this.submitData);
+        util.copyValue(this.formData,this.submitData)
+        axios.get('/api/basic/hr/recruit?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

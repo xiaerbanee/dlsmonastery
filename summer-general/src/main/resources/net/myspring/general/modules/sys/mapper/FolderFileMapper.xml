@@ -9,8 +9,11 @@
         sys_folder_file t1
         WHERE
         t1.enabled=1
-        <if test="p.createdDate != null">
-            AND t1.created_date LIKE CONCAT('%',#{p.createdDate},'%')
+        <if test="p.createdDateStart != null">
+            AND t1.created_date > #{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd != null">
+            AND t1.created_date &lt; #{p.createdDateEnd}
         </if>
     </select>
 

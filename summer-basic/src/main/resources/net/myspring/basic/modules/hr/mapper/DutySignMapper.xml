@@ -60,10 +60,10 @@
             AND t1.created_by = #{p.createdBy}
         </if>
         <if test="p.dutyDateStart != null">
-            AND t1.duty_date >= #{p.dutyDateStart}
+            AND t1.duty_date > #{p.dutyDateStart}
         </if>
         <if test="p.dutyDateEnd != null">
-            AND t1.duty_date  &lt;= #{p.dutyDateEnd}
+            AND t1.duty_date  &lt; #{p.dutyDateEnd}
         </if>
         <if test="p.address != null">
             AND t1.address  LIKE CONCAT('%',#{p.address},'%')

@@ -28,7 +28,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.positionName.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.positionName" clearable filterable :placeholder="$t('accountList.selectGroup')">
-                  <el-option v-for="position in formProperty.position" :key="position.name" :label="position.name" :value="position.name"></el-option>
+                  <el-option v-for="position in formData.position" :key="position.name" :label="position.name" :value="position.name"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -82,7 +82,6 @@
           positionName:''
         },
         offices:[],
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -92,9 +91,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("accountList",this.formData);
+        util.setQuery("accountList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/account',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/hr/account?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

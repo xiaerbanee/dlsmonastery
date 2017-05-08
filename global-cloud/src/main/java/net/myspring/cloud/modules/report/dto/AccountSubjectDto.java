@@ -1,16 +1,9 @@
-package net.myspring.cloud.modules.sys.domain;
-
-import net.myspring.cloud.common.domain.CompanyEntity;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
+package net.myspring.cloud.modules.report.dto;
 
 /**
  * Created by lihx on 2017/2/9.
  */
-@Entity
-@Table(name="sys_dynamic_subject")
-public class DynamicSubject extends CompanyEntity<DynamicSubject> {
+public class AccountSubjectDto {
     private String accNumber;
     private String accName;
     private String fyNum;

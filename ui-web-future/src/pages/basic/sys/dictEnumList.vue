@@ -58,7 +58,9 @@
     data() {
       return {
         page:{},
-        formData:{},
+        formData:{
+          createdDate:'',
+        },
         submitData:{
           page:0,
           size:25,
@@ -82,7 +84,7 @@
         this.pageLoading = true;
         util.copyValue(this.formData,this.submitData);
         util.setQuery("dictEnumList",this.submitData);
-        axios.get('/api/basic/sys/dictEnum',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/dictEnum?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

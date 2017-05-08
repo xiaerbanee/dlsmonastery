@@ -75,10 +75,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("officeList");
-        util.setQuery("officeList",this.formData);
+        util.setQuery("officeList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/office',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/office?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

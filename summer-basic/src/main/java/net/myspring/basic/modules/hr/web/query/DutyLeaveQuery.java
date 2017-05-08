@@ -2,6 +2,9 @@ package net.myspring.basic.modules.hr.web.query;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,12 +14,27 @@ import java.util.List;
  */
 public class DutyLeaveQuery {
     private String createdBy;
-    private LocalDate dutyDateStart;
-    private LocalDate dutyDateEnd;
+    private String dutyDate;
     private String dateType;
     private String leaveType;
     private List<String> dateList= Lists.newArrayList();
     private List<String> leaveList= Lists.newArrayList();
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setDutyDate(String dutyDate) {
+        this.dutyDate = dutyDate;
+    }
+
+    public String getDutyDate() {
+        return dutyDate;
+    }
 
     public List<String> getDateList() {
         return dateList;
@@ -34,30 +52,6 @@ public class DutyLeaveQuery {
         this.leaveList = leaveList;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDate getDutyDateStart() {
-        return dutyDateStart;
-    }
-
-    public void setDutyDateStart(LocalDate dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
-    }
-
-    public LocalDate getDutyDateEnd() {
-        return dutyDateEnd;
-    }
-
-    public void setDutyDateEnd(LocalDate dutyDateEnd) {
-        this.dutyDateEnd = dutyDateEnd;
-    }
-
     public String getDateType() {
         return dateType;
     }
@@ -72,5 +66,21 @@ public class DutyLeaveQuery {
 
     public void setLeaveType(String leaveType) {
         this.leaveType = leaveType;
+    }
+
+    public LocalDate getDutyDateStart() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getDutyDateEnd() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }

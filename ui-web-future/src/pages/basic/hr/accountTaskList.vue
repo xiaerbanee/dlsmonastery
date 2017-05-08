@@ -45,6 +45,7 @@
       return {
         page: {},
         formData: {
+        },submitData: {
           pageNumber: 0,
           pageSize: 25,
           name: '',
@@ -61,10 +62,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        util.getQuery("accountTaskList");
-        util.setQuery("accountTaskList",this.formData);
-        axios.get('/api/basic/hr/accountTask',{params:this.formData}).then((response) => {
+        util.setQuery("accountTaskList",this.submitData);
+        util.copyValue(this.formData,this.submitData)
+        axios.get('/api/basic/hr/accountTask?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

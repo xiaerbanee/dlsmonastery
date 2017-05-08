@@ -64,17 +64,15 @@
           name:{label:"名称"},
         },
         formLabelWidth: '120px',
-        formVisible: false,
-        loading:false
+        formVisible: false
       };
     },
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("officeRuleList");
-        util.setQuery("officeRuleList",this.formData);
+        util.setQuery("officeRuleList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/officeRule',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/officeRule?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

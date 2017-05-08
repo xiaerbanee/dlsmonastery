@@ -45,7 +45,6 @@
         formLabel:{
           name:{label:this.$t('dutyAnnualList.employeeName')}
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -54,10 +53,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("dutyAnnualList");
-        util.setQuery("dutyAnnualList",this.formData);
+        util.setQuery("dutyAnnualList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/dutyAnnual',{params:this.formData}).then((response) => {
+        axios.get('/api/basic/hr/dutyAnnual?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

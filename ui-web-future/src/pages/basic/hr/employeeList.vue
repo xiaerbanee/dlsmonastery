@@ -37,14 +37,14 @@
                   <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.entryDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.entryDate" type="daterange" align="right" :placeholder="$t('employeeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.entryDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.entryDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.regularDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.regularDate" type="daterange" align="right" :placeholder="$t('employeeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.regularDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.regularDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.leaveDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.leaveDate" type="daterange" align="right" :placeholder="$t('employeeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.leaveDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.leaveDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -80,7 +80,11 @@
     data() {
       return {
         page:{},
-        formData:{},
+        formData:{
+          entryDate:'',
+          regularDate:'',
+          leaveDate:''
+        },
         submitData:{
           page:0,
           size:25,
@@ -91,11 +95,8 @@
           positionId:'',
           status:'',
           entryDate:'',
-          entryDateBTW:'',
           regularDate:'',
-          regularDateBTW:'',
           leaveDate:'',
-          leaveDateBTW:''
         },formLabel:{
           name:{label:this.$t('employeeList.employeeName')},
           leaderName:{label:this.$t('employeeList.leader')},
@@ -103,11 +104,10 @@
           officeId:{label:this.$t('employeeList.officeName'),value:''},
           positionId:{label:this.$t('employeeList.positionName'),value:''},
           status:{label:this.$t('employeeList.status')},
-          entryDateBTW:{label:this.$t('employeeList.entryDate')},
-          regularDateBTW:{label:this.$t('employeeList.regularDate')},
-          leaveDateBTW:{label:this.$t('employeeList.leaveDate')}
+          entryDate:{label:this.$t('employeeList.entryDate')},
+          regularDate:{label:this.$t('employeeList.regularDate')},
+          leaveDate:{label:this.$t('employeeList.leaveDate')}
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -118,15 +118,11 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.entryDateBTW=util.formatDateRange(this.formData.entryDate);
-        this.formData.regularDateBTW=util.formatDateRange(this.formData.regularDate);
-        this.formData.leaveDateBTW=util.formatDateRange(this.formData.leaveDate);
         this.formLabel.officeId.value=util.getLabel(this.offices,this.formData.officeId);
         this.formLabel.positionId.value=util.getLabel(this.formData.positionList,this.formData.positionId);
-        util.getQuery("employeeList");
-        util.setQuery("employeeList",this.formData);
+        util.setQuery("employeeList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/employee',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/hr/employee?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -163,7 +159,6 @@
       }
     },created () {
       var that = this;
-      that.formData = that.submitData;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/basic/hr/employee/getQuery').then((response) =>{
         that.formData=response.data;

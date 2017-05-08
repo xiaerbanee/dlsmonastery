@@ -8,8 +8,8 @@
       </el-row>
       <el-dialog :title="$t('dutyTripList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
-              <el-form-item :label="formLabel.dutyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.dutyDate" type="daterange" align="right" :placeholder="$t('dutyTripList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -37,19 +37,15 @@
         page:{},
         formData:{
           dutyDate:'',
-          dutyDateBTW:'',
         },
         submitData:{
           page:0,
           size:25,
           dutyDate:'',
-          dutyDateBTW:'',
         },
         formLabel:{
-          dutyDateBTW:{label:this.$t('dutyTripList.date')},
+          dutyDate:{label:this.$t('dutyTripList.date')},
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -58,11 +54,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("dutyTripList");
-        util.setQuery("dutyTripList",this.formData);
+        util.setQuery("dutyTripList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutyTrip',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/hr/dutyTrip?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

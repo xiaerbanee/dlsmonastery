@@ -120,7 +120,7 @@
         Ffyname
     </select>
 
-    <select id="findByAccName" resultType="DynamicSubject">
+    <select id="findByAccName" resultType="AccountSubjectDto">
         SELECT DISTINCT
             faccnumber as accNumber,
             faccname as accName,
