@@ -19,7 +19,7 @@
       return {
         innerContent : [],
         innerProcessInstanceId : this.value,
-        innerGetUrl:'/api/general/sys/activiti/getActivitiDetail',
+        innerGetUrl:'/api/general/sys/activiti/detail',
         innerPageLoading:false,
       };
     } ,methods:{
