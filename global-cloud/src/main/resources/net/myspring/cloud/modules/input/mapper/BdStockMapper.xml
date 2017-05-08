@@ -40,7 +40,7 @@
         AND t1.FMODIFYDATE > #{maxOutDate}
     </select>
 
-    <select id="findNameAndNumber" resultType="NameValueDto">
+    <select id="findNameAndNumber" resultType="NameNumberDto">
         SELECT
         t1.FNUMBER as number,
         t2.FNAME as name

@@ -38,7 +38,7 @@
         t.FDEPTID = #{departmentId}
     </select>
 
-    <select id="findNameAndNumber" resultType="NameValueDto">
+    <select id="findNameAndNumber" resultType="NameNumberDto">
         select
             t1.FNUMBER as number,
             t2.FFULLNAME as name
