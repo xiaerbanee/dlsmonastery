@@ -70,9 +70,9 @@
       return {
         page:{},
         formData:{
+        },submitData:{
           page:0,
           size:25,
-          createdDate:'',
           employeeName:'',
           status:'',
           remarks:'',
@@ -93,9 +93,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        util.setQuery("employeePhoneDepositList",this.formData);
-        axios.get('/api/basic/hr/employeePhoneDeposit',{params:this.formData}).then((response) => {
+        util.setQuery("employeePhoneDepositList",this.submitData);
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/hr/employeePhoneDeposit?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -134,11 +134,11 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
       axios.get('/api/basic/hr/employeePhoneDeposit/getQuery').then((response) =>{
-        this.searchProperty=response.data;
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>

@@ -9,20 +9,20 @@
       </el-row>
       <el-dialog :title="$t('accountChangeList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
-          <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-            <el-date-picker v-model="formData.createdDateBTW" type="daterange" align="right" :placeholder="$t('accountChangeList.selectDateRange')"  :picker-options="pickerDateOption"></el-date-picker>
+          <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+            <date-range-picker v-model="formData.createdDate"></date-range-picker>
           </el-form-item>
           <el-form-item :label="formLabel.createdByName.label" :label-width="formLabelWidth">
             <el-input v-model="formData.createdByName" auto-complete="off" :placeholder="$t('accountChangeList.likeSearch')"></el-input>
           </el-form-item>
           <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
             <el-select v-model="formData.officeId" filterable clearable :placeholder="$t('accountChangeList.inputKey')">
-              <el-option v-for="area in formProperty.areas" :key="area.id" :label="area.name" :value="area.id"></el-option>
+              <el-option v-for="area in formData.areas" :key="area.id" :label="area.name" :value="area.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="formLabel.type.label" :label-width="formLabelWidth">
             <el-select v-model="formData.type" clearable filterable :placeholder="$t('accountChangeList.selectGroup')">
-              <el-option v-for="type in formProperty.types" :key="type" :label="type" :value="type"></el-option>
+              <el-option v-for="type in formData.types" :key="type" :label="type" :value="type"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -57,9 +57,9 @@
       return {
         page:{},
         formData:{
-
+          createdDate:'',
         },formLabel:{
-          createdDateBTW:{label:this.$t('accountChangeList.createdDate')},
+          createdDate:{label:this.$t('accountChangeList.createdDate')},
           createdByName:{label:this.$t('accountChangeList.createdBy')},
           type:{label:this.$t('accountChangeList.type')},
           officeId:{label:this.$t('accountChangeList.areaName'),value:''}
@@ -69,12 +69,9 @@
           size:25,
           officeId:'',
           createdDate:'',
-          createdDateBTW:'',
           createdByName:'',
           type:''
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -83,13 +80,10 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        this.formLabel.officeId.value=util.getLabel(this.formProperty.areas, this.formData.officeId);
-        util.getQuery("accountChangeList");
-        util.setQuery("accountChangeList",this.formData);
+        this.formLabel.officeId.value=util.getLabel(this.formData.areas, this.formData.officeId);
+        util.setQuery("accountChangeList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/accountChange',{params:this.submitData}).then((response) => {
-          console.log(response.data);
+        axios.get('/api/basic/hr/accountChange?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

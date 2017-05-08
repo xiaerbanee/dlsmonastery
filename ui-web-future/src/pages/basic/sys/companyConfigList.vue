@@ -60,7 +60,6 @@
           name:{label:this.$t('companyConfigList.name')},
           code:{label:this.$t('companyConfigList.code')}
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -71,7 +70,7 @@
         this.pageLoading = true;
         util.setQuery("companyConfigList",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/companyConfig',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/companyConfig?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

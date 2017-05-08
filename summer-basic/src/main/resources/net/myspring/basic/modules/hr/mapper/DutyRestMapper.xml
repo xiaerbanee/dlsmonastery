@@ -15,13 +15,13 @@
         and account.office_id=office.id
         and t1.enabled=1
         <if test="p.createdBy !=null ">
-           AND t1.created_by=#{p.createdBy}
+            AND t1.created_by=#{p.createdBy}
         </if>
         <if test="p.dutyDateStart !=null">
-            AND t1.duty_date>=#{p.dutyDateStart}
+            AND t1.duty_date> #{p.dutyDateStart}
         </if>
         <if test="p.dutyDateEnd !=null">
-            AND t1.duty_date &lt;=#{p.dutyDateEnd}
+            AND t1.duty_date &lt; #{p.dutyDateEnd}
         </if>
         <if test="p.type !=null">
             AND t1.type=#{p.type}

@@ -2,9 +2,12 @@ package net.myspring.basic.modules.hr.web.query;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,9 +19,7 @@ public class AuditFileQuery {
     private String positionId;
     private String auditType;
     private List<String> officeIds;
-    private String createdDateBTW;
-    private LocalDateTime createdDateStart;
-    private LocalDateTime createdDateEnd;
+    private String createdDate;
     private String officeName;
     private String officeId;
     private String createdByName;
@@ -72,30 +73,6 @@ public class AuditFileQuery {
 
     public void setOfficeIds(List<String> officeIds) {
         this.officeIds = officeIds;
-    }
-
-    public LocalDateTime getCreatedDateStart() {
-        if(createdDateStart==null&& StringUtils.isNotBlank(createdDateBTW)){
-            String[] tempParamValues = createdDateBTW.split(" - ");
-            this.createdDateStart= LocalDateTimeUtils.parse(tempParamValues[0]+ " 00:00:00");
-        }
-        return createdDateStart;
-    }
-
-    public void setCreatedDateStart(LocalDateTime createdDateStart) {
-        this.createdDateStart = createdDateStart;
-    }
-
-    public LocalDateTime getCreatedDateEnd() {
-        if(createdDateEnd==null&& StringUtils.isNotBlank(createdDateBTW)){
-            String[] tempParamValues = createdDateBTW.split(" - ");
-            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 23:59:59");
-        }
-        return createdDateEnd;
-    }
-
-    public void setCreatedDateEnd(LocalDateTime createdDateEnd) {
-        this.createdDateEnd = createdDateEnd;
     }
 
     public String getOfficeName() {
@@ -162,11 +139,19 @@ public class AuditFileQuery {
         this.processflowName = processflowName;
     }
 
-    public String getCreatedDateBTW() {
-        return createdDateBTW;
+    public LocalDate getCreatedDateStart() {
+        if(StringUtils.isNotBlank(createdDate)) {
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
     }
 
-    public void setCreatedDateBTW(String createdDateBTW) {
-        this.createdDateBTW = createdDateBTW;
+    public LocalDate getCreatedDateEnd() {
+        if(StringUtils.isNotBlank(createdDate)) {
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }

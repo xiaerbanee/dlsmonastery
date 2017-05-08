@@ -21,22 +21,22 @@
             and employee.mobile_phone like CONCAT('%',#{p.mobilePhone},'%')
         </if>
         <if test="p.entryDateStart != null">
-            AND employee.entry_date >= #{p.entryDateStart}
+            AND employee.entry_date > #{p.entryDateStart}
         </if>
         <if test="p.entryDateEnd != null">
-            AND employee.entry_date  &lt;= #{p.entryDateEnd}
+            AND employee.entry_date  &lt; #{p.entryDateEnd}
         </if>
         <if test="p.regularDateStart != null">
-            AND employee.regular_date >= #{p.regularDateStart}
+            AND employee.regular_date > #{p.regularDateStart}
         </if>
         <if test="p.regularDateEnd != null">
-            AND employee.regular_date  &lt;= #{p.regularDateEnd}
+            AND employee.regular_date  &lt; #{p.regularDateEnd}
         </if>
         <if test="p.leaveDateStart != null">
-            AND employee.leave_date >= #{p.leaveDateStart}
+            AND employee.leave_date > #{p.leaveDateStart}
         </if>
         <if test="p.leaveDateEnd != null">
-            AND employee.leave_date  &lt;= #{p.leaveDateEnd}
+            AND employee.leave_date  &lt; #{p.leaveDateEnd}
         </if>
         <if test="p.positionId != null ">
             AND employee.account_id in(

@@ -12,8 +12,8 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.dutyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.dutyDate" type="daterange" align="right" :placeholder="$t('dutyWorktimeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -22,7 +22,6 @@
           <el-button type="primary" @click="search()">{{$t('dutyWorktimeList.sure')}}</el-button>
         </div>
       </el-dialog>
-
       <el-dialog :title="$t('dutyWorktimeList.export')" v-model="exportVisible" size="tiny" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="4">
@@ -59,7 +58,6 @@
           dutyDate:'',
           month:'',
           formatMonth:'',
-          dutyDateBTW:''
         },
         submitData:{
           page:0,
@@ -67,13 +65,10 @@
           dutyDate:'',
           month:'',
           formatMonth:'',
-          dutyDateBTW:''
         },formLabel:{
-          dutyDateBTW:{label: this.$t('dutyWorktimeList.dutyDate')},
+          dutyDate:{label: this.$t('dutyWorktimeList.dutyDate')},
           formatMonth:{label: this.$t('dutyWorktimeList.yearMonth')},
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         exportVisible:false,
@@ -83,11 +78,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("dutyWorktimeList");
-        util.setQuery("dutyWorktimeList",this.formData);
+        util.setQuery("dutyWorktimeList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutyWorktime',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/hr/dutyWorktime?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -111,6 +104,7 @@
 			}
     },created () {
       this.pageHeight = window.outerHeight -320;
+      util.copyValue(this.$route.query,this.formData)
       this.pageRequest();
     }
   };

@@ -1,5 +1,9 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -8,50 +12,23 @@ import java.util.List;
  */
 public class DutyFreeQuery {
     private String createdBy;
-    private LocalDate freeDateStart;
-    private LocalDate freeDateEnd;
-    private LocalDate dutyDateStart;
-    private LocalDate dutyDateEnd;
+    private String dutyDate;
     private List<String> officeIds;
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public LocalDate getFreeDateStart() {
-        return freeDateStart;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setFreeDateStart(LocalDate freeDateStart) {
-        this.freeDateStart = freeDateStart;
+    public void setDutyDate(String dutyDate) {
+        this.dutyDate = dutyDate;
     }
 
-    public LocalDate getFreeDateEnd() {
-        return freeDateEnd;
-    }
-
-    public void setFreeDateEnd(LocalDate freeDateEnd) {
-        this.freeDateEnd = freeDateEnd;
-    }
-
-    public LocalDate getDutyDateStart() {
-        return dutyDateStart;
-    }
-
-    public void setDutyDateStart(LocalDate dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
-    }
-
-    public LocalDate getDutyDateEnd() {
-        return dutyDateEnd;
-    }
-
-    public void setDutyDateEnd(LocalDate dutyDateEnd) {
-        this.dutyDateEnd = dutyDateEnd;
+    public String getDutyDate() {
+        return dutyDate;
     }
 
     public List<String> getOfficeIds() {
@@ -60,5 +37,21 @@ public class DutyFreeQuery {
 
     public void setOfficeIds(List<String> officeIds) {
         this.officeIds = officeIds;
+    }
+
+    public LocalDate getDutyDateStart() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getDutyDateEnd() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }

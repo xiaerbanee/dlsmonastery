@@ -85,16 +85,14 @@
         },
         formLabelWidth: '120px',
         formVisible: false,
-        loading:false
       };
     },
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("menuList");
-        util.setQuery("menuList",this.formData);
+        util.setQuery("menuList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/menu',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/menu?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

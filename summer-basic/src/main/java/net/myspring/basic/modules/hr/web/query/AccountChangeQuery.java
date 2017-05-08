@@ -2,7 +2,11 @@ package net.myspring.basic.modules.hr.web.query;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,8 +16,6 @@ import java.util.List;
 public class AccountChangeQuery {
 
     private List<String> officeIds= Lists.newArrayList();
-    private LocalDateTime createdDateStart;
-    private LocalDateTime createdDateEnd;
     private String officeRuleName;
     private String createdByName;
     private String officeId;
@@ -21,6 +23,7 @@ public class AccountChangeQuery {
     private List<Office> areaList=Lists.newArrayList();
     private String id;
     private String accountId;
+    private String createdDate;
 
     public String getId() {
         return id;
@@ -62,22 +65,6 @@ public class AccountChangeQuery {
         this.officeIds = officeIds;
     }
 
-    public LocalDateTime getCreatedDateStart() {
-        return createdDateStart;
-    }
-
-    public void setCreatedDateStart(LocalDateTime createdDateStart) {
-        this.createdDateStart = createdDateStart;
-    }
-
-    public LocalDateTime getCreatedDateEnd() {
-        return createdDateEnd;
-    }
-
-    public void setCreatedDateEnd(LocalDateTime createdDateEnd) {
-        this.createdDateEnd = createdDateEnd;
-    }
-
     public String getCreatedByName() {
         return createdByName;
     }
@@ -100,5 +87,29 @@ public class AccountChangeQuery {
 
     public void setOfficeRuleName(String officeRuleName) {
         this.officeRuleName = officeRuleName;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public LocalDate getCreatedDateStart() {
+        if(StringUtils.isNotBlank(createdDate)) {
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getCreatedDateEnd() {
+        if(StringUtils.isNotBlank(createdDate)) {
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }

@@ -63,15 +63,14 @@
         detailFormData:{},
         formLabelWidth: '120px',
         formVisible: false,
-        loading:false
       };
     },
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("processTypeList",this.formData);
+        util.setQuery("processTypeList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/processType',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/processType?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

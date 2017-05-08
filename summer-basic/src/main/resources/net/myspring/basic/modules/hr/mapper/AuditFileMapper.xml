@@ -12,10 +12,10 @@
         AND t1.enabled=1
         <include refid="net.myspring.basic.modules.sys.mapper.OfficeMapper.officeFilter" />
         <if test="p.createdDateStart !=null">
-            and t1.created_date >=#{p.createdDateStart}
+            and t1.created_date > #{p.createdDateStart}
         </if>
         <if test="p.createdDateEnd !=null">
-            and t1.created_date &lt;=#{p.createdDateEnd}
+            and t1.created_date &lt; #{p.createdDateEnd}
         </if>
         <if test="p.processTypeId !=null">
             and t1.process_type_id =#{p.processTypeId}

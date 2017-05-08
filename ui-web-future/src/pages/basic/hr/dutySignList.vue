@@ -10,8 +10,8 @@
         <el-form :model="formData">
           <el-row :gutter="7">
             <el-col :span="12">
-              <el-form-item :label="formLabel.dutyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.dutyDate" type="daterange" align="right" :placeholder="$t('dutySignList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.employeeName.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.employeeName" auto-complete="off" :placeholder="$t('dutySignList.likeSearch')"></el-input>
@@ -69,7 +69,6 @@
         page:{},
         formData:{
           dutyDate:'',
-          dutyDateBTW:'',
         },
         submitData:{
           page:0,
@@ -79,17 +78,14 @@
           officeName:'',
           positionName:'',
           dutyDate:'',
-          dutyDateBTW:'',
         },
         formLabel:{
-          dutyDateBTW:{label:this.$t('dutySignList.dutyDate')},
+          dutyDate:{label:this.$t('dutySignList.dutyDate')},
           employeeName:{label:this.$t('dutySignList.employeeName')},
           address:{label:this.$t('dutySignList.address')},
           officeName:{label:this.$t('dutySignList.officeName')},
           positionName:{label:this.$t('dutySignList.positionName')}
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -98,11 +94,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.getQuery("dutySignList");
-        util.setQuery("dutySignList",this.formData);
+        util.setQuery("dutySignList",this.submitData);
         util.copyValue(this.formData,this.submitData);
-        this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        axios.get('/api/basic/hr/dutySign',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/hr/dutySign?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -120,16 +114,14 @@
       },exportData(){
         this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
         window.location.href= "/api/basic/hr/dutySign/export?"+qs.stringify(this.formData);
-			},getQuery(){
-        axios.get('/api/basic/hr/dutySign/getQuery').then((response) =>{
-          this.formData=response.data;
-          this.pageRequest();
-        });
-      }
+			}
     },created () {
       this.pageHeight = window.outerHeight -320;
-      this.getQuery();
+      axios.get('/api/basic/hr/dutySign/getQuery').then((response) =>{
+        this.formData=response.data;
       util.copyValue(this.$route.query,this.formData);
+      this.pageRequest();
+    });
     }
   };
 </script>

@@ -3,6 +3,9 @@ package net.myspring.basic.modules.hr.web.query;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.enums.DutyRestTypeEnum;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,13 +15,28 @@ import java.util.List;
  */
 public class DutyRestQuery {
     private String createdBy;
-    private LocalDate dutyDateStart;
-    private LocalDate dutyDateEnd;
+    private String dutyDate;
     private String type;
     private String dateType;
     private List<String> officeIds;
     private List<String> restList= Lists.newArrayList();
     private List<String> dateList= Lists.newArrayList();
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setDutyDate(String dutyDate) {
+        this.dutyDate = dutyDate;
+    }
+
+    public String getDutyDate() {
+        return dutyDate;
+    }
 
     public void setRestList(List<String> restList) {
         this.restList = restList;
@@ -34,30 +52,6 @@ public class DutyRestQuery {
 
     public List<String> getDateList() {
         return dateList;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDate getDutyDateStart() {
-        return dutyDateStart;
-    }
-
-    public void setDutyDateStart(LocalDate dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
-    }
-
-    public LocalDate getDutyDateEnd() {
-        return dutyDateEnd;
-    }
-
-    public void setDutyDateEnd(LocalDate dutyDateEnd) {
-        this.dutyDateEnd = dutyDateEnd;
     }
 
     public String getType() {
@@ -82,5 +76,21 @@ public class DutyRestQuery {
 
     public void setOfficeIds(List<String> officeIds) {
         this.officeIds = officeIds;
+    }
+
+    public LocalDate getDutyDateStart() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getDutyDateEnd() {
+        if(StringUtils.isNotBlank(dutyDate)) {
+            return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }
