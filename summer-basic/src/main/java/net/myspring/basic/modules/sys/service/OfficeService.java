@@ -126,22 +126,19 @@ public class OfficeService {
             office = officeMapper.findOne(officeForm.getId());
             ReflectionUtil.copyProperties(officeForm, office);
             officeMapper.update(office);
-            officeLeaderMapper.removeOfficeLeaderByOffice(office.getId());
         }
         List<OfficeBusiness> businessOfficeList = officeBusinessMapper.findAllBusinessIdById(office.getId());
-        if (OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())) {
+        if (OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())&&CollectionUtil.isNotEmpty(officeForm.getLeaderIdList())) {
             List<String> businessOfficeIdList = CollectionUtil.extractToList(businessOfficeList, "businessOfficeId");
             List<String> removeIdList = CollectionUtil.subtract(businessOfficeIdList, officeForm.getOfficeIdList());
             List<String> addIdList = CollectionUtil.subtract(officeForm.getOfficeIdList(), businessOfficeIdList);
             List<OfficeBusiness> officeBusinessList = Lists.newArrayList();
             for (String businessOfficeId : addIdList) {
-                OfficeBusiness officeBusiness = new OfficeBusiness(office.getId(), businessOfficeId);
-                officeBusiness.setCompanyId(SecurityUtils.getCompanyId());
-                officeBusinessList.add(officeBusiness);
+                officeBusinessList.add(new OfficeBusiness(office.getId(), businessOfficeId));
             }
             officeBusinessMapper.setEnabledByOfficeId(true, office.getId());
             if (CollectionUtil.isNotEmpty(removeIdList)) {
-                officeBusinessMapper.removeByBusinessOfficeIds(removeIdList);
+                officeBusinessMapper.setEnabledByBusinessOfficeIds(removeIdList);
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
                 officeBusinessMapper.batchSave(officeBusinessList);
@@ -150,12 +147,24 @@ public class OfficeService {
             officeBusinessMapper.setEnabledByOfficeId(false, office.getId());
         }
 
+        List<OfficeLeader> officeLeaderList=officeLeaderMapper.findAllByOfficeId(office.getId());
         if (CollectionUtil.isNotEmpty(officeForm.getLeaderIdList())) {
-            List<OfficeLeader> officeLeaderList = Lists.newArrayList();
+            List<String> officeLeaderIdList = CollectionUtil.extractToList(officeLeaderList, "leaderId");
+            List<String> removeIdList = CollectionUtil.subtract(officeLeaderIdList, officeForm.getLeaderIdList());
+            List<String> addIdList = CollectionUtil.subtract(officeForm.getLeaderIdList(), officeLeaderIdList);
+            List<OfficeLeader> leaderList = Lists.newArrayList();
             for (String leaderId : officeForm.getLeaderIdList()) {
-                officeLeaderList.add(new OfficeLeader(office.getId(), leaderId));
+                leaderList.add(new OfficeLeader(office.getId(), leaderId));
             }
-            officeLeaderMapper.batchSave(officeLeaderList);
+            officeLeaderMapper.setEnabledByOfficeId(true, office.getId());
+            if (CollectionUtil.isNotEmpty(removeIdList)) {
+                officeLeaderMapper.setEnabledByLeaderIds(false,removeIdList);
+            }
+            if (CollectionUtil.isNotEmpty(addIdList)) {
+                officeLeaderMapper.batchSave(leaderList);
+            }
+        }else {
+            officeLeaderMapper.setEnabledByOfficeId(false,office.getId());
         }
         return office;
     }

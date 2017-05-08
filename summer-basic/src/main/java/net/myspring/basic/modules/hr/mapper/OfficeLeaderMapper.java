@@ -3,6 +3,8 @@ package net.myspring.basic.modules.hr.mapper;
 import net.myspring.basic.modules.hr.domain.OfficeLeader;
 import net.myspring.common.mybatis.MyMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.security.access.method.P;
 
 import java.util.List;
 
@@ -12,7 +14,11 @@ import java.util.List;
 @Mapper
 public interface OfficeLeaderMapper extends MyMapper<OfficeLeader,String> {
 
-    int removeOfficeLeaderByOffice(String officeId);
+    int setEnabledByOfficeId(@Param("enabled")boolean enabled,@Param("officeId") String officeId);
+
+    int setEnabledByLeaderIds(@Param("enabled")boolean enabled,@Param("leaderList") List<String> leaderList);
 
     List<OfficeLeader> findByOfficeId(String officeId);
+
+    List<OfficeLeader> findAllByOfficeId(String officeId);
 }
