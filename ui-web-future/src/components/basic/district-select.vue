@@ -16,33 +16,26 @@
       };
     } ,methods:{
       remoteSelect(query) {
-        if(query == this.innerId || query == util.getLabel(this.itemList,this.innerId,"fullName")) {
+        if(query=="" || query == this.innerId || query == util.getLabel(this.itemList,this.innerId,"fullName")) {
             return;
         }
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/general/sys/district/search',{params:{key:query}}).then((response)=>{
-            this.itemList=response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.itemList = [];
-        }
+        this.remoteLoading = true;
+        axios.get('/api/general/sys/district/search',{params:{key:query}}).then((response)=>{
+          this.itemList=response.data;
+          this.remoteLoading = false;
+        })
       }, handleChange(newVal) {
         this.$emit('input', newVal);
-        return true;
       },setValue(val) {
-        this.innerId=val;
-        if(val && val != "") {
-          var idList = util.getIdList(this.itemList);
-          if(idList.indexOf(this.innerId) < 0) {
-            this.remoteLoading = true;
-            axios.get('/api/general/sys/district/findById?id=' + this.innerId).then((response)=>{
-              this.itemList=response.data;
-              this.remoteLoading = false;
-            })
-          }
+        if(this.innerId == val || val=="") {
+          return;
         }
+        this.innerId=val;
+        this.remoteLoading = true;
+        axios.get('/api/general/sys/district/findById?id=' + this.innerId).then((response)=>{
+          this.itemList=response.data;
+          this.remoteLoading = false;
+        })
       }
     },created () {
       this.setValue(this.value);
