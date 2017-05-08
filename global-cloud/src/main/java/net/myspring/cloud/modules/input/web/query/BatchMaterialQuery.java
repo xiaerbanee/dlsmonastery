@@ -1,11 +1,11 @@
-package net.myspring.cloud.modules.input.web.form;
+package net.myspring.cloud.modules.input.web.query;
 
 import java.util.List;
 
 /**
  * Created by lihx on 2017/5/5.
  */
-public class BatchMaterialForm {
+public class BatchMaterialQuery {
     private List<String> materialCategoryList;
     private List<String> materialGroupList;
 

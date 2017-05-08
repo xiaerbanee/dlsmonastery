@@ -24,8 +24,8 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('officeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="parentName" :label="$t('officeList.parentName')" sortable></el-table-column>
         <el-table-column prop="name" :label="$t('officeList.name')" ></el-table-column>
-        <el-table-column prop="typeLabel" :label="$t('officeList.typeLabel')" ></el-table-column>
-        <el-table-column prop="type" label="类型" width="100">
+        <el-table-column prop="officeRuleName" label="业务类型" ></el-table-column>
+        <el-table-column prop="type" label="类型">
           <template scope="scope">
             {{$t('OfficeRuleEnum.'+ scope.row.type)}}
           </template>

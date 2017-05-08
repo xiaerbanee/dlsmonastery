@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.report.mapper.GlcxViewMapper">
-    <select id="findDepartment" resultType="NameValueDto">
+    <select id="findDepartment" resultType="NameNumberDto">
         SELECT DISTINCT
             fdeptnum AS number,
             fdeptname AS name
@@ -120,7 +120,7 @@
         Ffyname
     </select>
 
-    <select id="findByAccName" resultType="DynamicSubject">
+    <select id="findByAccName" resultType="AccountSubjectDto">
         SELECT DISTINCT
             faccnumber as accNumber,
             faccname as accName,

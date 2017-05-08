@@ -19,7 +19,7 @@
             </el-form-item>
           </el-col>
           <el-col :span = "10">
-            <el-form-item  label="授权" prop="permissionIdStr">
+            <el-form-item  label="授权" prop="moduleIdStr">
               <el-tree
                 :data="treeData"
                 show-checkbox
@@ -50,7 +50,7 @@
           name:'',
           permission:'',
           remarks:'',
-          permissionIdStr:""
+          moduleIdStr:""
         },
         rules: {
           name: [{ required: true, message: this.$t('roleForm.prerequisiteMessage')}],
@@ -87,15 +87,14 @@
         })
       },
       handleCheckChange(data, checked, indeterminate) {
-        var permissions=new Array()
+        var modules=new Array()
         var check=this.$refs.tree.getCheckedKeys();
-        console.log(check)
         for(var index in check){
           if(check[index].indexOf("p")!=0&& check[index]!=0){
-            permissions.push(check[index])
+            modules.push(check[index])
           }
         }
-        this.inputForm.permissionIdStr=permissions.join();
+        this.inputForm.moduleIdStr=modules.join();
       },remoteBackend(query){
         if (query !== '') {
           this.remoteLoading = true;
@@ -110,9 +109,9 @@
     },created(){
       axios.get('/api/basic/sys/role/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
-        this.treeData =new Array(response.data.permissionTree);
-        this.checked = response.data.permissionTree.checked;
-        this.inputForm.permissionIdStr = response.data.permissionTree.checked.join();
+        this.treeData =new Array(response.data.treeNode);
+        this.checked = response.data.treeNode.checked;
+        this.inputForm.moduleIdStr = response.data.treeNode.checked.join();
       })
     }
   }

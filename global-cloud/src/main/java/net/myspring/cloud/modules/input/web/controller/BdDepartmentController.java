@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.modules.input.domain.BdDepartment;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.service.BdDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,11 @@ public class BdDepartmentController {
     public List<BdDepartment> getDepartmentList() {
         List<BdDepartment> departmentList = bdDepartmentService.findAll();
         return departmentList;
+    }
+
+    @RequestMapping(value = "getNameAndNumber")
+    public List<NameNumberDto> getNameAndNumber(){
+        return bdDepartmentService.findNameNumber();
     }
 
 }

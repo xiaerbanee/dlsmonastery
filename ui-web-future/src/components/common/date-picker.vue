@@ -17,11 +17,21 @@
         if(!newVal) {
             newVal = "";
         }
-        this.$emit('change', newVal);
+        this.$emit('input', newVal);
         return true;
+      },setValue(val) {
+        var date = null;
+        if(util.isNotBlank(val)) {
+          date = new Date(this.value.replace(/-/,"/"));
+        }
+        this.innerDate =date;
       }
     },created () {
-        this.innerDate =new Date(this.value.replace(/-/,"/"));;
+       this.setValue(this.value);
+    },watch: {
+      value :function (val) {
+        this.setValue(val);
+      }
     }
   };
 </script>

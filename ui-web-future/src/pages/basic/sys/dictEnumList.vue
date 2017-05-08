@@ -73,6 +73,7 @@
           category:{label: this.$t('dictEnumList.category')},
           value:{label: this.$t('dictEnumList.value')}
         },
+        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false

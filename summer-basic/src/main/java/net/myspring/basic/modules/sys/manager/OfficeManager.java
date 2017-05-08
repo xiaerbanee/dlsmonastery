@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.mapper.OfficeBusinessMapper;
 import net.myspring.basic.modules.sys.mapper.OfficeMapper;
@@ -39,7 +40,8 @@ public class OfficeManager {
                 officeIdList.add(office.getId());
                 officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()), "id"));
             } else {
-                officeIdList.addAll(officeBusinessMapper.findBusinessIdById(office.getId()));
+                List<OfficeBusiness> businessList = officeBusinessMapper.findBusinessIdById(office.getId());
+                officeIdList.addAll(CollectionUtil.extractToList(businessList,"id"));
             }
             if (CollectionUtil.isNotEmpty(officeIdList)) {
                 officeIdList.add("0");

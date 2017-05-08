@@ -12,7 +12,7 @@
         where t.FID = tl.FID
     </select>
 
-    <select id="findNameAndNumber" resultType="NameValueDto">
+    <select id="findNameAndNumber" resultType="NameNumberDto">
         select
         t.FNUMBER as number,
         tl.FNAME as name

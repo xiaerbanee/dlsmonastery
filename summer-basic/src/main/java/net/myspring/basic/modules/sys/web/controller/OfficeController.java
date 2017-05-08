@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.service.OfficeRuleService;
@@ -15,6 +16,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,58 +41,47 @@ public class OfficeController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<OfficeDto> list(Pageable pageable, OfficeQuery officeQuery) {
-        Page<OfficeDto> page = officeService.findPage(pageable,officeQuery);
+        Page<OfficeDto> page = officeService.findPage(pageable, officeQuery);
         return page;
     }
 
     @RequestMapping(value = "search")
-    public List<OfficeDto> search(String name,String officeType,String parentOfficeId) {
+    public List<OfficeDto> search(String name, String officeType, String parentOfficeId) {
         List<OfficeDto> officeDtos = Lists.newArrayList();
-        if(StringUtils.isNotBlank(name)) {
+        if (StringUtils.isNotBlank(name)) {
             Map<String, Object> map = Maps.newHashMap();
             map.put("name", name);
             if (StringUtils.isNotBlank(parentOfficeId)) {
-                map.put("parentOfficeId",parentOfficeId);
+                map.put("parentOfficeId", parentOfficeId);
             }
             officeDtos = officeService.findByFilter(map);
         }
-         return officeDtos;
+        return officeDtos;
     }
 
     @RequestMapping(value = "getOfficeFilterIds")
-    public List<String> getOfficeFilterIds(String accountId){
-        List<String> officeIdList=Lists.newArrayList();
-        if(StringUtils.isNotBlank(accountId)){
-            officeIdList=officeService.getOfficeFilterIds(accountId);
+    public List<String> getOfficeFilterIds(String accountId) {
+        List<String> officeIdList = Lists.newArrayList();
+        if (StringUtils.isNotBlank(accountId)) {
+            officeIdList = officeService.getOfficeFilterIds(accountId);
         }
         return officeIdList;
     }
 
     @RequestMapping(value = "findByOfficeRuleName")
-    public List<OfficeDto> findByOfficeRuleName(String officeRuleName){
-        List<OfficeDto> officeList=Lists.newArrayList();
-        if(StringUtils.isNotBlank(officeRuleName)){
-            officeList= BeanUtil.map(officeService.findByOfficeRuleName(officeRuleName),OfficeDto.class);
+    public List<OfficeDto> findByOfficeRuleName(String officeRuleName) {
+        List<OfficeDto> officeList = Lists.newArrayList();
+        if (StringUtils.isNotBlank(officeRuleName)) {
+            officeList = BeanUtil.map(officeService.findByOfficeRuleName(officeRuleName), OfficeDto.class);
         }
         return officeList;
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(OfficeForm officeForm) {
-        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
-        if(OfficeTypeEnum.BUSINESS.name().equals(officeForm.getType())){
-            OfficeRule topOfficeRule = officeRuleService.findMaxLevel();
-            OfficeRule officeRule=officeRuleService.findOne(officeForm.getOfficeRuleId());
-            Office parent=officeService.findOne(officeForm.getParentId());
-            if(parent!=null&&topOfficeRule.getId().equals(officeForm.getOfficeRuleId())){
-                return new RestResponse("顶级业务部门不能设置上级", null);
-            }else if(parent!=null){
-                if(officeRule.getParentId()!=parent.getOfficeRuleId()){
-                    return new RestResponse("业务部门上级类型不正确", null);
-                }
-            }else {
-                return new RestResponse("非顶级业务部门必须设置上级", null);
-            }
+        RestResponse restResponse=officeService.check(officeForm);
+        if(!restResponse.getSuccess()){
+            return restResponse;
         }
         officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
         officeService.save(officeForm);
@@ -99,27 +90,27 @@ public class OfficeController {
 
 
     @RequestMapping(value = "findForm")
-    public OfficeForm findForm(OfficeForm officeForm){
-        officeForm=officeService.findForm(officeForm);
-        officeForm.setOfficeRuleList(officeService.findTypeList());
+    public OfficeForm findForm(OfficeForm officeForm) {
+        officeForm = officeService.findForm(officeForm);
+        officeForm.setOfficeRuleList(officeService.findOfficeRuleList());
         officeForm.setJointTypeList(JointTypeEnum.getList());
         officeForm.setOfficeTypeList(OfficeTypeEnum.getList());
         return officeForm;
     }
 
     @RequestMapping(value = "getOfficeTree")
-    public TreeNode getOfficeTree(String id){
-        if(StringUtils.isNotBlank(id)){
-            List<String> officeIds=officeService.findBusinessIdById(id);
-            TreeNode treeNode=officeService.getOfficeTree(officeIds);
+    public TreeNode getOfficeTree(String id) {
+        if (StringUtils.isNotBlank(id)) {
+            List<OfficeBusiness> businessList = officeService.findBusinessIdById(id);
+            TreeNode treeNode = officeService.getOfficeTree(CollectionUtil.extractToList(businessList,"businessOfficeId"));
             return treeNode;
         }
         return null;
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(Office office,BindingResult bindingResult) {
+    public RestResponse delete(Office office, BindingResult bindingResult) {
         officeService.logicDeleteOne(office);
-        return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 }

@@ -42,7 +42,11 @@ public interface RoleModuleMapper extends BaseMapper<RoleModule,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL)
     List<RoleModule> findAll();
 
-    List<RoleModule> findByPositionId(String positionId);
+    List<RoleModule> findByRoleId(String roleId);
 
-    int deleteByRoleId(String roleId);
+    List<RoleModule> findAllByRoleId(String roleId);
+
+    int setEnabledByRoleId(@Param("enabled")boolean enabled,@Param("roleId") String roleId);
+
+    int setEnabledByModuleIdList(@Param("enabled")boolean enabled,@Param("list") List<String> moduleIds);
 }

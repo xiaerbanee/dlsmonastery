@@ -12,7 +12,7 @@ import net.myspring.cloud.modules.input.dto.BdMaterialDto;
 import net.myspring.cloud.modules.input.dto.K3CloudSave;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.utils.K3cloudUtils;
-import net.myspring.cloud.modules.input.web.form.BatchMaterialForm;
+import net.myspring.cloud.modules.input.web.query.BatchMaterialQuery;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.util.collection.CollectionUtil;
@@ -100,12 +100,12 @@ public class BatchMaterialService {
         return ObjectMapperUtils.writeValueAsString(root);
     }
 
-    public BatchMaterialForm getFormProperty(BatchMaterialForm batchMaterialForm){
+    public BatchMaterialQuery getFormProperty(BatchMaterialQuery batchMaterialQuery){
         List<NameNumberDto> materialCategories = bdMaterialMapper.findCategory();
         List<NameNumberDto> materialGroups = bdMaterialMapper.findGroup();
-        batchMaterialForm.setMaterialCategoryList(CollectionUtil.extractToList(materialCategories, "name"));
-        batchMaterialForm.setMaterialGroupList(CollectionUtil.extractToList(materialGroups, "name"));
-        return batchMaterialForm;
+        batchMaterialQuery.setMaterialCategoryList(CollectionUtil.extractToList(materialCategories, "name"));
+        batchMaterialQuery.setMaterialGroupList(CollectionUtil.extractToList(materialGroups, "name"));
+        return batchMaterialQuery;
     }
 
 }

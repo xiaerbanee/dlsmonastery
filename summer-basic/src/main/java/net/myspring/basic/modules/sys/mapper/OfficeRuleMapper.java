@@ -52,7 +52,7 @@ public interface OfficeRuleMapper extends BaseMapper<OfficeRule,String> {
 
     List<OfficeRule> findByType(String type);
 
-    OfficeRule findMaxLevel();
+    OfficeRule findTopOfficeRule();
 
     OfficeRule findNextOfficeRule(String id);
 }
