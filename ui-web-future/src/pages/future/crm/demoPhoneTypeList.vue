@@ -58,7 +58,8 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:"",
@@ -72,8 +73,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("demoPhoneTypeList",this.formData);
-        axios.get('/api/ws/future/crm/demoPhoneType',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("demoPhoneTypeList",this.submitData);
+        axios.get('/api/ws/future/crm/demoPhoneType',{params:this.submitData}).then((response) => {
           console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
@@ -102,9 +104,10 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      util.copyValue(that.$route.query,that.formData);
+      that.pageRequest();
     }
   };
 </script>

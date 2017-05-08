@@ -64,7 +64,8 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           code:'',
@@ -83,8 +84,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("productTypeList",this.formData);
-        axios.get('/api/ws/future/basic/productType',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("productTypeList",this.submitData);
+        axios.get('/api/ws/future/basic/productType',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -112,9 +114,10 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      util.copyValue(this.$route.query,that.formData);
+      that.pageRequest();
     }
   };
 </script>
