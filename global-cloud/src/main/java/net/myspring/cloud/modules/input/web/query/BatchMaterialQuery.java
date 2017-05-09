@@ -1,11 +1,13 @@
 package net.myspring.cloud.modules.input.web.query;
 
+import net.myspring.cloud.common.query.BaseQuery;
+
 import java.util.List;
 
 /**
  * Created by lihx on 2017/5/5.
  */
-public class BatchMaterialQuery {
+public class BatchMaterialQuery extends BaseQuery {
     private List<String> materialCategoryList;
     private List<String> materialGroupList;
 

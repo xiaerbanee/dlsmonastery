@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.web.query;
 
+import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StoreAllotQuery {
+public class StoreAllotQuery extends BaseQuery {
 
     private String businessIds;
 

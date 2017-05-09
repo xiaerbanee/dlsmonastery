@@ -1,16 +1,17 @@
 package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.query.BaseQuery;
 
 import java.util.List;
 
 /**
  * Created by lihx on 2017/4/19.
  */
-public class ShopAdTypeQuery {
+public class ShopAdTypeQuery extends BaseQuery {
     private String totalPriceType;
     private String name;
-    private List<String> totalPriceTypeList= Lists.newArrayList();
+    private List<String> totalPriceTypeList = Lists.newArrayList();
 
     public List<String> getTotalPriceTypeList() {
         return totalPriceTypeList;

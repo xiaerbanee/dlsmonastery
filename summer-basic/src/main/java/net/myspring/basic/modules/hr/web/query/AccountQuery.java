@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.web.query;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.query.BaseQuery;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by liuj on 2017/3/19.
  */
-public class AccountQuery {
+public class AccountQuery extends BaseQuery {
     private String loginName;
     private String officeName;
     private String positionName;

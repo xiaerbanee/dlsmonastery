@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.web.query;
 
+import net.myspring.basic.common.query.BaseQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * Created by lihx on 2017/4/7.
  */
-public class DutyWorktimeQuery {
+public class DutyWorktimeQuery extends BaseQuery {
     private String dutyDate;
     private String accountId;
 

@@ -3,6 +3,7 @@ package net.myspring.future.modules.layout.web.query;
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.common.dto.NameValueDto;
+import net.myspring.future.common.query.BaseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by zhangyf on 2017/5/5.
  */
-public class ShopPrintQuery {
+public class ShopPrintQuery extends BaseQuery {
 
     private String officeId;
     private String printType;

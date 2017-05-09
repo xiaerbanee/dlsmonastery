@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.query.BaseQuery;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/7.
  */
-public class MenuQuery {
+public class MenuQuery extends BaseQuery {
     private String category;
     private String name;
     private String sort;

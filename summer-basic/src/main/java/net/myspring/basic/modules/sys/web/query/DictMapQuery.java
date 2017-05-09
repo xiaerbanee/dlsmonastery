@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.query.BaseQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/7.
  */
-public class DictMapQuery {
+public class DictMapQuery extends BaseQuery {
     private String category;
     private String value;
     private String createdDate;

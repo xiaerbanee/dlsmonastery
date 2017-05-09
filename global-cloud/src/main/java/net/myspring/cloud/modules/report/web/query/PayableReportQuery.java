@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.report.web.query;
 
+import net.myspring.cloud.common.query.BaseQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 /**
  * Created by lihx on 2017/5/2.
  */
-public class PayableReportQuery {
+public class PayableReportQuery extends BaseQuery {
     private String dateRangeBTW;
     private LocalDate startDate;
     private LocalDate endDate;

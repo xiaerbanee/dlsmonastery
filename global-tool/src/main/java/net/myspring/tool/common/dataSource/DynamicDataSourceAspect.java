@@ -16,7 +16,10 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
 @Aspect
@@ -48,16 +51,7 @@ public class DynamicDataSourceAspect {
                 }
             }
         }
-        DynamicDataSourceContext.get().setCompanyId(RequestUtils.getCompanyId());
-        if(DataSourceTypeEnum.LOCAL.name().equals(dataSourceType)) {
-            DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.LOCAL.name());
-        } else {
-            DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.FACTORY.name());
-        }
-    }
-
-    @After("serviceExecution()")
-    public void removeDynamicDataSource(JoinPoint point) {
-        DynamicDataSourceContext.get().remove();
+        HttpServletRequest request  = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        request.setAttribute("dataSourceType",dataSourceType);
     }
 }

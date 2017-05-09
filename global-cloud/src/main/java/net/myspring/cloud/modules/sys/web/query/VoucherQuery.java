@@ -1,9 +1,11 @@
 package net.myspring.cloud.modules.sys.web.query;
 
+import net.myspring.cloud.common.query.BaseQuery;
+
 /**
  * Created by lihx on 2017/4/10.
  */
-public class VoucherQuery {
+public class VoucherQuery extends BaseQuery {
     private String id;
     private String createdName;
     private String status;

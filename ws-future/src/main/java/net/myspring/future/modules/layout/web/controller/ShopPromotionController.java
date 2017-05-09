@@ -30,6 +30,7 @@ public class ShopPromotionController {
     @RequestMapping(value = "findForm")
     public ShopPromotionForm findOne(ShopPromotionForm shopPromotionForm) {
         shopPromotionForm = shopPromotionService.findForm(shopPromotionForm);
+        shopPromotionForm.setActivityTypeList(ActivityTypeEnum.getList());
         return shopPromotionForm;
     }
 
@@ -39,8 +40,9 @@ public class ShopPromotionController {
     }
 
     @RequestMapping(value="getQuery",method = RequestMethod.GET)
-    public List<String> getQuery() {
-        return ActivityTypeEnum.getList();
+    public ShopPromotionQuery getQuery(ShopPromotionQuery shopPromotionQuery) {
+        shopPromotionQuery.setActivityTypeList(ActivityTypeEnum.getList());
+        return shopPromotionQuery;
     }
 
     @RequestMapping(value="save")

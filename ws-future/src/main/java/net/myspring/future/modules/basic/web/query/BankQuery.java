@@ -1,17 +1,18 @@
 package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.query.BaseQuery;
 
 import java.util.List;
 
 /**
  * Created by lihx on 2017/4/18.
  */
-public class BankQuery {
+public class BankQuery extends BaseQuery {
 
     private String name;
-    private List<String> depotIdList= Lists.newArrayList();
-    private List<String> officeIdList=Lists.newArrayList();
+    private List<String> depotIdList = Lists.newArrayList();
+    private List<String> officeIdList = Lists.newArrayList();
 
     public List<String> getDepotIdList() {
         return depotIdList;

@@ -1,8 +1,10 @@
 package net.myspring.future.modules.basic.web.query;
 
+import net.myspring.future.common.query.BaseQuery;
+
 import java.util.List;
 
-public class ExpressCompanyQuery {
+public class ExpressCompanyQuery extends BaseQuery {
 
 
     public String getName() {
@@ -28,7 +30,6 @@ public class ExpressCompanyQuery {
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
     }
-
 
 
     public String getReachPlace() {

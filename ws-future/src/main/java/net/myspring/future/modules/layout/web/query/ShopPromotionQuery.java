@@ -1,17 +1,28 @@
 package net.myspring.future.modules.layout.web.query;
 
+import net.myspring.future.common.query.BaseQuery;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/4.
  */
-public class ShopPromotionQuery {
+public class ShopPromotionQuery extends BaseQuery {
     private String businessId;
     private String activityType;
     private String shopName;
     private LocalDateTime createdDateStart;
     private LocalDateTime createdDateEnd;
+    private List<String> activityTypeList;
 
+    public List<String> getActivityTypeList() {
+        return activityTypeList;
+    }
+
+    public void setActivityTypeList(List<String> activityTypeList) {
+        this.activityTypeList = activityTypeList;
+    }
 
     public String getBusinessId() {
         return businessId;

@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.query.BaseQuery;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/7.
  */
-public class AuditFileQuery {
+public class AuditFileQuery extends BaseQuery {
     private String id;
     private String positionId;
     private String auditType;

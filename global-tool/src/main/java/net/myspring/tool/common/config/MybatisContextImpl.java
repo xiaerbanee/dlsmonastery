@@ -3,7 +3,6 @@ package net.myspring.tool.common.config;
 import net.myspring.mybatis.context.MybatisContext;
 import net.myspring.mybatis.dialect.Dialect;
 import net.myspring.mybatis.dialect.MySQLDialect;
-import net.myspring.tool.common.dataSource.DynamicDataSourceContext;
 import net.myspring.tool.common.enums.DataSourceTypeEnum;
 import net.myspring.tool.common.utils.RequestUtils;
 
@@ -19,7 +18,7 @@ public class MybatisContextImpl implements MybatisContext {
 
     @Override
     public Dialect getDialect() {
-        if(DataSourceTypeEnum.LOCAL.name().equals(DynamicDataSourceContext.get().getDataSourceType())) {
+        if(DataSourceTypeEnum.LOCAL.name().equals(RequestUtils.getDataSourceType())) {
             return new MySQLDialect();
         } else {
             return new MySQLDialect();

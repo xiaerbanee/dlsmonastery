@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.web.query;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.enums.DutyRestTypeEnum;
+import net.myspring.basic.common.query.BaseQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/7.
  */
-public class DutyRestQuery {
+public class DutyRestQuery extends BaseQuery {
     private String createdBy;
     private String dutyDate;
     private String type;

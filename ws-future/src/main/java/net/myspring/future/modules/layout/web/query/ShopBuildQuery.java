@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.web.query;
 
 import net.myspring.common.constant.CharConstant;
+import net.myspring.future.common.query.BaseQuery;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 /**
  * Created by zhangyf on 2017/5/6.
  */
-public class ShopBuildQuery {
+public class ShopBuildQuery extends BaseQuery {
     private String officeId;
     private String auditType;
     private String shopName;

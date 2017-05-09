@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.query.BaseQuery;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.common.constant.CharConstant;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/7.
  */
-public class DutySignQuery {
+public class DutySignQuery extends BaseQuery {
     private String dutyDate;
     private String createdBy;
     private String address;

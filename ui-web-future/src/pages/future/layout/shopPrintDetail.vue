@@ -71,7 +71,7 @@
         },
         submitData:{
             id:'',
-            pass:'',
+            pass:'1',
             passRemarks:'',
         },
         submitDisabled:false,
@@ -85,6 +85,8 @@
         var form = this.$refs["shopPrint"];
         form.validate((valid) => {
           if (valid) {
+              util.copyValue(this.shopPrint,this.submitData);
+              console.log(this.submitData);
             axios.post('/api/ws/future/layout/shopPrint/audit', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);

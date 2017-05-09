@@ -1,11 +1,12 @@
 package net.myspring.cloud.modules.input.web.query;
 
 import net.myspring.cloud.common.enums.KingdeeBillTypeEnum;
+import net.myspring.cloud.common.query.BaseQuery;
 
 /**
  * Created by lihx on 2017/4/25.
  */
-public class BatchBillQuery {
+public class BatchBillQuery extends BaseQuery {
 
     private KingdeeBillTypeEnum[] typeList;
 

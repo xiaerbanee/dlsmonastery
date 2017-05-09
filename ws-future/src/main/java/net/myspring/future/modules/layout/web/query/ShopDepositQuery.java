@@ -1,12 +1,13 @@
 package net.myspring.future.modules.layout.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.time.LocalDateTimeUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class ShopDepositQuery {
+public class ShopDepositQuery extends BaseQuery {
 
     private String shopName;
     private String type;
