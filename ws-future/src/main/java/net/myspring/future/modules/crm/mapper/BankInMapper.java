@@ -16,4 +16,5 @@ public interface BankInMapper extends MyMapper<BankIn,String> {
 
     BankIn findByShopAndType(@Param("shopId") String shopId, @Param("type") String type);
 
+    BankInDto findDto(@Param("id") String id);
 }

@@ -1,6 +1,5 @@
 package net.myspring.cloud.modules.input.dto;
 
-import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 
 /**

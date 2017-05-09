@@ -1,9 +1,7 @@
 package net.myspring.future.modules.basic.mapper;
 
 import net.myspring.common.cache.IdCacheKeyGenerator;
-import net.myspring.common.mybatis.MyMapper;
 import net.myspring.common.mybatis.MyProvider;
-import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductDto;
@@ -84,4 +82,6 @@ public interface ProductMapper extends BaseMapper<Product,String> {
     LocalDateTime getMaxOutDate();
 
     List<ProductType> findProductTypeList();
+
+    List<ProductDto> findIntersectionOfBothPricesystem(@Param("pricesystemId1")  String pricesystemId1, @Param("pricesystemId2") String pricesystemId2);
 }

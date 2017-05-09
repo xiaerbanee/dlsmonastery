@@ -10,8 +10,6 @@
     props: {
       value: {
         required: true
-      }, type: {
-        required: true
       }
     },
     data() {
@@ -24,22 +22,9 @@
     } ,
     computed:{
       url: function() {
-          if(this.type == 'shop'){
-
-            return {
-              search:'/api/ws/future/basic/depot/searchShop',
-              searchById:'/api/ws/future/basic/depot/searchById',
-            }
-          }else if(this.type == 'store'){
-              return {
-                search:'/api/ws/future/basic/depot/searchStore',
-                searchById:'/api/ws/future/basic/depot/searchById',
-              }
-          }else{
             return {
               search:'',
               searchById:'',
-            }
           }
 
       }
@@ -47,10 +32,6 @@
     methods:{
       remoteSearch(query) {
         if(this.searchLock) return;
-        if(query=="" || query == this.innerId || query == util.getLabel(this.options,this.innerId,"name")) {
-          return;
-        }
-
         if ( query !== '') {
           this.remoteLoading = true;
           axios.get(this.url.search, {params:{key:query}}).then((response)=>{

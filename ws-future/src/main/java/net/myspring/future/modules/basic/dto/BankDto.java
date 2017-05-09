@@ -7,6 +7,8 @@ import net.myspring.future.modules.basic.domain.Bank;
  * Created by lihx on 2017/4/17.
  */
 public class BankDto extends DataDto<Bank> {
+
+
     private String name;
     private String code;
     private String accountList;
