@@ -26,7 +26,7 @@
           <el-button type="primary" @click="search()">{{$t('shopAdTypeList.sure')}}</el-button>
         </div>
       </el-dialog>
-      <su-table v-model="queryData"  getUrl="/api/ws/future/basic/shopAdType" >
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAdTypeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('shopAdTypeList.name')" sortable ></el-table-column>
         <el-table-column prop="totalPriceType" :label="$t('shopAdTypeList.totalPriceType')"></el-table-column>
         <el-table-column prop="price" :label="$t('shopAdTypeList.price')"></el-table-column>
@@ -37,7 +37,7 @@
             <el-button size="small"  v-permit="'crm:shopAdType:delete'" @click.native="itemDelete(scope.row.id)">{{$t('shopAdTypeList.delete')}}</el-button>
           </template>
         </el-table-column>
-      </su-table>
+      </el-table>
     </div>
   </div>
 </template>
@@ -47,12 +47,15 @@
       return {
         page:{},
         formData:{},
-        queryData:{
-            totalPriceType:'',
-            name:'',
-        },formLabel:{
+        formLabel:{
           totalPriceType:{label:this.$t('shopAdTypeList.totalPriceType')},
           name:{label:this.$t('shopAdTypeList.name')},
+        },
+        submitData:{
+          page:0,
+          size:25,
+          name:'',
+          totalPriceType:'',
         },
         pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
@@ -60,10 +63,23 @@
         pageLoading: false
       };
     }, methods: {
+      pageRequest() {
+        this.pageLoading = true;
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("shopAdTypeList",this.submitData);
+        axios.get('/api/ws/future/basic/shopAdType',{params:this.submitData}).then((response) => {
+          this.page = response.data;
+          this.pageLoading = false;
+        })
+      },
+      sortChange(column) {
+        this.formData.order=util.getSort(column);
+        this.formData.page=0;
+        this.pageRequest();
+      },
       search() {
         this.formVisible = false;
-        this.queryData = util.cloneAndCopy(this.formData, this.queryData);
-
+        this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'shopAdTypeForm'})
       },itemEdit:function(id){
@@ -72,14 +88,16 @@
        util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/ws/future/basic/shopAdType/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
-            this.queryData = util.cloneAndCopy(this.formData, this.queryData);
+            this.pageRequest();
           })
         });
       }
     },created () {
+      this.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/basic/shopAdType/getQuery').then((response) =>{
         this.formData=response.data;
-        this.queryData = util.cloneAndCopy(this.formData, this.queryData);
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
       });
     }
   };

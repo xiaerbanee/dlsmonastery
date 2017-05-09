@@ -45,8 +45,8 @@
         <if test="p.name != null">
             and office.name like CONCAT('%',#{p.name},'%')
         </if>
-        <if test="p.parentOfficeId != null">
-            and office.parent_id=#{p.parentOfficeId}
+        <if test="p.id != null">
+            and office.id=#{p.id}
         </if>
         <include refid="officeFilter"/>
         order by office.name

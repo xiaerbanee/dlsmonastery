@@ -48,9 +48,7 @@
               <el-input v-model="inputForm.address"></el-input>
             </el-form-item>
             <el-form-item :label="$t('depotForm.forSaleMan')" prop="accountIdList">
-              <el-select v-model="inputForm.accountIdList"  multiple clearable filterable remote :placeholder="$t('depotForm.inputWord')" :remote-method="remoteAccount" :loading="remoteLoading">
-                <el-option v-for="account in accounts" :key="account.id" :label="account.fullName" :value="account.id"></el-option>
-              </el-select>
+              <account-select  v-model="inputForm.accountIdList"></account-select>
             </el-form-item>
             <div v-show="inputForm.type >200">
               <el-form-item :label="$t('depotForm.areaType')" prop="areaType">
@@ -236,7 +234,12 @@
   </div>
 </template>
 <script>
+  import accountSelect from 'components/basic/account-select'
+
   export default{
+      components:{
+          accountSelect
+      },
     data(){
       return{
         isCreate:this.$route.query.id==null,
@@ -325,17 +328,6 @@
             this.submitDisabled = false;
           }
         })
-      },remoteAccount(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
-            this.accounts=response.data;
-            console.log(this.accounts);
-            this.remoteLoading = false;
-          })
-        } else {
-          this.accounts = [];
-        }
       },remoteOffice(query){
       if (query !== '') {
         this.remoteLoading = true;

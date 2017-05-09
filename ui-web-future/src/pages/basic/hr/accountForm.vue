@@ -6,9 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="10">
             <el-form-item :label="$t('accountForm.mainAccount')" prop="employeeId">
-              <el-select v-model="inputForm.employeeId" filterable remote :placeholder="$t('accountForm.inputWord')" :remote-method="remoteEmployee" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="employee in employees" :key="employee.id" :label="employee.name" :value="employee.id"></el-option>
-              </el-select>
+              <employee-select v-model="inputForm.employeeId" ></employee-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.loginName')" prop="loginName">
               <el-input v-model="inputForm.loginName"></el-input>
@@ -19,9 +17,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.leader')" prop="leaderId">
-              <el-select v-model="inputForm.leaderId" filterable remote :placeholder="$t('accountForm.inputWord')" :remote-method="remoteAccount" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="item in leaders" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
-              </el-select>
+              <account-select v-model="inputForm.leaderId"></account-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.position')" prop="positionId">
               <el-select v-model="inputForm.positionId"  filterable :placeholder="$t('accountForm.selectGroup')" :clearable=true>
@@ -49,7 +45,12 @@
   </div>
 </template>
 <script>
+  import employeeSelect from 'components/basic/employee-select'
+  import accountSelect from 'components/basic/account-select'
   export default{
+      components:{
+          employeeSelect
+      },
     data(){
       return{
         isCreate:this.$route.query.id==null,
@@ -105,27 +106,11 @@
             this.submitDisabled = false;
           }
         })
-      },remoteAccount(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
-            this.leaders=response.data;
-            this.remoteLoading = false;
-          })
-        }
       },remoteDataScopeOffice(query) {
         if (query !== '') {
           this.remoteLoading = true;
           axios.get('/api/basic/sys/office/search',{params:{name:query}}).then((response)=>{
             this.dataScopeOffices=response.data;
-            this.remoteLoading = false;
-          })
-        }
-      },remoteEmployee(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/employee/search',{params:{key:query}}).then((response)=>{
-            this.employees=response.data;
             this.remoteLoading = false;
           })
         }

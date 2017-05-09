@@ -20,9 +20,9 @@
               <el-option v-for="area in formData.areas" :key="area.id" :label="area.name" :value="area.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="formLabel.type.label" :label-width="formLabelWidth">
-            <el-select v-model="formData.type" clearable filterable :placeholder="$t('accountChangeList.selectGroup')">
-              <el-option v-for="type in formData.types" :key="type" :label="type" :value="type"></el-option>
+          <el-form-item :label="formLabel.officeRuleName.label" :label-width="formLabelWidth">
+            <el-select v-model="formData.officeRuleName" clearable filterable :placeholder="$t('accountChangeList.selectGroup')">
+              <el-option v-for="officeRuleName in formData.types" :key="type" :label="type" :value="type"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -61,7 +61,7 @@
         },formLabel:{
           createdDate:{label:this.$t('accountChangeList.createdDate')},
           createdByName:{label:this.$t('accountChangeList.createdBy')},
-          type:{label:this.$t('accountChangeList.type')},
+          officeRuleName:{label:this.$t('accountChangeList.type')},
           officeId:{label:this.$t('accountChangeList.areaName'),value:''}
         },
         submitData:{
@@ -70,7 +70,7 @@
           officeId:'',
           createdDate:'',
           createdByName:'',
-          type:''
+          officeRuleName:''
         },
         formLabelWidth: '120px',
         formVisible: false,

@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.input.web.controller;
 
-import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.service.BatchMaterialService;
 import net.myspring.cloud.modules.input.web.query.BatchMaterialQuery;
 import net.myspring.common.response.RestResponse;
@@ -30,7 +30,7 @@ public class BatchMaterialController {
     public RestResponse save(String data) {
         data = HtmlUtils.htmlUnescape(data);
         List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
-        List<K3CloudSaveDto> resultList = batchMaterialService.save(datas);
+        List<KingdeeSynDto> resultList = batchMaterialService.save(datas);
         List<String> message = CollectionUtil.extractToList(resultList,"success");
         return new RestResponse("物料添加成功："+message,null,true);
     }

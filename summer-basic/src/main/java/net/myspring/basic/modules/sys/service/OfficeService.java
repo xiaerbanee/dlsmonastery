@@ -26,6 +26,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -78,9 +79,16 @@ public class OfficeService {
         return officeMapper.findAll();
     }
 
-    public Office findOne(String id) {
-        Office office = officeMapper.findOne(id);
-        return office;
+    public OfficeDto searchById(OfficeQuery officeQuery) {
+        OfficeDto officeDto=new OfficeDto();
+        List<String> officeFilter = officeManager.officeFilter(SecurityUtils.getAccountId());
+        officeQuery.setOfficeIds(officeFilter);
+        List<Office> officeList = officeMapper.findByFilter(officeQuery);
+        if(CollectionUtil.isNotEmpty(officeList)){
+            officeDto= BeanUtil.map(officeList.get(0),OfficeDto.class);
+            cacheUtils.initCacheInput(officeDto);
+        }
+        return officeDto;
     }
 
     public OfficeForm findForm(OfficeForm officeForm) {
@@ -173,8 +181,9 @@ public class OfficeService {
         officeMapper.logicDeleteOne(office.getId());
     }
 
-    public List<OfficeDto> findByFilter(Map<String, Object> map) {
-        List<Office> officeList = officeMapper.findByFilter(map);
+    public List<OfficeDto> findByFilter(OfficeQuery officeQuery) {
+        officeQuery.setOfficeIds(officeManager.officeFilter(SecurityUtils.getAccountId()));
+        List<Office> officeList = officeMapper.findByFilter(officeQuery);
         List<OfficeDto> officeDtoList = BeanUtil.map(officeList, OfficeDto.class);
         cacheUtils.initCacheInput(officeDtoList);
         return officeDtoList;

@@ -70,4 +70,9 @@ public class DictMapService {
     public void logicDeleteOne(String id) {
         dictMapMapper.logicDeleteOne(id);
     }
+
+    public List<DictMap> findByCategory(String category){
+        List<DictMap> dictMapList=dictMapMapper.findByCategory(category);
+        return dictMapList;
+    }
 }

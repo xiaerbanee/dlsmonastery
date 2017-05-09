@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.K3CloudBillTypeEnum;
+import net.myspring.cloud.common.enums.KingdeeBillTypeEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.domain.BdCustomer;
@@ -110,7 +110,7 @@ public class BatchBillService {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", batchBillDto.getDate());
-        if (K3CloudBillTypeEnum.销售出库单.name().equals(batchBillDto.getType())) {
+        if (KingdeeBillTypeEnum.销售出库单.name().equals(batchBillDto.getType())) {
             model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD01_SYS"));
         } else {
             model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD06_SYS"));
@@ -160,7 +160,7 @@ public class BatchBillService {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", batchBillDto.getDate());
-        if (K3CloudBillTypeEnum.销售退货单.name().equals(batchBillDto.getType())) {
+        if (KingdeeBillTypeEnum.销售退货单.name().equals(batchBillDto.getType())) {
             model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSTHD01_SYS"));
         } else {
             model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSTHD06_SYS"));
@@ -209,7 +209,7 @@ public class BatchBillService {
     }
 
     public BatchBillQuery getFormProperty(BatchBillQuery batchBillQuery){
-        batchBillQuery.setTypeList(K3CloudBillTypeEnum.values());
+        batchBillQuery.setTypeList(KingdeeBillTypeEnum.values());
         return batchBillQuery;
     }
 }

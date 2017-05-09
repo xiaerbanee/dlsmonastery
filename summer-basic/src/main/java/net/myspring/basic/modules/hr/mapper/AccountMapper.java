@@ -63,4 +63,6 @@ public interface AccountMapper extends BaseMapper<Account,String> {
     List<Account> findLabels(List<String> ids);
 
     List<Account> findByLoginNameList(List<String> loginNames);
+
+    List<Account> findById(String id);
 }

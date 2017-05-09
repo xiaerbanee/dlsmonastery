@@ -6,11 +6,8 @@
         <el-row :gutter="20">
           <el-col :span="7">
             <el-form-item label="账号名称" prop="id">
-              <el-select v-model="inputForm.id" filterable :clearable=true remote placeholder="请输入关键字"
-                         :remote-method="remoteAccount" @change="getTreeCheckData(inputForm.id)"
-                         :loading="remoteLoading">
-                <el-option v-for="item in accountList" :key="item.id" :label="item.loginName"
-                           :value="item.id"></el-option>
+              <el-select v-model="inputForm.id" filterable :clearable=true remote placeholder="请输入关键字" :loading="remoteLoading">
+                <el-option v-for="item in accountList" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
