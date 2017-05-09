@@ -21,9 +21,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.employeeName')" prop="employeeId">
-              <el-select v-model="inputForm.employeeId" filterable remote :placeholder="$t('adGoodsOrderForm.inputWord')" :remote-method="remoteEmployee" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="employee in employees" :key="employee.id" :label="employee.name" :value="employee.id"></el-option>
-              </el-select>
+              <employee-select v-model="inputForm.employeeId" ></employee-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.expressCompany')" prop="expressCompanyId">
               <el-select v-model="inputForm.expressOrder.expressCompanyId" clearable  >
@@ -69,7 +67,12 @@
   </div>
 </template>
 <script>
+  import employeeSelect from 'components/basic/employee-select'
+
   export default{
+    components:{
+      employeeSelect
+    },
     data(){
       return{
         isCreate:this.$route.query.id==null,
@@ -169,14 +172,6 @@
           this.remoteLoading = true;
           axios.get('/api/crm/depot/adShopBsc',{params:{key:query}}).then((response)=>{
             this.adDepotBacs=response.data;
-            this.remoteLoading = false;
-          })
-        }
-      },remoteEmployee(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/hr/employee/search',{params:{key:query}}).then((response)=>{
-            this.employees=response.data;
             this.remoteLoading = false;
           })
         }

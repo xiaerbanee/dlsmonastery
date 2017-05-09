@@ -4,10 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('employeePhoneDepositForm.employeeName')" prop="employeeId">
-          <el-select v-model="inputForm.employeeId" filterable remote :placeholder="$t('employeePhoneDepositForm.inputWord')" :remote-method="remoteEmployee" :loading="remoteLoading" :clearable=true>
-            <el-option v-for="employee in employees" :key="employee.id" :label="employee.name" :value="employee.id"></el-option>
-          </el-select>
-        </el-form-item>
+          <employee-select  v-model="inputForm.employeeId"></employee-select>
         <el-form-item :label="$t('employeePhoneDepositForm.depotName')" prop="depotId">
           <el-select v-model="inputForm.depotId" filterable remote :placeholder="$t('employeePhoneDepositForm.inputWord')" :remote-method="remoteDepot" :loading="remoteLoading" :clearable=true>
             <el-option v-for="depot in depots" :key="depot.id" :label="depot.name" :value="depot.id"></el-option>
@@ -32,12 +29,18 @@
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('employeePhoneDepositForm.save')}}</el-button>
         </el-form-item>
+        </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 <script>
+  import employeeSelect from 'components/basic/employee-select'
+
     export default{
+      components:{
+        employeeSelect
+      },
       data(){
           return{
             isCreate:this.$route.query.id==null,
@@ -107,16 +110,6 @@
                 this.inputForm.department=response.data.departMent;
               })
             }
-          } else {
-            this.depots = [];
-          }
-        },remoteEmployee(query) {
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/basic/hr/employee/search',{params:{key:query}}).then((response)=>{
-              this.employees=response.data;
-              this.remoteLoading = false;
-            })
           } else {
             this.depots = [];
           }
