@@ -75,7 +75,9 @@ public class KingdeeManager {
 
     public KingdeeSynDto save(KingdeeSynDto kingdeeSynDto) {
         KingdeeBook kingdeeBook = kingdeeSynDto.getKingdeeBook();
+        Map<String,String> resultMap = Maps.newHashMap();
         String result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SAVE.getValue(),kingdeeSynDto.getFormId(),kingdeeSynDto.getContent());
+        resultMap.put("SAVE",result);
         JSONObject jsonObject = JSONObject.fromObject(result);
         if (BoolEnum.TRUE.getValue().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
             String billNo = jsonObject.getJSONObject("Result").getString("Number");
@@ -83,31 +85,38 @@ public class KingdeeManager {
             root.put("CreateOrgId", 0);
             root.put("Numbers", billNo);
             String content = ObjectMapperUtils.writeValueAsString(root);
-            invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynDto.getFormId(), content);
+            result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynDto.getFormId(), content);
+            resultMap.put("SUBMIT",result);
             if (kingdeeSynDto.getAutoAudit()) {
-                invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynDto.getFormId(), content);
+                result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynDto.getFormId(), content);
+                resultMap.put("AUDIT",result);
             }
             kingdeeSynDto.setBillNo(billNo);
             kingdeeSynDto.setSuccess(true);
         } else {
             kingdeeSynDto.setSuccess(false);
         }
+        kingdeeSynDto.setResult(ObjectMapperUtils.writeValueAsString(resultMap));
         return kingdeeSynDto;
     }
 
 
     public KingdeeSynExtendDto save(KingdeeSynExtendDto kingdeeSynExtendDto) {
         KingdeeBook kingdeeBook = kingdeeSynExtendDto.getKingdeeBook();
+        Map<String,String> resultMap = Maps.newHashMap();
         String result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SAVE.getValue(),kingdeeSynExtendDto.getFormId(),kingdeeSynExtendDto.getContent());
+        resultMap.put("SAVE",result);
         JSONObject jsonObject = JSONObject.fromObject(result);
-        if (BoolEnum.TRUE.getValue().toString().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
+        if (BoolEnum.TRUE.getValue().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
             String billNo = jsonObject.getJSONObject("Result").getString("Number");
             Map<String, Object> root = Maps.newLinkedHashMap();
             root.put("CreateOrgId", 0);
             root.put("Numbers", billNo);
             String content = ObjectMapperUtils.writeValueAsString(root);
-            invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynExtendDto.getFormId(), content);
-            invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynExtendDto.getFormId(), content);
+            result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynExtendDto.getFormId(), content);
+            resultMap.put("SUBMIT",result);
+            result =  invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynExtendDto.getFormId(), content);
+            resultMap.put("AUDIT",result);
             kingdeeSynExtendDto.setBillNo(billNo);
             String nextBillNo = kingdeeSynExtendDto.getNextBillNo();
             root = Maps.newLinkedHashMap();
@@ -115,12 +124,15 @@ public class KingdeeManager {
             root.put("Numbers", nextBillNo);
             kingdeeSynExtendDto.setBillNo(kingdeeSynExtendDto.getBillNo() + CharConstant.COMMA + nextBillNo);
             content = ObjectMapperUtils.writeValueAsString(root);
-            invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
-            invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
+            result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
+            resultMap.put("NEXT_SUBMIT",result);
+            result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
+            resultMap.put("NEXT_AUDIT",result);
             kingdeeSynExtendDto.setSuccess(true);
         } else {
             kingdeeSynExtendDto.setSuccess(false);
         }
+        kingdeeSynExtendDto.setResult(ObjectMapperUtils.writeValueAsString(result));
         return kingdeeSynExtendDto;
     }
 

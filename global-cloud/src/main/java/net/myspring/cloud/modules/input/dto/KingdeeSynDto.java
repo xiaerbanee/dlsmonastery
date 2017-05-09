@@ -11,6 +11,7 @@ public class KingdeeSynDto {
     private String formId;
     private String content;
     private String billNo;
+    private String result;
     private Boolean autoAudit = true;
 
     public KingdeeSynDto(String formId, String content) {
@@ -56,6 +57,14 @@ public class KingdeeSynDto {
 
     public void setBillNo(String billNo) {
         this.billNo = billNo;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public Boolean getAutoAudit() {
