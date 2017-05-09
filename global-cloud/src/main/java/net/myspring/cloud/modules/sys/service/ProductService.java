@@ -1,10 +1,10 @@
 package net.myspring.cloud.modules.sys.service;
 
 import com.google.common.collect.Maps;
-import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.sys.domain.Product;
 import net.myspring.cloud.modules.sys.dto.ProductDto;
@@ -20,8 +20,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-
-import static net.myspring.util.mapper.BeanUtil.map;
 
 /**
  * Created by liuj on 2017/4/5.
@@ -39,7 +37,7 @@ public class ProductService {
     }
 
     public Map<String,Object> getFormProperty(){
-        String companyId = DynamicDataSourceContext.get().getCompanyId();
+        String companyId = RequestUtils.getCompanyId();
         List<Product> productList = productMapper.findByCompanyId(companyId);
         List<ProductDto> productDtoList = BeanUtil.map(productList,ProductDto.class);
         Map<String,Object> map= Maps.newHashMap();
@@ -54,7 +52,7 @@ public class ProductService {
     }
 
     public void save(List<List<Object>> datas) {
-        String companyId = DynamicDataSourceContext.get().getCompanyId();
+        String companyId = RequestUtils.getCompanyId();
         List<Product> productList = productMapper.findByCompanyId(companyId);
         Map<String,Product> productMap = CollectionUtil.extractToMap(productList,"code");
         for (List<Object> row : datas) {
@@ -71,7 +69,7 @@ public class ProductService {
 
     public void syn(List<BdMaterial> bdMaterials) {
         if (CollectionUtil.isNotEmpty(bdMaterials)) {
-            String companyId = DynamicDataSourceContext.get().getCompanyId();
+            String companyId = RequestUtils.getCompanyId();
             String returnOutId = "";
             if(!KingdeeNameEnum.JXDJ.name().equals(kingdeeBookMapper.findNameByCompanyId(companyId))){
                 returnOutId = productMapper.findReturnOutId(companyId);

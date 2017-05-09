@@ -2,7 +2,6 @@ package net.myspring.cloud.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.VoucherFormDto;
@@ -54,10 +53,9 @@ public class VoucherController {
     public Map<String,Object> list(Pageable pageable, VoucherQuery voucherQuery, String companyId) {
         Map<String,Object> map = Maps.newHashMap();
         if(StringUtils.isNotBlank(companyId)) {
-            DynamicDataSourceContext.get().setCompanyId(companyId);
             voucherQuery.setCompanyId(companyId);
         }else{
-            voucherQuery.setCompanyId(DynamicDataSourceContext.get().getCompanyId());
+            voucherQuery.setCompanyId(RequestUtils.getCompanyId());
         }
         Page<VoucherDto> page = voucherService.findPage(pageable, voucherQuery);
         for (VoucherDto voucherDto : page.getContent()) {
@@ -76,7 +74,6 @@ public class VoucherController {
         Map<String,Object> map = Maps.newHashMap();
         if (voucherDto.getId() != null) {
             voucherDto = voucherService.findOne(voucherDto.getId());
-            DynamicDataSourceContext.get().setCompanyId(companyId);
         }
         if(StringUtils.isNotBlank(companyId)){
             VoucherFormDto voucherFormDto = glVoucherService.getGlVoucherDto();
