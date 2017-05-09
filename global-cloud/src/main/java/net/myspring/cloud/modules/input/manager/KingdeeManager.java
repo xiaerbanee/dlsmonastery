@@ -30,7 +30,7 @@ public class KingdeeManager {
     private Map<String, OkHttpClient> okHttpClientMap = Maps.newHashMap();
 
 
-    public Boolean login(String url,String dbid,String username,String password) {
+    public Boolean login(String postUrl,String dbid,String username,String password) {
         List<Object> list = Lists.newArrayList();
         list.add(dbid);
         list.add(username);
@@ -38,7 +38,7 @@ public class KingdeeManager {
         list.add("2052");
         OkHttpClient okHttpClient = getClient(SecurityUtils.getAccountId());
         Request request = new Request.Builder()
-                .url(url + KingdeeActionEnum.VALIDATE_USER.getValue())
+                .url(postUrl + KingdeeActionEnum.VALIDATE_USER.getValue())
                 .addHeader("content-type", "application/json;charset:utf-8")
                 .put(getRequestBody(list))
                 .build();

@@ -7,7 +7,7 @@
           <el-col :span="6">
             <el-form-item :label="formLabel.storeNumber.label"  :label-width="formLabelWidth">
               <el-select v-model="formData.storeNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStore" :loading="remoteLoading">
-                <el-option v-for="item in storeList" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                <el-option v-for="item in storeList" :key="item.number" :label="item.name" :value="item.number"></el-option>
               </el-select>
             </el-form-item>
           </el-col>

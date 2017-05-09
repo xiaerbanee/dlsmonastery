@@ -78,7 +78,7 @@ public class RoleController {
             List<Permission> permissionList=permissionService.findByRoleId(roleForm.getId());
             List<String> permissionIds = CollectionUtil.extractToList(permissionList, "id");
             roleForm.setPermissionIdList(permissionIds);
-            TreeNode treeNode=permissionService.findPermissionTree(roleForm.getId(),permissionIds);
+            TreeNode treeNode=permissionService.findRoleTree(roleForm.getId(),permissionIds);
             return treeNode;
         }
         return null;
