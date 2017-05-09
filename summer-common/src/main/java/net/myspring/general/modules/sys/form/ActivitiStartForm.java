@@ -6,15 +6,15 @@ package net.myspring.general.modules.sys.form;
 public class ActivitiStartForm {
     private String name;
     private String businessKey;
-    private String processTypeId;
+    private String processTypeName;
     private String message;
 
     public ActivitiStartForm(){};
-    public ActivitiStartForm(String name,String businessKey, String processTypeId,String message){
+    public ActivitiStartForm(String name,String businessKey, String processTypeName,String message){
         this.name = name;
         this.message=message;
         this.businessKey=businessKey;
-        this.processTypeId=processTypeId;
+        this.processTypeName=processTypeName;
     }
 
     public String getMessage() {
@@ -41,11 +41,11 @@ public class ActivitiStartForm {
         this.businessKey = businessKey;
     }
 
-    public String getProcessTypeId() {
-        return processTypeId;
+    public String getProcessTypeName() {
+        return processTypeName;
     }
 
-    public void setProcessTypeId(String processTypeId) {
-        this.processTypeId = processTypeId;
+    public void setProcessTypeName(String processTypeName) {
+        this.processTypeName = processTypeName;
     }
 }

@@ -13,7 +13,6 @@ public class BankInForm extends DataForm<BankIn> {
     private String shopId;
     private String type;
     private List<String>  typeList;
-
     private String bankId;
     private List<BankDto> bankDtoList;
     private LocalDate inputDate;

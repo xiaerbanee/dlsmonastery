@@ -31,6 +31,15 @@ public class BankIn extends CompanyEntity<BankIn> {
     private Bank bank;
     private String bankId;
     private String cloudSynId;
+    private String positionId;
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
 
     public String getShopId() {
         return shopId;
