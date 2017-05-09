@@ -16,9 +16,6 @@
     },
     methods:{
       onChange( newVal) {
-        if(!newVal) {
-          newVal = "";
-        }
         this.$emit('input', newVal);
         return true;
       },setValue(val) {
