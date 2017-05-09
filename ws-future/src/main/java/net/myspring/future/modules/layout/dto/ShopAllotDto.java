@@ -1,7 +1,12 @@
 package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.future.modules.layout.domain.ShopAllot;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShopAllotDto extends DataDto<ShopAllot> {
 
@@ -69,12 +74,60 @@ public class ShopAllotDto extends DataDto<ShopAllot> {
         this.status = status;
     }
 
-    public Boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public BigDecimal getToShopShouldGet() {
+        return toShopShouldGet;
+    }
+
+    public void setToShopShouldGet(BigDecimal toShopShouldGet) {
+        this.toShopShouldGet = toShopShouldGet;
+    }
+
+    public BigDecimal getFromShopShouldGet() {
+        return fromShopShouldGet;
+    }
+
+    public void setFromShopShouldGet(BigDecimal fromShopShouldGet) {
+        this.fromShopShouldGet = fromShopShouldGet;
+    }
+
+    public BigDecimal getSaleTotalPrice() {
+        return saleTotalPrice;
+    }
+
+    public void setSaleTotalPrice(BigDecimal saleTotalPrice) {
+        this.saleTotalPrice = saleTotalPrice;
+    }
+
+    public BigDecimal getReturnTotalPrice() {
+        return returnTotalPrice;
+    }
+
+    public void setReturnTotalPrice(BigDecimal returnTotalPrice) {
+        this.returnTotalPrice = returnTotalPrice;
+    }
+
+    public List<ShopAllotDetailDto> getShopAllotDetailList() {
+        return shopAllotDetailList;
+    }
+
+    public void setShopAllotDetailList(List<ShopAllotDetailDto> shopAllotDetailList) {
+        this.shopAllotDetailList = shopAllotDetailList;
+    }
+
+    public Boolean getAuditable(){
+        return AuditTypeEnum.APPLYING.name().equals(status);
+    }
+
+    public Boolean getEditable(){
+        return AuditTypeEnum.APPLYING.name().equals(status);
     }
 
     private String fromShopName;
@@ -86,5 +139,12 @@ public class ShopAllotDto extends DataDto<ShopAllot> {
     private String outSaleCode;
     private String status;
     private Boolean enabled;
+    private BigDecimal saleTotalPrice;
+    private BigDecimal returnTotalPrice;
+    private BigDecimal toShopShouldGet;
+    private BigDecimal fromShopShouldGet;
+
+
+    private List<ShopAllotDetailDto> shopAllotDetailList = new ArrayList<>();
 
 }

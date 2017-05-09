@@ -3,14 +3,33 @@ package net.myspring.future.modules.layout.dto;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 
+import java.math.BigDecimal;
+
 public class ShopAllotDetailDto extends DataDto<ShopAllotDetail> {
-
-
 
     private String shopAllotId;
     private String productId;
     private String productName;
     private Integer qty;
+    private BigDecimal returnPrice;
+    private BigDecimal salePrice;
+
+    public BigDecimal getReturnPrice() {
+        return returnPrice;
+    }
+
+    public void setReturnPrice(BigDecimal returnPrice) {
+        this.returnPrice = returnPrice;
+    }
+
+    public BigDecimal getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(BigDecimal salePrice) {
+        this.salePrice = salePrice;
+    }
+
 
     public String getShopAllotId() {
         return shopAllotId;
@@ -43,8 +62,5 @@ public class ShopAllotDetailDto extends DataDto<ShopAllotDetail> {
     public void setQty(Integer qty) {
         this.qty = qty;
     }
-
-
-
 
 }

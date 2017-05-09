@@ -15,9 +15,7 @@
                     where t1.id in (select t2.product_id from crm_pricesystem_detail t2 where t2.pricesystem_id = (select depot1.pricesystem_id from crm_depot depot1 where depot1.id = #{fromShopId}))
                     and t1.id in (select t3.product_id from crm_pricesystem_detail t3 where t3.pricesystem_id =  (select depot2.pricesystem_id from crm_depot depot2 where depot2.id = #{toShopId}))
                     and t1.enabled=1) validProduct LEFT JOIN crm_shop_allot_detail detail
-                    ON validProduct.id = detail.product_id
-        where  detail.shop_allot_id = #{shopAllotId}
-
+                    ON validProduct.id = detail.product_id and  detail.shop_allot_id = #{shopAllotId}
     </select>
 
 
@@ -30,6 +28,16 @@
         and t1.enabled=1
 
     </select>
+
+
+    <select id="getShopAllotDetailListForViewOrAudit" resultType="ShopAllotDetailDto">
+
+        select t2.name productName, t1.*
+        from  crm_shop_allot_detail t1 , crm_product t2
+        WHERE  t1.product_id = t2.id  and  t1.shop_allot_id = #{shopAllotId}
+    </select>
+
+
 
 
     <select id="findByShopAllotIds" resultType="ShopAllotDetail">

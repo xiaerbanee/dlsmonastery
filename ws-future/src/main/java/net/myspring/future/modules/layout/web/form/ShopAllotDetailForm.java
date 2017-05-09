@@ -3,14 +3,35 @@ package net.myspring.future.modules.layout.web.form;
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 
+import java.math.BigDecimal;
+
 /**
  * Created by wangzm on 2017/4/21.
  */
 public class ShopAllotDetailForm extends DataForm<ShopAllotDetail> {
 
-
     private String shopAllotId;
     private String productId;
+    private BigDecimal returnPrice;
+    private BigDecimal salePrice;
+    private String productName;
+    private Integer qty;
+
+    public BigDecimal getReturnPrice() {
+        return returnPrice;
+    }
+
+    public void setReturnPrice(BigDecimal returnPrice) {
+        this.returnPrice = returnPrice;
+    }
+
+    public BigDecimal getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(BigDecimal salePrice) {
+        this.salePrice = salePrice;
+    }
 
     public String getShopAllotId() {
         return shopAllotId;
@@ -44,8 +65,6 @@ public class ShopAllotDetailForm extends DataForm<ShopAllotDetail> {
         this.qty = qty;
     }
 
-    private String productName;
-    private Integer qty;
 
 
 }

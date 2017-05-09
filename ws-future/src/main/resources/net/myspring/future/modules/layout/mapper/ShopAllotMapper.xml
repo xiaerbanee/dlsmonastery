@@ -12,7 +12,10 @@
 
 
     <select id="findShopAllotDto" resultType="ShopAllotDto">
-        SELECT  depot1.name fromShopName, depot2.name toShopName, t1.*
+        SELECT  depot1.name fromShopName, depot2.name toShopName
+                     , (select sum(detail1.qty * detail1.sale_price) from crm_shop_allot_detail detail1 where detail1.shop_allot_id = #{id}) saleTotalPrice
+                     ,(select sum(detail2.qty * detail2.return_price) from crm_shop_allot_detail detail2 where  detail2.shop_allot_id = #{id}) returnTotalPrice
+                     ,t1.*
         FROM  crm_shop_allot t1,crm_depot depot1, crm_depot depot2
         where t1.enabled=1
         and (t1.from_shop_id=depot1.id and  t1.to_shop_id=depot2.id)

@@ -2,9 +2,7 @@ package net.myspring.future.modules.basic.mapper;
 
 
 import net.myspring.common.cache.IdCacheKeyGenerator;
-import net.myspring.common.mybatis.MyMapper;
 import net.myspring.common.mybatis.MyProvider;
-import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
@@ -49,4 +47,6 @@ public interface PricesystemDetailMapper extends BaseMapper<PricesystemDetail,St
     List<PricesystemDetail> findByProductIdList(List<String> productIdList);
 
     List<PricesystemDetail> findByPricesystemId(String pricesystemId);
+
+    List<PricesystemDetail> findByDepotId(@Param("depotId") String depotId);
 }
