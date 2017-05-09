@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable remote :placeholder="$t('su_district.inputKey')" :remote-method="remoteSearch" :loading="remoteLoading"  :clearable=true @change="valueChanged">
+    <el-select v-model="innerId"  :disabled = "this.disabled" filterable remote :placeholder="$t('su_district.inputKey')" :remote-method="remoteSearch" :loading="remoteLoading"  :clearable=true @change="valueChanged">
       <el-option v-for="item in options"  :key="item.id" :label="item.name" :value="item.id"></el-option>
     </el-select>
   </div>
@@ -12,6 +12,9 @@
         required: true
       }, type: {
         required: true
+      },disabled:{
+        required: false,
+        default:false
       }
     },
     data() {
@@ -20,27 +23,28 @@
         options : [],
         remoteLoading:false,
         searchLock:false,
+
       };
     } ,
     computed:{
       url: function() {
-          if(this.type == 'shop'){
+        if(this.type == 'shop'){
 
-            return {
-              search:'/api/ws/future/basic/depot/searchShop',
-              searchById:'/api/ws/future/basic/depot/searchById',
-            }
-          }else if(this.type == 'store'){
-              return {
-                search:'/api/ws/future/basic/depot/searchStore',
-                searchById:'/api/ws/future/basic/depot/searchById',
-              }
-          }else{
-            return {
-              search:'',
-              searchById:'',
-            }
+          return {
+            search:'/api/ws/future/basic/depot/searchShop',
+            searchById:'/api/ws/future/basic/depot/searchById',
           }
+        }else if(this.type == 'store'){
+          return {
+            search:'/api/ws/future/basic/depot/searchStore',
+            searchById:'/api/ws/future/basic/depot/searchById',
+          }
+        }else{
+          return {
+            search:'',
+            searchById:'',
+          }
+        }
 
       }
     },

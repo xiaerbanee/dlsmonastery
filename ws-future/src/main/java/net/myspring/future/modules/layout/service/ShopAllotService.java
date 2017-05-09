@@ -57,7 +57,6 @@ public class ShopAllotService {
         return shopAllot;
     }
 
-
     public Page<ShopAllotDto> findPage(Pageable pageable, ShopAllotQuery shopAllotQuery) {
         Page<ShopAllotDto> page = shopAllotMapper.findPage(pageable, shopAllotQuery);
         cacheUtils.initCacheInput(page.getContent());
@@ -122,6 +121,8 @@ public class ShopAllotService {
             ReflectionUtil.copyProperties(shopAllotForm, shopAllot);
             String maxBusinessId = shopAllotMapper.findMaxBusinessId(LocalDate.now());
             shopAllot.setBusinessId(StringUtils.getNextBusinessId(maxBusinessId));
+            shopAllot.setStatus(AuditTypeEnum.APPLYING.name());
+            shopAllot.setEnabled(Boolean.TRUE);
             shopAllotMapper.save(shopAllot);
 
             batchSaveShopAllotDetails(shopAllotForm.getShopAllotDetailFormList(), shopAllot);
