@@ -2,7 +2,6 @@ package net.myspring.cloud.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
@@ -237,7 +236,7 @@ public class VoucherService {
     public VoucherForm save(List<List<Object>> datas,VoucherForm voucherForm,VoucherFormDto voucherFormDto) {
         Boolean isCreate = StringUtils.isBlank(voucherForm.getId());
         if (isCreate) {
-            voucherForm.setCompanyId(DynamicDataSourceContext.get().getCompanyId());
+            voucherForm.setCompanyId(RequestUtils.getCompanyId());
             //待写accountName；
             voucherForm.setCreatedName(RequestUtils.getAccountId());
             if(RequestUtils.getAccountId() != null){//问题ThreadLocalContext.get().getAccount() != null

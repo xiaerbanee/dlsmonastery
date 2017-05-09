@@ -1,7 +1,6 @@
 package net.myspring.cloud.modules.sys.web.controller;
 
 import com.google.common.collect.Maps;
-import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.input.service.BdMaterialService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
@@ -39,7 +38,6 @@ public class ProductController {
     public Map<String,Object> getFormProperty(String companyId){
         Map<String,Object> map= Maps.newHashMap();
         if (StringUtils.isNotBlank(companyId)) {
-            DynamicDataSourceContext.get().setCompanyId(companyId);
             map.putAll(productService.getFormProperty());
         }
         //用户所拥有的kingdeeName
@@ -62,7 +60,6 @@ public class ProductController {
     public RestResponse syn(String companyId) {
         if (StringUtils.isNotBlank(companyId)) {
             LocalDateTime maxOutDate = productService.findMaxOutDate(companyId);
-            DynamicDataSourceContext.get().setCompanyId(companyId);
             List<BdMaterial> bdMaterials = bdMaterialService.findByDate(maxOutDate);
             if(CollectionUtil.isNotEmpty(bdMaterials)){
                 productService.syn(bdMaterials);
