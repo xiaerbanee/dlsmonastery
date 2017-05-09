@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.cloud.modules.sys.mapper.AccountKingdeeBookMapper">
+    <select id="findByAccountId" resultType="AccountKingdeeBook">
+        select t1.*
+        from sys_account_kingdee_book t1
+        where t1.account_id = #{accountId}
+    </select>
+
+</mapper>

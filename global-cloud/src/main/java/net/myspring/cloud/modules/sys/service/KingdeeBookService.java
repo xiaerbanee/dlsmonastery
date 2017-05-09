@@ -73,6 +73,10 @@ public class KingdeeBookService {
         return kingdeeBookMapper.findNameByCompanyId(companyId);
     }
 
+    public KingdeeBook getByCompanyId(String companyId){
+        return kingdeeBookMapper.findByCompanyId(companyId);
+    }
+
     public boolean isWZOPPO(String companyId){
         if (StringUtils.isNotBlank(companyId)){
             String kingdeeBookName = kingdeeBookMapper.findNameByCompanyId(companyId);
