@@ -3,7 +3,7 @@ package net.myspring.cloud.common.enums;
 /**
  * Created by liuj on 2017/5/8.
  */
-public enum K3CloudActionEnum {
+public enum KingdeeActionEnum {
         SAVE("Kingdee.BOS.WebApi.ServicesStub.DynamicFormService.Save.common.kdsvc"),
         VIEW("Kingdee.BOS.WebApi.ServicesStub.DynamicFormService.View.common.kdsvc"),
         SUBMIT("Kingdee.BOS.WebApi.ServicesStub.DynamicFormService.Submit.common.kdsvc"),
@@ -14,7 +14,7 @@ public enum K3CloudActionEnum {
 
         private String value;
 
-        K3CloudActionEnum(String value) {
+        KingdeeActionEnum(String value) {
             this.value = value;
         }
 

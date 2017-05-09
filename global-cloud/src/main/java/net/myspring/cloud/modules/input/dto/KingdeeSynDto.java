@@ -5,15 +5,16 @@ import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 /**
  * Created by liuj on 2016-06-20.
  */
-public class K3CloudSaveDto {
+public class KingdeeSynDto {
     private Boolean success;
     private KingdeeBook kingdeeBook;
     private String formId;
     private String content;
     private String billNo;
+    private String result;
     private Boolean autoAudit = true;
 
-    public K3CloudSaveDto(String formId, String content) {
+    public KingdeeSynDto(String formId, String content) {
         this.formId = formId;
         this.content = content;
     }
@@ -56,6 +57,14 @@ public class K3CloudSaveDto {
 
     public void setBillNo(String billNo) {
         this.billNo = billNo;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public Boolean getAutoAudit() {

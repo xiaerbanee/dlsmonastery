@@ -3,12 +3,12 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
+import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.MisDeliveryTypeEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.dto.BatchDeliveryDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.mapper.BdStockMapper;
@@ -77,7 +77,7 @@ public class BatchDeliveryService {
         List<String> billNos = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchDeliveryDto misDelivery : billList) {
-                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.STK_MisDelivery.name(), getMisDeliveryReturn(misDelivery,accountDto));
+                KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(KingdeeFormIdEnum.STK_MisDelivery.name(), getMisDeliveryReturn(misDelivery,accountDto));
                 String billNo = null;
                 billNos.add(billNo);
             }
