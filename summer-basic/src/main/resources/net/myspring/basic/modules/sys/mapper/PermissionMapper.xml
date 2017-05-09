@@ -30,21 +30,12 @@
             t1.*
         FROM
             sys_permission t1,
-            sys_role_permission t2,
-            sys_role_module t3,
-            sys_menu_category t4,
-            sys_menu t5
+            sys_role_permission t2
         WHERE
             t1.id = t2.permission_id
         AND t2.role_id = #{roleId}
-        AND t2.role_id = t3.role_id
-        AND t3.backend_module_id = t4.backend_module_id
-        AND t4.id = t5.menu_category_id
-        AND t1.menu_id = t5.id
         AND t1.enabled = 1
-        AND t3.enabled = 1
-        AND t4.enabled = 1
-        AND t5.enabled = 1
+        AND t2.enabled = 1
     </select>
 
     <select id="findByRoleAndAccount" resultType="Permission">
@@ -53,25 +44,15 @@
         FROM
             sys_permission t1,
             sys_role_permission t2,
-            sys_role_module t3,
-            sys_menu_category t4,
-            sys_menu t5,
-            hr_account_permission t6,
-            hr_account t7
+            hr_account_permission t3
         WHERE
             t1.id = t2.permission_id
+        and t2.permission_id=t3.permission_id
         AND t2.role_id = #{roleId}
-        AND t2.role_id = t3.role_id
-        AND t3.backend_module_id = t4.backend_module_id
-        AND t4.id = t5.menu_category_id
-        AND t1.menu_id = t5.id
-        and t6.permission_id=t1.id
-        and t6.account_id=t7.id
-        and t7.id=#{accountId}
+        and t3.account_id=#{accountId}
         AND t1.enabled = 1
         AND t3.enabled = 1
-        AND t4.enabled = 1
-        AND t5.enabled = 1
+        AND t2.enabled = 1
     </select>
 
     <select id="findByMenuId" resultType="Permission">

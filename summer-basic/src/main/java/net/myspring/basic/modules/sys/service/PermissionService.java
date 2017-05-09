@@ -125,11 +125,23 @@ public class PermissionService {
         return treeNode;
     }
 
-    public TreeNode findPermissionTree(String roleId,List<String> permissionIdList) {
-        Set<String> permissionIdSet = Sets.newHashSet(permissionIdList);
-        TreeNode treeNode = new TreeNode("0", "权限列表");
+    public TreeNode findRoleTree(String roleId,List<String> permissionIdList) {
         List<BackendMenuDto> backendMenuDtoList = backendMapper.findByRoleId(roleId);
-        List<Permission> permissionList = permissionMapper.findAllEnabled();
+        List<Permission> permissionList=permissionMapper.findAll();
+        TreeNode treeNode=getTreeNode(backendMenuDtoList,permissionList,permissionIdList);
+        return treeNode;
+    }
+
+    public TreeNode findRolePermissionTree(String roleId,List<String> permissionIdList) {
+        List<BackendMenuDto> backendMenuDtoList = backendMapper.findRolePermissionByRoleId(roleId);
+        List<Permission> permissionList=permissionMapper.findByRoleId(roleId);
+        TreeNode treeNode=getTreeNode(backendMenuDtoList,permissionList,permissionIdList);
+        return treeNode;
+    }
+
+    private TreeNode getTreeNode(List<BackendMenuDto> backendMenuDtoList,List<Permission> permissionList,List<String> permissionIdList){
+        TreeNode treeNode = new TreeNode("0", "权限列表");
+        Set<String> permissionIdSet = Sets.newHashSet(permissionIdList);
         Map<String,List<Permission>> permissionMap=CollectionUtil.extractToMapList(permissionList,"menuId");
         for(BackendMenuDto backend:backendMenuDtoList){
             TreeNode backendTree = new TreeNode("b" + backend.getId(), backend.getName());

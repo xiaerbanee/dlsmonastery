@@ -162,7 +162,7 @@ public class AccountController {
 
     @RequestMapping(value = "getTreeNode")
     public TreeNode getTreeNode() {
-        TreeNode treeNode=permissionService.findPermissionTree(SecurityUtils.getRoleId(), Lists.newArrayList());
+        TreeNode treeNode=permissionService.findRolePermissionTree(SecurityUtils.getRoleId(), Lists.newArrayList());
         return treeNode;
     }
 
