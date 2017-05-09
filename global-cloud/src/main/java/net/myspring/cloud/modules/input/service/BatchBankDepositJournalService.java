@@ -167,7 +167,7 @@ public class BatchBankDepositJournalService {
 
     public BatchBankDepositJournalQuery getFormProperty(BatchBankDepositJournalQuery batchBankDepositJournalQuery){
         List<NameNumberDto> accountSubjectList = bdAccountMapper.findForIsBank();
-        batchBankDepositJournalQuery.setAccountSubject(accountSubjectList);
+        batchBankDepositJournalQuery.setAccountSubjectList(accountSubjectList);
         return batchBankDepositJournalQuery;
     }
 

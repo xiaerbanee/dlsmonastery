@@ -9,14 +9,14 @@ import java.util.List;
  */
 public class BatchBankDepositJournalQuery {
     private String kingdeeName;
-    private List<NameNumberDto> accountSubject;
+    private List<NameNumberDto> accountSubjectList;
 
-    public List<NameNumberDto> getAccountSubject() {
-        return accountSubject;
+    public List<NameNumberDto> getAccountSubjectList() {
+        return accountSubjectList;
     }
 
-    public void setAccountSubject(List<NameNumberDto> accountSubject) {
-        this.accountSubject = accountSubject;
+    public void setAccountSubjectList(List<NameNumberDto> accountSubjectList) {
+        this.accountSubjectList = accountSubjectList;
     }
 
     public String getKingdeeName() {
