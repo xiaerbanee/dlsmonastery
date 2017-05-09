@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by liuj on 2017/4/2.
  */
-public class SecurityUtils {
+public class RequestUtils {
 
     public static String getAccountId() {
         return String.valueOf(getAdditionalInformation().get("accountId"));

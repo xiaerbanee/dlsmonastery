@@ -1,7 +1,7 @@
 package net.myspring.general.common.domain;
 
 import net.myspring.common.domain.DataEntity;
-import net.myspring.general.common.utils.SecurityUtils;
+import net.myspring.general.common.utils.RequestUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
@@ -16,7 +16,7 @@ public class CompanyEntity<T> extends DataEntity<T> {
 
     public String getCompanyId() {
         if(StringUtils.isBlank(companyId) && StringUtils.isBlank(id)) {
-            companyId = SecurityUtils.getCompanyId();
+            companyId = RequestUtils.getCompanyId();
         }
         return companyId;
     }

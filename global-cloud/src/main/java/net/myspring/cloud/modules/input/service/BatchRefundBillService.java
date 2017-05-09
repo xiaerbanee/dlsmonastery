@@ -6,7 +6,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.domain.BdCustomer;
 import net.myspring.cloud.modules.input.domain.CnBank;
 import net.myspring.cloud.modules.input.dto.BatchRefundBillDto;
@@ -79,7 +79,7 @@ public class BatchRefundBillService {
                     arRefundBill.setBillDate(billDate);
                     arRefundBill.setAmount(amount);
                     arRefundBill.setDepartment(bdDepartmentMapper.findByCustomerId(customerIdMap.get(customerName)).getfNumber());
-                    if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(SecurityUtils.getCompanyId()))) {
+                    if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(RequestUtils.getCompanyId()))) {
                         arRefundBill.setSubject(bdCustomerMapper.findNumberByName("银行存款"));
                     }
                     arRefundBill.setNote(remarks);
@@ -136,7 +136,7 @@ public class BatchRefundBillService {
         Map<String, Object> detail = Maps.newLinkedHashMap();
         detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", "JSFS04_SYS"));
         detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
-        if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(SecurityUtils.getCompanyId()))) {
+        if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(RequestUtils.getCompanyId()))) {
             detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", arRefundBill.getSubject()));
         }
         detail.put("FREFUNDAMOUNTFOR", arRefundBill.getAmount());
@@ -162,7 +162,7 @@ public class BatchRefundBillService {
         Map<String, Object> detail = Maps.newLinkedHashMap();
         detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", "JSFS01_SYS"));
         detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
-        if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(SecurityUtils.getCompanyId()))) {
+        if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(RequestUtils.getCompanyId()))) {
             detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", arRefundBill.getSubject()));
         }
         detail.put("FREFUNDAMOUNTFOR", arRefundBill.getAmount());

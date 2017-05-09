@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.input.web.controller;
 
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.service.BatchCashDepositJournalService;
 import net.myspring.cloud.modules.input.web.form.BatchCashDepositJournalForm;
 import net.myspring.cloud.modules.input.web.query.BatchCashDepositJournalQuery;
@@ -30,7 +30,7 @@ public class BatchCashDepositJournalController {
 
     @RequestMapping(value = "form")
     public BatchCashDepositJournalQuery cashForm(BatchCashDepositJournalQuery batchCashDepositJournalQuery) {
-        String kingdeeName = kingdeeBookService.getNameByCompanyId(SecurityUtils.getCompanyId());
+        String kingdeeName = kingdeeBookService.getNameByCompanyId(RequestUtils.getCompanyId());
         batchCashDepositJournalQuery.setKingdeeName(kingdeeName);
         return batchCashDepositJournalQuery;
     }

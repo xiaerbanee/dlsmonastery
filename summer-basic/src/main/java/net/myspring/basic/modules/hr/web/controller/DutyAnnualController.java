@@ -1,22 +1,17 @@
 package net.myspring.basic.modules.hr.web.controller;
 
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.dto.DutyAnnualDto;
 import net.myspring.basic.modules.hr.service.DutyAnnualService;
 import net.myspring.basic.modules.hr.web.query.DutyAnnualQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.util.excel.SimpleExcelBook;
-import net.myspring.util.excel.SimpleExcelSheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 
@@ -29,7 +24,7 @@ public class DutyAnnualController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyAnnualDto> list(Pageable pageable, DutyAnnualQuery dutyAnnualQuery) {
-        dutyAnnualQuery.setCreatedBy(SecurityUtils.getAccountId());
+        dutyAnnualQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyAnnualDto> page  = dutyAnnualService.findPage(pageable,dutyAnnualQuery);
         return page;
     }

@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.input.manager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.KingdeeActionEnum;
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
@@ -36,7 +36,7 @@ public class KingdeeManager {
         list.add(username);
         list.add(password);
         list.add("2052");
-        OkHttpClient okHttpClient = getClient(SecurityUtils.getAccountId());
+        OkHttpClient okHttpClient = getClient(RequestUtils.getAccountId());
         Request request = new Request.Builder()
                 .url(postUrl + KingdeeActionEnum.VALIDATE_USER.getValue())
                 .addHeader("content-type", "application/json;charset:utf-8")
@@ -62,7 +62,7 @@ public class KingdeeManager {
                 .addHeader("content-type", "application/json;charset:utf-8")
                 .put(getRequestBody(list))
                 .build();
-        OkHttpClient okHttpClient = getClient(SecurityUtils.getAccountId());
+        OkHttpClient okHttpClient = getClient(RequestUtils.getAccountId());
         try {
             Response response = okHttpClient.newCall(request).execute();
             String result = response.body().string();

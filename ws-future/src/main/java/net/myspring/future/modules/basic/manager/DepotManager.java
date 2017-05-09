@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.enums.*;
-import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -202,10 +202,10 @@ public class DepotManager {
 
     public Map<String,Object> filterDepotIds(){
         Map<String,Object> filterMap= Maps.newLinkedHashMap();
-        String accountId = SecurityUtils.getAccountId();
-        List<Depot> depotList=depotMapper.findByAccountId(SecurityUtils.getAccountId());
+        String accountId = RequestUtils.getAccountId();
+        List<Depot> depotList=depotMapper.findByAccountId(RequestUtils.getAccountId());
         filterMap.put("depotIdList",CollectionUtil.extractToList(depotList,"id"));
-        List<String> officeIdList=officeClient.getOfficeFilterIds(SecurityUtils.getAccountId());
+        List<String> officeIdList=officeClient.getOfficeFilterIds(RequestUtils.getAccountId());
         filterMap.put("officeIdList",officeIdList);
         return filterMap;
     }

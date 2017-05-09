@@ -2,7 +2,7 @@ package net.myspring.future.modules.basic.service;
 
 import net.myspring.future.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
@@ -67,8 +67,8 @@ public class BankService {
     }
 
     public Page<BankDto> findPage(Pageable pageable,BankQuery bankQuery) {
-        bankQuery.setDepotIdList(depotManager.getDepotIds(SecurityUtils.getAccountId()));
-        bankQuery.setOfficeIdList(officeClient.getOfficeFilterIds(SecurityUtils.getAccountId()));
+        bankQuery.setDepotIdList(depotManager.getDepotIds(RequestUtils.getAccountId()));
+        bankQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getAccountId()));
         Page<BankDto> page = bankMapper.findPage(pageable, bankQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

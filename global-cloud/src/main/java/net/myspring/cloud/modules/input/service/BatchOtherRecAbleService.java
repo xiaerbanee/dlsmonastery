@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.domain.BasAssistant;
 import net.myspring.cloud.modules.input.domain.BdAccount;
 import net.myspring.cloud.modules.input.domain.HrEmpInfo;
@@ -159,7 +159,7 @@ public class BatchOtherRecAbleService {
             detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", aROtherRecAbleDetail.getOtherType()));
             detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", aROtherRecAbleDetail.getExpenseType()));
             if (StringUtils.isNotBlank(aROtherRecAbleDetail.getF_PAEC_Base())) {
-                if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(SecurityUtils.getCompanyId()))) {
+                if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(RequestUtils.getCompanyId()))) {
                     detail.put("F_PAEC_Base", CollectionUtil.getMap("FNumber", aROtherRecAbleDetail.getF_PAEC_Base()));
                 } else {
                     detail.put("F_YLG_Base2", CollectionUtil.getMap("FNumber", aROtherRecAbleDetail.getF_PAEC_Base()));

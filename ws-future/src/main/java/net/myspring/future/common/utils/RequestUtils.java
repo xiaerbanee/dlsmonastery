@@ -1,4 +1,4 @@
-package net.myspring.cloud.common.utils;
+package net.myspring.future.common.utils;
 
 import com.google.common.collect.Maps;
 import com.mongodb.BasicDBObject;
@@ -8,12 +8,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+
 import java.util.Map;
 
 /**
  * Created by liuj on 2017/4/2.
  */
-public class SecurityUtils {
+public class RequestUtils {
 
     public static String getAccountId() {
         return String.valueOf(getAdditionalInformation().get("accountId"));
@@ -33,6 +34,10 @@ public class SecurityUtils {
 
     public static String getEmployeeId() {
         return String.valueOf(getAdditionalInformation().get("employeeId"));
+    }
+
+    public static String getCompanyName() {
+        return String.valueOf(getAdditionalInformation().get("companyName"));
     }
 
     public static DBObject getDbObject(){

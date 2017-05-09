@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.BatchPurchaseDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
@@ -88,7 +88,7 @@ public class BatchPurchaseService {
             }
             String shrlStr = StringUtils.toString(row.get(7)).trim();
             BigDecimal shrl = StringUtils.isEmpty(shrlStr) ? BigDecimal.ZERO : new BigDecimal(shrlStr);
-            if (shrl.compareTo(BigDecimal.ZERO) == 1 && KingdeeNameEnum.INAVIVO.name().equals(kingdeeBookMapper.findNameByCompanyId(SecurityUtils.getCompanyId()))) {
+            if (shrl.compareTo(BigDecimal.ZERO) == 1 && KingdeeNameEnum.INAVIVO.name().equals(kingdeeBookMapper.findNameByCompanyId(RequestUtils.getCompanyId()))) {
                 BigDecimal returnPrice = price.multiply(shrl).multiply(new BigDecimal(0.01));
                 BigDecimal returnAmount = new BigDecimal(qty).multiply(returnPrice);
                 DecimalFormat decimalFormat = new DecimalFormat("0.00");

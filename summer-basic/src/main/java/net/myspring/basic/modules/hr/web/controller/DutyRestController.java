@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.web.controller;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.enums.DutyRestTypeEnum;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.dto.DutyRestDto;
 import net.myspring.basic.modules.hr.service.DutyAnnualService;
 import net.myspring.basic.modules.hr.service.DutyOvertimeService;
@@ -12,14 +12,12 @@ import net.myspring.basic.modules.hr.web.form.DutyRestForm;
 import net.myspring.basic.modules.hr.web.query.DutyRestQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -36,7 +34,7 @@ public class DutyRestController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyRestDto> list(Pageable pageable, DutyRestQuery dutyRestQuery) {
-        dutyRestQuery.setCreatedBy(SecurityUtils.getAccountId());
+        dutyRestQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyRestDto> page = dutyRestService.findPage(pageable,dutyRestQuery);
         return page;
     }
@@ -44,10 +42,10 @@ public class DutyRestController {
     @RequestMapping(value = "getFormProperty")
     public Map<String, Object> getFormProperty(DutyRestForm dutyRestForm) {
         Map<String, Object> map = Maps.newHashMap();
-        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(SecurityUtils.getEmployeeId(), LocalDateTime.now()));
-        dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(SecurityUtils.getEmployeeId()));
+        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(RequestUtils.getEmployeeId(), LocalDateTime.now()));
+        dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(RequestUtils.getEmployeeId()));
         map.put("dutyRestForm", dutyRestForm);
-        map.put("expiredHour", dutyOvertimeService.getExpiredHour(SecurityUtils.getEmployeeId(), LocalDateTime.now()));
+        map.put("expiredHour", dutyOvertimeService.getExpiredHour(RequestUtils.getEmployeeId(), LocalDateTime.now()));
         map.put("restList", DutyRestTypeEnum.values());
         map.put("dateList", DutyDateTypeEnum.values());
         return map;

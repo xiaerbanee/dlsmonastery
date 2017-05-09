@@ -1,12 +1,10 @@
 package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
-import net.myspring.general.common.utils.CacheUtils;
-import net.myspring.general.common.utils.SecurityUtils;
+import net.myspring.general.common.utils.RequestUtils;
 import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.dto.FolderFileDto;
 import net.myspring.general.modules.sys.mapper.FolderFileMapper;
@@ -14,7 +12,6 @@ import net.myspring.general.modules.sys.web.query.FolderFileQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
-import org.apache.commons.io.output.*;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +47,7 @@ public class FolderFileService {
     private GridFsTemplate tempGridFsTemplate;
 
     public List<FolderFileDto> save(String folderId, Map<String, MultipartFile> fileMap) {
-        DBObject dbObject = SecurityUtils.getDbObject();
+        DBObject dbObject = RequestUtils.getDbObject();
         List<FolderFile> list = Lists.newArrayList();
         try {
             for (MultipartFile multipartFile : fileMap.values()) {
@@ -76,7 +73,7 @@ public class FolderFileService {
                     if(preview != null) {
                         folderFile.setMongoPreviewId(StringUtils.toString(preview.getId()));
                     }
-                    folderFile.setCompanyId(SecurityUtils.getCompanyId());
+                    folderFile.setCompanyId(RequestUtils.getCompanyId());
                     folderFileMapper.save(folderFile);
                     list.add(folderFile);
                 }

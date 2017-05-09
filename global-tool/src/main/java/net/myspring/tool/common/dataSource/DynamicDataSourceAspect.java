@@ -7,15 +7,13 @@ package net.myspring.tool.common.dataSource;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.enums.DataSourceTypeEnum;
-import net.myspring.tool.common.utils.SecurityUtils;
-import net.myspring.util.text.StringUtils;
+import net.myspring.tool.common.utils.RequestUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +49,7 @@ public class DynamicDataSourceAspect {
             }
         }
         if(DynamicDataSourceContext.get().isAutomaticSetCompany()) {
-            DynamicDataSourceContext.get().setCompanyId(SecurityUtils.getCompanyId());
+            DynamicDataSourceContext.get().setCompanyId(RequestUtils.getCompanyId());
         }
         if(DataSourceTypeEnum.LOCAL.name().equals(dataSourceType)) {
             DynamicDataSourceContext.get().setDataSourceType(DataSourceTypeEnum.LOCAL.name());

@@ -2,7 +2,7 @@ package net.myspring.future.modules.crm.service;
 
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
-import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
@@ -140,7 +140,7 @@ public class ExpressOrderService {
 
     public static Integer getExpressPrintQty(Integer totalBillQty) {
         //TODO 需要完善该方法，
-        String companyName= SecurityUtils.getCompanyName();
+        String companyName= RequestUtils.getCompanyName();
         Integer expressPrintQty = 1;
 //        if(CompanyNameEnum.JXOPPO.name().equals(companyName)){
 //            expressPrintQty=Const.OPPO_ORDER_EXPRESS_PRODUCT_QTY;

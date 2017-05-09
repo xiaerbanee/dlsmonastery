@@ -4,7 +4,7 @@ package net.myspring.future.modules.crm.web.controller;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.BankInTypeEnum;
-import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.service.BankService;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.service.BankInService;
@@ -13,13 +13,11 @@ import net.myspring.future.modules.crm.web.query.BankInQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -93,7 +91,7 @@ public class BankInController {
         BankInForm  result =bankInService.findForm(bankInForm);
 
         result.setTypeList(BankInTypeEnum.getList());
-        result.setBankDtoList(bankService.findBankDtosByAccountId(SecurityUtils.getAccountId()));
+        result.setBankDtoList(bankService.findBankDtosByAccountId(RequestUtils.getAccountId()));
         return result;
     }
 

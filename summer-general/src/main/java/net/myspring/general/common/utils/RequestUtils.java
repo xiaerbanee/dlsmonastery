@@ -1,4 +1,4 @@
-package net.myspring.future.common.utils;
+package net.myspring.general.common.utils;
 
 import com.google.common.collect.Maps;
 import com.mongodb.BasicDBObject;
@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by liuj on 2017/4/2.
  */
-public class SecurityUtils {
+public class RequestUtils {
 
     public static String getAccountId() {
         return String.valueOf(getAdditionalInformation().get("accountId"));
@@ -34,10 +34,6 @@ public class SecurityUtils {
 
     public static String getEmployeeId() {
         return String.valueOf(getAdditionalInformation().get("employeeId"));
-    }
-
-    public static String getCompanyName() {
-        return String.valueOf(getAdditionalInformation().get("companyName"));
     }
 
     public static DBObject getDbObject(){

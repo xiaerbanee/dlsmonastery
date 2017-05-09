@@ -6,7 +6,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.domain.BasAssistant;
 import net.myspring.cloud.modules.input.domain.HrEmpInfo;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
@@ -133,7 +133,7 @@ public class BatchBankDepositJournalService {
             detail.put("F_PAEC_Base1", CollectionUtil.getMap("FStaffNumber", secUserMap.get(secUser)));
             detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", otherTypeMap.get(otherType)));
             detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", expenseMap.get(expenseType)));
-            if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(SecurityUtils.getCompanyId())) && StringUtils.isNotBlank(F_PAEC_Base2)) {
+            if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBookMapper.findNameByCompanyId(RequestUtils.getCompanyId())) && StringUtils.isNotBlank(F_PAEC_Base2)) {
                 detail.put("F_PAEC_Base2", CollectionUtil.getMap("FNumber", customerMap.get(F_PAEC_Base2)));
             }
             detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", settleTypeMap.get(settleType)));

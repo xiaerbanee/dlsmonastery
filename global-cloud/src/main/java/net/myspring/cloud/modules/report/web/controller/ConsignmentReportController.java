@@ -2,7 +2,7 @@ package net.myspring.cloud.modules.report.web.controller;
 
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.report.dto.ConsignmentDto;
 import net.myspring.cloud.modules.report.service.ConsignmentReportService;
 import net.myspring.cloud.modules.report.web.form.ConsignmentReportForm;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -31,7 +30,7 @@ public class ConsignmentReportController {
     @RequestMapping(value = "report")
     public ConsignmentReportForm report(ConsignmentReportQuery consignmentReportQuery) {
         ConsignmentReportForm form = new ConsignmentReportForm();
-        String companyId = SecurityUtils.getCompanyId();
+        String companyId = RequestUtils.getCompanyId();
         if (kingdeeBookService.isWZOPPO(companyId)) {
             LocalDate dateStart = consignmentReportQuery.getStartDate();
             LocalDate dateEnd = consignmentReportQuery.getEndDate();

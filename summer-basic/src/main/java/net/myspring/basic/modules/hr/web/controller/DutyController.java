@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.enums.BoolEnum;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.dto.CalendarEventDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.DutyService;
@@ -73,13 +73,13 @@ public class DutyController {
     public List<CalendarEventDto> events(String start, String end) {
         LocalDate dateStart= LocalDateUtils.parse(start);
         LocalDate dateEnd= LocalDateUtils.parse(end);
-        List<CalendarEventDto> events = dutyService.findEvent(SecurityUtils.getEmployeeId(),dateStart,dateEnd);
+        List<CalendarEventDto> events = dutyService.findEvent(RequestUtils.getEmployeeId(),dateStart,dateEnd);
         return events;
     }
 
     private List<DutyDto> getDutyDtoList() {
         LocalDateTime dateStart = LocalDateTime.now().minusMonths(1);
-        String leaderId = SecurityUtils.getAccountId();
+        String leaderId = RequestUtils.getAccountId();
         List<DutyDto> list = dutyService.findByAuditable(leaderId, AuditTypeEnum.APPLYING.toString(), dateStart);
         return list;
     }

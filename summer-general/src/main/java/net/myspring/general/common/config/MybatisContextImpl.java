@@ -1,6 +1,6 @@
 package net.myspring.general.common.config;
 
-import net.myspring.general.common.utils.SecurityUtils;
+import net.myspring.general.common.utils.RequestUtils;
 import net.myspring.mybatis.context.MybatisContext;
 import net.myspring.mybatis.dialect.Dialect;
 import net.myspring.mybatis.dialect.MySQLDialect;
@@ -12,7 +12,7 @@ public class MybatisContextImpl implements MybatisContext {
 
     @Override
     public String getAccountId() {
-        return SecurityUtils.getAccountId();
+        return RequestUtils.getAccountId();
     }
 
     @Override

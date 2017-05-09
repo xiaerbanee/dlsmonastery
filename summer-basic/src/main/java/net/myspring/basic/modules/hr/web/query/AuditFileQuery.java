@@ -1,14 +1,12 @@
 package net.myspring.basic.modules.hr.web.query;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -48,7 +46,7 @@ public class AuditFileQuery {
 
     public String getPositionId() {
         if(auditType == null || auditType.equals("1")) {
-            this.positionId = SecurityUtils.getPositionId();
+            this.positionId = RequestUtils.getPositionId();
         }else {
             this.positionId="";
         }

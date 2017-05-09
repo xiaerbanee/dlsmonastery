@@ -1,14 +1,10 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
-import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyAnnual;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.DutyAnnualDto;
@@ -85,7 +81,7 @@ public class DutyAnnualService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("年假导入模版",employeeDtoList,simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"年假导入模版"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8",SecurityUtils.getDbObject());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());
     }
 

@@ -2,7 +2,7 @@ package net.myspring.general.modules.sys.web.controller;
 
 import com.mongodb.gridfs.GridFSDBFile;
 import net.myspring.general.modules.sys.domain.Folder;
-import net.myspring.general.common.utils.SecurityUtils;
+import net.myspring.general.common.utils.RequestUtils;
 import net.myspring.general.modules.sys.dto.FolderFileDto;
 import net.myspring.general.modules.sys.service.FolderFileService;
 import net.myspring.general.modules.sys.service.FolderService;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springside.modules.utils.text.EncodeUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -47,7 +46,7 @@ public class FolderFileController {
 
     @RequestMapping(value = "/upload")
     public List<FolderFileDto> upload(String uploadPath, MultipartHttpServletRequest request) {
-        Folder folder = folderService.getAccountFolder(SecurityUtils.getAccountId(), uploadPath);
+        Folder folder = folderService.getAccountFolder(RequestUtils.getAccountId(), uploadPath);
         Map<String, MultipartFile> fileMap = request.getFileMap();
         List<FolderFileDto> list = folderFileService.save(folder.getId(), fileMap);
         return list;

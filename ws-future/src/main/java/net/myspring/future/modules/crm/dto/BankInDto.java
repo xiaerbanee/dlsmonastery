@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.BankIn;
 
 import java.math.BigDecimal;
@@ -145,7 +145,7 @@ public class BankInDto extends DataDto<BankIn> {
     }
 
     public Boolean getEditable(){
-        if ((!getLocked() && !getFinished()) && SecurityUtils.getAccountId() != null && (SecurityUtils.getAccountId().equals(getCreatedBy()) )) {
+        if ((!getLocked() && !getFinished()) && RequestUtils.getAccountId() != null && (RequestUtils.getAccountId().equals(getCreatedBy()) )) {
             return Boolean.TRUE;
         } else {
             return Boolean.FALSE;

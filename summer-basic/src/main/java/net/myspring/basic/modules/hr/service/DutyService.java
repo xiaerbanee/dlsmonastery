@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.service;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.*;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.*;
 import net.myspring.basic.modules.hr.dto.CalendarEventDto;
 import net.myspring.basic.modules.hr.mapper.*;
@@ -100,7 +100,7 @@ public class DutyService {
     }
 
     public void audit(String id, String dutyType, Boolean pass, String auditRemarks) {
-        String auditBy = SecurityUtils.getAccountId();
+        String auditBy = RequestUtils.getAccountId();
         if (DutyTypeEnum.LEAVE.toString().equals(dutyType)) {
             DutyLeave dutyLeave = dutyLeaveMapper.findOne(id);
             if (AuditTypeEnum.APPLYING.toString().equals(dutyLeave.getStatus())) {

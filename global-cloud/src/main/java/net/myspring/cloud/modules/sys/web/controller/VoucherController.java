@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.VoucherFormDto;
 import net.myspring.cloud.modules.input.service.GlVoucherService;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
@@ -144,15 +144,15 @@ public class VoucherController {
 
     public List<String> getActionList(VoucherDto voucherDto){
         List<String> actionList = Lists.newArrayList();
-        if (VoucherStatusEnum.地区财务审核.name().equals(voucherDto.getStatus()) && SecurityUtils.getAccountId() == null) {
+        if (VoucherStatusEnum.地区财务审核.name().equals(voucherDto.getStatus()) && RequestUtils.getAccountId() == null) {
             voucherDto.setEditable(true);
             voucherDto.setDeletable(true);
-        } else if (!VoucherStatusEnum.已完成.name().equals(voucherDto.getStatus()) && SecurityUtils.getAccountId() != null) {
+        } else if (!VoucherStatusEnum.已完成.name().equals(voucherDto.getStatus()) && RequestUtils.getAccountId() != null) {
             voucherDto.setEditable(true);
             voucherDto.setDeletable(true);
         }
         //待定
-//        if(SecurityUtils.getAuthorityList().contains("crm:afterSale:delete")){
+//        if(RequestUtils.getAuthorityList().contains("crm:afterSale:delete")){
 //            actionList.add(Const.ITEM_ACTION_DELETE);
 //        }
         return actionList;
