@@ -15,7 +15,7 @@ import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.input.mapper.BdDepartmentMapper;
 import net.myspring.cloud.modules.input.mapper.CnBankMapper;
-import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;

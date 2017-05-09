@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-select v-model="innerId"  filterable :clearable=true @change="handleChange">
-      <el-option v-for="item in itemList"  :key="item.value" :label="item.value" :value="item.value"></el-option>
+      <el-option v-for="item in itemList"  :key="item.value" :label="item.name" :value="item.value"></el-option>
     </el-select>
   </div>
 </template>
@@ -21,7 +21,7 @@
         this.remoteLoading = true;
       }
     },created () {
-      axios.get('/api/basic/sys/dictEnum/findByCategory?category=' + this.category).then((response)=>{
+      axios.get('/api/basic/sys/dictMap/findByCategory?category=' + this.category).then((response)=>{
         this.itemList=response.data;
       })
       this.setValue(this.value);

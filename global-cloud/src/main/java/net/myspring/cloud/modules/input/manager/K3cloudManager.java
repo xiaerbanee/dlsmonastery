@@ -6,7 +6,6 @@ import net.myspring.cloud.common.enums.K3CloudActionEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.K3CloudSaveExtendDto;
-import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
@@ -46,6 +45,7 @@ public class K3cloudManager {
         try {
             Response response = okHttpClient.newCall(request).execute();
             String result = response.body().string();
+            logger.debug("login result:"+ result );
             response.body().close();
             return result.contains("\"LoginResultType\":1");
         } catch (IOException e) {
@@ -53,7 +53,7 @@ public class K3cloudManager {
         }
     }
 
-    public  String invoke(String url,String action, String formId, String content) {
+    private String invoke(String url,String action, String formId, String content) {
         List<Object> list = Lists.newArrayList();
         list.add(formId);
         list.add(content);
@@ -75,7 +75,7 @@ public class K3cloudManager {
 
     public K3CloudSaveDto save(K3CloudSaveDto k3CloudSaveDto) {
         KingdeeBook kingdeeBook = k3CloudSaveDto.getKingdeeBook();
-        String result = invoke(kingdeeBook.getKingdeeUrl(),K3CloudActionEnum.SAVE.getValue(),k3CloudSaveDto.getFormId(),k3CloudSaveDto.getContent());
+        String result = invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.SAVE.getValue(),k3CloudSaveDto.getFormId(),k3CloudSaveDto.getContent());
         JSONObject jsonObject = JSONObject.fromObject(result);
         if (BoolEnum.TRUE.getValue().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
             String billNo = jsonObject.getJSONObject("Result").getString("Number");
@@ -83,9 +83,9 @@ public class K3cloudManager {
             root.put("CreateOrgId", 0);
             root.put("Numbers", billNo);
             String content = ObjectMapperUtils.writeValueAsString(root);
-            invoke(kingdeeBook.getKingdeeUrl(),K3CloudActionEnum.SUBMIT.getValue(),k3CloudSaveDto.getFormId(), content);
+            invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.SUBMIT.getValue(),k3CloudSaveDto.getFormId(), content);
             if (k3CloudSaveDto.getAutoAudit()) {
-                invoke(kingdeeBook.getKingdeeUrl(),K3CloudActionEnum.AUDIT.getValue(),k3CloudSaveDto.getFormId(), content);
+                invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.AUDIT.getValue(),k3CloudSaveDto.getFormId(), content);
             }
             k3CloudSaveDto.setBillNo(billNo);
             k3CloudSaveDto.setSuccess(true);
@@ -98,7 +98,7 @@ public class K3cloudManager {
 
     public K3CloudSaveExtendDto save(K3CloudSaveExtendDto k3CloudSaveExtendDto) {
         KingdeeBook kingdeeBook = k3CloudSaveExtendDto.getKingdeeBook();
-        String result = invoke(kingdeeBook.getKingdeeUrl(),K3CloudActionEnum.SAVE.getValue(),k3CloudSaveExtendDto.getFormId(),k3CloudSaveExtendDto.getContent());
+        String result = invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.SAVE.getValue(),k3CloudSaveExtendDto.getFormId(),k3CloudSaveExtendDto.getContent());
         JSONObject jsonObject = JSONObject.fromObject(result);
         if (BoolEnum.TRUE.getValue().toString().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
             String billNo = jsonObject.getJSONObject("Result").getString("Number");
@@ -106,8 +106,8 @@ public class K3cloudManager {
             root.put("CreateOrgId", 0);
             root.put("Numbers", billNo);
             String content = ObjectMapperUtils.writeValueAsString(root);
-            invoke(kingdeeBook.getKingdeeUrl(),K3CloudActionEnum.SUBMIT.getValue(),k3CloudSaveExtendDto.getFormId(), content);
-            invoke(kingdeeBook.getKingdeeUrl(),K3CloudActionEnum.AUDIT.getValue(),k3CloudSaveExtendDto.getFormId(), content);
+            invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.SUBMIT.getValue(),k3CloudSaveExtendDto.getFormId(), content);
+            invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.AUDIT.getValue(),k3CloudSaveExtendDto.getFormId(), content);
             k3CloudSaveExtendDto.setBillNo(billNo);
             String nextBillNo = k3CloudSaveExtendDto.getNextBillNo();
             root = Maps.newLinkedHashMap();
@@ -115,8 +115,8 @@ public class K3cloudManager {
             root.put("Numbers", nextBillNo);
             k3CloudSaveExtendDto.setBillNo(k3CloudSaveExtendDto.getBillNo() + CharConstant.COMMA + nextBillNo);
             content = ObjectMapperUtils.writeValueAsString(root);
-            invoke(kingdeeBook.getKingdeeUrl(),K3CloudActionEnum.SUBMIT.getValue(),k3CloudSaveExtendDto.getNextFormId(), content);
-            invoke(kingdeeBook.getKingdeeUrl(),K3CloudActionEnum.AUDIT.getValue(),k3CloudSaveExtendDto.getNextFormId(), content);
+            invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.SUBMIT.getValue(),k3CloudSaveExtendDto.getNextFormId(), content);
+            invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.AUDIT.getValue(),k3CloudSaveExtendDto.getNextFormId(), content);
             k3CloudSaveExtendDto.setSuccess(true);
         } else {
             k3CloudSaveExtendDto.setSuccess(false);
