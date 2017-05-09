@@ -17,7 +17,7 @@ import java.util.Map;
  */
 
 public class AuditFileForm extends DataForm<AuditFile> {
-    private String processTypeId;
+    private String processTypeName;
     private Map<String, String> boolMap= Maps.newHashMap();
     private String title;
     private String content;
@@ -137,11 +137,11 @@ public class AuditFileForm extends DataForm<AuditFile> {
         this.boolMap = boolMap;
     }
 
-    public String getProcessTypeId() {
-        return processTypeId;
+    public String getProcessTypeName() {
+        return processTypeName;
     }
 
-    public void setProcessTypeId(String processTypeId) {
-        this.processTypeId = processTypeId;
+    public void setProcessTypeName(String processTypeName) {
+        this.processTypeName = processTypeName;
     }
 }

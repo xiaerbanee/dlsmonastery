@@ -8,7 +8,6 @@ import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
-import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
@@ -63,12 +62,13 @@ public class AuditFileService {
         if (auditFileForm.isCreate()) {
             String name="文件审批";
             String businessKey = auditFileForm.getId();
-            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm(name, businessKey, auditFileForm.getProcessTypeId(),auditFileForm.getTitle()));
-            auditFileForm.setProcessStatus(activitiStartDto.getProcessStatus());
-            auditFileForm.setProcessFlowId(activitiStartDto.getProcessFlowId());
-            auditFileForm.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
-            auditFileForm.setPositionId(activitiStartDto.getPositionId());
+            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm(name, businessKey, auditFileForm.getProcessTypeName(),auditFileForm.getTitle()));
             auditFile = BeanUtil.map(auditFileForm, AuditFile.class);
+            auditFile.setProcessStatus(activitiStartDto.getProcessStatus());
+            auditFile.setProcessFlowId(activitiStartDto.getProcessFlowId());
+            auditFile.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
+            auditFile.setPositionId(activitiStartDto.getPositionId());
+            auditFile.setProcessTypeId(activitiStartDto.getProcessTypeId());
             auditFileMapper.save(auditFile);
             return auditFile;
         }

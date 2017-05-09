@@ -49,7 +49,8 @@
   import accountSelect from 'components/basic/account-select'
   export default{
       components:{
-          employeeSelect
+          employeeSelect,
+          accountSelect
       },
     data(){
       return{
