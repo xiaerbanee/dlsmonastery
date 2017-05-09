@@ -84,17 +84,7 @@
           }
         }
         this.inputForm.permissionIdStr = permissions.join();
-      }, remoteAccount(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/account/searchFilter', {params: {loginName: query}}).then((response) => {
-            this.accountList = response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.roleList = [];
-        }
-      }, getTreeCheckData(id){
+      },getTreeCheckData(id){
         axios.get('/api/basic/hr/account/getTreeCheckData', {params: {id: id}}).then((response) => {
           this.checked = response.data.checked;
         })

@@ -89,9 +89,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.firstBy')"  prop="firstBy">
-            <el-select v-model="inputForm.firstBy" filterable remote clearable :placeholder="$t('recruitForm.selectFirstBy')" :remote-method="remoteAccount" :loading="remoteLoading">
-              <el-option v-for="item in accounts" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
-            </el-select>
+            <account-select v-model="inputForm.firstBy"></account-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.firstPoint')" prop="firstPoint">
             <el-input v-model="inputForm.firstPoint"></el-input>
@@ -115,9 +113,7 @@
             <date-time-picker v-model="inputForm.secondRealDate"></date-time-picker>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.secondBy')" prop="secondBy">
-            <el-select v-model="inputForm.secondBy" filterable remote clearable :placeholder="$t('recruitForm.selectSecondBy')" :remote-method="remoteAccount" :loading="remoteLoading">
-              <el-option v-for="item in accounts" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
-            </el-select>
+            <account-select v-model="inputForm.secondBy"></account-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.secondComment')"  prop="secondComment">
             <el-input v-model="inputForm.secondComment"></el-input>
