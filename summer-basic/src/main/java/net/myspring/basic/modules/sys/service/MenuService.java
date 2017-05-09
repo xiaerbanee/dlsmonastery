@@ -132,19 +132,18 @@ public class MenuService {
         return menu;
     }
 
-    public List<BackendMenuDto> getMenuMap(String accountId) {
-        Account account = accountMapper.findOne(accountId);
-        return getMenusMap(account, false);
+    public List<BackendMenuDto> getMenuMap() {
+        return getMenusMap(false);
     }
 
-    private List<BackendMenuDto> getMenusMap(Account account, boolean isMobile) {
+    private List<BackendMenuDto> getMenusMap(boolean isMobile) {
         List<BackendMenuDto> backendList = Lists.newLinkedList();
         List<String> menuIdList;
-        if (StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(account.getId())) {
+        if (StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(SecurityUtils.getAccountId())) {
             List<Menu> menuList = menuMapper.findAllEnabled();
             menuIdList=CollectionUtil.extractToList(menuList,"id");
         } else {
-            String roleId = account.getPositionId();
+            String roleId = SecurityUtils.getRoleId();
             List<Permission> permissionList;
             List<String> accountPermissions=accountPermissionMapper.findPermissionIdByAccount(SecurityUtils.getAccountId());
             if(CollectionUtil.isNotEmpty(accountPermissions)){
