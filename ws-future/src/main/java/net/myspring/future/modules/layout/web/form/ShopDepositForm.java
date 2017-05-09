@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.DataForm;
+import net.myspring.future.modules.basic.dto.BankDto;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 
 import java.math.BigDecimal;
@@ -45,21 +46,7 @@ public class ShopDepositForm extends DataForm<ShopDeposit> {
         this.departMents = departMents;
     }
 
-    public List<String> getOutBillTypes() {
-        return outBillTypes;
-    }
 
-    public void setOutBillTypes(List<String> outBillTypes) {
-        this.outBillTypes = outBillTypes;
-    }
-
-    public List<String> getBanks() {
-        return banks;
-    }
-
-    public void setBanks(List<String> banks) {
-        this.banks = banks;
-    }
 
     public String getDepartMent() {
         return departMent;
@@ -102,8 +89,26 @@ public class ShopDepositForm extends DataForm<ShopDeposit> {
     private String outBillType;
     private String shopId;
     private List<String>  departMents;
-    private List<String> outBillTypes;
-    private List<String> banks;
+
+    public List<String> getOutBillTypeList() {
+        return outBillTypeList;
+    }
+
+    public void setOutBillTypeList(List<String> outBillTypeList) {
+        this.outBillTypeList = outBillTypeList;
+    }
+
+    private List<String> outBillTypeList;
+
+    private List<BankDto> bankDtoList;
+
+    public List<BankDto> getBankDtoList() {
+        return bankDtoList;
+    }
+
+    public void setBankDtoList(List<BankDto> bankDtoList) {
+        this.bankDtoList = bankDtoList;
+    }
 
     public boolean isImageAmountPositive() {
         if (imageAmount != null && imageAmount.compareTo(BigDecimal.ZERO) > 0) {

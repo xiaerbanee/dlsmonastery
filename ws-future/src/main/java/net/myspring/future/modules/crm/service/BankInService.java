@@ -6,7 +6,10 @@ import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.mapper.BankInMapper;
+import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
+import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class BankInService {
 
     @Autowired
@@ -50,12 +54,53 @@ public class BankInService {
         bankInMapper.update(bankIn);
     }
 
-    @Transactional
+
     public void save(BankIn bankIn){
     }
 
-    @Transactional
+
     public void audit(BankIn bankIn){
     }
 
+    public BankInForm findForm(BankInForm bankInForm) {
+        BankIn bankIn=bankInMapper.findOne(bankInForm.getId());
+        BankInForm result = BeanUtil.map(bankIn, BankInForm.class);
+
+        if(result == null){
+            result = new BankInForm();
+        }
+
+        return result;
+
+    }
+
+    public BankIn save(BankInForm bankInForm) {
+        BankIn bankIn;
+        if(bankInForm.isCreate()) {
+            bankIn = BeanUtil.map(bankInForm, BankIn.class);
+            bankInMapper.save(bankIn);
+        } else {
+            bankIn = bankInMapper.findOne(bankInForm.getId());
+            ReflectionUtil.copyProperties(bankInForm,bankIn);
+            bankInMapper.update(bankIn);
+        }
+        return bankIn;
+    }
+
+    public void logicDeleteOne(String id) {
+        bankInMapper.logicDeleteOne(id);
+    }
+
+    public BankInDto findDetail(String id) {
+
+        BankInDto result = bankInMapper.findDto(id);
+        if(result.getShopParentId()!=null){
+            result.setRealShopName(depotMapper.findOne(result.getShopParentId()).getName());
+        }else {
+            result.setRealShopName(result.getShopName());
+        }
+        cacheUtils.initCacheInput(result);
+        return result;
+
+    }
 }

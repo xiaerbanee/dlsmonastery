@@ -1,9 +1,9 @@
 package net.myspring.future.modules.layout.web.form;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -11,124 +11,63 @@ import java.util.List;
  */
 public class ShopAllotForm extends DataForm<ShopAllot> {
 
+
+    private String fromShopId;
+    private String toShopId;
+
+    private Boolean success;
     private String message;
-
-    public BigDecimal getMarketAmount() {
-        return marketAmount;
+    public Boolean getSuccess() {
+        return success;
     }
 
-    public void setMarketAmount(BigDecimal marketAmount) {
-        this.marketAmount = marketAmount;
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
 
-    public BigDecimal getImageAmount() {
-        return imageAmount;
+    public String getMessage() {
+        return message;
     }
 
-    public void setImageAmount(BigDecimal imageAmount) {
-        this.imageAmount = imageAmount;
-    }
-
-    public BigDecimal getDemoPhoneAmount() {
-        return demoPhoneAmount;
-    }
-
-    public void setDemoPhoneAmount(BigDecimal demoPhoneAmount) {
-        this.demoPhoneAmount = demoPhoneAmount;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 
-    public List<String> getDepartMents() {
-        return departMents;
+    public String getFromShopId() {
+        return fromShopId;
     }
 
-    public void setDepartMents(List<String> departMents) {
-        this.departMents = departMents;
+    public void setFromShopId(String fromShopId) {
+        this.fromShopId = fromShopId;
     }
 
-    public List<String> getOutBillTypes() {
-        return outBillTypes;
+    public String getToShopId() {
+        return toShopId;
     }
 
-    public void setOutBillTypes(List<String> outBillTypes) {
-        this.outBillTypes = outBillTypes;
+    public void setToShopId(String toShopId) {
+        this.toShopId = toShopId;
     }
 
-    public List<String> getBanks() {
-        return banks;
+    public List<String> getShopAllotDetailIdList() {
+        return shopAllotDetailIdList;
     }
 
-    public void setBanks(List<String> banks) {
-        this.banks = banks;
+    public void setShopAllotDetailIdList(List<String> shopAllotDetailIdList) {
+        this.shopAllotDetailIdList = shopAllotDetailIdList;
     }
 
-    public String getDepartMent() {
-        return departMent;
+    public List<ShopAllotDetailForm> getShopAllotDetailFormList() {
+        return shopAllotDetailFormList;
     }
 
-    public void setDepartMent(String departMent) {
-        this.departMent = departMent;
+    public void setShopAllotDetailFormList(List<ShopAllotDetailForm> shopAllotDetailFormList) {
+        this.shopAllotDetailFormList = shopAllotDetailFormList;
     }
 
-    public String getOutBillType() {
-        return outBillType;
-    }
-
-    public void setOutBillType(String outBillType) {
-        this.outBillType = outBillType;
-    }
-
-    public String getBankId() {
-        return bankId;
-    }
-
-    public void setBankId(String bankId) {
-        this.bankId = bankId;
-    }
-
-    public String getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
-    }
-
-
-    private String bankId;
-    private BigDecimal imageAmount;
-    private BigDecimal demoPhoneAmount;
-    private BigDecimal marketAmount;
-    private String departMent;
-    private String outBillType;
-    private String shopId;
-    private List<String>  departMents;
-    private List<String> outBillTypes;
-    private List<String> banks;
-
-    public boolean isImageAmountPositive() {
-        if (imageAmount != null && imageAmount.compareTo(BigDecimal.ZERO) > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isDemoPhoneAmountPositive() {
-        if (demoPhoneAmount != null && demoPhoneAmount.compareTo(BigDecimal.ZERO) > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isMarketAmountPositive() {
-        if (marketAmount != null && marketAmount.compareTo(BigDecimal.ZERO) > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    private List<ShopAllotDetailForm> shopAllotDetailFormList = Lists.newArrayList();
+    private List<String> shopAllotDetailIdList = Lists.newArrayList();
 
 
 }

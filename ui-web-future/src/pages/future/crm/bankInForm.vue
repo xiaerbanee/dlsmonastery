@@ -4,19 +4,18 @@
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('bankInForm.shopName')" prop="shopId">
-          <el-select v-model="inputForm.shopId" filterable remote  :placeholder="$t('bankInForm.inputWord')" :remote-method="remoteDepot" :loading="remoteLoading" >
-            <el-option v-for="item in depots" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <su-depot type="shop" v-model="inputForm.shopId" ></su-depot>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.type')" prop="type">
-          <el-radio-group v-model="inputForm.type">
-            <el-radio  :label="$t('bankInForm.saleMoney')" value="销售收款">{{$t('bankInForm.saleMoney')}}</el-radio>
-            <el-radio  :label="$t('bankInForm.deposit')" value='定金收款'>{{$t('bankInForm.deposit')}}</el-radio>
-          </el-radio-group>
+          <el-select v-model="inputForm.type"  clearable :placeholder="$t('bankInForm.selectType')">
+            <el-option v-for="item in inputForm.typeList" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+
         </el-form-item>
         <el-form-item :label="$t('bankInForm.bankName')" prop="bankId">
           <el-select v-model="inputForm.bankId" filterable clearable :placeholder="$t('bankInForm.selectBank')">
-            <el-option v-for="item in formProperty.banks" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option key="0" :label="$t('bankInForm.cashIn')" value="0"></el-option>
+            <el-option v-for="item in inputForm.bankDtoList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.cash')" prop="inputDate">
@@ -29,7 +28,7 @@
           <el-input v-model="inputForm.serialNumber"></el-input>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.remarks')" prop="remarks">
-          <el-input v-model="inputForm.remarks"></el-input>
+          <el-input type="textarea" v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('bankInForm.save')}}</el-button>
@@ -42,13 +41,10 @@
     export default{
       data(){
           return{
-            isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
-            depots:[],
-            remoteLoading:false,
-            inputForm:{
-              id:this.$route.query.id,
+            inputForm:{},
+            submitData:{
+              id:'',
               shopId:'',
               type:'',
               bankId:'',
@@ -71,48 +67,37 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              this.inputForm.inputDate=util.formatLocalDate(this.inputForm.inputDate)
-              axios.post('/api/crm/bankIn/save',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+              util.copyValue(this.inputForm,this.submitData);
+              axios.post('/api/ws/future/crm/bankIn/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                if(this.isCreate){
+                if(this.inputForm.create){
                   form.resetFields();
                   this.submitDisabled = false;
                 } else {
-                   this.$router.push({name:'bankInList',query:util.getQuery("bankInList")})
+                  this.$router.push({name:'bankInList',query:util.getQuery("bankInList")})
                 }
               });
             }else{
               this.submitDisabled = false;
             }
           })
-        },remoteDepot(query){
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/crm/depot/search', {params: {name: query,category:'DIRECT_AND_SUB_SHOP'}}).then((response)=> {
-              this.depots = response.data;
-              this.remoteLoading = false;
-            })
-          } else {
-            this.depots = [];
-          }
         }
       },created(){
-        axios.get('/api/crm/bankIn/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate){
-          axios.get('/api/crm/bankIn/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(response.data.shop!=null){
-              this.depots = new Array(response.data.shop);
-            }
-            if(response.data.bank){
-                this.formProperty.banks=new Array(response.data.bank);
-                this.inputForm.bankId=response.data.bankId;
-            }
 
-          })
-        }
+        axios.get('/api/ws/future/crm/bankIn/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+        })
+//        axios.get('/api/ws/future/crm/bankIn/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+//            util.copyValue(response.data,this.inputForm);
+//            if(response.data.shop!=null){
+//              this.depots = new Array(response.data.shop);
+//            }
+//            if(response.data.bank){
+//                this.formProperty.banks=new Array(response.data.bank);
+//                this.inputForm.bankId=response.data.bankId;
+//            }
+//
+//          })
       }
     }
 </script>

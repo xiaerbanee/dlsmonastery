@@ -15,7 +15,7 @@ import net.myspring.cloud.modules.input.dto.BatchOtherRecAbleDto;
 import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
-import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;

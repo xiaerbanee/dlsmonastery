@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.utils.SecurityUtils;
 import net.myspring.future.modules.crm.domain.BankIn;
 
 import java.math.BigDecimal;
@@ -8,7 +9,7 @@ import java.time.LocalDate;
 
 public class BankInDto extends DataDto<BankIn> {
 
-    private Boolean selected;
+    private Boolean selected = Boolean.FALSE;
     private String shopName;
     private String shopId;
     private String shopParentId;
@@ -22,6 +23,16 @@ public class BankInDto extends DataDto<BankIn> {
     private LocalDate inputDate;
     private String outCode;
     private String processStatus;
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    private Boolean locked;
 
     public String getShopParentId() {
         return shopParentId;
@@ -129,6 +140,22 @@ public class BankInDto extends DataDto<BankIn> {
         this.processStatus = processStatus;
     }
 
+    public Boolean getAuditable(){
+        return Boolean.FALSE;
+    }
+
+    public Boolean getEditable(){
+        if ((!getLocked() && !getFinished()) && SecurityUtils.getAccountId() != null && (SecurityUtils.getAccountId().equals(getCreatedBy()) )) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
+
+    public Boolean getFinished() {
+        return Boolean.FALSE;
+//        return PROCESS_PASS.PROCESS_PASS.equals(processStatus) || Const.PROCESS_NOT_PASS.equals(processStatus);
+    }
 
 
 
