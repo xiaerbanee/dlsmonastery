@@ -40,7 +40,7 @@
     export default{
       data(){
           return{
-            isCreate:this.$route.query.id==null,
+            isCreate:(this.$route.query.id==null || this.$route.query.id==''),
             submitDisabled:false,
             productName:'',
             filterShopAllotDetailList:[],
