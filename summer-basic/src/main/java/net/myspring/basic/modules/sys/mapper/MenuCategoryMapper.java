@@ -4,7 +4,7 @@ import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
 import net.myspring.basic.modules.sys.web.query.MenuCategoryQuery;
-import net.myspring.common.mybatis.MyProvider;
+import net.myspring.basic.common.mybatis.MyProvider;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;

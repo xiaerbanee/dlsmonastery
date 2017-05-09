@@ -1,17 +1,12 @@
-package net.myspring.common.mybatis;
+package net.myspring.tool.common.mybatis;
 
 import com.google.common.collect.Lists;
-import net.myspring.mybatis.dto.ColumnDto;
-import net.myspring.mybatis.dto.TableDto;
-import net.myspring.mybatis.provider.BaseProvider;
 import net.myspring.mybatis.provider.CrudProvider;
 import net.myspring.util.text.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 

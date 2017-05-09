@@ -4,7 +4,7 @@ import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
-import net.myspring.common.mybatis.MyProvider;
+import net.myspring.basic.common.mybatis.MyProvider;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;

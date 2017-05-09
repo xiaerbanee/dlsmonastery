@@ -1,6 +1,6 @@
 package net.myspring.general.modules.sys.mapper;
 
-import net.myspring.common.mybatis.MyMapper;
+import net.myspring.general.common.mybatis.MyProvider;
 import net.myspring.general.modules.sys.domain.Town;
 import org.apache.ibatis.annotations.Mapper;
 

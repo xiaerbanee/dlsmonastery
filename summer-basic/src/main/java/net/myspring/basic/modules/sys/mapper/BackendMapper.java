@@ -5,7 +5,7 @@ import net.myspring.basic.modules.sys.domain.Backend;
 import net.myspring.basic.modules.sys.dto.BackendDto;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.web.query.BackendQuery;
-import net.myspring.common.mybatis.MyProvider;
+import net.myspring.basic.common.mybatis.MyProvider;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,7 @@
 package net.myspring.future.modules.basic.mapper;
 
 import net.myspring.common.cache.IdCacheKeyGenerator;
-import net.myspring.common.mybatis.MyProvider;
+import net.myspring.future.common.mybatis.MyProvider;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;

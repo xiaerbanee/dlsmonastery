@@ -1,6 +1,6 @@
 package net.myspring.future.modules.layout.mapper;
 
-import net.myspring.common.mybatis.MyMapper;
+import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.layout.domain.ShopBuild;
 import net.myspring.future.modules.layout.dto.ShopBuildDto;
 import net.myspring.future.modules.layout.web.query.ShopBuildQuery;

@@ -4,7 +4,7 @@ import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.web.query.DictMapQuery;
-import net.myspring.common.mybatis.MyProvider;
+import net.myspring.basic.common.mybatis.MyProvider;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;

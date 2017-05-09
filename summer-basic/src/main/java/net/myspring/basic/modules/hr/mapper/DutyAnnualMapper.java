@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.mapper;
 
-import net.myspring.common.mybatis.MyMapper;
+import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.DutyAnnual;
 import net.myspring.basic.modules.hr.dto.DutyAnnualDto;
 import net.myspring.basic.modules.hr.web.query.DutyAnnualQuery;

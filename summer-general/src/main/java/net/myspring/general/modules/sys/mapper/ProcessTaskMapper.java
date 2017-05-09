@@ -1,6 +1,6 @@
 package net.myspring.general.modules.sys.mapper;
 
-import net.myspring.common.mybatis.MyMapper;
+import net.myspring.general.common.mybatis.MyMapper;
 import net.myspring.general.modules.sys.domain.ProcessTask;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

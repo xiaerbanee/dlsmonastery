@@ -5,7 +5,7 @@ import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.sys.domain.CompanyConfig;
 import net.myspring.basic.modules.sys.dto.CompanyConfigDto;
 import net.myspring.basic.modules.sys.web.query.CompanyConfigQuery;
-import net.myspring.common.mybatis.MyProvider;
+import net.myspring.basic.common.mybatis.MyProvider;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;

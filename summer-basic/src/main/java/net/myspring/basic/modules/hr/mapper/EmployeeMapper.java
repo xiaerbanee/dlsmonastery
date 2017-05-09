@@ -5,7 +5,7 @@ import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
-import net.myspring.common.mybatis.MyProvider;
+import net.myspring.basic.common.mybatis.MyProvider;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;

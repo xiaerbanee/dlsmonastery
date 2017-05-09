@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.mapper;
 
-import net.myspring.common.mybatis.MyMapper;
+import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.web.query.BankInQuery;

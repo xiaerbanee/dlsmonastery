@@ -1,11 +1,11 @@
 package net.myspring.basic.modules.sys.mapper;
 
 import net.myspring.common.cache.IdCacheKeyGenerator;
-import net.myspring.common.mybatis.MyMapper;
+import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.web.query.MenuQuery;
-import net.myspring.common.mybatis.MyProvider;
+import net.myspring.basic.common.mybatis.MyProvider;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;

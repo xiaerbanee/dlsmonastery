@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.mapper;
 
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.sys.domain.RoleModule;
-import net.myspring.common.mybatis.MyProvider;
+import net.myspring.basic.common.mybatis.MyProvider;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 

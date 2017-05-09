@@ -1,8 +1,11 @@
-package net.myspring.common.mybatis;
+package net.myspring.tool.common.mybatis;
 
 import net.myspring.mybatis.form.BaseForm;
 import net.myspring.mybatis.mapper.BaseMapper;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,10 +15,10 @@ import java.util.List;
  */
 public interface MyMapper<T, ID extends Serializable> extends BaseMapper<T, ID> {
 
-    @UpdateProvider(type=MyProvider.class,method = MyProvider.LOGIC_DELETE_ONE)
+    @UpdateProvider(type= MyProvider.class,method = MyProvider.LOGIC_DELETE_ONE)
     int logicDeleteOne(ID id);
 
-    @UpdateProvider(type=MyProvider.class,method = MyProvider.LOGIC_DELETE_BY_IDS)
+    @UpdateProvider(type= MyProvider.class,method = MyProvider.LOGIC_DELETE_BY_IDS)
     int logicDeleteByIds(List<ID> ids);
 
     @SelectProvider(type = MyProvider.class,method = MyProvider.FIND_ALL_ENABLED)
@@ -32,7 +35,7 @@ public interface MyMapper<T, ID extends Serializable> extends BaseMapper<T, ID> 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ONE)
     T findOne(ID var1);
 
-    @SelectProvider(type = MyProvider.class, method =MyProvider.EXISTS)
+    @SelectProvider(type = MyProvider.class, method = MyProvider.EXISTS)
     Boolean exists(ID var1);
 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL)
@@ -44,7 +47,7 @@ public interface MyMapper<T, ID extends Serializable> extends BaseMapper<T, ID> 
     @SelectProvider(type = MyProvider.class, method = MyProvider.COUNT)
     Long count();
 
-    @UpdateProvider(type = MyProvider.class, method =MyProvider.UPDATE)
+    @UpdateProvider(type = MyProvider.class, method = MyProvider.UPDATE)
     <S extends T> int update(S var1);
 
     @UpdateProvider(type = MyProvider.class, method = MyProvider.UPDATE)

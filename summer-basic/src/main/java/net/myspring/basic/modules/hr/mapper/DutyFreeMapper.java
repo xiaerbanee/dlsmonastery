@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.mapper;
 
-import net.myspring.common.mybatis.MyMapper;
+import net.myspring.basic.common.mybatis.MyMapper;
 import net.myspring.basic.modules.hr.domain.DutyFree;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.dto.DutyFreeDto;
