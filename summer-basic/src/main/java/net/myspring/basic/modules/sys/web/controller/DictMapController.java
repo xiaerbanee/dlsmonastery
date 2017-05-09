@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.web.controller;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.domain.DictMap;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
@@ -8,6 +9,7 @@ import net.myspring.basic.modules.sys.web.query.DictMapQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,7 @@ import net.myspring.basic.modules.sys.service.DictMapService;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -57,5 +60,13 @@ public class DictMapController {
         return restResponse;
     }
 
+    @RequestMapping(value = "findByCategory")
+    public List<DictMap> findByCategory(String category){
+        List<DictMap> dictMapList= Lists.newArrayList();
+        if(StringUtils.isNotBlank(category)){
+            dictMapList=dictMapService.findByCategory(category);
+        }
+        return dictMapList;
+    }
 
 }

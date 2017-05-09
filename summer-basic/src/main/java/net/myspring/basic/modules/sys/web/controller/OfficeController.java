@@ -46,15 +46,10 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "search")
-    public List<OfficeDto> search(String name, String officeType, String parentOfficeId) {
+    public List<OfficeDto> search(OfficeQuery officeQuery) {
         List<OfficeDto> officeDtos = Lists.newArrayList();
-        if (StringUtils.isNotBlank(name)) {
-            Map<String, Object> map = Maps.newHashMap();
-            map.put("name", name);
-            if (StringUtils.isNotBlank(parentOfficeId)) {
-                map.put("parentOfficeId", parentOfficeId);
-            }
-            officeDtos = officeService.findByFilter(map);
+        if (StringUtils.isNotBlank(officeQuery.getName())) {
+            officeDtos = officeService.findByFilter(officeQuery);
         }
         return officeDtos;
     }
@@ -112,5 +107,11 @@ public class OfficeController {
     public RestResponse delete(Office office, BindingResult bindingResult) {
         officeService.logicDeleteOne(office);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+    }
+
+    @RequestMapping(value = "findById")
+    public OfficeDto findById(OfficeQuery officeQuery){
+        OfficeDto officeDto=officeService.searchById(officeQuery);
+        return officeDto;
     }
 }
