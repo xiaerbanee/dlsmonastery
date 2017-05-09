@@ -3,7 +3,7 @@ package net.myspring.future.modules.layout.service;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.IdUtils;
-import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
@@ -190,7 +190,7 @@ public class ShopAllotService {
         ShopAllot shopAllot = findOne(shopAllotAuditForm.getId());
         shopAllot.setStatus(shopAllotAuditForm.getPass() ? AuditTypeEnum.PASSED.name() : AuditTypeEnum.NOT_PASS.name());
         shopAllot.setAuditRemarks(shopAllotAuditForm.getAuditRemarks());
-        shopAllot.setAuditBy(SecurityUtils.getAccountId());
+        shopAllot.setAuditBy(RequestUtils.getAccountId());
         shopAllot.setAuditDate(LocalDateTime.now());
         shopAllotMapper.update(shopAllot);
 
