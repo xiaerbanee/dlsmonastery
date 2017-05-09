@@ -1,11 +1,14 @@
 package net.myspring.future.modules.layout.web.controller;
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.service.ShopAllotDetailService;
 import net.myspring.future.modules.layout.service.ShopAllotService;
+import net.myspring.future.modules.layout.web.form.ShopAllotAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
@@ -35,7 +38,6 @@ public class ShopAllotController {
     @Autowired
     private ShopAllotDetailService shopAllotDetailService;
 
-
     @RequestMapping(method = RequestMethod.GET)
     public Page<ShopAllotDto> list(Pageable pageable, ShopAllotQuery shopAllotQuery){
         Page<ShopAllotDto> page = shopAllotService.findPage(pageable, shopAllotQuery);
@@ -43,18 +45,24 @@ public class ShopAllotController {
     }
 
     @RequestMapping(value = "delete")
-    public String delete() {
-        return null;
+    public RestResponse delete(ShopAllotForm shopAllotForm) {
+        shopAllotService.delete(shopAllotForm);
+        RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
+
     }
 
     @RequestMapping(value = "save")
-    public String save() {
-        return null;
+    public RestResponse save(ShopAllotForm shopAllotForm) {
+        shopAllotService.saveOrUpdate(shopAllotForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "audit")
-    public String audit() {
-        return null;
+    public RestResponse audit(ShopAllotAuditForm shopAllotAuditForm) {
+
+        shopAllotService.audit(shopAllotAuditForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getShopAllotDetailFormList")
@@ -95,6 +103,14 @@ public class ShopAllotController {
 
         return result;
     }
+
+
+    @RequestMapping(value="findForViewOrAudit")
+    public ShopAllotDto findForViewOrAudit(ShopAllotForm shopAllotForm) {
+
+        return  shopAllotService.findForViewOrAudit(shopAllotForm.getId());
+    }
+
 
 
     @RequestMapping(value="getQuery")

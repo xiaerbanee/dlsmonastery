@@ -31,6 +31,14 @@
         and t1.pricesystem_id=#{pricesystemId}
     </select>
 
+    <select id="findByDepotId" resultType="PricesystemDetail">
+        SELECT t1.*
+        FROM crm_pricesystem_detail t1, crm_depot t2
+        WHERE  t1.pricesystem_id = t2.pricesystem_id
+        AND t2.id=#{depotId}
+    </select>
+
+
     <select id="findByPricesystemIdAndProductId" resultType="PricesystemDetail">
         select t1.* from crm_pricesystem_detail t1 where t1.pricesystem_id = #{pricesystemId} and t1.product_id = #{productId}
     </select>

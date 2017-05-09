@@ -19,5 +19,7 @@ public interface ShopAllotDetailMapper extends MyMapper<ShopAllotDetail,String> 
 
     List<ShopAllotDetailDto> getShopAllotDetailListForEdit(@Param("shopAllotId")  String shopAllotId, @Param("fromShopId")String fromShopId, @Param("toShopId")String toShopId);
 
-    List<ShopAllotDetailDto> getShopAllotDetailListForNew(@Param("fromShopId")String fromShopId, @Param("toShopId")String toShopId);
+    List<ShopAllotDetailDto> getShopAllotDetailListForNew(@Param("fromShopId") String fromShopId, @Param("toShopId")String toShopId);
+
+    List<ShopAllotDetailDto> getShopAllotDetailListForViewOrAudit(@Param("shopAllotId") String shopAllotId);
 }

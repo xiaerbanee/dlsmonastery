@@ -87,5 +87,9 @@ public class IdUtils {
 		return nextBusinessId.toString();
 	}
 
+	public static String getNextBusinessId(String maxBusinessId) {
+		return getNextBusinessId(Long.valueOf(maxBusinessId));
+	}
+
 
 }
