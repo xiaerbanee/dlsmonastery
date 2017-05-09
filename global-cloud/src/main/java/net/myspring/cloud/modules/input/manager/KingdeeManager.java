@@ -2,10 +2,10 @@ package net.myspring.cloud.modules.input.manager;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.cloud.common.enums.K3CloudActionEnum;
+import net.myspring.cloud.common.enums.KingdeeActionEnum;
 import net.myspring.cloud.common.utils.SecurityUtils;
-import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSaveExtendDto;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
+import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * Created by liuj on 2017/5/8.
  */
 @Component
-public class K3cloudManager {
+public class KingdeeManager {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private Map<String, OkHttpClient> okHttpClientMap = Maps.newHashMap();
@@ -38,7 +38,7 @@ public class K3cloudManager {
         list.add("2052");
         OkHttpClient okHttpClient = getClient(SecurityUtils.getAccountId());
         Request request = new Request.Builder()
-                .url(url + K3CloudActionEnum.VALIDATE_USER.getValue())
+                .url(url + KingdeeActionEnum.VALIDATE_USER.getValue())
                 .addHeader("content-type", "application/json;charset:utf-8")
                 .put(getRequestBody(list))
                 .build();
@@ -73,9 +73,9 @@ public class K3cloudManager {
         }
     }
 
-    public K3CloudSaveDto save(K3CloudSaveDto k3CloudSaveDto) {
-        KingdeeBook kingdeeBook = k3CloudSaveDto.getKingdeeBook();
-        String result = invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.SAVE.getValue(),k3CloudSaveDto.getFormId(),k3CloudSaveDto.getContent());
+    public KingdeeSynDto save(KingdeeSynDto kingdeeSynDto) {
+        KingdeeBook kingdeeBook = kingdeeSynDto.getKingdeeBook();
+        String result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SAVE.getValue(),kingdeeSynDto.getFormId(),kingdeeSynDto.getContent());
         JSONObject jsonObject = JSONObject.fromObject(result);
         if (BoolEnum.TRUE.getValue().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
             String billNo = jsonObject.getJSONObject("Result").getString("Number");
@@ -83,22 +83,22 @@ public class K3cloudManager {
             root.put("CreateOrgId", 0);
             root.put("Numbers", billNo);
             String content = ObjectMapperUtils.writeValueAsString(root);
-            invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.SUBMIT.getValue(),k3CloudSaveDto.getFormId(), content);
-            if (k3CloudSaveDto.getAutoAudit()) {
-                invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.AUDIT.getValue(),k3CloudSaveDto.getFormId(), content);
+            invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynDto.getFormId(), content);
+            if (kingdeeSynDto.getAutoAudit()) {
+                invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynDto.getFormId(), content);
             }
-            k3CloudSaveDto.setBillNo(billNo);
-            k3CloudSaveDto.setSuccess(true);
+            kingdeeSynDto.setBillNo(billNo);
+            kingdeeSynDto.setSuccess(true);
         } else {
-            k3CloudSaveDto.setSuccess(false);
+            kingdeeSynDto.setSuccess(false);
         }
-        return k3CloudSaveDto;
+        return kingdeeSynDto;
     }
 
 
-    public K3CloudSaveExtendDto save(K3CloudSaveExtendDto k3CloudSaveExtendDto) {
-        KingdeeBook kingdeeBook = k3CloudSaveExtendDto.getKingdeeBook();
-        String result = invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.SAVE.getValue(),k3CloudSaveExtendDto.getFormId(),k3CloudSaveExtendDto.getContent());
+    public KingdeeSynExtendDto save(KingdeeSynExtendDto kingdeeSynExtendDto) {
+        KingdeeBook kingdeeBook = kingdeeSynExtendDto.getKingdeeBook();
+        String result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SAVE.getValue(),kingdeeSynExtendDto.getFormId(),kingdeeSynExtendDto.getContent());
         JSONObject jsonObject = JSONObject.fromObject(result);
         if (BoolEnum.TRUE.getValue().toString().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
             String billNo = jsonObject.getJSONObject("Result").getString("Number");
@@ -106,22 +106,22 @@ public class K3cloudManager {
             root.put("CreateOrgId", 0);
             root.put("Numbers", billNo);
             String content = ObjectMapperUtils.writeValueAsString(root);
-            invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.SUBMIT.getValue(),k3CloudSaveExtendDto.getFormId(), content);
-            invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.AUDIT.getValue(),k3CloudSaveExtendDto.getFormId(), content);
-            k3CloudSaveExtendDto.setBillNo(billNo);
-            String nextBillNo = k3CloudSaveExtendDto.getNextBillNo();
+            invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynExtendDto.getFormId(), content);
+            invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynExtendDto.getFormId(), content);
+            kingdeeSynExtendDto.setBillNo(billNo);
+            String nextBillNo = kingdeeSynExtendDto.getNextBillNo();
             root = Maps.newLinkedHashMap();
             root.put("CreateOrgId", 0);
             root.put("Numbers", nextBillNo);
-            k3CloudSaveExtendDto.setBillNo(k3CloudSaveExtendDto.getBillNo() + CharConstant.COMMA + nextBillNo);
+            kingdeeSynExtendDto.setBillNo(kingdeeSynExtendDto.getBillNo() + CharConstant.COMMA + nextBillNo);
             content = ObjectMapperUtils.writeValueAsString(root);
-            invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.SUBMIT.getValue(),k3CloudSaveExtendDto.getNextFormId(), content);
-            invoke(kingdeeBook.getKingdeePostUrl(),K3CloudActionEnum.AUDIT.getValue(),k3CloudSaveExtendDto.getNextFormId(), content);
-            k3CloudSaveExtendDto.setSuccess(true);
+            invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
+            invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
+            kingdeeSynExtendDto.setSuccess(true);
         } else {
-            k3CloudSaveExtendDto.setSuccess(false);
+            kingdeeSynExtendDto.setSuccess(false);
         }
-        return k3CloudSaveExtendDto;
+        return kingdeeSynExtendDto;
     }
 
 

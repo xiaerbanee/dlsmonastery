@@ -1,20 +1,20 @@
 package net.myspring.cloud.modules.input.web.query;
 
-import net.myspring.cloud.common.enums.K3CloudBillTypeEnum;
+import net.myspring.cloud.common.enums.KingdeeBillTypeEnum;
 
 /**
  * Created by lihx on 2017/4/25.
  */
 public class BatchBillQuery {
 
-    private K3CloudBillTypeEnum[] typeList;
+    private KingdeeBillTypeEnum[] typeList;
 
 
-    public K3CloudBillTypeEnum[] getTypeList() {
+    public KingdeeBillTypeEnum[] getTypeList() {
         return typeList;
     }
 
-    public void setTypeList(K3CloudBillTypeEnum[] typeList) {
+    public void setTypeList(KingdeeBillTypeEnum[] typeList) {
         this.typeList = typeList;
     }
 

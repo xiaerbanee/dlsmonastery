@@ -3,19 +3,17 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
+import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.BdMaterialDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
-import net.myspring.cloud.modules.input.manager.K3cloudManager;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
+import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.web.query.BatchMaterialQuery;
 import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
-import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
-import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -38,9 +36,9 @@ public class BatchMaterialService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private K3cloudManager k3cloudManager;
+    private KingdeeManager k3cloudManager;
 
-    public List<K3CloudSaveDto> save(List<List<Object>> datas) {
+    public List<KingdeeSynDto> save(List<List<Object>> datas) {
         Map<String, BdMaterialDto> materialMap = Maps.newLinkedHashMap();
         Map<String, String> materialCategoryMap = Maps.newHashMap();
         Map<String, String> materialGroupMap = Maps.newHashMap();
@@ -72,14 +70,14 @@ public class BatchMaterialService {
             }
         }
         List<BdMaterialDto> materials = Lists.newArrayList(materialMap.values());
-        List<K3CloudSaveDto> codeList = Lists.newArrayList();
+        List<KingdeeSynDto> codeList = Lists.newArrayList();
         //财务出库开单
         if (CollectionUtil.isNotEmpty(materials)) {
             AccountDto accountDto = new AccountDto();
             cacheUtils.initCacheInput(accountDto);
             for (BdMaterialDto bdMaterial : materials) {
-                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial));
-                K3CloudSaveDto billNo = k3cloudManager.save(k3CloudSaveDto);
+                KingdeeSynDto k3CloudSaveDto = new KingdeeSynDto(KingdeeFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial));
+                KingdeeSynDto billNo = k3cloudManager.save(k3CloudSaveDto);
                 codeList.add(billNo);
             }
         }
