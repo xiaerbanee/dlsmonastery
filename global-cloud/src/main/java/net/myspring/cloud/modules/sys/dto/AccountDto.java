@@ -1,4 +1,4 @@
-package net.myspring.cloud.modules.remote.dto;
+package net.myspring.cloud.modules.sys.dto;
 
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.util.cahe.annotation.CacheInput;

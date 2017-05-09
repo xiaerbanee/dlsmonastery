@@ -53,7 +53,7 @@ public class K3cloudManager {
         }
     }
 
-    public  String invoke(String url,String action, String formId, String content) {
+    private String invoke(String url,String action, String formId, String content) {
         List<Object> list = Lists.newArrayList();
         list.add(formId);
         list.add(content);
