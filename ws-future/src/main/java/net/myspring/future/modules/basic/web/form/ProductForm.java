@@ -5,6 +5,7 @@ import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -16,12 +17,12 @@ public class ProductForm extends DataForm<Product> {
     private String outGroupName;
     private String productTypeId;
     private String netType;
-    private String hasIme;
-    private String allowOrder;
-    private String allowBill;
-    private String price2;
-    private String retailPrice;
-    private String depositPrice;
+    private Boolean hasIme;
+    private Boolean allowOrder;
+    private Boolean allowBill;
+    private BigDecimal price2;
+    private BigDecimal retailPrice;
+    private BigDecimal depositPrice;
     private String mappingName;
     private String image;
 
@@ -75,51 +76,51 @@ public class ProductForm extends DataForm<Product> {
         this.netType = netType;
     }
 
-    public String getHasIme() {
+    public Boolean getHasIme() {
         return hasIme;
     }
 
-    public void setHasIme(String hasIme) {
+    public void setHasIme(Boolean hasIme) {
         this.hasIme = hasIme;
     }
 
-    public String getAllowOrder() {
+    public Boolean getAllowOrder() {
         return allowOrder;
     }
 
-    public void setAllowOrder(String allowOrder) {
+    public void setAllowOrder(Boolean allowOrder) {
         this.allowOrder = allowOrder;
     }
 
-    public String getAllowBill() {
+    public Boolean getAllowBill() {
         return allowBill;
     }
 
-    public void setAllowBill(String allowBill) {
+    public void setAllowBill(Boolean allowBill) {
         this.allowBill = allowBill;
     }
 
-    public String getPrice2() {
+    public BigDecimal getPrice2() {
         return price2;
     }
 
-    public void setPrice2(String price2) {
+    public void setPrice2(BigDecimal price2) {
         this.price2 = price2;
     }
 
-    public String getRetailPrice() {
+    public BigDecimal getRetailPrice() {
         return retailPrice;
     }
 
-    public void setRetailPrice(String retailPrice) {
+    public void setRetailPrice(BigDecimal retailPrice) {
         this.retailPrice = retailPrice;
     }
 
-    public String getDepositPrice() {
+    public BigDecimal getDepositPrice() {
         return depositPrice;
     }
 
-    public void setDepositPrice(String depositPrice) {
+    public void setDepositPrice(BigDecimal depositPrice) {
         this.depositPrice = depositPrice;
     }
 
