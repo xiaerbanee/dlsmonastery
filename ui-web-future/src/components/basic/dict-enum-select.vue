@@ -10,7 +10,7 @@
     props: ['value','category'],
     data() {
       return {
-        innerId:this.value,
+        innerId: this.value,
         itemList : []
       };
     },methods:{
