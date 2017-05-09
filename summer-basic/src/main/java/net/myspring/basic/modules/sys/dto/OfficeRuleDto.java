@@ -12,6 +12,15 @@ public class OfficeRuleDto extends TreeDto<OfficeRule> {
     private String parentName;
     private String name;
     private String code;
+    private boolean hasPoint;
+
+    public boolean isHasPoint() {
+        return hasPoint;
+    }
+
+    public void setHasPoint(boolean hasPoint) {
+        this.hasPoint = hasPoint;
+    }
 
     public String getParentName() {
         return parentName;

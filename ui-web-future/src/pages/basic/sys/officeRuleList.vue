@@ -14,9 +14,6 @@
               <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('officeRuleList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.parentName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.parentName" auto-complete="off" :placeholder="$t('officeRuleList.likeSearch')"></el-input>
-              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -31,7 +28,7 @@
         <el-table-column prop="parentName" label="上级" ></el-table-column>
         <el-table-column prop="hasPoint" label="是否有点位" width="100">
           <template scope="scope">
-            <el-tag :type="scope.row.hasPoint ? 'primary' : 'danger'">{{scope.row.hasPoint | bool2str}}</el-tag>
+            <el-tag :type="scope.row.hasPoint? 'primary' : 'danger'">{{scope.row.hasPoint | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="remarks" :label="$t('officeRuleList.remarks')"></el-table-column>
@@ -57,10 +54,8 @@
         submitData:{
           page:0,
           size:25,
-          parentName:'',
           name:"",
         },formLabel:{
-          parentName:{label:"上级名称"},
           name:{label:"名称"},
         },
         formLabelWidth: '120px',

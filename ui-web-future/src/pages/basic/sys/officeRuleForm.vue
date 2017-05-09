@@ -22,7 +22,7 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="inputForm.remark"></el-input>
+              <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('menuForm.save')}}</el-button>

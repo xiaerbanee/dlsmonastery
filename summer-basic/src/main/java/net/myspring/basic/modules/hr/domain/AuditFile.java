@@ -18,6 +18,15 @@ public class AuditFile extends CompanyEntity<AuditFile> {
     private String processStatus;
     private String processTypeId;
     private String processFlowId;
+    private String positionId;
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
 
     public String getTitle() {
         return title;

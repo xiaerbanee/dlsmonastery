@@ -7,7 +7,7 @@
         FROM sys_backend_module  t1
         where t1.enabled=1
         <if test="p.name!=null">
-            and t1.name =#{p.name}
+            and t1.name  like concat('%',#{p.name},'%')
         </if>
         <if test="p.backendName!=null">
             and t1.backend_id in (

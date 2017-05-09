@@ -3,7 +3,7 @@
     <head-tab active="backendModuleForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item :label="$t('backendModuleForm.code')" prop="name">
+        <el-form-item :label="$t('backendModuleForm.code')" prop="code">
           <el-input v-model.number="inputForm.code"></el-input>
         </el-form-item>
         <el-form-item :label="$t('backendModuleForm.name')" prop="name">
