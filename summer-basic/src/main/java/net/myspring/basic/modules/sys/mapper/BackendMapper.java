@@ -50,4 +50,6 @@ public interface BackendMapper extends BaseMapper<Backend,String> {
     List<BackendMenuDto> findByMenuList(List<String> menuList);
 
     List<BackendMenuDto> findByRoleId(String roleId);
+
+    List<BackendMenuDto> findRolePermissionByRoleId(String roleId);
 }
