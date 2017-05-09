@@ -468,7 +468,8 @@ export default {
     content: "konten",
     processStatus: "status",
     scenePhoto: "gambar",
-    confirmPhoto: "konfirmasi gambar"
+    confirmPhoto: "konfirmasi gambar",
+    pass:"pass",
   },
   shopBuildForm: {
     shopBuildForm: "Mengedit konstruksi toko",
@@ -714,6 +715,10 @@ export default {
     createdBy: "dibuat oleh",
     createdDate: "tanggal pembuatan",
     remarks: "keterangan / komen",
+    pass:"pass",
+    passRemarks:"persetujuan memo",
+    inputRemarks:'masukkan catatan persetujuan',
+    save:"simpan",
   },
   shopPrintForm: {
     shopPrintForm: "formulir cetak periklanan",

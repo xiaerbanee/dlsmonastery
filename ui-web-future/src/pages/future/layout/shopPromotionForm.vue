@@ -6,9 +6,7 @@
         <el-row>
           <el-col :span="12">
            <el-form-item :label="$t('shopPromotionForm.shopId')" prop="shopId">
-             <el-select v-model="inputForm.shopId" filterable remote :placeholder="$t('shopPromotionForm.inputWord')" :remote-method="remoteShop" :loading="remoteLoading" :clearable=true :disabled = "shopDisabled" >
-               <el-option v-for="shop in shops" :key="shop.id" :label="shop.name" :value="shop.id"></el-option>
-            </el-select>
+             <su-depot v-model="inputForm.shopId" type="shop" :disabled="shopDisabled"></su-depot>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityDate')" prop="activityDate">
               <el-date-picker v-model="inputForm.activityDate" type="date" :placeholder="$t('shopPromotionForm.inputDate')"></el-date-picker>
@@ -138,16 +136,6 @@
             this.submitDisabled = false;
           }
         })
-      },remoteShop(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/ws/future/basic/depot/shop',{params:{name:query}}).then((response)=>{
-            this.shops=response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.shops = [];
-        }
       },handlePreview1(file) {
         window.open(file.url);
       },handleChange1(file, fileList) {

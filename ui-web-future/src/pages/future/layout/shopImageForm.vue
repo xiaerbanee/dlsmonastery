@@ -6,9 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopImageForm.shopName')" prop="shopId">
-              <el-select v-model="inputForm.shopId" filterable remote :placeholder="$t('shopImageForm.inputWord')" :remote-method="remoteShop" :loading="remoteLoading" :clearable=true :disabled="shopDisabled">
-                <el-option v-for="shop in shops" :key="shop.id" :label="shop.name" :value="shop.id"></el-option>
-              </el-select>
+              <su-depot v-model="inputForm.shopId" type="shop" :disabled="shopDisabled"></su-depot>
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageType')" prop="imageType">
               <el-select v-model="inputForm.imageType" filterable clearable :placeholder="$t('shopImageForm.inputType')">
@@ -90,17 +88,7 @@
             this.submitDisabled = false;
           }
         })
-      },remoteShop(query) {
-      if (query !== '') {
-        this.remoteLoading = true;
-        axios.get('/api/ws/future/basic/depot/shop',{params:{name:query}}).then((response)=>{
-          this.shops=response.data;
-          this.remoteLoading = false;
-        })
-      } else {
-        this.shops = [];
-      }
-    },getFormProperty(){
+      },getFormProperty(){
         axios.get('/api/basic/sys/companyConfig/getValueByCode',{params:{code:"SHOP_IMAGE_TYPE"}}).then((response)=>{
           this.formProperty=response.data.split(',');
         });
