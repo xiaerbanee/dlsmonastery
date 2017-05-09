@@ -8,6 +8,15 @@ public class ActivitiStartDto {
     private String processStatus;
     private String processFlowId;
     private String positionId;
+    private String processTypeId;
+
+    public String getProcessTypeId() {
+        return processTypeId;
+    }
+
+    public void setProcessTypeId(String processTypeId) {
+        this.processTypeId = processTypeId;
+    }
 
     public String getProcessInstanceId() {
         return processInstanceId;

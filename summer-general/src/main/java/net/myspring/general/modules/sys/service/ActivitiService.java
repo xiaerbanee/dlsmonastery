@@ -10,6 +10,7 @@ import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.common.utils.SecurityUtils;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
 import net.myspring.general.modules.sys.domain.ProcessTask;
+import net.myspring.general.modules.sys.domain.ProcessType;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiDetailDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
@@ -17,6 +18,7 @@ import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.general.modules.sys.mapper.ProcessFlowMapper;
 import net.myspring.general.modules.sys.mapper.ProcessTaskMapper;
+import net.myspring.general.modules.sys.mapper.ProcessTypeMapper;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
@@ -52,17 +54,21 @@ public class ActivitiService {
     private ProcessTaskMapper processTaskMapper;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private ProcessTypeMapper processTypeMapper;
 
     public ActivitiStartDto start(ActivitiStartForm activitiStartForm){
         //启动流程
         ActivitiStartDto activitiStartDto=new ActivitiStartDto();
+        ProcessType processType=processTypeMapper.findByName(activitiStartForm.getProcessTypeName());
+        activitiStartDto.setProcessTypeId(processType.getId());
         identityService.setAuthenticatedUserId(SecurityUtils.getAccountId());
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process_type_" + activitiStartForm.getProcessTypeId(), activitiStartForm.getBusinessKey());
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process_type_" + processType.getId(), activitiStartForm.getBusinessKey());
         String processInstanceId = processInstance.getId();
         activitiStartDto.setProcessInstanceId(processInstanceId);
         String processStatus = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult().getName();
         activitiStartDto.setProcessStatus(processStatus);
-        ProcessFlow processFlow = processFlowMapper.findByProcessTypeAndName(activitiStartForm.getProcessTypeId(), processStatus);
+        ProcessFlow processFlow = processFlowMapper.findByProcessTypeAndName(processType.getId(), processStatus);
         activitiStartDto.setProcessFlowId(processFlow==null?"":processFlow.getId());
         activitiStartDto.setPositionId(processFlow.getPositionId());
         //创建任务
