@@ -1,7 +1,7 @@
 package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopPrint;
 import net.myspring.util.cahe.annotation.CacheInput;
 
@@ -113,7 +113,7 @@ public class ShopPrintDto extends DataDto<ShopPrint>{
     }
 
     public Boolean getIsAuditable(){
-        if(SecurityUtils.getPositionId().equals(getProcessPositionId())||SecurityUtils.getAccountId().equalsIgnoreCase("1")){
+        if(RequestUtils.getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
             return true;
         }else{
             return false;
@@ -121,7 +121,7 @@ public class ShopPrintDto extends DataDto<ShopPrint>{
     }
 
     public Boolean getIsEditable(){
-        if(SecurityUtils.getAccountId().equals(getCreatedBy())||SecurityUtils.getAccountId().equalsIgnoreCase("1")){
+        if(RequestUtils.getAccountId().equals(getCreatedBy())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
             return true;
         }else {
             return false;

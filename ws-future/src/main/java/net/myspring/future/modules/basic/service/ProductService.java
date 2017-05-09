@@ -8,7 +8,7 @@ import net.myspring.future.common.enums.CompanyNameEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.IdUtils;
-import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -128,7 +128,7 @@ public class ProductService {
         if(adApplyForm.getShopId() != null){
             Depot depot = depotMapper.findOne(adApplyForm.getShopId());
             adApplyForm.setShop(depot);
-            if(CompanyNameEnum.JXDJ.name().equals(SecurityUtils.getCompanyName())){
+            if(CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())){
                 if(depot != null && depot.getCode().startsWith("IM0")){
                     for(int i= adProducts.size()-1;i >= 0; i--){
                         Product product = adProducts.get(i);
@@ -196,7 +196,7 @@ public class ProductService {
                 product.setOutGroupId(map.get("fgroup").toString());
                 product.setOutGroupName(map.get("groupName").toString());
                 product.setCode(map.get("code").toString());
-                if(CompanyNameEnum.JXVIVO.name().equals(SecurityUtils.getCompanyName()) || CompanyNameEnum.JXOPPO.name().equals(SecurityUtils.getCompanyName())){
+                if(CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName()) || CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName())){
                     if("商品类".equals(map.get("groupName").toString())){
                         if(map.get("name").toString().trim().contains("移动")){
                             product.setNetType("移动");

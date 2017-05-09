@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyLeave;
 import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
 import net.myspring.basic.modules.hr.mapper.DutyLeaveMapper;
@@ -45,7 +45,7 @@ public class DutyLeaveService {
             if (dutyLeaveMapper.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, dutyLeaveForm.getDateType())  == null) {
                 dutyLeaveForm.setDutyDate(date);
                 dutyLeaveForm.setStatus(AuditTypeEnum.APPLYING.toString());
-                dutyLeaveForm.setEmployeeId(SecurityUtils.getEmployeeId());
+                dutyLeaveForm.setEmployeeId(RequestUtils.getEmployeeId());
                 DutyLeave dutyLeave=BeanUtil.map(dutyLeaveForm,DutyLeave.class);
                 dutyLeaveMapper.save(dutyLeave);
                 dutyLeave=dutyLeaveMapper.findOne(dutyLeave.getId());
@@ -64,7 +64,7 @@ public class DutyLeaveService {
                     item.setLeaveType(dutyLeaveForm.getLeaveType());
                     item.setAttachment(dutyLeaveForm.getAttachment());
                     item.setRemarks(dutyLeaveForm.getRemarks());
-                    item.setEmployeeId(SecurityUtils.getEmployeeId());
+                    item.setEmployeeId(RequestUtils.getEmployeeId());
                     dutyLeaveMapper.save(item);
                     dutyLeaveList.add(item);
                 }

@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.sys.dto;
 
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.StringUtils;
 
@@ -8,7 +8,7 @@ import net.myspring.util.text.StringUtils;
  * Created by lihx on 2017/5/6.
  */
 public class AccountDto {
-    private String id = SecurityUtils.getAccountId();
+    private String id = RequestUtils.getAccountId();
     @CacheInput(inputKey = "accounts",inputInstance = "id",outputInstance = "loginName")
     private String name;
     @CacheInput(inputKey = "accounts",inputInstance = "id",outputInstance = "outId")
@@ -18,14 +18,14 @@ public class AccountDto {
 
     public String getId() {
         if(StringUtils.isBlank(id)){
-            return SecurityUtils.getAccountId();
+            return RequestUtils.getAccountId();
         }
         return id;
     }
 
     public void setId(String id) {
         if(StringUtils.isBlank(id)){
-            this.id = SecurityUtils.getAccountId();
+            this.id = RequestUtils.getAccountId();
         }else {
             this.id = id;
         }

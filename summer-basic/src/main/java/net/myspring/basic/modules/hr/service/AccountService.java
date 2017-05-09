@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountPermission;
 import net.myspring.basic.modules.hr.dto.AccountDto;
@@ -141,11 +141,11 @@ public class AccountService {
     }
 
     public List<String> getAuthorityList() {
-        String roleId = SecurityUtils.getRoleId();
-        String accountId=SecurityUtils.getAccountId();
+        String roleId = RequestUtils.getRoleId();
+        String accountId= RequestUtils.getAccountId();
         List<String> authorityList;
         List<Permission> permissionList;
-        if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(SecurityUtils.getAccountId())){
+        if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())){
             permissionList=permissionMapper.findAllEnabled();
         }else {
             List<String> accountPermissions=accountPermissionMapper.findPermissionIdByAccount(accountId);

@@ -3,8 +3,7 @@ package net.myspring.basic.modules.sys.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
-import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.AccountPermissionMapper;
 import net.myspring.basic.modules.sys.domain.Menu;
@@ -139,15 +138,15 @@ public class MenuService {
     private List<BackendMenuDto> getMenusMap(boolean isMobile) {
         List<BackendMenuDto> backendList = Lists.newLinkedList();
         List<String> menuIdList;
-        if (StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(SecurityUtils.getAccountId())) {
+        if (StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())) {
             List<Menu> menuList = menuMapper.findAllEnabled();
             menuIdList=CollectionUtil.extractToList(menuList,"id");
         } else {
-            String roleId = SecurityUtils.getRoleId();
+            String roleId = RequestUtils.getRoleId();
             List<Permission> permissionList;
-            List<String> accountPermissions=accountPermissionMapper.findPermissionIdByAccount(SecurityUtils.getAccountId());
+            List<String> accountPermissions=accountPermissionMapper.findPermissionIdByAccount(RequestUtils.getAccountId());
             if(CollectionUtil.isNotEmpty(accountPermissions)){
-                permissionList=permissionMapper.findByRoleAndAccount(roleId,SecurityUtils.getAccountId());
+                permissionList=permissionMapper.findByRoleAndAccount(roleId, RequestUtils.getAccountId());
             }else {
                 permissionList=permissionMapper.findByRoleId(roleId);
             }

@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyOvertime;
 import net.myspring.basic.modules.hr.dto.DutyOvertimeDto;
 import net.myspring.basic.modules.hr.mapper.DutyOvertimeMapper;
@@ -41,7 +41,7 @@ public class DutyOvertimeService {
     public DutyOvertime save(DutyOvertimeForm dutyOvertimeForm) {
         dutyOvertimeForm.setLeftHour(dutyOvertimeForm.getHour());
         dutyOvertimeForm.setStatus(AuditTypeEnum.APPLYING.toString());
-        dutyOvertimeForm.setEmployeeId(SecurityUtils.getEmployeeId());
+        dutyOvertimeForm.setEmployeeId(RequestUtils.getEmployeeId());
         DutyOvertime dutyOvertime = BeanUtil.map(dutyOvertimeForm, DutyOvertime.class);
         dutyOvertimeMapper.save(dutyOvertime);
         return dutyOvertime;

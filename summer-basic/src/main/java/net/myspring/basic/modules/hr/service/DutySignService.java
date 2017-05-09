@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.service;
 import com.google.common.collect.Lists;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutySign;
 import net.myspring.basic.modules.hr.dto.DutySignDto;
 import net.myspring.basic.modules.hr.mapper.DutySignMapper;
@@ -40,7 +40,7 @@ public class DutySignService {
         dutySignForm.setDutyDate(LocalDate.now());
         dutySignForm.setDutyTime(LocalTime.now());
         dutySignForm.setStatus(AuditTypeEnum.APPLYING.toString());
-        dutySignForm.setEmployeeId(SecurityUtils.getEmployeeId());
+        dutySignForm.setEmployeeId(RequestUtils.getEmployeeId());
         DutySign dutySign=BeanUtil.map(dutySignForm,DutySign.class);
         dutySignMapper.save(dutySign);
         return dutySign;

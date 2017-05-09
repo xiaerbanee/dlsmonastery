@@ -2,7 +2,7 @@ package net.myspring.cloud.common.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +30,7 @@ public class OAuth2FeignRequestInterceptor implements RequestInterceptor {
      */
     @Override
     public void apply(RequestTemplate template) {
-        System.out.println(SecurityUtils.getAccountId());
+        System.out.println(RequestUtils.getAccountId());
 
         if (template.headers().containsKey(AUTHORIZATION_HEADER)) {
             LOGGER.warn("The Authorization token has been already set");

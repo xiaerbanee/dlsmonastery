@@ -6,7 +6,7 @@ import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.domain.BdAccount;
 import net.myspring.cloud.modules.input.domain.BdFlexItemProperty;
 import net.myspring.cloud.modules.input.dto.BdFlexItemGroupDto;
@@ -239,8 +239,8 @@ public class VoucherService {
         if (isCreate) {
             voucherForm.setCompanyId(DynamicDataSourceContext.get().getCompanyId());
             //待写accountName；
-            voucherForm.setCreatedName(SecurityUtils.getAccountId());
-            if(SecurityUtils.getAccountId() != null){//问题ThreadLocalContext.get().getAccount() != null
+            voucherForm.setCreatedName(RequestUtils.getAccountId());
+            if(RequestUtils.getAccountId() != null){//问题ThreadLocalContext.get().getAccount() != null
                 voucherForm.setStatus(VoucherStatusEnum.省公司财务审核.name());
             }else{
                 voucherForm.setStatus(VoucherStatusEnum.地区财务审核.name());

@@ -4,7 +4,7 @@ package net.myspring.future.modules.layout.web.controller;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.OutBillTypeEnum;
-import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.service.BankService;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.service.ShopDepositService;
@@ -62,7 +62,7 @@ public class ShopDepositController {
     public ShopDepositForm findForm() {
         ShopDepositForm shopDepositForm = new ShopDepositForm();
         shopDepositForm.setOutBillTypeList(OutBillTypeEnum.getList());
-        shopDepositForm.setBankDtoList(bankService.findBankDtosByAccountId(SecurityUtils.getAccountId()));
+        shopDepositForm.setBankDtoList(bankService.findBankDtosByAccountId(RequestUtils.getAccountId()));
         return shopDepositForm;
 
     }

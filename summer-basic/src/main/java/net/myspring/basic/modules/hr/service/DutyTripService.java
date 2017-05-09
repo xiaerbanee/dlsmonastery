@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.service;
 
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyTrip;
 import net.myspring.basic.modules.hr.dto.DutyTripDto;
 import net.myspring.basic.modules.hr.mapper.DutyTripMapper;
@@ -33,7 +33,7 @@ public class DutyTripService {
 
     public DutyTrip save(DutyTripForm dutyTripForm) {
         dutyTripForm.setStatus(AuditTypeEnum.APPLYING.toString());
-        dutyTripForm.setEmployeeId(SecurityUtils.getEmployeeId());
+        dutyTripForm.setEmployeeId(RequestUtils.getEmployeeId());
         DutyTrip dutyTrip = BeanUtil.map(dutyTripForm, DutyTrip.class);
         dutyTripMapper.save(dutyTrip);
         return dutyTrip;

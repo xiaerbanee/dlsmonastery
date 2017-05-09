@@ -74,10 +74,10 @@ public class ActivitiUtils {
         // 如果没有签收，签收
         if (task != null) {
             if (StringUtils.isEmpty(task.getAssignee())) {
-                taskService.claim(task.getId(), SecurityUtils.getAccountId());
+                taskService.claim(task.getId(), RequestUtils.getAccountId());
                 return true;
             } else {
-                if (task.getAssignee().equals(SecurityUtils.getAccountId())) {
+                if (task.getAssignee().equals(RequestUtils.getAccountId())) {
                     return true;
                 }
             }

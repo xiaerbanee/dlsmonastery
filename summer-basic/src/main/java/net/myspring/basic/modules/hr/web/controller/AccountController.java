@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.AccountMessageDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
@@ -113,7 +113,7 @@ public class AccountController {
 
     @RequestMapping(value = "searchFilter")
     public List<AccountDto> searchFilter(AccountQuery accountQuery) {
-        accountQuery.setOfficeId(SecurityUtils.getOfficeId());
+        accountQuery.setOfficeId(RequestUtils.getOfficeId());
         List<AccountDto> accountDtoList = accountService.findByFilter(accountQuery);
         return accountDtoList;
     }
@@ -129,7 +129,7 @@ public class AccountController {
 
     @RequestMapping(value = "getAccountInfo")
     public Map<String, Object> getAccountInfo() {
-        String accountId = SecurityUtils.getAccountId();
+        String accountId = RequestUtils.getAccountId();
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccountDto(accountId);
         List<String> authorityList = accountService.getAuthorityList();
@@ -143,7 +143,7 @@ public class AccountController {
     @RequestMapping(value = "/home")
     public Map<String, Object> home() {
         Map<String, Object> map = Maps.newHashMap();
-        AccountDto accountDto = accountService.getAccountDto(SecurityUtils.getAccountId());
+        AccountDto accountDto = accountService.getAccountDto(RequestUtils.getAccountId());
         cacheUtils.initCacheInput(accountDto);
         LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
         List<DutyDto> dutyList = dutyService.findByAuditable(accountDto.getId(), AuditTypeEnum.APPLYING.toString(), lastMonth);
@@ -151,7 +151,7 @@ public class AccountController {
         map.put("dutySize", dutyList.size());
         map.put("accountMessageSize", accountMessages.size());
         //显示剩余的加班调休时间和年假时间
-        String employeeId = SecurityUtils.getEmployeeId();
+        String employeeId = RequestUtils.getEmployeeId();
         map.put("annualHour", dutyAnnualService.getAvailableHour(employeeId));
         map.put("overtimeHour", dutyOvertimeService.getAvailableHour(employeeId, LocalDateTime.now()));
         //显示快到期时间
@@ -169,7 +169,7 @@ public class AccountController {
 
     @RequestMapping(value = "getTreeNode")
     public TreeNode getTreeNode() {
-        TreeNode treeNode=permissionService.findRolePermissionTree(SecurityUtils.getRoleId(), Lists.newArrayList());
+        TreeNode treeNode=permissionService.findRolePermissionTree(RequestUtils.getRoleId(), Lists.newArrayList());
         return treeNode;
     }
 

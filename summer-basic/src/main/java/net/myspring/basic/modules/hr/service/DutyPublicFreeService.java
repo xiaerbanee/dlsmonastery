@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.service;
 
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyPublicFree;
 import net.myspring.basic.modules.hr.dto.DutyPublicFreeDto;
 import net.myspring.basic.modules.hr.mapper.DutyPublicFreeMapper;
@@ -25,7 +25,7 @@ public class DutyPublicFreeService {
 
 
     public DutyPublicFree save(DutyPublicFreeForm dutyPublicFreeForm) {
-        dutyPublicFreeForm.setEmployeeId(SecurityUtils.getEmployeeId());
+        dutyPublicFreeForm.setEmployeeId(RequestUtils.getEmployeeId());
         dutyPublicFreeForm.setStatus(AuditTypeEnum.APPLYING.toString());
         DutyPublicFree dutyPublicFree = BeanUtil.map(dutyPublicFreeForm, DutyPublicFree.class);
         dutyPublicFreeMapper.save(dutyPublicFree);

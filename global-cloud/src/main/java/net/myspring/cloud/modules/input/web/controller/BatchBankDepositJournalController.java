@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.input.web.controller;
 
-import net.myspring.cloud.common.utils.SecurityUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.service.BatchBankDepositJournalService;
 import net.myspring.cloud.modules.input.web.form.BatchBankDepositJournalForm;
 import net.myspring.cloud.modules.input.web.query.BatchBankDepositJournalQuery;
@@ -31,7 +31,7 @@ public class BatchBankDepositJournalController {
     @RequestMapping(value = "form")
     public BatchBankDepositJournalQuery bankForm(BatchBankDepositJournalQuery batchBankDepositJournalQuery) {
         batchBankDepositJournalQuery = batchBankDepositJournalService.getFormProperty(batchBankDepositJournalQuery);
-        String kingdeeName = kingdeeBookService.getNameByCompanyId(SecurityUtils.getCompanyId());
+        String kingdeeName = kingdeeBookService.getNameByCompanyId(RequestUtils.getCompanyId());
         batchBankDepositJournalQuery.setKingdeeName(kingdeeName);
         return batchBankDepositJournalQuery;
     }

@@ -1,13 +1,11 @@
 package net.myspring.future.modules.layout.web.query;
 
 import net.myspring.common.constant.CharConstant;
-import net.myspring.future.common.utils.SecurityUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Created by zhangyf on 2017/5/6.
@@ -41,7 +39,7 @@ public class ShopBuildQuery {
     public String getPositionId() {
         if(StringUtils.isNotBlank(auditType)){
             if(auditType.equalsIgnoreCase("1")){
-                return SecurityUtils.getPositionId();
+                return RequestUtils.getPositionId();
             }
         }
         return null;
