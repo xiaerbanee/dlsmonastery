@@ -8,7 +8,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -44,6 +47,14 @@ public class RequestUtils {
         dbObject.put("officeId",getOfficeId());
         return dbObject;
     }
+
+
+    public static String getDataSourceType() {
+        HttpServletRequest request  = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String dataSourceType = (String) request.getAttribute("dataSourceType");
+        return dataSourceType;
+    }
+
 
     private  static Map<String, Object> getAdditionalInformation() {
         Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
