@@ -1,11 +1,13 @@
 package net.myspring.cloud.modules.sys.web.query;
 
+import net.myspring.cloud.common.query.BaseQuery;
+
 import java.util.List;
 
 /**
  * Created by lihx on 2017/4/12.
  */
-public class KingdeeBookQuery {
+public class KingdeeBookQuery extends BaseQuery {
     private String companyId;
     private String name;
     private String type;

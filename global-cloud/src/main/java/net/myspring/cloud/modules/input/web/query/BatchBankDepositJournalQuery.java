@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.input.web.query;
 
+import net.myspring.cloud.common.query.BaseQuery;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/5/8.
  */
-public class BatchBankDepositJournalQuery {
+public class BatchBankDepositJournalQuery extends BaseQuery {
     private String kingdeeName;
     private List<NameNumberDto> accountSubjectList;
 

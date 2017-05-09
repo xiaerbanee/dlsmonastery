@@ -1,9 +1,11 @@
 package net.myspring.basic.modules.sys.web.query;
 
+import net.myspring.basic.common.query.BaseQuery;
+
 /**
  * Created by lihx on 2017/4/7.
  */
-public class PermissionQuery {
+public class PermissionQuery extends BaseQuery {
     private String name;
     private String permission;
     private String menuName;

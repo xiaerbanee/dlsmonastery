@@ -1,9 +1,11 @@
 package net.myspring.basic.modules.sys.web.query;
 
+import net.myspring.basic.common.query.BaseQuery;
+
 /**
  * Created by wangzm on 2017/4/22.
  */
-public class OfficeRuleQuery {
+public class OfficeRuleQuery extends BaseQuery {
     private String name;
     private String parentName;
 

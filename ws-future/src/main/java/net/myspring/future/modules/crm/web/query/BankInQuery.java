@@ -1,12 +1,13 @@
 package net.myspring.future.modules.crm.web.query;
 
+import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.time.LocalDateTimeUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class BankInQuery {
+public class BankInQuery extends BaseQuery {
 
 
     private List<String> processStatusList;

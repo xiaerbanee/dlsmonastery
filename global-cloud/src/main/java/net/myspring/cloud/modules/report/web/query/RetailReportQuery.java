@@ -1,12 +1,14 @@
 package net.myspring.cloud.modules.report.web.query;
 
 
+import net.myspring.cloud.common.query.BaseQuery;
+
 import java.time.YearMonth;
 
 /**
  * Created by lihx on 2017/5/8.
  */
-public class RetailReportQuery {
+public class RetailReportQuery extends BaseQuery {
     private YearMonth startMonth;
     private YearMonth endMonth;
     

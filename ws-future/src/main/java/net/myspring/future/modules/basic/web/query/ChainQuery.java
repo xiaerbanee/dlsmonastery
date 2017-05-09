@@ -1,9 +1,11 @@
 package net.myspring.future.modules.basic.web.query;
 
+import net.myspring.future.common.query.BaseQuery;
+
 /**
  * Created by lihx on 2017/4/18.
  */
-public class ChainQuery {
+public class ChainQuery extends BaseQuery {
     private String name;
     private String type;
     private String areaType;

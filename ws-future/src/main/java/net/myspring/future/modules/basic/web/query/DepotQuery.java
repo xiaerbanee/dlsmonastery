@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.HashBiMap;
 import net.myspring.common.dto.NameValueDto;
+import net.myspring.future.common.query.BaseQuery;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
@@ -14,7 +15,7 @@ import java.util.Map;
 /**
  * Created by lihx on 2017/4/18.
  */
-public class DepotQuery {
+public class DepotQuery extends BaseQuery {
     private String name;
     private String type;
     private String areaType;
@@ -37,12 +38,12 @@ public class DepotQuery {
     private List<Pricesystem> pricesystemList;
     private List<NameValueDto> specialityStoreTypeList;
     private List<Chain> chainList;
-    private Map<String,String> bools;
+    private Map<String, String> bools;
     private List<AdPricesystem> adPricesystemList;
     private List<ExpressCompany> expressCompanyList;
     private LocalDate dutyDateStart;
     private LocalDate dutyDateEnd;
-//后台
+    //后台
     private List<String> officeIdList;
     private String depotName;
     private List<Integer> typeList;

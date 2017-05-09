@@ -1,12 +1,13 @@
 package net.myspring.future.modules.layout.web.query;
 
+import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.time.LocalDateTimeUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShopAllotQuery {
+public class ShopAllotQuery extends BaseQuery {
 
     private String businessId;
     private String businessIds;

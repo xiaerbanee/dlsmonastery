@@ -1,16 +1,17 @@
 package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Maps;
+import net.myspring.future.common.query.BaseQuery;
 
 import java.util.Map;
 
 /**
  * Created by lihx on 2017/4/19.
  */
-public class ProductTypeQuery {
+public class ProductTypeQuery extends BaseQuery {
     private String code;
     private String name;
-    private Map<String,String> boolMap= Maps.newHashMap();
+    private Map<String, String> boolMap = Maps.newHashMap();
 
     public Map<String, String> getBoolMap() {
         return boolMap;

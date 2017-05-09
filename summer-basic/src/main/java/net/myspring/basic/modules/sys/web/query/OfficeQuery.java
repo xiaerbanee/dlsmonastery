@@ -1,13 +1,14 @@
 package net.myspring.basic.modules.sys.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.query.BaseQuery;
 
 import java.util.List;
 
 /**
  * Created by lihx on 2017/4/7.
  */
-public class OfficeQuery {
+public class OfficeQuery extends BaseQuery {
     private String id;
     private List<String> officeIds= Lists.newArrayList();
     private String name;

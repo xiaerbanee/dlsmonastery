@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.query.BaseQuery;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
 
@@ -10,7 +11,7 @@ import java.util.Map;
 /**
  * Created by lihx on 2017/4/19.
  */
-public class ProductQuery {
+public class ProductQuery extends BaseQuery {
     private String name;  //名称
     private String code;  //编码
     private String type;
@@ -20,10 +21,10 @@ public class ProductQuery {
     private String allowOrder;  //允许开单
     private String outGroupName;  //产品类型
     private String netType;  //网络制式
-    private List<String> netTypeList= Lists.newArrayList();
-    private List<Product> outGroupNameList=Lists.newArrayList();
-    private Map<String,String> boolMap;
-    private List<ProductType> productTypeList=Lists.newArrayList();
+    private List<String> netTypeList = Lists.newArrayList();
+    private List<Product> outGroupNameList = Lists.newArrayList();
+    private Map<String, String> boolMap;
+    private List<ProductType> productTypeList = Lists.newArrayList();
 
     public List<ProductType> getProductTypeList() {
         return productTypeList;

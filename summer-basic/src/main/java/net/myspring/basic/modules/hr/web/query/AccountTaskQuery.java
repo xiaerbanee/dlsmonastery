@@ -1,12 +1,14 @@
 package net.myspring.basic.modules.hr.web.query;
 
 
+import net.myspring.basic.common.query.BaseQuery;
+
 import java.util.List;
 
 /**
  * Created by liuj on 2017/3/19.
  */
-public class AccountTaskQuery {
+public class AccountTaskQuery extends BaseQuery {
     private String positionId;
     private String status;
     private String name;

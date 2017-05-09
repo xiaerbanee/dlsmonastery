@@ -1,9 +1,11 @@
 package net.myspring.future.modules.layout.web.query;
 
+import net.myspring.future.common.query.BaseQuery;
+
 /**
  * Created by zhangyf on 2017/5/3.
  */
-public class ShopImageQuery {
+public class ShopImageQuery extends BaseQuery {
     private String shopName;
     private String officeId;
 

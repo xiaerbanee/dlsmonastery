@@ -1,9 +1,11 @@
 package net.myspring.basic.modules.sys.web.query;
 
+import net.myspring.basic.common.query.BaseQuery;
+
 /**
  * Created by zhucc on 2017/4/17.
  */
-public class CompanyConfigQuery {
+public class CompanyConfigQuery extends BaseQuery {
     private String name;
     private String code;
 

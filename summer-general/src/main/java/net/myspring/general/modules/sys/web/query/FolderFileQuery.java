@@ -1,6 +1,7 @@
 package net.myspring.general.modules.sys.web.query;
 
 import net.myspring.common.constant.CharConstant;
+import net.myspring.general.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 /**
  * Created by lihx on 2017/4/7.
  */
-public class FolderFileQuery {
+public class FolderFileQuery extends BaseQuery {
     private String createdDate;
 
     public String getCreatedDate() {
