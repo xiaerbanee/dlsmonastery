@@ -5,6 +5,7 @@ import net.myspring.future.modules.layout.domain.ShopPromotion;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/4.
@@ -24,6 +25,15 @@ public class ShopPromotionForm extends DataForm<ShopPromotion>{
     private String activityImage3;
     private String comment;
     private String phone;
+    private List<String> activityTypeList;
+
+    public List<String> getActivityTypeList() {
+        return activityTypeList;
+    }
+
+    public void setActivityTypeList(List<String> activityTypeList) {
+        this.activityTypeList = activityTypeList;
+    }
 
     public String getShopId() {
         return shopId;
