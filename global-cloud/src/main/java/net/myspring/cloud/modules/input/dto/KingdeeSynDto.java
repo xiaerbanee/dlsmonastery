@@ -14,9 +14,15 @@ public class KingdeeSynDto {
     private String result;
     private Boolean autoAudit = true;
 
-    public KingdeeSynDto(String formId, String content) {
+    public KingdeeSynDto(String formId, String content,KingdeeBook kingdeeBook) {
         this.formId = formId;
         this.content = content;
+        this.kingdeeBook = kingdeeBook;
+    }
+
+    public KingdeeSynDto(Boolean success, String result) {
+        this.success = success;
+        this.result = result;
     }
 
     public Boolean getSuccess() {
