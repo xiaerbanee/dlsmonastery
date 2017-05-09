@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.mapper;
 
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
@@ -52,5 +53,7 @@ public interface EmployeeMapper extends BaseMapper<Employee,String> {
     List<Employee> findByNameList(List<String> employeeNameList);
 
     List<Employee> findByStatusAndregularDate(@Param("status") String status,@Param("regularDate") LocalDateTime regularDate);
+
+    List<Employee> findById(String id);
 
 }

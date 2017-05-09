@@ -104,6 +104,13 @@ public class AccountController {
         return accountDtoList;
     }
 
+    @RequestMapping(value = "findById")
+    public List<AccountDto> findById(String id) {
+        List<AccountDto> accountDtoList =accountService.findById(id);
+        return accountDtoList;
+    }
+
+
     @RequestMapping(value = "searchFilter")
     public List<AccountDto> searchFilter(AccountQuery accountQuery) {
         accountQuery.setOfficeId(SecurityUtils.getOfficeId());

@@ -2,7 +2,9 @@ package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.SecurityUtils;
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.Employee;
+import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -72,5 +75,12 @@ public class EmployeeService {
 
     public void logicDeleteOne(String id) {
         employeeMapper.logicDeleteOne(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<EmployeeDto> findById(String id){
+        List<Employee> employees = employeeMapper.findById(id);
+        List<EmployeeDto> employeeDto= BeanUtil.map(employees,EmployeeDto.class);
+        return employeeDto;
     }
 }

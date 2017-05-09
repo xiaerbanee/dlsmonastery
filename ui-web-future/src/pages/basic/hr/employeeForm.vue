@@ -81,9 +81,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('employeeForm.leader')" prop="leaderId">
-              <el-select v-model="accountForm.leaderId" filterable remote :placeholder="$t('employeeForm.inputWord')" :remote-method="remoteAccount" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="leader in leaders" :key="leader.id" :label="leader.loginName" :value="leader.id"></el-option>
-              </el-select>
+              <account-select v-model="accountForm.leaderId"></account-select>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.position')" prop="positionId">
               <el-select v-model="accountForm.positionId"  filterable :placeholder="$t('employeeForm.selectGroup')" :clearable=true>
@@ -103,8 +101,12 @@
 </template>
 <script>
   import districtSelect from 'components/general/district-select'
+  import accountSelect from 'components/basic/account-select'
   export default{
-    components:{districtSelect},
+    components:{
+        districtSelect,
+        accountSelect
+    },
     data(){
       return{
         isCreate:this.$route.query.id==null,
@@ -198,22 +200,6 @@
             this.submitDisabled = false;
           }
         })
-      },remoteAccount(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
-            this.leaders=response.data;
-            this.remoteLoading = false;
-          })
-        }
-      },remoteEmployee(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/employee/search',{params:{key:query}}).then((response)=>{
-            this.employees=response.data;
-            this.remoteLoading = false;
-          })
-        }
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;

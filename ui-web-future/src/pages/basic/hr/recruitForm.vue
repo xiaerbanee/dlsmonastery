@@ -41,9 +41,7 @@
             <date-time-picker v-model="inputForm.firstAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.contactById')" prop="contactById">
-            <el-select v-model="inputForm.contactById" filterable remote :placeholder="$t('recruitForm.selectContactById')" :remote-method="remoteAccount" :loading="remoteLoading" :clearable=true>
-              <el-option v-for="item in accounts" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
-            </el-select>
+            <account-select  v-model="inputForm.contactById"></account-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.remarks')" prop="remarks">
             <el-input v-model="inputForm.remarks"></el-input>
@@ -183,8 +181,13 @@
 </template>
 <script>
   import dateTimePicker from "components/common/date-time-picker.vue"
-    export default{
-      components:{dateTimePicker},
+  import accountSelect from 'components/basic/account-select'
+
+  export default{
+      components:{
+          dateTimePicker,
+          accountSelect
+      },
       data(){
           return{
             isCreate:this.$route.query.id==null,

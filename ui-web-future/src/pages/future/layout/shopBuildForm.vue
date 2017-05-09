@@ -30,9 +30,7 @@
               <dict-enum-select v-model="inputForm.buildType" category="项目建设方式"></dict-enum-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.applyAccount')" prop="applyAccountId">
-              <el-select v-model="inputForm.applyAccountId" filterable remote :placeholder="$t('shopBuildForm.inputWord')" :remote-method="remoteAccount" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="account in accounts" :key="account.id" :label="account.loginName" :value="account.id"></el-option>
-              </el-select>
+              <account-select v-model="inputForm.applyAccountId"></account-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.content')" prop="content">
               <el-input v-model="inputForm.content" type="textarea"></el-input>
@@ -58,8 +56,12 @@
 
 <script>
   import dictEnumSelect from 'components/basic/dict-enum-select'
+  import accountSelect from 'components/basic/account-select'
   export default{
-    components:{dictEnumSelect},
+    components:{
+        dictEnumSelect,
+        accountSelect
+    },
     data(){
       return {
         isCreate: this.$route.query.id == null,
@@ -115,16 +117,6 @@
             this.submitDisabled = false;
           }
         })
-      },remoteAccount(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/hr/account/search',{params:{key:query}}).then((response)=>{
-            this.accounts=response.data;
-            this.remoteLoading = false;
-          })
-        }else{
-          this.accounts=[];
-        }
       },remoteShop(query) {
         if (query !== '') {
           this.remoteLoading = true;

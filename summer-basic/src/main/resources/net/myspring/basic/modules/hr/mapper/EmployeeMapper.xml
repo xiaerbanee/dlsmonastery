@@ -91,4 +91,10 @@
         UPDATE hr_employee  set account_id = #{accountId} where id=#{employeeId}
     </update>
 
+    <select id="findById" resultType="Employee">
+        SELECT t1.*
+        FROM hr_employee t1
+        WHERE t1.id=#{id}
+    </select>
+
 </mapper>

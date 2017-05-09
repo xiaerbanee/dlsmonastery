@@ -126,4 +126,10 @@
         </if>
     </sql>
 
+    <select id="findById" resultType="Account">
+        SELECT t1.*
+        FROM hr_account t1
+        WHERE t1.id=#{id}
+    </select>
+
 </mapper>

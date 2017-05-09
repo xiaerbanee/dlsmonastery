@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -178,6 +179,13 @@ public class AccountService {
             }
             accountPermissionMapper.batchSave(accountPermissions);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<AccountDto> findById(String id){
+        List<Account> districts = accountMapper.findById(id);
+        List<AccountDto> districtDtos= BeanUtil.map(districts,AccountDto.class);
+        return districtDtos;
     }
 
 }
