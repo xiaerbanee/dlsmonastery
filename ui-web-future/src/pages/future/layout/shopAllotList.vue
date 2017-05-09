@@ -44,13 +44,29 @@
         <el-table-column prop="createdDate" :label="$t('shopAllotList.createdDate')" width="120" sortable></el-table-column>
         <el-table-column prop="fromShopName" :label="$t('shopAllotList.fromShop')"  sortable></el-table-column>
         <el-table-column prop="toShopName" :label="$t('shopAllotList.toShop')" sortable></el-table-column>
-        <el-table-column prop="outReturnCode" :label="$t('shopAllotList.outReturnCode')" sortable></el-table-column>
-        <el-table-column prop="outSaleCode" :label="$t('shopAllotList.outSaleCode')" sortable></el-table-column>
+        <el-table-column prop="outReturnCode" :label="$t('shopAllotList.outReturnCode')" sortable>
+          <template scope="scope">
+            <el-button
+              @click.native.prevent="returnPrint(scope.row.outReturnCode)"
+              type="text">
+              {{ scope.row.outReturnCode}}
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column prop="outSaleCode" :label="$t('shopAllotList.outSaleCode')" sortable>
+          <template scope="scope">
+            <el-button
+              @click.native.prevent="salePrint(scope.row.outSaleCode)"
+              type="text">
+              {{ scope.row.outSaleCode}}
+            </el-button>
+          </template>
+        </el-table-column>
 
 
         <el-table-column prop="status" :label="$t('shopAllotList.status')" width="120">
           <template scope="scope">
-            <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
+            <el-tag :type="scope.row.status=='PASSED' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="remarks" :label="$t('shopAllotList.remarks')"></el-table-column>
@@ -59,11 +75,13 @@
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('shopAllotList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('shopAllotList.operation')" width="120">
           <template scope="scope">
-            <el-button size="small"  v-permit="'crm:shopAllot:edit'" @click.native="itemAction(scope.row.id, 'edit')">{{$t('shopAllotList.edit')}}</el-button>
-            <el-button size="small"  v-permit="'crm:shopAllot:edit'" @click.native="itemAction(scope.row.id), 'delete'">{{$t('shopAllotList.delete')}}</el-button>
-            <el-button size="small"  v-permit="'crm:shopAllot:view'" @click.native="itemAction(scope.row.id), 'detail'">{{$t('shopAllotList.detail')}}</el-button>
+            <el-button v-if="scope.row.editable" size="small" type="text" v-permit="'crm:shopAllot:edit'" @click.native="itemAction(scope.row.id, 'edit')">{{$t('shopAllotList.edit')}}</el-button>
+            <el-button  v-if="scope.row.editable" size="small" type="text" v-permit="'crm:shopAllot:delete'" @click.native="itemAction(scope.row.id, 'delete')">{{$t('shopAllotList.delete')}}</el-button>
+            <el-button size="small" type="text" v-permit="'crm:shopAllot:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('shopAllotList.detail')}}</el-button>
+            <el-button v-if="scope.row.auditable" size="small" type="text" v-permit="'crm:shopAllot:audit'" @click.native="itemAction(scope.row.id, 'audit')">{{$t('shopAllotList.audit')}}</el-button>
+
           </template>
         </el-table-column>
       </el-table>
@@ -120,17 +138,27 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'shopAllotForm'})
+      },returnPrint(){
+        this.$router.push({ name: 'shopAllotForm'})
+      },salePrint(){
+        this.$router.push({ name: 'shopAllotForm'})
       },itemAction:function(id, action){
         if(action=="edit") {
           this.$router.push({ name: 'shopAllotForm', query: { id: id, action:'edit'}})
         } else if(action=="delete") {
-          this.$router.push({ name: 'shopAllotDetail', query: { id: id,action:'delete' }})
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/crm/shopAllot/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          });
+
         }else if(action=="detail"){
-          this.$router.push({ name: 'shopAllotForm', query: { id: id, action:'detail'}})
-        }
+          this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'view'}})
+        }else if(action=="audit"){
+          this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'audit'}})}
       }
     },created () {
-
       var that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{

@@ -8,10 +8,10 @@
           <el-alert :title="message" type="error" show-icon v-if="message !==''"></el-alert>
         </template>
         <el-form-item :label="$t('shopAllotForm.fromShop')" prop="fromShopId">
-            <su-depot type="shop" v-model="inputForm.fromShopId"  @input="refreshProductListIfNeeded" ></su-depot>
+            <su-depot :disabled="!isCreate" type="shop" v-model="inputForm.fromShopId"  @input="refreshProductListIfNeeded" ></su-depot>
         </el-form-item>
         <el-form-item :label="$t('shopAllotForm.toShop')" prop="toShopId">
-          <su-depot type="shop" v-model="inputForm.toShopId"   @input="refreshProductListIfNeeded"></su-depot>
+          <su-depot :disabled="!isCreate"  type="shop" v-model="inputForm.toShopId"   @input="refreshProductListIfNeeded"></su-depot>
         </el-form-item>
         <el-form-item :label="$t('shopAllotForm.remarks')" prop="remarks">
           <el-input type="textarea" v-model="inputForm.remarks"></el-input>
@@ -43,7 +43,6 @@
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             productName:'',
-            products:[],
             filterShopAllotDetailList:[],
             message:'',
             inputForm:{},
@@ -66,58 +65,69 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              this.inputForm.shopAllotDetailFormList=this.filterShopAllotDetailList;
-              axios.post('/api/ws/future/crm/shopAllot/save',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
-                this.$message(response.data.message);
-                if(this.isCreate){
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
-                   this.$router.push({name:'shopAllotList',query:util.getQuery("shopAllotList")})
-                }
-              });
-            }else{
-              this.submitDisabled = false;
-            }
-          })
-        },refreshProductListIfNeeded(){
-            console.log('refreshProductListIfNeeded');
-          if(this.inputForm.fromShopId!=='' && this.inputForm.toShopId!=='' && this.isCreate){
-            this.message='';
-            axios.get('/api/ws/future/crm/shopAllot/getShopAllotDetailFormList',{params:{fromShopId:this.inputForm.fromShopId,toShopId:this.inputForm.toShopId}}).then((response)=>{
-              if(!response.data.success){
-                this.message=response.data.message;
+              this.initSubmitDataBeforeSubmit();
 
-              }else{
-                this.inputForm.shopAllotDetailFormList=response.data.shopAllotDetailFormList;
-                this.searchDetail();
+            axios.post('/api/ws/future/crm/shopAllot/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+              this.$message(response.data.message);
+              if(this.isCreate){
+                form.resetFields();
+                this.submitDisabled = false;
+              } else {
+                this.$router.push({name:'shopAllotList',query:util.getQuery("shopAllotList")})
               }
-            })
+            });
+          }else{
+            this.submitDisabled = false;
           }
-          return true;
-        },searchDetail(){
-          var val=this.productName;
-          var tempList=new Array();
-          for(var index in this.inputForm.shopAllotDetailFormList){
+        })
+      }, initSubmitDataBeforeSubmit(){
+        util.copyValue(this.inputForm,this.submitData);
 
-            let shopAllotDetailForm = this.inputForm.shopAllotDetailFormList[index];
-            if(util.isNotBlank(shopAllotDetailForm.qty)){
-              tempList.push(shopAllotDetailForm);
-            }
-          }
-          for(var index in this.inputForm.shopAllotDetailFormList){
-            let shopAllotDetailForm = this.inputForm.shopAllotDetailFormList[index];
-            if(util.contains(shopAllotDetailForm.productName, val) && util.isBlank(shopAllotDetailForm.qty)){
-              tempList.push(shopAllotDetailForm);
-            }
-          }
-          this.filterShopAllotDetailList = tempList;
+        let tempList=new Array();
+        for(let each of this.inputForm.shopAllotDetailFormList){
 
+          if(util.isNotBlank(each.qty)){
+            tempList.push(each);
+          }
         }
-      },created(){
-          axios.get('/api/ws/future/crm/shopAllot/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm=response.data;
-          })
+        this.submitData.shopAllotDetailFormList = tempList;
       }
+      ,refreshProductListIfNeeded(){
+        if(this.inputForm.fromShopId!=='' && this.inputForm.toShopId!=='' && this.isCreate){
+          this.message='';
+          axios.get('/api/ws/future/crm/shopAllot/getShopAllotDetailFormList',{params:{fromShopId:this.inputForm.fromShopId,toShopId:this.inputForm.toShopId}}).then((response)=>{
+            if(!response.data.success){
+              this.message=response.data.message;
+
+            }else{
+              this.inputForm.shopAllotDetailFormList=response.data.shopAllotDetailFormList;
+              this.searchDetail();
+            }
+          })
+        }
+        return true;
+      },searchDetail(){
+        let val=this.productName;
+        let tempList=new Array();
+        for(let each of this.inputForm.shopAllotDetailFormList){
+
+          if(util.isNotBlank(each.qty)){
+            tempList.push(each);
+          }
+        }
+        for(let each of this.inputForm.shopAllotDetailFormList){
+          if(util.contains(each.productName, val) && util.isBlank(each.qty)){
+            tempList.push(each);
+          }
+        }
+        this.filterShopAllotDetailList = tempList;
+
+      }
+    },created(){
+      axios.get('/api/ws/future/crm/shopAllot/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm=response.data;
+        this.filterShopAllotDetailList = this.inputForm.shopAllotDetailFormList;
+      })
     }
+  }
 </script>
