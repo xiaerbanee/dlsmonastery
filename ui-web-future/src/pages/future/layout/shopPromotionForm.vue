@@ -13,7 +13,7 @@
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityType')" prop="activityType">
               <el-select v-model="inputForm.activityType" filterable clearable :placeholder="$t('shopPromotionForm.inputType')">
-                <el-option v-for="type in formProperty" :key="type" :label="type" :value="type"></el-option>
+                <el-option v-for="(key,value) in inputForm.activityTypeList" :key="key" :label="key" :value="key"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.amount')" prop="amount">
@@ -79,7 +79,8 @@
         fileList2:[],
         fileList3:[],
         shops:[],
-        inputForm:{
+        inputForm:{},
+        submitData:{
           id:'',
           shopId:'',
           activityDate:'',
@@ -107,87 +108,80 @@
         headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
       }
     },
-    methods:{
+    methods: {
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
-        this.inputForm.activityDate=util.formatLocalDate( this.inputForm.activityDate)
+        this.inputForm.activityDate = util.formatLocalDate(this.inputForm.activityDate)
         form.validate((valid) => {
-            this.inputForm.activityImage1 = util.getFolderFileIdStr(this.fileList1);
-            this.inputForm.activityImage2 = util.getFolderFileIdStr(this.fileList2);
-            this.inputForm.activityImage3 = util.getFolderFileIdStr(this.fileList3);
+          this.inputForm.activityImage1 = util.getFolderFileIdStr(this.fileList1);
+          this.inputForm.activityImage2 = util.getFolderFileIdStr(this.fileList2);
+          this.inputForm.activityImage3 = util.getFolderFileIdStr(this.fileList3);
 
-        if (valid) {
-            axios.post('/api/ws/future/layout/shopPromotion/save', qs.stringify(this.inputForm)).then((response)=> {
-              if(response.data.message){
+          if (valid) {
+              util.copyValue(this.formData,this.submitData);
+            axios.post('/api/ws/future/layout/shopPromotion/save', qs.stringify(this.submitData)).then((response) => {
+              if (response.data.message) {
                 this.$message(response.data.message);
               }
-              if(this.isCreate){
+              if (this.isCreate) {
                 form.resetFields();
-                this.fileList1=[];
-                this.fileList2=[];
-                this.fileList3=[];
+                this.fileList1 = [];
+                this.fileList2 = [];
+                this.fileList3 = [];
                 this.submitDisabled = false;
               } else {
-                this.$router.push({name:'shopPromotionList',query:util.getQuery("shopPromotionList")})
+                this.$router.push({name: 'shopPromotionList', query: util.getQuery("shopPromotionList")})
               }
             });
-          }else{
+          } else {
             this.submitDisabled = false;
           }
         })
-      },handlePreview1(file) {
+      }, handlePreview1(file) {
         window.open(file.url);
-      },handleChange1(file, fileList) {
+      }, handleChange1(file, fileList) {
         this.fileList1 = fileList;
-      },handleRemove1(file, fileList) {
+      }, handleRemove1(file, fileList) {
         this.fileList1 = fileList;
-      },handlePreview2(file) {
+      }, handlePreview2(file) {
         window.open(file.url);
-      },handleChange2(file, fileList) {
+      }, handleChange2(file, fileList) {
         this.fileList2 = fileList;
-      },handleRemove2(file, fileList) {
+      }, handleRemove2(file, fileList) {
         this.fileList2 = fileList;
-      },handlePreview3(file) {
+      }, handlePreview3(file) {
         window.open(file.url);
-      },handleChange3(file, fileList) {
+      }, handleChange3(file, fileList) {
         this.fileList3 = fileList;
-      },handleRemove3(file, fileList) {
+      }, handleRemove3(file, fileList) {
         this.fileList3 = fileList;
-      },findOne(){
-        axios.get('/api/ws/future/layout/shopPromotion/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-          if(response.data.shopId!=null){
-            this.shops=new Array(response.data.shopId);
-            this.shopDisabled = true;
-          }
-          if(this.inputForm.activityImage1 !=null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
-              this.fileList1= response.data;
-            });
-          }
-          if(this.inputForm.activityImage2 !=null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
-              this.fileList2= response.data;
-            });
-          }
-          if(this.inputForm.activityImage3 !=null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
-              this.fileList3= response.data;
-            });
-          }
-        })
-      },getFormProperty(){
-        axios.get('/api/ws/future/layout/shopPromotion/getQuery').then((response)=>{
-            console.log(response.data);
-          this.formProperty=response.data;
-        });
+      }, findOne(){
+
       }
     },created(){
-        this.getFormProperty();
-        if(!this.isCreate){
-           this.findOne();
+      axios.get('/api/ws/future/layout/shopPromotion/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
+        if(response.data.shopId!=null){
+          this.shops=new Array(response.data.shopId);
+          this.shopDisabled = true;
         }
+        if(this.inputForm.activityImage1 !=null) {
+          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
+            this.fileList1= response.data;
+          });
+        }
+        if(this.inputForm.activityImage2 !=null) {
+          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
+            this.fileList2= response.data;
+          });
+        }
+        if(this.inputForm.activityImage3 !=null) {
+          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
+            this.fileList3= response.data;
+          });
+        }
+      })
     }
   }
 </script>

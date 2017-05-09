@@ -12,14 +12,10 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.officeId" filterable clearable :placeholder="$t('shopPrintList.inputKey')">
-                  <el-option v-for="area in formData.officeIdList" :key="area.id" :label="area.name" :value="area.id"></el-option>
-                </el-select>
+                <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item :label="formLabel.printType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.printType" filterable clearable :placeholder="$t('shopPrintList.inputKey')">
-                  <el-option v-for="printType in formData.printTypeList" :key="printType.name" :label="printType.name" :value="printType.name"></el-option>
-                </el-select>
+                <dict-map-select v-model="formData.printType" category="门店_广告印刷"></dict-map-select>
               </el-form-item>
               <el-form-item :label="formLabel.processStatus.label" :label-width="formLabelWidth">
               <el-select v-model="formData.processStatus" filterable clearable :placeholder="$t('shopPrintList.inputKey')">
@@ -66,7 +62,10 @@
   </div>
 </template>
 <script>
+  import officeSelect from 'components/basic/office-select';
+  import dictMapSelect from 'components/basic/dict-map-select';
   export default {
+    components:{officeSelect,dictMapSelect},
     data() {
       return {
         page:{},

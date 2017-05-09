@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.service;
 
 import net.myspring.future.common.enums.DictMapCategoryEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.layout.domain.ShopPrint;
@@ -32,6 +33,8 @@ public class ShopPrintService {
     private OfficeClient officeClient;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private ActivitiClient activitiClient;
 
 
     public Page<ShopPrintDto> findPage(Pageable pageable, ShopPrintQuery shopPrintQuery) {
@@ -67,13 +70,15 @@ public class ShopPrintService {
     }
 
     public void audit(ShopPrintForm shopPrintForm) {
-        ActivitiCompleteForm activitiCompleteForm;
-        if(shopPrintForm.isCreate()){
+        ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
 
-        }else{
-            ShopPrint shopPrint = shopPrintMapper.findOne(shopPrintForm.getId());
+        activitiCompleteForm.setPass(shopPrintForm.getPass()=="1"?true:false);
+        activitiCompleteForm.setComment(shopPrintForm.getPassRemarks());
 
-        }
+        ShopPrint shopPrint = shopPrintMapper.findOne(shopPrintForm.getId());
+        activitiCompleteForm.setProcessInstanceId(shopPrint.getProcessInstanceId());
+        activitiCompleteForm.setProcessTypeId(shopPrint.getProcessTypeId());
+        activitiClient.complete(activitiCompleteForm);
     }
 
     public ShopPrintQuery findQuery(ShopPrintQuery shopPrintQuery){
