@@ -6,15 +6,13 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item :label="$t('shopBuildForm.shopId')" prop="shopId">
-              <el-select v-model="inputForm.shopId" filterable remote :placeholder="$t('shopBuildForm.inputWord')" :remote-method="remoteShop" :loading="remoteLoading" :clearable=true >
-                <el-option v-for="shop in shops" :key="shop.id" :label="shop.name" :value="shop.id"></el-option>
-              </el-select>
+              <su-depot v-model="inputForm.shopId" type="shop"></su-depot>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.shopType')" prop="shopType">
               <dict-enum-select v-model="inputForm.shopType" category="店面类型"></dict-enum-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.fixtureType')" prop="fixtureType">
-              <dict-enum-select v-model="inputForm.fixtureType" category="装修类型"></dict-enum-select>
+              <dict-enum-select v-model="inputForm.fixtureType" category="装修类别"></dict-enum-select>
             </el-form-item>
             <div v-show="inputForm.fixtureType.indexOf('包柱')>0">
             <el-form-item :label="$t('shopBuildForm.oldContents')" prop="oldContents">
@@ -30,15 +28,13 @@
               <dict-enum-select v-model="inputForm.buildType" category="项目建设方式"></dict-enum-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.applyAccount')" prop="applyAccountId">
-              <el-select v-model="inputForm.applyAccountId" filterable remote :placeholder="$t('shopBuildForm.inputWord')" :remote-method="remoteAccount" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="account in accounts" :key="account.id" :label="account.loginName" :value="account.id"></el-option>
-              </el-select>
+              <account-select v-model="inputForm.applyAccountId"></account-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.content')" prop="content">
               <el-input v-model="inputForm.content" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.remarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks"></el-input>
+              <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.scenePhoto')" prop="scenePhoto">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
@@ -58,8 +54,12 @@
 
 <script>
   import dictEnumSelect from 'components/basic/dict-enum-select'
+  import accountSelect from 'components/basic/account-select'
   export default{
-    components:{dictEnumSelect},
+    components:{
+        dictEnumSelect,
+        accountSelect
+    },
     data(){
       return {
         isCreate: this.$route.query.id == null,
@@ -115,16 +115,6 @@
             this.submitDisabled = false;
           }
         })
-      },remoteAccount(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/hr/account/search',{params:{key:query}}).then((response)=>{
-            this.accounts=response.data;
-            this.remoteLoading = false;
-          })
-        }else{
-          this.accounts=[];
-        }
       },remoteShop(query) {
         if (query !== '') {
           this.remoteLoading = true;
@@ -147,6 +137,7 @@
     },created(){
       axios.get('/api/ws/future/layout/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
+        console.log(this.inputForm);
         if(this.inputForm.scenePhoto !=null) {
             axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
             this.fileList= response.data;

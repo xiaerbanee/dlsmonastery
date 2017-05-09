@@ -1,8 +1,10 @@
 package net.myspring.basic.modules.sys.dto;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -103,6 +105,10 @@ public class OfficeDto extends DataDto<Office> {
 
     public void setParentName(String parentName) {
         this.parentName = parentName;
+    }
+
+    public String getFullName(){
+        return (StringUtils.isBlank(officeRuleName)?"顶级业务部门":officeRuleName)+ CharConstant.DATE_RANGE_SPLITTER+name;
     }
 
 }

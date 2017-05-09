@@ -21,7 +21,7 @@
       },setValue(val) {
         var date = null;
         if(util.isNotBlank(val)) {
-          date = new Date(this.value.replace(/-/,"/"));
+          date = new Date(this.val.replace(/-/,"/"));
         }
         this.innerDate =date;
       }

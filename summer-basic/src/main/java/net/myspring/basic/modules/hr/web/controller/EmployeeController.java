@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.web.controller;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
+import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.service.AccountService;
 import net.myspring.basic.modules.hr.service.EmployeeService;
@@ -71,6 +72,12 @@ public class EmployeeController {
     public List<EmployeeDto> search(String key){
         List<EmployeeDto> employeeList=employeeService.findByNameLike(key);
         return employeeList;
+    }
+
+    @RequestMapping(value = "findById")
+    public List<EmployeeDto> findById(String id) {
+        List<EmployeeDto> employeeDtoList =employeeService.findById(id);
+        return employeeDtoList;
     }
 
 
