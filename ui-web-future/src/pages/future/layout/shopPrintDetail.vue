@@ -41,6 +41,15 @@
             <el-form-item :label="$t('shopPrintDetail.remarks')"  >
               {{shopPrint.remarks}}
             </el-form-item>
+            <el-form-item :label="$t('shopPrintDetail.pass')"  v-if="action=='audit'">
+              <su-radio-group v-model="shopPrint.pass"></su-radio-group>
+            </el-form-item>
+            <el-form-item :label="$t('shopPrintDetail.passRemarks')"  v-if="action=='audit'">
+              <el-input v-model="shopPrint.passRemarks" :placeholder="$t('shopPrintDetail.inputRemarks')" type="textarea"></el-input>
+            </el-form-item>
+            <el-form-item v-if="action=='audit'">
+              <el-button type="primary" :disabled="submitDisabled"  @click="passSubmit()">{{$t('shopPrintDetail.save')}}</el-button>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -50,35 +59,57 @@
 </template>
 
 <script>
+  import suRadioGroup from 'components/common/su-radio-group';
   export default{
+    components:{suRadioGroup},
     data(){
       return{
         isCreate:this.$route.query.id==null,
-        shopPrint:{id:"",attachment:""},
+        action:this.$route.query.action,
+        shopPrint:{
+            pass:'1',
+        },
+        submitData:{
+            id:'',
+            pass:'',
+            passRemarks:'',
+        },
+        submitDisabled:false,
         activitiEntity:{historicTaskInstances:[]},
         fileList:[]
       }
     },
     methods:{
-      findOne(){
-        axios.get('/api/ws/future/layout/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.shopPrint = response.data;
-          if(this.shopPrint.attachment != null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.shopPrint.attachment}}).then((response)=>{
-              this.fileList = response.data;
+      passSubmit(){
+        this.submitDisabled = true;
+        var form = this.$refs["shopPrint"];
+        form.validate((valid) => {
+          if (valid) {
+            axios.post('/api/ws/future/layout/shopPrint/audit', qs.stringify(this.submitData)).then((response)=> {
+              if(response.data.message){
+                this.$message(response.data.message);
+              }
             });
-          }
-          if(response.data.activitiEntity.historicTaskInstances){
-            this.activitiEntity.historicTaskInstances = response.data.activitiEntity.historicTaskInstances;
+          }else{
+            this.submitDisabled = false;
           }
         })
-      }, handlePreview(file) {
+      },
+      handlePreview(file) {
         window.open(file.url);
       }
     },created(){
-      if(!this.isCreate){
-        this.findOne();
-      }
+      axios.get('/api/ws/future/layout/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.shopPrint = response.data;
+        if(this.shopPrint.attachment != null) {
+          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.shopPrint.attachment}}).then((response)=>{
+            this.fileList = response.data;
+          });
+        }
+        if(response.data.activitiEntity.historicTaskInstances){
+          this.activitiEntity.historicTaskInstances = response.data.activitiEntity.historicTaskInstances;
+        }
+      })
     }
   }
 </script>

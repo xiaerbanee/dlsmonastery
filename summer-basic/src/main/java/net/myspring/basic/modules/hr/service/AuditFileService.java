@@ -76,9 +76,8 @@ public class AuditFileService {
     }
 
     public void audit(String id, boolean pass, String comment) {
-        String name="文件审批";
         AuditFile auditFile = auditFileMapper.findOne(id);
-        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(id, name, auditFile.getProcessInstanceId(), auditFile.getProcessTypeId(), comment, pass));
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(auditFile.getProcessInstanceId(), auditFile.getProcessTypeId(), comment, pass));
         AuditFileForm auditFileForm = BeanUtil.map(auditFile, AuditFileForm.class);
         auditFileForm.setLocked(true);
         auditFileForm.setProcessFlowId(activitiCompleteDto.getProcessFlowId());

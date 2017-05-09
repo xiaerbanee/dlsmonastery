@@ -42,8 +42,9 @@ public class ShopBuildController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public String save() {
-        return null;
+    public RestResponse save(ShopBuildForm shopBuildForm) {
+        shopBuildService.save(shopBuildForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "batchAudit", method = RequestMethod.GET)

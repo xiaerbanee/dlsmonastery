@@ -62,9 +62,8 @@ public class BankInService {
     }
 
     public void audit(String id, boolean pass, String comment){
-        String name="文件审批";
         BankIn bankIn = bankInMapper.findOne(id);
-        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(id, name, bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), comment, pass));
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), comment, pass));
         bankIn.setLocked(true);
         bankIn.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
         bankIn.setProcessStatus(activitiCompleteDto.getProcessStatus());

@@ -79,7 +79,7 @@ public class KingdeeManager {
         String result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SAVE.getValue(),kingdeeSynDto.getFormId(),kingdeeSynDto.getContent());
         resultMap.put("SAVE",result);
         JSONObject jsonObject = JSONObject.fromObject(result);
-        if (BoolEnum.TRUE.getValue().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
+        if (BoolEnum.TRUE.getName().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
             String billNo = jsonObject.getJSONObject("Result").getString("Number");
             Map<String, Object> root = Maps.newLinkedHashMap();
             root.put("CreateOrgId", 0);
@@ -107,7 +107,7 @@ public class KingdeeManager {
         String result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SAVE.getValue(),kingdeeSynExtendDto.getFormId(),kingdeeSynExtendDto.getContent());
         resultMap.put("SAVE",result);
         JSONObject jsonObject = JSONObject.fromObject(result);
-        if (BoolEnum.TRUE.getValue().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
+        if (BoolEnum.TRUE.getName().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {
             String billNo = jsonObject.getJSONObject("Result").getString("Number");
             Map<String, Object> root = Maps.newLinkedHashMap();
             root.put("CreateOrgId", 0);

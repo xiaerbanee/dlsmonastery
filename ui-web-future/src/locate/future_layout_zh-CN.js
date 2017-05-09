@@ -469,6 +469,7 @@ export default {
     processStatus: "审核状态",
     scenePhoto: "现场照片",
     confirmPhoto: "装修后照片",
+    pass:"通过",
   },
   shopBuildForm: {
     shopBuildForm: "门店建设编辑",
@@ -714,6 +715,10 @@ export default {
     createdBy: "创建人",
     createdDate: "创建时间",
     remarks: "备注",
+    pass:"通过",
+    passRemarks:"审批备注",
+    inputRemarks:'请输入审批备注',
+    save:"保存",
   },
   shopPrintForm: {
     shopPrintForm: "广告印刷编辑",
@@ -721,7 +726,7 @@ export default {
     officeId: "办事处",
     printType: "印刷类型",
     inputType: "请选择分组",
-    content: "印刷规格说明",
+    content: "内容",
     qty: "数量",
     address: "收获地址",
     contact: "收货人",

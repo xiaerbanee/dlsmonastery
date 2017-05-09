@@ -41,8 +41,7 @@ public class BatchMaterialController {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(SecurityUtils.getAccountId());
         data = HtmlUtils.htmlUnescape(data);
         List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
-        List<KingdeeSynDto> resultList = batchMaterialService.save(datas,kingdeeBook,accountKingdeeBook);
-        List<String> message = CollectionUtil.extractToList(resultList,"success");
-        return new RestResponse("物料添加成功："+message,null,true);
+        List<String> resultList = batchMaterialService.save(datas,kingdeeBook,accountKingdeeBook);
+        return new RestResponse(""+resultList,null,true);
     }
 }

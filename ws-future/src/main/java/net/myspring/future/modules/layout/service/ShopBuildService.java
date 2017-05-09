@@ -13,6 +13,7 @@ import net.myspring.future.modules.layout.web.query.ShopBuildQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +51,17 @@ public class ShopBuildService {
         return shopBuildForm;
     }
 
-    public ShopBuild save(ShopBuild shopBuild) {
-        return null;
+    public ShopBuild save(ShopBuildForm shopBuildForm) {
+        ShopBuild shopBuild;
+        if(shopBuildForm.isCreate()){
+            shopBuild = BeanUtil.map(shopBuildForm,ShopBuild.class);
+            shopBuildMapper.save(shopBuild);
+        }else{
+            shopBuild = shopBuildMapper.findOne(shopBuildForm.getId());
+            ReflectionUtil.copyProperties(shopBuildForm,shopBuild);
+            shopBuildMapper.update(shopBuild);
+        }
+        return shopBuild;
     }
 
     public void notify(ShopBuild shopBuild) {

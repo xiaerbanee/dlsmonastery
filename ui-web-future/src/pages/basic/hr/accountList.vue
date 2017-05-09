@@ -35,7 +35,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="exportData">{{$t('accountList.export')}}</el-button>
+          <el-button @click="exportData()">{{$t('accountList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('accountList.sure')}}</el-button>
         </div>
       </el-dialog>
@@ -50,8 +50,8 @@
         <el-table-column prop="employeeStatus" :label="$t('accountList.employeeStatus')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('accountList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('accountList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -118,9 +118,9 @@
       },itemAuthAdd(){
         this.$router.push({name:"accountAuthorityForm"})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'accountForm', query: { id: id }})
-        } else if(action=="删除") {
+        } else if(action=="delete") {
           axios.get('/api/basic/hr/account/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();

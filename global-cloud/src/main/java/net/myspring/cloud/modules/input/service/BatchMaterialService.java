@@ -5,8 +5,6 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
-import net.myspring.cloud.common.utils.CacheUtils;
-import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.BdMaterialDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
@@ -15,7 +13,6 @@ import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.web.query.BatchMaterialQuery;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
-import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -38,8 +35,10 @@ public class BatchMaterialService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    public List<KingdeeSynDto> save(List<List<Object>> datas, KingdeeBook kingdeeBook,AccountKingdeeBook accountKingdeeBook) {
-        if(kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword())) {
+    public List<String> save(List<List<Object>> datas, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
+        List<String> resultList = Lists.newArrayList();
+        String userName = accountKingdeeBook.getUsername();
+        if(kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),userName,accountKingdeeBook.getPassword())) {
             Map<String, BdMaterialDto> materialMap = Maps.newLinkedHashMap();
             Map<String, String> materialCategoryMap = Maps.newHashMap();
             Map<String, String> materialGroupMap = Maps.newHashMap();
@@ -71,23 +70,28 @@ public class BatchMaterialService {
                 }
             }
             List<BdMaterialDto> materials = Lists.newArrayList(materialMap.values());
-            List<KingdeeSynDto> codeList = Lists.newArrayList();
             //财务出库开单
             if (CollectionUtil.isNotEmpty(materials)) {
                 for (BdMaterialDto bdMaterial : materials) {
-                    KingdeeSynDto k3CloudSaveDto = new KingdeeSynDto(KingdeeFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial));
-                    KingdeeSynDto billNo = kingdeeManager.save(k3CloudSaveDto);
-                    codeList.add(billNo);
+                    KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(KingdeeFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial,userName),kingdeeBook);
+                    kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
+                    if(kingdeeSynDto.getSuccess()){
+                        resultList.add("物料添加成功: "+kingdeeSynDto.getBillNo());
+                    }else {
+                        resultList.add("物料添加失败: "+kingdeeSynDto.getResult());
+                        System.err.println("物料添加失败: "+kingdeeSynDto.getResult());
+                    }
                 }
             }
-            return codeList;
+        }else {
+            resultList.add("登入失败");
         }
-        return null;
+        return resultList;
     }
 
-    private String getBdMaterial(BdMaterialDto bdMaterial) {
+    private String getBdMaterial(BdMaterialDto bdMaterial,String userName) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", SecurityUtils.getAccountId());
+        root.put("Creator", userName);
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FName", bdMaterial.getfName());
@@ -98,8 +102,11 @@ public class BatchMaterialService {
         detail.put("FCategoryID", CollectionUtil.getMap("FNumber", bdMaterial.getfCategoryId()));
         detail.put("FMaterialGroup", CollectionUtil.getMap("FNumber", bdMaterial.getfMaterialGroupName()));
         detail.put("FTaxRateId", CollectionUtil.getMap("FNumber", "SL04_SYS"));
+        detail.put("FBaseUnitId",CollectionUtil.getMap("FNumber","Pcs"));
+        detail.put("FErpClsID","外购");
         model.put("BD_MATERIAL__SubHeadEntity", detail);
         root.put("Model", model);
+        System.out.println(root);
         return ObjectMapperUtils.writeValueAsString(root);
     }
 
