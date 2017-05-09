@@ -3,9 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
-import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.sys.dto.AccountDto;
@@ -108,7 +106,7 @@ public class BatchPurchaseReturnService {
         model.put("PUR_MRB__FPURMRBENTRY", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
-        KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(KingdeeFormIdEnum.PUR_MRB.name(), result);
+//        K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.PUR_MRB.name(), result);
         String billNo =null;
         codeList.add(billNo);
         return codeList;

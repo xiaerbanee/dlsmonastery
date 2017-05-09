@@ -3,11 +3,9 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.dto.BatchPayBillDto;
-import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.sys.dto.AccountDto;
@@ -100,7 +98,7 @@ public class BatchPayBillService {
         List<String> billNos = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchPayBillDto payBill : billList) {
-                KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(KingdeeFormIdEnum.AP_PAYBILL.name(), getPayBill(payBill,accountDto));
+//                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AP_PAYBILL.name(), getPayBill(payBill,accountDto));
                 String billNo = null;
                 billNos.add(billNo);
             }

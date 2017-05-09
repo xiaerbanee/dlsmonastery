@@ -9,11 +9,13 @@ import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.BdMaterialDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.web.query.BatchMaterialQuery;
+import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
+import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.dto.AccountDto;
-import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -34,54 +36,53 @@ public class BatchMaterialService {
     @Autowired
     private BdMaterialMapper bdMaterialMapper;
     @Autowired
-    private CacheUtils cacheUtils;
-    @Autowired
-    private KingdeeManager k3cloudManager;
+    private KingdeeManager kingdeeManager;
 
-    public List<KingdeeSynDto> save(List<List<Object>> datas) {
-        Map<String, BdMaterialDto> materialMap = Maps.newLinkedHashMap();
-        Map<String, String> materialCategoryMap = Maps.newHashMap();
-        Map<String, String> materialGroupMap = Maps.newHashMap();
-        for (NameNumberDto bdMaterial : bdMaterialMapper.findCategory()) {
-            materialCategoryMap.put(bdMaterial.getName(), bdMaterial.getNumber());
-        }
-        for (NameNumberDto bdMaterial : bdMaterialMapper.findGroup()) {
-            materialGroupMap.put(bdMaterial.getName(), bdMaterial.getNumber());
-        }
-        for (List<Object> row : datas) {
-            String productNumber = HandSonTableUtils.getValue(row, 0);
-            String productName = HandSonTableUtils.getValue(row, 1);
-            String priceStr = HandSonTableUtils.getValue(row, 2);
-            BigDecimal price = StringUtils.isEmpty(priceStr) ? BigDecimal.ZERO : new BigDecimal(priceStr);
-            String RLPriceStr = HandSonTableUtils.getValue(row,3);
-            BigDecimal rlprice = StringUtils.isEmpty(RLPriceStr) ? BigDecimal.ZERO : new BigDecimal(RLPriceStr);
-            String productGroup = HandSonTableUtils.getValue(row, 4);
-            String productCategory = HandSonTableUtils.getValue(row, 5);
-            String billKey = productNumber + CharConstant.COMMA + productName;
-            if (!materialMap.containsKey(billKey)) {
-                BdMaterialDto bdMaterial = new BdMaterialDto();
-                bdMaterial.setfName(productName);
-                bdMaterial.setfNumber(productNumber);
-                bdMaterial.setPrice1(price);
-                bdMaterial.setRlPrice(rlprice);
-                bdMaterial.setfCategoryId(materialCategoryMap.get(productCategory));
-                bdMaterial.setfMaterialGroupName(materialGroupMap.get(productGroup));
-                materialMap.put(billKey, bdMaterial);
+    public List<KingdeeSynDto> save(List<List<Object>> datas, KingdeeBook kingdeeBook,AccountKingdeeBook accountKingdeeBook) {
+        if(kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword())) {
+            Map<String, BdMaterialDto> materialMap = Maps.newLinkedHashMap();
+            Map<String, String> materialCategoryMap = Maps.newHashMap();
+            Map<String, String> materialGroupMap = Maps.newHashMap();
+            for (NameNumberDto bdMaterial : bdMaterialMapper.findCategory()) {
+                materialCategoryMap.put(bdMaterial.getName(), bdMaterial.getNumber());
             }
-        }
-        List<BdMaterialDto> materials = Lists.newArrayList(materialMap.values());
-        List<KingdeeSynDto> codeList = Lists.newArrayList();
-        //财务出库开单
-        if (CollectionUtil.isNotEmpty(materials)) {
-            AccountDto accountDto = new AccountDto();
-            cacheUtils.initCacheInput(accountDto);
-            for (BdMaterialDto bdMaterial : materials) {
-                KingdeeSynDto k3CloudSaveDto = new KingdeeSynDto(KingdeeFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial));
-                KingdeeSynDto billNo = k3cloudManager.save(k3CloudSaveDto);
-                codeList.add(billNo);
+            for (NameNumberDto bdMaterial : bdMaterialMapper.findGroup()) {
+                materialGroupMap.put(bdMaterial.getName(), bdMaterial.getNumber());
             }
+            for (List<Object> row : datas) {
+                String productNumber = HandSonTableUtils.getValue(row, 0);
+                String productName = HandSonTableUtils.getValue(row, 1);
+                String priceStr = HandSonTableUtils.getValue(row, 2);
+                BigDecimal price = StringUtils.isEmpty(priceStr) ? BigDecimal.ZERO : new BigDecimal(priceStr);
+                String RLPriceStr = HandSonTableUtils.getValue(row, 3);
+                BigDecimal rlprice = StringUtils.isEmpty(RLPriceStr) ? BigDecimal.ZERO : new BigDecimal(RLPriceStr);
+                String productGroup = HandSonTableUtils.getValue(row, 4);
+                String productCategory = HandSonTableUtils.getValue(row, 5);
+                String billKey = productNumber + CharConstant.COMMA + productName;
+                if (!materialMap.containsKey(billKey)) {
+                    BdMaterialDto bdMaterial = new BdMaterialDto();
+                    bdMaterial.setfName(productName);
+                    bdMaterial.setfNumber(productNumber);
+                    bdMaterial.setPrice1(price);
+                    bdMaterial.setRlPrice(rlprice);
+                    bdMaterial.setfCategoryId(materialCategoryMap.get(productCategory));
+                    bdMaterial.setfMaterialGroupName(materialGroupMap.get(productGroup));
+                    materialMap.put(billKey, bdMaterial);
+                }
+            }
+            List<BdMaterialDto> materials = Lists.newArrayList(materialMap.values());
+            List<KingdeeSynDto> codeList = Lists.newArrayList();
+            //财务出库开单
+            if (CollectionUtil.isNotEmpty(materials)) {
+                for (BdMaterialDto bdMaterial : materials) {
+                    KingdeeSynDto k3CloudSaveDto = new KingdeeSynDto(KingdeeFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial));
+                    KingdeeSynDto billNo = kingdeeManager.save(k3CloudSaveDto);
+                    codeList.add(billNo);
+                }
+            }
+            return codeList;
         }
-        return codeList;
+        return null;
     }
 
     private String getBdMaterial(BdMaterialDto bdMaterial) {
