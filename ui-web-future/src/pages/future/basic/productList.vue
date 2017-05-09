@@ -175,6 +175,7 @@
       this.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
         this.formProperty = response.data;
+        util.copyValue(this.$route.query,this.formData);
         this.pageRequest();
       });
     }
