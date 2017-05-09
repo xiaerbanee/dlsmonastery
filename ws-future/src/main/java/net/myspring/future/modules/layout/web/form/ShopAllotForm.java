@@ -23,7 +23,7 @@ public class ShopAllotForm extends DataForm<ShopAllot> {
     private String outReturnCode;
     private String outSaleCode;
     private String status;
-    private Boolean enabled;
+    private Boolean enabled = Boolean.TRUE;
     private BigDecimal saleTotalPrice;
     private BigDecimal returnTotalPrice;
     private BigDecimal toShopShouldGet;

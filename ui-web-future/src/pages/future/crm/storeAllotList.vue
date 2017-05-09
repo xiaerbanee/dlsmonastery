@@ -56,15 +56,15 @@
         <el-table-column prop="lastModifiedByName" :label="$t('storeAllotList.lastModifiedBy')" width=120></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('storeAllotList.lastModifiedDate')" sortable width=140></el-table-column>
         <el-table-column prop="remarks" :label="$t('storeAllotList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('storeAllotList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('storeAllotList.operation')" width="120">
           <template scope="scope">
-            <el-button size="small"  v-permit="'crm:storeAllot:view'" @click.native="itemAction(scope.row.id, 'view')">{{$t('storeAllotList.detail')}}</el-button>
-            <el-button v-if="scope.row.status === '待发货' || scope.row.status === '发货中'"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'ship')">{{$t('storeAllotList.ship')}}</el-button>
-            <el-button v-if="scope.row.status === '待发货'"   size="small"  v-permit="'crm:storeAllot:delete'" @click.native="itemAction(scope.row.id,'delete')"> {{$t('storeAllotList.delete')}}</el-button>
-            <el-button v-if="scope.row.isPrint"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'print')">{{$t('storeAllotList.print')}}</el-button>
-            <el-button v-if="!scope.row.isPrint"  style="color:red;"  size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'print')">{{$t('storeAllotList.print')}}</el-button>
-            <el-button v-if="scope.row.isShipPrint"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('storeAllotList.shipPrint')}}</el-button>
-            <el-button v-if="!scope.row.isShipPrint"   style="color:#ff0000;" size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('storeAllotList.shipPrint')}}</el-button>
+            <el-button  type="text"  size="small"v-permit="'crm:storeAllot:view'" @click.native="itemAction(scope.row.id, 'view')">{{$t('storeAllotList.detail')}}</el-button>
+            <el-button v-if="scope.row.status === '待发货' || scope.row.status === '发货中'"   type="text"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'ship')">{{$t('storeAllotList.ship')}}</el-button>
+            <el-button v-if="scope.row.status === '待发货'"   type="text"   size="small"  v-permit="'crm:storeAllot:delete'" @click.native="itemAction(scope.row.id,'delete')"> {{$t('storeAllotList.delete')}}</el-button>
+            <el-button v-if="scope.row.isPrint"   type="text"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'print')">{{$t('storeAllotList.print')}}</el-button>
+            <el-button v-if="!scope.row.isPrint"  style="color:red;"   type="text"  size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'print')">{{$t('storeAllotList.print')}}</el-button>
+            <el-button v-if="scope.row.isShipPrint"    type="text"  size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('storeAllotList.shipPrint')}}</el-button>
+            <el-button v-if="!scope.row.isShipPrint"   style="color:#ff0000;"  type="text"  size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('storeAllotList.shipPrint')}}</el-button>
 
           </template>
         </el-table-column>
