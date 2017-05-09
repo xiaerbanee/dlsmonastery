@@ -17,10 +17,8 @@ import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
-import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.future.modules.basic.web.form.ProductForm;
-import net.myspring.future.modules.crm.mapper.ProductImeMapper;
+import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -231,5 +229,9 @@ public class ProductService {
 
     public void delete(ProductDto productDto) {
         productMapper.logicDeleteOne(productDto.getId());
+    }
+
+    public List<ProductDto> findIntersectionOfBothPricesystem(String pricesystemId1, String pricesystemId2) {
+        return  productMapper.findIntersectionOfBothPricesystem(pricesystemId1, pricesystemId2);
     }
 }

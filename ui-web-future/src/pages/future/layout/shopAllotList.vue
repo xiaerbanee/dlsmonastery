@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAllot:edit'">{{$t('shopAllotList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAllot:view'">{{$t('shopAllotList.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -21,7 +21,7 @@
                 <su-depot  type="shop" v-model="formData.toShopId"  ></su-depot>
               </el-form-item>
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
-                <su-date-range-picker v-model="formData.createdDateRange" ></su-date-range-picker>
+                <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('shopAllotList.inputKey')">
@@ -38,7 +38,7 @@
           <el-button type="primary" @click="search()">{{$t('shopAllotList.sure')}}</el-button>
         </div>
       </el-dialog>
-      <su-table  v-model="queryData" getUrl="/api/ws/future/crm/shopAllot">
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="businessId" :label="$t('shopAllotList.billCode')" sortable width="150"></el-table-column>
         <el-table-column prop="createdByName" :label="$t('shopAllotList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopAllotList.createdDate')" width="120" sortable></el-table-column>
@@ -61,12 +61,13 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('shopAllotList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small"  v-permit="'crm:shopAllot:edit'" @click.native="itemEdit(scope.row.id)">{{$t('shopAllotList.edit')}}</el-button>
-            <el-button size="small"  v-permit="'crm:shopAllot:edit'" @click.native="itemDelete(scope.row.id)">{{$t('shopAllotList.delete')}}</el-button>
-            <el-button size="small"  v-permit="'crm:shopAllot:view'" @click.native="itemView(scope.row.id)">{{$t('shopAllotList.detail')}}</el-button>
+            <el-button size="small"  v-permit="'crm:shopAllot:edit'" @click.native="itemAction(scope.row.id, 'edit')">{{$t('shopAllotList.edit')}}</el-button>
+            <el-button size="small"  v-permit="'crm:shopAllot:edit'" @click.native="itemAction(scope.row.id), 'delete'">{{$t('shopAllotList.delete')}}</el-button>
+            <el-button size="small"  v-permit="'crm:shopAllot:view'" @click.native="itemAction(scope.row.id), 'detail'">{{$t('shopAllotList.detail')}}</el-button>
           </template>
         </el-table-column>
-      </su-table>
+      </el-table>
+      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
@@ -74,8 +75,9 @@
   export default {
     data() {
       return {
+        page:{},
         formData:{},
-        queryData:{
+        submitData:{
           fromShopId:"",
           toShopId:"",
           businessId:"",
@@ -92,25 +94,49 @@
         },
         formLabelWidth: '120px',
         formVisible: false,
+        pageLoading: false,
       };
     },
     methods: {
-     search() {
-       this.formVisible = false;
-       this.queryData = util.cloneAndCopy(this.formData, this.queryData);
+
+      pageRequest() {
+        this.pageLoading = true;
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("shopAllotList",this.submitData);
+        axios.get('/api/ws/future/crm/shopAllot',{params:this.submitData}).then((response) => {
+          this.page = response.data;
+          this.pageLoading = false;
+        })
+      },pageChange(pageNumber,pageSize) {
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
+      },sortChange(column) {
+        this.formData.sort=util.getSort(column);
+        this.formData.page=0;
+        this.pageRequest();
+      },search() {
+        this.formVisible = false;
+        this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'shopAllotForm'})
-      },itemEdit:function(id){
-          this.$router.push({ name: 'shopAllotForm', query: { id: id, action:'修改'}})
-      },itemView:function(id){
-        this.$router.push({ name: 'shopAllotForm', query: { id: id, action:'详细'}})
-      },itemDelete:function(id){
-          this.$router.push({ name: 'shopAllotDetail', query: { id: id,action:'删除' }})
+      },itemAction:function(id, action){
+        if(action=="edit") {
+          this.$router.push({ name: 'shopAllotForm', query: { id: id, action:'edit'}})
+        } else if(action=="delete") {
+          this.$router.push({ name: 'shopAllotDetail', query: { id: id,action:'delete' }})
+        }else if(action=="detail"){
+          this.$router.push({ name: 'shopAllotForm', query: { id: id, action:'detail'}})
+        }
       }
     },created () {
+
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{
-        this.formData=response.data;
-        this.queryData = util.cloneAndCopy(this.formData, this.queryData);
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
     }
   };

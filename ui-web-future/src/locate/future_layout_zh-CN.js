@@ -542,6 +542,7 @@ export default {
     outBillType: "开单类型",
     bank: "银行",
     inputBank: "选择银行",
+    billDate: "开单日期",
     marketAmount: "市场保证金",
     imageAmount: "形象保证金",
     demoPhoneAmount: "演示机押金",
