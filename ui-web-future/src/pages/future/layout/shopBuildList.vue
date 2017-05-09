@@ -14,9 +14,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.officeId" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
-                  <el-option v-for="area in formProperty.areas" :key="area.id" :label="area.name" :value="area.id"></el-option>
-                </el-select>
+                <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item :label="formLabel.auditType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.auditType" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
@@ -32,9 +30,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.fixtureType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.fixtureType" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
-                  <el-option v-for="fixtureType in formData.fixtureTypes" :key="fixtureType" :label="fixtureType" :value="fixtureType"></el-option>
-                </el-select>
+                <dict-enum-select v-model="formData.fixtureType" category="装修类别"></dict-enum-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('shopBuildList.likeSearch')"></el-input>
@@ -83,7 +79,10 @@
   </div>
 </template>
 <script>
+  import officeSelect from 'components/basic/office-select';
+  import dictEnumSelect from 'components/basic/dict-enum-select'
   export default {
+    components:{officeSelect,dictEnumSelect},
     data() {
       return {
         pageLoading: false,
@@ -159,7 +158,7 @@
         }else if(action == "edit"){
           this.$router.push({name: 'shopBuildForm', query:{id: id}});
         }else if(action == "audit"){
-          this.$router.push({name: 'shopBuildDetail', query:{id: id}});
+          this.$router.push({name: 'shopBuildDetail', query:{id: id,action:action}});
         }
      },handleSelectionChange(val) {
          var arr = []
@@ -187,10 +186,8 @@
     created () {
         var that = this;
         that.pageHeight = window.outerHeight -320;
-        console.log(this.formData);
         axios.get('api/ws/future/layout/shopBuild/getQuery',{params:this.formData}).then((response) =>{
            that.formData = response.data;
-           console.log(that.formData);
            util.copyValue(this.$route.query,that.formData);
            that.pageRequest();
         });

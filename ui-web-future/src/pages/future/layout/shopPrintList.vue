@@ -124,15 +124,10 @@
               this.pageRequest();
             })
           })
-        }else if(action == "detail"){
-           this.$router.push({ name: 'shopPrintDetail', query: { id: id }})
+        }else if(action == "detail"||action == "audit"){
+           this.$router.push({ name: 'shopPrintDetail', query: { id: id,action:action}});
         }
-      }/*,getQuery(){
-        axios.get('/api/ws/future/layout/shopPrint/getQuery').then((response) =>{
-          this.formProperty=response.data;
-          this.pageRequest();
-        });
-      }*/
+      }
     },created () {
         var that = this;
         that.pageHeight = window.outerHeight -320;

@@ -6,20 +6,16 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopPrintForm.officeName')" prop="officeName">
-              <el-select v-model="inputForm.officeId" filterable clearable :placeholder="$t('shopPrintForm.inputWord')" :disabled="shopDiabled">
-                <el-option v-for="area in formProperty.areas" :key="area.id" :label="area.name" :value="area.id"></el-option>
-              </el-select>
+              <office-select v-model="inputForm.officeId"></office-select>
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.printType')" prop="printType">
-              <el-select v-model="inputForm.printType" filterable clearable :placeholder="$t('shopPrintForm.inputType')">
-                <el-option v-for="type in formProperty.printTypes" :key="type.name" :label="type.name" :value="type.name"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('shopPrintForm.content')" prop="content">
-              <el-input v-model="inputForm.content"></el-input>
+              <dict-map-select v-model="inputForm.printType" category="门店_广告印刷"></dict-map-select>
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.qty')" prop="qty">
               <el-input v-model.number="inputForm.qty" ></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('shopPrintForm.content')" prop="content">
+              <el-input v-model="inputForm.content" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.address')" prop="address">
               <el-input v-model="inputForm.address" ></el-input>
@@ -50,7 +46,10 @@
 </template>
 
 <script>
+  import officeSelect from 'components/basic/office-select';
+  import dictMapSelect from 'components/basic/dict-map-select';
   export default{
+    components:{officeSelect,dictMapSelect},
     data(){
       return{
         isCreate:this.$route.query.id==null,
@@ -58,7 +57,8 @@
         shopDiabled:false,
         formProperty:{},
         fileList:[],
-        inputForm:{
+        inputForm:{},
+        submitData:{
           id:'',
           officeId:'',
           printType:'',
@@ -78,19 +78,18 @@
           contator: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
           mobilePhone: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
         },
-        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
+        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
       }
     },
     methods:{
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
-        this.inputForm.expiryDate=util.formatLocalDate( this.inputForm.expiryDate)
         form.validate((valid) => {
           this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
           if (valid) {
-            this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
-            axios.post('/api/ws/future/layout/shopPrint/save', qs.stringify(this.inputForm)).then((response)=> {
+            util.copyValue(this.inputForm,this.submitData);
+            axios.post('/api/ws/future/layout/shopPrint/save', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -106,21 +105,6 @@
             this.submitDisabled = false;
           }
         })
-      },getFormProperty(){
-        axios.get('/api/basic/sys/dictMap/getQuery',{params:{category:"门店_广告印刷"}}).then((response)=>{
-          this.formProperty=response.data;
-          console.log(this.formProperty);
-        });
-      },findOne(){
-        axios.get('/api/ws/future/layout/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-          this.depots=new Array(response.data.depot);
-          if(this.inputForm.attachment !=null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
-              this.fileList= response.data;
-            });
-          }
-        })
       },
       handlePreview(file) {
         window.open(file.url);
@@ -130,11 +114,15 @@
         this.fileList = fileList;
       }
     },created(){
-      this.getFormProperty();
-      if(!this.isCreate){
-          this.findOne();
+      axios.get('/api/ws/future/layout/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
+        if(this.inputForm.attachment !=null) {
+          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
+            this.fileList= response.data;
+          });
+        }
+      });
 
       }
-    }
   }
 </script>

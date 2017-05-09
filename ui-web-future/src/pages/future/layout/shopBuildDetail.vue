@@ -72,6 +72,7 @@
     data(){
       return{
         isCreate:this.$route.query.id==null,
+        action:this.$route.query.action,
         inputForm:{
 
         },
@@ -80,37 +81,33 @@
       }
     },
     methods:{
-      findOne(){
-        axios.get('/api/ws/future/layout/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm=response.data;
+      handlePreview1(file) {
+        window.open(file.url);
+    },handleChange1(file, fileList) {
+        this.fileList1 = fileList;
+    },handleRemove1(file, fileList) {
+        this.fileList1 = fileList;
+    },handlePreview2(file) {
+        window.open(file.url);
+    },handleChange2(file, fileList) {
+        this.fileList2 = fileList;
+    },handleRemove2(file, fileList) {
+        this.fileList2 = fileList;
+    },
+    },created(){
+      axios.get('/api/ws/future/layout/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm=response.data;
         if(this.inputForm.scenePhoto !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
             this.fileList1= response.data;
-        });
+          });
         }
         if(this.inputForm.confirmPhoto !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.confirmPhoto}}).then((response)=>{
             this.fileList2= response.data;
-        });
+          });
         }
-        })
-      },handlePreview1(file) {
-      window.open(file.url);
-    },handleChange1(file, fileList) {
-      this.fileList1 = fileList;
-    },handleRemove1(file, fileList) {
-      this.fileList1 = fileList;
-    },handlePreview2(file) {
-      window.open(file.url);
-    },handleChange2(file, fileList) {
-      this.fileList2 = fileList;
-    },handleRemove2(file, fileList) {
-      this.fileList2 = fileList;
-    },
-    },created(){
-      if(!this.isCreate){
-        this.findOne();
-      }
+      })
     }
   }
 </script>

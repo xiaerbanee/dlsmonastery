@@ -9,6 +9,7 @@ import net.myspring.future.modules.layout.dto.ShopPrintDto;
 import net.myspring.future.modules.layout.mapper.ShopPrintMapper;
 import net.myspring.future.modules.layout.web.form.ShopPrintForm;
 import net.myspring.future.modules.layout.web.query.ShopPrintQuery;
+import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +66,14 @@ public class ShopPrintService {
         shopPrintMapper.logicDeleteOne(id);
     }
 
-    public void audit(ShopPrint shopPrint, boolean pass, String comment) {
-        shopPrintMapper.update(shopPrint);
+    public void audit(ShopPrintForm shopPrintForm) {
+        ActivitiCompleteForm activitiCompleteForm;
+        if(shopPrintForm.isCreate()){
+
+        }else{
+            ShopPrint shopPrint = shopPrintMapper.findOne(shopPrintForm.getId());
+
+        }
     }
 
     public ShopPrintQuery findQuery(ShopPrintQuery shopPrintQuery){

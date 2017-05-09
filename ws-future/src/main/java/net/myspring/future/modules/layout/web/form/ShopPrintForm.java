@@ -24,6 +24,24 @@ public class ShopPrintForm extends DataForm<ShopPrint>{
     private String createdByName;
     private String processInstanceId;
     private LocalDateTime createdDate;
+    private String pass;
+    private String passRemarks;
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public String getPassRemarks() {
+        return passRemarks;
+    }
+
+    public void setPassRemarks(String passRemarks) {
+        this.passRemarks = passRemarks;
+    }
 
     public String getOfficeId() {
         return officeId;

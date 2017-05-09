@@ -58,9 +58,11 @@ public class ShopPrintController {
         return restResponse;
     }
 
-    @RequestMapping(value = "audit", method = RequestMethod.GET)
-    public String audit() {
-        return null;
+    @RequestMapping(value = "audit")
+    public RestResponse audit(ShopPrintForm shopPrintForm) {
+        shopPrintService.audit(shopPrintForm);
+        RestResponse restResponse = new RestResponse("审核成功", ResponseCodeEnum.removed.name());
+        return restResponse;
     }
 
     private List<String> getActionList() {
