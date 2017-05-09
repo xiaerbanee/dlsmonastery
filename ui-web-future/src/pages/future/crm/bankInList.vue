@@ -19,13 +19,13 @@
                 <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('bankInList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.billDateRange.label" :label-width="formLabelWidth">
-                <su-date-range-picker  v-model="formData.billDateRange" ></su-date-range-picker>
+                <date-range-picker  v-model="formData.billDateRange" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.amount.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.amount" auto-complete="off" :placeholder="$t('bankInList.preciseSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.inputDateRange.label" :label-width="formLabelWidth">
-                <su-date-range-picker  v-model="formData.inputDateRange"></su-date-range-picker>
+                <date-range-picker  v-model="formData.inputDateRange"></date-range-picker>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -41,7 +41,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
-                <su-date-range-picker  v-model="formData.createdDateRange" ></su-date-range-picker>
+                <date-range-picker  v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.serialNumber.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.serialNumber" auto-complete="off" :placeholder="$t('bankInList.likeSearch')"></el-input>
@@ -72,9 +72,9 @@
           <template scope="scope">
 
             <el-button size="small"  v-permit="'crm:bankIn:view'" @click.native="itemAction(scope.row.id, '详细')">{{$t('bankInList.detail')}}</el-button>
-            <el-button size="small"  v-permit="'crm:bankIn:edit'" @click.native="itemAction(scope.row.id, '修改')">{{$t('bankInList.edit')}}</el-button>
-            <el-button size="small"  v-permit="'crm:bankIn:audit'" @click.native="itemAction(scope.row.id, '审核')">{{$t('bankInList.audit')}}</el-button>
-            <el-button size="small"  v-permit="'crm:bankIn:delete'" @click.native="itemAction(scope.row.id, '删除')">{{$t('bankInList.delete')}}</el-button>
+            <el-button size="small"  v-if="scope.row.auditable"   v-permit="'crm:bankIn:audit'" @click.native="itemAction(scope.row.id, '审核')">{{$t('bankInList.audit')}}</el-button>
+            <el-button size="small"   v-if="scope.row.editable"   v-permit="'crm:bankIn:edit'" @click.native="itemAction(scope.row.id, '修改')">{{$t('bankInList.edit')}}</el-button>
+             <el-button size="small"   v-if="scope.row.editable" v-permit="'crm:bankIn:delete'" @click.native="itemAction(scope.row.id, '删除')">{{$t('bankInList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>

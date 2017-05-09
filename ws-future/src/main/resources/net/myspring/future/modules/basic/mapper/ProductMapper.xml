@@ -62,6 +62,16 @@
         <include refid="filter"></include>
     </select>
 
+
+    <select id="findIntersectionOfBothPricesystem" resultType="ProductDto">
+        select t1.*
+        from crm_product t1
+        where t1.product_id in (select product_id from crm_pricesystem_detail t2 where t2.pricesystem_id = #{pricesystemId1})
+        and t1.product_id in (select product_id from crm_pricesystem_detail t3 where t3.pricesystem_id = #{pricesystemId2})
+        and t1.enabled=1
+    </select>
+
+
     <select id="findFilter" resultType="Product">
         select t1.*
         from crm_product t1

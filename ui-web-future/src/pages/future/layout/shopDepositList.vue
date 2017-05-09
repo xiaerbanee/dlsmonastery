@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopDeposit:edit'">{{$t('shopDepositList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('shopDepositList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -21,7 +21,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
-                <su-date-range-picker v-model="formData.createdDateRange" ></su-date-range-picker>
+                <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.remarks.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('shopDepositList.likeSearch')"></el-input>
@@ -33,7 +33,8 @@
           <el-button type="primary" @click="search()">{{$t('shopDepositList.sure')}}</el-button>
         </div>
       </el-dialog>
-      <su-table v-model="queryData"  getUrl="/api/ws/future/crm/shopDeposit" >
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopDepositList.loading')" @sort-change="sortChange" stripe border>
+
         <el-table-column fixed prop="id" :label="$t('shopDepositList.billCode')" sortable width="100"></el-table-column>
         <el-table-column prop="shop.name" :label="$t('shopDepositList.shopName')" sortable></el-table-column>
         <el-table-column prop="shop.area.name" :label="$t('shopDepositList.areaName')" ></el-table-column>
@@ -58,7 +59,8 @@
           </template>
         </el-table-column>
 
-      </su-table>
+      </el-table>
+      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
@@ -66,8 +68,10 @@
   export default {
     data() {
       return {
+        page:{},
+        pageLoading:false,
         formData:{},
-        queryData:{
+        submitData:{
           shopName:'',
           createdDateRange:'',
           type:'',
@@ -83,18 +87,39 @@
       };
     },
     methods: {
-      search() {
-        this.formVisible = false;
-        this.queryData = util.cloneAndCopy(this.formData, this.queryData);
 
+      pageRequest() {
+        this.pageLoading = true;
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("shopDepositList",this.submitData);
+        axios.get('/api/ws/future/crm/shopDeposit',{params:this.submitData}).then((response) => {
+          this.page = response.data;
+          this.pageLoading = false;
+        })
+      },pageChange(pageNumber,pageSize) {
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
+      },sortChange(column) {
+        this.formData.sort=util.getSort(column);
+        this.formData.page=0;
+        this.pageRequest();
+      },search() {
+        this.formVisible = false;
+        this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'shopDepositForm'})
       }
     },created () {
+
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/shopDeposit/getQuery').then((response) =>{
-        this.formData=response.data;
-        this.queryData = util.cloneAndCopy(this.formData, this.queryData);
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
+
     }
   };
 </script>

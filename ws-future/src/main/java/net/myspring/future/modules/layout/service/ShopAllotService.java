@@ -3,14 +3,13 @@ package net.myspring.future.modules.layout.service;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
-import net.myspring.future.modules.layout.mapper.ShopAllotDetailMapper;
 import net.myspring.future.modules.layout.mapper.ShopAllotMapper;
+import net.myspring.future.modules.layout.web.form.ShopAllotForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +27,9 @@ public class ShopAllotService {
     private DepotMapper depotMapper;
     @Autowired
     private CacheUtils cacheUtils;
+
+    @Autowired
+    private ShopAllotDetailService shopAllotDetailService;
 
 
     public ShopAllot findOne(String id){
@@ -86,5 +88,22 @@ public class ShopAllotService {
     @Transactional
     public void audit(ShopAllot shopAllot){
 
+    }
+
+    public ShopAllotForm findForm(ShopAllotForm shopAllotForm) {
+
+        if(shopAllotForm.isCreate()){
+            return new ShopAllotForm();
+        }
+
+        ShopAllotDto shopAllotDto = findShopAllotDto(shopAllotForm.getId());
+        ShopAllotForm result = BeanUtil.map(shopAllotDto, ShopAllotForm.class);
+        result.setShopAllotDetailFormList(shopAllotDetailService.getShopAllotDetailListForEdit(shopAllotForm.getId(), shopAllotForm.getFromShopId(), shopAllotForm.getToShopId()));
+
+        return result;
+    }
+
+    private ShopAllotDto findShopAllotDto(String id) {
+        return shopAllotMapper.findShopAllotDto(id);
     }
 }

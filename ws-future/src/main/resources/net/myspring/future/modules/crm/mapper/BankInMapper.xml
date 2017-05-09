@@ -60,6 +60,20 @@
         </if>
     </select>
 
+    <select id="findDto" resultType="BankInDto">
+        SELECT
+        depot.name shopName, bank.name bankName, depot.parent_id shopParentId, t1.*
+        FROM
+        crm_bank_in t1,crm_depot depot, crm_bank bank
+        WHERE
+        t1.shop_id=depot.id and t1.bank_id = bank.id
+        <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
+        <if test="id !=null">
+            and t1.id=#{id}
+        </if>
+    </select>
+
+
     <select id="findByShopAndType" resultType="BankIn">
         select t1.* from crm_bank_in t1 where t1.shop_id = #{shopId} and t1.type = #{type} and t1.process_status='已通过' order by t1.last_modified_date desc limit 0,1
     </select>
