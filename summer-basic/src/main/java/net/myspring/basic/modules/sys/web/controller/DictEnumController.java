@@ -48,6 +48,11 @@ public class DictEnumController {
         return dictEnumForm;
     }
 
+    @RequestMapping(value="getQuery")
+    public  DictEnumQuery getQuery(DictEnumQuery dictEnumQuery){
+        dictEnumQuery.setCategoryList(dictEnumService.findDistinctCategory());
+        return dictEnumQuery;
+    }
 
     @RequestMapping(value="findByCategory")
     public List<DictEnumDto> findByCategory(String category){

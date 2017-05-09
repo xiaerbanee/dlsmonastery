@@ -12,7 +12,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item :label="formLabel.billDateBTW.label" :label-width="formLabelWidth">
+            <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth">
               <el-date-picker v-model="formData.billDate" type="date" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-date-picker>
             </el-form-item>
           </el-col>
@@ -40,7 +40,6 @@
           autoColumnSize:true,
           stretchH: 'all',
           height: 650,
-          product:'',
           colHeaders: ["门店","编码","货品","价格","数量","类型","备注"],
           columns: [
             {type: "autocomplete", allowEmpty: false, strict: true, tempCustomerNames:[],
@@ -98,7 +97,7 @@
             },
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
             {type: "numeric", allowEmpty: false},
-            {type: "autocomplete", allowEmpty: false, strict: true,tempBillTypes:[], source: this.tempBillTypes},
+            {type: "autocomplete", allowEmpty: false, strict: true,billType:[], source: this.billType},
             {type: "text", allowEmpty: true, strict: true }
           ],
           afterChange: function (changes, source) {
@@ -129,11 +128,10 @@
         },
         formData:{
           billDate:'',
-          billDateBTW:'',
           storeNumber:'',
           data:[],
         },formLabel:{
-          billDateBTW:{label:"日期"},
+          billDate:{label:"日期"},
           storeNumber:{label:"仓库"},
         },
         pickerDateOption:'',
@@ -159,7 +157,6 @@
           }
         }
         this.formData.data = JSON.stringify(this.formData.data);
-        this.formData.billDateBTW = util.formatDateRange(this.formData.billDate);
         axios.post('/api/global/cloud/input/batchMaterial/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
           this.$message(response.data.message);
         });

@@ -3,22 +3,21 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.K3CloudBillTypeEnum;
-import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
-import net.myspring.cloud.common.utils.*;
-import net.myspring.cloud.modules.input.mapper.*;
-import net.myspring.cloud.modules.input.web.form.BatchBillForm;
+import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.domain.BdCustomer;
 import net.myspring.cloud.modules.input.domain.BdDepartment;
 import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.input.dto.BatchBillDetailDto;
 import net.myspring.cloud.modules.input.dto.BatchBillDto;
-import net.myspring.cloud.modules.input.utils.K3CloudSaveExtend;
-import net.myspring.cloud.modules.input.utils.K3cloudUtils;
+import net.myspring.cloud.modules.input.mapper.ArReceivableMapper;
+import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
+import net.myspring.cloud.modules.input.mapper.BdDepartmentMapper;
+import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -76,7 +75,7 @@ public class BatchBillService {
             batchBillDetail.setPrice(price);
             batchBillDetail.setQty(qty);
             batchBillDetail.setRemarks(remarks);
-            String billKey = customerMap.get(customerName) + CharEnum.COMMA + type;
+            String billKey = customerMap.get(customerName) + CharConstant.COMMA + type;
             if (!billMap.containsKey(billKey)) {
                 BatchBillDto batchBill = new BatchBillDto();
                 batchBill.setCustomerFNumber(customerMap.get(customerName));
@@ -97,24 +96,7 @@ public class BatchBillService {
         cacheUtils.initCacheInput(accountDto);
         if (CollectionUtil.isNotEmpty(batchBillDtoList)) {
             for (BatchBillDto batchBillDto : batchBillDtoList) {
-                K3CloudSaveExtend k3CloudSaveExtend;
-                if (K3CloudBillTypeEnum.销售出库单.name().equals(batchBillDto.getType()) || K3CloudBillTypeEnum.现销出库单.name().equals(batchBillDto.getType())) {
-                    k3CloudSaveExtend = new K3CloudSaveExtend(K3CloudFormIdEnum.SAL_OUTSTOCK.name(), getSaleOutStock(batchBillDto,accountDto), K3CloudFormIdEnum.AR_receivable.name()) {
-                        @Override
-                        public String getNextBillNo() {
-                            return arReceivableMapper.findFBillNoByfSourceBillNo(getBillNo());
-                        }
-                    };
-                } else {
-                    k3CloudSaveExtend = new K3CloudSaveExtend(K3CloudFormIdEnum.SAL_RETURNSTOCK.name(), getReturnStock(batchBillDto,accountDto), K3CloudFormIdEnum.AR_receivable.name()) {
-                        @Override
-                        public String getNextBillNo() {
-                            return arReceivableMapper.findFBillNoByfSourceBillNo(getBillNo());
-                        }
-                    };
-                }
-                String billNo = K3cloudUtils.save(k3CloudSaveExtend,accountDto).getBillNo();
-                codeList.add(billNo);
+
             }
         }
         return codeList;
@@ -129,24 +111,24 @@ public class BatchBillService {
         model.put("FID", 0);
         model.put("FDate", batchBillDto.getDate());
         if (K3CloudBillTypeEnum.销售出库单.name().equals(batchBillDto.getType())) {
-            model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "XSCKD01_SYS"));
+            model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD01_SYS"));
         } else {
-            model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "XSCKD06_SYS"));
+            model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD06_SYS"));
         }
-        model.put("FDeliveryDeptID", K3cloudUtils.getMap("FNumber", batchBillDto.getDepartmentFNumber()));
-        model.put("FSaleOrgId", K3cloudUtils.getMap("FNumber", 100));
-        model.put("FStockOrgId", K3cloudUtils.getMap("FNumber", 100));
-        model.put("FOwnerIdHead", K3cloudUtils.getMap("FNumber", 100));
-        model.put("FSettleCurrID", K3cloudUtils.getMap("FNumber", "PRE001"));
-        model.put("FCustomerID", K3cloudUtils.getMap("FNumber", batchBillDto.getCustomerFNumber()));
+        model.put("FDeliveryDeptID", CollectionUtil.getMap("FNumber", batchBillDto.getDepartmentFNumber()));
+        model.put("FSaleOrgId", CollectionUtil.getMap("FNumber", 100));
+        model.put("FStockOrgId", CollectionUtil.getMap("FNumber", 100));
+        model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", 100));
+        model.put("FSettleCurrID", CollectionUtil.getMap("FNumber", "PRE001"));
+        model.put("FCustomerID", CollectionUtil.getMap("FNumber", batchBillDto.getCustomerFNumber()));
         model.put("FNote", batchBillDto.getNote()+ "批量开单");
         List<Object> entity = Lists.newArrayList();
         for (BatchBillDetailDto batchBillDetail : batchBillDto.getBatchBillDetailDtoList()) {
             if (batchBillDetail.getQty() != null && batchBillDetail.getQty() > 0) {
                 Map<String, Object> detail = Maps.newLinkedHashMap();
-                detail.put("FMaterialId", K3cloudUtils.getMap("FNumber", batchBillDetail.getProductFNumber()));
-                detail.put("FStockID", K3cloudUtils.getMap("FNumber", batchBillDto.getStoreFNumber()));
-                detail.put("FStockStatusID", K3cloudUtils.getMap("FNumber", "KCZT01_SYS"));
+                detail.put("FMaterialId", CollectionUtil.getMap("FNumber", batchBillDetail.getProductFNumber()));
+                detail.put("FStockID", CollectionUtil.getMap("FNumber", batchBillDto.getStoreFNumber()));
+                detail.put("FStockStatusID", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
                 detail.put("FRealQty", batchBillDetail.getQty());
                 detail.put("FBaseUnitQty", batchBillDetail.getQty());
                 detail.put("FPriceUnitQty", batchBillDetail.getQty());
@@ -179,24 +161,24 @@ public class BatchBillService {
         model.put("FID", 0);
         model.put("FDate", batchBillDto.getDate());
         if (K3CloudBillTypeEnum.销售退货单.name().equals(batchBillDto.getType())) {
-            model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "XSTHD01_SYS"));
+            model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSTHD01_SYS"));
         } else {
-            model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "XSTHD06_SYS"));
+            model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSTHD06_SYS"));
         }
-        model.put("FStockDeptId", K3cloudUtils.getMap("FNumber", batchBillDto.getDepartmentFNumber()));
-        model.put("FSaledeptid", K3cloudUtils.getMap("FNumber", batchBillDto.getDepartmentFNumber()));
-        model.put("FSaleOrgId", K3cloudUtils.getMap("FNumber", 100));
-        model.put("FStockOrgId", K3cloudUtils.getMap("FNumber", 100));
-        model.put("FOwnerIdHead", K3cloudUtils.getMap("FNumber", 100));
-        model.put("FRetcustId", K3cloudUtils.getMap("FNumber", batchBillDto.getCustomerFNumber()));
+        model.put("FStockDeptId", CollectionUtil.getMap("FNumber", batchBillDto.getDepartmentFNumber()));
+        model.put("FSaledeptid", CollectionUtil.getMap("FNumber", batchBillDto.getDepartmentFNumber()));
+        model.put("FSaleOrgId", CollectionUtil.getMap("FNumber", 100));
+        model.put("FStockOrgId", CollectionUtil.getMap("FNumber", 100));
+        model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", 100));
+        model.put("FRetcustId", CollectionUtil.getMap("FNumber", batchBillDto.getCustomerFNumber()));
         model.put("FHeadNote", batchBillDto.getNote()+ "批量开单");
         List<Object> entity = Lists.newArrayList();
         for (BatchBillDetailDto batchBillDetail : batchBillDto.getBatchBillDetailDtoList()) {
             if (batchBillDetail.getQty() != null && batchBillDetail.getQty() > 0) {
                 Map<String, Object> detail = Maps.newLinkedHashMap();
-                detail.put("FMaterialId", K3cloudUtils.getMap("FNumber", batchBillDetail.getProductFNumber()));
-                detail.put("FStockId", K3cloudUtils.getMap("FNumber", batchBillDto.getStoreFNumber()));
-                detail.put("FStockStatusID", K3cloudUtils.getMap("FNumber", "KCZT01_SYS"));
+                detail.put("FMaterialId", CollectionUtil.getMap("FNumber", batchBillDetail.getProductFNumber()));
+                detail.put("FStockId", CollectionUtil.getMap("FNumber", batchBillDto.getStoreFNumber()));
+                detail.put("FStockStatusID", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
                 detail.put("FRealQty", batchBillDetail.getQty());
                 detail.put("FBaseunitQty", batchBillDetail.getQty());
                 detail.put("FTaxPrice", batchBillDetail.getPrice());
@@ -218,8 +200,8 @@ public class BatchBillService {
 
         Map<String, Object> subHeadEntity = Maps.newLinkedHashMap();
         subHeadEntity.put("FExchangeRate", 1);
-        subHeadEntity.put("FLocalCurrId", K3cloudUtils.getMap("FNumber", "PRE001"));
-        subHeadEntity.put("FExchangeTypeId", K3cloudUtils.getMap("FNumber", "HLTX01_SYS"));
+        subHeadEntity.put("FLocalCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
+        subHeadEntity.put("FExchangeTypeId", CollectionUtil.getMap("FNumber", "HLTX01_SYS"));
         model.put("SAL_RETURNSTOCK__SubHeadEntity", subHeadEntity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);

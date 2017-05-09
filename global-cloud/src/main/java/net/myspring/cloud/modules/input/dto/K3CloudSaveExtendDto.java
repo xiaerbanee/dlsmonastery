@@ -1,16 +1,14 @@
-package net.myspring.cloud.modules.input.utils;
+package net.myspring.cloud.modules.input.dto;
 
-
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
 
 /**
  * Created by liuj on 2016-06-20.
  */
-public abstract class K3CloudSaveExtend extends K3CloudSave {
+public abstract class K3CloudSaveExtendDto extends K3CloudSaveDto {
 
     private String nextFormId;
 
-    public K3CloudSaveExtend(String formId, String content, String nextFormId) {
+    public K3CloudSaveExtendDto(String formId, String content, String nextFormId) {
         super(formId, content);
         this.nextFormId = nextFormId;
     }

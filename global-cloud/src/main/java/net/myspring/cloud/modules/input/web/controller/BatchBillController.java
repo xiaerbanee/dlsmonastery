@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.modules.input.service.BatchBillService;
+import net.myspring.cloud.modules.input.web.form.BatchBillForm;
 import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -30,10 +31,12 @@ public class BatchBillController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(String data, String storeCode, String billDateBTW) {
-        data = HtmlUtils.htmlUnescape(data);
+    public RestResponse save(BatchBillForm batchBillForm) {
+        String data = HtmlUtils.htmlUnescape(batchBillForm.getData());
         List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
-        List<String> codeList = batchBillService.save(datas, storeCode, LocalDate.parse(billDateBTW));
+        String storeNumber = batchBillForm.getStoreNumber();
+        String billDate = batchBillForm.getBillDate();
+        List<String> codeList = batchBillService.save(datas, storeNumber, LocalDate.parse(billDate));
         return new RestResponse("批量开单成功：" + codeList,null,true);
     }
 }

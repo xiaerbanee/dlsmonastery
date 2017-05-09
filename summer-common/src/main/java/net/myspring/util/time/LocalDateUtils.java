@@ -15,6 +15,7 @@ import java.util.Locale;
 public class LocalDateUtils {
 
     public static final String FORMATTER = "yyyy-MM-dd";
+    public static final String FORMATTER_MONTH_SINGLE = "yyyy.M";
 
     public static String format(LocalDate localDate) {
         return format(localDate,FORMATTER);

@@ -15,7 +15,8 @@ public class CharConstant {
     public static final String VERTICAL_LINE = "|";
     public static final String UNDER_LINE = "_";
     public static final String COLON = ":";
-    public static final String TILDE = "~";
+    public static final String WAVE_LINE = "~";
+    public static final String MINUS = "-";
     public static final String SLASH_LINE = "/";
     public static final String DATE_RANGE_SPLITTER = " - ";
 

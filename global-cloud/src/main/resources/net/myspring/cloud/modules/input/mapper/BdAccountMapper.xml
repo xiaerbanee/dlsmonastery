@@ -38,4 +38,17 @@
         t1.FACCTID = t2.FACCTID
         and t2.FLOCALEID = 2052
     </select>
+
+    <select id="findForIsBank" resultType="NameNumberDto">
+        SELECT
+        t.FNUMBER as number,
+        tl.FNAME as name
+        FROM
+        T_BD_ACCOUNT t,
+        T_BD_ACCOUNT_L tl
+        WHERE
+        t.FACCTID = tl.FACCTID
+        AND t.FISBANK = 1
+        AND tl.FLOCALEID=2052
+    </select>
 </mapper>

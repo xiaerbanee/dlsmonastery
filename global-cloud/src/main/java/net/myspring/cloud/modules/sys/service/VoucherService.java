@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.DynamicDataSourceContext;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
@@ -25,6 +24,7 @@ import net.myspring.cloud.modules.sys.mapper.VoucherEntryMapper;
 import net.myspring.cloud.modules.sys.mapper.VoucherMapper;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -142,7 +142,7 @@ public class VoucherService {
             List<String> list = Lists.newArrayList();
             list.add(voucherEntryDto.getfExplanation());
             BdAccount bdAccount = bdVoucherMap.get(voucherEntryDto.getfAccountId());
-            list.add(bdAccount.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + bdAccount.getfName());
+            list.add(bdAccount.getfNumber() + CharConstant.SLASH_LINE + bdAccount.getfName());
             Map<String, VoucherEntryFlowDto> voucherEntryFlowMap = Maps.newHashMap();
             List<VoucherEntryFlowDto> voucherEntryFlowDtoList = voucherEntryDto.getVoucherEntryFlowDtoList();
             if (CollectionUtil.isNotEmpty(voucherEntryFlowDtoList)) {
@@ -150,7 +150,7 @@ public class VoucherService {
                 for(VoucherEntryFlowDto voucherEntryFlowDto: voucherEntryFlowDtoList) {
                     voucherEntryFlowDto.setFlexName(flexNumberMap.get(voucherEntryFlowDto.getFlexNumber()).getfName());
                     String value=reverseMap.get(voucherEntryFlowDto.getFlexName()).get(voucherEntryFlowDto.getCode());
-                    voucherEntryFlowDto.setValue(voucherEntryFlowDto.getCode()+CharEnum.CHAR_SLASH_LINE.getValue()+value);
+                    voucherEntryFlowDto.setValue(voucherEntryFlowDto.getCode()+CharConstant.SLASH_LINE+value);
                 }
             }
             for (String header : headers) {
@@ -178,7 +178,7 @@ public class VoucherService {
         Map<String, BdFlexItemGroupDto> map = CollectionUtil.extractToMap(bdFlexItemGroupDtoList, "fId");
         for (BdAccount bdAccount : bdAccountList) {
             if (!"0".equals(bdAccount.getfItemDetailId())) {
-                result.put(bdAccount.getfNumber() + CharEnum.CHAR_SLASH_LINE.getValue() + bdAccount.getfName(), map.get(bdAccount.getfItemDetailId()).getFNames());
+                result.put(bdAccount.getfNumber() + CharConstant.SLASH_LINE + bdAccount.getfName(), map.get(bdAccount.getfItemDetailId()).getFNames());
             }
         }
         return result;
@@ -272,7 +272,7 @@ public class VoucherService {
             voucherEntry.setfExplanation(HandSonTableUtils.getValue(row,0));
             String FAcctFullName = HandSonTableUtils.getValue(row,1);
             //科目编码
-            voucherEntry.setfAccountId(FAcctFullName.substring(0,FAcctFullName.indexOf(CharEnum.CHAR_SLASH_LINE.getValue())));
+            voucherEntry.setfAccountId(FAcctFullName.substring(0,FAcctFullName.indexOf(CharConstant.SLASH_LINE)));
             //借方
             String debitStr = HandSonTableUtils.getValue(row,headers.size() - 2);
             //贷方
@@ -293,8 +293,8 @@ public class VoucherService {
                     String name = "FDetailID__" + bdFlexItemPropertyMap.get(header).getfFlexNumber();
                     VoucherEntryFlow voucherEntryFlow = new VoucherEntryFlow();
                     voucherEntryFlow.setName(name);
-                    voucherEntryFlow.setValue(value.substring(value.indexOf(CharEnum.CHAR_SLASH_LINE.getValue())+1));
-                    voucherEntryFlow.setCode(value.substring(0,value.indexOf(CharEnum.CHAR_SLASH_LINE.getValue())));
+                    voucherEntryFlow.setValue(value.substring(value.indexOf(CharConstant.SLASH_LINE)+1));
+                    voucherEntryFlow.setCode(value.substring(0,value.indexOf(CharConstant.SLASH_LINE)));
                     voucherEntryFlow.setGlVoucherEntryId(voucherEntry.getId());
                     voucherEntryFlowList.add(voucherEntryFlow);
                 }

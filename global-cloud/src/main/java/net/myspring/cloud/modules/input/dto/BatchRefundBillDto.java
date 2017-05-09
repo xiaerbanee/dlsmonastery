@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.input.dto;
 
-import net.myspring.cloud.common.enums.CharEnum;
+
+import net.myspring.common.constant.CharConstant;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,7 +16,7 @@ public class BatchRefundBillDto {
     private String subject;
 
     public String getBillDate() {
-        return String.valueOf(billDate.getYear()) + CharEnum.MINUS.getValue() + billDate.getMonthValue() + CharEnum.MINUS.getValue() + billDate.getDayOfMonth();
+        return String.valueOf(billDate.getYear()) + CharConstant.MINUS + billDate.getMonthValue() + CharConstant.MINUS + billDate.getDayOfMonth();
     }
 
     public void setBillDate(LocalDate billDate) {

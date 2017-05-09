@@ -3,18 +3,17 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.BdMaterialDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
-import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.input.web.query.BatchMaterialQuery;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -55,7 +54,7 @@ public class BatchMaterialService {
             BigDecimal rlprice = StringUtils.isEmpty(RLPriceStr) ? BigDecimal.ZERO : new BigDecimal(RLPriceStr);
             String productGroup = HandSonTableUtils.getValue(row, 4);
             String productCategory = HandSonTableUtils.getValue(row, 5);
-            String billKey = productNumber + CharEnum.COMMA + productName;
+            String billKey = productNumber + CharConstant.COMMA + productName;
             if (!materialMap.containsKey(billKey)) {
                 BdMaterialDto bdMaterial = new BdMaterialDto();
                 bdMaterial.setfName(productName);
@@ -74,8 +73,8 @@ public class BatchMaterialService {
             AccountDto accountDto = new AccountDto();
             cacheUtils.initCacheInput(accountDto);
             for (BdMaterialDto bdMaterial : materials) {
-                K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial));
-                String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.BD_MATERIAL.name(), getBdMaterial(bdMaterial));
+                String billNo =null;
                 codeList.add(billNo);
             }
         }
@@ -92,9 +91,9 @@ public class BatchMaterialService {
         model.put("F_PAEZ_Decimal", bdMaterial.getPrice1());
         model.put("F_PAEZ_Decimal1", bdMaterial.getRlPrice());
         Map<String, Object> detail = Maps.newLinkedHashMap();
-        detail.put("FCategoryID", K3cloudUtils.getMap("FNumber", bdMaterial.getfCategoryId()));
-        detail.put("FMaterialGroup", K3cloudUtils.getMap("FNumber", bdMaterial.getfMaterialGroupName()));
-        detail.put("FTaxRateId", K3cloudUtils.getMap("FNumber", "SL04_SYS"));
+        detail.put("FCategoryID", CollectionUtil.getMap("FNumber", bdMaterial.getfCategoryId()));
+        detail.put("FMaterialGroup", CollectionUtil.getMap("FNumber", bdMaterial.getfMaterialGroupName()));
+        detail.put("FTaxRateId", CollectionUtil.getMap("FNumber", "SL04_SYS"));
         model.put("BD_MATERIAL__SubHeadEntity", detail);
         root.put("Model", model);
         return ObjectMapperUtils.writeValueAsString(root);

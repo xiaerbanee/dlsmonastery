@@ -9,7 +9,7 @@
              {{inputForm.id}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.office')" prop="depotDto">
-              {{inputForm.officeId}}
+              {{inputForm.officeName}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.shopName')" prop="shopId">
               {{inputForm.shopName}}

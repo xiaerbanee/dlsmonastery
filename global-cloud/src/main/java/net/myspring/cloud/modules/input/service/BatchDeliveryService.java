@@ -3,19 +3,18 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CharEnum;
 import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.MisDeliveryTypeEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.dto.BatchDeliveryDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSave;
+import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.mapper.BdStockMapper;
-import net.myspring.cloud.modules.input.utils.K3cloudUtils;
 import net.myspring.cloud.modules.input.web.query.BatchDeliveryQuery;
 import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -57,7 +56,7 @@ public class BatchDeliveryService {
             String type = HandSonTableUtils.getValue(row, 4);
             String remarks = HandSonTableUtils.getValue(row, 5);
 
-            String billKey = productName + CharEnum.COMMA + depotName + CharEnum.COMMA + qty + CharEnum.COMMA + remarks + CharEnum.COMMA + type;
+            String billKey = productName + CharConstant.COMMA + depotName + CharConstant.COMMA + qty + CharConstant.COMMA + remarks + CharConstant.COMMA + type;
             if (!misDeliveryMap.containsKey(billKey)) {
                 BatchDeliveryDto misDelivery = new BatchDeliveryDto();
                 misDelivery.setBillDate(billDate);
@@ -78,8 +77,8 @@ public class BatchDeliveryService {
         List<String> billNos = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchDeliveryDto misDelivery : billList) {
-                K3CloudSave k3CloudSave = new K3CloudSave(K3CloudFormIdEnum.STK_MisDelivery.name(), getMisDeliveryReturn(misDelivery,accountDto));
-                String billNo = K3cloudUtils.save(k3CloudSave,accountDto).getBillNo();
+                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.STK_MisDelivery.name(), getMisDeliveryReturn(misDelivery,accountDto));
+                String billNo = null;
                 billNos.add(billNo);
             }
         }
@@ -93,12 +92,12 @@ public class BatchDeliveryService {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", misDelivery.getBillDate());
-        model.put("FBillTypeID", K3cloudUtils.getMap("FNumber", "QTCKD01_SYS"));
-        model.put("FStockOrgId", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FPickOrgId", K3cloudUtils.getMap("FNumber", "100"));
-        model.put("FOwnerIdHead", K3cloudUtils.getMap("FNumber", "100"));
+        model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "QTCKD01_SYS"));
+        model.put("FStockOrgId", CollectionUtil.getMap("FNumber", "100"));
+        model.put("FPickOrgId", CollectionUtil.getMap("FNumber", "100"));
+        model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", "100"));
 
-        model.put("FDeptId", K3cloudUtils.getMap("FNumber", misDelivery.getDepartment()));
+        model.put("FDeptId", CollectionUtil.getMap("FNumber", misDelivery.getDepartment()));
         //库存方向
         if (MisDeliveryTypeEnum.出库.name().equals(misDelivery.getMisDeliveryType())) {
             model.put("FStockDirect", "GENERAL");
@@ -106,11 +105,11 @@ public class BatchDeliveryService {
             model.put("FStockDirect", "RETURN");
         }
         model.put("FOwnerTypeIdHead", "BD_OwnerOrg");
-        model.put("FBaseCurrId", K3cloudUtils.getMap("FNumber", "PRE001"));
+        model.put("FBaseCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
         List<Object> entity = Lists.newArrayList();
         Map<String, Object> detail = Maps.newLinkedHashMap();
-        detail.put("FMaterialId", K3cloudUtils.getMap("FNumber", misDelivery.getProduct()));
-        detail.put("FStockId", K3cloudUtils.getMap("FNumber", misDelivery.getDepot()));
+        detail.put("FMaterialId", CollectionUtil.getMap("FNumber", misDelivery.getProduct()));
+        detail.put("FStockId", CollectionUtil.getMap("FNumber", misDelivery.getDepot()));
         detail.put("FQty", misDelivery.getQty());
         detail.put("FEntryNote", misDelivery.getRemark());
         entity.add(detail);

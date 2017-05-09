@@ -96,33 +96,12 @@
                 }
               }
             },
-            {type: 'numeric',allowEmpty: false,format:"0,0.00"},
+            {type: 'numeric',allowEmpty: false,format:"0,0"},
             {type: "autocomplete", allowEmpty: false, strict: true,types:[], source: this.types},
             {type: "text", allowEmpty: true, strict: true }
           ],
           afterChange: function (changes, source) {
-            var tbody = this.table.lastChild;
-            if (source === 'edit') {
-              for (let i = changes.length - 1; i >= 0; i--) {
-                let row = changes[i][0];
-                let column = changes[i][1]==2;
-                var tr = tbody.childNodes[row];
-                var td = tr.childNodes[2];
-                if(column){
-                  var name = changes[i][3];
-                  var productMap;
-                  axios.get('/api/global/cloud/input/batchDelivery/getNameAndNumber').then((response) =>{
-                    productMap = response.data;
-                    for (let index in productMap){
-                      if(productMap[index].name === name){
-                        td.innerHTML = productMap[index].value;
-                            this.table.setDataAtCell(row,1,productMap[index].value,source);
-                      }
-                    }
-                  });
-                }
-              }
-            }
+
           }
         },
         formData:{

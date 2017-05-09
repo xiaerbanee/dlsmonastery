@@ -17,7 +17,9 @@ public class ShopBuildForm extends DataForm<ShopBuild>{
     private String shopName;
     @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "address")
     private String address;
+    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "officeId")
     private String officeId;
+    private String officeName;
     private String shopType;
     private String fixtureType;
     private String oldContents;
@@ -67,6 +69,14 @@ public class ShopBuildForm extends DataForm<ShopBuild>{
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
+    }
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
     }
 
     public String getShopId() {

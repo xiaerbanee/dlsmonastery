@@ -1,5 +1,7 @@
 package net.myspring.future.modules.layout.web.controller;
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.layout.dto.ShopBuildDto;
 import net.myspring.future.modules.layout.service.ShopBuildService;
 import net.myspring.future.modules.layout.web.form.ShopBuildForm;
@@ -34,8 +36,9 @@ public class ShopBuildController {
     }
 
     @RequestMapping(value = "getQuery")
-    public String getQuery() {
-        return null;
+    public ShopBuildQuery getQuery(ShopBuildQuery shopBuildQuery) {
+        shopBuildQuery.getPositionId();
+        return shopBuildQuery;
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
@@ -49,8 +52,10 @@ public class ShopBuildController {
     }
 
     @RequestMapping(value = "delete")
-    public String delete() {
-        return null;
+    public RestResponse delete(ShopBuildForm shopBuildForm) {
+        shopBuildService.logicDeleteOne(shopBuildForm.getId());
+        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
     }
     @RequestMapping(value = "detail")
     public ShopBuildForm detail(ShopBuildForm shopBuildForm) {

@@ -24,7 +24,7 @@
             and  t1.created_date >=#{p.createdDateStart}
         </if>
         <if test="p.createdDateEnd !=null">
-            and  t1.created_date &lt;=#{p.createdDateEnd}
+            and  t1.created_date &lt;#{p.createdDateEnd}
         </if>
         <if test="p.positionId !=null">
             and t1.process_position_id =#{p.positionId}

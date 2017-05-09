@@ -1,35 +1,38 @@
 package net.myspring.cloud.modules.input.dto;
 
-
-import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
+import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 
 /**
  * Created by liuj on 2016-06-20.
  */
-public class K3CloudSave {
-    private AccountDto accountDto;
+public class K3CloudSaveDto {
+    private Boolean success;
+    private KingdeeBook kingdeeBook;
     private String formId;
     private String content;
     private String billNo;
     private Boolean autoAudit = true;
 
-    public K3CloudSave(String formId, String content) {
+    public K3CloudSaveDto(String formId, String content) {
         this.formId = formId;
         this.content = content;
     }
 
-    public K3CloudSave(String formId, String content, AccountDto accountDto) {
-        this.formId = formId;
-        this.content = content;
-        this.setAccountDto(accountDto);
+    public Boolean getSuccess() {
+        return success;
     }
 
-    public AccountDto getAccount() {
-        return accountDto;
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
 
-    public void setAccountDto(AccountDto account) {
-        this.accountDto = account;
+    public KingdeeBook getKingdeeBook() {
+        return kingdeeBook;
+    }
+
+    public void setKingdeeBook(KingdeeBook kingdeeBook) {
+        this.kingdeeBook = kingdeeBook;
     }
 
     public String getFormId() {

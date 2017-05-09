@@ -18,7 +18,7 @@
         this.$emit('input', newVal);
       }
     },created () {
-      axios.get('/api/basic/sys/dictEnum/findByCategory?id=' + this.category).then((response)=>{
+      axios.get('/api/basic/sys/dictEnum/findByCategory?category=' + this.category).then((response)=>{
         this.itemList=response.data;
       })
       this.setValue(this.value);

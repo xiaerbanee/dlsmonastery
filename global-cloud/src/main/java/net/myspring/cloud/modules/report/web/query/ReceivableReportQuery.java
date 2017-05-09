@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.report.web.query;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
@@ -30,7 +31,7 @@ public class ReceivableReportQuery {
 
     public LocalDate getStartDate() {
         if(StringUtils.isNotBlank(dateRangeBTW)){
-            String[] tempParamValues = dateRangeBTW.split(" - ");
+            String[] tempParamValues = dateRangeBTW.split(CharConstant.DATE_RANGE_SPLITTER);
             this.startDate = LocalDateUtils.parse(tempParamValues[0]);
         }else{
             this.startDate = LocalDate.now().minusDays(3L);
@@ -44,7 +45,7 @@ public class ReceivableReportQuery {
 
     public LocalDate getEndDate() {
         if(StringUtils.isNotBlank(dateRangeBTW)){
-            String[] tempParamValues = dateRangeBTW.split(" - ");
+            String[] tempParamValues = dateRangeBTW.split(CharConstant.DATE_RANGE_SPLITTER);
             this.endDate = LocalDateUtils.parse(tempParamValues[1]);
         }else{
             this.endDate = LocalDate.now().minusDays(1L);
