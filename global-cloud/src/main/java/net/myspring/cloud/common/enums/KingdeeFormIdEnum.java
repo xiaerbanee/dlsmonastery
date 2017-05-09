@@ -3,7 +3,7 @@ package net.myspring.cloud.common.enums;
 /**
  * Created by lihx on 2017/4/25.
  */
-public enum K3CloudFormIdEnum {
+public enum KingdeeFormIdEnum {
     SAL_OUTSTOCK,
     SAL_RETURNSTOCK,
     AR_receivable,

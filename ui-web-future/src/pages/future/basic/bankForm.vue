@@ -7,9 +7,7 @@
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('bankForm.account')" prop="accountIdList">
-          <el-select v-model="inputForm.accountIdList" filterable remote multiple :placeholder="$t('bankForm.inputWord')" :remote-method="remoteAccount" :loading="remoteLoading" >
-            <el-option v-for="item in accounts" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
-          </el-select>
+          <account-select  v-model="inputForm.accountIdList" :multiple="true"></account-select>
         </el-form-item>
         <el-form-item :label="$t('bankForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -22,7 +20,12 @@
   </div>
 </template>
 <script>
-    export default{
+  import accountSelect from 'components/basic/account-select'
+
+  export default{
+    components:{
+      accountSelect
+    },
       data(){
           return{
             isCreate:this.$route.query.id==null,
@@ -60,16 +63,6 @@
               this.submitDisabled = false;
             }
           })
-        },remoteAccount(query) {
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/hr/account/search',{params:{key:query}}).then((response)=>{
-              this.accounts=response.data;
-              this.remoteLoading = false;
-            })
-          } else {
-            this.accounts = [];
-          }
         }
       },created(){
         if(!this.isCreate){

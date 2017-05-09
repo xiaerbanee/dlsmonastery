@@ -54,7 +54,7 @@ public class FolderFileController {
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public void download(String token,String type,String id,HttpServletResponse response) {
+    public void download(String type,String id,HttpServletResponse response) {
         GridFSDBFile gridFSDBFile = folderFileService.getGridFSDBFile(type,id);
         if(gridFSDBFile != null) {
             try {

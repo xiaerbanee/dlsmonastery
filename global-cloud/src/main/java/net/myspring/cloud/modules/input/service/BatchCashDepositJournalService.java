@@ -3,14 +3,14 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
+import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.domain.BasAssistant;
 import net.myspring.cloud.modules.input.domain.HrEmpInfo;
-import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BasAssistantMapper;
 import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
@@ -142,7 +142,7 @@ public class BatchCashDepositJournalService {
         model.put("CN_JOURNAL__FJOURNALENTRY", entity);
         root.put("Model", model);
         String JournalResult = ObjectMapperUtils.writeValueAsString(root);
-        K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.CN_JOURNAL.name(), JournalResult);
+        KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(KingdeeFormIdEnum.CN_JOURNAL.name(), JournalResult);
         String billNo =null;
         return billNo;
     }

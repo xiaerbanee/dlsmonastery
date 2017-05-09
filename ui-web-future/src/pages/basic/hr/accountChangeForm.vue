@@ -6,9 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('accountChangeForm.account')" prop="accountId">
-              <el-select v-model="inputForm.accountId" filterable remote clearable :placeholder="$t('accountChangeForm.inputWord')"  :remote-method="remoteAccount" :loading="remoteLoading" @change="getAccount(inputForm.accountId)">
-                <el-option v-for="item in accounts" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
-              </el-select>
+              <account-select  v-model="inputForm.accountId"></account-select>
             </el-form-item>
             <el-form-item :label="$t('accountChangeForm.type')"  prop="type">
               <el-select v-model="inputForm.type" filterable clearable :placeholder="$t('accountChangeForm.selectGroup')"  @change="getOldValue">
@@ -37,9 +35,7 @@
               </el-select>
             </el-form-item>
             <el-form-item  v-show="inputForm.type=='LEADER'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
-              <el-select v-model="inputForm.newValue" filterable remote clearable :placeholder="$t('accountChangeForm.inputWord')"  :remote-method="remoteAccount" :loading="remoteLoading">
-                <el-option v-for="item in accounts" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
-              </el-select>
+              <account-select v-model="inputForm.newValue"></account-select>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='REGULAR_WORKER'||inputForm.type=='ENTRY_WORKER'||inputForm.type=='LEAVE_WORKER'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
               <date-picker v-model="inputForm.newValue"></date-picker>
@@ -58,7 +54,11 @@
 </template>
 
 <script>
+  import accountSelect from 'components/basic/account-select'
   export default{
+      components:{
+          accountSelect
+      },
     data(){
       return{
         isCreate:this.$route.query.id==null,
@@ -109,16 +109,6 @@
             this.submitDisabled = false;
       }
       })
-      },remoteAccount(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
-            this.accounts=response.data;
-            this.remoteLoading = false;
-        })
-        } else {
-          this.accounts = [];
-        }
       },remoteOffice(query){
         if (query !== '') {
           this.remoteLoading = true;
