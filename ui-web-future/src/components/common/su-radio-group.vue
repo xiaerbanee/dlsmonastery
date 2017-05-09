@@ -11,7 +11,7 @@
     props: ['value'],
     data() {
       return {
-        innerBool:null
+        innerBool:0
       }
     },
     methods:{
@@ -22,11 +22,8 @@
         this.$emit('input', newVal);
         return true;
       },setValue(val) {
-        var bool=null
         if(util.isNotBlank(val)){
-            bool=parseInt(val)
-          this.innerBool=bool;
-
+          this.innerBool=parseInt(val);
         }
       }
     },created () {
