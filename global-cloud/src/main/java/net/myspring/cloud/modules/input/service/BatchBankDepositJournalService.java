@@ -3,19 +3,16 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.domain.BasAssistant;
 import net.myspring.cloud.modules.input.domain.HrEmpInfo;
-import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
-import net.myspring.cloud.modules.input.manager.K3cloudManager;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.input.web.query.BatchBankDepositJournalQuery;
-import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -55,8 +52,7 @@ public class BatchBankDepositJournalService {
     private CacheUtils cacheUtils;
     @Autowired
     private KingdeeBookMapper kingdeeBookMapper;
-    @Autowired
-    private K3cloudManager k3cloudManager;
+
 
     // 手工日记账(银行存取款日记账)
     public String saveBankJournal(LocalDate billDate, String subject, List<List<Object>> datas) {
@@ -160,14 +156,14 @@ public class BatchBankDepositJournalService {
         model.put("CN_JOURNAL__FJOURNALENTRY", entity);
         root.put("Model", model);
         String BankJournalResult = ObjectMapperUtils.writeValueAsString(root);
-        K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.CN_JOURNAL.name(), BankJournalResult);
+//        K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.CN_JOURNAL.name(), BankJournalResult);
         //String billNo = K3cloudUtils.save(k3CloudSaveDto,accountDto).getBillNo();
         return null;
     }
 
     public BatchBankDepositJournalQuery getFormProperty(BatchBankDepositJournalQuery batchBankDepositJournalQuery){
         List<NameNumberDto> accountSubjectList = bdAccountMapper.findForIsBank();
-        batchBankDepositJournalQuery.setAccountSubject(accountSubjectList);
+        batchBankDepositJournalQuery.setAccountSubjectList(accountSubjectList);
         return batchBankDepositJournalQuery;
     }
 

@@ -13,11 +13,13 @@ import net.myspring.future.modules.crm.web.query.BankInQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -28,7 +30,6 @@ public class BankInController {
 
     @Autowired
     private BankInService bankInService;
-
     @Autowired
     private BankService bankService;
 
@@ -41,27 +42,18 @@ public class BankInController {
     @RequestMapping(value = "getFormProperty")
     public BankInQuery getFormProperty(BankInQuery bankInQuery){
         bankInQuery.setProcessStatusList(new ArrayList<>());
-
-
         return bankInQuery;
     }
 
 
     @RequestMapping(value = "getQuery")
     public String getQuery(){
-
-
         return null;
     }
 
 
     @RequestMapping(value = "save")
     public RestResponse save(@Valid BankInForm bankInForm, BindingResult result) {
-
-        if(result.hasErrors()){
-            return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
-        }
-
         bankInService.save(bankInForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
@@ -76,10 +68,9 @@ public class BankInController {
 
 
     @RequestMapping(value = "audit")
-    public String audit( ){
-
-
-        return null;
+    public RestResponse audit(String id, boolean pass, String comment) {
+        bankInService.audit(id,pass,comment);
+        return new RestResponse("审核成功",null);
     }
 
 

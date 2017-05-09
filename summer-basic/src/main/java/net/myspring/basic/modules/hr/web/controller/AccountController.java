@@ -104,6 +104,13 @@ public class AccountController {
         return accountDtoList;
     }
 
+    @RequestMapping(value = "findById")
+    public List<AccountDto> findById(String id) {
+        List<AccountDto> accountDtoList =accountService.findById(id);
+        return accountDtoList;
+    }
+
+
     @RequestMapping(value = "searchFilter")
     public List<AccountDto> searchFilter(AccountQuery accountQuery) {
         accountQuery.setOfficeId(SecurityUtils.getOfficeId());
@@ -126,7 +133,7 @@ public class AccountController {
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccountDto(accountId);
         List<String> authorityList = accountService.getAuthorityList();
-        List<BackendMenuDto> menus = menuService.getMenuMap(SecurityUtils.getAccountId());
+        List<BackendMenuDto> menus = menuService.getMenuMap();
         map.put("account", accountDto);
         map.put("authorityList", authorityList);
         map.put("menus", menus);
@@ -162,7 +169,7 @@ public class AccountController {
 
     @RequestMapping(value = "getTreeNode")
     public TreeNode getTreeNode() {
-        TreeNode treeNode=permissionService.findPermissionTree(SecurityUtils.getRoleId(), Lists.newArrayList());
+        TreeNode treeNode=permissionService.findRolePermissionTree(SecurityUtils.getRoleId(), Lists.newArrayList());
         return treeNode;
     }
 

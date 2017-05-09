@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.report.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.cloud.common.constant.K3CloudConstant;
+import net.myspring.cloud.common.constant.KingdeeConstant;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.handsontable.NestedHeaderCell;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -31,8 +30,8 @@ public class RetailReportForAssistService {
     //"合计"部门
     public NameNumberDto getAddDepartment() {
         NameNumberDto department = new NameNumberDto();
-        department.setNumber(K3CloudConstant.DOUBLE_ZERO);
-        department.setName(K3CloudConstant.TOTAL_DEPARTMENT);
+        department.setNumber(KingdeeConstant.DOUBLE_ZERO);
+        department.setName(KingdeeConstant.TOTAL_DEPARTMENT);
         return department;
     }
 
@@ -77,22 +76,22 @@ public class RetailReportForAssistService {
                 itemTime.add(CharConstant.SPACE);
                 tempStart = tempStart.plusMonths(1);
             }
-            itemTime.add(K3CloudConstant.ACCUMULATE);
+            itemTime.add(KingdeeConstant.ACCUMULATE);
             itemTime.add(CharConstant.SPACE);
         }
         retailReportModels.add(itemTime);
         //表头---金额+占比
         List<Object> itemAccountAndParent = Lists.newArrayList();
-        itemAccountAndParent.add(K3CloudConstant.SUBJECT_NAME);
+        itemAccountAndParent.add(KingdeeConstant.SUBJECT_NAME);
         for (NameNumberDto department : departmentList) {
             YearMonth tempStart = start;
             while (tempStart.isBefore(end) || tempStart.equals(end)) {
-                itemAccountAndParent.add(K3CloudConstant.AMOUNT);
-                itemAccountAndParent.add(K3CloudConstant.PROPORTION);
+                itemAccountAndParent.add(KingdeeConstant.AMOUNT);
+                itemAccountAndParent.add(KingdeeConstant.PROPORTION);
                 tempStart = tempStart.plusMonths(1);
             }
-            itemAccountAndParent.add(K3CloudConstant.AMOUNT);
-            itemAccountAndParent.add(K3CloudConstant.PROPORTION);
+            itemAccountAndParent.add(KingdeeConstant.AMOUNT);
+            itemAccountAndParent.add(KingdeeConstant.PROPORTION);
         }
         retailReportModels.add(itemAccountAndParent);
         return retailReportModels;
@@ -111,7 +110,7 @@ public class RetailReportForAssistService {
         List<NestedHeaderCell> cellForMonthList = Lists.newArrayList();
         cellForMonthList.add(getNestedHeadCell("", 0));
         List<NestedHeaderCell> cellForAmountAndPercentList = Lists.newArrayList();
-        cellForAmountAndPercentList.add(getNestedHeadCell(K3CloudConstant.SUBJECT_NAME, 0));
+        cellForAmountAndPercentList.add(getNestedHeadCell(KingdeeConstant.SUBJECT_NAME, 0));
         for (NameNumberDto department : departmentList) {
             YearMonth tempStart = start;
             Integer betweenMonth = Period.between(LocalDate.of(start.getYear(), start.getMonth(), 1), LocalDate.of(end.getYear(), end.getMonth(), 1)).getMonths() + 2;
@@ -119,13 +118,13 @@ public class RetailReportForAssistService {
             cellForDepartmentList.add(getNestedHeadCell(department.getName(), betweenMonth * 2));
             while (tempStart.isBefore(end.plusMonths(1))) {
                 cellForMonthList.add(getNestedHeadCell(YearMonthUtils.format(tempStart), 2));
-                cellForAmountAndPercentList.add(getNestedHeadCell(K3CloudConstant.AMOUNT, 0));
-                cellForAmountAndPercentList.add(getNestedHeadCell(K3CloudConstant.PROPORTION, 0));
+                cellForAmountAndPercentList.add(getNestedHeadCell(KingdeeConstant.AMOUNT, 0));
+                cellForAmountAndPercentList.add(getNestedHeadCell(KingdeeConstant.PROPORTION, 0));
                 tempStart = tempStart.plusMonths(1);
             }
-            cellForMonthList.add(getNestedHeadCell(K3CloudConstant.ACCUMULATE, 2));
-            cellForAmountAndPercentList.add(getNestedHeadCell(K3CloudConstant.AMOUNT, 0));
-            cellForAmountAndPercentList.add(getNestedHeadCell(K3CloudConstant.PROPORTION, 0));
+            cellForMonthList.add(getNestedHeadCell(KingdeeConstant.ACCUMULATE, 2));
+            cellForAmountAndPercentList.add(getNestedHeadCell(KingdeeConstant.AMOUNT, 0));
+            cellForAmountAndPercentList.add(getNestedHeadCell(KingdeeConstant.PROPORTION, 0));
         }
         data.add(cellForDepartmentCodeList);
         data.add(cellForDepartmentList);

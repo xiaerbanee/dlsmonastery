@@ -22,14 +22,10 @@
           </el-col>
           <el-col :span="10">
             <el-form-item :label="$t('menuForm.mobile')" prop="mobile">
-              <el-radio-group v-model="inputForm.mobile">
-                <el-radio v-for="(value,key) in inputForm.boolMap" :key="key" :label="value">{{key | bool2str}}</el-radio>
-              </el-radio-group>
+              <su-radio-group v-model="inputForm.mobile"></su-radio-group>
             </el-form-item>
             <el-form-item :label="$t('menuForm.visible')" prop="visible">
-              <el-radio-group v-model="inputForm.visible">
-                <el-radio v-for="(value,key) in inputForm.boolMap"  :key="key" :label="value">{{key | bool2str}}</el-radio>
-              </el-radio-group>
+              <su-radio-group v-model="inputForm.visible"></su-radio-group>
             </el-form-item>
             <el-form-item :label="$t('menuForm.permissionStr')" prop="permissionStr">
               <el-input v-model="inputForm.permissionStr" type="textarea":rows="5"></el-input>
@@ -47,7 +43,12 @@
   </div>
 </template>
 <script>
+  import suRadioGroup from 'components/common/su-radio-group'
+
     export default{
+      components:{
+        suRadioGroup
+      },
       data(){
           return{
             isCreate:this.$route.query.id==null,

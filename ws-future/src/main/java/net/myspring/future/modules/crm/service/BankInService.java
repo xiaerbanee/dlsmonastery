@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.mapper.BankMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.crm.domain.BankIn;
@@ -8,6 +9,10 @@ import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.mapper.BankInMapper;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
+import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
+import net.myspring.general.modules.sys.dto.ActivitiStartDto;
+import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
+import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,8 @@ public class BankInService {
     private BankMapper bankMapper;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private ActivitiClient activitiClient;
 
     public Page<BankInDto> findPage(Pageable pageable, BankInQuery bankInQuery) {
         Page<BankInDto> page = bankInMapper.findPage(pageable, bankInQuery);
@@ -54,12 +61,14 @@ public class BankInService {
         bankInMapper.update(bankIn);
     }
 
-
-    public void save(BankIn bankIn){
-    }
-
-
-    public void audit(BankIn bankIn){
+    public void audit(String id, boolean pass, String comment){
+        BankIn bankIn = bankInMapper.findOne(id);
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), comment, pass));
+        bankIn.setLocked(true);
+        bankIn.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+        bankIn.setProcessStatus(activitiCompleteDto.getProcessStatus());
+        bankIn.setPositionId(activitiCompleteDto.getPositionId());
+        bankInMapper.update(bankIn);
     }
 
     public BankInForm findForm(BankInForm bankInForm) {
@@ -77,7 +86,15 @@ public class BankInService {
     public BankIn save(BankInForm bankInForm) {
         BankIn bankIn;
         if(bankInForm.isCreate()) {
+            String name="销售收款";
+            String businessKey = bankInForm.getId();
+            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm(name, businessKey,BankIn.class.getSimpleName(),bankInForm.getAmount().toString()));
             bankIn = BeanUtil.map(bankInForm, BankIn.class);
+            bankIn.setProcessFlowId(activitiStartDto.getProcessFlowId());
+            bankIn.setProcessStatus(activitiStartDto.getProcessStatus());
+            bankIn.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
+            bankIn.setPositionId(activitiStartDto.getPositionId());
+            bankIn.setProcessTypeId(activitiStartDto.getProcessTypeId());
             bankInMapper.save(bankIn);
         } else {
             bankIn = bankInMapper.findOne(bankInForm.getId());

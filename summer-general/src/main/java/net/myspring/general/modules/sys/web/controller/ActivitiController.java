@@ -31,13 +31,11 @@ public class ActivitiController {
 
     @Autowired
     private ActivitiService  activitiService;
-    @Autowired
-    private ActivitiUtils activitiUtils;
 
     @RequestMapping(value = "start")
     public ActivitiStartDto start(@RequestBody ActivitiStartForm activitiStartForm){
         ActivitiStartDto activitiStartDto=new ActivitiStartDto();
-        if(StringUtils.isNotBlank(activitiStartForm.getProcessTypeId())){
+        if(StringUtils.isNotBlank(activitiStartForm.getProcessTypeName())){
             activitiStartDto=activitiService.start(activitiStartForm);
         }
         return activitiStartDto;

@@ -10,12 +10,18 @@
     props: ['value','category'],
     data() {
       return {
-        innerId:this.value,
+        innerId: this.value,
         itemList : []
       };
     },methods:{
       handleChange(newVal) {
         this.$emit('input', newVal);
+      },
+      setValue(val){
+        if(this.innerId == val || val=="") {
+          return;
+        }
+        this.innerId=val;
       }
     },created () {
       axios.get('/api/basic/sys/dictEnum/findByCategory?category=' + this.category).then((response)=>{

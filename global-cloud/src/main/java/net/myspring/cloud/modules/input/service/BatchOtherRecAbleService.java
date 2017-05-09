@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
@@ -12,10 +11,9 @@ import net.myspring.cloud.modules.input.domain.BdAccount;
 import net.myspring.cloud.modules.input.domain.HrEmpInfo;
 import net.myspring.cloud.modules.input.dto.BatchOtherRecAbleDetailDto;
 import net.myspring.cloud.modules.input.dto.BatchOtherRecAbleDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
-import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
@@ -125,7 +123,7 @@ public class BatchOtherRecAbleService {
         List<String> billNos = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchOtherRecAbleDto aROtherRecAble : billList) {
-                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_OtherRecAble.name(), getAROtherRecAble(aROtherRecAble,accountDto));
+//                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_OtherRecAble.name(), getAROtherRecAble(aROtherRecAble,accountDto));
                 String billNo = null;
                 billNos.add(billNo);
             }

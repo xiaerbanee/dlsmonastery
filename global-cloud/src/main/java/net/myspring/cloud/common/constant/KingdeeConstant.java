@@ -3,7 +3,7 @@ package net.myspring.cloud.common.constant;
 /**
  * Created by liuj on 2017/5/6.
  */
-public class K3CloudConstant {
+public class KingdeeConstant {
     public static final Integer LANG = 2052;
     public static final String TOTAL_DEPARTMENT = "合计";
     public static final String ACCUMULATE = "累计";

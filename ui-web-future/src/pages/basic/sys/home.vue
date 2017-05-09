@@ -108,7 +108,7 @@ export default {
   data () {
     return {
       fcEvents: [],
-      synDate:new Date(),
+      synDate:new Date().toDateString(),
       account:{
           employeeId:'',
           employee:{name:'',regularDate:''},

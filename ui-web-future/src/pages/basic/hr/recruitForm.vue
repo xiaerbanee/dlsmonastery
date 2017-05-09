@@ -41,9 +41,7 @@
             <date-time-picker v-model="inputForm.firstAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.contactById')" prop="contactById">
-            <el-select v-model="inputForm.contactById" filterable remote :placeholder="$t('recruitForm.selectContactById')" :remote-method="remoteAccount" :loading="remoteLoading" :clearable=true>
-              <el-option v-for="item in accounts" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
-            </el-select>
+            <account-select  v-model="inputForm.contactById"></account-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.remarks')" prop="remarks">
             <el-input v-model="inputForm.remarks"></el-input>
@@ -91,9 +89,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.firstBy')"  prop="firstBy">
-            <el-select v-model="inputForm.firstBy" filterable remote clearable :placeholder="$t('recruitForm.selectFirstBy')" :remote-method="remoteAccount" :loading="remoteLoading">
-              <el-option v-for="item in accounts" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
-            </el-select>
+            <account-select v-model="inputForm.firstBy"></account-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.firstPoint')" prop="firstPoint">
             <el-input v-model="inputForm.firstPoint"></el-input>
@@ -117,9 +113,7 @@
             <date-time-picker v-model="inputForm.secondRealDate"></date-time-picker>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.secondBy')" prop="secondBy">
-            <el-select v-model="inputForm.secondBy" filterable remote clearable :placeholder="$t('recruitForm.selectSecondBy')" :remote-method="remoteAccount" :loading="remoteLoading">
-              <el-option v-for="item in accounts" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
-            </el-select>
+            <account-select v-model="inputForm.secondBy"></account-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.secondComment')"  prop="secondComment">
             <el-input v-model="inputForm.secondComment"></el-input>
@@ -183,8 +177,13 @@
 </template>
 <script>
   import dateTimePicker from "components/common/date-time-picker.vue"
-    export default{
-      components:{dateTimePicker},
+  import accountSelect from 'components/basic/account-select'
+
+  export default{
+      components:{
+          dateTimePicker,
+          accountSelect
+      },
       data(){
           return{
             isCreate:this.$route.query.id==null,

@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.handsontable.HandSonTableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
@@ -11,11 +10,10 @@ import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.domain.BdCustomer;
 import net.myspring.cloud.modules.input.domain.CnBank;
 import net.myspring.cloud.modules.input.dto.BatchRefundBillDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.input.mapper.BdDepartmentMapper;
 import net.myspring.cloud.modules.input.mapper.CnBankMapper;
-import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
@@ -112,7 +110,7 @@ public class BatchRefundBillService {
         List<BatchRefundBillDto> billList = Lists.newArrayList(ARRefundBillMap.values());
         if (CollectionUtil.isNotEmpty(billList)) {
             for (BatchRefundBillDto arRefundBill : billList) {
-                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_REFUNDBILL.name(), getARRefundBill(arRefundBill,accountDto));
+//                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_REFUNDBILL.name(), getARRefundBill(arRefundBill,accountDto));
                 String billNo = null;
                 billNos.add(billNo);
             }
@@ -120,7 +118,7 @@ public class BatchRefundBillService {
         List<BatchRefundBillDto> cashBillList = Lists.newArrayList(cashARRefundBillMap.values());
         if (CollectionUtil.isNotEmpty(cashBillList)) {
             for (BatchRefundBillDto arRefundBill : cashBillList) {
-                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_REFUNDBILL.name(), getCashARRefundBill(arRefundBill,accountDto));
+//                K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.AR_REFUNDBILL.name(), getCashARRefundBill(arRefundBill,accountDto));
                 String billNo = null;
                 billNos.add(billNo);
             }

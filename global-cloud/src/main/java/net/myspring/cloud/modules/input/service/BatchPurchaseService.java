@@ -3,15 +3,13 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.K3CloudFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.SecurityUtils;
 import net.myspring.cloud.modules.input.dto.BatchPurchaseDto;
-import net.myspring.cloud.modules.input.dto.K3CloudSaveDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
-import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -122,7 +120,7 @@ public class BatchPurchaseService {
         model.put("STK_InStock__FInStockEntry", entity);
         root.put("Model", model);
         String inStockResult =  ObjectMapperUtils.writeValueAsString(root);
-        K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.STK_InStock.name(), inStockResult);
+//        K3CloudSaveDto k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.STK_InStock.name(), inStockResult);
         String billNo = null;
         codeList.add(billNo);
         if (CollectionUtil.isNotEmpty(purMrbEntry)) {
@@ -134,7 +132,7 @@ public class BatchPurchaseService {
             purMrbroot.put("Model", purMrbModel);
             purMrbResult =  ObjectMapperUtils.writeValueAsString(purMrbroot);
 
-            k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.PUR_MRB.name(), purMrbResult);
+//            k3CloudSaveDto = new K3CloudSaveDto(K3CloudFormIdEnum.PUR_MRB.name(), purMrbResult);
             billNo = null;
             codeList.add(billNo);
         }
