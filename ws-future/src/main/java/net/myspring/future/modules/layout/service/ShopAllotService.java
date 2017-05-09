@@ -2,7 +2,6 @@ package net.myspring.future.modules.layout.service;
 
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.IdUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
@@ -122,7 +121,7 @@ public class ShopAllotService {
             shopAllot = new ShopAllot();
             ReflectionUtil.copyProperties(shopAllotForm, shopAllot);
             String maxBusinessId = shopAllotMapper.findMaxBusinessId(LocalDate.now());
-            shopAllot.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
+            shopAllot.setBusinessId(StringUtils.getNextBusinessId(maxBusinessId));
             shopAllotMapper.save(shopAllot);
 
             batchSaveShopAllotDetails(shopAllotForm.getShopAllotDetailFormList(), shopAllot);
