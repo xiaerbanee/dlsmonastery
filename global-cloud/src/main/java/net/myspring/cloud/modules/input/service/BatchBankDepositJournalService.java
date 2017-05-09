@@ -15,7 +15,7 @@ import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.manager.K3cloudManager;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.input.web.query.BatchBankDepositJournalQuery;
-import net.myspring.cloud.modules.remote.dto.AccountDto;
+import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;

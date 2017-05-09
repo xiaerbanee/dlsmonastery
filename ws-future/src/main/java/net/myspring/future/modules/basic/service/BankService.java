@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,15 @@ public class BankService {
 
     public List<Bank> findByAccountId(String accountId){
         return  bankMapper.findByAccountId(accountId);
+    }
+
+    public List<BankDto> findBankDtosByAccountId(String accountId){
+        List<Bank> banks = bankMapper.findByAccountId(accountId);
+        List<BankDto> result = BeanUtil.map(banks, BankDto.class);
+        if(result == null){
+            result = new ArrayList<>();
+        }
+        return  result;
     }
 
     public List<Bank> findAll(){

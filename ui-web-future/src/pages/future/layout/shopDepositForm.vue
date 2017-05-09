@@ -4,24 +4,21 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('shopDepositForm.shopName')" prop="shopId">
-          <el-select v-model="inputForm.shopId"  filterable remote :placeholder="$t('shopDepositForm.inputWord')"  :remote-method="remoteDepot" :loading="remoteLoading" :clearable=true  @change="changeDepartment">
-            <el-option v-for="depot in depots" :key="depot.id" :label="depot.name" :value="depot.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('shopDepositForm.department')" prop="departMent" >
-          <el-select v-model="inputForm.departMent"  filterable :clearable=true >
-            <el-option v-for="departMent in inputForm.departMents" :key="departMent" :label="departMent" :value="departMent"></el-option>
-          </el-select>
+          <su-depot v-model ="inputForm.shopId"  type="shop" @input="changeDepartment">         </su-depot>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.outBillType')" prop="outBillType" >
           <el-select v-model="inputForm.outBillType" filterable :placeholder="$t('shopDepositForm.outBillType')">
-            <el-option v-for="item in inputForm.outBillTypes" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in inputForm.outBillTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item :label="$t('shopDepositForm.department')" prop="department" >
+          <su-department v-model = "inputForm.department" ></su-department>
+        </el-form-item>
         <el-form-item :label="$t('shopDepositForm.bank')" prop="bankId" v-if="inputForm.outBillType==='手工日记账'" >
-          <el-select v-model="inputForm.bankId" filterable clearable :placeholder="$t('shopDepositForm.inputBank')">
-            <el-option v-for="item in inputForm.banks" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <su-bank v-model = "inputForm.bankId"></su-bank>
+        </el-form-item>
+        <el-form-item   :label="$t('shopDepositForm.billDate')" prop="billDate" >
+          <el-date-picker  v-model="inputForm.billDate" type="date" align="left" :placeholder="$t('bankInForm.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.marketAmount')" prop="marketAmount" >
           <el-input v-model.number="inputForm.marketAmount"></el-input>
@@ -47,8 +44,6 @@
       data(){
           return{
             submitDisabled:false,
-            depots:[],
-            remoteLoading:false,
             inputForm:{},
             submitData:{
               id:'',
@@ -61,7 +56,6 @@
               imageAmount:'',
               demoPhoneAmount:'',
               remarks:'',
-
             },
             rules: {
               shopId: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
@@ -79,24 +73,17 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm, this.submitData);
-              axios.post('/api/ws/future/crm/shopDeposit/save',qs.stringify(this.submitData)).then((response)=> {
+              util.copyValue(this.inputForm,this.submitData);
+              axios.post('/api/ws/future/crm/shopDeposit/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                  form.resetFields();
-                  this.submitDisabled = false;
+                form.resetFields();
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
             }
           })
-        },remoteDepot(query){
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/ws/future/basic/depot/search',{params:{name:query,category:"SHOP"}}).then((response)=>{
-              this.depots=response.data;
-              this.remoteLoading = false;
-            })
-          }
+
         },changeDepartment(){
            var shopId=this.inputForm.shopId;
             axios.get('/api/ws/future/crm/shopDeposit/getDepartmentByShopId',{params:{shopId:shopId}}).then((response)=>{
@@ -104,7 +91,7 @@
             })
         }
       }, created(){
-          axios.get('/api/ws/future/crm/shopDeposit/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/shopDeposit/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
               this.inputForm = response.data;
           })
       }

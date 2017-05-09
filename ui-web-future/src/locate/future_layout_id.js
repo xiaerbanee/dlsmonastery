@@ -540,6 +540,7 @@ export default {
     type: "jenis",
     amount: "jumlah",
     outBillType: "kode keluar",
+    billDate: "开单日期",
     bank: "bank",
     inputBank: "pilih bank",
     marketAmount: "jumlah",
