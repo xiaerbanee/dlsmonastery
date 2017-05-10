@@ -1,6 +1,5 @@
 package net.myspring.cloud.modules.report.web.form;
 
-import net.myspring.cloud.common.handsontable.NestedHeaderCell;
 
 import java.util.List;
 
@@ -9,17 +8,8 @@ import java.util.List;
  */
 public class RetailReportForm {
     private List<List<Object>> retailReport;
-    private List<List<NestedHeaderCell>> nestedHeader;
     private String startMonth;
     private String endMonth;
-
-    public List<List<NestedHeaderCell>> getNestedHeader() {
-        return nestedHeader;
-    }
-
-    public void setNestedHeader(List<List<NestedHeaderCell>> nestedHeader) {
-        this.nestedHeader = nestedHeader;
-    }
 
     public List<List<Object>> getRetailReport() {
         return retailReport;

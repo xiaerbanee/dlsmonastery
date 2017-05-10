@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.report.service;
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.constant.KingdeeConstant;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.handsontable.NestedHeaderCell;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.report.mapper.GlcxViewMapper;
 import net.myspring.common.constant.CharConstant;
@@ -95,49 +94,6 @@ public class RetailReportForAssistService {
         }
         retailReportModels.add(itemAccountAndParent);
         return retailReportModels;
-    }
-
-    //handsontable for nested head
-    public List<List<NestedHeaderCell>> getNestedHeads(YearMonth start, YearMonth end,List<String> departmentNumber) {
-        List<NameNumberDto> departmentList = Lists.newArrayList();
-        departmentList.add(getAddDepartment());
-        departmentList.addAll(glcxViewMapper.findDepartmentByDeptNumList(departmentNumber));
-        List<List<NestedHeaderCell>> data = Lists.newArrayList();
-        List<NestedHeaderCell> cellForDepartmentCodeList = Lists.newArrayList();
-        cellForDepartmentCodeList.add(getNestedHeadCell("", 0));
-        List<NestedHeaderCell> cellForDepartmentList = Lists.newArrayList();
-        cellForDepartmentList.add(getNestedHeadCell("", 0));
-        List<NestedHeaderCell> cellForMonthList = Lists.newArrayList();
-        cellForMonthList.add(getNestedHeadCell("", 0));
-        List<NestedHeaderCell> cellForAmountAndPercentList = Lists.newArrayList();
-        cellForAmountAndPercentList.add(getNestedHeadCell(KingdeeConstant.SUBJECT_NAME, 0));
-        for (NameNumberDto department : departmentList) {
-            YearMonth tempStart = start;
-            Integer betweenMonth = Period.between(LocalDate.of(start.getYear(), start.getMonth(), 1), LocalDate.of(end.getYear(), end.getMonth(), 1)).getMonths() + 2;
-            cellForDepartmentCodeList.add(getNestedHeadCell(department.getNumber(), betweenMonth * 2));
-            cellForDepartmentList.add(getNestedHeadCell(department.getName(), betweenMonth * 2));
-            while (tempStart.isBefore(end.plusMonths(1))) {
-                cellForMonthList.add(getNestedHeadCell(YearMonthUtils.format(tempStart), 2));
-                cellForAmountAndPercentList.add(getNestedHeadCell(KingdeeConstant.AMOUNT, 0));
-                cellForAmountAndPercentList.add(getNestedHeadCell(KingdeeConstant.PROPORTION, 0));
-                tempStart = tempStart.plusMonths(1);
-            }
-            cellForMonthList.add(getNestedHeadCell(KingdeeConstant.ACCUMULATE, 2));
-            cellForAmountAndPercentList.add(getNestedHeadCell(KingdeeConstant.AMOUNT, 0));
-            cellForAmountAndPercentList.add(getNestedHeadCell(KingdeeConstant.PROPORTION, 0));
-        }
-        data.add(cellForDepartmentCodeList);
-        data.add(cellForDepartmentList);
-        data.add(cellForMonthList);
-        data.add(cellForAmountAndPercentList);
-        return data;
-    }
-
-    private NestedHeaderCell getNestedHeadCell(String Label, Integer colSpan) {
-        NestedHeaderCell nestedHeaderCell = new NestedHeaderCell();
-        nestedHeaderCell.setLabel(Label);
-        nestedHeaderCell.setColspan(colSpan);
-        return nestedHeaderCell;
     }
 
 }
