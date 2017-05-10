@@ -9,10 +9,10 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.fromStore')" prop="fromStore">
-              <su-depot type="store" v-model="inputForm.fromStoreId" @input="getStoreAllot"></su-depot>
+              <depot-select category="STORE" v-model="inputForm.fromStoreId" @input="getStoreAllot"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.toStore')" prop="toStore">
-              <su-depot type="store" v-model="inputForm.toStoreId"  ></su-depot>
+              <depot-select category="SHOP" v-model="inputForm.toStoreId"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.shipType')" prop="shipType">
               <el-select v-model="inputForm.shipType"  clearable >
@@ -20,7 +20,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.expressCompany')" prop="expressCompany">
-              <su-express-company v-model="inputForm.expressCompanyId"></su-express-company>
+              <express-company-select v-model="inputForm.expressCompanyId"></express-company-select>
             </el-form-item>
             <el-form-item :label="$t('storeAllotForm.syn')" prop="syn">
               <el-radio-group v-model="inputForm.syn">
@@ -38,7 +38,7 @@
               <el-table :data="inputForm.storeAllotDetailFormList" border stripe>
                 <el-table-column :label="$t('storeAllotForm.productName')">
                   <template scope="scope">
-                    <su-product v-model ="scope.row.productId" ></su-product>
+                    <product-select v-model ="scope.row.productId"></product-select>
                   </template>
                 </el-table-column>
                 <el-table-column  :label="$t('storeAllotForm.cloudQty')" prop="cloudQty"></el-table-column>
@@ -60,7 +60,15 @@
 </template>
 
 <script>
+  import depotSelect from 'components/future/depot-select'
+  import expressCompanySelect from 'components/future/express-company-select'
+  import productSelect from 'components/future/product-select'
   export default{
+      components:{
+        depotSelect,
+        expressCompanySelect,
+        productSelect
+      },
     data(){
       return{
         isCreate:this.$route.query.id==null,

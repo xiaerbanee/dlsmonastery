@@ -103,7 +103,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       this.pageRequest();
-
+      this.formData=this.submitData;
       util.copyValue(this.$route.query,this.formData);
     }
   };

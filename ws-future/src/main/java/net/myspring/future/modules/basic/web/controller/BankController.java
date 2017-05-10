@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "basic/bank")
 public class BankController {
@@ -52,5 +54,17 @@ public class BankController {
     public BankForm findOne(BankForm bankForm){
         bankForm=bankService.findForm(bankForm);
         return bankForm;
+    }
+
+    @RequestMapping(value = "search")
+    public List<BankDto> search(String key) {
+        List<BankDto> bankDtoList =bankService.findByNameLike(key);
+        return bankDtoList;
+    }
+
+    @RequestMapping(value = "findById")
+    public List<BankDto> findById(String id) {
+        List<BankDto> bankDtoList =bankService.findById(id);
+        return bankDtoList;
     }
 }
