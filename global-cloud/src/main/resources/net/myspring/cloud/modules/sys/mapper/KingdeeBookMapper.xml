@@ -47,4 +47,10 @@
         where t1.enabled = 1
     </select>
 
+    <select id="findTypeByCompanyId" resultType="String">
+        select t1.type
+        from sys_kingdee_book t1
+        where t1.enabled = 1
+        and t1.company_id = #{companyId}
+    </select>
 </mapper>

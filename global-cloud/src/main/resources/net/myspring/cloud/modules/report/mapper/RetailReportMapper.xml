@@ -131,6 +131,149 @@
 	      c.FNUMBER
     </select>
 
+    <select id="findXSCKDByPeriodAndDeptNumList" resultType="Retail">
+        SELECT
+        year(b.FDATE) AS YEAR,
+        month(b.FDATE) AS month,
+        '销售出库单' AS fyName,
+        '01' AS fyNum,
+        'Y' as accName,
+        c.FNAME as deptName,
+        c.FNUMBER AS deptNum,
+        isnull(sum(a.frealqty),0) AS amount
+        FROM
+        T_SAL_OUTSTOCKENTRY a
+        JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
+        LEFT JOIN (
+        SELECT
+        a.FDEPTID AS FFLEX5,
+        b.FNAME,
+        a.FNUMBER
+        FROM
+        t_bd_department a
+        JOIN T_BD_DEPARTMENT_L b ON a.FDEPTID = b.FDEPTID
+        and a.FNUMBER in
+        <foreach item="item" index="index" collection="deptNumList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ) c ON b.FDELIVERYDEPTID = c.FFLEX5
+        join T_BD_MATERIALBASE f ON a.FMATERIALID = f.FMATERIALID
+        join t_bd_materialcategory g on f.FCATEGORYID = g.FCATEGORYID
+        WHERE
+        year(b.FDATE) = #{year} AND
+        MONTH (b.FDATE) = #{month}
+        AND g.FNUMBER IN ('CHLB10')
+        GROUP BY
+        year(b.FDATE),
+        MONTH (b.FDATE),
+        c.FNUMBER,
+        c.FNAME
+    </select>
+    <select id="findXSTHDByPeriodAndDeptNumList" resultType="Retail">
+        SELECT
+        year(b.FDATE) AS YEAR,
+        month(b.FDATE) AS month,
+        '销售退货单' AS fyName,
+        '02' AS  fyNum,
+        'Y' as accName,
+        c.FNUMBER AS deptNum,
+        c.FNAME as deptName,
+        isnull(SUM (a.frealqty),0) AS amount
+        FROM
+        T_SAL_RETURNSTOCKENTRY a
+        JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
+        LEFT JOIN (
+        SELECT
+        a.FDEPTID AS FFLEX5,
+        b.FNAME,
+        a.FNUMBER
+        FROM
+        t_bd_department a
+        JOIN T_BD_DEPARTMENT_L b ON a.FDEPTID = b.FDEPTID
+        and a.FNUMBER in
+        <foreach item="item" index="index" collection="deptNumList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ) c ON b.FSALEDEPTID = c.FFLEX5
+        join T_BD_MATERIALBASE f ON a.FMATERIALID = f.FMATERIALID
+        join t_bd_materialcategory g on f.FCATEGORYID = g.FCATEGORYID
+        WHERE
+        year(b.FDATE) = #{year} AND
+        MONTH (b.FDATE) = #{month}
+        AND g.FNUMBER IN ('CHLB10')
+        GROUP BY
+        year(b.FDATE),
+        MONTH (b.FDATE),
+        c.FNUMBER,
+        c.FNAME
+    </select>
+    <select id="findXSCKDBySumPeriodAndDeptNumList" resultType="Retail">
+        SELECT
+        '销售出库单' AS fyName,
+        '01' AS fyNum,
+        'Y' as accName,
+        c.FNAME AS deptName,
+        c.FNUMBER AS deptNum,
+        isnull(SUM (a.frealqty),0) AS amount
+        FROM
+        T_SAL_OUTSTOCKENTRY a
+        JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
+        LEFT JOIN (
+        SELECT
+        a.FDEPTID AS FFLEX5,
+        b.FNAME,
+        a.FNUMBER
+        FROM
+        t_bd_department a
+        JOIN T_BD_DEPARTMENT_L b ON a.FDEPTID = b.FDEPTID
+        and a.FNUMBER in
+        <foreach item="item" index="index" collection="deptNumList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ) c ON b.FDELIVERYDEPTID = c.FFLEX5
+        join T_BD_MATERIALBASE f ON a.FMATERIALID = f.FMATERIALID
+        join t_bd_materialcategory g on f.FCATEGORYID = g.FCATEGORYID
+        WHERE
+        year(b.FDATE)*100+month(b.FDATE) BETWEEN #{dateStart} AND #{dateEnd}
+        AND g.FNUMBER IN ('CHLB10')
+        group by
+        c.FNAME,
+        c.FNUMBER
+    </select>
+    <select id="findXSTHDBySumPeriodAndDeptNumList" resultType="Retail">
+        SELECT
+        '销售退货单' AS fyName,
+        '02' AS fyNum,
+        'Y' as accName,
+        c.FNAME AS deptName,
+        c.FNUMBER AS deptNum,
+        isnull(SUM (a.frealqty),0) AS amount
+        FROM
+        T_SAL_RETURNSTOCKENTRY a
+        JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
+        LEFT JOIN (
+        SELECT
+        a.FDEPTID AS FFLEX5,
+        b.FNAME,
+        a.FNUMBER
+        FROM
+        t_bd_department a
+        JOIN T_BD_DEPARTMENT_L b ON a.FDEPTID = b.FDEPTID
+        and a.FNUMBER in
+        <foreach item="item" index="index" collection="deptNumList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ) c ON b.FSALEDEPTID = c.FFLEX5
+        join T_BD_MATERIALBASE f ON a.FMATERIALID = f.FMATERIALID
+        join t_bd_materialcategory g on f.FCATEGORYID = g.FCATEGORYID
+        WHERE
+        YEAR(b.FDATE)*100+MONTH(b.FDATE) BETWEEN #{dateStart} AND #{dateEnd}
+        AND g.FNUMBER IN ('CHLB10')
+        group by
+        c.FNAME,
+        c.FNUMBER
+    </select>
+
     <select id="findXSCKDByPeriodForTotalDepartment" resultType="Retail">
         SELECT
             year(b.FDATE) AS YEAR,

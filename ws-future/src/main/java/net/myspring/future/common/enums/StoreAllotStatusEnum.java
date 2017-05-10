@@ -7,6 +7,7 @@ import java.util.List;
 
 public enum StoreAllotStatusEnum {
         待发货, 发货中, 已完成;
+        /*SHIPPING,SHIPPED,FINISH*/
 
         private static List<String> list= Lists.newArrayList();
 

@@ -98,10 +98,10 @@ public class RetailReportForAssistService {
     }
 
     //handsontable for nested head
-    public List<List<NestedHeaderCell>> getNestedHeads(YearMonth start, YearMonth end) {
+    public List<List<NestedHeaderCell>> getNestedHeads(YearMonth start, YearMonth end,List<String> departmentNumber) {
         List<NameNumberDto> departmentList = Lists.newArrayList();
         departmentList.add(getAddDepartment());
-        departmentList.addAll(glcxViewMapper.findDepartment());
+        departmentList.addAll(glcxViewMapper.findDepartmentByDeptNumList(departmentNumber));
         List<List<NestedHeaderCell>> data = Lists.newArrayList();
         List<NestedHeaderCell> cellForDepartmentCodeList = Lists.newArrayList();
         cellForDepartmentCodeList.add(getNestedHeadCell("", 0));

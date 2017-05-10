@@ -1,14 +1,23 @@
 package net.myspring.cloud.modules.report.web.controller;
 
 import com.google.common.collect.Lists;
+import net.myspring.cloud.common.enums.KingdeeTypeEnum;
 import net.myspring.cloud.common.handsontable.NestedHeaderCell;
+import net.myspring.cloud.common.utils.RequestUtils;
+import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.report.domain.Retail;
+import net.myspring.cloud.modules.report.service.GlcxViewService;
 import net.myspring.cloud.modules.report.service.RetailReportForAssistService;
 import net.myspring.cloud.modules.report.service.RetailReportService;
 import net.myspring.cloud.modules.report.web.form.RetailReportForm;
 import net.myspring.cloud.modules.report.web.query.RetailReportQuery;
+import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.YearMonthUtils;
+import org.apache.catalina.security.SecurityUtil;
+import org.codehaus.jackson.sym.NameN;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,25 +30,38 @@ import java.util.List;
  * Created by lihx on 2017/2/10.
  */
 @RestController
-@RequestMapping(value = "report/retailReport17")
+@RequestMapping(value = "report/retailReport")
 public class RetailReportController {
     @Autowired
     private RetailReportForAssistService retailReportForAssistService;
     @Autowired
     private RetailReportService retailReportService;
-
+    @Autowired
+    private KingdeeBookService kingdeeBookService;
+    @Autowired
+    private GlcxViewService glcxViewService;
 
     @RequestMapping(value = "report")
     public RetailReportForm report(RetailReportQuery retailReportQuery) {
-        YearMonth start = retailReportQuery.getStartDate();
-        YearMonth end = retailReportQuery.getEndDate();
-        List<List<NestedHeaderCell>> nestedHeader = retailReportForAssistService.getNestedHeads(start, end);
-        List<List<Object>> retailShopReport = retailReportService.getRetailReport(start, end);
         RetailReportForm retailReportForm = new RetailReportForm();
-        retailReportForm.setStartMonth(YearMonthUtils.format(start));
-        retailReportForm.setEndMonth(YearMonthUtils.format(end));
-        retailReportForm.setRetailReport(retailShopReport);
-        retailReportForm.setNestedHeader(nestedHeader);;
+        YearMonth start = retailReportQuery.getStartMonth();
+        YearMonth end = retailReportQuery.getEndMonth();
+        List<String> departmentNumberList = retailReportQuery.getDepartmentNumber();
+        String type = kingdeeBookService.getTypeByCompanyId(RequestUtils.getCompanyId());
+        if (KingdeeTypeEnum.retail.name().equals(type)){
+            if (retailReportQuery.getDepartmentNumber() == null){
+                 departmentNumberList = glcxViewService.findDefaultDepartment();
+                retailReportQuery.setDepartmentNumber(departmentNumberList);
+            }
+            List<List<NestedHeaderCell>> nestedHeader = retailReportForAssistService.getNestedHeads(start, end, departmentNumberList);
+            List<List<Object>> retailShopReport = retailReportService.getRetailReport(start, end,departmentNumberList);
+            retailReportForm.setStartMonth(YearMonthUtils.format(start));
+            retailReportForm.setEndMonth(YearMonthUtils.format(end));
+            retailReportForm.setRetailReport(retailShopReport);
+            retailReportForm.setNestedHeader(nestedHeader);
+        }else{
+            retailReportForm.setStartMonth("该报表仅限于零售账套");
+        }
         return retailReportForm;
     }
 
@@ -53,8 +75,7 @@ public class RetailReportController {
         if (StringUtils.isNotBlank(monthEnd)) { end = YearMonth.parse(monthEnd);}
         if (StringUtils.isNotBlank(companyName)) {
             ReportDataList = retailReportForAssistService.getRetailReportHead(start, end);
-            ReportDataForAssistList.addAll(retailReportService.getRetailReport2(start, end));
-            ReportDataList.addAll(retailReportService.getRetailReport(start, end));
+            ReportDataList.addAll(retailReportService.getRetailReport(start, end,null));
         }
         return null;
     }
