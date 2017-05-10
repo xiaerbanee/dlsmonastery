@@ -37,9 +37,6 @@
         WHERE  t1.product_id = t2.id  and  t1.shop_allot_id = #{shopAllotId}
     </select>
 
-
-
-
     <select id="findByShopAllotIds" resultType="ShopAllotDetail">
         SELECT  t1.* from crm_shop_allot_detail t1
         where t1.shop_allot_id IN

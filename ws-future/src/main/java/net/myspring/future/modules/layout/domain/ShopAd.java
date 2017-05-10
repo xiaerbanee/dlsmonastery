@@ -1,7 +1,6 @@
 package net.myspring.future.modules.layout.domain;
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 
@@ -28,6 +27,17 @@ public class ShopAd extends CompanyEntity<ShopAd> {
     private String processTypeId;
     private String processFlowId;
     private Depot shop;
+    private String processPositionId;
+
+    public String getProcessPositionId() {
+        return processPositionId;
+    }
+
+    public void setProcessPositionId(String processPositionId) {
+        this.processPositionId = processPositionId;
+    }
+
+
 
     public String getShopId() {
         return shopId;

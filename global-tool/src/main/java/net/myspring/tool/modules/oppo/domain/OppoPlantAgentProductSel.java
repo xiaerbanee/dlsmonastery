@@ -1,15 +1,12 @@
 package net.myspring.tool.modules.oppo.domain;
 
-
-import net.myspring.tool.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-
+import net.myspring.common.domain.IdEntity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="oppo_plant_agent_product_sel")
-public class OppoPlantAgentProductSel extends CompanyEntity<OppoPlantAgentProductSel> {
+public class OppoPlantAgentProductSel extends IdEntity<OppoPlantAgentProductSel> {
     private String brandId;
     private String brandName;
     private String typeId;
@@ -20,7 +17,8 @@ public class OppoPlantAgentProductSel extends CompanyEntity<OppoPlantAgentProduc
     private String brandType;
     private String itemDesc;
     private String itemNumber;
-    private Integer version;
+    private String lxProductId;
+    private String productId;
 
     public String getBrandId() {
         return brandId;
@@ -102,11 +100,20 @@ public class OppoPlantAgentProductSel extends CompanyEntity<OppoPlantAgentProduc
         this.itemNumber = itemNumber;
     }
 
-    public Integer getVersion() {
-        return version;
+    public String getLxProductId() {
+        return lxProductId;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setLxProductId(String lxProductId) {
+        this.lxProductId = lxProductId;
     }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
 }

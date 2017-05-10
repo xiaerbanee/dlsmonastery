@@ -9,7 +9,7 @@ import java.util.List;
 public class StoreAllotForm extends DataForm<StoreAllot> {
 
     private String allotType;
-    private Boolean showAllotType = Boolean.FALSE;
+    private Boolean showAllotType = Boolean.TRUE;
     private String fromStoreId;
     private String toStoreId;
     private String shipType;
