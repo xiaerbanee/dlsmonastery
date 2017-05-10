@@ -5,7 +5,7 @@
             select
             t1.*,account.office_id
             from
-            hr_account_change t1,hr_account account,hr_office office
+            hr_account_change t1,hr_account account,sys_office office
             where
             t1.enabled=1
             and t1.account_id=account.id
@@ -31,7 +31,7 @@
             <if test="p.officeId !=null">
                 and t1.account_id  in(
                 select t2.id
-                from hr_account t2 ,hr_office office
+                from hr_account t2 ,sys_office office
                 where  t2.enabled=1
                 and t2.office_id=office.id
                 and (
