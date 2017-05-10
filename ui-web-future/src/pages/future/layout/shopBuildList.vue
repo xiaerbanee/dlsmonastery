@@ -21,8 +21,8 @@
                   <el-option v-for="(value,key) in auditTypes" :key="key" :label="value" :value="key"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopBuildList.likeSearch')"></el-input>
+              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
+                <su-depot v-model="formData.shopId" type="shop"></su-depot>
               </el-form-item>
               <el-form-item :label="formLabel.processFlow.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.processFlow" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
@@ -33,7 +33,7 @@
                 <dict-enum-select v-model="formData.fixtureType" category="装修类别"></dict-enum-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('shopBuildList.likeSearch')"></el-input>
+                <account-select v-model="formData.createdBy"></account-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
@@ -80,9 +80,10 @@
 </template>
 <script>
   import officeSelect from 'components/basic/office-select';
-  import dictEnumSelect from 'components/basic/dict-enum-select'
+  import dictEnumSelect from 'components/basic/dict-enum-select';
+  import accountSelect from 'components/basic/account-select';
   export default {
-    components:{officeSelect,dictEnumSelect},
+    components:{officeSelect,dictEnumSelect,accountSelect},
     data() {
       return {
         pageLoading: false,
@@ -95,7 +96,7 @@
           size:25,
           officeId:'',
           auditType:'',
-          shopName:'',
+          shopId:'',
           processFlow:'',
           fixtureType:'',
           createdBy:'',
@@ -104,7 +105,7 @@
         formLabel:{
           officeId:{label: this.$t('shopBuildList.officeName'),value:''},
           auditType:{label: this.$t('shopBuildList.auditType'),value:''},
-          shopName:{label:this.$t('shopBuildList.shopName')},
+          shopId:{label:this.$t('shopBuildList.shopName')},
           processFlow:{label:this.$t('shopBuildList.processFlow'),value:''},
           fixtureType:{label:this.$t('shopBuildList.fixtureType'),value:''},
           createdBy:{label: this.$t('shopBuildList.createdBy')},
@@ -144,7 +145,7 @@
         this.formVisible = false;
         this.pageRequest();
       },exportData(){
-        window.location.href= "/api/crm/shopBuild/export?"+qs.stringify(this.formData);
+        window.location.href= "/api/ws/future/layout/shopBuild/export?"+qs.stringify(this.formData);
       },itemAdd(){
         this.$router.push({ name: 'shopBuildForm'});
       },itemAction:function(id,action){
@@ -167,12 +168,12 @@
         }
         this.multipleSelection = arr;
     },batchPass(){
-      axios.get('/api/crm/shopBuild/batchAudit',{params:{pass:true, ids:this.multipleSelection}}).then((response) =>{
+      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{pass:true, ids:this.multipleSelection}}).then((response) =>{
         this.$message(response.data.message);
         this.pageRequest();
       })
     },batchBack(){
-      axios.get('/api/crm/shopBuild/batchAudit',{params:{pass:false, ids:this.multipleSelection}}).then((response) =>{
+      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{pass:false, ids:this.multipleSelection}}).then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })
@@ -181,7 +182,7 @@
     created () {
         var that = this;
         that.pageHeight = window.outerHeight -320;
-        axios.get('api/ws/future/layout/shopBuild/getQuery',{params:this.formData}).then((response) =>{
+        axios.get('/api/ws/future/layout/shopBuild/getQuery',{params:this.formData}).then((response) =>{
            that.formData = response.data;
            util.copyValue(this.$route.query,that.formData);
            that.pageRequest();

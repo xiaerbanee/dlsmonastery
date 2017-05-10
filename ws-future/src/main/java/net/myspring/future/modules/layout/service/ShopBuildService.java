@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
@@ -10,6 +11,7 @@ import net.myspring.future.modules.layout.dto.ShopBuildDto;
 import net.myspring.future.modules.layout.mapper.ShopBuildMapper;
 import net.myspring.future.modules.layout.web.form.ShopBuildForm;
 import net.myspring.future.modules.layout.web.query.ShopBuildQuery;
+import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
@@ -33,6 +35,8 @@ public class ShopBuildService {
     private CacheUtils cacheUtils;
     @Autowired
     private DepotMapper depotMapper;
+    @Autowired
+    private ActivitiClient activitiClient;
 
 
     public Page<ShopBuildDto> findPage(Pageable pageable, ShopBuildQuery shopBuildQuery) {
@@ -67,7 +71,29 @@ public class ShopBuildService {
     public void notify(ShopBuild shopBuild) {
     }
 
-    public void audit(ShopBuild shopBuild, boolean pass, String comment) {
+    public void audit(ShopBuildForm shopBuildForm) {
+        ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
+        ShopBuild shopBuild;
+        if(!shopBuildForm.isCreate()){
+            shopBuild = shopBuildMapper.findOne(shopBuildForm.getId());
+            activitiCompleteForm.setProcessInstanceId(shopBuild.getProcessInstanceId());
+            activitiCompleteForm.setProcessTypeId(shopBuild.getProcessTypeId());
+            activitiCompleteForm.setPass(shopBuildForm.getPass());
+            activitiCompleteForm.setComment(shopBuildForm.getPassRemarks());
+            activitiClient.complete(activitiCompleteForm);
+        }
+    }
+
+    public void batchAudit(ShopBuildForm shopBuildForm){
+        ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
+        ShopBuild shopBuild;
+        for(String id:shopBuildForm.getIds()){
+            shopBuild = shopBuildMapper.findOne(id);
+            activitiCompleteForm.setPass(shopBuildForm.getPass());
+            activitiCompleteForm.setProcessTypeId(shopBuild.getProcessTypeId());
+            activitiCompleteForm.setProcessInstanceId(shopBuild.getProcessInstanceId());
+            activitiClient.complete(activitiCompleteForm);
+        }
     }
 
     public void logicDeleteOne(String id) {

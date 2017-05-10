@@ -2,48 +2,30 @@ package net.myspring.future.modules.layout.web.query;
 
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 
 /**
- * Created by zhangyf on 2017/5/6.
+ * Created by zhangyf on 2017/5/10.
  */
-public class ShopBuildQuery extends BaseQuery {
-    private String officeId;
-    private String auditType;
+public class ShopAdQuery extends BaseQuery{
+    private String id;
     private String shopId;
-    private String processFlow;
-    private String fixtureType;
+    private String officeId;
+    private String shopAdTypeId;
+    private String specialArea;
     private String createdBy;
     private String createdDate;
+    private String processStatus;
 
-    public void setAuditType(String auditType){
-        this.auditType = auditType;
+    public String getId() {
+        return id;
     }
 
-    public String getAuditType() {
-        return auditType;
-    }
-
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
-    }
-
-    public String getOfficeId() {
-        return officeId;
-    }
-
-
-    public String getPositionId() {
-        if(StringUtils.isNotBlank(auditType)){
-            if(auditType.equalsIgnoreCase("1")){
-                return RequestUtils.getRequestEntity().getPositionId();
-            }
-        }
-        return null;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getShopId() {
@@ -54,20 +36,28 @@ public class ShopBuildQuery extends BaseQuery {
         this.shopId = shopId;
     }
 
-    public String getProcessFlow() {
-        return processFlow;
+    public String getOfficeId() {
+        return officeId;
     }
 
-    public void setProcessFlow(String processFlow) {
-        this.processFlow = processFlow;
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
     }
 
-    public String getFixtureType() {
-        return fixtureType;
+    public String getShopAdTypeId() {
+        return shopAdTypeId;
     }
 
-    public void setFixtureType(String fixtureType) {
-        this.fixtureType = fixtureType;
+    public void setShopAdTypeId(String shopAdTypeId) {
+        this.shopAdTypeId = shopAdTypeId;
+    }
+
+    public String getSpecialArea() {
+        return specialArea;
+    }
+
+    public void setSpecialArea(String specialArea) {
+        this.specialArea = specialArea;
     }
 
     public String getCreatedBy() {
@@ -78,12 +68,16 @@ public class ShopBuildQuery extends BaseQuery {
         this.createdBy = createdBy;
     }
 
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getProcessStatus() {
+        return processStatus;
+    }
+
+    public void setProcessStatus(String processStatus) {
+        this.processStatus = processStatus;
     }
 
     public LocalDate getCreatedDateStart() {
@@ -101,5 +95,4 @@ public class ShopBuildQuery extends BaseQuery {
             return null;
         }
     }
-
 }

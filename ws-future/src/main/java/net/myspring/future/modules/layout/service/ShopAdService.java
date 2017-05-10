@@ -3,7 +3,9 @@ package net.myspring.future.modules.layout.service;
 import com.google.common.collect.Lists;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.layout.domain.ShopAd;
+import net.myspring.future.modules.layout.dto.ShopAdDto;
 import net.myspring.future.modules.layout.mapper.ShopAdMapper;
+import net.myspring.future.modules.layout.web.query.ShopAdQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -24,8 +26,8 @@ public class ShopAdService {
     private ShopAdMapper shopAdMapper;
     @Autowired
     private DepotMapper depotMapper;
-    public Page<ShopAd> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<ShopAd> page = shopAdMapper.findPage(pageable, map);
+    public Page<ShopAdDto> findPage(Pageable pageable, ShopAdQuery shopAdQuery) {
+        Page<ShopAdDto> page = shopAdMapper.findPage(pageable, shopAdQuery);
         return page;
     }
 

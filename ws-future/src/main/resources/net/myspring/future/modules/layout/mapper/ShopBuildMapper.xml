@@ -13,12 +13,8 @@
         <if test="p.fixtureType !=null">
             and t1.fixture_type=#{p.fixtureType}
         </if>
-        <if test="p.shopName != null and p.shopName !=''">
-            AND t1.shop_id in (
-            select t2.id
-            from crm_depot t2
-            where t2.name LIKE CONCAT('%',#{p.shopName},'%')
-            )
+        <if test="p.shopId != null">
+            and t1.shop_id =#{p.shopId}
         </if>
         <if test="p.createdDateStart !=null">
             and  t1.created_date >=#{p.createdDateStart}
@@ -26,15 +22,11 @@
         <if test="p.createdDateEnd !=null">
             and  t1.created_date &lt;#{p.createdDateEnd}
         </if>
-        <if test="p.positionId !=null">
-            and t1.process_position_id =#{p.positionId}
+        <if test="p.specialArea !=null">
+            and t1.special_area =#{p.specialArea}
         </if>
         <if test="p.createdBy !=null">
-            AND t1.created_by in(
-            select t3.id
-            from hr_account t3
-            where t3.login_name like concat('%',#{p.createdBy},'%')
-            )
+            and t1.created_by =#{p.createdBy}
         </if>
         <if test="p.officeId !=null">
             and depot.office_id = #{p.officeId}

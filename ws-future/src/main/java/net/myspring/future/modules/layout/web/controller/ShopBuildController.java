@@ -47,10 +47,20 @@ public class ShopBuildController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "batchAudit", method = RequestMethod.GET)
-    public String batchAudit() {
-        return null;
+    @RequestMapping(value = "audit")
+    public RestResponse audit(ShopBuildForm shopBuildForm){
+        shopBuildService.audit(shopBuildForm);
+        RestResponse restResponse = new RestResponse("审核成功", ResponseCodeEnum.removed.name());
+        return restResponse;
     }
+
+    @RequestMapping(value = "batchAudit")
+    public RestResponse batchAudit(ShopBuildForm shopBuildForm) {
+        shopBuildService.batchAudit(shopBuildForm);
+        RestResponse restResponse = new RestResponse("成功", ResponseCodeEnum.removed.name());
+        return restResponse;
+    }
+
 
     @RequestMapping(value = "delete")
     public RestResponse delete(ShopBuildForm shopBuildForm) {
@@ -64,7 +74,7 @@ public class ShopBuildController {
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public ModelAndView export() {
+    public ModelAndView export(ShopBuildQuery shopBuildQuery) {
         return null;
     }
 

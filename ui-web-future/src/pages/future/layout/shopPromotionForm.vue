@@ -26,10 +26,10 @@
               <el-input v-model="inputForm.salerComment" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.materialComment')" prop="materialComment">
-              <el-input v-model="inputForm.materialComment" ></el-input>
+              <el-input v-model="inputForm.materialComment" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.comment')" prop="comment">
-              <el-input v-model="inputForm.comment" ></el-input>
+              <el-input v-model="inputForm.comment" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.phone')" prop="phone">
               <el-input v-model="inputForm.phone" ></el-input>
