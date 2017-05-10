@@ -13,14 +13,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableFeignClients
 public class GlobalCloudApplication {
 
-	private static ApplicationContext applicationContext;
-
 	public static void main(String[] args) {
-		final ApplicationContext applicationContext = SpringApplication.run(GlobalCloudApplication.class, args);
-		GlobalCloudApplication.applicationContext = applicationContext;
+		SpringApplication.run(GlobalCloudApplication.class, args);
 	}
 
-	public static ApplicationContext getApplicationContext() {
-		return applicationContext;
-	}
 }
