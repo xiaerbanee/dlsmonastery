@@ -92,7 +92,6 @@
           dateRange:{label:"日期"},
           primaryGroupName:{label:"客户分组",value:""},
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
         detailVisible:false,

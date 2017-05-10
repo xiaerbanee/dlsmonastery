@@ -48,4 +48,16 @@
         where
           t1.FDEPTID = t2.FDEPTID
     </select>
+
+    <select id="findByNameLike" resultType="NameNumberDto">
+        select
+            t1.FNUMBER as number,
+            t2.FFULLNAME as name
+        from
+            T_BD_DEPARTMENT t1,
+            T_BD_DEPARTMENT_L t2
+        where
+            t1.FDEPTID = t2.FDEPTID
+        and t2.FFULLNAME like CONCAT('%',#{name},'%')
+    </select>
 </mapper>
