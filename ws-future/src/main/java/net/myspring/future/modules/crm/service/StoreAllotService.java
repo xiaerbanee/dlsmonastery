@@ -153,7 +153,7 @@ public class StoreAllotService {
         ExpressOrder expressOrder = expressOrderService.saveExpressOrder(storeAllot, storeAllotForm);
 
         storeAllot.setExpressOrderId(expressOrder.getId());
-        storeAllotMapper.save(storeAllot);
+        storeAllotMapper.update(storeAllot);
 
         return storeAllot;
     }

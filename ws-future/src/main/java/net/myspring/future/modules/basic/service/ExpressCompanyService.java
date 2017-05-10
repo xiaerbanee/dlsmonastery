@@ -85,4 +85,15 @@ public class ExpressCompanyService {
     public List<ExpressCompanyDto> findByNameLike(String name) {
         return expressCompanyMapper.findByNameLike(RequestUtils.getCompanyId(), name);
     }
+
+    public String getDefaultExpressCompanyId() {
+        //TODO default expressCompanyID
+//        String code = Global.getCompanyConfig(AccountUtils.getCompany().getId(), CompanyConfig.CompanyConfigCode.DEFAULT_EXPRESS_COMPANY_ID.getCode());
+//        if (StringUtils.isNotBlank(code)) {
+//            ExpressCompany expressCompany = expressCompanyDao.findOne(Long.valueOf(code));
+//            storeAllotForm.setExpressCompanyId( expressCompanyService.getDefaultExpressCompanyId());
+//        }
+
+        return null;
+    }
 }

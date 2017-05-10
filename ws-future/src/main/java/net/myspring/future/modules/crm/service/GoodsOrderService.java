@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -145,4 +146,10 @@ public class GoodsOrderService {
     private Map<String, Integer> getMap(List<GoodsOrderDetail> orderList, String columnName) {
         return null;
     }
+
+
+    public List<GoodsOrder> findByStoreBillData(LocalDate billDate, String storeId, String status){
+        return goodsOrderMapper.findByStoreBillData(billDate, storeId, status);
+    }
+
 }
