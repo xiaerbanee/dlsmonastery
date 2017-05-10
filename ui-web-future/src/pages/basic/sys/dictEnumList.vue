@@ -43,8 +43,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('dictEnumList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('dictEnumList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('dictEnumList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -60,7 +60,6 @@
         page:{},
         formData:{
           createdDate:'',
-          createdDateBTW:'',
         },
         submitData:{
           page:0,
@@ -74,7 +73,6 @@
           category:{label: this.$t('dictEnumList.category')},
           value:{label: this.$t('dictEnumList.value')}
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -85,7 +83,7 @@
         this.pageLoading = true;
         util.copyValue(this.formData,this.submitData);
         util.setQuery("dictEnumList",this.submitData);
-        axios.get('/api/basic/sys/dictEnum',{params:this.submitData}).then((response) => {
+        axios.get('/api/basic/sys/dictEnum?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -103,9 +101,9 @@
       },itemAdd(){
         this.$router.push({ name: 'dictEnumForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'dictEnumForm', query: { id: id }})
-        } else if(action=="删除") {
+        } else if(action=="delete") {
           axios.get('/api/basic/sys/dictEnum/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
