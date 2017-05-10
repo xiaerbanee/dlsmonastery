@@ -28,4 +28,6 @@ public interface KingdeeBookMapper extends CrudMapper<KingdeeBook,String> {
 
     List<String> findTypes();
 
+    String findTypeByCompanyId(@Param("companyId")String companyId);
+
 }

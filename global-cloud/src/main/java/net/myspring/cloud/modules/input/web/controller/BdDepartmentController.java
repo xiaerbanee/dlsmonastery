@@ -36,4 +36,9 @@ public class BdDepartmentController {
         return bdDepartmentService.findNameNumber();
     }
 
+    @RequestMapping(value = "getByNameLike")
+    public List<NameNumberDto> getByNameLike(String name){
+        return bdDepartmentService.findByNameLike(name);
+    }
+
 }

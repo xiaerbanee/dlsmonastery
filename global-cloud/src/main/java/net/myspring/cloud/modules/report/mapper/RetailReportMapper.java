@@ -20,6 +20,14 @@ public interface RetailReportMapper {
     List<Retail> findXSCKDBySumPeriod(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd);
     //销售退货单
     List<Retail> findXSTHDBySumPeriod(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd);
+    //销售出库单
+    List<Retail> findXSCKDByPeriodAndDeptNumList(@Param("year") Integer year, @Param("month") Integer month,@Param("deptNumList")List<String> deptNumList);
+    //销售退货单
+    List<Retail> findXSTHDByPeriodAndDeptNumList(@Param("year") Integer year, @Param("month") Integer month,@Param("deptNumList")List<String> deptNumList);
+    //销售出库单
+    List<Retail> findXSCKDBySumPeriodAndDeptNumList(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd,@Param("deptNumList")List<String> deptNumList);
+    //销售退货单
+    List<Retail> findXSTHDBySumPeriodAndDeptNumList(@Param("dateStart") Integer dateStart, @Param("dateEnd") Integer dateEnd,@Param("deptNumList")List<String> deptNumList);
 
     //合计
     //销售出库单

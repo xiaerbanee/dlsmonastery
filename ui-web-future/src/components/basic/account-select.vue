@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable remote :placeholder="$t('accountChangeForm.inputWord')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+    <el-select v-model="innerId"  filterable remote  :multiple="isMultiple" :placeholder="$t('accountChangeForm.inputWord')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList"  :key="item.id" :label="item.loginName" :value="item.id"></el-option>
     </el-select>
   </div>
@@ -12,7 +12,8 @@
       return {
         innerId:this.value,
         itemList : [],
-        remoteLoading:false
+        remoteLoading:false,
+        isMultiple:null
       };
     } ,methods:{
       remoteSelect(query) {
@@ -36,9 +37,17 @@
           this.itemList=response.data;
           this.remoteLoading = false;
         })
+      },
+      setMultiple(mul){
+          if(mul==='true'){
+            this.isMultiple=true;
+          }else{
+              this.isMultiple=false;
+          }
       }
     },created () {
       this.setValue(this.value);
+      this.setMultiple(this.multiple)
     },watch: {
       value :function (newVal) {
         this.setValue(newVal);

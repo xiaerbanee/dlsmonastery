@@ -21,4 +21,6 @@ public interface BdDepartmentMapper {
 
     List<NameNumberDto> findNameAndNumber();
 
+    List<NameNumberDto> findByNameLike(@Param("name")String name);
+
 }

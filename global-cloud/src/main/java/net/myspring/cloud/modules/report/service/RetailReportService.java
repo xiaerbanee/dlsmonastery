@@ -99,24 +99,14 @@ public class RetailReportService {
         return showItemMap;
     }
 
-    //页面导出纵向显示数据
-    public List<Retail> getRetailReport2(YearMonth start, YearMonth end){
-        List<Retail> retailOrWholeSaleReports = Lists.newArrayList();
-        retailOrWholeSaleReports.addAll(findAmountAndPercentForAddDepartment(start, end));
-        retailOrWholeSaleReports.addAll(findSumAmountAndSumPercentForAddDepartment( start,  end));
-        retailOrWholeSaleReports.addAll(findAmountAndPercentForDepartments(start, end));
-        retailOrWholeSaleReports.addAll(findSumAmountAndSumPercentForDepartments(start, end));
-        return retailOrWholeSaleReports;
-    }
-
     //页面显示数据
-    public List<List<Object>> getRetailReport(YearMonth start, YearMonth end) {
+    public List<List<Object>> getRetailReport(YearMonth start, YearMonth end,List<String> departmentNumberList) {
         List<List<Object>> retailReportModels = Lists.newArrayList();
         List<NameNumberDto> departmentList = Lists.newArrayList();
         departmentList.add(retailReportForAssistService.getAddDepartment());
-        departmentList.addAll(glcxViewMapper.findDepartment());
+        departmentList.addAll(glcxViewMapper.findDepartmentByDeptNumList(departmentNumberList));
         List<Retail> itemDataList = findAmountAndPercentForAddDepartment(start, end);
-        itemDataList.addAll(findAmountAndPercentForDepartments(start, end));
+        itemDataList.addAll(findAmountAndPercentForDepartments(start, end,departmentNumberList));
         Map<String, Retail> retailReportItemMap = Maps.newHashMap();
         for (Retail tempItemData : itemDataList) {
             String key = tempItemData.getAccName() + CharConstant.UNDER_LINE + tempItemData.getFyNum() + CharConstant.UNDER_LINE + tempItemData.getDeptName() + CharConstant.UNDER_LINE + tempItemData.getYear() + CharConstant.UNDER_LINE + tempItemData.getMonth();
@@ -126,7 +116,7 @@ public class RetailReportService {
         }
         //获取累计金额，占比
         List<Retail> sumItemDataList = findSumAmountAndSumPercentForAddDepartment(start, end);
-        sumItemDataList.addAll(findSumAmountAndSumPercentForDepartments(start, end));
+        sumItemDataList.addAll(findSumAmountAndSumPercentForDepartments(start, end,departmentNumberList));
         Map<String, Retail> sumRetailReportItemMap = Maps.newHashMap();
         for (Retail sumDirectShopDetail : sumItemDataList) {
             String key = sumDirectShopDetail.getAccName() + CharConstant.UNDER_LINE + sumDirectShopDetail.getFyNum() + CharConstant.UNDER_LINE +sumDirectShopDetail.getDeptName();
@@ -272,22 +262,22 @@ public class RetailReportService {
     }
 
     //各个部门 金额+占比
-    private List<Retail> findAmountAndPercentForDepartments(YearMonth dateStart, YearMonth dateEnd) {
+    private List<Retail> findAmountAndPercentForDepartments(YearMonth dateStart, YearMonth dateEnd,List<String> departmentNumberList) {
         List<Retail> itemDataList = Lists.newArrayList();
         while (dateStart.isBefore(dateEnd) || dateStart.equals(dateEnd)) {
             int year = dateStart.getYear();
             int month = dateStart.getMonthValue();
             List<Retail> incomeList = Lists.newArrayList();
             for(RetailReportForIncomeEnum retailReportForIncomeEnum: RetailReportForIncomeEnum.values()){
-                incomeList.addAll(glcxViewMapper.findEntityByPeriod(year,month,retailReportForIncomeEnum.getAccName(),retailReportForIncomeEnum.getFyNum()));
+                incomeList.addAll(glcxViewMapper.findEntityByPeriodAndDeptNumList(year,month,retailReportForIncomeEnum.getAccName(),retailReportForIncomeEnum.getFyNum(),departmentNumberList));
             }
             List<Retail> costList = Lists.newArrayList();
             for(RetailReportForCostEnum retailReportForCostEnum: RetailReportForCostEnum.values()){
-                costList.addAll(glcxViewMapper.findEntityByPeriod(year,month,retailReportForCostEnum.getAccName(),retailReportForCostEnum.getFyNum()));
+                costList.addAll(glcxViewMapper.findEntityByPeriodAndDeptNumList(year,month,retailReportForCostEnum.getAccName(),retailReportForCostEnum.getFyNum(),departmentNumberList));
             }
-            List<Retail> managementFeeList = glcxViewMapper.findEntityByPeriod(year,month,"管理费用",null);
-            List<Retail> xsckdQuantity =  retailReportMapper.findXSCKDByPeriod(year, month);
-            List<Retail> xsthdQuantity =  retailReportMapper.findXSTHDByPeriod(year, month);
+            List<Retail> managementFeeList = glcxViewMapper.findEntityByPeriodAndDeptNumList(year,month,"管理费用",null,departmentNumberList);
+            List<Retail> xsckdQuantity =  retailReportMapper.findXSCKDByPeriodAndDeptNumList(year, month,departmentNumberList);
+            List<Retail> xsthdQuantity =  retailReportMapper.findXSTHDByPeriodAndDeptNumList(year, month,departmentNumberList);
             itemDataList.addAll(getSalesProductQuantity(xsckdQuantity,xsthdQuantity));
             itemDataList.addAll(getSubjectFeeEntityItem(incomeList,costList,managementFeeList));
             dateStart = dateStart.plusMonths(1);
@@ -296,20 +286,20 @@ public class RetailReportService {
     }
 
     //各个部门 累计金额+累计占比
-    private List<Retail> findSumAmountAndSumPercentForDepartments(YearMonth start, YearMonth end) {
+    private List<Retail> findSumAmountAndSumPercentForDepartments(YearMonth start, YearMonth end,List<String> departmentNumberList) {
         Integer startDate = start.getYear() * 100 + start.getMonthValue();
         Integer endDate = end.getYear() * 100 + end.getMonthValue();
         List<Retail> incomeList = Lists.newArrayList();
         for(RetailReportForIncomeEnum retailReportForIncomeEnum: RetailReportForIncomeEnum.values()){
-            incomeList.addAll(glcxViewMapper.findEntityBySumPeriod(startDate,endDate,retailReportForIncomeEnum.getAccName(),retailReportForIncomeEnum.getFyNum()));
+            incomeList.addAll(glcxViewMapper.findEntityBySumPeriodAndDeptNumList(startDate,endDate,retailReportForIncomeEnum.getAccName(),retailReportForIncomeEnum.getFyNum(),departmentNumberList));
         }
         List<Retail> costList = Lists.newArrayList();
         for(RetailReportForCostEnum retailReportForCostEnum: RetailReportForCostEnum.values()){
-            costList.addAll(glcxViewMapper.findEntityBySumPeriod(startDate,endDate,retailReportForCostEnum.getAccName(),retailReportForCostEnum.getFyNum()));
+            costList.addAll(glcxViewMapper.findEntityBySumPeriodAndDeptNumList(startDate,endDate,retailReportForCostEnum.getAccName(),retailReportForCostEnum.getFyNum(),departmentNumberList));
         }
-        List<Retail> managementFeeList = glcxViewMapper.findEntityBySumPeriod(startDate,endDate,"管理费用",null);
-        List<Retail> xsckdQuantity =  retailReportMapper.findXSCKDBySumPeriod(startDate, endDate);
-        List<Retail> xsthdQuantity =  retailReportMapper.findXSTHDBySumPeriod(startDate, endDate);
+        List<Retail> managementFeeList = glcxViewMapper.findEntityBySumPeriodAndDeptNumList(startDate,endDate,"管理费用",null, departmentNumberList);
+        List<Retail> xsckdQuantity =  retailReportMapper.findXSCKDBySumPeriodAndDeptNumList(startDate, endDate,departmentNumberList);
+        List<Retail> xsthdQuantity =  retailReportMapper.findXSTHDBySumPeriodAndDeptNumList(startDate, endDate,departmentNumberList);
         List<Retail> list = Lists.newArrayList(getSalesProductQuantity(xsckdQuantity,xsthdQuantity));
         list.addAll(getSubjectFeeEntityItem(incomeList, costList,managementFeeList));
         return list;
