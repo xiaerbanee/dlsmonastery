@@ -51,7 +51,6 @@ public class DynamicDataSourceAspect {
                 }
             }
         }
-        HttpServletRequest request  = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        request.setAttribute("dataSourceType",dataSourceType);
+        RequestUtils.getRequestEntity().setDataSourceType(dataSourceType);
     }
 }

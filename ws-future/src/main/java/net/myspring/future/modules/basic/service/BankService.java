@@ -69,7 +69,7 @@ public class BankService {
 
     public Page<BankDto> findPage(Pageable pageable,BankQuery bankQuery) {
         bankQuery.setDepotIdList(depotManager.getDepotIds(RequestUtils.getAccountId()));
-        bankQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
+        bankQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         Page<BankDto> page = bankMapper.findPage(pageable, bankQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

@@ -129,7 +129,7 @@ public class ProductService {
         if(adApplyForm.getShopId() != null){
             Depot depot = depotMapper.findOne(adApplyForm.getShopId());
             adApplyForm.setShop(depot);
-            if(CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())){
+            if(CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyId())){
                 if(depot != null && depot.getCode().startsWith("IM0")){
                     for(int i= adProducts.size()-1;i >= 0; i--){
                         Product product = adProducts.get(i);
@@ -197,7 +197,7 @@ public class ProductService {
                 product.setOutGroupId(map.get("fgroup").toString());
                 product.setOutGroupName(map.get("groupName").toString());
                 product.setCode(map.get("code").toString());
-                if(CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName()) || CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName())){
+                if(CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyId()) || CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyId())){
                     if("商品类".equals(map.get("groupName").toString())){
                         if(map.get("name").toString().trim().contains("移动")){
                             product.setNetType("移动");

@@ -113,7 +113,7 @@ public class AccountController {
 
     @RequestMapping(value = "searchFilter")
     public List<AccountDto> searchFilter(AccountQuery accountQuery) {
-        accountQuery.setOfficeId(RequestUtils.getOfficeId());
+        accountQuery.setOfficeId(RequestUtils.getRequestEntity().getOfficeId());
         List<AccountDto> accountDtoList = accountService.findByFilter(accountQuery);
         return accountDtoList;
     }
@@ -151,7 +151,7 @@ public class AccountController {
         map.put("dutySize", dutyList.size());
         map.put("accountMessageSize", accountMessages.size());
         //显示剩余的加班调休时间和年假时间
-        String employeeId = RequestUtils.getEmployeeId();
+        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
         map.put("annualHour", dutyAnnualService.getAvailableHour(employeeId));
         map.put("overtimeHour", dutyOvertimeService.getAvailableHour(employeeId, LocalDateTime.now()));
         //显示快到期时间
