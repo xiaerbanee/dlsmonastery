@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.tool.modules.oppo.mapper.OppoMapper">
+
+    <select id="plantProductSel" resultType="OppoPlantProductSel" statementType="CALLABLE" >
+          call plantProductSel (
+                  #{companyId},
+                  #{password},
+                  #{branchId}
+                  )
+    </select>
+
+
+    <select id="plantAgentProductSel" resultType="OppoPlantAgentProductSel" statementType="CALLABLE" >
+        call PlantAgentProductSel (
+        #{companyId},
+        #{password},
+        #{branchId}
+        )
+    </select>
+
+    <select id="plantSendImeiPPSel" resultType="OppoPlantSendImeiPpsel" statementType="CALLABLE" >
+        call PlantSendImeiPPSel (
+        #{companyId},
+        #{password},
+        #{createdTime}
+        )
+    </select>
+
+
+    <select id="plantProductItemelectronSel" resultType="OppoPlantProductItemelectronSel" statementType="CALLABLE" >
+        call PlantProductItemelectronSel (
+        #{companyId},
+        #{password},
+        #{systemDate}
+        )
+    </select>
+
+
+
+</mapper>
