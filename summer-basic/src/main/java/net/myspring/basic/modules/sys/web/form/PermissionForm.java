@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Permission;
+import net.myspring.basic.modules.sys.dto.RoleDto;
 import net.myspring.common.form.DataForm;
 import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -25,6 +26,7 @@ public class PermissionForm extends DataForm<Permission> {
     private List<MenuDto> menuList= Lists.newArrayList();
     @CacheInput(inputKey = "roles",inputInstance = "roleIdList",outputInstance = "name")
     private List<String> roleNameList=Lists.newArrayList();
+    private List<RoleDto> roleList = Lists.newArrayList();
 
     public String getUrl() {
         return url;
@@ -99,4 +101,11 @@ public class PermissionForm extends DataForm<Permission> {
     }
 
 
+    public void setRoleList(List<RoleDto> roleList) {
+        this.roleList = roleList;
+    }
+
+    public List<RoleDto> getRoleList() {
+        return roleList;
+    }
 }

@@ -33,9 +33,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.officeId.label"  :label-width="formLabelWidth">
-                <el-select v-model="formData.officeId" filterable remote :placeholder="$t('employeeList.inputWord')" :remote-method="remoteOffice" :loading="remoteLoading" :clearable=true>
-                  <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-                </el-select>
+                <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item :label="formLabel.entryDate.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.entryDate"></date-range-picker>
@@ -76,7 +74,10 @@
   </div>
 </template>
 <script>
+  import officeSelect from 'components/basic/office-select'
+
   export default {
+      components:{officeSelect},
     data() {
       return {
         page:{},
@@ -112,7 +113,6 @@
         formVisible: false,
         pageLoading: false,
         remoteLoading:false,
-        offices:[]
     };
     },
     methods: {
@@ -146,14 +146,6 @@
           axios.get('/api/basic/hr/employee/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
-        }
-      },remoteOffice(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
-            this.offices=response.data;
-            this.remoteLoading = false;
           })
         }
       }

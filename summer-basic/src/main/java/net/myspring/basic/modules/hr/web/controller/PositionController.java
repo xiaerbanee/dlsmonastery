@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
 import net.myspring.basic.modules.sys.service.BackendModuleService;
 import net.myspring.basic.modules.sys.service.PermissionService;
+import net.myspring.basic.modules.sys.service.RoleService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.text.StringUtils;
@@ -29,6 +30,8 @@ public class PositionController {
     private PermissionService permissionService;
     @Autowired
     private BackendModuleService backendModuleService;
+    @Autowired
+    private RoleService roleService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<PositionDto> findPage(Pageable pageable, PositionQuery positionQuery) {
@@ -39,6 +42,7 @@ public class PositionController {
     @RequestMapping(value = "findForm")
     public PositionForm findForm(PositionForm positionForm) {
         positionForm= positionService.findForm(positionForm);
+        positionForm.setRoleList(roleService.findAll());
         return positionForm;
     }
 

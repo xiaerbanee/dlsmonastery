@@ -15,8 +15,8 @@
           <el-input v-model="inputForm.permission"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="roleIdList">
-          <el-select v-model="inputForm.roleIdList" multiple filterable remote :placeholder="$t('permissionForm.inputWord')" :remote-method="remoteRole" :loading="remoteLoading">
-            <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select v-model="inputForm.roleIdList" multiple filterable  :placeholder="$t('accountForm.inputWord')" >
+            <el-option v-for="item in inputForm.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="请求Url" prop="url">
@@ -83,17 +83,7 @@
               this.submitDisabled = false;
             }
           })
-        },remoteRole(query){
-         if (query !== '') {
-           this.remoteLoading = true;
-           axios.get('/api/basic/sys/role/search',{params:{name:query}}).then((response)=>{
-             this.roleList=response.data;
-              this.remoteLoading = false;
-           })
-         } else {
-           this.roleList = [];
-         }
-       }
+        }
       },created(){
         axios.get('/api/basic/sys/permission/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;

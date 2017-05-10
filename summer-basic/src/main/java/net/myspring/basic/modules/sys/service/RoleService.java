@@ -118,4 +118,11 @@ public class RoleService {
         cacheUtils.initCacheInput(roleDtoList);
         return roleDtoList;
     }
+
+    public List<RoleDto> findAll(){
+        List<Role> roleList=roleMapper.findAll();
+        List<RoleDto> roleDtoList = BeanUtil.map(roleList, RoleDto.class);
+        cacheUtils.initCacheInput(roleDtoList);
+        return  roleDtoList;
+    }
 }

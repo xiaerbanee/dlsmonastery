@@ -1,18 +1,19 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable remote :placeholder="$t('employeeForm.inputWord')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+    <el-select v-model="innerId"  filterable remote  :multiple="isMultiple" :placeholder="$t('employeeForm.inputWord')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
 <script>
   export default {
-    props: ['value'],
+    props: ['value','multiple'],
     data() {
       return {
         innerId:this.value,
         itemList : [],
-        remoteLoading:false
+        remoteLoading:false,
+        isMultiple:null
       };
     } ,methods:{
       remoteSelect(query) {
@@ -36,9 +37,17 @@
           this.itemList=response.data;
           this.remoteLoading = false;
         })
+      },
+      setMultiple(mul){
+        if(mul==='true'){
+          this.isMultiple=true;
+        }else{
+          this.isMultiple=false;
+        }
       }
     },created () {
       this.setValue(this.value);
+      this.setMultiple(this.multiple)
     },watch: {
       value :function (newVal) {
         this.setValue(newVal);

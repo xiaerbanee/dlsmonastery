@@ -1,7 +1,9 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Position;
+import net.myspring.basic.modules.sys.dto.RoleDto;
 import net.myspring.common.form.DataForm;
 import net.myspring.util.cahe.annotation.CacheInput;
 
@@ -19,6 +21,8 @@ public class PositionForm extends DataForm<Position> {
     private String permission;
     private String remarks;
     private String roleId;
+    private List<RoleDto> roleList= Lists.newArrayList();
+
 
     public String getRoleName() {
         return roleName;
@@ -60,5 +64,13 @@ public class PositionForm extends DataForm<Position> {
     @Override
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public void setRoleList(List<RoleDto> roleList) {
+        this.roleList = roleList;
+    }
+
+    public List<RoleDto> getRoleList() {
+        return roleList;
     }
 }

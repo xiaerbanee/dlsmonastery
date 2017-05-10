@@ -107,22 +107,6 @@
             this.submitDisabled = false;
           }
         })
-      },remoteDataScopeOffice(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/sys/office/search',{params:{name:query}}).then((response)=>{
-            this.dataScopeOffices=response.data;
-            this.remoteLoading = false;
-          })
-        }
-      },remoteOffice(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/sys/office/search',{params:{name:query}}).then((response)=>{
-            this.offices = response.data;
-            this.remoteLoading = false;
-          })
-        }
       }
     },created(){
       axios.get('/api/basic/hr/account/findForm',{params: {id:this.$route.query.id}}).then((response)=>{

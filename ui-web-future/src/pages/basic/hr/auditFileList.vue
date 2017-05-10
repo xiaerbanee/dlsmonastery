@@ -23,9 +23,7 @@
                 <el-input v-model="formData.officeName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.officeId.label"  :label-width="formLabelWidth">
-                <el-select v-model="formData.officeId"  clearable filterable remote :placeholder="$t('auditFileList.inputWord')" :remote-method="remoteOffice" :loading="remoteLoading">
-                  <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-                </el-select>
+                <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
@@ -85,7 +83,10 @@
   </div>
 </template>
 <script>
+  import officeSelect from 'components/basic/office-select'
+
   export default {
+    components:{officeSelect},
     data() {
       return {
         page:{},
@@ -119,7 +120,6 @@
           0:this.$t('auditFileList.all'),
           1:this.$t('auditFileList.waitAudit')
         },
-        offices:[],
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -162,14 +162,6 @@
           axios.get('/api/basic/hr/auditFile/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
-        }
-      },remoteOffice(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
-            this.offices=response.data;
-            this.remoteLoading = false;
           })
         }
       }

@@ -5,23 +5,18 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('employeePhoneDepositForm.employeeName')" prop="employeeId">
           <employee-select  v-model="inputForm.employeeId"></employee-select>
+        </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.depotName')" prop="depotId">
-          <el-select v-model="inputForm.depotId" filterable remote :placeholder="$t('employeePhoneDepositForm.inputWord')" :remote-method="remoteDepot" :loading="remoteLoading" :clearable=true>
-            <el-option v-for="depot in depots" :key="depot.id" :label="depot.name" :value="depot.id"></el-option>
-          </el-select>
+          <depot-select v-model="inputForm.depotId"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.amount')" prop="amount">
           <el-input v-model.number="inputForm.amount"></el-input>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.department')" prop="department">
-          <el-select v-model="inputForm.department">
-            <el-option v-for="item in formProperty.departments"  :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
-          </el-select>
+          <office-select v-model="inputForm.department"></office-select>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.productName')" prop="productId">
-          <el-select v-model="inputForm.productId" filterable remote :placeholder="$t('employeePhoneDepositForm.inputWord')" :remote-method="remoteProduct" :loading="remoteLoading" :clearable=true>
-            <el-option v-for="product in products" :key="product.id" :label="product.name" :value="product.id"></el-option>
-          </el-select>
+          <product-select v-model="inputForm.productId"></product-select>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -36,10 +31,16 @@
 </template>
 <script>
   import employeeSelect from 'components/basic/employee-select'
+  import productSelect from 'components/future/product-select'
+  import officeSelect from 'components/basic/office-select'
+  import depotSelect from 'components/future/depot-select'
 
     export default{
       components:{
-        employeeSelect
+        employeeSelect,
+        productSelect,
+        officeSelect,
+        depotSelect
       },
       data(){
           return{
@@ -88,31 +89,6 @@
               this.submitDisabled = false;
             }
           })
-        },remoteProduct(query) {
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/crm/product/search',{params:{name:query}}).then((response)=>{
-              this.products=response.data;
-              this.remoteLoading = false;
-            })
-          } else {
-            this.products = [];
-          }
-        },remoteDepot(query) {
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/crm/depot/search',{params:{name:query}}).then((response)=>{
-              this.depots=response.data;
-              this.remoteLoading = false;
-            })
-            if(this.inputForm.depotId!==''){
-              axios.get('/api/crm/shopGoodsDeposit/searchDepartMent',{params:{shopId:this.inputForm.depotId}}).then((response)=>{
-                this.inputForm.department=response.data.departMent;
-              })
-            }
-          } else {
-            this.depots = [];
-          }
         }
       },created(){
         axios.get('/api/basic/hr/employeePhoneDeposit/getFormProperty').then((response)=>{

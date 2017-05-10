@@ -9,9 +9,7 @@
               <office-select v-model="inputForm.parentId" ></office-select>
             </el-form-item>
             <el-form-item label="部门管理人" prop="leaderIdList">
-              <el-select v-model="inputForm.leaderIdList" filterable remote multiple :placeholder="$t('officeForm.inputWord')" :remote-method="remoteOfficeLeader" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="item in accountList" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
-              </el-select>
+              <account-select v-model="inputForm.leaderIdList" multiple="true"></account-select>
             </el-form-item>
             <el-form-item label="类型" prop="type">
               <el-select v-model="inputForm.type" filterable @change="typeChange">
@@ -66,10 +64,12 @@
   </div>
 </template>
 <script>
+  import accountSelect from 'components/basic/account-select'
   import officeSelect from 'components/basic/office-select'
   export default{
     components:{
       officeSelect,
+      accountSelect
     },
     data(){
       return {
@@ -134,14 +134,6 @@
             this.submitDisabled = false;
           }
         })
-      }, remoteOfficeLeader(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/account/search', {params: {key: query}}).then((response) => {
-            this.accountList = response.data;
-            this.remoteLoading = false;
-          })
-        }
       },
       handleCheckChange(data, checked, indeterminate) {
         var officeIdList=new Array()

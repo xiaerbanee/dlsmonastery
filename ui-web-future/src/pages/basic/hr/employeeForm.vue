@@ -73,11 +73,8 @@
               <el-input v-model="accountForm.loginName"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.office')" prop="officeId">
-              <el-select v-model="accountForm.officeId" filterable remote :placeholder="$t('employeeForm.inputWord')" :remote-method="remoteOffice" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-              </el-select>
+              <office-select v-model="accountForm.officeId"></office-select>
             </el-form-item>
-
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('employeeForm.leader')" prop="leaderId">
@@ -102,10 +99,12 @@
 <script>
   import districtSelect from 'components/general/district-select'
   import accountSelect from 'components/basic/account-select'
+  import officeSelect from 'components/basic/office-select'
   export default{
     components:{
         districtSelect,
-        accountSelect
+        accountSelect,
+        officeSelect
     },
     data(){
       return{
@@ -200,14 +199,6 @@
             this.submitDisabled = false;
           }
         })
-      },remoteOffice(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/sys/office/search',{params:{name:query}}).then((response)=>{
-            this.offices=response.data;
-            this.remoteLoading = false;
-          })
-        }
       }
     },created(){
       axios.get('/api/basic/hr/employee/findForm',{params: {id:this.$route.query.id}}).then((response)=>{

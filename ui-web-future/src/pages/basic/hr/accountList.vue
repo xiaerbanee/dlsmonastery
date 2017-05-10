@@ -19,9 +19,7 @@
                 <el-input v-model="formData.employeeName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.officeName.label"  :label-width="formLabelWidth">
-                <el-select v-model="formData.officeName"  clearable filterable remote :placeholder="$t('accountList.inputWord')" :remote-method="remoteOffice" :loading="remoteLoading">
-                  <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.name"></el-option>
-                </el-select>
+                <office-select v-model="formData.officeName"></office-select>
               </el-form-item>
               <el-form-item :label="formLabel.leaderName.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.leaderName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
@@ -60,7 +58,10 @@
   </div>
 </template>
 <script>
+  import officeSelect from 'components/basic/office-select'
+
   export default {
+    components:{officeSelect},
     data() {
       return {
         page:{},
@@ -125,16 +126,6 @@
             this.$message(response.data.message);
             this.pageRequest();
           })
-        }
-      },remoteOffice(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
-            this.offices=response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.offices = [];
         }
       }
     },created () {
