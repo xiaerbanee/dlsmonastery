@@ -6,13 +6,13 @@
         <el-form-item :label="$t('processTypeForm.name')" prop="name">
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('processTypeForm.createPermissionId')" prop="createPermissionId">
-          <el-select v-model="inputForm.createPermissionId" filterable remote :placeholder="$t('processTypeForm.inputWord')" :remote-method="createPermissionMethod" :loading="loading">
+        <el-form-item :label="$t('processTypeForm.createdPositionIds')" prop="createdPositionIds">
+          <el-select v-model="inputForm.createdPositionIds" filterable remote :placeholder="$t('processTypeForm.inputWord')" :remote-method="createPermissionMethod" :loading="loading">
             <el-option v-for="item in createPermissions" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('processTypeForm.viewPermissionId')" prop="viewPermissionId">
-          <el-select v-model="inputForm.viewPermissionId" filterable remote :placeholder="$t('processTypeForm.inputWord')"  :remote-method="viewPermissionMethod" :loading="loading">
+        <el-form-item :label="$t('processTypeForm.viewPositionIds')" prop="viewPositionIds">
+          <el-select v-model="inputForm.viewPositionIds" filterable remote :placeholder="$t('processTypeForm.inputWord')"  :remote-method="viewPermissionMethod" :loading="loading">
             <el-option v-for="item in viewPermissions" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -71,15 +71,15 @@
               name:'',
               auditFileType:"1",
               remarks:'',
-              createPermissionId:"",
-              viewPermissionId:"",
+              createdPositionIds:"",
+              viewPositionIds:"",
               processFlowDtoList:[]
             },
             rules: {
               name: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
               auditFileType: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-              createPermissionId: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-              viewPermissionId: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+              createdPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+              viewPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
             }
           }
       },

@@ -441,8 +441,8 @@ export default {
   processTypeForm: {
     processTypeForm: "Proses Editor dinamis",
     name: "NAMA",
-    createPermissionId: "drafting Izin",
-    viewPermissionId: "Lihat izin",
+    createdPositionIds: "drafting Izin",
+    viewPositionIds: "Lihat izin",
     auditFileType: "periksa berkas",
     sort: "pengurutan",
     positionName: "nama posisi",

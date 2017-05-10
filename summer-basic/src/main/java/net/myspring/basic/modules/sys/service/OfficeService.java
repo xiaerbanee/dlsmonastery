@@ -127,7 +127,7 @@ public class OfficeService {
             office = BeanUtil.map(officeForm, Office.class);
             officeMapper.save(office);
         } else {
-            officeManager.officeFilter(officeForm.getId())
+            officeManager.officeFilter(officeForm.getId());
             office = officeMapper.findOne(officeForm.getId());
             String oldParentId=office.getParentId();
             String oldParentIds=office.getParentIds();
