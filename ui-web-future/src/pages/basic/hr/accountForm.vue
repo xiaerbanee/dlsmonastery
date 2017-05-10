@@ -12,9 +12,7 @@
               <el-input v-model="inputForm.loginName"></el-input>
             </el-form-item>
             <el-form-item :label="$t('accountForm.officeName')" prop="officeId">
-              <el-select v-model="inputForm.officeId" filterable remote :placeholder="$t('accountForm.inputWord')" :remote-method="remoteOffice" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-              </el-select>
+              <office-select v-model="inputForm.officeId" ></office-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.leader')" prop="leaderId">
               <account-select v-model="inputForm.leaderId"></account-select>
@@ -47,10 +45,12 @@
 <script>
   import employeeSelect from 'components/basic/employee-select'
   import accountSelect from 'components/basic/account-select'
+  import officeSelect from 'components/basic/office-select'
   export default{
       components:{
           employeeSelect,
-          accountSelect
+          accountSelect,
+          officeSelect
       },
     data(){
       return{
