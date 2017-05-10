@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
 /**
  * Created by admin on 2017/4/6.
  */
@@ -35,18 +36,18 @@ public class OfficeManager {
 
     public List<String> officeFilter(String officeId) {
         List<String> officeIdList = Lists.newArrayList();
-        Office office=officeMapper.findOne(officeId);
         if (!StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())) {
+            Office office = officeMapper.findOne(officeId);
+            officeIdList.add(office.getId());
             if (OfficeTypeEnum.BUSINESS.name().equalsIgnoreCase(office.getType())) {
-                officeIdList.add(office.getId());
                 officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()), "id"));
             } else {
                 List<OfficeBusiness> businessList = officeBusinessMapper.findBusinessIdById(office.getId());
-                if(CollectionUtil.isNotEmpty(businessList)){
+                if (CollectionUtil.isNotEmpty(businessList)) {
                     List<String> officeIds = CollectionUtil.extractToList(businessList, "id");
                     officeIdList.addAll(officeIds);
-                    List<Office> childOfficeList=officeMapper.findByParentIdsListLike(officeIds);
-                    officeIdList.addAll(CollectionUtil.extractToList(childOfficeList,"id"));
+                    List<Office> childOfficeList = officeMapper.findByParentIdsListLike(officeIds);
+                    officeIdList.addAll(CollectionUtil.extractToList(childOfficeList, "id"));
                 }
             }
             if (CollectionUtil.isNotEmpty(officeIdList)) {
