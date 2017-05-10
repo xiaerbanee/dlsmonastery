@@ -25,6 +25,7 @@ import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,11 +60,8 @@ public class OfficeService {
         return page;
     }
 
-    public List<String> getOfficeFilterIds(String accountId) {
-        List<String> officeIdList = Lists.newArrayList();
-        if (accountId != null) {
-            officeIdList = officeManager.officeFilter(accountId);
-        }
+    public List<String> getOfficeFilterIds(String officeId) {
+        List<String> officeIdList =officeManager.officeFilter(officeId);
         return officeIdList;
     }
 
@@ -79,7 +77,7 @@ public class OfficeService {
 
     public OfficeDto searchById(OfficeQuery officeQuery) {
         OfficeDto officeDto=new OfficeDto();
-        List<String> officeFilter = officeManager.officeFilter(RequestUtils.getAccountId());
+        List<String> officeFilter = officeManager.officeFilter(RequestUtils.getOfficeId());
         officeQuery.setOfficeIds(officeFilter);
         List<Office> officeList = officeMapper.findByFilter(officeQuery);
         if(CollectionUtil.isNotEmpty(officeList)){
@@ -129,9 +127,19 @@ public class OfficeService {
             office = BeanUtil.map(officeForm, Office.class);
             officeMapper.save(office);
         } else {
+            officeManager.officeFilter(officeForm.getId())
             office = officeMapper.findOne(officeForm.getId());
+            String oldParentId=office.getParentId();
+            String oldParentIds=office.getParentIds();
             ReflectionUtil.copyProperties(officeForm, office);
             officeMapper.update(office);
+            if(!oldParentId.equals(officeForm.getParentId())){
+                List<Office> list = officeMapper.findByParentIdsLike("%," + office.getId() + ",%");
+                for (Office item : list) {
+                    item.setParentIds(item.getParentIds().replace(oldParentIds, office.getParentIds()));
+                    officeMapper.update(item);
+                }
+            }
         }
         List<OfficeBusiness> businessOfficeList = officeBusinessMapper.findAllBusinessIdById(office.getId());
         if (OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())&&CollectionUtil.isNotEmpty(officeForm.getOfficeIdList())) {
@@ -180,7 +188,7 @@ public class OfficeService {
     }
 
     public List<OfficeDto> findByFilter(OfficeQuery officeQuery) {
-        officeQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getAccountId()));
+        officeQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getOfficeId()));
         List<Office> officeList = officeMapper.findByFilter(officeQuery);
         List<OfficeDto> officeDtoList = BeanUtil.map(officeList, OfficeDto.class);
         cacheUtils.initCacheInput(officeDtoList);

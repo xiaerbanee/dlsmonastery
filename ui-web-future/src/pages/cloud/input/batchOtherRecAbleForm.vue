@@ -6,7 +6,7 @@
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth">
-              <el-date-picker v-model="formData.billDate" type="date" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-date-picker>
+              <date-picker v-model="formData.billDate"></date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -49,16 +49,13 @@
           }
         },
         formData:{
-          billDate:'',
+          billDate:new Date(),
           data:[],
         },formLabel:{
           billDate:{label:"日期"},
         },
-        pickerDateOption:'',
         submitDisabled:false,
         formLabelWidth: '120px',
-        formVisible: false,
-        remoteLoading:false
       };
     },
     mounted() {

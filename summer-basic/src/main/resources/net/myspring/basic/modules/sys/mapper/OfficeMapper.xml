@@ -36,6 +36,17 @@
         and t1.enabled =1
     </select>
 
+    <select id="findByParentIdsListLike" resultType="Office">
+        SELECT t1.*
+        FROM sys_office t1
+        where  t1.enabled =1
+        and (
+        <foreach collection="list" item="item" index="index" open="" separator="or" close="">
+            t1.parent_ids like CONCAT('%',#{item},'%')
+        </foreach>
+        )
+    </select>
+
     <select id="findByFilter" resultType="Office">
         select office.*
         from
@@ -106,7 +117,6 @@
         FROM sys_office t1,sys_office_rule t2
         where t1.enabled=1
         and t2.enabled=1
-        and t2.type='business'
         and t1.office_rule_id=t2.id
         and (t1.parent_ids like concat(',',#{officeId},',') or t1.id=#{officeId})
         and t1.office_rule_id=#{officeRuleId}

@@ -13,7 +13,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth">
-              <el-date-picker v-model="formData.billDate" type="date" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-date-picker>
+              <date-picker v-model="formData.billDate"></date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -101,13 +101,11 @@
             {type: "text", allowEmpty: true, strict: true }
           ],
           afterChange: function (changes, source) {
-            var tbody = this.table.lastChild;
+            var that=this;
             if (source === 'edit') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1]==2;
-                var tr = tbody.childNodes[row];
-                var td = tr.childNodes[2];
                 if(column){
                   var name = changes[i][3];
                   var productMap;
@@ -115,11 +113,9 @@
                     productMap = response.data;
                     for (let index in productMap){
                       if(productMap[index].name === name){
-                        td.innerHTML = productMap[index].value;
-                            this.table.setDataAtCell(row,1,productMap[index].value,source);
+                        that.sss();
                       }
                     }
-//                    this.table.render();
                   });
                 }
               }
@@ -127,17 +123,15 @@
           }
         },
         formData:{
-          billDate:'',
+          billDate:null,
           storeNumber:'',
           data:[],
         },formLabel:{
           billDate:{label:"日期"},
           storeNumber:{label:"仓库"},
         },
-        pickerDateOption:'',
         submitDisabled:false,
         formLabelWidth: '120px',
-        formVisible: false,
         remoteLoading:false
       };
     },
@@ -171,6 +165,9 @@
         } else {
           this.storeList = {};
         }
+      },
+      sss(){
+          this.table.setDataAtCell(2,2,"2");
       }
     }
   }

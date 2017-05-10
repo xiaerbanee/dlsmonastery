@@ -51,6 +51,8 @@ public interface OfficeMapper extends BaseMapper<Office,String> {
 
     List<Office> findByParentIdsLike(String parentId);
 
+    List<Office> findByParentIdsListLike(List<String> parentIdList);
+
     List<Office> findByFilter(@Param("p") OfficeQuery officeQuery);
 
     List<Office> findByFilterAll(@Param("p") Map<String, Object> map);
