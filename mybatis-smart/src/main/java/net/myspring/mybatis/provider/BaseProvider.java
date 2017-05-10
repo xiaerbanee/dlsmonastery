@@ -49,6 +49,7 @@ public class BaseProvider<T, ID extends Serializable> {
             }
             if(getTableDto().getIdColumn() != null && getTableDto().getIdColumn().getJdbcColumn().equals(columnDto.getJdbcColumn())) {
                 Object id;
+                field.setAccessible(true);
                 try {
                     id = field.get(entity);
                 } catch (IllegalAccessException e) {
