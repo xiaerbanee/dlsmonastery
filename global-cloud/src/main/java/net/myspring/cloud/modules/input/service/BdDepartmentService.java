@@ -31,4 +31,8 @@ public class BdDepartmentService {
     public List<NameNumberDto> findNameNumber(){
         return bdDepartmentMapper.findNameAndNumber();
     }
+
+    public List<NameNumberDto> findByNameLike(String name){
+        return bdDepartmentMapper.findByNameLike(name);
+    }
 }

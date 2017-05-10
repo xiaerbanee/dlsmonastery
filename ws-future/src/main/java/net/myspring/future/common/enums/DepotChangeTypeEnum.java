@@ -5,4 +5,5 @@ package net.myspring.future.common.enums;
  */
 public enum DepotChangeTypeEnum {
     名称,价格体系, 有无导购, 是否让利,信用额度;
+    /*NAME,PRICESYSTEM,SHOPGUIDE,BENEFIT,CREDITLINE;*/
 }

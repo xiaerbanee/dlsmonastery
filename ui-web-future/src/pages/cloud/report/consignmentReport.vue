@@ -23,7 +23,7 @@
           <el-button type="primary" @click="search()">搜索</el-button>
         </div>
       </el-dialog>
-      <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+      <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
     </div>
   </div>
 </template>
@@ -70,7 +70,6 @@
         formLabel:{
           dateRange:{label:"日期"},
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false
       };

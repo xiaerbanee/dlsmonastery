@@ -9,6 +9,7 @@ import java.util.List;
  */
 public enum TotalPriceTypeEnum {
     按数量, 按面积;
+    /*NUMBER,AREA*/
 
     public static List<String> getValues(){
         List<String> values= Lists.newArrayList();

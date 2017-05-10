@@ -12,6 +12,9 @@ public enum ShopDepositTypeEnum {
     市场保证金,
     形象保证金,
     演示机押金;
+    /*MARKET_DEPOSIT,
+    * IMAGE_DEPOSIT,
+    * DEMOMOBIE_DEPOSIT*/
 
     private static List<String> list= Lists.newArrayList();
 
