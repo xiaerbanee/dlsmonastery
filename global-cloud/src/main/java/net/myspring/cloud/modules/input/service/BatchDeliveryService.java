@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.MisDeliveryTypeEnum;
-import net.myspring.cloud.common.handsontable.HandSonTableUtils;
+import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.dto.BatchDeliveryDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
@@ -49,10 +49,10 @@ public class BatchDeliveryService {
         }
         for (List<Object> row : datas) {
             String productName = StringUtils.toString(row.get(1));
-            String depotName = HandSonTableUtils.getValue(row, 2);
-            Integer qty = Integer.valueOf(HandSonTableUtils.getValue(row, 3));
-            String type = HandSonTableUtils.getValue(row, 4);
-            String remarks = HandSonTableUtils.getValue(row, 5);
+            String depotName = HandsontableUtils.getValue(row, 2);
+            Integer qty = Integer.valueOf(HandsontableUtils.getValue(row, 3));
+            String type = HandsontableUtils.getValue(row, 4);
+            String remarks = HandsontableUtils.getValue(row, 5);
 
             String billKey = productName + CharConstant.COMMA + depotName + CharConstant.COMMA + qty + CharConstant.COMMA + remarks + CharConstant.COMMA + type;
             if (!misDeliveryMap.containsKey(billKey)) {

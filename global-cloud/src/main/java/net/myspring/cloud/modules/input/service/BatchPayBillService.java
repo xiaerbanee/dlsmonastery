@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.handsontable.HandSonTableUtils;
+import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.dto.BatchPayBillDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
@@ -64,14 +64,14 @@ public class BatchPayBillService {
             departmentMap.put(bdSettleType.getName(), bdSettleType.getNumber());
         }
         for (List<Object> row : datas) {
-            String supplierName = HandSonTableUtils.getValue(row, 0);
-            String departName = HandSonTableUtils.getValue(row, 1);
-            String bankName = HandSonTableUtils.getValue(row, 2);
-            String settleType = HandSonTableUtils.getValue(row, 3);
-            String priceStr = HandSonTableUtils.getValue(row, 4);
+            String supplierName = HandsontableUtils.getValue(row, 0);
+            String departName = HandsontableUtils.getValue(row, 1);
+            String bankName = HandsontableUtils.getValue(row, 2);
+            String settleType = HandsontableUtils.getValue(row, 3);
+            String priceStr = HandsontableUtils.getValue(row, 4);
             BigDecimal amount = StringUtils.isEmpty(priceStr) ? BigDecimal.ZERO : new BigDecimal(priceStr);
-            String note = HandSonTableUtils.getValue(row, 5);
-            String subject = HandSonTableUtils.getValue(row, 6);
+            String note = HandsontableUtils.getValue(row, 5);
+            String subject = HandsontableUtils.getValue(row, 6);
 
             String billKey = supplierName + CharConstant.COMMA + departName + CharConstant.COMMA + bankName + CharConstant.COMMA + settleType + CharConstant.COMMA + amount + CharConstant.COMMA + note + CharConstant.COMMA + subject;
 

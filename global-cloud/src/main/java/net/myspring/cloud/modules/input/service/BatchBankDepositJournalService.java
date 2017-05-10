@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
-import net.myspring.cloud.common.handsontable.HandSonTableUtils;
+import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.domain.BasAssistant;
@@ -105,25 +105,25 @@ public class BatchBankDepositJournalService {
         BigDecimal creditAmounts = BigDecimal.ZERO;
         List<Object> entity = Lists.newArrayList();
         for (List<Object> row : datas) {
-            String otherSubject =  HandSonTableUtils.getValue(row, 0);
-            String settleType =  HandSonTableUtils.getValue(row, 1);
-            String debitAmountStr =  HandSonTableUtils.getValue(row,2);
+            String otherSubject =  HandsontableUtils.getValue(row, 0);
+            String settleType =  HandsontableUtils.getValue(row, 1);
+            String debitAmountStr =  HandsontableUtils.getValue(row,2);
             BigDecimal debitAmount = StringUtils.isEmpty(debitAmountStr) ? BigDecimal.ZERO : new BigDecimal(debitAmountStr);
-            String creditAmountStr =  HandSonTableUtils.getValue(row, 3);
+            String creditAmountStr =  HandsontableUtils.getValue(row, 3);
             BigDecimal creditAmount = StringUtils.isEmpty(creditAmountStr) ? BigDecimal.ZERO : new BigDecimal(creditAmountStr);
-            String bankId =  HandSonTableUtils.getValue(row, 4);
-            String remarks =  HandSonTableUtils.getValue(row, 5);
+            String bankId =  HandsontableUtils.getValue(row, 4);
+            String remarks =  HandsontableUtils.getValue(row, 5);
             String secUser = "";
             String department = "";
             String otherType = "";
             String expenseType = "";
             String F_PAEC_Base2 = "";
-            secUser = HandSonTableUtils.getValue(row, 7);
-            department =  HandSonTableUtils.getValue(row, 8);
-            otherType = HandSonTableUtils.getValue(row, 9);
-            expenseType = HandSonTableUtils.getValue(row, 10);
+            secUser = HandsontableUtils.getValue(row, 7);
+            department =  HandsontableUtils.getValue(row, 8);
+            otherType = HandsontableUtils.getValue(row, 9);
+            expenseType = HandsontableUtils.getValue(row, 10);
             if (row.size() > 11) {
-                F_PAEC_Base2 =  HandSonTableUtils.getValue(row, 11);
+                F_PAEC_Base2 =  HandsontableUtils.getValue(row, 11);
             }
             debitAmounts = debitAmounts.add(debitAmount);
             creditAmounts = creditAmounts.add(creditAmount);

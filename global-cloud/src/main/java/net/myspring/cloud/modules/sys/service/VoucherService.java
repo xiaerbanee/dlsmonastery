@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
-import net.myspring.cloud.common.handsontable.HandSonTableUtils;
+import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.domain.BdAccount;
 import net.myspring.cloud.modules.input.domain.BdFlexItemProperty;
@@ -194,12 +194,12 @@ public class VoucherService {
             int index = i + 1;
             List<Object> row = datas.get(i);
             //科目
-            String subject = HandSonTableUtils.getValue(row,1);
+            String subject = HandsontableUtils.getValue(row,1);
             if (map.containsKey(subject)) {
                 //科目对应核算维度
                 List<String> bdFlexitemproperty = map.get(subject);
                 for (int j = 2; j < row.size() - 2; j++) {
-                    String value = HandSonTableUtils.getValue(row,j);
+                    String value = HandsontableUtils.getValue(row,j);
                     String subjectName = header.get(j);
                     if (StringUtils.isBlank(value)) {
                         if (bdFlexitemproperty.contains(subjectName)) {
@@ -213,12 +213,12 @@ public class VoucherService {
                 }
             }
             //借方金额
-            String debitStr = HandSonTableUtils.getValue(row,header.size() - 2);
+            String debitStr = HandsontableUtils.getValue(row,header.size() - 2);
             if(StringUtils.isNotEmpty(debitStr)){
                 debitAmount = debitAmount.add(new BigDecimal(debitStr));
             }
             //贷方金额
-            String creditStr = HandSonTableUtils.getValue(row,header.size() - 1);
+            String creditStr = HandsontableUtils.getValue(row,header.size() - 1);
             if(StringUtils.isNotEmpty(creditStr)){
                 creditAmount = creditAmount.add(new BigDecimal(creditStr));
             }
@@ -268,14 +268,14 @@ public class VoucherService {
         for (List<Object> row : datas) {
             VoucherEntry voucherEntry = new VoucherEntry();
             //摘要
-            voucherEntry.setfExplanation(HandSonTableUtils.getValue(row,0));
-            String FAcctFullName = HandSonTableUtils.getValue(row,1);
+            voucherEntry.setfExplanation(HandsontableUtils.getValue(row,0));
+            String FAcctFullName = HandsontableUtils.getValue(row,1);
             //科目编码
             voucherEntry.setfAccountId(FAcctFullName.substring(0,FAcctFullName.indexOf(CharConstant.SLASH_LINE)));
             //借方
-            String debitStr = HandSonTableUtils.getValue(row,headers.size() - 2);
+            String debitStr = HandsontableUtils.getValue(row,headers.size() - 2);
             //贷方
-            String creditStr = HandSonTableUtils.getValue(row,headers.size() - 1);
+            String creditStr = HandsontableUtils.getValue(row,headers.size() - 1);
             if (StringUtils.isNoneEmpty(debitStr)) {
                 voucherEntry.setfDebit(new BigDecimal(debitStr));
             } else {
@@ -286,7 +286,7 @@ public class VoucherService {
             //核算维度明细
             List<VoucherEntryFlow> voucherEntryFlowList = Lists.newArrayList();
             for (int i = 2; i < row.size() - 2; i++) {
-                String value = HandSonTableUtils.getValue(row,i);
+                String value = HandsontableUtils.getValue(row,i);
                 String header = headers.get(i);
                 if (StringUtils.isNotBlank(value)) {
                     String name = "FDetailID__" + bdFlexItemPropertyMap.get(header).getfFlexNumber();

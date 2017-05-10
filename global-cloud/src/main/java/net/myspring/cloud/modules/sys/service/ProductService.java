@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.sys.service;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
-import net.myspring.cloud.common.handsontable.HandSonTableUtils;
+import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.sys.domain.Product;
@@ -56,8 +56,8 @@ public class ProductService {
         List<Product> productList = productMapper.findByCompanyId(companyId);
         Map<String,Product> productMap = CollectionUtil.extractToMap(productList,"code");
         for (List<Object> row : datas) {
-            String code = HandSonTableUtils.getValue(row,1);
-            String priceStr = HandSonTableUtils.getValue(row,2);
+            String code = HandsontableUtils.getValue(row,1);
+            String priceStr = HandsontableUtils.getValue(row,2);
             BigDecimal price = StringUtils.isEmpty(priceStr) ? BigDecimal.ZERO : new BigDecimal(priceStr);
             if(productMap.get(code) != null){
                 Product product = productMap.get(code);

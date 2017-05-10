@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
-import net.myspring.cloud.common.handsontable.HandSonTableUtils;
+import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.domain.BasAssistant;
@@ -93,23 +93,23 @@ public class BatchCashDepositJournalService {
         BigDecimal creditAmounts = BigDecimal.ZERO;
         List<Object> entity = Lists.newArrayList();
         for (List<Object> row : datas) {
-            String subject = HandSonTableUtils.getValue(row, 0);
-            String debitAmountStr =  HandSonTableUtils.getValue(row, 1);
+            String subject = HandsontableUtils.getValue(row, 0);
+            String debitAmountStr =  HandsontableUtils.getValue(row, 1);
             BigDecimal debitAmount = StringUtils.isEmpty(debitAmountStr) ? BigDecimal.ZERO : new BigDecimal(debitAmountStr);
-            String creditAmountStr =  HandSonTableUtils.getValue(row, 2);
+            String creditAmountStr =  HandsontableUtils.getValue(row, 2);
             BigDecimal creditAmount = StringUtils.isEmpty(creditAmountStr) ? BigDecimal.ZERO : new BigDecimal(creditAmountStr);
-            String remarks =  HandSonTableUtils.getValue(row, 3);
+            String remarks =  HandsontableUtils.getValue(row, 3);
             String user = "";
             String department = "";
             String otherType = "";
             String expenseType = "";
             String F_PAEC_Base2 = "";
-            user =  HandSonTableUtils.getValue(row, 5);
-            department = HandSonTableUtils.getValue(row, 6);
-            otherType =  HandSonTableUtils.getValue(row, 7);
-            expenseType =  HandSonTableUtils.getValue(row, 8);
+            user =  HandsontableUtils.getValue(row, 5);
+            department = HandsontableUtils.getValue(row, 6);
+            otherType =  HandsontableUtils.getValue(row, 7);
+            expenseType =  HandsontableUtils.getValue(row, 8);
             if (row.size() > 9) {
-                F_PAEC_Base2 =  HandSonTableUtils.getValue(row, 9);
+                F_PAEC_Base2 =  HandsontableUtils.getValue(row, 9);
             }
             debitAmounts = debitAmounts.add(debitAmount);
             creditAmounts = creditAmounts.add(creditAmount);

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
-import net.myspring.cloud.common.handsontable.HandSonTableUtils;
+import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.BdMaterialDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
@@ -49,14 +49,14 @@ public class BatchMaterialService {
                 materialGroupMap.put(bdMaterial.getName(), bdMaterial.getNumber());
             }
             for (List<Object> row : datas) {
-                String productNumber = HandSonTableUtils.getValue(row, 0);
-                String productName = HandSonTableUtils.getValue(row, 1);
-                String priceStr = HandSonTableUtils.getValue(row, 2);
+                String productNumber = HandsontableUtils.getValue(row, 0);
+                String productName = HandsontableUtils.getValue(row, 1);
+                String priceStr = HandsontableUtils.getValue(row, 2);
                 BigDecimal price = StringUtils.isEmpty(priceStr) ? BigDecimal.ZERO : new BigDecimal(priceStr);
-                String RLPriceStr = HandSonTableUtils.getValue(row, 3);
+                String RLPriceStr = HandsontableUtils.getValue(row, 3);
                 BigDecimal rlprice = StringUtils.isEmpty(RLPriceStr) ? BigDecimal.ZERO : new BigDecimal(RLPriceStr);
-                String productGroup = HandSonTableUtils.getValue(row, 4);
-                String productCategory = HandSonTableUtils.getValue(row, 5);
+                String productGroup = HandsontableUtils.getValue(row, 4);
+                String productCategory = HandsontableUtils.getValue(row, 5);
                 String billKey = productNumber + CharConstant.COMMA + productName;
                 if (!materialMap.containsKey(billKey)) {
                     BdMaterialDto bdMaterial = new BdMaterialDto();

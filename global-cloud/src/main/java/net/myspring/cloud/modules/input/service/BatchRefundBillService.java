@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
-import net.myspring.cloud.common.handsontable.HandSonTableUtils;
+import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.domain.BdCustomer;
@@ -63,12 +63,12 @@ public class BatchRefundBillService {
         Map<String, BatchRefundBillDto> cashARRefundBillMap = Maps.newLinkedHashMap();
         for (List<Object> row : datas) {
             String customerName = StringUtils.toString(row.get(0));
-            String bankName = HandSonTableUtils.getValue(row, 1);
-            LocalDate billDate = LocalDateUtils.parse(HandSonTableUtils.getValue(row, 2));
-            String priceStr = HandSonTableUtils.getValue(row, 3);
+            String bankName = HandsontableUtils.getValue(row, 1);
+            LocalDate billDate = LocalDateUtils.parse(HandsontableUtils.getValue(row, 2));
+            String priceStr = HandsontableUtils.getValue(row, 3);
             BigDecimal amount = StringUtils.isEmpty(priceStr) ? BigDecimal.ZERO : new BigDecimal(priceStr);
-            String settleType = HandSonTableUtils.getValue(row, 4);
-            String remarks = HandSonTableUtils.getValue(row, 5);
+            String settleType = HandsontableUtils.getValue(row, 4);
+            String remarks = HandsontableUtils.getValue(row, 5);
             String billKey = "";
             if ("电汇".equals(settleType)) {
                 billKey = customerName + CharConstant.COMMA + bankName + CharConstant.COMMA + billDate + CharConstant.COMMA + amount + CharConstant.COMMA + remarks;

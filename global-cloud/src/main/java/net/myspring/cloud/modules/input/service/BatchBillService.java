@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeBillTypeEnum;
-import net.myspring.cloud.common.handsontable.HandSonTableUtils;
+import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.domain.BdCustomer;
 import net.myspring.cloud.modules.input.domain.BdDepartment;
@@ -63,13 +63,13 @@ public class BatchBillService {
         Map<String, BatchBillDto> billMap = Maps.newLinkedHashMap();
         for (List<Object> row : datas) {
             BatchBillDetailDto batchBillDetail = new BatchBillDetailDto();
-            String productCode = HandSonTableUtils.getValue(row,0);
-            String customerName = HandSonTableUtils.getValue(row,1);
-            String priceStr = HandSonTableUtils.getValue(row, 3);
+            String productCode = HandsontableUtils.getValue(row,0);
+            String customerName = HandsontableUtils.getValue(row,1);
+            String priceStr = HandsontableUtils.getValue(row, 3);
             BigDecimal price = StringUtils.isEmpty(priceStr) ? BigDecimal.ZERO : new BigDecimal(priceStr);
-            Integer qty = Integer.valueOf(HandSonTableUtils.getValue(row, 4));
-            String type = HandSonTableUtils.getValue(row, 5);
-            String remarks = HandSonTableUtils.getValue(row, 6);
+            Integer qty = Integer.valueOf(HandsontableUtils.getValue(row, 4));
+            String type = HandsontableUtils.getValue(row, 5);
+            String remarks = HandsontableUtils.getValue(row, 6);
 
             batchBillDetail.setProductFNumber(productCode);
             batchBillDetail.setPrice(price);
