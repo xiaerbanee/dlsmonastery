@@ -1,7 +1,6 @@
 package net.myspring.mybatis.provider;
 
 import com.google.common.collect.Maps;
-import com.sun.deploy.util.ReflectionUtil;
 import net.myspring.mybatis.context.MapperThreadLocal;
 import net.myspring.mybatis.context.ProviderContextUtils;
 import net.myspring.mybatis.dto.ColumnDto;
