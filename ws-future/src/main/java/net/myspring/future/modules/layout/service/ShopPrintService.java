@@ -1,9 +1,7 @@
 package net.myspring.future.modules.layout.service;
 
-import net.myspring.future.common.enums.DictMapCategoryEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.layout.domain.ShopPrint;
 import net.myspring.future.modules.layout.dto.ShopPrintDto;
@@ -19,16 +17,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-
 @Service
 @Transactional(readOnly = false)
 public class ShopPrintService {
 
     @Autowired
     private ShopPrintMapper shopPrintMapper;
-    @Autowired
-    private DictMapClient dictMapClient;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
