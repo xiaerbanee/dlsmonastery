@@ -40,7 +40,7 @@ public class DutySignService {
         dutySignForm.setDutyDate(LocalDate.now());
         dutySignForm.setDutyTime(LocalTime.now());
         dutySignForm.setStatus(AuditTypeEnum.APPLYING.toString());
-        dutySignForm.setEmployeeId(RequestUtils.getEmployeeId());
+        dutySignForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
         DutySign dutySign=BeanUtil.map(dutySignForm,DutySign.class);
         dutySignMapper.save(dutySign);
         return dutySign;

@@ -92,7 +92,7 @@
           <table class="table">
             <tbody >
                 <date-picker v-model="synDate"></date-picker>
-=                <el-button type="primary"  @click="synFactory">{{$t('home.synFactory')}}</el-button>
+                <el-button type="primary"  @click="synFactory">{{$t('home.synFactory')}}</el-button>
             </tbody>
           </table>
         </el-card>
@@ -141,6 +141,9 @@ export default {
       })
     },synFactory(){
       axios.get('/api/basic/sys/cache/init').then((response) =>{
+        this.$message(response.data.message);
+      })
+      axios.get('/api/ws/future/basic/cache/init').then((response) =>{
         this.$message(response.data.message);
       })
     }

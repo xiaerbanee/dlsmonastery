@@ -1,8 +1,6 @@
 package net.myspring.future.modules.layout.service;
 
-import net.myspring.future.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.layout.domain.ShopImage;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
@@ -19,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -31,8 +28,6 @@ public class ShopImageService {
     private DepotMapper depotMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private CompanyConfigClient companyConfigClient;
 
     public Page findPage(Pageable pageable, ShopImageQuery shopImageQuery){
         Page<ShopImageDto> page=shopImageMapper.findPage(pageable,shopImageQuery);

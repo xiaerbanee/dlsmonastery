@@ -4,7 +4,7 @@
       <!-- header start  -->
       <header class="db-header">
         <div class="backend">
-          <div class="backend-item"><router-link  :to="{path: '/'}">{{token.companyName}}</router-link></div>
+          <div class="backend-item"><router-link  :to="{path: '/'}">{{account.companyName}}</router-link></div>
           <div class="backend-item" v-for="backend in backendList" :key="backend.id"><a  :class="backend.class" href="#" :data-code="backend.code" @click="changeBackend">{{$t('menus.backend.' + backend.code)}}</a></div>
         </div>
         <div class="user-info">

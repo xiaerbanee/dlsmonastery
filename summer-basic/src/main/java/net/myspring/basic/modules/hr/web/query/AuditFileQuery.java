@@ -47,7 +47,7 @@ public class AuditFileQuery extends BaseQuery {
 
     public String getPositionId() {
         if(auditType == null || auditType.equals("1")) {
-            this.positionId = RequestUtils.getPositionId();
+            this.positionId = RequestUtils.getRequestEntity().getPositionId();
         }else {
             this.positionId="";
         }

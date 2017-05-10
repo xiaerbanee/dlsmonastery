@@ -3,7 +3,6 @@ package net.myspring.future.modules.basic.service;
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.DistrictClient;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.mapper.ExpressCompanyMapper;
@@ -25,8 +24,6 @@ public class ExpressCompanyService {
 
     @Autowired
     private ExpressCompanyMapper expressCompanyMapper;
-    @Autowired
-    private DistrictClient districtClient;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -84,5 +81,16 @@ public class ExpressCompanyService {
 
     public List<ExpressCompanyDto> findByNameLike(String name) {
         return expressCompanyMapper.findByNameLike(RequestUtils.getCompanyId(), name);
+    }
+
+    public String getDefaultExpressCompanyId() {
+        //TODO default expressCompanyID
+//        String code = Global.getCompanyConfig(AccountUtils.getCompany().getId(), CompanyConfig.CompanyConfigCode.DEFAULT_EXPRESS_COMPANY_ID.getCode());
+//        if (StringUtils.isNotBlank(code)) {
+//            ExpressCompany expressCompany = expressCompanyDao.findOne(Long.valueOf(code));
+//            storeAllotForm.setExpressCompanyId( expressCompanyService.getDefaultExpressCompanyId());
+//        }
+
+        return null;
     }
 }

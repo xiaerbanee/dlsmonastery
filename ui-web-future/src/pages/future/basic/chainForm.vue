@@ -10,7 +10,10 @@
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item :label="$t('chainForm.shopType')" prop="depotList">
-          <office-select v-model="inputForm.officeId" multiple="true"></office-select>
+          <el-select v-model="inputForm.depotList" multiple filterable remote :placeholder="$t('chainForm.inputKey')" :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in depotOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('chainForm.save')}}</el-button>
@@ -22,8 +25,14 @@
 <script>
   import officeSelect from 'components/basic/office-select'
 
+  import accountSelect from 'components/basic/account-select'
+  import depotSelect from 'components/future/depot-select'
   export default{
-      components:{officeSelect},
+      components:{
+          officeSelect
+          accountSelect,
+        depotSelect},
+      },
     updated(){
       if(this.pageUpdated) {
         this.pageUpdated = false;
@@ -36,8 +45,7 @@
           })
           this.selectChange = true;
         }
-      }
-    },
+      },
     data(){
       return{
         isCreate:this.$route.query.id==null,

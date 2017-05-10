@@ -3,8 +3,10 @@ package net.myspring.future.modules.basic.service;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.future.common.enums.*;
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.*;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
@@ -25,6 +27,7 @@ import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,19 +54,13 @@ public class DepotService {
     @Autowired
     private ShopAttributeMapper shopAttributeMapper;
     @Autowired
-    private DictMapClient dictMapClient;
-    @Autowired
-    private DictEnumClient dictEnumClient;
-    @Autowired
-    private OfficeClient officeClient;
-    @Autowired
-    private DistrictClient districtClient;
-    @Autowired
-    private CompanyConfigClient companyConfigClient;
-    @Autowired
     private CloudClient cloudClient;
     @Autowired
     private DepotManager depotManager;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private CacheUtils cacheUtils;
 
 
     public DepotDto findOne(String id) {
@@ -90,13 +87,12 @@ public class DepotService {
                 depotDto.setTypeLabel(map.get(depotDto.getType()));
             }
         }
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public DepotQuery getQueryProperty(DepotQuery depotQuery) {
         depotQuery.setTypeMap(DepotTypeEnum.getMap());
-        depotQuery.setAreaTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_地区属性.name()));
-        depotQuery.setSpecialityStoreTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_体验店类型.name()));
         depotQuery.setPricesystemList(pricesystemMapper.findAll());
         depotQuery.setChainList(chainMapper.findAll());
         depotQuery.setAdPricesystemList(adPricesystemMapper.findAll());
@@ -106,18 +102,6 @@ public class DepotService {
     }
 
     public DepotForm getFormProperty(DepotForm depotForm) {
-        depotForm.setDistrictDtoList(districtClient.findByParentId("100000"));
-        depotForm.setChannelTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_渠道类型.name()));
-        depotForm.setAreaTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_地区属性.name()));
-        depotForm.setCarrierTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_运营商属性.name()));
-        depotForm.setChainTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_连锁属性.name()));
-        depotForm.setTurnoverTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_营业额分类.name()));
-        depotForm.setSalePointTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_售点类型.name()));
-        depotForm.setShopAreaTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_店面尺寸.name()));
-        depotForm.setBusinessCenterTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_核心商圈.name()));
-        depotForm.setShopMonthTotalList(dictEnumClient.findDictEnumByCategory(DictEnumCategoryEnum.SHOP_MONTH_TOTAL.getValue()));
-        depotForm.setSpecialityStoreTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_体验店类型.name()));
-        depotForm.setBoolMap(BoolEnum.getMap());
         depotForm.setPricesystemList( pricesystemMapper.findAll());
         depotForm.setChainList(chainMapper.findAll());
         return depotForm;
@@ -207,7 +191,7 @@ public class DepotService {
     }
 
     public void synStore(){
-        String cloudName = companyConfigClient.findByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
+        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
         LocalDateTime dateTime = depotMapper.getMaxOutDate(DataOutTypeEnum.大库.name());
         String result = cloudClient.getSynStockData(cloudName, LocalDateTimeUtils.format(dateTime));
         List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);
@@ -251,7 +235,7 @@ public class DepotService {
 
     @Transactional
     public void synShop(){
-        String cloudName = companyConfigClient.findByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
+        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
         LocalDateTime dateTime=depotMapper.getMaxOutDate(DataOutTypeEnum.门店.name());
         String result = cloudClient.getSynCustomerData(cloudName, LocalDateTimeUtils.format(dateTime));
         List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);

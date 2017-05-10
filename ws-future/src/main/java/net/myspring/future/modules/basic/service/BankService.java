@@ -1,10 +1,10 @@
 package net.myspring.future.modules.basic.service;
 
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.future.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.dto.BankDto;
@@ -19,6 +19,7 @@ import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,9 +41,9 @@ public class BankService {
     @Autowired
     private OfficeClient officeClient;
     @Autowired
-    private CompanyConfigClient companyConfigClient;
-    @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public Bank findOne(String id){
         Bank bank=bankMapper.findOne(id);
@@ -68,7 +69,7 @@ public class BankService {
 
     public Page<BankDto> findPage(Pageable pageable,BankQuery bankQuery) {
         bankQuery.setDepotIdList(depotManager.getDepotIds(RequestUtils.getAccountId()));
-        bankQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
+        bankQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         Page<BankDto> page = bankMapper.findPage(pageable, bankQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -99,7 +100,7 @@ public class BankService {
 
     @Transactional
     public void syn(){
-        String cloudName = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode());
+        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
         LocalDateTime dateTime=bankMapper.getMaxOutDate();
         String result = cloudClient.getSynBankData(cloudName, LocalDateTimeUtils.format(dateTime));
         List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);
