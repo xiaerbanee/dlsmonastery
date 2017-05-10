@@ -18,7 +18,7 @@ import datePicker from './components/common/date-picker.vue'
 import dateRangePicker from './components/common/date-range-picker.vue';
 import suDistrict from './components/su-district';
 import suDepot from './components/su-depot';
-import suProcessDetails from './components/su-process-details';
+import suProcessDetails from './components/general/su-process-details';
 import suExpressCompany from './components/su-express-company';
 import suProduct from './components/su-product';
 import suDepartment from './components/su-department';
