@@ -14,6 +14,29 @@
         ORDER BY Fdeptnum
     </select>
 
+    <select id="findDepartmentByDeptNumList" resultType="NameNumberDto">
+        SELECT DISTINCT
+            fdeptnum AS number,
+            fdeptname AS name
+        FROM
+            glcx
+        WHERE
+            fdeptnum in
+        <foreach item="item" index="index" collection="deptNumList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY Fdeptnum
+    </select>
+
+    <select id="findTowDepartmentNumber" resultType="String">
+        SELECT DISTINCT top 2
+            fdeptnum
+        FROM
+            glcx
+        where
+            fdeptnum NOT IN ('')
+    </select>
+
     <select id="findEntityByPeriod" resultType="Retail">
         SELECT
             FYEAR as year,
@@ -62,6 +85,71 @@
         <if test="fyNum != '' and fyNum != null">
             AND Ffynum = #{fyNum}
         </if>
+        GROUP BY
+        faccnumber,
+        faccname,
+        Fdeptnum,
+        Fdeptname,
+        Ffynum,
+        Ffyname
+    </select>
+
+    <select id="findEntityByPeriodAndDeptNumList" resultType="Retail">
+        SELECT
+        FYEAR as year,
+        FPERIOD as month,
+        faccnumber as accNumber,
+        faccname as accName,
+        Fdeptnum as deptNum,
+        Fdeptname as deptName,
+        Ffynum as fyNum,
+        Ffyname as fyName,
+        SUM (famount) AS amount
+        FROM
+        glcx
+        WHERE
+        flx = ''
+        AND Fyear = #{year} and Fperiod = #{month}
+        AND faccname = #{accName}
+        <if test="fyNum != '' and fyNum != null">
+            AND Ffynum = #{fyNum}
+        </if>
+        and fdeptnum in
+        <foreach item="item" index="index" collection="deptNumList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY
+        FYEAR,
+        FPERIOD,
+        faccnumber,
+        faccname,
+        Fdeptnum,
+        Fdeptname,
+        Ffynum,
+        Ffyname
+    </select>
+    <select id="findEntityBySumPeriodAndDeptNumList" resultType="Retail">
+        SELECT
+        faccnumber as accNumber,
+        faccname as accName,
+        Fdeptnum as deptNum,
+        Fdeptname as deptName,
+        Ffynum as fyNum,
+        Ffyname as fyName,
+        SUM (famount) AS amount
+        FROM
+        glcx
+        WHERE
+        flx = ''
+        AND FYEAR*100+ FPERIOD BETWEEN  #{dateStart} AND #{dateEnd}
+        AND faccname = #{accName}
+        <if test="fyNum != '' and fyNum != null">
+            AND Ffynum = #{fyNum}
+        </if>
+        and fdeptnum in
+        <foreach item="item" index="index" collection="deptNumList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         GROUP BY
         faccnumber,
         faccname,

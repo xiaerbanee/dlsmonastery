@@ -10,8 +10,8 @@
         <el-form :model="formData">
           <el-row :gutter="7">
             <el-col :span="12">
-              <el-form-item :label="formLabel.dateRangeBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.dateRange" type="daterange" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.dateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.primaryGroupName.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.primaryGroupId" placeholder="请选择客户分组">
@@ -78,22 +78,20 @@
         detail: {},
         formData: {
           dateRange: '',
-          dateRangeBTW: '',
           primaryGroupName:'',
           primaryGroup:{},
         },
         submitData: {
-          dateRangeBTW: '',
+          dateRange: '',
         },
         submitDetail: {
-          dateRangeBTW: '',
+          dateRange: '',
           customerId: '',
         },
         formLabel:{
-          dateRangeBTW:{label:"日期"},
+          dateRange:{label:"日期"},
           primaryGroupName:{label:"客户分组",value:""},
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
         detailVisible:false,
@@ -107,11 +105,10 @@
         this.pageLoading = true;
         util.getQuery("receivableReport");
         util.setQuery("receivableReport",this.formData);
-        this.formData.dateRangeBTW = util.formatDateRange(this.formData.dateRange);
         util.copyValue(this.formData,this.submitData);
         axios.get('/api/global/cloud/report/receivableReport/summaryList',{params:this.submitData}).then((response) => {
           this.summary = response.data;
-          this.formData.dateRangeBTW = response.data.dateRange;
+          this.formData.dateRange = response.data.dateRange;
           this.formData.primaryGroupName = response.data.primaryGroupName;
           this.formData.primaryGroup = response.data.primaryGroup;
           this.pageLoading = false;

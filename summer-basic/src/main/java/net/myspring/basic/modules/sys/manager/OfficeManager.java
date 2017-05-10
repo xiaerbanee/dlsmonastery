@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.manager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
 /**
  * Created by admin on 2017/4/6.
  */
@@ -32,16 +34,21 @@ public class OfficeManager {
     @Value("${setting.adminIdList}")
     private String adminIdList;
 
-    public List<String> officeFilter(String accountId) {
+    public List<String> officeFilter(String officeId) {
         List<String> officeIdList = Lists.newArrayList();
-        Office office = officeMapper.findByAccountId(accountId);
-        if (!StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)) {
+        if (!StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())) {
+            Office office = officeMapper.findOne(officeId);
+            officeIdList.add(office.getId());
             if (OfficeTypeEnum.BUSINESS.name().equalsIgnoreCase(office.getType())) {
-                officeIdList.add(office.getId());
                 officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()), "id"));
             } else {
                 List<OfficeBusiness> businessList = officeBusinessMapper.findBusinessIdById(office.getId());
-                officeIdList.addAll(CollectionUtil.extractToList(businessList,"id"));
+                if (CollectionUtil.isNotEmpty(businessList)) {
+                    List<String> officeIds = CollectionUtil.extractToList(businessList, "id");
+                    officeIdList.addAll(officeIds);
+                    List<Office> childOfficeList = officeMapper.findByParentIdsListLike(officeIds);
+                    officeIdList.addAll(CollectionUtil.extractToList(childOfficeList, "id"));
+                }
             }
             if (CollectionUtil.isNotEmpty(officeIdList)) {
                 officeIdList.add("0");

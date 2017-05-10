@@ -441,8 +441,8 @@ export default {
   processTypeForm: {
     processTypeForm: "动态流程编辑",
     name: "名称",
-    createPermissionId: "起草权限",
-    viewPermissionId: "查看权限",
+    createdPositionIds: "起草岗位",
+    viewPositionIds: "查看岗位",
     auditFileType: "文件审批类型",
     sort: "排序",
     positionName: "岗位",

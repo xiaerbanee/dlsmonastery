@@ -17,9 +17,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.dateType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.dateType" filterable clearable :placeholder="$t('dutyLeaveList.inputKey')">
-                  <el-option v-for="item in formData.dateList" :key="item" :label="$t('DutyDateTypeEnum.'+item)" :value="item"></el-option>
-                </el-select>
+                <dict-enmu-select v-model="formData.dateType" category="请假类型"></dict-enmu-select>
               </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -42,7 +40,11 @@
   </div>
 </template>
 <script>
+  import dictEnumSelect from 'components/basic/dict-enum-select'
   export default {
+      components:{
+        dictEnumSelect
+      },
     data() {
       return {
         page:{},

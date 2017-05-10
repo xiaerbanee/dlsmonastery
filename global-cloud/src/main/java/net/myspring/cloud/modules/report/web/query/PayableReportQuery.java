@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * Created by lihx on 2017/5/2.
  */
 public class PayableReportQuery extends BaseQuery {
-    private String dateRangeBTW;
+    private String dateRange;
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -19,17 +19,17 @@ public class PayableReportQuery extends BaseQuery {
     private String supplierId;
     private String departmentId;
 
-    public String getDateRangeBTW() {
-        return dateRangeBTW;
+    public String getDateRange() {
+        return dateRange;
     }
 
-    public void setDateRangeBTW(String dateRangeBTW) {
-        this.dateRangeBTW = dateRangeBTW;
+    public void setDateRange(String dateRange) {
+        this.dateRange = dateRange;
     }
 
     public LocalDate getStartDate() {
-        if(StringUtils.isNotBlank(dateRangeBTW)){
-            String[] tempParamValues = dateRangeBTW.split(CharConstant.DATE_RANGE_SPLITTER);
+        if(StringUtils.isNotBlank(dateRange)){
+            String[] tempParamValues = dateRange.split(CharConstant.DATE_RANGE_SPLITTER);
             this.startDate = LocalDateUtils.parse(tempParamValues[0]);
         }else{
             this.startDate = LocalDate.now().minusDays(7L);
@@ -42,8 +42,8 @@ public class PayableReportQuery extends BaseQuery {
     }
 
     public LocalDate getEndDate() {
-        if(StringUtils.isNotBlank(dateRangeBTW)){
-            String[] tempParamValues = dateRangeBTW.split(CharConstant.DATE_RANGE_SPLITTER);
+        if(StringUtils.isNotBlank(dateRange)){
+            String[] tempParamValues = dateRange.split(CharConstant.DATE_RANGE_SPLITTER);
             this.endDate = LocalDateUtils.parse(tempParamValues[1]);
         }else{
             this.endDate = LocalDate.now().minusDays(1L);

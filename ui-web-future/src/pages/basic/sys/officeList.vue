@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:office:edit'">{{$t('officeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'hr:office:view'">{{$t('officeList.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel = "formLabel"></search-tag>
+        <search-tag  :formData="submitData" :formLabel = "formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('officeList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -44,8 +44,8 @@
         <el-table-column prop="remarks" :label="$t('officeList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('officeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('officeList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('officeList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -98,9 +98,9 @@
       },itemAdd(){
         this.$router.push({ name: 'officeForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'officeForm', query: { id: id }})
-        } else if(action=="删除") {
+        } else if(action=="delete") {
           axios.get('/api/basic/sys/office/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
@@ -109,6 +109,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
+      this.formData=this.submitData;
       util.copyValue(this.$route.query,this.formData);
       this.pageRequest();
     }

@@ -71,8 +71,8 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("menuCategoryList",this.submitData);
         util.copyValue(this.formData,this.submitData);
+        util.setQuery("menuCategoryList",this.submitData);
         axios.get('/api/basic/sys/menuCategory?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -102,8 +102,9 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
       this.pageRequest();
+      this.formData=this.submitData;
+      util.copyValue(this.$route.query,this.formData);
     }
   };
 </script>

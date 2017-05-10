@@ -13,7 +13,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth">
-              <el-date-picker v-model="formData.billDate" type="date" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-date-picker>
+              <date-picker v-model="formData.billDate"></date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -65,7 +65,6 @@
           billDate:{label:"日期"},
           subjectNumber:{label:"科目"},
         },
-        pickerDateOption:'',
         submitDisabled:false,
         formLabelWidth: '120px',
       };

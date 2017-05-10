@@ -86,4 +86,8 @@ public class KingdeeBookService {
         }
         return false;
     }
+
+    public String getTypeByCompanyId(String companyId){
+        return kingdeeBookMapper.findTypeByCompanyId(companyId);
+    }
 }

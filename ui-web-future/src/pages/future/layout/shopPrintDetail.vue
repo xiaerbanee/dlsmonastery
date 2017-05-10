@@ -60,8 +60,9 @@
 
 <script>
   import suRadioGroup from 'components/common/su-radio-group';
+  import suProcessDetails from 'components/general/su-process-details'
   export default{
-    components:{suRadioGroup},
+    components:{suRadioGroup,suProcessDetails},
     data(){
       return{
         isCreate:this.$route.query.id==null,

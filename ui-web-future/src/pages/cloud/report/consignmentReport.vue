@@ -13,8 +13,8 @@
         <el-form :model="formData">
           <el-row :gutter="7">
             <el-col :span="12">
-              <el-form-item :label="formLabel.dateRangeBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.dateRange" type="daterange" align="right" placeholder="请选择时间" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.dateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dateRange"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -23,7 +23,7 @@
           <el-button type="primary" @click="search()">搜索</el-button>
         </div>
       </el-dialog>
-      <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+      <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
     </div>
   </div>
 </template>
@@ -66,12 +66,10 @@
         },
         formData: {
           dateRange: '',
-          dateRangeBTW: '',
         },
         formLabel:{
-          dateRangeBTW:{label:"日期"},
+          dateRange:{label:"日期"},
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false
       };
@@ -79,7 +77,7 @@
     mounted () {
       axios.get("/api/global/cloud/report/consignmentReport/report").then((response)=>{
         this.settings.data = response.data.consignmentDtoList;
-        this.formData.dateRangeBTW = response.data.dateRange;
+        this.formData.dateRange = response.data.dateRange;
         this.table = new Handsontable(this.$refs["handsontable"], this.settings)
       })
     },
@@ -91,7 +89,7 @@
         util.copyValue(this.formData,this.submitData);
         axios.get("/api/global/cloud/report/consignmentReport/report",{params:this.submitData}).then((response)=>{
           this.settings.data = response.data.consignmentDtoList;
-          this.formData.dateRangeBTW = response.data.dateRange;
+          this.formData.dateRange = response.data.dateRange;
         })
       }
     },created () {
