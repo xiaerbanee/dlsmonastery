@@ -48,10 +48,6 @@ public class RequestUtils {
         return getRequestEntity().getCompanyId();
     }
 
-    public static String getRoleId() {
-        return "";
-    }
-
     public static DBObject getDbObject(){
         DBObject dbObject = new BasicDBObject();
         dbObject.put("createdBy", getAccountId());

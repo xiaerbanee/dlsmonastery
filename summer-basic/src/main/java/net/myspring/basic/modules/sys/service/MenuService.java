@@ -10,6 +10,7 @@ import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.dto.MenuDto;
+import net.myspring.basic.modules.sys.manager.RoleManager;
 import net.myspring.basic.modules.sys.mapper.BackendMapper;
 import net.myspring.basic.modules.sys.mapper.MenuMapper;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
@@ -40,7 +41,7 @@ public class MenuService {
     @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
-    private AccountMapper accountMapper;
+    private RoleManager roleManager;
     @Autowired
     private BackendMapper backendMapper;
     @Autowired
@@ -142,7 +143,7 @@ public class MenuService {
             List<Menu> menuList = menuMapper.findAllEnabled();
             menuIdList=CollectionUtil.extractToList(menuList,"id");
         } else {
-            String roleId = RequestUtils.getRoleId();
+            String roleId=roleManager.findIdByAccountId(RequestUtils.getAccountId());
             List<Permission> permissionList;
             List<String> accountPermissions=accountPermissionMapper.findPermissionIdByAccount(RequestUtils.getAccountId());
             if(CollectionUtil.isNotEmpty(accountPermissions)){

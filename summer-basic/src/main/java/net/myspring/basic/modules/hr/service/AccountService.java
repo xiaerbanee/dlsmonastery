@@ -12,6 +12,8 @@ import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.domain.Permission;
+import net.myspring.basic.modules.sys.manager.OfficeManager;
+import net.myspring.basic.modules.sys.manager.RoleManager;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
@@ -45,6 +47,8 @@ public class AccountService {
     private PermissionMapper permissionMapper;
     @Autowired
     private EmployeeMapper employeeMapper;
+    @Autowired
+    private RoleManager roleManager;
     @Autowired
     private AccountPermissionMapper accountPermissionMapper;
     @Value("${setting.adminIdList}")
@@ -141,8 +145,8 @@ public class AccountService {
     }
 
     public List<String> getAuthorityList() {
-        String roleId = RequestUtils.getRoleId();
         String accountId= RequestUtils.getAccountId();
+        String roleId = roleManager.findIdByAccountId(accountId);
         List<String> authorityList;
         List<Permission> permissionList;
         if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())){
