@@ -122,4 +122,17 @@ public class BankService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<BankDto> findByNameLike(String name){
+        List<Bank> banks = bankMapper.findByNameLike(name);
+        List<BankDto> bankDtos= BeanUtil.map(banks, BankDto.class);
+        return bankDtos;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BankDto> findById(String id){
+        List<Bank> banks = bankMapper.findById(id);
+        List<BankDto> bankDtos= BeanUtil.map(banks,BankDto.class);
+        return bankDtos;
+    }
 }

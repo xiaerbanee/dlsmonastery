@@ -176,12 +176,7 @@
           this.$message(response.data.message);
           this.pageRequest();
         })
-    },getQuery(){
-        axios.get('/api/crm/shopBuild/getQuery').then((response) =>{
-          this.formProperty=response.data;
-          this.pageRequest();
-        });
-      }
+    }
     },
     created () {
         var that = this;

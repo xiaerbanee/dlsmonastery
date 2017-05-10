@@ -8,7 +8,7 @@
         <el-button type="primary" @click="itemAuthAdd" icon="plus">用户权限编辑</el-button>
         <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
       </el-row>
-      <el-dialog :title="$t('accountList.filter')" v-model="formVisible" size="small" class="search-form">
+      <el-dialog :title="$t('accountList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData" method="get" >
           <el-row :gutter="4">
             <el-col :span="24">
@@ -28,7 +28,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.positionName.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.positionName" clearable filterable :placeholder="$t('accountList.selectGroup')">
-                  <el-option v-for="position in formData.position" :key="position.name" :label="position.name" :value="position.name"></el-option>
+                  <el-option v-for="position in formData.positionList" :key="position.name" :label="position.name" :value="position.name"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -64,13 +64,6 @@
     data() {
       return {
         page:{},
-        formLabel:{
-          loginName:{label:this.$t('accountList.loginName')},
-          employeeName:{label:this.$t('accountList.employeeName')},
-          officeName:{label:this.$t('accountList.officeName')},
-          leaderName:{label:this.$t('accountList.leader')},
-          positionName:{label:this.$t('accountList.positionName')}
-        },
         formData:{},
         submitData:{
           page:0,
@@ -80,6 +73,13 @@
           officeName:'',
           leaderName:'',
           positionName:''
+        },
+        formLabel:{
+          loginName:{label:this.$t('accountList.loginName')},
+          employeeName:{label:this.$t('accountList.employeeName')},
+          officeName:{label:this.$t('accountList.officeName')},
+          leaderName:{label:this.$t('accountList.leader')},
+          positionName:{label:this.$t('accountList.positionName')}
         },
         offices:[],
         formLabelWidth: '120px',

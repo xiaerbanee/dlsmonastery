@@ -24,6 +24,7 @@
         this.innerId=val;
       }
     },created () {
+        console.log(this.category);
       axios.get('/api/basic/sys/dictEnum/findByCategory?category=' + this.category).then((response)=>{
         this.itemList=response.data;
       })
