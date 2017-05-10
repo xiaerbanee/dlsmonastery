@@ -26,10 +26,10 @@
   </div>
 </template>
 <style>
-  @import "~handsontable/handsontable.full.css";
+  @import "~handsontable/dist/handsontable.full.css";
 </style>
 <script>
-  import Handsontable from 'src/assets/handsontable/handsontable.full.js'
+  import Handsontable from 'handsontable/dist/handsontable.full.js'
   export default {
     data() {
       return {
