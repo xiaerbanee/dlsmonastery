@@ -73,9 +73,7 @@
             <date-picker v-model="inputForm.birthday" ></date-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.originSelectId')" prop="originSelectId">
-            <el-select v-model="inputForm.originSelectId"  clearable filterable remote :placeholder="$t('recruitForm.inputWord')" :remote-method="remoteDistrict" :loading="remoteLoading">
-              <el-option v-for="item in origins"  :key="item.id" :label="item.fullName" :value="item.id"></el-option>
-            </el-select>
+            <district-select v-model="inputForm.originSelectId"></district-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.school')" prop="school">
             <el-input v-model="inputForm.school"></el-input>
@@ -178,11 +176,13 @@
 <script>
   import dateTimePicker from "components/common/date-time-picker.vue"
   import accountSelect from 'components/basic/account-select'
+  import districtSelect from 'components/general/district-select'
 
   export default{
       components:{
           dateTimePicker,
-          accountSelect
+          accountSelect,
+          districtSelect
       },
       data(){
           return{
@@ -277,34 +277,6 @@
           this.active = this.active+1;
           if(this.active ==6){
             this.active = 1;
-          }
-        },remoteAccount(query) {
-          if (query !== '') {
-            this.remoteLoading = true;
-              axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
-                var dataMap = new Map();
-                response.data.map((v,index)=>{
-                  dataMap.set(response.data[index].id,response.data[index]);
-                });
-                this.accounts.map((v,index)=>{
-                  dataMap.set(this.accounts[index].id,this.accounts[index]);
-                });
-                this.accounts = new Array();
-                for(let value of dataMap.values()){
-                  this.accounts.push(value);
-                }
-                this.remoteLoading = false;
-              })
-            }
-        },remoteDistrict(query){
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/basic/sys/district/search',{params:{key:query}}).then((response)=>{
-              this.origins=response.data;
-              this.remoteLoading = false;
-            })
-          } else {
-            this.origins = [];
           }
         },onChange(){
           this.message="";

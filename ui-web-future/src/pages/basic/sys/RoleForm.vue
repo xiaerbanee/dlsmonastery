@@ -95,16 +95,6 @@
           }
         }
         this.inputForm.moduleIdStr=modules.join();
-      },remoteBackend(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/sys/backend/search',{params:{name:query}}).then((response)=>{
-            this.backendList=response.data;
-            this.remoteLoading = false;
-        })
-        } else {
-          this.backendList = [];
-        }
       }
     },created(){
       axios.get('/api/basic/sys/role/findForm',{params: {id:this.$route.query.id}}).then((response)=>{

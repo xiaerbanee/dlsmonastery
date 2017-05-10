@@ -6,6 +6,7 @@ import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.PermissionDto;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.basic.modules.sys.service.PermissionService;
+import net.myspring.basic.modules.sys.service.RoleService;
 import net.myspring.basic.modules.sys.web.form.PermissionForm;
 import net.myspring.basic.modules.sys.web.query.PermissionQuery;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -28,6 +29,8 @@ public class PermissionController {
     private PermissionService permissionService;
     @Autowired
     private MenuService menuService;
+    @Autowired
+    private RoleService roleService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<PermissionDto> list(Pageable pageable, PermissionQuery permissionQuery){
@@ -52,6 +55,7 @@ public class PermissionController {
     public PermissionForm findForm(PermissionForm permissionForm) {
         permissionForm=permissionService.findForm(permissionForm);
         permissionForm.setMenuList(menuService.findAll());
+        permissionForm.setRoleList(roleService.findAll());
         return permissionForm;
     }
 

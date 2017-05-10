@@ -9,8 +9,8 @@
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
             <el-form-item label="绑定角色" prop="roleId">
-              <el-select v-model="inputForm.roleId" filterable remote :placeholder="$t('accountForm.inputWord')" :remote-method="remoteRole" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-select v-model="inputForm.roleId" filterable  :placeholder="$t('accountForm.inputWord')" >
+                <el-option v-for="item in inputForm.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('positionForm.permission')" prop="permission">
@@ -70,25 +70,12 @@
             this.submitDisabled = false;
           }
         })
-      },remoteRole(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/sys/role/search',{params:{name:query}}).then((response)=>{
-            this.roleList=response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.roleList = [];
-        }
       }
     },created(){
       axios.get('/api/basic/hr/position/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
-        if(response.data.roleId!=null){
-            this.roleList = new Array({id:response.data.roleId,name:response.data.roleName});
-        }
+        console.log(response.data)
       })
-
     }
   }
 </script>

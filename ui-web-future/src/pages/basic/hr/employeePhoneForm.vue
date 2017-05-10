@@ -7,9 +7,7 @@
           <el-input v-model.number="inputForm.employeeName" readonly></el-input>
         </el-form-item>
         <el-form-item :label="$t('accountList.depotName')" prop="depotId">
-          <el-select v-model="inputForm.depotId" filterable remote :placeholder="$t('employeePhoneForm.inputWord')" :remote-method="remoteDepot" :loading="remoteLoading" :clearable=true>
-            <el-option v-for="depot in depots" :key="depot.id" :label="depot.name" :value="depot.id"></el-option>
-          </el-select>
+          <depot-select v-model="inputForm.depotId"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('accountList.depositAmount')" prop="depositAmount">
           <el-input v-model.number="inputForm.depositAmount"></el-input>
@@ -18,9 +16,7 @@
           <el-date-picker  v-model="inputForm.uploadTime" type="datetime" align="left" :placeholder="$t('employeePhoneForm.selectDate')" format="yyyy-MM-dd hh:mm:ss" ></el-date-picker>
         </el-form-item>
         <el-form-item :label="$t('accountList.productName')" prop="productId">
-          <el-select v-model="inputForm.productId" filterable remote :placeholder="$t('employeePhoneForm.inputWord')" :remote-method="remoteProduct" :loading="remoteLoading" :clearable=true>
-            <el-option v-for="product in products" :key="product.id" :label="product.name" :value="product.id"></el-option>
-          </el-select>
+          <product-select v-model="inputForm.productId"></product-select>
         </el-form-item>
         <el-form-item :label="$t('accountList.jobPrice')" prop="jobPrice">
           <el-input v-model.number="inputForm.jobPrice"></el-input>
@@ -44,7 +40,11 @@
   </div>
 </template>
 <script>
-    export default{
+  import productSelect from 'components/future/product-select'
+  import depotSelect from 'components/future/depot-select'
+
+  export default{
+      components:{productSelect,depotSelect},
       data(){
           return{
             isCreate:this.$route.query.id==null,
@@ -96,26 +96,6 @@
               this.submitDisabled = false;
             }
           })
-        },remoteProduct(query) {
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/crm/product/search',{params:{name:query}}).then((response)=>{
-              this.products=response.data;
-              this.remoteLoading = false;
-            });
-          } else {
-            this.products = [];
-          }
-        },remoteDepot(query) {
-          if (query !== '') {
-            this.remoteLoading = true;
-            axios.get('/api/crm/depot/search',{params:{name:query}}).then((response)=>{
-              this.depots=response.data;
-              this.remoteLoading = false;
-            })
-          } else {
-            this.depots = [];
-          }
         }
       },created(){
         axios.get('/api/basic/hr/employeePhone/getFormProperty').then((response)=>{

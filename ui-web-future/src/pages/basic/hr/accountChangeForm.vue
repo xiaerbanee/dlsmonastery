@@ -25,9 +25,7 @@
               </el-select>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='DEPARTMENT'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
-              <el-select v-model="inputForm.newValue" filterable remote clearable :placeholder="$t('accountChangeForm.selectKeyShow20time')"  :remote-method="remoteOffice" :loading="remoteLoading">
-                <el-option v-for="item in offices"  :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+              <office-select v-model="inputForm.officeId"></office-select>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='POSITION'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
               <el-select v-model="inputForm.newValue" filterable :placeholder="$t('accountChangeForm.inputWord')" >
@@ -55,9 +53,11 @@
 
 <script>
   import accountSelect from 'components/basic/account-select'
+  import officeSelect from 'components/basic/office-select'
   export default{
       components:{
-          accountSelect
+          accountSelect,
+          officeSelect
       },
     data(){
       return{
@@ -109,16 +109,6 @@
             this.submitDisabled = false;
       }
       })
-      },remoteOffice(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/hr/office/search',{params:{name:query}}).then((response)=>{
-            this.offices=response.data;
-          this.remoteLoading = false;
-        })
-        } else {
-          this.offices = [];
-        }
       },getAccount(id){
         if(id){
             var type=this.inputForm.type;
