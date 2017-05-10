@@ -64,4 +64,13 @@ public class PositionController {
         }
         return positionDtoList;
     }
+
+    @RequestMapping(value = "findById")
+    public PositionDto findById(String id) {
+        PositionDto positionDto =new PositionDto();
+        if(StringUtils.isNotBlank(id)){
+            positionDto =positionService.findOne(id);
+        }
+        return positionDto;
+    }
 }

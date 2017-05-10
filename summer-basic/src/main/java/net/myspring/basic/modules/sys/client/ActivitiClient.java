@@ -24,6 +24,6 @@ public interface ActivitiClient {
     @RequestMapping(method = RequestMethod.GET, value = "/sys/activiti/complete")
     ActivitiCompleteDto complete(ActivitiCompleteForm activitiCompleteForm);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/sys/activiti/getActivitiDetail")
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/activiti/detail")
     List<ActivitiDetailDto> getActivitiDetail(@RequestParam("processInstanceId") String processInstanceId);
 }

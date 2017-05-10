@@ -6,9 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="10">
             <el-form-item :label="$t('officeForm.parentId')" prop="parentId">
-              <el-select v-model="inputForm.parentId" filterable remote :placeholder="$t('officeForm.inputWord')" :remote-method="remoteOffice" :loading="remoteLoading" :clearable=true>
-                <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-              </el-select>
+              <office-select v-model="inputForm.parentId" ></office-select>
             </el-form-item>
             <el-form-item label="部门管理人" prop="leaderIdList">
               <el-select v-model="inputForm.leaderIdList" filterable remote multiple :placeholder="$t('officeForm.inputWord')" :remote-method="remoteOfficeLeader" :loading="remoteLoading" :clearable=true>
@@ -68,7 +66,11 @@
   </div>
 </template>
 <script>
+  import officeSelect from 'components/basic/office-select'
   export default{
+    components:{
+      officeSelect,
+    },
     data(){
       return {
         isCreate: this.$route.query.id == null,
@@ -132,14 +134,6 @@
             this.submitDisabled = false;
           }
         })
-      }, remoteOffice(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/sys/office/search', {params: {name: query}}).then((response) => {
-            this.offices = response.data;
-            this.remoteLoading = false;
-          })
-        }
       }, remoteOfficeLeader(query){
         if (query !== '') {
           this.remoteLoading = true;

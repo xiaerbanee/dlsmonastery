@@ -27,8 +27,6 @@ public class DepotManager {
     @Autowired
     private DepotMapper depotMapper;
     @Autowired
-    private OfficeClient officeClient;
-    @Autowired
     private CompanyConfigClient companyConfigClient;
 
 
@@ -202,11 +200,8 @@ public class DepotManager {
 
     public Map<String,Object> filterDepotIds(){
         Map<String,Object> filterMap= Maps.newLinkedHashMap();
-        String accountId = RequestUtils.getAccountId();
         List<Depot> depotList=depotMapper.findByAccountId(RequestUtils.getAccountId());
         filterMap.put("depotIdList",CollectionUtil.extractToList(depotList,"id"));
-        List<String> officeIdList=officeClient.getOfficeFilterIds(RequestUtils.getAccountId());
-        filterMap.put("officeIdList",officeIdList);
         return filterMap;
     }
 }
