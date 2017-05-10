@@ -5,4 +5,5 @@ package net.myspring.future.common.enums;
  */
 public enum DepotOutTypeEnum {
     大库,门店
+    /*DEPOT,STORE*/
 }

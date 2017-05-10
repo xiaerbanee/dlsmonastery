@@ -15,6 +15,15 @@ public enum DepotTypeEnum {
     门店_专卖店(620),
     门店_直营_分店(620),
     门店_代理(630);
+    /*DEPOT_HQ(100),
+    DEPOT_OFFICE(110),
+    DEPOT_CONSIGNMENTSALES(200),
+    DEPOT_AGENCY(500),
+    STORE_DIRECTSALES(600),
+    STORE_CONSIGNMENTSALES(610),
+    STORE_SHOP(620),
+    STORE_DIRECTSALES_SHOP(620),
+    STORE_AGENCY(630);*/
     private static HashBiMap<Integer, String> map;
 
     private Integer value;
