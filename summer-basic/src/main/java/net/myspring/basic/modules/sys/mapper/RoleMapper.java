@@ -48,4 +48,6 @@ public interface RoleMapper extends BaseMapper<Role,String> {
     Page<RoleDto> findPage(Pageable pageable, @Param("p")RoleQuery roleQuery);
 
     List<Role> findByNameLike(String name);
+
+    Role findByAccountId(String accountId);
 }

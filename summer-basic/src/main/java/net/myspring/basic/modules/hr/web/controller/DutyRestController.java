@@ -42,10 +42,10 @@ public class DutyRestController {
     @RequestMapping(value = "getFormProperty")
     public Map<String, Object> getFormProperty(DutyRestForm dutyRestForm) {
         Map<String, Object> map = Maps.newHashMap();
-        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(RequestUtils.getEmployeeId(), LocalDateTime.now()));
-        dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(RequestUtils.getEmployeeId()));
+        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(RequestUtils.getRequestEntity().getEmployeeId(), LocalDateTime.now()));
+        dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(RequestUtils.getRequestEntity().getEmployeeId()));
         map.put("dutyRestForm", dutyRestForm);
-        map.put("expiredHour", dutyOvertimeService.getExpiredHour(RequestUtils.getEmployeeId(), LocalDateTime.now()));
+        map.put("expiredHour", dutyOvertimeService.getExpiredHour(RequestUtils.getRequestEntity().getEmployeeId(), LocalDateTime.now()));
         map.put("restList", DutyRestTypeEnum.values());
         map.put("dateList", DutyDateTypeEnum.values());
         return map;

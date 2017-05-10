@@ -19,9 +19,11 @@
               <el-form-item :label="formLabel.endMonth.label" :label-width="formLabelWidth">
                 <el-date-picker v-model="formData.endMonth" type="month" placeholder="选择结束月份"></el-date-picker>
               </el-form-item>
-              <el-select v-model="formData.departmentNumbers" filterable multiple remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
-                <el-option v-for="item in departmentList" :key="item.number" :label="item.name" :value="item.number"></el-option>
-              </el-select>
+              <el-form-item :label="formLabel.departmentNumbers.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.departmentNumbers" filterable multiple remote placeholder="请输入关键词，可多选" :remote-method="remoteDepartment" :loading="remoteLoading">
+                  <el-option v-for="item in departmentList" :key="item.number" :label="item.name" :value="item.number"></el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -68,7 +70,7 @@
         formLabel:{
           startMonth:{label:"开始月份"},
           endMonth:{label:"结束月份"},
-          departmentNumbers:'',
+          departmentNumbers:{label:"部门"},
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -95,7 +97,7 @@
           this.formData.dateRange = response.data.dateRange;
         })
       },
-      remoteDepartment(){
+      remoteDepartment(query){
         if (query !== '') {
           this.remoteLoading = true;
           axios.get('/api/global/cloud/input/bdDepartment/getByNameLike',{params:{name:query}}).then((response)=>{

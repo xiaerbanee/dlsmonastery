@@ -12,12 +12,12 @@
                 <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.leaveType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.leaveType" filterable clearable :placeholder="$t('dutyLeaveList.inputKey')">
-                  <el-option v-for="item in formData.leaveList" :key="item" :label="item" :value="item"></el-option>
-                </el-select>
+                <dict-enum-select v-model="formData.leaveType" category="请假类型" />
               </el-form-item>
               <el-form-item :label="formLabel.dateType.label" :label-width="formLabelWidth">
-                <dict-enmu-select v-model="formData.dateType" category="请假类型"></dict-enmu-select>
+                <el-select v-model="formData.dateType" filterable clearable :placeholder="$t('dutyLeaveList.inputKey')">
+                  <el-option v-for="item in formData.dateList" :key="item" :label="$t('DutyDateTypeEnum.'+item)" :value="item"></el-option>
+                </el-select>
               </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -42,9 +42,9 @@
 <script>
   import dictEnumSelect from 'components/basic/dict-enum-select'
   export default {
-      components:{
-        dictEnumSelect
-      },
+    components:{
+      dictEnumSelect
+    },
     data() {
       return {
         page:{},

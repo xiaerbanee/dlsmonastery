@@ -8,6 +8,7 @@ import net.myspring.future.modules.basic.mapper.ChainMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.web.query.ChainQuery;
 import net.myspring.future.modules.basic.web.form.ChainForm;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -72,18 +74,27 @@ public class ChainService {
             chain = chainMapper.findOne(chainForm.getId());
             ReflectionUtil.copyProperties(chainForm,chain);
             chainMapper.update(chain);
+            chainMapper.deleteByChainId(chain.getId());
         }
-
-        List<Depot> depotListBefore = depotMapper.findByChainId(chain.getId());
-        for(Depot depot:depotListBefore){
-            depot.setChainId(null);
-            depotMapper.update(depot);
+        if(CollectionUtil.isNotEmpty(chainForm.getAccountIdList())){
+            chainMapper.saveAccountAndChain(chain.getId(),chainForm.getAccountIdList());
         }
-
-        List<Depot> depotListNow = depotMapper.findByIds(chainForm.getDepotIdList());
-        for(Depot depot:depotListNow){
-            depot.setChainId(chain.getId());
-            depotMapper.update(depot);
+        List<Depot> depotList = depotMapper.findByChainId(chain.getId());
+        Map<String,Depot> depotMap=CollectionUtil.extractToMap(depotList,"id");
+        List<String> depotIdList= CollectionUtil.extractToList(depotList,"id");
+        List<String> removeIdList=CollectionUtil.subtract(chainForm.getDepotIdList(),depotIdList);
+        List<String> addIdList=CollectionUtil.subtract(depotIdList,chainForm.getDepotIdList());
+        for(String removeId:removeIdList){
+            Depot removeDepot = depotMap.get(removeId);
+            removeDepot.setChainId(null);
+            depotMapper.update(removeDepot);
+        }
+        depotList=depotMapper.findByIds(chainForm.getDepotIdList());
+        depotMap=CollectionUtil.extractToMap(depotList,"id");
+        for(String addId:addIdList){
+            Depot addDepot = depotMap.get(addId);
+            addDepot.setChainId(chain.getId());
+            depotMapper.update(addDepot);
         }
         return chain;
     }

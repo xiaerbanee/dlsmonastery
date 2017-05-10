@@ -9,9 +9,8 @@
         <el-form-item :label="$t('chainForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('chainForm.shopType')" prop="depotList">
-          <el-select v-model="inputForm.depotList" multiple filterable remote :placeholder="$t('chainForm.inputKey')" :remote-method="remoteMethod"
-                     :loading="loading">
+        <el-form-item label="门店" prop="depotIdList">
+          <el-select v-model="inputForm.depotIdList" :multiple="!isCreate" filterable remote :placeholder="$t('chainForm.inputKey')" :remote-method="remoteDepot" :loading="loading">
             <el-option v-for="item in depotOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -23,20 +22,12 @@
   </div>
 </template>
 <script>
+  import accountSelect from 'components/basic/account-select'
+  import depotSelect from 'components/future/depot-select'
   export default{
-    updated(){
-      if(this.pageUpdated) {
-        this.pageUpdated = false;
-        if(this.content != null && this.content.length>0) {
-          this.$refs['table'].clearSelection();
-          this.content.map((v,index)=>{
-            if(v.chainId ===this.inputForm.id){
-              this.$refs['table'].toggleRowSelection(this.content[index],true);
-            }
-          })
-          this.selectChange = true;
-        }
-      }
+    components:{
+      accountSelect,
+      depotSelect
     },
     data(){
       return{
@@ -47,10 +38,12 @@
         submitData:{
             id:"",
             name:"",
-            remarks:""
+            remarks:"",
+          depotIdList:[],
+          accountIdList:[],
         },
-//        states:[],
         depotOptions:[],
+        accountList:[],
         rules: {
           name: [{ required: true, message: this.$t('chainForm.prerequisiteMessage')}]
         }
@@ -76,22 +69,17 @@
             this.submitDisabled = false;
           }
         })
-      },remoteMethod(query){
+      },remoteDepot(query){
         if (query !== '') {
           console.log("query "+query);
           this.loading = true;
-            axios.get('/api/ws/future/basic/depot/searchShop',{params:{name:query}}).then((response)=>{
-
+            axios.get('/api/ws/future/basic/depot/searchShop',{params:{key:query}}).then((response)=>{
               this.depotOptions = response.data;
-
-              console.log(this.depotOptions);
-
               this.loading = false;
             });
         } else {
           this.depotOptions = [];
         }
-
       }
       },created(){
         axios.get('/api/ws/future/basic/chain/findForm',{params: {id:this.$route.query.id}}).then((response)=>{

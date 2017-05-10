@@ -7,6 +7,14 @@ public class NestedHeaderCell {
     String label;
     Integer colspan;
 
+    public NestedHeaderCell(){
+    };
+
+    public NestedHeaderCell(String label, Integer colSpan) {
+        this.label = label;
+        this.colspan = colSpan;
+    }
+
     public String getLabel() {
         return label;
     }
@@ -22,9 +30,4 @@ public class NestedHeaderCell {
     public void setColspan(Integer colspan) {
         this.colspan = colspan;
     }
-    public NestedHeaderCell(String label, Integer colSpan) {
-        this.label = label;
-        this.colspan = colSpan;
-    }
-    public NestedHeaderCell(){};
 }

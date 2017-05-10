@@ -41,11 +41,7 @@ public class PricesystemController {
 
     @RequestMapping(value = "findForm")
     public PricesystemForm findOne(PricesystemForm pricesystemForm) {
-        if(pricesystemForm.getId() != null){
-            Pricesystem pricesystem = pricesystemService.findOne(pricesystemForm.getId());
-            pricesystemForm = BeanUtil.map(pricesystem,PricesystemForm.class);
-        }
-        pricesystemService.initPricesystemDetail(pricesystemForm);
+        pricesystemForm=pricesystemService.findForm(pricesystemForm);
         return pricesystemForm;
     }
 

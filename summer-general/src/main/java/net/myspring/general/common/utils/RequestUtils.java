@@ -8,46 +8,59 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
  * Created by liuj on 2017/4/2.
  */
 public class RequestUtils {
+    public static final String REQEUST_ENTITY = "requestEntity";
+
+    public static RequestEntity getRequestEntity() {
+        HttpServletRequest request  = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        RequestEntity requestEntity;
+        if(request.getAttribute(REQEUST_ENTITY) != null) {
+            requestEntity = (RequestEntity) request.getAttribute(REQEUST_ENTITY);
+        } else {
+            requestEntity = new RequestEntity();
+        }
+        Map<String,String> securityMap = getSecurityMap();
+        if(securityMap.size()>0) {
+            requestEntity.setAccountId(securityMap.get("accountId"));
+            requestEntity.setCompanyId(securityMap.get("companyId"));
+            requestEntity.setPositionId(securityMap.get("positionId"));
+            requestEntity.setOfficeId(securityMap.get("officeId"));
+            requestEntity.setEmployeeId(securityMap.get("employeeId"));
+        }
+        request.setAttribute(REQEUST_ENTITY,requestEntity);
+        return requestEntity;
+    }
 
     public static String getAccountId() {
-        return String.valueOf(getAdditionalInformation().get("accountId"));
+        return getRequestEntity().getAccountId();
     }
 
     public static String getCompanyId() {
-        return String.valueOf(getAdditionalInformation().get("companyId"));
+        return getRequestEntity().getCompanyId();
     }
 
-    public static String getPositionId() {
-        return String.valueOf(getAdditionalInformation().get("positionId"));
-    }
-
-    public static String getOfficeId() {
-        return String.valueOf(getAdditionalInformation().get("officeId"));
-    }
-
-    public static String getEmployeeId() {
-        return String.valueOf(getAdditionalInformation().get("employeeId"));
-    }
 
     public static DBObject getDbObject(){
         DBObject dbObject = new BasicDBObject();
         dbObject.put("createdBy", getAccountId());
-        dbObject.put("companyId",getCompanyId());
-        dbObject.put("positionId",getPositionId());
-        dbObject.put("officeId",getOfficeId());
+        dbObject.put("companyId",getRequestEntity().getCompanyId());
+        dbObject.put("positionId",getRequestEntity().getPositionId());
+        dbObject.put("officeId",getRequestEntity().getOfficeId());
         return dbObject;
     }
 
-    private  static Map<String, Object> getAdditionalInformation() {
+    private  static Map<String, String> getSecurityMap() {
         Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
-        Map<String,Object> map = Maps.newHashMap();
+        Map<String,String> map = Maps.newHashMap();
         if(details instanceof  OAuth2AuthenticationDetails) {
             OAuth2AuthenticationDetails oAuth2AuthenticationDetails = (OAuth2AuthenticationDetails)details;
             Jwt jwt = JwtHelper.decode(oAuth2AuthenticationDetails.getTokenValue());

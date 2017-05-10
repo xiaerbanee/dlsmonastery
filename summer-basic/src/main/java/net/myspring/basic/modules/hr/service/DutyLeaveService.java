@@ -45,7 +45,7 @@ public class DutyLeaveService {
             if (dutyLeaveMapper.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, dutyLeaveForm.getDateType())  == null) {
                 dutyLeaveForm.setDutyDate(date);
                 dutyLeaveForm.setStatus(AuditTypeEnum.APPLYING.toString());
-                dutyLeaveForm.setEmployeeId(RequestUtils.getEmployeeId());
+                dutyLeaveForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
                 DutyLeave dutyLeave=BeanUtil.map(dutyLeaveForm,DutyLeave.class);
                 dutyLeaveMapper.save(dutyLeave);
                 dutyLeave=dutyLeaveMapper.findOne(dutyLeave.getId());
@@ -64,7 +64,7 @@ public class DutyLeaveService {
                     item.setLeaveType(dutyLeaveForm.getLeaveType());
                     item.setAttachment(dutyLeaveForm.getAttachment());
                     item.setRemarks(dutyLeaveForm.getRemarks());
-                    item.setEmployeeId(RequestUtils.getEmployeeId());
+                    item.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
                     dutyLeaveMapper.save(item);
                     dutyLeaveList.add(item);
                 }

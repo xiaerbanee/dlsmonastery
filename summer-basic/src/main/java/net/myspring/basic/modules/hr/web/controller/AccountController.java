@@ -11,6 +11,7 @@ import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
+import net.myspring.basic.modules.sys.manager.RoleManager;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.common.constant.CharConstant;
@@ -61,6 +62,8 @@ public class AccountController {
     private MenuService menuService;
     @Autowired
     private PermissionService permissionService;
+    @Autowired
+    private RoleManager roleManager;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AccountDto> list(Pageable pageable, AccountQuery accountQuery) {
@@ -113,7 +116,7 @@ public class AccountController {
 
     @RequestMapping(value = "searchFilter")
     public List<AccountDto> searchFilter(AccountQuery accountQuery) {
-        accountQuery.setOfficeId(RequestUtils.getOfficeId());
+        accountQuery.setOfficeId(RequestUtils.getRequestEntity().getOfficeId());
         List<AccountDto> accountDtoList = accountService.findByFilter(accountQuery);
         return accountDtoList;
     }
@@ -151,7 +154,7 @@ public class AccountController {
         map.put("dutySize", dutyList.size());
         map.put("accountMessageSize", accountMessages.size());
         //显示剩余的加班调休时间和年假时间
-        String employeeId = RequestUtils.getEmployeeId();
+        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
         map.put("annualHour", dutyAnnualService.getAvailableHour(employeeId));
         map.put("overtimeHour", dutyOvertimeService.getAvailableHour(employeeId, LocalDateTime.now()));
         //显示快到期时间
@@ -169,7 +172,8 @@ public class AccountController {
 
     @RequestMapping(value = "getTreeNode")
     public TreeNode getTreeNode() {
-        TreeNode treeNode=permissionService.findRolePermissionTree(RequestUtils.getRoleId(), Lists.newArrayList());
+        String roleId=roleManager.findIdByAccountId(RequestUtils.getAccountId());
+        TreeNode treeNode=permissionService.findRolePermissionTree(roleId, Lists.newArrayList());
         return treeNode;
     }
 

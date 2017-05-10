@@ -3,17 +3,17 @@ package net.myspring.future.modules.basic.manager;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.CompanyConfigClient;
-import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class DepotManager {
     @Autowired
     private DepotMapper depotMapper;
     @Autowired
-    private CompanyConfigClient companyConfigClient;
+    private RedisTemplate redisTemplate;
 
 
     public List<String> getDepotIds(String accountId) {
@@ -148,8 +148,8 @@ public class DepotManager {
 
     public  Integer getDepotType(Depot depot) {
         Integer type = depot.getType()==null?DepotTypeEnum.门店_代理.getValue():depot.getType();
-        List<String> shopDelegateGroupIds = StringUtils.getSplitList(companyConfigClient.findByCode(CompanyConfigCodeEnum.SHOP_DELEGATE_GROUP_IDS.getCode()).getValue(), CharConstant.COMMA);
-        List<String> storeDelegateGroupIds= StringUtils.getSplitList(companyConfigClient.findByCode(CompanyConfigCodeEnum.STORE_DELEGATE_GROUP_IDS.getCode()).getValue(), CharConstant.COMMA);
+        List<String> shopDelegateGroupIds = StringUtils.getSplitList(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.SHOP_DELEGATE_GROUP_IDS.getCode()).getValue(), CharConstant.COMMA);
+        List<String> storeDelegateGroupIds= StringUtils.getSplitList(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.STORE_DELEGATE_GROUP_IDS.getCode()).getValue(), CharConstant.COMMA);
         Depot parent = depotMapper.findOne(depot.getParentId());
         //如果财务类型为空
         if(StringUtils.isBlank(depot.getOutType())) {
