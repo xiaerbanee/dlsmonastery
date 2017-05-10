@@ -112,7 +112,7 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     }
 
     public Boolean getIsAuditable(){
-        if(RequestUtils.getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
+        if(RequestUtils.getRequestEntity().getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
             return true;
         }else {
             return false;
