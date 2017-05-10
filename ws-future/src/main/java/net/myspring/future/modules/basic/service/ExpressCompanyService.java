@@ -3,7 +3,6 @@ package net.myspring.future.modules.basic.service;
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.DistrictClient;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.mapper.ExpressCompanyMapper;
@@ -25,8 +24,6 @@ public class ExpressCompanyService {
 
     @Autowired
     private ExpressCompanyMapper expressCompanyMapper;
-    @Autowired
-    private DistrictClient districtClient;
     @Autowired
     private CacheUtils cacheUtils;
 

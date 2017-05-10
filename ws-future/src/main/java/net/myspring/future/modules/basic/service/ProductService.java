@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.CompanyConfigCodeEnum;
@@ -10,7 +11,6 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.IdUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
@@ -28,6 +28,7 @@ import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,13 +43,13 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
     @Autowired
-    private CompanyConfigClient companyConfigClient;
-    @Autowired
     private DepotMapper depotMapper;
     @Autowired
     private CloudClient cloudClient;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private RedisTemplate redisTemplate;
     
 
     public Page<ProductDto> findPage(Pageable pageable, ProductQuery productQuery) {
@@ -118,10 +119,10 @@ public class ProductService {
     public  List<Product> findAdProduct(String billType,AdApplyForm adApplyForm){
         List<String> outGroupIds =Lists.newArrayList();
         if(BillTypeEnum.POP.name().equals(billType)){
-            String value = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.getCode());
+            String value = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.getCode()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }else if (BillTypeEnum.配件赠品.name().equals(billType)){
-            String value = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.getCode());
+            String value = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.getCode()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }
         List<Product> adProducts  = productMapper.findByOutGroupIds(outGroupIds);
@@ -168,9 +169,9 @@ public class ProductService {
 
     public void syn() {
         LocalDateTime dateTime=productMapper.getMaxOutDate();
-        String cloudName = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode());
+        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
         String result = cloudClient.getSynProductData(cloudName, LocalDateTimeUtils.format(dateTime));
-        String value = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.getCode());
+        String value = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.getCode()).getValue();
         List<String> outGroupIds = IdUtils.getIdList(value);
         List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);
         if(CollectionUtil.isNotEmpty(dataList)) {

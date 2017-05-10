@@ -20,11 +20,11 @@
                   <el-option v-for="(value,key) in formData.TypeList" :key="key" :label="value" :value="key"></el-option>
                 </el-select>
               </el-form-item>
-              <!--<el-form-item :label="formLabel.areaType.label" :label-width="formLabelWidth">-->
-                <!--<el-select v-model="formData.areaType" filterable clearable :placeholder="$t('depotList.inputKey')">-->
-                  <!--<el-option v-for="areaType in formData.areaList"  :key="areaType.name" :label="areaType.name" :value="areaType.name"></el-option>-->
-                <!--</el-select>-->
-              <!--</el-form-item>-->
+              <el-form-item :label="formLabel.areaType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.areaType" filterable clearable :placeholder="$t('depotList.inputKey')">
+                  <el-option v-for="areaType in formData.areaList"  :key="areaType.name" :label="areaType.name" :value="areaType.name"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item :label="formLabel.pricesystemId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.pricesystemId" filterable clearable :placeholder="$t('depotList.inputKey')">
                   <el-option v-for="pricesystem in formData.pricesystemList"  :key="pricesystem.name" :label="pricesystem.name" :value="pricesystem.id"></el-option>
@@ -43,16 +43,16 @@
                   <el-option v-for="(value,key) in formData.bools" :key="key"  :label="key | bool2str" :value="value"></el-option>
                 </el-select>
               </el-form-item>
-              <!--<el-form-item :label="formLabel.specialityStoreType.label" :label-width="formLabelWidth">-->
-                <!--<el-select v-model="formData.specialityStoreType" filterable clearable :placeholder="$t('depotList.inputKey')">-->
-                  <!--<el-option v-for="specialityStore in formData.specialityStoreTypeList" :key="specialityStore.name" :label="specialityStore.name" :value="specialityStore.name"></el-option>-->
-                <!--</el-select>-->
-              <!--</el-form-item>-->
-              <!--<el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">-->
-                <!--<el-select v-model="formData.officeId" filterable remote :placeholder="$t('depotList.inputWord')" :clearable=true>-->
-                  <!--<el-option v-for="office in formData.offices" :key="office.id" :label="office.name" :value="office.id"></el-option>-->
-                <!--</el-select>-->
-              <!--</el-form-item>-->
+              <el-form-item :label="formLabel.specialityStoreType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.specialityStoreType" filterable clearable :placeholder="$t('depotList.inputKey')">
+                  <el-option v-for="specialityStore in formData.specialityStoreTypeList" :key="specialityStore.name" :label="specialityStore.name" :value="specialityStore.name"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.officeId" filterable remote :placeholder="$t('depotList.inputWord')" :clearable=true>
+                  <el-option v-for="office in formData.offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item :label="formLabel.chainId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.chainId" filterable clearable :placeholder="$t('depotList.inputKey')">
                   <el-option v-for="chain in formData.chainList" :key="chain.id" :label="chain.name" :value="chain.id"></el-option>
@@ -96,10 +96,10 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('depotList.name')" width="130px"></el-table-column>
-        <el-table-column prop="officeName" :label="$t('depotList.officeName')" width="130px"></el-table-column>
+        <el-table-column fixed prop="name" :label="$t('depotList.name')" ></el-table-column>
+        <el-table-column prop="officeName" :label="$t('depotList.officeName')" ></el-table-column>
         <el-table-column prop="areaName" :label="$t('depotList.areaName')" ></el-table-column>
-        <el-table-column prop="typeLabel" :label="$t('depotList.typeLabel')" sortable ></el-table-column>
+        <el-table-column prop="typeLabel" :label="$t('depotList.typeLabel')"  ></el-table-column>
         <el-table-column prop="depositMap.xxbzj" :label="$t('depotList.xxbzj')"></el-table-column>
         <el-table-column prop="depositMap.scbzj" :label="$t('depotList.scbzj')"></el-table-column>
         <el-table-column prop="contator" :label="$t('depotList.contact')"></el-table-column>
@@ -137,13 +137,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="createdByName" :label="$t('depotList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('depotList.createdDate')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('depotList.createdDate')" ></el-table-column>
         <el-table-column prop="lastModifiedByName" :label="$t('depotList.lastModifiedBy')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('depotList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('depotList.operation')" >
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+
           </template>
         </el-table-column>
       </el-table>

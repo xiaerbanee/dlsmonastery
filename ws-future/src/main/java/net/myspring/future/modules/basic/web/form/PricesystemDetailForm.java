@@ -4,6 +4,7 @@ import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 
@@ -16,7 +17,10 @@ public class PricesystemDetailForm extends DataForm<PricesystemDetail> {
     private String productId;
     private BigDecimal price;
     private String pricesystemId;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
+
+
 
     public String getPricesystemId() {
         return pricesystemId;

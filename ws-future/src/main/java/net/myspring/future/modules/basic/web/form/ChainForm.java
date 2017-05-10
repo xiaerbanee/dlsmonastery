@@ -12,6 +12,15 @@ import java.util.List;
 public class ChainForm extends DataForm<Chain> {
     private String name;
     private List<String> depotIdList=Lists.newArrayList();
+    private List<String> accountIdList=Lists.newArrayList();
+
+    public List<String> getAccountIdList() {
+        return accountIdList;
+    }
+
+    public void setAccountIdList(List<String> accountIdList) {
+        this.accountIdList = accountIdList;
+    }
 
     public List<String> getDepotIdList() {
         return depotIdList;
