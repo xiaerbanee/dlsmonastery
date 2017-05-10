@@ -24,6 +24,15 @@ public class AccountChangeQuery extends BaseQuery {
     private String id;
     private String accountId;
     private String createdDate;
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getId() {
         return id;

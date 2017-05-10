@@ -7,6 +7,7 @@ import java.util.List;
 
 public enum AuditStatusEnum {
         申请中, 已通过, 未通过;
+        /*APPLY, PASSED, NOTPASS;*/
 
         private static List<String> list= Lists.newArrayList();
 

@@ -35,7 +35,7 @@ public class AuditFileController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<AuditFileDto> data(Pageable pageable, AuditFileQuery auditFileQuery) {
         if(auditFileQuery.getAuditType()==null||auditFileQuery.getAuditType().equals("1")){
-            auditFileQuery.setPositionId(RequestUtils.getPositionId());
+            auditFileQuery.setPositionId(RequestUtils.getRequestEntity().getPositionId());
         }
         Page<AuditFileDto> page = auditFileService.findPage(pageable,auditFileQuery);
         return page;

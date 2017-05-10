@@ -71,7 +71,7 @@
         inputForm:{},
         submitData:{
           id:'',
-          accountId:'',
+          accountId:"",
           type:'',
           oldValue:'',
           newValue:'',

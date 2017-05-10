@@ -140,7 +140,7 @@ public class ExpressOrderService {
 
     public static Integer getExpressPrintQty(Integer totalBillQty) {
         //TODO 需要完善该方法，
-        String companyName= RequestUtils.getCompanyName();
+        //String companyName= RequestUtils.getCompanyName();
         Integer expressPrintQty = 1;
 //        if(CompanyNameEnum.JXOPPO.name().equals(companyName)){
 //            expressPrintQty=Const.OPPO_ORDER_EXPRESS_PRODUCT_QTY;

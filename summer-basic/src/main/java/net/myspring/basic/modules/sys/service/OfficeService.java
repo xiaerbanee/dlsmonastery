@@ -77,7 +77,7 @@ public class OfficeService {
 
     public OfficeDto searchById(OfficeQuery officeQuery) {
         OfficeDto officeDto=new OfficeDto();
-        List<String> officeFilter = officeManager.officeFilter(RequestUtils.getOfficeId());
+        List<String> officeFilter = officeManager.officeFilter(RequestUtils.getRequestEntity().getOfficeId());
         officeQuery.setOfficeIds(officeFilter);
         List<Office> officeList = officeMapper.findByFilter(officeQuery);
         if(CollectionUtil.isNotEmpty(officeList)){
@@ -188,7 +188,7 @@ public class OfficeService {
     }
 
     public List<OfficeDto> findByFilter(OfficeQuery officeQuery) {
-        officeQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getOfficeId()));
+        officeQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getRequestEntity().getOfficeId()));
         List<Office> officeList = officeMapper.findByFilter(officeQuery);
         List<OfficeDto> officeDtoList = BeanUtil.map(officeList, OfficeDto.class);
         cacheUtils.initCacheInput(officeDtoList);

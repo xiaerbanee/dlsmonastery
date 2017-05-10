@@ -33,7 +33,7 @@ public class DutyTripService {
 
     public DutyTrip save(DutyTripForm dutyTripForm) {
         dutyTripForm.setStatus(AuditTypeEnum.APPLYING.toString());
-        dutyTripForm.setEmployeeId(RequestUtils.getEmployeeId());
+        dutyTripForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
         DutyTrip dutyTrip = BeanUtil.map(dutyTripForm, DutyTrip.class);
         dutyTripMapper.save(dutyTrip);
         return dutyTrip;

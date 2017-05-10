@@ -10,6 +10,7 @@ import java.util.List;
  */
 public enum OutBillTypeEnum {
         其他应收单, 手工日记账,不同步到金蝶;
+        /*OTHER_RECEIVE_ORDER,MANUAL_TALLY,OUTSYNC_KINGDEE*/
 
     private static List<String> list= Lists.newArrayList();
 

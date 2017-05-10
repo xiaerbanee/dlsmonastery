@@ -7,6 +7,7 @@ import java.util.List;
 
 public enum StoreAllotTypeEnum {
         普通调拨,快速调拨;
+        /*GENERAL_ALLOT,QUICK_ALLOT*/
 
         private static List<String> list= Lists.newArrayList();
 
