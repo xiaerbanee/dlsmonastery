@@ -7,15 +7,15 @@
           <su-depot v-model ="inputForm.shopId"  type="shop" @input="changeDepartment">         </su-depot>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.outBillType')" prop="outBillType" >
-          <el-select v-model="inputForm.outBillType" filterable :placeholder="$t('shopDepositForm.outBillType')">
+          <el-select v-model="inputForm.outBillType" filterable :placeholder="$t('shopDepositForm.inputKey')">
             <el-option v-for="item in inputForm.outBillTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.department')" prop="department" >
-          <su-department v-model = "inputForm.department" ></su-department>
+          <office-select v-model = "inputForm.department" ></office-select>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.bank')" prop="bankId" v-if="inputForm.outBillType==='手工日记账'" >
-          <su-bank v-model = "inputForm.bankId"></su-bank>
+          <bank-select v-model = "inputForm.bankId"></bank-select>
         </el-form-item>
         <el-form-item   :label="$t('shopDepositForm.billDate')" prop="billDate" >
           <el-date-picker  v-model="inputForm.billDate" type="date" align="left" :placeholder="$t('bankInForm.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
@@ -40,7 +40,13 @@
   </div>
 </template>
 <script>
+  import bankSelect from 'components/future/bank-select';
+  import officeSelect from 'components/basic/office-select'
     export default{
+        components:{
+          bankSelect,
+          officeSelect
+        },
       data(){
           return{
             submitDisabled:false,
@@ -93,6 +99,7 @@
       }, created(){
         axios.get('/api/ws/future/crm/shopDeposit/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
               this.inputForm = response.data;
+              console.log(this.inputForm)
           })
       }
     }

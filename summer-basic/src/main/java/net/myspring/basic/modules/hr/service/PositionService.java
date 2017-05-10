@@ -44,9 +44,10 @@ public class PositionService {
         return  positionDtoList;
     }
 
-    public Position findOne(String id){
+    public PositionDto findOne(String id){
         Position position = positionMapper.findOne(id);
-        return position;
+        PositionDto positionDto=BeanUtil.map(position,PositionDto.class);
+        return positionDto;
     }
 
     public PositionForm findForm(PositionForm positionForm){

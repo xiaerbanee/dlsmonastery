@@ -55,10 +55,10 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "getOfficeFilterIds")
-    public List<String> getOfficeFilterIds(String accountId) {
+    public List<String> getOfficeFilterIds(String officeId) {
         List<String> officeIdList = Lists.newArrayList();
-        if (StringUtils.isNotBlank(accountId)) {
-            officeIdList = officeService.getOfficeFilterIds(accountId);
+        if (StringUtils.isNotBlank(officeId)) {
+            officeIdList = officeService.getOfficeFilterIds(officeId);
         }
         return officeIdList;
     }

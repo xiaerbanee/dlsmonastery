@@ -16,8 +16,8 @@ import java.util.Map;
 public class ProcessTypeForm extends DataForm<ProcessType> {
     private String type;
     private String name;
-    private String viewPermissionId;
-    private String createPermissionId;
+    private String viewPositionIds;
+    private String createdPositionIds;
     private Boolean auditFileType;
     private List<ProcessFlowForm> processFlowFormList = Lists.newArrayList();
 
@@ -37,20 +37,20 @@ public class ProcessTypeForm extends DataForm<ProcessType> {
         this.name = name;
     }
 
-    public String getViewPermissionId() {
-        return viewPermissionId;
+    public String getViewPositionIds() {
+        return viewPositionIds;
     }
 
-    public void setViewPermissionId(String viewPermissionId) {
-        this.viewPermissionId = viewPermissionId;
+    public void setViewPositionIds(String viewPositionIds) {
+        this.viewPositionIds = viewPositionIds;
     }
 
-    public String getCreatePermissionId() {
-        return createPermissionId;
+    public String getCreatedPositionIds() {
+        return createdPositionIds;
     }
 
-    public void setCreatePermissionId(String createPermissionId) {
-        this.createPermissionId = createPermissionId;
+    public void setCreatedPositionIds(String createdPositionIds) {
+        this.createdPositionIds = createdPositionIds;
     }
 
     public Boolean getAuditFileType() {
