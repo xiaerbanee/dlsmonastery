@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="10">
             <el-form-item :label="$t('accountForm.mainAccount')" prop="employeeId">
-              <employee-select v-model="inputForm.employeeId" ></employee-select>
+              <employee-select v-model="inputForm.employeeId" :disabled="disabled"></employee-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.loginName')" prop="loginName">
               <el-input v-model="inputForm.loginName"></el-input>
@@ -56,6 +56,7 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
+        disabled:true,
         formProperty:{positionDtoList:[]},
         employees:[],
         leaders:[],

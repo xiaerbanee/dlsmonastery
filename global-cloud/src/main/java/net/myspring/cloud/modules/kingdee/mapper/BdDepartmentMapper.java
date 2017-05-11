@@ -17,10 +17,8 @@ public interface BdDepartmentMapper {
 
     List<BdDepartment> findAll();
 
-    String findNameByDepartmentId(@Param("departmentId")String departmentId);
+    BdDepartment findByName(String name);
 
-    List<NameNumberDto> findNameAndNumber();
-
-    List<NameNumberDto> findByNameLike(@Param("name")String name);
+    List<BdDepartment> findByNameLike(@Param("name")String name);
 
 }

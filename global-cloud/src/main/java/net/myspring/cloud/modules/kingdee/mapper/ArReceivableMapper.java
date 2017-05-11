@@ -1,7 +1,10 @@
 package net.myspring.cloud.modules.kingdee.mapper;
 
+import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/6.
@@ -9,6 +12,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ArReceivableMapper {
 
-    String findFBillNoByfSourceBillNo(@Param("fSourceBillNo")String fSourceBillNo);
+    List<ArReceivable> findBySourceBillNo(@Param("sourceBillNo")String sourceBillNo);
 
 }
