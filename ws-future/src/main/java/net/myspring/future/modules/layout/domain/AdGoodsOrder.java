@@ -2,7 +2,6 @@ package net.myspring.future.modules.layout.domain;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 
@@ -46,6 +45,16 @@ public class AdGoodsOrder extends CompanyEntity<AdGoodsOrder> {
     private Depot outShop;
     private String parentId;
     private AdGoodsOrder parent;
+    private String processPositionId;
+
+    public String getProcessPositionId() {
+        return processPositionId;
+    }
+
+    public void setProcessPositionId(String processPositionId) {
+        this.processPositionId = processPositionId;
+    }
+
 
     public String getStoreId() {
         return storeId;
