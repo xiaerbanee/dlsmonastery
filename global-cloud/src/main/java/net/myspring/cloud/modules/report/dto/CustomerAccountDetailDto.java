@@ -15,7 +15,7 @@ public class CustomerAccountDetailDto {
     //单据状态
     private String billStatus;
     //单据序列号
-    private Integer billIndex;
+    private Integer index;
     //单据日期
     private LocalDate billDate;
     //物料名称
@@ -57,12 +57,12 @@ public class CustomerAccountDetailDto {
         this.billStatus = billStatus;
     }
 
-    public Integer getBillIndex() {
-        return billIndex;
+    public Integer getIndex() {
+        return index;
     }
 
-    public void setBillIndex(Integer billIndex) {
-        this.billIndex = billIndex;
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 
     public LocalDate getBillDate() {
