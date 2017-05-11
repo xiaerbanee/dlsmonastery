@@ -5,6 +5,7 @@
         SELECT
             t1.FCUSTID,
             t1.FNUMBER,
+            t1.FSALDEPTID,
             t2.FNAME,
             t1.FPRIMARYGROUP,
             t4.FNAME AS fprimaryGroupName,

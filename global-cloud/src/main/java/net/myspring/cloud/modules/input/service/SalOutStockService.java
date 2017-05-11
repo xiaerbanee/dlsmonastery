@@ -12,6 +12,7 @@ import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.BatchBillForm;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.kingdee.mapper.ArReceivableMapper;
 import net.myspring.cloud.modules.kingdee.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.kingdee.mapper.BdDepartmentMapper;
@@ -70,20 +71,25 @@ public class SalOutStockService {
         String storeNumber = batchBillForm.getStoreNumber();
         LocalDate date = batchBillForm.getDate();
         String json = batchBillForm.getJson();
+
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> customerNameList = Lists.newArrayList();
         for (List<Object> row : data){
             customerNameList.add(HandsontableUtils.getValue(row,1));
         }
         Map<String, String> customerNumMap = Maps.newHashMap();
-        Map<String, String> customerIdMap = Maps.newHashMap();
+        Map<String, String> customerDepartmentMap = Maps.newHashMap();
+
+        List<String> departmentIdList = Lists.newArrayList();
         for (BdCustomer bdCustomer : bdCustomerMapper.findByNameList(customerNameList)) {
             customerNumMap.put(bdCustomer.getFName(), bdCustomer.getFNumber());
-            customerIdMap.put(bdCustomer.getFName(), bdCustomer.getFCustId());
+            customerDepartmentMap.put(bdCustomer.getFName(), bdCustomer.getFSALDEPTID());
+            departmentIdList.add(bdCustomer.getFSALDEPTID());
         }
-        Map<String,String> custNameDeptNumMap = Maps.newHashMap();
-        for(NameNumberDto nameNumberDto : bdDepartmentMapper.findCustomerNameAndDepartNumberByCustomerNameList(customerNameList)){
-            custNameDeptNumMap.put(nameNumberDto.getName(),nameNumberDto.getNumber());
+        List<BdDepartment> bdDepartmentList = bdDepartmentMapper.findByIdList(departmentIdList);
+        Map<String,BdDepartment> bdDepartmentMap = Maps.newHashMap();
+        for(BdDepartment bdDepartment:bdDepartmentList) {
+            bdDepartmentMap.put(bdDepartment.getFDeptId(),bdDepartment);
         }
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookMapper.findByAccountId(RequestUtils.getAccountId());
         Map<String, SalOutStockDto> billMap = Maps.newLinkedHashMap();
@@ -108,7 +114,7 @@ public class SalOutStockService {
                 salOutStockDto.setCreator(accountKingdeeBook.getUsername());
                 salOutStockDto.setDate(date);
                 salOutStockDto.setStoreNumber(storeNumber);
-                salOutStockDto.setDepartmentNumber(custNameDeptNumMap.get(customerName));
+                salOutStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
                 salOutStockDto.setCustomerNumber(customerNumMap.get(customerName));
                 salOutStockDto.setNote(remarks);
                 billMap.put(billKey, salOutStockDto);
