@@ -4,53 +4,53 @@ package net.myspring.cloud.modules.kingdee.domain;
  * Created by lihx on 2017/4/11.
  */
 public class BdAccount {
-    private String fAcctId;
+    private String FAcctId;
 
-    private String fNumber;
+    private String FNumber;
 
-    private String  fFullName;
+    private String  FFullName;
 
-    private String fName;
+    private String FName;
 
-    private String  fItemDetailId;
+    private String  FItemDetailId;
 
-    public String getfAcctId() {
-        return fAcctId;
+    public String getFAcctId() {
+        return FAcctId;
     }
 
-    public void setfAcctId(String fAcctId) {
-        this.fAcctId = fAcctId;
+    public void setFAcctId(String FAcctId) {
+        this.FAcctId = FAcctId;
     }
 
-    public String getfNumber() {
-        return fNumber;
+    public String getFNumber() {
+        return FNumber;
     }
 
-    public void setfNumber(String fNumber) {
-        this.fNumber = fNumber;
+    public void setFNumber(String FNumber) {
+        this.FNumber = FNumber;
     }
 
-    public String getfFullName() {
-        return fFullName;
+    public String getFFullName() {
+        return FFullName;
     }
 
-    public void setfFullName(String fFullName) {
-        this.fFullName = fFullName;
+    public void setFFullName(String FFullName) {
+        this.FFullName = FFullName;
     }
 
-    public String getfName() {
-        return fName;
+    public String getFName() {
+        return FName;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
+    public void setFName(String FName) {
+        this.FName = FName;
     }
 
-    public String getfItemDetailId() {
-        return fItemDetailId;
+    public String getFItemDetailId() {
+        return FItemDetailId;
     }
 
-    public void setfItemDetailId(String fItemDetailId) {
-        this.fItemDetailId = fItemDetailId;
+    public void setFItemDetailId(String FItemDetailId) {
+        this.FItemDetailId = FItemDetailId;
     }
 }

@@ -3,32 +3,32 @@ package net.myspring.cloud.modules.kingdee.domain;
 //结算方式
 public class BdSettleType {
 
-    private String fId;
-    private String fNumber;
-    private String fName;
+    private String FId;
+    private String FNumber;
+    private String FName;
 
-    public String getfId() {
-        return fId;
+    public String getFId() {
+        return FId;
     }
 
-    public void setfId(String fId) {
-        this.fId = fId;
+    public void setFId(String FId) {
+        this.FId = FId;
     }
 
-    public String getfNumber() {
-        return fNumber;
+    public String getFNumber() {
+        return FNumber;
     }
 
-    public void setfNumber(String fNumber) {
-        this.fNumber = fNumber;
+    public void setFNumber(String FNumber) {
+        this.FNumber = FNumber;
     }
 
-    public String getfName() {
-        return fName;
+    public String getFName() {
+        return FName;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
+    public void setFName(String FName) {
+        this.FName = FName;
     }
 }
 

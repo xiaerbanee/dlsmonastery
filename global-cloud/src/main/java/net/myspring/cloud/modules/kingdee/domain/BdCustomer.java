@@ -1,62 +1,69 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
 import java.time.LocalDate;
-
+/**
+ *客户表
+ * Created by lihx on 2017/4/11.
+ */
 public class BdCustomer {
+    //客户ID
+    private String FCustId;
+    //客户编码
+    private String FNumber;
+    //客户名称
+    private String FName;
+    //客户分组编码
+    private String FPrimaryGroup;
+    //客户分组名称
+    private String FPrimaryGroupName;
+    //修改客户时间
+    private LocalDate FModifyDate;
 
-    private String fCustId;
-    private String fNumber;
-    private String fName;
-    //客户分组
-    private String fPrimaryGroup;
-    private String fPrimaryGroupName;
-    private LocalDate fModifyDate;
-
-    public String getfCustId() {
-        return fCustId;
+    public String getFCustId() {
+        return FCustId;
     }
 
-    public void setfCustId(String fCustId) {
-        this.fCustId = fCustId;
+    public void setFCustId(String FCustId) {
+        this.FCustId = FCustId;
     }
 
-    public String getfNumber() {
-        return fNumber;
+    public String getFNumber() {
+        return FNumber;
     }
 
-    public void setfNumber(String fNumber) {
-        this.fNumber = fNumber;
+    public void setFNumber(String FNumber) {
+        this.FNumber = FNumber;
     }
 
-    public String getfName() {
-        return fName;
+    public String getFName() {
+        return FName;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
+    public void setFName(String FName) {
+        this.FName = FName;
     }
 
-    public String getfPrimaryGroup() {
-        return fPrimaryGroup;
+    public String getFPrimaryGroup() {
+        return FPrimaryGroup;
     }
 
-    public void setfPrimaryGroup(String fPrimaryGroup) {
-        this.fPrimaryGroup = fPrimaryGroup;
+    public void setFPrimaryGroup(String FPrimaryGroup) {
+        this.FPrimaryGroup = FPrimaryGroup;
     }
 
-    public String getfPrimaryGroupName() {
-        return fPrimaryGroupName;
+    public String getFPrimaryGroupName() {
+        return FPrimaryGroupName;
     }
 
-    public void setfPrimaryGroupName(String fPrimaryGroupName) {
-        this.fPrimaryGroupName = fPrimaryGroupName;
+    public void setFPrimaryGroupName(String FPrimaryGroupName) {
+        this.FPrimaryGroupName = FPrimaryGroupName;
     }
 
-    public LocalDate getfModifyDate() {
-        return fModifyDate;
+    public LocalDate getFModifyDate() {
+        return FModifyDate;
     }
 
-    public void setfModifyDate(LocalDate fModifyDate) {
-        this.fModifyDate = fModifyDate;
+    public void setFModifyDate(LocalDate FModifyDate) {
+        this.FModifyDate = FModifyDate;
     }
 }

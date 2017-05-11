@@ -5,31 +5,31 @@ package net.myspring.cloud.modules.kingdee.domain;
  * Created by lihx on 2017/4/11.
  */
 public class BasAssistant {
-    private String fEntryId;
-    private String fNumber;
-    private String fDataValue;
+    private String FEntryId;
+    private String FNumber;
+    private String FDataValue;
 
-    public String getfEntryId() {
-        return fEntryId;
+    public String getFEntryId() {
+        return FEntryId;
     }
 
-    public void setfEntryId(String fEntryId) {
-        this.fEntryId = fEntryId;
+    public void setFEntryId(String FEntryId) {
+        this.FEntryId = FEntryId;
     }
 
-    public String getfNumber() {
-        return fNumber;
+    public String getFNumber() {
+        return FNumber;
     }
 
-    public void setfNumber(String fNumber) {
-        this.fNumber = fNumber;
+    public void setFNumber(String FNumber) {
+        this.FNumber = FNumber;
     }
 
-    public String getfDataValue() {
-        return fDataValue;
+    public String getFDataValue() {
+        return FDataValue;
     }
 
-    public void setfDataValue(String fDataValue) {
-        this.fDataValue = fDataValue;
+    public void setFDataValue(String FDataValue) {
+        this.FDataValue = FDataValue;
     }
 }
