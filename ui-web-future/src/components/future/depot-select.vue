@@ -11,7 +11,8 @@
     data() {
       return {
         innerId:this.value,
-        itemList : []
+        itemList : [],
+        remoteLoading:false
       };
     } ,methods:{
       remoteSelect(query) {
