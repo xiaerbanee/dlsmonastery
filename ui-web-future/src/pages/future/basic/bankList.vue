@@ -24,11 +24,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('bankList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('bankList.name')" sortable width="150"></el-table-column>
         <el-table-column prop="code" :label="$t('bankList.code')"  sortable></el-table-column>
-        <el-table-column prop="accountList" :label="$t('bankList.account')" >
-          <template scope="scope">
-            {{scope.row.accountList | joinColumn('loginName')}}
-          </template>
-        </el-table-column>
+        <el-table-column prop="accountNameStr" :label="$t('bankList.account')"   sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('bankList.remarks')"></el-table-column>
         <el-table-column prop="createdByName" :label="$t('bankList.createdBy')"></el-table-column>
         <el-table-column prop="enabled" :label="$t('bankList.enabled')" width="120">
@@ -38,9 +34,7 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('bankList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" v-permit="'crm:bank:edit'" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -94,7 +88,7 @@
           this.pageRequest();
         })
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'bankForm', query: { id: id }})
         }
       }

@@ -44,7 +44,6 @@ public class ExpressCompanyController {
 
     @RequestMapping(value = "save")
     public RestResponse save(@Valid  ExpressCompanyForm expressCompanyForm, BindingResult result) {
-
         if(result.hasErrors()){
             return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         }
@@ -56,7 +55,6 @@ public class ExpressCompanyController {
     public ExpressCompanyForm findOne(ExpressCompanyForm expressCompanyForm){
         expressCompanyForm=expressCompanyService.findForm(expressCompanyForm);
         expressCompanyForm.setExpressTypeList(ExpressCompanyTypeEnum.getList());
-//        expressCompanyForm.set
         return expressCompanyForm;
     }
 

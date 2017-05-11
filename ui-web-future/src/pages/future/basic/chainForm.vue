@@ -10,7 +10,7 @@
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item :label="$t('chainForm.shopType')" prop="depotList">
-          <depot-select v-model="inputForm.depotList" category="SHOP"></depot-select>
+          <depot-select v-model="inputForm.depotList" category="SHOP" multiple="true"></depot-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('chainForm.save')}}</el-button>
