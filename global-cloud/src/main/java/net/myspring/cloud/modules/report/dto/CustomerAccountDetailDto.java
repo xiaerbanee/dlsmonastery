@@ -12,7 +12,11 @@ public class CustomerAccountDetailDto {
     private String billType;
     //单据号
     private String billNo;
-    //记帐日期
+    //单据状态
+    private String billStatus;
+    //单据序列号
+    private Integer billIndex;
+    //单据日期
     private LocalDate billDate;
     //物料名称
     private String  materialName;
@@ -28,8 +32,6 @@ public class CustomerAccountDetailDto {
     private BigDecimal endShouldGet;
     //备注
     private String remarks;
-    //颜色CSS
-    private String css;
 
     public String getBillType() {
         return billType;
@@ -45,6 +47,22 @@ public class CustomerAccountDetailDto {
 
     public void setBillNo(String billNo) {
         this.billNo = billNo;
+    }
+
+    public String getBillStatus() {
+        return billStatus;
+    }
+
+    public void setBillStatus(String billStatus) {
+        this.billStatus = billStatus;
+    }
+
+    public Integer getBillIndex() {
+        return billIndex;
+    }
+
+    public void setBillIndex(Integer billIndex) {
+        this.billIndex = billIndex;
     }
 
     public LocalDate getBillDate() {
@@ -109,14 +127,6 @@ public class CustomerAccountDetailDto {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public String getCss() {
-        return css;
-    }
-
-    public void setCss(String css) {
-        this.css = css;
     }
 
     public BigDecimal getAmount(){

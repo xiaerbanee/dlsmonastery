@@ -9,11 +9,22 @@ import java.util.List;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerAccountDto {
+    private String customerGroup;
     private String customerName;
     private BigDecimal beginShouldGet;
     private BigDecimal endShouldGet;
+    private BigDecimal shouldGet;
+    private BigDecimal realGet;
 
     private List<CustomerAccountDetailDto> customerAccountDetailDtoList = Lists.newArrayList();
+
+    public String getCustomerGroup() {
+        return customerGroup;
+    }
+
+    public void setCustomerGroup(String customerGroup) {
+        this.customerGroup = customerGroup;
+    }
 
     public String getCustomerName() {
         return customerName;
@@ -37,6 +48,22 @@ public class CustomerAccountDto {
 
     public void setEndShouldGet(BigDecimal endShouldGet) {
         this.endShouldGet = endShouldGet;
+    }
+
+    public BigDecimal getShouldGet() {
+        return shouldGet;
+    }
+
+    public void setShouldGet(BigDecimal shouldGet) {
+        this.shouldGet = shouldGet;
+    }
+
+    public BigDecimal getRealGet() {
+        return realGet;
+    }
+
+    public void setRealGet(BigDecimal realGet) {
+        this.realGet = realGet;
     }
 
     public List<CustomerAccountDetailDto> getCustomerAccountDetailDtoList() {
