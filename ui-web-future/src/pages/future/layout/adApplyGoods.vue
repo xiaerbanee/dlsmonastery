@@ -67,6 +67,8 @@
               } else {
                 this.$router.push({name:'adApplyList',query:util.getQuery("adApplyList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

@@ -88,6 +88,8 @@
                 } else {
                   this.$router.push({name:'menuList',query:util.getQuery("menuList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

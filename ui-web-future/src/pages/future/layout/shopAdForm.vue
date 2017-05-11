@@ -101,7 +101,9 @@
               } else {
                 this.$router.push({name:'shopPrintList',query:util.getQuery("shopPrintList")})
               }
-            });
+            }).catch(function () {
+            this.submitDisabled = false;
+          });
           }else{
             this.submitDisabled = false;
           }

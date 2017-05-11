@@ -70,6 +70,8 @@
               } else {
                 this.$router.push({name:'demoPhoneList',query:util.getQuery("demoPhoneList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

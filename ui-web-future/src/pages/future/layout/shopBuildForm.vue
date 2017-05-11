@@ -110,6 +110,8 @@
               } else {
                 this.$router.push({name:'shopBuildList',query:util.getQuery("shopBuildList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

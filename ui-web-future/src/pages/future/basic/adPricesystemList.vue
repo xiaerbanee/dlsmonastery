@@ -38,7 +38,7 @@
         <el-table-column fixed="right" :label="$t('bankList.operation')" width="140">
           <template scope="scope">
             <el-button size="small"  @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-            <el-button size="small"  @click.native="itemAction(scope.row.id,'delete')">修改</el-button>
+            <el-button size="small"  @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

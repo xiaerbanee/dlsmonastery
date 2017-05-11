@@ -76,6 +76,8 @@
                 } else {
                   this.$router.push({name:'bankInList',query:util.getQuery("bankInList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

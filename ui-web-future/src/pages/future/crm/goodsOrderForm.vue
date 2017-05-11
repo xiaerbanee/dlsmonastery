@@ -129,7 +129,9 @@
                   this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
                 }
               }
-            });
+            }).catch(function () {
+                this.submitDisabled = false;
+              });
           }else{
             this.submitDisabled = false;
           }

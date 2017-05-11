@@ -102,6 +102,8 @@
               } else {
                 this.$router.push({name:'accountList',query:util.getQuery("accountList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

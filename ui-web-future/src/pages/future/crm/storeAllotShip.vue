@@ -94,6 +94,8 @@
                   this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList")})
                 }
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

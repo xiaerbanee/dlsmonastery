@@ -143,6 +143,8 @@
                 } else {
                   this.$router.push({name:'adPricesystemList',query:util.getQuery("adPricesystemList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

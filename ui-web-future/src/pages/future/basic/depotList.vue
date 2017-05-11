@@ -141,7 +141,8 @@
         <el-table-column prop="lastModifiedByName" :label="$t('depotList.lastModifiedBy')"></el-table-column>
         <el-table-column fixed="right" :label="$t('depotList.operation')" >
           <template scope="scope">
-
+            <el-button size="small"  @click.native="itemAction(scope.row.id,'edit')" class="action">修改</el-button>
+            <el-button size="small"  @click.native="itemAction(scope.row.id,'syn')" class="action">同步</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -207,19 +208,7 @@
     },
     methods: {
       pageRequest() {
-//        this.pageLoading = true;
-//        this.formLabel.type.value = this.formData.types[this.formData.type];
-//        this.formLabel.specialityStore.value = util.bool2str(this.formData.specialityStore);
-//        this.formLabel.adShopBsc.value = util.bool2str(this.formData.adShopBsc);
-//        this.formLabel.adShop.value =  util.bool2str(this.formData.adShop);
-//        this.formLabel.isHidden.value = util.bool2str(this.formData.isHidden);
-//
-//        this.formLabel.pricesystemId.value = util.getLabel(this.formData.pricesystems, this.formData.pricesystemId);
-//        this.formLabel.expressCompanyId.value = util.getLabel(this.formData.expressCompanys, this.formData.expressCompanyId);
-//        this.formLabel.specialityStoreType.value = util.getLabel(this.formData.specialityStoreTypes, this.formData.specialityStoreType);
-//        this.formLabel.chainId.value = util.getLabel(this.formData.chains, this.formData.chainId);
-//        this.formLabel.adPricesystemId.value = util.getLabel(this.formData.adPricesystems, this.formData.adPricesystemId);
-//        this.formLabel.officeId.value = util.getLabel(this.offices, this.formData.officeId);
+
 
         util.setQuery("depotList",this.formData);
         util.copyValue(this.formData,this.submitData);
@@ -246,8 +235,10 @@
           this.pageRequest();
         })
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'depotForm', query: { id: id }})
+        }else if(action=="syn"){
+
         }
       }
     },created () {

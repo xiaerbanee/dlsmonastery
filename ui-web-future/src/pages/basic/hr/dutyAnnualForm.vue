@@ -72,6 +72,8 @@
               } else {
                 this.$router.push({name:'dutyAnnualList',query:util.getQuery("dutyAnnualList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

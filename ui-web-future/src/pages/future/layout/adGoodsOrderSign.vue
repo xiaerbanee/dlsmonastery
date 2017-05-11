@@ -65,6 +65,8 @@
             axios.post('/api/crm/adGoodsOrder/sign',{id:this.$route.query.id}).then((response)=> {
               this.$message(response.data.message);
               this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")})
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

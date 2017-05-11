@@ -60,6 +60,8 @@
                 } else {
                   this.$router.push({name:'dictMapList',query:util.getQuery("dictMapList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
