@@ -12,8 +12,8 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.district')" prop="districtId">
-          <su-district v-model="inputForm.districtId">
-          </su-district>
+          <district-select v-model="inputForm.districtId">
+          </district-select>
         </el-form-item>
 
         <el-form-item :label="$t('expressCompanyForm.reachPlace')" prop="reachPlace">
@@ -45,7 +45,11 @@
   </div>
 </template>
 <script>
-    export default{
+  import districtSelect from 'components/general/district-select'
+  export default{
+    components:{
+      districtSelect,
+    },
       data(){
           return{
             isCreate:this.$route.query.id==null,

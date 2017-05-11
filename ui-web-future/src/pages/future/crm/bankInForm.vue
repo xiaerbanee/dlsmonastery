@@ -4,7 +4,7 @@
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('bankInForm.shopName')" prop="shopId">
-          <su-depot type="shop" v-model="inputForm.shopId" ></su-depot>
+          <depot-select type="SHOP" v-model="inputForm.shopId" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.type')" prop="type">
           <el-select v-model="inputForm.type"  clearable :placeholder="$t('bankInForm.selectType')">
@@ -38,8 +38,12 @@
   </div>
 </template>
 <script>
-    export default{
-      data(){
+  import depotSelect from 'components/future/depot-select'
+  export default{
+    components:{
+      depotSelect,
+    },
+    data(){
           return{
             submitDisabled:false,
             inputForm:{},

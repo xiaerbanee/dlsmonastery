@@ -16,13 +16,6 @@ import headTab from './components/common/head-tab';
 import searchTag from './components/common/search-tag';
 import datePicker from './components/common/date-picker.vue'
 import dateRangePicker from './components/common/date-range-picker.vue';
-import suDistrict from './components/su-district';
-import suDepot from './components/su-depot';
-import suProcessDetails from './components/general/su-process-details';
-import suExpressCompany from './components/su-express-company';
-import suProduct from './components/su-product';
-import suDepartment from './components/su-department';
-import suBank from './components/su-bank';
 
 import App from './app.vue';
 import fullCalendar from 'vue-fullcalendar'
@@ -46,13 +39,6 @@ Vue.component('head-tab', headTab);
 Vue.component('search-tag', searchTag);
 Vue.component('date-picker',datePicker);
 Vue.component('date-range-picker', dateRangePicker);
-Vue.component('su-district', suDistrict);
-Vue.component('su-depot', suDepot);
-Vue.component('su-process-details', suProcessDetails);
-Vue.component('su-express-company', suExpressCompany);
-Vue.component('su-product', suProduct);
-Vue.component('su-department', suDepartment);
-Vue.component('su-bank', suBank);
 
 // progressBar
 const options = {

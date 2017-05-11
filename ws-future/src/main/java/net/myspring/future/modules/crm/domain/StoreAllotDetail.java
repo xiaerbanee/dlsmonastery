@@ -6,7 +6,6 @@ import net.myspring.future.modules.basic.domain.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 
 @Entity
@@ -17,29 +16,7 @@ public class StoreAllotDetail extends IdEntity<StoreAllotDetail> {
     private Integer shippedQty;
     private Product product;
     private String productId;
-    private StoreAllot storeAllot;
     private String storeAllotId;
-
-    @Transient
-    private Integer cloudQty;
-    @Transient
-    private Integer shipQty;
-
-    public Integer getShipQty() {
-        return shipQty;
-    }
-
-    public void setShipQty(Integer shipQty) {
-        this.shipQty = shipQty;
-    }
-
-    public Integer getCloudQty() {
-        return cloudQty;
-    }
-
-    public void setCloudQty(Integer cloudQty) {
-        this.cloudQty = cloudQty;
-    }
 
     public Integer getQty() {
         return qty;
@@ -79,14 +56,6 @@ public class StoreAllotDetail extends IdEntity<StoreAllotDetail> {
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public StoreAllot getStoreAllot() {
-        return storeAllot;
-    }
-
-    public void setStoreAllot(StoreAllot storeAllot) {
-        this.storeAllot = storeAllot;
     }
 
     public String getStoreAllotId() {

@@ -2,27 +2,42 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.DepotCategoryEnum;
+import net.myspring.future.common.enums.GoodsOrderStatusEnum;
+import net.myspring.future.common.enums.NetTypeEnum;
+import net.myspring.future.common.enums.ShipTypeEnum;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
-
+import net.myspring.future.modules.crm.dto.GoodsOrderDto;
+import net.myspring.future.modules.crm.service.GoodsOrderService;
+import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
+import net.myspring.util.time.LocalDateTimeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/goodsOrder")
 public class GoodsOrderController {
 
+    @Autowired
+    private DepotManager depotManager;
+    @Autowired
+    private GoodsOrderService goodsOrderService;
+
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request) {
-        return null;
+    public Page<GoodsOrderDto> list(Pageable pageable, GoodsOrderQuery goodsOrderQuery){
+        Page<GoodsOrderDto> page = goodsOrderService.findPage(pageable, goodsOrderQuery);
+        return page;
     }
 
     @RequestMapping(value = "shipBoxAndIme", method = RequestMethod.GET)
@@ -41,9 +56,17 @@ public class GoodsOrderController {
     }
 
 
-    @RequestMapping(value = "getQuery", method = RequestMethod.GET)
-    public String getQuery() {
-        return null;  }
+    @RequestMapping(value = "getQuery")
+    public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
+        GoodsOrderQuery result = new GoodsOrderQuery();
+        result.setNetTypeList(NetTypeEnum.getList());
+        result.setShipTypeList(ShipTypeEnum.getList());
+        result.setStatusList(GoodsOrderStatusEnum.getList());
+        result.setCreatedDateRange(LocalDateTimeUtils.getThisMonthDateRange());
+        result.setStoreTypeList(depotManager.getTypeNameByCategory(DepotCategoryEnum.STORE.name()));
+
+        return result;
+    }
 
     @RequestMapping(value = "findByFormatId", method = RequestMethod.GET)
     public Object findByFormatId(String formatId) {

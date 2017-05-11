@@ -16,7 +16,6 @@ public class ShopAllotDetail extends IdEntity<ShopAllotDetail> {
     private BigDecimal returnPrice;
     private Product product;
     private String productId;
-    private ShopAllot shopAllot;
     private String shopAllotId;
 
     public Integer getQty() {
@@ -57,14 +56,6 @@ public class ShopAllotDetail extends IdEntity<ShopAllotDetail> {
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public ShopAllot getShopAllot() {
-        return shopAllot;
-    }
-
-    public void setShopAllot(ShopAllot shopAllot) {
-        this.shopAllot = shopAllot;
     }
 
     public String getShopAllotId() {

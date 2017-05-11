@@ -854,6 +854,7 @@ export default {
     store: "gudang",
     netType: "standar jaringan",
     expressCodes: "kode resi",
+    expressCode: "kode resi",
     carrierCodes: "kode karir",
     pullStatus: "status",
     operate: "operasi",

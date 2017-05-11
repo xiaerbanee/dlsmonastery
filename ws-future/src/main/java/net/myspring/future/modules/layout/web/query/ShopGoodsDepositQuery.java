@@ -94,7 +94,7 @@ public class ShopGoodsDepositQuery extends BaseQuery {
         if(createdDateRange!=null){
             String[] tempParamValues = createdDateRange.split(" - ");
             this.createdDateStart= LocalDateTimeUtils.parse(tempParamValues[0]+ " 00:00:00");
-            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 23:59:59");
+            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 00:00:00").plusDays(1);
         }
         this.createdDateRange = createdDateRange;
 

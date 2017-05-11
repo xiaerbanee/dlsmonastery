@@ -1,12 +1,9 @@
 package net.myspring.future.modules.crm.domain;
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Bank;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -28,7 +25,6 @@ public class BankIn extends CompanyEntity<BankIn> {
     private String checkId;
     private String processTypeId;
     private String processFlowId;
-    private Bank bank;
     private String bankId;
     private String cloudSynId;
     private String positionId;
@@ -151,14 +147,6 @@ public class BankIn extends CompanyEntity<BankIn> {
 
     public void setProcessFlowId(String processFlowId) {
         this.processFlowId = processFlowId;
-    }
-
-    public Bank getBank() {
-        return bank;
-    }
-
-    public void setBank(Bank bank) {
-        this.bank = bank;
     }
 
     public String getBankId() {

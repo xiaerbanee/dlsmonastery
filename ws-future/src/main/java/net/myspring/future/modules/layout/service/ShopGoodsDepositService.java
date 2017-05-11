@@ -50,10 +50,10 @@ public class ShopGoodsDepositService {
     public Page<ShopGoodsDepositDto> findPage(Pageable pageable, ShopGoodsDepositQuery shopGoodsDepositQuery) {
 
         Page<ShopGoodsDepositDto> page = shopGoodsDepositMapper.findPage(pageable, shopGoodsDepositQuery);
+
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
-
 
 
 

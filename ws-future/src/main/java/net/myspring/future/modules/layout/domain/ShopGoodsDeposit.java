@@ -2,13 +2,9 @@ package net.myspring.future.modules.layout.domain;
 
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Bank;
-import net.myspring.future.modules.basic.domain.Depot;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -25,11 +21,8 @@ public class ShopGoodsDeposit extends CompanyEntity<ShopGoodsDeposit> {
     private String status;
     private Integer version = 0;
     private String outCode;
-    private Bank bank;
     private String bankId;
     private String cloudSynId;
-
-    private Depot shop;
 
     public String getShopId() {
         return shopId;
@@ -111,14 +104,6 @@ public class ShopGoodsDeposit extends CompanyEntity<ShopGoodsDeposit> {
         this.outCode = outCode;
     }
 
-    public Bank getBank() {
-        return bank;
-    }
-
-    public void setBank(Bank bank) {
-        this.bank = bank;
-    }
-
     public String getBankId() {
         return bankId;
     }
@@ -135,11 +120,4 @@ public class ShopGoodsDeposit extends CompanyEntity<ShopGoodsDeposit> {
         this.cloudSynId = cloudSynId;
     }
 
-    public Depot getShop() {
-        return shop;
-    }
-
-    public void setShop(Depot shop) {
-        this.shop = shop;
-    }
 }

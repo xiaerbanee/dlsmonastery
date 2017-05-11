@@ -24,7 +24,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,21 +39,15 @@ public class ShopAllotService {
     private DepotMapper depotMapper;
     @Autowired
     private CacheUtils cacheUtils;
-
     @Autowired
     private ShopAllotDetailService shopAllotDetailService;
-
     @Autowired
     private PricesystemDetailService pricesystemDetailService;
 
 
     public ShopAllot findOne(String id){
-        ShopAllot shopAllot = shopAllotMapper.findOne(id);
-        BigDecimal saleTotalPrice = BigDecimal.ZERO;
-        for(ShopAllotDetail shopAllotDetail:shopAllot.getShopAllotDetailList()){
-            saleTotalPrice = saleTotalPrice.add(shopAllotDetail.getSalePrice().multiply(new BigDecimal(shopAllotDetail.getQty())));
-        }
-        return shopAllot;
+
+        return shopAllotMapper.findOne(id);
     }
 
     public Page<ShopAllotDto> findPage(Pageable pageable, ShopAllotQuery shopAllotQuery) {
@@ -82,15 +75,6 @@ public class ShopAllotService {
         }
         return sb.toString();
     }
-
-    public List<ShopAllotDetail> getProducts(String fromShopId, String toShopId){
-        return null;
-    }
-
-    public ShopAllot getEditFormData(ShopAllot shopAllot){
-        return null;
-    }
-
 
     public void logicDeleteOne(String id) {
         shopAllotMapper.logicDeleteOne(id);
@@ -159,7 +143,11 @@ public class ShopAllotService {
             shopAllotDetail.setSalePrice(toPricesystemMap.get(shopAllotDetail.getProductId()).getPrice());
             shopAllotDetailsToBeSaved.add(shopAllotDetail);
         }
+
+
         shopAllotDetailService.batchSave(shopAllotDetailsToBeSaved);
+
+
     }
 
     public void delete(ShopAllotForm shopAllotForm) {
