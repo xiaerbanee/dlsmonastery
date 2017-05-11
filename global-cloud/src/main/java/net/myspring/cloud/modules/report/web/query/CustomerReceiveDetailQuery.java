@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by liuj on 2017/5/11.
  */
-public class CustomerAccountDetailQuery {
+public class CustomerReceiveDetailQuery {
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private String customerName;

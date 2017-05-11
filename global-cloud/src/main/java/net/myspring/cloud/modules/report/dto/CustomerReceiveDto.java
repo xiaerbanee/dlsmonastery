@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by liuj on 2017/5/11.
  */
-public class CustomerAccountDto {
+public class CustomerReceiveDto {
     private String customerGroup;
     private String customerName;
     private BigDecimal beginShouldGet;
@@ -16,7 +16,7 @@ public class CustomerAccountDto {
     private BigDecimal shouldGet;
     private BigDecimal realGet;
 
-    private List<CustomerAccountDetailDto> customerAccountDetailDtoList = Lists.newArrayList();
+    private List<CustomerReceiveDetailDto> customerReceiveDetailDtoList = Lists.newArrayList();
 
     public String getCustomerGroup() {
         return customerGroup;
@@ -66,11 +66,11 @@ public class CustomerAccountDto {
         this.realGet = realGet;
     }
 
-    public List<CustomerAccountDetailDto> getCustomerAccountDetailDtoList() {
-        return customerAccountDetailDtoList;
+    public List<CustomerReceiveDetailDto> getCustomerReceiveDetailDtoList() {
+        return customerReceiveDetailDtoList;
     }
 
-    public void setCustomerAccountDetailDtoList(List<CustomerAccountDetailDto> customerAccountDetailDtoList) {
-        this.customerAccountDetailDtoList = customerAccountDetailDtoList;
+    public void setCustomerReceiveDetailDtoList(List<CustomerReceiveDetailDto> customerReceiveDetailDtoList) {
+        this.customerReceiveDetailDtoList = customerReceiveDetailDtoList;
     }
 }

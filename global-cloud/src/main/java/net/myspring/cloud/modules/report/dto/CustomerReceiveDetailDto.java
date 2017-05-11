@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by liuj on 2017/5/11.
  */
-public class CustomerAccountDetailDto {
+public class CustomerReceiveDetailDto {
     //业务类型
     private String billType;
     //单据号
