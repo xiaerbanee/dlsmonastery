@@ -1,19 +1,13 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.ExpressCompany;
-import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name="crm_express_order")
@@ -43,18 +37,8 @@ public class ExpressOrder extends CompanyEntity<ExpressOrder> {
     private Integer mobileQty;
     private String areaName;
     private BigDecimal weight;
-    private List<AdGoodsOrder> adGoodsOrderList = Lists.newArrayList();
-    private List<String> adGoodsOrderIdList = Lists.newArrayList();
-    private List<Express> expressList = Lists.newArrayList();
-    private List<String> expressIdList = Lists.newArrayList();
-    private ExpressCompany expressCompany;
     private String expressCompanyId;
-    private List<GoodsOrder> goodsOrderList = Lists.newArrayList();
-    private List<String> goodsOrderIdList = Lists.newArrayList();
-    private List<StoreAllot> storeAllotList = Lists.newArrayList();
-    private List<String> storeAllotIdList = Lists.newArrayList();
-    private Depot fromDepot;
-    private Depot toDepot;
+
 
     public String getExtendId() {
         return extendId;
@@ -256,46 +240,6 @@ public class ExpressOrder extends CompanyEntity<ExpressOrder> {
         this.weight = weight;
     }
 
-    public List<AdGoodsOrder> getAdGoodsOrderList() {
-        return adGoodsOrderList;
-    }
-
-    public void setAdGoodsOrderList(List<AdGoodsOrder> adGoodsOrderList) {
-        this.adGoodsOrderList = adGoodsOrderList;
-    }
-
-    public List<String> getAdGoodsOrderIdList() {
-        return adGoodsOrderIdList;
-    }
-
-    public void setAdGoodsOrderIdList(List<String> adGoodsOrderIdList) {
-        this.adGoodsOrderIdList = adGoodsOrderIdList;
-    }
-
-    public List<Express> getExpressList() {
-        return expressList;
-    }
-
-    public void setExpressList(List<Express> expressList) {
-        this.expressList = expressList;
-    }
-
-    public List<String> getExpressIdList() {
-        return expressIdList;
-    }
-
-    public void setExpressIdList(List<String> expressIdList) {
-        this.expressIdList = expressIdList;
-    }
-
-    public ExpressCompany getExpressCompany() {
-        return expressCompany;
-    }
-
-    public void setExpressCompany(ExpressCompany expressCompany) {
-        this.expressCompany = expressCompany;
-    }
-
     public String getExpressCompanyId() {
         return expressCompanyId;
     }
@@ -304,51 +248,4 @@ public class ExpressOrder extends CompanyEntity<ExpressOrder> {
         this.expressCompanyId = expressCompanyId;
     }
 
-    public List<GoodsOrder> getGoodsOrderList() {
-        return goodsOrderList;
-    }
-
-    public void setGoodsOrderList(List<GoodsOrder> goodsOrderList) {
-        this.goodsOrderList = goodsOrderList;
-    }
-
-    public List<String> getGoodsOrderIdList() {
-        return goodsOrderIdList;
-    }
-
-    public void setGoodsOrderIdList(List<String> goodsOrderIdList) {
-        this.goodsOrderIdList = goodsOrderIdList;
-    }
-
-    public List<StoreAllot> getStoreAllotList() {
-        return storeAllotList;
-    }
-
-    public void setStoreAllotList(List<StoreAllot> storeAllotList) {
-        this.storeAllotList = storeAllotList;
-    }
-
-    public List<String> getStoreAllotIdList() {
-        return storeAllotIdList;
-    }
-
-    public void setStoreAllotIdList(List<String> storeAllotIdList) {
-        this.storeAllotIdList = storeAllotIdList;
-    }
-
-    public Depot getFromDepot() {
-        return fromDepot;
-    }
-
-    public void setFromDepot(Depot fromDepot) {
-        this.fromDepot = fromDepot;
-    }
-
-    public Depot getToDepot() {
-        return toDepot;
-    }
-
-    public void setToDepot(Depot toDepot) {
-        this.toDepot = toDepot;
-    }
 }

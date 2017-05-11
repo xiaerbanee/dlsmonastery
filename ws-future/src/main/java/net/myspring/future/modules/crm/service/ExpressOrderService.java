@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.service;
 
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
@@ -157,5 +156,25 @@ public class ExpressOrderService {
             expressPrintQty = totalBillQty / expressPrintQty + 1;
         }
         return expressPrintQty;
+    }
+
+    public ExpressOrder saveOrUpdate(ExpressOrder expressOrder) {
+        if(expressOrder == null){
+            return null;
+        }
+        if(StringUtils.isNotBlank(expressOrder.getId())){
+            expressOrderMapper.update(expressOrder);
+        }else{
+            expressOrderMapper.save(expressOrder);
+        }
+        return expressOrder;
+    }
+
+    public ExpressOrder reCalcAndUpdateExpressCodes(String expressOrderId) {
+
+        ExpressOrder eo = expressOrderMapper.findOne(expressOrderId);
+        eo.setExpressCodes(CollectionUtil.extractAndJoin( expressMapper.findByExpressOrderId(expressOrderId), "code"));
+        expressOrderMapper.update(eo);
+        return eo;
     }
 }

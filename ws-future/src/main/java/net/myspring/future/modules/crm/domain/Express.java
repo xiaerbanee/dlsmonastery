@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -18,7 +17,6 @@ public class Express extends CompanyEntity<Express> {
     private String tracking;
     private Integer version = 0;
     private Integer qty;
-    private ExpressOrder expressOrder;
     private String expressOrderId;
 
     public String getCode() {
@@ -75,14 +73,6 @@ public class Express extends CompanyEntity<Express> {
 
     public void setQty(Integer qty) {
         this.qty = qty;
-    }
-
-    public ExpressOrder getExpressOrder() {
-        return expressOrder;
-    }
-
-    public void setExpressOrder(ExpressOrder expressOrder) {
-        this.expressOrder = expressOrder;
     }
 
     public String getExpressOrderId() {

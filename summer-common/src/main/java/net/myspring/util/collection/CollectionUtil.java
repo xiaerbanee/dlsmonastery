@@ -2,6 +2,7 @@ package net.myspring.util.collection;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.util.text.StringUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import java.util.*;
@@ -10,6 +11,12 @@ import java.util.*;
  * Created by liuj on 2017/5/1.
  */
 public class CollectionUtil extends org.springside.modules.utils.collection.CollectionUtil {
+
+
+
+    public static String extractAndJoin(final Collection collection, final String propertyName) {
+        return StringUtils.join(extractToList(collection, propertyName),",");
+    }
 
     public static <E> List<E> extractToList(final Collection collection, final String propertyName) {
         if (isEmpty(collection)) {
