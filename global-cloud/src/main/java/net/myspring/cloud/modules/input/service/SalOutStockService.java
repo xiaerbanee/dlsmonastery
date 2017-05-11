@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by liuj on 2017/5/11.
@@ -87,10 +88,7 @@ public class SalOutStockService {
             departmentIdList.add(bdCustomer.getFSALDEPTID());
         }
         List<BdDepartment> bdDepartmentList = bdDepartmentMapper.findByIdList(departmentIdList);
-        Map<String,BdDepartment> bdDepartmentMap = Maps.newHashMap();
-        for(BdDepartment bdDepartment:bdDepartmentList) {
-            bdDepartmentMap.put(bdDepartment.getFDeptId(),bdDepartment);
-        }
+        Map<String,BdDepartment> bdDepartmentMap = bdDepartmentList.stream().collect(Collectors.toMap(BdDepartment::getFDeptId,bdDepartment -> bdDepartment));
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookMapper.findByAccountId(RequestUtils.getAccountId());
         Map<String, SalOutStockDto> billMap = Maps.newLinkedHashMap();
         for (List<Object> row : data) {
