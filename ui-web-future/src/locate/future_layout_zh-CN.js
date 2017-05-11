@@ -173,7 +173,11 @@ export default {
     operation: "操作",
     billType: "订单类型",
     parentId: "主单编号",
-    loading:"拼命加载中"
+    loading:"拼命加载中",
+    detail: "详细",
+    edit: "修改",
+    delete: "删除",
+    audit: "审核",
   },
   adGoodsOrderForm: {
     adGoodsOrderForm: "物料订单编辑",

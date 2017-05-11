@@ -32,7 +32,18 @@ public class ExpressDto extends DataDto<Express> {
     private Integer qty;
     private BigDecimal shouldPay;
     private BigDecimal realPay;
+
+    private String tracking;
     private String expressOrderId;
+
+    public String getTracking() {
+        return tracking;
+    }
+
+    public void setTracking(String tracking) {
+        this.tracking = tracking;
+    }
+
 
     public String getCode() {
         return code;

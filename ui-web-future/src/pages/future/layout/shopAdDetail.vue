@@ -6,10 +6,10 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopAdDetail.shopAdTypeId')" prop="shopAdTypeId">
-              {{inputForm.shopAdType.name}}
+              {{inputForm.shopAdTypeId}}
             </el-form-item>
             <el-form-item  :label="$t('shopAdDetail.shopId')"  prop="shopId">
-              {{inputForm.shop.name}}
+              {{inputForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('shopAdDetail.length')" prop="length">
               {{inputForm.length}}
@@ -36,22 +36,7 @@
           </el-col>
           <el-col :span="10" :offset="2">
             <span v-html="inputForm.content"></span>
-            <el-table :data="activitiEntity.historicTaskInstances">
-              <el-table-column prop="name" :label="$t('shopAdDetail.nodeName')"></el-table-column>
-              <el-table-column :label="$t('shopAdDetail.auditMan')" >
-                <template scope="scope">{{activitiEntity.accountMap?activitiEntity.accountMap[scope.row.id]:''}}</template>
-              </el-table-column>
-              <el-table-column :label="$t('shopAdDetail.auditDate')">
-                <template scope="scope">
-                  {{scope.row.endTime | formatLocalDateTime}}
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('shopAdDetail.auditRemarks')">
-                <template scope="scope">
-                  {{activitiEntity.commentMap?activitiEntity.commentMap[scope.row.id]:''}}
-                </template>
-              </el-table-column>
-            </el-table>
+            <su-process-details v-model="inputForm.processInstanceId"></su-process-details>
           </el-col>
         </el-row>
       </el-form>
@@ -94,9 +79,18 @@
         window.open(file.url);
       }
     },created(){
-      if(!this.isCreate){
-        this.findOne();
-      }
+      axios.get('/api/ws/future/layout/shopAd/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
+        console.log(this.inputForm);
+        if(this.inputForm.attachment !=null) {
+          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
+            this.fileList= response.data;
+          });
+        }
+        if(response.data.activitiEntity.historicTaskInstances){
+          this.activitiEntity.historicTaskInstances = response.data.activitiEntity.historicTaskInstances;
+        }
+      })
     }
   }
 </script>

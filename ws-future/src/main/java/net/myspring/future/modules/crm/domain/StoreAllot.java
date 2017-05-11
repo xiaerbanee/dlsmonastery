@@ -1,16 +1,11 @@
 package net.myspring.future.modules.crm.domain;
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Depot;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Entity
@@ -25,12 +20,9 @@ public class StoreAllot extends CompanyEntity<StoreAllot> {
     private LocalDateTime shipDate;
     private Integer version = 0;
     private String shipType;
-    private ExpressOrder expressOrder;
     private String expressOrderId;
     private String cloudSynId;
 
-    private Depot toStore;
-    private Depot fromStore;
 
     public String getFromStoreId() {
         return fromStoreId;
@@ -104,14 +96,6 @@ public class StoreAllot extends CompanyEntity<StoreAllot> {
         this.shipType = shipType;
     }
 
-    public ExpressOrder getExpressOrder() {
-        return expressOrder;
-    }
-
-    public void setExpressOrder(ExpressOrder expressOrder) {
-        this.expressOrder = expressOrder;
-    }
-
     public String getExpressOrderId() {
         return expressOrderId;
     }
@@ -128,19 +112,4 @@ public class StoreAllot extends CompanyEntity<StoreAllot> {
         this.cloudSynId = cloudSynId;
     }
 
-    public Depot getToStore() {
-        return toStore;
-    }
-
-    public void setToStore(Depot toStore) {
-        this.toStore = toStore;
-    }
-
-    public Depot getFromStore() {
-        return fromStore;
-    }
-
-    public void setFromStore(Depot fromStore) {
-        this.fromStore = fromStore;
-    }
 }

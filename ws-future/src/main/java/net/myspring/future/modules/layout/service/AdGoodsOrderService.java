@@ -13,9 +13,11 @@ import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.mapper.*;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.mapper.AdGoodsOrderDetailMapper;
 import net.myspring.future.modules.layout.mapper.AdGoodsOrderMapper;
 import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
+import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +52,8 @@ public class AdGoodsOrderService {
     @Autowired
     private AdPricesystemMapper adPricesystemMapper;
 
-    public Page findPage(Pageable pageable, Map<String, Object> map) {
-        Page<AdGoodsOrder> page = adGoodsOrderMapper.findPage(pageable, map);
+    public Page<AdGoodsOrderDto> findPage(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
+        Page<AdGoodsOrderDto> page = adGoodsOrderMapper.findPage(pageable, adGoodsOrderQuery);
         return page;
     }
 
@@ -211,10 +213,8 @@ public class AdGoodsOrderService {
     public void sign(AdGoodsOrder adGoodsOrder) {
     }
 
-    public void delete(AdGoodsOrder adGoodsOrder) {
-        adGoodsOrder.getExpressOrder().setEnabled(false);
-        adGoodsOrder.setEnabled(false);
-        adGoodsOrderMapper.update(adGoodsOrder);
+    public void logicDelete(String id) {
+        adGoodsOrderMapper.logicDeleteOne(id);
     }
 
 

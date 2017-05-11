@@ -3,9 +3,9 @@ package net.myspring.util.time;
 import net.myspring.util.text.StringUtils;
 import org.springside.modules.utils.text.TextValidator;
 
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -63,6 +63,13 @@ public class LocalDateTimeUtils {
 
     public static LocalDateTime getLastDayOfMonth(LocalDateTime localDateTime) {
         return localDateTime.withDayOfMonth(localDateTime.toLocalDate().lengthOfMonth());
+    }
+
+
+    public static String getThisMonthDateRange(){
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate dateStart = getFirstDayOfMonth(now).toLocalDate();
+        return LocalDateUtils.format(dateStart) + " - "+LocalDateUtils.format(now.toLocalDate()) ;
     }
 
 }

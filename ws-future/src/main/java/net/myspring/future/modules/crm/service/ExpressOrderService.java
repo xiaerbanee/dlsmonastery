@@ -25,8 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
-@Transactional(readOnly=false)
+
 @Service
+@Transactional
 public class ExpressOrderService {
 
     @Autowired
@@ -37,7 +38,6 @@ public class ExpressOrderService {
     private DepotMapper depotMapper;
     @Autowired
     private ExpressMapper expressMapper;
-
     @Autowired
     private ProductService productService;
 

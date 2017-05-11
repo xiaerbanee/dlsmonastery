@@ -1,15 +1,10 @@
 package net.myspring.future.modules.layout.domain;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.AuditEntity;
-import net.myspring.future.modules.basic.domain.Depot;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import java.math.BigDecimal;
-import java.util.List;
 
 
 @Entity
@@ -24,8 +19,6 @@ public class ShopAllot extends AuditEntity<ShopAllot> {
     private String outSaleCode;
     private String returnCloudSynId;
     private String saleCloudSynId;
-    private List<ShopAllotDetail> shopAllotDetailList = Lists.newArrayList();
-    private List<String> shopAllotDetailIdList = Lists.newArrayList();
 
     public String getFromShopId() {
         return fromShopId;
@@ -99,19 +92,4 @@ public class ShopAllot extends AuditEntity<ShopAllot> {
         this.saleCloudSynId = saleCloudSynId;
     }
 
-    public List<ShopAllotDetail> getShopAllotDetailList() {
-        return shopAllotDetailList;
-    }
-
-    public void setShopAllotDetailList(List<ShopAllotDetail> shopAllotDetailList) {
-        this.shopAllotDetailList = shopAllotDetailList;
-    }
-
-    public List<String> getShopAllotDetailIdList() {
-        return shopAllotDetailIdList;
-    }
-
-    public void setShopAllotDetailIdList(List<String> shopAllotDetailIdList) {
-        this.shopAllotDetailIdList = shopAllotDetailIdList;
-    }
 }

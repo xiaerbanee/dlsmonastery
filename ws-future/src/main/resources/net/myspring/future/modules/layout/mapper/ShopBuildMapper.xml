@@ -22,8 +22,8 @@
         <if test="p.createdDateEnd !=null">
             and  t1.created_date &lt;#{p.createdDateEnd}
         </if>
-        <if test="p.specialArea !=null">
-            and t1.special_area =#{p.specialArea}
+        <if test="p.positionId !=null">
+            and t1.process_position_id =#{p.positionId}
         </if>
         <if test="p.createdBy !=null">
             and t1.created_by =#{p.createdBy}

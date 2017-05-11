@@ -198,7 +198,11 @@ export default {
     operation: "operasi",
     billType: "jenis",
     parentId: "ID",
-    loading: "memuat"
+    loading: "memuat",
+    detail: "perincian",
+    edit: "ubah",
+    delete: "hapus",
+    audit: "ubah"
   },
   adGoodsOrderShip: {
     adGoodsOrderShip: "order bahan",

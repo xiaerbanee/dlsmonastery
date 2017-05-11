@@ -1,12 +1,16 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Maps;
+import net.myspring.future.common.enums.GoodsOrderStatusEnum;
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.mapper.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
+import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.mapper.*;
+import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.future.modules.layout.mapper.ShopGoodsDepositMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,9 +52,21 @@ public class GoodsOrderService {
     @Autowired
     private BankMapper bankMapper;
 
+    @Autowired
+    private CacheUtils cacheUtils;
 
-    public Page<GoodsOrder> findPage(Pageable pageable, Map<String, Object> param) {
-        Page<GoodsOrder> page = goodsOrderMapper.findPage(pageable, param);
+
+    public Page<GoodsOrderDto> findPage(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
+        Page<GoodsOrderDto> page = goodsOrderMapper.findPage(pageable, goodsOrderQuery);
+
+        for (GoodsOrderDto each : page.getContent()) {
+            if (GoodsOrderStatusEnum.待开单.name().equals(each.getStatus())) {
+//               TODO 设置应收 each.setShopShouldGet();
+
+            }
+        }
+
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
@@ -111,7 +127,6 @@ public class GoodsOrderService {
         return goodsOrder;
     }
 
-    @Transactional(readOnly = false)
     public void sreturn(GoodsOrder goodsOrder) {
         goodsOrderMapper.update(goodsOrder);
     }

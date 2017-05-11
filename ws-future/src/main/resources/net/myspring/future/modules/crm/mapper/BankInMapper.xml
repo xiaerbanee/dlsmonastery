@@ -15,11 +15,8 @@
             and t1.id=#{p.id}
         </if>
         <if test="p.shopName!=null">
-            and t1.shop_id in(
-            select shop.id
-            from crm_depot shop
-            where shop.name like concat('%',#{p.shopName},'%')
-            )
+            and depot.name like concat('%',#{p.shopName},'%')
+
         </if>
         <if test="p.amount !=null">
             and t1.amount=#{p.amount}
@@ -28,11 +25,8 @@
             and t1.out_code like concat('%',#{p.outCode},'%')
         </if>
         <if test="p.bankName!=null">
-            and t1.bank_id in(
-            select bank.id
-            from crm_bank bank
-            where bank.name like concat('%',#{p.bankName},'%')
-            )
+            and bank.name like concat('%',#{p.bankName},'%')
+
         </if>
         <if test="p.processStatus !=null">
             and t1.process_status =#{p.processStatus}
@@ -44,19 +38,19 @@
             and t1.created_date >= #{p.createdDateStart}
         </if>
         <if test="p.createdDateEnd !=null">
-            and t1.created_date &lt;= #{p.createdDateEnd}
+            and t1.created_date &lt; #{p.createdDateEnd}
         </if>
         <if test="p.billDateStart !=null">
             and t1.bill_date >= #{p.billDateStart}
         </if>
         <if test="p.billDateEnd !=null">
-            and t1.bill_date &lt;= #{p.billDateEnd}
+            and t1.bill_date &lt; #{p.billDateEnd}
         </if>
         <if test="p.inputDateStart !=null">
             and t1.input_date >= #{p.inputDateStart}
         </if>
         <if test="p.inputDateEnd !=null">
-            and t1.input_date &lt;= #{p.inputDateEnd}
+            and t1.input_date &lt; #{p.inputDateEnd}
         </if>
     </select>
 

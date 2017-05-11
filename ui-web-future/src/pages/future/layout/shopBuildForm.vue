@@ -139,7 +139,6 @@
     },created(){
       axios.get('/api/ws/future/layout/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
-        console.log(this.inputForm);
         if(this.inputForm.scenePhoto !=null) {
             axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
             this.fileList= response.data;

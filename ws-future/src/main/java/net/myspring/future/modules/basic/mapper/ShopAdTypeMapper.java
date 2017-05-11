@@ -6,6 +6,7 @@ import net.myspring.future.common.mybatis.MyProvider;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
+import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
@@ -44,7 +45,7 @@ public interface ShopAdTypeMapper extends BaseMapper<ShopAdType,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL_ENABLED)
     List<ShopAdType> findAllEnabled();
 
-    List<ShopAdType> findAllByEnabled();
+    List<ShopAdTypeDto> findAllByEnabled();
 
     Page<ShopAdTypeDto> findPage(Pageable pageable, @Param("p")ShopAdTypeQuery shopAdTypeQuery);
 

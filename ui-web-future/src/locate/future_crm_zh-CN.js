@@ -657,6 +657,7 @@ export default {
     store: "仓库",
     netType: "网络制式",
     expressCodes: "快递单号",
+    expressCode: "快递单号",
     carrierCodes: "商城单号",
     pullStatus: "推送状态",
     operate: "操作",

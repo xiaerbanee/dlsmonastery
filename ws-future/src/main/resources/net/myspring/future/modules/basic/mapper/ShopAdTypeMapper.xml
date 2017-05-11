@@ -3,7 +3,7 @@
 
 <mapper namespace="net.myspring.future.modules.basic.mapper.ShopAdTypeMapper">
 
-  <select id="findAllByEnabled" resultType="ShopAdType">
+  <select id="findAllByEnabled" resultType="ShopAdTypeDto">
       SELECT t1.*
       FROM  crm_shop_ad_type t1
       where t1.enabled=1

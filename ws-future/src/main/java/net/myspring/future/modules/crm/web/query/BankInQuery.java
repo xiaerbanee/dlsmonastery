@@ -47,7 +47,7 @@ public class BankInQuery extends BaseQuery {
         if(createdDateRange!=null){
             String[] tempParamValues = createdDateRange.split(" - ");
             this.createdDateStart= LocalDateTimeUtils.parse(tempParamValues[0]+ " 00:00:00");
-            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 23:59:59");
+            this.createdDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 00:00:00").plusDays(1);
         }
         this.createdDateRange = createdDateRange;
 
@@ -70,7 +70,7 @@ public class BankInQuery extends BaseQuery {
         if(billDateRange!=null){
             String[] tempParamValues = billDateRange.split(" - ");
             this.billDateStart= LocalDateTimeUtils.parse(tempParamValues[0]+ " 00:00:00");
-            this.billDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 23:59:59");
+            this.billDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 00:00:00").plusDays(1);
         }
         this.billDateRange = billDateRange;
 
@@ -93,7 +93,7 @@ public class BankInQuery extends BaseQuery {
         if(inputDateRange!=null){
             String[] tempParamValues = inputDateRange.split(" - ");
             this.inputDateStart= LocalDateTimeUtils.parse(tempParamValues[0]+ " 00:00:00");
-            this.inputDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 23:59:59");
+            this.inputDateEnd= LocalDateTimeUtils.parse(tempParamValues[1]+ " 00:00:00").plusDays(1);
         }
         this.inputDateRange = billDateRange;
 

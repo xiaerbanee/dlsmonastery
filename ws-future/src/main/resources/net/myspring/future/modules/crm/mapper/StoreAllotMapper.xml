@@ -61,7 +61,7 @@
             and t1.created_date &gt;= #{p.createdDateStart}
         </if>
         <if test="p.createdDateEnd!=null">
-            and t1.created_date &lt;= #{p.createdDateEnd}
+            and t1.created_date &lt; #{p.createdDateEnd}
         </if>
 
     </sql>

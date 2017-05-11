@@ -67,7 +67,7 @@
         <el-table-column prop="remarks" :label="$t('shopBuildList.remarks')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('shopBuildList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" v-permit="'crm:shopBuild:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button>
+            <el-button size="small" v-permit="'crm:shopBuild:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopBuildList.detail')}}</el-button>
             <el-button size="small" v-if="scope.row.isAuditable" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
             <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button>
             <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button>
@@ -152,9 +152,11 @@
         if(action=="detail") {
           this.$router.push({ name: 'shopBuildDetail', query:{id: id}});
         }else if(action=="delete") {
-          axios.get('/api/crm/shopBuild/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/crm/shopBuild/delete', {params: {id: id}}).then((response) => {
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
           })
         }else if(action == "edit"){
           this.$router.push({name: 'shopBuildForm', query:{id: id}});

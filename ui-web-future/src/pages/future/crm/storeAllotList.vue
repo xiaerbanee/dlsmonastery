@@ -25,10 +25,10 @@
             </el-col>
             <el-col :span="12">
               <el-form-item :label="formLabel.fromStoreId.label" :label-width="formLabelWidth">
-                <su-depot type="store" v-model="formData.fromStoreId"  ></su-depot>
+                <depot-select type="STORE" v-model="formData.fromStoreId"  ></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.toStoreId.label" :label-width="formLabelWidth">
-                <su-depot type="store" v-model="formData.toStoreId"  ></su-depot>
+                <depot-select type="STORE" v-model="formData.toStoreId"  ></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.outCode.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.outCode" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
@@ -74,7 +74,11 @@
   </div>
 </template>
 <script>
-  export default {
+  import depotSelect from 'components/future/depot-select'
+  export default{
+    components:{
+      depotSelect,
+    },
     data() {
       return {
         page:{},
