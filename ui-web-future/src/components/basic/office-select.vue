@@ -45,7 +45,7 @@
         }
       },
       setDisabled(dis){
-        if(dis==='true'){
+        if(dis){
           this.isDisabled=true;
         }
       }

@@ -39,7 +39,7 @@
         })
       },
       setMultiple(mul){
-        if(mul==='true'){
+        if(mul){
           this.isMultiple=true;
         }
       }
