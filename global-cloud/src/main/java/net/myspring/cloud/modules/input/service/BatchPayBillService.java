@@ -8,7 +8,6 @@ import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.input.dto.BatchPayBillDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.*;
-import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -92,8 +91,6 @@ public class BatchPayBillService {
                 payBillMap.get(billKey).setAmout(amount.add(amount));
             }
         }
-        AccountDto accountDto = new AccountDto();
-        cacheUtils.initCacheInput(accountDto);
         List<BatchPayBillDto> billList = Lists.newArrayList(payBillMap.values());
         List<String> billNos = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {
@@ -107,9 +104,9 @@ public class BatchPayBillService {
     }
 
     //批量应付单
-    public String getPayBill(BatchPayBillDto payBill, AccountDto accountDto) {
+    public String getPayBill(BatchPayBillDto payBill, String userName) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountDto.getName());
+        root.put("Creator", userName);
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);

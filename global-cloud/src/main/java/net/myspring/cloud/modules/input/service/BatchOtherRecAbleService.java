@@ -13,7 +13,6 @@ import net.myspring.cloud.modules.input.dto.BatchOtherRecAbleDetailDto;
 import net.myspring.cloud.modules.input.dto.BatchOtherRecAbleDto;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
-import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
@@ -117,8 +116,6 @@ public class BatchOtherRecAbleService {
             }
             aROtherRecAbleMap.get(billKey).getBatchOtherRecAbleDetailDtoList().add(aROtherRecAbleDetail);
         }
-        AccountDto accountDto = new AccountDto();
-        cacheUtils.initCacheInput(accountDto);
         List<BatchOtherRecAbleDto> billList = Lists.newArrayList(aROtherRecAbleMap.values());
         List<String> billNos = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {
@@ -132,9 +129,9 @@ public class BatchOtherRecAbleService {
     }
 
     // 其他应收单
-    private String getAROtherRecAble(BatchOtherRecAbleDto aROtherRecAble, AccountDto accountDto) {
+    private String getAROtherRecAble(BatchOtherRecAbleDto aROtherRecAble, String userName) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountDto.getName());
+        root.put("Creator", userName);
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);

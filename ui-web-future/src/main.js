@@ -133,8 +133,8 @@ axios.interceptors.response.use((resp) => {
         window.location.assign('/');
         break;
       case 500:
-        ElementUI.Notification.error({
-          title: 'system error',
+        ElementUI.Message.error({
+          title: 'System Error',
           message:error.response.data
         });
     }

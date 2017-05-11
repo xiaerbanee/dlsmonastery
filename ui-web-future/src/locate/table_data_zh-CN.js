@@ -96,6 +96,7 @@ export default {
       cloudSysCategory:"系统设置",
       kingdeeBookList:"账套管理",
       kingdeeBookForm:"账套编辑",
+      accountKingdeeBookList:"金蝶用户管理",
       404: "404",
       companyConfigForm: "参数设置编辑",
       companyConfigList: "参数设置",

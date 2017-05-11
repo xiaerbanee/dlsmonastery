@@ -11,7 +11,6 @@ import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.mapper.BdStockMapper;
 import net.myspring.cloud.modules.input.web.query.BatchDeliveryQuery;
-import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -34,8 +33,6 @@ public class BatchDeliveryService {
     private BdStockMapper bdStockMapper;
     @Autowired
     private BdMaterialMapper bdMaterialMapper;
-    @Autowired
-    private CacheUtils cacheUtils;
 
     public List<String> save(List<List<Object>> datas, String department, LocalDate billDate) {
         Map<String, BatchDeliveryDto> misDeliveryMap = Maps.newLinkedHashMap();
@@ -69,8 +66,6 @@ public class BatchDeliveryService {
                 misDeliveryMap.get(billKey).setQty(qty + qty);
             }
         }
-        AccountDto accountDto = new AccountDto();
-        cacheUtils.initCacheInput(accountDto);
         List<BatchDeliveryDto> billList = Lists.newArrayList(misDeliveryMap.values());
         List<String> billNos = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {
@@ -83,9 +78,9 @@ public class BatchDeliveryService {
         return billNos;
     }
 
-    private String getMisDeliveryReturn(BatchDeliveryDto misDelivery,AccountDto accountDto) {
+    private String getMisDeliveryReturn(BatchDeliveryDto misDelivery, String userName) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountDto.getName());
+        root.put("Creator", userName);
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);

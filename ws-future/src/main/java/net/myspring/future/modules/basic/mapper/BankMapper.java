@@ -6,6 +6,7 @@ import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.common.mybatis.MyProvider;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.dto.BankDto;
+import net.myspring.future.modules.basic.web.form.BankForm;
 import net.myspring.future.modules.basic.web.query.BankQuery;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;
@@ -50,19 +51,13 @@ public interface BankMapper extends MyMapper<Bank,String> {
 
     Page<BankDto> findPage(Pageable pageable, @Param("p")BankQuery bankQuery);
 
-    List<NameValueDto> findByBankId(List<String> bankId);
-
     int deleteBankAccount(@Param("bankId") String bankId);
 
     int saveAccount(@Param("bankId") String bankId, @Param("accountIds") List<String> accountIds);
 
-    List<Bank> findLabels(List<String> ids);
-
     List<Bank> findByAccountId(@Param("accountId") String accountId);
 
     LocalDateTime getMaxOutDate();
-
-    List<Bank> findById(String id);
 
     List<Bank> findByNameLike(String name);
 }

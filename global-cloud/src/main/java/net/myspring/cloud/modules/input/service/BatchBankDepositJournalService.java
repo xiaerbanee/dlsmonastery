@@ -12,7 +12,6 @@ import net.myspring.cloud.modules.input.domain.HrEmpInfo;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.*;
 import net.myspring.cloud.modules.input.web.query.BatchBankDepositJournalQuery;
-import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -84,10 +83,9 @@ public class BatchBankDepositJournalService {
         for (HrEmpInfo employee : hrEmpInfoMapper.findAllUser()) {
             secUserMap.put(employee.getfName(), employee.getfNumber());
         }
-        AccountDto accountDto = new AccountDto();
-        cacheUtils.initCacheInput(accountDto);
+
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountDto.getName());
+        root.put("Creator", "");
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
