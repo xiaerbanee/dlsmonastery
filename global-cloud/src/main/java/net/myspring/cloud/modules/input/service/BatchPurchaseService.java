@@ -9,7 +9,6 @@ import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.BatchPurchaseDto;
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
-import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -45,14 +44,12 @@ public class BatchPurchaseService {
         for (NameNumberDto basicData : bdMaterialMapper.findNameAndNumber()) {
             productMap.put(basicData.getName(), basicData.getNumber());
         }
-        AccountDto accountDto = new AccountDto();
-        cacheUtils.initCacheInput(accountDto);
         List<String> codeList = Lists.newArrayList();
         String purMrbResult = "";
         Map<String, Object> purMrbModel = Maps.newLinkedHashMap();
         List<Object> purMrbEntry = Lists.newArrayList();
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountDto.getName());
+        root.put("Creator", "");
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
@@ -125,7 +122,7 @@ public class BatchPurchaseService {
         codeList.add(billNo);
         if (CollectionUtil.isNotEmpty(purMrbEntry)) {
             Map<String, Object> purMrbroot = Maps.newLinkedHashMap();
-            purMrbroot.put("Creator", accountDto.getName());
+            purMrbroot.put("Creator", "");
             purMrbroot.put("NeedUpDateFields", Lists.newArrayList());
             purMrbModel = savePurMrbHeader(billDate, supplier,department);
             purMrbModel.put("PUR_MRB__FPURMRBENTRY", purMrbEntry);

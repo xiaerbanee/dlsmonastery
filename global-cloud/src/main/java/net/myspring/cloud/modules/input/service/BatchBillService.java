@@ -16,7 +16,6 @@ import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.input.mapper.BdDepartmentMapper;
 import net.myspring.cloud.modules.input.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
-import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -92,8 +91,6 @@ public class BatchBillService {
         List<BatchBillDto> batchBillDtoList = Lists.newArrayList(billMap.values());
         List<String> codeList = Lists.newArrayList();
         //财务出库开单
-        AccountDto accountDto = new AccountDto();
-        cacheUtils.initCacheInput(accountDto);
         if (CollectionUtil.isNotEmpty(batchBillDtoList)) {
             for (BatchBillDto batchBillDto : batchBillDtoList) {
 
@@ -103,9 +100,9 @@ public class BatchBillService {
     }
 
     //批量销售出库单json
-    private String getSaleOutStock(BatchBillDto batchBillDto,AccountDto accountDto) {
+    private String getSaleOutStock(BatchBillDto batchBillDto,String userName) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountDto.getName());
+        root.put("Creator", userName);
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
@@ -153,9 +150,9 @@ public class BatchBillService {
     }
 
     //批量销售退货单json
-    private String getReturnStock(BatchBillDto batchBillDto,AccountDto accountDto) {
+    private String getReturnStock(BatchBillDto batchBillDto,String userName) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountDto.getName());
+        root.put("Creator", userName);
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);

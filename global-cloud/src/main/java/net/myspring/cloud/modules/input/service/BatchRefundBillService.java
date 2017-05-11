@@ -13,7 +13,6 @@ import net.myspring.cloud.modules.input.dto.BatchRefundBillDto;
 import net.myspring.cloud.modules.input.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.input.mapper.BdDepartmentMapper;
 import net.myspring.cloud.modules.input.mapper.CnBankMapper;
-import net.myspring.cloud.modules.sys.dto.AccountDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
@@ -104,8 +103,7 @@ public class BatchRefundBillService {
             }
 
         }
-        AccountDto accountDto = new AccountDto();
-        cacheUtils.initCacheInput(accountDto);
+
         List<String> billNos = Lists.newArrayList();
         List<BatchRefundBillDto> billList = Lists.newArrayList(ARRefundBillMap.values());
         if (CollectionUtil.isNotEmpty(billList)) {
@@ -127,9 +125,9 @@ public class BatchRefundBillService {
     }
 
     //银行
-    private String getARRefundBill(BatchRefundBillDto arRefundBill, AccountDto accountDto) {
+    private String getARRefundBill(BatchRefundBillDto arRefundBill, String userName) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountDto.getName());
+        root.put("Creator", userName);
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = getHeader(arRefundBill);
         List<Object> entity = Lists.newArrayList();
@@ -153,9 +151,9 @@ public class BatchRefundBillService {
     }
 
     //现金
-    private String getCashARRefundBill(BatchRefundBillDto arRefundBill, AccountDto accountDto) {
+    private String getCashARRefundBill(BatchRefundBillDto arRefundBill, String userName) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", accountDto.getName());
+        root.put("Creator", userName);
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = getHeader(arRefundBill);
         List<Object> entity = Lists.newArrayList();
