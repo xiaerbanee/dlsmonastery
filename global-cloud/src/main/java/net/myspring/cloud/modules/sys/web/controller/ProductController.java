@@ -62,7 +62,6 @@ public class ProductController {
             LocalDateTime maxOutDate = productService.findMaxOutDate(companyId);
             List<BdMaterial> bdMaterials = bdMaterialService.findByDate(maxOutDate);
             if(CollectionUtil.isNotEmpty(bdMaterials)){
-                productService.syn(bdMaterials);
                return new RestResponse("同步成功",null);
             }
         }
