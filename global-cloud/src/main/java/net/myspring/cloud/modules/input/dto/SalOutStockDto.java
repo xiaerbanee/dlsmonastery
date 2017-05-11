@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by liuj on 2017/5/11.
  */
-public class SalOutstockDto {
+public class SalOutStockDto {
     private String creator;
     // 客户名称
     private String customerNumber;
@@ -85,13 +85,13 @@ public class SalOutstockDto {
         this.salOutStockFEntityDtoList = salOutStockFEntityDtoList;
     }
 
-    public String getJson(SalOutstockDto salOutstockDto) {
+    public String getJson() {
         Map<String, Object> root = Maps.newLinkedHashMap();
         root.put("Creator", getCreator());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
-        model.put("FDate", LocalDateUtils.format(salOutstockDto.getDate(),"yyyy-M-d"));
+        model.put("FDate", LocalDateUtils.format(getDate(),"yyyy-M-d"));
         model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD01_SYS"));
         model.put("FDeliveryDeptID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
         model.put("FSaleOrgId", CollectionUtil.getMap("FNumber", 100));
@@ -99,9 +99,9 @@ public class SalOutstockDto {
         model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", 100));
         model.put("FSettleCurrID", CollectionUtil.getMap("FNumber", "PRE001"));
         model.put("FCustomerID", CollectionUtil.getMap("FNumber", getCustomerNumber()));
-        model.put("FNote", salOutstockDto.getNote());
+        model.put("FNote", getNote());
         List<Object> entity = Lists.newArrayList();
-        for (SalOutStockFEntityDto salOutStockFEntityDto: salOutstockDto.getSalOutStockFEntityDtoList()) {
+        for (SalOutStockFEntityDto salOutStockFEntityDto: getSalOutStockFEntityDtoList()) {
             if (salOutStockFEntityDto.getQty() != null && salOutStockFEntityDto.getQty() > 0) {
                 Map<String, Object> detail = Maps.newLinkedHashMap();
                 detail.put("FMaterialId", CollectionUtil.getMap("FNumber", salOutStockFEntityDto.getMaterialNumber()));
