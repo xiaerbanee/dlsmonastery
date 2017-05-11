@@ -59,6 +59,8 @@
                 } else {
                   this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
