@@ -78,6 +78,8 @@
                 } else {
                   this.$router.push({name:'permissionList',query:util.getQuery("permissionList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

@@ -2,10 +2,8 @@ package net.myspring.cloud.modules.sys.service;
 
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
-import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
-import net.myspring.cloud.modules.input.domain.BdMaterial;
 import net.myspring.cloud.modules.sys.domain.Product;
 import net.myspring.cloud.modules.sys.dto.ProductDto;
 import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
@@ -67,18 +65,4 @@ public class ProductService {
         }
     }
 
-    public void syn(List<BdMaterial> bdMaterials) {
-        if (CollectionUtil.isNotEmpty(bdMaterials)) {
-            String companyId = RequestUtils.getCompanyId();
-            String returnOutId = "";
-            if(!KingdeeNameEnum.JXDJ.name().equals(kingdeeBookMapper.findNameByCompanyId(companyId))){
-                returnOutId = productMapper.findReturnOutId(companyId);
-            }
-            List<Product> productList = productMapper.findByCompanyId(companyId);
-            Map<String,Product> productMap = CollectionUtil.extractToMap(productList,"outId");
-            for (BdMaterial bdmaterial : bdMaterials) {
-
-            }
-        }
-    }
 }

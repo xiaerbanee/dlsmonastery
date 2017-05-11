@@ -86,7 +86,9 @@
         axios.post('/api/crm/goodsOrder/sreturn',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
             this.$message(response.data.message);
             this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
-          });
+          }).catch(function () {
+           this.submitDisabled = false;
+         });
       },
       findOne(){
         axios.get('/api/crm/goodsOrder/sreturn',{params: {id:this.$route.query.id}}).then((response)=>{

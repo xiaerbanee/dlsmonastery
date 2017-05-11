@@ -132,6 +132,11 @@ axios.interceptors.response.use((resp) => {
         store.dispatch('clearGlobal');
         window.location.assign('/');
         break;
+      case 500:
+        ElementUI.Message.error({
+          title: 'System Error',
+          message:error.response.data
+        });
     }
   }
   return Promise.reject(error)

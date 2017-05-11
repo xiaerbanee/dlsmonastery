@@ -98,7 +98,9 @@
        axios.post('/api/crm/adPricesystemChange/save',qs.stringify({data:this.inputForm.data},{allowDots:true})).then((response)=> {
           this.$message(response.data.message);
           this.submitDisabled = false;
-        });
+        }).catch(function () {
+         this.submitDisabled = false;
+       });
       },search() {
         this.formVisible = false;
         this.getData();

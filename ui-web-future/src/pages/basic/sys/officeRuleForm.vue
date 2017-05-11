@@ -71,6 +71,8 @@
               } else {
                 this.$router.push({name:'officeRuleList',query:util.getQuery("officeRuleList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

@@ -84,6 +84,8 @@
                 } else {
                   this.$router.push({name:'employeePhoneDepositList',query:util.getQuery("employeePhoneDepositList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

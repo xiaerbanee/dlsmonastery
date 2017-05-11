@@ -99,6 +99,8 @@
                 } else {
                   this.$router.push({name:'priceChangeImeList',query:util.getQuery("priceChangeImeList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

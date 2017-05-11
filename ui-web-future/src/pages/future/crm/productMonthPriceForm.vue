@@ -71,6 +71,8 @@
                 } else {
                   this.$router.push({name:'productMonthPriceList',query:util.getQuery("productMonthPriceList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

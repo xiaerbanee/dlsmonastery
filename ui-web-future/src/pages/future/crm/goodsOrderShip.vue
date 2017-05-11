@@ -125,6 +125,8 @@
                     }
                 }
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

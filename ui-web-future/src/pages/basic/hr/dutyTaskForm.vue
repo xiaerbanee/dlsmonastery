@@ -185,6 +185,8 @@
               } else {
                 this.$router.push({name:'dutyTaskList',query:util.getQuery("dutyTaskList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.cloud.modules.kingdee.mapper.BdDepartmentMapper">
+    <select id="findByCustomerId" resultType="BdDepartment">
+        select
+         t1.FDEPTID,
+         t1.FNUMBER,
+         t2.FFULLNAME as FNAME
+        from
+         T_BD_DEPARTMENT t1,
+         T_BD_DEPARTMENT_L t2,
+         T_BD_CUSTOMER t
+        where
+         t1.FDEPTID = t.FSALDEPTID
+         and t1.FDEPTID = t2.FDEPTID
+         and t.FCUSTID = #{customerId}
+    </select>
+
+    <select id="findAll" resultType="BdDepartment">
+        select
+            t.FDEPTID,
+            t.FNUMBER,
+            t1.FFULLNAME as FNAME
+        from
+            T_BD_DEPARTMENT t,
+            T_BD_DEPARTMENT_L t1
+        where
+            t.FDEPTID = t1.FDEPTID
+    </select>
+
+    <select id="findNameByDepartmentId" resultType="String">
+        select
+            t1.FFULLNAME
+        from
+            T_BD_DEPARTMENT t
+        left join T_BD_DEPARTMENT_L t1 on t.FDEPTID = t1.FDEPTID
+        where
+        t.FDEPTID = #{departmentId}
+    </select>
+
+    <select id="findNameAndNumber" resultType="NameNumberDto">
+        select
+            t1.FNUMBER as number,
+            t2.FFULLNAME as name
+        from
+            T_BD_DEPARTMENT t1,
+            T_BD_DEPARTMENT_L t2
+        where
+          t1.FDEPTID = t2.FDEPTID
+    </select>
+
+    <select id="findByNameLike" resultType="NameNumberDto">
+        select
+            t1.FNUMBER as number,
+            t2.FFULLNAME as name
+        from
+            T_BD_DEPARTMENT t1,
+            T_BD_DEPARTMENT_L t2
+        where
+            t1.FDEPTID = t2.FDEPTID
+        and t2.FFULLNAME like CONCAT('%',#{name},'%')
+    </select>
+</mapper>

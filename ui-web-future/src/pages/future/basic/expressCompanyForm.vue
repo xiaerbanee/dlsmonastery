@@ -84,6 +84,8 @@
                 } else {
                   this.$router.push({name:'expressCompanyList',query:util.getQuery("expressCompanyList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

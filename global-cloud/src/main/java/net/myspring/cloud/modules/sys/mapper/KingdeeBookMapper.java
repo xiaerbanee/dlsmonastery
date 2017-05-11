@@ -3,8 +3,7 @@ package net.myspring.cloud.modules.sys.mapper;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.web.query.KingdeeBookQuery;
 import net.myspring.mybatis.mapper.CrudMapper;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

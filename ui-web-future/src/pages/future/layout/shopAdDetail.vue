@@ -82,7 +82,9 @@
         if(this.inputForm.attachment !=null) {
           axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
             this.fileList= response.data;
-        });
+        }).catch(function () {
+            this.submitDisabled = false;
+          });
         }
           if(response.data.activitiEntity.historicTaskInstances){
             this.activitiEntity.historicTaskInstances = response.data.activitiEntity.historicTaskInstances;

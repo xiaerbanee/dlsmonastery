@@ -77,6 +77,8 @@
                 } else {
                   this.$router.push({name:'shopGoodsDepositList',query:util.getQuery("shopGoodsDepositList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

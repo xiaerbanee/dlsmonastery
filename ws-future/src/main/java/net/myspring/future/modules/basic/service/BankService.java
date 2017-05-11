@@ -131,9 +131,9 @@ public class BankService {
     }
 
     @Transactional(readOnly = true)
-    public List<BankDto> findById(String id){
-        List<Bank> banks = bankMapper.findById(id);
-        List<BankDto> bankDtos= BeanUtil.map(banks,BankDto.class);
-        return bankDtos;
+    public BankDto findById(String id){
+        Bank bank= bankMapper.findOne(id);
+        BankDto bankDto= BeanUtil.map(bank,BankDto.class);
+        return bankDto;
     }
 }

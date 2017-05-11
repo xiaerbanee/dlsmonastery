@@ -112,6 +112,8 @@
                     this.$router.push({name:'imeAllotList',query:util.getQuery("imeAllotList")})
                   }
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }
           })

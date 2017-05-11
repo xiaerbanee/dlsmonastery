@@ -268,6 +268,8 @@
                 } else {
                   this.$router.push({name:'recruitList',query:util.getQuery("recruitList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

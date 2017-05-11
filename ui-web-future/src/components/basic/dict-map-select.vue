@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable :clearable=true @change="handleChange">
+    <el-select v-model="innerId"  filterable :clearable=true  :disabled="isDisabled" @change="handleChange">
       <el-option v-for="item in itemList"  :key="item.value" :label="item.name" :value="item.value"></el-option>
     </el-select>
   </div>
@@ -11,7 +11,8 @@
     data() {
       return {
         innerId:this.value,
-        itemList : []
+        itemList : [],
+        isDisabled:false
       };
     },methods:{
       handleChange(newVal) {
@@ -19,8 +20,14 @@
       },setValue(val) {
         this.innerId=val;
         this.remoteLoading = true;
+      },
+      setDisabled(dis){
+        if(dis==='true'){
+          this.isDisabled=true;
+        }
       }
     },created () {
+      this.setDisabled(this.disabled)
       axios.get('/api/basic/sys/dictMap/findByCategory?category=' + this.category).then((response)=>{
         this.itemList=response.data;
       })

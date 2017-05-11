@@ -35,10 +35,11 @@
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('adPricesystemList.operation')" width="140">
-          <div v-for="action in scope.row.actionList" :key="action" class="action">
-            <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-          </div>
+        <el-table-column fixed="right" :label="$t('bankList.operation')" width="140">
+          <template scope="scope">
+            <el-button size="small"  @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
+            <el-button size="small"  @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
@@ -87,9 +88,9 @@
       },itemAdd(){
         this.$router.push({ name: 'adPricesystemForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'adPricesystemForm', query: { id: id }})
-        }else if(action=="删除"){
+        }else if(action=="delete"){
           axios.get('/api/ws/future/basic/adPricesystem/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();

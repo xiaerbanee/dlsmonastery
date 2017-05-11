@@ -63,8 +63,8 @@ public class BankController {
     }
 
     @RequestMapping(value = "findById")
-    public List<BankDto> findById(String id) {
-        List<BankDto> bankDtoList =bankService.findById(id);
-        return bankDtoList;
+    public BankDto findById(String id) {
+        BankDto bankDto =bankService.findById(id);
+        return bankDto;
     }
 }

@@ -65,6 +65,8 @@
               } else {
                 this.$router.push({name:'dealerList',query:util.getQuery("dealerList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

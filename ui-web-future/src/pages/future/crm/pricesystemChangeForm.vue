@@ -78,6 +78,8 @@
                   that.$message(response.data.message);
                   form.resetFields();
                   that.submitDisabled = false;
+                }).catch(function () {
+                  this.submitDisabled = false;
                 });
               }
             })

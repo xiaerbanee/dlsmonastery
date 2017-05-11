@@ -63,6 +63,8 @@
                 } else {
                   this.$router.push({name:'priceChangeList',query:util.getQuery("priceChangeList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
