@@ -242,12 +242,12 @@
     </select>
 
     <sql id="depotParamFilter">
-        <!--<if test="p.types !=null and p.types.size() !=0">
+        <if test="p.types !=null and p.types.size() !=0">
             and depot.type IN
             <foreach collection="p.types" index="index" item="item" open="(" separator="," close=")">
                 #{p.types[${index}]}
             </foreach>
-        </if>-->
+        </if>
         <if test="p.depotName != null">
             and (depot.name like CONCAT('%',#{p.depotName},'%') or depot.name_pinyin like CONCAT('%',#{p.depotName},'%'))
         </if>

@@ -46,7 +46,7 @@ public class DepotQuery extends BaseQuery {
     //后台
     private List<String> officeIdList;
     private String depotName;
-    private List<Integer> typeList;
+    private List<Integer> types;
     private Boolean allowAdApply;
     private List<String> depotIdList;
     private String dateRange;
@@ -308,11 +308,11 @@ public class DepotQuery extends BaseQuery {
         this.typeMap = typeMap;
     }
 
-    public List<Integer> getTypeList() {
-        return typeList;
+    public List<Integer> getTypes() {
+        return types;
     }
 
-    public void setTypeList(List<Integer> typeList) {
-        this.typeList = typeList;
+    public void setTypes(List<Integer> types) {
+        this.types = types;
     }
 }

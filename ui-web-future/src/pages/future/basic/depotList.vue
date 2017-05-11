@@ -44,9 +44,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.specialityStoreType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.specialityStoreType" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="specialityStore in formData.specialityStoreTypeList" :key="specialityStore.name" :label="specialityStore.name" :value="specialityStore.name"></el-option>
-                </el-select>
+                <dict-map-select v-model="formData.specialityStoreType" category="门店_体验店类型"/>
               </el-form-item>
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.officeId" filterable remote :placeholder="$t('depotList.inputWord')" :clearable=true>
@@ -151,7 +149,11 @@
   </div>
 </template>
 <script>
-  export default {
+  import dictMapSelect from 'components/basic/dict-map-select'
+  export default{
+    components:{
+      dictMapSelect
+    },
     data() {
       return {
         page:{},

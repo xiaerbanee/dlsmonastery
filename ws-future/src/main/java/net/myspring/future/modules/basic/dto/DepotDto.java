@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.dto;
 
 import com.google.common.collect.Maps;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -44,8 +45,17 @@ public class DepotDto extends DataDto<Depot> {
     private String expressCompanyName;
     private Boolean rebate;
     private Boolean locked;
+    private Boolean enabled;
     //后台
     private Integer type;
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public Integer getType() {
         return type;

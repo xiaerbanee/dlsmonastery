@@ -1,18 +1,19 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable :clearable=true @change="handleChange" :disabled="isDisabled" >
+    <el-select v-model="innerId"  filterable   :multiple="multiple" :clearable=true @change="handleChange" :disabled="isDisabled" >
       <el-option v-for="item in itemList"  :key="item.value" :label="item.value" :value="item.value"></el-option>
     </el-select>
   </div>
 </template>
 <script>
   export default {
-    props: ['value','category','disabled'],
+    props: ['value','category','disabled',"multiple"],
     data() {
       return {
         innerId: this.value,
         itemList : [],
         isDisabled:false
+
       };
     },methods:{
       handleChange(newVal) {

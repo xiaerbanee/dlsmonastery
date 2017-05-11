@@ -63,9 +63,17 @@ public class DepotService {
     private CacheUtils cacheUtils;
 
 
-    public DepotDto findOne(String id) {
+    public DepotForm findForm(DepotForm depotForm) {
+        if(depotForm.isCreate()){
+            Depot depot = depotMapper.findOne(depotForm.getId());
+            depotForm = BeanUtil.map(depot,DepotForm.class);
+        }
+        return depotForm;
+    }
+
+    public DepotDto findOne(String id){
         Depot depot = depotMapper.findOne(id);
-        DepotDto depotDto = BeanUtil.map(depot,DepotDto.class);
+        DepotDto depotDto=BeanUtil.map(depot,DepotDto.class);
         return depotDto;
     }
 
@@ -287,7 +295,7 @@ public class DepotService {
         } else {
             //代理区域所有门店，直营区域只能是财务关联门店
             List<Integer> typeValueByCategory = depotManager.getTypeValueByCategory(DepotCategoryEnum.SHOP_PROXY_STORE.name());
-            depotQuery.setTypeList(typeValueByCategory);
+            depotQuery.setTypes(typeValueByCategory);
             depotList =  BeanUtil.map(depotMapper.findByFilter(depotQuery),DepotDto.class);
         }
         Map<Integer, String> map = DepotTypeEnum.getMap();

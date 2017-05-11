@@ -235,7 +235,6 @@
 </template>
 <script>
   import accountSelect from 'components/basic/account-select'
-
   export default{
       components:{
           accountSelect
@@ -246,7 +245,8 @@
         submitDisabled:false,
         multiple:true,
         formProperty:{},
-        inputForm:{
+        inputForm:"",
+        submitData:{
           id:'',
           type:'',
           officeId:null,
@@ -314,7 +314,8 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/ws/future/basic/depot/save', qs.stringify(this.inputForm)).then((response)=> {
+            util.copyValue(this.inputForm,this.submitData)
+            axios.post('/api/ws/future/basic/depot/save', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -403,60 +404,54 @@
         }
       }
     },created(){
-      axios.get('/api/ws/future/basic/depot/findForm').then((response)=>{
-        this.formProperty=response.data;
-        console.log(response.data)
-      });
-      if(!this.isCreate){
-        axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-          this.inputForm.doorHead = response.data.doorHead?1:0;
-          this.inputForm.rebate = response.data.rebate?1:0;
-          this.inputForm.hasGuide = response.data.hasGuide?1:0;
-          this.inputForm.printPrice = response.data.printPrice?1:0;
-          this.inputForm.isHidden = response.data.isHidden?1:0;
-          this.inputForm.adShop = response.data.adShop?1:0;
-          this.inputForm.adShopBsc = response.data.adShopBsc?1:0;
-          this.inputForm.bussinessCenter = response.data.bussinessCenter?1:0;
-          this.inputForm.specialityStore = response.data.specialityStore?1:0;
-          if(response.data.office){
-            this.offices=new Array(response.data.office);
-            this.inputForm.officeId=response.data.office.id;
-          }
-          if(response.data.district){
-            this.districts=new Array(response.data.district);
-            this.inputForm.districtId=response.data.district.id;
-          }
-          if(response.data.chain){
-            this.formProperty.chains=new Array(response.data.chain);
-            this.inputForm.chainId=response.data.chain.id;
-          }
-          if(response.data.pricesystem){
-            this.formProperty.pricesystems=new Array(response.data.pricesystem);
-            this.inputForm.pricesystemId=response.data.pricesystem.id;
-          }
-          if(response.data.town){
-            this.towns=new Array(response.data.town);
-            this.inputForm.townId=response.data.town.id;
-          }
-          if(response.data.cmccCarrierShop){
-            this.cmccCarrierShops=new Array(response.data.cmccCarrierShop);
-            this.inputForm.cmccCarrierShopId=response.data.cmccCarrierShop.id;
-          }
-          if(response.data.ctccCarrierShop){
-            this.ctccCarrierShops=new Array(response.data.ctccCarrierShop);
-            this.inputForm.ctccCarrierShopId=response.data.ctccCarrierShop.id;
-          }
-          if(response.data.accountList!==null&&response.data.accountList.length>0){
-            this.accounts=response.data.accountList;
-            this.inputForm.accountIdList=util.getIdList(this.accounts);
-          }
-          if(response.data.parent){
-            this.shops=new Array(response.data.parent);
-            this.inputForm.parentId=response.data.parent.id;
-          }
-        })
-      }
+      axios.get('/api/ws/future/basic/depot/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        util.copyValue(response.data,this.inputForm);
+        this.inputForm.doorHead = response.data.doorHead?1:0;
+        this.inputForm.rebate = response.data.rebate?1:0;
+        this.inputForm.hasGuide = response.data.hasGuide?1:0;
+        this.inputForm.printPrice = response.data.printPrice?1:0;
+        this.inputForm.isHidden = response.data.isHidden?1:0;
+        this.inputForm.adShop = response.data.adShop?1:0;
+        this.inputForm.adShopBsc = response.data.adShopBsc?1:0;
+        this.inputForm.bussinessCenter = response.data.bussinessCenter?1:0;
+        this.inputForm.specialityStore = response.data.specialityStore?1:0;
+        if(response.data.office){
+          this.offices=new Array(response.data.office);
+          this.inputForm.officeId=response.data.office.id;
+        }
+        if(response.data.district){
+          this.districts=new Array(response.data.district);
+          this.inputForm.districtId=response.data.district.id;
+        }
+        if(response.data.chain){
+          this.formProperty.chains=new Array(response.data.chain);
+          this.inputForm.chainId=response.data.chain.id;
+        }
+        if(response.data.pricesystem){
+          this.formProperty.pricesystems=new Array(response.data.pricesystem);
+          this.inputForm.pricesystemId=response.data.pricesystem.id;
+        }
+        if(response.data.town){
+          this.towns=new Array(response.data.town);
+          this.inputForm.townId=response.data.town.id;
+        }
+        if(response.data.cmccCarrierShop){
+          this.cmccCarrierShops=new Array(response.data.cmccCarrierShop);
+          this.inputForm.cmccCarrierShopId=response.data.cmccCarrierShop.id;
+        }
+        if(response.data.ctccCarrierShop){
+          this.ctccCarrierShops=new Array(response.data.ctccCarrierShop);
+          this.inputForm.ctccCarrierShopId=response.data.ctccCarrierShop.id;
+        }
+        if(response.data.accountList){
+          this.accounts=response.data.accountList;
+          this.inputForm.accountIdList=util.getIdList(this.accounts);
+        }
+        if(response.data.parent){
+          this.shops=new Array(response.data.parent);
+          this.inputForm.parentId=response.data.parent.id;
+        }
+      })
     }
   }
 </script>
