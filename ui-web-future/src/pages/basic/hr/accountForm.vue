@@ -6,13 +6,13 @@
         <el-row :gutter="20">
           <el-col :span="10">
             <el-form-item :label="$t('accountForm.mainAccount')" prop="employeeId">
-              <employee-select v-model="inputForm.employeeId" :disabled="disabled"></employee-select>
+              <employee-select v-model="inputForm.employeeId"></employee-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.loginName')" prop="loginName">
               <el-input v-model="inputForm.loginName"></el-input>
             </el-form-item>
             <el-form-item :label="$t('accountForm.officeName')" prop="officeId">
-              <office-select v-model="inputForm.officeId" ></office-select>
+              <office-select v-model="inputForm.officeId" :multiple="multiple"></office-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.leader')" prop="leaderId">
               <account-select v-model="inputForm.leaderId"></account-select>
@@ -55,8 +55,8 @@
     data(){
       return{
         isCreate:this.$route.query.id==null,
+        multiple:true,
         submitDisabled:false,
-        disabled:true,
         formProperty:{positionDtoList:[]},
         employees:[],
         leaders:[],
