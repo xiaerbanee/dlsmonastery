@@ -18,4 +18,5 @@ public interface ExpressOrderMapper extends MyMapper<ExpressOrder,String> {
     ExpressOrder findByExtendIdAndType(@Param("extendId") String id, @Param("extendType") String type);
 
     List<ExpressOrder> findLabels(List<String> ids);
+
 }

@@ -1,62 +1,81 @@
 package net.myspring.future.modules.layout.web.controller;
 
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.OutBillTypeEnum;
+import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
+import net.myspring.future.modules.layout.service.ShopGoodsDepositService;
+import net.myspring.future.modules.layout.web.form.ShopGoodsDepositForm;
+import net.myspring.future.modules.layout.web.query.ShopGoodsDepositQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "crm/shopGoodsDeposit")
 public class ShopGoodsDepositController {
 
+    @Autowired
+    private ShopGoodsDepositService shopGoodsDepositService;
+
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list() {
-        return null;
+    public Page<ShopGoodsDepositDto> list(Pageable pageable, ShopGoodsDepositQuery shopGoodsDepositQuery){
+        Page<ShopGoodsDepositDto> page = shopGoodsDepositService.findPage(pageable, shopGoodsDepositQuery);
+        return page;
     }
 
 
-    @RequestMapping(value = "getFormProperty")
-    public String form() {
-        return null;
+    @RequestMapping(value="getQuery")
+    public ShopGoodsDepositQuery getQuery(ShopGoodsDepositQuery shopGoodsDepositQuery) {
+        shopGoodsDepositQuery.setOutBillTypeList(OutBillTypeEnum.getList());
+        shopGoodsDepositQuery.setStatusList(null);//TODO 审批状态
+
+        return shopGoodsDepositQuery;
     }
-    @RequestMapping(value = "getQuery")
-    public String getQuery() {
+
+    @RequestMapping(value = "searchDepartment")
+    public String searchDepartment() {
         return null;
     }
 
-
-    @RequestMapping(value = "searchDepartMent")
-    public String searchDepartMent() {
-        return null;
-    }
 
     @RequestMapping(value = "save")
-    public String save() {
-        return null;
+    public RestResponse save(ShopGoodsDepositForm shopGoodsDepositForm) {
+        shopGoodsDepositService.save(shopGoodsDepositForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
 
-    @RequestMapping(value = "audit")
-    @ResponseBody
-    public String batchSave() {
-        return null;
+
+
+
+    @RequestMapping(value = "batchAudit")
+    public RestResponse batchAudit(String[] ids) {
+        shopGoodsDepositService.batchAudit(ids);
+//        for(Long id:ids){
+//            k3cloudSynService.syn(id, K3CloudSynEntity.ExtendType.定金收款.name());
+//        }
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+
     }
 
     @RequestMapping(value = "delete")
-    public String delete() {
-        return null;
+    public RestResponse delete(ShopGoodsDepositForm shopGoodsDepositForm) {
+        shopGoodsDepositService.delete(shopGoodsDepositForm);
+        RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
+
     }
 
     @RequestMapping(value = "findForm")
-    public String findOne() {
-        return null;
-    }
+    public ShopGoodsDepositForm findForm(ShopGoodsDepositForm shopGoodsDepositForm) {
 
-    private List<String> getActionList() {
-        return null;
+        ShopGoodsDepositForm result = shopGoodsDepositService.findForm(shopGoodsDepositForm);
+        return result;
     }
-
 
 }

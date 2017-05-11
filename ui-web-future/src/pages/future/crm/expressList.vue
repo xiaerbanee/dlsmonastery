@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:express:edit'">{{$t('expressList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:express:view'">{{$t('expressList.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('expressList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -14,31 +14,24 @@
               <el-form-item :label="formLabel.code.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
+              <el-form-item :label="formLabel.expressOrderToDepotId.label" :label-width="formLabelWidth">
+                <depot-select v-model="formData.expressOrderToDepotId"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
+              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('expressList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.expressOrderExtendBusinessId.label" :label-width="formLabelWidth">
+                <el-input v-model="formData.expressOrderExtendBusinessId" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.extendBusinessId.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.extendBusinessId" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
+              <el-form-item :label="formLabel.expressOrderFromDepotId.label" :label-width="formLabelWidth">
+                <depot-select v-model="formData.expressOrderFromDepotId" ></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.storeId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.storeId" filterable clearable :placeholder="$t('expressList.inputKey')">
-                  <el-option v-for="item in formProperty.stores" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
+              <el-form-item :label="formLabel.expressOrderExpressCompanyId.label" :label-width="formLabelWidth">
+                <express-company-select v-model="formData.expressOrderExpressCompanyId"></express-company-select>
               </el-form-item>
-              <el-form-item :label="formLabel.expressCompanyId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.expressCompanyId" filterable clearable :placeholder="$t('expressList.inputKey')">
-                  <el-option v-for="item in formProperty.expressCompanys" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item :label="formLabel.extendType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.extendType" filterable clearable :placeholder="$t('expressList.inputKey')">
-                  <el-option v-for="item in formProperty.extendTypes" :key="item" :label="item" :value="item"></el-option>
+              <el-form-item :label="formLabel.expressOrderExtendType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.expressOrderExtendType" filterable clearable :placeholder="$t('expressList.inputKey')">
+                  <el-option v-for="item in formData.expressOrderExtendTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -50,25 +43,25 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="code" :label="$t('expressList.code')" sortable width="150"></el-table-column>
-        <el-table-column prop="expressOrder.expressCompany.name" :label="$t('expressList.expressCompanyName')" sortable></el-table-column>
-        <el-table-column prop="expressOrder.extendType" :label="$t('expressList.extendType')"></el-table-column>
-        <el-table-column prop="expressOrder.extendBusinessId" :label="$t('expressList.extendBusinessId')"></el-table-column>
-        <el-table-column prop="expressOrder.fromDepot.name" :label="$t('expressList.fromDepotName')"></el-table-column>
-        <el-table-column prop="expressOrder.toDepot.name" :label="$t('expressList.toDepotName')"></el-table-column>
-        <el-table-column prop="expressOrder.contator" :label="$t('expressList.contact')"></el-table-column>
-        <el-table-column prop="expressOrder.mobilePhone" :label="$t('expressList.mobilePhone')"></el-table-column>
-        <el-table-column prop="expressOrder.address" :label="$t('expressList.address')"></el-table-column>
+        <el-table-column prop="expressOrderExpressCompanyName" :label="$t('expressList.expressCompanyName')" sortable></el-table-column>
+        <el-table-column prop="expressOrderExtendType" :label="$t('expressList.extendType')"></el-table-column>
+        <el-table-column prop="expressOrderExtendBusinessId" :label="$t('expressList.extendBusinessId')"></el-table-column>
+        <el-table-column prop="expressOrderFromDepotName" :label="$t('expressList.fromDepotName')"></el-table-column>
+        <el-table-column prop="expressOrderToDepotName" :label="$t('expressList.toDepotName')"></el-table-column>
+        <el-table-column prop="expressOrderContator" :label="$t('expressList.contact')"></el-table-column>
+        <el-table-column prop="expressOrderMobilePhone" :label="$t('expressList.mobilePhone')"></el-table-column>
+        <el-table-column prop="expressOrderAddress" :label="$t('expressList.address')"></el-table-column>
         <el-table-column prop="weight" :label="$t('expressList.weight')"></el-table-column>
         <el-table-column prop="qty" :label="$t('expressList.qty')"></el-table-column>
         <el-table-column prop="shouldPay" :label="$t('expressList.shouldPay')"></el-table-column>
         <el-table-column prop="realPay" :label="$t('expressList.realPay')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('expressList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('expressList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('expressList.createdDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" v-permit="'crm:express:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('expressList.edit')}}</el-button>
+            <el-button size="small" v-permit="'crm:express:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('expressList.delete')}}</el-button>
+
           </template>
         </el-table-column>
       </el-table>
@@ -77,61 +70,56 @@
   </div>
 </template>
 <script>
-  export default {
-    data() {
+  import depotSelect from 'components/future/depot-select'
+  import expressCompanySelect from 'components/future/express-company-select'
+  export default{
+    components:{
+      depotSelect,
+      expressCompanySelect,
+    }, data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           code:'',
-          shopName:'',
-          createdBy:'',
-          createdDateBTW:'',
-          createdDate:'',
-          extendBusinessId:'',
-          storeId:'',
-          expressCompanyId:'',
-          extendType:''
+          expressOrderToDepotId:'',
+          createdDateRange:'',
+          expressOrderExtendBusinessId:'',
+          expressOrderFromDepotId:'',
+          expressOrderExpressCompanyId:'',
+          expressOrderExtendType:''
         },formLabel:{
           code:{label:this.$t('expressList.code')},
-          shopName:{label:this.$t('expressList.toDepotName')},
-          createdDateBTW:{label: this.$t('expressOrderList.createdDate')},
-          createdBy:{label: this.$t('expressOrderList.createdBy')},
-          extendBusinessId:{label:this.$t('expressList.extendBusinessId')},
-          storeId:{label:this.$t('expressList.fromDepotName'),value:''},
-          expressCompanyId:{label:this.$t('expressList.code'),value:''},
-          extendType:{label:this.$t('expressList.extendType')},
+          expressOrderToDepotId:{label:this.$t('expressList.toDepotName')},
+          createdDateRange:{label: this.$t('expressOrderList.createdDate')},
+          expressOrderExtendBusinessId:{label:this.$t('expressList.extendBusinessId')},
+          expressOrderFromDepotId:{label:this.$t('expressList.fromDepotName'),value:''},
+          expressOrderExpressCompanyId:{label:this.$t('expressList.expressCompanyName'),value:''},
+          expressOrderExtendType:{label:this.$t('expressList.extendType')},
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
-        isPageChange:false,
         pageLoading: false,
       };
     },
     methods: {
+
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW = util.formatDateRange(this.formData.createdDate);
-        this.formLabel.storeId.value=util.getLabel(this.formProperty.stores,this.formData.storeId);
-        this.formLabel.expressCompanyId.value=util.getLabel(this.formProperty.expressCompanys,this.formData.expressCompanyId);
-
-        util.setQuery("expressList",this.formData);
-        axios.get('/api/crm/express',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("expressList",this.submitData);
+        axios.get('/api/ws/future/crm/express?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
       },pageChange(pageNumber,pageSize) {
-        if(this.isPageChange){
-          this.formData.page = pageNumber;
-          this.formData.size = pageSize;
-          this.pageRequest();
-        }
-        this.isPageChange = true;
-        },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
+      },sortChange(column) {
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -140,19 +128,23 @@
       },itemAdd(){
         this.$router.push({ name: 'expressForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'expressForm', query: { id: id }})
+        } else if(action=="delete") {
+          axios.get('/api/ws/future/crm/express/delete',{params:{id:id}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          })
         }
-      },getQuery(){
-        axios.get('/api/crm/express/getQuery').then((response) =>{
-          this.formProperty=response.data;
-          this.pageRequest();
-        });
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.getQuery();
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/crm/express/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+      });
     }
   };
 </script>
