@@ -1,19 +1,17 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable   :multiple="multiple" :clearable=true @change="handleChange" :disabled="isDisabled" >
+    <el-select v-model="innerId"  filterable :clearable=true @change="handleChange" :multiple="multiple" :disabled="disabled" >
       <el-option v-for="item in itemList"  :key="item.value" :label="item.value" :value="item.value"></el-option>
     </el-select>
   </div>
 </template>
 <script>
   export default {
-    props: ['value','category','disabled',"multiple"],
+    props: ['value','category','multiple','disabled'],
     data() {
       return {
         innerId: this.value,
         itemList : [],
-        isDisabled:false
-
       };
     },methods:{
       handleChange(newVal) {
@@ -24,15 +22,8 @@
           return;
         }
         this.innerId=val;
-      },
-      setDisabled(dis){
-        if(dis==='true'){
-          this.isDisabled=true;
-        }
       }
     },created () {
-        console.log(this.category);
-      this.setDisabled(this.disabled)
       axios.get('/api/basic/sys/dictEnum/findByCategory?category=' + this.category).then((response)=>{
         this.itemList=response.data;
       })
