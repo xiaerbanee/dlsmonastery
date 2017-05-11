@@ -7,7 +7,7 @@
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('bankForm.account')" prop="accountIdList">
-          <account-select  v-model="inputForm.accountIdList" :multiple="true"></account-select>
+          <account-select  v-model="inputForm.accountIdList" multiple="true"></account-select>
         </el-form-item>
         <el-form-item :label="$t('bankForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -33,7 +33,8 @@
             formProperty:{},
             accounts:[],
             remoteLoading:false,
-            inputForm:{
+            inputForm:{},
+            submitData:{
               id:this.$route.query.id,
               name:'',
               accountIdList:"",
@@ -50,7 +51,8 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/ws/future/basic/bank/save',qs.stringify(this.inputForm)).then((response)=> {
+              util.copyValue(this.inputForm,this.submitData)
+              axios.post('/api/ws/future/basic/bank/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -65,15 +67,13 @@
           })
         }
       },created(){
-        if(!this.isCreate){
-          axios.get('/api/ws/future/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
+          axios.get('/api/ws/future/basic/bank/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm=response.data;
             if(response.data.accountList!=null&&response.data.accountList.length>0){
               this.accounts=response.data.accountList;
               this.inputForm.accountIdList=util.getIdList(this.accounts);
             }
           })
-        }
       }
     }
 </script>

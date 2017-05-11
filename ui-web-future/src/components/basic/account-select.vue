@@ -1,19 +1,20 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable remote  :multiple="isMultiple" :placeholder="$t('accountChangeForm.inputWord')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+    <el-select v-model="innerId"  filterable remote  :multiple="isMultiple" :disabled="isDisabled" :placeholder="$t('accountChangeForm.inputWord')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList"  :key="item.id" :label="item.loginName" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
 <script>
   export default {
-    props: ['value','multiple'],
+    props: ['value','multiple','disabled'],
     data() {
       return {
         innerId:this.value,
         itemList : [],
         remoteLoading:false,
-        isMultiple:null
+        isMultiple:false,
+        isDisabled:false
       };
     } ,methods:{
       remoteSelect(query) {
@@ -41,13 +42,17 @@
       setMultiple(mul){
           if(mul==='true'){
             this.isMultiple=true;
-          }else{
-              this.isMultiple=false;
           }
+      },
+      setDisabled(dis){
+        if(dis==='true'){
+          this.isDisabled=true;
+        }
       }
     },created () {
       this.setValue(this.value);
-      this.setMultiple(this.multiple)
+      this.setMultiple(this.multiple);
+      this.setDisabled(this.disabled)
     },watch: {
       value :function (newVal) {
         this.setValue(newVal);
