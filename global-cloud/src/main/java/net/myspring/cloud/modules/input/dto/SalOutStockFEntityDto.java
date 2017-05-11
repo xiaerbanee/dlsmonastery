@@ -11,7 +11,7 @@ public class SalOutStockFEntityDto {
     // 物料名称
     private String materialNumber;
     // 备注
-    private String entrynote;
+    private String entryNote;
     //数量
     private Integer qty;
 
@@ -31,12 +31,12 @@ public class SalOutStockFEntityDto {
         this.materialNumber = materialNumber;
     }
 
-    public String getEntrynote() {
-        return entrynote;
+    public String getEntryNote() {
+        return entryNote;
     }
 
-    public void setEntrynote(String entrynote) {
-        this.entrynote = entrynote;
+    public void setEntryNote(String entryNote) {
+        this.entryNote = entryNote;
     }
 
     public Integer getQty() {

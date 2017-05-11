@@ -1,26 +1,28 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
 /**
- *
+ *应收单
  * Created by lihx on 2017/4/11.
  */
 public class ArReceivable {
-    private String FBILLNO;
-    private String FSOURCEBILLNO;
+    //单据No
+    private String FBillNo;
+    //上游单据No
+    private String FSourceBillNo;
 
-    public String getFBILLNO() {
-        return FBILLNO;
+    public String getFBillNo() {
+        return FBillNo;
     }
 
-    public void setFBILLNO(String FBILLNO) {
-        this.FBILLNO = FBILLNO;
+    public void setFBillNo(String FBillNo) {
+        this.FBillNo = FBillNo;
     }
 
-    public String getFSOURCEBILLNO() {
-        return FSOURCEBILLNO;
+    public String getFSourceBillNo() {
+        return FSourceBillNo;
     }
 
-    public void setFSOURCEBILLNO(String FSOURCEBILLNO) {
-        this.FSOURCEBILLNO = FSOURCEBILLNO;
+    public void setFSourceBillNo(String FSourceBillNo) {
+        this.FSourceBillNo = FSourceBillNo;
     }
 }

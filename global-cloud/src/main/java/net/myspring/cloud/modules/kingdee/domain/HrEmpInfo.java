@@ -4,22 +4,22 @@ package net.myspring.cloud.modules.kingdee.domain;
  * Created by lihx on 2017/4/11.
  */
 public class HrEmpInfo {
-    private String fNumber;
-    private String fName;
+    private String FNumber;
+    private String FName;
 
-    public String getfNumber() {
-        return fNumber;
+    public String getFNumber() {
+        return FNumber;
     }
 
-    public void setfNumber(String fNumber) {
-        this.fNumber = fNumber;
+    public void setFNumber(String FNumber) {
+        this.FNumber = FNumber;
     }
 
-    public String getfName() {
-        return fName;
+    public String getFName() {
+        return FName;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
+    public void setFName(String FName) {
+        this.FName = FName;
     }
 }

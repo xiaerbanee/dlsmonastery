@@ -19,6 +19,8 @@ const productTypeList  = r => require.ensure([], () => r(require('pages/future/b
 const productTypeForm = r => require.ensure([], () => r(require('pages/future/basic/productTypeForm.vue')));
 const shopAdTypeList  = r => require.ensure([], () => r(require('pages/future/basic/shopAdTypeList.vue')));
 const shopAdTypeForm  = r => require.ensure([], () => r(require('pages/future/basic/shopAdTypeForm.vue')));
+const shopAttributeList  = r => require.ensure([], () => r(require('pages/future/basic/shopAttributeList.vue')));
+const shopAttributeForm  = r => require.ensure([], () => r(require('pages/future/basic/shopAttributeForm.vue')));
 
 let routes = [
   {path:'/future/basic/adPricesystemList',component:adPricesystemList,name:'adPricesystemList'},
@@ -42,6 +44,8 @@ let routes = [
   {path:'/future/basic/productTypeForm',component:productTypeForm,name:'productTypeForm',meta: {menu:"productTypeList"}},
   {path:'/future/basic/shopAdTypeList',component:shopAdTypeList,name:'shopAdTypeList'},
   {path:'/future/basic/shopAdTypeForm',component:shopAdTypeForm,name:'shopAdTypeForm',meta: {menu:"shopAdTypeList"}},
+  {path:'/future/basic/shopAttributeList',component:shopAttributeList,name:'shopAttributeList'},
+  {path:'/future/basic/shopAttributeForm',component:shopAttributeForm,name:'shopAttributeForm',meta: {menu:"shopAttributeList"}},
 ];
 
 export default routes;

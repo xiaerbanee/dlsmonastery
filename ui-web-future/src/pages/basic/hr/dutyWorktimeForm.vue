@@ -9,7 +9,7 @@
           <el-date-picker v-model="inputForm.yearMonth"  type="month" :placeholder="$t('dutyWorktimeForm.selectMonth')"></el-date-picker>
         </el-form-item>
         <el-form-item :label="$t('dutyWorktimeForm.importFile')" prop="importFile">
-          <el-upload action = "/api/basic/hr/dutyWorktime/import" :multiple="true"  :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+          <el-upload action = "/api/basic/hr/dutyWorktime/import" multiple  :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
             <el-button size="small" type="primary">{{$t('dutyWorktimeForm.clickUpload')}}</el-button>
             <div class="el-upload__tip" slot="tip">{{$t('dutyWorktimeForm.uploadImageSizeFor5000KB')}}</div>
           </el-upload>

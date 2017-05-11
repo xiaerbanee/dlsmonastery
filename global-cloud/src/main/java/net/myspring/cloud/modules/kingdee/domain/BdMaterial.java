@@ -4,62 +4,62 @@ import java.time.LocalDateTime;
 
 public class BdMaterial {
     //id
-    private String fMasterId;
-    private String fNumber;
+    private String FMasterId;
+    private String FNumber;
     //名称
-    private String fName;
+    private String FName;
     //物料分组
-    private Long fMaterialGroup;
+    private Long FMaterialGroup;
     //分组名称
-    private String fMaterialGroupName;
-    private LocalDateTime fModifyDate;
+    private String FMaterialGroupName;
+    private LocalDateTime FModifyDate;
 
-    public String getfMasterId() {
-        return fMasterId;
+    public String getFMasterId() {
+        return FMasterId;
     }
 
-    public void setfMasterId(String fMasterId) {
-        this.fMasterId = fMasterId;
+    public void setFMasterId(String FMasterId) {
+        this.FMasterId = FMasterId;
     }
 
-    public String getfNumber() {
-        return fNumber;
+    public String getFNumber() {
+        return FNumber;
     }
 
-    public void setfNumber(String fNumber) {
-        this.fNumber = fNumber;
+    public void setFNumber(String FNumber) {
+        this.FNumber = FNumber;
     }
 
-    public String getfName() {
-        return fName;
+    public String getFName() {
+        return FName;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
+    public void setFName(String FName) {
+        this.FName = FName;
     }
 
-    public Long getfMaterialGroup() {
-        return fMaterialGroup;
+    public Long getFMaterialGroup() {
+        return FMaterialGroup;
     }
 
-    public void setfMaterialGroup(Long fMaterialGroup) {
-        this.fMaterialGroup = fMaterialGroup;
+    public void setFMaterialGroup(Long FMaterialGroup) {
+        this.FMaterialGroup = FMaterialGroup;
     }
 
-    public String getfMaterialGroupName() {
-        return fMaterialGroupName;
+    public String getFMaterialGroupName() {
+        return FMaterialGroupName;
     }
 
-    public void setfMaterialGroupName(String fMaterialGroupName) {
-        this.fMaterialGroupName = fMaterialGroupName;
+    public void setFMaterialGroupName(String FMaterialGroupName) {
+        this.FMaterialGroupName = FMaterialGroupName;
     }
 
-    public LocalDateTime getfModifyDate() {
-        return fModifyDate;
+    public LocalDateTime getFModifyDate() {
+        return FModifyDate;
     }
 
-    public void setfModifyDate(LocalDateTime fModifyDate) {
-        this.fModifyDate = fModifyDate;
+    public void setFModifyDate(LocalDateTime FModifyDate) {
+        this.FModifyDate = FModifyDate;
     }
 
 }

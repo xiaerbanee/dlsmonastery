@@ -9,7 +9,9 @@ import net.myspring.future.modules.basic.mapper.AdPricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
+import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.mapper.AdPricesystemChangeMapper;
+import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +40,8 @@ public class AdPricesystemChangeService {
         return adPricesystemChange;
     }
 
-    public Page<AdPricesystemChange> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<AdPricesystemChange> page = adPricesystemChangeMapper.findPage(pageable, map);
+    public Page<AdPricesystemChangeDto> findPage(Pageable pageable, AdPricesystemChangeQuery adPricesystemChangeQuery) {
+        Page<AdPricesystemChangeDto> page = adPricesystemChangeMapper.findPage(pageable, adPricesystemChangeQuery);
         return page;
     }
 

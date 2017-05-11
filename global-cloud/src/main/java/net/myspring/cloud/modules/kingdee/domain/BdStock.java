@@ -4,59 +4,59 @@ import java.time.LocalDate;
 
 public class BdStock {
 
-    private String fStockId;
-    private String fNumber;
-    private String fName;
+    private String FStockId;
+    private String FNumber;
+    private String FName;
     //分组
-    private Long fGroup;
-    private String fGroupName;
-    private LocalDate fModifyDate;
+    private Long FGroup;
+    private String FGroupName;
+    private LocalDate FModifyDate;
 
-    public String getfStockId() {
-        return fStockId;
+    public String getFStockId() {
+        return FStockId;
     }
 
-    public void setfStockId(String fStockId) {
-        this.fStockId = fStockId;
+    public void setFStockId(String FStockId) {
+        this.FStockId = FStockId;
     }
 
-    public String getfNumber() {
-        return fNumber;
+    public String getFNumber() {
+        return FNumber;
     }
 
-    public void setfNumber(String fNumber) {
-        this.fNumber = fNumber;
+    public void setFNumber(String FNumber) {
+        this.FNumber = FNumber;
     }
 
-    public String getfName() {
-        return fName;
+    public String getFName() {
+        return FName;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
+    public void setFName(String FName) {
+        this.FName = FName;
     }
 
-    public Long getfGroup() {
-        return fGroup;
+    public Long getFGroup() {
+        return FGroup;
     }
 
-    public void setfGroup(Long fGroup) {
-        this.fGroup = fGroup;
+    public void setFGroup(Long FGroup) {
+        this.FGroup = FGroup;
     }
 
-    public String getfGroupName() {
-        return fGroupName;
+    public String getFGroupName() {
+        return FGroupName;
     }
 
-    public void setfGroupName(String fGroupName) {
-        this.fGroupName = fGroupName;
+    public void setFGroupName(String FGroupName) {
+        this.FGroupName = FGroupName;
     }
 
-    public LocalDate getfModifyDate() {
-        return fModifyDate;
+    public LocalDate getFModifyDate() {
+        return FModifyDate;
     }
 
-    public void setfModifyDate(LocalDate fModifyDate) {
-        this.fModifyDate = fModifyDate;
+    public void setFModifyDate(LocalDate FModifyDate) {
+        this.FModifyDate = FModifyDate;
     }
 }

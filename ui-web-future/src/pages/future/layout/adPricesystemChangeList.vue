@@ -12,7 +12,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adPricesystemChangeList.likeSearch')"></el-input>
+                <product-select v-model="formData.productId"></product-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -22,12 +22,12 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adPricesystemChangeList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="product.code" :label="$t('adPricesystemChangeList.productCode')" sortable width="150"></el-table-column>
-        <el-table-column prop="product.name" :label="$t('adPricesystemChangeList.productName')"></el-table-column>
-        <el-table-column prop="adPricesystem.name" :label="$t('adPricesystemChangeList.adPricesystem')"></el-table-column>
+        <el-table-column prop="productCode" :label="$t('adPricesystemChangeList.productCode')" sortable width="150"></el-table-column>
+        <el-table-column prop="productName" :label="$t('adPricesystemChangeList.productName')"></el-table-column>
+        <el-table-column prop="adPricesystemName" :label="$t('adPricesystemChangeList.adPricesystem')"></el-table-column>
         <el-table-column prop="oldPrice" :label="$t('adPricesystemChangeList.oldPrice')"></el-table-column>
         <el-table-column prop="newPrice" :label="$t('adPricesystemChangeList.newPrice')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('adPricesystemChangeList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('adPricesystemChangeList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('adPricesystemChangeList.createdDate')"></el-table-column>
 
       </el-table>
@@ -36,16 +36,19 @@
   </div>
 </template>
 <script>
+  import productSelect from 'components/future/product-select';
   export default {
+    components:{productSelect},
     data() {
       return {
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
-          productName:''
+          productId:''
         },formLabel:{
           productName:{label:this.$t('adPricesystemChangeList.productName')}
         },
@@ -57,8 +60,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("adPricesystemChangeList",this.formData);
-        axios.get('/api/crm/adPricesystemChange',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("adPricesystemChangeList",this.submitData);
+        axios.get('/api/ws/future/layout/adPricesystemChange',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -75,15 +79,14 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'adPricesystemChangeForm'})
-      },itemAction:function(id,action){
-        if(action=="修改") {
-          this.$router.push({ name: 'adPricesystemChangeForm', query: { id: id }})
-        }
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response) => {
+        this.formData = response.data;
+        console.log(this.formData);
+        this.pageRequest();
+      })
     }
   };
 </script>

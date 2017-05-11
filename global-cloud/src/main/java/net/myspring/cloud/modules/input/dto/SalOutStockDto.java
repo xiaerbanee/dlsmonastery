@@ -120,7 +120,7 @@ public class SalOutStockDto {
                 detail.put("FTaxPrice", salOutStockFEntityDto.getPrice());
                 detail.put("FAmount", new BigDecimal(salOutStockFEntityDto.getQty()).multiply(salOutStockFEntityDto.getPrice()));
                 detail.put("FBefDisAllAmt", new BigDecimal(salOutStockFEntityDto.getQty()).multiply(salOutStockFEntityDto.getPrice()));
-                detail.put("FEntrynote", salOutStockFEntityDto.getEntrynote());
+                detail.put("FEntrynote", salOutStockFEntityDto.getEntryNote());
                 entity.add(detail);
             }
         }

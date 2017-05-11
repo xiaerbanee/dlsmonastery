@@ -1,8 +1,11 @@
 package net.myspring.future.modules.layout.web.controller;
 
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.layout.dto.ShopAdDto;
 import net.myspring.future.modules.layout.service.ShopAdService;
+import net.myspring.future.modules.layout.web.form.ShopAdForm;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,22 +38,24 @@ public class ShopAdController {
 
     @RequestMapping(value = "getQuery")
     public ShopAdQuery getQuery(ShopAdQuery shopAdQuery) {
-        return shopAdQuery;
+        return new ShopAdQuery();
     }
 
     @RequestMapping(value = "save")
-    public String save( ) {
-        return null;
+    public RestResponse save(ShopAdForm shopAdForm) {
+        shopAdService.save(shopAdForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
-    public String delete( ) {
-        return null;
+    public RestResponse delete(ShopAdForm shopAdForm) {
+        shopAdService.logicDelete(shopAdForm.getId());
+        return new RestResponse("删除成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public String detail( ) {
-        return null;
+    @RequestMapping(value = "findForm")
+    public ShopAdForm detail(ShopAdForm shopAdForm) {
+        return shopAdService.findForm(shopAdForm);
     }
 
     @RequestMapping(value = "audit", method = RequestMethod.GET)

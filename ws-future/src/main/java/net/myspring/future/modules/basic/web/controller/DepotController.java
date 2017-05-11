@@ -88,9 +88,9 @@ public class DepotController {
     }
 
     @RequestMapping(value = "findForm")
-    public DepotDto findOne(String depotId){
-        DepotDto depotDto = depotService.findOne(depotId);
-        return depotDto;
+    public DepotForm findForm(DepotForm depotForm){
+        depotForm = depotService.findForm(depotForm);
+        return depotForm;
     }
 
     @RequestMapping(value = "searchShop")
@@ -132,7 +132,7 @@ public class DepotController {
             depotQuery.setName(name);
             if (StringUtils.isNotBlank(category)) {
                 HashBiMap<String, Integer> typeMap = depotService.getTypeMapByCategory(category);
-                depotQuery.setTypeList(CollectionUtil.extractToList(typeMap.entrySet(),"value"));
+                depotQuery.setTypes(CollectionUtil.extractToList(typeMap.entrySet(),"value"));
             }
             depotList = depotService.findByFilter(depotQuery);
         }

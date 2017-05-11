@@ -9,7 +9,7 @@
               <office-select v-model="inputForm.parentId" ></office-select>
             </el-form-item>
             <el-form-item label="部门管理人" prop="leaderIdList">
-              <account-select v-model="inputForm.leaderIdList" multiple="true"></account-select>
+              <account-select v-model="inputForm.leaderIdList" :multiple="multiple"></account-select>
             </el-form-item>
             <el-form-item label="类型" prop="type">
               <el-select v-model="inputForm.type" filterable @change="typeChange">
@@ -74,6 +74,7 @@
     data(){
       return {
         isCreate: this.$route.query.id == null,
+        multiple:true,
         submitDisabled: false,
         isBusiness:false,
         offices: [],

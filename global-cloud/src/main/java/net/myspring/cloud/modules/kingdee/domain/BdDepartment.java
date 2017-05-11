@@ -5,31 +5,31 @@ package net.myspring.cloud.modules.kingdee.domain;
  * Created by lihx on 2017/4/6.
  */
 public class BdDepartment {
-    private String fDeptId;
-    private String fNumber;
-    private String fName;
+    private String FDeptId;
+    private String FNumber;
+    private String FName;
 
-    public String getfDeptId() {
-        return fDeptId;
+    public String getFDeptId() {
+        return FDeptId;
     }
 
-    public void setfDeptId(String fDeptId) {
-        this.fDeptId = fDeptId;
+    public void setFDeptId(String FDeptId) {
+        this.FDeptId = FDeptId;
     }
 
-    public String getfNumber() {
-        return fNumber;
+    public String getFNumber() {
+        return FNumber;
     }
 
-    public void setfNumber(String fNumber) {
-        this.fNumber = fNumber;
+    public void setFNumber(String FNumber) {
+        this.FNumber = FNumber;
     }
 
-    public String getfName() {
-        return fName;
+    public String getFName() {
+        return FName;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
+    public void setFName(String FName) {
+        this.FName = FName;
     }
 }

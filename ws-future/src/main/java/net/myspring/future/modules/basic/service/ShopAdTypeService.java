@@ -24,8 +24,8 @@ public class ShopAdTypeService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public List<ShopAdType> findAllByEnabled() {
-        List<ShopAdType> shopAdTypes = shopAdTypeMapper.findAllByEnabled();
+    public List<ShopAdTypeDto> findAllByEnabled() {
+        List<ShopAdTypeDto> shopAdTypes = shopAdTypeMapper.findAllByEnabled();
         return shopAdTypes;
     }
 
