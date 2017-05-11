@@ -16,6 +16,7 @@ import java.util.Map;
  * Created by liuj on 2017/5/11.
  */
 public class SalOutstockDto {
+    private String creator;
     // 客户名称
     private String customerNumber;
     //仓库
@@ -28,6 +29,14 @@ public class SalOutstockDto {
     private String departmentNumber;
 
     private List<SalOutStockFEntityDto> salOutStockFEntityDtoList = Lists.newArrayList();
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
 
     public String getCustomerNumber() {
         return customerNumber;
@@ -79,16 +88,13 @@ public class SalOutstockDto {
 
     public String getJson(SalOutstockDto salOutstockDto) {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", RequestUtils.getAccountId());
+        root.put("Creator", getCreator());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", LocalDateUtils.format(salOutstockDto.getDate(),"yyyy-M-d"));
         model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD01_SYS"));
-
         model.put("FDeliveryDeptID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
-
-
         model.put("FSaleOrgId", CollectionUtil.getMap("FNumber", 100));
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", 100));
         model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", 100));
