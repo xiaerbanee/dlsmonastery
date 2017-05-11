@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable :clearable=true  :disabled="isDisabled" @change="handleChange">
+    <el-select v-model="innerId"  filterable :clearable=true  :multiple="multiple" :disabled="disabled"  @change="handleChange">
       <el-option v-for="item in itemList"  :key="item.value" :label="item.name" :value="item.value"></el-option>
     </el-select>
   </div>
 </template>
 <script>
   export default {
-    props: ['value','category'],
+    props: ['value','category','multiple','disabled'],
     data() {
       return {
         innerId:this.value,
