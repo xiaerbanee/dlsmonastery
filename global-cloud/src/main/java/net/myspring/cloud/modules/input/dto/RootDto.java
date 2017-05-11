@@ -13,7 +13,6 @@ public class RootDto {
     private List<String> needReturnFields = Lists.newArrayList();
     private Boolean isDeleteEntry = true;
     private String subSystemId;
-    private ModelDto modelDto;
 
     public String getCreator() {
         return creator;
@@ -55,11 +54,4 @@ public class RootDto {
         this.subSystemId = subSystemId;
     }
 
-    public ModelDto getModelDto() {
-        return modelDto;
-    }
-
-    public void setModelDto(ModelDto modelDto) {
-        this.modelDto = modelDto;
-    }
 }
