@@ -12,22 +12,14 @@
       return {
         innerId:this.value,
         itemList : [],
-        isDisabled:false
       };
     },methods:{
       handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
         this.innerId=val;
-        this.remoteLoading = true;
-      },
-      setDisabled(dis){
-        if(dis==='true'){
-          this.isDisabled=true;
-        }
       }
     },created () {
-      this.setDisabled(this.disabled)
       axios.get('/api/basic/sys/dictMap/findByCategory?category=' + this.category).then((response)=>{
         this.itemList=response.data;
       })
