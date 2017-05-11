@@ -2,8 +2,16 @@ package net.myspring.future.modules.layout.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
+import net.myspring.future.modules.layout.service.AdGoodsOrderService;
+import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
+import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,21 +25,22 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "crm/adGoodsOrder")
+@RequestMapping(value = "layout/adGoodsOrder")
 public class  AdGoodsOrderController {
+
+    @Autowired
+    private AdGoodsOrderService adGoodsOrderService;
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request) {
-       
-        return null;
+    public Page<AdGoodsOrderDto> list(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
+       Page<AdGoodsOrderDto> page = adGoodsOrderService.findPage(pageable,adGoodsOrderQuery);
+        return page;
     }
 
     @RequestMapping(value = "getQuery")
-    public String getQuery() {
-        Map<String, Object> map = Maps.newHashMap();
-     
-        return null;
+    public AdGoodsOrderQuery getQuery(AdGoodsOrderQuery adGoodsOrderQuery) {
+        return new AdGoodsOrderQuery();
     }
 
 
@@ -119,10 +128,10 @@ public class  AdGoodsOrderController {
         return null;
     }
 
-    @RequestMapping(value = "delete", method = RequestMethod.GET)
-    public RestResponse delete(AdGoodsOrder adGoodsOrder, RedirectAttributes redirectAttributes) {
-
-        return new RestResponse("删除成功",null);
+    @RequestMapping(value = "delete")
+    public RestResponse delete(AdGoodsOrderForm adGoodsOrderForm) {
+        adGoodsOrderService.logicDelete(adGoodsOrderForm.getId());
+        return new RestResponse("删除成功", ResponseCodeEnum.saved.name());
     }
 
     private List<String> getActionList(AdGoodsOrder adGoodsOrder) {

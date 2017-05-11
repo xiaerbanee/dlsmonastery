@@ -15,7 +15,7 @@
                 <el-input type="textarea" v-model="formData.id" auto-complete="off" :placeholder="$t('adGoodsOrderList.blankOrComma')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('adGoodsOrderList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+                <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.billType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.billType" filterable clearable :placeholder="$t('adGoodsOrderList.inputKey')">
@@ -55,7 +55,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.billDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.billDate" type="daterange" align="right" :placeholder="$t('adGoodsOrderList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+                <date-range-picker v-model="formData.billDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -65,26 +65,27 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="id" :label="$t('adGoodsOrderList.orderCode')" sortable></el-table-column>
+        <el-table-column fixed prop="businessId" :label="$t('adGoodsOrderList.orderCode')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('adGoodsOrderList.createdDate')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('adGoodsOrderList.billDate')" ></el-table-column>
         <el-table-column prop="billType" :label="$t('adGoodsOrderList.type')" ></el-table-column>
         <el-table-column prop="outCode" :label="$t('adGoodsOrderList.outCode')" ></el-table-column>
         <el-table-column prop="processStatus" :label="$t('adGoodsOrderList.processStatus')"  ></el-table-column>
         <el-table-column prop="storeName" :label="$t('adGoodsOrderList.storeName')"  ></el-table-column>
-        <el-table-column prop="created.extendMap.officeName" :label="$t('adGoodsOrderList.officeName')" ></el-table-column>
-        <el-table-column prop="created.extendMap.areaName" :label="$t('adGoodsOrderList.areaName')" ></el-table-column>
-        <el-table-column prop="shop.areaType" :label="$t('adGoodsOrderList.areaType')" ></el-table-column>
-        <el-table-column prop="shop.name" :label="$t('adGoodsOrderList.shopName')" ></el-table-column>
+        <el-table-column prop="officeName" :label="$t('adGoodsOrderList.officeName')" ></el-table-column>
+        <el-table-column prop="areaName" :label="$t('adGoodsOrderList.areaName')" ></el-table-column>
+        <el-table-column prop="areaType" :label="$t('adGoodsOrderList.areaType')" ></el-table-column>
+        <el-table-column prop="shopName" :label="$t('adGoodsOrderList.shopName')" ></el-table-column>
         <el-table-column prop="amount" :label="$t('adGoodsOrderList.amount')"  ></el-table-column>
         <el-table-column prop="expressCodes" :label="$t('adGoodsOrderList.expressCodes')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('adGoodsOrderList.remarks')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('adGoodsOrderList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('adGoodsOrderList.createdBy')"></el-table-column>
         <el-table-column fixed="right" :label="$t('adGoodsOrderList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" v-permit="'crm:adGoodsOrder:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('adGoodsOrderList.detail')}}</el-button>
+            <el-button size="small" v-if="scope.row.isAuditable" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('adGoodsOrderList.audit')}}</el-button>
+            <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button>
+            <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:adGoodsOrder:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -102,18 +103,16 @@
           page:0,
           size:25,
           id:'',
-          createdDateBTW:'',
           createdDate:'',
           billType:'',
           remarks:'',
           createdBy:'',
-          parentId:'',
-          officeName:'',
+          areaId:'',
+          officeId:'',
           storeId:'',
-          shopName:'',
+          shopId:'',
           processStatus:'',
           areaType:'',
-          billDateBTW:'',
           billDate:''
         },formLabel:{
           id:{label:this.$t('adGoodsOrderList.orderCode')},
@@ -138,58 +137,55 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW = util.formatDateRange(this.formData.createdDate);
-        this.formData.billDateBTW = util.formatDateRange(this.formData.billDate);
-        this.formLabel.storeId.value=util.getLabel(this.formProperty.stores,this.formData.storeId);
-        util.setQuery("adGoodsOrderList",this.formData);
-        axios.get('/api/crm/adGoodsOrder',{params:this.formData}).then((response) => {
+        this.formLabel.storeId.value = util.getLabel(this.formProperty.stores, this.formData.storeId);
+        util.setQuery("adGoodsOrderList", this.formData);
+        axios.get('/api/ws/future/layout/adGoodsOrder', {params: this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
-      },pageChange(pageNumber,pageSize) {
+      }, pageChange(pageNumber, pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
         this.pageRequest();
-      },sortChange(column) {
-        this.formData.order=util.getOrder(column);
-        this.formData.page=0;
+      }, sortChange(column) {
+        this.formData.order = util.getOrder(column);
+        this.formData.page = 0;
         this.pageRequest();
-      },search() {
+      }, search() {
         this.formVisible = false;
         this.pageRequest();
-      },itemAdd(){
-        this.$router.push({ name: 'adGoodsOrderForm'})
-      },itemAction:function(id,action){
-        console.log(id,action)
-        if(action=="修改") {
-          this.$router.push({ name: 'adGoodsOrderForm', query: { id: id }})
-        }else if(action=="详细"){
-          this.$router.push({ name: 'adGoodsOrderDetail', query: { id: id,action:"详细"}})
-        }else if(action=="审核"){
-          this.$router.push({ name: 'adGoodsOrderDetail', query: { id: id,action:"审核"}})
-        }else if(action=="开单"){
-          this.$router.push({ name: 'adGoodsOrderBill', query: { id: id}})
-        }else if(action=="发货"){
-          this.$router.push({ name: 'adGoodsOrderShip', query: { id: id }})
-        }else if(action=="签收"){
-          this.$router.push({ name: 'adGoodsOrderSign', query: { id: id }})
-        }else if(action=="刪除"){
-          axios.get('/api/crm/adGoodsOrder/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
+      }, itemAdd(){
+        this.$router.push({name: 'adGoodsOrderForm'})
+      }, itemAction: function (id, action) {
+        console.log(id, action)
+        if (action == "edit") {
+          this.$router.push({name: 'adGoodsOrderForm', query: {id: id}})
+        } else if (action == "detail") {
+          this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "详细"}})
+        } else if (action == "audit") {
+          this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "审核"}})
+        } else if (action == "开单") {
+          this.$router.push({name: 'adGoodsOrderBill', query: {id: id}})
+        } else if (action == "发货") {
+          this.$router.push({name: 'adGoodsOrderShip', query: {id: id}})
+        } else if (action == "签收") {
+          this.$router.push({name: 'adGoodsOrderSign', query: {id: id}})
+        } else if (action == "delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/layout/adGoodsOrder/delete', {params: {id: id}}).then((response) => {
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
           })
         }
-      },getQuery(){
-        axios.get('/api/crm/adGoodsOrder/getQuery').then((response) =>{
-          this.formProperty=response.data;
-          this.pageRequest();
-        });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.getQuery();
+      axios.get('/api/ws/future/layout/adGoodsOrder/getQuery').then((response) =>{
+        this.formProperty=response.data;
+        this.pageRequest();
+      });
     }
-  };
+  }
 </script>
 

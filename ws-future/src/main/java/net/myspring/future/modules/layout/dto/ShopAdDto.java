@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopAd;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.StringUtils;
@@ -25,11 +26,11 @@ public class ShopAdDto extends DataDto<ShopAd>{
     private BigDecimal length;
     private BigDecimal width;
     private Integer qty;
-    private String lengthWidthQty;
-    private BigDecimal allArea;
     private BigDecimal price;
     private String content;
     private String processStatus;
+    private String processPositionId;
+
 
 
     public String getShopId() {
@@ -112,6 +113,14 @@ public class ShopAdDto extends DataDto<ShopAd>{
         this.processStatus = processStatus;
     }
 
+    public String getProcessPositionId() {
+        return processPositionId;
+    }
+
+    public void setProcessPositionId(String processPositionId) {
+        this.processPositionId = processPositionId;
+    }
+
     public void setLength(BigDecimal length) {
         this.length = length;
     }
@@ -132,11 +141,27 @@ public class ShopAdDto extends DataDto<ShopAd>{
         }
     }
 
-    public BigDecimal getAllArea() {
+    public BigDecimal getArea() {
         if(this.length !=null&&this.width!=null&&this.qty!=null){
             return length.multiply(width).multiply(BigDecimal.valueOf(qty));
         }else{
             return null;
+        }
+    }
+
+    public Boolean getIsAuditable(){
+        if(RequestUtils.getRequestEntity().getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public Boolean getIsEditable(){
+        if (RequestUtils.getAccountId().equals(getCreatedBy())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
+            return true;
+        }else {
+            return false;
         }
     }
 }

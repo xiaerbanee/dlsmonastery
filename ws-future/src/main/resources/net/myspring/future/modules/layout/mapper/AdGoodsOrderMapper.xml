@@ -2,16 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.layout.mapper.AdGoodsOrderMapper">
 
-    <select id="findPage" resultType="AdGoodsOrder">
+    <select id="findPage" resultType="AdGoodsOrderDto">
         SELECT
-        t1.*
+        depot.office_id officeId,depot.area_id areaId,t1.*
         FROM
-        crm_ad_goods_order t1,hr_office office,crm_depot depot
+        crm_ad_goods_order t1,crm_depot depot
         WHERE
         t1.enabled=1
         and t1.shop_id=depot.id
-        and depot.office_id=office.id
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
         <if test="p.billType !=null">
             and t1.bill_type =#{p.billType}
         </if>
@@ -34,32 +32,17 @@
             and t1.bill_date &lt;= #{p.billDateEnd}
         </if>
         <if test="p.createdBy !=null">
-            and t1.created_by in(
-            select id
-            from hr_account
-            where login_name like concat('%',#{p.createdBy},'%')
-            and enabled=1
-            )
+
         </if>
-        <if test="p.officeName != null">
-            and t1.created_by in (
-            select t2.id
-            from hr_account t2 ,  hr_office t4
-            and t2.office_id = t4.id
-            and t4.name like CONCAT('%',#{p.officeName},'%')
-            )
+        <if test="p.officeId != null">
+
         </if>
         <if test="p.storeId !=null">
             AND t1.store_id =#{p.storeId}
             )
         </if>
-        <if test="p.shopName !=null">
-            and t1.shop_id in(
-            select depot.id
-            from crm_depot depot
-            where depot.name like concat('%',#{p.shopName},'%')
-            and depot.enabled=1
-            )
+        <if test="p.shopId !=null">
+
         </if>
         <if test="p.areaType !=null">
             and t1.shop_id in(

@@ -1,10 +1,13 @@
 package net.myspring.future.modules.layout.web.controller;
 
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
+import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.service.AdPricesystemChangeService;
+import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
@@ -12,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "crm/adPricesystemChange")
+@RequestMapping(value = "layout/adPricesystemChange")
 public class AdPricesystemChangeController {
 
     @Autowired
@@ -24,9 +27,9 @@ public class AdPricesystemChangeController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
+    public Page<AdPricesystemChangeDto> list(Pageable pageable, AdPricesystemChangeQuery adPricesystemChangeQuery){
 
-        return null;
+        return adPricesystemChangeService.findPage(pageable,adPricesystemChangeQuery);
     }
 
     @RequestMapping(value="findFilter", method = RequestMethod.GET)
@@ -40,6 +43,10 @@ public class AdPricesystemChangeController {
 
 
         return null;
+    }
+    @RequestMapping(value = "getQuery")
+    public AdPricesystemChangeQuery getQuery(AdPricesystemChangeQuery adPricesystemChangeQuery){
+        return new AdPricesystemChangeQuery();
     }
 
 
