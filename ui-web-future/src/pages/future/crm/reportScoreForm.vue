@@ -85,6 +85,8 @@
                 } else {
                   this.$router.push({name:'reportScoreList',query:util.getQuery("reportScoreList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

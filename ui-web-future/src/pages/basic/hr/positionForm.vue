@@ -65,6 +65,8 @@
               } else {
                 this.$router.push({name:'positionList',query:util.getQuery("positionList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

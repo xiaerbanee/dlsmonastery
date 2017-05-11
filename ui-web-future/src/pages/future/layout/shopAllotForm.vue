@@ -75,7 +75,9 @@
               } else {
                 this.$router.push({name:'shopAllotList',query:util.getQuery("shopAllotList")})
               }
-            });
+            }).catch(function () {
+                this.submitDisabled = false;
+              });
           }else{
             this.submitDisabled = false;
           }

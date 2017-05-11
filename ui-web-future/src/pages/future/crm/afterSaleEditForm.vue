@@ -171,6 +171,8 @@
           } else {
              this.$router.push({name:'afterSaleList',query:util.getQuery("afterSaleList")})
           }
+        }).catch(function () {
+          this.submitDisabled = false;
         });
       },getImeStr(imeStr){
         this.formVisible = false;

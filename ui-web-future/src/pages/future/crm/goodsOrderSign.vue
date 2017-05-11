@@ -52,7 +52,9 @@
         axios.post('/api/crm/goodsOrder/sign',qs.stringify(this.inputForm)).then((response)=> {
             this.$message(response.data.message);
             this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
-          });
+          }).catch(function () {
+           this.submitDisabled = false;
+         });
       },
       findOne(){
         axios.get('/api/crm/goodsOrder/sign',{params: {id:this.$route.query.id}}).then((response)=>{

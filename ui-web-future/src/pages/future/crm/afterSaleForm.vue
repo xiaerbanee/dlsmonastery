@@ -162,7 +162,9 @@
             } else {
                this.$router.push({name:'afterSaleList',query:util.getQuery("afterSaleList")})
             }
-          });
+          }).catch(function () {
+              this.submitDisabled = false;
+            });
           }else{
             this.submitDisabled = false;
       }

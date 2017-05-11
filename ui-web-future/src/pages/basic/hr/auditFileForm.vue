@@ -83,6 +83,8 @@
               } else {
                 this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

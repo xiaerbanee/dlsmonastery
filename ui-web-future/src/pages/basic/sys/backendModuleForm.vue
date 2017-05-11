@@ -59,6 +59,8 @@
                 } else {
                   this.$router.push({name:'backendModuleList',query:util.getQuery("backendModuleList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

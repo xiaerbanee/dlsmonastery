@@ -56,6 +56,8 @@
               axios.get('/api/basic/hr/dutyWorktime/import', {params: this.submitData}).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
+              }).catch(function () {
+                this.submitDisabled = false;
               });
            }else{
               this.submitDisabled = false;

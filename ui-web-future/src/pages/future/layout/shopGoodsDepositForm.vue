@@ -71,6 +71,8 @@
                 } else {
                   this.$router.push({name:'定金收款',query:util.getQuery("定金收款")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }
           })

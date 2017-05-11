@@ -165,6 +165,8 @@
               } else {
                 this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

@@ -129,7 +129,9 @@
                   this.$message("账户"+response.data.message);
                   });
                this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
-              });
+              }).catch(function () {
+              this.submitDisabled = false;
+            });
           }else{
             this.submitDisabled = false;
           }

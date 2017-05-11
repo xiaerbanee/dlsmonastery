@@ -88,6 +88,8 @@
                 } else {
                   this.$router.push({name:'productTypeList',query:util.getQuery("productTypeList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

@@ -118,6 +118,8 @@
               } else {
                 this.$router.push({name:'productList',query:util.getQuery("productList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

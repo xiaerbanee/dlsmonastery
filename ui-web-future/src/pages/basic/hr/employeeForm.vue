@@ -192,6 +192,8 @@
                   } else {
                     this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
                   }
+                }).catch(function () {
+                  this.submitDisabled = false;
                 });
               }
             })

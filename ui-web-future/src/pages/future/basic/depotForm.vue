@@ -323,6 +323,8 @@
               } else {
                 this.$router.push({name:'depotList',query:util.getQuery("depotList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

@@ -103,6 +103,8 @@
                     this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList")})
                   }
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }
           })
