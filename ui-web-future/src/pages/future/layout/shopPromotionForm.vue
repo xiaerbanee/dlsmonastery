@@ -133,6 +133,8 @@
               } else {
                 this.$router.push({name: 'shopPromotionList', query: util.getQuery("shopPromotionList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           } else {
             this.submitDisabled = false;

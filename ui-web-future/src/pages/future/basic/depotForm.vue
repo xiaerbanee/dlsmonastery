@@ -48,7 +48,7 @@
               <el-input v-model="inputForm.address"></el-input>
             </el-form-item>
             <el-form-item :label="$t('depotForm.forSaleMan')" prop="accountIdList">
-              <account-select  v-model="inputForm.accountIdList" multiple="true"></account-select>
+              <account-select  v-model="inputForm.accountIdList" multiple="true" disabled="true"></account-select>
             </el-form-item>
             <div v-show="inputForm.type >200">
               <el-form-item :label="$t('depotForm.areaType')" prop="areaType">
@@ -323,6 +323,8 @@
               } else {
                 this.$router.push({name:'depotList',query:util.getQuery("depotList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

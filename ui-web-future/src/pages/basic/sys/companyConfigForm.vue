@@ -55,6 +55,8 @@
                  } else {
                     this.$router.push({name:'companyConfigList',query:util.getQuery("companyConfigList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

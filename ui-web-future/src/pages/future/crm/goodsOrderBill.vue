@@ -182,6 +182,8 @@
                   }else{
                     this.submitDisabled = false;
                   }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

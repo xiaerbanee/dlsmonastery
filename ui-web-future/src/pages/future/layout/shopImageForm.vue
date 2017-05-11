@@ -83,6 +83,8 @@
               } else {
                 this.$router.push({name:'shopImageList',query:util.getQuery("shopImageList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

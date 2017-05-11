@@ -82,6 +82,8 @@
               } else {
                 this.$router.push({name:'demoPhoneTypeList',query:util.getQuery("demoPhoneTypeList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

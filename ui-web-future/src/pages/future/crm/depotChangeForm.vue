@@ -90,6 +90,8 @@
               } else {
                 this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

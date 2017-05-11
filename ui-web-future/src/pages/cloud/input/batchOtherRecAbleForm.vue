@@ -73,6 +73,8 @@
         this.formData.data = JSON.stringify(this.formData.data);
         axios.post('/api/global/cloud/input/batchOtherRecAble/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
           this.$message(response.data.message);
+        }).catch(function () {
+          this.submitDisabled = false;
         });
       },
     }

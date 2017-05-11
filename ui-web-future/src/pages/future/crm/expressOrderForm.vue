@@ -70,6 +70,8 @@
                 } else {
                   this.$router.push({name:'expressOrderList',query:util.getQuery("expressOrderList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

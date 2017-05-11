@@ -91,6 +91,8 @@
                 } else {
                   this.$router.push({name:'employeePhoneList',query:util.getQuery("employeePhoneList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

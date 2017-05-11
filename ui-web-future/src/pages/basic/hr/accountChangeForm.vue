@@ -104,7 +104,9 @@
             } else {
               this.$router.push({name:'accountChangeList',query:util.getQuery("accountChangeList")})
             }
-          });
+          }).catch(function () {
+              this.submitDisabled = false;
+            });
           }else{
             this.submitDisabled = false;
       }

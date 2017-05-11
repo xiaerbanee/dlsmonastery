@@ -98,6 +98,8 @@
                 } else {
                   this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             } else {
               this.submitDisabled = false;

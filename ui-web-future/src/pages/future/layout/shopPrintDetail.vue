@@ -92,6 +92,8 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

@@ -85,6 +85,8 @@
               } else {
                 this.$router.push({name:'pricesystemList',query:util.getQuery("pricesystemList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

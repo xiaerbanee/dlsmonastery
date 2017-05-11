@@ -55,6 +55,8 @@
                 } else {
                   this.$router.push({name:'folderList',query:util.getQuery("folderList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

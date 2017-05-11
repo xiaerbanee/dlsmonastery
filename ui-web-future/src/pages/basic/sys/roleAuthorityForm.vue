@@ -73,7 +73,9 @@
               } else {
                 this.$router.push({name:'roleList',query:util.getQuery("roleList")})
               }
-            });
+            }).catch(function () {
+                this.submitDisabled = false;
+              });
           }else{
             this.submitDisabled = false;
           }

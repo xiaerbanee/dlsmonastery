@@ -75,6 +75,8 @@
               } else {
                 this.$router.push({name:'chainList',query:util.getQuery("chainList")})
               }
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

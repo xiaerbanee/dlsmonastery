@@ -60,6 +60,8 @@
                 } else {
                   this.$router.push({name:'bankList',query:util.getQuery("bankList")})
                 }
+              }).catch(function () {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;

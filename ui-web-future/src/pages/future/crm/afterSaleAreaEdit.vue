@@ -158,6 +158,8 @@
               this.$message(response.data.message);
               form.resetFields();
               this.submitDisabled = false;
+            }).catch(function () {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
