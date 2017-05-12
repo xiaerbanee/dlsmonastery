@@ -19,7 +19,7 @@ public class BdCustomer {
     //修改客户时间
     private LocalDate FModifyDate;
     //部门ID
-    private String FSALDEPTID;
+    private String FSalDeptId;
 
     public String getFCustId() {
         return FCustId;
@@ -69,11 +69,11 @@ public class BdCustomer {
         this.FModifyDate = FModifyDate;
     }
 
-    public String getFSALDEPTID() {
-        return FSALDEPTID;
+    public String getFSalDeptId() {
+        return FSalDeptId;
     }
 
-    public void setFSALDEPTID(String FSALDEPTID) {
-        this.FSALDEPTID = FSALDEPTID;
+    public void setFSalDeptId(String FSalDeptId) {
+        this.FSalDeptId = FSalDeptId;
     }
 }

@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.input.dto;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -26,6 +27,8 @@ public class SalOutStockDto {
     private String note;
     //部门名称
     private String departmentNumber;
+    //单据类型
+    private String billType;
 
     private List<SalOutStockFEntityDto> salOutStockFEntityDtoList = Lists.newArrayList();
 
@@ -77,6 +80,14 @@ public class SalOutStockDto {
         this.departmentNumber = departmentNumber;
     }
 
+    public String getBillType() {
+        return billType;
+    }
+
+    public void setBillType(String billType) {
+        this.billType = billType;
+    }
+
     public List<SalOutStockFEntityDto> getSalOutStockFEntityDtoList() {
         return salOutStockFEntityDtoList;
     }
@@ -92,7 +103,11 @@ public class SalOutStockDto {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", LocalDateUtils.format(getDate(),"yyyy-M-d"));
-        model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD01_SYS"));
+        if(SalOutStockBillTypeEnum.标准销售出库单.name().equals(getBillType())) {
+            model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD01_SYS"));
+        }else if (SalOutStockBillTypeEnum.现销出库单.name().equals(getBillType())){
+            model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD06_SYS"));
+        }
         model.put("FDeliveryDeptID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
         model.put("FSaleOrgId", CollectionUtil.getMap("FNumber", 100));
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", 100));

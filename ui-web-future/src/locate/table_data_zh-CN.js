@@ -85,7 +85,7 @@ export default {
       apiCategory:"外部接口",
       cloudInputCategory:"财务录单",
       cloudBatchBillCategory:"批量录入",
-      batchBillForm:"批量开单",
+      salOutStock:"出库单",
       batchMaterialForm:"物料添加",
       batchDeliveryForm:'其他出库',
       cloudReportCategory:"财务报表",
