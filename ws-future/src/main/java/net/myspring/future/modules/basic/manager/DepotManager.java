@@ -29,4 +29,6 @@ public class DepotManager {
     private DepotMapper depotMapper;
     @Autowired
     private RedisTemplate redisTemplate;
+
+
 }
