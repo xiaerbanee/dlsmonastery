@@ -39,9 +39,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item :label="formLabel.specialityStore.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.specialityStore" filterable clearable :placeholder="$t('depotList.inputKey')">
-                  <el-option v-for="(value,key) in formData.bools" :key="key"  :label="key | bool2str" :value="value"></el-option>
-                </el-select>
+                <select-radio-group v-model="formData.specialityStore"></select-radio-group>
               </el-form-item>
               <el-form-item :label="formLabel.specialityStoreType.label" :label-width="formLabelWidth">
                 <dict-map-select v-model="formData.specialityStoreType" category="门店_体验店类型"/>
@@ -150,9 +148,11 @@
 </template>
 <script>
   import dictMapSelect from 'components/basic/dict-map-select'
+  import selectRadioGroup from 'components/common/select-radio-group'
   export default{
     components:{
-      dictMapSelect
+      dictMapSelect,
+      selectRadioGroup
     },
     data() {
       return {
@@ -210,8 +210,8 @@
     },
     methods: {
       pageRequest() {
-
-
+        this.formLabel.specialityStore.value = util.bool2str(this.formData.specialityStore);
+        console.log( this.formLabel.specialityStore.value)
         util.setQuery("depotList",this.formData);
         util.copyValue(this.formData,this.submitData);
         axios.get('/api/ws/future/basic/depot',{params:this.submitData}).then((response) => {
