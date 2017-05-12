@@ -3,15 +3,17 @@ package net.myspring.cloud.modules.kingdee.domain;
 import java.time.LocalDateTime;
 
 public class BdMaterial {
-    //id
+    //物料id
     private String FMasterId;
+    //物料编码
     private String FNumber;
-    //名称
+    //物料名称
     private String FName;
     //物料分组
     private Long FMaterialGroup;
-    //分组名称
+    //物料分组名称
     private String FMaterialGroupName;
+    //
     private LocalDateTime FModifyDate;
 
     public String getFMasterId() {

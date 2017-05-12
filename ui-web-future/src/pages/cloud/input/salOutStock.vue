@@ -1,13 +1,13 @@
 <template>
   <div>
-    <head-tab active="batchBillForm"></head-tab>
+    <head-tab active="salOutStock"></head-tab>
     <div>
       <el-form :model="formData" method="get">
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item :label="formLabel.storeNumber.label"  :label-width="formLabelWidth">
               <el-select v-model="formData.storeNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStore" :loading="remoteLoading">
-                <el-option v-for="item in storeList" :key="item.number" :label="item.name" :value="item.number"></el-option>
+                <el-option v-for="item in storeList" :key="item.FNumber" :label="item.FName" :value="item.FNumber"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -30,6 +30,7 @@
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
+  var table = null;
   export default {
     data() {
       return {
@@ -40,8 +41,9 @@
           autoColumnSize:true,
           stretchH: 'all',
           height: 650,
-          colHeaders: ["门店","编码","货品","价格","数量","类型","备注"],
+          colHeaders: ["编码","门店","货品","价格","数量","类型","备注"],
           columns: [
+            {type:"text", allowEmpty: false, strict: true},
             {type: "autocomplete", allowEmpty: false, strict: true, tempCustomerNames:[],
               source:function (query, process) {
                 var that = this;
@@ -50,7 +52,7 @@
                 } else {
                   var customerNames = new Array();
                   if(query.length>0) {
-                    axios.get('/api/global/cloud/input/bdCustomer/getNameByNameLike?name='+query).then((response)=>{
+                    axios.get('/api/global/cloud/kingdee/bdCustomer/getNameByNameLike?name='+query).then((response)=>{
                       if(response.data.length>0) {
                         for(let index in response.data) {
                           var shopName = response.data[index];
@@ -68,7 +70,6 @@
                 }
               }
             },
-            {type:"text", allowEmpty: false, strict: true},
             {type: "autocomplete", allowEmpty: true, strict: true,tempProductNames:[],
               source:function (query, process) {
                 var that = this;
@@ -77,7 +78,7 @@
                 } else {
                   var productNames = new Array();
                   if(query.length>0) {
-                    axios.get('/api/global/cloud/input/bdMaterial/getNameByNameLike?name='+query).then((response)=>{
+                    axios.get('/api/global/cloud/kingdee/bdMaterial/getNameByNameLike?name='+query).then((response)=>{
                       if(response.data.length>0) {
                         for(let index in response.data) {
                           var productName = response.data[index];
@@ -101,21 +102,17 @@
             {type: "text", allowEmpty: true, strict: true }
           ],
           afterChange: function (changes, source) {
-            var that=this;
+            var that = this;
             if (source === 'edit') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1]==2;
                 if(column){
-                  var name = changes[i][3];
-                  var productMap;
-                  axios.get('/api/global/cloud/input/bdMaterial/getNameAndNumber').then((response) =>{
-                    productMap = response.data;
-                    for (let index in productMap){
-                      if(productMap[index].name === name){
-                        that.sss();
-                      }
-                    }
+                  let name = changes[i][3];
+                  let material;
+                  axios.get('/api/global/cloud/kingdee/bdMaterial/getByName?name='+ name).then((response) =>{
+                    material = response.data;
+                    table.setDataAtCell(row,0,material.FNumber);
                   });
                 }
               }
@@ -137,16 +134,16 @@
     },
     mounted() {
       axios.get('/api/global/cloud/input/batchBill/form').then((response)=>{
-        this.settings.columns[5].source = response.data.typeList;
-        this.table = new Handsontable(this.$refs["handsontable"], this.settings);
+        this.settings.columns[5].source = response.data.billTypeEnums;
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },
     methods: {
       formSubmit(){
         this.formData.data =new Array();
-        let list = this.table.getData();
+        let list = table.getData();
         for(let item in list){
-          if(!this.table.isEmptyRow(item)){
+          if(!table.isEmptyRow(item)){
             this.formData.data.push(list[item]);
           }
         }
@@ -160,7 +157,7 @@
       remoteStore(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/global/cloud/input/bdStock/getNameAndNumber',{params:{name:query}}).then((response)=>{
+          axios.get('/api/global/cloud/kingdee/bdStock/getByNameLike',{params:{name:query}}).then((response)=>{
             this.storeList = response.data;
             this.remoteLoading = false;
           })
@@ -168,9 +165,6 @@
           this.storeList = {};
         }
       },
-      sss(){
-          this.table.setDataAtCell(2,2,"2");
-      }
     }
   }
 </script>

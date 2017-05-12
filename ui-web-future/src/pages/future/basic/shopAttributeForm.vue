@@ -58,10 +58,15 @@
         offices:[],
         depots:[],
         dataScopeOffices:[],
-        inputForm:{shop:{},shopAttributeDetailList:{}},
+        inputForm:{
+          shop:{},
+          shopAttributeDetailList:{},
+          shopMonthTotal:""
+        },
         submitData:{
           shop:{},
-          shopAttributeDetailList:{}
+          shopAttributeDetailList:{},
+          shopMonthTotal:""
         },
         rules: {
           employeeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
@@ -79,8 +84,7 @@
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm, this.submitData);
-            this.submitData.shopAttributeDetailList.push({店月总量:this.inputForm.shopMonthTotal})
-            axios.post('/api/ws/future/layout/shopAttribute/save',qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/ws/future/layout/shopAttribute/save',qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
