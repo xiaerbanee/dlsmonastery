@@ -2,33 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.kingdee.mapper.ArRefundBillMapper">
 
-    <select id="findByPeriodForEntrySum" resultType="ReceivableForDetailDto">
-        SELECT
-        b.FCONTACTUNIT AS customerReceiveDto.customerId,
-        e.FNAME AS customerName,
-        d.FNAME AS billType,
-        b.FBillNo AS billNo,
-        b.FDATE AS billDate,
-        sum(a.FREALREFUNDAMOUNT) AS endShouldGet,
-        b.FDocumentStatus AS billStatus
-        FROM
-        T_AR_REFUNDBILLENTRY a
-        JOIN T_AR_REFUNDBILL b ON b.FID = a.FID
-        LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
-        LEFT JOIN T_BD_CUSTOMER_L e ON b.FCONTACTUNIT = e.FCUSTID
-        WHERE
-        b.FDATE &gt;=#{dateStart} AND
-        b.FDATE  &lt;=#{dateEnd} and
-        b.FCONTACTUNIT = #{customerId}
-        group by
-        b.FCONTACTUNIT,
-        e.FNAME,
-        d.FNAME,
-        b.FBillNo,
-        b.FDATE,
-        b.FDocumentStatus
-    </select>
-
     <select id="findByPeriodForSum" resultType="CustomerReceiveDto">
         SELECT
         b.FCONTACTUNIT AS customerId,

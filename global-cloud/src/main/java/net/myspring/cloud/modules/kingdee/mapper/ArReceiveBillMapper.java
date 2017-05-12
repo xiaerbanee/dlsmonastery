@@ -1,6 +1,5 @@
 package net.myspring.cloud.modules.kingdee.mapper;
 
-import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,8 +13,6 @@ import java.util.List;
  */
 @Mapper
 public interface ArReceiveBillMapper {
-
-    List<CustomerReceiveDetailDto> findByPeriodForEntrySum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
 
     List<CustomerReceiveDto> findByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
 }

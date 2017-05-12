@@ -150,42 +150,9 @@ public class CustomerReceiveService {
                 summaryItem.setBeginShouldGet(item.getBeginShouldGet());
             }
         }
-        List<CustomerReceiveDetailDto> detailForBillList = Lists.newArrayList();
-        List<CustomerReceiveDetailDto> QTYSDByPeriodForEntrySumList = arOtherRecableMapper.findByPeriodForEntrySum(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> XSTHDByPeriodForMaterialSumList = salReturnStockMapper.findXSTHDByPeriodForEntryFSum(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> XSCKDByPeriodForMaterialSumList = salOutStockMapper.findXSCKDByPeriodForEntryFSum(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> XXTHDByPeriodForMaterialSumList = salReturnStockMapper.findXXTHDByPeriodForEntryFSum(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> XXCKDByPeriodForMaterialSumList = salOutStockMapper.findXXCKDByPeriodForEntryFSum(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> SKDForPeriodList = arReceiveBillMapper.findByPeriodForEntrySum(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> SKTKDForPeriodList = arRefundBillMapper.findByPeriodForEntrySum(dateStart, dateEnd,customerId);
-        detailForBillList.addAll(QTYSDByPeriodForEntrySumList);
-        detailForBillList.addAll(XSTHDByPeriodForMaterialSumList);
-        detailForBillList.addAll(XSCKDByPeriodForMaterialSumList);
-        detailForBillList.addAll(XXTHDByPeriodForMaterialSumList);
-        detailForBillList.addAll(XXCKDByPeriodForMaterialSumList);
-        detailForBillList.addAll(SKDForPeriodList);
-        detailForBillList.addAll(SKTKDForPeriodList);
-        //按日期排序
-        List<CustomerReceiveDetailDto> detailForBillByDateList = Lists.newArrayList();
-        LocalDate tempDate = dateStart;
-        while(tempDate.isBefore(dateEnd) || tempDate.equals(dateEnd)){
-            for(CustomerReceiveDetailDto receivableReportForDetail : detailForBillList) {
-                if (receivableReportForDetail.getBillDate().equals(tempDate)) {
-                    detailForBillByDateList.add(receivableReportForDetail);
-                }
-            }
-            tempDate = tempDate.plusDays(1);
-        }
+        List<CustomerReceiveDetailDto> detailForBillList = customerReceiveMapper.findByPeriodForEntrySum(dateStart, dateEnd,customerId);
         //物料详细
-        List<CustomerReceiveDetailDto> detailForMaterialList = Lists.newArrayList();
-        List<CustomerReceiveDetailDto> XSTHDListForPeriodList = salReturnStockMapper.findXSTHDByPeriodForEntryF(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> XSCKDListForPeriodList = salOutStockMapper.findXSCKDByPeriodForEntryF(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> XXTHDListForPeriodList = salReturnStockMapper.findXXTHDByPeriodForEntryF(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> XXCKDListForPeriodList = salOutStockMapper.findXXCKDByPeriodForEntryF(dateStart, dateEnd,customerId);
-        detailForMaterialList.addAll(XSTHDListForPeriodList);
-        detailForMaterialList.addAll(XSCKDListForPeriodList);
-        detailForMaterialList.addAll(XXTHDListForPeriodList);
-        detailForMaterialList.addAll(XXCKDListForPeriodList);
+        List<CustomerReceiveDetailDto> detailForMaterialList = customerReceiveMapper.findByPeriodForEntryF(dateStart, dateEnd,customerId);
         Map<String,List<CustomerReceiveDetailDto>> detailForMaterialMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(detailForMaterialList)) {
             for (CustomerReceiveDetailDto customerAccount : detailForMaterialList) {
@@ -206,8 +173,8 @@ public class CustomerReceiveService {
         beginAmount.setIndex(-1);
         dataList.add(beginAmount);
         BigDecimal endShouldGet = summaryItem.getBeginShouldGet();
-        for(int i = 0 ;i<detailForBillByDateList.size();i++){
-            CustomerReceiveDetailDto detailForBill = detailForBillByDateList.get(i);
+        for(int i = 0 ;i<detailForBillList.size();i++){
+            CustomerReceiveDetailDto detailForBill = detailForBillList.get(i);
 
             CustomerReceiveDetailDto receivableDetail = new CustomerReceiveDetailDto();
             receivableDetail.setIndex(i);
