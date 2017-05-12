@@ -31,8 +31,6 @@ public class DepotShopAttribute extends CompanyEntity<DepotShopAttribute> {
     private String businessType;
     //运营商类型移动社会渠道
     private String channelType;
-    // 地区属性
-    private String areaType;
     //门店类型
     private String salePointType;
     //乡镇类型
@@ -129,14 +127,6 @@ public class DepotShopAttribute extends CompanyEntity<DepotShopAttribute> {
 
     public void setChannelType(String channelType) {
         this.channelType = channelType;
-    }
-
-    public String getAreaType() {
-        return areaType;
-    }
-
-    public void setAreaType(String areaType) {
-        this.areaType = areaType;
     }
 
     public String getSalePointType() {

@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 @Table(name="crm_depot_shop")
 public class DepotShop extends CompanyEntity<DepotShop> {
     private String depotId;
+    // 地区属性
+    private String areaType;
     // 门店类型
     private String type;
     // 价格体系
@@ -51,6 +53,15 @@ public class DepotShop extends CompanyEntity<DepotShop> {
     public void setDepotId(String depotId) {
         this.depotId = depotId;
     }
+
+    public String getAreaType() {
+        return areaType;
+    }
+
+    public void setAreaType(String areaType) {
+        this.areaType = areaType;
+    }
+
 
     public String getType() {
         return type;
