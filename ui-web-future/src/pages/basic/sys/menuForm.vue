@@ -43,12 +43,7 @@
   </div>
 </template>
 <script>
-  import boolRadioGroup from 'components/common/bool-radio-group'
-
     export default{
-      components:{
-        boolRadioGroup
-      },
       data(){
           return{
             isCreate:this.$route.query.id==null,
