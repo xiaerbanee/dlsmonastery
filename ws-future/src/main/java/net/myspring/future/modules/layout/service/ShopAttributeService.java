@@ -61,7 +61,6 @@ public class ShopAttributeService {
     public Page<DepotDto> findPage(Pageable pageable, ShopAttributeQuery shopAttributeQuery){
         DepotQuery depotQuery=new DepotQuery();
         ReflectionUtil.copyProperties(shopAttributeQuery,depotQuery);
-        depotQuery.setTypes(depotManager.getTypeValueByCategory(DepotCategoryEnum.SHOP.name()));
         Page<DepotDto> page = depotMapper.findPage(pageable, depotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -91,12 +90,6 @@ public class ShopAttributeService {
 
     public ShopAttributeForm save(ShopAttributeForm shopAttributeForm) {
         Depot shop = depotMapper.findOne(shopAttributeForm.getShop().getId());
-        shop.setChannelType(shopAttributeForm.getShop().getChannelType());
-        shop.setDistrictId(shopAttributeForm.getShop().getDistrictId());
-        shop.setAreaType(shopAttributeForm.getShop().getAreaType());
-        shop.setTaskQty(shopAttributeForm.getShop().getTaskQty());
-        Long shopMonthTotal=shopAttributeForm.getShopMonthTotal()==null?0l:shopAttributeForm.getShopMonthTotal();
-        shop.setTurnoverType(getValueByTurnoverType(shopMonthTotal));
         depotMapper.update(shop);
         List<ShopAttribute> shopAttributes=shopAttributeMapper.findByShopId(shopAttributeForm.getShop().getId());
         Map<String,ShopAttribute> shopAttributeMap=CollectionUtil.extractToMap(shopAttributes,"typeName");
