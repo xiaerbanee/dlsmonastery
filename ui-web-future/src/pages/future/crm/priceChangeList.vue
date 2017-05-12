@@ -28,13 +28,13 @@
         <el-table-column prop="priceChangeDate" :label="$t('priceChangeList.priceChangeDate')"></el-table-column>
         <el-table-column prop="uploadEndDate"  :label="$t('priceChangeList.uploadEndDate')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('priceChangeList.remarks')"></el-table-column>
-        <el-table-column prop="created.fullName" :label="$t('priceChangeList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('priceChangeList.createdBy')"></el-table-column>
         <el-table-column prop="status" :label="$t('priceChangeList.status')"></el-table-column>
         <el-table-column  :label="$t('priceChangeList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button v-if="scope.row.status === '上报中'" size="small" v-permit="'crm:priceChange:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeList.audit')}}</el-button>
+            <el-button size="small" v-permit="'crm:priceChange:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('priceChangeList.edit')}}</el-button>
+            <el-button v-if="scope.row.status === '上报中'" size="small" v-permit="'crm:priceChange:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopImageList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -67,7 +67,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("priceChangeList",this.formData);
-        axios.get('/api/crm/priceChange',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/crm/priceChange',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -85,14 +85,14 @@
       },itemAdd(){
         this.$router.push({ name: 'priceChangeForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'priceChangeForm', query: { id: id }})
-        } else if(action=="删除") {
+        } else if(action=="delete") {
           axios.get('/api/crm/priceChange/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
             this.pageRequest();
           })
-        }else if(action =='抽检'){
+        }else if(action =='audit'){
           this.$router.push({ name: 'priceChangeDetail', query: { id: id }})
         }
       }
@@ -100,6 +100,7 @@
       this.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/priceChange/getQuery').then((response) =>{
         this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
         this.pageRequest();
       });
     }

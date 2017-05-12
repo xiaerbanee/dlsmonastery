@@ -1,10 +1,13 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
 import net.myspring.future.modules.crm.domain.PriceChange;
+import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.mapper.PriceChangeImeMapper;
 import net.myspring.future.modules.crm.mapper.PriceChangeMapper;
 import net.myspring.future.modules.crm.mapper.PriceChangeProductMapper;
+import net.myspring.future.modules.crm.web.query.PriceChangeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +30,8 @@ public class PriceChangeService {
     private ProductTypeMapper productTypeMapper;
     @Autowired
     private PriceChangeImeMapper priceChangeImeMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
 
     public PriceChange findNearPriceChange(){
         return priceChangeMapper.findNearPriceChange();
@@ -43,8 +48,9 @@ public class PriceChangeService {
     }
 
 
-    public Page<PriceChange> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<PriceChange> page = priceChangeMapper.findPage(pageable, map);
+    public Page<PriceChangeDto> findPage(Pageable pageable, PriceChangeQuery priceChangeQuery) {
+        Page<PriceChangeDto> page = priceChangeMapper.findPage(pageable, priceChangeQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
