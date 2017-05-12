@@ -18,4 +18,8 @@ public interface CustomerReceiveMapper {
 
     List<CustomerReceiveDto> findByEndDateAndIn(@Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") List<String> customerIdList);
 
+    List<CustomerReceiveDetailDto> findByPeriodForEntrySum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
+
+    List<CustomerReceiveDetailDto> findByPeriodForEntryF(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
+
 }

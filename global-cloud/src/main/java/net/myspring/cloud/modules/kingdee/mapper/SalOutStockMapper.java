@@ -16,16 +16,8 @@ import java.util.List;
 public interface SalOutStockMapper {
 
     //标准销售出库单
-    List<CustomerReceiveDetailDto> findXSCKDByPeriodForEntryF(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
-
-    List<CustomerReceiveDetailDto> findXSCKDByPeriodForEntryFSum(@Param("dateStart")LocalDate dateStart,@Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
-
     List<CustomerReceiveDto> findXSCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
 
     //现销出库单
-    List<CustomerReceiveDetailDto> findXXCKDByPeriodForEntryF(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
-
-    List<CustomerReceiveDetailDto> findXXCKDByPeriodForEntryFSum(@Param("dateStart")LocalDate dateStart,@Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
-
     List<CustomerReceiveDto> findXXCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
 }

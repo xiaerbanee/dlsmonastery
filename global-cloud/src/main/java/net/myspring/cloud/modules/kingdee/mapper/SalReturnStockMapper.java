@@ -16,16 +16,8 @@ import java.util.List;
 public interface SalReturnStockMapper {
 
     //标准销售退货单
-    List<CustomerReceiveDetailDto> findXSTHDByPeriodForEntryF(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
-
-    List<CustomerReceiveDetailDto> findXSTHDByPeriodForEntryFSum(@Param("dateStart")LocalDate dateStart,@Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
-
     List<CustomerReceiveDto> findXSTHDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
 
     //现销退货单
-    List<CustomerReceiveDetailDto> findXXTHDByPeriodForEntryF(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
-
-    List<CustomerReceiveDetailDto> findXXTHDByPeriodForEntryFSum(@Param("dateStart")LocalDate dateStart,@Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
-
     List<CustomerReceiveDto>   findXXTHDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
 }

@@ -15,7 +15,5 @@ import java.util.List;
 @Mapper
 public interface ArRefundBillMapper {
 
-    List<CustomerReceiveDetailDto> findByPeriodForEntrySum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
-
     List<CustomerReceiveDto> findByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
 }

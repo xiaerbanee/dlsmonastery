@@ -1,61 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.kingdee.mapper.SalReturnStockMapper">
-    <select id="findXSTHDByPeriodForEntryF" resultType="CustomerReceiveDetailDto">
-        SELECT
-            b.FRETCUSTID AS customerReceiveDto.customerId,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            a.FMATERIALID as materialId,
-            f.fname as materialName,
-            a.FBASEUNITQTY AS quantity,
-            c.FPRICE AS price,
-            c.FAMOUNT AS endShouldGet,
-            a.FNOTE AS note,
-            b.FDOCUMENTSTATUS AS billStatus
-        FROM
-            T_SAL_RETURNSTOCKENTRY a
-        JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-        JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
-        LEFT JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
-        left JOIN T_BD_MATERIAL_L f ON a.FMATERIALID = f.FMATERIALID
-        WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FRETCUSTID = #{customerId} and
-            d.FNAME= '标准销售退货单'
-    </select>
-
-    <select id="findXSTHDByPeriodForEntryFSum" resultType="CustomerReceiveDetailDto">
-        SELECT
-        b.FRETCUSTID AS customerReceiveDto.customerId,
-        e.FNAME as customerName,
-        d.FNAME AS billType,
-        b.FBillNo AS billNo,
-        b.FDATE AS billDate,
-        sum(c.FAMOUNT) AS endShouldGet,
-        b.FDOCUMENTSTATUS AS billStatus
-        FROM
-        T_SAL_RETURNSTOCKENTRY a
-        JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-        JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
-        LEFT JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
-        LEFT JOIN T_BD_CUSTOMER_L e ON b.FRETCUSTID = e.FCUSTID
-        WHERE
-        b.FDATE &gt;=#{dateStart} AND
-        b.FDATE  &lt;=#{dateEnd} and
-        b.FRETCUSTID = #{customerId} and
-        d.FNAME= '标准销售退货单'
-        group by
-        b.FRETCUSTID,
-        e.FNAME,
-        d.FNAME,
-        b.FBillNo,
-        b.FDATE,
-        b.FDOCUMENTSTATUS
-    </select>
-
     <select id="findXSTHDByPeriodForSum" resultType="CustomerReceiveDto">
         SELECT
         b.FRETCUSTID AS customerId,
@@ -75,60 +20,6 @@
         b.FRETCUSTID
     </select>
 
-    <select id="findXXTHDByPeriodForEntryF" resultType="CustomerReceiveDetailDto">
-        SELECT
-        b.FRETCUSTID AS customerReceiveDto.customerId,
-        d.FNAME AS billType,
-        b.FBillNo AS billNo,
-        b.FDATE AS billDate,
-        a.FMATERIALID as materialId,
-        f.fname as materialName,
-        a.FBASEUNITQTY AS quantity,
-        c.FPRICE AS price,
-        c.FAMOUNT AS endShouldGet,
-        a.FNOTE AS note,
-        b.FDOCUMENTSTATUS AS billStatus
-        FROM
-        T_SAL_RETURNSTOCKENTRY a
-        JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-        JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
-        LEFT JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
-        left JOIN T_BD_MATERIAL_L f ON a.FMATERIALID = f.FMATERIALID
-        WHERE
-        b.FDATE &gt;=#{dateStart} AND
-        b.FDATE  &lt;=#{dateEnd} and
-        b.FRETCUSTID = #{customerId} and
-        d.FNAME='现销退货单'
-    </select>
-
-    <select id="findXXTHDByPeriodForEntryFSum" resultType="CustomerReceiveDetailDto">
-        SELECT
-        b.FRETCUSTID AS customerReceiveDto.customerId,
-        e.FNAME as customerName,
-        d.FNAME AS billType,
-        b.FBillNo AS billNo,
-        b.FDATE AS billDate,
-        sum(c.FAMOUNT) AS endShouldGet,
-        b.FDOCUMENTSTATUS AS billStatus
-        FROM
-        T_SAL_RETURNSTOCKENTRY a
-        JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-        JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
-        LEFT JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
-        LEFT JOIN T_BD_CUSTOMER_L e ON b.FRETCUSTID = e.FCUSTID
-        WHERE
-        b.FDATE &gt;=#{dateStart} AND
-        b.FDATE  &lt;=#{dateEnd} and
-        b.FRETCUSTID = #{customerId} and
-        d.FNAME='现销退货单'
-        group by
-        b.FRETCUSTID,
-        e.FNAME,
-        d.FNAME,
-        b.FBillNo,
-        b.FDATE,
-        b.FDOCUMENTSTATUS
-    </select>
 
     <select id="findXXTHDByPeriodForSum" resultType="CustomerReceiveDto">
         SELECT
