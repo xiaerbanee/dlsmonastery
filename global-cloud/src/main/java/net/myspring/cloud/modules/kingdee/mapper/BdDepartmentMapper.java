@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
+ * 部门
  * Created by lihx on 2017/5/11.
  */
 @Mapper

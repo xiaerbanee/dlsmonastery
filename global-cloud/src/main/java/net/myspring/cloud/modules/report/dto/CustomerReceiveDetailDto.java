@@ -20,12 +20,12 @@ public class CustomerReceiveDetailDto {
     private LocalDate billDate;
     //物料名称
     private String  materialName;
-    //总数量
+    //数量
     private Long qty;
     //单价
     private BigDecimal price;
-    //预收金额
-    private BigDecimal receiveAmount;
+    //实收金额
+    private BigDecimal realGet;
     //应收金额
     private BigDecimal shouldGet;
     //期末应收款
@@ -97,12 +97,12 @@ public class CustomerReceiveDetailDto {
         this.price = price;
     }
 
-    public BigDecimal getReceiveAmount() {
-        return receiveAmount;
+    public BigDecimal getRealGet() {
+        return realGet;
     }
 
-    public void setReceiveAmount(BigDecimal receiveAmount) {
-        this.receiveAmount = receiveAmount;
+    public void setRealGet(BigDecimal realGet) {
+        this.realGet = realGet;
     }
 
     public BigDecimal getShouldGet() {

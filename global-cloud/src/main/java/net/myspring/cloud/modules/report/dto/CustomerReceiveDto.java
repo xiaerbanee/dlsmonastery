@@ -9,11 +9,17 @@ import java.util.List;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveDto {
+    //客户分组
     private String customerGroup;
+    //客户名称
     private String customerName;
+    //期初金额
     private BigDecimal beginShouldGet;
+    //期末金额
     private BigDecimal endShouldGet;
+    //期间应收
     private BigDecimal shouldGet;
+    //期间实收
     private BigDecimal realGet;
 
     private List<CustomerReceiveDetailDto> customerReceiveDetailDtoList = Lists.newArrayList();

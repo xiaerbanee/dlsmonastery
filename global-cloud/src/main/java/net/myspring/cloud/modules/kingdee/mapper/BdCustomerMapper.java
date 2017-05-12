@@ -8,6 +8,7 @@ import org.springframework.security.access.method.P;
 import java.util.List;
 
 /**
+ * 客户
  * Created by lihx on 2017/5/11.
  */
 @Mapper

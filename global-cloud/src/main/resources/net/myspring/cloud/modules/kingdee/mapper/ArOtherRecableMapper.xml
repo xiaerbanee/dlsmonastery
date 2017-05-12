@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.cloud.modules.kingdee.mapper.ArOtherRecableMapper">
+    <select id="findByPeriodForEntry" resultType="CustomerReceiveDetailDto">
+        SELECT
+        b.FCONTACTUNIT AS customerId,
+        d.FNAME AS billType,
+        b.FBillNo AS billNo,
+        b.FDATE AS billDate,
+        a.FAMOUNT AS amount,
+        a.FCOMMENT AS note,
+        b.FDocumentStatus AS documentStatus
+        FROM
+        T_AR_OTHERRECABLEENTRY a
+        JOIN T_AR_OTHERRECABLE b ON a.FID = b.FID
+        LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
+        WHERE
+        b.FDATE &gt;=#{dateStart} AND
+        b.FDATE  &lt;=#{dateEnd} and
+        b.FCONTACTUNIT = #{customerId}
+    </select>
+
+</mapper>
