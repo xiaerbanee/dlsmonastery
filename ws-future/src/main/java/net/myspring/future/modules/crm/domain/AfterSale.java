@@ -11,7 +11,6 @@ import javax.persistence.Table;
 public class AfterSale extends CompanyEntity<AfterSale> {
     //售后机，窜货机
     private String type;
-    private String officeId;
     private String businessId;
     private String badProductId;
     private String badProductImeId;
@@ -27,14 +26,6 @@ public class AfterSale extends CompanyEntity<AfterSale> {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
     }
 
     public String getBusinessId() {
