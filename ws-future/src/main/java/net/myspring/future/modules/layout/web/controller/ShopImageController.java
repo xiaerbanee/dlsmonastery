@@ -5,24 +5,20 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.CompanyConfigCodeEnum;
-import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.layout.domain.ShopImage;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
 import net.myspring.future.modules.layout.service.ShopImageService;
 import net.myspring.future.modules.layout.web.form.ShopImageForm;
 import net.myspring.future.modules.layout.web.query.ShopImageQuery;
-import org.apache.commons.collections.ComparatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.plaf.ComponentUI;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "layout/shopImage")

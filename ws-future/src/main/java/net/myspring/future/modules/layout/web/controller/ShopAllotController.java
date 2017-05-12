@@ -3,7 +3,6 @@ package net.myspring.future.modules.layout.web.controller;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
-import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.service.ShopAllotDetailService;
@@ -28,10 +27,6 @@ public class ShopAllotController {
 
     @Autowired
     private ShopAllotService shopAllotService;
-
-    @Autowired
-    private DepotService depotService;
-
 
     @Autowired
     private ProductService productService;

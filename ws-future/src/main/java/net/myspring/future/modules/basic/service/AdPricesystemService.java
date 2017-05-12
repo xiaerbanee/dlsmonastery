@@ -3,9 +3,11 @@ package net.myspring.future.modules.basic.service;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.mapper.DepotShopMapper;
 import net.myspring.future.modules.basic.web.query.AdPricesystemQuery;
 import net.myspring.future.modules.basic.web.form.AdPricesystemForm;
 import net.myspring.util.mapper.BeanUtil;
@@ -25,7 +27,7 @@ public class AdPricesystemService {
     @Autowired
     private DepotMapper depotMapper;
     @Autowired
-    private DepotService depotService;
+    private DepotShopMapper depotShopMapper;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -68,13 +70,14 @@ public class AdPricesystemService {
         }
         List<Depot> depotList = depotMapper.findByIds(adPricesystemForm.getPageIds());
         for(Depot depot : depotList){
+            DepotShop depotShop = depotShopMapper.findOne(depot.getDepotShopId());
             if(!adPricesystemForm.getNewDepotIds().contains(depot.getId())){
-                depot.setAdPricesystemId(null);
+                depotShop.setAdPricesystemId(null);
                 depotMapper.update(depot);
             }else {
-                if(!adPricesystemForm.getId().equals(depot.getAdPricesystemId())){
-                    depot.setAdPricesystemId(adPricesystemForm.getId());
-                    depotMapper.update(depot);
+                if(!adPricesystemForm.getId().equals(depotShop.getAdPricesystemId())){
+                    depotShop.setAdPricesystemId(adPricesystemForm.getId());
+                    depotShopMapper.update(depotShop);
                 }
             }
         }

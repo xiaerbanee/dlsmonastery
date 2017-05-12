@@ -77,12 +77,6 @@ public class AdGoodsOrderService {
         // 统计应付运费,以门店物料运费为准
         Map<String,AdPricesystemDetail> priceMap = Maps.newHashMap();
         Depot shop=depotMapper.findOne(adGoodsOrder.getShopId());
-        if(StringUtils.isNotBlank(shop.getAdPricesystemId())){
-            List<AdPricesystemDetail> adPricesystemDetailList = adPricesystemDetailMapper.findByAdPricesystemId(shop.getAdPricesystemId());
-            for (AdPricesystemDetail adPricesystemDetail : adPricesystemDetailList) {
-                priceMap.put(adPricesystemDetail.getProductId(), adPricesystemDetail);
-            }
-        }
         
         
         BigDecimal yfyfAmount = BigDecimal.ZERO;
@@ -164,12 +158,6 @@ public class AdGoodsOrderService {
     public AdGoodsOrder bill(AdGoodsOrder adGoodsOrder) {
         Map<String,AdPricesystemDetail> priceMap = Maps.newHashMap();
         Depot shop=depotMapper.findOne(adGoodsOrder.getShopId());
-        if(StringUtils.isNotBlank(shop.getAdPricesystemId())){
-            List<AdPricesystemDetail> adPricesystemDetailList = adPricesystemDetailMapper.findByAdPricesystemId(shop.getAdPricesystemId());
-            for(AdPricesystemDetail adPricesystemDetail:adPricesystemDetailList) {
-                priceMap.put(adPricesystemDetail.getProductId(), adPricesystemDetail);
-            }
-        }
         List<AdGoodsOrderDetail> adGoodsOrderDetailList=Lists.newArrayList();
         for (int i = adGoodsOrder.getAdGoodsOrderDetailList().size() - 1; i >= 0; i--) {
             AdGoodsOrderDetail agod = adGoodsOrder.getAdGoodsOrderDetailList().get(i);

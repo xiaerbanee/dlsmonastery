@@ -2,17 +2,17 @@ package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.dto.ChainDto;
 import net.myspring.future.modules.basic.service.ChainService;
-import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.web.query.ChainQuery;
 import net.myspring.future.modules.basic.web.form.ChainForm;
+import net.myspring.future.modules.basic.web.query.ChainQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "basic/chain")
@@ -20,8 +20,6 @@ public class ChainController {
 
     @Autowired
     private ChainService chainService;
-    @Autowired
-    private DepotService depotService;
 
 
     @RequestMapping(method = RequestMethod.GET)
