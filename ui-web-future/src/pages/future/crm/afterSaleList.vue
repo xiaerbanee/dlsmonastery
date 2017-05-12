@@ -134,7 +134,7 @@
         this.formData.toStoreDateBTW = util.formatDateRange(this.formData.toStoreDate);
 
         util.setQuery("afterSaleList",this.formData);
-        axios.get('/api/crm/afterSale',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/crm/afterSale',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -154,12 +154,11 @@
       },itemEdit(){
         this.$router.push({ name: 'afterSaleEditForm'})
       },itemSyn(){
-        axios.get('/api/crm/afterSale/synToFinance').then((response) =>{
+        axios.get('/api/ws/future/crm/afterSale/synToFinance').then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })
       },itemAction:function(id,action){
-        console.log(id,action)
         if(action=="修改") {
           this.$router.push({ name: 'afterSaleEditForm', query: { id: id }})
         }else if(action=="刪除"){

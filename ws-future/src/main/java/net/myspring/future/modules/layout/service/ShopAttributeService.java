@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
 import java.util.*;
 
@@ -94,8 +95,9 @@ public class ShopAttributeService {
         shop.setDistrictId(shopAttributeForm.getShop().getDistrictId());
         shop.setAreaType(shopAttributeForm.getShop().getAreaType());
         shop.setTaskQty(shopAttributeForm.getShop().getTaskQty());
-        Map<String,ShopAttributeDetailDto> shopAttributeDetailDtoMap=CollectionUtil.extractToMap(shopAttributeForm.getShopAttributeDetailList(),"typeName");
-        shop.setTurnoverType(getValueByTurnoverType(shopAttributeDetailDtoMap.get("店月总量").getTypeValue().longValue()));
+        Long shopMonthTotal=shopAttributeForm.getShopMonthTotal()==null?0l:shopAttributeForm.getShopMonthTotal();
+        shop.setTurnoverType(getValueByTurnoverType(shopMonthTotal));
+        depotMapper.update(shop);
         List<ShopAttribute> shopAttributes=shopAttributeMapper.findByShopId(shopAttributeForm.getShop().getId());
         Map<String,ShopAttribute> shopAttributeMap=CollectionUtil.extractToMap(shopAttributes,"typeName");
         List<ShopAttribute> shopAttributeList=Lists.newArrayList();
@@ -143,7 +145,7 @@ public class ShopAttributeService {
             return turnoverTypeMap.get(keyList.get(keyList.size()-1));
         }
         for(int i=0;i<keyList.size();i++){
-            double key=keyList.get(i);
+            Long key=keyList.get(i);
             if(key<=turnoverType&&turnoverType<keyList.get(i+1)){
                 return turnoverTypeMap.get(key);
             }

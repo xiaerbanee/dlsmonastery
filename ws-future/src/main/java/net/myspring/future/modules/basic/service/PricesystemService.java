@@ -114,12 +114,13 @@ public class PricesystemService {
     public void initPricesystemDetail(PricesystemForm pricesystemForm){
         List<PricesystemDetailForm> pricesystemDetailFormList=Lists.newArrayList();
         if(pricesystemForm.isCreate()){
-            String value =CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.getCode()).getValue();
+            String value =CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.getCode()).getValue();
             List<String> outGroupIds = IdUtils.getIdList(value);
             List<Product> productList = productMapper.findByOutGroupIds(outGroupIds);
             for(Product product:productList){
                 PricesystemDetailForm pricesystemDetailForm=new PricesystemDetailForm();
                 pricesystemDetailForm.setProductId(product.getId());
+                pricesystemDetailForm.setProductName(product.getName());
             }
         }else {
             List<PricesystemDetail> pricesystemDetailList=pricesystemDetailMapper.findByPricesystemId(pricesystemForm.getId());

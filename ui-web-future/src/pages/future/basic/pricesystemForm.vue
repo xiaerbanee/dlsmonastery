@@ -39,19 +39,12 @@
         submitDisabled:false,
         productName:'',
         filterPricesystemDetailList:[],
-        inputForm:{
-          id:'',
-          name:'',
-          sort:'',
-          remarks:'',
-          pricesystemDetailList:[]
-        },
+        inputForm:{},
         submitData:{
           id:'',
           name:'',
           sort:'',
           remarks:'',
-          enabled:false,
           pricesystemDetailList:[]
         },
         pageLoading: false,
@@ -97,7 +90,13 @@
         var tempList=new Array();
         for(var index in this.inputForm.pricesystemDetailList){
           var detail=this.inputForm.pricesystemDetailList[index];
-          if(util.contains(detail.productName,val)){
+          if(util.isNotBlank(detail.qty)){
+            tempList.push(detail)
+          }
+        }
+        for(var index in this.inputForm.pricesystemDetailList){
+          var detail=this.inputForm.pricesystemDetailList[index];
+          if(util.contains(detail.productName,val) && util.isBlank(detail.qty)){
             tempList.push(detail)
           }
         }
@@ -105,8 +104,8 @@
       }
     },created(){
         axios.get('/api/ws/future/crm/pricesystem/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-          this.inputForm.pricesystemDetailList=response.data.pricesystemDetailList;
+          this.inputForm=response.data;
+          console.log(this.inputForm)
           this.searchDetail();
         })
     }
