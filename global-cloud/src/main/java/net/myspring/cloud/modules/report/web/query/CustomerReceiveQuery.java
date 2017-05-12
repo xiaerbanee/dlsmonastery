@@ -10,7 +10,7 @@ public class CustomerReceiveQuery {
     private String customerGroup;
     private LocalDate dateStart;
     private LocalDate dateEnd;
-    private List<String> nameList;
+    private List<String> customerIdList;
     private Boolean queryDetail = false;
 
 
@@ -38,12 +38,12 @@ public class CustomerReceiveQuery {
         this.dateEnd = dateEnd;
     }
 
-    public List<String> getNameList() {
-        return nameList;
+    public List<String> getCustomerIdList() {
+        return customerIdList;
     }
 
-    public void setNameList(List<String> nameList) {
-        this.nameList = nameList;
+    public void setCustomerIdList(List<String> customerIdList) {
+        this.customerIdList = customerIdList;
     }
 
     public Boolean getQueryDetail() {
