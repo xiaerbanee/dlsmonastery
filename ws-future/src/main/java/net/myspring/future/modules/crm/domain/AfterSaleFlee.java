@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class AfterSaleFlee extends CompanyEntity<AfterSaleFlee> {
     private String ime;
     private String fleeShopName;
-    private String contactor;
+    private String contact;
     private String mobilePhone;
     private String address;
     private BigDecimal buyAmount;
@@ -36,12 +36,12 @@ public class AfterSaleFlee extends CompanyEntity<AfterSaleFlee> {
         this.fleeShopName = fleeShopName;
     }
 
-    public String getContactor() {
-        return contactor;
+    public String getContact() {
+        return contact;
     }
 
-    public void setContactor(String contactor) {
-        this.contactor = contactor;
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 
     public String getMobilePhone() {
