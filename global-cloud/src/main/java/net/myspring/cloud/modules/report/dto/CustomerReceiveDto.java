@@ -9,6 +9,7 @@ import java.util.List;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveDto {
+    private String customerId;
     private String customerGroup;
     private String customerName;
     private BigDecimal beginShouldGet;
@@ -17,6 +18,15 @@ public class CustomerReceiveDto {
     private BigDecimal realGet;
 
     private List<CustomerReceiveDetailDto> customerReceiveDetailDtoList = Lists.newArrayList();
+
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
 
     public String getCustomerGroup() {
         return customerGroup;
