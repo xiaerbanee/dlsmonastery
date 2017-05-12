@@ -2,9 +2,8 @@ package net.myspring.future.modules.basic.mapper;
 
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.future.common.mybatis.MyProvider;
-import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.mybatis.mapper.BaseMapper;
-import net.myspring.mybatis.mapper.CrudMapper;
 import org.apache.ibatis.annotations.*;
 
 import javax.cache.annotation.CacheDefaults;
@@ -18,32 +17,32 @@ import java.util.List;
  */
 
 @Mapper
-@CacheDefaults(cacheName = "depotShops")
-public interface DepotShopMapper extends BaseMapper<DepotShop,String> {
+@CacheDefaults(cacheName = "depotStores")
+public interface DepotStoreMapper extends BaseMapper<DepotStore,String> {
 
     @CacheResult
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ONE)
-    DepotShop findOne(String id);
+    DepotStore findOne(String id);
 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL)
-    List<DepotShop> findAll();
+    List<DepotStore> findAll();
 
     @CachePut(cacheKeyGenerator = IdCacheKeyGenerator.class)
     @InsertProvider(type = MyProvider.class, method =MyProvider.SAVE)
     @Options(useGeneratedKeys = true)
-    int save(@CacheValue DepotShop depotShop);
+    int save(@CacheValue DepotStore depotStore);
 
     @UpdateProvider(type=MyProvider.class,method =MyProvider.LOGIC_DELETE_ONE)
     int logicDeleteOne(String id);
 
     @CachePut(cacheKeyGenerator = IdCacheKeyGenerator.class)
     @UpdateProvider(type = MyProvider.class, method = MyProvider.UPDATE)
-    int update(@CacheValue DepotShop depotShop);
+    int update(@CacheValue DepotStore depotStore);
 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL_ENABLED)
-    List<DepotShop> findAllEnabled();
+    List<DepotStore> findAllEnabled();
 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
-    List<DepotShop> findByIds(List<String> ids);
+    List<DepotStore> findByIds(List<String> ids);
 
 }
