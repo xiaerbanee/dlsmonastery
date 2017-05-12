@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopImageForm.shopName')" prop="shopId">
-              <su-depot v-model="inputForm.shopId" type="shop" :disabled="shopDisabled"></su-depot>
+              <depot-select v-model="inputForm.shopId" category="shop"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageType')" prop="imageType">
               <el-select v-model="inputForm.imageType" filterable clearable :placeholder="$t('shopImageForm.inputType')">
@@ -36,7 +36,9 @@
 </template>
 
 <script>
+  import depotSelect from 'components/future/depot-select';
   export default{
+    components:{depotSelect},
     data(){
       return{
         isCreate:this.$route.query.id==null,
