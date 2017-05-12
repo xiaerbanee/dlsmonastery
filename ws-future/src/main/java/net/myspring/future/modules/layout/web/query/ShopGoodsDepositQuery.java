@@ -87,9 +87,6 @@ public class ShopGoodsDepositQuery extends BaseQuery {
         this.amount = amount;
     }
 
-
-
-
     public void setCreatedDateRange(String createdDateRange) {
         if(createdDateRange!=null){
             String[] tempParamValues = createdDateRange.split(" - ");

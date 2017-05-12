@@ -14,7 +14,7 @@
         AND depot.created_date>= #{p.createdDateStart}
     </if>
     <if test="p.createdDateEnd != null">
-        AND t1.created_date &lt;= #{p.createdDateEnd}
+        AND t1.created_date &lt; #{p.createdDateEnd}
     </if>
     <if test = "p.businessId !=null">
         AND t1.business_id LIKE CONCAT('%',#{p.businessId},'%')
