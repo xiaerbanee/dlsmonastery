@@ -37,7 +37,7 @@ public class ShopBuildController {
 
     @RequestMapping(value = "getQuery")
     public ShopBuildQuery getQuery(ShopBuildQuery shopBuildQuery) {
-        shopBuildQuery.getPositionId();
+        shopBuildQuery.setAuditType("1");
         return shopBuildQuery;
     }
 

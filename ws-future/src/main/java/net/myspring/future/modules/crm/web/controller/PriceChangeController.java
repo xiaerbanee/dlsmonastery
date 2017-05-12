@@ -4,6 +4,7 @@ package net.myspring.future.modules.crm.web.controller;
 import net.myspring.future.modules.basic.service.ProductTypeService;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.service.PriceChangeService;
+import net.myspring.future.modules.crm.web.query.PriceChangeQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,14 +55,9 @@ public class PriceChangeController {
         return null;
     }
 
-    @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
-        return null;
-    }
-
     @RequestMapping(value="getQuery")
-    public String getQuery(){
-        return null;
+    public PriceChangeQuery getQuery(PriceChangeQuery priceChangeQuery){
+        return priceChangeQuery;
     }
 
     private List<String> getActionList(PriceChange priceChange) {

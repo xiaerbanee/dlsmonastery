@@ -10,6 +10,7 @@ import net.myspring.util.cahe.annotation.CacheInput;
 public class ShopImageDto extends DataDto<ShopImage>{
 
     private String shopId;
+    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
     private String shopName;
     private String imageSize;
     private String imageType;

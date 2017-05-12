@@ -21,6 +21,8 @@ public class ShopPrintForm extends DataForm<ShopPrint>{
     private String address;
     private String content;
     private String attachment;
+    private String createdBy;
+    @CacheInput(inputKey = "accounts",inputInstance = "createdBy",outputInstance = "loginName")
     private String createdByName;
     private String processInstanceId;
     private LocalDateTime createdDate;
@@ -41,6 +43,14 @@ public class ShopPrintForm extends DataForm<ShopPrint>{
 
     public void setPassRemarks(String passRemarks) {
         this.passRemarks = passRemarks;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public String getOfficeId() {

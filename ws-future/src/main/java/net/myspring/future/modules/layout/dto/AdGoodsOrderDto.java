@@ -36,21 +36,21 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private String outCode;
     private String billType;
     private LocalDate billDate;
-    private String billRemarks;
-    private Integer smallQty;
-    private Integer mediumQty;
-    private Integer largeQty;
-    private Integer version = 0;
     private String processInstanceId;
     private String processStatus;
     private String businessId;
     private Boolean splitBill;
     private Boolean isUrgent;
     private String expressOrderId;
+    /*
+    * 等Dto建好再修改*/
+    private ExpressOrder expressOrder;
+
     private String employeeId;
-    private String processTypeId;
-    private String processFlowId;
-    private String cloudSynId;
+    @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "name")
+    private String employeeName;
+    @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "mobilePhone")
+    private String employeePhone;
     private String processPositionId;
 
     public String getStoreId() {
@@ -60,6 +60,7 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     public void setStoreId(String storeId) {
         this.storeId = storeId;
     }
+
 
     public String getStoreName() {
         return storeName;
@@ -165,46 +166,6 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
         this.billDate = billDate;
     }
 
-    public String getBillRemarks() {
-        return billRemarks;
-    }
-
-    public void setBillRemarks(String billRemarks) {
-        this.billRemarks = billRemarks;
-    }
-
-    public Integer getSmallQty() {
-        return smallQty;
-    }
-
-    public void setSmallQty(Integer smallQty) {
-        this.smallQty = smallQty;
-    }
-
-    public Integer getMediumQty() {
-        return mediumQty;
-    }
-
-    public void setMediumQty(Integer mediumQty) {
-        this.mediumQty = mediumQty;
-    }
-
-    public Integer getLargeQty() {
-        return largeQty;
-    }
-
-    public void setLargeQty(Integer largeQty) {
-        this.largeQty = largeQty;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
     public String getProcessInstanceId() {
         return processInstanceId;
     }
@@ -261,28 +222,28 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
         this.employeeId = employeeId;
     }
 
-    public String getProcessTypeId() {
-        return processTypeId;
+    public ExpressOrder getExpressOrder() {
+        return expressOrder;
     }
 
-    public void setProcessTypeId(String processTypeId) {
-        this.processTypeId = processTypeId;
+    public void setExpressOrder(ExpressOrder expressOrder) {
+        this.expressOrder = expressOrder;
     }
 
-    public String getProcessFlowId() {
-        return processFlowId;
+    public String getEmployeeName() {
+        return employeeName;
     }
 
-    public void setProcessFlowId(String processFlowId) {
-        this.processFlowId = processFlowId;
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
     }
 
-    public String getCloudSynId() {
-        return cloudSynId;
+    public String getEmployeePhone() {
+        return employeePhone;
     }
 
-    public void setCloudSynId(String cloudSynId) {
-        this.cloudSynId = cloudSynId;
+    public void setEmployeePhone(String employeePhone) {
+        this.employeePhone = employeePhone;
     }
 
     public String getProcessPositionId() {

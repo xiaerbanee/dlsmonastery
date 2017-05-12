@@ -6,11 +6,11 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopImageForm.shopName')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="shop"></depot-select>
+              <depot-select v-model="inputForm.shopId" category="SHOP" :disabled="shopDisabled"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageType')" prop="imageType">
               <el-select v-model="inputForm.imageType" filterable clearable :placeholder="$t('shopImageForm.inputType')">
-                <el-option v-for="item in formProperty" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.imageTypeList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageSize')" prop="imageSize">
@@ -48,10 +48,10 @@
         formProperty:{},
         fileList:[],
         shops:[],
-        inputForm:{
+        inputForm:{},
+        submitData:{
           id:'',
           shopId:'',
-          shopName:'',
           imageType:'',
           imageSize:'',
           image:'',
@@ -72,8 +72,8 @@
         form.validate((valid) => {
           this.inputForm.image = util.getFolderFileIdStr(this.fileList);
           if (valid) {
-              console.log(this.inputForm);
-            axios.post('/api/ws/future/layout/shopImage/save', qs.stringify(this.inputForm)).then((response)=> {
+            util.copyValue(this.inputForm,this.submitData)
+            axios.post('/api/ws/future/layout/shopImage/save', qs.stringify(this.submitData)).then((response)=> {
               console.log(response.data)
               if(response.data.message){
                 this.$message(response.data.message);
@@ -92,10 +92,6 @@
             this.submitDisabled = false;
           }
         })
-      },getFormProperty(){
-        axios.get('/api/basic/sys/companyConfig/getValueByCode',{params:{code:"SHOP_IMAGE_TYPE"}}).then((response)=>{
-          this.formProperty=response.data.split(',');
-        });
       },handlePreview(file) {
         window.open(file.url);
       },handleChange(file, fileList) {
@@ -106,7 +102,7 @@
     },created(){
       axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
-        this.shops=[];
+        util.copyValue(this.$route.query,this.inputForm);
         if(this.inputForm.id != null){
             this.shopDisabled = true;
         }
@@ -116,7 +112,6 @@
           });
         }
       })
-      this.getFormProperty();
     }
   }
 </script>

@@ -6,25 +6,25 @@
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('adGoodsOrderDetail.orderCode')">
-              {{detailForm.id}}
+              {{detailForm.businessId}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.billDate')" >
               {{detailForm.billDate}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.outShopName')">
-              {{detailForm.outShop.name}}
+              {{detailForm.outShopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.shopName')" >
-              {{detailForm.shop.name}}
+              {{detailForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.threeMonthQty')">
               {{detailForm.remarks}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.employeeId')" >
-              {{detailForm.employeeId ? detailForm.employee.name :''}}
+              {{detailForm.employeeName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.mobilePhone')">
-              {{detailForm.employeeId ? detailForm.employee.mobilePhone :''}}
+              {{detailForm.employeePhone}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.processStatus')">
               {{detailForm.processStatus}}
@@ -35,7 +35,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('adGoodsOrderDetail.createdBy')">
-              {{detailForm.created.loginName}}
+              {{detailForm.createdByName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.remarks')">
               {{detailForm.remarks}}
@@ -51,12 +51,10 @@
             </el-form-item>
             <div  v-if="audit">
             <el-form-item :label="$t('adGoodsOrderDetail.pass')" >
-              <el-radio-group v-model="inputForm.pass">
-                <el-radio v-for="(value,key) in detailProperty.bools" :key="key" :label="value">{{key | bool2str}} </el-radio>
-              </el-radio-group>
+              <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderDetail.comment')" prop="comment">
-              <el-input v-model="inputForm.comment"></el-input>
+            <el-form-item :label="$t('adGoodsOrderDetail.comment')" prop="passRemarks">
+              <el-input v-model="inputForm.passRemarks"></el-input>
             </el-form-item>
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('adGoodsOrderDetail.audit')}}</el-button>
@@ -64,50 +62,26 @@
               </div>
           </el-col>
         </el-row>
-        <el-table :data="detailForm.adGoodsOrderDetailList" style="margin-top:5px;"  stripe border >
-          <el-table-column  prop="product.code" :label="$t('adGoodsOrderDetail.code')" ></el-table-column>
-          <el-table-column  prop="product.name" :label="$t('adGoodsOrderDetail.productName')" ></el-table-column>
-          <el-table-column prop="qty" :label="$t('adGoodsOrderDetail.qty')"></el-table-column>
-          <el-table-column prop="confirmQty" :label="$t('adGoodsOrderDetail.confirmQty')"></el-table-column>
-          <el-table-column prop="billQty" :label="$t('adGoodsOrderDetail.billQty')"></el-table-column>
-          <el-table-column prop="shippedQty" :label="$t('adGoodsOrderDetail.shippedQty')"></el-table-column>
-          <el-table-column prop="price" :label="$t('adGoodsOrderDetail.price')"></el-table-column>
-        </el-table>
+        <process-details v-model="detailForm.processInstanceId"></process-details>
       </el-form>
     </div>
   </div>
 </template>
 <script>
+  import processDetails from 'components/general/process-details';
+  import boolRadioGroup from 'components/common/bool-radio-group';
   export default{
+    components:{processDetails,boolRadioGroup},
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        audit:this.$route.query.action=='审核',
-        detailProperty:{},
-        detailForm:{
-          store:{name:''},
-          outShop:{name:''},
-          shop:{name:''},
-          created:{loginName:''},
-          employee:{
-            name:'',
-            moblePhone:''
-          },
-          expressOrder:{
-            contator:'',
-            address:'',
-            mobilePhone:'',
-            expressCodes:''
-          },
-          adGoodsOrderDetailList:[],
-          processStatus:'',
-          remarks:'',
-        },
+        audit:this.$route.query.action=='audit',
+        detailForm:{},
         inputForm:{
          id:this.$route.query.id,
          pass:"",
-         comment:""
+         passRemarks:"",
         },
         rules: {
           comment:{ required: true, message: this.$t('adGoodsOrderDetail.prerequisiteMessage')},
@@ -120,7 +94,7 @@
         var form = this.$refs["detailForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/crm/adGoodsOrder/audit',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/layout/adGoodsOrder/audit',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -136,14 +110,11 @@
             this.submitDisabled = false;
           }
         })
-      }, findOne(){
-        axios.get('/api/crm/adGoodsOrder/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.detailForm = response.data.adGoodsOrder;
-          this.detailProperty.bools = response.data.bools;
-        })
       }
     },created(){
-      this.findOne();
+      axios.get('/api/ws/future/layout/adGoodsOrder/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.detailForm = response.data;
+      })
     }
   }
 </script>

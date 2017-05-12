@@ -3,6 +3,8 @@ package net.myspring.future.modules.layout.web.form;
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.layout.domain.ShopImage;
 
+import java.util.List;
+
 /**
  * Created by zhangyf on 2017/5/3.
  */
@@ -13,6 +15,7 @@ public class ShopImageForm extends DataForm<ShopImage>{
     private String imageType;
     private String imageSize;
     private String image;
+    private List<String> imageTypeList;
 
     public String getShopId() {
         return shopId;
@@ -52,5 +55,13 @@ public class ShopImageForm extends DataForm<ShopImage>{
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<String> getImageTypeList() {
+        return imageTypeList;
+    }
+
+    public void setImageTypeList(List<String> imageTypeList) {
+        this.imageTypeList = imageTypeList;
     }
 }
