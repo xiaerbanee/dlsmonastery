@@ -150,25 +150,6 @@ public class CustomerReceiveService {
                 summaryItem.setBeginShouldGet(item.getBeginShouldGet());
             }
         }
-        //物料详细
-        List<CustomerReceiveDetailDto> detailForMaterialList = Lists.newArrayList();
-        List<CustomerReceiveDetailDto> XSTHDListForPeriodList = salReturnStockMapper.findXSTHDByPeriodForEntryF(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> XSCKDListForPeriodList = salOutStockMapper.findXSCKDByPeriodForEntryF(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> XXTHDListForPeriodList = salReturnStockMapper.findXXTHDByPeriodForEntryF(dateStart, dateEnd,customerId);
-        List<CustomerReceiveDetailDto> XXCKDListForPeriodList = salOutStockMapper.findXXCKDByPeriodForEntryF(dateStart, dateEnd,customerId);
-        detailForMaterialList.addAll(XSTHDListForPeriodList);
-        detailForMaterialList.addAll(XSCKDListForPeriodList);
-        detailForMaterialList.addAll(XXTHDListForPeriodList);
-        detailForMaterialList.addAll(XXCKDListForPeriodList);
-        Map<String,List<CustomerReceiveDetailDto>> detailForMaterialMap = Maps.newHashMap();
-        if (CollectionUtil.isNotEmpty(detailForMaterialList)) {
-            for (CustomerReceiveDetailDto customerAccount : detailForMaterialList) {
-                if (!detailForMaterialMap.containsKey(customerAccount.getBillNo())) {
-                    detailForMaterialMap.put(customerAccount.getBillNo(), new ArrayList<CustomerReceiveDetailDto>());
-                }
-                detailForMaterialMap.get(customerAccount.getBillNo()).add(customerAccount);
-            }
-        }
         List<CustomerReceiveDetailDto> detailForBillList = Lists.newArrayList();
         List<CustomerReceiveDetailDto> QTYSDByPeriodForEntrySumList = arOtherRecableMapper.findByPeriodForEntrySum(dateStart, dateEnd,customerId);
         List<CustomerReceiveDetailDto> XSTHDByPeriodForMaterialSumList = salReturnStockMapper.findXSTHDByPeriodForEntryFSum(dateStart, dateEnd,customerId);
@@ -195,7 +176,25 @@ public class CustomerReceiveService {
             }
             tempDate = tempDate.plusDays(1);
         }
-
+        //物料详细
+        List<CustomerReceiveDetailDto> detailForMaterialList = Lists.newArrayList();
+        List<CustomerReceiveDetailDto> XSTHDListForPeriodList = salReturnStockMapper.findXSTHDByPeriodForEntryF(dateStart, dateEnd,customerId);
+        List<CustomerReceiveDetailDto> XSCKDListForPeriodList = salOutStockMapper.findXSCKDByPeriodForEntryF(dateStart, dateEnd,customerId);
+        List<CustomerReceiveDetailDto> XXTHDListForPeriodList = salReturnStockMapper.findXXTHDByPeriodForEntryF(dateStart, dateEnd,customerId);
+        List<CustomerReceiveDetailDto> XXCKDListForPeriodList = salOutStockMapper.findXXCKDByPeriodForEntryF(dateStart, dateEnd,customerId);
+        detailForMaterialList.addAll(XSTHDListForPeriodList);
+        detailForMaterialList.addAll(XSCKDListForPeriodList);
+        detailForMaterialList.addAll(XXTHDListForPeriodList);
+        detailForMaterialList.addAll(XXCKDListForPeriodList);
+        Map<String,List<CustomerReceiveDetailDto>> detailForMaterialMap = Maps.newHashMap();
+        if (CollectionUtil.isNotEmpty(detailForMaterialList)) {
+            for (CustomerReceiveDetailDto customerAccount : detailForMaterialList) {
+                if (!detailForMaterialMap.containsKey(customerAccount.getBillNo())) {
+                    detailForMaterialMap.put(customerAccount.getBillNo(), new ArrayList<CustomerReceiveDetailDto>());
+                }
+                detailForMaterialMap.get(customerAccount.getBillNo()).add(customerAccount);
+            }
+        }
         CustomerReceiveDetailDto head = new CustomerReceiveDetailDto();
         head.setBillType(summaryItem.getCustomerName());
         head.setIndex(-3);
