@@ -6,14 +6,14 @@
             b.FRETCUSTID AS customerReceiveDto.customerId,
             d.FNAME AS billType,
             b.FBillNo AS billNo,
-            b.FDATE AS date,
+            b.FDATE AS billDate,
             a.FMATERIALID as materialId,
             f.fname as materialName,
             a.FBASEUNITQTY AS quantity,
             c.FPRICE AS price,
-            c.FAMOUNT AS amount,
+            c.FAMOUNT AS endShouldGet,
             a.FNOTE AS note,
-            b.FDOCUMENTSTATUS AS documentStatus
+            b.FDOCUMENTSTATUS AS billStatus
         FROM
             T_SAL_RETURNSTOCKENTRY a
         JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
@@ -29,13 +29,13 @@
 
     <select id="findXSTHDByPeriodForEntryFSum" resultType="CustomerReceiveDetailDto">
         SELECT
-        b.FRETCUSTID AS customerId,
+        b.FRETCUSTID AS customerReceiveDto.customerId,
         e.FNAME as customerName,
         d.FNAME AS billType,
         b.FBillNo AS billNo,
-        b.FDATE AS date,
-        sum(c.FAMOUNT) AS amount,
-        b.FDOCUMENTSTATUS AS documentStatus
+        b.FDATE AS billDate,
+        sum(c.FAMOUNT) AS endShouldGet,
+        b.FDOCUMENTSTATUS AS billStatus
         FROM
         T_SAL_RETURNSTOCKENTRY a
         JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
@@ -59,7 +59,7 @@
     <select id="findXSTHDByPeriodForSum" resultType="CustomerReceiveDto">
         SELECT
         b.FRETCUSTID AS customerId,
-        sum(c.FAMOUNT) AS beginAmount
+        sum(c.FAMOUNT) AS beginShouldGet
         FROM
         T_SAL_RETURNSTOCKENTRY a
         JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
@@ -77,17 +77,17 @@
 
     <select id="findXXTHDByPeriodForEntryF" resultType="CustomerReceiveDetailDto">
         SELECT
-        b.FRETCUSTID AS customerId,
+        b.FRETCUSTID AS customerReceiveDto.customerId,
         d.FNAME AS billType,
         b.FBillNo AS billNo,
-        b.FDATE AS date,
+        b.FDATE AS billDate,
         a.FMATERIALID as materialId,
         f.fname as materialName,
         a.FBASEUNITQTY AS quantity,
         c.FPRICE AS price,
-        c.FAMOUNT AS amount,
+        c.FAMOUNT AS endShouldGet,
         a.FNOTE AS note,
-        b.FDOCUMENTSTATUS AS documentStatus
+        b.FDOCUMENTSTATUS AS billStatus
         FROM
         T_SAL_RETURNSTOCKENTRY a
         JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
@@ -103,13 +103,13 @@
 
     <select id="findXXTHDByPeriodForEntryFSum" resultType="CustomerReceiveDetailDto">
         SELECT
-        b.FRETCUSTID AS customerId,
+        b.FRETCUSTID AS customerReceiveDto.customerId,
         e.FNAME as customerName,
         d.FNAME AS billType,
         b.FBillNo AS billNo,
-        b.FDATE AS date,
-        sum(c.FAMOUNT) AS amount,
-        b.FDOCUMENTSTATUS AS documentStatus
+        b.FDATE AS billDate,
+        sum(c.FAMOUNT) AS endShouldGet,
+        b.FDOCUMENTSTATUS AS billStatus
         FROM
         T_SAL_RETURNSTOCKENTRY a
         JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
@@ -133,7 +133,7 @@
     <select id="findXXTHDByPeriodForSum" resultType="CustomerReceiveDto">
         SELECT
         b.FRETCUSTID AS customerId,
-        sum(c.FAMOUNT) AS beginAmount
+        sum(c.FAMOUNT) AS beginShouldGet
         FROM
         T_SAL_RETURNSTOCKENTRY a
         JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID

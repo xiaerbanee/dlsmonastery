@@ -3,17 +3,17 @@
 <mapper namespace="net.myspring.cloud.modules.kingdee.mapper.SalOutStockMapper">
     <select id="findXSCKDByPeriodForEntryF" resultType="ReceivableForDetailDto">
         SELECT
-        b.FCUSTOMERID AS customerId,
+        b.FCUSTOMERID AS customerReceiveDto.customerId,
         d.FNAME AS billType,
         b.FBillNo AS billNo,
-        b.FDATE AS date,
+        b.FDATE AS billDate,
         a.FMATERIALID AS materialId,
         f.FNAME AS materialName,
-        a.FREALQTY AS quantity,
+        a.FREALQTY AS qty,
         c.FTAXPRICE AS price,
-        c.FALLAMOUNT AS amount,
-        a.FNOTE AS note,
-        b.FDOCUMENTSTATUS AS documentStatus
+        c.FALLAMOUNT AS endShouldGet,
+        a.FNOTE AS remarks,
+        b.FDOCUMENTSTATUS AS billStatus
         FROM
         T_SAL_OUTSTOCKENTRY a
         JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
@@ -30,13 +30,13 @@
 
     <select id="findXSCKDByPeriodForEntryFSum" resultType="CustomerReceiveDetailDto">
         SELECT
-        b.FCUSTOMERID AS customerId,
+        b.FCUSTOMERID AS customerReceiveDto.customerId,
         e.FNAME AS customerName,
         d.FNAME AS billType,
         b.FBillNo AS billNo,
-        b.FDATE AS date,
-        sum(c.FALLAMOUNT) AS amount,
-        b.FDOCUMENTSTATUS AS documentStatus
+        b.FDATE AS billDate,
+        sum(c.FALLAMOUNT) AS endShouldGet,
+        b.FDOCUMENTSTATUS AS billStatus
         FROM
         T_SAL_OUTSTOCKENTRY a
         JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
@@ -61,7 +61,7 @@
     <select id="findXSCKDByPeriodForSum" resultType="CustomerReceiveDto">
         SELECT
         b.FCUSTOMERID AS customerId,
-        sum(c.FALLAMOUNT) AS beginAmount
+        sum(c.FALLAMOUNT) AS beginShouldGet
         FROM
         T_SAL_OUTSTOCKENTRY a
         JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
@@ -79,17 +79,17 @@
 
     <select id="findXXCKDByPeriodForEntryF" resultType="ReceivableForDetailDto">
         SELECT
-        b.FCUSTOMERID AS customerId,
+        b.FCUSTOMERID AS customerReceiveDto.customerId,
         d.FNAME AS billType,
         b.FBillNo AS billNo,
-        b.FDATE AS date,
+        b.FDATE AS billDate,
         a.FMATERIALID AS materialId,
         f.FNAME AS materialName,
-        a.FREALQTY AS quantity,
+        a.FREALQTY AS qty,
         c.FTAXPRICE AS price,
-        c.FALLAMOUNT AS amount,
-        a.FNOTE AS note,
-        b.FDOCUMENTSTATUS AS documentStatus
+        c.FALLAMOUNT AS endShouldGet,
+        a.FNOTE AS remarks,
+        b.FDOCUMENTSTATUS AS billStatus
         FROM
         T_SAL_OUTSTOCKENTRY a
         JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
@@ -110,9 +110,9 @@
         e.FNAME AS customerName,
         d.FNAME AS billType,
         b.FBillNo AS billNo,
-        b.FDATE AS date,
-        sum(c.FALLAMOUNT) AS amount,
-        b.FDOCUMENTSTATUS AS documentStatus
+        b.FDATE AS billDate,
+        sum(c.FALLAMOUNT) AS endShouldGet,
+        b.FDOCUMENTSTATUS AS billStatus
         FROM
         T_SAL_OUTSTOCKENTRY a
         JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
@@ -137,7 +137,7 @@
     <select id="findXXCKDByPeriodForSum" resultType="CustomerReceiveDto">
         SELECT
         b.FCUSTOMERID AS customerId,
-        sum(c.FALLAMOUNT) AS beginAmount
+        sum(c.FALLAMOUNT) AS beginShouldGet
         FROM
         T_SAL_OUTSTOCKENTRY a
         JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
