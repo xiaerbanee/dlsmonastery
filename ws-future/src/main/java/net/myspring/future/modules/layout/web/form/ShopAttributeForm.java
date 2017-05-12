@@ -18,7 +18,16 @@ public class ShopAttributeForm extends DataForm<ShopAttribute> {
 
     private String shopId;
     private Depot shop;
+    private Long shopMonthTotal;
     private List<ShopAttributeDetailDto> shopAttributeDetailList= Lists.newArrayList();
+
+    public Long getShopMonthTotal() {
+        return shopMonthTotal;
+    }
+
+    public void setShopMonthTotal(Long shopMonthTotal) {
+        this.shopMonthTotal = shopMonthTotal;
+    }
 
     public String getShopId() {
         return shopId;

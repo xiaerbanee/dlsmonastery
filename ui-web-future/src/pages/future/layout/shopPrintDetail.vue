@@ -59,10 +59,10 @@
 </template>
 
 <script>
+  import processDetails from 'components/general/process-details'
   import boolRadioGroup from 'components/common/bool-radio-group';
-  import ProcessDetails from 'components/general/process-details'
   export default{
-    components:{boolRadioGroup,ProcessDetails},
+    components:{processDetails,boolRadioGroup},
     data(){
       return{
         isCreate:this.$route.query.id==null,

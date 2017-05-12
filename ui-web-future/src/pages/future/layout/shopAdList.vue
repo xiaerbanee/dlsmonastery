@@ -20,7 +20,7 @@
                 <el-input v-model="formData.id" auto-complete="off" placeholder="输入非零部分"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <su-depot v-model="formData.shopId" type="shop"></su-depot>
+                <depot-select v-model="formData.shopId" category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.specialArea.label" :label-width="formLabelWidth">
                 <bool-radio-group v-model="formData.specialArea"></bool-radio-group>
@@ -81,9 +81,10 @@
 <script>
   import officeSelect from 'components/basic/office-select';
   import accountSelect from 'components/basic/account-select';
+  import depotSelect from 'components/future/depot-select';
   import boolRadioGroup from 'components/common/bool-radio-group';
   export default {
-    components:{officeSelect,accountSelect,boolRadioGroup},
+    components:{officeSelect,accountSelect,depotSelect,boolRadioGroup},
     data() {
       return {
         page:{},

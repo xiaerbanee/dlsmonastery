@@ -45,10 +45,9 @@
 </template>
 
 <script>
-  import ProcessDetails from 'components/general/process-details'
-
+  import processDetails from 'components/general/process-details';
   export default{
-    components:{ProcessDetails},
+    components:{processDetails},
     data(){
       return{
         isCreate:this.$route.query.id==null,

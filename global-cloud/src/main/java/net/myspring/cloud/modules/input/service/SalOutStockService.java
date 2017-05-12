@@ -2,15 +2,17 @@ package net.myspring.cloud.modules.input.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
+import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
-import net.myspring.cloud.modules.input.dto.NameNumberDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.BatchBillForm;
+import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.kingdee.mapper.ArReceivableMapper;
@@ -25,6 +27,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -36,6 +39,8 @@ import java.util.stream.Collectors;
 /**
  * Created by liuj on 2017/5/11.
  */
+@Service
+@KingdeeDataSource
 public class SalOutStockService {
     @Autowired
     private KingdeeManager kingdeeManager;
@@ -72,7 +77,6 @@ public class SalOutStockService {
         String storeNumber = batchBillForm.getStoreNumber();
         LocalDate date = batchBillForm.getDate();
         String json = batchBillForm.getJson();
-
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> customerNameList = Lists.newArrayList();
         for (List<Object> row : data){
@@ -84,11 +88,11 @@ public class SalOutStockService {
         List<String> departmentIdList = Lists.newArrayList();
         for (BdCustomer bdCustomer : bdCustomerMapper.findByNameList(customerNameList)) {
             customerNumMap.put(bdCustomer.getFName(), bdCustomer.getFNumber());
-            customerDepartmentMap.put(bdCustomer.getFName(), bdCustomer.getFSALDEPTID());
-            departmentIdList.add(bdCustomer.getFSALDEPTID());
+            customerDepartmentMap.put(bdCustomer.getFName(), bdCustomer.getFSalDeptId());
+            departmentIdList.add(bdCustomer.getFSalDeptId());
         }
         List<BdDepartment> bdDepartmentList = bdDepartmentMapper.findByIdList(departmentIdList);
-        Map<String,BdDepartment> bdDepartmentMap = bdDepartmentList.stream().collect(Collectors.toMap(BdDepartment::getFDeptId,bdDepartment -> bdDepartment));
+        Map<String,BdDepartment> bdDepartmentMap = bdDepartmentList.stream().collect(Collectors.toMap(BdDepartment::getFDeptId, bdDepartment -> bdDepartment));
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookMapper.findByAccountId(RequestUtils.getAccountId());
         Map<String, SalOutStockDto> billMap = Maps.newLinkedHashMap();
         for (List<Object> row : data) {
@@ -113,6 +117,7 @@ public class SalOutStockService {
                 salOutStockDto.setDate(date);
                 salOutStockDto.setStoreNumber(storeNumber);
                 salOutStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
+                salOutStockDto.setBillType(billType);
                 salOutStockDto.setCustomerNumber(customerNumMap.get(customerName));
                 salOutStockDto.setNote(remarks);
                 billMap.put(billKey, salOutStockDto);
@@ -131,6 +136,9 @@ public class SalOutStockService {
         return kingdeeSynExtendDtoList;
     }
 
-
+    public BatchBillQuery getFormProperty(BatchBillQuery batchBillQuery){
+        batchBillQuery.setBillTypeEnums(SalOutStockBillTypeEnum.values());
+        return batchBillQuery;
+    }
 
 }

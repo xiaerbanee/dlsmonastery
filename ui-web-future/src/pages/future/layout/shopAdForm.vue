@@ -11,7 +11,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.shopId')" prop="shopId">
-              <su-depot v-model="inputForm.shopId" type="shop"></su-depot>
+              <depot-select v-model="inputForm.shopId" category="shop"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.length')" prop="length">
               <el-input v-model="inputForm.length"></el-input>
@@ -48,9 +48,10 @@
 </template>
 
 <script>
+  import depotSelect from 'components/future/depot-select';
   import boolRadioGroup from 'components/common/bool-radio-group';
   export default{
-    components:{boolRadioGroup},
+    components:{depotSelect,boolRadioGroup},
     data(){
       return{
         isCreate:this.$route.query.id==null,

@@ -22,7 +22,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
-                <su-depot v-model="formData.shopId" type="shop"></su-depot>
+                <depot-select v-model="formData.shopId" category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.processFlow.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.processFlow" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
@@ -82,8 +82,9 @@
   import officeSelect from 'components/basic/office-select';
   import dictEnumSelect from 'components/basic/dict-enum-select';
   import accountSelect from 'components/basic/account-select';
+  import depotSelect from 'components/future/depot-select';
   export default {
-    components:{officeSelect,dictEnumSelect,accountSelect},
+    components:{officeSelect,dictEnumSelect,accountSelect,depotSelect},
     data() {
       return {
         pageLoading: false,

@@ -4,9 +4,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.crm.domain.AfterSale;
+import net.myspring.future.modules.crm.dto.AfterSaleDto;
+import net.myspring.future.modules.crm.dto.BankInDto;
+import net.myspring.future.modules.crm.service.AfterSaleService;
+import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
@@ -20,12 +25,13 @@ import java.util.Map;
 public class AfterSaleController {
 
 
-
+    @Autowired
+    private AfterSaleService afterSaleService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request) {
-
-        return null;
+    public Page<AfterSaleDto> list(Pageable pageable, AfterSaleQuery afterSaleQuery) {
+        Page<AfterSaleDto> page = afterSaleService.findPage(pageable, afterSaleQuery);
+        return page;
     }
 
     @RequestMapping(value = "getFromCompanyData",method = RequestMethod.GET)

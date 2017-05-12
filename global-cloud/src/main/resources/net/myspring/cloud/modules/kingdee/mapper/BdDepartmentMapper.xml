@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.kingdee.mapper.BdDepartmentMapper">
-    <select id="findCustomerNameAndDepartNumberByCustomerNameList" resultType="NameNumberDto">
+    <select id="findByIdList" resultType="BdDepartment">
         select
-        t1.FNUMBER as number,
-        t4.FNAME as name
+            t1.FDEPTID,
+            t1.FNUMBER,
+            t2.FFULLNAME as FNAME
         from
-        T_BD_DEPARTMENT t1,
-        T_BD_DEPARTMENT_L t2,
-        T_BD_CUSTOMER t3,
-        T_BD_CUSTOMER_L t4,
+            T_BD_DEPARTMENT t1,
+            T_BD_DEPARTMENT_L t2
         where
-        t1.FDEPTID = t2.FDEPTID
-        and t1.FDEPTID = t3.FSALDEPTID
-        and t3.FCUSTID = t4.FCUSTID
-        and t4.FNAME in
-        <foreach item="item" index="index" collection="customerNameList" open="(" separator="," close=")">
+            t1.FDEPTID = t2.FDEPTID
+        and t1.FDEPTID in
+        <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
