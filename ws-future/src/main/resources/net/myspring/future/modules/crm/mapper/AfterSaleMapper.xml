@@ -6,13 +6,11 @@
         SELECT
         t1.*
         FROM
-        crm_after_sale t1,crm_depot depot ,crm_product_ime im,hr_office office
+        crm_after_sale t1,crm_depot depot ,crm_product_ime im
         WHERE
         t1.enabled=1
         and t1.bad_product_ime_id=im.id
         and im.depot_id=depot.id
-        and depot.office_id=office.id
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
        <include refid="afterSaleFilter" />
     </select>
 

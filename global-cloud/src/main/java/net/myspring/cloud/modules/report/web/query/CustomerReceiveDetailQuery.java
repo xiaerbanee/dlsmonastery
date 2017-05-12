@@ -9,7 +9,7 @@ import java.util.List;
 public class CustomerReceiveDetailQuery {
     private LocalDate dateStart;
     private LocalDate dateEnd;
-    private String customerName;
+    private String customerId;
 
     public LocalDate getDateStart() {
         return dateStart;
@@ -27,11 +27,11 @@ public class CustomerReceiveDetailQuery {
         this.dateEnd = dateEnd;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 }

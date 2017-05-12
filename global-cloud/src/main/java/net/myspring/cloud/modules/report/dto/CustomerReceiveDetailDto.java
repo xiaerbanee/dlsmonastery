@@ -8,6 +8,7 @@ import java.util.Date;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveDetailDto {
+    private CustomerReceiveDto customerReceiveDto;
     //业务类型
     private String billType;
     //单据号
@@ -20,18 +21,26 @@ public class CustomerReceiveDetailDto {
     private LocalDate billDate;
     //物料名称
     private String  materialName;
-    //数量
+    //总数量
     private Long qty;
     //单价
     private BigDecimal price;
-    //实收金额
-    private BigDecimal realGet;
     //应收金额
     private BigDecimal shouldGet;
+    //实收金额
+    private BigDecimal realGet;
     //期末应收款
     private BigDecimal endShouldGet;
     //备注
     private String remarks;
+
+    public CustomerReceiveDto getCustomerReceiveDto() {
+        return customerReceiveDto;
+    }
+
+    public void setCustomerReceiveDto(CustomerReceiveDto customerReceiveDto) {
+        this.customerReceiveDto = customerReceiveDto;
+    }
 
     public String getBillType() {
         return billType;
@@ -97,20 +106,20 @@ public class CustomerReceiveDetailDto {
         this.price = price;
     }
 
-    public BigDecimal getRealGet() {
-        return realGet;
-    }
-
-    public void setRealGet(BigDecimal realGet) {
-        this.realGet = realGet;
-    }
-
     public BigDecimal getShouldGet() {
         return shouldGet;
     }
 
     public void setShouldGet(BigDecimal shouldGet) {
         this.shouldGet = shouldGet;
+    }
+
+    public BigDecimal getRealGet() {
+        return realGet;
+    }
+
+    public void setRealGet(BigDecimal realGet) {
+        this.realGet = realGet;
     }
 
     public BigDecimal getEndShouldGet() {
