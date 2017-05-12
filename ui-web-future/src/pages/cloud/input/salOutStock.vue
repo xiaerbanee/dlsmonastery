@@ -30,7 +30,7 @@
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
-  var table;
+  var table = null;
   export default {
     data() {
       return {
