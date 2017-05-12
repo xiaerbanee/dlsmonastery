@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.myspring.cloud.modules.kingdee.mapper.ArOtherRecableMapper">
+<mapper namespace="net.myspring.cloud.modules.kingdee.mapper.ArReceiveBillMapper">
+
     <select id="findByPeriodForEntrySum" resultType="CustomerReceiveDetailDto">
         SELECT
-        b.FID,
         b.FCONTACTUNIT AS customerId,
         e.FNAME AS customerName,
         d.FNAME AS billType,
         b.FBillNo AS billNo,
         b.FDATE AS DATE,
-        sum(a.FAMOUNT) AS amount,
+        sum(a.FRECAMOUNT_E) AS amount,
         b.FDocumentStatus AS documentStatus
         FROM
-        T_AR_OTHERRECABLEENTRY a
-        JOIN T_AR_OTHERRECABLE b ON a.FID = b.FID
+        T_AR_RECEIVEBILLENTRY a
+        JOIN T_AR_RECEIVEBILL b ON a.FID = b.FID
         LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
         LEFT JOIN T_BD_CUSTOMER_L e ON b.FCONTACTUNIT = e.FCUSTID
         WHERE
         b.FDATE &gt;=#{dateStart} AND
         b.FDATE  &lt;=#{dateEnd} and
         b.FCONTACTUNIT = #{customerId}
-        GROUP BY
-        b.FID,
+        group by
         b.FCONTACTUNIT,
         e.FNAME,
         d.FNAME,
@@ -33,11 +32,11 @@
     <select id="findByPeriodForSum" resultType="CustomerReceiveDto">
         SELECT
         b.FCONTACTUNIT AS customerId,
-        sum(a.FAMOUNT) AS beginAmount
+        sum(a.FRECAMOUNT_E) AS beginAmount
         FROM
-        T_AR_OTHERRECABLEENTRY a
-        JOIN T_AR_OTHERRECABLE b ON a.FID = b.FID
-        JOIN T_BD_CUSTOMER e on e.FCUSTID = b.FCONTACTUNIT
+        T_AR_RECEIVEBILLENTRY a
+        join T_AR_RECEIVEBILL b on a.FID = b.FID
+        JOIN T_BD_CUSTOMER e ON e.FCUSTID = b.FCONTACTUNIT
         WHERE
         b.FDATE &gt;=#{dateStart}
         and b.FDATE  &lt;=#{dateEnd}

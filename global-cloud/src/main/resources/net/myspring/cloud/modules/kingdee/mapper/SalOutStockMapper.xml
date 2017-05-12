@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.cloud.modules.kingdee.mapper.SalOutStockMapper">
+    <select id="findXSCKDByPeriodForEntryF" resultType="ReceivableForDetailDto">
+        SELECT
+        b.FCUSTOMERID AS customerId,
+        d.FNAME AS billType,
+        b.FBillNo AS billNo,
+        b.FDATE AS date,
+        a.FMATERIALID AS materialId,
+        f.FNAME AS materialName,
+        a.FREALQTY AS quantity,
+        c.FTAXPRICE AS price,
+        c.FALLAMOUNT AS amount,
+        a.FNOTE AS note,
+        b.FDOCUMENTSTATUS AS documentStatus
+        FROM
+        T_SAL_OUTSTOCKENTRY a
+        JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
+        JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID
+        AND a.FENTRYID = c.FENTRYID
+        LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
+        LEFT JOIN T_BD_MATERIAL_L f ON a.FMATERIALID = f.FMATERIALID
+        WHERE
+        b.FDATE &gt;=#{dateStart} AND
+        b.FDATE  &lt;=#{dateEnd} and
+        b.FCUSTOMERID = #{customerId} and
+        d.FNAME= '标准销售出库单'
+    </select>
+
+    <select id="findXSCKDByPeriodForEntryFSum" resultType="CustomerReceiveDetailDto">
+        SELECT
+        b.FCUSTOMERID AS customerId,
+        e.FNAME AS customerName,
+        d.FNAME AS billType,
+        b.FBillNo AS billNo,
+        b.FDATE AS date,
+        sum(c.FALLAMOUNT) AS amount,
+        b.FDOCUMENTSTATUS AS documentStatus
+        FROM
+        T_SAL_OUTSTOCKENTRY a
+        JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
+        JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID
+        AND a.FENTRYID = c.FENTRYID
+        LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
+        LEFT JOIN T_BD_CUSTOMER_L e ON b.FCUSTOMERID = e.FCUSTID
+        WHERE
+        b.FDATE &gt;=#{dateStart} AND
+        b.FDATE  &lt;=#{dateEnd} and
+        b.FCUSTOMERID = #{customerId} and
+        d.FNAME= '标准销售出库单'
+        group by
+        b.FCUSTOMERID,
+        e.FNAME,
+        d.FNAME,
+        b.FBillNo,
+        b.FDATE,
+        b.FDOCUMENTSTATUS
+    </select>
+
+    <select id="findXSCKDByPeriodForSum" resultType="CustomerReceiveDto">
+        SELECT
+        b.FCUSTOMERID AS customerId,
+        sum(c.FALLAMOUNT) AS beginAmount
+        FROM
+        T_SAL_OUTSTOCKENTRY a
+        JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
+        JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID AND a.FENTRYID = c.FENTRYID
+        JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
+        JOIN T_BD_CUSTOMER e ON e.FCUSTID = b.FCUSTOMERID
+        WHERE
+        b.FDATE &gt;=#{dateStart}
+        and b.FDATE  &lt;=#{dateEnd}
+        and d.FNAME= '标准销售出库单'
+        and e.FPRIMARYGROUP = #{primaryGroup}
+        group by
+        b.FCUSTOMERID
+    </select>
+
+    <select id="findXXCKDByPeriodForEntryF" resultType="ReceivableForDetailDto">
+        SELECT
+        b.FCUSTOMERID AS customerId,
+        d.FNAME AS billType,
+        b.FBillNo AS billNo,
+        b.FDATE AS date,
+        a.FMATERIALID AS materialId,
+        f.FNAME AS materialName,
+        a.FREALQTY AS quantity,
+        c.FTAXPRICE AS price,
+        c.FALLAMOUNT AS amount,
+        a.FNOTE AS note,
+        b.FDOCUMENTSTATUS AS documentStatus
+        FROM
+        T_SAL_OUTSTOCKENTRY a
+        JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
+        JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID
+        AND a.FENTRYID = c.FENTRYID
+        LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
+        LEFT JOIN T_BD_MATERIAL_L f ON a.FMATERIALID = f.FMATERIALID
+        WHERE
+        b.FDATE &gt;=#{dateStart} AND
+        b.FDATE  &lt;=#{dateEnd} and
+        b.FCUSTOMERID = #{customerId} and
+        d.FNAME='现销出库单'
+    </select>
+
+    <select id="findXXCKDByPeriodForEntryFSum" resultType="CustomerReceiveDetailDto">
+        SELECT
+        b.FCUSTOMERID AS customerId,
+        e.FNAME AS customerName,
+        d.FNAME AS billType,
+        b.FBillNo AS billNo,
+        b.FDATE AS date,
+        sum(c.FALLAMOUNT) AS amount,
+        b.FDOCUMENTSTATUS AS documentStatus
+        FROM
+        T_SAL_OUTSTOCKENTRY a
+        JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
+        JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID
+        AND a.FENTRYID = c.FENTRYID
+        LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
+        LEFT JOIN T_BD_CUSTOMER_L e ON b.FCUSTOMERID = e.FCUSTID
+        WHERE
+        b.FDATE &gt;=#{dateStart} AND
+        b.FDATE  &lt;=#{dateEnd} and
+        b.FCUSTOMERID = #{customerId} and
+        d.FNAME='现销出库单'
+        group by
+        b.FCUSTOMERID,
+        e.FNAME,
+        d.FNAME,
+        b.FBillNo,
+        b.FDATE,
+        b.FDOCUMENTSTATUS
+    </select>
+
+    <select id="findXXCKDByPeriodForSum" resultType="CustomerReceiveDto">
+        SELECT
+        b.FCUSTOMERID AS customerId,
+        sum(c.FALLAMOUNT) AS beginAmount
+        FROM
+        T_SAL_OUTSTOCKENTRY a
+        JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
+        JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID AND a.FENTRYID = c.FENTRYID
+        JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
+        JOIN T_BD_CUSTOMER e ON e.FCUSTID = b.FCUSTOMERID
+        WHERE
+        b.FDATE &gt;=#{dateStart}
+        and b.FDATE  &lt;=#{dateEnd}
+        and d.FNAME='现销出库单'
+        and e.FPRIMARYGROUP = #{primaryGroup}
+        group by
+        b.FCUSTOMERID
+    </select>
+</mapper>

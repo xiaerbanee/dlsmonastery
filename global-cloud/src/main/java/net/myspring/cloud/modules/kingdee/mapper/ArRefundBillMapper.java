@@ -9,11 +9,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * 其他应收单
+ * 收款退款单
  * Created by lihx on 2017/5/12.
  */
 @Mapper
-public interface ArOtherRecableMapper {
+public interface ArRefundBillMapper {
 
     List<CustomerReceiveDetailDto> findByPeriodForEntrySum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
 

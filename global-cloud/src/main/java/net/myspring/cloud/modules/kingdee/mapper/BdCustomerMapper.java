@@ -16,6 +16,11 @@ public interface BdCustomerMapper {
 
     List<BdCustomer> findByNameList(@Param("nameList")List<String> nameList);
 
+    List<BdCustomer> findByIdList(@Param("idList")List<String> idList);
+
+    BdCustomer findById(@Param("id")String id);
+
     List<String> findNameByNameLike(@Param("name")String name);
+
 
 }
