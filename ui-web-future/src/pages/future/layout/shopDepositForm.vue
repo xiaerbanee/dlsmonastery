@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('shopDepositForm.shopName')" prop="shopId">
-          <su-depot v-model ="inputForm.shopId"  type="shop" @input="changeDepartment">         </su-depot>
+          <depot-select v-model ="inputForm.shopId"  type="SHOP" @input="changeDepartment">         </depot-select>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.outBillType')" prop="outBillType" >
           <el-select v-model="inputForm.outBillType" filterable :placeholder="$t('shopDepositForm.inputKey')">
@@ -18,7 +18,7 @@
           <bank-select v-model = "inputForm.bankId"></bank-select>
         </el-form-item>
         <el-form-item   :label="$t('shopDepositForm.billDate')" prop="billDate" >
-          <el-date-picker  v-model="inputForm.billDate" type="date" align="left" :placeholder="$t('bankInForm.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
+          <date-picker  v-model="inputForm.billDate" type="date" align="left" :placeholder="$t('bankInForm.selectDate')" format="yyyy-MM-dd" ></date-picker>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.marketAmount')" prop="marketAmount" >
           <el-input v-model.number="inputForm.marketAmount"></el-input>
@@ -42,10 +42,12 @@
 <script>
   import bankSelect from 'components/future/bank-select';
   import officeSelect from 'components/basic/office-select'
+  import depotSelect from 'components/future/depot-select'
     export default{
         components:{
           bankSelect,
-          officeSelect
+          officeSelect,
+          depotSelect,
         },
       data(){
           return{
