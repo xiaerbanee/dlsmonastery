@@ -1,9 +1,7 @@
 <template>
   <div>
     <head-tab active="pricesystemForm"></head-tab>
-    <div>
 
-    </div>
 
   </div>
 </template>
@@ -11,7 +9,10 @@
   export default{
     data(){
       return{
+
       }
+    },
+    mounted () {
     },
     methods:{
 

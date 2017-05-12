@@ -42,7 +42,7 @@
               {{shopPrint.remarks}}
             </el-form-item>
             <el-form-item :label="$t('shopPrintDetail.pass')"  v-if="action=='audit'">
-              <su-radio-group v-model="shopPrint.pass"></su-radio-group>
+              <bool-radio-group v-model="shopPrint.pass"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('shopPrintDetail.passRemarks')"  v-if="action=='audit'">
               <el-input v-model="shopPrint.passRemarks" :placeholder="$t('shopPrintDetail.inputRemarks')" type="textarea"></el-input>
@@ -54,15 +54,15 @@
         </el-row>
       </el-form>
     </div>
-    <su-process-details v-model="shopPrint.processInstanceId"></su-process-details>
+    <process-details v-model="shopPrint.processInstanceId"></process-details>
   </div>
 </template>
 
 <script>
-  import suRadioGroup from 'components/common/su-radio-group';
-  import suProcessDetails from 'components/general/su-process-details'
+  import boolRadioGroup from 'components/common/bool-radio-group';
+  import ProcessDetails from 'components/general/process-details'
   export default{
-    components:{suRadioGroup,suProcessDetails},
+    components:{boolRadioGroup,ProcessDetails},
     data(){
       return{
         isCreate:this.$route.query.id==null,

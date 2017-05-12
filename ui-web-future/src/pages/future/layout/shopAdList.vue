@@ -23,7 +23,7 @@
                 <su-depot v-model="formData.shopId" type="shop"></su-depot>
               </el-form-item>
               <el-form-item :label="formLabel.specialArea.label" :label-width="formLabelWidth">
-                <su-radio-group v-model="formData.specialArea"></su-radio-group>
+                <bool-radio-group v-model="formData.specialArea"></bool-radio-group>
               </el-form-item>
               <el-form-item :label="formLabel.shopAdTypeId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.shopAdTypeId" filterable clearable :placeholder="$t('expressOrderList.inputKey')">
@@ -81,9 +81,9 @@
 <script>
   import officeSelect from 'components/basic/office-select';
   import accountSelect from 'components/basic/account-select';
-  import suRadioGroup from 'components/common/su-radio-group';
+  import boolRadioGroup from 'components/common/bool-radio-group';
   export default {
-    components:{officeSelect,accountSelect,suRadioGroup},
+    components:{officeSelect,accountSelect,boolRadioGroup},
     data() {
       return {
         page:{},

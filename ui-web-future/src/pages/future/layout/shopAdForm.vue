@@ -26,7 +26,7 @@
               <el-input v-model="inputForm.content" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.specialArea')" prop="specialArea">
-              <su-radio-group v-model="inputForm.isSpecialArea"></su-radio-group>
+              <bool-radio-group v-model="inputForm.isSpecialArea"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
@@ -48,9 +48,9 @@
 </template>
 
 <script>
-  import suRadioGroup from 'components/common/su-radio-group';
+  import boolRadioGroup from 'components/common/bool-radio-group';
   export default{
-    components:{suRadioGroup},
+    components:{boolRadioGroup},
     data(){
       return{
         isCreate:this.$route.query.id==null,

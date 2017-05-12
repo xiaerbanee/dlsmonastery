@@ -36,7 +36,7 @@
           </el-col>
           <el-col :span="10" :offset="2">
             <span v-html="inputForm.content"></span>
-            <su-process-details v-model="inputForm.processInstanceId"></su-process-details>
+            <process-details v-model="inputForm.processInstanceId"></process-details>
           </el-col>
         </el-row>
       </el-form>
@@ -45,7 +45,10 @@
 </template>
 
 <script>
+  import ProcessDetails from 'components/general/process-details'
+
   export default{
+    components:{ProcessDetails},
     data(){
       return{
         isCreate:this.$route.query.id==null,
