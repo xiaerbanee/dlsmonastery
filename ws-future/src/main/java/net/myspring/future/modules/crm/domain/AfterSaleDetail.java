@@ -4,6 +4,7 @@ import net.myspring.future.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -27,6 +28,8 @@ public class AfterSaleDetail extends CompanyEntity<AfterSaleDetail>{
     private String replaceProductImeId;
     //替换机型号
     private String replaceProductId;
+    //返还金额
+    private BigDecimal replaceAmount;
     //坏机录入金蝶单据
     private  String inputOutCode;
     //替换机录入对应金蝶单据
@@ -86,6 +89,14 @@ public class AfterSaleDetail extends CompanyEntity<AfterSaleDetail>{
 
     public void setReplaceProductId(String replaceProductId) {
         this.replaceProductId = replaceProductId;
+    }
+
+    public BigDecimal getReplaceAmount() {
+        return replaceAmount;
+    }
+
+    public void setReplaceAmount(BigDecimal replaceAmount) {
+        this.replaceAmount = replaceAmount;
     }
 
     public String getInputOutCode() {

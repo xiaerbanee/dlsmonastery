@@ -9,6 +9,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name="crm_after_sale")
 public class AfterSale extends CompanyEntity<AfterSale> {
+    //售后机，窜货机
+    private String type;
+    private String officeId;
     private String businessId;
     private String badProductId;
     private String badProductImeId;
@@ -17,6 +20,22 @@ public class AfterSale extends CompanyEntity<AfterSale> {
     private String packageStatus;
     private String memory;
     private Integer version = 0;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
 
     public String getBusinessId() {
         return businessId;
