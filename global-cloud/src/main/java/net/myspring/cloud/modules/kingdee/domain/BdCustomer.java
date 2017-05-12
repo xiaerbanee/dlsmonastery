@@ -18,6 +18,8 @@ public class BdCustomer {
     private String FPrimaryGroupName;
     //修改客户时间
     private LocalDate FModifyDate;
+    //部门ID
+    private String FSALDEPTID;
 
     public String getFCustId() {
         return FCustId;
@@ -65,5 +67,13 @@ public class BdCustomer {
 
     public void setFModifyDate(LocalDate FModifyDate) {
         this.FModifyDate = FModifyDate;
+    }
+
+    public String getFSALDEPTID() {
+        return FSALDEPTID;
+    }
+
+    public void setFSALDEPTID(String FSALDEPTID) {
+        this.FSALDEPTID = FSALDEPTID;
     }
 }

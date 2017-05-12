@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.kingdee.mapper;
 
 import net.myspring.cloud.modules.input.dto.NameNumberDto;
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,6 +13,6 @@ import java.util.List;
 @Mapper
 public interface BdDepartmentMapper {
 
-    List<NameNumberDto> findCustomerNameAndDepartNumberByCustomerNameList(@Param("customerNameList") List<String> customerNameList);
+    List<BdDepartment> findByIdList(@Param("idList") List<String> idList);
 
 }
