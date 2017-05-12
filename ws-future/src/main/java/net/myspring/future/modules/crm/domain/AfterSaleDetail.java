@@ -4,6 +4,7 @@ import net.myspring.future.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 /**
  * Created by liuj on 2017/5/11.
@@ -12,12 +13,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name="crm_after_sale_detail")
 public class AfterSaleDetail extends CompanyEntity<AfterSaleDetail>{
-    //售后节点：地区录入，总部录入，坏机返厂，好机返库
+    //售后节点：地区录入，总部录入，工厂录入(坏机返厂，好机返库)
     private String status;
     //坏机来源
     private String fromDepotId;
     //坏机所在库
     private String toDepotId;
+    //录单日期
+    private LocalDate inputDate;
+    //返还日期
+    private LocalDate replaceDate;
     //替换机串码
     private String replaceProductImeId;
     //替换机型号
@@ -49,6 +54,22 @@ public class AfterSaleDetail extends CompanyEntity<AfterSaleDetail>{
 
     public void setToDepotId(String toDepotId) {
         this.toDepotId = toDepotId;
+    }
+
+    public LocalDate getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(LocalDate inputDate) {
+        this.inputDate = inputDate;
+    }
+
+    public LocalDate getReplaceDate() {
+        return replaceDate;
+    }
+
+    public void setReplaceDate(LocalDate replaceDate) {
+        this.replaceDate = replaceDate;
     }
 
     public String getReplaceProductImeId() {
