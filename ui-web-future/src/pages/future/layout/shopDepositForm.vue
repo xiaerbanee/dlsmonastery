@@ -18,7 +18,7 @@
           <bank-select v-model = "inputForm.bankId"></bank-select>
         </el-form-item>
         <el-form-item   :label="$t('shopDepositForm.billDate')" prop="billDate" >
-          <date-picker  v-model="inputForm.billDate" type="date" align="left" :placeholder="$t('bankInForm.selectDate')" format="yyyy-MM-dd" ></date-picker>
+          <date-picker  v-model="inputForm.billDate" ></date-picker>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.marketAmount')" prop="marketAmount" >
           <el-input v-model.number="inputForm.marketAmount"></el-input>

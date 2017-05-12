@@ -30,6 +30,7 @@ public class ShopPromotionService {
 
     public Page<ShopPromotionDto> findPage(Pageable pageable, ShopPromotionQuery shopPromotionQuery){
         Page<ShopPromotionDto> page = shopPromotionMapper.findPage(pageable,shopPromotionQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return  page;
     }
 

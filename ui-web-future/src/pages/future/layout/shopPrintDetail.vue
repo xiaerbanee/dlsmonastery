@@ -59,7 +59,7 @@
 </template>
 
 <script>
-  import processDetails from 'components/general/process-details'
+  import processDetails from 'components/general/process-details';
   import boolRadioGroup from 'components/common/bool-radio-group';
   export default{
     components:{processDetails,boolRadioGroup},

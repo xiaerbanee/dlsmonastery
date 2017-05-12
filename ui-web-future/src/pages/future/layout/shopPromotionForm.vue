@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="12">
            <el-form-item :label="$t('shopPromotionForm.shopId')" prop="shopId">
-             <su-depot v-model="inputForm.shopId" type="shop" :disabled="shopDisabled"></su-depot>
+             <depot-select v-model="inputForm.shopId" category="SHOP" :disabled="shopDisabled"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityDate')" prop="activityDate">
               <el-date-picker v-model="inputForm.activityDate" type="date" :placeholder="$t('shopPromotionForm.inputDate')"></el-date-picker>
@@ -68,7 +68,9 @@
 </template>
 
 <script>
+  import depotSelect from 'components/future/depot-select'
   export default{
+    components:{depotSelect},
     data(){
       return{
         isCreate:this.$route.query.id==null,

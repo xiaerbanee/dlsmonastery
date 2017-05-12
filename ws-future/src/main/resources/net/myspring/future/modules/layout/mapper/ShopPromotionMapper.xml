@@ -4,26 +4,19 @@
 
 <select id="findPage" resultType="ShopPromotionDto">
     SELECT
-    depot.name shopName,t1.*
+    t1.*
     FROM
-    crm_shop_promotion t1,crm_depot depot
+    crm_shop_promotion t1
     WHERE
     t1.enabled=1
-    and t1.shop_id = depot.id
-    <if test="p.createdDateStart !=null">
-        AND depot.created_date>= #{p.createdDateStart}
-    </if>
-    <if test="p.createdDateEnd != null">
-        AND t1.created_date &lt;= #{p.createdDateEnd}
-    </if>
     <if test = "p.businessId !=null">
         AND t1.business_id LIKE CONCAT('%',#{p.businessId},'%')
     </if>
     <if test = "p.activityType !=null">
         AND t1.activity_type = #{p.activityType}
     </if>
-    <if test="p.shopName !=null">
-        AND depot.name LIKE CONCAT('%',#{p.shopName},'%')
+    <if test="p.shopId !=null">
+        AND t1.shop_id = #{p.shopId}
     </if>
     <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
 </select>

@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.common.enums.TotalPriceTypeEnum;
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ShopAdTypeMapper;
@@ -34,8 +35,12 @@ public class ShopAdService {
     private ShopAdMapper shopAdMapper;
     @Autowired
     private ShopAdTypeMapper shopAdTypeMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
+
     public Page<ShopAdDto> findPage(Pageable pageable, ShopAdQuery shopAdQuery) {
         Page<ShopAdDto> page = shopAdMapper.findPage(pageable, shopAdQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
@@ -63,7 +68,9 @@ public class ShopAdService {
         return shopAd;
     }
 
-    public void notify(ShopAd shopAd) {
+    public ShopAdQuery getQuery(ShopAdQuery shopAdQuery) {
+        shopAdQuery.setShopAdTypes(shopAdTypeMapper.findAllByEnabled());
+        return shopAdQuery;
     }
 
 

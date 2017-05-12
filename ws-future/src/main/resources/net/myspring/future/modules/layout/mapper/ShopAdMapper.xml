@@ -6,7 +6,7 @@
         SELECT
         depot.office_id officeId,t1.*
         FROM
-        crm_shop_ad t1,crm_depot depot
+        crm_shop_ad t1,crm_depot depot,crm_shop_ad_type
         WHERE
         t1.enabled=1
         and t1.shop_id=depot.id

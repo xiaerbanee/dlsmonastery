@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopPromotion:edit'">{{$t('shopPromotionList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopPromotion:view'">{{$t('shopPromotionList.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('shopPromotionList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -16,11 +16,11 @@
               </el-form-item>
               <el-form-item :label="formLabel.activityType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.activityType" filterable clearable :placeholder="$t('shopPromotionList.inputKey')">
-                  <el-option v-for="type in formProperty" :key="type" :label="type" :value="type"></el-option>
+                  <el-option v-for="type in formData.activityTypeList" :key="type" :label="type" :value="type"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                 <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopPromotionList.likeSearch')"></el-input>
+                <depot-select v-model="formData.shopId" category="SHOP"></depot-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -57,22 +57,26 @@
   </div>
 </template>
 <script>
+  import depotSelect from 'components/future/depot-select'
   export default {
+    components:{depotSelect},
     data() {
       return {
         page:{},
         formData:{
+
+        },submitData:{
           page:0,
           size:25,
           businessId:'',
           activityType:'',
-          shopName:''
-        },formLabel:{
+          shopId:''
+        },
+        formLabel:{
           businessId:{label:this.$t('shopPromotionList.businessId'),value:""},
           activityType:{label:this.$t('shopPromotionList.activityType'),value:""},
           shopName:{label:this.$t('shopPromotionList.shopName'),value:""},
         },
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -81,8 +85,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("shopPromotionList",this.formData);
-        axios.get('/api/ws/future/layout/shopPromotion',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("shopPromotionList",this.submitData);
+        axios.get('/api/ws/future/layout/shopPromotion',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -108,16 +113,14 @@
             this.pageRequest();
           })
         }
-      },getQuery(){
-        axios.get('/api/ws/future/layout/shopPromotion/getQuery').then((response) =>{
-          this.formProperty=response.data;
-          this.pageRequest();
-        });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.getQuery();
+      axios.get('/api/ws/future/layout/shopPromotion/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
+      });
     }
   };
 </script>

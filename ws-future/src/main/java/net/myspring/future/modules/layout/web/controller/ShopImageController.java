@@ -1,19 +1,25 @@
 package net.myspring.future.modules.layout.web.controller;
 
 
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.layout.domain.ShopImage;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
 import net.myspring.future.modules.layout.service.ShopImageService;
 import net.myspring.future.modules.layout.web.form.ShopImageForm;
 import net.myspring.future.modules.layout.web.query.ShopImageQuery;
+import org.apache.commons.collections.ComparatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.plaf.ComponentUI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,22 +30,27 @@ public class ShopImageController {
 
     @Autowired
     private ShopImageService shopImageService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ShopImageDto> list(Pageable pageable, ShopImageQuery shopImageQuery) {
+
         return shopImageService.findPage(pageable,shopImageQuery);
     }
 
     @RequestMapping(value = "findOne")
     public ShopImageForm findOne(ShopImageForm shopImageForm) {
         shopImageForm = shopImageService.findForm(shopImageForm);
+        List<String> imageTypeList=Arrays.asList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.getCode()).getValue().split(","));
+        shopImageForm.setImageTypeList(imageTypeList);
         return shopImageForm;
     }
 
     @RequestMapping(value = "getQuery", method = RequestMethod.GET)
-    public List<String> getQuery() {
-        return shopImageService.getQuery();
+    public ShopImageQuery getQuery(ShopImageQuery shopImageQuery) {
+        return shopImageService.getQuery(shopImageQuery);
     }
 
     @RequestMapping(value = "save")

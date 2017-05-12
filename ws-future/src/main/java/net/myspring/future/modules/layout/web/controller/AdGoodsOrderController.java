@@ -43,17 +43,16 @@ public class  AdGoodsOrderController {
         return new AdGoodsOrderQuery();
     }
 
-
-    @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public String detail(AdGoodsOrder adGoodsOrder) {
-
-        return null;
+    @RequestMapping(value = "detail")
+    public AdGoodsOrderDto detail(AdGoodsOrderDto adGoodsOrderDto){
+        adGoodsOrderDto = adGoodsOrderService.getAdGoodsOrderDetail(adGoodsOrderDto);
+        return adGoodsOrderDto;
     }
 
     @RequestMapping(value = "audit")
-    public String audit(AdGoodsOrder adGoodsOrder, boolean pass, String comment) {
-     
-        return null;
+    public RestResponse audit(AdGoodsOrderForm adGoodsOrderForm) {
+        adGoodsOrderService.audit(adGoodsOrderForm);
+        return new RestResponse("审核成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "outShopChange", method = RequestMethod.GET)
@@ -65,9 +64,9 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "findForm", method = RequestMethod.GET)
-    public String findOne(AdGoodsOrder adGoodsOrder) {
-
-        return null;
+    public AdGoodsOrderForm findForm(AdGoodsOrderForm adGoodsOrderForm) {
+        adGoodsOrderForm = adGoodsOrderService.findForm(adGoodsOrderForm);
+        return adGoodsOrderForm;
     }
 
     @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)

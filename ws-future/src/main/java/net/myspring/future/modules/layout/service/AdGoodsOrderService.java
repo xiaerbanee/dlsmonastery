@@ -2,6 +2,8 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -17,8 +19,11 @@ import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.mapper.AdGoodsOrderDetailMapper;
 import net.myspring.future.modules.layout.mapper.AdGoodsOrderMapper;
 import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
+import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
+import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,9 +56,14 @@ public class AdGoodsOrderService {
     private AdPricesystemDetailMapper adPricesystemDetailMapper;
     @Autowired
     private AdPricesystemMapper adPricesystemMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
+    @Autowired
+    private ActivitiClient activitiClient;
 
     public Page<AdGoodsOrderDto> findPage(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
         Page<AdGoodsOrderDto> page = adGoodsOrderMapper.findPage(pageable, adGoodsOrderQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
@@ -116,11 +126,39 @@ public class AdGoodsOrderService {
         return adGoodsOrder;
     }
 
-    public AdGoodsOrder getAdGoodsOrderDetail(AdGoodsOrder adGoodsOrder) {
-        return adGoodsOrder;
+    public AdGoodsOrderDto getAdGoodsOrderDetail(AdGoodsOrderDto adGoodsOrderDto) {
+        if(adGoodsOrderDto.getId()!=null){
+            AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderDto.getId());
+            adGoodsOrderDto = BeanUtil.map(adGoodsOrder,AdGoodsOrderDto.class);
+            if(adGoodsOrderDto.getExpressOrderId()!=null){
+                /*等Dto建好在修改*/
+                adGoodsOrderDto.setExpressOrder(expressOrderMapper.findOne(adGoodsOrderDto.getExpressOrderId()));
+            }
+            cacheUtils.initCacheInput(adGoodsOrderDto);
+        }
+        return adGoodsOrderDto;
     }
 
-    public void audit(AdGoodsOrder adGoodsOrder, boolean pass, String comment) {
+    public AdGoodsOrderForm findForm(AdGoodsOrderForm adGoodsOrderForm){
+        if(!adGoodsOrderForm.isCreate()){
+            AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderForm.getId());
+            adGoodsOrderForm = BeanUtil.map(adGoodsOrder,AdGoodsOrderForm.class);
+            cacheUtils.initCacheInput(adGoodsOrderForm);
+        }
+        return adGoodsOrderForm;
+    }
+
+    public void audit(AdGoodsOrderForm adGoodsOrderForm) {
+        if(!adGoodsOrderForm.isCreate()) {
+            ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
+            activitiCompleteForm.setPass(adGoodsOrderForm.getPass() == "1" ? true : false);
+            activitiCompleteForm.setComment(adGoodsOrderForm.getPassRemarks());
+
+            activitiCompleteForm.setProcessTypeId(adGoodsOrderMapper.findOne(adGoodsOrderForm.getId()).getProcessTypeId());
+            activitiCompleteForm.setProcessInstanceId(adGoodsOrderMapper.findOne(adGoodsOrderForm.getId()).getProcessInstanceId());
+
+            activitiClient.complete(activitiCompleteForm);
+        }
     }
     
     public AdGoodsOrder bill(AdGoodsOrder adGoodsOrder) {

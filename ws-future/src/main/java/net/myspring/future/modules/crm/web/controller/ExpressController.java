@@ -29,7 +29,7 @@ public class ExpressController {
     }
 
     @RequestMapping(value = "getQuery")
-    public ExpressQuery getQuery(ExpressQuery expressQuery) {
+    public ExpressQuery getQuery() {
         ExpressQuery result = new ExpressQuery();
         result.setExpressOrderExtendTypeList(ExpressOrderExtendTypeEnum.getList());
         return result;

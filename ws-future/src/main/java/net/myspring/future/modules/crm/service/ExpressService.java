@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -112,38 +113,43 @@ public class ExpressService {
 
     private BigDecimal caculateShouldPay(Express express) {
         //计算快递运费
-        String rule = null;//TODO CompanyConfigUtil.hasExpressShouldPayRule();Global.getCompanyConfig(AccountUtils.getCompany().getId(), CompanyConfigCode.EXPRESS_SHOULD_PAY_RULE.getCode());
-       if(StringUtils.isBlank(rule) || express.getWeight() == null ){
-           return null;
-       }
 
-        BigDecimal shouldPay = BigDecimal.ZERO;
-            try {
-                List<Map<String, Object>> list = JsonBuilder.getNonEmptyMapper().fromJson(rule, List.class);
-                for (Map<String, Object> map : list) {
-                    BigDecimal min = new BigDecimal(String.valueOf(map.get("min")));
-                    BigDecimal max = new BigDecimal(String.valueOf(map.get("max")));
-                    if (express.getWeight().compareTo(min) <= 0 || express.getWeight().compareTo(max) > 0) {
-                        continue;
-                    }
+        if(express.getWeight()==null){
+            return null;
+        }
+        Map<String, Object> matchingRule = findMatchingRuleForExpressShouldGet(express.getWeight());
+        if(matchingRule == null){
+            return null;
+        }
 
-                    shouldPay = new BigDecimal(String.valueOf(map.get("price")));
-                    BigDecimal addPerPrice = null;
-                    Object app = map.get("addPerPrice");
-                    if (app != null) {
-                        addPerPrice = new BigDecimal(String.valueOf(app));
-                    }
-                    if (addPerPrice != null) {
-                        BigDecimal sub = (express.getWeight().subtract(min)).setScale(2, BigDecimal.ROUND_UP);
-                        shouldPay = shouldPay.add(sub.multiply(addPerPrice)).setScale(1, BigDecimal.ROUND_UP);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ServiceException("exception_express_price_count_fail");
-            }
-
+        BigDecimal shouldPay = new BigDecimal(String.valueOf(matchingRule.get("price")));
+        Object app = matchingRule.get("addPerPrice");
+        if (app != null) {
+            BigDecimal addPerPrice = new BigDecimal(String.valueOf(app));
+            BigDecimal sub = (express.getWeight().subtract(new BigDecimal(String.valueOf(matchingRule.get("min"))))).setScale(2, BigDecimal.ROUND_UP);
+            shouldPay = shouldPay.add(sub.multiply(addPerPrice)).setScale(1, BigDecimal.ROUND_UP);
+        }
         return shouldPay;
+    }
+
+    private Map<String,Object> findMatchingRuleForExpressShouldGet(BigDecimal weight) {
+        String rule = null;//TODO CompanyConfigUtil.hasExpressShouldPayRule();Global.getCompanyConfig(AccountUtils.getCompany().getId(), CompanyConfigCode.EXPRESS_SHOULD_PAY_RULE.getCode());
+        if(StringUtils.isBlank(rule)){
+            return null;
+        }
+
+        List<Map<String, Object>> list = JsonBuilder.getNonEmptyMapper().fromJson(rule, List.class);
+        if(list == null){
+            return null;
+        }
+
+        Optional<Map<String, Object>> optionanlMatchingRule = list.stream().filter(s -> (weight.compareTo(new BigDecimal(String.valueOf(s.get("min")))) >= 0 && weight.compareTo(new BigDecimal(String.valueOf(s.get("max")))) <= 0)).limit(1).findFirst();
+        if(optionanlMatchingRule.isPresent()){
+            return optionanlMatchingRule.get();
+        }else {
+            return null;
+        }
+
     }
 
     private ExpressOrder saveOrUpdateExpressOrderWithoutSettingExpressCodes(ExpressForm expressForm) {

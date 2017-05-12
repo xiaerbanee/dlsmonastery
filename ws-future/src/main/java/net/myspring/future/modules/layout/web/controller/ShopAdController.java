@@ -31,14 +31,9 @@ public class ShopAdController {
         return shopAdService.findPage(pageable,shopAdQuery);
     }
 
-    @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
-    public String getFormProperty( ) {
-        return null;
-    }
-
     @RequestMapping(value = "getQuery")
     public ShopAdQuery getQuery(ShopAdQuery shopAdQuery) {
-        return new ShopAdQuery();
+        return shopAdService.getQuery(shopAdQuery);
     }
 
     @RequestMapping(value = "save")
