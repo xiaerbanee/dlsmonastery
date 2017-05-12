@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Table(name="crm_after_sale_detail")
 public class AfterSaleDetail extends CompanyEntity<AfterSaleDetail>{
     //售后节点：地区录入，总部录入，工厂录入(坏机返厂，好机返库)
-    private String status;
+    private String type;
     //坏机来源
     private String fromDepotId;
     //坏机所在库
@@ -32,12 +32,12 @@ public class AfterSaleDetail extends CompanyEntity<AfterSaleDetail>{
     //替换机录入对应金蝶单据
     private  String replaceOutCode;
 
-    public String getStatus() {
-        return status;
+    public String getType() {
+        return type;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getFromDepotId() {
