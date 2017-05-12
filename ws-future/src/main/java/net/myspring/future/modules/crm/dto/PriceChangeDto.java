@@ -18,5 +18,43 @@ public class PriceChangeDto extends DataDto<PriceChange> {
     private Integer checkPercent;
     private String status;
 
-    private List<ProductDto> productDtos;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDate getPriceChangeDate() {
+        return priceChangeDate;
+    }
+
+    public void setPriceChangeDate(LocalDate priceChangeDate) {
+        this.priceChangeDate = priceChangeDate;
+    }
+
+    public LocalDate getUploadEndDate() {
+        return uploadEndDate;
+    }
+
+    public void setUploadEndDate(LocalDate uploadEndDate) {
+        this.uploadEndDate = uploadEndDate;
+    }
+
+    public Integer getCheckPercent() {
+        return checkPercent;
+    }
+
+    public void setCheckPercent(Integer checkPercent) {
+        this.checkPercent = checkPercent;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

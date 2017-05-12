@@ -3,7 +3,7 @@
 <mapper namespace="net.myspring.future.modules.crm.mapper.PriceChangeMapper">
 
 
-    <select id="findPage" resultType="PriceChange">
+    <select id="findPage" resultType="PriceChangeDto">
         SELECT
         t1.*
         FROM
