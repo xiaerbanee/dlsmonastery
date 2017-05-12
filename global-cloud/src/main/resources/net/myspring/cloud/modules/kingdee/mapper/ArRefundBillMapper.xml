@@ -4,13 +4,13 @@
 
     <select id="findByPeriodForEntrySum" resultType="ReceivableForDetailDto">
         SELECT
-        b.FCONTACTUNIT AS customerId,
+        b.FCONTACTUNIT AS customerReceiveDto.customerId,
         e.FNAME AS customerName,
         d.FNAME AS billType,
         b.FBillNo AS billNo,
-        b.FDATE AS DATE,
-        sum(a.FREALREFUNDAMOUNT) AS amount,
-        b.FDocumentStatus AS documentStatus
+        b.FDATE AS billDate,
+        sum(a.FREALREFUNDAMOUNT) AS endShouldGet,
+        b.FDocumentStatus AS billStatus
         FROM
         T_AR_REFUNDBILLENTRY a
         JOIN T_AR_REFUNDBILL b ON b.FID = a.FID
@@ -32,7 +32,7 @@
     <select id="findByPeriodForSum" resultType="CustomerReceiveDto">
         SELECT
         b.FCONTACTUNIT AS customerId,
-        sum(a.FREALREFUNDAMOUNTFOR) AS beginAmount
+        sum(a.FREALREFUNDAMOUNTFOR) AS beginShouldGet
         FROM
         T_AR_REFUNDBILLENTRY a
         JOIN T_AR_REFUNDBILL b ON b.FID = a.FID
