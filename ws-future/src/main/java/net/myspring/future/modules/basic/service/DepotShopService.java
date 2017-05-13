@@ -20,4 +20,8 @@ public class DepotShopService {
         return depotShopMapper.findAll(depotShopQuery);
     }
 
+    public  List<DepotDto> findByLikeName(String name,String category){
+        return depotShopMapper.findByLikeName(name,category);
+    };
+
 }

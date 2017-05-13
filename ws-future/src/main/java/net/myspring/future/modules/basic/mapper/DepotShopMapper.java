@@ -50,4 +50,6 @@ public interface DepotShopMapper extends BaseMapper<DepotShop,String> {
 
     List<DepotDto> findAll(DepotShopQuery depotShopQuery);
 
+    List<DepotDto> findByLikeName(@Param("name")String name,@Param("category")String category);
+
 }
