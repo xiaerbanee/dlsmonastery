@@ -4,7 +4,19 @@
 
 
     <select id="findPage" resultType="PriceChangeDto">
-        SELECT
+        SELECT(
+          SELECT
+            group_concat(NAME)
+          FROM
+             crm_price_change_product product ,
+             crm_product_type type
+          WHERE
+            product.product_type_id = type.id
+          AND
+            product.price_change_id = t1.id
+          GROUP BY
+            product.price_change_id
+        ) productTypeName,
         t1.*
         FROM
         crm_price_change t1

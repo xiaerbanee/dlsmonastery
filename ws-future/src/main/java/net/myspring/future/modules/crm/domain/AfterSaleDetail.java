@@ -35,6 +35,16 @@ public class AfterSaleDetail extends CompanyEntity<AfterSaleDetail>{
     //替换机录入对应金蝶单据
     private  String replaceOutCode;
 
+    private String  afterSaleId;
+
+    public String getAfterSaleId() {
+        return afterSaleId;
+    }
+
+    public void setAfterSaleId(String afterSaleId) {
+        this.afterSaleId = afterSaleId;
+    }
+
     public String getType() {
         return type;
     }

@@ -12,8 +12,8 @@ public class AfterSale extends CompanyEntity<AfterSale> {
     //售后机，窜货机
     private String type;
     private String businessId;
-    private String badProductId;
     private String badProductImeId;
+    private String badProductId;
     private String badDepotId;
     private String badType;
     private String packageStatus;

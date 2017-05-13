@@ -19,6 +19,15 @@ public class AfterSaleFlee extends CompanyEntity<AfterSaleFlee> {
     private String mobilePhone;
     private String address;
     private BigDecimal buyAmount;
+    private String afterSaleId;
+
+    public String getAfterSaleId() {
+        return afterSaleId;
+    }
+
+    public void setAfterSaleId(String afterSaleId) {
+        this.afterSaleId = afterSaleId;
+    }
 
     public String getIme() {
         return ime;

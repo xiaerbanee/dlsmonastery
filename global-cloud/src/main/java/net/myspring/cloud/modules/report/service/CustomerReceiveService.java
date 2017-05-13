@@ -150,9 +150,9 @@ public class CustomerReceiveService {
                 summaryItem.setBeginShouldGet(item.getBeginShouldGet());
             }
         }
-        List<CustomerReceiveDetailDto> detailForBillList = customerReceiveMapper.findByPeriodForEntrySum(dateStart, dateEnd,customerId);
+        List<CustomerReceiveDetailDto> detailForBillList = customerReceiveMapper.findByPeriodForBillSum(dateStart, dateEnd,customerId);
         //物料详细
-        List<CustomerReceiveDetailDto> detailForMaterialList = customerReceiveMapper.findByPeriodForEntryF(dateStart, dateEnd,customerId);
+        List<CustomerReceiveDetailDto> detailForMaterialList = customerReceiveMapper.findByPeriodForMaterial(dateStart, dateEnd,customerId);
         Map<String,List<CustomerReceiveDetailDto>> detailForMaterialMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(detailForMaterialList)) {
             for (CustomerReceiveDetailDto customerAccount : detailForMaterialList) {
@@ -174,59 +174,58 @@ public class CustomerReceiveService {
         dataList.add(beginAmount);
         BigDecimal endShouldGet = summaryItem.getBeginShouldGet();
         for(int i = 0 ;i<detailForBillList.size();i++){
-            CustomerReceiveDetailDto detailForBill = detailForBillList.get(i);
-
+            CustomerReceiveDetailDto billSum = detailForBillList.get(i);
             CustomerReceiveDetailDto receivableDetail = new CustomerReceiveDetailDto();
             receivableDetail.setIndex(i);
-            receivableDetail.setBillType(detailForBill.getBillType());
-            receivableDetail.setBillDate(detailForBill.getBillDate());
-            receivableDetail.setBillNo(detailForBill.getBillNo());
-            receivableDetail.setRemarks(detailForBill.getRemarks());
-            if(!"C".equals(detailForBill.getBillStatus())){
+            receivableDetail.setBillType(billSum.getBillType());
+            receivableDetail.setBillDate(billSum.getBillDate());
+            receivableDetail.setBillNo(billSum.getBillNo());
+            receivableDetail.setRemarks(billSum.getRemarks());
+            if(!"C".equals(billSum.getBillStatus())){
                 receivableDetail.setIndex(-4);
             }
             //实收
-            if(detailForBill.getBillType().equals(CustomerReceiveEnum.销售收款单.name())){
-                receivableDetail.setShouldGet(detailForBill.getAmount());
+            if(billSum.getBillType().equals(CustomerReceiveEnum.销售收款单.name())){
+                receivableDetail.setShouldGet(billSum.getAmount());
                 endShouldGet = endShouldGet.subtract(receivableDetail.getRealGet());
                 receivableDetail.setEndShouldGet(endShouldGet);
                 dataList.add(receivableDetail);
-            }else if(detailForBill.getBillType().equals(CustomerReceiveEnum.销售业务退款单.name())){
-                receivableDetail.setShouldGet(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
+            }else if(billSum.getBillType().equals(CustomerReceiveEnum.销售业务退款单.name())){
+                receivableDetail.setShouldGet(BigDecimal.ZERO.subtract(billSum.getAmount()));
                 endShouldGet = endShouldGet.subtract(receivableDetail.getRealGet());
                 receivableDetail.setEndShouldGet(endShouldGet);
                 dataList.add(receivableDetail);
                 //不计入期末期初
-            }else if(detailForBill.getBillType().equals(CustomerReceiveEnum.现销退货单.name())) {
-                receivableDetail.setShouldGet(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
+            }else if(billSum.getBillType().equals(CustomerReceiveEnum.现销退货单.name())) {
+                receivableDetail.setShouldGet(BigDecimal.ZERO.subtract(billSum.getAmount()));
                 receivableDetail.setEndShouldGet(endShouldGet.add(receivableDetail.getShouldGet()));
                 dataList.add(receivableDetail);
-            }else if(detailForBill.getBillType().equals(CustomerReceiveEnum.现销出库单.name())){
-                receivableDetail.setShouldGet(detailForBill.getAmount());
+            }else if(billSum.getBillType().equals(CustomerReceiveEnum.现销出库单.name())){
+                receivableDetail.setShouldGet(billSum.getAmount());
                 receivableDetail.setEndShouldGet(endShouldGet.add(receivableDetail.getShouldGet()));
                 dataList.add(receivableDetail);
                 //应收
-            }else if(detailForBill.getBillType().equals(CustomerReceiveEnum.标准销售退货单.name())) {
-                receivableDetail.setShouldGet(BigDecimal.ZERO.subtract(detailForBill.getAmount()));
+            }else if(billSum.getBillType().equals(CustomerReceiveEnum.标准销售退货单.name())) {
+                receivableDetail.setShouldGet(BigDecimal.ZERO.subtract(billSum.getAmount()));
                 endShouldGet = endShouldGet.add(receivableDetail.getShouldGet());
                 receivableDetail.setEndShouldGet(endShouldGet);
                 dataList.add(receivableDetail);
             }else{
-                receivableDetail.setShouldGet(detailForBill.getAmount());
+                receivableDetail.setShouldGet(billSum.getAmount());
                 endShouldGet = endShouldGet.add(receivableDetail.getShouldGet());
                 receivableDetail.setEndShouldGet(endShouldGet);
                 dataList.add(receivableDetail);
             }
-            if (detailForMaterialMap.containsKey(detailForBill.getBillNo())) {
-                for (CustomerReceiveDetailDto detailMaterial : detailForMaterialMap.get(detailForBill.getBillNo())) {
-                    if (detailMaterial.getBillNo().contains("XSTHD")) {
-                        detailMaterial.setQty(0L - detailMaterial.getQty());
-                    } else if (detailMaterial.getQty() != null) {
-                        detailMaterial.setQty(detailMaterial.getQty());
+            if (detailForMaterialMap.containsKey(billSum.getBillNo())) {
+                for (CustomerReceiveDetailDto billMaterial : detailForMaterialMap.get(billSum.getBillNo())) {
+                    if (billMaterial.getBillNo().contains("XSTHD")) {
+                        billMaterial.setQty(0L - billMaterial.getQty());
+                    } else if (billMaterial.getQty() != null) {
+                        billMaterial.setQty(billMaterial.getQty());
                     }
-                    detailMaterial.setBillType(CharConstant.EMPTY);
-                    detailMaterial.setIndex(i);
-                    dataList.add(detailMaterial);
+                    billMaterial.setBillType(CharConstant.EMPTY);
+                    billMaterial.setIndex(i);
+                    dataList.add(billMaterial);
                 }
             }
         }
