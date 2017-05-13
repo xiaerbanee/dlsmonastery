@@ -13,6 +13,7 @@ import java.util.List;
 public class PriceChangeDto extends DataDto<PriceChange> {
 
     private String name;
+    private String productTypeName;
     private LocalDate priceChangeDate;
     private LocalDate uploadEndDate;
     private Integer checkPercent;
@@ -56,5 +57,13 @@ public class PriceChangeDto extends DataDto<PriceChange> {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getProductTypeName() {
+        return productTypeName;
+    }
+
+    public void setProductTypeName(String productTypeName) {
+        this.productTypeName = productTypeName;
     }
 }

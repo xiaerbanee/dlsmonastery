@@ -2,13 +2,21 @@ package net.myspring.future.modules.crm.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.crm.domain.AfterSale;
+import net.myspring.future.modules.crm.dto.AfterSaleInputDto;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
-import net.myspring.future.modules.crm.dto.BankInDto;
+import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
+import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.service.AfterSaleService;
+import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +35,10 @@ public class AfterSaleController {
 
     @Autowired
     private AfterSaleService afterSaleService;
+    @Autowired
+    private ProductImeService productImeService;
+    @Autowired
+    private ProductService productService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AfterSaleDto> list(Pageable pageable, AfterSaleQuery afterSaleQuery) {
@@ -34,86 +46,118 @@ public class AfterSaleController {
         return page;
     }
 
-    @RequestMapping(value = "getFromCompanyData",method = RequestMethod.GET)
-    public String getFromCompanyData(HttpServletRequest request) {
-
-        return null;
+    @RequestMapping(value = "areaInputData", method = RequestMethod.GET)
+    public List<AfterSaleInputDto> formData(String imeStr) {
+        List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
+        if(StringUtils.isNotBlank(imeStr)){
+            List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+            List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
+            for(ProductImeDto productIme:productImeList){
+                AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
+                afterSaleInputDto.setProductName(productIme.getProductName());
+                afterSaleInputDto.setIme(productIme.getIme());
+                afterSaleInputDto.setDepotName(productIme.getDepotName());
+                afterSaleInputList.add(afterSaleInputDto);
+            }
+        }
+        return afterSaleInputList;
     }
 
-    @RequestMapping(value="getFormProperty")
-    public String getQuery(){
-        Map<String,Object> map= Maps.newHashMap();
-
-        return null;
-    }
-
-    @RequestMapping(value = "formData", method = RequestMethod.GET)
-    public String formData(String imeStr) {
-
-        return null;
-    }
-
-    @RequestMapping(value = "editFormData", method = RequestMethod.GET)
-    public String editFormData(String imeStr) {
-
-        return null;
+    @RequestMapping(value = "headInputData", method = RequestMethod.GET)
+    public List<AfterSaleInputDto> editFormData(String imeStr) {
+        List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
+        if(StringUtils.isNotBlank(imeStr)){
+            List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+            List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
+            List<AfterSale> afterSaleList=afterSaleService.findByImeList(imeList);
+            Map<String,AfterSale> afterSaleMap= CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
+            for(ProductImeDto productIme:productImeList){
+                AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
+                AfterSale afterSale=afterSaleMap.get(productIme.getId());
+                if(afterSale!=null){
+                    afterSaleInputDto.setMemory(afterSale.getMemory());
+                    afterSaleInputDto.setBadType(afterSale.getBadType());
+                    afterSaleInputDto.setPackageStatus(afterSale.getPackageStatus());
+                }
+                afterSaleInputDto.setProductName(productIme.getProductName());
+                afterSaleInputDto.setIme(productIme.getIme());
+                afterSaleInputDto.setDepotName(productIme.getDepotName());
+                afterSaleInputList.add(afterSaleInputDto);
+            }
+        }
+        return afterSaleInputList;
     }
 
     @RequestMapping(value="searchImeMap" ,method=RequestMethod.GET)
-    public String searchImeMap(String imeStr){
-
-        return null;
+    public Map<String,Object> searchImeMap(String imeStr){
+        Map<String,Object> map=Maps.newLinkedHashMap();
+        if(StringUtils.isNotBlank(imeStr)){
+            List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+            List<AfterSale> afterSaleList=afterSaleService.findByImeList(imeList);
+            map.put("afterSaleList",afterSaleList);
+            Map<String,Integer> productQtyMap=productImeService.findQtyMap(imeList);
+            map.put("productQtyMap",productQtyMap);
+        }
+        return map;
     }
 
+
+    @RequestMapping(value = "getFromCompanyData",method = RequestMethod.GET)
+    public List<AfterSaleCompanyDto> getFromCompanyData(String imeStr) {
+        List<AfterSaleCompanyDto> afterSaleToCompanyList=Lists.newArrayList();
+        if(StringUtils.isNotBlank(imeStr)){
+            List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+            afterSaleService.getFromCompanyData(imeList);
+        }
+        return afterSaleToCompanyList;
+    }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public RestResponse save(String data, String toStoreDate) {
-
-        return null;
+    public RestResponse save(String data, String type) {
+        List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
+        if(CollectionUtil.isEmpty(datas)) {
+            return new RestResponse("保存失败",null,false);
+        }
+        afterSaleService.save(datas,type);
+        return new RestResponse("保存成功",null);
     }
 
-    @RequestMapping(value = "update", method = RequestMethod.POST)
-    public RestResponse update(String data) {
+    @RequestMapping(value = "saveHead", method = RequestMethod.POST)
+    public RestResponse saveHead(String data, String type) {
+        List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
+        if(CollectionUtil.isEmpty(datas)) {
+            return new RestResponse("保存失败",null,false);
+        }
+        afterSaleService.saveHead(datas,type);
+        return new RestResponse("保存成功",null);
+    }
 
-        return null;
+    @RequestMapping(value = "toCompany", method = RequestMethod.POST)
+    public RestResponse toCompany(List<String> badImes, LocalDate toCompanyDate, String toCompanyRemarks) {
+        if(CollectionUtil.isEmpty(badImes)) {
+            return new RestResponse("保存失败",null,false);
+        }
+        afterSaleService.toCompany(badImes,toCompanyDate,toCompanyRemarks);
+        return new RestResponse("保存成功",null);
     }
 
     @RequestMapping(value = "fromCompany", method = RequestMethod.POST)
     public RestResponse fromCompany(String data,String fromCompanyDate) {
-
-        return null;
+        List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
+        if(CollectionUtil.isEmpty(datas)) {
+            return new RestResponse("保存失败",null,false);
+        }
+        afterSaleService.fromCompany(datas, LocalDateUtils.parse(fromCompanyDate));
+        return new RestResponse("保存成功",null);
     }
-
-    @RequestMapping(value = "toCompany", method = RequestMethod.POST)
-    public RestResponse toCompany(String imeStr,AfterSale afterSale) {
-
-        return null;
-    }
-
-    @RequestMapping(value = "toCompanyForm")
-    public String toCompanyForm(String imeStr) {
-        Map<String,Object> map=Maps.newHashMap();
-        StringBuilder stringBuilder=new StringBuilder();
-
-        return null;
-    }
-
 
     @RequestMapping(value = "synToFinance")
     public String synToFinance() {
-
         return null;
     }
 
     @RequestMapping(value = "delete")
     public String logicDelete(String id) {
-
-        return null;
-    }
-
-    public List<String> getActionList(AfterSale afterSale){
-        List<String> actionList = Lists.newArrayList();
-
         return null;
     }
 

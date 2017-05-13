@@ -84,4 +84,6 @@ public interface ProductMapper extends BaseMapper<Product,String> {
     List<ProductType> findProductTypeList();
 
     List<ProductDto> findIntersectionOfBothPricesystem(@Param("pricesystemId1")  String pricesystemId1, @Param("pricesystemId2") String pricesystemId2);
+
+    List<Product> findByNameList(List<String> nameList);
 }

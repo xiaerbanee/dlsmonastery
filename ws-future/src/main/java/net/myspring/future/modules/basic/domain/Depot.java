@@ -9,6 +9,8 @@ import java.util.Date;
 @Entity
 @Table(name="crm_depot")
 public class Depot extends CompanyEntity<Depot> {
+    //父节点
+    private String parentId;
     //编码
     private String code;
     //对应store_id
@@ -39,6 +41,14 @@ public class Depot extends CompanyEntity<Depot> {
     private String outType;
     //财务同步日期
     private Date outDate;
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
 
     public String getCode() {
         return code;

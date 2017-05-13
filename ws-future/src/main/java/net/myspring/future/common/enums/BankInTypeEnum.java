@@ -11,14 +11,14 @@ public enum BankInTypeEnum {
 	/*SALES_RECEIPT,
 	DEPOSIT_RECEIPT;*/
 
-	private static List<String> list= Lists.newArrayList();
+	private static List<String> list = Lists.newArrayList();
 
-	public static List<String> getList(){
-		if(CollectionUtil.isEmpty(list)){
-			for(BankInTypeEnum each : BankInTypeEnum.values()){
+	public static List<String> getList() {
+		if (CollectionUtil.isEmpty(list)) {
+			for (BankInTypeEnum each : BankInTypeEnum.values()) {
 				list.add(each.name());
 			}
 		}
 		return list;
 	}
-	}
+}

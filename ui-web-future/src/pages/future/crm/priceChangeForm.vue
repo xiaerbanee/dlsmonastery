@@ -8,7 +8,7 @@
         </el-form-item>
         <el-form-item :label="$t('priceChangeForm.productTypeId')" prop="productTypeIdList">
           <el-select v-model="inputForm.productTypeIdList" multiple filterable clearable :placeholder="$t('priceChangeForm.inputWord')" :disabled="!isCreate">
-            <el-option v-for="item in formProperty.productTypes" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.allProductTypeDtos" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item  :label="$t('priceChangeForm.priceChangeDate')" prop="priceChangeDate">
@@ -23,8 +23,8 @@
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('priceChangeForm.save')}}</el-button>
         </el-form-item>
-          <el-table :data="inputForm.priceChangeProductList" border stripe >
-            <el-table-column :label="$t('priceChangeForm.productType')"  prop="productType.name"></el-table-column>
+          <el-table :data="inputForm.productTypeDtos" border stripe >
+            <el-table-column :label="$t('priceChangeForm.productType')"  prop="name"></el-table-column>
             <el-table-column :label="$t('priceChangeForm.price3')">
               <template scope="scope">
                 <input type="text" v-model="scope.row.price3" class="el-input__inner"/>
@@ -32,7 +32,7 @@
             </el-table-column>
             <el-table-column  :label="$t('priceChangeForm.baokaPrice')">
               <template scope="scope">
-                <input type="text" v-model="scope.row.amount" class="el-input__inner"/>
+                <input type="text" v-model="scope.row.baokaPrice" class="el-input__inner"/>
               </template>
             </el-table-column>
           </el-table>
@@ -46,8 +46,9 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
             inputForm:{
+            },
+            submitData:{
               id:this.$route.query.id,
               name:'',
               checkPercent:'',
@@ -55,7 +56,6 @@
               uploadEndDate:'',
               productTypeIdList:'',
               remarks:'',
-              priceChangeProductList:[]
             },
             rules: {
               name: [{ required: true, message: this.$t('priceChangeForm.prerequisiteMessage')}],
@@ -87,18 +87,10 @@
           })
         },
       },created(){
-        axios.get('/api/crm/priceChange/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate ){
-          axios.get('/api/crm/priceChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            this.inputForm.priceChangeProductList = response.data.priceChangeProductList;
-            if(response.data.productTypeList!=null&&response.data.productTypeList.length>0){
-              this.inputForm.productTypeIdList=util.getIdList(response.data.productTypeList);
-            }
+          axios.get('/api/ws/future/crm/priceChange/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm = response.data;
+            console.log(this.inputForm);
           })
         }
-      }
     }
 </script>

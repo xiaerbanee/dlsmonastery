@@ -16,8 +16,12 @@ public class DepotShopService {
     @Autowired
     private DepotShopMapper depotShopMapper;
 
-    public List<DepotDto> findAll(DepotShopQuery depotShopQuery) {
-        return depotShopMapper.findAll(depotShopQuery);
+    public List<DepotDto> findDepotDtoList(DepotShopQuery depotShopQuery) {
+        return depotShopMapper.findDepotDtoList(depotShopQuery);
     }
+
+    public  List<DepotDto> findByLikeName(String name,String category){
+        return depotShopMapper.findByLikeName(name,category);
+    };
 
 }
