@@ -20,8 +20,6 @@ public class DepotShop extends CompanyEntity<DepotShop> {
     private String type;
     // 价格体系
     private String pricesystemId;
-    //寄售对应仓库
-    private String delegateStoreId;
     // 额度
     private BigDecimal credit;
     //税务名称
@@ -75,14 +73,6 @@ public class DepotShop extends CompanyEntity<DepotShop> {
 
     public void setPricesystemId(String pricesystemId) {
         this.pricesystemId = pricesystemId;
-    }
-
-    public String getDelegateStoreId() {
-        return delegateStoreId;
-    }
-
-    public void setDelegateStoreId(String delegateStoreId) {
-        this.delegateStoreId = delegateStoreId;
     }
 
     public BigDecimal getCredit() {

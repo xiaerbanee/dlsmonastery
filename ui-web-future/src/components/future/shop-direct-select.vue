@@ -7,7 +7,7 @@
 </template>
 <script>
   export default {
-    props: ['value','category','multiple','disabled'],
+    props: ['value','multiple','disabled'],
     data() {
       return {
         innerId:this.value,

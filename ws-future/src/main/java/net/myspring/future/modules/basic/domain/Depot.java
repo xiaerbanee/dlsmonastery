@@ -8,6 +8,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="crm_depot")
 public class Depot extends CompanyEntity<Depot> {
+    private String clientId;
     //编码
     private String code;
     //对应store_id
@@ -28,6 +29,14 @@ public class Depot extends CompanyEntity<Depot> {
     private String address;
     // 省市区
     private String districtId;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
     public String getCode() {
         return code;
