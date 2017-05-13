@@ -26,4 +26,9 @@ public class BdCustomerController {
     public List<BdCustomer> getCustomerGroupList(){
         return bdCustomerService.getCustomerGroupList();
     }
+
+    @RequestMapping(value = "getByNameLike")
+    public List<BdCustomer> getByNameLike(String name){
+        return bdCustomerService.getByNameLike(name);
+    }
 }

@@ -13,7 +13,10 @@
         WHERE
         b.FDATE &gt;=#{dateStart}
         and b.FDATE  &lt;=#{dateEnd}
-        and e.FPRIMARYGROUP = #{primaryGroup}
+        and b.FCONTACTUNIT in
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         group by
         b.FCONTACTUNIT
     </select>

@@ -24,4 +24,8 @@ public class BdCustomerService {
     public List<BdCustomer> getCustomerGroupList(){
         return bdCustomerMapper.findPrimaryGroupAndPrimaryGroupName();
     }
+
+    public List<BdCustomer> getByNameLike(String name){
+        return bdCustomerMapper.findByNameLike(name);
+    }
 }

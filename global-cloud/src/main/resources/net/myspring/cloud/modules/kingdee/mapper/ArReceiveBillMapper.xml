@@ -9,11 +9,13 @@
         FROM
         T_AR_RECEIVEBILLENTRY a
         join T_AR_RECEIVEBILL b on a.FID = b.FID
-        JOIN T_BD_CUSTOMER e ON e.FCUSTID = b.FCONTACTUNIT
         WHERE
         b.FDATE &gt;=#{dateStart}
         and b.FDATE  &lt;=#{dateEnd}
-        and e.FPRIMARYGROUP = #{primaryGroup}
+        and b.FCONTACTUNIT in
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         group by
         b.FCONTACTUNIT
     </select>

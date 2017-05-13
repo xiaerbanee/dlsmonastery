@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -14,5 +15,5 @@ import java.util.List;
 @Mapper
 public interface ArReceiveBillMapper {
 
-    List<CustomerReceiveDto> findByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("primaryGroup")String primaryGroup);
+    List<CustomerReceiveDto> findByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList")HashSet<String> customerIdList);
 }

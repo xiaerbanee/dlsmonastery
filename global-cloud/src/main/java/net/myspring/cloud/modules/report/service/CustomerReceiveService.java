@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -45,14 +46,22 @@ public class CustomerReceiveService {
     public List<CustomerReceiveDto>  findCustomerReceiveDtoList(CustomerReceiveQuery customerReceiveQuery) {
         LocalDate dateStart = customerReceiveQuery.getDateStart();
         LocalDate dateEnd = customerReceiveQuery.getDateEnd();
-        if (StringUtils.isBlank(customerReceiveQuery.getCustomerGroup())) {
-            BdCustomer bdCustomer = bdCustomerMapper.findTopOne();
-            customerReceiveQuery.setCustomerGroup(bdCustomer.getFPrimaryGroup());
+        HashSet<String> customerIdSet = new HashSet<String>();
+        if (customerReceiveQuery.getCustomerIdList().size() >0){
+            customerIdSet.addAll(customerReceiveQuery.getCustomerIdList());
         }
-        String primaryGroupId = customerReceiveQuery.getCustomerGroup();
+        if (StringUtils.isNotBlank(customerReceiveQuery.getCustomerGroup())){
+           List<BdCustomer> customerList =  bdCustomerMapper.findByPrimaryGroup(customerReceiveQuery.getCustomerGroup());
+           customerIdSet.addAll(CollectionUtil.extractToList(customerList,"FCustId"));
+        }
+        if (customerIdSet.isEmpty()) {
+            BdCustomer bdCustomer = bdCustomerMapper.findTopOne();
+            List<BdCustomer> customerList =  bdCustomerMapper.findByPrimaryGroup(bdCustomer.getFPrimaryGroup());
+            customerIdSet.addAll(CollectionUtil.extractToList(customerList,"FCustId"));
+        }
         List<CustomerReceiveDto> tempList = Lists.newLinkedList();
-        List<CustomerReceiveDto> dataForStartDate = customerReceiveMapper.findByEndDate(dateStart,primaryGroupId);
-        List<CustomerReceiveDto> dataForEndDate = customerReceiveMapper.findByEndDate(dateEnd.plusDays(1),primaryGroupId);
+        List<CustomerReceiveDto> dataForStartDate = customerReceiveMapper.findByEndDateAndIn(dateStart,customerIdSet);
+        List<CustomerReceiveDto> dataForEndDate = customerReceiveMapper.findByEndDateAndIn(dateEnd.plusDays(1),customerIdSet);
         //期初结余
         Map<String,BigDecimal> dateStartMap = Maps.newHashMap();
         for(CustomerReceiveDto startItem : dataForStartDate){
@@ -72,11 +81,11 @@ public class CustomerReceiveService {
             }
             tempList.add(summaryModel);
         }
-        List<CustomerReceiveDto> QTYSDListForPeriodList = arOtherRecableMapper.findByPeriodForSum(dateStart, dateEnd,primaryGroupId);
-        List<CustomerReceiveDto> XSTHDListForPeriodList = salReturnStockMapper.findXSTHDByPeriodForSum(dateStart, dateEnd,primaryGroupId);
-        List<CustomerReceiveDto> XSCKDListForPeriodList = salOutStockMapper.findXSCKDByPeriodForSum(dateStart, dateEnd,primaryGroupId);
-        List<CustomerReceiveDto> SKDForPeriodList = arReceiveBillMapper.findByPeriodForSum(dateStart, dateEnd,primaryGroupId);
-        List<CustomerReceiveDto> SKTKDForPeriodList = arRefundBillMapper.findByPeriodForSum(dateStart, dateEnd,primaryGroupId);
+        List<CustomerReceiveDto> QTYSDListForPeriodList = arOtherRecableMapper.findByPeriodForSum(dateStart, dateEnd,customerIdSet);
+        List<CustomerReceiveDto> XSTHDListForPeriodList = salReturnStockMapper.findXSTHDByPeriodForSum(dateStart, dateEnd,customerIdSet);
+        List<CustomerReceiveDto> XSCKDListForPeriodList = salOutStockMapper.findXSCKDByPeriodForSum(dateStart, dateEnd,customerIdSet);
+        List<CustomerReceiveDto> SKDForPeriodList = arReceiveBillMapper.findByPeriodForSum(dateStart, dateEnd,customerIdSet);
+        List<CustomerReceiveDto> SKTKDForPeriodList = arRefundBillMapper.findByPeriodForSum(dateStart, dateEnd,customerIdSet);
         for(CustomerReceiveDto item : tempList) {
             String key = item.getCustomerId();
             BigDecimal QTYSDAmount = BigDecimal.ZERO;
@@ -144,7 +153,7 @@ public class CustomerReceiveService {
         LocalDate dateEnd = customerReceiveDetailQuery.getDateEnd();
         String customerId = customerReceiveDetailQuery.getCustomerId();
         List<CustomerReceiveDetailDto> dataList = Lists.newArrayList();
-        List<CustomerReceiveDto> summaryItemList = customerReceiveMapper.findByEndDateAndIn(dateStart,Lists.newArrayList(customerId));
+        List<CustomerReceiveDto> summaryItemList = customerReceiveMapper.findByEndDate(dateStart,customerId);
         CustomerReceiveDto summaryItem = new CustomerReceiveDto();
         summaryItem.setCustomerId(customerId);
         summaryItem.setCustomerName(bdCustomerMapper.findById(customerId).getFName());

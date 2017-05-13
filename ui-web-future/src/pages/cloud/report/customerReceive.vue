@@ -18,6 +18,11 @@
                   <el-option v-for="item in formData.customerList" :key="item.fprimaryGroup" :label="item.fprimaryGroupName" :value="item.fprimaryGroup"></el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item :label="formLabel.customerIdList.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.customerIdList" filterable remote multiple placeholder="请输入关键词" :remote-method="remoteCustomer" :loading="remoteLoading">
+                  <el-option v-for="item in customerList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -77,11 +82,13 @@
   export default {
     data() {
       return {
+        customerList:[],
         summary: [],
         detail: [],
         formData: {
-          dateRange: '',
+          dateRange: [new Date().toLocaleDateString(),new Date().toLocaleDateString()],
           customerGroup:'',
+          customerIdList:[],
           customerList:[],
         },
         submitData: {
@@ -96,8 +103,10 @@
         formLabel:{
           dateRange:{label:"日期"},
           customerGroup:{label:"客户分组",value:''},
+          customerIdList:{label:"客户名称",value:''}
         },
         formLabelWidth: '120px',
+        remoteLoading:false,
         formVisible: false,
         detailVisible:false,
         pageLoading: false,
@@ -111,6 +120,7 @@
         that.pageLoading = true;
         util.getQuery("receivableReport");
         util.setQuery("receivableReport",that.formData);
+        this.formData.dateRange = util.formatDateRange(this.formData.dateRange);
         util.copyValue(that.formData,that.submitData);
         axios.get('/api/global/cloud/report/customerReceive/list',{params:that.submitData}).then((response) => {
           this.summary = response.data;
@@ -142,12 +152,22 @@
         } else if (row.index / 2 !== 0) {
           return "detail-item2";
         }
-      }
+      },remoteCustomer(query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          axios.get('/api/global/cloud/kingdee/bdCustomer/getByNameLike',{params:{name:query}}).then((response)=>{
+            this.customerList = response.data;
+            console.log(this.customerList);
+            this.remoteLoading = false;
+          })
+        } else {
+          this.storeList = {};
+        }
+      },
     },created () {
       this.pageHeight = window.outerHeight -320;
       axios.get('/api/global/cloud/kingdee/bdCustomer/getCustomerGroupList').then((response) => {
         this.formData.customerList = response.data;
-        console.log(this.formData.customerList);
       });
       this.pageRequest();
     }

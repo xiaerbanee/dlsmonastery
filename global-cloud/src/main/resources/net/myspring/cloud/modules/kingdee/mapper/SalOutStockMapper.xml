@@ -10,12 +10,14 @@
         JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
         JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID AND a.FENTRYID = c.FENTRYID
         JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
-        JOIN T_BD_CUSTOMER e ON e.FCUSTID = b.FCUSTOMERID
         WHERE
         b.FDATE &gt;=#{dateStart}
         and b.FDATE  &lt;=#{dateEnd}
         and d.FNAME= '标准销售出库单'
-        and e.FPRIMARYGROUP = #{primaryGroup}
+        and b.FCUSTOMERID in
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         group by
         b.FCUSTOMERID
     </select>
@@ -30,12 +32,14 @@
         JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
         JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID AND a.FENTRYID = c.FENTRYID
         JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
-        JOIN T_BD_CUSTOMER e ON e.FCUSTID = b.FCUSTOMERID
         WHERE
         b.FDATE &gt;=#{dateStart}
         and b.FDATE  &lt;=#{dateEnd}
         and d.FNAME='现销出库单'
-        and e.FPRIMARYGROUP = #{primaryGroup}
+        and b.FCUSTOMERID in
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         group by
         b.FCUSTOMERID
     </select>
