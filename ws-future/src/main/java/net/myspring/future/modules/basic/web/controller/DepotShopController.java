@@ -46,19 +46,4 @@ public class DepotShopController {
         return depotShopService.findDepotDtoList(depotShopQuery);
     }
 
-    //广告门店
-    @RequestMapping(value = "adShop")
-    public List<DepotDto> adShop(DepotShopQuery depotShopQuery) {
-        depotShopQuery.setAdShop(true);
-        return depotShopService.findDepotDtoList(depotShopQuery);
-    }
-
-    //直营广告门店
-    @RequestMapping(value = "directAdShop")
-    public List<DepotDto> directAdShop(DepotShopQuery depotShopQuery) {
-        depotShopQuery.setDirect(true);
-        depotShopQuery.setAdShop(true);
-        return depotShopService.findDepotDtoList(depotShopQuery);
-    }
-
 }
