@@ -9,7 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name="crm_depot")
 public class Depot extends CompanyEntity<Depot> {
-    //总店
+    //父节点
     private String parentId;
     //编码
     private String code;
