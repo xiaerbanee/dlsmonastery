@@ -142,6 +142,7 @@ public class SalOutStockDto {
         model.put("SAL_OUTSTOCK__FEntity", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
+        System.out.println(result);
         return result;
     }
 }
