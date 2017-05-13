@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.crm.mapper.AfterSaleMapper">
 
-    <select id="findPage" resultType="AfterSale">
+    <select id="findPage" resultType="AfterSaleDto">
         SELECT
         t1.*
         FROM
-        crm_after_sale t1,crm_depot depot ,crm_product_ime im
+        crm_after_sale t1,crm_after_sale_detail t2
         WHERE
         t1.enabled=1
         and t1.bad_product_ime_id=im.id

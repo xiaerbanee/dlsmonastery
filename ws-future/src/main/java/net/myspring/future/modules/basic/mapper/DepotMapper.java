@@ -86,4 +86,6 @@ public interface DepotMapper extends BaseMapper<Depot,String> {
 
     LocalDateTime getMaxOutDate(@Param("outType") String outType);
 
+    List<Depot> findByNameList(List<String> nameList);
+
 }

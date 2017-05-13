@@ -19,6 +19,7 @@ import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
+import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -67,6 +68,7 @@ public class ProductService {
     public List<Product> findByIds(List<String> ids) {
         return productMapper.findByIds(ids);
     }
+
     public Product findByName(String name){
         return productMapper.findByName(name);
     }
