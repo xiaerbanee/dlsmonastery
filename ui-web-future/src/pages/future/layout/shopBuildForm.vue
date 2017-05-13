@@ -15,7 +15,7 @@
               <dict-enum-select v-model="inputForm.fixtureType" category="装修类别"></dict-enum-select>
             </el-form-item>
             <div v-show="inputForm.fixtureType.indexOf('包柱')>0">
-            <el-form-item :label="$t('shopBuildForm.oldContents')" prop="oldContents">
+            <el-form-item :label="$t('shopBuildForm.oldContents')" prop="oldContents" >
               <el-input v-model="inputForm.oldContents" ></el-input>
             </el-form-item>
               </div>
@@ -55,7 +55,7 @@
 <script>
   import dictEnumSelect from 'components/basic/dict-enum-select';
   import accountSelect from 'components/basic/account-select';
-  import shopSelect from 'components/future/shop-select';
+  import shopSelect from 'components/future/depot-select';
   export default{
     components:{
         dictEnumSelect,
@@ -119,14 +119,6 @@
             this.submitDisabled = false;
           }
         })
-      },remoteShop(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/ws/future/basic/depot/shop',{params:{name:query}}).then((response)=>{
-            this.shops=response.data;
-            this.remoteLoading = false;
-          })
-        }
       },getFormProperty(){
         axios.get('/api/ws/future/layout/shopBuild/getQuery').then((response)=>{
           this.formProperty=response.data;

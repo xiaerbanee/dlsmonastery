@@ -4,10 +4,12 @@ import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.future.common.mybatis.MyProvider;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import net.myspring.mybatis.mapper.BaseMapper;
-import net.myspring.mybatis.mapper.CrudMapper;
 import org.apache.ibatis.annotations.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CachePut;
@@ -50,6 +52,8 @@ public interface DepotShopMapper extends BaseMapper<DepotShop,String> {
 
     List<DepotDto> findDepotDtoList(@Param("p") DepotShopQuery depotShopQuery);
 
-    List<DepotDto> findByLikeName(@Param("name")String name,@Param("category")String category);
+    Page<DepotShopDto> findPage(Pageable pageable, DepotShopQuery depotShopQuery);
+
+    List<DepotDto> findByIdList(List<String> ids);
 
 }
