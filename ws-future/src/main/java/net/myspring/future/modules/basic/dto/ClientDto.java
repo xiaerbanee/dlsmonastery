@@ -1,16 +1,12 @@
 package net.myspring.future.modules.basic.dto;
 
-import com.google.common.collect.Lists;
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.basic.domain.Dealer;
-import net.myspring.future.modules.basic.domain.Depot;
-
-import java.util.List;
+import net.myspring.future.modules.basic.domain.Client;
 
 /**
  * Created by lihx on 2017/4/17.
  */
-public class DealerDto extends DataDto<Dealer> {
+public class ClientDto extends DataDto<Client> {
     private String name;
     private String mobilePhone;
     private Boolean locked;

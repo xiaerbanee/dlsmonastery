@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.enums.BoolEnum;
+import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
 import net.myspring.future.modules.basic.service.ProductTypeService;
 import net.myspring.future.modules.basic.web.form.ProductForm;
@@ -57,6 +59,14 @@ public class ProductTypeController {
     public ProductTypeQuery getListProperty(ProductTypeQuery productTypeQuery){
         productTypeQuery.setBoolMap(BoolEnum.getMap());
         return productTypeQuery;
+    }
+
+    @RequestMapping(value = "searchById")
+    public List<ProductTypeDto> searchById(String id){
+        ProductType productType = productTypeService.findOne(id);
+        List<ProductTypeDto> productTypeList = Lists.newArrayList();
+        productTypeList.add(BeanUtil.map(productType, ProductTypeDto.class));
+        return productTypeList;
     }
 
     @RequestMapping(value = "search")

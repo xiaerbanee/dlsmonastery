@@ -8,10 +8,10 @@
           <el-alert :title="message" type="error" show-icon v-if="message !==''"></el-alert>
         </template>
         <el-form-item :label="$t('shopAllotForm.fromShop')" prop="fromShopId">
-            <su-depot :disabled="!isCreate" type="shop" v-model="inputForm.fromShopId"  @input="refreshProductListIfNeeded" ></su-depot>
+            <depot-select :disabled="!isCreate" type="SHOP" v-model="inputForm.fromShopId"  @input="refreshProductListIfNeeded" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('shopAllotForm.toShop')" prop="toShopId">
-          <su-depot :disabled="!isCreate"  type="shop" v-model="inputForm.toShopId"   @input="refreshProductListIfNeeded"></su-depot>
+          <depot-select :disabled="!isCreate"  type="SHOP" v-model="inputForm.toShopId"   @input="refreshProductListIfNeeded"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('shopAllotForm.remarks')" prop="remarks">
           <el-input type="textarea" v-model="inputForm.remarks"></el-input>
@@ -37,7 +37,13 @@
   </div>
 </template>
 <script>
-    export default{
+  import depotSelect from 'components/future/depot-select'
+
+  export default{
+    components:{
+      depotSelect,
+
+    },
       data(){
           return{
             isCreate:(this.$route.query.id==null || this.$route.query.id==''),

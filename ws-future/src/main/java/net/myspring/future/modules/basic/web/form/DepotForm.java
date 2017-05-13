@@ -38,7 +38,7 @@ public class DepotForm extends DataForm<Depot>{
     private String turnoverType;
     private String doorHead;
     private String enableDate;
-    private String dealerId;
+    private String clientId;
     private String pricesystemId;
     private String chainId;
     private String specialityStore;
@@ -251,12 +251,12 @@ public class DepotForm extends DataForm<Depot>{
         this.enableDate = enableDate;
     }
 
-    public String getDealerId() {
-        return dealerId;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setDealerId(String dealerId) {
-        this.dealerId = dealerId;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public String getPricesystemId() {
