@@ -1,11 +1,14 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
+import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountPermission;
+import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.AccountDto;
+import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.mapper.AccountMapper;
 import net.myspring.basic.modules.hr.mapper.AccountPermissionMapper;
 import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
@@ -18,6 +21,8 @@ import net.myspring.basic.modules.sys.mapper.PermissionMapper;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
@@ -28,11 +33,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by liuj on 2017/3/19.
@@ -52,6 +62,11 @@ public class AccountService {
     private RoleManager roleManager;
     @Autowired
     private AccountPermissionMapper accountPermissionMapper;
+    @Autowired
+    private GridFsTemplate tempGridFsTemplate;
+    @Autowired
+    private OfficeManager officeManager;
+
     @Value("${setting.adminIdList}")
     private String adminIdList;
 
@@ -116,29 +131,6 @@ public class AccountService {
         accountMapper.logicDeleteOne(id);
     }
 
-    public List<SimpleExcelSheet> findSimpleExcelSheets(Workbook workbook, AccountQuery accountQuery) {
-        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "type", "类型"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "loginName", "登录名"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employee.name", "姓名"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "leader.loginName", "上级"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "office.name", "部门"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "position.dataScope", "数据部门"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "position.dataScopeLabel", "数据范围"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employee.status", "是否在职"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employee.entryDate", "入职日期"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employee.regularDate", "转正日期"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employee.leaveDate", "离职日期"));
-
-        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-        List<Account> accountList = accountMapper.findByFilter(accountQuery);
-        List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
-        cacheUtils.initCacheInput(accountDtoList);
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("账户信息", accountList, simpleExcelColumnList);
-        simpleExcelSheetList.add(simpleExcelSheet);
-        return simpleExcelSheetList;
-    }
-
     public List<AccountDto> findByLoginNameLikeAndType(Map<String, Object> map) {
         List<Account> accountList = accountMapper.findByLoginNameLikeAndType(map);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
@@ -168,6 +160,29 @@ public class AccountService {
         AccountDto accountDto=BeanUtil.map(accountMapper.findOne(accountId),AccountDto.class);
         cacheUtils.initCacheInput(accountDto);
         return accountDto;
+    }
+
+
+    public String findSimpleExcelSheet(Workbook workbook,AccountQuery accountQuery) throws IOException {
+        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getRequestEntity().getOfficeId()));
+        List<Account> accountList = accountMapper.findByFilter(accountQuery);
+        List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
+        cacheUtils.initCacheInput(accountDtoList);
+        List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "type", "类型"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "loginName", "登录名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeeName", "姓名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "leaderName", "上级"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "部门"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeeStatus", "是否在职"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "entryDate", "入职日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "regularDate", "转正日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "leaveDate", "离职日期"));
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("账户信息模版",accountDtoList,simpleExcelColumnList);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"账户信息模版"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
+        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        return StringUtils.toString(gridFSFile.getId());
     }
 
     public void saveAccountAndPermission(AccountForm accountForm){

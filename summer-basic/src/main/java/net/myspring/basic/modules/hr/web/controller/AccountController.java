@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -133,11 +134,9 @@ public class AccountController {
 
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public ModelAndView export(AccountQuery accountQuery) {
-        Workbook workbook = new SXSSFWorkbook(5000);
-        List<SimpleExcelSheet> simpleExcelSheetList = accountService.findSimpleExcelSheets(workbook, accountQuery);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "账户信息.xlsx", simpleExcelSheetList);
-        return null;
+    public String export(AccountQuery accountQuery) throws IOException {
+        Workbook workbook = new SXSSFWorkbook(10000);
+        return accountService.findSimpleExcelSheet(workbook,accountQuery);
     }
 
     @RequestMapping(value = "getAccountInfo")
