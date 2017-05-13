@@ -3,6 +3,8 @@ package net.myspring.future.modules.basic.mapper;
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.future.common.mybatis.MyProvider;
 import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import net.myspring.mybatis.mapper.BaseMapper;
 import net.myspring.mybatis.mapper.CrudMapper;
 import org.apache.ibatis.annotations.*;
@@ -45,5 +47,7 @@ public interface DepotShopMapper extends BaseMapper<DepotShop,String> {
 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<DepotShop> findByIds(List<String> ids);
+
+    List<DepotDto> findAll(DepotShopQuery depotShopQuery);
 
 }
