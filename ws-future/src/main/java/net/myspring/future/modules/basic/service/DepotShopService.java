@@ -1,12 +1,16 @@
 package net.myspring.future.modules.basic.service;
 
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.dto.DepotShopDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.mapper.DepotShopMapper;
 import net.myspring.future.modules.basic.web.query.DepotShopQuery;
-import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,18 +22,28 @@ import java.util.List;
 public class DepotShopService {
     @Autowired
     private DepotShopMapper depotShopMapper;
+    @Autowired
+    private OfficeClient officeClient;
+    @Autowired
+    private DepotManager depotManager;
+    @Autowired
+    private CacheUtils cacheUtils;
+
+    public Page<DepotShopDto> findPage(Pageable pageable, DepotShopQuery depotShopQuery){
+        Page<DepotShopDto> page=depotShopMapper.findPage(pageable,depotShopQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
+    }
 
     public List<DepotDto> findDepotDtoList(DepotShopQuery depotShopQuery) {
+        depotShopQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        depotShopQuery.setDepotIdList(depotManager.filterDepotIds());
         return depotShopMapper.findDepotDtoList(depotShopQuery);
     }
 
-    public  List<DepotDto> findByLikeName(String name,String category){
-        return depotShopMapper.findByLikeName(name,category);
-    };
-
-    public List<DepotDto> findByListIds(List<String> ids){
-        List<DepotShop> depotShopList = depotShopMapper.findByIds(ids);
-        return BeanUtil.map(depotShopList,DepotDto.class);
+    public List<DepotDto> findByIds(List<String> ids){
+        List<DepotDto> depotDtoList=depotShopMapper.findByIdList(ids);
+        return depotDtoList;
     }
 
 }

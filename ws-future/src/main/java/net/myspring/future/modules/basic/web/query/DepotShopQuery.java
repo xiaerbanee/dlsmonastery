@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by lihx on 2017/4/18.
  */
 public class DepotShopQuery extends BaseQuery {
-    private String key;
+    private String name;
     private List<String> officeIdList= Lists.newArrayList();
     private List<String> depotIdList= Lists.newArrayList();
     //直营
@@ -29,12 +29,12 @@ public class DepotShopQuery extends BaseQuery {
     //广告门店
     private Boolean adShop;
 
-    public String getKey() {
-        return key;
+    public String getName() {
+        return name;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<String> getOfficeIdList() {

@@ -23,8 +23,43 @@
         <if test="p.directAndSub">
            and t2.client_id is not NULL
         </if>
-        and t1.name like concat('%',#{p.key},'%')
+        and depot.name like concat('%',#{p.name},'%')
+        <include refid="depotFilter" />
         limit 0,25
     </select>
 
+    <select id="findPage" resultType="DepotShopDto">
+        SELECT t1.*,t2.*
+        FROM crm_depot depot ,crm_depot_shop t2
+        where depot.denabled=1
+        and t2.enabled=1
+        and depot.depot_shop_id=t2.id
+    </select>
+
+    <select id="findByIdList" resultType="DepotDto">
+         SELECT t1.*,t2.*
+        FROM crm_depot depot ,crm_depot_shop t2
+        where depot.denabled=1
+        and t2.enabled=1
+        and depot.depot_shop_id=t2.id
+        and t1.id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <sql id="depotFilter">
+    <if test="p.officeIdList !=null and p.officeIdList.size() !=0">
+        and depot.office_id IN
+        <foreach collection="p.officeIdList" index="index" item="item" open="(" separator="," close=")">
+            #{p.officeIdList[${index}]}
+        </foreach>
+    </if>
+    <if test="p.depotIdList !=null and p.depotIdList.size() !=0">
+        and depot.id IN
+        <foreach collection="p.depotIdList" index="index" item="item" open="(" separator="," close=")">
+            #{p.depotIdList[${index}]}
+        </foreach>
+    </if>
+</sql>
 </mapper>

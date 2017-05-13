@@ -23,10 +23,8 @@ public class DepotManager {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public Map<String,Object> filterDepotIds(){
-        Map<String,Object> filterMap= Maps.newLinkedHashMap();
+    public List<String>  filterDepotIds(){
         List<Depot> depotList=depotMapper.findByAccountId(RequestUtils.getAccountId());
-        filterMap.put("depotIdList", CollectionUtil.extractToList(depotList,"id"));
-        return filterMap;
+        return CollectionUtil.extractToList(depotList,"id");
     }
 }
