@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.mapper;
 
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
+import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,4 +19,6 @@ public interface GoodsOrderDetailMapper extends MyMapper<GoodsOrderDetail,String
     List<GoodsOrderDetail> findByParentOfficeIdAndCreatedDate(@Param("areaId") String areaId, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd);
 
     List<GoodsOrderDetail> findByParentOfficeIdAndBillDate(@Param("areaId") String areaId, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd, @Param("shipTypes") List<String> shipTypes);
+
+    List<GoodsOrderDetailDto> getGoodsOrderDetailListForEdit(@Param("goodsOrderId")  String goodsOrderId, @Param("depotId")  String depotId);
 }
