@@ -47,7 +47,7 @@ public class CustomerReceiveService {
         LocalDate dateStart = customerReceiveQuery.getDateStart();
         LocalDate dateEnd = customerReceiveQuery.getDateEnd();
         HashSet<String> customerIdSet = new HashSet<String>();
-        if (customerReceiveQuery.getCustomerIdList().size() >0){
+        if (customerReceiveQuery.getCustomerIdList() != null){
             customerIdSet.addAll(customerReceiveQuery.getCustomerIdList());
         }
         if (StringUtils.isNotBlank(customerReceiveQuery.getCustomerGroup())){
@@ -153,7 +153,9 @@ public class CustomerReceiveService {
         LocalDate dateEnd = customerReceiveDetailQuery.getDateEnd();
         String customerId = customerReceiveDetailQuery.getCustomerId();
         List<CustomerReceiveDetailDto> dataList = Lists.newArrayList();
-        List<CustomerReceiveDto> summaryItemList = customerReceiveMapper.findByEndDate(dateStart,customerId);
+        HashSet<String> customerSet = new HashSet<String>();
+        customerSet.add(customerId);
+        List<CustomerReceiveDto> summaryItemList = customerReceiveMapper.findByEndDateAndIn(dateStart,customerSet);
         CustomerReceiveDto summaryItem = new CustomerReceiveDto();
         summaryItem.setCustomerId(customerId);
         summaryItem.setCustomerName(bdCustomerMapper.findById(customerId).getFName());

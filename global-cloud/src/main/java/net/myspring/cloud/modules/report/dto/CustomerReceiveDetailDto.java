@@ -8,7 +8,6 @@ import java.util.Date;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveDetailDto {
-    private CustomerReceiveDto customerReceiveDto;
     //业务类型
     private String billType;
     //单据号
@@ -36,13 +35,6 @@ public class CustomerReceiveDetailDto {
     //备注
     private String remarks;
 
-    public CustomerReceiveDto getCustomerReceiveDto() {
-        return customerReceiveDto;
-    }
-
-    public void setCustomerReceiveDto(CustomerReceiveDto customerReceiveDto) {
-        this.customerReceiveDto = customerReceiveDto;
-    }
 
     public String getBillType() {
         return billType;

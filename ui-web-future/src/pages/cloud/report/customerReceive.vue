@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="receivableReport"></head-tab>
+    <head-tab active="customerReceive"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
@@ -82,7 +82,7 @@
   export default {
     data() {
       return {
-        customerList:[],
+        customerList:{},
         summary: [],
         detail: [],
         formData: {
@@ -118,8 +118,8 @@
       pageRequest() {
           var that = this;
         that.pageLoading = true;
-        util.getQuery("receivableReport");
-        util.setQuery("receivableReport",that.formData);
+        util.getQuery("customerReceive");
+        util.setQuery("customerReceive",that.formData);
         this.formData.dateRange = util.formatDateRange(this.formData.dateRange);
         util.copyValue(that.formData,that.submitData);
         axios.get('/api/global/cloud/report/customerReceive/list',{params:that.submitData}).then((response) => {
@@ -161,7 +161,7 @@
             this.remoteLoading = false;
           })
         } else {
-          this.storeList = {};
+          this.customerList = {};
         }
       },
     },created () {
