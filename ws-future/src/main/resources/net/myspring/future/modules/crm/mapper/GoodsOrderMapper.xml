@@ -68,7 +68,7 @@
             select id
             from crm_express_order
             where express_codes like concat('%',#{p.expressCodes},'%')
-            and endabled=1
+            and enabled=1
             )
         </if>
     </select>

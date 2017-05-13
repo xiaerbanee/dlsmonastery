@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopPrint:edit'">{{$t('shopPrintList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopPrint:view'">{{$t('shopPrintList.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('shopPrintList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -23,7 +23,7 @@
               </el-select>
             </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-              <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('shopPrintList.likeSearch')"></el-input>
+                <account-select  v-model="formData.createdBy"></account-select>
             </el-form-item>
             </el-col>
           </el-row>
@@ -64,8 +64,9 @@
 <script>
   import officeSelect from 'components/basic/office-select';
   import dictMapSelect from 'components/basic/dict-map-select';
+  import accountSelect from 'components/basic/account-select'
   export default {
-    components:{officeSelect,dictMapSelect},
+    components:{officeSelect,dictMapSelect,accountSelect},
     data() {
       return {
         page:{},

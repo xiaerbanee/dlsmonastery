@@ -4,7 +4,7 @@ import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.future.common.mybatis.MyProvider;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;
@@ -46,11 +46,11 @@ public interface DepotMapper extends BaseMapper<Depot,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<Depot> findByIds(List<String> ids);
     
-    Page<DepotDto> findPage(Pageable pageable, @Param("p")DepotQuery depotQuery);
+    Page<DepotDto> findPage(Pageable pageable, @Param("p")DepotShopQuery depotQuery);
 
-    Page<DepotDto> findDepotAccountPage(Pageable pageable, @Param("p") DepotQuery depotQuery);
+    Page<DepotDto> findDepotAccountPage(Pageable pageable, @Param("p") DepotShopQuery depotQuery);
 
-    List<DepotDto> findShopAccountExportPage(@Param("p") DepotQuery depotQuery);
+    List<DepotDto> findShopAccountExportPage(@Param("p") DepotShopQuery depotQuery);
 
     List<Depot> findByTypes(List<Integer> depotTypes);
 
@@ -58,11 +58,11 @@ public interface DepotMapper extends BaseMapper<Depot,String> {
 
     List<Depot> findByAccountId(String accountId);
 
-    List<Depot> findByFilterAll(@Param("p") DepotQuery depotQuery);
+    List<Depot> findByFilterAll(@Param("p") DepotShopQuery depotQuery);
 
-    List<Depot> findByFilter(@Param("p")DepotQuery depotQuery);
+    List<Depot> findByFilter(@Param("p")DepotShopQuery depotQuery);
 
-    List<String> findChainIds(@Param("p") DepotQuery depotQuery);
+    List<String> findChainIds(@Param("p") DepotShopQuery depotQuery);
 
     List<Depot> findByChainId(String chainId);
 

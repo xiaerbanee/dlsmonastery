@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
+ * 应收单
  * Created by lihx on 2017/4/6.
  */
 @Mapper

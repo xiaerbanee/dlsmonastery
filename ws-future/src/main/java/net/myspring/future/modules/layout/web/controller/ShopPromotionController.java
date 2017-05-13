@@ -34,11 +34,6 @@ public class ShopPromotionController {
         return shopPromotionForm;
     }
 
-    @RequestMapping(value="getFormProperty")
-    public String getFormProperty() {
-        return null;
-    }
-
     @RequestMapping(value="getQuery",method = RequestMethod.GET)
     public ShopPromotionQuery getQuery(ShopPromotionQuery shopPromotionQuery) {
         shopPromotionQuery.setActivityTypeList(ActivityTypeEnum.getList());
@@ -49,11 +44,6 @@ public class ShopPromotionController {
     public RestResponse save(ShopPromotionForm shopPromotionForm) {
         shopPromotionService.save(shopPromotionForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
-    }
-
-    @RequestMapping(value="detail")
-    public String detail() {
-        return null;
     }
 
     @RequestMapping(value="delete")

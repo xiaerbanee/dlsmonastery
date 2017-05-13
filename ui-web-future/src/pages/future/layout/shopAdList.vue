@@ -7,7 +7,7 @@
         <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopAd:view'">{{$t('shopAdList.batchBlack')}}</el-button>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAd:edit'">{{$t('shopAdList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAd:view'">{{$t('shopAdList.filterOrExport')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('shopAdList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -20,7 +20,7 @@
                 <el-input v-model="formData.id" auto-complete="off" placeholder="输入非零部分"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="shop"></depot-select>
+                <depot-select v-model="formData.shopId" category="SHOP"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.specialArea.label" :label-width="formLabelWidth">
                 <bool-radio-group v-model="formData.specialArea"></bool-radio-group>
@@ -34,7 +34,7 @@
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('expressOrderList.likeSearch')"></el-input>
+                <account-select  v-model="formData.createdBy"></account-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -108,7 +108,6 @@
           createdBy:{label:this.$t('shopAdList.createdBy')},
           createdDate:{label:this.$t('shopAdList.createdDate')}
         },
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -120,8 +119,6 @@
       pageRequest() {
         this.pageLoading = true;
         this.formLabel.specialArea.value = util.bool2str(this.formData.specialArea);
-        this.formLabel.officeId.value = util.getLabel(this.formProperty.areas,this.formData.officeId);
-        this.formLabel.shopAdTypeId.value = util.getLabel(this.formProperty.shopAdTypes,this.formData.shopAdTypeId);
         this.formData.createdDate=util.formatDateRange(this.formData.createdDate);
         util.copyValue(this.formData,this.submitData)
         util.setQuery("shopAdList",this.submitData);

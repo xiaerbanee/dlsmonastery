@@ -11,9 +11,7 @@ import java.util.List;
 public class ShopPromotionQuery extends BaseQuery {
     private String businessId;
     private String activityType;
-    private String shopName;
-    private LocalDateTime createdDateStart;
-    private LocalDateTime createdDateEnd;
+    private String shopId;
     private List<String> activityTypeList;
 
     public List<String> getActivityTypeList() {
@@ -40,27 +38,11 @@ public class ShopPromotionQuery extends BaseQuery {
         this.activityType = activityType;
     }
 
-    public String getShopName() {
-        return shopName;
+    public String getShopId() {
+        return shopId;
     }
 
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
-    }
-
-    public LocalDateTime getCreatedDateStart() {
-        return createdDateStart;
-    }
-
-    public void setCreatedDateStart(LocalDateTime createdDateStart) {
-        this.createdDateStart = createdDateStart;
-    }
-
-    public LocalDateTime getCreatedDateEnd() {
-        return createdDateEnd;
-    }
-
-    public void setCreatedDateEnd(LocalDateTime createdDateEnd) {
-        this.createdDateEnd = createdDateEnd;
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
     }
 }

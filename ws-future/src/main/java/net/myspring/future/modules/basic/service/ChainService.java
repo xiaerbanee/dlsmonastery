@@ -6,6 +6,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ChainDto;
 import net.myspring.future.modules.basic.mapper.ChainMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.mapper.DepotShopMapper;
 import net.myspring.future.modules.basic.web.query.ChainQuery;
 import net.myspring.future.modules.basic.web.form.ChainForm;
 import net.myspring.util.collection.CollectionUtil;
@@ -28,7 +29,7 @@ public class ChainService {
     @Autowired
     private ChainMapper chainMapper;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotShopMapper depotShopMapper;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -53,15 +54,6 @@ public class ChainService {
             chainForm= BeanUtil.map(chain,ChainForm.class);
             cacheUtils.initCacheInput(chainForm);
         }
-        List<Depot> depots = depotMapper.findByChainId(chainForm.getId());
-        if(!depots.isEmpty()){
-            List<String> depotName = new ArrayList<>();
-            for(Depot depot : depots){
-                depotName.add(depot.getName());
-            }
-            chainForm.setDepotIdList(depotName);
-        }
-
         return chainForm;
     }
 
@@ -78,23 +70,6 @@ public class ChainService {
         }
         if(CollectionUtil.isNotEmpty(chainForm.getAccountIdList())){
             chainMapper.saveAccountAndChain(chain.getId(),chainForm.getAccountIdList());
-        }
-        List<Depot> depotList = depotMapper.findByChainId(chain.getId());
-        Map<String,Depot> depotMap=CollectionUtil.extractToMap(depotList,"id");
-        List<String> depotIdList= CollectionUtil.extractToList(depotList,"id");
-        List<String> removeIdList=CollectionUtil.subtract(chainForm.getDepotIdList(),depotIdList);
-        List<String> addIdList=CollectionUtil.subtract(depotIdList,chainForm.getDepotIdList());
-        for(String removeId:removeIdList){
-            Depot removeDepot = depotMap.get(removeId);
-            removeDepot.setChainId(null);
-            depotMapper.update(removeDepot);
-        }
-        depotList=depotMapper.findByIds(chainForm.getDepotIdList());
-        depotMap=CollectionUtil.extractToMap(depotList,"id");
-        for(String addId:addIdList){
-            Depot addDepot = depotMap.get(addId);
-            addDepot.setChainId(chain.getId());
-            depotMapper.update(addDepot);
         }
         return chain;
     }

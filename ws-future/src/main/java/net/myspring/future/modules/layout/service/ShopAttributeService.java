@@ -2,11 +2,9 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import jdk.nashorn.internal.objects.Global;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.DepotCategoryEnum;
 import net.myspring.future.common.enums.DictEnumCategoryEnum;
 import net.myspring.future.common.enums.DictMapCategoryEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -16,7 +14,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import net.myspring.future.modules.layout.domain.ShopAttribute;
 import net.myspring.future.modules.layout.dto.ShopAttributeDetailDto;
 import net.myspring.future.modules.layout.mapper.ShopAttributeMapper;
@@ -30,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
 
 import java.util.*;
 
@@ -59,9 +56,8 @@ public class ShopAttributeService {
     }
 
     public Page<DepotDto> findPage(Pageable pageable, ShopAttributeQuery shopAttributeQuery){
-        DepotQuery depotQuery=new DepotQuery();
+        DepotShopQuery depotQuery=new DepotShopQuery();
         ReflectionUtil.copyProperties(shopAttributeQuery,depotQuery);
-        depotQuery.setTypes(depotManager.getTypeValueByCategory(DepotCategoryEnum.SHOP.name()));
         Page<DepotDto> page = depotMapper.findPage(pageable, depotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -91,12 +87,6 @@ public class ShopAttributeService {
 
     public ShopAttributeForm save(ShopAttributeForm shopAttributeForm) {
         Depot shop = depotMapper.findOne(shopAttributeForm.getShop().getId());
-        shop.setChannelType(shopAttributeForm.getShop().getChannelType());
-        shop.setDistrictId(shopAttributeForm.getShop().getDistrictId());
-        shop.setAreaType(shopAttributeForm.getShop().getAreaType());
-        shop.setTaskQty(shopAttributeForm.getShop().getTaskQty());
-        Long shopMonthTotal=shopAttributeForm.getShopMonthTotal()==null?0l:shopAttributeForm.getShopMonthTotal();
-        shop.setTurnoverType(getValueByTurnoverType(shopMonthTotal));
         depotMapper.update(shop);
         List<ShopAttribute> shopAttributes=shopAttributeMapper.findByShopId(shopAttributeForm.getShop().getId());
         Map<String,ShopAttribute> shopAttributeMap=CollectionUtil.extractToMap(shopAttributes,"typeName");

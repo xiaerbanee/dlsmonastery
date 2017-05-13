@@ -2,12 +2,7 @@ package net.myspring.future.modules.layout.web.controller;
 
 
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
-import net.myspring.future.modules.layout.domain.ShopAttribute;
-import net.myspring.future.modules.layout.dto.ShopAttributeDto;
 import net.myspring.future.modules.layout.service.ShopAttributeService;
 import net.myspring.future.modules.layout.web.form.ShopAttributeForm;
 import net.myspring.future.modules.layout.web.query.ShopAttributeQuery;

@@ -2,7 +2,6 @@ package net.myspring.future.modules.layout.service;
 
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.future.modules.layout.mapper.ShopGoodsDepositMapper;
@@ -29,9 +28,6 @@ public class ShopGoodsDepositService {
     private ShopGoodsDepositMapper shopGoodsDepositMapper;
     @Autowired
     private CacheUtils cacheUtils;
-
-    @Autowired
-    private DepotService depotService;
 
     public BigDecimal getTotalAmount(String shopId) {
         return null;

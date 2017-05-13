@@ -44,9 +44,8 @@ public class ShopImageService {
         return shopImageForm;
     }
 
-    public List<String> getQuery(){
-        List<String> areaLists = new ArrayList<>();
-        return areaLists;
+    public ShopImageQuery getQuery(ShopImageQuery shopImageQuery){
+        return shopImageQuery;
     }
 
     public ShopImage save(ShopImageForm shopImageForm) {

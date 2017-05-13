@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
@@ -34,6 +35,8 @@ public class AdPricesystemChangeService {
     private ProductMapper productMapper;
     @Autowired
     private AdPricesystemDetailMapper adPricesystemDetailMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
 
     public AdPricesystemChange findOne(String id){
         AdPricesystemChange adPricesystemChange=adPricesystemChangeMapper.findOne(id);
@@ -42,6 +45,7 @@ public class AdPricesystemChangeService {
 
     public Page<AdPricesystemChangeDto> findPage(Pageable pageable, AdPricesystemChangeQuery adPricesystemChangeQuery) {
         Page<AdPricesystemChangeDto> page = adPricesystemChangeMapper.findPage(pageable, adPricesystemChangeQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 

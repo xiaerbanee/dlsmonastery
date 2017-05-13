@@ -63,7 +63,6 @@ public class GoodsOrderController {
         result.setShipTypeList(ShipTypeEnum.getList());
         result.setStatusList(GoodsOrderStatusEnum.getList());
         result.setCreatedDateRange(LocalDateTimeUtils.getThisMonthDateRange());
-        result.setStoreTypeList(depotManager.getTypeNameByCategory(DepotCategoryEnum.STORE.name()));
 
         return result;
     }

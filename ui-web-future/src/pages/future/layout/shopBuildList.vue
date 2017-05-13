@@ -22,7 +22,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="shop"></depot-select>
+                <depot-select v-model="formData.shopId" category="SHOP"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.processFlow.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.processFlow" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
@@ -89,9 +89,7 @@
       return {
         pageLoading: false,
         page:{},
-        formData:{
-            auditType:'1',
-        },
+        formData:{},
         submitData:{
           page:0,
           size:25,
@@ -116,7 +114,6 @@
           1:this.$t('shopBuildList.waitAudit')
         },
         multipleSelection:[],
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pickerDateOption:util.pickerDateOption
@@ -125,9 +122,6 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formLabel.officeId.value = util.getLabel(this.formProperty.areas, this.formData.officeId);
-        this.formLabel.processFlow.value = util.getLabel(this.formProperty.processFlows, this.formData.processFlow);
-        this.formLabel.auditType.value = this.auditTypes[this.formData.auditType];
         util.copyValue(this.formData,this.submitData);
         util.setQuery("shopBuildList",this.submitData);
         axios.get('/api/ws/future/layout/shopBuild',{params:this.submitData}).then((response) => {

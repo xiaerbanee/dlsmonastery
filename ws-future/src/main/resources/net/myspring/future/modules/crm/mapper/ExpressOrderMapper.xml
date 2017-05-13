@@ -3,19 +3,82 @@
 <mapper namespace="net.myspring.future.modules.crm.mapper.ExpressOrderMapper">
 
 
-    <select id="findPage" resultType="ExpressOrder">
+    <select id="findPage" resultType="ExpressOrderDto">
         SELECT
         t1.*
         FROM
         crm_express_order t1
         WHERE
         t1.enabled=1
-        <if test="p.expressCode !=null">
-
+        <if test="p.extendBusinessId !=null">
+            and t1.extend_business_id = #{p.extendBusinessId}
+        </if>
+        <if test="p.printDateStart !=null">
+            and t1.print_date >= #{p.printDateStart}
+        </if>
+        <if test="p.printDateEnd !=null">
+            and t1.print_date &lt; #{p.printDateEnd}
+        </if>
+        <if test="p.extendBusinessIdStart !=null">
+            and t1.extend_business_id >= #{p.extendBusinessIdStart}
+        </if>
+        <if test="p.extendType !=null">
+            and t1.extend_type = #{p.extendType}
+        </if>
+        <if test="p.outPrint !=null">
+            <if test="p.outPrint">
+                and t1.out_print_date is not null
+            </if>
+            <if test="!p.outPrint">
+                and t1.out_print_date is  null
+            </if>
+        </if>
+        <if test="p.expressPrint !=null">
+            <if test="p.expressPrint">
+                and t1.express_print_date is not null
+            </if>
+            <if test="!p.expressPrint">
+                and t1.express_print_date is  null
+            </if>
+        </if>
+        <if test="p.fromDepotName !=null">
+            and t1.from_depot_id in(
+            select fromDepot.id
+            from crm_depot fromDepot
+            where fromDepot.name like concat('%',#{p.fromDepotName},'%')
+            and fromDepot.enabled=1
+            )
+        </if>
+        <if test="p.toDepotName !=null">
+            and t1.to_depot_id in(
+            select toDepot.id
+            from crm_depot toDepot
+            where toDepot.name like concat('%',#{p.toDepotName},'%')
+            and toDepot.enabled=1
+            )
+        </if>
+        <if test="p.expressCompanyName !=null">
+            and t1.express_company_id in(
+            select expressCompany.id
+            from crm_express_company expressCompany
+            where expressCompany.name like concat('%',#{p.expressCompanyName},'%')
+            and expressCompany.enabled=1
+            )
         </if>
     </select>
 
-   <select id="findByExtendIdAndType" resultType="ExpressOrder">
+    <select id="findDto" resultType="ExpressOrderDto">
+        SELECT
+        t1.*
+        FROM
+        crm_express_order t1
+        WHERE
+        t1.enabled=1 and t1.id = #{id}
+
+    </select>
+
+
+    <select id="findByExtendIdAndType" resultType="ExpressOrder">
        SELECT t1.*
        FROM crm_express_order t1
        where t1.extend_id=#{extendId}

@@ -2,10 +2,12 @@ package net.myspring.future.modules.layout.web.query;
 
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
+import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/10.
@@ -19,6 +21,7 @@ public class ShopAdQuery extends BaseQuery{
     private String createdBy;
     private String createdDate;
     private String processStatus;
+    private List<ShopAdTypeDto> shopAdTypes;
 
     public String getId() {
         return id;
@@ -78,6 +81,14 @@ public class ShopAdQuery extends BaseQuery{
 
     public void setProcessStatus(String processStatus) {
         this.processStatus = processStatus;
+    }
+
+    public List<ShopAdTypeDto> getShopAdTypes() {
+        return shopAdTypes;
+    }
+
+    public void setShopAdTypes(List<ShopAdTypeDto> shopAdTypes) {
+        this.shopAdTypes = shopAdTypes;
     }
 
     public LocalDate getCreatedDateStart() {

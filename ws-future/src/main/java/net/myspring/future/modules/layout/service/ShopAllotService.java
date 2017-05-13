@@ -63,16 +63,6 @@ public class ShopAllotService {
         if(fromShopId.equals(toShopId)){
             sb.append("调拨前后门店不能相同");
         }
-        if(fromShop.getPricesystemId() ==null ||
-                (fromShop.getParentId()==null && fromShop.getCode()==null) ||
-                (fromShop.getParentId()!=null && depotMapper.findOne(fromShop.getParentId()).getCode()==null && fromShop.getCode()==null)){
-            sb.append(fromShop.getName()+"没有价格体系或者没有和财务关联\n");
-        }
-        if(toShop.getPricesystemId() ==null ||
-                (toShop.getParentId()==null && toShop.getCode()==null) ||
-                (toShop.getParentId()!=null && depotMapper.findOne(toShop.getParentId()).getCode()==null && toShop.getCode()==null)){
-            sb.append(toShop.getName()+"没有价格体系或者没有和财务关联 \n");
-        }
         return sb.toString();
     }
 

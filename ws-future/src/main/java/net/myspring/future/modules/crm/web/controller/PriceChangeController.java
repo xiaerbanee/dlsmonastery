@@ -3,10 +3,13 @@ package net.myspring.future.modules.crm.web.controller;
 
 import net.myspring.future.modules.basic.service.ProductTypeService;
 import net.myspring.future.modules.crm.domain.PriceChange;
+import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.service.PriceChangeService;
+import net.myspring.future.modules.crm.web.query.PriceChangeQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +32,8 @@ public class PriceChangeController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        return null;
+    public Page<PriceChangeDto> list(Pageable pageable,PriceChangeQuery priceChangeQuery){
+        return priceChangeService.findPage(pageable,priceChangeQuery);
     }
 
     @RequestMapping(value = "delete")
@@ -54,14 +57,9 @@ public class PriceChangeController {
         return null;
     }
 
-    @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
-        return null;
-    }
-
     @RequestMapping(value="getQuery")
-    public String getQuery(){
-        return null;
+    public PriceChangeQuery getQuery(PriceChangeQuery priceChangeQuery){
+        return priceChangeQuery;
     }
 
     private List<String> getActionList(PriceChange priceChange) {

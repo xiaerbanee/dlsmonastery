@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.report.web.controller;
 
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,7 @@ public class CustomerReceiveController {
     }
 
     @RequestMapping(value = "detail")
-    public List<CustomerReceiveDetailDto> list(CustomerReceiveDetailDto customerReceiveDetailDto) {
+    public List<CustomerReceiveDetailDto> list(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
         return null;
     }
 
