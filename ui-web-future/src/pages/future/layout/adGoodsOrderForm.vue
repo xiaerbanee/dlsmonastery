@@ -11,9 +11,7 @@
         <el-row >
           <el-col :span="8">
             <el-form-item :label="$t('adGoodsOrderForm.outShopId')" prop="outShopId">
-              <el-select v-model="inputForm.outShopId" clearable filterable remote :placeholder="$t('adGoodsOrderForm.selectKeyShow20time')" :remote-method="remoteAdDepotBac" @change="outShopChange(inputForm.outShopId)" :loading="remoteLoading">
-                <el-option v-for="shop in adDepotBacs" :key="shop.id" :label="shop.name" :value="shop.id"></el-option>
-              </el-select>
+              <depot-select v-model="inputForm.outShopId" category="SHOP"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.outShopId')" prop="outShopId" v-if="isAdShop">
               <el-select v-model="inputForm.adShop" clearable filterable remote :placeholder="$t('adGoodsOrderForm.selectKeyShow20time')" :remote-method="remoteAdDepot"  :loading="remoteLoading">
@@ -24,20 +22,18 @@
               <employee-select v-model="inputForm.employeeId" ></employee-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.expressCompany')" prop="expressCompanyId">
-              <el-select v-model="inputForm.expressOrder.expressCompanyId" clearable  >
-                <el-option v-for="item in formProperty.expressCompanys" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+              <express-company-select v-model="expressOrder.expressCompanyId"></express-company-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.address')" prop="address">
-              <el-input v-model="inputForm.expressOrder.address"></el-input>
+              <el-input v-model="expressOrder.address"></el-input>
             </el-form-item>
             </el-col>
             <el-col :span="8">
             <el-form-item :label="$t('adGoodsOrderForm.contact')" prop="contator">
-              <el-input v-model="inputForm.expressOrder.contator"></el-input>
+              <el-input v-model="expressOrder.contator"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.mobilePhone')" prop="mobilePhone">
-              <el-input v-model="inputForm.expressOrder.mobilePhone"></el-input>
+              <el-input v-model="expressOrder.mobilePhone"></el-input>
             </el-form-item>
               <el-form-item :label="$t('adGoodsOrderForm.remarks')" prop="remarks">
                 <el-input v-model="inputForm.remarks" type="textarea"></el-input>
@@ -67,11 +63,12 @@
   </div>
 </template>
 <script>
-  import employeeSelect from 'components/basic/employee-select'
-
+  import employeeSelect from 'components/basic/employee-select';
+  import depotSelect from 'components/future/depot-select';
+  import expressCompanySelect from 'components/future/express-company-select'
   export default{
     components:{
-      employeeSelect
+      employeeSelect,depotSelect,expressCompanySelect
     },
     data(){
       return{
@@ -84,14 +81,16 @@
         remoteLoading:false,
         isAdShop:false,
         pageLoading:'',
-        inputForm:{
-           id:this.$route.query.id,
+        inputForm:{},
+        expressOrder:{},
+        submitData:{
+          id:this.$route.query.id,
           outShopId:'',
           employeeId:'',
           expressOrder:{
             id:"",
             expressCompanyId:'',
-             address:'',
+            address:'',
             contator:'',
             mobilePhone:'',
           },
@@ -109,7 +108,6 @@
         adDepotBacs:[],
         employees:[],
         rules:{},
-        formProperty:{},
         totalQty:'',
         totalPrice:''
       }
@@ -196,24 +194,11 @@
       }
       this.totalQty=totalQty;
       this.totalPrice=totalPrice;
-    },getFormProperty(){
-        axios.get('/api/crm/adGoodsOrder/getFormProperty').then((response)=> {
-          this.formProperty = response.data;
-        });
-      },findOne(){
-        axios.get('/api/crm/adGoodsOrder/findOne',{params:{id:this.$route.query.id}}).then((response)=> {
-          util.copyValue(response.data,this.inputForm);
-          if(response.data.outShop){
-             this.shops=new Array(response.data.outShop);
-          }
-          if(response.data.employee){
-             this.employees=new Array(response.data.employee)
-          }
-        });
-      }
-    },created(){
-      this.findOne();
-      this.getFormProperty();
+    }},created(){
+      axios.get('/api/ws/future/layout/adGoodsOrder/findForm',{params:{id:this.$route.query.id}}).then((response)=> {
+        this.inputForm =response.data;
+        this.expressOrder=response.data.expressOrderForm;
+      });
     }
   }
 </script>

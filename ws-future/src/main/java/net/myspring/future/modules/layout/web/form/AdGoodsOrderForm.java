@@ -1,11 +1,15 @@
 package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.DataForm;
+import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
+import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/11.
@@ -22,10 +26,31 @@ public class AdGoodsOrderForm extends DataForm<AdGoodsOrder> {
     private LocalDate billDate;
     private String billRemarks;
     private String expressOrderId;
+
+    private ExpressOrderForm expressOrderForm;
     private String employeeId;
 
     private String pass;
     private String passRemarks;
+
+    private List<AdGoodsOrderDetailDto> adGoodsOrderDetails;
+
+
+    public List<AdGoodsOrderDetailDto> getAdGoodsOrderDetails() {
+        return adGoodsOrderDetails;
+    }
+
+    public void setAdGoodsOrderDetails(List<AdGoodsOrderDetailDto> adGoodsOrderDetails) {
+        this.adGoodsOrderDetails = adGoodsOrderDetails;
+    }
+
+    public ExpressOrderForm getExpressOrderForm() {
+        return expressOrderForm;
+    }
+
+    public void setExpressOrderForm(ExpressOrderForm expressOrderForm) {
+        this.expressOrderForm = expressOrderForm;
+    }
 
     public String getStoreId() {
         return storeId;

@@ -12,9 +12,12 @@ import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.mapper.*;
+import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.mapper.AdGoodsOrderDetailMapper;
 import net.myspring.future.modules.layout.mapper.AdGoodsOrderMapper;
@@ -33,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -125,8 +129,7 @@ public class AdGoodsOrderService {
             AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderDto.getId());
             adGoodsOrderDto = BeanUtil.map(adGoodsOrder,AdGoodsOrderDto.class);
             if(adGoodsOrderDto.getExpressOrderId()!=null){
-                /*等Dto建好在修改*/
-                adGoodsOrderDto.setExpressOrder(expressOrderMapper.findOne(adGoodsOrderDto.getExpressOrderId()));
+                adGoodsOrderDto.setExpressOrderDto(expressOrderMapper.findDto(adGoodsOrderDto.getExpressOrderId()));
             }
             cacheUtils.initCacheInput(adGoodsOrderDto);
         }
@@ -137,6 +140,10 @@ public class AdGoodsOrderService {
         if(!adGoodsOrderForm.isCreate()){
             AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderForm.getId());
             adGoodsOrderForm = BeanUtil.map(adGoodsOrder,AdGoodsOrderForm.class);
+            ExpressOrder expressOrder = expressOrderMapper.findOne(adGoodsOrderForm.getExpressOrderId());
+            adGoodsOrderForm.setExpressOrderForm(BeanUtil.map(expressOrder, ExpressOrderForm.class));
+            List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailMapper.findByAdGoodsOrderIds(Arrays.asList(adGoodsOrderForm.getId()));
+            adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
             cacheUtils.initCacheInput(adGoodsOrderForm);
         }
         return adGoodsOrderForm;

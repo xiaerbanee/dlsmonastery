@@ -5,6 +5,7 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
+import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -42,9 +43,7 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private Boolean splitBill;
     private Boolean isUrgent;
     private String expressOrderId;
-    /*
-    * 等Dto建好再修改*/
-    private ExpressOrder expressOrder;
+    private ExpressOrderDto expressOrderDto;
 
     private String employeeId;
     @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "name")
@@ -222,12 +221,12 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
         this.employeeId = employeeId;
     }
 
-    public ExpressOrder getExpressOrder() {
-        return expressOrder;
+    public ExpressOrderDto getExpressOrderDto() {
+        return expressOrderDto;
     }
 
-    public void setExpressOrder(ExpressOrder expressOrder) {
-        this.expressOrder = expressOrder;
+    public void setExpressOrderDto(ExpressOrderDto expressOrderDto) {
+        this.expressOrderDto = expressOrderDto;
     }
 
     public String getEmployeeName() {

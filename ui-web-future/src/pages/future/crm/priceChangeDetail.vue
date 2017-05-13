@@ -19,7 +19,7 @@
           {{inputForm.remarks}}
         </el-form-item>
         <el-form-item  :label="$t('priceChangeDetail.checkPercent')" prop="checkPercent">
-          <el-input v-model="inputForm.checkPercent" ></el-input>
+          <el-input v-model.number="inputForm.checkPercent" ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('priceChangeDetail.save')}}</el-button>
@@ -35,14 +35,10 @@
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             formProperty:{},
-            inputForm:{
-              id:this.$route.query.id,
-              name:'',
-              checkPercent:'',
-              priceChangeDate:'',
-              uploadEndDate:'',
-              productTypeNames:'',
-              remarks:''
+            inputForm:{},
+            submitData:{
+              id:"",
+              checkPercent:"",
             },
             rules: {
               checkPercent: [{ type: 'number', message: this.$t('priceChangeDetail.checkPercentIdNumber')}]
@@ -55,7 +51,9 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/crm/priceChange/check',qs.stringify(this.inputForm)).then((response)=> {
+                util.copyValue(this.inputForm,this.submitData);
+
+              axios.post('/api/ws/future/crm/priceChange/check',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -72,11 +70,10 @@
           })
         }
       },created(){
-        if(!this.isCreate){
-          axios.get('/api/crm/priceChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
+          axios.get('/api/ws/future/crm/priceChange/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm = response.data;
           })
         }
-      }
+
     }
 </script>

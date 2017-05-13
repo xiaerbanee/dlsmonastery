@@ -18,7 +18,7 @@
               {{detailForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.threeMonthQty')">
-              {{detailForm.remarks}}
+              {{detailForm.threeMonthQty}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.employeeId')" >
               {{detailForm.employeeName}}
@@ -30,7 +30,7 @@
               {{detailForm.processStatus}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.expressCodes')">
-              {{detailForm.expressOrder.expressCodes}}
+              {{detailForm.expressOrderDto.expressCodes}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -41,13 +41,13 @@
               {{detailForm.remarks}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.contact')" >
-              {{detailForm.expressOrder.contator}}
+              {{detailForm.expressOrderDto.contator}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.address')" >
-              {{detailForm.expressOrder.address}}
+              {{detailForm.expressOrderDto.address}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.mobilePhone')">
-              {{detailForm.expressOrder.mobilePhone}}
+              {{detailForm.expressOrderDto.mobilePhone}}
             </el-form-item>
             <div  v-if="audit">
             <el-form-item :label="$t('adGoodsOrderDetail.pass')" >
