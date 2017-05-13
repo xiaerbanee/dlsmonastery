@@ -20,7 +20,7 @@
           return;
         }
         this.remoteLoading = true;
-        axios.get('/api/ws/future/basic/depot/search',{params:{name:query,category:this.category}}).then((response)=>{
+        axios.get('/api/ws/future/basic/depotShop/delegate',{params:{key:query}}).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })
@@ -32,7 +32,7 @@
         }
         this.innerId=val;
         this.remoteLoading = true;
-        axios.get('/api/ws/future/basic/depot/searchById?id=' + this.innerId).then((response)=>{
+        axios.get('/api/ws/future/basic/depot/findByIds?id=' + this.innerId).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })

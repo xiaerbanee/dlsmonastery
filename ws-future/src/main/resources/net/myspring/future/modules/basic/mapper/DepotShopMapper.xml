@@ -24,6 +24,7 @@
            and t2.client_id is not NULL
         </if>
         and t1.name like concat('%',#{p.key},'%')
+        limit 0,25
     </select>
 
 </mapper>
