@@ -22,5 +22,7 @@ public interface BdCustomerMapper {
 
     List<String> findNameByNameLike(@Param("name")String name);
 
+    BdCustomer findTopOne();
 
+    List<BdCustomer> findPrimaryGroupAndPrimaryGroupName();
 }

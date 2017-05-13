@@ -7,7 +7,7 @@
           <el-input v-model="inputForm.name" :disabled="!isCreate"></el-input>
         </el-form-item>
         <el-form-item :label="$t('priceChangeForm.productTypeId')" prop="productTypeIdList">
-          <product-type v-model="inputForm.productTypeIdList"></product-type>
+          <product-type  v-model="inputForm.productTypeIdList"></product-type>
         </el-form-item>
         <el-form-item  :label="$t('priceChangeForm.priceChangeDate')" prop="priceChangeDate">
           <el-date-picker  v-model="inputForm.priceChangeDate" type="date" align="left" :placeholder="$t('priceChangeForm.selectDate')" format="yyyy-MM-dd" :disabled="!isCreate"></el-date-picker>

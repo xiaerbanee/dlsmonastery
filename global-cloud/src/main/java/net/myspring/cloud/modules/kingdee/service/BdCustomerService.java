@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.kingdee.service;
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
+import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.mapper.BdCustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,9 @@ public class BdCustomerService {
 
     public List<String> getNameByNameLike(String name){
         return bdCustomerMapper.findNameByNameLike(name);
+    }
+
+    public List<BdCustomer> getCustomerGroupList(){
+        return bdCustomerMapper.findPrimaryGroupAndPrimaryGroupName();
     }
 }

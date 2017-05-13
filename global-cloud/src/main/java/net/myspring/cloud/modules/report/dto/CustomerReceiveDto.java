@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class CustomerReceiveDto {
     private String customerId;
-    private String customerGroup;
+    private String customerGroupName;
     private String customerName;
     private BigDecimal beginShouldGet;
     private BigDecimal endShouldGet;
@@ -28,12 +28,12 @@ public class CustomerReceiveDto {
         this.customerId = customerId;
     }
 
-    public String getCustomerGroup() {
-        return customerGroup;
+    public String getCustomerGroupName() {
+        return customerGroupName;
     }
 
-    public void setCustomerGroup(String customerGroup) {
-        this.customerGroup = customerGroup;
+    public void setCustomerGroupName(String customerGroupName) {
+        this.customerGroupName = customerGroupName;
     }
 
     public String getCustomerName() {

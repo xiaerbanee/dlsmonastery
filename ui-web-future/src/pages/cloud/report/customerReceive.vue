@@ -13,9 +13,9 @@
               <el-form-item :label="formLabel.dateRange.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.dateRange"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.primaryGroupName.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.primaryGroupId" placeholder="请选择客户分组">
-                  <el-option v-for="item in formData.primaryGroup" :key="item.value" :label="item.name" :value="item.value"></el-option>
+              <el-form-item :label="formLabel.customerGroup.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.customerGroup" placeholder="请选择客户分组">
+                  <el-option v-for="item in formData.customerList" :key="item.fprimaryGroup" :label="item.fprimaryGroupName" :value="item.fprimaryGroup"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -31,19 +31,19 @@
           <el-table-column prop="billNo" label="单据编号"></el-table-column>
           <el-table-column prop="date" label="单据日期"></el-table-column>
           <el-table-column prop="materialName" label="商品名称"></el-table-column>
-          <el-table-column prop="quantity" label="数量"></el-table-column>
+          <el-table-column prop="qty" label="数量"></el-table-column>
           <el-table-column prop="price" label="单价"></el-table-column>
-          <el-table-column prop="amount" label="金额"></el-table-column>
-          <el-table-column prop="receivableAmount" label="应收"></el-table-column>
-          <el-table-column prop="actualReceivableAmount" label="实收"></el-table-column>
-          <el-table-column prop="endAmount" label="期末"></el-table-column>
+          <el-table-column prop="shouldGet" label="金额"></el-table-column>
+          <el-table-column prop="shouldGet" label="应收"></el-table-column>
+          <el-table-column prop="realGet" label="实收"></el-table-column>
+          <el-table-column prop="endShouldGet" label="期末"></el-table-column>
           <el-table-column prop="note" label="摘要"></el-table-column>
         </el-table>
       </el-dialog>
       <el-table :data="summary" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
-        <el-table-column fixed prop="customerGroup" label="客户分组" sortable width="150"></el-table-column>
+        <el-table-column fixed prop="customerGroupName" label="客户分组" sortable width="150"></el-table-column>
         <el-table-column prop="customerName" label="客户名称"></el-table-column>
-        <el-table-column prop="beginAmount" label="期初应收"></el-table-column>
+        <el-table-column prop="beginShouldGet" label="期初应收"></el-table-column>
         <el-table-column prop="shouldGet" label="应收金额"></el-table-column>
         <el-table-column prop="realGet" label="实收金额"></el-table-column>
         <el-table-column prop="endShouldGet" label="期末应收"></el-table-column>
@@ -57,16 +57,19 @@
   </div>
 </template>
 <style>
-  .el-table .info-row {
+  .el-table .detail-item1 {
     background: #c9e5f5;
   }
 
-  .el-table .danger-row {
+  .el-table .detail-error {
     background: #FF8888;
   }
 
-  .el-table .warning-row {
+  .el-table .detail-title {
     background: #FFEE99;
+  }
+  .el-table .detail-item2{
+    background:#FFFFFF;
   }
 
 </style>
@@ -75,14 +78,16 @@
     data() {
       return {
         summary: [],
-        detail: {},
+        detail: [],
         formData: {
           dateRange: '',
-          primaryGroupName:'',
-          primaryGroup:{},
+          customerGroup:'',
+          customerList:[],
         },
         submitData: {
           dateRange: '',
+          customerGroup:'',
+          customerIdList:[],
         },
         submitDetail: {
           dateRange: '',
@@ -90,7 +95,7 @@
         },
         formLabel:{
           dateRange:{label:"日期"},
-          primaryGroupName:{label:"客户分组",value:""},
+          customerGroup:{label:"客户分组",value:''},
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -102,11 +107,12 @@
     },
     methods: {
       pageRequest() {
-        this.pageLoading = true;
+          var that = this;
+        that.pageLoading = true;
         util.getQuery("receivableReport");
-        util.setQuery("receivableReport",this.formData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/global/cloud/report/customerReceive/list',{params:this.submitData}).then((response) => {
+        util.setQuery("receivableReport",that.formData);
+        util.copyValue(that.formData,that.submitData);
+        axios.get('/api/global/cloud/report/customerReceive/list',{params:that.submitData}).then((response) => {
           this.summary = response.data;
           this.pageLoading = false;
         })
@@ -118,23 +124,31 @@
         if(customerId !== null) {
           util.copyValue(this.formData,this.submitDetail);
           this.submitDetail.customerId = customerId;
-          axios.get('/api/global/cloud/report/receivableReport/detailList',{params:this.submitDetail}).then((response) =>{
+          axios.get('/api/global/cloud/report/customerReceive/detail',{params:this.submitDetail}).then((response) =>{
             this.detail = response.data;
             this.detailLoading = false;
             this.detailVisible = true;
           })
         }
       },tableRowClassName(row, index) {
-        if (row.css === "info") {
-          return "info-row";
-        }else if(row.css === "danger"){
-          return "danger-row"
-        }else if(row.css === "warning"){
-          return "warning-row"
+        if (row.index === -2) { //head
+          return "detail-item2";
+        } else if (row.index === -3) { //error
+          return "detail-error";
+        } else if (row.index === -1) {
+          return "detail-title";
+        } else if (row.index / 2 === 0) {
+          return "detail-item1";
+        } else if (row.index / 2 !== 0) {
+          return "detail-item2";
         }
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
+      axios.get('/api/global/cloud/kingdee/bdCustomer/getCustomerGroupList').then((response) => {
+        this.formData.customerList = response.data;
+        console.log(this.formData.customerList);
+      });
       this.pageRequest();
     }
   };

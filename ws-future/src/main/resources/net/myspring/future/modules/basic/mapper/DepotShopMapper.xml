@@ -9,21 +9,22 @@
         and t1.enabled=1
         and t2.enabled=1
         <if test="p.direct">
-            and t1.out_id is not NULL
-            and t1.out_type='门店'
-        </if>
-        <if test="p.delegate">
-            and t1.parent_id is NULL
-            AND t1.out_id is NULL
-        </if>
-        <if test="p.directAndSub">
-            AND (
-                t1.out_id IS NOT NULL
-                AND t1.out_type = '门店'
-                OR t1.parent_id IS NOT NULL
+            and t2.client_id is not NULL
+            and t2.client_id in (
+                SELECT id
+                FROM crm_client
+                where enabled=1
+                and out_id is not NULL
             )
         </if>
+        <if test="p.delegate">
+            and t1.client_id is NULL
+        </if>
+        <if test="p.directAndSub">
+           and t2.client_id is not NULL
+        </if>
         and t1.name like concat('%',#{p.key},'%')
+        limit 0,25
     </select>
 
 </mapper>

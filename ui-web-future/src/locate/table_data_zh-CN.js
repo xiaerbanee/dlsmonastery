@@ -90,7 +90,7 @@ export default {
       batchDeliveryForm:'其他出库',
       cloudReportCategory:"财务报表",
       payableReport:"应付对账报表",
-      receivableReport:"应收对账报表",
+      customerReceive:"应收对账报表",
       consignmentReport:"委托代销报表",
       retailReport:"零售报表",
       cloudSysCategory:"系统设置",
