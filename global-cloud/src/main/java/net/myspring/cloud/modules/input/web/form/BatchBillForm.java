@@ -7,7 +7,7 @@ import java.time.LocalDate;
  */
 public class BatchBillForm {
     private String storeNumber;
-    private LocalDate date;
+    private LocalDate billDate;
     private String json;
 
     public String getStoreNumber() {
@@ -18,12 +18,12 @@ public class BatchBillForm {
         this.storeNumber = storeNumber;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getBillDate() {
+        return billDate;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setBillDate(LocalDate billDate) {
+        this.billDate = billDate;
     }
 
     public String getJson() {
