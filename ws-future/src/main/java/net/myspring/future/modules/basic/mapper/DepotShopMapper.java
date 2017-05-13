@@ -48,6 +48,6 @@ public interface DepotShopMapper extends BaseMapper<DepotShop,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<DepotShop> findByIds(List<String> ids);
 
-    List<DepotDto> findAll(DepotShopQuery depotShopQuery);
+    List<DepotDto> findDepotDtoList(DepotShopQuery depotShopQuery);
 
 }
