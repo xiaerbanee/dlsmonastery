@@ -17,8 +17,6 @@ public class DepotStore extends CompanyEntity<DepotStore> {
     private String depotId;
     //仓库类型(好机库good，坏机库bad，寄存机库deposit，淘汰机库disuse)
     private String type;
-    //寄售对应门店
-    private String delegateShopId;
     //分组
     private String group;
     // 财务编号
@@ -44,14 +42,6 @@ public class DepotStore extends CompanyEntity<DepotStore> {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getDelegateShopId() {
-        return delegateShopId;
-    }
-
-    public void setDelegateShopId(String delegateShopId) {
-        this.delegateShopId = delegateShopId;
     }
 
     public String getGroup() {

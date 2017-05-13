@@ -5,6 +5,7 @@ import net.myspring.future.common.domain.CompanyEntity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -16,31 +17,47 @@ public class DepotShop extends CompanyEntity<DepotShop> {
     private String depotId;
     // 地区属性
     private String areaType;
-    // 门店类型
-    private String type;
-    // 价格体系
-    private String pricesystemId;
-    // 额度
-    private BigDecimal credit;
-    //税务名称
-    private String taxName;
-    //是否打印价格
-    private Boolean printPrice;
-    // 客户
-    private String clientId;
-    // 连锁体系
-    private String chainId;
-    //物料价格体系
-    private String adPricesystemId;
-    // 打印类型，批量打印时用于分批打印
-    private String printType;
-    // 快递公司
-    private String expressCompanyId;
-    // 是否让利
-    private Boolean rebate;
-    //是否隐藏
-    private Boolean isHidden=false;
-    private Boolean adShop=false;
+    // 经度
+    private BigDecimal lng;
+    // 纬度
+    private BigDecimal lat;
+    // 有无导购
+    private Boolean hasGuide;
+
+    //门店各种属性
+    //运营商营业厅类型
+    private String carrierType;
+    //营业额分类
+    private String turnoverType;
+    //经营方式
+    private String businessType;
+    //运营商类型移动社会渠道
+    private String channelType;
+    //门店类型
+    private String salePointType;
+    //乡镇类型
+    private String townType;
+    //是否核心商圈
+    private Boolean bussinessCenter=false;
+    //核心商圈名称
+    private String bussinessCenterName;
+    //有无门头
+    private Boolean doorHead=false;
+    //开业时间
+    private Date enableDate;
+    //是否体验店
+    private Boolean specialityStore=false;
+    private String specialityStoreType;
+    //面积大小
+    private String shopArea;
+    //2.0悬吊画框数量
+    private Integer frameNum=0;
+    //2.0 双面体验台数量
+    private Integer deskDoubleNum=0;
+    //2.0 单面体验台数量
+    private Integer deskSingleNum=0;
+    //展柜数量
+    private Integer cabinetNum=0;
 
     public String getDepotId() {
         return depotId;
@@ -58,108 +75,163 @@ public class DepotShop extends CompanyEntity<DepotShop> {
         this.areaType = areaType;
     }
 
-
-    public String getType() {
-        return type;
+    public BigDecimal getLng() {
+        return lng;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setLng(BigDecimal lng) {
+        this.lng = lng;
     }
 
-    public String getPricesystemId() {
-        return pricesystemId;
+    public BigDecimal getLat() {
+        return lat;
     }
 
-    public void setPricesystemId(String pricesystemId) {
-        this.pricesystemId = pricesystemId;
+    public void setLat(BigDecimal lat) {
+        this.lat = lat;
     }
 
-    public BigDecimal getCredit() {
-        return credit;
+    public Boolean getHasGuide() {
+        return hasGuide;
     }
 
-    public void setCredit(BigDecimal credit) {
-        this.credit = credit;
+    public void setHasGuide(Boolean hasGuide) {
+        this.hasGuide = hasGuide;
     }
 
-    public String getTaxName() {
-        return taxName;
+    public String getCarrierType() {
+        return carrierType;
     }
 
-    public void setTaxName(String taxName) {
-        this.taxName = taxName;
+    public void setCarrierType(String carrierType) {
+        this.carrierType = carrierType;
     }
 
-    public Boolean getPrintPrice() {
-        return printPrice;
+    public String getTurnoverType() {
+        return turnoverType;
     }
 
-    public void setPrintPrice(Boolean printPrice) {
-        this.printPrice = printPrice;
+    public void setTurnoverType(String turnoverType) {
+        this.turnoverType = turnoverType;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getBusinessType() {
+        return businessType;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
-    public String getChainId() {
-        return chainId;
+    public String getChannelType() {
+        return channelType;
     }
 
-    public void setChainId(String chainId) {
-        this.chainId = chainId;
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
     }
 
-    public String getAdPricesystemId() {
-        return adPricesystemId;
+    public String getSalePointType() {
+        return salePointType;
     }
 
-    public void setAdPricesystemId(String adPricesystemId) {
-        this.adPricesystemId = adPricesystemId;
+    public void setSalePointType(String salePointType) {
+        this.salePointType = salePointType;
     }
 
-    public String getPrintType() {
-        return printType;
+    public String getTownType() {
+        return townType;
     }
 
-    public void setPrintType(String printType) {
-        this.printType = printType;
+    public void setTownType(String townType) {
+        this.townType = townType;
     }
 
-    public String getExpressCompanyId() {
-        return expressCompanyId;
+    public Boolean getBussinessCenter() {
+        return bussinessCenter;
     }
 
-    public void setExpressCompanyId(String expressCompanyId) {
-        this.expressCompanyId = expressCompanyId;
+    public void setBussinessCenter(Boolean bussinessCenter) {
+        this.bussinessCenter = bussinessCenter;
     }
 
-    public Boolean getRebate() {
-        return rebate;
+    public String getBussinessCenterName() {
+        return bussinessCenterName;
     }
 
-    public void setRebate(Boolean rebate) {
-        this.rebate = rebate;
+    public void setBussinessCenterName(String bussinessCenterName) {
+        this.bussinessCenterName = bussinessCenterName;
     }
 
-    public Boolean getHidden() {
-        return isHidden;
+    public Boolean getDoorHead() {
+        return doorHead;
     }
 
-    public void setHidden(Boolean hidden) {
-        isHidden = hidden;
+    public void setDoorHead(Boolean doorHead) {
+        this.doorHead = doorHead;
     }
 
-    public Boolean getAdShop() {
-        return adShop;
+    public Date getEnableDate() {
+        return enableDate;
     }
 
-    public void setAdShop(Boolean adShop) {
-        this.adShop = adShop;
+    public void setEnableDate(Date enableDate) {
+        this.enableDate = enableDate;
+    }
+
+    public Boolean getSpecialityStore() {
+        return specialityStore;
+    }
+
+    public void setSpecialityStore(Boolean specialityStore) {
+        this.specialityStore = specialityStore;
+    }
+
+    public String getSpecialityStoreType() {
+        return specialityStoreType;
+    }
+
+    public void setSpecialityStoreType(String specialityStoreType) {
+        this.specialityStoreType = specialityStoreType;
+    }
+
+    public String getShopArea() {
+        return shopArea;
+    }
+
+    public void setShopArea(String shopArea) {
+        this.shopArea = shopArea;
+    }
+
+    public Integer getFrameNum() {
+        return frameNum;
+    }
+
+    public void setFrameNum(Integer frameNum) {
+        this.frameNum = frameNum;
+    }
+
+    public Integer getDeskDoubleNum() {
+        return deskDoubleNum;
+    }
+
+    public void setDeskDoubleNum(Integer deskDoubleNum) {
+        this.deskDoubleNum = deskDoubleNum;
+    }
+
+    public Integer getDeskSingleNum() {
+        return deskSingleNum;
+    }
+
+    public void setDeskSingleNum(Integer deskSingleNum) {
+        this.deskSingleNum = deskSingleNum;
+    }
+
+    public Integer getCabinetNum() {
+        return cabinetNum;
+    }
+
+    public void setCabinetNum(Integer cabinetNum) {
+        this.cabinetNum = cabinetNum;
     }
 }

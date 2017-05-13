@@ -4,11 +4,14 @@ import net.myspring.future.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_depot")
 public class Depot extends CompanyEntity<Depot> {
     private String clientId;
+    //寄售对应
+    private String delegateDepotId;
     //编码
     private String code;
     //对应store_id
@@ -30,12 +33,43 @@ public class Depot extends CompanyEntity<Depot> {
     // 省市区
     private String districtId;
 
+    // 价格体系
+    private String pricesystemId;
+    // 额度
+    private BigDecimal credit;
+    // 连锁体系
+    private String chainId;
+    //物料价格体系
+    private String adPricesystemId;
+    // 快递公司
+    private String expressCompanyId;
+    //是否打印价格
+    private Boolean printPrice;
+    // 打印类型，批量打印时用于分批打印
+    private String printType;
+    // 是否让利
+    private Boolean rebate;
+    //税务名称
+    private String taxName;
+    //是否是广告门店
+    private Boolean adShop=false;
+    //是否隐藏
+    private Boolean isHidden=false;
+
     public String getClientId() {
         return clientId;
     }
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public String getDelegateDepotId() {
+        return delegateDepotId;
+    }
+
+    public void setDelegateDepotId(String delegateDepotId) {
+        this.delegateDepotId = delegateDepotId;
     }
 
     public String getCode() {
@@ -116,5 +150,93 @@ public class Depot extends CompanyEntity<Depot> {
 
     public void setDistrictId(String districtId) {
         this.districtId = districtId;
+    }
+
+    public String getPricesystemId() {
+        return pricesystemId;
+    }
+
+    public void setPricesystemId(String pricesystemId) {
+        this.pricesystemId = pricesystemId;
+    }
+
+    public BigDecimal getCredit() {
+        return credit;
+    }
+
+    public void setCredit(BigDecimal credit) {
+        this.credit = credit;
+    }
+
+    public String getChainId() {
+        return chainId;
+    }
+
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
+    }
+
+    public String getAdPricesystemId() {
+        return adPricesystemId;
+    }
+
+    public void setAdPricesystemId(String adPricesystemId) {
+        this.adPricesystemId = adPricesystemId;
+    }
+
+    public String getExpressCompanyId() {
+        return expressCompanyId;
+    }
+
+    public void setExpressCompanyId(String expressCompanyId) {
+        this.expressCompanyId = expressCompanyId;
+    }
+
+    public Boolean getPrintPrice() {
+        return printPrice;
+    }
+
+    public void setPrintPrice(Boolean printPrice) {
+        this.printPrice = printPrice;
+    }
+
+    public String getPrintType() {
+        return printType;
+    }
+
+    public void setPrintType(String printType) {
+        this.printType = printType;
+    }
+
+    public Boolean getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(Boolean rebate) {
+        this.rebate = rebate;
+    }
+
+    public String getTaxName() {
+        return taxName;
+    }
+
+    public void setTaxName(String taxName) {
+        this.taxName = taxName;
+    }
+
+    public Boolean getAdShop() {
+        return adShop;
+    }
+
+    public void setAdShop(Boolean adShop) {
+        this.adShop = adShop;
+    }
+
+    public Boolean getHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        isHidden = hidden;
     }
 }
