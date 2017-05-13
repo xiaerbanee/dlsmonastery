@@ -12,6 +12,7 @@ import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,10 @@ public class CustomerReceiveService {
     public List<CustomerReceiveDto>  findCustomerReceiveDtoList(CustomerReceiveQuery customerReceiveQuery) {
         LocalDate dateStart = customerReceiveQuery.getDateStart();
         LocalDate dateEnd = customerReceiveQuery.getDateEnd();
+        BdCustomer bdCustomer = bdCustomerMapper.findTopOne();
+        if (StringUtils.isBlank(customerReceiveQuery.getCustomerGroup())) {
+            customerReceiveQuery.setCustomerGroup(bdCustomer.getFPrimaryGroup());
+        }
         String primaryGroupId = customerReceiveQuery.getCustomerGroup();
         List<CustomerReceiveDto> tempList = Lists.newLinkedList();
         List<CustomerReceiveDto> dataForStartDate = customerReceiveMapper.findByEndDate(dateStart,primaryGroupId);
@@ -120,8 +125,7 @@ public class CustomerReceiveService {
             for(BdCustomer customer : customerList){
                 if(summary.getCustomerId().equals(customer.getFCustId())) {
                     summary.setCustomerName(customer.getFName());
-                    summary.setCustomerGroup(customer.getFPrimaryGroup());
-                    summary.setCustomerName(customer.getFPrimaryGroupName());
+                    summary.setCustomerGroupName(customer.getFPrimaryGroupName());
                 }
             }
             if (customerReceiveQuery.getQueryDetail()){
@@ -140,7 +144,7 @@ public class CustomerReceiveService {
         LocalDate dateEnd = customerReceiveDetailQuery.getDateEnd();
         String customerId = customerReceiveDetailQuery.getCustomerId();
         List<CustomerReceiveDetailDto> dataList = Lists.newArrayList();
-        List<CustomerReceiveDto> summaryItemList = customerReceiveMapper.findByEndDate(dateStart,customerId);
+        List<CustomerReceiveDto> summaryItemList = customerReceiveMapper.findByEndDateAndIn(dateStart,Lists.newArrayList(customerId));
         CustomerReceiveDto summaryItem = new CustomerReceiveDto();
         summaryItem.setCustomerId(customerId);
         summaryItem.setCustomerName(bdCustomerMapper.findById(customerId).getFName());
@@ -164,7 +168,7 @@ public class CustomerReceiveService {
         }
         CustomerReceiveDetailDto head = new CustomerReceiveDetailDto();
         head.setBillType(summaryItem.getCustomerName());
-        head.setIndex(-3);
+        head.setIndex(-2);
         dataList.add(head);
 
         CustomerReceiveDetailDto beginAmount = new CustomerReceiveDetailDto();
@@ -182,7 +186,7 @@ public class CustomerReceiveService {
             receivableDetail.setBillNo(billSum.getBillNo());
             receivableDetail.setRemarks(billSum.getRemarks());
             if(!"C".equals(billSum.getBillStatus())){
-                receivableDetail.setIndex(-4);
+                receivableDetail.setIndex(-3);
             }
             //实收
             if(billSum.getBillType().equals(CustomerReceiveEnum.销售收款单.name())){
@@ -232,7 +236,7 @@ public class CustomerReceiveService {
         CustomerReceiveDetailDto endAmount = new CustomerReceiveDetailDto();
         endAmount.setBillType("期末应收");
         endAmount.setEndShouldGet(endShouldGet);
-        endAmount.setIndex(-3);
+        endAmount.setIndex(-1);
         dataList.add(endAmount);
         return dataList;
     }

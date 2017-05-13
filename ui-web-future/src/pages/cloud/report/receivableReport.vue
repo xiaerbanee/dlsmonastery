@@ -31,19 +31,19 @@
           <el-table-column prop="billNo" label="单据编号"></el-table-column>
           <el-table-column prop="date" label="单据日期"></el-table-column>
           <el-table-column prop="materialName" label="商品名称"></el-table-column>
-          <el-table-column prop="quantity" label="数量"></el-table-column>
+          <el-table-column prop="qty" label="数量"></el-table-column>
           <el-table-column prop="price" label="单价"></el-table-column>
-          <el-table-column prop="amount" label="金额"></el-table-column>
-          <el-table-column prop="receivableAmount" label="应收"></el-table-column>
-          <el-table-column prop="actualReceivableAmount" label="实收"></el-table-column>
-          <el-table-column prop="endAmount" label="期末"></el-table-column>
+          <el-table-column prop="shouldGet" label="金额"></el-table-column>
+          <el-table-column prop="shouldGet" label="应收"></el-table-column>
+          <el-table-column prop="realGet" label="实收"></el-table-column>
+          <el-table-column prop="endShouldGet" label="期末"></el-table-column>
           <el-table-column prop="note" label="摘要"></el-table-column>
         </el-table>
       </el-dialog>
       <el-table :data="summary" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
-        <el-table-column fixed prop="customerGroup" label="客户分组" sortable width="150"></el-table-column>
+        <el-table-column fixed prop="customerGroupName" label="客户分组" sortable width="150"></el-table-column>
         <el-table-column prop="customerName" label="客户名称"></el-table-column>
-        <el-table-column prop="beginAmount" label="期初应收"></el-table-column>
+        <el-table-column prop="beginShouldGet" label="期初应收"></el-table-column>
         <el-table-column prop="shouldGet" label="应收金额"></el-table-column>
         <el-table-column prop="realGet" label="实收金额"></el-table-column>
         <el-table-column prop="endShouldGet" label="期末应收"></el-table-column>
@@ -57,16 +57,19 @@
   </div>
 </template>
 <style>
-  .el-table .info-row {
+  .el-table .detail-item1 {
     background: #c9e5f5;
   }
 
-  .el-table .danger-row {
+  .el-table .detail-error {
     background: #FF8888;
   }
 
-  .el-table .warning-row {
+  .el-table .detail-title {
     background: #FFEE99;
+  }
+  .el-table .detail-item2{
+    background:#FFFFFF;
   }
 
 </style>
@@ -75,7 +78,7 @@
     data() {
       return {
         summary: [],
-        detail: {},
+        detail: [],
         formData: {
           dateRange: '',
           primaryGroupName:'',
@@ -90,7 +93,7 @@
         },
         formLabel:{
           dateRange:{label:"日期"},
-          primaryGroupName:{label:"客户分组",value:""},
+          primaryGroupName:{label:"客户分组"},
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -118,19 +121,23 @@
         if(customerId !== null) {
           util.copyValue(this.formData,this.submitDetail);
           this.submitDetail.customerId = customerId;
-          axios.get('/api/global/cloud/report/receivableReport/detailList',{params:this.submitDetail}).then((response) =>{
+          axios.get('/api/global/cloud/report/customerReceive/detail',{params:this.submitDetail}).then((response) =>{
             this.detail = response.data;
             this.detailLoading = false;
             this.detailVisible = true;
           })
         }
       },tableRowClassName(row, index) {
-        if (row.css === "info") {
-          return "info-row";
-        }else if(row.css === "danger"){
-          return "danger-row"
-        }else if(row.css === "warning"){
-          return "warning-row"
+        if (row.index === -2) { //head
+          return "detail-item2";
+        } else if (row.index === -3) { //error
+          return "detail-error";
+        } else if (row.index === -1) {
+          return "detail-title";
+        } else if (row.index / 2 === 0) {
+          return "detail-item1";
+        } else if (row.index / 2 !== 0) {
+          return "detail-item2";
         }
       }
     },created () {

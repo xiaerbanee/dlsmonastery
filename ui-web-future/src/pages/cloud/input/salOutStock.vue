@@ -2,17 +2,17 @@
   <div>
     <head-tab active="salOutStock"></head-tab>
     <div>
-      <el-form :model="formData" method="get">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
         <el-row :gutter="24">
           <el-col :span="6">
-            <el-form-item :label="formLabel.storeNumber.label"  :label-width="formLabelWidth">
+            <el-form-item :label="formLabel.storeNumber.label"  :label-width="formLabelWidth" prop="storeNumber">
               <el-select v-model="formData.storeNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStore" :loading="remoteLoading">
                 <el-option v-for="item in storeList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth">
+            <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth" prop="billDate">
               <date-picker v-model="formData.billDate"></date-picker>
             </el-form-item>
           </el-col>
@@ -119,12 +119,15 @@
           }
         },
         formData:{
-          billDate:'',
+          billDate:new Date().toLocaleDateString(),
           storeNumber:'',
           json:[],
         },formLabel:{
           billDate:{label:"日期"},
           storeNumber:{label:"仓库"},
+        },rules: {
+          storeNumber: [{ required: true, message: '请选择仓库'}],
+          billDate: [{ required: true, message: '请选择时间'}],
         },
         submitDisabled:false,
         formLabelWidth: '120px',
@@ -139,19 +142,28 @@
     },
     methods: {
       formSubmit(){
-        this.formData.json =new Array();
-        let list = table.getData();
-        for(let item in list){
-          if(!table.isEmptyRow(item)){
-            this.formData.json.push(list[item]);
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            this.formData.json =new Array();
+            let list = table.getData();
+            for(let item in list){
+              if(!table.isEmptyRow(item)){
+                this.formData.json.push(list[item]);
+              }
+            }
+            this.formData.json = JSON.stringify(this.formData.json);
+            this.formData.billDate = util.formatLocalDate(this.formData.billDate);
+            axios.post('/api/global/cloud/input/salOutStock/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+              this.$message(response.data.message);
+            }).catch(function () {
+              this.submitDisabled = false;
+            });
+          }else{
+            this.submitDisabled = false;
           }
-        }
-        this.formData.json = JSON.stringify(this.formData.json);
-        axios.post('/api/global/cloud/input/salOutStock/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
-          this.$message(response.data.message);
-        }).catch(function () {
-          this.submitDisabled = false;
-        });
+        })
       },
       remoteStore(query) {
         if (query !== '') {

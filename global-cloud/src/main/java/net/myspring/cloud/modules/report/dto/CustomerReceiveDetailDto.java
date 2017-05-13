@@ -25,6 +25,8 @@ public class CustomerReceiveDetailDto {
     private Long qty;
     //单价
     private BigDecimal price;
+    //金额
+    private BigDecimal amount;
     //应收金额
     private BigDecimal shouldGet;
     //实收金额
@@ -138,11 +140,11 @@ public class CustomerReceiveDetailDto {
         this.remarks = remarks;
     }
 
-    public BigDecimal getAmount(){
-        if(qty==null || price==null) {
-            return null;
-        } else {
-            return new BigDecimal(qty).multiply(price);
-        }
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 }

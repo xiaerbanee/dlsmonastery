@@ -25,6 +25,26 @@
         </foreach>
     </select>
 
+    <select id="findTopOne" resultType="BdCustomer">
+        SELECT top 1
+        t1.FCUSTID,
+        t1.FNUMBER,
+        t1.FSALDEPTID,
+        t2.FNAME,
+        t1.FPRIMARYGROUP,
+        t4.FNAME AS fprimaryGroupName,
+        t1.FMODIFYDATE
+        FROM
+        T_BD_CUSTOMER t1,
+        T_BD_CUSTOMER_L t2,
+        T_BD_CUSTOMERGROUP t3,
+        T_BD_CUSTOMERGROUP_L t4
+        WHERE
+        t1.FCUSTID = t2.FCUSTID
+        AND t1.FPRIMARYGROUP = t3.FID
+        AND t3.FID = t4.FID
+    </select>
+
     <select id="findByIdList" resultType="BdCustomer">
         SELECT
         t1.FCUSTID,

@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
+import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
@@ -28,6 +29,7 @@ import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -50,13 +52,8 @@ public class SalOutStockService {
     private BdCustomerMapper bdCustomerMapper;
     @Autowired
     private BdDepartmentMapper bdDepartmentMapper;
-    @Autowired
-    private AccountKingdeeBookMapper accountKingdeeBookMapper;
-    @Autowired
-    private KingdeeBookMapper kingdeeBookMapper;
 
-    public KingdeeSynExtendDto save(SalOutStockDto salOutStockDto) {
-        KingdeeBook kingdeeBook = kingdeeBookMapper.findByCompanyId(RequestUtils.getCompanyId());
+    public KingdeeSynExtendDto save(SalOutStockDto salOutStockDto,KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
                 KingdeeFormIdEnum.SAL_OUTSTOCK.name(),
                 salOutStockDto.getJson(),
@@ -72,11 +69,11 @@ public class SalOutStockService {
     }
 
 
-    public List<KingdeeSynExtendDto> save (BatchBillForm batchBillForm) {
+    public List<KingdeeSynExtendDto> save (BatchBillForm batchBillForm,KingdeeBook kingdeeBook) {
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         String storeNumber = batchBillForm.getStoreNumber();
         LocalDate date = batchBillForm.getBillDate();
-        String json = batchBillForm.getJson();
+        String json = HtmlUtils.htmlUnescape(batchBillForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> customerNameList = Lists.newArrayList();
         for (List<Object> row : data){
@@ -93,7 +90,6 @@ public class SalOutStockService {
         }
         List<BdDepartment> bdDepartmentList = bdDepartmentMapper.findByIdList(departmentIdList);
         Map<String,BdDepartment> bdDepartmentMap = bdDepartmentList.stream().collect(Collectors.toMap(BdDepartment::getFDeptId, bdDepartment -> bdDepartment));
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookMapper.findByAccountId(RequestUtils.getAccountId());
         Map<String, SalOutStockDto> billMap = Maps.newLinkedHashMap();
         for (List<Object> row : data) {
             String materialNumber = HandsontableUtils.getValue(row,0);
@@ -113,7 +109,7 @@ public class SalOutStockService {
             String billKey = customerNumMap.get(customerName) + CharConstant.COMMA + billType;
             if (!billMap.containsKey(billKey)) {
                 SalOutStockDto salOutStockDto = new SalOutStockDto();
-                salOutStockDto.setCreator(accountKingdeeBook.getUsername());
+                salOutStockDto.setCreator(RequestUtils.getAccountId());
                 salOutStockDto.setDate(date);
                 salOutStockDto.setStoreNumber(storeNumber);
                 salOutStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
@@ -129,7 +125,7 @@ public class SalOutStockService {
         //财务出库开单
         if (CollectionUtil.isNotEmpty(batchBills)) {
             for (SalOutStockDto batchBill : batchBills) {
-                KingdeeSynExtendDto kingdeeSynExtendDto = save(batchBill);
+                KingdeeSynExtendDto kingdeeSynExtendDto = save(batchBill,kingdeeBook);
                 kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
             }
         }

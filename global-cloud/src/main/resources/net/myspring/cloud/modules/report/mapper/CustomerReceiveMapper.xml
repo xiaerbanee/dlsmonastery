@@ -154,7 +154,7 @@
     </select>
 
     <select id="findByPeriodForBillSum" resultType="CustomerReceiveDetailDto">
-        select t.customerId as customerReceiveDto.customerId, t.customerName,t.billType,t.billNo,t.billDate,t.endShouldGet,t.billStatus
+        select t.customerId as customerId, t.customerName,t.billType,t.billNo,t.billDate,t.amount,t.billStatus
         from (
             SELECT
             b.FCONTACTUNIT AS customerId,
@@ -162,7 +162,7 @@
             d.FNAME AS billType,
             b.FBillNo AS billNo,
             b.FDATE AS billDate,
-            a.FAMOUNT AS endShouldGet,
+            a.FAMOUNT AS amount,
             b.FDocumentStatus AS billStatus
             FROM
             T_AR_OTHERRECABLEENTRY a
@@ -180,7 +180,7 @@
             d.FNAME AS billType,
             b.FBillNo AS billNo,
             b.FDATE AS billDate,
-            a.FRECAMOUNT_E AS endShouldGet,
+            a.FRECAMOUNT_E AS amount,
             b.FDocumentStatus AS billStatus
             FROM
             T_AR_RECEIVEBILLENTRY a
@@ -198,7 +198,7 @@
             d.FNAME AS billType,
             b.FBillNo AS billNo,
             b.FDATE AS billDate,
-            a.FREALREFUNDAMOUNT AS endShouldGet,
+            a.FREALREFUNDAMOUNT AS amount,
             b.FDocumentStatus AS billStatus
             FROM
             T_AR_REFUNDBILLENTRY a
@@ -216,7 +216,7 @@
             d.FNAME AS billType,
             b.FBillNo AS billNo,
             b.FDATE AS billDate,
-            sum(c.FAMOUNT) AS endShouldGet,
+            sum(c.FAMOUNT) AS amount,
             b.FDOCUMENTSTATUS AS billStatus
             FROM
             T_SAL_RETURNSTOCKENTRY a
@@ -243,7 +243,7 @@
             d.FNAME AS billType,
             b.FBillNo AS billNo,
             b.FDATE AS billDate,
-            sum(c.FALLAMOUNT) AS endShouldGet,
+            sum(c.FALLAMOUNT) AS amount,
             b.FDOCUMENTSTATUS AS billStatus
             FROM
             T_SAL_OUTSTOCKENTRY a
@@ -271,7 +271,7 @@
             d.FNAME AS billType,
             b.FBillNo AS billNo,
             b.FDATE AS billDate,
-            sum(c.FAMOUNT) AS endShouldGet,
+            sum(c.FAMOUNT) AS amount,
             b.FDOCUMENTSTATUS AS billStatus
             FROM
             T_SAL_RETURNSTOCKENTRY a
@@ -298,7 +298,7 @@
             d.FNAME AS billType,
             b.FBillNo AS billNo,
             b.FDATE AS billDate,
-            sum(c.FALLAMOUNT) AS endShouldGet,
+            sum(c.FALLAMOUNT) AS amount,
             b.FDOCUMENTSTATUS AS billStatus
             FROM
             T_SAL_OUTSTOCKENTRY a
@@ -333,7 +333,7 @@
             f.fname as materialName,
             a.FBASEUNITQTY AS qty,
             c.FPRICE AS price,
-            c.FAMOUNT AS endShouldGet,
+            c.FAMOUNT AS amount,
             a.FNOTE AS note,
             b.FDOCUMENTSTATUS AS billStatus
             FROM
@@ -357,7 +357,7 @@
             f.FNAME AS materialName,
             a.FREALQTY AS qty,
             c.FTAXPRICE AS price,
-            c.FALLAMOUNT AS endShouldGet,
+            c.FALLAMOUNT AS amount,
             a.FNOTE AS remarks,
             b.FDOCUMENTSTATUS AS billStatus
             FROM
@@ -382,7 +382,7 @@
             f.fname as materialName,
             a.FBASEUNITQTY AS qty,
             c.FPRICE AS price,
-            c.FAMOUNT AS endShouldGet,
+            c.FAMOUNT AS amount,
             a.FNOTE AS note,
             b.FDOCUMENTSTATUS AS billStatus
             FROM
@@ -406,7 +406,7 @@
             f.FNAME AS materialName,
             a.FREALQTY AS qty,
             c.FTAXPRICE AS price,
-            c.FALLAMOUNT AS endShouldGet,
+            c.FALLAMOUNT AS amount,
             a.FNOTE AS remarks,
             b.FDOCUMENTSTATUS AS billStatus
             FROM
