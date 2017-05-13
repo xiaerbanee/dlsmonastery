@@ -68,4 +68,10 @@ public class DepotShopController {
         return depotShopService.findDepotDtoList(depotShopQuery);
     }
 
+    @RequestMapping(value = "findByIds")
+    public List<DepotDto> findByListIds(List<String> ids) {
+        List<DepotDto> depotDtoList =depotShopService.findByListIds(ids);
+        return depotDtoList;
+    }
+
 }

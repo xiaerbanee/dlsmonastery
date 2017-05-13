@@ -1,17 +1,9 @@
 package net.myspring.future.modules.basic.service;
 
-import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.OfficeClient;
-import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.dto.DepotShopDto;
-import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.mapper.DepotShopMapper;
 import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,5 +33,6 @@ public class DepotShopService {
         depotShopQuery.setDepotIdList(depotManager.filterDepotIds());
         return depotShopMapper.findDepotDtoList(depotShopQuery);
     }
+
 
 }

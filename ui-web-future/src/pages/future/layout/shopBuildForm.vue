@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item :label="$t('shopBuildForm.shopId')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="SHOP"></depot-select>
+              <shop-select v-model="inputForm.shopId"></shop-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.shopType')" prop="shopType">
               <dict-enum-select v-model="inputForm.shopType" category="店面类型"></dict-enum-select>
@@ -55,12 +55,12 @@
 <script>
   import dictEnumSelect from 'components/basic/dict-enum-select';
   import accountSelect from 'components/basic/account-select';
-  import depotSelect from 'components/future/depot-select';
+  import shopSelect from 'components/future/shop-select';
   export default{
     components:{
         dictEnumSelect,
         accountSelect,
-      depotSelect
+      shopSelect
     },
     data(){
       return {

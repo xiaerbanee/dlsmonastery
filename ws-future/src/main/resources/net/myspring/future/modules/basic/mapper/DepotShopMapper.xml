@@ -4,9 +4,9 @@
 
     <select id="findDepotDtoList" resultType="DepotDto">
         SELECT t1.*
-        FROM crm_depot depot ,crm_depot_shop t2
-        where depot.depot_shop_id=t2.id
-        and depot.enabled=1
+        FROM crm_depot t1,crm_depot_shop t2
+        where t1.depot_shop_id=t2.id
+        and t1.enabled=1
         and t2.enabled=1
         <if test="p.direct">
             and t2.client_id is not NULL
@@ -18,13 +18,14 @@
             )
         </if>
         <if test="p.delegate">
-            and depot.client_id is NULL
+            and t1.client_id is NULL
         </if>
         <if test="p.directAndSub">
            and t2.client_id is not NULL
         </if>
-        and depot.name like concat('%',#{p.key},'%')
+        and depot.name like concat('%',#{p.name},'%')
         <include refid="depotFilter" />
+        limit 0,25
     </select>
 
     <select id="findPage" resultType="DepotShopDto">

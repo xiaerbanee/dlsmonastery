@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.kingdee.web;
 
+import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.service.BdCustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,4 +22,8 @@ public class BdCustomerController {
         return bdCustomerService.getNameByNameLike(name);
     }
 
+    @RequestMapping(value = "getCustomerGroupList")
+    public List<BdCustomer> getCustomerGroupList(){
+        return bdCustomerService.getCustomerGroupList();
+    }
 }
