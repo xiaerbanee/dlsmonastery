@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Lists;
 import net.myspring.common.dto.NameValueDto;
 import net.myspring.future.common.query.BaseQuery;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
@@ -17,8 +18,8 @@ import java.util.Map;
  */
 public class DepotShopQuery extends BaseQuery {
     private String key;
-    private List<String> officeIdList;
-    private List<String> depotIdList;
+    private List<String> officeIdList= Lists.newArrayList();
+    private List<String> depotIdList= Lists.newArrayList();
     //直营
     private Boolean direct;
     //代理
