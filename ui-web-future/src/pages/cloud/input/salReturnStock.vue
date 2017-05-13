@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="salOutStock"></head-tab>
+    <head-tab active="salReturnStock"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
         <el-row :gutter="24">
@@ -135,8 +135,8 @@
       };
     },
     mounted() {
-      axios.get('/api/global/cloud/input/salOutStock/form').then((response)=>{
-        this.settings.columns[5].source = response.data.outStockBillTypeEnums;
+      axios.get('/api/global/cloud/input/salReturnStock/form').then((response)=>{
+        this.settings.columns[5].source = response.data.returnStockBillTypeEnums;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },
@@ -155,7 +155,7 @@
             }
             this.formData.json = JSON.stringify(this.formData.json);
             this.formData.billDate = util.formatLocalDate(this.formData.billDate);
-            axios.post('/api/global/cloud/input/salOutStock/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            axios.post('/api/global/cloud/input/salReturnStock/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
             }).catch(function () {
               this.submitDisabled = false;

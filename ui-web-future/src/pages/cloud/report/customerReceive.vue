@@ -19,8 +19,8 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.customerIdList.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.customerIdList" filterable remote multiple placeholder="请输入关键词" :remote-method="remoteCustomer" :loading="remoteLoading">
-                  <el-option v-for="item in customerList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
+                <el-select v-model="formData.customerIdList"  multiple filterable remote placeholder="请输入关键词" :remote-method="remoteCustomer" :loading="remoteLoading">
+                  <el-option v-for="item in customers" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -82,7 +82,7 @@
   export default {
     data() {
       return {
-        customerList:{},
+        customers:{},
         summary: [],
         detail: [],
         formData: {
@@ -156,12 +156,12 @@
         if (query !== '') {
           this.remoteLoading = true;
           axios.get('/api/global/cloud/kingdee/bdCustomer/getByNameLike',{params:{name:query}}).then((response)=>{
-            this.customerList = response.data;
-            console.log(this.customerList);
+            this.customers = response.data;
+            console.log(this.customers);
             this.remoteLoading = false;
           })
         } else {
-          this.customerList = {};
+          this.customers = {};
         }
       },
     },created () {

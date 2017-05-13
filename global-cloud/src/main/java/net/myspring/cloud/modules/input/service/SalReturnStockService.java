@@ -5,12 +5,12 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
-import net.myspring.cloud.common.utils.CacheUtils;
+import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
-import net.myspring.cloud.modules.input.dto.SalOutStockDto;
-import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
+import net.myspring.cloud.modules.input.dto.SalReturnStockDto;
+import net.myspring.cloud.modules.input.dto.SalReturnStockFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.BatchBillForm;
 import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
@@ -19,10 +19,7 @@ import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.kingdee.mapper.ArReceivableMapper;
 import net.myspring.cloud.modules.kingdee.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.kingdee.mapper.BdDepartmentMapper;
-import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
-import net.myspring.cloud.modules.sys.mapper.AccountKingdeeBookMapper;
-import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -43,7 +40,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-public class SalOutStockService {
+public class SalReturnStockService {
     @Autowired
     private KingdeeManager kingdeeManager;
     @Autowired
@@ -53,10 +50,10 @@ public class SalOutStockService {
     @Autowired
     private BdDepartmentMapper bdDepartmentMapper;
 
-    public KingdeeSynExtendDto save(SalOutStockDto salOutStockDto,KingdeeBook kingdeeBook) {
+    public KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
                 KingdeeFormIdEnum.SAL_OUTSTOCK.name(),
-                salOutStockDto.getJson(),
+                salReturnStockDto.getJson(),
                 kingdeeBook,
                 KingdeeFormIdEnum.AR_receivable.name()) {
             @Override
@@ -90,7 +87,7 @@ public class SalOutStockService {
         }
         List<BdDepartment> bdDepartmentList = bdDepartmentMapper.findByIdList(departmentIdList);
         Map<String,BdDepartment> bdDepartmentMap = bdDepartmentList.stream().collect(Collectors.toMap(BdDepartment::getFDeptId, bdDepartment -> bdDepartment));
-        Map<String, SalOutStockDto> billMap = Maps.newLinkedHashMap();
+        Map<String, SalReturnStockDto> billMap = Maps.newLinkedHashMap();
         for (List<Object> row : data) {
             String materialNumber = HandsontableUtils.getValue(row,0);
             String customerName = HandsontableUtils.getValue(row,1);
@@ -100,31 +97,31 @@ public class SalOutStockService {
             String billType = HandsontableUtils.getValue(row,5);
             String remarks = HandsontableUtils.getValue(row,6);
 
-            SalOutStockFEntityDto salOutStockFEntityDto = new SalOutStockFEntityDto();
-            salOutStockFEntityDto.setMaterialNumber(materialNumber);
-            salOutStockFEntityDto.setPrice(price);
-            salOutStockFEntityDto.setQty(qty);
-            salOutStockFEntityDto.setEntryNote(remarks);
+            SalReturnStockFEntityDto salReturnStockFEntityDto = new SalReturnStockFEntityDto();
+            salReturnStockFEntityDto.setMaterialNumber(materialNumber);
+            salReturnStockFEntityDto.setPrice(price);
+            salReturnStockFEntityDto.setQty(qty);
+            salReturnStockFEntityDto.setEntryNote(remarks);
 
             String billKey = customerNumMap.get(customerName) + CharConstant.COMMA + billType;
             if (!billMap.containsKey(billKey)) {
-                SalOutStockDto salOutStockDto = new SalOutStockDto();
-                salOutStockDto.setCreator(RequestUtils.getAccountId());
-                salOutStockDto.setDate(date);
-                salOutStockDto.setStoreNumber(storeNumber);
-                salOutStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
-                salOutStockDto.setBillType(billType);
-                salOutStockDto.setCustomerNumber(customerNumMap.get(customerName));
-                salOutStockDto.setNote(remarks);
-                billMap.put(billKey, salOutStockDto);
+                SalReturnStockDto salReturnStockDto = new SalReturnStockDto();
+                salReturnStockDto.setCreator(RequestUtils.getAccountId());
+                salReturnStockDto.setDate(date);
+                salReturnStockDto.setStoreNumber(storeNumber);
+                salReturnStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
+                salReturnStockDto.setBillType(billType);
+                salReturnStockDto.setCustomerNumber(customerNumMap.get(customerName));
+                salReturnStockDto.setNote(remarks);
+                billMap.put(billKey, salReturnStockDto);
             }
-            billMap.get(billKey).getSalOutStockFEntityDtoList().add(salOutStockFEntityDto);
+            billMap.get(billKey).getSalReturnStockFEntityDtoList().add(salReturnStockFEntityDto);
         }
 
-        List<SalOutStockDto> batchBills = Lists.newArrayList(billMap.values());
+        List<SalReturnStockDto> batchBills = Lists.newArrayList(billMap.values());
         //财务出库开单
         if (CollectionUtil.isNotEmpty(batchBills)) {
-            for (SalOutStockDto batchBill : batchBills) {
+            for (SalReturnStockDto batchBill : batchBills) {
                 KingdeeSynExtendDto kingdeeSynExtendDto = save(batchBill,kingdeeBook);
                 kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
             }
@@ -133,7 +130,7 @@ public class SalOutStockService {
     }
 
     public BatchBillQuery getFormProperty(BatchBillQuery batchBillQuery){
-        batchBillQuery.setOutStockBillTypeEnums(SalOutStockBillTypeEnum.values());
+        batchBillQuery.setReturnStockBillTypeEnums(SalReturnStockBillTypeEnum.values());
         return batchBillQuery;
     }
 
