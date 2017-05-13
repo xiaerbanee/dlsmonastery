@@ -5,6 +5,7 @@ import net.myspring.future.modules.basic.service.ProductTypeService;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.service.PriceChangeService;
+import net.myspring.future.modules.crm.web.form.PriceChangeForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,8 @@ public class PriceChangeController {
     }
 
     @RequestMapping(value = "findForm")
-    public String findOne(PriceChange priceChange){
-        return null;
+    public PriceChangeForm findForm(PriceChangeForm priceChangeForm){
+        return priceChangeService.findForm(priceChangeForm);
     }
 
     @RequestMapping(value="getQuery")
