@@ -7,9 +7,7 @@
           <el-input v-model="inputForm.name" :disabled="!isCreate"></el-input>
         </el-form-item>
         <el-form-item :label="$t('priceChangeForm.productTypeId')" prop="productTypeIdList">
-          <el-select v-model="inputForm.productTypeIdList" multiple filterable clearable :placeholder="$t('priceChangeForm.inputWord')" :disabled="!isCreate">
-            <el-option v-for="item in inputForm.allProductTypeDtos" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <product-type v-model="inputForm.productTypeIdList"></product-type>
         </el-form-item>
         <el-form-item  :label="$t('priceChangeForm.priceChangeDate')" prop="priceChangeDate">
           <el-date-picker  v-model="inputForm.priceChangeDate" type="date" align="left" :placeholder="$t('priceChangeForm.selectDate')" format="yyyy-MM-dd" :disabled="!isCreate"></el-date-picker>
@@ -41,7 +39,9 @@
   </div>
 </template>
 <script>
+  import productType from 'components/future/product-type-select'
     export default{
+      components:{productType},
       data(){
           return{
             isCreate:this.$route.query.id==null,
