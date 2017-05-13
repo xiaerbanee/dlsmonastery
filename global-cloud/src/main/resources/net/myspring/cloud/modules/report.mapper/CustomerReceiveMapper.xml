@@ -153,7 +153,7 @@
         h.customerId
     </select>
 
-    <select id="findByPeriodForEntrySum" resultType="CustomerReceiveDetailDto">
+    <select id="findByPeriodForBillSum" resultType="CustomerReceiveDetailDto">
         select t.customerId as customerReceiveDto.customerId, t.customerName,t.billType,t.billNo,t.billDate,t.endShouldGet,t.billStatus
         from (
             SELECT
@@ -323,7 +323,7 @@
         order by t.customerId, t.billDate, t.billNo
     </select>
 
-    <select id="findByPeriodForEntryF" resultType="CustomerReceiveDetailDto">
+    <select id="findByPeriodForMaterial" resultType="CustomerReceiveDetailDto">
             SELECT
             b.FRETCUSTID AS customerId,
             d.FNAME AS billType,

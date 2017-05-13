@@ -21,7 +21,7 @@ public class BdMaterialService {
         return bdMaterialMapper.findNameByNameLike(name);
     }
 
-    public List<BdMaterial> getByName(String name){
+    public BdMaterial getByName(String name){
         return bdMaterialMapper.findByName(name);
     }
 

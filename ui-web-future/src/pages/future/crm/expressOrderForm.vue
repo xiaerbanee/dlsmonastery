@@ -16,7 +16,7 @@
           <el-input v-model="inputForm.contator"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.address')" prop="address">
-          <el-input v-model="inputForm.address"></el-input>
+          <el-input type="textarea" v-model="inputForm.address"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.mobilePhone')" prop="mobilePhone">
           <el-input v-model="inputForm.mobilePhone"></el-input>

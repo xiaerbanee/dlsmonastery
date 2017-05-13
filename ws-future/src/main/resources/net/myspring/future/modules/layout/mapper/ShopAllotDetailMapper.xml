@@ -12,8 +12,8 @@
         select validProduct.id productId, validProduct.productName productName, detail.*
         from  (select t1.id id, t1.name productName
                     from crm_product t1
-                    where t1.id in (select t2.product_id from crm_pricesystem_detail t2 where t2.pricesystem_id = (select depot1.pricesystem_id from crm_depot depot1 where depot1.id = #{fromShopId}))
-                    and t1.id in (select t3.product_id from crm_pricesystem_detail t3 where t3.pricesystem_id =  (select depot2.pricesystem_id from crm_depot depot2 where depot2.id = #{toShopId}))
+                    where t1.id in (select t2.product_id from crm_pricesystem_detail t2 where t2.pricesystem_id = (select depot1.pricesystem_id from crm_depot depot1 where depot1.id = #{fromDepotId}))
+                    and t1.id in (select t3.product_id from crm_pricesystem_detail t3 where t3.pricesystem_id =  (select depot2.pricesystem_id from crm_depot depot2 where depot2.id = #{toDepotId}))
                     and t1.enabled=1) validProduct LEFT JOIN crm_shop_allot_detail detail
                     ON validProduct.id = detail.product_id and  detail.shop_allot_id = #{shopAllotId}
     </select>
@@ -23,8 +23,8 @@
 
         select t1.id productId, t1.name productName
         from crm_product t1
-        where t1.id in (select t2.product_id from crm_pricesystem_detail t2 where t2.pricesystem_id = (select depot1.pricesystem_id from crm_depot depot1 where depot1.id = #{fromShopId}))
-        and t1.id in (select t3.product_id from crm_pricesystem_detail t3 where t3.pricesystem_id =  (select depot2.pricesystem_id from crm_depot depot2 where depot2.id = #{toShopId}))
+        where t1.id in (select t2.product_id from crm_pricesystem_detail t2 where t2.pricesystem_id = (select depot1.pricesystem_id from crm_depot depot1 where depot1.id = #{fromDepotId}))
+        and t1.id in (select t3.product_id from crm_pricesystem_detail t3 where t3.pricesystem_id =  (select depot2.pricesystem_id from crm_depot depot2 where depot2.id = #{toDepotId}))
         and t1.enabled=1
 
     </select>

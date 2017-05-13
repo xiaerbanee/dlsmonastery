@@ -15,10 +15,10 @@
                 <el-input v-model="formData.businessId" auto-complete="off" :placeholder="$t('shopAllotList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.fromShopId.label" :label-width="formLabelWidth">
-                <su-depot type="shop" v-model="formData.fromShopId"  ></su-depot>
+                <depot-select type="SHOP" v-model="formData.fromShopId"  ></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.toShopId.label" :label-width="formLabelWidth">
-                <su-depot  type="shop" v-model="formData.toShopId"  ></su-depot>
+                <depot-select  type="SHOP" v-model="formData.toShopId"  ></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
@@ -90,7 +90,13 @@
   </div>
 </template>
 <script>
-  export default {
+  import depotSelect from 'components/future/depot-select'
+
+  export default{
+    components:{
+      depotSelect,
+
+    },
     data() {
       return {
         page:{},

@@ -21,8 +21,8 @@ public class ShopAllotDetailService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public List<ShopAllotDetailForm> getShopAllotDetailListForEdit(String shopAllotId, String fromShopId, String toShopId) {
-        List<ShopAllotDetailDto> result = shopAllotDetailMapper.getShopAllotDetailListForEdit(shopAllotId, fromShopId, toShopId);
+    public List<ShopAllotDetailForm> getShopAllotDetailListForEdit(String shopAllotId, String fromDepotId, String toDepotId) {
+        List<ShopAllotDetailDto> result = shopAllotDetailMapper.getShopAllotDetailListForEdit(shopAllotId, fromDepotId, toDepotId);
         cacheUtils.initCacheInput(result);
 
         return BeanUtil.map(result, ShopAllotDetailForm.class);

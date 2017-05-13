@@ -31,17 +31,6 @@ public class ShopDepositController {
     }
 
 
-    @RequestMapping(value = "getDepartmentByShopId")
-    public String getDepartmentByShopId() {
-        return null;
-    }
-
-    @RequestMapping(value = "getFormProperty")
-    public String getFormProperty() {
-        return null;
-    }
-
-
     @RequestMapping(value = "getQuery")
     public ShopDepositQuery getQuery(ShopDepositQuery shopDepositQuery) {
         shopDepositQuery.setTypeList(shopDepositService.findShopDepositTypeList());
