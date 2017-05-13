@@ -26,4 +26,18 @@
         and t1.name like concat('%',#{p.key},'%')
     </select>
 
+    <select id="findPage" resultType="DepotDto">
+        select depot.*
+        from crm_depot depot
+        where
+        depot.enabled=1
+        <if test="name !=null">
+            and depot.name like concat('%',#{name},'%')
+        </if>
+        <if test="category !=null">
+            and depot.category = category
+        </if>
+    </select>
+
+
 </mapper>

@@ -1,5 +1,9 @@
 package net.myspring.cloud.modules.report.web.query;
 
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,9 +14,17 @@ public class CustomerReceiveQuery {
     private String customerGroup;
     private LocalDate dateStart;
     private LocalDate dateEnd;
+    private String dateRange;
     private List<String> customerIdList;
     private Boolean queryDetail = false;
 
+    public String getDateRange() {
+        return dateRange;
+    }
+
+    public void setDateRange(String dateRange) {
+        this.dateRange = dateRange;
+    }
 
     public String getCustomerGroup() {
         return customerGroup;
@@ -23,6 +35,12 @@ public class CustomerReceiveQuery {
     }
 
     public LocalDate getDateStart() {
+        if(StringUtils.isNotBlank(dateRange)){
+            String[] tempParamValues = dateRange.split(CharConstant.DATE_RANGE_SPLITTER);
+            dateStart = LocalDateUtils.parse(tempParamValues[0]);
+        }else{
+            dateStart = LocalDate.now().minusDays(3L);
+        }
         return dateStart;
     }
 
@@ -31,6 +49,12 @@ public class CustomerReceiveQuery {
     }
 
     public LocalDate getDateEnd() {
+        if(StringUtils.isNotBlank(dateRange)){
+            String[] tempParamValues = dateRange.split(CharConstant.DATE_RANGE_SPLITTER);
+            dateEnd = LocalDateUtils.parse(tempParamValues[1]);
+        }else{
+            dateEnd = LocalDate.now().minusDays(1L);
+        }
         return dateEnd;
     }
 

@@ -23,7 +23,7 @@ public class BdMaterialController {
     }
 
     @RequestMapping(value = "getByName")
-    public List<BdMaterial> getByName(String name){
+    public BdMaterial getByName(String name){
         return bdMaterialService.getByName(name);
     }
 

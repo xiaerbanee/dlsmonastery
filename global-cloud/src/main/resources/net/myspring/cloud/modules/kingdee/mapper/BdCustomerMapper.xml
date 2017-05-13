@@ -44,7 +44,7 @@
         AND t1.FPRIMARYGROUP = t3.FID
         AND t3.FID = t4.FID
         and t1.FCUSTID in
-        <foreach item="item" index="index" collection="nameList" open="(" separator="," close=")">
+        <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>

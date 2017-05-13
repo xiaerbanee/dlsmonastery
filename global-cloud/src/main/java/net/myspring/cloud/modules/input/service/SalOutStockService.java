@@ -75,7 +75,7 @@ public class SalOutStockService {
     public List<KingdeeSynExtendDto> save (BatchBillForm batchBillForm) {
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         String storeNumber = batchBillForm.getStoreNumber();
-        LocalDate date = batchBillForm.getDate();
+        LocalDate date = batchBillForm.getBillDate();
         String json = batchBillForm.getJson();
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> customerNameList = Lists.newArrayList();

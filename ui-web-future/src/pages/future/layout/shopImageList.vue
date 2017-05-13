@@ -58,8 +58,8 @@
           officeId:"",
           shopId:""
         },formLabel:{
-          officeId:{label:this.$t('shopImageList.areaName'),value:""},
-          shopName:{label:this.$t('shopImageList.shopName'),value:""}
+          officeId:{label:this.$t('shopImageList.areaName')},
+          shopName:{label:this.$t('shopImageList.shopName')}
         },
         formLabelWidth: '120px',
         formVisible: false,
