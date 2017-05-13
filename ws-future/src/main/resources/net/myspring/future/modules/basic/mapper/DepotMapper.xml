@@ -36,6 +36,16 @@
         </if>
     </select>
 
+    <select id="findByNameList" resultType="Depot">
+        SELECT t1.*
+        FROM crm_depot t1
+        WHERE t1.enabled = 1
+        and t1.name in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <select id="findShopAccountExportPage" resultType="DepotDto">
         select depot.*
         from crm_depot depot

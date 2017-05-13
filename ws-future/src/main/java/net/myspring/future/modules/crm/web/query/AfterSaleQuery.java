@@ -98,6 +98,22 @@ public class AfterSaleQuery {
         }
     }
 
+    public LocalDate getFromCompanyDateStart() {
+        if(StringUtils.isNotBlank(fromCompanyDate)) {
+            return LocalDateUtils.parse(fromCompanyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getFromCompanyDateEnd() {
+        if(StringUtils.isNotBlank(fromCompanyDate)) {
+            return LocalDateUtils.parse(fromCompanyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
+    }
+
     public LocalDate getToStoreDateStart() {
         if(StringUtils.isNotBlank(toStoreDate)) {
             return LocalDateUtils.parse(toStoreDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);

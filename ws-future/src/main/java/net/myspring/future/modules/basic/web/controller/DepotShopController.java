@@ -25,7 +25,7 @@ public class DepotShopController {
 
     @RequestMapping(value = "search")
     public List<DepotDto>  directAndSubShop(DepotShopQuery depotShopQuery) {
-        return depotShopService.findAll(depotShopQuery);
+        return depotShopService.findDepotDtoList(depotShopQuery);
     }
 
     @RequestMapping(value = "searchShop")
@@ -40,36 +40,21 @@ public class DepotShopController {
     @RequestMapping(value = "direct")
     public List<DepotDto>  direct(DepotShopQuery depotShopQuery) {
         depotShopQuery.setDirect(true);
-        return depotShopService.findAll(depotShopQuery);
+        return depotShopService.findDepotDtoList(depotShopQuery);
     }
 
     //代理门店查询
     @RequestMapping(value = "delegate")
     public List<DepotDto>  delegate(DepotShopQuery depotShopQuery) {
         depotShopQuery.setDelegate(true);
-        return depotShopService.findAll(depotShopQuery);
+        return depotShopService.findDepotDtoList(depotShopQuery);
     }
 
     //直营门店+子店
     @RequestMapping(value = "directAndSub")
     public List<DepotDto> directAndSub(DepotShopQuery depotShopQuery) {
         depotShopQuery.setDirectAndSub(true);
-        return depotShopService.findAll(depotShopQuery);
-    }
-
-    //广告门店
-    @RequestMapping(value = "adShop")
-    public List<DepotDto> adShop(DepotShopQuery depotShopQuery) {
-        depotShopQuery.setAdShop(true);
-        return depotShopService.findAll(depotShopQuery);
-    }
-
-    //直营广告门店
-    @RequestMapping(value = "directAdShop")
-    public List<DepotDto> directAdShop(DepotShopQuery depotShopQuery) {
-        depotShopQuery.setDirect(true);
-        depotShopQuery.setAdShop(true);
-        return depotShopService.findAll(depotShopQuery);
+        return depotShopService.findDepotDtoList(depotShopQuery);
     }
 
 }
