@@ -1,37 +1,37 @@
 <template>
   <div>
-    <head-tab active="dealerList"></head-tab>
+    <head-tab active="clientList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:dealer:edit'">{{$t('dealerList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:dealer:view'">{{$t('dealerList.filter')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:client:edit'">{{$t('clientList.add')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:client:view'">{{$t('clientList.filter')}}</el-button>
         <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
       </el-row>
-      <el-dialog :title="$t('dealerList.filter')" v-model="formVisible"  size="tiny" class="search-form">
+      <el-dialog :title="$t('clientList.filter')" v-model="formVisible"  size="tiny" class="search-form">
         <el-form :model="formData">
           <el-form-item :label="formLabel.name" :label-width="formLabelWidth">
-            <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('dealerList.likeSearch')"></el-input>
+            <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('clientList.likeSearch')"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="search()">{{$t('dealerList.sure')}}</el-button>
+          <el-button type="primary" @click="search()">{{$t('clientList.sure')}}</el-button>
         </div>
       </el-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dealerList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('dealerList.name')" sortable width="120"></el-table-column>
-        <el-table-column prop="mobilePhone" :label="$t('dealerList.mobilePhone')"></el-table-column>
-        <el-table-column prop="locked" :label="$t('dealerList.locked')" >
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('clientList.loading')" @sort-change="sortChange" stripe border>
+        <el-table-column fixed prop="name" :label="$t('clientList.name')" sortable width="120"></el-table-column>
+        <el-table-column prop="mobilePhone" :label="$t('clientList.mobilePhone')"></el-table-column>
+        <el-table-column prop="locked" :label="$t('clientList.locked')" >
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="enabled" :label="$t('dealerList.enabled')" >
+        <el-table-column prop="enabled" :label="$t('clientList.enabled')" >
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="remarks" :label="$t('dealerList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('dealerList.operation')" width="140">
+        <el-table-column prop="remarks" :label="$t('clientList.remarks')"></el-table-column>
+        <el-table-column fixed="right" :label="$t('clientList.operation')" width="140">
           <template scope="scope">
             <div v-for="action in scope.row.actionList" :key="action" class="action">
               <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
@@ -60,7 +60,7 @@
           outGroupName:'',
           netType:'',
         },formLabel:{
-          name:this.$t('dealerList.name'),
+          name:this.$t('clientList.name'),
         },
         offices:[],
         pickerDateOption:util.pickerDateOption,
@@ -75,7 +75,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.setQuery("productList",this.formData);
-        axios.get('/api/ws/future/basic/dealer',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/basic/client',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -91,10 +91,10 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAdd(){
-        this.$router.push({ name: 'dealerForm'})
+        this.$router.push({ name: 'clientForm'})
       },itemAction:function(id,action){
         if(action=="修改") {
-          this.$router.push({ name: 'dealerForm', query: { id: id }})
+          this.$router.push({ name: 'clientForm', query: { id: id }})
         }
       }
     },created () {

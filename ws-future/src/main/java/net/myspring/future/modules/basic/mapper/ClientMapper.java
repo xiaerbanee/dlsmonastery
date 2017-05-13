@@ -2,9 +2,9 @@ package net.myspring.future.modules.basic.mapper;
 
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.future.common.mybatis.MyProvider;
-import net.myspring.future.modules.basic.domain.Dealer;
-import net.myspring.future.modules.basic.dto.DealerDto;
-import net.myspring.future.modules.basic.web.query.DealerQuery;
+import net.myspring.future.modules.basic.domain.Client;
+import net.myspring.future.modules.basic.dto.ClientDto;
+import net.myspring.future.modules.basic.web.query.ClientQuery;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;
@@ -17,30 +17,30 @@ import javax.cache.annotation.CacheValue;
 import java.util.List;
 
 @Mapper
-@CacheDefaults(cacheName = "dealers")
-public interface DealerMapper extends BaseMapper<Dealer,String> {
+@CacheDefaults(cacheName = "clients")
+public interface ClientMapper extends BaseMapper<Client,String> {
 
     @CacheResult
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ONE)
-    Dealer findOne(String id);
+    Client findOne(String id);
 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL)
-    List<Dealer> findAll();
+    List<Client> findAll();
 
     @CachePut(cacheKeyGenerator = IdCacheKeyGenerator.class)
     @InsertProvider(type = MyProvider.class, method =MyProvider.SAVE)
     @Options(useGeneratedKeys = true)
-    int save(@CacheValue Dealer dealer);
+    int save(@CacheValue Client client);
 
     @UpdateProvider(type=MyProvider.class,method =MyProvider.LOGIC_DELETE_ONE)
     int logicDeleteOne(String id);
 
     @CachePut(cacheKeyGenerator = IdCacheKeyGenerator.class)
     @UpdateProvider(type = MyProvider.class, method = MyProvider.UPDATE)
-    int update(@CacheValue Dealer dealer);
+    int update(@CacheValue Client client);
 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL_ENABLED)
-    List<Dealer> findAllEnabled();
+    List<Client> findAllEnabled();
     
-    Page<DealerDto> findPage(Pageable pageable, @Param("p")DealerQuery dealerQuery);
+    Page<ClientDto> findPage(Pageable pageable, @Param("p")ClientQuery clientQuery);
 }

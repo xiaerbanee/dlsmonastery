@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.domain;
 
+
 import net.myspring.future.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
@@ -7,20 +8,12 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Date;
 
-/**
- * Created by liuj on 2017/5/12.
- */
-
 @Entity
-@Table(name="crm_depot_store")
-public class DepotStore extends CompanyEntity<DepotStore> {
-    private String depotId;
-    //仓库类型(好机库good，坏机库bad，寄存机库deposit，淘汰机库disuse)
-    private String type;
-    //寄售对应门店
-    private String delegateShopId;
-    //分组
-    private String group;
+@Table(name="crm_client")
+public class Client extends CompanyEntity<Client> {
+    private String name;
+    private String mobilePhone;
+    private Integer version = 0;
     // 财务编号
     private String outId;
     //财务分组
@@ -30,36 +23,28 @@ public class DepotStore extends CompanyEntity<DepotStore> {
     //财务同步日期
     private LocalDate outDate;
 
-    public String getDepotId() {
-        return depotId;
+    public String getName() {
+        return name;
     }
 
-    public void setDepotId(String depotId) {
-        this.depotId = depotId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getMobilePhone() {
+        return mobilePhone;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 
-    public String getDelegateShopId() {
-        return delegateShopId;
+    public Integer getVersion() {
+        return version;
     }
 
-    public void setDelegateShopId(String delegateShopId) {
-        this.delegateShopId = delegateShopId;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public String getOutId() {

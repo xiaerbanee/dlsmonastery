@@ -140,8 +140,8 @@ export default {
     delete: "hapus",
     audit: "ubah"
   },
-  dealerForm: {
-    dealerForm: "formulir dealer",
+  clientForm: {
+    clientForm: "formulir client",
     loginName: "username",
     name: "nama",
     mobilePhone: "nomor telepon",
@@ -157,8 +157,8 @@ export default {
     prerequisiteMessage: "Informasi yang diperlukan",
     inputLegalValue: "silahkan masukkan angka yang valid"
   },
-  dealerList: {
-    dealerList: "manajemen dealer",
+  clientList: {
+    clientList: "manajemen client",
     name: "nama",
     mobilePhone: "nomor telepon",
     add: "tambah",
@@ -266,7 +266,7 @@ export default {
     district: "daerah",
     doorHead: "Apakah ada pintu pertama",
     enableDate: "tanggal",
-    dealerName: "nama dealer",
+    clientName: "nama client",
     pricesystem: "sistem harga",
     chain: "sistem rantai",
     shopArea: "aera",

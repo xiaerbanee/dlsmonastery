@@ -4,8 +4,8 @@ const bankList= r  => require.ensure([], () => r(require('pages/future/basic/ban
 const bankForm  = r => require.ensure([], () => r(require('pages/future/basic/bankForm.vue')));
 const chainList  = r => require.ensure([], () => r(require('pages/future/basic/chainList.vue')));
 const chainForm  = r => require.ensure([], () => r(require('pages/future/basic/chainForm.vue')));
-const dealerList = r  => require.ensure([], () => r(require('pages/future/basic/dealerList.vue')));
-const dealerForm= r  => require.ensure([], () => r(require('pages/future/basic/dealerForm.vue')));
+const clientList = r  => require.ensure([], () => r(require('pages/future/basic/clientList.vue')));
+const clientForm= r  => require.ensure([], () => r(require('pages/future/basic/clientForm.vue')));
 const depotList = r  => require.ensure([], () => r(require('pages/future/basic/depotList.vue')));
 const depotForm= r  => require.ensure([], () => r(require('pages/future/basic/depotForm.vue')));
 const expressCompanyList= r  => require.ensure([], () => r(require('pages/future/basic/expressCompanyList.vue')));
@@ -29,8 +29,8 @@ let routes = [
   {path:'/future/basic/bankForm',component:bankForm,name:'bankForm',meta: {menu:"bankList"}},
   {path:'/future/basic/chainList',component:chainList,name:'chainList'},
   {path:'/future/basic/chainForm',component:chainForm,name:'chainForm',meta: {menu:"chainList"}},
-  {path:'/future/basic/dealerList',component:dealerList,name:'dealerList'},
-  {path:'/future/basic/dealerForm',component:dealerForm,name:'dealerForm',meta: {menu:"dealerList"}},
+  {path:'/future/basic/clientList',component:clientList,name:'clientList'},
+  {path:'/future/basic/clientForm',component:clientForm,name:'clientForm',meta: {menu:"clientList"}},
   {path:'/future/basic/depotList',component:depotList,name:'depotList'},
   {path:'/future/basic/depotForm',component:depotForm,name:'depotForm',meta: {menu:"depotList"}},
   {path:'/future/basic/expressCompanyList',component:expressCompanyList,name:'expressCompanyList'},

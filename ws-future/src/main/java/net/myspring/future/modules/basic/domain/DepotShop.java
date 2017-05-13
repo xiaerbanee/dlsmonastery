@@ -28,8 +28,8 @@ public class DepotShop extends CompanyEntity<DepotShop> {
     private String taxName;
     //是否打印价格
     private Boolean printPrice;
-    // 经销商
-    private String dealerId;
+    // 客户
+    private String clientId;
     // 连锁体系
     private String chainId;
     //物料价格体系
@@ -109,12 +109,12 @@ public class DepotShop extends CompanyEntity<DepotShop> {
         this.printPrice = printPrice;
     }
 
-    public String getDealerId() {
-        return dealerId;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setDealerId(String dealerId) {
-        this.dealerId = dealerId;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public String getChainId() {
