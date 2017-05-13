@@ -45,8 +45,8 @@ public class CustomerReceiveService {
     public List<CustomerReceiveDto>  findCustomerReceiveDtoList(CustomerReceiveQuery customerReceiveQuery) {
         LocalDate dateStart = customerReceiveQuery.getDateStart();
         LocalDate dateEnd = customerReceiveQuery.getDateEnd();
-        BdCustomer bdCustomer = bdCustomerMapper.findTopOne();
         if (StringUtils.isBlank(customerReceiveQuery.getCustomerGroup())) {
+            BdCustomer bdCustomer = bdCustomerMapper.findTopOne();
             customerReceiveQuery.setCustomerGroup(bdCustomer.getFPrimaryGroup());
         }
         String primaryGroupId = customerReceiveQuery.getCustomerGroup();
