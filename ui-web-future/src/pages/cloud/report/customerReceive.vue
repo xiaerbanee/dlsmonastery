@@ -13,9 +13,9 @@
               <el-form-item :label="formLabel.dateRange.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.dateRange"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.primaryGroupName.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.primaryGroupId" placeholder="请选择客户分组">
-                  <el-option v-for="item in formData.primaryGroup" :key="item.value" :label="item.name" :value="item.value"></el-option>
+              <el-form-item :label="formLabel.customerGroup.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.customerGroup" placeholder="请选择客户分组">
+                  <el-option v-for="item in formData.customerList" :key="item.fprimaryGroup" :label="item.fprimaryGroupName" :value="item.fprimaryGroup"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -81,11 +81,13 @@
         detail: [],
         formData: {
           dateRange: '',
-          primaryGroupName:'',
-          primaryGroup:{},
+          customerGroup:'',
+          customerList:[],
         },
         submitData: {
           dateRange: '',
+          customerGroup:'',
+          customerIdList:[],
         },
         submitDetail: {
           dateRange: '',
@@ -93,7 +95,7 @@
         },
         formLabel:{
           dateRange:{label:"日期"},
-          primaryGroupName:{label:"客户分组"},
+          customerGroup:{label:"客户分组",value:''},
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -105,11 +107,12 @@
     },
     methods: {
       pageRequest() {
-        this.pageLoading = true;
+          var that = this;
+        that.pageLoading = true;
         util.getQuery("receivableReport");
-        util.setQuery("receivableReport",this.formData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/global/cloud/report/customerReceive/list',{params:this.submitData}).then((response) => {
+        util.setQuery("receivableReport",that.formData);
+        util.copyValue(that.formData,that.submitData);
+        axios.get('/api/global/cloud/report/customerReceive/list',{params:that.submitData}).then((response) => {
           this.summary = response.data;
           this.pageLoading = false;
         })
@@ -142,6 +145,10 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
+      axios.get('/api/global/cloud/kingdee/bdCustomer/getCustomerGroupList').then((response) => {
+        this.formData.customerList = response.data;
+        console.log(this.formData.customerList);
+      });
       this.pageRequest();
     }
   };
