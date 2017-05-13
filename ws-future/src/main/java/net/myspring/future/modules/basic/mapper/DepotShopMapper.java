@@ -54,4 +54,6 @@ public interface DepotShopMapper extends BaseMapper<DepotShop,String> {
 
     Page<DepotShopDto> findPage(Pageable pageable, DepotShopQuery depotShopQuery);
 
+    List<DepotDto> findByIdList(List<String> ids);
+
 }

@@ -27,6 +27,10 @@ public class AccountDto extends DataDto<Account> {
     private String positionName;
     @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
     private String leaderName;
+    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "entryDate")
+    private LocalDate entryDate;
+    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "leaveDate")
+    private LocalDate leaveDate;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "regularDate")
     private LocalDate regularDate;
     @CacheInput(inputKey = "companys",inputInstance = "companyId",outputInstance = "name")
@@ -35,6 +39,22 @@ public class AccountDto extends DataDto<Account> {
     private String employeeName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "status")
     private String employeeStatus;
+
+    public LocalDate getEntryDate() {
+        return entryDate;
+    }
+
+    public void setEntryDate(LocalDate entryDate) {
+        this.entryDate = entryDate;
+    }
+
+    public LocalDate getLeaveDate() {
+        return leaveDate;
+    }
+
+    public void setLeaveDate(LocalDate leaveDate) {
+        this.leaveDate = leaveDate;
+    }
 
     public String getEmployeeName() {
         return employeeName;

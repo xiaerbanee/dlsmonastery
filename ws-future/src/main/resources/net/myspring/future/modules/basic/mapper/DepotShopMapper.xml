@@ -36,6 +36,18 @@
         and depot.depot_shop_id=t2.id
     </select>
 
+    <select id="findByIdList" resultType="DepotDto">
+         SELECT t1.*,t2.*
+        FROM crm_depot depot ,crm_depot_shop t2
+        where depot.denabled=1
+        and t2.enabled=1
+        and depot.depot_shop_id=t2.id
+        and t1.id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <sql id="depotFilter">
     <if test="p.officeIdList !=null and p.officeIdList.size() !=0">
         and depot.office_id IN

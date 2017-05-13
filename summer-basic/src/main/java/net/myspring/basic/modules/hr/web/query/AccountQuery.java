@@ -18,7 +18,7 @@ public class AccountQuery extends BaseQuery {
     private String employeeName;
     private String leaderName;
     private String officeId;
-    private List<String> officeIds;
+    private List<String> officeIds=Lists.newArrayList();
     private List<PositionDto> positionList= Lists.newArrayList();
 
     public String getOfficeId() {

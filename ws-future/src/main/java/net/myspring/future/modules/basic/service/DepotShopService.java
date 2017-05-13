@@ -1,9 +1,16 @@
 package net.myspring.future.modules.basic.service;
 
+import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.dto.DepotShopDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.mapper.DepotShopMapper;
 import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +29,7 @@ public class DepotShopService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public Page<DepotShopDto> findPage(Pageable pageable,DepotShopQuery depotShopQuery){
+    public Page<DepotShopDto> findPage(Pageable pageable, DepotShopQuery depotShopQuery){
         Page<DepotShopDto> page=depotShopMapper.findPage(pageable,depotShopQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -34,5 +41,9 @@ public class DepotShopService {
         return depotShopMapper.findDepotDtoList(depotShopQuery);
     }
 
+    public List<DepotDto> findByIds(List<String> ids){
+        List<DepotDto> depotDtoList=depotShopMapper.findByIdList(ids);
+        return depotDtoList;
+    }
 
 }
