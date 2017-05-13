@@ -7,7 +7,7 @@
 </template>
 <script>
   export default {
-    props: ['value','category','multiple','disabled'],
+    props: ['value','multiple','disabled'],
     data() {
       return {
         innerId:this.value,
@@ -20,7 +20,7 @@
           return;
         }
         this.remoteLoading = true;
-        axios.get('/api/ws/future/basic/depotShop/directAndSub',{params:{key:query}}).then((response)=>{
+        axios.get('/api/ws/future/basic/depotShop/directAndSub',{params:{key:query}}).then((response)=>
           this.itemList=response.data;
           this.remoteLoading = false;
         })
