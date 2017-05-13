@@ -16,6 +16,7 @@ import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.manager.RoleManager;
 import net.myspring.basic.modules.sys.mapper.PermissionMapper;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
@@ -190,6 +191,12 @@ public class AccountService {
         List<Account> districts = accountMapper.findById(id);
         List<AccountDto> districtDtos= BeanUtil.map(districts,AccountDto.class);
         return districtDtos;
+    }
+
+
+    public Boolean checkLoginName(AccountQuery accountQuery){
+        Account account = accountMapper.findByLoginName(accountQuery.getLoginName());
+        return account == null || (account.getId().equals(accountQuery.getId()));
     }
 
 }

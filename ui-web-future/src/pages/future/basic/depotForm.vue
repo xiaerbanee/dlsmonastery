@@ -245,7 +245,7 @@
         submitDisabled:false,
         multiple:true,
         formProperty:{},
-        inputForm:"",
+        inputForm:{},
         submitData:{
           id:'',
           type:'',

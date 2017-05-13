@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.AccountMessageDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
@@ -111,6 +112,15 @@ public class AccountController {
     public List<AccountDto> findById(String id) {
         List<AccountDto> accountDtoList =accountService.findById(id);
         return accountDtoList;
+    }
+
+    @RequestMapping(value="checkLoginName")
+        public RestResponse checkLoginName(AccountQuery accountQuery){
+        RestResponse restResponse=null;
+        if(!accountService.checkLoginName(accountQuery)) {
+            restResponse = new RestResponse("登录名不能重复", ResponseCodeEnum.saved.name());
+        }
+        return restResponse;
     }
 
 

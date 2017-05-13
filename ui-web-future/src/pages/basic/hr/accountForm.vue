@@ -53,6 +53,15 @@
           officeSelect
       },
     data(){
+      var checkLoginName=(rule, value, callback)=>{
+        if (!value) {
+          return callback(new Error('必填信息'));
+        }else {
+            axios.get('/api/basic/hr/account/checkLoginName?loginName='+value+"&id="+this.$route.query.id).then((response)=>{
+          return callback(new Error(response.data.message));
+        })
+        }
+      };
       return{
         isCreate:this.$route.query.id==null,
         multiple:true,
@@ -80,9 +89,9 @@
         },
         rules: {
           employeeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
-          loginName: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
-          officeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
-          positionId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
+          loginName: [{ required: true,validator: checkLoginName,trigger: 'blur'}],
+          officeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage'),trigger: 'blur'}],
+          positionId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage'),trigger: 'blur'}],
         },
         radio:'1',
         remoteLoading:false

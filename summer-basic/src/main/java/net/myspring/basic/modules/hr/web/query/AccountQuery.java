@@ -12,6 +12,7 @@ import java.util.List;
  * Created by liuj on 2017/3/19.
  */
 public class AccountQuery extends BaseQuery {
+    private String id;
     private String loginName;
     private String officeName;
     private String positionName;
@@ -20,6 +21,14 @@ public class AccountQuery extends BaseQuery {
     private String officeId;
     private List<String> officeIds;
     private List<PositionDto> positionList= Lists.newArrayList();
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getOfficeId() {
         return officeId;

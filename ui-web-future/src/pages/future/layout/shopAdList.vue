@@ -34,7 +34,7 @@
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <account-select  v-model="formData.createdBy"></account-select>
+                <account-select  v-model="formData.createdBy" :multiple="multiple"></account-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -87,6 +87,7 @@
     components:{officeSelect,accountSelect,depotSelect,boolSelect},
     data() {
       return {
+        multiple:true,
         page:{},
         formData:{},
         submitData:{

@@ -43,7 +43,7 @@
         if(list.length==0) {
           this.$router.push({ name: "home"})
         } else {
-          var tabItem = list[0];
+          var tabItem = list[list.length-1];
           if(this.currentActive == tabItem.name) {
             this.tabList = this.getTabList();
           } else {
