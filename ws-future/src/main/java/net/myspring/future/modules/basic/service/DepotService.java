@@ -41,10 +41,6 @@ public class DepotService {
         return depotMapper.findStoreList(depotQuery);
     }
 
-
-
-
-
     public List<DepotDto> findByIds(List<String> ids){
         List<Depot> depotList=depotMapper.findByIds(ids);
         List<DepotDto> depotDtoList= BeanUtil.map(depotList,DepotDto.class);
