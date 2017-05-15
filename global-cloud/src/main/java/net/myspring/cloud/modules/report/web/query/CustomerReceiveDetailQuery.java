@@ -11,10 +11,10 @@ import java.util.List;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveDetailQuery {
+    private String dateRange;
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private String customerId;
-    private String dateRange;
 
 
     public String getDateRange() {
@@ -26,13 +26,11 @@ public class CustomerReceiveDetailQuery {
     }
 
     public LocalDate getDateStart() {
-        if(StringUtils.isNotBlank(dateRange)){
-            String[] tempParamValues = dateRange.split(CharConstant.DATE_RANGE_SPLITTER);
-            dateStart = LocalDateUtils.parse(tempParamValues[0]);
-        }else{
-            dateStart = LocalDate.now().minusDays(3L);
+        if(StringUtils.isNotBlank(dateRange)) {
+            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
         }
-        return dateStart;
     }
 
     public void setDateStart(LocalDate dateStart) {
@@ -40,13 +38,11 @@ public class CustomerReceiveDetailQuery {
     }
 
     public LocalDate getDateEnd() {
-        if(StringUtils.isNotBlank(dateRange)){
-            String[] tempParamValues = dateRange.split(CharConstant.DATE_RANGE_SPLITTER);
-            dateEnd = LocalDateUtils.parse(tempParamValues[1]);
-        }else{
-            dateEnd = LocalDate.now().minusDays(1L);
+        if(StringUtils.isNotBlank(dateRange)) {
+            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
         }
-        return dateEnd;
     }
 
     public void setDateEnd(LocalDate dateEnd) {

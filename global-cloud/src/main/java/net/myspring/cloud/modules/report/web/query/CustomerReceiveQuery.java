@@ -35,13 +35,11 @@ public class CustomerReceiveQuery {
     }
 
     public LocalDate getDateStart() {
-        if(StringUtils.isNotBlank(dateRange)){
-            String[] tempParamValues = dateRange.split(CharConstant.DATE_RANGE_SPLITTER);
-            dateStart = LocalDateUtils.parse(tempParamValues[0]);
-        }else{
-            dateStart = LocalDate.now().minusDays(3L);
+        if(StringUtils.isNotBlank(dateRange)) {
+            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
         }
-        return dateStart;
     }
 
     public void setDateStart(LocalDate dateStart) {
@@ -49,13 +47,11 @@ public class CustomerReceiveQuery {
     }
 
     public LocalDate getDateEnd() {
-        if(StringUtils.isNotBlank(dateRange)){
-            String[] tempParamValues = dateRange.split(CharConstant.DATE_RANGE_SPLITTER);
-            dateEnd = LocalDateUtils.parse(tempParamValues[1]);
-        }else{
-            dateEnd = LocalDate.now().minusDays(1L);
+        if(StringUtils.isNotBlank(dateRange)) {
+            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
         }
-        return dateEnd;
     }
 
     public void setDateEnd(LocalDate dateEnd) {

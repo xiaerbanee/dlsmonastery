@@ -60,8 +60,8 @@ public class CustomerReceiveService {
             customerIdSet.addAll(CollectionUtil.extractToList(customerList,"FCustId"));
         }
         List<CustomerReceiveDto> tempList = Lists.newLinkedList();
-        List<CustomerReceiveDto> dataForStartDate = customerReceiveMapper.findByEndDateAndIn(dateStart,customerIdSet);
-        List<CustomerReceiveDto> dataForEndDate = customerReceiveMapper.findByEndDateAndIn(dateEnd.plusDays(1),customerIdSet);
+        List<CustomerReceiveDto> dataForStartDate = customerReceiveMapper.findByEndDateAndCustomerIdList(dateStart,customerIdSet);
+        List<CustomerReceiveDto> dataForEndDate = customerReceiveMapper.findByEndDateAndCustomerIdList(dateEnd.plusDays(1),customerIdSet);
         //期初结余
         Map<String,BigDecimal> dateStartMap = Maps.newHashMap();
         for(CustomerReceiveDto startItem : dataForStartDate){
@@ -155,7 +155,7 @@ public class CustomerReceiveService {
         List<CustomerReceiveDetailDto> dataList = Lists.newArrayList();
         HashSet<String> customerSet = new HashSet<String>();
         customerSet.add(customerId);
-        List<CustomerReceiveDto> summaryItemList = customerReceiveMapper.findByEndDateAndIn(dateStart,customerSet);
+        List<CustomerReceiveDto> summaryItemList = customerReceiveMapper.findByEndDateAndCustomerIdList(dateStart,customerSet);
         CustomerReceiveDto summaryItem = new CustomerReceiveDto();
         summaryItem.setCustomerId(customerId);
         summaryItem.setCustomerName(bdCustomerMapper.findById(customerId).getFName());
