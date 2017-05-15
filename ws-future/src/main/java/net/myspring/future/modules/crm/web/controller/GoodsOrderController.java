@@ -1,17 +1,11 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
-import com.google.common.collect.Maps;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.*;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.Pricesystem;
-import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.common.enums.GoodsOrderStatusEnum;
+import net.myspring.future.common.enums.NetTypeEnum;
+import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
-import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
@@ -25,19 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import sun.misc.Request;
 
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/goodsOrder")
 public class GoodsOrderController {
-
-    @Autowired
-    private DepotManager depotManager;
     @Autowired
     private GoodsOrderService goodsOrderService;
 

@@ -16,16 +16,12 @@ import java.util.Map;
 /**
  * Created by lihx on 2017/4/18.
  */
-public class DepotShopQuery extends BaseQuery {
+public class DepotQuery extends BaseQuery {
     private String name;
     private List<String> officeIdList= Lists.newArrayList();
     private List<String> depotIdList= Lists.newArrayList();
-    //直营
-    private Boolean direct;
-    //代理
-    private Boolean delegate;
-    //直营+子店
-    private Boolean directAndSub;
+    //直营，代理
+    private Boolean clientIsNull;
     //广告门店
     private Boolean adShop;
 
@@ -53,28 +49,12 @@ public class DepotShopQuery extends BaseQuery {
         this.depotIdList = depotIdList;
     }
 
-    public Boolean getDirect() {
-        return direct;
+    public Boolean getClientIsNull() {
+        return clientIsNull;
     }
 
-    public void setDirect(Boolean direct) {
-        this.direct = direct;
-    }
-
-    public Boolean getDelegate() {
-        return delegate;
-    }
-
-    public void setDelegate(Boolean delegate) {
-        this.delegate = delegate;
-    }
-
-    public Boolean getDirectAndSub() {
-        return directAndSub;
-    }
-
-    public void setDirectAndSub(Boolean directAndSub) {
-        this.directAndSub = directAndSub;
+    public void setClientIsNull(Boolean clientIsNull) {
+        this.clientIsNull = clientIsNull;
     }
 
     public Boolean getAdShop() {
