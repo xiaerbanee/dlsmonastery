@@ -10,4 +10,14 @@
             #{item}
         </foreach>
     </select>
+
+    <select id="findByAdGoodsOrderForEdit" resultType="AdGoodsOrderDetailDto">
+        SELECT validProduct.id productId,validProduct.name productName,validProduct.code productCode,t1.*
+        FROM (select t1.id id, t1.name productName
+        from crm_product t1
+        where t1.id in (select t2.product_id from crm_ad_good_order_detail t2 where t2.product_id = (select product1.pricesystem_id from crm_product product1 where product1.id = #{fromDepotId}))
+        and t1.id in (select t3.product_id from crm_ad_good_order_detail t3 where t3.product_id =  (select product2.pricesystem_id from crm_product product2 where product2.id = #{toDepotId}))
+        and t1.enabled=1) validProduct LEFT JOIN crm_ad_good_order_detail detail
+        ON validProduct.id = detail.product_id and  detail.ad_good_order_id = #{adGoodsOrderId}
+    </select>
 </mapper>

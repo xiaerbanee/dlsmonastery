@@ -72,7 +72,7 @@
         },
         submitData:{
             id:'',
-            pass:'1',
+            pass:'',
             passRemarks:'',
         },
         submitDisabled:false,

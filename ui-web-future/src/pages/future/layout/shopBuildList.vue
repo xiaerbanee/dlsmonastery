@@ -165,6 +165,7 @@
         }
         this.multipleSelection = arr;
     },batchPass(){
+       console.log(this.multipleSelection);
       axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{pass:true, ids:this.multipleSelection}}).then((response) =>{
         this.$message(response.data.message);
         this.pageRequest();

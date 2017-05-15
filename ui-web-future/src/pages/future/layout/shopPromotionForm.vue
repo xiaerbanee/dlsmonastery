@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="12">
            <el-form-item :label="$t('shopPromotionForm.shopId')" prop="shopId">
-             <depot-select v-model="inputForm.shopId" category="SHOP" :disabled="shopDisabled"></depot-select>
+             <depot-select v-model="inputForm.shopId" category="shop" :disabled="shopDisabled"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityDate')" prop="activityDate">
               <el-date-picker v-model="inputForm.activityDate" type="date" :placeholder="$t('shopPromotionForm.inputDate')"></el-date-picker>

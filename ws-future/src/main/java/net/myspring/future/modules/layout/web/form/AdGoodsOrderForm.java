@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.DataForm;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
@@ -34,7 +35,6 @@ public class AdGoodsOrderForm extends DataForm<AdGoodsOrder> {
     private String passRemarks;
 
     private List<AdGoodsOrderDetailDto> adGoodsOrderDetails;
-
 
     public List<AdGoodsOrderDetailDto> getAdGoodsOrderDetails() {
         return adGoodsOrderDetails;

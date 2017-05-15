@@ -85,14 +85,10 @@ public class ShopBuildService {
     }
 
     public void batchAudit(ShopBuildForm shopBuildForm){
-        ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
-        ShopBuild shopBuild;
-        for(String id:shopBuildForm.getIds()){
-            shopBuild = shopBuildMapper.findOne(id);
-            activitiCompleteForm.setPass(shopBuildForm.getPass());
-            activitiCompleteForm.setProcessTypeId(shopBuild.getProcessTypeId());
-            activitiCompleteForm.setProcessInstanceId(shopBuild.getProcessInstanceId());
-            activitiClient.complete(activitiCompleteForm);
+        List<ShopBuild> shopBuilds = shopBuildMapper.findByIds(shopBuildForm.getIds());
+        for (ShopBuild shopBuild:shopBuilds){
+            shopBuildForm = BeanUtil.map(shopBuild,ShopBuildForm.class);
+            audit(shopBuildForm);
         }
     }
 

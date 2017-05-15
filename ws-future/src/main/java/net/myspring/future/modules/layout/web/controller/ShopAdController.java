@@ -54,12 +54,12 @@ public class ShopAdController {
     }
 
     @RequestMapping(value = "audit", method = RequestMethod.GET)
-    public String audit( ) {
+    public String audit() {
         return null;
     }
 
     @RequestMapping(value = "batchAudit")
-    public String batchAudit(Boolean pass, @RequestParam(value = "ids[]")String[] ids) {
+    public RestResponse batchAudit(Boolean pass, @RequestParam(value = "ids[]")String[] ids) {
         return null;
     }
 
