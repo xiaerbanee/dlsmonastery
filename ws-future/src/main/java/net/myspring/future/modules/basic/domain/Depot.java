@@ -55,6 +55,10 @@ public class Depot extends CompanyEntity<Depot> {
     private Boolean adShop=false;
     //是否隐藏
     private Boolean isHidden=false;
+    //是否是广告仓库
+    private Boolean popShop = false;
+    //公司分组（imoo，电玩，oppo不写）
+    private String companyGroup;
 
     public String getClientId() {
         return clientId;
@@ -238,5 +242,21 @@ public class Depot extends CompanyEntity<Depot> {
 
     public void setHidden(Boolean hidden) {
         isHidden = hidden;
+    }
+
+    public Boolean getPopShop() {
+        return popShop;
+    }
+
+    public void setPopShop(Boolean popShop) {
+        this.popShop = popShop;
+    }
+
+    public String getCompanyGroup() {
+        return companyGroup;
+    }
+
+    public void setCompanyGroup(String companyGroup) {
+        this.companyGroup = companyGroup;
     }
 }

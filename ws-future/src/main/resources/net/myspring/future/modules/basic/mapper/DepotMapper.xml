@@ -136,6 +136,14 @@
                 and t1.ad_shop is not NULL
             </if>
         </if>
+        <if test="p.popShop != null">
+            <if test="p.popShop">
+                and t1.pop_shop is NULL
+            </if>
+            <if test="!p.popShop">
+                and t1.pop_shop is not NULL
+            </if>
+        </if>
         and depot.name like concat('%',#{p.name},'%')
         <include refid="depotFilter" />
         limit 0,25

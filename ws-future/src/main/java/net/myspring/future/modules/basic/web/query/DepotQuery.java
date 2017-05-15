@@ -22,7 +22,9 @@ public class DepotQuery extends BaseQuery {
     private List<String> depotIdList= Lists.newArrayList();
     //直营，代理
     private Boolean clientIsNull;
-    //广告门店
+    //pop门店
+    private Boolean popShop;
+    //广告门店（物料柜台对应的财务门店）
     private Boolean adShop;
     //直营仓库
     private Boolean outIdIsNull;
@@ -59,6 +61,14 @@ public class DepotQuery extends BaseQuery {
         this.clientIsNull = clientIsNull;
     }
 
+    public Boolean getPopShop() {
+        return popShop;
+    }
+
+    public void setPopShop(Boolean popShop) {
+        this.popShop = popShop;
+    }
+
     public Boolean getAdShop() {
         return adShop;
     }
@@ -66,6 +76,7 @@ public class DepotQuery extends BaseQuery {
     public void setAdShop(Boolean adShop) {
         this.adShop = adShop;
     }
+
 
     public Boolean getOutIdIsNull() {
         return outIdIsNull;
