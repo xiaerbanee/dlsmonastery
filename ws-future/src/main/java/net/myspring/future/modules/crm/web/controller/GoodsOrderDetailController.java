@@ -4,10 +4,9 @@ import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.service.GoodsOrderDetailService;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -23,10 +22,10 @@ public class GoodsOrderDetailController {
     }
 
 
-    @RequestMapping(value = "getFormWithTodaysAreaQty")
-    public GoodsOrderDetailForm getFormWithTodaysAreaQty(String productId, String depotId) {
+    @RequestMapping(value = "getFormListForNewWithoutAreaQty")
+    public List<GoodsOrderDetailForm> getFormListForNewWithoutAreaQty(String depotId, String netType, String shipType) {
 
-        return goodsOrderDetailService.getFormWithTodaysAreaQty(productId, depotId);
+        return goodsOrderDetailService.getFormListForNewWithoutAreaQty( depotId, netType, shipType);
 
     }
 

@@ -9,42 +9,28 @@
     </select>
 
 
-    <select id="getDtoListWithAreaQty" resultType="GoodsOrderDetailDto">
+    <select id="getDtoListForNewWithoutAreaQty" resultType="GoodsOrderDetailDto">
         SELECT
-            detail.product_id,
-            product.name productName,
-            product.has_ime productHasIme,
-            product.allow_order productAllowOrder,
-            product.allow_bill productAllowBill,
-            detail.qty,
-            detail.price,
-            (
-                SELECT
-                  SUM(innerDetail.qty)
-                FROM
-                    crm_goods_order_detail innerDetail,
-                    crm_goods_order innerOrd,
-                    crm_depot innerDepot
-                WHERE
-                    innerDetail.product_id = detail.product_id
-                    AND innerDetail.goods_order_id = innerOrd.id
-                    AND innerOrd.enabled = 1
-                    AND innerOrd.created_date >= #{dateStart}
-                    AND innerOrd.created_date &lt; #{dateEnd}
-                    AND innerOrd.shop_id = innerDepot.id
-                    AND innerDepot.enabled = 1
-                    AND innerDepot.area_id = depot.area_id
-            ) areaQty
+            t2.product_id,
+            t3.name productName,
+            t3.has_ime productHasIme,
+            t3.allow_order productAllowOrder,
+            t3.allow_bill productAllowBill
         FROM
-            crm_goods_order_detail detail,
-            crm_goods_order ord,
-            crm_depot depot,
-            crm_product product
+            crm_depot t1,
+            crm_pricesystem_detail t2,
+            crm_product t3
         WHERE
-            detail.goods_order_id = #{goodsOrderId}
-            AND detail.goods_order_id = ord.id
-            AND ord.shop_id = depot.id
-            AND detail.product_id = product.id
+            t1.id = #{depotId}
+        AND t1.pricesystem_id = t2.pricesystem_id
+        AND t2.product_id = t3.id
+        AND t3.enabled = 1
+        AND (
+            '全网通' = #{netType}
+            OR t3.net_type = '全网通'
+            OR t3.net_type = #{netType}
+        )
+        AND( #{showAll} OR (t3.allow_order = 1 and t3.allow_bill = 1)  )
     </select>
 
 

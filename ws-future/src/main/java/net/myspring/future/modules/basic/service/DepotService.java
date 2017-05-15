@@ -1,7 +1,5 @@
 package net.myspring.future.modules.basic.service;
 
-import com.netflix.discovery.converters.Auto;
-import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -13,17 +11,15 @@ import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class DepotService {
     @Autowired
     private DepotMapper depotMapper;
-    @Auto
+    @Autowired
     private OfficeClient officeClient;
 
 

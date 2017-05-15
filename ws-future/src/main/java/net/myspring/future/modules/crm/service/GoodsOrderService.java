@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Maps;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
+import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -181,8 +182,9 @@ public class GoodsOrderService {
 
 
         result.setShipTypeList(ShipTypeEnum.getList());
-        result.setGoodsOrderDetailFormList(new ArrayList<>());
 
+        //TODO 需要修改
+        result.setNetTypeList(Arrays.asList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
 //TODO 判斷公司類比額
 //        if(CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyId().getCompany().getName()) || Company.CompanyName.JXvivo.name().equals(AccountUtils.getCompany().getName()) ){
 //            result.setNetTypeList(Arrays.asList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
@@ -198,10 +200,13 @@ public class GoodsOrderService {
         cacheUtils.initCacheInput(result);
 
         if (result.getShopId() == null) {
+
+
             return result;
         }
 
-        result.setGoodsOrderDetailFormList(goodsOrderDetailService.getFormListWithTodaysAreaQty(result.getId()));
+
+//        result.setGoodsOrderDetailFormList(goodsOrderDetailService.getFormListWithTodaysAreaQty(result.getId()));
         //TODO  需要判斷設置alreadyQty
         if (result.getShopId() != null) {
             // 检查是否有权限

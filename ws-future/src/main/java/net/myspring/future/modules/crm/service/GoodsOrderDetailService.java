@@ -31,15 +31,23 @@ public class GoodsOrderDetailService {
         return goodsOrderDetailMapper.findOne(id);
     }
 
-    public List<GoodsOrderDetailForm> getFormListWithTodaysAreaQty(String goodsOrderId) {
+    public List<GoodsOrderDetailForm> getFormListForNewWithoutAreaQty(String depotId, String netType, String shipType) {
 
-        LocalDateTime dateStart = LocalDate.now().atStartOfDay();
+        Boolean showAll = Boolean.FALSE;
+        if("地区发货".equals(shipType) || "地区自提".equals(shipType) || "代理发货".equals(shipType) || "代理自提".equals(shipType) ){
+            showAll = Boolean.TRUE;
+        }
+        //TODO 如果权限够，也是showAll
+        // <shiro:hasPermission name="crm:goodsOrder:bill">
+//	        			<c:if test="${fns:getAccount().dataScope eq 10}">
+//	        				<c:set var="showAll"  value="1"/>
+//	        			</c:if>
 
-        LocalDateTime dateEnd = dateStart.plusDays(1);
+        List<GoodsOrderDetailDto> tmp =  goodsOrderDetailMapper.getDtoListForNewWithoutAreaQty(depotId, netType,  showAll);
 
-        List<GoodsOrderDetailDto> result =  goodsOrderDetailMapper.getDtoListWithAreaQty(goodsOrderId, dateStart, dateEnd);
-        cacheUtils.initCacheInput(result);
-        return BeanUtil.map(result, GoodsOrderDetailForm.class);
+
+        cacheUtils.initCacheInput(tmp);
+        return BeanUtil.map(tmp, GoodsOrderDetailForm.class);
 
     }
 

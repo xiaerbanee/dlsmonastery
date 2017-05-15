@@ -5,7 +5,6 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
-import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
@@ -25,8 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(value = "crm/goodsOrder")
 public class GoodsOrderController {
 
-    @Autowired
-    private DepotManager depotManager;
     @Autowired
     private GoodsOrderService goodsOrderService;
 
@@ -48,10 +45,6 @@ public class GoodsOrderController {
         return null;
     }
 
-    @RequestMapping(value = "getGoodsOrderDetail", method = RequestMethod.GET)
-    public String getGoodsOrderDetail(GoodsOrder goodsOrder, BindingResult bindingResult) {
-        return null;
-    }
 
 
     @RequestMapping(value = "getQuery")

@@ -23,8 +23,18 @@ public class GoodsOrderForm extends DataForm<GoodsOrder> {
     private String shopType;
     private String priceSystemName;
     private String summary;
-    private List<GoodsOrderDetailForm> goodsOrderDetailFormList = new ArrayList<>();
+
+    private List<GoodsOrderDetailForm> detailFormList = new ArrayList<>();
     private List<String> netTypeList;
+
+
+    public List<GoodsOrderDetailForm> getDetailFormList() {
+        return detailFormList;
+    }
+
+    public void setDetailFormList(List<GoodsOrderDetailForm> detailFormList) {
+        this.detailFormList = detailFormList;
+    }
 
     public String getParentShopId() {
         return parentShopId;
@@ -148,13 +158,6 @@ public class GoodsOrderForm extends DataForm<GoodsOrder> {
         this.summary = summary;
     }
 
-    public List<GoodsOrderDetailForm> getGoodsOrderDetailFormList() {
-        return goodsOrderDetailFormList;
-    }
-
-    public void setGoodsOrderDetailFormList(List<GoodsOrderDetailForm> goodsOrderDetailFormList) {
-        this.goodsOrderDetailFormList = goodsOrderDetailFormList;
-    }
 
     public String getFormatId(){
         if(businessId == null){

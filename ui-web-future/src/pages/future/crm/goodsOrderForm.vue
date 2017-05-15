@@ -11,21 +11,21 @@
         <el-row>
           <el-col :span="12">
         <el-form-item :label="$t('goodsOrderForm.shop')" prop="shopId">
-          <depot-select v-model="inputForm.shopId" type="SHOP" ></depot-select>
+          <depot-select v-model="inputForm.shopId" category="directShop" @input="refreshDetailList"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.parentShop')" prop="parentId">
           {{inputForm.parentName}}
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
-          <el-select v-model="inputForm.netType"  filterable  clearable :placeholder="$t('goodsOrderForm.inputWord')" >
+          <el-select v-model="inputForm.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
             <el-option v-for="item in inputForm.netTypeList" :key="item":label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.isUseTicket')" prop="isUseTicket">
           <bool-radio-group v-model="inputForm.isUseTicket"></bool-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType">
-          <el-select v-model="inputForm.shipType" filterable clearable :placeholder="$t('goodsOrderForm.inputKey')" >
+        <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType" >
+          <el-select v-model="inputForm.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
             <el-option v-for="item in inputForm.shipTypeList" :key="item":label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
@@ -59,16 +59,12 @@
           </el-col>
         </el-row>
       </el-form>
-
-      <el-table :data="inputForm.goodsOrderDetailFormList" border stripe>
-        <el-table-column  :label="$t('goodsOrderForm.productName')" >
-          <template scope="scope">
-            <product-select v-model ="scope.row.productId" @input="productSelected(scope.row)" ></product-select>
-          </template>
-        </el-table-column>
+      <el-input v-model="productName" @change="filterProducts" :placeholder="$t('shopAllotForm.selectTowKey')" style="width:200px;"></el-input>
+      <el-table :data="inputForm.detailFormList" border stripe>
+        <el-table-column  prop = "productName" :label="$t('goodsOrderForm.productName')" ></el-table-column>
         <el-table-column prop="hasIme" :label="$t('goodsOrderForm.hasIme')" width="70">
           <template scope="scope">
-            <el-tag  v-if="scope.row.productHasIme!=undefined && scope.row.productHasIme!=null" :type="scope.row.productHasIme ? 'primary' : 'danger'">{{scope.row.productHasIme | bool2str}}</el-tag>
+            <el-tag   :type="scope.row.productHasIme ? 'primary' : 'danger'">{{scope.row.productHasIme | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderForm.price')" width="100"></el-table-column>
@@ -79,15 +75,10 @@
         </el-table-column>
         <el-table-column prop="productAllowOrderAndBill" :label="$t('goodsOrderForm.allowOrderAndBill')">
           <template scope="scope">
-            <el-tag v-if="scope.row.productAllowOrderAndBill!=undefined && scope.row.productAllowOrderAndBill!=null" :type="scope.row.productAllowOrderAndBill? 'primary' : 'danger'">{{scope.row.productAllowOrderAndBill | bool2str}}</el-tag>
+            <el-tag  :type="scope.row.productAllowOrderAndBill? 'primary' : 'danger'">{{scope.row.productAllowOrderAndBill | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="areaQty" :label="$t('goodsOrderForm.areaQty')" ></el-table-column>
-        <el-table-column :render-header="renderAction"  width="100">
-          <template scope="scope">
-            <el-button size="small" type="danger" @click.prevent="removeDomain(scope.row)">{{$t('storeAllotForm.delete')}}</el-button>
-          </template>
-        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -110,6 +101,8 @@
         submitDisabled:false,
         pageLoading:false,
         alertError:false,
+        productName:'',
+        filterDetailList:[],
         carrierShops:[],
         inputForm:{},
         submitData:{
@@ -121,7 +114,7 @@
           carrierShopId:'',
           carrierCodes:'',
           carrierDetails:'',
-          goodsOrderDetailFormList:[],
+          detailFormList:[],
         },
         rules: {
         }
@@ -149,41 +142,41 @@
             this.submitDisabled = false;
           }
         })
-      },removeDomain(item) {
-        var index = this.inputForm.goodsOrderDetailFormList.indexOf(item);
-        if (index !== -1) {
-          this.inputForm.goodsOrderDetailFormList.splice(index, 1)
-        }
-      },renderAction(createElement) {
-        return createElement(
-          'a',{
-            attrs: {
-              class: 'el-button el-button--primary el-button--small'
-            }, domProps: {
-              innerHTML: '增加'
-            },on: {
-              click: this.addDomain
-            }
-          }
-        );
-      },addDomain(){
-        this.inputForm.goodsOrderDetailFormList.push({});
-        return false;
-      },productSelected(row){
-          console.log("productSelected");
-        axios.get('/api/ws/future/crm/goodsOrderDetail/getFormWithTodaysAreaQty?productId='+row.productId+'&depotId='+ this.inputForm.shopId).then((res)=>{
-            if(res.data){
-              util.copyValue(res.data, row);
-            }
+      },filterProducts(){
 
-//          row.cloudQty=res.data
-        });
-      }
-    },created(){
+        let val=this.productName;
+        let tempList=new Array();
+        for(let each of this.inputForm.detailFormList){
+
+          if(util.isNotBlank(each.qty)){
+            tempList.push(each);
+          }
+        }
+        for(let each of this.inputForm.detailFormList){
+          if(util.contains(each.productName, val) && util.isBlank(each.qty)){
+            tempList.push(each);
+          }
+        }
+        this.filterDetailList = tempList;
+
+      },refreshDetailList(){
+
+        if(this.inputForm.shopId && this.inputForm.netType && this.inputForm.shipType ) {
+
+          axios.get('/api/ws/future/crm/goodsOrderDetail/getFormListForNewWithoutAreaQty?depotId='+this.inputForm.shopId+'&netType='+ this.inputForm.netType+'&shipType='+ this.inputForm.shipType).then((res)=>{
+
+            this.inputForm.detailFormList = res.data;
+            this.filterProducts();
+
+          });
+        }
+
+
+    }
+    }, created(){
       axios.get('/api/ws/future/crm/goodsOrder/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
 
-        this.inputForm.goodsOrderDetailFormList.push({});
       })
     }
   }
