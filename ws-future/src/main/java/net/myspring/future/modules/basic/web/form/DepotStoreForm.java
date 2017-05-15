@@ -9,5 +9,23 @@ import java.math.BigDecimal;
  * Created by lihx on 2017/4/18.
  */
 public class DepotStoreForm extends DataForm<Depot>{
+    private String depotId;
 
+    private DepotForm depotForm;
+
+    public String getDepotId() {
+        return depotId;
+    }
+
+    public void setDepotId(String depotId) {
+        this.depotId = depotId;
+    }
+
+    public DepotForm getDepotForm() {
+        return depotForm;
+    }
+
+    public void setDepotForm(DepotForm depotForm) {
+        this.depotForm = depotForm;
+    }
 }
