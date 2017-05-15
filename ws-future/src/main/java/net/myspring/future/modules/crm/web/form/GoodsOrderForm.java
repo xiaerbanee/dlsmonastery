@@ -10,15 +10,12 @@ import java.util.List;
 public class GoodsOrderForm extends DataForm<GoodsOrder> {
 
     private String netType;
-
     private String businessId;
-
     private String shopId;
+    private String parentShopId;
     private String parentShopName;
     private Boolean isUseTicket;
     private String shipType;
-
-
     private List<String> shipTypeList;
     private String carrierShopId;
     private String carrierCodes;
@@ -28,6 +25,22 @@ public class GoodsOrderForm extends DataForm<GoodsOrder> {
     private String summary;
     private List<GoodsOrderDetailForm> goodsOrderDetailFormList = new ArrayList<>();
     private List<String> netTypeList;
+
+    public String getParentShopId() {
+        return parentShopId;
+    }
+
+    public void setParentShopId(String parentShopId) {
+        this.parentShopId = parentShopId;
+    }
+
+    public String getParentShopName() {
+        return parentShopName;
+    }
+
+    public void setParentShopName(String parentShopName) {
+        this.parentShopName = parentShopName;
+    }
 
     public List<String> getShipTypeList() {
         return shipTypeList;
@@ -69,14 +82,6 @@ public class GoodsOrderForm extends DataForm<GoodsOrder> {
 
     public void setShopId(String shopId) {
         this.shopId = shopId;
-    }
-
-    public String getParentShopName() {
-        return parentShopName;
-    }
-
-    public void setParentShopName(String parentShopName) {
-        this.parentShopName = parentShopName;
     }
 
     public Boolean getUseTicket() {

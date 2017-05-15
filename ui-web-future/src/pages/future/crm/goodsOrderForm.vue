@@ -11,13 +11,13 @@
         <el-row>
           <el-col :span="12">
         <el-form-item :label="$t('goodsOrderForm.shop')" prop="shopId">
-          <depot-select v-model="inputForm.shopId" type="SHOP" @input="refreshGoodsOrderDetailList"></depot-select>
+          <depot-select v-model="inputForm.shopId" type="SHOP" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.parentShop')" prop="parentId">
-          <depot-select :disabled="false" v-model="inputForm.parentId" type="SHOP"></depot-select>
+          {{inputForm.parentName}}
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
-          <el-select v-model="inputForm.netType"  filterable  clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshGoodsOrderDetailList">
+          <el-select v-model="inputForm.netType"  filterable  clearable :placeholder="$t('goodsOrderForm.inputWord')" >
             <el-option v-for="item in inputForm.netTypeList" :key="item":label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
@@ -25,19 +25,19 @@
           <bool-radio-group v-model="inputForm.isUseTicket"></bool-radio-group>
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType">
-          <el-select v-model="inputForm.shipType" filterable clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshGoodsOrderDetailList">
+          <el-select v-model="inputForm.shipType" filterable clearable :placeholder="$t('goodsOrderForm.inputKey')" >
             <el-option v-for="item in inputForm.shipTypeList" :key="item":label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.remarks')" prop="remarks">
-          <el-input v-model="inputForm.remarks"></el-input>
+          <el-input type="textarea" v-model="inputForm.remarks"></el-input>
         </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderForm.carrierShop')" prop="carrierShopId">
-              <el-select v-model="inputForm.carrierShopId" clearable filterable remote ::placeholder="$t('goodsOrderForm.selectWord')" :remote-method="remoteCarrierShop" :loading="remoteLoading">
-                <el-option v-for="item in carrierShops" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+              <!--<el-select v-model="inputForm.carrierShopId" clearable filterable remote ::placeholder="$t('goodsOrderForm.selectWord')" :remote-method="remoteCarrierShop" :loading="remoteLoading">-->
+                <!--<el-option v-for="item in carrierShops" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
+              <!--</el-select>-->
             </el-form-item>
             <el-form-item :label="$t('goodsOrderForm.carrierCodes')" prop="carrierCodes">
             </el-form-item>
@@ -59,50 +59,58 @@
           </el-col>
         </el-row>
       </el-form>
-      <el-input v-model="productName" @change="searchProduct" :placeholder="$t('goodsOrderForm.selectTowKey')" style="width:200px;"></el-input>
-      <el-table :data="filterGoodsOrderDetailList" v-loading="pageLoading" :element-loading-text="$t('goodsOrderForm.loading')" stripe border style="margin-top:5px;" >
-        <el-table-column  prop="productName" :label="$t('goodsOrderForm.productName')"></el-table-column>
-        <el-table-column prop="hasIme" :label="$t('goodsOrderForm.hasIme')" width="120">
+
+      <el-table :data="inputForm.goodsOrderDetailFormList" border stripe>
+        <el-table-column  :label="$t('goodsOrderForm.productName')" >
           <template scope="scope">
-            <el-tag :type="scope.row.product.hasIme ? 'primary' : 'danger'">{{scope.row.product.hasIme | bool2str}}</el-tag>
+            <product-select v-model ="scope.row.productId" @input="productSelected(scope.row)" ></product-select>
           </template>
         </el-table-column>
-        <el-table-column prop="price" :label="$t('goodsOrderForm.price')"></el-table-column>
+        <el-table-column prop="hasIme" :label="$t('goodsOrderForm.hasIme')" width="70">
+          <template scope="scope">
+            <el-tag  v-if="scope.row.productHasIme!=undefined && scope.row.productHasIme!=null" :type="scope.row.productHasIme ? 'primary' : 'danger'">{{scope.row.productHasIme | bool2str}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="price" :label="$t('goodsOrderForm.price')" width="100"></el-table-column>
         <el-table-column prop="qty" :label="$t('goodsOrderForm.qty')">
           <template scope="scope">
-            <input type="text" v-model="scope.row.qty" class="el-input__inner"/>
+            <input   type="text" v-model="scope.row.qty" class="el-input__inner"/>
           </template>
         </el-table-column>
-        <el-table-column prop="allowOrderAndBill" :label="$t('goodsOrderForm.allowOrderAndBill')">
+        <el-table-column prop="productAllowOrderAndBill" :label="$t('goodsOrderForm.allowOrderAndBill')">
           <template scope="scope">
-            <el-tag :type="scope.row.product.allowOrder? 'primary' : 'danger'">{{scope.row.product.allowOrder | bool2str}}</el-tag>
+            <el-tag v-if="scope.row.productAllowOrderAndBill!=undefined && scope.row.productAllowOrderAndBill!=null" :type="scope.row.productAllowOrderAndBill? 'primary' : 'danger'">{{scope.row.productAllowOrderAndBill | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="areaQty" :label="$t('goodsOrderForm.areaQty')" ></el-table-column>
+        <el-table-column :render-header="renderAction"  width="100">
+          <template scope="scope">
+            <el-button size="small" type="danger" @click.prevent="removeDomain(scope.row)">{{$t('storeAllotForm.delete')}}</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
 </template>
 <script>
   import depotSelect from 'components/future/depot-select'
+  import productSelect from 'components/future/product-select'
+  import boolRadioGroup from 'components/common/bool-radio-group'
 
   export default{
     components:{
       depotSelect,
+      productSelect,
+      boolRadioGroup,
 
     },
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-
         pageLoading:false,
         alertError:false,
-
-        productName:"",
-        depots:[],
         carrierShops:[],
-        filterGoodsOrderDetailList:[],
         inputForm:{},
         submitData:{
           id:'',
@@ -113,9 +121,8 @@
           carrierShopId:'',
           carrierCodes:'',
           carrierDetails:'',
-          goodsOrderDetailList:[],
+          goodsOrderDetailFormList:[],
         },
-        labelForm:{},
         rules: {
         }
       }
@@ -142,36 +149,41 @@
             this.submitDisabled = false;
           }
         })
-      },refreshGoodsOrderDetailList(){
-        axios.get('/api/ws/future/crm/goodsOrder/getGoodsOrderDetail',{params: {id:this.inputForm.id,shopId:this.inputForm.shopId,netType:this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
-          if(!response.data.errors){
-            this.inputForm.goodsOrderDetailList=response.data;
-            this.filterGoodsOrderDetailList=response.data;
-          }else{
-            this.alertError=true;
-            this.error=response.data.errors.id.message
-          }
-        })
-      },searchProduct(){
-        var val=this.productName;
-        var tempList=new Array();
-        for(var index in this.inputForm.goodsOrderDetailList){
-          var detail=this.inputForm.goodsOrderDetailList[index];
-          if(util.isNotBlank(detail.qty)){
-            tempList.push(detail)
-          }
+      },removeDomain(item) {
+        var index = this.inputForm.goodsOrderDetailFormList.indexOf(item);
+        if (index !== -1) {
+          this.inputForm.goodsOrderDetailFormList.splice(index, 1)
         }
-        for(var index in this.inputForm.goodsOrderDetailList){
-          var detail=this.inputForm.goodsOrderDetailList[index];
-          if(util.contains(detail.product.name,val) && util.isBlank(detail.qty)){
-            tempList.push(detail)
+      },renderAction(createElement) {
+        return createElement(
+          'a',{
+            attrs: {
+              class: 'el-button el-button--primary el-button--small'
+            }, domProps: {
+              innerHTML: '增加'
+            },on: {
+              click: this.addDomain
+            }
           }
-        }
-        this.filterGoodsOrderDetailList = tempList;
+        );
+      },addDomain(){
+        this.inputForm.goodsOrderDetailFormList.push({});
+        return false;
+      },productSelected(row){
+          console.log("productSelected");
+        axios.get('/api/ws/future/crm/goodsOrderDetail/getFormWithTodaysAreaQty?productId='+row.productId+'&depotId='+ this.inputForm.shopId).then((res)=>{
+            if(res.data){
+              util.copyValue(res.data, row);
+            }
+
+//          row.cloudQty=res.data
+        });
       }
     },created(){
       axios.get('/api/ws/future/crm/goodsOrder/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
+
+        this.inputForm.goodsOrderDetailFormList.push({});
       })
     }
   }

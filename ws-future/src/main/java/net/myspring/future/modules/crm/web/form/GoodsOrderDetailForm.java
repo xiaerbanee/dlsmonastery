@@ -16,9 +16,45 @@ public class GoodsOrderDetailForm extends DataForm<GoodsOrderDetail> {
     private Boolean productHasIme;
     private BigDecimal price;
     private Integer qty;
+    private Integer areaQty;
     private Boolean productAllowOrder;
     private Boolean productAllowBill;
-    private Integer alreadyOrderQty;
+
+    public Boolean getProductAllowOrder() {
+        return productAllowOrder;
+    }
+
+    public void setProductAllowOrder(Boolean productAllowOrder) {
+        this.productAllowOrder = productAllowOrder;
+    }
+
+    public Boolean getProductAllowBill() {
+        return productAllowBill;
+    }
+
+    public void setProductAllowBill(Boolean productAllowBill) {
+        this.productAllowBill = productAllowBill;
+    }
+
+    public Boolean getProductAllowOrderAndBill(){
+
+        if(productAllowBill!=null && productAllowOrder !=null){
+            if(productAllowBill && productAllowOrder){
+                return Boolean.TRUE;
+            }
+        }
+
+        return Boolean.FALSE;
+    }
+
+
+    public Integer getAreaQty() {
+        return areaQty;
+    }
+
+    public void setAreaQty(Integer areaQty) {
+        this.areaQty = areaQty;
+    }
 
     public String getProductName() {
         return productName;
@@ -53,6 +89,7 @@ public class GoodsOrderDetailForm extends DataForm<GoodsOrderDetail> {
     }
 
     public Integer getQty() {
+
         return qty;
     }
 
@@ -60,27 +97,4 @@ public class GoodsOrderDetailForm extends DataForm<GoodsOrderDetail> {
         this.qty = qty;
     }
 
-    public Boolean getProductAllowOrder() {
-        return productAllowOrder;
-    }
-
-    public void setProductAllowOrder(Boolean productAllowOrder) {
-        this.productAllowOrder = productAllowOrder;
-    }
-
-    public Boolean getProductAllowBill() {
-        return productAllowBill;
-    }
-
-    public void setProductAllowBill(Boolean productAllowBill) {
-        this.productAllowBill = productAllowBill;
-    }
-
-    public Integer getAlreadyOrderQty() {
-        return alreadyOrderQty;
-    }
-
-    public void setAlreadyOrderQty(Integer alreadyOrderQty) {
-        this.alreadyOrderQty = alreadyOrderQty;
-    }
 }

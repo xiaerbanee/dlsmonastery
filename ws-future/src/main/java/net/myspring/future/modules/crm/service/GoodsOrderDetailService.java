@@ -9,6 +9,8 @@ import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,13 +31,28 @@ public class GoodsOrderDetailService {
         return goodsOrderDetailMapper.findOne(id);
     }
 
-    public List<GoodsOrderDetailForm> getGoodsOrderDetailListForEdit(String goodsOrderId, String depotId) {
+    public List<GoodsOrderDetailForm> getFormListWithTodaysAreaQty(String goodsOrderId) {
 
-        List<GoodsOrderDetailDto> result =  goodsOrderDetailMapper.getGoodsOrderDetailListForEdit(goodsOrderId, depotId);
+        LocalDateTime dateStart = LocalDate.now().atStartOfDay();
+
+        LocalDateTime dateEnd = dateStart.plusDays(1);
+
+        List<GoodsOrderDetailDto> result =  goodsOrderDetailMapper.getDtoListWithAreaQty(goodsOrderId, dateStart, dateEnd);
         cacheUtils.initCacheInput(result);
-
         return BeanUtil.map(result, GoodsOrderDetailForm.class);
 
+    }
 
+    public GoodsOrderDetailForm getFormWithTodaysAreaQty(String productId, String depotId) {
+        LocalDateTime dateStart = LocalDate.now().atStartOfDay();
+        LocalDateTime dateEnd = dateStart.plusDays(1);
+
+        GoodsOrderDetailDto godd =  goodsOrderDetailMapper.getDtoWithAreaQty(productId, depotId, dateStart, dateEnd);
+        if(godd == null){
+            godd =new GoodsOrderDetailDto();
+            godd.setProductId(productId);
+        }
+        cacheUtils.initCacheInput(godd);
+        return BeanUtil.map(godd, GoodsOrderDetailForm.class);
     }
 }

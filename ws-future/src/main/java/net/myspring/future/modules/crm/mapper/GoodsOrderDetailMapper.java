@@ -20,5 +20,7 @@ public interface GoodsOrderDetailMapper extends MyMapper<GoodsOrderDetail,String
 
     List<GoodsOrderDetail> findByParentOfficeIdAndBillDate(@Param("areaId") String areaId, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd, @Param("shipTypes") List<String> shipTypes);
 
-    List<GoodsOrderDetailDto> getGoodsOrderDetailListForEdit(@Param("goodsOrderId")  String goodsOrderId, @Param("depotId")  String depotId);
+    List<GoodsOrderDetailDto> getDtoListWithAreaQty(@Param("goodsOrderId")  String goodsOrderId, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd);
+
+    GoodsOrderDetailDto getDtoWithAreaQty(@Param("productId")  String productId, @Param("depotId")   String depotId, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd);
 }
