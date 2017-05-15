@@ -12,9 +12,8 @@ import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.web.query.DepotShopQuery;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.layout.domain.ShopAttribute;
 import net.myspring.future.modules.layout.dto.ShopAttributeDetailDto;
 import net.myspring.future.modules.layout.mapper.ShopAttributeMapper;
@@ -37,8 +36,6 @@ public class ShopAttributeService {
     @Autowired
     private ShopAttributeMapper shopAttributeMapper;
     @Autowired
-    private DepotManager depotManager;
-    @Autowired
     private DepotMapper depotMapper;
     @Autowired
     private DictEnumClient dictEnumClient;
@@ -56,7 +53,7 @@ public class ShopAttributeService {
     }
 
     public Page<DepotDto> findPage(Pageable pageable, ShopAttributeQuery shopAttributeQuery){
-        DepotShopQuery depotQuery=new DepotShopQuery();
+        DepotQuery depotQuery=new DepotQuery();
         ReflectionUtil.copyProperties(shopAttributeQuery,depotQuery);
         Page<DepotDto> page = depotMapper.findPage(pageable, depotQuery);
         cacheUtils.initCacheInput(page.getContent());

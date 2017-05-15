@@ -4,7 +4,7 @@ import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.future.common.mybatis.MyProvider;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.web.query.DepotShopQuery;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;
@@ -46,46 +46,15 @@ public interface DepotMapper extends BaseMapper<Depot,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<Depot> findByIds(List<String> ids);
     
-    Page<DepotDto> findPage(Pageable pageable, @Param("p")DepotShopQuery depotQuery);
+    Page<DepotDto> findPage(Pageable pageable, @Param("p")DepotQuery depotQuery);
 
-    Page<DepotDto> findDepotAccountPage(Pageable pageable, @Param("p") DepotShopQuery depotQuery);
+    List<DepotDto> findShopList(@Param("p") DepotQuery depotShopQuery);
 
-    List<DepotDto> findShopAccountExportPage(@Param("p") DepotShopQuery depotQuery);
-
-    List<Depot> findByTypes(List<Integer> depotTypes);
-
-    List<Depot> findByOfficeId(String officeId);
+    List<DepotDto> findStoreList(@Param("p") DepotQuery depotShopQuery);
 
     List<Depot> findByAccountId(String accountId);
 
-    List<Depot> findByFilterAll(@Param("p") DepotShopQuery depotQuery);
-
-    List<Depot> findByFilter(@Param("p")DepotShopQuery depotQuery);
-
-    List<String> findChainIds(@Param("p") DepotShopQuery depotQuery);
-
-    List<Depot> findByChainId(String chainId);
-
-    List<Depot> findAllByOffice(@Param("officeIds") List<String> officeIds);
-
-    List<Depot> findLabels(List<String> ids);
-
-    List<Depot> findByAdPricesystemId(String adPricesystemId);
-
-    Depot findByName(String name);
-
-    List<Depot> findByOutGroupId(String outGroupId);
-
-    List<Depot> findByOutTypeAndOutId(@Param("outType") String outType, @Param("outId") String outId);
-
-    Depot findAllByNameAndOutId(@Param("name") String name, @Param("outId") String outId);
-
-    int deleteDepotAccount(@Param("depotId") String depotId);
-
-    int saveDepotAccount(@Param("depotId") String accountId, @Param("accountIds") List<String> accountIds);
-
-    LocalDateTime getMaxOutDate(@Param("outType") String outType);
-
     List<Depot> findByNameList(List<String> nameList);
 
+    Depot findByName(String name);
 }
