@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="vivo_plant_sendimei")
 public class VivoPlantSendimei extends IdEntity<VivoPlantSendimei> {
+    private String companyId;
     private String billId;
     private String imei;
     private String imeiState;
@@ -21,7 +22,14 @@ public class VivoPlantSendimei extends IdEntity<VivoPlantSendimei> {
     private String model;
     private String meid;
     private String imei2;
-    private String companyId;
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
     public String getBillId() {
         return billId;
@@ -109,9 +117,5 @@ public class VivoPlantSendimei extends IdEntity<VivoPlantSendimei> {
 
     public void setImei2(String imei2) {
         this.imei2 = imei2;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 }
