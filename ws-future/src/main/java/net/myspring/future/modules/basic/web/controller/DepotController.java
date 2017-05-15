@@ -19,7 +19,7 @@ public class DepotController {
     @Autowired
     private DepotService depotService;
 
-    //直营门店查询
+    //直营门店查询(POP申请开单类型为配件赠品用这个)
     @RequestMapping(value = "directShop")
     public List<DepotDto>  directShop(DepotQuery depotQuery) {
         depotQuery.setClientIsNull(false);
@@ -33,12 +33,25 @@ public class DepotController {
         return depotService.findShopList(depotQuery);
     }
 
-    //门店查询
+    //门店查询(物料订单的代理门店也用这个)
     @RequestMapping(value = "shop")
     public List<DepotDto>  shop(DepotQuery depotQuery) {
         return depotService.findShopList(depotQuery);
     }
 
+    //广告门店（物料订单）
+    @RequestMapping(value = "adShop")
+    public List<DepotDto>  adShop(DepotQuery depotQuery) {
+        depotQuery.setAdShop(true);
+        return depotService.findShopList(depotQuery);
+    }
+
+    //广告门店（POP申请）
+    @RequestMapping(value = "popShop")
+    public List<DepotDto>  popShop(DepotQuery depotQuery) {
+        depotQuery.setPopShop(true);
+        return depotService.findShopList(depotQuery);
+    }
 
     //直营仓库查询
     @RequestMapping(value = "directStore")
@@ -59,8 +72,6 @@ public class DepotController {
     public List<DepotDto>  store(DepotQuery depotQuery) {
         return depotService.findStoreList(depotQuery);
     }
-
-
 
     @RequestMapping(value = "findByIds")
     public List<DepotDto> findByListIds(List<String> ids) {
