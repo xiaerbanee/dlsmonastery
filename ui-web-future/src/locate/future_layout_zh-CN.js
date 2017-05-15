@@ -474,6 +474,9 @@ export default {
     scenePhoto: "现场照片",
     confirmPhoto: "装修后照片",
     pass:"通过",
+    passRemarks:"审批意见",
+    inputRemarks:'请输入审批备注',
+    save:"保存",
   },
   shopBuildForm: {
     shopBuildForm: "门店建设编辑",

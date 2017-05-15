@@ -6,38 +6,32 @@
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item :label="$t('priceChangeImeDetail.priceChangeName')">
-              {{inputForm.priceChange.name}}
+              {{inputForm.priceChangeName}}
             </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.type')">
-              {{inputForm.productIme.product.name}}
+              {{inputForm.productName}}
             </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.ime')">
-              {{inputForm.productIme.ime}}
+              {{inputForm.ime}}
             </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.remarks')">
-              {{inputForm.pass}}
+              {{inputForm.remarks}}
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item :label="$t('priceChangeImeDetail.shopName')">
-              {{inputForm.shop.name}}
+              {{inputForm.shopName}}
             </el-form-item>
-            <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image">
-              <el-upload  action="/api/basic/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
-              </el-upload>
-            </el-form-item>
-            <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action=='上传'">
-              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+            <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action=='upload'">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
                 <el-button size="small" type="primary">{{$t('priceChangeImeDetail.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('priceChangeImeDetail.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
             </el-form-item>
-            <el-form-item :label="$t('priceChangeImeDetail.pass')" prop="pass" v-if="action=='审核'">
-              <el-radio-group v-model="inputForm.pass">
-                <el-radio v-for="(value,key) in formProperty.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
-              </el-radio-group>
+            <el-form-item :label="$t('priceChangeImeDetail.pass')" prop="pass" v-if="action=='audit'">
+              <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('priceChangeImeDetail.auditRemarks')" prop="auditRemarks"  v-if="action=='审核'">
+            <el-form-item :label="$t('priceChangeImeDetail.auditRemarks')" prop="auditRemarks"  v-if="action=='audit'">
               <el-input v-model="inputForm.auditRemarks"></el-input>
             </el-form-item>
             <el-form-item>
@@ -50,7 +44,9 @@
   </div>
 </template>
 <script>
+  import boolRadioGroup from 'components/common/bool-radio-group';
     export default{
+      components:{boolRadioGroup},
       data(){
           return{
             isCreate:this.$route.query.id==null,
@@ -59,23 +55,16 @@
             formProperty:{bools:''},
             fileList:[],
             url:'',
-            inputForm:{
-              id:this.$route.query.id,
-              priceChange:{name:''},
-              shop:{name:''},
-              productIme:{
-                ime:'',
-                product:{
-                  name:""
-                }
-              },
-              remarks:"",
-              image:"",
+            inputForm:{},
+            submitData:{
+                id:'',
+              image:'',
               pass:'',
-              auditRemarks:''
+              auditRemarks:'',
             },
             rules: {
-            }
+            },
+            headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
           }
       },
       methods:{
@@ -84,13 +73,15 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
+                util.copyValue(this.inputForm,this.submitData);
+                console.log(this.submitData);
               this.inputForm.image = util.getFolderFileIdStr(this.fileList);
-              if(this.action==='上传'){
-                this.url = '/api/crm/priceChangeIme/imageUpload';
-              }else if(this.action==='审核'){
-                this.url = '/api/crm/priceChangeIme/audit';
+              if(this.action==='upload'){
+                this.url = '/api/ws/future/crm/priceChangeIme/imageUpload';
+              }else if(this.action==='audit'){
+                this.url = '/api/ws/future/crm/priceChangeIme/audit';
               }
-              axios.post(this.url,qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+              axios.post(this.url,qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -115,17 +106,14 @@
           this.fileList = fileList;
         }
       },created(){
-        if(!this.isCreate){
-          axios.get('/api/crm/priceChangeIme/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data.priceChangeIme,this.inputForm);
-            util.copyValue(response.data.bools,this.formProperty.bools);
+          axios.get('/api/ws/future/crm/priceChangeIme/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm = response.data;
             if(this.inputForm.image != null) {
-              axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((res)=>{
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((res)=>{
                 this.fileList= res.data;
               });
             }
           })
-        }
       }
     }
 </script>

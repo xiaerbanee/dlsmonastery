@@ -1,8 +1,16 @@
 package net.myspring.future.modules.crm.web.controller;
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
 
+import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
+import net.myspring.future.modules.crm.service.PriceChangeImeService;
+import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
+import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,21 +23,24 @@ import java.util.Map;
 @RequestMapping(value = "crm/priceChangeIme")
 public class PriceChangeImeController {
 
+    @Autowired
+    private PriceChangeImeService priceChangeImeService;
+
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request) {
-        return null;
+    public Page<PriceChangeImeDto> list(Pageable pageable, PriceChangeImeQuery priceChangeImeQuery) {
+        return priceChangeImeService.findPage(pageable,priceChangeImeQuery);
     }
 
     @RequestMapping(value = "getQuery")
-    public String getQuery(){
-        return null;
+    public PriceChangeImeQuery getQuery(PriceChangeImeQuery priceChangeImeQuery){
+        return priceChangeImeQuery;
     }
 
 
-    @RequestMapping(value = "detail" ,method = RequestMethod.GET)
-    public String detail(PriceChangeIme priceChangeIme){
-        return null;
+    @RequestMapping(value = "findForm" ,method = RequestMethod.GET)
+    public PriceChangeImeForm detail(PriceChangeImeForm priceChangeImeForm){
+        return priceChangeImeService.findForm(priceChangeImeForm);
     }
 
     @RequestMapping(value="getFormProperty")
@@ -43,13 +54,15 @@ public class PriceChangeImeController {
     }
 
     @RequestMapping(value = "imageUpload")
-    public String imageUpload(PriceChangeIme priceChangeIme) {
-        return null;
+    public RestResponse imageUpload(PriceChangeImeForm priceChangeImeForm) {
+        priceChangeImeService.imageUpload(priceChangeImeForm);
+        return new RestResponse("上报成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "audit")
-    public String audit(PriceChangeIme priceChangeIme){
-        return null;
+    public RestResponse audit(PriceChangeImeForm priceChangeImeForm){
+        priceChangeImeService.audit(priceChangeImeForm);
+        return new RestResponse("审核成功", ResponseCodeEnum.saved.name());
     }
 
     private List<String> getActionList(PriceChangeIme priceChangeIme){

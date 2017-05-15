@@ -77,7 +77,7 @@ public interface ProductMapper extends BaseMapper<Product,String> {
 
     List<Product> findLabels(List<String> ids);
 
-    List<Product> findByOutGroupIdsAndAllowOrder(@Param("outGroupIds") List<String> outGroupIds, @Param("allowOrder") boolean allowOrder);
+    List<ProductDto> findByOutGroupIdsAndAllowOrder(@Param("outGroupIds") List<String> outGroupIds, @Param("allowOrder") boolean allowOrder);
 
     LocalDateTime getMaxOutDate();
 

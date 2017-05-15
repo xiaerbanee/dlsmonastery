@@ -2,57 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.crm.mapper.PriceChangeImeMapper">
 
-    <select id="findPage" resultType="PriceChangeIme">
+    <select id="findPage" resultType="PriceChangeImeDto">
         SELECT
-        t1.*
+        depot.office_id officeId,depot.area_id areaId,t2.name priceChangeName,productIme.ime ime,productIme.product_id productId,t1.*
         FROM
-        crm_price_change_ime t1,crm_price_change t2,crm_depot depot
+        crm_price_change_ime t1,crm_price_change t2,crm_depot depot,crm_product_ime productIme
         WHERE
          t1.price_change_id=t2.id
         and t1.shop_id=depot.id
+        and t1.product_ime_id=productIme.id
         and t1.enabled=1
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
-        and (
-          t1.image is null
+        <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
+        <if test="p.image != null">
+            AND t1.image = #{p.image}
+        </if>
         <if test="p.isCheck != null">
-            OR t1.is_check = #{p.isCheck}
+            AND t1.is_check = #{p.isCheck}
         </if>
         <if test="p.status != null">
-            OR t1.status = #{p.status}
+            AND t1.status = #{p.status}
         </if>
-        )
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter"/>
+        <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter"/>-->
         <if test="p.priceChangeName != null ">
             and t2.name  like CONCAT('%', #{p.priceChangeName},'%')
         </if>
-        <if test="p.productName !=null">
-            and t1.product_id in(
-            select product.id
-            from crm_product product
-            where product.name like concat('%',#{p.productName},'%')
-            and product.enabled=1
-            )
+        <if test="p.productId !=null">
+            and productIme.product_id = #{p.productId}
         </if>
-        <if test="p.shopName !=null">
-            and t1.shop_id in(
-            select depot.id
-            from crm_depot depot
-            where depot.enabeld=1 and depot.name=#{p.shopName}
-            )
+        <if test="p.shopId !=null">
+            and t1.shop_id =#{p.shopId}
         </if>
         <if test="p.ime !=null">
-            and t1.product_ime_id in(
-            select ime.id
-            from crm_product_ime ime
-            where ime.enabeld=1 and ime.ime=#{p.ime}
-            )
+            and productIme.ime like CONCAT('%',#{p.ime},'%')
         </if>
         <if test="p.officeId !=null">
-            and t1.shop_id in(
-            select depot.id
-            from crm_depot depot
-            where depot.office_id=#{p.officeId}
-            )
+            and depot.office_id = #{p.officeId}
         </if>
     </select>
 
