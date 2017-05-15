@@ -144,7 +144,7 @@
                 and t1.pop_shop is not NULL
             </if>
         </if>
-        and depot.name like concat('%',#{p.name},'%')
+        and t1.name like concat('%',#{p.name},'%')
         <include refid="depotFilter" />
         limit 0,25
     </select>
@@ -163,7 +163,7 @@
                 and t1.out_id is not NULL
             </if>
         </if>
-        and depot.name like concat('%',#{p.name},'%')
+        and t1.name like concat('%',#{p.name},'%')
         <include refid="depotFilter" />
     </select>
 

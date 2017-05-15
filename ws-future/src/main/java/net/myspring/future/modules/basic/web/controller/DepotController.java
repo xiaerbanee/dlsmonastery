@@ -23,7 +23,8 @@ public class DepotController {
     @RequestMapping(value = "directShop")
     public List<DepotDto>  directShop(DepotQuery depotQuery) {
         depotQuery.setClientIsNull(false);
-        return depotService.findShopList(depotQuery);
+        List<DepotDto> result = depotService.findShopList(depotQuery);
+        return result;
     }
 
     //代理门店查询

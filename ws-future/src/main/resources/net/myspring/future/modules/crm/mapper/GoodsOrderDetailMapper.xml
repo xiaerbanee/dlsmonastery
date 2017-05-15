@@ -9,48 +9,67 @@
     </select>
 
 
-    <select id="getGoodsOrderDetailListForEdit" resultType="GoodsOrderDetailDto">
-            SELECT
-                validProduct.product_id,
-                validProduct.name productName,
-                validProduct.has_ime productHasIme,
-                validProduct.allow_bill productAllowBill,
-                validProduct.allow_order productAllowOrder,
-                detail.qty,
-                (
-                    CASE
-                    WHEN detail.price IS NULL THEN
-                        validProduct.price
-                    ELSE
-                        detail.price
-                    END
-                ) price
-            FROM
-                (
-                    SELECT
-                        t1.product_id,
-                        t1.price,
-                        t2.NAME,
-                        t2.allow_bill,
-                        t2.allow_order,
-                        t2.has_ime
-                    FROM
-                        crm_pricesystem_detail t1,
-                        crm_product t2
-                    WHERE
-                        t1.pricesystem_id = (
-                            SELECT
-                                depotShop.pricesystem_id
-                            FROM
-                                crm_depot_shop depotShop
-                            WHERE
-                                depotShop.depot_id = #{depotId}
-                        )
-                    AND t1.product_id = t2.id
-                    AND t2.enabled = 1
-                ) validProduct  LEFT JOIN crm_goods_order_detail detail ON detail.goods_order_id = #{goodsOrderId}  AND validProduct.product_id = detail.product_id
-
+    <select id="getDtoListForNewWithoutAreaQty" resultType="GoodsOrderDetailDto">
+        SELECT
+            t2.product_id,
+            t3.name productName,
+            t3.has_ime productHasIme,
+            t3.allow_order productAllowOrder,
+            t3.allow_bill productAllowBill
+        FROM
+            crm_depot t1,
+            crm_pricesystem_detail t2,
+            crm_product t3
+        WHERE
+            t1.id = #{depotId}
+        AND t1.pricesystem_id = t2.pricesystem_id
+        AND t2.product_id = t3.id
+        AND t3.enabled = 1
+        AND (
+            '全网通' = #{netType}
+            OR t3.net_type = '全网通'
+            OR t3.net_type = #{netType}
+        )
+        AND( #{showAll} OR (t3.allow_order = 1 and t3.allow_bill = 1)  )
     </select>
+
+
+    <select id="getDtoWithAreaQty" resultType="GoodsOrderDetailDto">
+        SELECT
+            t1.price,
+            t2.has_ime productHasIme,
+            t2.id productId,
+            t2.name productName,
+            t2.allow_order productAllowOrder,
+            t2.allow_bill productAllowBill,
+            (
+                SELECT
+                    SUM(innerDetail.qty)
+                FROM
+                    crm_goods_order_detail innerDetail,
+                    crm_goods_order innerOrd,
+                    crm_depot innerDepot
+                WHERE
+                    innerDetail.product_id = #{productId}
+                AND innerDetail.goods_order_id = innerOrd.id
+                AND innerOrd.enabled = 1
+                AND innerOrd.created_date >= #{dateStart}
+                AND innerOrd.created_date &lt; #{dateEnd}
+                AND innerOrd.shop_id = innerDepot.id
+                AND innerDepot.enabled = 1
+                AND innerDepot.area_id = t3.area_id
+            ) areaQty
+        FROM
+            crm_pricesystem_detail t1,
+            crm_product t2,
+            crm_depot t3
+        WHERE
+            t3.id = #{depotId}
+        AND t1.pricesystem_id = t3.pricesystem_id
+        AND t1.product_id = #{productId}
+        AND t1.product_id = t2.id
+    </select>
+
 
 
     <select id="findByGoodsOrderIds" resultType="GoodsOrderDetail">

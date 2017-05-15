@@ -11,33 +11,33 @@
         <el-row>
           <el-col :span="12">
         <el-form-item :label="$t('goodsOrderForm.shop')" prop="shopId">
-          <depot-select v-model="inputForm.shopId" type="SHOP" @input="refreshGoodsOrderDetailList"></depot-select>
+          <depot-select v-model="inputForm.shopId" category="directShop" @input="refreshDetailList"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.parentShop')" prop="parentId">
-          <depot-select :disabled="false" v-model="inputForm.parentId" type="SHOP"></depot-select>
+          {{inputForm.parentName}}
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
-          <el-select v-model="inputForm.netType"  filterable  clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshGoodsOrderDetailList">
+          <el-select v-model="inputForm.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
             <el-option v-for="item in inputForm.netTypeList" :key="item":label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.isUseTicket')" prop="isUseTicket">
           <bool-radio-group v-model="inputForm.isUseTicket"></bool-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType">
-          <el-select v-model="inputForm.shipType" filterable clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshGoodsOrderDetailList">
+        <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType" >
+          <el-select v-model="inputForm.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
             <el-option v-for="item in inputForm.shipTypeList" :key="item":label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('goodsOrderForm.remarks')" prop="remarks">
-          <el-input v-model="inputForm.remarks"></el-input>
+          <el-input type="textarea" v-model="inputForm.remarks"></el-input>
         </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderForm.carrierShop')" prop="carrierShopId">
-              <el-select v-model="inputForm.carrierShopId" clearable filterable remote ::placeholder="$t('goodsOrderForm.selectWord')" :remote-method="remoteCarrierShop" :loading="remoteLoading">
-                <el-option v-for="item in carrierShops" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+              <!--<el-select v-model="inputForm.carrierShopId" clearable filterable remote ::placeholder="$t('goodsOrderForm.selectWord')" :remote-method="remoteCarrierShop" :loading="remoteLoading">-->
+                <!--<el-option v-for="item in carrierShops" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
+              <!--</el-select>-->
             </el-form-item>
             <el-form-item :label="$t('goodsOrderForm.carrierCodes')" prop="carrierCodes">
             </el-form-item>
@@ -59,23 +59,23 @@
           </el-col>
         </el-row>
       </el-form>
-      <el-input v-model="productName" @change="searchProduct" :placeholder="$t('goodsOrderForm.selectTowKey')" style="width:200px;"></el-input>
-      <el-table :data="filterGoodsOrderDetailList" v-loading="pageLoading" :element-loading-text="$t('goodsOrderForm.loading')" stripe border style="margin-top:5px;" >
-        <el-table-column  prop="productName" :label="$t('goodsOrderForm.productName')"></el-table-column>
-        <el-table-column prop="hasIme" :label="$t('goodsOrderForm.hasIme')" width="120">
+      <el-input v-model="productName" @change="filterProducts" :placeholder="$t('shopAllotForm.selectTowKey')" style="width:200px;"></el-input>
+      <el-table :data="inputForm.detailFormList" border stripe>
+        <el-table-column  prop = "productName" :label="$t('goodsOrderForm.productName')" ></el-table-column>
+        <el-table-column prop="hasIme" :label="$t('goodsOrderForm.hasIme')" width="70">
           <template scope="scope">
-            <el-tag :type="scope.row.product.hasIme ? 'primary' : 'danger'">{{scope.row.product.hasIme | bool2str}}</el-tag>
+            <el-tag   :type="scope.row.productHasIme ? 'primary' : 'danger'">{{scope.row.productHasIme | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="price" :label="$t('goodsOrderForm.price')"></el-table-column>
+        <el-table-column prop="price" :label="$t('goodsOrderForm.price')" width="100"></el-table-column>
         <el-table-column prop="qty" :label="$t('goodsOrderForm.qty')">
           <template scope="scope">
-            <input type="text" v-model="scope.row.qty" class="el-input__inner"/>
+            <input   type="text" v-model="scope.row.qty" class="el-input__inner"/>
           </template>
         </el-table-column>
-        <el-table-column prop="allowOrderAndBill" :label="$t('goodsOrderForm.allowOrderAndBill')">
+        <el-table-column prop="productAllowOrderAndBill" :label="$t('goodsOrderForm.allowOrderAndBill')">
           <template scope="scope">
-            <el-tag :type="scope.row.product.allowOrder? 'primary' : 'danger'">{{scope.row.product.allowOrder | bool2str}}</el-tag>
+            <el-tag  :type="scope.row.productAllowOrderAndBill? 'primary' : 'danger'">{{scope.row.productAllowOrderAndBill | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="areaQty" :label="$t('goodsOrderForm.areaQty')" ></el-table-column>
@@ -85,24 +85,25 @@
 </template>
 <script>
   import depotSelect from 'components/future/depot-select'
+  import productSelect from 'components/future/product-select'
+  import boolRadioGroup from 'components/common/bool-radio-group'
 
   export default{
     components:{
       depotSelect,
+      productSelect,
+      boolRadioGroup,
 
     },
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-
         pageLoading:false,
         alertError:false,
-
-        productName:"",
-        depots:[],
+        productName:'',
+        filterDetailList:[],
         carrierShops:[],
-        filterGoodsOrderDetailList:[],
         inputForm:{},
         submitData:{
           id:'',
@@ -113,9 +114,8 @@
           carrierShopId:'',
           carrierCodes:'',
           carrierDetails:'',
-          goodsOrderDetailList:[],
+          detailFormList:[],
         },
-        labelForm:{},
         rules: {
         }
       }
@@ -142,36 +142,41 @@
             this.submitDisabled = false;
           }
         })
-      },refreshGoodsOrderDetailList(){
-        axios.get('/api/ws/future/crm/goodsOrder/getGoodsOrderDetail',{params: {id:this.inputForm.id,shopId:this.inputForm.shopId,netType:this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
-          if(!response.data.errors){
-            this.inputForm.goodsOrderDetailList=response.data;
-            this.filterGoodsOrderDetailList=response.data;
-          }else{
-            this.alertError=true;
-            this.error=response.data.errors.id.message
-          }
-        })
-      },searchProduct(){
-        var val=this.productName;
-        var tempList=new Array();
-        for(var index in this.inputForm.goodsOrderDetailList){
-          var detail=this.inputForm.goodsOrderDetailList[index];
-          if(util.isNotBlank(detail.qty)){
-            tempList.push(detail)
+      },filterProducts(){
+
+        let val=this.productName;
+        let tempList=new Array();
+        for(let each of this.inputForm.detailFormList){
+
+          if(util.isNotBlank(each.qty)){
+            tempList.push(each);
           }
         }
-        for(var index in this.inputForm.goodsOrderDetailList){
-          var detail=this.inputForm.goodsOrderDetailList[index];
-          if(util.contains(detail.product.name,val) && util.isBlank(detail.qty)){
-            tempList.push(detail)
+        for(let each of this.inputForm.detailFormList){
+          if(util.contains(each.productName, val) && util.isBlank(each.qty)){
+            tempList.push(each);
           }
         }
-        this.filterGoodsOrderDetailList = tempList;
-      }
-    },created(){
+        this.filterDetailList = tempList;
+
+      },refreshDetailList(){
+
+        if(this.inputForm.shopId && this.inputForm.netType && this.inputForm.shipType ) {
+
+          axios.get('/api/ws/future/crm/goodsOrderDetail/getFormListForNewWithoutAreaQty?depotId='+this.inputForm.shopId+'&netType='+ this.inputForm.netType+'&shipType='+ this.inputForm.shipType).then((res)=>{
+
+            this.inputForm.detailFormList = res.data;
+            this.filterProducts();
+
+          });
+        }
+
+
+    }
+    }, created(){
       axios.get('/api/ws/future/crm/goodsOrder/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
+
       })
     }
   }

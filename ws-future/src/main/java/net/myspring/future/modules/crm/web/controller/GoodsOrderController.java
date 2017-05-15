@@ -20,11 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "crm/goodsOrder")
 public class GoodsOrderController {
+
     @Autowired
     private GoodsOrderService goodsOrderService;
 
@@ -46,10 +45,6 @@ public class GoodsOrderController {
         return null;
     }
 
-    @RequestMapping(value = "getGoodsOrderDetail", method = RequestMethod.GET)
-    public String getGoodsOrderDetail(GoodsOrder goodsOrder, BindingResult bindingResult) {
-        return null;
-    }
 
 
     @RequestMapping(value = "getQuery")
@@ -157,8 +152,4 @@ public class GoodsOrderController {
 
     }
 
-
-    private List<String> getActionList(GoodsOrder goodsOrder) {
-        return null;
-    }
 }
