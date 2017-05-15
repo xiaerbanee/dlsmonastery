@@ -17,10 +17,10 @@ import java.util.Set;
 public interface CustomerReceiveMapper {
 
     //期末查询
-    List<CustomerReceiveDto> findByEndDateAndCustomerIdList(@Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") Set<String> customerIdList);
+    List<CustomerReceiveDto> findEndShouldGet(@Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") List<String> customerIdList);
 
-    List<CustomerReceiveDetailDto> findByPeriodForBillSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
+    List<CustomerReceiveDetailDto> findMainList(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") List<String> customerIdList);
 
-    List<CustomerReceiveDetailDto> findByPeriodForMaterial(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
+    List<CustomerReceiveDetailDto> findDetailList(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") List<String> customerIdList);
 
 }

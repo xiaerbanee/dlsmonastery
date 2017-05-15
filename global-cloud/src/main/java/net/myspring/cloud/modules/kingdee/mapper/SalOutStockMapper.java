@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 标准销售出库单/现销出库单
@@ -17,8 +18,8 @@ import java.util.List;
 public interface SalOutStockMapper {
 
     //标准销售出库单
-    List<CustomerReceiveDto> findXSCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList")HashSet<String> customerIdList);
+    List<CustomerReceiveDto> findXSCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList")Set<String> customerIdList);
 
     //现销出库单
-    List<CustomerReceiveDto> findXXCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList")HashSet<String> customerIdList);
+    List<CustomerReceiveDto> findXXCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList")Set<String> customerIdList);
 }
