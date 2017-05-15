@@ -35,14 +35,24 @@ public class CustomerReceiveService {
     public List<CustomerReceiveDto>  findCustomerReceiveDtoList(CustomerReceiveQuery customerReceiveQuery) {
         LocalDate dateStart = customerReceiveQuery.getDateStart();
         LocalDate dateEnd = customerReceiveQuery.getDateEnd();
-        List<CustomerReceiveDto> beginList = customerReceiveMapper.findByDateEndAndCustomerIdList(dateStart,customerReceiveQuery.getCustomerIdList());
-        List<CustomerReceiveDto> endList = customerReceiveMapper.findByDateEndAndCustomerIdList(dateEnd,customerReceiveQuery.getCustomerIdList());
+        List<CustomerReceiveDto> beginList = customerReceiveMapper.findEndShouldGet(dateStart,customerReceiveQuery.getCustomerIdList());
+        List<CustomerReceiveDto> endList = customerReceiveMapper.findEndShouldGet(dateEnd,customerReceiveQuery.getCustomerIdList());
         //期初结余
         Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //期末结余
         Map<String,BigDecimal> endMap = endList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
-        List<BdCustomer> customerList =  bdCustomerMapper.findByIdList(customerReceiveQuery.getCustomerIdList());
-
+        List<String> customerIdList = Lists.newArrayList();
+        for(CustomerReceiveDto customerReceiveDto:beginList) {
+            if(!customerIdList.contains(customerReceiveDto.getCustomerId())) {
+                customerIdList.add(customerReceiveDto.getCustomerId());
+            }
+        }
+        for(CustomerReceiveDto customerReceiveDto:endList) {
+            if(!customerIdList.contains(customerReceiveDto.getCustomerId())) {
+                customerIdList.add(customerReceiveDto.getCustomerId());
+            }
+        }
+        List<BdCustomer> customerList =  bdCustomerMapper.findByIdList(customerIdList);
         List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
         for(BdCustomer bdCustomer:customerList) {
             CustomerReceiveDto customerReceiveDto = new CustomerReceiveDto();
@@ -51,19 +61,28 @@ public class CustomerReceiveService {
             customerReceiveDto.setCustomerName(bdCustomer.getFName());
             customerReceiveDto.setCustomerGroupName(bdCustomer.getFPrimaryGroupName());
         }
+        if(customerReceiveQuery.getQueryDetail()) {
+            CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
+            customerReceiveDetailQuery.setCustomerIdList(customerIdList);
+            customerReceiveDetailQuery.setDateRange(customerReceiveQuery.getDateRange());
+            Map<String,List<CustomerReceiveDetailDto>> customerReceiveDetailMap =findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
+            for(CustomerReceiveDto customerReceiveDto:customerReceiveDtoList) {
+                customerReceiveDto.setCustomerReceiveDetailDtoList(customerReceiveDetailMap.get(customerReceiveDto.getCustomerId()));
+            }
+        }
         return customerReceiveDtoList;
     }
 
-    public List<CustomerReceiveDetailDto>  findCustomerReceiveDetailDtoList(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
+    public Map<String,List<CustomerReceiveDetailDto>>  findCustomerReceiveDetailDtoMap(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
         LocalDate dateStart = customerReceiveDetailQuery.getDateStart();
         LocalDate dateEnd = customerReceiveDetailQuery.getDateEnd();
-        List<CustomerReceiveDetailDto> dataList = Lists.newArrayList();
+        Map<String,List<CustomerReceiveDetailDto>> dataMap= Maps.newHashMap();
 
 
 
 
 
-        return dataList;
+        return dataMap;
     }
 
 }
