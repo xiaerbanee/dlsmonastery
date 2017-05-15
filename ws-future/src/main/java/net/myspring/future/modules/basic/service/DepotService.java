@@ -27,14 +27,27 @@ public class DepotService {
     private OfficeClient officeClient;
 
 
-    public List<DepotDto> findList(DepotQuery depotQuery) {
+    public List<DepotDto> findShopList(DepotQuery depotQuery) {
         List<Depot> depotList = depotMapper.findByAccountId(RequestUtils.getAccountId());
         depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         if(CollectionUtil.isNotEmpty(depotList)) {
             depotQuery.setDepotIdList(CollectionUtil.extractToList(depotList,"id"));
         }
-        return depotMapper.findList(depotQuery);
+        return depotMapper.findShopList(depotQuery);
     }
+
+    public List<DepotDto> findStoreList(DepotQuery depotQuery) {
+        List<Depot> depotList = depotMapper.findByAccountId(RequestUtils.getAccountId());
+        depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        if(CollectionUtil.isNotEmpty(depotList)) {
+            depotQuery.setDepotIdList(CollectionUtil.extractToList(depotList,"id"));
+        }
+        return depotMapper.findStoreList(depotQuery);
+    }
+
+
+
+
 
     public List<DepotDto> findByIds(List<String> ids){
         List<Depot> depotList=depotMapper.findByIds(ids);

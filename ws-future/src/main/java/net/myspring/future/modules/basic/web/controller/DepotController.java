@@ -19,24 +19,48 @@ public class DepotController {
     @Autowired
     private DepotService depotService;
 
-    @RequestMapping(value = "search")
-    public List<DepotDto> search(DepotQuery depotQuery) {
-        return depotService.findList(depotQuery);
-    }
-
     //直营门店查询
-    @RequestMapping(value = "direct")
-    public List<DepotDto>  direct(DepotQuery depotQuery) {
+    @RequestMapping(value = "directShop")
+    public List<DepotDto>  directShop(DepotQuery depotQuery) {
         depotQuery.setClientIsNull(false);
-        return depotService.findList(depotQuery);
+        return depotService.findShopList(depotQuery);
     }
 
     //代理门店查询
-    @RequestMapping(value = "delegate")
-    public List<DepotDto>  delegate(DepotQuery depotQuery) {
+    @RequestMapping(value = "delegateShop")
+    public List<DepotDto>  delegateShop(DepotQuery depotQuery) {
         depotQuery.setClientIsNull(true);
-        return depotService.findList(depotQuery);
+        return depotService.findShopList(depotQuery);
     }
+
+    //门店查询
+    @RequestMapping(value = "shop")
+    public List<DepotDto>  shop(DepotQuery depotQuery) {
+        return depotService.findShopList(depotQuery);
+    }
+
+
+    //直营仓库查询
+    @RequestMapping(value = "directStore")
+    public List<DepotDto>  directStore(DepotQuery depotQuery) {
+        depotQuery.setOutIdIsNull(false);
+        return depotService.findStoreList(depotQuery);
+    }
+
+    //代理仓库查询
+    @RequestMapping(value = "delegateStore")
+    public List<DepotDto>  delegateStore(DepotQuery depotQuery) {
+        depotQuery.setOutIdIsNull(true);
+        return depotService.findStoreList(depotQuery);
+    }
+
+    //仓库查询
+    @RequestMapping(value = "store")
+    public List<DepotDto>  store(DepotQuery depotQuery) {
+        return depotService.findStoreList(depotQuery);
+    }
+
+
 
     @RequestMapping(value = "findByIds")
     public List<DepotDto> findByListIds(List<String> ids) {

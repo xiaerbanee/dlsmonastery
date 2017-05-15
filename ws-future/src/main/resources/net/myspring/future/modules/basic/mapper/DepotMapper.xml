@@ -114,7 +114,7 @@
     </select>
 
 
-    <select id="findList" resultType="DepotDto">
+    <select id="findShopList" resultType="DepotDto">
         SELECT t1.*
         FROM crm_depot t1,crm_depot_shop t2
         where t1.depot_shop_id=t2.id
@@ -139,6 +139,24 @@
         and depot.name like concat('%',#{p.name},'%')
         <include refid="depotFilter" />
         limit 0,25
+    </select>
+
+    <select id="findStoreList" resultType="DepotDto">
+        SELECT t1.*
+        FROM crm_depot t1,crm_depot_store t2
+        where t1.depot_store_id=t2.id
+        and t1.enabled=1
+        and t2.enabled=1
+        <if test="p.outIdIsNull != null">
+            <if test="p.outIdIsNull">
+                and t2.out_id is NULL
+            </if>
+            <if test="!p.outIdIsNull">
+                and t1.out_id is not NULL
+            </if>
+        </if>
+        and depot.name like concat('%',#{p.name},'%')
+        <include refid="depotFilter" />
     </select>
 
 

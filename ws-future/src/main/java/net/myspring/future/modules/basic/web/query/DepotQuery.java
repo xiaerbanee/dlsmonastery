@@ -24,6 +24,8 @@ public class DepotQuery extends BaseQuery {
     private Boolean clientIsNull;
     //广告门店
     private Boolean adShop;
+    //直营仓库
+    private Boolean outIdIsNull;
 
     public String getName() {
         return name;
@@ -63,5 +65,13 @@ public class DepotQuery extends BaseQuery {
 
     public void setAdShop(Boolean adShop) {
         this.adShop = adShop;
+    }
+
+    public Boolean getOutIdIsNull() {
+        return outIdIsNull;
+    }
+
+    public void setOutIdIsNull(Boolean outIdIsNull) {
+        this.outIdIsNull = outIdIsNull;
     }
 }

@@ -48,7 +48,9 @@ public interface DepotMapper extends BaseMapper<Depot,String> {
     
     Page<DepotDto> findPage(Pageable pageable, @Param("p")DepotQuery depotQuery);
 
-    List<DepotDto> findList(@Param("p") DepotQuery depotShopQuery);
+    List<DepotDto> findShopList(@Param("p") DepotQuery depotShopQuery);
+
+    List<DepotDto> findStoreList(@Param("p") DepotQuery depotShopQuery);
 
     List<Depot> findByAccountId(String accountId);
 
