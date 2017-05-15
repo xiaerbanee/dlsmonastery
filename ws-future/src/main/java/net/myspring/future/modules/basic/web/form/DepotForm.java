@@ -10,6 +10,7 @@ import net.myspring.future.modules.basic.dto.BasicDistrictDto;
 import net.myspring.future.modules.layout.domain.ShopAttribute;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -17,86 +18,95 @@ import java.util.Map;
  * Created by lihx on 2017/4/18.
  */
 public class DepotForm extends DataForm<Depot>{
-    private Integer type;
-    private String officeId;
-    private String name;
-    private String taxName;
-    private String reportName;
-    private String parentId;
-    private String contator;
-    private String mobilePhone;
-    private String address;
-    private List<String> accountIdList = Lists.newArrayList();
-    private String areaType;
-    private String bussinessCenter;
-    private String bussinessCenterName;
-    private String channelType;
-    private String salePointType;
-    private String specialityStoreType;
-    private String chainType;
-    private String carrierType;
-    private String turnoverType;
-    private String doorHead;
-    private String enableDate;
     private String clientId;
-    private String pricesystemId;
-    private String chainId;
-    private String specialityStore;
-    private String shopArea;
-    private Integer frameNum;
-    private Integer cabinetNum;
-    private Integer deskDoubleNum;
-    private Integer deskSingleNum;
-    private String townId;
+    //寄售对应
+    private String delegateDepotId;
+    //编码
+    private String code;
+    //对应store_id
+    private String depotStoreId;
+    //对应shop_id
+    private String depotShopId;
+    // 名称
+    private String name;
+    // 拼音
+    private String namePinyin;
+    // 部门
+    private String officeId;
+    // 负责人【货品收货人】
+    private String contator;
+    // 手机号
+    private String mobilePhone;
+    // 地址
+    private String address;
+    // 省市区
     private String districtId;
-    private String cmccCarrierShopId;
-    private String ctccCarrierShopId;
-    private Boolean hasGuide;
-    private Boolean rebate;
+
+    // 价格体系
+    private String pricesystemId;
+    // 额度
+    private BigDecimal credit;
+    // 连锁体系
+    private String chainId;
+    //物料价格体系
+    private String adPricesystemId;
+    // 快递公司
+    private String expressCompanyId;
+    //是否打印价格
     private Boolean printPrice;
-    private Boolean isHidden;
-    private Boolean adShop;
-    private Boolean adShopBsc;
-    private List<NameValueDto> channelTypeList;
-    private List<NameValueDto> areaTypeList;
-    private List<NameValueDto> carrierTypeList;
-    private List<NameValueDto> chainTypeList;
-    private List<NameValueDto> turnoverTypeList;
-    private List<NameValueDto> salePointTypeList;
-    private List<NameValueDto> shopAreaTypeList;
-    private List<NameValueDto> businessCenterTypeList;
-    private List<NameValueDto> shopMonthTotalList;
-    private List<NameValueDto> specialityStoreTypeList;
-    private Map<String,String> boolMap;
-    private List<NameValueDto> typeList;
-    private List<Pricesystem> pricesystemList;
-    private List<Chain> chainList;
-    private List<BasicDistrictDto> districtDtoList;
-    private List<ShopAttribute> shopAttributeList;
+    // 打印类型，批量打印时用于分批打印
+    private String printType;
+    // 是否让利
+    private Boolean rebate;
+    //税务名称
+    private String taxName;
+    //是否是广告门店
+    private Boolean adShop=false;
+    //是否隐藏
+    private Boolean isHidden=false;
+    //是否是广告仓库
+    private Boolean popShop = false;
+    //公司分组（imoo，电玩，oppo不写）
+    private String companyGroup;
 
-
-    public List<ShopAttribute> getShopAttributeList() {
-        return shopAttributeList;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setShopAttributeList(List<ShopAttribute> shopAttributeList) {
-        this.shopAttributeList = shopAttributeList;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public Integer getType() {
-        return type;
+    public String getDelegateDepotId() {
+        return delegateDepotId;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setDelegateDepotId(String delegateDepotId) {
+        this.delegateDepotId = delegateDepotId;
     }
 
-    public String getOfficeId() {
-        return officeId;
+    public String getCode() {
+        return code;
     }
 
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getDepotStoreId() {
+        return depotStoreId;
+    }
+
+    public void setDepotStoreId(String depotStoreId) {
+        this.depotStoreId = depotStoreId;
+    }
+
+    public String getDepotShopId() {
+        return depotShopId;
+    }
+
+    public void setDepotShopId(String depotShopId) {
+        this.depotShopId = depotShopId;
     }
 
     public String getName() {
@@ -107,28 +117,20 @@ public class DepotForm extends DataForm<Depot>{
         this.name = name;
     }
 
-    public String getTaxName() {
-        return taxName;
+    public String getNamePinyin() {
+        return namePinyin;
     }
 
-    public void setTaxName(String taxName) {
-        this.taxName = taxName;
+    public void setNamePinyin(String namePinyin) {
+        this.namePinyin = namePinyin;
     }
 
-    public String getReportName() {
-        return reportName;
+    public String getOfficeId() {
+        return officeId;
     }
 
-    public void setReportName(String reportName) {
-        this.reportName = reportName;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
     }
 
     public String getContator() {
@@ -155,108 +157,12 @@ public class DepotForm extends DataForm<Depot>{
         this.address = address;
     }
 
-    public List<String> getAccountIdList() {
-        return accountIdList;
+    public String getDistrictId() {
+        return districtId;
     }
 
-    public void setAccountIdList(List<String> accountIdList) {
-        this.accountIdList = accountIdList;
-    }
-
-    public String getAreaType() {
-        return areaType;
-    }
-
-    public void setAreaType(String areaType) {
-        this.areaType = areaType;
-    }
-
-    public String getBussinessCenter() {
-        return bussinessCenter;
-    }
-
-    public void setBussinessCenter(String bussinessCenter) {
-        this.bussinessCenter = bussinessCenter;
-    }
-
-    public String getBussinessCenterName() {
-        return bussinessCenterName;
-    }
-
-    public void setBussinessCenterName(String bussinessCenterName) {
-        this.bussinessCenterName = bussinessCenterName;
-    }
-
-    public String getChannelType() {
-        return channelType;
-    }
-
-    public void setChannelType(String channelType) {
-        this.channelType = channelType;
-    }
-
-    public String getSalePointType() {
-        return salePointType;
-    }
-
-    public void setSalePointType(String salePointType) {
-        this.salePointType = salePointType;
-    }
-
-    public String getSpecialityStoreType() {
-        return specialityStoreType;
-    }
-
-    public void setSpecialityStoreType(String specialityStoreType) {
-        this.specialityStoreType = specialityStoreType;
-    }
-
-    public String getChainType() {
-        return chainType;
-    }
-
-    public void setChainType(String chainType) {
-        this.chainType = chainType;
-    }
-
-    public String getCarrierType() {
-        return carrierType;
-    }
-
-    public void setCarrierType(String carrierType) {
-        this.carrierType = carrierType;
-    }
-
-    public String getTurnoverType() {
-        return turnoverType;
-    }
-
-    public void setTurnoverType(String turnoverType) {
-        this.turnoverType = turnoverType;
-    }
-
-    public String getDoorHead() {
-        return doorHead;
-    }
-
-    public void setDoorHead(String doorHead) {
-        this.doorHead = doorHead;
-    }
-
-    public String getEnableDate() {
-        return enableDate;
-    }
-
-    public void setEnableDate(String enableDate) {
-        this.enableDate = enableDate;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
     }
 
     public String getPricesystemId() {
@@ -267,6 +173,14 @@ public class DepotForm extends DataForm<Depot>{
         this.pricesystemId = pricesystemId;
     }
 
+    public BigDecimal getCredit() {
+        return credit;
+    }
+
+    public void setCredit(BigDecimal credit) {
+        this.credit = credit;
+    }
+
     public String getChainId() {
         return chainId;
     }
@@ -275,100 +189,20 @@ public class DepotForm extends DataForm<Depot>{
         this.chainId = chainId;
     }
 
-    public String getSpecialityStore() {
-        return specialityStore;
+    public String getAdPricesystemId() {
+        return adPricesystemId;
     }
 
-    public void setSpecialityStore(String specialityStore) {
-        this.specialityStore = specialityStore;
+    public void setAdPricesystemId(String adPricesystemId) {
+        this.adPricesystemId = adPricesystemId;
     }
 
-    public String getShopArea() {
-        return shopArea;
+    public String getExpressCompanyId() {
+        return expressCompanyId;
     }
 
-    public void setShopArea(String shopArea) {
-        this.shopArea = shopArea;
-    }
-
-    public Integer getFrameNum() {
-        return frameNum;
-    }
-
-    public void setFrameNum(Integer frameNum) {
-        this.frameNum = frameNum;
-    }
-
-    public Integer getCabinetNum() {
-        return cabinetNum;
-    }
-
-    public void setCabinetNum(Integer cabinetNum) {
-        this.cabinetNum = cabinetNum;
-    }
-
-    public Integer getDeskDoubleNum() {
-        return deskDoubleNum;
-    }
-
-    public void setDeskDoubleNum(Integer deskDoubleNum) {
-        this.deskDoubleNum = deskDoubleNum;
-    }
-
-    public Integer getDeskSingleNum() {
-        return deskSingleNum;
-    }
-
-    public void setDeskSingleNum(Integer deskSingleNum) {
-        this.deskSingleNum = deskSingleNum;
-    }
-
-    public String getTownId() {
-        return townId;
-    }
-
-    public void setTownId(String townId) {
-        this.townId = townId;
-    }
-
-    public String getDistrictId() {
-        return districtId;
-    }
-
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
-    }
-
-    public String getCmccCarrierShopId() {
-        return cmccCarrierShopId;
-    }
-
-    public void setCmccCarrierShopId(String cmccCarrierShopId) {
-        this.cmccCarrierShopId = cmccCarrierShopId;
-    }
-
-    public String getCtccCarrierShopId() {
-        return ctccCarrierShopId;
-    }
-
-    public void setCtccCarrierShopId(String ctccCarrierShopId) {
-        this.ctccCarrierShopId = ctccCarrierShopId;
-    }
-
-    public Boolean getHasGuide() {
-        return hasGuide;
-    }
-
-    public void setHasGuide(Boolean hasGuide) {
-        this.hasGuide = hasGuide;
-    }
-
-    public Boolean getRebate() {
-        return rebate;
-    }
-
-    public void setRebate(Boolean rebate) {
-        this.rebate = rebate;
+    public void setExpressCompanyId(String expressCompanyId) {
+        this.expressCompanyId = expressCompanyId;
     }
 
     public Boolean getPrintPrice() {
@@ -379,12 +213,28 @@ public class DepotForm extends DataForm<Depot>{
         this.printPrice = printPrice;
     }
 
-    public Boolean getHidden() {
-        return isHidden;
+    public String getPrintType() {
+        return printType;
     }
 
-    public void setHidden(Boolean hidden) {
-        isHidden = hidden;
+    public void setPrintType(String printType) {
+        this.printType = printType;
+    }
+
+    public Boolean getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(Boolean rebate) {
+        this.rebate = rebate;
+    }
+
+    public String getTaxName() {
+        return taxName;
+    }
+
+    public void setTaxName(String taxName) {
+        this.taxName = taxName;
     }
 
     public Boolean getAdShop() {
@@ -395,131 +245,27 @@ public class DepotForm extends DataForm<Depot>{
         this.adShop = adShop;
     }
 
-    public Boolean getAdShopBsc() {
-        return adShopBsc;
+    public Boolean getHidden() {
+        return isHidden;
     }
 
-    public void setAdShopBsc(Boolean adShopBsc) {
-        this.adShopBsc = adShopBsc;
+    public void setHidden(Boolean hidden) {
+        isHidden = hidden;
     }
 
-    public List<NameValueDto> getChannelTypeList() {
-        return channelTypeList;
+    public Boolean getPopShop() {
+        return popShop;
     }
 
-    public void setChannelTypeList(List<NameValueDto> channelTypeList) {
-        this.channelTypeList = channelTypeList;
+    public void setPopShop(Boolean popShop) {
+        this.popShop = popShop;
     }
 
-    public List<NameValueDto> getAreaTypeList() {
-        return areaTypeList;
+    public String getCompanyGroup() {
+        return companyGroup;
     }
 
-    public void setAreaTypeList(List<NameValueDto> areaTypeList) {
-        this.areaTypeList = areaTypeList;
-    }
-
-    public List<NameValueDto> getCarrierTypeList() {
-        return carrierTypeList;
-    }
-
-    public void setCarrierTypeList(List<NameValueDto> carrierTypeList) {
-        this.carrierTypeList = carrierTypeList;
-    }
-
-    public List<NameValueDto> getChainTypeList() {
-        return chainTypeList;
-    }
-
-    public void setChainTypeList(List<NameValueDto> chainTypeList) {
-        this.chainTypeList = chainTypeList;
-    }
-
-    public List<NameValueDto> getTurnoverTypeList() {
-        return turnoverTypeList;
-    }
-
-    public void setTurnoverTypeList(List<NameValueDto> turnoverTypeList) {
-        this.turnoverTypeList = turnoverTypeList;
-    }
-
-    public List<NameValueDto> getSalePointTypeList() {
-        return salePointTypeList;
-    }
-
-    public void setSalePointTypeList(List<NameValueDto> salePointTypeList) {
-        this.salePointTypeList = salePointTypeList;
-    }
-
-    public List<NameValueDto> getShopAreaTypeList() {
-        return shopAreaTypeList;
-    }
-
-    public void setShopAreaTypeList(List<NameValueDto> shopAreaTypeList) {
-        this.shopAreaTypeList = shopAreaTypeList;
-    }
-
-    public List<NameValueDto> getBusinessCenterTypeList() {
-        return businessCenterTypeList;
-    }
-
-    public void setBusinessCenterTypeList(List<NameValueDto> businessCenterTypeList) {
-        this.businessCenterTypeList = businessCenterTypeList;
-    }
-
-    public List<NameValueDto> getShopMonthTotalList() {
-        return shopMonthTotalList;
-    }
-
-    public void setShopMonthTotalList(List<NameValueDto> shopMonthTotalList) {
-        this.shopMonthTotalList = shopMonthTotalList;
-    }
-
-    public List<NameValueDto> getSpecialityStoreTypeList() {
-        return specialityStoreTypeList;
-    }
-
-    public void setSpecialityStoreTypeList(List<NameValueDto> specialityStoreTypeList) {
-        this.specialityStoreTypeList = specialityStoreTypeList;
-    }
-
-    public Map<String,String> getBoolMap() {
-        return boolMap;
-    }
-
-    public void setBoolMap(Map<String,String> boolMap) {
-        this.boolMap = boolMap;
-    }
-
-    public List<NameValueDto> getTypeList() {
-        return typeList;
-    }
-
-    public void setTypeList(List<NameValueDto> typeList) {
-        this.typeList = typeList;
-    }
-
-    public List<Pricesystem> getPricesystemList() {
-        return pricesystemList;
-    }
-
-    public void setPricesystemList(List<Pricesystem> pricesystemList) {
-        this.pricesystemList = pricesystemList;
-    }
-
-    public List<Chain> getChainList() {
-        return chainList;
-    }
-
-    public void setChainList(List<Chain> chainList) {
-        this.chainList = chainList;
-    }
-
-    public List<BasicDistrictDto> getDistrictDtoList() {
-        return districtDtoList;
-    }
-
-    public void setDistrictDtoList(List<BasicDistrictDto> districtDtoList) {
-        this.districtDtoList = districtDtoList;
+    public void setCompanyGroup(String companyGroup) {
+        this.companyGroup = companyGroup;
     }
 }

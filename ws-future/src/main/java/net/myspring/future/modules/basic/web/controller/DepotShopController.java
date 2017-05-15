@@ -1,5 +1,7 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -25,8 +27,4 @@ public class DepotShopController {
         Page<DepotShopDto> page = depotShopService.findPage(pageable,depotShopQuery);
         return page;
     }
-
-
-
-
 }
