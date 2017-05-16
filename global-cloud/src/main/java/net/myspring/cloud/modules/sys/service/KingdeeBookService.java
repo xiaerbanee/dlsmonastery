@@ -52,8 +52,8 @@ public class KingdeeBookService {
         return kingdeeBookForm;
     }
 
-    public void deleteById(String id) {
-        kingdeeBookMapper.deleteById(id);
+    public void logicDeleteOne(String id) {
+        kingdeeBookMapper.logicDeleteOne(id);
     }
 
     public int save(KingdeeBookForm kingdeeBookForm){
@@ -67,15 +67,7 @@ public class KingdeeBookService {
         return count;
     }
 
-    public String getNameByCompanyId(String companyId){
-        return kingdeeBookMapper.findNameByCompanyId(companyId);
-    }
-
-    public KingdeeBook getByCompanyId(String companyId){
-        return kingdeeBookMapper.findByCompanyId(companyId);
-    }
-
-    public String getTypeByCompanyId(String companyId){
-        return kingdeeBookMapper.findTypeByCompanyId(companyId);
+    public KingdeeBook findByAccountId(String accountId) {
+        return kingdeeBookMapper.findByAccountId(accountId);
     }
 }

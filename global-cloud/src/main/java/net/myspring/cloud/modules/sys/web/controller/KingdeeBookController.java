@@ -42,7 +42,7 @@ public class KingdeeBookController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
-        kingdeeBookService.deleteById(id);
+        kingdeeBookService.logicDeleteOne(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
