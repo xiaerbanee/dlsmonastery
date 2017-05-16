@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by lihx on 2017/5/12.
@@ -17,11 +18,11 @@ public class BdMaterialService {
     @Autowired
     private BdMaterialMapper bdMaterialMapper;
 
-    public List<String> getNameByNameLike(String name){
-        return bdMaterialMapper.findNameByNameLike(name);
+    public List<BdMaterial> findByNameLike(String name){
+        return bdMaterialMapper.findByNameLike(name);
     }
 
-    public BdMaterial getByName(String name){
+    public BdMaterial findByName(String name){
         return bdMaterialMapper.findByName(name);
     }
 

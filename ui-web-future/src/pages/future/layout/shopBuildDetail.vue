@@ -60,6 +60,15 @@
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange2" :on-remove="handleRemove2"  :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
               </el-upload>
             </el-form-item>
+            <el-form-item :label="$t('shopBuildDetail.pass')"  v-if="action=='audit'">
+              <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
+            </el-form-item>
+            <el-form-item :label="$t('shopBuildDetail.passRemarks')"  v-if="action=='audit'">
+              <el-input v-model="inputForm.passRemarks" :placeholder="$t('shopBuildDetail.inputRemarks')" type="textarea"></el-input>
+            </el-form-item>
+            <el-form-item v-if="action=='audit'">
+              <el-button type="primary" :disabled="submitDisabled"  @click="passSubmit()">{{$t('shopBuildDetail.save')}}</el-button>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -68,19 +77,45 @@
 </template>
 
 <script>
+  import processDetails from 'components/general/process-details';
+  import boolRadioGroup from 'components/common/bool-radio-group';
   export default{
+    components:{processDetails,boolRadioGroup},
     data(){
       return{
+        submitDisabled:false,
         isCreate:this.$route.query.id==null,
         action:this.$route.query.action,
-        inputForm:{
-
+        inputForm:{},
+        submitData:{
+            id:'',
+          pass:'',
+          passRemarks:"",
         },
         fileList1:[],
         fileList2:[],
       }
     },
     methods:{
+      passSubmit(){
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            util.copyValue(this.inputForm,this.submitData);
+            console.log(this.submitData);
+            axios.post('/api/ws/future/layout/shopBuild/audit', qs.stringify(this.submitData)).then((response)=> {
+              if(response.data.message){
+                this.$message(response.data.message);
+              }
+            }).catch(function () {
+              this.submitDisabled = false;
+            });
+          }else{
+            this.submitDisabled = false;
+          }
+        })
+      },
       handlePreview1(file) {
         window.open(file.url);
     },handleChange1(file, fileList) {

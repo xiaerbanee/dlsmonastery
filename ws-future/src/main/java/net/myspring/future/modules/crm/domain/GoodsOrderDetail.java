@@ -2,11 +2,9 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.common.domain.IdEntity;
-import net.myspring.future.modules.basic.domain.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.math.BigDecimal;
 
 
@@ -18,40 +16,8 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     private Integer billQty;
     private Integer shippedQty;
     private Integer returnQty;
-    private Product product;
     private String productId;
-    private GoodsOrder goodsOrder;
     private String goodsOrderId;
-    @Transient
-    private Integer shipQty;
-    @Transient
-    private Integer areaQty;
-    @Transient
-    private Integer storeQty;
-
-    public Integer getStoreQty() {
-        return storeQty;
-    }
-
-    public void setStoreQty(Integer storeQty) {
-        this.storeQty = storeQty;
-    }
-
-    public Integer getAreaQty() {
-        return areaQty;
-    }
-
-    public void setAreaQty(Integer areaQty) {
-        this.areaQty = areaQty;
-    }
-
-    public Integer getShipQty() {
-        return shipQty;
-    }
-
-    public void setShipQty(Integer shipQty) {
-        this.shipQty = shipQty;
-    }
 
     public BigDecimal getPrice() {
         return price;
@@ -93,13 +59,6 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
         this.returnQty = returnQty;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
 
     public String getProductId() {
         return productId;
@@ -107,14 +66,6 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public GoodsOrder getGoodsOrder() {
-        return goodsOrder;
-    }
-
-    public void setGoodsOrder(GoodsOrder goodsOrder) {
-        this.goodsOrder = goodsOrder;
     }
 
     public String getGoodsOrderId() {

@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.report.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -11,11 +12,10 @@ import java.util.List;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveQuery {
-    private String customerGroup;
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private String dateRange;
-    private List<String> customerIdList;
+    private List<String> customerIdList = Lists.newArrayList();
     private Boolean queryDetail = false;
 
     public String getDateRange() {
@@ -25,15 +25,6 @@ public class CustomerReceiveQuery {
     public void setDateRange(String dateRange) {
         this.dateRange = dateRange;
     }
-
-    public String getCustomerGroup() {
-        return customerGroup;
-    }
-
-    public void setCustomerGroup(String customerGroup) {
-        this.customerGroup = customerGroup;
-    }
-
     public LocalDate getDateStart() {
         if(StringUtils.isNotBlank(dateRange)) {
             return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);

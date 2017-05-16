@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 标准销售退货单/现销退货单
@@ -15,9 +16,4 @@ import java.util.List;
 @Mapper
 public interface SalReturnStockMapper {
 
-    //标准销售退货单
-    List<CustomerReceiveDto> findXSTHDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") HashSet<String> customerIdList);
-
-    //现销退货单
-    List<CustomerReceiveDto> findXXTHDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") HashSet<String> customerIdList);
 }

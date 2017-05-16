@@ -23,11 +23,8 @@ public class SQLServerDialect extends Dialect {
                 }
             }
         }
-        if (pageable.getOffset() == 0) {
-            sb.append(" LIMIT ").append(pageable.getPageSize());
-        } else {
-            sb.append(" LIMIT ").append(" ").append(pageable.getOffset()).append(",").append(pageable.getPageSize());
-        }
+        sb.append(" OFFSET ").append(pageable.getOffset()).append(" ROWS FETCH NEXT ").append(pageable.getPageSize()).append(" ROWS ONLY");
         return sb.toString();
     }
+
 }

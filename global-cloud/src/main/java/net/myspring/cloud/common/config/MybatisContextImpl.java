@@ -5,6 +5,7 @@ import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.mybatis.context.MybatisContext;
 import net.myspring.mybatis.dialect.Dialect;
 import net.myspring.mybatis.dialect.MySQLDialect;
+import net.myspring.mybatis.dialect.SQLServerDialect;
 
 /**
  * Created by liuj on 2017/3/21.
@@ -21,7 +22,7 @@ public class MybatisContextImpl implements MybatisContext {
         if(DataSourceTypeEnum.LOCAL.name().equals(RequestUtils.getRequestEntity().getDataSourceType())) {
             return new MySQLDialect();
         } else {
-            return new MySQLDialect();
+            return new SQLServerDialect();
         }
     }
 }

@@ -2,6 +2,8 @@ package net.myspring.cloud.modules.report.mapper;
 
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
+import net.myspring.common.dto.NameValueDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,10 +19,14 @@ import java.util.Set;
 public interface CustomerReceiveMapper {
 
     //期末查询
-    List<CustomerReceiveDto> findByEndDateAndCustomerIdList(@Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") Set<String> customerIdList);
+    List<CustomerReceiveDto> findEndShouldGet(@Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") List<String> customerIdList);
 
-    List<CustomerReceiveDetailDto> findByPeriodForBillSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
+    List<CustomerReceiveDetailDto> findMainList(CustomerReceiveDetailQuery customerReceiveDetailQuery);
 
-    List<CustomerReceiveDetailDto> findByPeriodForMaterial(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerId") String customerId);
+    List<CustomerReceiveDetailDto> findDetailList(CustomerReceiveDetailQuery customerReceiveDetailQuery);
+
+    List<NameValueDto> findRemarks(CustomerReceiveDetailQuery customerReceiveDetailQuery);
+
+
 
 }

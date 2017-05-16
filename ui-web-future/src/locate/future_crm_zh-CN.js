@@ -693,6 +693,14 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+
+    bill:'开单',
+    sign:'签收',
+    shipBack:'重发',
+    sreturn:'销售退货',
+    shipPrint:'快递单',
+    print: "出库单",
+    ship: "发货",
   },
   goodsOrderForm: {
     goodsOrderForm: "货品订货编辑",
@@ -1035,6 +1043,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    upload:"上传",
   },
   priceChangeImeDetail: {
     priceChangeImeDetail: "调价串码编辑",

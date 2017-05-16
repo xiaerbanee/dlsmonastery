@@ -6,6 +6,8 @@ import net.myspring.util.cahe.annotation.CacheInput;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Created by wangzm on 2017/5/13.
@@ -15,71 +17,27 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String depotId;
     // 地区属性
     private String areaType;
-    // 门店类型
-    private String type;
-    // 价格体系
-    private String pricesystemId;
-    // 额度
-    private BigDecimal credit;
-    //税务名称
-    private String taxName;
-    //是否打印价格
-    private Boolean printPrice;
-    // 客户
-    private String clientId;
-    // 连锁体系
-    private String chainId;
-    //物料价格体系
-    private String adPricesystemId;
-    // 打印类型，批量打印时用于分批打印
-    private String printType;
-    // 快递公司
-    private String expressCompanyId;
-    // 是否让利
-    private Boolean rebate;
-    //是否隐藏
-    private Boolean isHidden=false;
-    private Boolean adShop=false;
+
+    private Boolean hasGuide;
+
+    //门店各种属性
+    //运营商营业厅类型
+    private String carrierType;
+    //营业额分类
+    private String turnoverType;
+    //经营方式
+    private String businessType;
+    //运营商类型移动社会渠道
+    private String channelType;
+    //门店类型
+    private String salePointType;
+    //乡镇类型
+    private String townType;
+    //面积大小
+    private String shopArea;
+
     @CacheInput(inputKey = "depots",inputInstance = "depotId",outputInstance = "name")
     private String depotName;
-    @CacheInput(inputKey = "pricesystems",inputInstance = "pricesystemId",outputInstance = "name")
-    private String pricesystemName;
-    @CacheInput(inputKey = "adPricesystems",inputInstance = "adPricesystemId",outputInstance = "name")
-    private String adPricesystemName;
-    @CacheInput(inputKey = "expressCompanys",inputInstance = "expressCompanyId",outputInstance = "name")
-    private String expressCompanyName;
-
-    public String getDepotName() {
-        return depotName;
-    }
-
-    public void setDepotName(String depotName) {
-        this.depotName = depotName;
-    }
-
-    public String getPricesystemName() {
-        return pricesystemName;
-    }
-
-    public void setPricesystemName(String pricesystemName) {
-        this.pricesystemName = pricesystemName;
-    }
-
-    public String getAdPricesystemName() {
-        return adPricesystemName;
-    }
-
-    public void setAdPricesystemName(String adPricesystemName) {
-        this.adPricesystemName = adPricesystemName;
-    }
-
-    public String getExpressCompanyName() {
-        return expressCompanyName;
-    }
-
-    public void setExpressCompanyName(String expressCompanyName) {
-        this.expressCompanyName = expressCompanyName;
-    }
 
     public String getDepotId() {
         return depotId;
@@ -97,107 +55,75 @@ public class DepotShopDto extends DataDto<DepotShop>{
         this.areaType = areaType;
     }
 
-    public String getType() {
-        return type;
+    public Boolean getHasGuide() {
+        return hasGuide;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setHasGuide(Boolean hasGuide) {
+        this.hasGuide = hasGuide;
     }
 
-    public String getPricesystemId() {
-        return pricesystemId;
+    public String getCarrierType() {
+        return carrierType;
     }
 
-    public void setPricesystemId(String pricesystemId) {
-        this.pricesystemId = pricesystemId;
+    public void setCarrierType(String carrierType) {
+        this.carrierType = carrierType;
     }
 
-    public BigDecimal getCredit() {
-        return credit;
+    public String getTurnoverType() {
+        return turnoverType;
     }
 
-    public void setCredit(BigDecimal credit) {
-        this.credit = credit;
+    public void setTurnoverType(String turnoverType) {
+        this.turnoverType = turnoverType;
     }
 
-    public String getTaxName() {
-        return taxName;
+    public String getBusinessType() {
+        return businessType;
     }
 
-    public void setTaxName(String taxName) {
-        this.taxName = taxName;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
-    public Boolean getPrintPrice() {
-        return printPrice;
+    public String getChannelType() {
+        return channelType;
     }
 
-    public void setPrintPrice(Boolean printPrice) {
-        this.printPrice = printPrice;
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getSalePointType() {
+        return salePointType;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setSalePointType(String salePointType) {
+        this.salePointType = salePointType;
     }
 
-    public String getChainId() {
-        return chainId;
+    public String getTownType() {
+        return townType;
     }
 
-    public void setChainId(String chainId) {
-        this.chainId = chainId;
+    public void setTownType(String townType) {
+        this.townType = townType;
     }
 
-    public String getAdPricesystemId() {
-        return adPricesystemId;
+    public String getShopArea() {
+        return shopArea;
     }
 
-    public void setAdPricesystemId(String adPricesystemId) {
-        this.adPricesystemId = adPricesystemId;
+    public void setShopArea(String shopArea) {
+        this.shopArea = shopArea;
     }
 
-    public String getPrintType() {
-        return printType;
+    public String getDepotName() {
+        return depotName;
     }
 
-    public void setPrintType(String printType) {
-        this.printType = printType;
-    }
-
-    public String getExpressCompanyId() {
-        return expressCompanyId;
-    }
-
-    public void setExpressCompanyId(String expressCompanyId) {
-        this.expressCompanyId = expressCompanyId;
-    }
-
-    public Boolean getRebate() {
-        return rebate;
-    }
-
-    public void setRebate(Boolean rebate) {
-        this.rebate = rebate;
-    }
-
-    public Boolean getHidden() {
-        return isHidden;
-    }
-
-    public void setHidden(Boolean hidden) {
-        isHidden = hidden;
-    }
-
-    public Boolean getAdShop() {
-        return adShop;
-    }
-
-    public void setAdShop(Boolean adShop) {
-        this.adShop = adShop;
+    public void setDepotName(String depotName) {
+        this.depotName = depotName;
     }
 }

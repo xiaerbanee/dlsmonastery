@@ -24,4 +24,6 @@ public interface GoodsOrderMapper extends MyMapper<GoodsOrder,String> {
     String findMaxBusinessId(@Param("localDate") LocalDate localDate);
 
     List<GoodsOrder> findByShopIdAndStatus(@Param("shopId") String shopId, @Param("status") String status);
+
+    GoodsOrderDto findDto(@Param("goodsOrderId")  String goodsOrderId);
 }

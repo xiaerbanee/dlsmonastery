@@ -38,6 +38,18 @@
         </foreach>
     </select>
 
+
+    <select id="findDtoListByCompanyIdAndExpressType" resultType="ExpressCompanyDto">
+        SELECT t1.*
+        FROM  crm_express_company t1
+        where t1.enabled=1
+        and t1.company_id=#{companyId}
+        and t1.express_type = #{expressType}
+
+    </select>
+
+
+
     <select id="findByExpressType" resultType="ExpressCompany">
         SELECT t1.*
         FROM  crm_express_company t1

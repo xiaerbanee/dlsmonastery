@@ -2,22 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.kingdee.mapper.ArReceiveBillMapper">
 
-    <select id="findByPeriodForSum" resultType="CustomerReceiveDto">
-        SELECT
-        b.FCONTACTUNIT AS customerId,
-        sum(a.FRECAMOUNT_E) AS beginShouldGet
-        FROM
-        T_AR_RECEIVEBILLENTRY a
-        join T_AR_RECEIVEBILL b on a.FID = b.FID
-        WHERE
-        b.FDATE &gt;=#{dateStart}
-        and b.FDATE  &lt;=#{dateEnd}
-        and b.FCONTACTUNIT in
-        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-        group by
-        b.FCONTACTUNIT
-    </select>
-
 </mapper>

@@ -144,7 +144,10 @@
           );
         }
     },created(){
-      this.findOne();
+      axios.get('/api/ws/future/crm/goodsOrder/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
+      })
+
     }
   }
 </script>

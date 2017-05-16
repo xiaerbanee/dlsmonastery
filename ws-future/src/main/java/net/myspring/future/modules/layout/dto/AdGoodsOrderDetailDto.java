@@ -25,6 +25,8 @@ public class AdGoodsOrderDetailDto extends DataDto<AdGoodsOrderDetail> {
     private String productName;
     @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "code")
     private String productCode;
+    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "remarks")
+    private String productRemarks;
     private String adGoodsOrderId;
 
     public BigDecimal getPrice() {

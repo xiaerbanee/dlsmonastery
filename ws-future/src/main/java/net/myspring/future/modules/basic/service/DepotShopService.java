@@ -56,6 +56,8 @@ public class DepotShopService {
             depotShopMapper.save(depotShop);
         } else {
             depotShop = depotShopMapper.findOne(depotShopForm.getId());
+            ReflectionUtil.copyProperties(depotShopForm,depotShop);
+            depotShopMapper.save(depotShop);
         }
         return depotShop;
     }

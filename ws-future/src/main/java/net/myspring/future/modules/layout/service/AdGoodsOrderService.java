@@ -2,11 +2,15 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.future.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.IdUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.mapper.AdPricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
@@ -31,6 +35,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +69,8 @@ public class AdGoodsOrderService {
     private CacheUtils cacheUtils;
     @Autowired
     private ActivitiClient activitiClient;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public Page<AdGoodsOrderDto> findPage(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
         Page<AdGoodsOrderDto> page = adGoodsOrderMapper.findPage(pageable, adGoodsOrderQuery);
