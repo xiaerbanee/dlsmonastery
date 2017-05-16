@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 public class AdGoodsOrderDetailDto extends DataDto<AdGoodsOrderDetail> {
 
     private BigDecimal price;
+    private BigDecimal price2;
     private Integer qty;
     private Integer confirmQty;
     private Integer billQty;
@@ -28,6 +29,22 @@ public class AdGoodsOrderDetailDto extends DataDto<AdGoodsOrderDetail> {
     @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "remarks")
     private String productRemarks;
     private String adGoodsOrderId;
+
+    public BigDecimal getPrice2() {
+        return price2;
+    }
+
+    public void setPrice2(BigDecimal price2) {
+        this.price2 = price2;
+    }
+
+    public String getProductRemarks() {
+        return productRemarks;
+    }
+
+    public void setProductRemarks(String productRemarks) {
+        this.productRemarks = productRemarks;
+    }
 
     public BigDecimal getPrice() {
         return price;
