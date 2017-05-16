@@ -95,7 +95,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
+      <pageable :page="page"  layout="sizes, prev, pager, next, jumper" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
@@ -160,7 +160,7 @@
         this.formData.createTimeBTW=util.formatDateRange(this.formData.createTime);
 
         util.setQuery("productImeList",this.formData);
-        axios.get('/api/crm/productIme',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/crm/productIme',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -185,12 +185,12 @@
           this.$router.push({ name: '串码列表详情', query: { id: id }})
         }
       },exportData(){
-        window.location.href= "/api/crm/productIme/export?"+qs.stringify(this.formData);
+        window.location.href= "/api/ws/future/crm/productIme/export?"+qs.stringify(this.formData);
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/crm/productIme/getQuery').then((response) => {
+      axios.get('/api/ws/future/crm/productIme/getQuery').then((response) => {
         this.formProperty = response.data;
       })
       this.pageRequest();
