@@ -1,30 +1,20 @@
-package net.myspring.cloud.modules.report.web.query;
+package net.myspring.cloud.modules.kingdee.web.query;
 
-import com.google.common.collect.Lists;
+import net.myspring.cloud.common.query.BaseQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
- * Created by liuj on 2017/5/11.
+ * Created by liuj on 2017/5/16.
  */
-public class CustomerReceiveQuery {
+public class BdCustomerQuery extends BaseQuery {
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private String dateRange;
-    private List<String> customerIdList = Lists.newArrayList();
-    private Boolean queryDetail = false;
 
-    public String getDateRange() {
-        return dateRange;
-    }
-
-    public void setDateRange(String dateRange) {
-        this.dateRange = dateRange;
-    }
     public LocalDate getDateStart() {
         if(StringUtils.isNotBlank(dateRange)) {
             return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
@@ -49,19 +39,11 @@ public class CustomerReceiveQuery {
         this.dateEnd = dateEnd;
     }
 
-    public List<String> getCustomerIdList() {
-        return customerIdList;
+    public String getDateRange() {
+        return dateRange;
     }
 
-    public void setCustomerIdList(List<String> customerIdList) {
-        this.customerIdList = customerIdList;
-    }
-
-    public Boolean getQueryDetail() {
-        return queryDetail;
-    }
-
-    public void setQueryDetail(Boolean queryDetail) {
-        this.queryDetail = queryDetail;
+    public void setDateRange(String dateRange) {
+        this.dateRange = dateRange;
     }
 }

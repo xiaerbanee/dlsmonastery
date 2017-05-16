@@ -88,4 +88,14 @@
         t2.FNAME like CONCAT('%',#{name},'%')
     </select>
 
+    <select id="findPage" resultType="BdCustomer">
+        SELECT
+        t1.*
+        FROM
+        T_BD_CUSTOMER t1
+        WHERE
+        1=1
+        ORDER BY t1.FID
+    </select>
+
 </mapper>

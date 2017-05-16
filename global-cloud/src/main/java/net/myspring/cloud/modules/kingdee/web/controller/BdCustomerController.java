@@ -1,9 +1,14 @@
-package net.myspring.cloud.modules.kingdee.web;
+package net.myspring.cloud.modules.kingdee.web.controller;
 
+import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.service.BdCustomerService;
+import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,8 +23,15 @@ public class BdCustomerController {
     @Autowired
     private BdCustomerService bdCustomerService;
 
+    @RequestMapping(method = RequestMethod.GET)
+    public Page<BdCustomer> list(Pageable pageable, BdCustomerQuery bdCustomerQuery){
+        Page<BdCustomer> page = bdCustomerService.findPage(pageable,bdCustomerQuery);
+        return page;
+    }
+
+
     @RequestMapping(value = "findByNameLike")
-    public List<String> getNameByNameLike(String name){
+    public List<String> findByNameLike(String name){
         List<BdCustomer> bdCustomerList = bdCustomerService.findByNameLike(name);
         return bdCustomerList.stream().map(BdCustomer::getFName).collect(Collectors.toList());
     }

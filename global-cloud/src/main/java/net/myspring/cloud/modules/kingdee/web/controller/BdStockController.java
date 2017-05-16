@@ -1,4 +1,4 @@
-package net.myspring.cloud.modules.kingdee.web;
+package net.myspring.cloud.modules.kingdee.web.controller;
 
 import net.myspring.cloud.modules.kingdee.domain.BdStock;
 import net.myspring.cloud.modules.kingdee.service.BdStockService;
