@@ -25,4 +25,9 @@
         </foreach>
     </select>
 
+    <select id="findPricesystem" resultType="Pricesystem">
+        SELECT  t1.*
+        from crm_pricesystem t1
+        WHERE t1.enabled = 1
+    </select>
 </mapper>

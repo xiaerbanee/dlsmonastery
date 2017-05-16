@@ -1,10 +1,13 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.common.enums.StatusEnum;
 import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.PricesystemMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.crm.domain.PricesystemChange;
+import net.myspring.future.modules.crm.dto.PricesystemChangeDto;
 import net.myspring.future.modules.crm.mapper.PricesystemChangeMapper;
+import net.myspring.future.modules.crm.web.query.PricesystemChangeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,8 +34,8 @@ public class PricesystemChangeService {
         return pricesystemChange;
     }
 
-    public Page<PricesystemChange> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<PricesystemChange> page = pricesystemChangeMapper.findPage(pageable,map);
+    public Page<PricesystemChangeDto> findPage(Pageable pageable, PricesystemChangeQuery pricesystemChangeQuery) {
+        Page<PricesystemChangeDto> page = pricesystemChangeMapper.findPage(pageable,pricesystemChangeQuery);
         return page;
     }
 
@@ -46,5 +49,9 @@ public class PricesystemChangeService {
 
     public List<List<Object>> getPricesystemDetail(List<String> productIdList){
         return null;
+    }
+
+    public List<String> findStatus(){
+        return StatusEnum.getValues();
     }
 }

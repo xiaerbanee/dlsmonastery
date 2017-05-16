@@ -15,17 +15,17 @@
               <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('pricesystemChangeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('pricesystemChangeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDate" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('pricesystemChangeList.inputKey')">
-                  <el-option v-for="item in formProperty.status" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.pricesystemId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.pricesystemId" filterable clearable :placeholder="$t('pricesystemChangeList.inputKey')">
-                  <el-option v-for="pricesystem in formProperty.pricesystems" :key="pricesystem.id" :label="pricesystem.name" :value="pricesystem.id"></el-option>
+                  <el-option v-for="pricesystem in formData.pricesystems" :key="pricesystem.name" :label="pricesystem.name" :value="pricesystem.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -37,11 +37,11 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('pricesystemChangeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column  prop="product.name":label="$t('pricesystemChangeList.productName')" width="150" ></el-table-column>
-        <el-table-column prop="pricesystem.name" :label="$t('pricesystemChangeList.pricesystemName')" ></el-table-column>
+        <el-table-column  prop="productName":label="$t('pricesystemChangeList.productName')" width="150" ></el-table-column>
+        <el-table-column prop="pricesystemName" :label="$t('pricesystemChangeList.pricesystemName')" ></el-table-column>
         <el-table-column prop="oldPrice" :label="$t('pricesystemChangeList.oldPrice')"  ></el-table-column>
         <el-table-column prop="newPrice" :label="$t('pricesystemChangeList.newPrice')"></el-table-column>
-        <el-table-column prop="created.fullName" :label="$t('pricesystemChangeList.createdBy')"></el-table-column>
+        <el-table-column prop="createdBy" :label="$t('pricesystemChangeList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('pricesystemChangeList.createdDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('pricesystemChangeList.status')" width="120">
           <template scope="scope">
@@ -64,39 +64,40 @@
   export default {
     data() {
       return {
-        pageLoading: false,
         pageHeight:600,
         page:{},
         formData:{
-          page:0,
-          size:25,
           productName:'',
-          createdDateBTW:'',
           createdDate:'',
           status:'',
           pricesystemId:'',
-        },formLabel:{
-          productName:{label: this.$t('pricesystemChangeList.createdDate')},
-          createdDateBTW:{label: this.$t('pricesystemChangeList.productName')},
+        },
+        submitData:{
+          page:0,
+          size:25,
+          productName:'',
+          createdDate:'',
+          status:'',
+          pricesystemId:'',
+        },
+        formLabel:{
+          productName:{label: this.$t('pricesystemChangeList.productName')},
+          createdDate:{label: this.$t('pricesystemChangeList.createdDate')},
           status:{label: this.$t('pricesystemChangeList.status')},
           pricesystemId:{label: this.$t('pricesystemChangeList.pricesystemName'),value:""},
-
         },
-        formProperty:{},
         selects:new Array(),
         formLabelWidth: '120px',
         formVisible: false,
-        pickerDateOption:util.pickerDateOption,
+        pageLoading: false,
       };
     },
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW = util.formatDateRange(this.formData.createdDate);
-        this.formLabel.pricesystemId.value = util.getLabel(this.formProperty.pricesystems, this.formData.pricesystemId);
-
-        util.setQuery("pricesystemChangeList",this.formData);
-        axios.get('/api/crm/pricesystemChange',{params:this.formData}).then((response) => {
+       util.copyValue(this.formData,this.submitData);
+        util.setQuery("pricesystemChangeList",this.submitData);
+        axios.get('/api/ws/future/crm/pricesystemChange?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -126,22 +127,21 @@
           this.selects.push(selection[key].id)
         }
       },batchPass(){
-        axios.get('/api/crm/pricesystemChange/audit',{params:{ids:this.selects,pass:true}}).then((response) =>{
+        axios.get('/api/ws/future/crm/pricesystemChange/audit',{params:{ids:this.selects,pass:true}}).then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         });
       },checkSelectable(row) {
         return row.status !== '已通过'
-      },getQuery(){
-        axios.get('/api/crm/pricesystemChange/getQuery').then((response) =>{
-          this.formProperty=response.data;
-          this.pageRequest();
-        });
-      }
+      },
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.getQuery();
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/crm/pricesystemChange/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+     });
     }
   };
 </script>

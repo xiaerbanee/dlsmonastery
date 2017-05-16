@@ -32,8 +32,8 @@
         <el-table-column prop="remarks" :label="$t('positionList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('positionList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('positionList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('positionList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -84,9 +84,9 @@
       },itemEdit(){
         this.$router.push({ name: 'positionEdit'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'positionForm', query: { id: id }})
-        } else if(action=="删除") {
+        } else if(action=="delete") {
           axios.get('/api/basic/hr/position/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
