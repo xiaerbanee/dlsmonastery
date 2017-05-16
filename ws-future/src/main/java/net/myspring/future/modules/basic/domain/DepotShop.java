@@ -5,6 +5,7 @@ import net.myspring.future.common.domain.CompanyEntity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -44,7 +45,7 @@ public class DepotShop extends CompanyEntity<DepotShop> {
     //有无门头
     private Boolean doorHead=false;
     //开业时间
-    private Date enableDate;
+    private LocalDate enableDate;
     //是否体验店
     private Boolean specialityStore=false;
     private String specialityStoreType;
@@ -171,11 +172,11 @@ public class DepotShop extends CompanyEntity<DepotShop> {
         this.doorHead = doorHead;
     }
 
-    public Date getEnableDate() {
+    public LocalDate getEnableDate() {
         return enableDate;
     }
 
-    public void setEnableDate(Date enableDate) {
+    public void setEnableDate(LocalDate enableDate) {
         this.enableDate = enableDate;
     }
 
