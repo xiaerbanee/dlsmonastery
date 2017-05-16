@@ -324,4 +324,52 @@
         AND t21.FDATE &lt;#{dateEnd}
     </select>
 
+    <select id="findRemarks" resultType="net.myspring.common.dto.NameValueDto">
+        SELECT
+        t1.FBILLNO AS name,
+        t2.FCOMMENT AS value
+        FROM
+        T_AR_OTHERRECABLE t1,
+        T_AR_OTHERRECABLEENTRY t2
+        WHERE
+        t1.FID = t2.FID
+        AND t1.FCONTACTUNIT IN
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t1.FDATE  >#{dateStart}
+        AND t1.FDATE &lt;#{dateEnd}
+                        UNION ALL
+        SELECT
+        t3.FBILLNO AS name,
+        t4.FCOMMENT AS value
+        FROM
+        T_AR_RECEIVEBILL t3,
+        T_AR_RECEIVEBILLENTRY t4
+        WHERE
+        t3.FID = t4.FID
+        AND t3.FCONTACTUNIT  IN
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t3.FDATE  >#{dateStart}
+        AND t3.FDATE &lt;#{dateEnd}
+                        UNION ALL
+        SELECT
+        t5.FBILLNO AS name,
+        t6.FNOTE AS value
+        FROM
+        T_AR_REFUNDBILL t5,
+        T_AR_REFUNDBILLENTRY t6
+        WHERE
+        t5.FID = t6.FID
+        AND t5.FCONTACTUNIT IN
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t5.FDATE  >#{dateStart}
+        AND t5.FDATE &lt;#{dateEnd}
+    </select>
+
+
 </mapper>

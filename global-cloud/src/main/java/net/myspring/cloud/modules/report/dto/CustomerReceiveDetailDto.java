@@ -8,6 +8,7 @@ import java.util.Date;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveDetailDto {
+    private Boolean main = true;
     //订单编号
     private String id;
     //客户ID
@@ -34,12 +35,20 @@ public class CustomerReceiveDetailDto {
     private BigDecimal totalAmount;
     //应收金额
     private BigDecimal shouldGet;
-    //实收金额
+    //实收金额(预收)
     private BigDecimal realGet;
     //期末应收款
     private BigDecimal endShouldGet;
     //备注
     private String remarks;
+
+    public Boolean getMain() {
+        return main;
+    }
+
+    public void setMain(Boolean main) {
+        this.main = main;
+    }
 
     public String getId() {
         return id;
