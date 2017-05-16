@@ -2,12 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.crm.mapper.ProductImeMapper">
 
-    <select id="findPage" resultType="ProductIme">
-        SELECT t1.*
-        FROM crm_product_ime t1,crm_depot depot
-        where  t1.enabled=1
-        and t1.depot_id=depot.id
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
+    <select id="findPage" resultType="ProductImeDto">
+       SELECT t1.*,depot.name as depotName,productImeSale.created_date as productImeUploadCreateDate,productImeUpload.created_date as productImeSaleCreateDate,product.name as productName,product.net_type as productNetType
+       FROM crm_product_ime t1,crm_depot depot,crm_product_ime_sale productImeSale ,crm_product_ime_upload productImeUpload,crm_product product
+       where  t1.enabled=1
+       and t1.depot_id=depot.id and t1.product_ime_sale_id=productImeSale.id and t1.product_ime_upload_id=productImeUpload.id and t1.product_id=product.id
+       and DATEDIFF(now(),t1.created_date)&lt;90
+    </select>
+        <!--include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
         <if test="p.boxIme !=null" >
             and t1.box_ime=#{p.boxIme}
         </if>
@@ -83,7 +85,7 @@
         FROM crm_product_ime t1
         where t1.enabled=1
         AND t1.ime like concat('%',#{ime},'%')
-    </select>
+    </select-->
 
     <select id="findByImeList" resultType="ProductIme">
         SELECT

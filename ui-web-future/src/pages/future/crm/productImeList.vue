@@ -69,11 +69,11 @@
         <el-table-column prop="ime2"  :label="$t('productImeList.ime2')" sortable ></el-table-column>
         <el-table-column prop="meid" :label="$t('productImeList.meid')"></el-table-column>
         <el-table-column prop="retailDate" :label="$t('productImeList.retailDate')"></el-table-column>
-        <el-table-column prop="productImeSale.createdDate" :label="$t('productImeList.saleDate')"></el-table-column>
-        <el-table-column prop="productImeUpload.createdDate" :label="$t('productImeList.uploadDate')"></el-table-column>
-        <el-table-column prop="depot.name"  :label="$t('productImeList.depotName')"></el-table-column>
-        <el-table-column prop="product.netType"  :label="$t('productImeList.netType')" width="80"></el-table-column>
-        <el-table-column prop="product.name"  :label="$t('productImeList.productType')"></el-table-column>
+        <el-table-column prop="productImeSaleCreateDate" :label="$t('productImeList.saleDate')"></el-table-column>
+        <el-table-column prop="productImeUploadCreateDate" :label="$t('productImeList.uploadDate')"></el-table-column>
+        <el-table-column prop="depotName"  :label="$t('productImeList.depotName')"></el-table-column>
+        <el-table-column prop="productNetType"  :label="$t('productImeList.netType')" width="80"></el-table-column>
+        <el-table-column prop="productName"  :label="$t('productImeList.productType')"></el-table-column>
         <el-table-column prop="inputType" :label="$t('productImeList.inputType')"></el-table-column>
         <el-table-column prop="createdTime" :label="$t('productImeList.createdTime')"></el-table-column>
         <el-table-column prop="locked" :label="$t('productImeList.locked')" width="120">
@@ -160,7 +160,7 @@
         this.formData.createTimeBTW=util.formatDateRange(this.formData.createTime);
 
         util.setQuery("productImeList",this.formData);
-        axios.get('/api/crm/productIme',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/crm/productIme',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -185,12 +185,12 @@
           this.$router.push({ name: '串码列表详情', query: { id: id }})
         }
       },exportData(){
-        window.location.href= "/api/crm/productIme/export?"+qs.stringify(this.formData);
+        window.location.href= "/api/ws/future/crm/productIme/export?"+qs.stringify(this.formData);
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/crm/productIme/getQuery').then((response) => {
+      axios.get('/api/ws/future/crm/productIme/getQuery').then((response) => {
         this.formProperty = response.data;
       })
       this.pageRequest();

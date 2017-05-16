@@ -1,20 +1,21 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
-import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.web.query.ProductQuery;
+import net.myspring.future.modules.crm.domain.ProductIme;
+import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.service.ProductImeService;
+import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/productIme")
@@ -24,13 +25,16 @@ public class ProductImeController {
     private ProductImeService productImeService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request){
-        return null;
+    public Page<ProductImeDto> list(Pageable pageable, ProductImeQuery productImeQuery){
+        return productImeService.findPage(pageable,productImeQuery);
+
     }
 
     @RequestMapping(value = "getQuery")
-    public String getQuery(Depot depot) {
-        return null;
+    public ProductImeQuery getQuery(ProductImeQuery productImeQuery) {
+         productImeQuery.setInputTypes(productImeService.findInputTypes());
+         return productImeQuery;
+
     }
 
 
