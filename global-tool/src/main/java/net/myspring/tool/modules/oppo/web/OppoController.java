@@ -2,6 +2,7 @@ package net.myspring.tool.modules.oppo.web;
 
 import net.myspring.tool.common.utils.Const;
 import net.myspring.tool.common.utils.DateUtils;
+import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
@@ -31,6 +32,8 @@ public class OppoController {
 
     @RequestMapping(value="syn")
     public String synFactoryOppo(String date){
+        RequestUtils.getRequestEntity().setAccountId("1");
+        RequestUtils.getRequestEntity().setCompanyId("2");
         List<String> mainCodes = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_CODES").split(Const.CharEnum.COMMA.getValue()));
         List<String> mainPasswords = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_PASSWORD").split(Const.CharEnum.COMMA.getValue()));
         LocalDate localDate = DateUtils.parseLocalDate(date);
