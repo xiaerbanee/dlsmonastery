@@ -140,8 +140,8 @@ export default {
     delete: "删除",
     audit: "审核",
   },
-  dealerForm: {
-    dealerForm: "客户管理编辑",
+  clientForm: {
+    clientForm: "客户管理编辑",
     loginName: "登录名",
     name: "姓名",
     mobilePhone: "手机号码",
@@ -157,8 +157,8 @@ export default {
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
   },
-  dealerList: {
-    dealerList: "客户管理",
+  clientList: {
+    clientList: "客户管理",
     name: "姓名",
     mobilePhone: "手机号码",
     add: "添加",
@@ -266,7 +266,7 @@ export default {
     district: "地区",
     doorHead: "是否有门头",
     enableDate: "开业时间",
-    dealerName: "经销商",
+    clientName: "经销商",
     pricesystem: "价格体系",
     chain: "连锁体系",
     shopArea: "店面尺寸",

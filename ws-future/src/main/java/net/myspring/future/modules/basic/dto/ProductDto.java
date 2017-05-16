@@ -4,6 +4,8 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.util.cahe.annotation.CacheInput;
 
+import java.math.BigDecimal;
+
 /**
  * Created by lihx on 2017/4/15.
  */
@@ -21,6 +23,16 @@ public class ProductDto extends DataDto<Product> {
     private Boolean allowBill;
     private String image;
     private Boolean locked;
+
+    private BigDecimal price2;
+
+    public BigDecimal getPrice2() {
+        return price2;
+    }
+
+    public void setPrice2(BigDecimal price2) {
+        this.price2 = price2;
+    }
 
     public String getName() {
         return name;

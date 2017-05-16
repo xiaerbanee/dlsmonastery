@@ -1,13 +1,20 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.common.config.CacheConfig;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.dto.ProductTypeDto;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
 import net.myspring.future.modules.crm.domain.PriceChange;
+import net.myspring.future.modules.crm.domain.PriceChangeProduct;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.mapper.PriceChangeImeMapper;
 import net.myspring.future.modules.crm.mapper.PriceChangeMapper;
 import net.myspring.future.modules.crm.mapper.PriceChangeProductMapper;
+import net.myspring.future.modules.crm.web.form.PriceChangeForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,9 +49,22 @@ public class PriceChangeService {
         return priceChangeMapper.finAllByEnabled(uploadEndDate);
     }
 
-    public PriceChange findOne(String id){
-        PriceChange priceChange = priceChangeMapper.findOne(id);
-        return priceChange;
+    public PriceChangeForm findForm(PriceChangeForm priceChangeForm){
+        if(priceChangeForm.isCreate()){
+            return new PriceChangeForm();
+        }
+        PriceChange priceChange = priceChangeMapper.findOne(priceChangeForm.getId());
+        PriceChangeForm result = BeanUtil.map(priceChange,PriceChangeForm.class);
+        List<PriceChangeProduct> priceChangeProducts = priceChangeProductMapper.findByPriceChangeId(priceChangeForm.getId());
+        List<String> productTypeIds = CollectionUtil.extractToList(priceChangeProducts,"productTypeId");
+
+        List<ProductTypeDto> productTypeDtos = BeanUtil.map(productTypeMapper.findLabels(CollectionUtil.extractToList(priceChangeProducts,"id")),ProductTypeDto.class);
+        List<String> productTypeNames = CollectionUtil.extractToList(productTypeDtos,"name");
+
+        result.setProductTypeDtos(productTypeDtos);
+        result.setProductTypeIds(productTypeIds);
+        result.setProductTypeNames(String.join(",",productTypeNames));
+        return result;
     }
 
 
@@ -55,18 +75,26 @@ public class PriceChangeService {
     }
 
     @Transactional
-    public void save(PriceChange priceChange){
+    public void save(PriceChangeForm priceChangeForm){
     }
 
     @Transactional
-    public void delete(PriceChange priceChange){
+    public void delete(PriceChangeForm priceChangeForm){
+        PriceChange priceChange = priceChangeMapper.findOne(priceChangeForm.getId());
+        priceChange.setName(priceChange.getName()+LocalDate.now()+"废除");
         priceChange.setEnabled(false);
-        priceChange.setName(priceChange.getName()+ LocalDate.now()+"废除");
         priceChangeMapper.update(priceChange);
     }
 
+
     @Transactional
-    public void check(PriceChange priceChange){
+    public void check(PriceChangeForm priceChangeForm){
+        PriceChange priceChange = priceChangeMapper.findOne(priceChangeForm.getId());
+        PriceChangeDto result = BeanUtil.map(priceChange,PriceChangeDto.class);
+        result.setCheckPercent(priceChangeForm.getCheckPercent());
+        result.setStatus("抽检中");
+        ReflectionUtil.copyProperties(result,priceChange);
+       priceChangeMapper.update(priceChange);
     }
 
 

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.AccountMessageDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +115,15 @@ public class AccountController {
         return accountDtoList;
     }
 
+    @RequestMapping(value="checkLoginName")
+        public RestResponse checkLoginName(AccountQuery accountQuery){
+        RestResponse restResponse=null;
+        if(!accountService.checkLoginName(accountQuery)) {
+            restResponse = new RestResponse("登录名不能重复", ResponseCodeEnum.saved.name());
+        }
+        return restResponse;
+    }
+
 
     @RequestMapping(value = "searchFilter")
     public List<AccountDto> searchFilter(AccountQuery accountQuery) {
@@ -123,11 +134,9 @@ public class AccountController {
 
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public ModelAndView export(AccountQuery accountQuery) {
-        Workbook workbook = new SXSSFWorkbook(5000);
-        List<SimpleExcelSheet> simpleExcelSheetList = accountService.findSimpleExcelSheets(workbook, accountQuery);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "账户信息.xlsx", simpleExcelSheetList);
-        return null;
+    public String export(AccountQuery accountQuery) throws IOException {
+        Workbook workbook = new SXSSFWorkbook(10000);
+        return accountService.findSimpleExcelSheet(workbook,accountQuery);
     }
 
     @RequestMapping(value = "getAccountInfo")

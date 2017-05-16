@@ -17,6 +17,24 @@ public class ProductTypeDto extends DataDto<ProductType> {
     private Boolean scoreType;
     private Boolean locked;
     private Boolean enabled;
+    private BigDecimal baokaPrice;
+    private BigDecimal price3;
+
+    public BigDecimal getBaokaPrice() {
+        return baokaPrice;
+    }
+
+    public void setBaokaPrice(BigDecimal baokaPrice) {
+        this.baokaPrice = baokaPrice;
+    }
+
+    public BigDecimal getPrice3() {
+        return price3;
+    }
+
+    public void setPrice3(BigDecimal price3) {
+        this.price3 = price3;
+    }
 
     public String getName() {
         return name;

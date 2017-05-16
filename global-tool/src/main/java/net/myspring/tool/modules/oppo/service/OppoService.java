@@ -1,20 +1,20 @@
 package net.myspring.tool.modules.oppo.service;
 
 import com.google.common.collect.Lists;
-import com.netflix.discovery.converters.Auto;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.utils.Const;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
+import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
-import net.myspring.tool.modules.oppo.mapper.OppoMapper;
-import net.myspring.tool.modules.oppo.mapper.OppoPlantAgentProductSelMapper;
-import net.myspring.tool.modules.oppo.mapper.OppoPlantProductSelMapper;
+import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
+import net.myspring.tool.modules.oppo.mapper.*;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +30,10 @@ public class OppoService {
     private OppoPlantProductSelMapper oppoPlantProductSelMapper;
     @Autowired
     private OppoPlantAgentProductSelMapper oppoPlantAgentProductSelMapper;
+    @Autowired
+    private OppoPlantSendImeiPpselMapper oppoPlantSendImeiPpselMapper;
+    @Autowired
+    private OppoPlantProductItemelectronSelMapper oppoPlantProductItemelectronSelMapper;
 
     public String getCodes(String type) {
         return Const.CompanyConfig.getMap().get("JXOPPO" + Const.CharEnum.UNDER_LINE.getValue() + type);
@@ -44,6 +48,17 @@ public class OppoService {
     public List<OppoPlantAgentProductSel> plantAgentProductSel(String companyId, String password, String branchId) {
         return oppoMapper.plantAgentProductSel(companyId, password, branchId);
     }
+
+    @FactoryDataSource
+    public List<OppoPlantSendImeiPpsel> plantSendImeiPPSel(String companyId, String password, LocalDate createdTime) {
+        return oppoMapper.plantSendImeiPPSel(companyId, password, createdTime);
+    }
+
+    @FactoryDataSource
+    public List<OppoPlantProductItemelectronSel> plantProductItemelectronSel(String companyId, String password, LocalDate systemDate) {
+        return oppoMapper.plantProductItemelectronSel(companyId, password, systemDate);
+    }
+
 
 
     //获取颜色编码
@@ -70,6 +85,7 @@ public class OppoService {
     }
 
     //获取物料编码
+    @LocalDataSource
     @Transactional(readOnly = false)
     public String pullPlantAgentProductSels(List<OppoPlantAgentProductSel> oppoPlantAgentProductSels) {
         List<OppoPlantAgentProductSel> list = Lists.newArrayList();
@@ -86,5 +102,43 @@ public class OppoService {
             }
         }
         return "物料编码同步成功，共"+list.size()+"条";
+    }
+
+    //获取发货串码信息
+    @LocalDataSource
+    @Transactional(readOnly = false)
+    public String pullPlantSendImeiPpsels(List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels, String agentCode) {
+        List<OppoPlantSendImeiPpsel> list = Lists.newArrayList();
+        List<String> imeis = CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
+        List<String> localImeis = oppoPlantSendImeiPpselMapper.findImeis(imeis);
+        for (OppoPlantSendImeiPpsel oppoPlantSendImeiPpsel : oppoPlantSendImeiPpsels) {
+            if (!localImeis.contains(oppoPlantSendImeiPpsel.getImei())) {
+                oppoPlantSendImeiPpsel.setCompanyId(agentCode);
+                list.add(oppoPlantSendImeiPpsel);
+            }
+        }
+        if (CollectionUtil.isNotEmpty(list)) {
+            oppoPlantSendImeiPpselMapper.save(list);
+        }
+        return "发货串码同步成功，共"+list.size()+"条";
+    }
+
+    // 获取电子保卡信息
+    @Transactional(readOnly = false)
+    public String pullPlantProductItemelectronSels(List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels) {
+        List<OppoPlantProductItemelectronSel> list = Lists.newArrayList();
+        if (CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)) {
+            List<String> productNos = CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
+            List<String> localProductNos = oppoPlantProductItemelectronSelMapper.findProductNos(productNos);
+            for (OppoPlantProductItemelectronSel oppoPlantProductItemelectronSel : oppoPlantProductItemelectronSels) {
+                if (!localProductNos.contains(oppoPlantProductItemelectronSel.getProductNo())) {
+                    list.add(oppoPlantProductItemelectronSel);
+                }
+            }
+            if (CollectionUtil.isNotEmpty(list)) {
+                oppoPlantProductItemelectronSelMapper.save(list);
+            }
+        }
+        return "电子保卡同步成功，共"+list.size()+"条";
     }
 }

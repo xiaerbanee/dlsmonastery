@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.modules.basic.mapper.DepotStoreMapper">
+
+
+    <select id="findPage" resultType="DepotShopDto">
+        SELECT t1.*,t2.*
+        FROM crm_depot depot ,crm_depot_store t2
+        where depot.denabled=1
+        and t2.enabled=1
+        and depot.depot_store_id=t2.id
+    </select>
+
+</mapper>

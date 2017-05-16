@@ -1,14 +1,18 @@
 package net.myspring.future.modules.basic.web.controller;
 
-import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.service.DepotShopService;
-import net.myspring.future.modules.basic.web.query.DepotShopQuery;
+import net.myspring.future.modules.basic.web.form.DepotShopForm;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -20,45 +24,15 @@ public class DepotShopController {
     @Autowired
     private DepotShopService depotShopService;
 
-    @RequestMapping(value = "search")
-    public List<DepotDto>  directAndSubShop(DepotShopQuery depotShopQuery) {
-        return depotShopService.findAll(depotShopQuery);
+    @RequestMapping(method = RequestMethod.GET)
+    public Page<DepotShopDto> list(Pageable pageable, DepotQuery depotShopQuery){
+        Page<DepotShopDto> page = depotShopService.findPage(pageable,depotShopQuery);
+        return page;
     }
 
-    //直营门店查询
-    @RequestMapping(value = "direct")
-    public List<DepotDto>  direct(DepotShopQuery depotShopQuery) {
-        depotShopQuery.setDirect(true);
-        return depotShopService.findAll(depotShopQuery);
+    @RequestMapping(value = "save")
+    public RestResponse list(DepotShopForm depotShopForm){
+        depotShopService.save(depotShopForm);
+        return new RestResponse("保存成功",null);
     }
-
-    //代理门店查询
-    @RequestMapping(value = "delegate")
-    public List<DepotDto>  delegate(DepotShopQuery depotShopQuery) {
-        depotShopQuery.setDelegate(true);
-        return depotShopService.findAll(depotShopQuery);
-    }
-
-    //直营门店+子店
-    @RequestMapping(value = "directAndSub")
-    public List<DepotDto> directAndSub(DepotShopQuery depotShopQuery) {
-        depotShopQuery.setDirectAndSub(true);
-        return depotShopService.findAll(depotShopQuery);
-    }
-
-    //广告门店
-    @RequestMapping(value = "adShop")
-    public List<DepotDto> adShop(DepotShopQuery depotShopQuery) {
-        depotShopQuery.setAdShop(true);
-        return depotShopService.findAll(depotShopQuery);
-    }
-
-    //直营广告门店
-    @RequestMapping(value = "directAdShop")
-    public List<DepotDto> directAdShop(DepotShopQuery depotShopQuery) {
-        depotShopQuery.setDirect(true);
-        depotShopQuery.setAdShop(true);
-        return depotShopService.findAll(depotShopQuery);
-    }
-
 }

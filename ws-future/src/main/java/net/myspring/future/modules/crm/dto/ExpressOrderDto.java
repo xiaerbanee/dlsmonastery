@@ -2,13 +2,14 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.Express;
+import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class ExpressOrderDto extends DataDto<Express> {
+public class ExpressOrderDto extends DataDto<ExpressOrder> {
 
     private String expressCompanyId;
     @CacheInput(inputKey = "expressCompanies",inputInstance = "expressCompanyId",outputInstance = "name")
@@ -38,6 +39,16 @@ public class ExpressOrderDto extends DataDto<Express> {
     private BigDecimal weight;
     private Integer totalQty;
     private BigDecimal averageWeight;
+
+    private String expressCodes;
+
+    public String getExpressCodes() {
+        return expressCodes;
+    }
+
+    public void setExpressCodes(String expressCodes) {
+        this.expressCodes = expressCodes;
+    }
 
     public BigDecimal getAverageWeight() {
         return averageWeight;

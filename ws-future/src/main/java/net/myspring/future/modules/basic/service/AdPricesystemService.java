@@ -27,8 +27,6 @@ public class AdPricesystemService {
     @Autowired
     private DepotMapper depotMapper;
     @Autowired
-    private DepotShopMapper depotShopMapper;
-    @Autowired
     private CacheUtils cacheUtils;
 
     public AdPricesystem findOne(String id){
@@ -70,14 +68,13 @@ public class AdPricesystemService {
         }
         List<Depot> depotList = depotMapper.findByIds(adPricesystemForm.getPageIds());
         for(Depot depot : depotList){
-            DepotShop depotShop = depotShopMapper.findOne(depot.getDepotShopId());
             if(!adPricesystemForm.getNewDepotIds().contains(depot.getId())){
-                depotShop.setAdPricesystemId(null);
+                depot.setAdPricesystemId(null);
                 depotMapper.update(depot);
             }else {
-                if(!adPricesystemForm.getId().equals(depotShop.getAdPricesystemId())){
-                    depotShop.setAdPricesystemId(adPricesystemForm.getId());
-                    depotShopMapper.update(depotShop);
+                if(!adPricesystemForm.getId().equals(depot.getAdPricesystemId())){
+                    depot.setAdPricesystemId(adPricesystemForm.getId());
+                    depotMapper.update(depot);
                 }
             }
         }

@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item :label="$t('shopBuildForm.shopId')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="SHOP"></depot-select>
+              <shop-select v-model="inputForm.shopId"></shop-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.shopType')" prop="shopType">
               <dict-enum-select v-model="inputForm.shopType" category="店面类型"></dict-enum-select>
@@ -15,7 +15,7 @@
               <dict-enum-select v-model="inputForm.fixtureType" category="装修类别"></dict-enum-select>
             </el-form-item>
             <div v-show="inputForm.fixtureType.indexOf('包柱')>0">
-            <el-form-item :label="$t('shopBuildForm.oldContents')" prop="oldContents">
+            <el-form-item :label="$t('shopBuildForm.oldContents')" prop="oldContents" >
               <el-input v-model="inputForm.oldContents" ></el-input>
             </el-form-item>
               </div>
@@ -55,12 +55,12 @@
 <script>
   import dictEnumSelect from 'components/basic/dict-enum-select';
   import accountSelect from 'components/basic/account-select';
-  import depotSelect from 'components/future/depot-select';
+  import shopSelect from 'components/future/depot-select';
   export default{
     components:{
         dictEnumSelect,
         accountSelect,
-      depotSelect
+      shopSelect
     },
     data(){
       return {
@@ -119,14 +119,6 @@
             this.submitDisabled = false;
           }
         })
-      },remoteShop(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/ws/future/basic/depot/shop',{params:{name:query}}).then((response)=>{
-            this.shops=response.data;
-            this.remoteLoading = false;
-          })
-        }
       },getFormProperty(){
         axios.get('/api/ws/future/layout/shopBuild/getQuery').then((response)=>{
           this.formProperty=response.data;

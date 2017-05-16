@@ -29,7 +29,7 @@
       this.setValue(this.value);
     },watch: {
       value :function (val) {
-        this.setValue(val);
+          this.setValue(val);
       }
     }
   };

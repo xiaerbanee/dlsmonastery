@@ -136,9 +136,9 @@
               <el-form-item :label="$t('depotForm.enableDate')" prop="enableDate">
                 <el-date-picker v-model="inputForm.enableDate" type="date" :placeholder="$t('depotForm.selectDate')" ></el-date-picker>
               </el-form-item>
-              <el-form-item :label="$t('depotForm.dealerName')" prop="dealerId">
-                <el-select v-model="inputForm.dealerId" filterable clearable :placeholder="$t('depotForm.inputKey')">
-                  <el-option v-for="dealer in formProperty.dealers" :key="dealer.id" :label="dealer.name" :value="dealer.id"></el-option>
+              <el-form-item :label="$t('depotForm.clientName')" prop="clientId">
+                <el-select v-model="inputForm.clientId" filterable clearable :placeholder="$t('depotForm.inputKey')">
+                  <el-option v-for="client in formProperty.clients" :key="client.id" :label="client.name" :value="client.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('depotForm.pricesystem')" prop="pricesystemId">
@@ -245,7 +245,7 @@
         submitDisabled:false,
         multiple:true,
         formProperty:{},
-        inputForm:"",
+        inputForm:{},
         submitData:{
           id:'',
           type:'',
@@ -269,7 +269,7 @@
           turnoverType:'',
           doorHead:'',
           enableDate:'',
-          dealerId:null,
+          clientId:null,
           pricesystemId:null,
           chainId:null,
           specialityStore:'',

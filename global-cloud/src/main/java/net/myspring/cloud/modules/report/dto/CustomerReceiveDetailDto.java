@@ -8,7 +8,11 @@ import java.util.Date;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveDetailDto {
-    private CustomerReceiveDto customerReceiveDto;
+    private Boolean main = true;
+    //订单编号
+    private String id;
+    //客户ID
+    private String customerId;
     //业务类型
     private String billType;
     //单据号
@@ -25,21 +29,41 @@ public class CustomerReceiveDetailDto {
     private Long qty;
     //单价
     private BigDecimal price;
+    //金额
+    private BigDecimal amount;
+    //总金额
+    private BigDecimal totalAmount;
     //应收金额
     private BigDecimal shouldGet;
-    //实收金额
+    //实收金额(预收)
     private BigDecimal realGet;
     //期末应收款
     private BigDecimal endShouldGet;
     //备注
     private String remarks;
 
-    public CustomerReceiveDto getCustomerReceiveDto() {
-        return customerReceiveDto;
+    public Boolean getMain() {
+        return main;
     }
 
-    public void setCustomerReceiveDto(CustomerReceiveDto customerReceiveDto) {
-        this.customerReceiveDto = customerReceiveDto;
+    public void setMain(Boolean main) {
+        this.main = main;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getBillType() {
@@ -138,11 +162,19 @@ public class CustomerReceiveDetailDto {
         this.remarks = remarks;
     }
 
-    public BigDecimal getAmount(){
-        if(qty==null || price==null) {
-            return null;
-        } else {
-            return new BigDecimal(qty).multiply(price);
-        }
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

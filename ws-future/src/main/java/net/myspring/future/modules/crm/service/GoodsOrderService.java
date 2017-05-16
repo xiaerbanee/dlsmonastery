@@ -2,6 +2,8 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Maps;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
+import net.myspring.future.common.enums.NetTypeEnum;
+import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.mapper.*;
@@ -10,8 +12,10 @@ import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.mapper.*;
+import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.future.modules.layout.mapper.ShopGoodsDepositMapper;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +58,10 @@ public class GoodsOrderService {
     private BankMapper bankMapper;
 
     @Autowired
+
     private CacheUtils cacheUtils;
+    @Autowired
+    private GoodsOrderDetailService goodsOrderDetailService;
 
 
     public Page<GoodsOrderDto> findPage(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
@@ -167,4 +175,76 @@ public class GoodsOrderService {
         return goodsOrderMapper.findByStoreBillData(billDate, storeId, status);
     }
 
+    public GoodsOrderForm findForm(GoodsOrderForm goodsOrderForm) {
+
+
+        GoodsOrderForm result = new GoodsOrderForm();
+
+
+        result.setShipTypeList(ShipTypeEnum.getList());
+
+        //TODO 需要修改
+        result.setNetTypeList(Arrays.asList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
+//TODO 判斷公司類比額
+//        if(CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyId().getCompany().getName()) || Company.CompanyName.JXvivo.name().equals(AccountUtils.getCompany().getName()) ){
+//            result.setNetTypeList(Arrays.asList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
+//        }else{
+//            result.setNetTypeList(Arrays.asList(NetTypeEnum.全网通.name()));
+//        }
+
+        if(goodsOrderForm.isCreate()){
+            return result;
+        }
+
+        ReflectionUtil.copyProperties(goodsOrderMapper.findOne(goodsOrderForm.getId()), result);
+        cacheUtils.initCacheInput(result);
+
+        if (result.getShopId() == null) {
+
+
+            return result;
+        }
+
+
+//        result.setGoodsOrderDetailFormList(goodsOrderDetailService.getFormListWithTodaysAreaQty(result.getId()));
+        //TODO  需要判斷設置alreadyQty
+        if (result.getShopId() != null) {
+            // 检查是否有权限
+            //DepotDto shop = depotService.findOne(result.getShopId());
+            //TODO 檢查是否有權限
+//            if (!DepotUtils.isAccess(shop, false)) {
+//                throw new ServiceException("exception_goods_order_no_order_permission");
+//            }
+//TODO 判斷公司類別
+//            if(Company.CompanyName.WZOPPO.name().equals(AccountUtils.getCompany().getName())){
+//                if(StringUtils.isEmpty(goodsOrder.getShipType())){
+//                    result.setShipType(ShipTypeEnum.总部发货.name());
+//                }
+//            }
+
+//
+//            Map<Long, GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
+//            if (Collections3.isNotEmpty(goodsOrder.getGoodsOrderDetails())) {
+//                for (GoodsOrderDetail goodsOrderDetail : goodsOrder.getGoodsOrderDetails()) {
+//                    goodsOrderDetailMap.put(goodsOrderDetail.getProduct().getId(), goodsOrderDetail);
+//                }
+//            }
+//            if(StringUtils.isNotBlank(goodsOrder.getNetType()) && shop.getPricesystemId()!=null){
+//                Pricesystem pricesystem=pricesystemService.findOne(shop.getPricesystemId(),goodsOrder.getNetType());
+//                model.addAttribute("pricesystem", pricesystem);
+//            }else{
+//                model.addAttribute("pricesystem", shop.getPricesystem());
+//            }
+//            // 办事处已订货数
+//            Map<Long, Integer> orderMap = goodsOrderDetailService.getOrderMap(shop.getOffice().getParentId(), date,date);
+//            model.addAttribute("orderMap", orderMap);
+//            model.addAttribute("shop", shop);
+//            model.addAttribute("carrierShops", shop.getCarrierShops());
+//            model.addAttribute("goodsOrderDetailMap", goodsOrderDetailMap);
+
+        }
+
+
+        return result;
+    }
 }

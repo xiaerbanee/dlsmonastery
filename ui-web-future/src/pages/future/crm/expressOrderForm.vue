@@ -4,10 +4,10 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('expressOrderForm.fromDepotId')" prop="fromDepotId">
-          <depot-select v-model="inputForm.fromDepotId"  ></depot-select>
+          <shop-select v-model="inputForm.fromDepotId"  ></shop-select>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.toDepotId')" prop="toDepotId">
-          <depot-select v-model="inputForm.toDepotId"  ></depot-select>
+          <shop-select v-model="inputForm.toDepotId"  ></shop-select>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.expressCompanyId')" prop="expressCompanyId">
           <express-company-select v-model="inputForm.expressCompanyId"  ></express-company-select>
@@ -16,7 +16,7 @@
           <el-input v-model="inputForm.contator"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.address')" prop="address">
-          <el-input v-model="inputForm.address"></el-input>
+          <el-input type="textarea" v-model="inputForm.address"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.mobilePhone')" prop="mobilePhone">
           <el-input v-model="inputForm.mobilePhone"></el-input>

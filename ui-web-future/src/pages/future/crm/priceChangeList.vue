@@ -23,7 +23,7 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('priceChangeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column  prop="name"  :label="$t('priceChangeList.name')" sortable width="200"></el-table-column>
-        <el-table-column prop="productTypeNames" :label="$t('priceChangeList.productType')"></el-table-column>
+        <el-table-column prop="productTypeName" :label="$t('priceChangeList.productType')"width="500"></el-table-column>
         <el-table-column prop="checkPercent" :label="$t('priceChangeList.checkPercent')"></el-table-column>
         <el-table-column prop="priceChangeDate" :label="$t('priceChangeList.priceChangeDate')"></el-table-column>
         <el-table-column prop="uploadEndDate"  :label="$t('priceChangeList.uploadEndDate')"></el-table-column>
@@ -57,7 +57,6 @@
         },formLabel:{
           name:{label:this.$t('priceChangeList.name')}
         },
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         loading:false
@@ -66,8 +65,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("priceChangeList",this.formData);
-        axios.get('/api/ws/future/crm/priceChange',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData)
+        util.setQuery("priceChangeList",this.submitData);
+        axios.get('/api/ws/future/crm/priceChange',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

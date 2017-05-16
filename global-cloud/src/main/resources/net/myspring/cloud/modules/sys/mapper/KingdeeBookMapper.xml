@@ -16,23 +16,13 @@
         </if>
     </select>
 
-    <select id="findByCompanyId" resultType="KingdeeBook">
+    <select id="findByAccountId" resultType="KingdeeBook">
         select t1.*
-        from sys_kingdee_book t1
+        from sys_kingdee_book t1,sys_account_kingdee_book t2
         where t1.enabled = 1
-        and t1.company_id = #{companyId}
-    </select>
-
-    <select id="findNameByCompanyId" resultType="String">
-        SELECT t1.name
-        from sys_kingdee_book t1
-        where t1.company_id = #{companyId} and t1.enabled = 1
-    </select>
-
-    <select id="findKingdeePostUrls" resultType="String">
-        select t1.kingdee_post_url
-        from sys_kingdee_book t1
-        where t1.enabled = 1
+        and t2.enabled=1
+        and t1.id = t2.kingdee_book_id
+        and t2.account_id = #{accountId}
     </select>
 
     <select id="findNames" resultType="String">
@@ -47,10 +37,4 @@
         where t1.enabled = 1
     </select>
 
-    <select id="findTypeByCompanyId" resultType="String">
-        select t1.type
-        from sys_kingdee_book t1
-        where t1.enabled = 1
-        and t1.company_id = #{companyId}
-    </select>
 </mapper>

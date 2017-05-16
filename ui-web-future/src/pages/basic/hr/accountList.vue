@@ -115,7 +115,10 @@
       },itemAdd(){
         this.$router.push({ name: 'accountForm'})
       },exportData(){
-        window.location.href= "/api/basic/hr/account/export?"+qs.stringify(this.formData);
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/basic/hr/account/export?'+qs.stringify(this.submitData)).then((response)=> {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        });
       },itemAuthAdd(){
         this.$router.push({name:"accountAuthorityForm"})
       },itemAction:function(id,action){

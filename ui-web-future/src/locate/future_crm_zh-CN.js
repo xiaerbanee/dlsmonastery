@@ -1035,6 +1035,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    upload:"上传",
   },
   priceChangeImeDetail: {
     priceChangeImeDetail: "调价串码编辑",

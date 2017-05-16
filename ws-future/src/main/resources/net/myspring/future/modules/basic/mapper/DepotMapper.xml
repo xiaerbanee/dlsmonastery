@@ -10,79 +10,6 @@
         <include refid="depotParamFilter" />
     </select>
 
-    <select id="findDepotAccountPage" resultType="DepotDto">
-        select depot.*
-        from crm_depot depot
-        where
-        depot.enabled=1
-        and depot.out_type='门店'
-        <include refid="depotFilter"/>
-        <if test="p.officeId !=null">
-            and depot.office_id=#{p.officeId}
-        </if>
-        <if test="p.name !=null">
-            and depot.name like concat('%',#{p.name},'%')
-        </if>
-        <if test="p.areaId !=null">
-            and depot.area_id=#{p.areaId}
-        </if>
-        <if test="p.specialityStore !=null">
-            and depot.speciality_store=#{p.specialityStore}
-        </if>
-        <if test="p.specialityStore !=null and p.specialityStore">
-            and (depot.speciality_store_type='总公司自营'
-            or depot.speciality_store_type='总公司经销商联营'
-            or  depot.speciality_store_type='综合卖场')
-        </if>
-    </select>
-
-    <select id="findShopAccountExportPage" resultType="DepotDto">
-        select depot.*
-        from crm_depot depot
-        where
-        depot.enabled=1
-        and depot.out_type='门店'
-        <include refid="depotFilter"/>
-        <if test="p.officeId !=null">
-            and depot.office_id=#{p.officeId}
-        </if>
-        <if test="p.name !=null">
-            and depot.name like concat('%',#{p.name},'%')
-        </if>
-        <if test="p.areaId !=null">
-            and depot.area_id=#{p.areaId}
-        </if>
-        <if test="p.specialityStore !=null">
-            and depot.speciality_store=#{p.specialityStore}
-        </if>
-        <if test="p.specialityStore !=null and p.specialityStore">
-            and (depot.speciality_store_type='总公司自营'
-            or depot.speciality_store_type='总公司经销商联营'
-            or  depot.speciality_store_type='综合卖场')
-        </if>
-    </select>
-
-    <select id="findByTypes" resultType="Depot">
-        select
-        t1.*
-        from
-        crm_depot t1
-        where
-        t1.enabled =1
-        and t1.is_hidden=0
-        and t1.type IN
-        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
-    <select id="findByOfficeId" resultType="Depot">
-        SELECT t1.*
-        FROM crm_depot t1
-        where t1.enabled=1
-        and t1.office_id = #{officeId}
-    </select>
-
     <select id="findByAccountId" resultType="Depot">
         select
             t1.*
@@ -96,151 +23,6 @@
             and t2.account_id=#{accountId}
     </select>
 
-    <select id="findByFilterAll" resultType="Depot">
-        select depot.*
-        from
-        crm_depot depot
-        where
-        depot.is_hidden=0
-        and depot.enabled = 1
-        <if test="p.types !=null and p.types.size() !=0">
-            and depot.type IN
-            <foreach collection="p.types" index="index" item="item" open="(" separator="," close=")">
-                #{p.types[${index}]}
-            </foreach>
-        </if>
-        <include refid="depotFilter"/>
-        order by depot.id
-    </select>
-
-    <select id="findByFilter" resultType="Depot">
-        select depot.*
-        from
-        crm_depot depot
-        where
-        depot.enabled=1
-        and depot.is_hidden=0
-        <include refid="depotParamFilter" />
-        order by depot.name
-        limit 0,20
-    </select>
-
-    <select id="findChainIds" resultType="String">
-        select distinct depot.chain_id
-        from
-        crm_depot depot
-        where
-        depot.enabled=1
-        <include refid="depotFilter"/>
-    </select>
-
-    <select id="findByChainId" resultType="Depot">
-        select t1.*
-        from crm_depot t1
-        where
-        t1.enabled = 1
-        and t1.chain_id = #{chainId}
-    </select>
-
-    <select id="findAllByOffice" resultType="Depot">
-        select t1.*
-        from
-        crm_depot t1
-        where
-        t1.enabled=1
-        t1.office_id in
-        <foreach collection="officeIds" index="index" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
-
-
-    <select id="findLabels" resultType="Depot">
-        SELECT t1.id,t1.name,t1.area_id,t1.office_id,t1.type,t1.is_hidden,t1.area_type,t1.parent_id,t1.out_id,t1.code
-        FROM crm_depot t1
-        WHERE t1.enabled = 1
-        and t1.id in
-        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
-    <select id="findByAdPricesystemId" resultType="Depot">
-        select t1.* from crm_depot t1 where t1.enabled = 1 and t1.ad_pricesystem_id = #{adPricesystemId}
-    </select>
-
-    <select id="findByName" resultType="Depot">
-        select
-        t1.*
-        from
-        crm_depot t1
-        where
-        t1.name=#{name}
-    </select>
-
-    <select id="findByOutGroupId" resultType="Depot">
-        SELECT t1.*
-        FROM crm_depot t1
-        where t1.enabled=1
-        and t1.out_group_id=#{outGroupId}
-    </select>
-
-    <select id="findByOutTypeAndOutId" resultType="Depot">
-        SELECT t1.*
-        FROM crm_depot t1
-        where
-         t1.out_type=#{outType}
-         and out_id=#{outId}
-    </select>
-
-    <select id="findAllByNameAndOutId" resultType="Depot">
-        SELECT t1.*
-        FROM crm_depot t1
-        where
-        t1.name=#{name}
-        and out_id=#{outId}
-    </select>
-
-    <delete id="deleteDepotAccount">
-        DELETE FROM
-        crm_account_depot
-        where depot_id=#{depotId}
-    </delete>
-
-    <insert id="saveDepotAccount">
-        INSERT INTO crm_account_depot(depot_id,account_id) VALUES
-        <foreach collection="accountIds" index="index" item="item" open="" separator="," close="">
-            (#{depotId},#{item})
-        </foreach>
-    </insert>
-
-    <sql id="depotFilter">
-        <if test="p.depotIdList !=null and p.depotIdList.size() !=0">
-            and depot.id IN
-            <foreach collection="p.depotIdList" index="index" item="item" open="(" separator="," close=")">
-                #{p.depotIdList[${index}]}
-            </foreach>
-        </if>
-        <if test="p.officeIdList !=null and p.officeIdList.size() !=0">
-            and depot.office_id IN
-            <foreach collection="p.officeIdList" index="index" item="item" open="(" separator="," close=")">
-                #{p.officeIdList[${index}]}
-            </foreach>
-        </if>
-    </sql>
-
-
-    <select id="getMaxOutDate" resultType="java.time.LocalDateTime">
-        select
-        MAX(out_date)
-        from
-        crm_depot t1
-        where
-        t1.enabled=1
-        and t1.out_type=#{outType}
-    </select>
-
     <sql id="depotParamFilter">
         <if test="p.types !=null and p.types.size() !=0">
             and depot.type IN
@@ -251,9 +33,6 @@
         <if test="p.depotName != null">
             and (depot.name like CONCAT('%',#{p.depotName},'%') or depot.name_pinyin like CONCAT('%',#{p.depotName},'%'))
         </if>
-        <!--<if test="p.townType != null">
-            and depot.town_type=#{p.townType}
-        </if>-->
         <if test="p.type != null">
             and depot.type=#{p.type}
         </if>
@@ -306,20 +85,101 @@
         <if test="p.adShop !=null">
             and depot.ad_shop=#{p.adShop}
         </if>
-        <!--<if test="p.isHidden !=null">
-            and depot.is_hidden=#{p.isHidden}
-        </if>-->
         <if test="p.allowAdApply != null">
             and depot.allow_ad_apply = #{p.allowAdApply}
         </if>
         <if test="p.name != null">
             and (depot.name like CONCAT('%',#{p.name},'%') or depot.name_pinyin like CONCAT('%',#{p.name},'%'))
         </if>
-        <!--<if test="p.types !=null and p.types.size() !=0">
-            and depot.type IN
-            <foreach collection="p.types" index="index" item="item" open="(" separator="," close=")">
-                #{p.types[${index}]}
+    </sql>
+
+
+    <select id="findByNameList" resultType="Depot">
+        SELECT t1.*
+        FROM crm_depot t1
+        WHERE t1.enabled = 1
+        and t1.name in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByName" resultType="Depot">
+        select
+        t1.*
+        from
+        crm_depot t1
+        where
+        t1.name=#{name}
+    </select>
+
+
+    <select id="findShopList" resultType="DepotDto">
+        SELECT t1.*
+        FROM crm_depot t1,crm_depot_shop t2
+        where t1.depot_shop_id=t2.id
+        and t1.enabled=1
+        and t2.enabled=1
+        <if test="p.clientIsNull != null">
+            <if test="p.clientIsNull">
+                and t1.client_id is NULL
+            </if>
+            <if test="!p.clientIsNull">
+                and t1.client_id is not NULL
+            </if>
+        </if>
+        <if test="p.adShop != null">
+            <if test="p.adShop">
+                and t1.ad_shop is NULL
+            </if>
+            <if test="!p.adShop">
+                and t1.ad_shop is not NULL
+            </if>
+        </if>
+        <if test="p.popShop != null">
+            <if test="p.popShop">
+                and t1.pop_shop is NULL
+            </if>
+            <if test="!p.popShop">
+                and t1.pop_shop is not NULL
+            </if>
+        </if>
+        and t1.name like concat('%',#{p.name},'%')
+        <include refid="depotFilter" />
+        limit 0,25
+    </select>
+
+    <select id="findStoreList" resultType="DepotDto">
+        SELECT t1.*
+        FROM crm_depot t1,crm_depot_store t2
+        where t1.depot_store_id=t2.id
+        and t1.enabled=1
+        and t2.enabled=1
+        <if test="p.outIdIsNull != null">
+            <if test="p.outIdIsNull">
+                and t2.out_id is NULL
+            </if>
+            <if test="!p.outIdIsNull">
+                and t1.out_id is not NULL
+            </if>
+        </if>
+        and t1.name like concat('%',#{p.name},'%')
+        <include refid="depotFilter" />
+    </select>
+
+
+    <sql id="depotFilter">
+        <if test="p.officeIdList !=null and p.officeIdList.size() !=0">
+            and depot.office_id IN
+            <foreach collection="p.officeIdList" index="index" item="item" open="(" separator="," close=")">
+                #{p.officeIdList[${index}]}
             </foreach>
-        </if>-->
+        </if>
+        <if test="p.depotIdList !=null and p.depotIdList.size() !=0">
+            and depot.id IN
+            <foreach collection="p.depotIdList" index="index" item="item" open="(" separator="," close=")">
+                #{p.depotIdList[${index}]}
+            </foreach>
+        </if>
     </sql>
 </mapper>

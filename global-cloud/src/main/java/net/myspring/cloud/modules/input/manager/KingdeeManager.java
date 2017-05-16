@@ -105,6 +105,7 @@ public class KingdeeManager {
         KingdeeBook kingdeeBook = kingdeeSynExtendDto.getKingdeeBook();
         Map<String,String> resultMap = Maps.newHashMap();
         String result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SAVE.getValue(),kingdeeSynExtendDto.getFormId(),kingdeeSynExtendDto.getContent());
+        logger.debug(result);
         resultMap.put("SAVE",result);
         JSONObject jsonObject = JSONObject.fromObject(result);
         if (BoolEnum.TRUE.getName().equals(jsonObject.getJSONObject("Result").getJSONObject("ResponseStatus").getString("IsSuccess"))) {

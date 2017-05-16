@@ -4,11 +4,14 @@ import net.myspring.future.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.Date;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_depot")
 public class Depot extends CompanyEntity<Depot> {
+    private String clientId;
+    //寄售对应
+    private String delegateDepotId;
     //编码
     private String code;
     //对应store_id
@@ -29,16 +32,49 @@ public class Depot extends CompanyEntity<Depot> {
     private String address;
     // 省市区
     private String districtId;
-    // 财务编号
-    private String outId;
-    //财务分组
-    private Long outGroupId;
-    //财务分组名称
-    private String outGroupName;
-    // 财务类型
-    private String outType;
-    //财务同步日期
-    private Date outDate;
+
+    // 价格体系
+    private String pricesystemId;
+    // 额度
+    private BigDecimal credit;
+    // 连锁体系
+    private String chainId;
+    //物料价格体系
+    private String adPricesystemId;
+    // 快递公司
+    private String expressCompanyId;
+    //是否打印价格
+    private Boolean printPrice;
+    // 打印类型，批量打印时用于分批打印
+    private String printType;
+    // 是否让利
+    private Boolean rebate;
+    //税务名称
+    private String taxName;
+    //是否是广告门店
+    private Boolean adShop=false;
+    //是否隐藏
+    private Boolean isHidden=false;
+    //是否是广告仓库
+    private Boolean popShop = false;
+    //公司分组（imoo，电玩，oppo不写）
+    private String companyGroup;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getDelegateDepotId() {
+        return delegateDepotId;
+    }
+
+    public void setDelegateDepotId(String delegateDepotId) {
+        this.delegateDepotId = delegateDepotId;
+    }
 
     public String getCode() {
         return code;
@@ -120,43 +156,107 @@ public class Depot extends CompanyEntity<Depot> {
         this.districtId = districtId;
     }
 
-    public String getOutId() {
-        return outId;
+    public String getPricesystemId() {
+        return pricesystemId;
     }
 
-    public void setOutId(String outId) {
-        this.outId = outId;
+    public void setPricesystemId(String pricesystemId) {
+        this.pricesystemId = pricesystemId;
     }
 
-    public Long getOutGroupId() {
-        return outGroupId;
+    public BigDecimal getCredit() {
+        return credit;
     }
 
-    public void setOutGroupId(Long outGroupId) {
-        this.outGroupId = outGroupId;
+    public void setCredit(BigDecimal credit) {
+        this.credit = credit;
     }
 
-    public String getOutGroupName() {
-        return outGroupName;
+    public String getChainId() {
+        return chainId;
     }
 
-    public void setOutGroupName(String outGroupName) {
-        this.outGroupName = outGroupName;
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
     }
 
-    public String getOutType() {
-        return outType;
+    public String getAdPricesystemId() {
+        return adPricesystemId;
     }
 
-    public void setOutType(String outType) {
-        this.outType = outType;
+    public void setAdPricesystemId(String adPricesystemId) {
+        this.adPricesystemId = adPricesystemId;
     }
 
-    public Date getOutDate() {
-        return outDate;
+    public String getExpressCompanyId() {
+        return expressCompanyId;
     }
 
-    public void setOutDate(Date outDate) {
-        this.outDate = outDate;
+    public void setExpressCompanyId(String expressCompanyId) {
+        this.expressCompanyId = expressCompanyId;
+    }
+
+    public Boolean getPrintPrice() {
+        return printPrice;
+    }
+
+    public void setPrintPrice(Boolean printPrice) {
+        this.printPrice = printPrice;
+    }
+
+    public String getPrintType() {
+        return printType;
+    }
+
+    public void setPrintType(String printType) {
+        this.printType = printType;
+    }
+
+    public Boolean getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(Boolean rebate) {
+        this.rebate = rebate;
+    }
+
+    public String getTaxName() {
+        return taxName;
+    }
+
+    public void setTaxName(String taxName) {
+        this.taxName = taxName;
+    }
+
+    public Boolean getAdShop() {
+        return adShop;
+    }
+
+    public void setAdShop(Boolean adShop) {
+        this.adShop = adShop;
+    }
+
+    public Boolean getHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        isHidden = hidden;
+    }
+
+    public Boolean getPopShop() {
+        return popShop;
+    }
+
+    public void setPopShop(Boolean popShop) {
+        this.popShop = popShop;
+    }
+
+    public String getCompanyGroup() {
+        return companyGroup;
+    }
+
+    public void setCompanyGroup(String companyGroup) {
+        this.companyGroup = companyGroup;
     }
 }

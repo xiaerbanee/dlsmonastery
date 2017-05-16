@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('depotAccountList.filterOrExport')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('depotAccountList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -65,102 +65,82 @@
   export default {
     data() {
       return {
-        page:{},
-        formData:{
-          page:0,
-          size:25,
-          name:'',
-          dateRange:'',
-          dutyDateBTW:'',
-          areaId:'',
-          officeId:'',
-          specialityStore:''
-        },formLabel:{
-          name:{label:this.$t('depotAccountList.name')},
-          dutyDateBTW:{label:this.$t('depotAccountList.dateRange')},
-          officeId:{label: this.$t('depotAccountList.officeName'),value:""},
-          areaId:{label: this.$t('depotAccountList.areaName'),value:""},
-          specialityStore:{label: this.$t('depotAccountList.isSpecialityStore'),value:""}
+        page: {},
+        formData:{},
+        submitData: {
+          page: 0,
+          size: 25,
+          name: '',
+          dateRange: '',
+          dutyDateRange: '',
+          areaId: '',
+          officeId: '',
+          specialityStore: ''
+        }, formLabel: {
+          name: {label: this.$t('depotAccountList.name')},
+          dutyDateRange: {label: this.$t('depotAccountList.dateRange')},
+          officeId: {label: this.$t('depotAccountList.officeName'), value: ""},
+          areaId: {label: this.$t('depotAccountList.areaName'), value: ""},
+          specialityStore: {label: this.$t('depotAccountList.isSpecialityStore'), value: ""}
         },
-        offices:[],
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
-        remoteLoading:false
       };
     },
     methods: {
-      request(){
-        this.pageLoading = true;
-        util.setQuery("depotAccountList",this.formData);
-        if(this.formProperty.dateRange==this.formData.dateRange){
-          this.formData.dutyDateBTW = this.formData.dateRange;
-        }else{
-          this.formData.dutyDateBTW = util.formatDateRange(this.formData.dateRange);
-        }
-        this.formLabel.specialityStore.value = util.bool2str(this.formData.specialityStore);
-        this.formLabel.officeId.value = util.getLabel(this.offices, this.formData.officeId);
-        this.formLabel.areaId.value=util.getLabel(this.formProperty.areas, this.formData.areaId);
-      },
       pageRequest() {
-          this.request();
-          axios.get('/api/crm/depot/depotAccountData',{params:this.formData}).then((response) => {
-            this.page = response.data;
-          })
-      },shopExportRequest() {
-          this.request();
-          window.location.href= "/api/crm/depot/shopExport?"+qs.stringify(this.formData);
-      },shopExportDataRequest() {
-          this.request();
-          window.location.href= "/api/crm/depot/accountExport?"+qs.stringify(this.formData);
-    },pageChange(pageNumber,pageSize) {
-        this.pageLoading = false;
+        this.pageLoading = true;
+        util.copyValue(this.formData, this.submitData);
+        util.setQuery("depotAccountList", this.submitData);
+        axios.get('/api/ws/future/crm/depot/depotAccountData?' + qs.stringify(this.submitData)).then((response) => {
+          this.page = response.data;
+          this.pageLoading = false;
+        })
+      }, pageChange(pageNumber, pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
         this.pageRequest();
-      },sortChange(column) {
-        this.formData.order=util.getOrder(column);
-        this.formData.page=0;
+      }, sortChange(column) {
+        this.formData.sort = util.getSort(column);
+        this.formData.page = 0;
         this.pageRequest();
-      },search() {
+      }, search() {
         this.formVisible = false;
         this.pageRequest();
-      },exportData(){
-        this.formVisible = false;
-        this.shopExportRequest();
-      },exportDataDetail(){
-        this.formVisible = false;
-        this.shopExportDataRequest();
-      },itemAction:function(id,action){
-        if(action=="详细") {
-          if(this.formProperty.dateRange==this.formData.dateRange){
-            this.formData.dateRange = this.formData.dateRange;
-          }else{
-            this.formData.dateRange = util.formatDateRange(this.formData.dateRange);
-          }
-            console.log(this.formData.dateRange);
-          this.$router.push({ name: 'depotAccountDetail', query: { id: id, dateRange:this.formData.dateRange}})
-        }
-      },remoteOffice(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
-            this.offices=response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.offices = [];
+      }, itemAdd(){
+        this.$router.push({name: 'dictEnumForm'})
+      }, itemAction: function (id, action) {
+        if (action == "detail") {
+          this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.formData.dateRange}})
         }
       }
-    },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/crm/depot/getQuery').then((response) =>{
-        this.formProperty=response.data;
-        this.formData.dateRange=this.formProperty.dateRange;
-        this.pageRequest();
+
+    , shopExportRequest() {
+      this.request();
+      window.location.href = "/api/crm/depot/shopExport?" + qs.stringify(this.formData);
+    }, shopExportDataRequest() {
+      this.request();
+      window.location.href = "/api/crm/depot/accountExport?" + qs.stringify(this.formData);
+    }, exportData(){
+      this.formVisible = false;
+      this.shopExportRequest();
+    }, exportDataDetail(){
+      this.formVisible = false;
+      this.shopExportDataRequest();
+    }, itemAction: function (id, action) {
+
+        this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.formData.dateRange}})
+
+    }
+  },
+    created (){
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/crm/depot/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
     }
   };

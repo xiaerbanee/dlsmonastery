@@ -1,5 +1,10 @@
 package net.myspring.cloud.modules.report.web.query;
 
+import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -7,23 +12,25 @@ import java.util.List;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveQuery {
-    private String customerGroup;
     private LocalDate dateStart;
     private LocalDate dateEnd;
-    private List<String> customerIdList;
+    private String dateRange;
+    private List<String> customerIdList = Lists.newArrayList();
     private Boolean queryDetail = false;
 
-
-    public String getCustomerGroup() {
-        return customerGroup;
+    public String getDateRange() {
+        return dateRange;
     }
 
-    public void setCustomerGroup(String customerGroup) {
-        this.customerGroup = customerGroup;
+    public void setDateRange(String dateRange) {
+        this.dateRange = dateRange;
     }
-
     public LocalDate getDateStart() {
-        return dateStart;
+        if(StringUtils.isNotBlank(dateRange)) {
+            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
     }
 
     public void setDateStart(LocalDate dateStart) {
@@ -31,7 +38,11 @@ public class CustomerReceiveQuery {
     }
 
     public LocalDate getDateEnd() {
-        return dateEnd;
+        if(StringUtils.isNotBlank(dateRange)) {
+            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 
     public void setDateEnd(LocalDate dateEnd) {

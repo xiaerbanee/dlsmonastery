@@ -30,7 +30,7 @@
       this.setValue(this.value);
     },watch: {
       value :function (newVal) {
-        this.setValue(newVal);
+          this.setValue(newVal);
       }
     }
   };

@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface BdMaterialMapper {
 
-    List<String> findNameByNameLike(@Param("name")String name);
+    List<BdMaterial> findByNameLike(@Param("name")String name);
 
-    List<BdMaterial> findByName(@Param("name")String name);
+    BdMaterial findByName(@Param("name")String name);
 }

@@ -18,7 +18,7 @@
               {{detailForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.threeMonthQty')">
-              {{detailForm.remarks}}
+              {{detailForm.threeMonthQty}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.employeeId')" >
               {{detailForm.employeeName}}
@@ -30,7 +30,7 @@
               {{detailForm.processStatus}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.expressCodes')">
-              {{detailForm.expressOrder.expressCodes}}
+              {{expressOrderForm.expressCodes}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -41,13 +41,13 @@
               {{detailForm.remarks}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.contact')" >
-              {{detailForm.expressOrder.contator}}
+              {{expressOrderForm.contator}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.address')" >
-              {{detailForm.expressOrder.address}}
+              {{expressOrderForm.address}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.mobilePhone')">
-              {{detailForm.expressOrder.mobilePhone}}
+              {{expressOrderForm.mobilePhone}}
             </el-form-item>
             <div  v-if="audit">
             <el-form-item :label="$t('adGoodsOrderDetail.pass')" >
@@ -78,6 +78,7 @@
         submitDisabled:false,
         audit:this.$route.query.action=='audit',
         detailForm:{},
+        expressOrderForm:{},
         inputForm:{
          id:this.$route.query.id,
          pass:"",
@@ -114,6 +115,7 @@
     },created(){
       axios.get('/api/ws/future/layout/adGoodsOrder/detail',{params: {id:this.$route.query.id}}).then((response)=>{
         this.detailForm = response.data;
+        this.expressOrderForm = response.data.expressOrderDto;
       })
     }
   }

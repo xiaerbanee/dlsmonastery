@@ -2,17 +2,17 @@
   <div>
     <head-tab active="salOutStock"></head-tab>
     <div>
-      <el-form :model="formData" method="get">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
         <el-row :gutter="24">
           <el-col :span="6">
-            <el-form-item :label="formLabel.storeNumber.label"  :label-width="formLabelWidth">
+            <el-form-item :label="formLabel.storeNumber.label"  :label-width="formLabelWidth" prop="storeNumber">
               <el-select v-model="formData.storeNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStore" :loading="remoteLoading">
-                <el-option v-for="item in storeList" :key="item.FNumber" :label="item.FName" :value="item.FNumber"></el-option>
+                <el-option v-for="item in storeList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth">
+            <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth" prop="billDate">
               <date-picker v-model="formData.billDate"></date-picker>
             </el-form-item>
           </el-col>
@@ -109,10 +109,9 @@
                 let column = changes[i][1]==2;
                 if(column){
                   let name = changes[i][3];
-                  let material;
                   axios.get('/api/global/cloud/kingdee/bdMaterial/getByName?name='+ name).then((response) =>{
-                    material = response.data;
-                    table.setDataAtCell(row,0,material.FNumber);
+                    let  material = response.data;
+                    table.setDataAtCell(row,0,material.fnumber);
                   });
                 }
               }
@@ -120,12 +119,15 @@
           }
         },
         formData:{
-          billDate:null,
+          billDate:new Date().toLocaleDateString(),
           storeNumber:'',
-          data:[],
+          json:[],
         },formLabel:{
           billDate:{label:"日期"},
           storeNumber:{label:"仓库"},
+        },rules: {
+          storeNumber: [{ required: true, message: '请选择仓库'}],
+          billDate: [{ required: true, message: '请选择时间'}],
         },
         submitDisabled:false,
         formLabelWidth: '120px',
@@ -133,26 +135,35 @@
       };
     },
     mounted() {
-      axios.get('/api/global/cloud/input/batchBill/form').then((response)=>{
-        this.settings.columns[5].source = response.data.billTypeEnums;
+      axios.get('/api/global/cloud/input/salOutStock/form').then((response)=>{
+        this.settings.columns[5].source = response.data.outStockBillTypeEnums;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },
     methods: {
       formSubmit(){
-        this.formData.data =new Array();
-        let list = table.getData();
-        for(let item in list){
-          if(!table.isEmptyRow(item)){
-            this.formData.data.push(list[item]);
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            this.formData.json =new Array();
+            let list = table.getData();
+            for(let item in list){
+              if(!table.isEmptyRow(item)){
+                this.formData.json.push(list[item]);
+              }
+            }
+            this.formData.json = JSON.stringify(this.formData.json);
+            this.formData.billDate = util.formatLocalDate(this.formData.billDate);
+            axios.post('/api/global/cloud/input/salOutStock/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+              this.$message(response.data.message);
+            }).catch(function () {
+              this.submitDisabled = false;
+            });
+          }else{
+            this.submitDisabled = false;
           }
-        }
-        this.formData.data = JSON.stringify(this.formData.data);
-        axios.post('/api/global/cloud/input/batchMaterial/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
-          this.$message(response.data.message);
-        }).catch(function () {
-          this.submitDisabled = false;
-        });
+        })
       },
       remoteStore(query) {
         if (query !== '') {

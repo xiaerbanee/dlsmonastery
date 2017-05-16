@@ -8,10 +8,9 @@ import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.dto.BankDto;
-import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.mapper.BankMapper;
-import net.myspring.future.modules.basic.web.query.BankQuery;
 import net.myspring.future.modules.basic.web.form.BankForm;
+import net.myspring.future.modules.basic.web.query.BankQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
@@ -36,8 +35,6 @@ public class BankService {
     private BankMapper bankMapper;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private DepotManager depotManager;
     @Autowired
     private OfficeClient officeClient;
     @Autowired

@@ -2,14 +2,13 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.DepotCategoryEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
-import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
+import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "crm/goodsOrder")
 public class GoodsOrderController {
 
-    @Autowired
-    private DepotManager depotManager;
     @Autowired
     private GoodsOrderService goodsOrderService;
 
@@ -50,10 +45,6 @@ public class GoodsOrderController {
         return null;
     }
 
-    @RequestMapping(value = "getGoodsOrderDetail", method = RequestMethod.GET)
-    public String getGoodsOrderDetail(GoodsOrder goodsOrder, BindingResult bindingResult) {
-        return null;
-    }
 
 
     @RequestMapping(value = "getQuery")
@@ -155,12 +146,10 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "findForm")
-    public String findOne(GoodsOrder goodsOrder) {
-        return null;
+    public GoodsOrderForm findForm(GoodsOrderForm goodsOrderForm) {
+
+        return goodsOrderService.findForm(goodsOrderForm);
+
     }
 
-
-    private List<String> getActionList(GoodsOrder goodsOrder) {
-        return null;
-    }
 }

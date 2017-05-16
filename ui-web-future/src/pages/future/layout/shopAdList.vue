@@ -23,7 +23,7 @@
                 <depot-select v-model="formData.shopId" category="SHOP"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.specialArea.label" :label-width="formLabelWidth">
-                <bool-radio-group v-model="formData.specialArea"></bool-radio-group>
+                <bool-select v-model="formData.specialArea"></bool-select>
               </el-form-item>
               <el-form-item :label="formLabel.shopAdTypeId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.shopAdTypeId" filterable clearable :placeholder="$t('expressOrderList.inputKey')">
@@ -34,7 +34,7 @@
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <account-select  v-model="formData.createdBy"></account-select>
+                <account-select  v-model="formData.createdBy" :multiple="multiple"></account-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -82,11 +82,12 @@
   import officeSelect from 'components/basic/office-select';
   import accountSelect from 'components/basic/account-select';
   import depotSelect from 'components/future/depot-select';
-  import boolRadioGroup from 'components/common/bool-radio-group';
+  import boolSelect from 'components/common/bool-select';
   export default {
-    components:{officeSelect,accountSelect,depotSelect,boolRadioGroup},
+    components:{officeSelect,accountSelect,depotSelect,boolSelect},
     data() {
       return {
+        multiple:true,
         page:{},
         formData:{},
         submitData:{

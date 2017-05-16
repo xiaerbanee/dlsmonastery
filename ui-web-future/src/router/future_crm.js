@@ -2,6 +2,7 @@ const afterSaleList = r => require.ensure([], () => r(require('pages/future/crm/
 const afterSaleForm= r => require.ensure([], () => r(require('pages/future/crm/afterSaleForm.vue')));
 const afterSaleEditForm= r => require.ensure([], () => r(require('pages/future/crm/afterSaleEditForm.vue')));
 const afterSaleImeAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleImeAllotList.vue')));
+const afterSaleAreaInput= r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaInput.vue')));
 const afterSaleProductAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleProductAllotList.vue')));
 const afterSaleStoreAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleStoreAllotList.vue')));
 const bankInList = r => require.ensure([], () => r(require('pages/future/crm/bankInList.vue')));
@@ -16,6 +17,8 @@ const expressList  = r => require.ensure([], () => r(require('pages/future/crm/e
 const expressForm = r => require.ensure([], () => r(require('pages/future/crm/expressForm.vue')));
 const expressOrderList  = r => require.ensure([], () => r(require('pages/future/crm/expressOrderList.vue')));
 const expressOrderForm = r => require.ensure([], () => r(require('pages/future/crm/expressOrderForm.vue')));
+const depotAccountList = r => require.ensure([], () => r(require('pages/future/crm/depotAccountList.vue')));
+
 const goodsOrderList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderList.vue')));
 const goodsOrderForm = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderForm.vue')));
 const goodsOrderDetail = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderDetail.vue')));
@@ -59,6 +62,7 @@ let routes = [
   {path:'/future/crm/afterSaleForm',component:afterSaleForm,name:'afterSaleForm',meta: {menu:"afterSaleList"}},
   {path:'/future/crm/afterSaleEditForm',component:afterSaleEditForm,name:'afterSaleEditForm',meta: {menu:"afterSaleList"}},
   {path:'/future/crm/afterSaleImeAllotList',component:afterSaleImeAllotList,name:'afterSaleImeAllotList'},
+  {path:'/future/crm/afterSaleAreaInput',component:afterSaleAreaInput,name:'afterSaleAreaInput'},
   {path:'/future/crm/afterSaleProductAllotList',component:afterSaleProductAllotList,name:'afterSaleProductAllotList'},
   {path:'/future/crm/afterSaleStoreAllotList',component:afterSaleStoreAllotList,name:'afterSaleStoreAllotList'},
   {path:'/future/crm/bankInList',component:bankInList,name:'bankInList'},
@@ -73,6 +77,10 @@ let routes = [
   {path:'/future/crm/expressForm',component:expressForm,name:'expressForm',meta: {menu:"expressList"}},
   {path:'/future/crm/expressOrderList',component:expressOrderList,name:'expressOrderList'},
   {path:'/future/crm/expressOrderForm',component:expressOrderForm,name:'expressOrderForm',meta: {menu:"expressOrderList"}},
+  {path:'/future/crm/depotAccountList',component:depotAccountList,name:'depotAccountList',meta: {menu:"depotAccountList"}},
+
+
+
   {path: '/future/crm/goodsOrderList',component: goodsOrderList,name:"goodsOrderList"},
   {path:'/future/crm/goodsOrderForm',component:goodsOrderForm,name:'goodsOrderForm',meta: {menu:"goodsOrderList"}},
   {path:'/future/crm/goodsOrderDetail',component:goodsOrderDetail,name:'goodsOrderDetail',meta: {menu:"goodsOrderList"}},

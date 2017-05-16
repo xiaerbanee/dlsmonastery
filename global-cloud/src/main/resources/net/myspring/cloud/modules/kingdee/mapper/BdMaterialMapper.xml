@@ -2,17 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.kingdee.mapper.BdMaterialMapper">
 
-    <select id="findNameByNameLike" resultType="String">
-        SELECT
-        t2.FNAME
-        FROM
-        T_BD_MATERIAL t1,
-        T_BD_MATERIAL_L t2
-        WHERE
-        t1.FMATERIALID = t2.FMATERIALID
-        and t2.FNAME like CONCAT('%',#{name},'%')
-    </select>
-
     <select id="findByName" resultType="BdMaterial">
         SELECT
             t1.FMASTERID,

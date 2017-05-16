@@ -1,42 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.kingdee.mapper.SalReturnStockMapper">
-    <select id="findXSTHDByPeriodForSum" resultType="CustomerReceiveDto">
-        SELECT
-        b.FRETCUSTID AS customerId,
-        sum(c.FAMOUNT) AS beginShouldGet
-        FROM
-        T_SAL_RETURNSTOCKENTRY a
-        JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-        JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
-        JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
-        JOIN T_BD_CUSTOMER e on e.FCUSTID = b.FRETCUSTID
-        WHERE
-        b.FDATE &gt;=#{dateStart}
-        and b.FDATE  &lt;=#{dateEnd}
-        and d.FNAME= '标准销售退货单'
-        and e.FPRIMARYGROUP = #{primaryGroup}
-        group by
-        b.FRETCUSTID
-    </select>
 
-
-    <select id="findXXTHDByPeriodForSum" resultType="CustomerReceiveDto">
-        SELECT
-        b.FRETCUSTID AS customerId,
-        sum(c.FAMOUNT) AS beginShouldGet
-        FROM
-        T_SAL_RETURNSTOCKENTRY a
-        JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-        JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
-        JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
-        JOIN T_BD_CUSTOMER e on e.FCUSTID = b.FRETCUSTID
-        WHERE
-        b.FDATE &gt;=#{dateStart}
-        and b.FDATE  &lt;=#{dateEnd}
-        and d.FNAME='现销退货单'
-        and e.FPRIMARYGROUP = #{primaryGroup}
-        group by
-        b.FRETCUSTID
-    </select>
 </mapper>
