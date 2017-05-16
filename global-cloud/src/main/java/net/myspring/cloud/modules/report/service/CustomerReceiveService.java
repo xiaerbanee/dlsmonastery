@@ -74,6 +74,14 @@ public class CustomerReceiveService {
         return customerReceiveDtoList;
     }
 
+    public List<CustomerReceiveDetailDto> findCustomerReceiveDetailDtoList(String dateRange,String customerId) {
+        CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
+        customerReceiveDetailQuery.setDateRange(dateRange);
+        customerReceiveDetailQuery.getCustomerIdList().add(customerId);
+        Map<String,List<CustomerReceiveDetailDto>> map = findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
+        return map.get(customerId);
+    }
+
     public Map<String,List<CustomerReceiveDetailDto>>  findCustomerReceiveDetailDtoMap(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
         LocalDate dateStart = customerReceiveDetailQuery.getDateStart();
         //期初应收

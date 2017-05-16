@@ -26,8 +26,8 @@ public class CustomerReceiveController {
     }
 
     @RequestMapping(value = "detail")
-    public List<CustomerReceiveDetailDto> detail(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
-        return customerReceiveService.findCustomerReceiveDetailDtoList(customerReceiveDetailQuery);
+    public List<CustomerReceiveDetailDto> detail(String dateRange,String customerId) {
+        return customerReceiveService.findCustomerReceiveDetailDtoList(dateRange,customerId);
     }
 
 }
