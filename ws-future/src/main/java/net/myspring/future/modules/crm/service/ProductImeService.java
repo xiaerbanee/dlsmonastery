@@ -39,8 +39,9 @@ public class ProductImeService {
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable,ProductImeQuery productImeQuery) {
         productImeQuery.setPageable(pageable);
-        List<ProductImeDto> productImeList = productImeMapper.findList(productImeQuery);
-        cacheUtils.initCacheInput(productImeList);
+        List<ProductIme> productImeList = productImeMapper.findList(productImeQuery);
+        List<ProductImeDto> productImeDtoList= BeanUtil.map(productImeList,ProductImeDto.class);
+        cacheUtils.initCacheInput(productImeDtoList);
         Page<ProductImeDto> page = new PageImpl(productImeList,pageable,(pageable.getPageNumber()+100)*pageable.getPageSize());
         return page;
     }

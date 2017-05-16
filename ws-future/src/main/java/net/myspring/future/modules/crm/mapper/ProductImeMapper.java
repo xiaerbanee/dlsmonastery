@@ -23,6 +23,6 @@ public interface ProductImeMapper extends MyMapper<ProductIme, String> {
 
     List<ProductIme> findShipList(ProductImeShipQuery productImeShipQuery);
 
-    List<ProductImeDto> findList(ProductImeQuery productImeQuery);
+    List<ProductIme> findList(ProductImeQuery productImeQuery);
 
 }
