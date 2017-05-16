@@ -2,355 +2,374 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.report.mapper.CustomerReceiveMapper">
 
-    <select id="findByEndDateAndIn" resultType="CustomerReceiveDto">
+    <select id="findEndShouldGet" resultType="CustomerReceiveDto">
         SELECT
-        h.customerId,
-        SUM (h.beginShouldGet) AS beginShouldGet
+        temp.customerId,
+        SUM (temp.endShouldGet) AS endShouldGet
         FROM
         (
         SELECT
-        b.FCONTACTUNIT AS customerId,
-        a.FAMOUNT AS beginShouldGet
+        t2.FCONTACTUNIT AS customerId,
+        t1.FAMOUNT AS endShouldGet
         FROM
-        T_AR_OTHERRECABLEENTRY a
-        JOIN T_AR_OTHERRECABLE b ON a.FID = b.FID
+        T_AR_OTHERRECABLEENTRY t1
+        JOIN T_AR_OTHERRECABLE t2 ON t1.FID = t2.FID
         WHERE
-        b.FDATE &lt;#{dateEnd}
-        and b.FCONTACTUNIT in
+        t2.FDATE &lt;#{dateEnd}
+        and t2.FCONTACTUNIT in
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
         UNION ALL
         SELECT
-        b.FRETCUSTID AS customerId,
-        - c.FAMOUNT AS beginShouldGet
+        t2.FRETCUSTID AS customerId,
+        - t3.FAMOUNT AS endShouldGet
         FROM
-        T_SAL_RETURNSTOCKENTRY a
-        JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-        JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID  AND a.FENTRYID = c.FENTRYID
-        LEFT JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
+        T_SAL_RETURNSTOCKENTRY t1
+        JOIN T_SAL_RETURNSTOCK t2 ON t1.FID = t2.FID
+        JOIN T_SAL_RETURNSTOCKENTRY_F t3 ON t2.FID = t3.FID  AND t1.FENTRYID = t3.FENTRYID
+        LEFT JOIN T_BAS_BILLTYPE_L t4 ON t4.FBILLTYPEID = t2.FBILLTYPEID
         WHERE
-        d.FNAME = '标准销售退货单'
-        and b.FDATE &lt;#{dateEnd}
-        and b.FRETCUSTID in
+        t4.FNAME = '标准销售退货单'
+        and t2.FDATE &lt;#{dateEnd}
+        and t2.FRETCUSTID in
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
         UNION ALL
         SELECT
-        b.FCUSTOMERID AS customerId,
-        c.FALLAMOUNT AS beginShouldGet
+        t2.FCUSTOMERID AS customerId,
+        t3.FALLAMOUNT AS endShouldGet
         FROM
-        T_SAL_OUTSTOCKENTRY a
-        JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
-        JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID AND a.FENTRYID = c.FENTRYID
-        LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
+        T_SAL_OUTSTOCKENTRY t1
+        JOIN T_SAL_OUTSTOCK t2 ON t1.FID = t2.FID
+        JOIN T_SAL_OUTSTOCKENTRY_F t3 ON t1.FID = t3.FID AND t1.FENTRYID = t3.FENTRYID
+        LEFT JOIN T_BAS_BILLTYPE_L t4 ON t2.FBILLTYPEID = t4.FBILLTYPEID
         WHERE
-        d.FNAME = '标准销售出库单'
-        and b.FDATE &lt;#{dateEnd}
-        and b.FCUSTOMERID in
+        t4.FNAME = '标准销售出库单'
+        and t2.FDATE &lt;#{dateEnd}
+        and t2.FCUSTOMERID in
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
         UNION ALL
         SELECT
-        b.FCONTACTUNIT AS customerId,
-        - a.FRECAMOUNT_E AS beginShouldGet
+        t2.FCONTACTUNIT AS customerId,
+        - t1.FRECAMOUNT_E AS endShouldGet
         FROM
-        T_AR_RECEIVEBILLENTRY a
-        JOIN T_AR_RECEIVEBILL b ON a.FID = b.FID
+        T_AR_RECEIVEBILLENTRY t1
+        JOIN T_AR_RECEIVEBILL t2 ON t1.FID = t2.FID
         WHERE
-        b.FDATE &lt;#{dateEnd}
-        and b.FCONTACTUNIT in
+        t2.FDATE &lt;#{dateEnd}
+        and t2.FCONTACTUNIT in
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
         UNION ALL
         SELECT
-        b.FCONTACTUNIT AS customerId,
-        a.FREALREFUNDAMOUNTFOR AS beginShouldGet
+        t2.FCONTACTUNIT AS customerId,
+        t1.FREALREFUNDAMOUNTFOR AS endShouldGet
         FROM
-        T_AR_REFUNDBILLENTRY a
-        JOIN T_AR_REFUNDBILL b ON b.FID = a.FID
+        T_AR_REFUNDBILLENTRY t1
+        JOIN T_AR_REFUNDBILL t2 ON t2.FID = t1.FID
         WHERE
-        b.FDATE &lt;#{dateEnd}
-        and b.FCONTACTUNIT in
+        t2.FDATE &lt;#{dateEnd}
+        and t2.FCONTACTUNIT in
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
-        ) h
+        ) temp
         GROUP BY
-        h.customerId
+        temp.customerId
     </select>
 
-    <select id="findByPeriodForBillSum" resultType="CustomerReceiveDetailDto">
-        select t.customerId as customerId, t.customerName,t.billType,t.billNo,t.billDate,t.amount,t.billStatus
-        from (
-            SELECT
-            b.FCONTACTUNIT AS customerId,
-            e.FNAME AS customerName,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            a.FAMOUNT AS amount,
-            b.FDocumentStatus AS billStatus
-            FROM
-            T_AR_OTHERRECABLEENTRY a
-            JOIN T_AR_OTHERRECABLE b ON a.FID = b.FID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
-            LEFT JOIN T_BD_CUSTOMER_L e ON b.FCONTACTUNIT = e.FCUSTID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FCONTACTUNIT = #{customerId}
-        union all
-            SELECT
-            b.FCONTACTUNIT AS customerId,
-            e.FNAME AS customerName,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            a.FRECAMOUNT_E AS amount,
-            b.FDocumentStatus AS billStatus
-            FROM
-            T_AR_RECEIVEBILLENTRY a
-            JOIN T_AR_RECEIVEBILL b ON a.FID = b.FID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
-            LEFT JOIN T_BD_CUSTOMER_L e ON b.FCONTACTUNIT = e.FCUSTID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FCONTACTUNIT = #{customerId}
-        union all
-            SELECT
-            b.FCONTACTUNIT AS customerId,
-            e.FNAME AS customerName,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            a.FREALREFUNDAMOUNT AS amount,
-            b.FDocumentStatus AS billStatus
-            FROM
-            T_AR_REFUNDBILLENTRY a
-            JOIN T_AR_REFUNDBILL b ON b.FID = a.FID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
-            LEFT JOIN T_BD_CUSTOMER_L e ON b.FCONTACTUNIT = e.FCUSTID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FCONTACTUNIT = #{customerId}
-        union all
-            SELECT
-            b.FRETCUSTID AS customerId,
-            e.FNAME as customerName,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            sum(c.FAMOUNT) AS amount,
-            b.FDOCUMENTSTATUS AS billStatus
-            FROM
-            T_SAL_RETURNSTOCKENTRY a
-            JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-            JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
-            LEFT JOIN T_BD_CUSTOMER_L e ON b.FRETCUSTID = e.FCUSTID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FRETCUSTID = #{customerId} and
-            d.FNAME= '标准销售退货单'
-            group by
-            b.FRETCUSTID,
-            e.FNAME,
-            d.FNAME,
-            b.FBillNo,
-            b.FDATE,
-            b.FDOCUMENTSTATUS
-        union all
+    <select id="findMainList" resultType="CustomerReceiveDetailDto">SELECT
+        t.id,
+        t.customerId,
+        t.billType,
+        t.billNo,
+        t.date as billDate,
+        t.totalAmount,
+        t. STATUS as billStatus
+        FROM (
         SELECT
-            b.FCUSTOMERID AS customerId,
-            e.FNAME AS customerName,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            sum(c.FALLAMOUNT) AS amount,
-            b.FDOCUMENTSTATUS AS billStatus
-            FROM
-            T_SAL_OUTSTOCKENTRY a
-            JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
-            JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID
-            AND a.FENTRYID = c.FENTRYID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
-            LEFT JOIN T_BD_CUSTOMER_L e ON b.FCUSTOMERID = e.FCUSTID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FCUSTOMERID = #{customerId} and
-            d.FNAME= '标准销售出库单'
-            group by
-            b.FCUSTOMERID,
-            e.FNAME,
-            d.FNAME,
-            b.FBillNo,
-            b.FDATE,
-            b.FDOCUMENTSTATUS
-        union all
-            SELECT
-            b.FRETCUSTID AS customerId,
-            e.FNAME as customerName,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            sum(c.FAMOUNT) AS amount,
-            b.FDOCUMENTSTATUS AS billStatus
-            FROM
-            T_SAL_RETURNSTOCKENTRY a
-            JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-            JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
-            LEFT JOIN T_BD_CUSTOMER_L e ON b.FRETCUSTID = e.FCUSTID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FRETCUSTID = #{customerId} and
-            d.FNAME='现销退货单'
-            group by
-            b.FRETCUSTID,
-            e.FNAME,
-            d.FNAME,
-            b.FBillNo,
-            b.FDATE,
-            b.FDOCUMENTSTATUS
-        union all
+        t01.FID AS id,
+        t01.FCONTACTUNIT AS customerId,
+        t02.FNAME AS billType,
+        t01.FBillNo AS billNo,
+        t01.FDATE AS date,
+        t01.FAMOUNTFOR AS totalAmount,
+        t01.FDocumentStatus AS STATUS
+        FROM
+        T_AR_OTHERRECABLE t01,
+        T_BAS_BILLTYPE_L t02
+        WHERE
+        t01.FBILLTYPEID = t02.FBILLTYPEID
+        AND t01.FCONTACTUNIT IN 
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t01.FDATE >=#{dateStart}
+        AND t01.FDATE &lt;#{dateEnd}
+
+        UNION ALL
         SELECT
-            b.FCUSTOMERID AS customerId,
-            e.FNAME AS customerName,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            sum(c.FALLAMOUNT) AS amount,
-            b.FDOCUMENTSTATUS AS billStatus
-            FROM
-            T_SAL_OUTSTOCKENTRY a
-            JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
-            JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID
-            AND a.FENTRYID = c.FENTRYID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
-            LEFT JOIN T_BD_CUSTOMER_L e ON b.FCUSTOMERID = e.FCUSTID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FCUSTOMERID = #{customerId} and
-            d.FNAME='现销出库单'
-            group by
-            b.FCUSTOMERID,
-            e.FNAME,
-            d.FNAME,
-            b.FBillNo,
-            b.FDATE,
-            b.FDOCUMENTSTATUS
+        t11.FID AS id,
+        t11.FRETCUSTID AS customerId,
+        t12.FNAME AS billType,
+        t11.FBillNo AS billNo,
+        t11.FDATE AS date,
+        sum(t13.FAMOUNT) AS totalAmount,
+        t11.FDOCUMENTSTATUS AS STATUS
+        FROM
+        T_SAL_RETURNSTOCK t11,
+        T_BAS_BILLTYPE_L t12,
+        T_SAL_RETURNSTOCKENTRY_F t13
+        WHERE
+        t11.FID = t13.FID
+        AND t11.FBILLTYPEID = t12.FBILLTYPEID
+        AND t12.FNAME = '标准销售退货单'
+        AND t11.FRETCUSTID IN 
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t11.FDATE >=#{dateStart}
+        AND t11.FDATE &lt;#{dateEnd} GROUP BY t11.FID,
+        t11.FRETCUSTID,
+        t12.FNAME,
+        t11.FBillNo,
+        t11.FDATE,
+        t11.FDOCUMENTSTATUS
+
+        UNION ALL
+        SELECT
+        t21.FID AS id,
+        t21.FCONTACTUNIT AS customerId,
+        t22.FNAME AS billType,
+        t21.FBillNo AS billNo,
+        t21.FDATE AS date,
+        t21.FRECEIVEAMOUNTFOR AS totalAmount,
+        t21.FDocumentStatus AS STATUS
+        FROM
+        T_AR_RECEIVEBILL t21,
+        T_BAS_BILLTYPE_L t22
+        WHERE
+        t21.FBILLTYPEID = t22.FBILLTYPEID
+        AND t21.FCONTACTUNIT IN 
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t21.FDATE >=#{dateStart}
+        AND t21.FDATE &lt;#{dateEnd}
+
+         UNION ALL
+         SELECT
+         t31.FID AS id,
+        t31.FCONTACTUNIT AS customerId,
+        t32.FNAME AS billType,
+        t31.FBillNo AS billNo,
+        t31.FDATE AS date,
+        t31.FREALREFUNDAMOUNTFOR AS totalAmount,
+        t31.FDocumentStatus AS STATUS
+        FROM
+        T_AR_REFUNDBILL t31,
+        T_BAS_BILLTYPE_L t32
+        WHERE
+        t31.FBILLTYPEID = t32.FBILLTYPEID
+        AND t31.FCONTACTUNIT IN 
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t31.FDATE >=#{dateStart}
+        AND t31.FDATE &lt;#{dateEnd}
+
+         UNION ALL
+         SELECT
+         t41.FID AS id,
+        t41.FCUSTOMERID AS customerId,
+        t42.FNAME AS billType,
+        t41.FBillNo AS billNo,
+        t41.FDATE AS date,
+        sum(t43.FAMOUNT) AS totalAmount,
+        t41.FDOCUMENTSTATUS AS STATUS
+        FROM
+        T_SAL_OUTSTOCK t41,
+        T_BAS_BILLTYPE_L t42,
+        T_SAL_OUTSTOCKENTRY_F t43
+        WHERE
+        t41.FID = t43.FID
+        AND t41.FBILLTYPEID = t42.FBILLTYPEID
+        AND t42.FNAME = '标准销售出库单'
+        AND t41.FCUSTOMERID IN 
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t41.FDATE >=#{dateStart}
+        AND t41.FDATE &lt;#{dateEnd} GROUP BY  t41.FID,
+        t41.FCUSTOMERID,
+        t42.FNAME,
+        t41.FBillNo,
+        t41.FDATE,
+        t41.FDOCUMENTSTATUS
+        UNION ALL
+        SELECT
+        t51.FID AS id,
+        t51.FRETCUSTID AS customerId,
+        t52.FNAME AS billType,
+        t51.FBillNo AS billNo,
+        t51.FDATE AS date,
+        sum(t53.FAMOUNT) AS totalAmount,
+        t51.FDOCUMENTSTATUS AS STATUS
+        FROM
+        T_SAL_RETURNSTOCK t51,
+        T_BAS_BILLTYPE_L t52,
+        T_SAL_RETURNSTOCKENTRY_F t53
+        WHERE
+        t51.FID = t53.FID
+        AND t51.FBILLTYPEID = t52.FBILLTYPEID
+        AND t52.FNAME = '现销退货单'
+        AND t51.FRETCUSTID IN 
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t51.FDATE >=#{dateStart}
+        AND t51.FDATE &lt; #{dateEnd} GROUP BY t51.FID,
+        t51.FRETCUSTID,
+        t52.FNAME,
+        t51.FBillNo,
+        t51.FDATE,
+        t51.FDOCUMENTSTATUS
+        UNION ALL
+        SELECT
+        t61.FID AS id,
+        t61.FCUSTOMERID AS customerId,
+        t62.FNAME AS billType,
+        t61.FBillNo AS billNo,
+        t61.FDATE AS date,
+        sum(t63.FAMOUNT) AS totalAmount,
+        t61.FDOCUMENTSTATUS AS STATUS
+        FROM
+        T_SAL_OUTSTOCK t61,
+        T_BAS_BILLTYPE_L t62,
+        T_SAL_OUTSTOCKENTRY_F t63
+        WHERE
+        t61.FID = t63.FID
+        AND t61.FBILLTYPEID = t62.FBILLTYPEID
+        AND t62.FNAME = '现销出库单'
+        AND t61.FCUSTOMERID IN 
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t61.FDATE >=#{dateStart}
+        AND t61.FDATE &lt;#{dateEnd}  GROUP BY  t61.FID,
+        t61.FCUSTOMERID,
+        t62.FNAME,
+        t61.FBillNo,
+        t61.FDATE,
+        t61.FDOCUMENTSTATUS
         ) t
-        order by t.customerId, t.billDate, t.billNo
+        ORDER BY
+        t.customerId,
+        t.date,
+        t.billNo
     </select>
 
-    <select id="findByPeriodForMaterial" resultType="CustomerReceiveDetailDto">
-            SELECT
-            b.FRETCUSTID AS customerId,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            a.FMATERIALID as materialId,
-            f.fname as materialName,
-            a.FBASEUNITQTY AS qty,
-            c.FPRICE AS price,
-            c.FAMOUNT AS amount,
-            a.FNOTE AS note,
-            b.FDOCUMENTSTATUS AS billStatus
-            FROM
-            T_SAL_RETURNSTOCKENTRY a
-            JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-            JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
-            left JOIN T_BD_MATERIAL_L f ON a.FMATERIALID = f.FMATERIALID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FRETCUSTID = #{customerId} and
-            d.FNAME= '标准销售退货单'
-        union all
-            SELECT
-            b.FCUSTOMERID AS customerId,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            a.FMATERIALID AS materialId,
-            f.FNAME AS materialName,
-            a.FREALQTY AS qty,
-            c.FTAXPRICE AS price,
-            c.FALLAMOUNT AS amount,
-            a.FNOTE AS remarks,
-            b.FDOCUMENTSTATUS AS billStatus
-            FROM
-            T_SAL_OUTSTOCKENTRY a
-            JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
-            JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID
-            AND a.FENTRYID = c.FENTRYID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
-            LEFT JOIN T_BD_MATERIAL_L f ON a.FMATERIALID = f.FMATERIALID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FCUSTOMERID = #{customerId} and
-            d.FNAME= '标准销售出库单'
-        union all
-            SELECT
-            b.FRETCUSTID AS customerId,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            a.FMATERIALID as materialId,
-            f.fname as materialName,
-            a.FBASEUNITQTY AS qty,
-            c.FPRICE AS price,
-            c.FAMOUNT AS amount,
-            a.FNOTE AS note,
-            b.FDOCUMENTSTATUS AS billStatus
-            FROM
-            T_SAL_RETURNSTOCKENTRY a
-            JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
-            JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
-            left JOIN T_BD_MATERIAL_L f ON a.FMATERIALID = f.FMATERIALID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FRETCUSTID = #{customerId} and
-            d.FNAME='现销退货单'
-        union all
-            SELECT
-            b.FCUSTOMERID AS customerId,
-            d.FNAME AS billType,
-            b.FBillNo AS billNo,
-            b.FDATE AS billDate,
-            a.FMATERIALID AS materialId,
-            f.FNAME AS materialName,
-            a.FREALQTY AS qty,
-            c.FTAXPRICE AS price,
-            c.FALLAMOUNT AS amount,
-            a.FNOTE AS remarks,
-            b.FDOCUMENTSTATUS AS billStatus
-            FROM
-            T_SAL_OUTSTOCKENTRY a
-            JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
-            JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID
-            AND a.FENTRYID = c.FENTRYID
-            LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
-            LEFT JOIN T_BD_MATERIAL_L f ON a.FMATERIALID = f.FMATERIALID
-            WHERE
-            b.FDATE &gt;=#{dateStart} AND
-            b.FDATE  &lt;=#{dateEnd} and
-            b.FCUSTOMERID = #{customerId} and
-            d.FNAME='现销出库单'
+    <select id="findDetailList" resultType="CustomerReceiveDetailDto">
+        SELECT
+        t11.FID AS id,
+        t11.FBillNo AS billNo,
+        t11.FCUSTOMERID AS customerId,
+        t13.FNAME AS materialName,
+        t12.FREALQTY AS qty,
+        t14.FPRICE AS price,
+        t12.FNOTE AS remarks
+        FROM
+        T_SAL_OUTSTOCK t11,
+        T_SAL_OUTSTOCKENTRY t12,
+        T_BD_MATERIAL_L t13,
+        T_SAL_OUTSTOCKENTRY_F t14
+        WHERE
+        t11.FID = t12.FID
+        AND t12.FENTRYID = t14.FENTRYID
+        AND t12.FMATERIALID = t13.FMATERIALID
+        AND t11.FCUSTOMERID IN 
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t11.FDATE >#{dateStart}
+        AND t11.FDATE &lt;#{dateEnd}
+                         UNION ALL
+                         SELECT
+                         t21.FID AS id,
+        t21.FBillNo AS billNo,
+        t21.FRETCUSTID AS customerId,
+        t23.FNAME AS materialName,
+        t22.FREALQTY AS qty,
+        t24.FPRICE AS price,
+        t22.FNOTE AS remarks
+        FROM
+        T_SAL_RETURNSTOCK t21,
+        T_SAL_RETURNSTOCKENTRY t22,
+        T_BD_MATERIAL_L t23,
+        T_SAL_RETURNSTOCKENTRY_F t24
+        WHERE
+        t21.FID = t22.FID
+        AND t22.FENTRYID = t24.FENTRYID
+        AND t22.FMATERIALID = t23.FMATERIALID
+        AND t21.FRETCUSTID IN 
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t21.FDATE >=#{dateStart}
+        AND t21.FDATE &lt;#{dateEnd}
     </select>
+
+    <select id="findRemarks" resultType="net.myspring.common.dto.NameValueDto">
+        SELECT
+        t1.FBILLNO AS name,
+        t2.FCOMMENT AS value
+        FROM
+        T_AR_OTHERRECABLE t1,
+        T_AR_OTHERRECABLEENTRY t2
+        WHERE
+        t1.FID = t2.FID
+        AND t1.FCONTACTUNIT IN
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t1.FDATE  >#{dateStart}
+        AND t1.FDATE &lt;#{dateEnd}
+                        UNION ALL
+        SELECT
+        t3.FBILLNO AS name,
+        t4.FCOMMENT AS value
+        FROM
+        T_AR_RECEIVEBILL t3,
+        T_AR_RECEIVEBILLENTRY t4
+        WHERE
+        t3.FID = t4.FID
+        AND t3.FCONTACTUNIT  IN
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t3.FDATE  >#{dateStart}
+        AND t3.FDATE &lt;#{dateEnd}
+                        UNION ALL
+        SELECT
+        t5.FBILLNO AS name,
+        t6.FNOTE AS value
+        FROM
+        T_AR_REFUNDBILL t5,
+        T_AR_REFUNDBILLENTRY t6
+        WHERE
+        t5.FID = t6.FID
+        AND t5.FCONTACTUNIT IN
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t5.FDATE  >#{dateStart}
+        AND t5.FDATE &lt;#{dateEnd}
+    </select>
+
 
 </mapper>

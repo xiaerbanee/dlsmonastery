@@ -95,7 +95,7 @@
            }
         }
        this.inputForm.data = JSON.stringify(this.inputForm.data);
-       axios.post('/api/crm/adPricesystemChange/save',qs.stringify({data:this.inputForm.data},{allowDots:true})).then((response)=> {
+       axios.post('/api/ws/future/layout/adPricesystemChange/save',qs.stringify({data:this.inputForm.data},{allowDots:true})).then((response)=> {
           this.$message(response.data.message);
           this.submitDisabled = false;
         }).catch(function () {
@@ -105,7 +105,7 @@
         this.formVisible = false;
         this.getData();
       },getData(){
-        axios.get('/api/crm/adPricesystemChange/findFilter',{params:this.formData}).then((response)=>{
+        axios.get('/api/ws/future/layout/adPricesystemChange/findFilter',{params:this.formData}).then((response)=>{
           this.settings.data = response.data;
           this.table.loadData(this.settings.data);
         })
@@ -116,7 +116,7 @@
   }
 </script>
 <style>
-  @import "~handsontable/dist/handsontable.full.css";
+
 </style>
 
 

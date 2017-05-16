@@ -1117,7 +1117,8 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "ubah"
+    audit: "ubah",
+    upload:"meng-upload",
   },
   priceChangeList: {
     priceChangeList: "调价项目",

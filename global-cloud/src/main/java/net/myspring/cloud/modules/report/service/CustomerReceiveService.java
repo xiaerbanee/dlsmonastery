@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.report.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import net.myspring.cloud.common.enums.CustomerReceiveEnum;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.mapper.*;
@@ -11,6 +12,7 @@ import net.myspring.cloud.modules.report.mapper.CustomerReceiveMapper;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.dto.NameValueDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by liuj on 2017/5/11.
@@ -31,225 +31,174 @@ public class CustomerReceiveService {
     @Autowired
     private CustomerReceiveMapper customerReceiveMapper;
     @Autowired
-    private ArOtherRecableMapper arOtherRecableMapper;
-    @Autowired
-    private ArReceiveBillMapper arReceiveBillMapper;
-    @Autowired
-    private ArRefundBillMapper arRefundBillMapper;
-    @Autowired
-    private SalOutStockMapper salOutStockMapper;
-    @Autowired
-    private SalReturnStockMapper salReturnStockMapper;
-    @Autowired
     private BdCustomerMapper bdCustomerMapper;
 
     public List<CustomerReceiveDto>  findCustomerReceiveDtoList(CustomerReceiveQuery customerReceiveQuery) {
         LocalDate dateStart = customerReceiveQuery.getDateStart();
         LocalDate dateEnd = customerReceiveQuery.getDateEnd();
-        HashSet<String> customerIdSet = new HashSet<String>();
-        if (customerReceiveQuery.getCustomerIdList() != null){
-            customerIdSet.addAll(customerReceiveQuery.getCustomerIdList());
-        }
-        if (StringUtils.isNotBlank(customerReceiveQuery.getCustomerGroup())){
-           List<BdCustomer> customerList =  bdCustomerMapper.findByPrimaryGroup(customerReceiveQuery.getCustomerGroup());
-           customerIdSet.addAll(CollectionUtil.extractToList(customerList,"FCustId"));
-        }
-        if (customerIdSet.isEmpty()) {
-            BdCustomer bdCustomer = bdCustomerMapper.findTopOne();
-            List<BdCustomer> customerList =  bdCustomerMapper.findByPrimaryGroup(bdCustomer.getFPrimaryGroup());
-            customerIdSet.addAll(CollectionUtil.extractToList(customerList,"FCustId"));
-        }
-        List<CustomerReceiveDto> tempList = Lists.newLinkedList();
-        List<CustomerReceiveDto> dataForStartDate = customerReceiveMapper.findByEndDateAndIn(dateStart,customerIdSet);
-        List<CustomerReceiveDto> dataForEndDate = customerReceiveMapper.findByEndDateAndIn(dateEnd.plusDays(1),customerIdSet);
+        List<CustomerReceiveDto> beginList = customerReceiveMapper.findEndShouldGet(dateStart,customerReceiveQuery.getCustomerIdList());
+        List<CustomerReceiveDto> endList = customerReceiveMapper.findEndShouldGet(dateEnd,customerReceiveQuery.getCustomerIdList());
         //期初结余
-        Map<String,BigDecimal> dateStartMap = Maps.newHashMap();
-        for(CustomerReceiveDto startItem : dataForStartDate){
-            String key1 = startItem.getCustomerId();
-            dateStartMap.put(key1,startItem.getBeginShouldGet());
-        }
+        Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //期末结余
-        for(CustomerReceiveDto endItem : dataForEndDate){
-            CustomerReceiveDto summaryModel = new CustomerReceiveDto();
-            summaryModel.setCustomerId(endItem.getCustomerId());
-            summaryModel.setEndShouldGet(endItem.getBeginShouldGet());
-            String key2 = endItem.getCustomerId();
-            if(dateStartMap.containsKey(key2)){
-                summaryModel.setBeginShouldGet(dateStartMap.get(key2));
-            }else{
-                summaryModel.setBeginShouldGet(BigDecimal.ZERO);
+        Map<String,BigDecimal> endMap = endList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
+        List<String> customerIdList = Lists.newArrayList();
+        for(CustomerReceiveDto customerReceiveDto:beginList) {
+            if(!customerIdList.contains(customerReceiveDto.getCustomerId())) {
+                customerIdList.add(customerReceiveDto.getCustomerId());
             }
-            tempList.add(summaryModel);
         }
-        List<CustomerReceiveDto> QTYSDListForPeriodList = arOtherRecableMapper.findByPeriodForSum(dateStart, dateEnd,customerIdSet);
-        List<CustomerReceiveDto> XSTHDListForPeriodList = salReturnStockMapper.findXSTHDByPeriodForSum(dateStart, dateEnd,customerIdSet);
-        List<CustomerReceiveDto> XSCKDListForPeriodList = salOutStockMapper.findXSCKDByPeriodForSum(dateStart, dateEnd,customerIdSet);
-        List<CustomerReceiveDto> SKDForPeriodList = arReceiveBillMapper.findByPeriodForSum(dateStart, dateEnd,customerIdSet);
-        List<CustomerReceiveDto> SKTKDForPeriodList = arRefundBillMapper.findByPeriodForSum(dateStart, dateEnd,customerIdSet);
-        for(CustomerReceiveDto item : tempList) {
-            String key = item.getCustomerId();
-            BigDecimal QTYSDAmount = BigDecimal.ZERO;
-            BigDecimal XSTHDAmount = BigDecimal.ZERO;
-            BigDecimal XSCKDAmount = BigDecimal.ZERO;
-            BigDecimal SKDAmount = BigDecimal.ZERO;
-            BigDecimal SKTKDAmount = BigDecimal.ZERO;
-            for (CustomerReceiveDto itemFor : QTYSDListForPeriodList) {
-                String keyFor = itemFor.getCustomerId();
-                if (key.equals(keyFor)) {
-                    QTYSDAmount = itemFor.getBeginShouldGet();
-                }
+        for(CustomerReceiveDto customerReceiveDto:endList) {
+            if(!customerIdList.contains(customerReceiveDto.getCustomerId())) {
+                customerIdList.add(customerReceiveDto.getCustomerId());
             }
-            for (CustomerReceiveDto itemFor : XSTHDListForPeriodList) {
-                String keyFor = itemFor.getCustomerId();
-                if (key.equals(keyFor)) {
-                    XSTHDAmount = itemFor.getBeginShouldGet();
-                }
-            }
-            for (CustomerReceiveDto itemFor : XSCKDListForPeriodList) {
-                String keyFor = itemFor.getCustomerId();
-                if (key.equals(keyFor)) {
-                    XSCKDAmount = itemFor.getBeginShouldGet();
-                }
-            }
-            for (CustomerReceiveDto itemFor : SKDForPeriodList) {
-                String keyFor = itemFor.getCustomerId();
-                if (key.equals(keyFor)) {
-                    SKDAmount = itemFor.getBeginShouldGet();
-                }
-            }
-            for (CustomerReceiveDto itemFor : SKTKDForPeriodList) {
-                String keyFor = itemFor.getCustomerId();
-                if (key.equals(keyFor)) {
-                    SKTKDAmount = itemFor.getBeginShouldGet();
-                }
-            }
-            //应收
-            item.setRealGet(QTYSDAmount.add(XSCKDAmount.subtract(XSTHDAmount)));
-            //实收
-            item.setShouldGet(SKDAmount.subtract(SKTKDAmount));
         }
-        List<String> customerIdList = CollectionUtil.extractToList(tempList,"customerId");
         List<BdCustomer> customerList =  bdCustomerMapper.findByIdList(customerIdList);
-        for (CustomerReceiveDto summary : tempList){
-            for(BdCustomer customer : customerList){
-                if(summary.getCustomerId().equals(customer.getFCustId())) {
-                    summary.setCustomerName(customer.getFName());
-                    summary.setCustomerGroupName(customer.getFPrimaryGroupName());
-                }
-            }
-            if (customerReceiveQuery.getQueryDetail()){
-                CustomerReceiveDetailQuery query = new CustomerReceiveDetailQuery();
-                query.setDateStart(dateStart);
-                query.setDateEnd(dateEnd);
-                query.setCustomerId(summary.getCustomerId());
-                summary.setCustomerReceiveDetailDtoList(findCustomerReceiveDetailDtoList(query));
+        List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
+        for(BdCustomer bdCustomer:customerList) {
+            CustomerReceiveDto customerReceiveDto = new CustomerReceiveDto();
+            customerReceiveDto.setBeginShouldGet(beginMap.get(bdCustomer.getFCustId()));
+            customerReceiveDto.setEndShouldGet(endMap.get(bdCustomer.getFCustId()));
+            customerReceiveDto.setCustomerName(bdCustomer.getFName());
+            customerReceiveDto.setCustomerGroupName(bdCustomer.getFPrimaryGroupName());
+        }
+        if(customerReceiveQuery.getQueryDetail()) {
+            CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
+            customerReceiveDetailQuery.setCustomerIdList(customerIdList);
+            customerReceiveDetailQuery.setDateRange(customerReceiveQuery.getDateRange());
+            Map<String,List<CustomerReceiveDetailDto>> customerReceiveDetailMap =findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
+            for(CustomerReceiveDto customerReceiveDto:customerReceiveDtoList) {
+                customerReceiveDto.setCustomerReceiveDetailDtoList(customerReceiveDetailMap.get(customerReceiveDto.getCustomerId()));
             }
         }
-        return tempList;
+        return customerReceiveDtoList;
     }
 
-    public List<CustomerReceiveDetailDto>  findCustomerReceiveDetailDtoList(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
+    public List<CustomerReceiveDetailDto> findCustomerReceiveDetailDtoList(String dateRange,String customerId) {
+        CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
+        customerReceiveDetailQuery.setDateRange(dateRange);
+        customerReceiveDetailQuery.getCustomerIdList().add(customerId);
+        Map<String,List<CustomerReceiveDetailDto>> map = findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
+        return map.get(customerId);
+    }
+
+    public Map<String,List<CustomerReceiveDetailDto>>  findCustomerReceiveDetailDtoMap(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
         LocalDate dateStart = customerReceiveDetailQuery.getDateStart();
-        LocalDate dateEnd = customerReceiveDetailQuery.getDateEnd();
-        String customerId = customerReceiveDetailQuery.getCustomerId();
-        List<CustomerReceiveDetailDto> dataList = Lists.newArrayList();
-        HashSet<String> customerSet = new HashSet<String>();
-        customerSet.add(customerId);
-        List<CustomerReceiveDto> summaryItemList = customerReceiveMapper.findByEndDateAndIn(dateStart,customerSet);
-        CustomerReceiveDto summaryItem = new CustomerReceiveDto();
-        summaryItem.setCustomerId(customerId);
-        summaryItem.setCustomerName(bdCustomerMapper.findById(customerId).getFName());
-        summaryItem.setBeginShouldGet(BigDecimal.ZERO);
-        for(CustomerReceiveDto item : summaryItemList){
-            if(item.getCustomerId() != null){
-                summaryItem.setBeginShouldGet(item.getBeginShouldGet());
+        //期初应收
+        List<CustomerReceiveDto> beginList = customerReceiveMapper.findEndShouldGet(dateStart,customerReceiveDetailQuery.getCustomerIdList());
+        Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
+        //主单据列表(其他应收,销售出库 销售退货，收款，退款)
+        List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveMapper.findMainList(customerReceiveDetailQuery);
+        //查找备注
+        List<NameValueDto> remarksList = customerReceiveMapper.findRemarks(customerReceiveDetailQuery);
+        Map<String,String> remarksMap = remarksList.stream().collect(Collectors.toMap(NameValueDto::getName,NameValueDto::getValue));
+        for (CustomerReceiveDetailDto customerReceiveDetailDto: customerReceiveDetailDtoMainList) {
+            if (remarksMap.containsKey(customerReceiveDetailDto.getBillNo())) {
+                customerReceiveDetailDto.setRemarks(remarksMap.get(customerReceiveDetailDto.getBillNo()));
             }
         }
-        List<CustomerReceiveDetailDto> detailForBillList = customerReceiveMapper.findByPeriodForBillSum(dateStart, dateEnd,customerId);
-        //物料详细
-        List<CustomerReceiveDetailDto> detailForMaterialList = customerReceiveMapper.findByPeriodForMaterial(dateStart, dateEnd,customerId);
-        Map<String,List<CustomerReceiveDetailDto>> detailForMaterialMap = Maps.newHashMap();
-        if (CollectionUtil.isNotEmpty(detailForMaterialList)) {
-            for (CustomerReceiveDetailDto customerAccount : detailForMaterialList) {
-                if (!detailForMaterialMap.containsKey(customerAccount.getBillNo())) {
-                    detailForMaterialMap.put(customerAccount.getBillNo(), new ArrayList<CustomerReceiveDetailDto>());
+        //根据customerId组织成map
+        Map<String, List<CustomerReceiveDetailDto>> mainMap = Maps.newHashMap();
+        if (CollectionUtil.isNotEmpty(customerReceiveDetailDtoMainList)) {
+            for (CustomerReceiveDetailDto customerReceiveDetailDto: customerReceiveDetailDtoMainList) {
+                if (!mainMap.containsKey(customerReceiveDetailDto.getCustomerId())) {
+                    mainMap.put(customerReceiveDetailDto.getCustomerId(), new ArrayList<>());
                 }
-                detailForMaterialMap.get(customerAccount.getBillNo()).add(customerAccount);
+                mainMap.get(customerReceiveDetailDto.getCustomerId()).add(customerReceiveDetailDto);
             }
         }
-        CustomerReceiveDetailDto head = new CustomerReceiveDetailDto();
-        head.setBillType(summaryItem.getCustomerName());
-        head.setIndex(-2);
-        dataList.add(head);
+        //单据明细(根据billNo组织成map)
+        List<CustomerReceiveDetailDto> customerReceiveDetailDtoDetailList = customerReceiveMapper.findDetailList(customerReceiveDetailQuery);
+        Map<String, List<CustomerReceiveDetailDto>> detailMap =Maps.newHashMap();
+        if (CollectionUtil.isNotEmpty(customerReceiveDetailDtoDetailList)) {
+            for (CustomerReceiveDetailDto customerReceiveDetailDto: customerReceiveDetailDtoDetailList) {
+                if (!detailMap.containsKey(customerReceiveDetailDto.getBillNo())) {
+                    detailMap.put(customerReceiveDetailDto.getBillNo(), new ArrayList<>());
+                }
+                detailMap.get(customerReceiveDetailDto.getBillNo()).add(customerReceiveDetailDto);
+            }
+        }
+        //所有客户
+        List<BdCustomer> bdCustomerList = bdCustomerMapper.findByIdList(customerReceiveDetailQuery.getCustomerIdList());
+        Map<String,BdCustomer> bdCustomerMap = bdCustomerList.stream().collect(Collectors.toMap(BdCustomer::getFCustId,bdCustomer -> bdCustomer));
+        Map<String,List<CustomerReceiveDetailDto>> result = Maps.newHashMap();
+        if (mainMap.size()>0) {
+            for(String customerId:mainMap.keySet()) {
+                if(!result.containsKey(customerId)) {
+                    result.put(customerId,Lists.newArrayList());
+                }
+                int index = 0;
+                List<CustomerReceiveDetailDto> list = result.get(customerId);
+                BigDecimal endShouldGet = beginMap.get(customerId);
+                List<CustomerReceiveDetailDto> mainList = mainMap.get(customerId);
 
-        CustomerReceiveDetailDto beginAmount = new CustomerReceiveDetailDto();
-        beginAmount.setBillType("期初应收");
-        beginAmount.setEndShouldGet(summaryItem.getBeginShouldGet());
-        beginAmount.setIndex(-1);
-        dataList.add(beginAmount);
-        BigDecimal endShouldGet = summaryItem.getBeginShouldGet();
-        for(int i = 0 ;i<detailForBillList.size();i++){
-            CustomerReceiveDetailDto billSum = detailForBillList.get(i);
-            CustomerReceiveDetailDto receivableDetail = new CustomerReceiveDetailDto();
-            receivableDetail.setIndex(i);
-            receivableDetail.setBillType(billSum.getBillType());
-            receivableDetail.setBillDate(billSum.getBillDate());
-            receivableDetail.setBillNo(billSum.getBillNo());
-            receivableDetail.setRemarks(billSum.getRemarks());
-            if(!"C".equals(billSum.getBillStatus())){
-                receivableDetail.setIndex(-3);
-            }
-            //实收
-            if(billSum.getBillType().equals(CustomerReceiveEnum.销售收款单.name())){
-                receivableDetail.setShouldGet(billSum.getAmount());
-                endShouldGet = endShouldGet.subtract(receivableDetail.getRealGet());
-                receivableDetail.setEndShouldGet(endShouldGet);
-                dataList.add(receivableDetail);
-            }else if(billSum.getBillType().equals(CustomerReceiveEnum.销售业务退款单.name())){
-                receivableDetail.setShouldGet(BigDecimal.ZERO.subtract(billSum.getAmount()));
-                endShouldGet = endShouldGet.subtract(receivableDetail.getRealGet());
-                receivableDetail.setEndShouldGet(endShouldGet);
-                dataList.add(receivableDetail);
-                //不计入期末期初
-            }else if(billSum.getBillType().equals(CustomerReceiveEnum.现销退货单.name())) {
-                receivableDetail.setShouldGet(BigDecimal.ZERO.subtract(billSum.getAmount()));
-                receivableDetail.setEndShouldGet(endShouldGet.add(receivableDetail.getShouldGet()));
-                dataList.add(receivableDetail);
-            }else if(billSum.getBillType().equals(CustomerReceiveEnum.现销出库单.name())){
-                receivableDetail.setShouldGet(billSum.getAmount());
-                receivableDetail.setEndShouldGet(endShouldGet.add(receivableDetail.getShouldGet()));
-                dataList.add(receivableDetail);
-                //应收
-            }else if(billSum.getBillType().equals(CustomerReceiveEnum.标准销售退货单.name())) {
-                receivableDetail.setShouldGet(BigDecimal.ZERO.subtract(billSum.getAmount()));
-                endShouldGet = endShouldGet.add(receivableDetail.getShouldGet());
-                receivableDetail.setEndShouldGet(endShouldGet);
-                dataList.add(receivableDetail);
-            }else{
-                receivableDetail.setShouldGet(billSum.getAmount());
-                endShouldGet = endShouldGet.add(receivableDetail.getShouldGet());
-                receivableDetail.setEndShouldGet(endShouldGet);
-                dataList.add(receivableDetail);
-            }
-            if (detailForMaterialMap.containsKey(billSum.getBillNo())) {
-                for (CustomerReceiveDetailDto billMaterial : detailForMaterialMap.get(billSum.getBillNo())) {
-                    if (billMaterial.getBillNo().contains("XSTHD")) {
-                        billMaterial.setQty(0L - billMaterial.getQty());
-                    } else if (billMaterial.getQty() != null) {
-                        billMaterial.setQty(billMaterial.getQty());
+                CustomerReceiveDetailDto customerReceiveDetailDto= new CustomerReceiveDetailDto();
+                customerReceiveDetailDto.setBillType(bdCustomerMap.get(customerId).getFName());
+                customerReceiveDetailDto.setBillNo("客户编码：" + customerId);
+                customerReceiveDetailDto.setIndex(index++);
+                list.add(customerReceiveDetailDto);
+
+                customerReceiveDetailDto = new CustomerReceiveDetailDto();
+                customerReceiveDetailDto.setBillType("期初应收");
+                customerReceiveDetailDto.setEndShouldGet(endShouldGet);
+                customerReceiveDetailDto.setIndex(index++);
+                list.add(customerReceiveDetailDto);
+
+                BigDecimal totalShouldGet = BigDecimal.ZERO;
+                for (int i = 0; i < mainList.size(); i++) {
+                    customerReceiveDetailDto.setIndex(index++);
+                    CustomerReceiveDetailDto main = mainList.get(i);
+                    customerReceiveDetailDto = new CustomerReceiveDetailDto();
+                    customerReceiveDetailDto.setBillStatus(main.getBillStatus());
+                    customerReceiveDetailDto.setBillType(main.getBillType());
+                    customerReceiveDetailDto.setBillDate(main.getBillDate());
+                    customerReceiveDetailDto.setBillNo(main.getBillNo());
+                    customerReceiveDetailDto.setRemarks(main.getRemarks());
+
+                    if (main.getBillType().contains("收款单")) {
+                        main.setRealGet(main.getTotalAmount());
+                        endShouldGet = endShouldGet.subtract(main.getRealGet());
+                        customerReceiveDetailDto.setRealGet(main.getRealGet());
+                        customerReceiveDetailDto.setEndShouldGet(endShouldGet);
+                        list.add(customerReceiveDetailDto);
+                    } else if(main.getBillType().contains("现销")){
+                        main.setShouldGet(main.getTotalAmount());
+                        main.setRealGet(main.getTotalAmount());
+                        customerReceiveDetailDto.setRealGet(main.getRealGet());
+                        customerReceiveDetailDto.setShouldGet(main.getShouldGet());
+                        list.add(customerReceiveDetailDto);
+                    } else {
+                        if(main.getBillType().contains("销售退货")){
+                            main.setShouldGet(main.getTotalAmount().multiply(new BigDecimal(-1)));
+                        }else{
+                            main.setShouldGet(main.getTotalAmount());
+                        }
+                        endShouldGet = endShouldGet.add(main.getShouldGet());
+                        customerReceiveDetailDto.setShouldGet(main.getShouldGet());
+                        customerReceiveDetailDto.setEndShouldGet(endShouldGet);
+                        list.add(customerReceiveDetailDto);
                     }
-                    billMaterial.setBillType(CharConstant.EMPTY);
-                    billMaterial.setIndex(i);
-                    dataList.add(billMaterial);
+                    if (detailMap.containsKey(main.getBillNo())) {
+                        for (CustomerReceiveDetailDto detail : detailMap.get(main.getBillNo())) {
+                            detail.setIndex(index);
+                            detail.setMain(false);
+                            if(main.getBillType().contains("销售退货")){
+                                detail.setQty(0L-detail.getQty());
+                            }
+                            list.add(detail);
+                        }
+                    }
+                    if (main.getShouldGet() != null) {
+                        totalShouldGet = totalShouldGet.add(main.getShouldGet());
+                    }
                 }
+                customerReceiveDetailDto = new CustomerReceiveDetailDto();
+                customerReceiveDetailDto.setShouldGet(totalShouldGet);
+                customerReceiveDetailDto.setBillType("期末应收");
+                customerReceiveDetailDto.setEndShouldGet(endShouldGet);
+                list.add(customerReceiveDetailDto);
             }
         }
-        CustomerReceiveDetailDto endAmount = new CustomerReceiveDetailDto();
-        endAmount.setBillType("期末应收");
-        endAmount.setEndShouldGet(endShouldGet);
-        endAmount.setIndex(-1);
-        dataList.add(endAmount);
-        return dataList;
+        return result;
     }
-
 }

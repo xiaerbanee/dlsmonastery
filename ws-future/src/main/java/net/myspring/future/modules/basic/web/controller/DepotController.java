@@ -40,14 +40,14 @@ public class DepotController {
         return depotService.findShopList(depotQuery);
     }
 
-    //广告门店（物料订单）
+    //物料订单门店
     @RequestMapping(value = "adShop")
     public List<DepotDto>  adShop(DepotQuery depotQuery) {
         depotQuery.setAdShop(true);
         return depotService.findShopList(depotQuery);
     }
 
-    //广告门店（POP申请）
+    //POP门店
     @RequestMapping(value = "popShop")
     public List<DepotDto>  popShop(DepotQuery depotQuery) {
         depotQuery.setPopShop(true);

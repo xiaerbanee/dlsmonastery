@@ -1,4 +1,4 @@
-package net.myspring.cloud.modules.kingdee.web;
+package net.myspring.cloud.modules.kingdee.web.controller;
 
 import net.myspring.cloud.modules.kingdee.domain.BdStock;
 import net.myspring.cloud.modules.kingdee.service.BdStockService;
@@ -17,8 +17,8 @@ public class BdStockController {
     @Autowired
     private BdStockService bdStockService;
 
-    @RequestMapping(value = "getByNameLike")
-    public List<BdStock> getByNameLike(String name){
-        return bdStockService.getByNameLike(name);
+    @RequestMapping(value = "findByNameLike")
+    public List<BdStock> findByNameLike(String name){
+        return bdStockService.findByNameLike(name);
     }
 }

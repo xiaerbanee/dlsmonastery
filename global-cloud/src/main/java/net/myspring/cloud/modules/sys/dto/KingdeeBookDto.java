@@ -12,8 +12,6 @@ public class KingdeeBookDto extends DataDto<KingdeeBook> {
     private String type;
     private String kingdeeUrl;
     private String kingdeePostUrl;
-    private String kingdeeUsername;
-    private String kingdeePassword;
     private String kingdeeDbid;
     private Integer version;
 
@@ -55,22 +53,6 @@ public class KingdeeBookDto extends DataDto<KingdeeBook> {
 
     public void setKingdeePostUrl(String kingdeePostUrl) {
         this.kingdeePostUrl = kingdeePostUrl;
-    }
-
-    public String getKingdeeUsername() {
-        return kingdeeUsername;
-    }
-
-    public void setKingdeeUsername(String kingdeeUsername) {
-        this.kingdeeUsername = kingdeeUsername;
-    }
-
-    public String getKingdeePassword() {
-        return kingdeePassword;
-    }
-
-    public void setKingdeePassword(String kingdeePassword) {
-        this.kingdeePassword = kingdeePassword;
     }
 
     public String getKingdeeDbid() {

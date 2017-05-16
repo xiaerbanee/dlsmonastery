@@ -474,6 +474,9 @@ export default {
     scenePhoto: "gambar",
     confirmPhoto: "konfirmasi gambar",
     pass:"pass",
+    passRemarks:"persetujuan memo",
+    inputRemarks:'masukkan catatan persetujuan',
+    save:"simpan",
   },
   shopBuildForm: {
     shopBuildForm: "Mengedit konstruksi toko",

@@ -1,7 +1,11 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.service.DepotShopService;
+import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +30,9 @@ public class DepotShopController {
         return page;
     }
 
-
-
-
+    @RequestMapping(value = "save")
+    public RestResponse list(DepotShopForm depotShopForm){
+        depotShopService.save(depotShopForm);
+        return new RestResponse("保存成功",null);
+    }
 }

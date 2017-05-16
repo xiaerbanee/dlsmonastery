@@ -8,6 +8,11 @@ import java.util.Date;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveDetailDto {
+    private Boolean main = true;
+    //订单编号
+    private String id;
+    //客户ID
+    private String customerId;
     //业务类型
     private String billType;
     //单据号
@@ -26,15 +31,40 @@ public class CustomerReceiveDetailDto {
     private BigDecimal price;
     //金额
     private BigDecimal amount;
+    //总金额
+    private BigDecimal totalAmount;
     //应收金额
     private BigDecimal shouldGet;
-    //实收金额
+    //实收金额(预收)
     private BigDecimal realGet;
     //期末应收款
     private BigDecimal endShouldGet;
     //备注
     private String remarks;
 
+    public Boolean getMain() {
+        return main;
+    }
+
+    public void setMain(Boolean main) {
+        this.main = main;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
 
     public String getBillType() {
         return billType;
@@ -138,5 +168,13 @@ public class CustomerReceiveDetailDto {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

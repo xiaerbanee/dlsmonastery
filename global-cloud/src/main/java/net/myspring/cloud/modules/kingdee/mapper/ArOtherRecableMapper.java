@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 其他应收单
@@ -14,6 +15,4 @@ import java.util.List;
  */
 @Mapper
 public interface ArOtherRecableMapper {
-
-    List<CustomerReceiveDto> findByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList")HashSet<String> customerIdList);
 }
