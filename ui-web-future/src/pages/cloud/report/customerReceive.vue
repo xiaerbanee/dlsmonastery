@@ -92,6 +92,8 @@
           customerList:[],
         },
         submitData: {
+          page:0,
+          size:25,
           dateRange: '',
           customerGroup:'',
           customerIdList:[],
@@ -116,14 +118,29 @@
     },
     methods: {
       pageRequest() {
-          var that = this;
+        var that = this;
         that.pageLoading = true;
         util.getQuery("customerReceive");
         util.setQuery("customerReceive",that.formData);
-        this.formData.dateRange = util.formatDateRange(this.formData.dateRange);
+        that.formData.dateRange = util.formatDateRange(that.formData.dateRange);
         util.copyValue(that.formData,that.submitData);
-        axios.get('/api/global/cloud/report/customerReceive/list',{params:that.submitData}).then((response) => {
-          this.summary = response.data;
+        axios.get('/api/global/cloud/input/bdCustomer',{params:that.submitData}).then((response) => {
+            let customers = response.data;
+            for (let item in customers){
+              that.submitData.customerIdList.push(customers[item].fcustId);
+            }
+            if(that.submitData.customerIdList !== ''){
+              axios.get('/api/global/cloud/report/customerReceive/list',{params:that.submitData}).then((response) => {
+                let shouldGetList = response.data;
+                for (let shouldGet in shouldGetList){
+                    for(let customer in customers){
+                        if (shouldGet.customerId === customer.customerId){
+                            this.summary.push()
+                        }
+                    }
+                }
+              });
+            }
           this.pageLoading = false;
         })
       },search() {
