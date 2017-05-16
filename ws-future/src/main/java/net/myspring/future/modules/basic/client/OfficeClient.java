@@ -20,7 +20,7 @@ public interface OfficeClient {
     @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findByOfficeRuleName")
     List<OfficeDto> findByOfficeRuleName(@RequestParam(value = "officeRuleName")String officeRuleName);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getOfficeOfSameArea")
-    List<String> getOfficeOfSameArea(@RequestParam(value = "officeId") String officeId);
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getOfficeIdsOfSameArea")
+    List<String> getOfficeIdsOfSameArea(@RequestParam(value = "officeId") String officeId);
 
 }
