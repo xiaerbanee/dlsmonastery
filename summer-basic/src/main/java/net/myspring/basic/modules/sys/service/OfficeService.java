@@ -87,6 +87,11 @@ public class OfficeService {
         return officeDto;
     }
 
+    public List<String> getSameAreaByOfficeId(String officeId){
+        List<Office> sameAreaByOfficeId = officeMapper.findSameAreaByOfficeId(officeId);
+        return CollectionUtil.extractToList(sameAreaByOfficeId,"id");
+    }
+
     public OfficeForm findForm(OfficeForm officeForm) {
         if (!officeForm.isCreate()) {
             Office office = officeMapper.findOne(officeForm.getId());

@@ -107,7 +107,7 @@ public class GoodsOrderDetailService {
         godq.setPricesystemId(pricesystemId);
         godq.setGoodsOrderId(goodsOrderId);
         godq.setNetType(netType);
-        godq.setOfficeIdList(officeClient.getOfficeIdsOfSameArea(officeId));
+        godq.setOfficeIdList(officeClient.getSameAreaByOfficeId(officeId));
 //        godq.setAreaId(areaId);
         godq.setCompanyId(RequestUtils.getCompanyId());
 

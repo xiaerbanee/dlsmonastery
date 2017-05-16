@@ -122,6 +122,21 @@
         and t1.office_rule_id=#{officeRuleId}
     </select>
 
+    <select id="findSameAreaByOfficeId" resultType="Office">
+        SELECT t1.*
+        FROM sys_office t1
+        WHERE t1.enabled=1
+        and t1.area_id  = (
+            SELECT
+            t2.area_id
+            FROM
+            sys_officet2
+            WHERE
+            t2.id = #{officeId}
+         )
+    </select>
+
+
     <sql id="officeFilter">
         <if test="p.officeIds !=null and p.officeIds.size() !=0">
             and office.id IN
