@@ -12,20 +12,73 @@ public class GoodsOrderForm extends DataForm<GoodsOrder> {
     private String netType;
     private String businessId;
     private String shopId;
-    private String parentShopId;
-    private String parentShopName;
-    private Boolean isUseTicket;
+    private String storeId;
+
+    private String clientId;
+    private String clientName;
+
+    private String isUseTicket;
     private String shipType;
     private List<String> shipTypeList;
-    private String carrierShopId;
-    private String carrierCodes;
-    private String carrierDetails;
     private String shopType;
+
+    private String priceSystemId;
     private String priceSystemName;
     private String summary;
+    private String status;
 
     private List<GoodsOrderDetailForm> detailFormList = new ArrayList<>();
     private List<String> netTypeList;
+
+
+    public String getIsUseTicket() {
+        return isUseTicket;
+    }
+
+    public void setIsUseTicket(String isUseTicket) {
+        this.isUseTicket = isUseTicket;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getPriceSystemId() {
+        return priceSystemId;
+    }
+
+    public void setPriceSystemId(String priceSystemId) {
+        this.priceSystemId = priceSystemId;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 
 
     public List<GoodsOrderDetailForm> getDetailFormList() {
@@ -36,21 +89,6 @@ public class GoodsOrderForm extends DataForm<GoodsOrder> {
         this.detailFormList = detailFormList;
     }
 
-    public String getParentShopId() {
-        return parentShopId;
-    }
-
-    public void setParentShopId(String parentShopId) {
-        this.parentShopId = parentShopId;
-    }
-
-    public String getParentShopName() {
-        return parentShopName;
-    }
-
-    public void setParentShopName(String parentShopName) {
-        this.parentShopName = parentShopName;
-    }
 
     public List<String> getShipTypeList() {
         return shipTypeList;
@@ -94,44 +132,12 @@ public class GoodsOrderForm extends DataForm<GoodsOrder> {
         this.shopId = shopId;
     }
 
-    public Boolean getUseTicket() {
-        return isUseTicket;
-    }
-
-    public void setUseTicket(Boolean useTicket) {
-        isUseTicket = useTicket;
-    }
-
     public String getShipType() {
         return shipType;
     }
 
     public void setShipType(String shipType) {
         this.shipType = shipType;
-    }
-
-    public String getCarrierShopId() {
-        return carrierShopId;
-    }
-
-    public void setCarrierShopId(String carrierShopId) {
-        this.carrierShopId = carrierShopId;
-    }
-
-    public String getCarrierCodes() {
-        return carrierCodes;
-    }
-
-    public void setCarrierCodes(String carrierCodes) {
-        this.carrierCodes = carrierCodes;
-    }
-
-    public String getCarrierDetails() {
-        return carrierDetails;
-    }
-
-    public void setCarrierDetails(String carrierDetails) {
-        this.carrierDetails = carrierDetails;
     }
 
     public String getShopType() {

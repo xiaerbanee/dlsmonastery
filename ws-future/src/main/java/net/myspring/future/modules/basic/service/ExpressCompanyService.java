@@ -93,4 +93,8 @@ public class ExpressCompanyService {
 
         return null;
     }
+
+    public List<ExpressCompanyDto> findDtoListByCompanyIdAndExpressType(String companyId, String expressType) {
+        return expressCompanyMapper.findDtoListByCompanyIdAndExpressType(companyId, expressType);
+    }
 }

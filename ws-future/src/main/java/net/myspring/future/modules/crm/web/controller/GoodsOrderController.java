@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
@@ -8,6 +9,7 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
+import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.time.LocalDateTimeUtils;
@@ -130,9 +132,10 @@ public class GoodsOrderController {
         return null;
     }
 
-    @RequestMapping(value = "bill", method = RequestMethod.GET)
-    public String bill(GoodsOrder goodsOrder) {
-        return null;
+    @RequestMapping(value = "getBillForm")
+    public GoodsOrderBillForm getBillForm(GoodsOrderBillForm goodsOrderBillForm) {
+        return goodsOrderService.getBillForm(goodsOrderBillForm);
+
     }
 
     @RequestMapping(value = "bill", method = RequestMethod.POST)
@@ -141,8 +144,17 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public RestResponse save(GoodsOrder goodsOrder) {
-        return null;
+    public RestResponse save(GoodsOrderForm goodsOrderForm) {
+
+        if (!goodsOrderForm.isCreate() && !GoodsOrderStatusEnum.待开单.name().equals(goodsOrderForm.getStatus()) ) {
+            return new RestResponse("message_goods_order_update_fail", ResponseCodeEnum.invalid.name());
+        } else {
+            goodsOrderService.save(goodsOrderForm);
+
+        }
+        return new RestResponse("message_goods_order_product_save_success", ResponseCodeEnum.saved.name());
+
+
     }
 
     @RequestMapping(value = "findForm")

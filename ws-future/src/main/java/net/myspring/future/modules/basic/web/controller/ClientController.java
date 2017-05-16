@@ -36,4 +36,10 @@ public class ClientController {
         return clientForm;
     }
 
+//TODO 貨品訂貨時，名稱顯示不對，不能動態及時相應
+    @RequestMapping(value = "getClientName")
+    public String getClientName(String depotId) {
+        return clientService.getClientName(depotId);
+    }
+
 }

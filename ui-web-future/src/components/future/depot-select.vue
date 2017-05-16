@@ -31,8 +31,8 @@
           }
           return '';
       },
-      searchByIdsUrl:function(){
-          return '/api/ws/future/basic/depot/findByIds';
+      searchByIdUrl:function(){
+          return '/api/ws/future/basic/depot/findById';
       }
     },methods:{
       remoteSelect(query) {
@@ -53,7 +53,7 @@
         }
         this.innerId=val;
         this.remoteLoading = true;
-        axios.get(this.searchByIdsUrl+'?id=' + this.innerId).then((response)=>{
+        axios.get(this.searchByIdUrl+'?id=' + this.innerId).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })

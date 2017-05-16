@@ -16,9 +16,36 @@ public class GoodsOrderDetailForm extends DataForm<GoodsOrderDetail> {
     private Boolean productHasIme;
     private BigDecimal price;
     private Integer qty;
+    private Integer billQty;
     private Integer areaQty;
+    private Integer areaBillQty;
     private Boolean productAllowOrder;
     private Boolean productAllowBill;
+    private String goodsOrderId;
+
+    public Integer getAreaBillQty() {
+        return areaBillQty;
+    }
+
+    public void setAreaBillQty(Integer areaBillQty) {
+        this.areaBillQty = areaBillQty;
+    }
+
+    public Integer getBillQty() {
+        return billQty;
+    }
+
+    public void setBillQty(Integer billQty) {
+        this.billQty = billQty;
+    }
+
+    public String getGoodsOrderId() {
+        return goodsOrderId;
+    }
+
+    public void setGoodsOrderId(String goodsOrderId) {
+        this.goodsOrderId = goodsOrderId;
+    }
 
     public Boolean getProductAllowOrder() {
         return productAllowOrder;

@@ -46,4 +46,8 @@ public class ClientService {
        return clientForm;
     }
 
+    public String getClientName(String depotId) {
+        Client c = clientMapper.findByDepotId(depotId);
+        return c.getName();
+    }
 }

@@ -43,4 +43,6 @@ public interface ClientMapper extends BaseMapper<Client,String> {
     List<Client> findAllEnabled();
     
     Page<ClientDto> findPage(Pageable pageable, @Param("p")ClientQuery clientQuery);
+
+    Client findByDepotId(@Param("depotId") String depotId);
 }
