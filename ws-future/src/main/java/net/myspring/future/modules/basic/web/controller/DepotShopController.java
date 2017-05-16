@@ -5,6 +5,7 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.service.DepotShopService;
+import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,23 @@ public class DepotShopController {
     public RestResponse list(DepotShopForm depotShopForm){
         depotShopService.save(depotShopForm);
         return new RestResponse("保存成功",null);
+    }
+
+    @RequestMapping(value = "saveDepot")
+    public RestResponse saveDepot(DepotForm depotForm){
+        depotShopService.saveDepot(depotForm);
+        return new RestResponse("保存成功",null);
+    }
+
+    @RequestMapping(value = "findForm")
+    public DepotShopForm findForm(DepotShopForm depotShopForm){
+        depotShopForm = depotShopService.findForm(depotShopForm);
+        return depotShopForm;
+    }
+
+    @RequestMapping(value = "findDepotForm")
+    public DepotForm findDepotForm(DepotForm depotForm){
+        depotForm = depotShopService.findDepotForm(depotForm);
+        return depotForm;
     }
 }

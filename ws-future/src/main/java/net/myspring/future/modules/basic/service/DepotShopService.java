@@ -12,6 +12,7 @@ import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +47,15 @@ public class DepotShopService {
         return depotShopForm;
     }
 
+    public DepotForm findDepotForm(DepotForm depotForm) {
+        if(!depotForm.isCreate()) {
+            Depot depot =depotMapper.findOne(depotForm.getId());
+            depotForm= BeanUtil.map(depot,DepotForm.class);
+            cacheUtils.initCacheInput(depotForm);
+        }
+        return depotForm;
+    }
+
     public DepotShop save(DepotShopForm depotShopForm) {
         DepotShop depotShop;
         if(depotShopForm.isCreate()) {
@@ -60,6 +70,20 @@ public class DepotShopService {
         depot.setDepotShopId(depotShop.getId());
         depotMapper.update(depot);
         return depotShop;
+    }
+
+    public Depot saveDepot(DepotForm depotForm){
+        Depot depot;
+        depotForm.setNamePinyin(StringUtils.getFirstSpell(depotForm.getName()));
+        if(depotForm.isCreate()){
+            depot=BeanUtil.map(depotForm,Depot.class);
+            depotMapper.save(depot);
+        }else {
+            depot=depotMapper.findOne(depotForm.getId());
+            ReflectionUtil.copyProperties(depotForm,depot);
+            depotMapper.update(depot);
+        }
+        return depot;
     }
 
 
