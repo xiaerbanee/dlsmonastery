@@ -6,44 +6,28 @@ import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by liuj on 2017/5/16.
  */
 public class BdCustomerQuery extends BaseQuery {
-    private LocalDate dateStart;
-    private LocalDate dateEnd;
-    private String dateRange;
+    private String customerGroup;
+    private List<String> customerIdList;
 
-    public LocalDate getDateStart() {
-        if(StringUtils.isNotBlank(dateRange)) {
-            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else {
-            return null;
-        }
+    public List<String> getCustomerIdList() {
+        return customerIdList;
     }
 
-    public void setDateStart(LocalDate dateStart) {
-        this.dateStart = dateStart;
+    public void setCustomerIdList(List<String> customerIdList) {
+        this.customerIdList = customerIdList;
     }
 
-    public LocalDate getDateEnd() {
-        if(StringUtils.isNotBlank(dateRange)) {
-            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
-            return null;
-        }
+    public String getCustomerGroup() {
+        return customerGroup;
     }
 
-    public void setDateEnd(LocalDate dateEnd) {
-        this.dateEnd = dateEnd;
-    }
-
-    public String getDateRange() {
-        return dateRange;
-    }
-
-    public void setDateRange(String dateRange) {
-        this.dateRange = dateRange;
+    public void setCustomerGroup(String customerGroup) {
+        this.customerGroup = customerGroup;
     }
 }
