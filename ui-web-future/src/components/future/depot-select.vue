@@ -28,6 +28,10 @@
             return '/api/ws/future/basic/depot/delegateStore';
           }else if(this.category =='store'){
             return '/api/ws/future/basic/depot/store';
+          }else if(this.category =='adShop'){
+            return '/api/ws/future/basic/depot/adShop';
+          }else if(this.category =='popShop'){
+            return '/api/ws/future/basic/depot/popShop';
           }
           return '';
       },

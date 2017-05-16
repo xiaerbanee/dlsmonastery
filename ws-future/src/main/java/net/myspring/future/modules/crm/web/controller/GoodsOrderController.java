@@ -138,8 +138,8 @@ public class GoodsOrderController {
 
     }
 
-    @RequestMapping(value = "bill", method = RequestMethod.POST)
-    public RestResponse billSave(GoodsOrder goodsOrder, BindingResult bindingResult) {
+    @RequestMapping(value = "billSave")
+    public RestResponse billSave(GoodsOrderBillForm goodsOrderBillForm) {
         return null;
     }
 
