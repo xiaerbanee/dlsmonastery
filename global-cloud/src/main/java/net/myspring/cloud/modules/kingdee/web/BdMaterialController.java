@@ -22,7 +22,7 @@ public class BdMaterialController {
     @RequestMapping(value = "findByNameLike")
     public List<String> findByNameLike(String name){
         List<BdMaterial> bdMaterialList = bdMaterialService.findByNameLike(name);
-        return bdMaterialList.stream().map(BdMaterial::getFName).collect(Collectors.toList());
+        return bdMaterialList.stream().map(bdMaterial -> bdMaterial.getFName().trim()).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "findByName")
