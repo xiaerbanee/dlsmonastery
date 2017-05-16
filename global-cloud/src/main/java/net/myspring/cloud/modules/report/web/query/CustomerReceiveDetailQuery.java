@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.report.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -14,7 +15,7 @@ public class CustomerReceiveDetailQuery {
     private String dateRange;
     private LocalDate dateStart;
     private LocalDate dateEnd;
-    private List<String> customerIdList;
+    private List<String> customerIdList = Lists.newArrayList();
 
 
     public String getDateRange() {

@@ -35,7 +35,7 @@ public class SalReturnStockController {
 
     @RequestMapping(value = "save")
     public RestResponse save(BatchBillForm batchBillForm) {
-        KingdeeBook kingdeeBook = kingdeeBookService.getByCompanyId(RequestUtils.getCompanyId());
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynExtendDto> codeList = salReturnStockService.save(batchBillForm,kingdeeBook);
         return new RestResponse("批量开单成功：" + codeList,null,true);
     }

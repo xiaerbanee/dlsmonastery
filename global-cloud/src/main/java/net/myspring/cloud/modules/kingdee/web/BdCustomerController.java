@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by lihx on 2017/5/12.
@@ -17,18 +18,9 @@ public class BdCustomerController {
     @Autowired
     private BdCustomerService bdCustomerService;
 
-    @RequestMapping(value = "getNameByNameLike")
+    @RequestMapping(value = "findByNameLike")
     public List<String> getNameByNameLike(String name){
-        return bdCustomerService.getNameByNameLike(name);
-    }
-
-    @RequestMapping(value = "getCustomerGroupList")
-    public List<BdCustomer> getCustomerGroupList(){
-        return bdCustomerService.getCustomerGroupList();
-    }
-
-    @RequestMapping(value = "getByNameLike")
-    public List<BdCustomer> getByNameLike(String name){
-        return bdCustomerService.getByNameLike(name);
+        List<BdCustomer> bdCustomerList = bdCustomerService.findByNameLike(name);
+        return bdCustomerList.stream().map(BdCustomer::getFName).collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.sys.mapper;
 
+import net.myspring.cloud.common.mybatis.MyMapper;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.web.query.KingdeeBookQuery;
 import net.myspring.mybatis.mapper.CrudMapper;
@@ -13,20 +14,13 @@ import java.util.List;
  * Created by lihx on 2017/4/5.
  */
 @Mapper
-public interface KingdeeBookMapper extends CrudMapper<KingdeeBook,String> {
+public interface KingdeeBookMapper extends MyMapper<KingdeeBook,String> {
 
     Page<KingdeeBook> findPage(Pageable pageable, @Param("p")KingdeeBookQuery kingdeeBookQuery);
 
-    String findNameByCompanyId(@Param("companyId")String companyId);
-
-    List<String> findKingdeePostUrls();
-
-    KingdeeBook findByCompanyId(@Param("companyId")String companyId);
+    KingdeeBook findByAccountId(String accountId);
 
     List<String> findNames();
 
     List<String> findTypes();
-
-    String findTypeByCompanyId(@Param("companyId")String companyId);
-
 }

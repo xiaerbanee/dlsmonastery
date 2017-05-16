@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.kingdee.web;
 
+import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
 import net.myspring.cloud.modules.kingdee.service.BdMaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by lihx on 2017/5/12.
@@ -17,14 +19,15 @@ public class BdMaterialController {
     @Autowired
     private BdMaterialService bdMaterialService;
 
-    @RequestMapping(value = "getNameByNameLike")
-    public List<String> getNameByNameLike(String name){
-        return bdMaterialService.getNameByNameLike(name);
+    @RequestMapping(value = "findByNameLike")
+    public List<String> findByNameLike(String name){
+        List<BdMaterial> bdMaterialList = bdMaterialService.findByNameLike(name);
+        return bdMaterialList.stream().map(BdMaterial::getFName).collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "getByName")
-    public BdMaterial getByName(String name){
-        return bdMaterialService.getByName(name);
+    @RequestMapping(value = "findByName")
+    public BdMaterial findByName(String name){
+        return bdMaterialService.findByName(name);
     }
 
 }

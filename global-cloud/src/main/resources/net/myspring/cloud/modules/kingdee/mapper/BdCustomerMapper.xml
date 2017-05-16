@@ -25,26 +25,6 @@
         </foreach>
     </select>
 
-    <select id="findTopOne" resultType="BdCustomer">
-        SELECT top 1
-        t1.FCUSTID,
-        t1.FNUMBER,
-        t1.FSALDEPTID,
-        t2.FNAME,
-        t1.FPRIMARYGROUP,
-        t4.FNAME AS fprimaryGroupName,
-        t1.FMODIFYDATE
-        FROM
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
-        WHERE
-        t1.FCUSTID = t2.FCUSTID
-        AND t1.FPRIMARYGROUP = t3.FID
-        AND t3.FID = t4.FID
-    </select>
-
     <select id="findByIdList" resultType="BdCustomer">
         SELECT
         t1.FCUSTID,
@@ -90,16 +70,6 @@
         and t1.FCUSTID = #{id}
     </select>
 
-    <select id="findNameByNameLike" resultType="String">
-        select
-        t2.FNAME
-        FROM
-        T_BD_CUSTOMER t1
-        LEFT JOIN T_BD_CUSTOMER_L t2 ON t1.FCUSTID = t2.FCUSTID
-        where
-        t2.FNAME like CONCAT('%',#{name},'%')
-    </select>
-
     <select id="findByNameLike" resultType="BdCustomer">
         SELECT
         t1.FCUSTID,
@@ -116,44 +86,6 @@
         T_BD_CUSTOMERGROUP_L t4
         where
         t2.FNAME like CONCAT('%',#{name},'%')
-    </select>
-
-    <select id="findByPrimaryGroup" resultType="BdCustomer">
-        select
-        t1.FCUSTID,
-        t1.FNUMBER,
-        t1.FPRIMARYGROUP,
-        t1.FMODIFYDATE,
-        t2.FNAME,
-        t4.FNAME as fprimaryGroupName
-        from
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
-        where
-        t1.FCUSTID=t2.FCUSTID
-        and t1.FPRIMARYGROUP=t3.FID
-        and t3.FID=t4.FID
-        and t1.FPRIMARYGROUP = #{primaryGroup}
-    </select>
-
-    <select id="findPrimaryGroupAndPrimaryGroupName" resultType="BdCustomer">
-        SELECT
-        t1.FPRIMARYGROUP,
-        t4.FNAME AS fprimaryGroupName
-        FROM
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
-        WHERE
-        t1.FCUSTID = t2.FCUSTID
-        AND t1.FPRIMARYGROUP = t3.FID
-        AND t3.FID = t4.FID
-        group by
-        t1.FPRIMARYGROUP,
-        t4.FNAME
     </select>
 
 </mapper>

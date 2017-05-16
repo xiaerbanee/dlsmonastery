@@ -16,10 +16,4 @@ import java.util.Set;
  */
 @Mapper
 public interface SalOutStockMapper {
-
-    //标准销售出库单
-    List<CustomerReceiveDto> findXSCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList")Set<String> customerIdList);
-
-    //现销出库单
-    List<CustomerReceiveDto> findXXCKDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList")Set<String> customerIdList);
 }
