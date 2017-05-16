@@ -28,11 +28,15 @@
             return '/api/ws/future/basic/depot/delegateStore';
           }else if(this.category =='store'){
             return '/api/ws/future/basic/depot/store';
+          }else if(this.category =='adShop'){
+            return '/api/ws/future/basic/depot/adShop';
+          }else if(this.category =='popShop'){
+            return '/api/ws/future/basic/depot/popShop';
           }
           return '';
       },
-      searchByIdsUrl:function(){
-          return '/api/ws/future/basic/depot/findByIds';
+      searchByIdUrl:function(){
+          return '/api/ws/future/basic/depot/findById';
       }
     },methods:{
       remoteSelect(query) {
@@ -53,7 +57,7 @@
         }
         this.innerId=val;
         this.remoteLoading = true;
-        axios.get(this.searchByIdsUrl+'?id=' + this.innerId).then((response)=>{
+        axios.get(this.searchByIdUrl+'?id=' + this.innerId).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,10 +42,30 @@ public class DepotService {
         return depotMapper.findStoreList(depotQuery);
     }
 
+
+
+    public List<DepotDto> findStoreList(String shipType) {
+        //TODO  需要完成根據shipType選擇倉庫
+        return findStoreList(new DepotQuery());
+
+    }
+
+
+
     public List<DepotDto> findByIds(List<String> ids){
         List<Depot> depotList=depotMapper.findByIds(ids);
         List<DepotDto> depotDtoList= BeanUtil.map(depotList,DepotDto.class);
         return depotDtoList;
     }
 
+    public DepotDto findById(String id) {
+        List<String> ids = new ArrayList<>();
+        ids.add(id);
+        List<DepotDto> depotList=findByIds(ids);
+        if(depotList!=null && depotList.size() >=1){
+            return depotList.get(0);
+        }else{
+            return null;
+        }
+    }
 }

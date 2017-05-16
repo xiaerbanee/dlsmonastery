@@ -13,9 +13,8 @@ public class GoodsOrderQuery extends BaseQuery {
     private List<String> netTypeList;
     private String businessId;
     private String businessIds;
-    private String storeType;
 
-    private List<String> storeTypeList;
+
 
     private String billDateRange;
     private LocalDateTime billDateEnd;
@@ -84,22 +83,6 @@ public class GoodsOrderQuery extends BaseQuery {
 
     public void setBusinessIds(String businessIds) {
         this.businessIds = businessIds;
-    }
-
-    public String getStoreType() {
-        return storeType;
-    }
-
-    public void setStoreType(String storeType) {
-        this.storeType = storeType;
-    }
-
-    public List<String> getStoreTypeList() {
-        return storeTypeList;
-    }
-
-    public void setStoreTypeList(List<String> storeTypeList) {
-        this.storeTypeList = storeTypeList;
     }
 
     public String getBillDateRange() {

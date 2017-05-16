@@ -19,11 +19,7 @@
               <el-form-item :label="formLabel.businessId.label"  :label-width="formLabelWidth">
                 <el-input v-model.number="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.storeType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.storeType" clearable filterable :placeholder="$t('goodsOrderList.selectStoreType')">
-                  <el-option v-for="(value,key) in formData.storeTypeList" :key="key"  :label="key" :value="value"></el-option>
-                </el-select>
-              </el-form-item>
+
               <el-form-item :label="formLabel.billDateRange.label" :label-width="formLabelWidth">
                 <date-range-picker  v-model="formData.billDateRange" ></date-range-picker>
               </el-form-item>
@@ -130,14 +126,25 @@
         <el-table-column prop="remarks" :label="$t('goodsOrderList.remarks')" ></el-table-column>
         <el-table-column prop="netType" :label="$t('goodsOrderList.netType')" ></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
-        <el-table-column prop="carrierCodes" :label="$t('goodsOrderList.carrierCodes')" ></el-table-column>
         <el-table-column prop="pullStatus" :label="$t('goodsOrderList.pullStatus')" ></el-table-column>
-        <el-table-column fixed="right" :label="$t('goodsOrderList.operate')" width="140">
+        <el-table-column fixed="right" :label="$t('goodsOrderList.operate')" width="80">
           <template scope="scope">
-             <div v-for="action in scope.row.actionList" :key="action" class="action">
-                <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-             </div>
+            <el-button  type="text"  size="small"v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'view')">{{$t('goodsOrderList.detail')}}</el-button>
+
+            <el-button  v-if="scope.row.enabled && scope.row.status=='待开单'" type="text"  size="small"v-permit="'crm:goodsOrder:bill'" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button>
+            <el-button  v-if="scope.row.enabled && scope.row.status=='待开单'" type="text"  size="small"v-permit="'crm:goodsOrder:edit'" @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button>
+            <el-button  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" type="text"  size="small"v-permit="'crm:goodsOrder:delete'" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button>
+            <el-button  v-if="scope.row.enabled && scope.row.status=='待发货' " type="text"  size="small"v-permit="'crm:goodsOrder:ship'" @click.native="itemAction(scope.row.id, 'ship')">{{$t('goodsOrderList.ship')}}</el-button>
+            <el-button  v-if="scope.row.enabled && scope.row.status=='待发货' && scope.row.isSreturn" type="text"  size="small"v-permit="'crm:goodsOrder:edit'" @click.native="itemAction(scope.row.id, 'sreturn')">{{$t('goodsOrderList.sreturn')}}</el-button>
+            <el-button  v-if="scope.row.enabled && scope.row.status=='待签收'" type="text"  size="small"v-permit="'crm:goodsOrder:edit'" @click.native="itemAction(scope.row.id, 'sign')">{{$t('goodsOrderList.sign')}}</el-button>
+            <el-button  v-if="scope.row.enabled && scope.row.status=='待签收'" type="text"  size="small"v-permit="'crm:goodsOrder:shipBack'" @click.native="itemAction(scope.row.id, 'shipBack')">{{$t('goodsOrderList.shipBack')}}</el-button>
+            <el-button  v-if="scope.row.isPrint" type="text"  size="small"v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'print')">{{$t('goodsOrderList.print')}}</el-button>
+            <el-button  v-if="!scope.row.isPrint" type="text" style="color:red;"  size="small"v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'print')">{{$t('goodsOrderList.print')}}</el-button>
+            <el-button  v-if="scope.row.isShipPrint" type="text" size="small"v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('goodsOrderList.shipPrint')}}</el-button>
+            <el-button  v-if="!scope.row.isShipPrint" type="text" style="color:red;"   size="small"v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('goodsOrderList.shipPrint')}}</el-button>
+
           </template>
+
         </el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
@@ -176,7 +183,6 @@
         size:25,
         netType:"",
         businessId:"",
-        storeType:"",
         billDateRange:'',
         shipType:"",
         areaId:"",
@@ -195,7 +201,6 @@
       formLabel:{
         netType:{label: this.$t("goodsOrderList.netType")},
         businessId:{label: this.$t("goodsOrderList.businessId")},
-        storeType:{label: this.$t("goodsOrderList.storeType"), value:""},
         billDateRange:{label: this.$t("goodsOrderList.billDate")},
         shipType:{label: this.$t("goodsOrderList.shipType")},
         areaId:{label: this.$t("goodsOrderList.office"), value:""},
@@ -260,7 +265,7 @@
         axios.get('/api/crm/goodsOrder/shipBack?id='+id).then((response)=> {
          this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
         });
-      }else if(action =="return"){
+      }else if(action =="sreturn"){
         this.$router.push({name:'goodsOrderReturn',query:{id:id}})
       }else if(action == "delete"){
         axios.get('/api/ws/future/crm/goodsOrder/delete',{params:{id:id}}).then((response) =>{

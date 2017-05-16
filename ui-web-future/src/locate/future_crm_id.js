@@ -889,7 +889,16 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "ubah"
+    audit: "ubah",
+
+
+    bill:'开单',
+    sign:'签收',
+    shipBack:'重发',
+    sreturn:'销售退货',
+    shipPrint:'快递单',
+    print: "出库单",
+    ship: "发货",
   },
   goodsOrderPrint: {},
   goodsOrderShip: {

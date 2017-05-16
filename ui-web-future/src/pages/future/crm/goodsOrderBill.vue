@@ -6,84 +6,80 @@
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.store')" prop="storeId">
-              <el-select v-model="inputForm.storeId" clearable filterable @change="billChange">
-                <el-option v-for="item in billFormProperty.stores" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-select v-model="inputForm.storeDto" clearable filterable @change="billChange">
+                <el-option v-for="item in inputForm.storeList" :key="item.id" :label="item.name" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.billDate')" prop="billDate">
-              <el-date-picker v-model="inputForm.billDate" align="right" :placeholder="$t('goodsOrderBill.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <date-picker v-model="inputForm.billDate"  ></date-picker>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.expressCompany')" prop="expressCompanyId">
-              <el-select v-model="inputForm.expressOrder.expressCompanyId" clearable  >
-                <el-option v-for="item in billFormProperty.expressCompanys" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-select v-model="inputForm.expressOrderDto.expressCompanyId" clearable  >
+                <el-option v-for="item in inputForm.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.synToCloud')" prop="syn">
-              <el-radio-group v-model="inputForm.syn" @change="billChange">
-                <el-radio v-for="(value,key) in billFormProperty.bools" :key="key" :label="value">{{key | bool2str}} </el-radio>
-              </el-radio-group>
+             <boolRadioGroup v-model="inputForm.syn" @input="billChange" ></boolRadioGroup>
             </el-form-item>
+            <el-form-item :label="$t('goodsOrderBill.shipType')" >
+              {{inputForm.shipType}}
+            </el-form-item>
+
             <el-form-item :label="$t('goodsOrderBill.goodsOrderRemarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks"></el-input>
+              <el-input type="textarea" v-model="inputForm.remarks"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.contact')" prop="contator">
-              <el-input v-model="inputForm.expressOrder.contator"></el-input>
+
+            <el-form-item :label="$t('goodsOrderBill.formatId')" >
+              {{inputForm.goodsOrderDto.formatId}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.address')" prop="address">
-              <el-input v-model="inputForm.expressOrder.address"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.mobilePhone')" prop="mobilePhone">
-              <el-input v-model="inputForm.expressOrder.mobilePhone"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.shouldGet')" prop="remarks" >
-              {{billForm.shop.extendMap.shouldGet}}
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.shopRemarks')" prop="remarks">
-              {{billForm.shop.remarks}}
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.credit')" prop="title">
-              {{billForm.shop.credit}}
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.goodsDeposit')" prop="title">
-              {{billForm.shop.goodsDeposit}}
-            </el-form-item>
+
           </el-col>
           <el-col :span="12">
-            <el-form-item :label="$t('goodsOrderBill.shipType')" prop="createdDate">
-              {{billForm.shipType}}
+            <el-form-item :label="$t('goodsOrderBill.contact')" prop="contator">
+              <el-input v-model="inputForm.expressOrderDto.contator"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.carrierCodes')" prop="id">
-              {{billForm.carrierCodes}}
+            <el-form-item :label="$t('goodsOrderBill.address')" prop="address">
+              <el-input v-model="inputForm.expressOrderDto.address"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.carrierDetails')" prop="title">
-              {{billForm.carrierDetails}}
+            <el-form-item :label="$t('goodsOrderBill.mobilePhone')" prop="mobilePhone">
+              <el-input v-model="inputForm.expressOrderDto.mobilePhone"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.formatId')" prop="remarks">
-              {{billForm.formatId}}
+
+            <el-form-item :label="$t('goodsOrderBill.areaName')" >
+              {{inputForm.goodsOrderDto.shopAreaName}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.areaName')" prop="title">
-              {{billForm.shop.area.name}}
+            <el-form-item :label="$t('goodsOrderBill.shopName')" >
+              {{inputForm.shopDto.name}} <div style="color:red;font-size:16px">{{inputForm.shopDto.areaType}}</div>
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.shopName')" prop="title">
-              {{billForm.shop.name}} <div style="color:red;font-size:16px">{{billForm.shop.areaType}}</div>
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.parentName')"  prop="remarks" v-if="billForm.shop.parent">
-              {{billForm.shop.parent.name}}
+            <el-form-item :label="$t('goodsOrderBill.parentName')"  v-if="inputForm.shopDto.clientName">
+              {{inputForm.shopDto.clientName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shopCredit')" prop="title">
-              {{billForm.shop.credit}}
+              {{inputForm.shopDto.credit}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.remarks')" prop="remarks">
-              {{billForm.remarks}}
+            <el-form-item :label="$t('goodsOrderBill.shouldGet')" prop="remarks" >
+              {{inputForm.goodsOrderDto.shopShouldGet}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.title')" prop="title">
-              {{billForm.title}}
+            <el-form-item :label="$t('goodsOrderBill.shopRemarks')" prop="remarks">
+              {{inputForm.shopDto.remarks}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.summery')" prop="summery">
+            <el-form-item :label="$t('goodsOrderBill.credit')" prop="title">
+              {{inputForm.shopDto.credit}}
+            </el-form-item>
+            <el-form-item :label="$t('goodsOrderBill.goodsDeposit')" prop="title">
+              {{inputForm.goodsOrderDto.shopGoodsDeposit}}
+            </el-form-item>
+            <el-form-item :label="$t('goodsOrderBill.costGoodsDeposit')" prop="remarks">
+              {{inputForm.goodsOrderDto.costGoodsDeposit}}
+            </el-form-item>
+            <el-form-item :label="$t('goodsOrderBill.leftGoodsDeposit')" prop="title">
+              {{inputForm.goodsOrderDto.leftGoodsDeposit}}
+            </el-form-item>
+            <el-form-item :label="$t('goodsOrderBill.summary')" prop="summary">
               {{$t('goodsOrderBill.totalQty')}}:{{this.totalQty}},{{$t('goodsOrderBill.totalPrice')}}:{{this.totalPrice}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.goodsOrderRebateRule')" prop="remarks">
-              {{billForm.goodsOrderRebateRule}}
+            <el-form-item :label="$t('goodsOrderBill.goodsOrderRebateRule')" >
+              {{inputForm.goodsOrderDto.goodsOrderRebateRuleRemarks}}
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderBill.save')}}</el-button>
@@ -93,12 +89,12 @@
       </el-form>
       <el-input v-model="productName" @change="searchDetail" :placeholder="$t('goodsOrderBill.selectTowKey')" style="width:200px;"></el-input>
       <el-table :data="filterGoodsOrderDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" stripe border>
-        <el-table-column  prop="product.name" :label="$t('goodsOrderBill.productName')" sortable width="200"></el-table-column>
-        <el-table-column prop="areaQty" sortable :label="$t('goodsOrderBill.areaQty')"></el-table-column>
+        <el-table-column  prop="productName" :label="$t('goodsOrderBill.productName')" sortable width="200"></el-table-column>
+        <el-table-column prop="areaBillQty" sortable :label="$t('goodsOrderBill.areaBillQty')"></el-table-column>
         <el-table-column prop="storeQty" :label="$t('goodsOrderBill.stock')"></el-table-column>
         <el-table-column prop="allowBill" :label="$t('goodsOrderBill.allowBill')">
           <template scope="scope">
-            <el-tag :type="scope.row.product.allowBill? 'primary' : 'danger'">{{scope.row.product.allowBill | bool2str}}</el-tag>
+            <el-tag :type="scope.row.allowBill? 'primary' : 'danger'">{{scope.row.allowBill | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="qty" :label="$t('goodsOrderBill.qty')"></el-table-column>
@@ -108,9 +104,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderBill.price')"></el-table-column>
-        <el-table-column prop="hasIme" :label="$t('goodsOrderBill.hasIme')" >
+        <el-table-column prop="productHasIme" :label="$t('goodsOrderBill.hasIme')" >
           <template scope="scope">
-            <el-tag :type="scope.row.product.hasIme ? 'primary' : 'danger'">{{scope.row.product.hasIme | bool2str}}</el-tag>
+            <el-tag :type="scope.row.productHasIme ? 'primary' : 'danger'">{{scope.row.productHasIme | bool2str}}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -118,46 +114,41 @@
   </div>
 </template>
 <script>
+  import depotSelect from 'components/future/depot-select'
+  import productSelect from 'components/future/product-select'
+  import boolRadioGroup from 'components/common/bool-radio-group'
+
   export default{
+    components:{
+      depotSelect,
+      productSelect,
+      boolRadioGroup,
+
+    },
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         productName:"",
         filterGoodsOrderDetailList:[],
-        inputForm:{
-          id:this.$route.query.id,
+        inputForm:{},
+        submitData:{
+          id:'',
           storeId:"",
-          billDate: util.currentDate(),
-          shop:{
-            name:'',
-            goodsDeposit:"",
-            credit:"",
-            remarks:"",
-            type:'',
-          },
-          remarks:"",
-          expressOrder:{
+          billDate: '',
           expressCompanyId:"",
           contator:"",
           address:"",
           mobilePhone:"",
-          },
           syn:"1",
+          remarks:"",
           goodsOrderDetailList:[],
-          summary:""
         },
-        billForm:{
-            shop:{
-              extendMap:{shouldGet:" "},
-              area:{name:""},
-              parent:{name:""},
-            }
-        },
+
         rules: {},
-        billFormProperty:{},
+
         pageLoading:false,
-        pickerDateOption:util.pickerDateOption,
+
         totalQty:'',
         totalPrice:''
       }
@@ -190,7 +181,7 @@
             }
           })
         }, billChange(){
-          if(this.billFormProperty.proxys.indexOf(this.inputForm.shop.type)==-1){
+          if(this.inputForm.proxys.indexOf(this.inputForm.shop.type)==-1){
            axios.get('/api/crm/goodsOrder/billChange',{params: {id:this.$route.query.id,storeId:this.inputForm.storeId,syn:this.inputForm.syn}}).then((response)=>{
              for(let index in response.data.goodsOrderDetailList) {
               response.data.goodsOrderDetailList[index].billQty = response.data.goodsOrderDetailList[index].qty;
@@ -201,27 +192,22 @@
             });
           }
         },searchDetail(){
-          var val=this.productName;
-         var tempList=new Array();
-          for(var index in this.inputForm.goodsOrderDetailList){
-            var detail=this.inputForm.goodsOrderDetailList[index];
-            if(util.isNotBlank(detail.billQty)){
-              tempList.push(detail)
+        let val=this.productName;
+         let tempList=new Array();
+          for(let each of this.inputForm.detailFormList){
+
+            if(util.isNotBlank(each.billQty) || util.isNotBlank(each.qty)){
+              tempList.push(each)
              }
           }
-         for(var index in this.inputForm.goodsOrderDetailList){
-           var detail=this.inputForm.goodsOrderDetailList[index];
-           if((val.length>=1 && util.contains(detail.product.name,val)) && util.isBlank(detail.billQty)){
-             tempList.push(detail)
+         for(let each of this.inputForm.detailFormList){
+           if(util.contains(each.productName,val) && util.isBlank(each.billQty) && util.isBlank(each.qty)){
+             tempList.push(each);
+
            }
          }
          this.filterGoodsOrderDetailList = tempList;
-       },getFormProperty(){
-      axios.get('/api/crm/goodsOrder/getBillFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.billFormProperty=response.data;
-        this.billForm.goodsOrderRebateRule=response.data.goodsOrderRebateRule.name;
-      });
-    },getBill(){
+       },getBill(){
         let list=this.filterGoodsOrderDetailList;
         let totalQty=0;
         let totalPrice=0;
@@ -235,27 +221,11 @@
         this.totalPrice=totalPrice;
       }
     },created(){
-      axios.get('/api/crm/goodsOrder/bill',{params: {id:this.$route.query.id}}).then((response)=>{
-        util.copyValue(response.data,this.inputForm);
-        this.billForm=response.data;
-        if(response.data.goodsOrderDetailList){
-          for(var index in response.data.goodsOrderDetailList) {
-            response.data.goodsOrderDetailList[index].billQty = response.data.goodsOrderDetailList[index].qty;
-          }
-          this.inputForm.goodsOrderDetailList=response.data.goodsOrderDetailList;
-          this.filterGoodsOrderDetailList=response.data.goodsOrderDetailList;
-          this.getBill();
-        }
-        if(response.data.store){
-          this.billFormProperty.stores=new Array(response.data.store);
-          this.inputForm.storeId=response.data.store.id;
-        }
-        if(response.data.expressOrder){
-          this.billFormProperty.expressCompanys=new Array(response.data.expressOrder.expressCompanyId);
-          this.inputForm.expressCompanyId=response.data.expressOrder.expressCompanyId;
-        }
-        this.getFormProperty();
+      axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
+        this.searchDetail();
       })
+
     }
   }
 </script>
