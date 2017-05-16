@@ -122,10 +122,12 @@ public class GoodsOrderDetailService {
         cacheUtils.initCacheInput(tmp);
 
         List<GoodsOrderDetailForm> result = BeanUtil.map(tmp, GoodsOrderDetailForm.class);
-
         return result;
-
     }
 
+    public List<GoodsOrderDetailDto> findDtoList(String goodsOrderId) {
 
+        return goodsOrderDetailMapper.findDtoListByGoodsOrderId(goodsOrderId);
+
+    }
 }

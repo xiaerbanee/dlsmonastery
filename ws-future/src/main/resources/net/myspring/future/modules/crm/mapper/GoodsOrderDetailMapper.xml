@@ -8,6 +8,23 @@
         WHERE t1.goods_order_id=#{goodsOrderId}
     </select>
 
+    <select id="findDtoListByGoodsOrderId" resultType="GoodsOrderDetailDto">
+             SELECT
+                    t1.product_id,
+                    t1.price,
+                    t2.name productName,
+                    t2.has_ime productHasIme,
+                    t2.allow_order productAllowOrder,
+                    t2.allow_bill productAllowBill,
+                    t1.qty,
+                    t1.bill_qty
+                FROM
+                    crm_goods_order_detail t1,
+                    crm_product t2
+                WHERE
+                    t1.goods_order_id = #{goodsOrderId}
+                    AND t1.product_id = t2.id
+    </select>
 
     <select id="getListForNewOrUpdateOrBillWithAreaQty" resultType="GoodsOrderDetailDto">
         SELECT

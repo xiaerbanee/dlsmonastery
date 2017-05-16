@@ -19,6 +19,7 @@ import net.myspring.future.modules.crm.mapper.*;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
+import net.myspring.future.modules.crm.web.form.GoodsOrderViewInDetailForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderDetailQuery;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.future.modules.layout.mapper.ShopGoodsDepositMapper;
@@ -82,6 +83,10 @@ public class GoodsOrderService {
 
     @Autowired
     private ExpressOrderService expressOrderService;
+
+
+    @Autowired
+    private GoodsOrderImeService goodsOrderImeService;
 
 
     public Page<GoodsOrderDto> findPage(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
@@ -617,5 +622,32 @@ public class GoodsOrderService {
         goodsOrderDetailService.batchSave(goodsOrderBillForm.getId(), detailsToBeSaved);
 
         return detailsToBeSaved;
+    }
+
+    public GoodsOrderViewInDetailForm getViewInDetailForm(String goodsOrderId) {
+
+        GoodsOrderViewInDetailForm result = new GoodsOrderViewInDetailForm();
+        GoodsOrderDto god = goodsOrderMapper.findDto(goodsOrderId);
+        DepotDto shopDto = depotService.findById(god.getShopId());
+        DepotDto storeDto = new DepotDto();
+        if(god.getStoreId()!=null){
+            storeDto =  depotService.findById(god.getStoreId());
+        }
+        ExpressOrderDto expressOrderDto = new ExpressOrderDto();
+        if(god.getExpressOrderId()!=null){
+            expressOrderDto = expressOrderMapper.findDto(god.getExpressOrderId());
+        }
+
+        result.setGoodsOrderDto(god);
+        result.setShopDto(shopDto);
+        result.setStoreDto(storeDto);
+        result.setExpressOrderDto(expressOrderDto);
+        result.setGoodsOrderDetailDtoList(goodsOrderDetailService.findDtoList(god.getId()));
+        result.setGoodsOrderImeDtoList(goodsOrderImeService.findDtoList(god.getId()));
+
+
+        return result;
+
+
     }
 }

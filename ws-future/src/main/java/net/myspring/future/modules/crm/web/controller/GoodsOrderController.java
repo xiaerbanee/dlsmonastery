@@ -11,6 +11,7 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
+import net.myspring.future.modules.crm.web.form.GoodsOrderViewInDetailForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +65,9 @@ public class GoodsOrderController {
     public Object findByFormatId(String formatId) {
         return null;}
 
-    @RequestMapping(value = "detail")
-    public String detail(GoodsOrder goodsOrder) {
-        return null;
+    @RequestMapping(value = "getViewInDetailForm")
+    public GoodsOrderViewInDetailForm getViewInDetailForm(String id) {
+        return goodsOrderService.getViewInDetailForm(id);
     }
 
     @RequestMapping(value = "shipForm", method = RequestMethod.GET)
