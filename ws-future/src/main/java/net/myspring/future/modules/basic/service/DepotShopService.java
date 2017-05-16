@@ -5,6 +5,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.DepotShopMapper;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
@@ -26,6 +27,8 @@ public class DepotShopService {
     @Autowired
     private DepotManager depotManager;
     @Autowired
+    private DepotMapper depotMapper;
+    @Autowired
     private CacheUtils cacheUtils;
 
     public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotShopQuery){
@@ -45,13 +48,7 @@ public class DepotShopService {
 
     public DepotShop save(DepotShopForm depotShopForm) {
         DepotShop depotShop;
-        DepotForm depotForm = depotShopForm.getDepotForm();
-        //保存depot
-        Depot depot = BeanUtil.map(depotForm, Depot.class);
-        depotManager.save(depot);
-        //保存depotShop
         if(depotShopForm.isCreate()) {
-            depotShopForm.setDepotId(depot.getId());
             depotShop = BeanUtil.map(depotShopForm,DepotShop.class);
             depotShopMapper.save(depotShop);
         } else {
@@ -59,6 +56,9 @@ public class DepotShopService {
             ReflectionUtil.copyProperties(depotShopForm,depotShop);
             depotShopMapper.save(depotShop);
         }
+        Depot depot=depotMapper.findOne(depotShopForm.getDepotId());
+        depot.setDepotShopId(depotShop.getId());
+        depotMapper.update(depot);
         return depotShop;
     }
 
