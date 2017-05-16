@@ -99,7 +99,12 @@
 
                                                     AND innerOrd.shop_id = innerDepot.id
                                                     AND innerDepot.enabled = 1
-                                                    AND innerDepot.area_id = #{p.areaId}
+                                                    <if test="p.officeIdList !=null">
+                                                        and innerDepot.office_id in
+                                                        <foreach collection="p.officeIdList" item="item" index="index" open="(" separator="," close=")">
+                                                            #{item}
+                                                        </foreach>
+                                                    </if>
                                                     AND innerDepot.company_id = #{p.companyId}
                                                     GROUP BY  innerDetail.product_id
                                                 ) orderMap
