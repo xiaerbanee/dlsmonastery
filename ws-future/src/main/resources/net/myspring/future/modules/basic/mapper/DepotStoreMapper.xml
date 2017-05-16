@@ -3,7 +3,7 @@
 <mapper namespace="net.myspring.future.modules.basic.mapper.DepotStoreMapper">
 
 
-    <select id="findPage" resultType="DepotShopDto">
+    <select id="findPage" resultType="DepotStoreDto">
         SELECT t1.*,t2.*
         FROM crm_depot depot ,crm_depot_store t2
         where depot.denabled=1

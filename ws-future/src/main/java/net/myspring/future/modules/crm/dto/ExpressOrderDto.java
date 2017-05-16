@@ -30,6 +30,8 @@ public class ExpressOrderDto extends DataDto<ExpressOrder> {
     private LocalDate printDate;
     private String extendType;
     private String extendBusinessId;
+    private String extendId;
+    private String shipType;
 
     private BigDecimal realPay;
     private String contator;
@@ -41,6 +43,22 @@ public class ExpressOrderDto extends DataDto<ExpressOrder> {
     private BigDecimal averageWeight;
 
     private String expressCodes;
+
+    public String getExtendId() {
+        return extendId;
+    }
+
+    public void setExtendId(String extendId) {
+        this.extendId = extendId;
+    }
+
+    public String getShipType() {
+        return shipType;
+    }
+
+    public void setShipType(String shipType) {
+        this.shipType = shipType;
+    }
 
     public String getExpressCodes() {
         return expressCodes;

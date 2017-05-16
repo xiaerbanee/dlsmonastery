@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
 
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
@@ -34,6 +35,7 @@ public class PriceChangeImeController {
 
     @RequestMapping(value = "getQuery")
     public PriceChangeImeQuery getQuery(PriceChangeImeQuery priceChangeImeQuery){
+        priceChangeImeQuery.setStatusList(AuditStatusEnum.getList());
         return priceChangeImeQuery;
     }
 
@@ -43,14 +45,11 @@ public class PriceChangeImeController {
         return priceChangeImeService.findForm(priceChangeImeForm);
     }
 
-    @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
-        return null;
-    }
 
     @RequestMapping(value = "save")
-    public String save(PriceChangeIme priceChangeIme) {
-        return null;
+    public RestResponse save(PriceChangeImeForm priceChangeImeForm) {
+        priceChangeImeService.save(priceChangeImeForm);
+        return new RestResponse("上传成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "imageUpload")

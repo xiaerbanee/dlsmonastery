@@ -1,23 +1,35 @@
 package net.myspring.future.modules.crm.web.query;
 
+import java.util.List;
+
 /**
  * Created by zhangyf on 2017/5/15.
  */
 public class PriceChangeImeQuery {
     private String status;
     private String isCheck;
-    private String image;
+    private Boolean image;
     private String shopId;
     private String ime;
     private String officeId;
     private String priceChangeName;
     private String productId;
 
-    public String getImage() {
+    private List<String> statusList;
+
+    public List<String> getStatusList() {
+        return statusList;
+    }
+
+    public void setStatusList(List<String> statusList) {
+        this.statusList = statusList;
+    }
+
+    public Boolean getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(Boolean image) {
         this.image = image;
     }
 

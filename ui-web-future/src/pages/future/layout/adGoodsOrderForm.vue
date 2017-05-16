@@ -11,29 +11,27 @@
         <el-row >
           <el-col :span="8">
             <el-form-item :label="$t('adGoodsOrderForm.outShopId')" prop="outShopId">
-              <depot-select v-model="inputForm.outShopId" category="SHOP"></depot-select>
+              <depot-select v-model="inputForm.outShopId" category="adShop" @input="shopChange"></depot-select>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderForm.outShopId')" prop="outShopId" v-if="isAdShop">
-              <el-select v-model="inputForm.adShop" clearable filterable remote :placeholder="$t('adGoodsOrderForm.selectKeyShow20time')" :remote-method="remoteAdDepot"  :loading="remoteLoading">
-                <el-option v-for="shop in adShops" :key="shop.id" :label="shop.name" :value="shop.id"></el-option>
-              </el-select>
+            <el-form-item :label="$t('adGoodsOrderForm.shopId')" prop="outShopId" v-if="isAdShop">
+              <depot-select v-model="inputForm.shopId" category="delegateShop"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.employeeName')" prop="employeeId">
               <employee-select v-model="inputForm.employeeId" ></employee-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.expressCompany')" prop="expressCompanyId">
-              <express-company-select v-model="expressOrder.expressCompanyId"></express-company-select>
+              <express-company-select v-model="expressOrderDto.expressCompanyId"></express-company-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.address')" prop="address">
-              <el-input v-model="expressOrder.address"></el-input>
+              <el-input v-model="expressOrderDto.address"></el-input>
             </el-form-item>
             </el-col>
             <el-col :span="8">
             <el-form-item :label="$t('adGoodsOrderForm.contact')" prop="contator">
-              <el-input v-model="expressOrder.contator"></el-input>
+              <el-input v-model="expressOrderDto.contator"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.mobilePhone')" prop="mobilePhone">
-              <el-input v-model="expressOrder.mobilePhone"></el-input>
+              <el-input v-model="expressOrderDto.mobilePhone"></el-input>
             </el-form-item>
               <el-form-item :label="$t('adGoodsOrderForm.remarks')" prop="remarks">
                 <el-input v-model="inputForm.remarks" type="textarea"></el-input>
@@ -55,18 +53,9 @@
             <el-input  v-model="scope.row.qty" @blur="getSummery()"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="productId" :label="$t('adGoodsOrderForm.productName')">
-          <template scope="scope">
-            <product-select v-model ="scope.row.productId" @input="productSelected(scope.row)"></product-select>
-          </template>
-        </el-table-column>
-        <el-table-column prop="price" :label="$t('adGoodsOrderForm.price')"></el-table-column>
-        <el-table-column prop="remarks" :label="$t('adGoodsOrderForm.remarks')"></el-table-column>
-        <el-table-column :render-header="renderAction"  >
-          <template scope="scope">
-            <el-button size="small" type="danger" @click.prevent="removeDomain(scope.row)">{{$t('storeAllotForm.delete')}}</el-button>
-          </template>
-        </el-table-column>
+        <el-table-column prop="productName" :label="$t('adGoodsOrderForm.productName')"></el-table-column>
+        <el-table-column prop="price2" :label="$t('adGoodsOrderForm.price')"></el-table-column>
+        <el-table-column prop="productRemarks" :label="$t('adGoodsOrderForm.remarks')"></el-table-column>
       </el-table>
     </div>
   </div>
@@ -95,7 +84,7 @@
         isAdShop:false,
         pageLoading:'',
         inputForm:{},
-        expressOrder:{
+        expressOrderDto:{
           expressCompanyId:'',
           address:'',
           contator:'',
@@ -104,8 +93,9 @@
         submitData:{
           id:this.$route.query.id,
           outShopId:'',
+          shopId:'',
           employeeId:'',
-          expressOrder:{
+          expressOrderDto:{
             id:"",
             expressCompanyId:'',
             address:'',
@@ -113,7 +103,7 @@
             mobilePhone:'',
           },
           remarks:'',
-          adGoodsOrderDetailList:[],
+          adGoodsOrderDetails:[],
         },
         rules: {
           outShopId:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
@@ -134,9 +124,17 @@
         form.validate((valid) => {
           if (valid) {
             this.inputForm.expressOrder = this.expressOrder;
-            this.inputForm.adGoodsOrderDetails=this.adGoodsOrderDetails
             util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/crm/adGoodsOrder/save',qs.stringify(this.submitData,{allowDots:true})).then((response)=> {
+            var tempList=new Array();
+            for(var index in this.adGoodsOrderDetails){
+              var detail=this.inputForm.adGoodsOrderDetails[index];
+              if(util.isNotBlank(detail.qty)){
+                tempList.push(detail)
+              }
+            }
+            this.submitData.adGoodsOrderDetails=tempList;
+            console.log(this.submitData);
+            axios.post('/api/ws/future/layout/adGoodsOrder/save',qs.stringify(this.submitData,{allowDots:true})).then((response)=> {
               if(!response.data.errors){
                 this.$message(response.data.message);
                 if(this.isCreate){
@@ -158,6 +156,15 @@
             this.submitDisabled = false;
           }
         })
+      },
+      shopChange(){
+        axios.get('/api/ws/future/basic/depot/findById'+'?id=' + this.inputForm.outShopId).then((response)=>{
+            console.log(response.data);
+          var jointType=response.data.jointType;
+          if(jointType == '代理'){
+              this.adShop = true;
+          }
+        })
       },searchDetail(){
           var val=this.productName;
          var tempList=new Array();
@@ -174,43 +181,14 @@
            }
          }
          this.adGoodsOrderDetails = tempList;
-       },
-      productSelected(row){
-        axios.get('/api/ws/future/basic/product/findForm',{params:{id:row.productId}}).then((res)=>{
-          row.productCode=res.data.code;
-          row.price=res.data.price2;
-          row.remarks=res.data.remarks;
-        });
-      },
-      removeDomain(item) {
-      var index = this.adGoodsOrderDetails.indexOf(item)
-        if (index !== -1) {
-          this.adGoodsOrderDetails.splice(index, 1)
-        }
-      },
-      renderAction(createElement) {
-        return createElement(
-          'a',{
-            attrs: {
-              class: 'el-button el-button--primary el-button--small'
-            }, domProps: {
-              innerHTML: '增加'
-            },on: {
-              click: this.addDomain
-            }
-          }
-        );
-      },addDomain(){
-        this.adGoodsOrderDetails.push({productCode:"",qty:"",productId:"",price:"",remarks:""});
-        return false;
-      },getSummery(){
+       },getSummery(){
       let list=this.adGoodsOrderDetails;
       let totalQty=0;
       let totalPrice=0;
       for(let item in list){
         if(list[item].qty){
           totalQty=totalQty+parseInt(list[item].qty);
-          totalPrice=totalPrice+parseInt(list[item].qty)*parseInt(list[item].price);
+          totalPrice=totalPrice+parseInt(list[item].qty)*parseInt(list[item].price2);
         }
       }
       this.totalQty=totalQty;
@@ -218,13 +196,10 @@
     }},created(){
       axios.get('/api/ws/future/layout/adGoodsOrder/findForm',{params:{id:this.$route.query.id}}).then((response)=> {
         this.inputForm =response.data;
-        if(response.data.expressOrderForm!=null){
-          this.expressOrder=response.data.expressOrderForm;
-        }
-        if(response.data.adGoodsOrderDetails!=null){
-          this.adGoodsOrderDetails=response.data.adGoodsOrderDetails;
-        }else{
-            this.adGoodsOrderDetails.push({productCode:"",qty:"",productId:"",price:"",remarks:""});
+        this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
+        this.shopChange();
+        if(response.data.expressOrderDto!=null){
+          this.expressOrderDto=response.data.expressOrderDto;
         }
       });
     }

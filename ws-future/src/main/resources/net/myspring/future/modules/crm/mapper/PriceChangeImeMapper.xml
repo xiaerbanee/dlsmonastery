@@ -14,6 +14,12 @@
         and t1.enabled=1
         <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
         <if test="p.image != null">
+            <if test = "p.image">
+                AND t1.image is NOT NULL
+            </if>
+            <if test = "!p.image">
+                AND t1.image is NULL
+            </if>
             AND t1.image = #{p.image}
         </if>
         <if test="p.isCheck != null">
