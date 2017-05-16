@@ -12,4 +12,17 @@
         </if>
     </select>
 
+    <select id="findByDepotId" resultType="Client">
+        select t1.*
+        from crm_client t1, crm_depot t2
+        where
+        t1.enabled=1
+        and t1.id = t2.client_id
+        and t2.id = #{depotId}
+
+    </select>
+
+
+
+
 </mapper>

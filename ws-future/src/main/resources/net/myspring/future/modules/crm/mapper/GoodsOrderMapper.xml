@@ -4,13 +4,28 @@
 
     <select id="findPage" resultType="GoodsOrderDto">
         SELECT
-           (select sum(deposit.amount) from crm_shop_goods_deposit deposit where deposit.shop_id = t1.shop_id and deposit.status='已通过'  and deposit.enabled=1) totalShopGoodsDepositAmount, t1.*
+            (
+                SELECT
+                sum(deposit.amount)
+                FROM
+                crm_shop_goods_deposit deposit
+                WHERE
+                deposit.shop_id = t1.shop_id
+                AND deposit. STATUS = '已通过'
+                AND deposit.enabled = 1
+                ) totalShopGoodsDepositAmount,
+            depot.client_id,
+            depot.pricesystem_id,
+            (select expressOrder.out_print_date from crm_express_order expressOrder where expressOrder.id = t1.express_order_id) expressOutPrintDate,
+            (select expressOrder.express_print_date from crm_express_order expressOrder where expressOrder.id = t1.express_order_id) expressExpressPrintDate,
+            t1.*
         FROM
-        crm_goods_order t1,crm_depot depot, crm_depot storeDepot
+            crm_goods_order t1,
+            crm_depot depot
         WHERE
-        t1.enabled=1
-        and t1.shop_id = depot.id
-        and t1.store_id = storeDepot.id
+            t1.enabled = 1
+            AND t1.shop_id = depot.id
+
         <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter"/>-->
         <if test="p.netType !=null ">
             AND t1.net_type=#{p.netType}
@@ -38,9 +53,6 @@
         </if>
         <if test="p.areaId !=null ">
             AND depot.area_id=#{p.areaId}
-        </if>
-        <if test="p.storeType !=null">
-            AND storeDepot.type=#{p.storeType}
         </if>
         <if test="p.createdDateStart !=null">
             AND t1.created_date &gt;=#{p.createdDateStart}
@@ -72,6 +84,37 @@
             )
         </if>
     </select>
+
+
+    <select id="findDto" resultType="GoodsOrderDto">
+        SELECT
+            (
+                SELECT
+                    sum(deposit.amount)
+                FROM
+                    crm_shop_goods_deposit deposit
+                WHERE
+                    deposit.shop_id = t1.shop_id
+                AND deposit. STATUS = '已通过'
+                AND deposit.enabled = 1
+            ) totalShopGoodsDepositAmount,
+          depot.client_id,
+          depot.pricesystem_id,
+            (select expressOrder.out_print_date from crm_express_order expressOrder where expressOrder.id = t1.express_order_id) expressOutPrintDate,
+            (select expressOrder.express_print_date from crm_express_order expressOrder where expressOrder.id = t1.express_order_id) expressExpressPrintDate,
+            t1.*
+        FROM
+            crm_goods_order t1,
+            crm_depot depot
+
+        WHERE
+            t1.id = #{goodsOrderId}
+        AND t1.shop_id = depot.id
+
+    </select>
+
+
+
 
     <select id="findByStoreBillData" resultType="GoodsOrder">
         SELECT t1.*

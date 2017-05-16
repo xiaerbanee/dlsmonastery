@@ -1,10 +1,14 @@
 package net.myspring.future.modules.crm.service;
 
+import com.google.common.collect.Lists;
+import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.mapper.GoodsOrderDetailMapper;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
+import net.myspring.future.modules.crm.web.query.GoodsOrderDetailQuery;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,4 +67,61 @@ public class GoodsOrderDetailService {
         cacheUtils.initCacheInput(godd);
         return BeanUtil.map(godd, GoodsOrderDetailForm.class);
     }
+
+    public void batchSave(String goodsOrderId, List<GoodsOrderDetail> details) {
+        goodsOrderDetailMapper.deleteByGoodsOrderId(goodsOrderId);
+
+        if(details==null || details.isEmpty()){
+            return;
+        }
+        details.stream().forEach(each -> each.setGoodsOrderId(goodsOrderId));
+
+        goodsOrderDetailMapper.batchSave(details);
+
+    }
+
+    public List<GoodsOrderDetailForm> getListForNewOrUpdateWithAreaQty(GoodsOrderDetailQuery godq) {
+
+
+        List<GoodsOrderDetailDto> tmp =  goodsOrderDetailMapper.getListForNewOrUpdateOrBillWithAreaQty(godq);
+        cacheUtils.initCacheInput(tmp);
+
+        List<GoodsOrderDetailForm> result = BeanUtil.map(tmp, GoodsOrderDetailForm.class);
+
+        return result;
+
+    }
+
+    public List<GoodsOrderDetailForm> getListForBillWithTodaysAreaBillQty(String goodsOrderId, String pricesystemId, String netType, String areaId) {
+        GoodsOrderDetailQuery godq = new GoodsOrderDetailQuery();
+
+        LocalDateTime dateStart = LocalDate.now().atStartOfDay();
+        LocalDateTime dateEnd = dateStart.plusDays(1);
+        godq.setBillDateStart(dateStart);
+        godq.setBillDateEnd(dateEnd);
+
+        godq.setShowAll(Boolean.FALSE);
+        godq.setPricesystemId(pricesystemId);
+        godq.setGoodsOrderId(goodsOrderId);
+        godq.setNetType(netType);
+        godq.setAreaId(areaId);
+        godq.setCompanyId(RequestUtils.getCompanyId());
+
+        List<String> shipTypeList= Lists.newArrayList();
+        shipTypeList.add(ShipTypeEnum.总部发货.name());
+        shipTypeList.add(ShipTypeEnum.总部自提.name());
+        shipTypeList.add(ShipTypeEnum.地区发货.name());
+        shipTypeList.add(ShipTypeEnum.地区自提.name());
+        godq.setShipTypeList(shipTypeList);
+
+        List<GoodsOrderDetailDto> tmp =  goodsOrderDetailMapper.getListForNewOrUpdateOrBillWithAreaQty(godq);
+        cacheUtils.initCacheInput(tmp);
+
+        List<GoodsOrderDetailForm> result = BeanUtil.map(tmp, GoodsOrderDetailForm.class);
+
+        return result;
+
+    }
+
+
 }

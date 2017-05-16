@@ -1,17 +1,12 @@
 package net.myspring.future.modules.crm.domain;
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Depot;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name="crm_goods_order")
@@ -30,13 +25,10 @@ public class GoodsOrder extends CompanyEntity<GoodsOrder> {
     private String shipType;
     private Boolean splitBill;
     private String netType;
-    private List<String> carrierOrderIdList = Lists.newArrayList();
-    private ExpressOrder expressOrder;
+
+
     private String expressOrderId;
-    private List<GoodsOrderDetail> goodsOrderDetailList = Lists.newArrayList();
-    private List<String> goodsOrderDetailIdList = Lists.newArrayList();
-    private List<GoodsOrderIme> goodsOrderImeList = Lists.newArrayList();
-    private List<String> goodsOrderImeIdList = Lists.newArrayList();
+
 
     //金蝶中间表
     private String transCloudSynId;
@@ -46,11 +38,6 @@ public class GoodsOrder extends CompanyEntity<GoodsOrder> {
     private String retransCloudSynId;
 
 
-    private Depot shop;
-    private Depot store;
-
-    private Depot allotFromStock;
-    private Depot allotToStock;
 
     public String getStoreId() {
         return storeId;
@@ -164,60 +151,12 @@ public class GoodsOrder extends CompanyEntity<GoodsOrder> {
         this.netType = netType;
     }
 
-    public List<String> getCarrierOrderIdList() {
-        return carrierOrderIdList;
-    }
-
-    public void setCarrierOrderIdList(List<String> carrierOrderIdList) {
-        this.carrierOrderIdList = carrierOrderIdList;
-    }
-
-    public ExpressOrder getExpressOrder() {
-        return expressOrder;
-    }
-
-    public void setExpressOrder(ExpressOrder expressOrder) {
-        this.expressOrder = expressOrder;
-    }
-
     public String getExpressOrderId() {
         return expressOrderId;
     }
 
     public void setExpressOrderId(String expressOrderId) {
         this.expressOrderId = expressOrderId;
-    }
-
-    public List<GoodsOrderDetail> getGoodsOrderDetailList() {
-        return goodsOrderDetailList;
-    }
-
-    public void setGoodsOrderDetailList(List<GoodsOrderDetail> goodsOrderDetailList) {
-        this.goodsOrderDetailList = goodsOrderDetailList;
-    }
-
-    public List<String> getGoodsOrderDetailIdList() {
-        return goodsOrderDetailIdList;
-    }
-
-    public void setGoodsOrderDetailIdList(List<String> goodsOrderDetailIdList) {
-        this.goodsOrderDetailIdList = goodsOrderDetailIdList;
-    }
-
-    public List<GoodsOrderIme> getGoodsOrderImeList() {
-        return goodsOrderImeList;
-    }
-
-    public void setGoodsOrderImeList(List<GoodsOrderIme> goodsOrderImeList) {
-        this.goodsOrderImeList = goodsOrderImeList;
-    }
-
-    public List<String> getGoodsOrderImeIdList() {
-        return goodsOrderImeIdList;
-    }
-
-    public void setGoodsOrderImeIdList(List<String> goodsOrderImeIdList) {
-        this.goodsOrderImeIdList = goodsOrderImeIdList;
     }
 
     public String getTransCloudSynId() {
@@ -260,35 +199,4 @@ public class GoodsOrder extends CompanyEntity<GoodsOrder> {
         this.retransCloudSynId = retransCloudSynId;
     }
 
-    public Depot getShop() {
-        return shop;
-    }
-
-    public void setShop(Depot shop) {
-        this.shop = shop;
-    }
-
-    public Depot getStore() {
-        return store;
-    }
-
-    public void setStore(Depot store) {
-        this.store = store;
-    }
-
-    public Depot getAllotFromStock() {
-        return allotFromStock;
-    }
-
-    public void setAllotFromStock(Depot allotFromStock) {
-        this.allotFromStock = allotFromStock;
-    }
-
-    public Depot getAllotToStock() {
-        return allotToStock;
-    }
-
-    public void setAllotToStock(Depot allotToStock) {
-        this.allotToStock = allotToStock;
-    }
 }

@@ -14,6 +14,7 @@ import net.myspring.future.modules.basic.mapper.ExpressCompanyMapper;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
+import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.mapper.ExpressMapper;
@@ -195,6 +196,26 @@ public class ExpressOrderService {
         }else{
             expressOrderMapper.save(expressOrder);
         }
+        return expressOrder;
+    }
+
+
+    public ExpressOrder saveOrUpdateExpressOrder(GoodsOrder goodsOrder) {
+        ExpressOrder expressOrder=null;
+        if(goodsOrder.getExpressOrderId()!=null){
+            expressOrder = expressOrderMapper.findOne(goodsOrder.getExpressOrderId());
+        }else{
+            expressOrder = new ExpressOrder();
+        }
+        expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
+        Depot shop=depotMapper.findOne(goodsOrder.getShopId());
+        expressOrder.setContator(shop.getContator());
+        expressOrder.setAddress(shop.getAddress());
+        expressOrder.setMobilePhone(shop.getMobilePhone());
+        expressOrder.setToDepotId(shop.getId());
+        expressOrder.setShipType(goodsOrder.getShipType());
+        expressOrder.setExtendId(goodsOrder.getId());
+        expressOrder = saveOrUpdate(expressOrder);
         return expressOrder;
     }
 

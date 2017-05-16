@@ -50,4 +50,6 @@ public interface ExpressCompanyMapper extends BaseMapper<ExpressCompany,String> 
     List<ExpressCompany> findByExpressType(String type);
 
     List<ExpressCompanyDto> findByNameLike(@Param("companyId") String companyId, @Param("name") String name);
+
+    List<ExpressCompanyDto> findDtoListByCompanyIdAndExpressType(@Param("companyId") String companyId, @Param("expressType")  String expressType);
 }
