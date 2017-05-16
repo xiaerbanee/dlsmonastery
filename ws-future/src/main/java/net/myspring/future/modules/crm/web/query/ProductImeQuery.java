@@ -13,20 +13,40 @@ import java.util.List;
  * Created by haos on 2017/5/12.
  */
 public class ProductImeQuery extends BaseQuery{
+    private List<String> officeIdList;
+    private List<String> depotIdList;
+
     private String ime;
+    private String imeReverse;
     private String boxIme;
     private String ime2;
     private String meid;
     private String depotId;
-    private String InputName;
     private String imes;
     private String productId;
     private String createdDate;
     private String retailDate;
     private String createTime;
+    private String inputType;
 
     //分页数据
     private Pageable pageable;
+
+    public List<String> getOfficeIdList() {
+        return officeIdList;
+    }
+
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
+    }
+
+    public List<String> getDepotIdList() {
+        return depotIdList;
+    }
+
+    public void setDepotIdList(List<String> depotIdList) {
+        this.depotIdList = depotIdList;
+    }
 
     public String getIme() {
         return ime;
@@ -34,6 +54,14 @@ public class ProductImeQuery extends BaseQuery{
 
     public void setIme(String ime) {
         this.ime = ime;
+    }
+
+    public String getImeReverse() {
+        return imeReverse;
+    }
+
+    public void setImeReverse(String imeReverse) {
+        this.imeReverse = imeReverse;
     }
 
     public String getBoxIme() {
@@ -68,13 +96,6 @@ public class ProductImeQuery extends BaseQuery{
         this.depotId = depotId;
     }
 
-    public String getInputName() {
-        return InputName;
-    }
-
-    public void setInputName(String inputName) {
-        InputName = inputName;
-    }
 
     public String getImes() {
         return imes;
@@ -98,6 +119,14 @@ public class ProductImeQuery extends BaseQuery{
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getInputType() {
+        return inputType;
+    }
+
+    public void setInputType(String inputType) {
+        this.inputType = inputType;
     }
 
     public String getRetailDate() {
@@ -156,7 +185,7 @@ public class ProductImeQuery extends BaseQuery{
         }
     }
 
-    public LocalDate geRetailDateEnd() {
+    public LocalDate getRetailDateEnd() {
         if(StringUtils.isNotBlank(retailDate)) {
             return LocalDateUtils.parse(retailDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
@@ -172,7 +201,7 @@ public class ProductImeQuery extends BaseQuery{
         }
     }
 
-    public LocalDate geCreateTimeEnd() {
+    public LocalDate getCreateTimeEnd() {
         if(StringUtils.isNotBlank(createTime)) {
             return LocalDateUtils.parse(createTime.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
