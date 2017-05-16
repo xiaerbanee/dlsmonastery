@@ -1,13 +1,13 @@
 <template>
   <div>
-    <head-tab active="imeAllotForm"></head-tab>
+    <head-tab active="priceChangeImeForm"></head-tab>
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="20">
           <el-col :span="10">
-        <el-form-item :label="$t('imeAllotForm.priceChangeId')" prop="priceChangeId">
-          <el-select v-model="inputForm.priceChangeId" filterable   :placeholder="$t('imeAllotForm.selectPriceChangeId')" >
-            <el-option v-for="item in formProperty.priceChanges" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        <el-form-item :label="$t('priceChangeImeForm.priceChangeId')" prop="priceChangeId">
+          <el-select v-model="inputForm.priceChangeId" filterable   :placeholder="$t('priceChangeImeForm.selectPriceChangeId')" >
+            <el-option v-for="item in formData.priceChangeDtos" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -49,7 +49,7 @@
                       } else {
                         var shopNames = new Array();
                         if(query.length>=2) {
-                          axios.get('/api/crm/depot/shop?name='+query).then((response)=>{
+                          axios.get('/api/ws/future/basic/depot/shop?name='+query).then((response)=>{
                               if(response.data.length>0) {
                                 for(var index in response.data) {
                                   var shopName = response.data[index].name;
@@ -77,7 +77,7 @@
             inputForm:{
               priceChangeId:''
             },
-            formProperty:{},
+            formData:{},
             remoteLoading:false,
             rules: {
               name: [{ required: true, message: '名称不能为空'}]
@@ -93,7 +93,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/crm/priceChangeIme/save',qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/ws/future/crm/priceChangeIme/save',qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 form.resetFields();
                 this.submitDisabled = false;
@@ -106,8 +106,8 @@
           })
         }
       },created() {
-        axios.get('/api/crm/priceChangeIme/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
+        axios.get('/api/ws/future/crm/priceChangeIme/findForm').then((response)=>{
+          this.formData=response.data;
         });
       }
     }

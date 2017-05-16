@@ -76,8 +76,9 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public RestResponse save(AdGoodsOrder adGoodsOrder, BindingResult bindingResult) {
-        return null;
+    public RestResponse save(AdGoodsOrderForm adGoodsOrderForm) {
+        adGoodsOrderService.save(adGoodsOrderForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getBillFormProperty", method = RequestMethod.GET)

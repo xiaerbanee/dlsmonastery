@@ -2,7 +2,9 @@ package net.myspring.future.modules.crm.service;
 
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
+import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
 import net.myspring.future.modules.crm.mapper.PriceChangeImeMapper;
 import net.myspring.future.modules.crm.mapper.PriceChangeMapper;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -56,8 +59,15 @@ public class PriceChangeImeService {
                 priceChangeImeForm.setProductId(productImeMapper.findOne(priceChangeImeForm.getProductImeId()).getProductId());
                 priceChangeImeForm.setIme(productImeMapper.findOne(priceChangeImeForm.getProductImeId()).getIme());
             }
+        }else {
+            List<PriceChange> priceChange = priceChangeMapper.findAllEnabled();
+            priceChangeImeForm.setPriceChangeDtos(BeanUtil.map(priceChange, PriceChangeDto.class));
         }
         return priceChangeImeForm;
+    }
+
+    public void save(PriceChangeImeForm priceChangeImeForm){
+
     }
 
     @Transactional

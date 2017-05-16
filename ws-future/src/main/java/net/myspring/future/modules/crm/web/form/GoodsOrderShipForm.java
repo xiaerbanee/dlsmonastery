@@ -10,7 +10,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
+public class GoodsOrderShipForm extends DataForm<GoodsOrder> {
+
+
+
 
     private Boolean sameDate;
     private String storeId;

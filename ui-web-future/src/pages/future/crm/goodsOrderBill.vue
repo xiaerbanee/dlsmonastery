@@ -6,20 +6,20 @@
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.store')" prop="storeId">
-              <el-select v-model="inputForm.storeDto" clearable filterable @change="billChange">
-                <el-option v-for="item in inputForm.storeList" :key="item.id" :label="item.name" :value="item"></el-option>
+              <el-select v-model="inputForm.storeId" clearable filterable @change="billChange">
+                <el-option v-for="item in inputForm.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.billDate')" prop="billDate">
               <date-picker v-model="inputForm.billDate"  ></date-picker>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.expressCompany')" prop="expressCompanyId">
-              <el-select v-model="inputForm.expressOrderDto.expressCompanyId" clearable  >
+              <el-select v-model="inputForm.expressCompanyId" clearable  >
                 <el-option v-for="item in inputForm.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.synToCloud')" prop="syn">
-             <boolRadioGroup v-model="inputForm.syn" @input="billChange" ></boolRadioGroup>
+             <boolRadioGroup v-model="inputForm.syn"  ></boolRadioGroup>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shipType')" >
               {{inputForm.shipType}}
@@ -36,13 +36,13 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.contact')" prop="contator">
-              <el-input v-model="inputForm.expressOrderDto.contator"></el-input>
+              <el-input v-model="inputForm.expressContator"></el-input>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.address')" prop="address">
-              <el-input v-model="inputForm.expressOrderDto.address"></el-input>
+              <el-input v-model="inputForm.expressAddress"></el-input>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.mobilePhone')" prop="mobilePhone">
-              <el-input v-model="inputForm.expressOrderDto.mobilePhone"></el-input>
+              <el-input v-model="inputForm.expressMobilePhone"></el-input>
             </el-form-item>
 
             <el-form-item :label="$t('goodsOrderBill.areaName')" >
@@ -100,7 +100,7 @@
         <el-table-column prop="qty" :label="$t('goodsOrderBill.qty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('goodsOrderBill.billQty')" >
           <template scope="scope">
-            <input type="text" v-model="scope.row.billQty" @change="getBill()" class="el-input__inner"/>
+            <input type="text" v-model="scope.row.billQty" @change="refreshSummary()" class="el-input__inner"/>
           </template>
         </el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderBill.price')"></el-table-column>
@@ -131,22 +131,24 @@
         submitDisabled:false,
         productName:"",
         filterGoodsOrderDetailList:[],
-        inputForm:{},
+        inputForm:{
+          goodsOrderDto:{},
+          shopDto:{},
+        },
         submitData:{
           id:'',
           storeId:"",
           billDate: '',
           expressCompanyId:"",
-          contator:"",
-          address:"",
-          mobilePhone:"",
+          expressContator:"",
+          expressAddress:"",
+          expressMobilePhone:"",
           syn:"1",
           remarks:"",
-          goodsOrderDetailList:[],
+          detailFormList:[],
         },
-
         rules: {},
-
+        initForm:false,
         pageLoading:false,
 
         totalQty:'',
@@ -159,9 +161,8 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-             this.inputForm.billDate=util.formatLocalDate(this.inputForm.billDate)
-              this.inputForm.goodsOrderDetailList=this.filterGoodsOrderDetailList
-              axios.post('/api/crm/goodsOrder/bill',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+               this.initSubmitDataBeforeSubmit();
+              axios.post('/api/ws/future/crm/goodsOrder/billSave',qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
                this.$message(response.data.message);
                 if(response.data.success){
                   if(this.isCreate){
@@ -180,17 +181,12 @@
               this.submitDisabled = false;
             }
           })
-        }, billChange(){
-          if(this.inputForm.proxys.indexOf(this.inputForm.shop.type)==-1){
-           axios.get('/api/crm/goodsOrder/billChange',{params: {id:this.$route.query.id,storeId:this.inputForm.storeId,syn:this.inputForm.syn}}).then((response)=>{
-             for(let index in response.data.goodsOrderDetailList) {
-              response.data.goodsOrderDetailList[index].billQty = response.data.goodsOrderDetailList[index].qty;
-            }
-              this.inputForm.goodsOrderDetailList=response.data.goodsOrderDetailList;
-              this.filterGoodsOrderDetailList=response.data.goodsOrderDetailList;
-              this.getBill();
-            });
-          }
+        }, billChange(newVal){
+        if(newVal=="" || newVal == this.inputForm.storeId || newVal == util.getLabel(this.inputForm.storeList,this.inputForm.storeId,"name")) {
+          return;
+        }
+        this.refreshForm();
+
         },searchDetail(){
         let val=this.productName;
          let tempList=new Array();
@@ -203,11 +199,10 @@
          for(let each of this.inputForm.detailFormList){
            if(util.contains(each.productName,val) && util.isBlank(each.billQty) && util.isBlank(each.qty)){
              tempList.push(each);
-
            }
          }
          this.filterGoodsOrderDetailList = tempList;
-       },getBill(){
+       },refreshSummary(){
         let list=this.filterGoodsOrderDetailList;
         let totalQty=0;
         let totalPrice=0;
@@ -219,12 +214,34 @@
         }
         this.totalQty=totalQty;
         this.totalPrice=totalPrice;
+      },initSubmitDataBeforeSubmit(){
+
+        util.copyValue(this.inputForm, this.submitData);
+
+        let tempList=new Array();
+        for(let each of this.inputForm.detailFormList){
+
+          if(util.isNotBlank(each.qty) || util.isNotBlank(each.billQty)){
+            tempList.push(each);
+          }
+        }
+        this.submitData.detailFormList = tempList;
+      },refreshForm(){
+          if(this.initForm){
+              return;
+          }
+          this.initForm = true;
+        axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id, storeId:this.inputForm.storeId}}).then((response)=>{
+          this.inputForm = response.data;
+          this.searchDetail();
+          this.refreshSummary();
+          this.initForm = false;
+        })
       }
     },created(){
-      axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
-        this.searchDetail();
-      })
+
+        this.refreshForm();
+
 
     }
   }

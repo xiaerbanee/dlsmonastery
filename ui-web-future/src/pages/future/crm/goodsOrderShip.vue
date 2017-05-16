@@ -83,14 +83,15 @@
         submitDisabled:false,
         alertError:false,
         error:"",
-        formProperty:{},
+
         shipForm:{
           store:{name:''},
           shop:{name:''},
           remarks:'',
         },
-        inputForm:{
-          id:this.$route.query.id,
+        inputForm:{},
+        submitData:{
+          id:'',
           businessId:'',
           boxImeStr:'',
           expressCodes:'',
@@ -160,14 +161,12 @@
           this.inputForm.businessId=response.data.businessId;
           this.inputForm.goodsOrderDetailList=response.data.goodsOrderDetailList;
         })
-      },getFormProperty(){
-        axios.get('/api/crm/goodsOrder/getFormProperty').then((response)=>{
-          this.formProperty=response.data;
-        });
       }
     },created(){
-      this.findOne();
-      this.getFormProperty();
+      axios.get('/api/ws/future/crm/goodsOrder/shipForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
+      })
+
     }
   }
 </script>

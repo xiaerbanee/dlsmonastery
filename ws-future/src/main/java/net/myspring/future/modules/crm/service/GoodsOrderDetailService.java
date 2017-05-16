@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.mapper.GoodsOrderDetailMapper;
@@ -25,6 +26,8 @@ public class GoodsOrderDetailService {
 
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private OfficeClient officeClient;
 
 
     public List<GoodsOrderDetail> findByGoodsOrderId(String goodsOrderId){
@@ -92,7 +95,7 @@ public class GoodsOrderDetailService {
 
     }
 
-    public List<GoodsOrderDetailForm> getListForBillWithTodaysAreaBillQty(String goodsOrderId, String pricesystemId, String netType, String areaId) {
+    public List<GoodsOrderDetailForm> getListForBillWithTodaysAreaBillQty(String goodsOrderId, String pricesystemId, String netType, String officeId) {
         GoodsOrderDetailQuery godq = new GoodsOrderDetailQuery();
 
         LocalDateTime dateStart = LocalDate.now().atStartOfDay();
@@ -104,7 +107,8 @@ public class GoodsOrderDetailService {
         godq.setPricesystemId(pricesystemId);
         godq.setGoodsOrderId(goodsOrderId);
         godq.setNetType(netType);
-        godq.setAreaId(areaId);
+        godq.setOfficeIdList(officeClient.getOfficeIdsOfSameArea(officeId));
+//        godq.setAreaId(areaId);
         godq.setCompanyId(RequestUtils.getCompanyId());
 
         List<String> shipTypeList= Lists.newArrayList();
