@@ -1,11 +1,16 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.future.modules.basic.service.PricesystemService;
 import net.myspring.future.modules.crm.domain.PricesystemChange;
 
+import net.myspring.future.modules.crm.dto.PricesystemChangeDto;
+import net.myspring.future.modules.crm.service.PricesystemChangeService;
+import net.myspring.future.modules.crm.web.query.PricesystemChangeQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,15 +22,23 @@ import java.util.Map;
 @RequestMapping(value = "crm/pricesystemChange")
 public class PricesystemChangeController {
 
+    @Autowired
+    private PricesystemChangeService pricesystemChangeService;
+
+    @Autowired
+    private PricesystemService pricesystemService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request) {
-        return null;
+    public Page<PricesystemChangeDto> list(Pageable pageable,PricesystemChangeQuery pricesystemChangeQuery) {
+        Page<PricesystemChangeDto> page=pricesystemChangeService.findPage(pageable,pricesystemChangeQuery);
+        return page;
     }
 
     @RequestMapping(value="getQuery")
-    public String form(){
-        return null;
+    public PricesystemChangeQuery getQuery(PricesystemChangeQuery pricesystemChangeQuery){
+        pricesystemChangeQuery.setStatusList(pricesystemChangeService.findStatus());
+        pricesystemChangeQuery.setPricesystems(pricesystemService.findPricesystem());
+        return pricesystemChangeQuery;
     }
 
     @RequestMapping(value="getFormProperty")
