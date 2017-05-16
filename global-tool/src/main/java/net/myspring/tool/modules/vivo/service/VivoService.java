@@ -12,6 +12,7 @@ import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.mapper.*;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,15 +91,16 @@ public class VivoService {
     @Transactional(readOnly = false)
     public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts){
         if(CollectionUtil.isNotEmpty(vivoPlantProducts)) {
-            List<String> itemNumbers = CollectionUtil.extractToList(vivoPlantProducts, "itemNumber");
-            List<String> localItemNumbers = vivoPlantProductsMapper.findItemNumbers(itemNumbers);
+            List<String> itemNumbers =CollectionUtil.extractToList(vivoPlantProducts, "itemNumber");
+            List<String> newItemNumbers=Lists.newArrayList();
+            for(String itemNumber:itemNumbers){
+                newItemNumbers.add(itemNumber.trim());
+            }
+            List<String> localItemNumbers = vivoPlantProductsMapper.findItemNumbers(newItemNumbers);
             List<VivoPlantProducts> list= Lists.newArrayList();
             for(VivoPlantProducts item : vivoPlantProducts){
                 if(!localItemNumbers.contains(item.getItemNumber().trim())){
-                    List<String> itemList = CollectionUtil.extractToList(list,"itemNumber");
-                    if(!itemList.contains(item.getItemNumber().trim())){
-                        list.add(item);
-                    }
+                    list.add(item);
                 }
             }
             if(CollectionUtil.isNotEmpty(list)) {
