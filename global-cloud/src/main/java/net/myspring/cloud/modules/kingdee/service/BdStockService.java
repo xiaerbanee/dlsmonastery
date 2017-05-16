@@ -17,7 +17,7 @@ public class BdStockService {
     @Autowired
     private BdStockMapper bdStockMapper;
 
-    public List<BdStock> getByNameLike(String name){
+    public List<BdStock> findByNameLike(String name){
         return bdStockMapper.findByNameLike(name);
     }
 }

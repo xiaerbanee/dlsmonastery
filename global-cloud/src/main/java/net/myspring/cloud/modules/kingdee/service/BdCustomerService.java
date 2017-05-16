@@ -17,15 +17,7 @@ public class BdCustomerService {
     @Autowired
     private BdCustomerMapper bdCustomerMapper;
 
-    public List<String> getNameByNameLike(String name){
-        return bdCustomerMapper.findNameByNameLike(name);
-    }
-
-    public List<BdCustomer> getCustomerGroupList(){
-        return bdCustomerMapper.findPrimaryGroupAndPrimaryGroupName();
-    }
-
-    public List<BdCustomer> getByNameLike(String name){
+    public List<BdCustomer> findByNameLike(String name) {
         return bdCustomerMapper.findByNameLike(name);
     }
 }

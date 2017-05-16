@@ -17,8 +17,8 @@ public class BdStockController {
     @Autowired
     private BdStockService bdStockService;
 
-    @RequestMapping(value = "getByNameLike")
-    public List<BdStock> getByNameLike(String name){
-        return bdStockService.getByNameLike(name);
+    @RequestMapping(value = "findByNameLike")
+    public List<BdStock> findByNameLike(String name){
+        return bdStockService.findByNameLike(name);
     }
 }

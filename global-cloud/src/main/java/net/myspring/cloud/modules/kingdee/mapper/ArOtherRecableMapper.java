@@ -15,6 +15,4 @@ import java.util.Set;
  */
 @Mapper
 public interface ArOtherRecableMapper {
-
-    List<CustomerReceiveDto> findByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList")Set<String> customerIdList);
 }

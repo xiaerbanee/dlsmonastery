@@ -16,9 +16,4 @@ import java.util.Set;
 @Mapper
 public interface SalReturnStockMapper {
 
-    //标准销售退货单
-    List<CustomerReceiveDto> findXSTHDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") Set<String> customerIdList);
-
-    //现销退货单
-    List<CustomerReceiveDto> findXXTHDByPeriodForSum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") Set<String> customerIdList);
 }
