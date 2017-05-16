@@ -32,6 +32,8 @@ public class ProductImeService {
     @Autowired
     private ProductImeMapper productImeMapper;
     @Autowired
+    private ProductMapper productMapper;
+    @Autowired
     private CacheUtils cacheUtils;
 
     //分页，但不查询总数
@@ -43,4 +45,25 @@ public class ProductImeService {
         return page;
     }
 
+
+    public List<ProductImeDto> findByImeList(List<String> imeList){
+        List<ProductIme> productImeList=productImeMapper.findByImeList(imeList);
+        List<ProductImeDto> productImeDtoList= BeanUtil.map(productImeList,ProductImeDto.class);
+        cacheUtils.initCacheInput(productImeDtoList);
+        return productImeDtoList;
+    }
+
+    public Map<String,Integer> findQtyMap(List<String> imeList){
+        Map<String,Integer> map= Maps.newHashMap();
+        List<ProductIme> productImeList=productImeMapper.findByImeList(imeList);
+        if(CollectionUtil.isNotEmpty(productImeList)){
+            List<Product> productList=productMapper.findByIds(CollectionUtil.extractToList(productImeList,"productId"));
+            Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"id");
+            Map<String,List<ProductIme>> productImeMap=CollectionUtil.extractToMapList(productImeList,"productId");
+            for(Map.Entry<String,List<ProductIme>> entry:productImeMap.entrySet()){
+                map.put(productMap.get(entry.getKey()).getName(),entry.getValue().size());
+            }
+        }
+        return map;
+    }
 }
