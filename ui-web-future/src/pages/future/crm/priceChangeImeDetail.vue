@@ -35,7 +35,7 @@
               <el-input v-model="inputForm.auditRemarks"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('priceChangeImeDetail.save')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" v-if="action !='detail'">{{$t('priceChangeImeDetail.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>

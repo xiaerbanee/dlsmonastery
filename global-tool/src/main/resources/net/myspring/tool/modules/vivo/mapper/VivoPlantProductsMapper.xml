@@ -5,9 +5,9 @@
 <mapper namespace="net.myspring.tool.modules.vivo.mapper.VivoPlantProductsMapper">
 
     <select id="findItemNumbers" resultType="String">
-        select t.item_number
+        select trim(t.item_number)
         from vivo_plant_products t
-        where t.item_number in
+        where trim(t.item_number) in
             <foreach item="item" index="index" collection="itemNumbers" open="(" separator="," close=")">
                 #{item}
             </foreach>
@@ -41,14 +41,8 @@
         item_type,
         org_id,
         code_record_type,
-        created_by,
-        created_date,
-        last_modified_by,
-        last_modified_date,
-        remarks,
-        version,
-        locked,
-        enabled
+        product_id,
+        lx_product_id
       )
       VALUES
       <foreach item="item" index="index" collection="list" open="" separator="," close="">
@@ -70,14 +64,8 @@
         #{item.itemType},
         #{item.orgId},
         #{item.codeRecordType},
-        #{item.createdBy},
-        #{item.createdDate},
-        #{item.lastModifiedBy},
-        #{item.lastModifiedDate},
-        #{item.remarks},
-        #{item.version},
-        #{item.locked},
-        #{item.enabled}
+        #{item.productId},
+        #{item.lxProductId}
       )
       </foreach>
     </insert>

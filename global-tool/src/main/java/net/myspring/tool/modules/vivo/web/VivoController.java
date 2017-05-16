@@ -35,6 +35,7 @@ public class VivoController {
         List<VivoProducts> vivoProductsList = vivoService.products();
         List<VivoPlantProducts> vivoPlantProductsList = vivoService.plantProducts();
         List<VivoPlantSendimei> vivoPlantSendimeis = vivoService.plantSendimei(localDate,agentCodes);
+        //同步颜色编码
         vivoService.pullProducts(vivoProductsList);
         //同步物料编码
         vivoService.pullPlantProducts(vivoPlantProductsList);

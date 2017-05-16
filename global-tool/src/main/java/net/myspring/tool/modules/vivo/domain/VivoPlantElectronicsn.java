@@ -14,6 +14,7 @@ public class VivoPlantElectronicsn extends IdEntity<VivoPlantElectronicsn> {
     private LocalDateTime retailDate;
     private LocalDateTime createTime;
     private String companyId;
+    private String productId;
 
     public String getSnImei() {
         return snImei;
@@ -45,5 +46,13 @@ public class VivoPlantElectronicsn extends IdEntity<VivoPlantElectronicsn> {
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 }
