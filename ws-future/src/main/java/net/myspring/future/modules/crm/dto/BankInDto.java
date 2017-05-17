@@ -27,6 +27,15 @@ public class BankInDto extends DataDto<BankIn> {
     private String outCode;
     private String processStatus;
     private Boolean locked;
+    private String processInstanceId;
+
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
 
     public String getFormatId() {
         return StringUtils.getFormatId(getId(), "XS");

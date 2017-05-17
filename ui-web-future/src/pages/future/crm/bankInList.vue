@@ -159,9 +159,9 @@
         if(action=="edit") {
           this.$router.push({ name: 'bankInForm', query: { id: id }})
         }else if(action=="detail"){
-          this.$router.push({ name: 'bankInDetail', query: { id: id}})
+          this.$router.push({ name: 'bankInDetail', query: { id: id, action:action}})
         }else if(action=="audit"){
-          this.$router.push({ name: 'bankInAudit', query: { id: id}})
+          this.$router.push({ name: 'bankInDetail', query: { id: id, action:action}})
         }else if(action=="delete"){
 
           util.confirmBeforeDelRecord(this).then(() => {

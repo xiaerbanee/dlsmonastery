@@ -283,6 +283,7 @@ export default {
     synToCloud: "sinkronisasi",
     true: "benar",
     false: "salah",
+    billDate:"开单日期",
     pass: "konfirmasi",
     auditRemarks: "keterangan pemeriksaan",
     prerequisiteMessage: "Informasi yang diperlukan",

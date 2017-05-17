@@ -348,6 +348,7 @@ export default {
     synToCloud: "同步到金蝶",
     true: "是",
     false: "否",
+    billDate:"开单日期",
     pass: "通过",
     auditRemarks: "审批备注",
     prerequisiteMessage: "必填信息",

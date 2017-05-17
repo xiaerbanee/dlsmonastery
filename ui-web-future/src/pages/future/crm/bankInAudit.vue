@@ -45,6 +45,7 @@
         <el-row :gutter="4">
           <el-col :span="24">
             <el-form-item :label="$t('bankInDetail.synToCloud')" prop="syn" v-if="action=='审核'">
+              <bool-
               <el-radio-group v-model="inputForm.syn">
                 <el-radio  :label="$t('bankInDetail.true')" value="true">{{$t('bankInDetail.true')}}</el-radio>
                 <el-radio  :label="$t('bankInDetail.false')" value = 'false'>{{$t('bankInDetail.false')}}</el-radio>
