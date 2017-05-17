@@ -22,6 +22,8 @@ public class ProcessFlowController {
         List<ProcessFlowDto> processFlowList= Lists.newArrayList();
         if(StringUtils.isNotBlank(processTypeName)){
             processFlowList=processFlowService.findByProcessTypeName(processTypeName);
+            processFlowList.add(new ProcessFlowDto("已通过"));
+            processFlowList.add(new ProcessFlowDto("未通过"));
         }
         return processFlowList;
     }
