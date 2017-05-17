@@ -115,7 +115,10 @@
     },created(){
       axios.get('/api/ws/future/layout/adGoodsOrder/detail',{params: {id:this.$route.query.id}}).then((response)=>{
         this.detailForm = response.data;
-        this.expressOrderForm = response.data.expressOrderDto;
+        if(response.data.expressOrderDto!=null){
+          this.expressOrderForm = response.data.expressOrderDto;
+        }
+
       })
     }
   }

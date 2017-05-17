@@ -85,6 +85,7 @@
         pageLoading:'',
         inputForm:{},
         expressOrderDto:{
+            id:'',
           expressCompanyId:'',
           address:'',
           contator:'',
@@ -133,6 +134,7 @@
               }
             }
             this.submitData.adGoodsOrderDetails=tempList;
+            this.submitData.expressOrderDto = this.expressOrderDto;
             console.log(this.submitData);
             axios.post('/api/ws/future/layout/adGoodsOrder/save',qs.stringify(this.submitData,{allowDots:true})).then((response)=> {
               if(!response.data.errors){

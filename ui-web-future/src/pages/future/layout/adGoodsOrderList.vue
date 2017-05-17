@@ -26,7 +26,7 @@
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
+                <account-select v-model="formData.createdBy"></account-select>
               </el-form-item>
               <el-form-item :label="formLabel.parentId.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.parentId" auto-complete="off" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
@@ -34,15 +34,13 @@
             </el-col>
             <el-col :span="12">
               <el-form-item :label="formLabel.officeName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.officeName" auto-complete="off" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
+                <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item :label="formLabel.storeId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.storeId" filterable clearable :placeholder="$t('adGoodsOrderList.inputKey')">
-                  <el-option v-for="item in formData.stores" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
+                <depot-select v-model="formData.storeId" category="store"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
+                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.processStatus.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.processStatus" filterable clearable :placeholder="$t('adGoodsOrderList.inputKey')">
@@ -83,7 +81,10 @@
         <el-table-column fixed="right" :label="$t('adGoodsOrderList.operation')" width="140">
           <template scope="scope">
             <el-button size="small" v-permit="'crm:adGoodsOrder:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('adGoodsOrderList.detail')}}</el-button>
-            <el-button size="small" v-if="scope.row.isAuditable" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('adGoodsOrderList.audit')}}</el-button>
+            <el-button size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('审核')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('adGoodsOrderList.audit')}}</el-button>
+            <el-button size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('开单')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'bill')">{{$t('adGoodsOrderList.bill')}}</el-button>
+            <el-button size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('发货')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'ship')">{{$t('adGoodsOrderList.ship')}}</el-button>
+            <el-button size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button>
             <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button>
             <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:adGoodsOrder:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button>
           </template>
@@ -94,7 +95,15 @@
   </div>
 </template>
 <script>
+  import officeSelect from 'components/basic/office-select';
+  import accountSelect from 'components/basic/account-select';
+  import depotSelect from 'components/future/depot-select';
   export default {
+    components:{
+      officeSelect,
+      accountSelect,
+      depotSelect
+    },
     data() {
       return {
         pageLoading: false,
@@ -108,7 +117,6 @@
           billType:'',
           remarks:'',
           createdBy:'',
-          areaId:'',
           officeId:'',
           storeId:'',
           shopId:'',
@@ -138,8 +146,9 @@
       pageRequest() {
         this.pageLoading = true;
         this.formLabel.storeId.value = util.getLabel(this.formData.stores, this.formData.storeId);
-        util.setQuery("adGoodsOrderList", this.formData);
-        axios.get('/api/ws/future/layout/adGoodsOrder', {params: this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("adGoodsOrderList", this.submitData);
+        axios.get('/api/ws/future/layout/adGoodsOrder', {params: this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
