@@ -41,7 +41,7 @@
           autoColumnSize:true,
           stretchH: 'all',
           height: 650,
-          colHeaders: ["编码","门店","货品","价格","数量","类型","备注"],
+          colHeaders: ["货品编码","门店","货品","价格","数量","类型","备注"],
           columns: [
             {type:"text", allowEmpty: false, strict: true},
             {type: "autocomplete", allowEmpty: false, strict: true, customerNames:[],source:this.customerNames},

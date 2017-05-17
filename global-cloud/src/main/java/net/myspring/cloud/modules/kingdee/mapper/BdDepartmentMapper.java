@@ -15,4 +15,6 @@ public interface BdDepartmentMapper {
 
     List<BdDepartment> findByIdList(@Param("idList") List<String> idList);
 
+    List<BdDepartment> findByNameLike(@Param("name")String name);
+
 }

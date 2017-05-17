@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 入库单
  * Created by liuj on 2017/5/11.
  */
 @Service
@@ -115,7 +116,7 @@ public class SalOutStockService {
             String billKey = customerNumMap.get(customerName) + CharConstant.COMMA + billType;
             if (!billMap.containsKey(billKey)) {
                 SalOutStockDto salOutStockDto = new SalOutStockDto();
-                salOutStockDto.setCreator(RequestUtils.getAccountId());
+                salOutStockDto.setCreator(accountKingdeeBook.getUsername());
                 salOutStockDto.setDate(date);
                 salOutStockDto.setStoreNumber(storeNumber);
                 salOutStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());

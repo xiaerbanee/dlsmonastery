@@ -1,13 +1,13 @@
 <template>
   <div>
-    <head-tab active="salReturnStock"></head-tab>
+    <head-tab active="stkMisDelivery"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
         <el-row :gutter="24">
           <el-col :span="6">
-            <el-form-item :label="formLabel.storeNumber.label"  :label-width="formLabelWidth" prop="storeNumber">
-              <el-select v-model="formData.storeNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStore" :loading="remoteLoading">
-                <el-option v-for="item in storeList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
+            <el-form-item :label="formLabel.departmentNumber.label"  :label-width="formLabelWidth" prop="departmentNumber">
+              <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
+                <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -35,20 +35,19 @@
     data() {
       return {
         table:null,
-        storeList:{},
+        departmentList:{},
         settings: {
           rowHeaders:true,
           autoColumnSize:true,
           stretchH: 'all',
           height: 650,
-          colHeaders: ["货品编码","门店","货品","价格","数量","类型","备注"],
+          colHeaders: ["货品编码", "货品", "仓库", "数量", "类型", "备注"],
           columns: [
-            {type:"text", allowEmpty: false, strict: true},
-            {type: "autocomplete", allowEmpty: false, strict: true, customerNames:[],source:this.customerNames},
-            {type: "autocomplete", allowEmpty: true, strict: true,productNames:[],source:this.productNames},
-            {type: 'numeric',allowEmpty: false,format:"0,0.00"},
-            {type: "numeric", allowEmpty: false},
-            {type: "autocomplete", allowEmpty: false, strict: true,billType:[], source: this.billType},
+            {type: "autocomplete", strict: true, productNumber:[],source: this.productNumber},
+            {type: "autocomplete", allowEmpty: false, strict: true, productName:[],source: this.productName},
+            {type: "autocomplete", allowEmpty: false, strict: true, stockName:[],source: this.stockName},
+            {type: 'numeric',allowEmpty: false, strict: true},
+            {type: "autocomplete", allowEmpty: false, strict: true, types:[],source: this.types},
             {type: "text", allowEmpty: true, strict: true }
           ],
           afterChange: function (changes, source) {
@@ -56,13 +55,15 @@
             if (source === 'edit') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
-                let column = changes[i][1]==2;
-                if(column){
-                  let name = changes[i][3];
-                  axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name='+ name).then((response) =>{
-                    let  material = response.data;
-                    table.setDataAtCell(row,0,material.fnumber);
+                let column = changes[i][1];
+                if(column === 1) {
+                  let productName = changes[i][3];
+                  axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name=' + productName).then((response) => {
+                    let material = response.data;
+                    table.setDataAtCell(row, 0, material.fnumber);
                   });
+                }else if(column == 0){
+                  let productNumber = changes[i][3];
                 }
               }
             }
@@ -70,13 +71,13 @@
         },
         formData:{
           billDate:new Date().toLocaleDateString(),
-          storeNumber:'',
+          departmentNumber:'',
           json:[],
         },formLabel:{
           billDate:{label:"日期"},
-          storeNumber:{label:"仓库"},
+          departmentNumber:{label:"部门"},
         },rules: {
-          storeNumber: [{ required: true, message: '请选择仓库'}],
+          departmentNumber: [{ required: true, message: '请选择部门'}],
           billDate: [{ required: true, message: '请选择时间'}],
         },
         submitDisabled:false,
@@ -85,10 +86,11 @@
       };
     },
     mounted() {
-      axios.get('/api/global/cloud/input/salReturnStock/form').then((response)=>{
-        this.settings.columns[1].source = response.data.bdCustomerNameList;
-        this.settings.columns[2].source = response.data.bdMaterialNameList;
-        this.settings.columns[5].source = response.data.returnStockBillTypeEnums;
+      axios.get('/api/global/cloud/input/stkMisDelivery/form').then((response)=>{
+        this.settings.columns[0].source = response.data.materialNumberList;
+        this.settings.columns[1].source = response.data.materialNameList;
+        this.settings.columns[2].source = response.data.stockNameList;
+        this.settings.columns[4].source = response.data.stkMisDeliveryTypeEnums;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },
@@ -107,7 +109,7 @@
             }
             this.formData.json = JSON.stringify(this.formData.json);
             this.formData.billDate = util.formatLocalDate(this.formData.billDate);
-            axios.post('/api/global/cloud/input/salReturnStock/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            axios.post('/api/global/cloud/input/stkMisDelivery/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
             }).catch(function () {
               this.submitDisabled = false;
@@ -117,15 +119,15 @@
           }
         })
       },
-      remoteStore(query) {
+      remoteDepartment(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/global/cloud/kingdee/bdStock/findByNameLike',{params:{name:query}}).then((response)=>{
-            this.storeList = response.data;
+          axios.get('/api/global/cloud/kingdee/bdDepartment/findByNameLike',{params:{name:query}}).then((response)=>{
+            this.departmentList = response.data;
             this.remoteLoading = false;
           })
         } else {
-          this.storeList = {};
+          this.departmentList = {};
         }
       },
     }

@@ -89,7 +89,7 @@ export default {
       cloudBatchBillCategory:"批量录入",
       salOutStock:"出库单",
       salReturnStock:"退货单",
-      batchDeliveryForm:'其他出库',
+      stkMisDelivery:'其他出库',
       cloudReportCategory:"财务报表",
       payableReport:"应付对账报表",
       customerReceive:"应收对账报表",

@@ -1,10 +1,14 @@
 package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.utils.RequestUtils;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.service.SalReturnStockService;
+import net.myspring.cloud.modules.input.service.StkMisDeliveryService;
 import net.myspring.cloud.modules.input.web.form.BatchBillForm;
+import net.myspring.cloud.modules.input.web.form.StkMisDeliveryForm;
 import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
+import net.myspring.cloud.modules.input.web.query.StkMisDeliveryQuery;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
@@ -18,36 +22,36 @@ import java.util.List;
 
 
 /**
- * 退货单
+ * 其他出库单
  * Created by lihx on 2017/4/25.
  */
 @RestController
-@RequestMapping(value = "input/salReturnStock")
-public class SalReturnStockController {
+@RequestMapping(value = "input/stkMisDelivery")
+public class StkMisDeliveryController {
     @Autowired
-    private SalReturnStockService salReturnStockService;
+    private StkMisDeliveryService stkMisDeliveryService;
     @Autowired
     private KingdeeBookService kingdeeBookService;
     @Autowired
     private AccountKingdeeBookService accountKingdeeBookService;
 
     @RequestMapping(value = "form")
-    public BatchBillQuery form (BatchBillQuery batchBillQuery) {
-        batchBillQuery = salReturnStockService.getFormProperty(batchBillQuery);
-        return batchBillQuery;
+    public StkMisDeliveryQuery form (StkMisDeliveryQuery stkMisDeliveryQuery) {
+        stkMisDeliveryQuery = stkMisDeliveryService.getFormProperty(stkMisDeliveryQuery);
+        return stkMisDeliveryQuery;
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(BatchBillForm batchBillForm) {
+    public RestResponse save(StkMisDeliveryForm stkMisDeliveryForm) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salReturnStockService.save(batchBillForm,kingdeeBook,accountKingdeeBook);
-        for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
-            if (kingdeeSynExtendDto.getSuccess()){
-                return new RestResponse("开单退货成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);
+        List<KingdeeSynDto> kingdeeSynDtoList = stkMisDeliveryService.save(stkMisDeliveryForm,kingdeeBook,accountKingdeeBook);
+        for(KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList){
+            if (kingdeeSynDto.getSuccess()){
+                return new RestResponse("其他出库单开单成功：" + kingdeeSynDto.getBillNo(),null,true);
             }else {
-                System.err.println(kingdeeSynExtendDto.getResult());
-                return new RestResponse("开单退货失败：" + kingdeeSynExtendDto.getResult(),null,true);
+                System.err.println(kingdeeSynDto.getResult());
+                return new RestResponse("其他出库单退货失败：" + kingdeeSynDto.getResult(),null,true);
             }
         }
         return null;

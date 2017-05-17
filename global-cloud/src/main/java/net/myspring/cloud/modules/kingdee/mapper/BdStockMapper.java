@@ -14,4 +14,8 @@ import java.util.List;
 public interface BdStockMapper {
 
     List<BdStock> findByNameLike(@Param("name")String name);
+
+    List<BdStock> findByNameList(@Param("nameList")List<String> nameList);
+
+    List<BdStock> findAll();
 }

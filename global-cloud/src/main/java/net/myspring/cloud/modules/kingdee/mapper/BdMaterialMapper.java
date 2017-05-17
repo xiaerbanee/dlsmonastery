@@ -16,4 +16,5 @@ public interface BdMaterialMapper {
     List<BdMaterial> findAll();
 
     BdMaterial findByName(@Param("name")String name);
+
 }

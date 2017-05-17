@@ -14,6 +14,7 @@ import net.myspring.cloud.modules.input.dto.SalReturnStockFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.BatchBillForm;
 import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
+import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
@@ -39,6 +40,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 退货单
  * Created by liuj on 2017/5/11.
  */
 @Service
@@ -57,7 +59,7 @@ public class SalReturnStockService {
 
     public KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
-                KingdeeFormIdEnum.SAL_OUTSTOCK.name(),
+                KingdeeFormIdEnum.SAL_RETURNSTOCK.name(),
                 salReturnStockDto.getJson(),
                 kingdeeBook,
                 KingdeeFormIdEnum.AR_receivable.name()) {
@@ -66,7 +68,13 @@ public class SalReturnStockService {
                 if(salReturnStockDto.getBillType().contains("现销")){
                     return null;
                 }else{
-                    return arReceivableMapper.findBySourceBillNo(getBillNo()).get(0).getFBillNo();
+                    List<ArReceivable> arReceivableList = arReceivableMapper.findBySourceBillNo(getBillNo());
+                    if (arReceivableList.size()>0){
+                        return arReceivableList.get(0).getFBillNo();
+                    }else {
+                        return "";
+                    }
+
                 }
             }
         };
@@ -115,7 +123,7 @@ public class SalReturnStockService {
             String billKey = customerNumMap.get(customerName) + CharConstant.COMMA + billType;
             if (!billMap.containsKey(billKey)) {
                 SalReturnStockDto salReturnStockDto = new SalReturnStockDto();
-                salReturnStockDto.setCreator(RequestUtils.getAccountId());
+                salReturnStockDto.setCreator(accountKingdeeBook.getUsername());
                 salReturnStockDto.setDate(date);
                 salReturnStockDto.setStoreNumber(storeNumber);
                 salReturnStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
