@@ -171,7 +171,7 @@
               this.$message(response.data.message);
               this.pageRequest();
             })
-          });
+          }).catch(()=>{});
         }
       },checkSelectable(row) {
         return row.processStatus !== '已通过' && row.processStatus !== '未通过'
@@ -181,21 +181,24 @@
         for(var key in selection){
           this.selects.push(selection[key].id);
         }
-        console.log(this.selects);
+
       },batchPass(){
 
           if(!this.selects || this.selects.length < 1){
             this.$message(this.$t('bankInList.noSelectionFound'));
             return ;
           }
-        this.submitDisabled = true;
-        this.pageLoading = true;
-        axios.get('/api/ws/future/crm/bankIn/batchAudit',{params:{ids:this.selects, pass:'1'}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageLoading = false;
-          this.submitDisabled = false;
-          this.pageRequest();
-        });
+
+        util.confirmBeforeBatchPass(this).then(() => {
+          this.submitDisabled = true;
+          this.pageLoading = true;
+          axios.get('/api/ws/future/crm/bankIn/batchAudit',{params:{ids:this.selects, pass:'1'}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageLoading = false;
+            this.submitDisabled = false;
+            this.pageRequest();
+          });
+        }).catch(()=>{});
       }
     },created () {
       var that = this;

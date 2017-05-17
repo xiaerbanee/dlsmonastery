@@ -7,7 +7,9 @@ export default {
     latestWeek: "最近一周",
     latestMonth: "最近一个月",
     waringMsgBeforeDelRecord:"此操作将删除该记录, 是否继续?",
+    waringMsgBeforeBatchPass:"确认批量通过?",
     typeOfWarningBeforeDelRecord:"提示",
+    typeOfWarningBeforeBatchPass:"提示",
     confirmButton:"确定",
     cancelButton:"取消",
 
