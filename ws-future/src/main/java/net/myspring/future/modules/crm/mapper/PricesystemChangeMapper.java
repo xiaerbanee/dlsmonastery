@@ -16,4 +16,8 @@ public interface PricesystemChangeMapper extends MyMapper<PricesystemChange,Stri
 
     Page<PricesystemChangeDto> findPage(Pageable pageable, @Param("p")PricesystemChangeQuery pricesystemChangeQuery);
 
+    void audit(@Param("ids")String[] ids,@Param("pass") Boolean pass);
+
+    void auditOperation(@Param("id") String id,@Param("pass") Boolean pass);
+
 }
