@@ -74,4 +74,27 @@ public class OfficeManager {
         }
         return null;
     }
+
+    //根据officeId获取某个级别的Office
+    public  String getOfficeIdByOfficeRule(String officeId, String officeRuleId) {
+        Office office = officeMapper.findOne(officeId);
+        if(office!=null){
+            if (officeRuleId.equals(office.getOfficeRuleId())) {
+                return officeId;
+            } else {
+                Office parent = officeMapper.findOne(office.getParentId());
+                for (int i = 1; i < 10; i++) {
+                    if (parent != null) {
+                        if (officeRuleId.equals(parent.getOfficeRuleId())) {
+                            return parent.getId();
+                        } else {
+                            parent = officeMapper.findOne(parent.getParentId());
+                        }
+                    }
+                }
+            }
+            return office.getParentId() == null ? officeId : office.getParentId();
+        }
+        return null;
+    }
 }

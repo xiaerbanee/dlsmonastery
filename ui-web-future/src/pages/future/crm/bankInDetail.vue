@@ -2,25 +2,24 @@
   <div>
     <head-tab active="bankInDetail"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" label-width="120px" class="form input-form">
         <el-row :gutter="4">
           <el-col :span="12">
-        <el-form-item :label="$t('bankInDetail.shopName')" >
-          {{inputForm.shopName}}
-        </el-form-item>
-        <el-form-item :label="$t('bankInDetail.bankName')">
-          {{inputForm.bankName}}
-        </el-form-item>
-        <el-form-item :label="$t('bankInDetail.amount')" >
-          {{inputForm.amount}}
-        </el-form-item>
-        <el-form-item :label="$t('bankInDetail.serialNumber')">
-          {{inputForm.serialNumber}}
-        </el-form-item>
-
+            <el-form-item :label="$t('bankInDetail.shopName')" >
+              {{inputForm.shopName}}
+            </el-form-item>
+            <el-form-item :label="$t('bankInDetail.bankName')">
+              {{inputForm.bankName}}
+            </el-form-item>
+            <el-form-item :label="$t('bankInDetail.amount')" >
+              {{inputForm.amount}}
+            </el-form-item>
+            <el-form-item :label="$t('bankInDetail.serialNumber')">
+              {{inputForm.serialNumber}}
+            </el-form-item>
             <el-form-item :label="$t('bankInDetail.synInfo')">
               金蝶同步
-            </el-form-item>
+             </el-form-item>
           </el-col>
 
           <el-col :span="12">

@@ -9,11 +9,36 @@ import java.util.List;
 
 public class BankInQuery extends BaseQuery {
 
+    private String id;
+    private String shopName;
+
+    private String billDateRange;
+    private LocalDateTime billDateStart;
+    private LocalDateTime billDateEnd;
+
+    private BigDecimal amount;
+    private String inputDateRange;
+    private LocalDateTime inputDateStart;
+    private LocalDateTime inputDateEnd;
+
+    private String outCode;
+    private String bankName;
+    private String processStatus;
+    private String createdBy;
+    private String createdDateRange;
+    private LocalDateTime createdDateStart;
+    private LocalDateTime createdDateEnd;
+    private String serialNumber;
 
     private List<String> processStatusList;
 
-    private String id;
-    private String shopName;
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public List<String> getProcessStatusList() {
         return processStatusList;
@@ -146,24 +171,6 @@ public class BankInQuery extends BaseQuery {
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
-
-    private String createdDateRange;
-    private LocalDateTime createdDateStart;
-    private LocalDateTime createdDateEnd;
-    private String billDateRange;
-    private LocalDateTime billDateStart;
-    private LocalDateTime billDateEnd;
-
-    private BigDecimal amount;
-    private String inputDateRange;
-    private LocalDateTime inputDateStart;
-    private LocalDateTime inputDateEnd;
-
-    private String outCode;
-    private String bankName;
-    private String processStatus;
-    private String serialNumber;
-
 
 
 

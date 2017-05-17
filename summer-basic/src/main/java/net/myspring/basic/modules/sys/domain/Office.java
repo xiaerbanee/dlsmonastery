@@ -19,6 +19,15 @@ public class Office extends TreeEntity<Office> {
     private Integer sort;
     private String officeRuleId;
     private String type;
+    private String areaId;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     public String getType() {
         return type;

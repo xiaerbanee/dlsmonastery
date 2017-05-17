@@ -318,6 +318,7 @@ export default {
     bankInList: "kredit penjualan",
     id: "ID",
     shopName: "nama toko",
+    shopClientName:'收款门店',
     realShopName: "toko pelanggan",
     bankName: "bank",
     amount: "jumlah",

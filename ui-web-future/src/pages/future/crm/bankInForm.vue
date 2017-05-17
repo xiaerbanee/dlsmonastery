@@ -4,13 +4,12 @@
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('bankInForm.shopName')" prop="shopId">
-          <depot-select type="SHOP" v-model="inputForm.shopId" ></depot-select>
+          <depot-select category="directShop" v-model="inputForm.shopId" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.type')" prop="type">
           <el-select v-model="inputForm.type"  clearable :placeholder="$t('bankInForm.selectType')">
             <el-option v-for="item in inputForm.typeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
-
         </el-form-item>
         <el-form-item :label="$t('bankInForm.bankName')" prop="bankId">
           <el-select v-model="inputForm.bankId" filterable clearable :placeholder="$t('bankInForm.selectBank')">
@@ -19,7 +18,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.cash')" prop="inputDate">
-          <el-date-picker  v-model="inputForm.inputDate" type="date" align="left" :placeholder="$t('bankInForm.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
+          <date-picker  v-model="inputForm.inputDate"></date-picker>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.amount')" prop="amount">
           <el-input v-model="inputForm.amount"></el-input>
@@ -39,9 +38,11 @@
 </template>
 <script>
   import depotSelect from 'components/future/depot-select'
+
   export default{
     components:{
       depotSelect,
+
     },
     data(){
           return{
@@ -67,6 +68,7 @@
       },
       methods:{
         formSubmit(){
+
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
@@ -93,17 +95,6 @@
         axios.get('/api/ws/future/crm/bankIn/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
-//        axios.get('/api/ws/future/crm/bankIn/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
-//            util.copyValue(response.data,this.inputForm);
-//            if(response.data.shop!=null){
-//              this.depots = new Array(response.data.shop);
-//            }
-//            if(response.data.bank){
-//                this.formProperty.banks=new Array(response.data.bank);
-//                this.inputForm.bankId=response.data.bankId;
-//            }
-//
-//          })
       }
     }
 </script>

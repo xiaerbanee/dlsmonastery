@@ -178,6 +178,9 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    bill:"开单",
+    ship:"发货",
+    sign:"签收",
   },
   adGoodsOrderForm: {
     adGoodsOrderForm: "物料订单编辑",
