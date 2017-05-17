@@ -70,19 +70,16 @@ public class BankInController {
         return new RestResponse("审核成功",ResponseCodeEnum.audited.name());
     }
 
-
     @RequestMapping(value = "findDetail")
     public BankInDetailForm findDetail(String id, String action){
         return bankInService.findDetail(id, action);
     }
 
-
-
-
     @RequestMapping(value = "batchAudit")
-    public String audit(@RequestParam(value = "ids[]") String[] ids,Boolean pass){
+    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids, String pass){
 
-        return null;
+        bankInService.batchAudit(ids, pass);
+        return new RestResponse("批量审核成功",ResponseCodeEnum.audited.name());
     }
 
     @RequestMapping(value = "findForm")

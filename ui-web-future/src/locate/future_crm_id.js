@@ -353,7 +353,8 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "ubah"
+    audit: "ubah",
+    noSelectionFound:"没有选中任何记录",
   },
   dataReportList: {
     dataReportList: "daftar data",

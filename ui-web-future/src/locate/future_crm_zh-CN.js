@@ -331,6 +331,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    noSelectionFound:"没有选中任何记录",
   },
   bankInDetail: {
     bankInDetail: "销售收款编辑",
