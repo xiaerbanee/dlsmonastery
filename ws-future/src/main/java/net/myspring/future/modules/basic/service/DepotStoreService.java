@@ -9,6 +9,7 @@ import net.myspring.future.modules.basic.mapper.DepotStoreMapper;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ public class DepotStoreService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public Page<DepotStoreDto> findPage(Pageable pageable, DepotQuery depotStoreQuery){
+    public Page<DepotStoreDto> findPage(Pageable pageable, DepotStoreQuery depotStoreQuery){
         Page<DepotStoreDto> page=depotStoreMapper.findPage(pageable,depotStoreQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

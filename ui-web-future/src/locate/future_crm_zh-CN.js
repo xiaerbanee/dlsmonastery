@@ -296,6 +296,7 @@ export default {
     bankInList: "销售收款",
     id: "编号",
     shopName: "门店",
+    shopClientName:'收款门店',
     realShopName: "收款门店",
     bankName: "银行",
     amount: "金额",
@@ -330,6 +331,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    noSelectionFound:"没有选中任何记录",
   },
   bankInDetail: {
     bankInDetail: "销售收款编辑",
@@ -347,6 +349,7 @@ export default {
     synToCloud: "同步到金蝶",
     true: "是",
     false: "否",
+    billDate:"开单日期",
     pass: "通过",
     auditRemarks: "审批备注",
     prerequisiteMessage: "必填信息",

@@ -5,7 +5,9 @@ import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.service.SalOutStockService;
 import net.myspring.cloud.modules.input.web.form.BatchBillForm;
 import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
+import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class SalOutStockController {
     private SalOutStockService salOutStockService;
     @Autowired
     private KingdeeBookService kingdeeBookService;
+    @Autowired
+    private AccountKingdeeBookService accountKingdeeBookService;
 
     @RequestMapping(value = "form")
     public BatchBillQuery form (BatchBillQuery batchBillQuery) {
@@ -35,7 +39,15 @@ public class SalOutStockController {
     @RequestMapping(value = "save")
     public RestResponse save(BatchBillForm batchBillForm) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynExtendDto> codeList = salOutStockService.save(batchBillForm,kingdeeBook);
-        return new RestResponse("批量开单成功：" + codeList,null,true);
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.save(batchBillForm,kingdeeBook,accountKingdeeBook);
+        for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
+            if (kingdeeSynExtendDto.getSuccess()){
+                return new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);
+            }else {
+                return new RestResponse("入库开单失败：" + kingdeeSynExtendDto.getResult(),null,true);
+            }
+        }
+        return null;
     }
 }

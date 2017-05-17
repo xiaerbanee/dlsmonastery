@@ -40,12 +40,15 @@
       }
     },methods:{
       remoteSelect(query) {
+
         if(query=="" || query == this.innerId || query == util.getLabel(this.itemList,this.innerId,"name")) {
           return;
         }
+
         this.remoteLoading = true;
         axios.get(this.searchUrl,{params:{name:query}}).then((response)=>{
           this.itemList=response.data;
+
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {
@@ -58,7 +61,8 @@
         this.innerId=val;
         this.remoteLoading = true;
         axios.get(this.searchByIdUrl+'?id=' + this.innerId).then((response)=>{
-          this.itemList=response.data;
+          this.itemList=[];
+          this.itemList.push(response.data);
           this.remoteLoading = false;
         })
       }

@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class SalReturnStockDto {
     private String creator;
-    // 客户名称
+    // 客户编码
     private String customerNumber;
     //仓库
     private String storeNumber;
@@ -138,7 +138,7 @@ public class SalReturnStockDto {
                 entity.add(detail);
             }
         }
-        model.put("SAL_RETURNSTOCK__FEntity", entity);
+        model.put("FEntity", entity);
         Map<String, Object> subHeadEntity = Maps.newLinkedHashMap();
         subHeadEntity.put("FExchangeRate", 1);
         subHeadEntity.put("FLocalCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
@@ -146,6 +146,7 @@ public class SalReturnStockDto {
         model.put("SAL_RETURNSTOCK__SubHeadEntity", subHeadEntity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
+        System.out.println(result);
         return result;
     }
 }

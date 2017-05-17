@@ -32,8 +32,8 @@ public class DepotShopService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotShopQuery){
-        Page<DepotShopDto> page=depotShopMapper.findPage(pageable,depotShopQuery);
+    public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotQuery){
+        Page<DepotShopDto> page=depotShopMapper.findPage(pageable,depotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.cloud.modules.kingdee.mapper.BdCustomerMapper">
+    <select id="findAll" resultType="BdCustomer">
+        SELECT
+        t1.FCUSTID,
+        t1.FNUMBER,
+        t1.FSALDEPTID,
+        t2.FNAME,
+        t1.FPRIMARYGROUP,
+        t4.FNAME AS fprimaryGroupName,
+        t1.FMODIFYDATE
+        FROM
+        T_BD_CUSTOMER t1,
+        T_BD_CUSTOMER_L t2,
+        T_BD_CUSTOMERGROUP t3,
+        T_BD_CUSTOMERGROUP_L t4
+        WHERE
+        t1.FCUSTID = t2.FCUSTID
+        AND t1.FPRIMARYGROUP = t3.FID
+        AND t3.FID = t4.FID
+    </select>
+
     <select id="findByNameList" resultType="BdCustomer">
         SELECT
             t1.FCUSTID,
@@ -20,7 +40,7 @@
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
             and t2.FNAME in
-        <foreach item="item" index="index" collection="nameList" open="(" separator="," close=")">
+        <foreach collection="nameList" item="item" index="index"  open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
@@ -44,7 +64,7 @@
         AND t1.FPRIMARYGROUP = t3.FID
         AND t3.FID = t4.FID
         and t1.FCUSTID in
-        <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+        <foreach collection="idList" item="item" index="index"  open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
@@ -85,7 +105,10 @@
         T_BD_CUSTOMERGROUP t3,
         T_BD_CUSTOMERGROUP_L t4
         where
-        t2.FNAME like CONCAT('%',#{name},'%')
+        t1.FCUSTID = t2.FCUSTID
+        AND t1.FPRIMARYGROUP = t3.FID
+        AND t3.FID = t4.FID
+        AND t2.FNAME like CONCAT('%',#{name},'%')
     </select>
 
     <select id="findPage" resultType="BdCustomer">
@@ -106,12 +129,24 @@
         t1.FCUSTID = t2.FCUSTID
         AND t1.FPRIMARYGROUP = t3.FID
         AND t3.FID = t4.FID
-        <if test="p.customerId !== null">
-        and t1.FCUSTID = #{customerId}
-        </if>
-        <if test="p.customerGroup !== null">
-        and t1.FCUSTID = #{companyId}
-        </if>
+
     </select>
 
+    <select id="findPrimaryGroupAndPrimaryGroupName" resultType="net.myspring.common.dto.NameValueDto">
+        SELECT
+        t1.FPRIMARYGROUP as value,
+        t4.FNAME AS name
+        FROM
+        T_BD_CUSTOMER t1,
+        T_BD_CUSTOMER_L t2,
+        T_BD_CUSTOMERGROUP t3,
+        T_BD_CUSTOMERGROUP_L t4
+        WHERE
+        t1.FCUSTID = t2.FCUSTID
+        AND t1.FPRIMARYGROUP = t3.FID
+        AND t3.FID = t4.FID
+        group by
+        t1.FPRIMARYGROUP,
+        t4.FNAME
+    </select>
 </mapper>

@@ -6,18 +6,17 @@ import net.myspring.util.collection.CollectionUtil;
 import java.util.List;
 
 /**
- * Created by lihx on 2017/4/15.
+ * Created by Lenovo on 2017/5/17.
  */
-public enum BillTypeEnum {
-    柜台, 配件赠品, POP;
-   /*COUNTERS,ACCESSORIES,POP;*/
+public enum  TownTypeEnum {
+    A类乡镇,B类乡镇,C类乡镇;
 
     private static List<String> list= Lists.newArrayList();
 
     public static List<String> getList(){
         if(CollectionUtil.isEmpty(list)){
-            for(BillTypeEnum BillTypeEnum:BillTypeEnum.values()){
-                list.add(BillTypeEnum.name());
+            for(TownTypeEnum townTypeEnum:TownTypeEnum.values()){
+                list.add(townTypeEnum.name());
             }
         }
         return list;

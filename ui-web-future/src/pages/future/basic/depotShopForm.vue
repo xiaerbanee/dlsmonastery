@@ -50,7 +50,6 @@
         <el-form-item label="体验店类型" prop="specialityStoreType" v-show="inputForm.specialityStoreType">
           <dict-map-select v-model="inputForm.specialityStoreType"  category="门店_体验店类型" ></dict-map-select>
         </el-form-item>
-
         <el-form-item label="面积大小" prop="shopArea" placeholder="单位为平方">
           <el-input v-model="inputForm.shopArea" />
         </el-form-item>
@@ -77,9 +76,10 @@
   </div>
 </template>
 <script>
+  import boolRadioGroup from 'components/common/bool-radio-group'
   import dictMapSelect from 'components/basic/dict-map-select'
   export default {
-    components:{dictMapSelect},
+    components:{dictMapSelect,boolRadioGroup},
     data(){
       return{
         isCreate:this.$route.query.id==null,

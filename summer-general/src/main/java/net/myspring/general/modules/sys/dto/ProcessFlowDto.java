@@ -16,6 +16,12 @@ public class ProcessFlowDto extends IdDto<ProcessFlow> {
     private String positionId;
     private String processTypeId;
 
+    public ProcessFlowDto(){};
+
+    public ProcessFlowDto(String name){
+        this.name=name;
+    }
+
     public String getName() {
         return name;
     }

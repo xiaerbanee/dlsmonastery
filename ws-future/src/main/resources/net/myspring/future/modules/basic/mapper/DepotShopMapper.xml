@@ -4,9 +4,9 @@
 
 
     <select id="findPage" resultType="DepotShopDto">
-        SELECT t1.*,t2.*
+        SELECT t2.*,depot.id as 'depotId'
         FROM crm_depot depot ,crm_depot_shop t2
-        where depot.denabled=1
+        where depot.enabled=1
         and t2.enabled=1
         and depot.depot_shop_id=t2.id
     </select>

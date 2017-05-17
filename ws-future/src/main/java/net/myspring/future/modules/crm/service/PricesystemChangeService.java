@@ -45,6 +45,12 @@ public class PricesystemChangeService {
 
     @Transactional
     public void audit(String[] ids,Boolean pass){
+        pricesystemChangeMapper.audit(ids,pass);
+    }
+
+    @Transactional
+    public void auditOperation(String id,Boolean pass){
+        pricesystemChangeMapper.auditOperation(id, pass);
     }
 
     public List<List<Object>> getPricesystemDetail(List<String> productIdList){

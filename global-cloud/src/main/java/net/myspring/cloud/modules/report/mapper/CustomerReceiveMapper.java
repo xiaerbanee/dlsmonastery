@@ -8,9 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by lihx on 2017/5/12.
@@ -25,8 +23,8 @@ public interface CustomerReceiveMapper {
 
     List<CustomerReceiveDetailDto> findDetailList(CustomerReceiveDetailQuery customerReceiveDetailQuery);
 
-    List<NameValueDto> findRemarks(CustomerReceiveDetailQuery customerReceiveDetailQuery);
 
+    List<NameValueDto> findRemarks(CustomerReceiveDetailQuery customerReceiveDetailQuery);
 
 
 }

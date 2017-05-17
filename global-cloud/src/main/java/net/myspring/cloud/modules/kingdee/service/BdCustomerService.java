@@ -1,10 +1,10 @@
 package net.myspring.cloud.modules.kingdee.service;
 
-import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
+import net.myspring.common.dto.NameValueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,5 +30,7 @@ public class BdCustomerService {
         return bdCustomerMapper.findByNameLike(name);
     }
 
-
+    public List<NameValueDto> findCustomerGroupList(){
+        return bdCustomerMapper.findPrimaryGroupAndPrimaryGroupName();
+    }
 }

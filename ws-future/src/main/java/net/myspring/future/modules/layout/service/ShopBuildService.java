@@ -11,6 +11,7 @@ import net.myspring.future.modules.layout.dto.ShopBuildDto;
 import net.myspring.future.modules.layout.mapper.ShopBuildMapper;
 import net.myspring.future.modules.layout.web.form.ShopBuildForm;
 import net.myspring.future.modules.layout.web.query.ShopBuildQuery;
+import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
@@ -80,7 +81,13 @@ public class ShopBuildService {
             activitiCompleteForm.setProcessTypeId(shopBuild.getProcessTypeId());
             activitiCompleteForm.setPass(shopBuildForm.getPass());
             activitiCompleteForm.setComment(shopBuildForm.getPassRemarks());
-            activitiClient.complete(activitiCompleteForm);
+            ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
+            if(activitiCompleteDto!=null){
+                shopBuild.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+                shopBuild.setProcessPositionId(activitiCompleteDto.getPositionId());
+                shopBuild.setProcessStatus(activitiCompleteDto.getProcessStatus());
+                shopBuildMapper.update(shopBuild);
+            }
         }
     }
 

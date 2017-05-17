@@ -2,19 +2,41 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.util.cahe.annotation.CacheInput;
+import java.time.LocalDateTime;
 
 /**
- * Created by wangzm on 2017/5/12.
+ * Created by haos on 2017/5/12.
  */
 public class ProductImeDto extends DataDto<ProductIme> {
+    private String billId;
     private String ime;
-    private String depotId;
-    private String productId;
-    @CacheInput(inputKey = "depots",inputInstance = "depotId",outputInstance = "name")
+    private String ime2;
+    private LocalDateTime retailDate;
+    private LocalDateTime createdTime;
+    private String inputType;
+    private String meid;
     private String depotName;
-    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
+    private LocalDateTime productImeUploadCreateDate;
+    private LocalDateTime productImeSaleCreateDate;
     private String productName;
+    private String productNetType;
+    private Boolean locked;
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public String getBillId() {
+        return billId;
+    }
+
+    public void setBillId(String billId) {
+        this.billId = billId;
+    }
 
     public String getIme() {
         return ime;
@@ -24,20 +46,44 @@ public class ProductImeDto extends DataDto<ProductIme> {
         this.ime = ime;
     }
 
-    public String getDepotId() {
-        return depotId;
+    public String getIme2() {
+        return ime2;
     }
 
-    public void setDepotId(String depotId) {
-        this.depotId = depotId;
+    public void setIme2(String ime2) {
+        this.ime2 = ime2;
     }
 
-    public String getProductId() {
-        return productId;
+    public LocalDateTime getRetailDate() {
+        return retailDate;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setRetailDate(LocalDateTime retailDate) {
+        this.retailDate = retailDate;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public String getInputType() {
+        return inputType;
+    }
+
+    public void setInputType(String inputType) {
+        this.inputType = inputType;
+    }
+
+    public String getMeid() {
+        return meid;
+    }
+
+    public void setMeid(String meid) {
+        this.meid = meid;
     }
 
     public String getDepotName() {
@@ -48,11 +94,35 @@ public class ProductImeDto extends DataDto<ProductIme> {
         this.depotName = depotName;
     }
 
+    public LocalDateTime getProductImeUploadCreateDate() {
+        return productImeUploadCreateDate;
+    }
+
+    public void setProductImeUploadCreateDate(LocalDateTime productImeUploadCreateDate) {
+        this.productImeUploadCreateDate = productImeUploadCreateDate;
+    }
+
+    public LocalDateTime getProductImeSaleCreateDate() {
+        return productImeSaleCreateDate;
+    }
+
+    public void setProductImeSaleCreateDate(LocalDateTime productImeSaleCreateDate) {
+        this.productImeSaleCreateDate = productImeSaleCreateDate;
+    }
+
     public String getProductName() {
         return productName;
     }
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getProductNetType() {
+        return productNetType;
+    }
+
+    public void setProductNetType(String productNetType) {
+        this.productNetType = productNetType;
     }
 }
