@@ -19,7 +19,7 @@ spring:
 mybatis:
   config-location: classpath:/mybatis-config.xml
 server:
-  port: 2000
+  port: 1300
 eureka:
   instance:
     prefer-ip-address: true
