@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.kingdee.mapper;
 
+import net.myspring.cloud.modules.input.dto.NameValueDto;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,6 +17,8 @@ import java.util.List;
 @Mapper
 public interface BdCustomerMapper {
 
+    List<BdCustomer> findAll();
+
     List<BdCustomer> findByNameList(@Param("nameList")List<String> nameList);
 
     List<BdCustomer> findByIdList(@Param("idList")List<String> idList);
@@ -26,4 +29,5 @@ public interface BdCustomerMapper {
 
     Page<BdCustomer> findPage(Pageable pageable, @Param("p")BdCustomerQuery bdCustomerQuery);
 
+    List<NameValueDto> findPrimaryGroupAndPrimaryGroupName();
 }
