@@ -39,6 +39,15 @@ public class OfficeForm extends DataForm<Office> {
     private Integer level;
     private String parentIds;
     private Office parent;
+    private String areaId;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
