@@ -87,6 +87,11 @@ public class OfficeService {
         return officeDto;
     }
 
+    public List<String> getSameAreaByOfficeId(String officeId){
+        List<Office> sameAreaByOfficeId = officeMapper.findSameAreaByOfficeId(officeId);
+        return CollectionUtil.extractToList(sameAreaByOfficeId,"id");
+    }
+
     public OfficeForm findForm(OfficeForm officeForm) {
         if (!officeForm.isCreate()) {
             Office office = officeMapper.findOne(officeForm.getId());
@@ -123,24 +128,33 @@ public class OfficeService {
 
     public Office save(OfficeForm officeForm) {
         Office office;
+        if(officeForm.getParent()!=null){
+            OfficeRule officeRule=officeRuleMapper.findTopOfficeRule();
+            officeForm.setAreaId(officeManager.getOfficeIdByOfficeRule(officeForm.getParent().getId(),officeRule.getId()));
+        }
         if (officeForm.isCreate()) {
             office = BeanUtil.map(officeForm, Office.class);
             officeMapper.save(office);
+            if(officeForm.getParent()==null){
+                officeForm.setAreaId(office.getId());
+            }
+            officeMapper.update(office);
         } else {
+            if(officeForm.getParent()==null){
+                officeForm.setAreaId(officeForm.getId());
+            }
             officeManager.officeFilter(officeForm.getId());
             office = officeMapper.findOne(officeForm.getId());
-            String oldParentId=office.getParentId();
             String oldParentIds=office.getParentIds();
             ReflectionUtil.copyProperties(officeForm, office);
             officeMapper.update(office);
-            if(!oldParentId.equals(officeForm.getParentId())){
-                List<Office> list = officeMapper.findByParentIdsLike("%," + office.getId() + ",%");
-                for (Office item : list) {
-                    item.setParentIds(item.getParentIds().replace(oldParentIds, office.getParentIds()));
-                    officeMapper.update(item);
-                }
+            List<Office> list = officeMapper.findByParentIdsLike("%," + office.getId() + ",%");
+            for (Office item : list) {
+                item.setParentIds(item.getParentIds().replace(oldParentIds, office.getParentIds()));
+                officeMapper.update(item);
             }
         }
+
         List<OfficeBusiness> businessOfficeList = officeBusinessMapper.findAllBusinessIdById(office.getId());
         if (OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())&&CollectionUtil.isNotEmpty(officeForm.getOfficeIdList())) {
             List<String> businessOfficeIdList = CollectionUtil.extractToList(businessOfficeList, "businessOfficeId");

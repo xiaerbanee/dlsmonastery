@@ -44,58 +44,8 @@
           colHeaders: ["编码","门店","货品","价格","数量","类型","备注"],
           columns: [
             {type:"text", allowEmpty: false, strict: true},
-            {type: "autocomplete", allowEmpty: false, strict: true, tempCustomerNames:[],
-              source:function (query, process) {
-                var that = this;
-                if(that.tempCustomerNames.indexOf(query)>=0) {
-                  process(that.tempCustomerNames);
-                } else {
-                  var customerNames = new Array();
-                  if(query.length>0) {
-                    axios.get('/api/global/cloud/kingdee/bdCustomer/getNameByNameLike?name='+query).then((response)=>{
-                      if(response.data.length>0) {
-                        for(let index in response.data) {
-                          var shopName = response.data[index];
-                          customerNames.push(shopName);
-                          if(that.tempCustomerNames.indexOf(shopName)<0) {
-                            that.tempCustomerNames.push(shopName);
-                          }
-                        }
-                      }
-                      process(customerNames);
-                    });
-                  } else {
-                    process(customerNames);
-                  }
-                }
-              }
-            },
-            {type: "autocomplete", allowEmpty: true, strict: true,tempProductNames:[],
-              source:function (query, process) {
-                var that = this;
-                if(that.tempProductNames.indexOf(query)>=0) {
-                  process(that.tempProductNames);
-                } else {
-                  var productNames = new Array();
-                  if(query.length>0) {
-                    axios.get('/api/global/cloud/kingdee/bdMaterial/getNameByNameLike?name='+query).then((response)=>{
-                      if(response.data.length>0) {
-                        for(let index in response.data) {
-                          var productName = response.data[index];
-                          productNames.push(productName);
-                          if(that.tempProductNames.indexOf(index)<0) {
-                            that.tempProductNames.push(productName);
-                          }
-                        }
-                      }
-                      process(productNames);
-                    });
-                  } else {
-                    process(productNames);
-                  }
-                }
-              }
-            },
+            {type: "autocomplete", allowEmpty: false, strict: true, customerNames:[],source:this.customerNames},
+            {type: "autocomplete", allowEmpty: true, strict: true,productNames:[],source:this.productNames},
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
             {type: "numeric", allowEmpty: false},
             {type: "autocomplete", allowEmpty: false, strict: true,billType:[], source: this.billType},
@@ -109,7 +59,7 @@
                 let column = changes[i][1]==2;
                 if(column){
                   let name = changes[i][3];
-                  axios.get('/api/global/cloud/kingdee/bdMaterial/getByName?name='+ name).then((response) =>{
+                  axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name='+ name).then((response) =>{
                     let  material = response.data;
                     table.setDataAtCell(row,0,material.fnumber);
                   });
@@ -136,6 +86,8 @@
     },
     mounted() {
       axios.get('/api/global/cloud/input/salReturnStock/form').then((response)=>{
+        this.settings.columns[1].source = response.data.bdCustomerNameList;
+        this.settings.columns[2].source = response.data.bdMaterialNameList;
         this.settings.columns[5].source = response.data.returnStockBillTypeEnums;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
@@ -168,7 +120,7 @@
       remoteStore(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/global/cloud/kingdee/bdStock/getByNameLike',{params:{name:query}}).then((response)=>{
+          axios.get('/api/global/cloud/kingdee/bdStock/findByNameLike',{params:{name:query}}).then((response)=>{
             this.storeList = response.data;
             this.remoteLoading = false;
           })

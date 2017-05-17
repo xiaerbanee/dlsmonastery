@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.service.AdGoodsOrderService;
@@ -40,7 +41,8 @@ public class  AdGoodsOrderController {
 
     @RequestMapping(value = "getQuery")
     public AdGoodsOrderQuery getQuery(AdGoodsOrderQuery adGoodsOrderQuery) {
-        return new AdGoodsOrderQuery();
+        adGoodsOrderQuery.setBillTypes(BillTypeEnum.getList());
+        return adGoodsOrderQuery;
     }
 
     @RequestMapping(value = "detail")
@@ -76,8 +78,9 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public RestResponse save(AdGoodsOrder adGoodsOrder, BindingResult bindingResult) {
-        return null;
+    public RestResponse save(AdGoodsOrderForm adGoodsOrderForm) {
+        adGoodsOrderService.save(adGoodsOrderForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getBillFormProperty", method = RequestMethod.GET)

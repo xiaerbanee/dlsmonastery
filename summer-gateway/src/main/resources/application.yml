@@ -20,6 +20,9 @@ zuul:
     ws-future: /api/ws/future/**
     global-tool: /api/global/tool/**
     global-cloud: /api/global/cloud/**
+  host:
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 60000
   add-proxy-headers: true
 
 hystrix:

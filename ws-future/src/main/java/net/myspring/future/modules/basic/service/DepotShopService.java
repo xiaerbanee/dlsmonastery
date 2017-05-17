@@ -5,12 +5,14 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.DepotShopMapper;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,10 +28,12 @@ public class DepotShopService {
     @Autowired
     private DepotManager depotManager;
     @Autowired
+    private DepotMapper depotMapper;
+    @Autowired
     private CacheUtils cacheUtils;
 
-    public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotShopQuery){
-        Page<DepotShopDto> page=depotShopMapper.findPage(pageable,depotShopQuery);
+    public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotQuery){
+        Page<DepotShopDto> page=depotShopMapper.findPage(pageable,depotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -43,15 +47,18 @@ public class DepotShopService {
         return depotShopForm;
     }
 
+    public DepotForm findDepotForm(DepotForm depotForm) {
+        if(!depotForm.isCreate()) {
+            Depot depot =depotMapper.findOne(depotForm.getId());
+            depotForm= BeanUtil.map(depot,DepotForm.class);
+            cacheUtils.initCacheInput(depotForm);
+        }
+        return depotForm;
+    }
+
     public DepotShop save(DepotShopForm depotShopForm) {
         DepotShop depotShop;
-        DepotForm depotForm = depotShopForm.getDepotForm();
-        //保存depot
-        Depot depot = BeanUtil.map(depotForm, Depot.class);
-        depotManager.save(depot);
-        //保存depotShop
         if(depotShopForm.isCreate()) {
-            depotShopForm.setDepotId(depot.getId());
             depotShop = BeanUtil.map(depotShopForm,DepotShop.class);
             depotShopMapper.save(depotShop);
         } else {
@@ -59,7 +66,24 @@ public class DepotShopService {
             ReflectionUtil.copyProperties(depotShopForm,depotShop);
             depotShopMapper.save(depotShop);
         }
+        Depot depot=depotMapper.findOne(depotShopForm.getDepotId());
+        depot.setDepotShopId(depotShop.getId());
+        depotMapper.update(depot);
         return depotShop;
+    }
+
+    public Depot saveDepot(DepotForm depotForm){
+        Depot depot;
+        depotForm.setNamePinyin(StringUtils.getFirstSpell(depotForm.getName()));
+        if(depotForm.isCreate()){
+            depot=BeanUtil.map(depotForm,Depot.class);
+            depotMapper.save(depot);
+        }else {
+            depot=depotMapper.findOne(depotForm.getId());
+            ReflectionUtil.copyProperties(depotForm,depot);
+            depotMapper.update(depot);
+        }
+        return depot;
     }
 
 

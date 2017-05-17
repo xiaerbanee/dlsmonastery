@@ -23,8 +23,6 @@ public class DepotForm extends DataForm<Depot>{
     private String delegateDepotId;
     //编码
     private String code;
-    //对应store_id
-    private String depotStoreId;
     //对应shop_id
     private String depotShopId;
     // 名称
@@ -69,6 +67,14 @@ public class DepotForm extends DataForm<Depot>{
     //公司分组（imoo，电玩，oppo不写）
     private String companyGroup;
 
+    public String getNamePinyin() {
+        return namePinyin;
+    }
+
+    public void setNamePinyin(String namePinyin) {
+        this.namePinyin = namePinyin;
+    }
+
     public String getClientId() {
         return clientId;
     }
@@ -93,14 +99,6 @@ public class DepotForm extends DataForm<Depot>{
         this.code = code;
     }
 
-    public String getDepotStoreId() {
-        return depotStoreId;
-    }
-
-    public void setDepotStoreId(String depotStoreId) {
-        this.depotStoreId = depotStoreId;
-    }
-
     public String getDepotShopId() {
         return depotShopId;
     }
@@ -115,14 +113,6 @@ public class DepotForm extends DataForm<Depot>{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getNamePinyin() {
-        return namePinyin;
-    }
-
-    public void setNamePinyin(String namePinyin) {
-        this.namePinyin = namePinyin;
     }
 
     public String getOfficeId() {

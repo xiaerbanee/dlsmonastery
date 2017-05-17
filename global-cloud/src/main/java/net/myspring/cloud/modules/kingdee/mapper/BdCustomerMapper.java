@@ -1,13 +1,12 @@
 package net.myspring.cloud.modules.kingdee.mapper;
 
-import net.myspring.basic.modules.sys.dto.DictEnumDto;
+import net.myspring.cloud.modules.input.dto.NameValueDto;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 
 import java.util.List;
 
@@ -17,6 +16,8 @@ import java.util.List;
  */
 @Mapper
 public interface BdCustomerMapper {
+
+    List<BdCustomer> findAll();
 
     List<BdCustomer> findByNameList(@Param("nameList")List<String> nameList);
 
@@ -28,4 +29,5 @@ public interface BdCustomerMapper {
 
     Page<BdCustomer> findPage(Pageable pageable, @Param("p")BdCustomerQuery bdCustomerQuery);
 
+    List<NameValueDto> findPrimaryGroupAndPrimaryGroupName();
 }

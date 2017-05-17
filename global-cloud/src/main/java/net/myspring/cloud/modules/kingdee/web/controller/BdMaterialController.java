@@ -19,12 +19,6 @@ public class BdMaterialController {
     @Autowired
     private BdMaterialService bdMaterialService;
 
-    @RequestMapping(value = "findByNameLike")
-    public List<String> findByNameLike(String name){
-        List<BdMaterial> bdMaterialList = bdMaterialService.findByNameLike(name);
-        return bdMaterialList.stream().map(bdMaterial -> bdMaterial.getFName().trim()).collect(Collectors.toList());
-    }
-
     @RequestMapping(value = "findByName")
     public BdMaterial findByName(String name){
         return bdMaterialService.findByName(name);

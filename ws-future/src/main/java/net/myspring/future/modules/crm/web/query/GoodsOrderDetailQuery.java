@@ -11,7 +11,6 @@ public class GoodsOrderDetailQuery extends BaseQuery {
     private String pricesystemId;
     private String netType;
     private Boolean showAll;
-    private String areaId;
 
     //用来计算该区间内的办事处已订货数
     private LocalDateTime createDateStart;
@@ -22,7 +21,7 @@ public class GoodsOrderDetailQuery extends BaseQuery {
     private LocalDateTime billDateEnd;
 
     private List<String> shipTypeList;
-
+    private List<String> officeIdList;
 
     public String getGoodsOrderId() {
         return goodsOrderId;
@@ -56,12 +55,12 @@ public class GoodsOrderDetailQuery extends BaseQuery {
         this.showAll = showAll;
     }
 
-    public String getAreaId() {
-        return areaId;
+    public List<String> getOfficeIdList() {
+        return officeIdList;
     }
 
-    public void setAreaId(String areaId) {
-        this.areaId = areaId;
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
     }
 
     public LocalDateTime getCreateDateStart() {

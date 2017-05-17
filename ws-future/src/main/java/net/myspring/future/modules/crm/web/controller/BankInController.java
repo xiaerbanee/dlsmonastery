@@ -8,19 +8,19 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.service.BankService;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.service.BankInService;
+import net.myspring.future.modules.crm.web.form.BankInDetailForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "crm/bankIn")
@@ -31,31 +31,29 @@ public class BankInController {
     @Autowired
     private BankService bankService;
 
+
     @RequestMapping(method = RequestMethod.GET)
     public Page<BankInDto> list(Pageable pageable, BankInQuery bankInQuery){
         Page<BankInDto> page = bankInService.findPage(pageable, bankInQuery);
         return page;
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public BankInQuery getFormProperty(BankInQuery bankInQuery){
-        bankInQuery.setProcessStatusList(new ArrayList<>());
+    @RequestMapping(value = "getQuery")
+    public BankInQuery getQuery(BankInQuery bankInQuery){
+
+        List<String> processStatusList = new ArrayList<>();
+        processStatusList.add("已通过");
+        processStatusList.add("未通过");
+        bankInQuery.setProcessStatusList(processStatusList);
+
         return bankInQuery;
     }
 
-
-    @RequestMapping(value = "getQuery")
-    public String getQuery(){
-        return null;
-    }
-
-
     @RequestMapping(value = "save")
-    public RestResponse save(@Valid BankInForm bankInForm, BindingResult result) {
+    public RestResponse save(BankInForm bankInForm) {
         bankInService.save(bankInForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
-
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
@@ -66,24 +64,22 @@ public class BankInController {
 
 
     @RequestMapping(value = "audit")
-    public RestResponse audit(String id, boolean pass, String comment) {
-        bankInService.audit(id,pass,comment);
-        return new RestResponse("审核成功",null);
-    }
+    public RestResponse audit(BankInDetailForm bankInDetailForm) {
 
+        bankInService.audit(bankInDetailForm);
+        return new RestResponse("审核成功",ResponseCodeEnum.audited.name());
+    }
 
     @RequestMapping(value = "findDetail")
-    public BankInDto findDetail(String id ){
-        return bankInService.findDetail(id);
+    public BankInDetailForm findDetail(String id, String action){
+        return bankInService.findDetail(id, action);
     }
 
-
-
-
     @RequestMapping(value = "batchAudit")
-    public String audit(@RequestParam(value = "ids[]") String[] ids,Boolean pass){
+    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids, String pass){
 
-        return null;
+        bankInService.batchAudit(ids, pass);
+        return new RestResponse("批量审核成功",ResponseCodeEnum.audited.name());
     }
 
     @RequestMapping(value = "findForm")

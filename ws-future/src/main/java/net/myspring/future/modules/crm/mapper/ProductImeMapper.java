@@ -4,6 +4,7 @@ import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
+import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -18,26 +19,10 @@ public interface ProductImeMapper extends MyMapper<ProductIme, String> {
 
     List<ProductIme> findByImeList(List<String> imeList);
 
-    List<ProductIme> findByImeLike(String ime);
-
     ProductIme findByIme(String ime);
 
-    List<ProductIme> findByStoreId(String storeId);
+    List<ProductIme> findShipList(ProductImeShipQuery productImeShipQuery);
 
-    List<ProductIme> findByStoreAndImeList(@Param("storeId") String storeId, @Param("list") List<String> imeList);
-
-    List<ProductIme> findByStoreAndBoxList(@Param("storeId") String storeId, @Param("list") List<String> boxList);
-
-    List<ProductIme> findByStoreAndBoxImeAndIme(@Param("storeId") String storeId, @Param("boxList") List<String> boxIme, @Param("imeList") List<String> imeList);
-
-    Page<ProductImeDto> findPage(Pageable pageable, @Param("p")ProductImeQuery productImeQuery);
-
-    List<ProductIme> findLabels(List<String> ids);
-
-    List<ProductIme> findByStoreAndImeLike(@Param("depotId") String depotId, @Param("ime") String ime);
-
-    List<ProductIme> findByFilter(@Param("p") Map<String, Object> map);
-
-    List<ProductIme> findByRetailDate(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
+    List<ProductIme> findList(@Param("p")ProductImeQuery productImeQuery);
 
 }

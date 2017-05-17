@@ -22,6 +22,7 @@ public class VivoPlantSendimei extends IdEntity<VivoPlantSendimei> {
     private String model;
     private String meid;
     private String imei2;
+    private String productId;
 
     public String getCompanyId() {
         return companyId;
@@ -117,5 +118,13 @@ public class VivoPlantSendimei extends IdEntity<VivoPlantSendimei> {
 
     public void setImei2(String imei2) {
         this.imei2 = imei2;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 }

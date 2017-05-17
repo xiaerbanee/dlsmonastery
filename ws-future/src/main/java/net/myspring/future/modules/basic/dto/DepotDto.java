@@ -18,6 +18,11 @@ public class DepotDto extends DataDto<Depot> {
     private String namePinyin;
     private String depotType;
 
+    // 部门
+    private String officeId;
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "jointType")
+    private String jointType;
+
     private String clientId;
     @CacheInput(inputKey = "clients",inputInstance = "clientId",outputInstance = "name")
     private String clientName;
@@ -31,6 +36,22 @@ public class DepotDto extends DataDto<Depot> {
     private String areaId;
     private BigDecimal credit;
     private String areaType;
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getJointType() {
+        return jointType;
+    }
+
+    public void setJointType(String jointType) {
+        this.jointType = jointType;
+    }
 
     public String getAreaType() {
         return areaType;

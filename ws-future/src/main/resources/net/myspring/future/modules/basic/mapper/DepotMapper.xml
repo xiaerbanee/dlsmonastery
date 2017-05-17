@@ -165,7 +165,10 @@
                 and t1.out_id is not NULL
             </if>
         </if>
-        and t1.name like concat('%',#{p.name},'%')
+        <if test="p.name != null">
+            and t1.name like concat('%',#{p.name},'%')
+        </if>
+
         <include refid="depotFilter" />
     </select>
 

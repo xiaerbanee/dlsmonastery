@@ -202,7 +202,10 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "ubah"
+    audit: "ubah",
+    bill:"penagihan",
+    ship:"pengiriman",
+    sign:"tanda",
   },
   adGoodsOrderShip: {
     adGoodsOrderShip: "order bahan",

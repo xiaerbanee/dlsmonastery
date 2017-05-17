@@ -3,6 +3,8 @@ package net.myspring.future.modules.crm.dto;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.BankIn;
+import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,8 +14,9 @@ public class BankInDto extends DataDto<BankIn> {
     private Boolean selected = Boolean.FALSE;
     private String shopName;
     private String shopId;
-    private String shopParentId;
-    private String realShopName;
+    private String shopClientId;
+    @CacheInput(inputKey = "clients",inputInstance = "shopClientId",outputInstance = "name")
+    private String shopClientName;
     private String bankName;
     private String bankId;
 
@@ -23,6 +26,36 @@ public class BankInDto extends DataDto<BankIn> {
     private LocalDate inputDate;
     private String outCode;
     private String processStatus;
+    private Boolean locked;
+    private String processInstanceId;
+
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
+
+    public String getFormatId() {
+        return StringUtils.getFormatId(getId(), "XS");
+    }
+
+    public String getShopClientId() {
+        return shopClientId;
+    }
+
+    public void setShopClientId(String shopClientId) {
+        this.shopClientId = shopClientId;
+    }
+
+    public String getShopClientName() {
+        return shopClientName;
+    }
+
+    public void setShopClientName(String shopClientName) {
+        this.shopClientName = shopClientName;
+    }
 
     public Boolean getLocked() {
         return locked;
@@ -32,15 +65,6 @@ public class BankInDto extends DataDto<BankIn> {
         this.locked = locked;
     }
 
-    private Boolean locked;
-
-    public String getShopParentId() {
-        return shopParentId;
-    }
-
-    public void setShopParentId(String shopParentId) {
-        this.shopParentId = shopParentId;
-    }
 
     public BigDecimal getAmount() {
         return amount;
@@ -73,14 +97,6 @@ public class BankInDto extends DataDto<BankIn> {
 
     public void setShopId(String shopId) {
         this.shopId = shopId;
-    }
-
-    public String getRealShopName() {
-        return realShopName;
-    }
-
-    public void setRealShopName(String realShopName) {
-        this.realShopName = realShopName;
     }
 
     public String getBankName() {
@@ -141,10 +157,12 @@ public class BankInDto extends DataDto<BankIn> {
     }
 
     public Boolean getAuditable(){
-        return Boolean.FALSE;
+        //TODO 判斷auditable的邏輯
+        return Boolean.TRUE;
     }
 
     public Boolean getEditable(){
+        //TODO 判斷editable要修改
         if ((!getLocked() && !getFinished()) && RequestUtils.getAccountId() != null && (RequestUtils.getAccountId().equals(getCreatedBy()) )) {
             return Boolean.TRUE;
         } else {
@@ -153,10 +171,6 @@ public class BankInDto extends DataDto<BankIn> {
     }
 
     public Boolean getFinished() {
-        return Boolean.FALSE;
-//        return PROCESS_PASS.PROCESS_PASS.equals(processStatus) || Const.PROCESS_NOT_PASS.equals(processStatus);
+        return "已通过".equals(processStatus) || "未通过".equals(processStatus);
     }
-
-
-
 }

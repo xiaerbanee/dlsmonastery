@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
-import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
@@ -16,13 +15,13 @@ import net.myspring.cloud.modules.input.web.form.BatchBillForm;
 import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
 import net.myspring.cloud.modules.kingdee.mapper.ArReceivableMapper;
 import net.myspring.cloud.modules.kingdee.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.kingdee.mapper.BdDepartmentMapper;
+import net.myspring.cloud.modules.kingdee.mapper.BdMaterialMapper;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
-import net.myspring.cloud.modules.sys.mapper.AccountKingdeeBookMapper;
-import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -52,6 +51,8 @@ public class SalOutStockService {
     private BdCustomerMapper bdCustomerMapper;
     @Autowired
     private BdDepartmentMapper bdDepartmentMapper;
+    @Autowired
+    private BdMaterialMapper bdMaterialMapper;
 
     public KingdeeSynExtendDto save(SalOutStockDto salOutStockDto,KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
@@ -69,7 +70,7 @@ public class SalOutStockService {
     }
 
 
-    public List<KingdeeSynExtendDto> save (BatchBillForm batchBillForm,KingdeeBook kingdeeBook) {
+    public List<KingdeeSynExtendDto> save (BatchBillForm batchBillForm,KingdeeBook kingdeeBook,AccountKingdeeBook accountKingdeeBook) {
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         String storeNumber = batchBillForm.getStoreNumber();
         LocalDate date = batchBillForm.getBillDate();
@@ -124,9 +125,12 @@ public class SalOutStockService {
         List<SalOutStockDto> batchBills = Lists.newArrayList(billMap.values());
         //财务出库开单
         if (CollectionUtil.isNotEmpty(batchBills)) {
-            for (SalOutStockDto batchBill : batchBills) {
-                KingdeeSynExtendDto kingdeeSynExtendDto = save(batchBill,kingdeeBook);
-                kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
+            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+            if(isLogin) {
+                for (SalOutStockDto batchBill : batchBills) {
+                    KingdeeSynExtendDto kingdeeSynExtendDto = save(batchBill,kingdeeBook);
+                    kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
+                }
             }
         }
         return kingdeeSynExtendDtoList;
@@ -134,6 +138,10 @@ public class SalOutStockService {
 
     public BatchBillQuery getFormProperty(BatchBillQuery batchBillQuery){
         batchBillQuery.setOutStockBillTypeEnums(SalOutStockBillTypeEnum.values());
+        List<String> customerNameList = bdCustomerMapper.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList());
+        List<String> materialNameList = bdMaterialMapper.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList());
+        batchBillQuery.setBdCustomerNameList(customerNameList);
+        batchBillQuery.setBdMaterialNameList(materialNameList);
         return batchBillQuery;
     }
 

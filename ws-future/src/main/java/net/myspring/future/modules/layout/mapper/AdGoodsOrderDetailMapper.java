@@ -11,8 +11,12 @@ import java.util.List;
 @Mapper
 public interface AdGoodsOrderDetailMapper extends MyMapper<AdGoodsOrderDetail,String> {
 
+    void deleteById(String adGoodsOrderId);
+
     List<AdGoodsOrderDetailDto> findByAdGoodsOrderIds(List<String> adGoodsOrderIds);
 
-    List<AdGoodsOrderDetailDto> findByAdGoodsOrderForEdit(@Param("productType") String productType,@Param("adGoodsOrderId") String adGoodsOrderId);
+    List<AdGoodsOrderDetailDto> findByAdGoodsOrderForEdit(@Param("outGroupIds") List<String> outGroupIds,@Param("adGoodsOrderId") String adGoodsOrderId);
+
+    List<AdGoodsOrderDetailDto> findByAdGoodsOrderForNew(@Param("outGroupIds") List<String> outGroupIds);
 
 }

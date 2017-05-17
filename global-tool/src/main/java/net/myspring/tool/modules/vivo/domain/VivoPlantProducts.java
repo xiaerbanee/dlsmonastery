@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.vivo.domain;
 
 
+import net.myspring.common.domain.IdEntity;
 import net.myspring.tool.common.domain.CompanyEntity;
 import net.myspring.common.domain.DataEntity;
 
@@ -9,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="vivo_plant_products")
-public class VivoPlantProducts extends CompanyEntity<VivoPlantProducts> {
+public class VivoPlantProducts extends IdEntity<VivoPlantProducts> {
     private String typeId;
     private String colorId;
     private String colorName;
@@ -27,7 +28,8 @@ public class VivoPlantProducts extends CompanyEntity<VivoPlantProducts> {
     private String itemType;
     private String orgId;
     private String codeRecordType;
-    private Integer version = 0;
+    private String productId;
+    private String lxProductId;
 
     public String getTypeId() {
         return typeId;
@@ -165,11 +167,19 @@ public class VivoPlantProducts extends CompanyEntity<VivoPlantProducts> {
         this.codeRecordType = codeRecordType;
     }
 
-    public Integer getVersion() {
-        return version;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getLxProductId() {
+        return lxProductId;
+    }
+
+    public void setLxProductId(String lxProductId) {
+        this.lxProductId = lxProductId;
     }
 }

@@ -6,6 +6,7 @@ import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/11.
@@ -23,6 +24,15 @@ public class AdGoodsOrderQuery extends BaseQuery {
     private String remarks;
     private String createdBy;
     private String createdDate;
+    private List<String> billTypes;
+
+    public List<String> getBillTypes() {
+        return billTypes;
+    }
+
+    public void setBillTypes(List<String> billTypes) {
+        this.billTypes = billTypes;
+    }
 
     public String getBussinessId() {
         return bussinessId;
@@ -144,7 +154,7 @@ public class AdGoodsOrderQuery extends BaseQuery {
     }
 
     public LocalDate getBillDateEnd() {
-        if(StringUtils.isNotBlank(createdDate)) {
+        if(StringUtils.isNotBlank(billDate)) {
             return LocalDateUtils.parse(billDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;

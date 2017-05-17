@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.mapper.ImooPlantBasicProductMapper">
+
+    <select id="findSegment1s" resultType="String">
+        select t.segment1 from api_imoo_plant_basic_product t where t.segment1 in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <insert id="save">
+        INSERT INTO api_imoo_plant_basic_product
+        (
+        segment1,
+        description,
+        product_id,
+        title,
+        plid,
+        plname,
+        created_time
+        )VALUES
+        <foreach item="item" index="index" collection="list" open="" separator="," close="">
+            (
+            #{item.segment1},
+            #{item.description},
+            #{item.productId},
+            #{item.title},
+            #{item.plid},
+            #{item.plname},
+            #{item.createdTime}
+            )
+        </foreach>
+    </insert>
+
+    <select id="findById" resultType="ImooPlantBasicProduct">
+        select * from api_imoo_plant_basic_product where id = #{id}
+    </select>
+
+
+</mapper>

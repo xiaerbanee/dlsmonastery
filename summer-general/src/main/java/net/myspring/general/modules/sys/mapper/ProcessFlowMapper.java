@@ -13,4 +13,6 @@ public interface ProcessFlowMapper extends MyMapper<ProcessFlow,String> {
     ProcessFlow findByProcessTypeAndName(@Param("processTypeId") String processTypeId, @Param("name") String name);
 
     List<ProcessFlow> findByProcessType(String processTypeId);
+
+    List<ProcessFlow> findByProcessTypeName(String processTypeName);
 }

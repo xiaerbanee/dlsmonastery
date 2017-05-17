@@ -2,40 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.crm.mapper.ProductImeMapper">
 
-    <select id="findPage" resultType="ProductImeDto">
-       SELECT t1.*,depot.name as depotName,productImeSale.created_date as productImeUploadCreateDate,productImeUpload.created_date as productImeSaleCreateDate,product.name as productName,product.net_type as productNetType
-       FROM crm_product_ime t1,crm_depot depot,crm_product_ime_sale productImeSale ,crm_product_ime_upload productImeUpload,crm_product product
-       where  t1.enabled=1
-       and t1.depot_id=depot.id and t1.product_ime_sale_id=productImeSale.id and t1.product_ime_upload_id=productImeUpload.id and t1.product_id=product.id
-       and DATEDIFF(now(),t1.created_date)&lt;90
-    </select>
-        <!--include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
+    <select id="findList" resultType="ProductIme">
+        SELECT t1.*
+        FROM crm_product_ime t1,crm_depot depot
+        where  t1.enabled=1
+        and t1.depot_id=depot.id
+        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
         <if test="p.boxIme !=null" >
-            and t1.box_ime=#{p.boxIme}
+            and t1.box_ime like CONCAT('%',#{p.boxIme},'%')
         </if>
         <if test="p.imeReverse !=null" >
-            and t1.ime_reverse like CONCAT('%',#{p.imeReverse},'%')
+            and t1.ime_reverse like CONCAT(#{p.imeReverse},'%')
         </if>
         <if test="p.ime2 !=null" >
-            and t1.ime2 =#{p.ime2}
-        </if>
-        <if test="p.ime !=null" >
-            and t1.ime =#{p.ime}
+            and t1.ime2  like CONCAT('%',#{p.ime2},'%')
         </if>
         <if test="p.meid !=null" >
-            and t1.ime2 like CONCAT('%',#{p.meid},'%')
+            and t1.meid like CONCAT('%',#{p.meid},'%')
         </if>
-        <if test="p.imes !=null" >
-            and t1.ime in
+        <if test="p.imeList !=null" >
+            and (t1.ime in
             <foreach item="item" index="index" collection="p.imes" open="(" separator="," close=")">
                 #{item}
             </foreach>
-        </if>
-        <if test="p.meids !=null" >
-            and t1.meid in
-            <foreach item="item" index="index" collection="p.meids" open="(" separator="," close=")">
+            or t1.ime1 in
+            <foreach item="item" index="index" collection="p.imes" open="(" separator="," close=")">
                 #{item}
             </foreach>
+            or t1.meid in
+            <foreach item="item" index="index" collection="p.imes" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            )
         </if>
         <if test="p.createdDateStart !=null">
             AND t1.created_date>=#{p.createdDateStart}
@@ -55,37 +53,20 @@
         <if test="p.createTimeEnd !=null">
             AND t1.create_time &lt;=#{p.createTimeEnd}
         </if>
-        <if test="p.saleDate !=null">
-            and t1.product_ime_sale_id in (
-              select t4.id from crm_product_ime_sale t4
-            where t4.created_date &gt;= #{p.saleDateStart} and t4.created_date &lt;= #{p.saleDateEnd}
-            )
+        <if test="p.depotId !=null" >
+            and t1.depot_id = #{p.depotId}
         </if>
-        <if test="p.depotName !=null" >
-            and t1.depot_id in(
-            select t2.id
-            from crm_depot t2
-            where t2.name like CONCAT('%',#{p.depotName},'%')
-            )
-        </if>
-        <if test="p.productName !=null" >
-            and t1.product_id in(
-            select t3.id
-            from crm_product t3
-            where t3.name like CONCAT('%',#{p.productName},'%')
-            )
+        <if test="p.productId !=null" >
+            and t1.product_id = #{p.productId}
         </if>
         <if test="p.inputType !=null" >
             and t1.input_type =#{p.inputType}
         </if>
+        <if test="p.pageable.sort !=null" >
+           order by t1.${p.pageable.sort}
+        </if>
+        limit ${p.pageable.offset},${p.pageable.pageSize}
     </select>
-
-    <select id="findByImeLike" resultType="ProductIme">
-        SELECT t1.*
-        FROM crm_product_ime t1
-        where t1.enabled=1
-        AND t1.ime like concat('%',#{ime},'%')
-    </select-->
 
     <select id="findByImeList" resultType="ProductIme">
         SELECT
@@ -107,20 +88,28 @@
         </foreach>
     </select>
 
-    <select id="findByStoreAndBoxImeAndIme" resultType="ProductIme">
-        SELECT
-        t1.*
-        FROM
-        crm_product_ime t1
-        where t1.enabled=1
-        and t1.depot_id=#{storeId}
+    <select id="findShipList" resultType="ProductIme">
         <if test="boxList !=null and boxList.size() !=0">
+            SELECT
+            t1.*
+            FROM
+            crm_product_ime t1
+            where t1.enabled=1
+            and t1.depot_id=#{storeId}
             and t1.box_ime IN
             <foreach item="item" index="index" collection="boxList" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
+        <if test="boxImeAndIme">
+            UNION
+        </if>
         <if test="imeList !=null and imeList.size() !=0">
+            SELECT
+            t1.*
+            FROM
+            crm_product_ime t1
+            where t1.enabled=1
             and (t1.ime IN
             <foreach item="item" index="index" collection="imeList" open="(" separator="," close=")">
                 #{item}
@@ -137,45 +126,6 @@
         </if>
     </select>
 
-    <select id="findByStoreAndImeList" resultType="ProductIme">
-        SELECT t1.*
-        FROM crm_product_ime t1
-        WHERE t1.enabled=1
-        and t1.depot_id=#{storeId}
-        and t1.ime in
-        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-        or t1.ime2 in
-        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-        or t1.meid in
-        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
-    <select id="findByStoreAndBoxList" resultType="ProductIme">
-        SELECT t1.*
-        FROM crm_product_ime t1
-        WHERE t1.enabled=1
-        and t1.depot_id=#{storeId}
-        and t1.box_ime IN
-        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
-    <select id="findByStoreId" resultType="ProductIme">
-         SELECT
-        t1.*
-        FROM
-        crm_product_ime t1
-        where t1.enabled=1
-        and t1.depot_id=#{storeId}
-    </select>
-
     <select id="findByIme" resultType="ProductIme">
         SELECT
         t1.*
@@ -184,105 +134,4 @@
         where t1.enabled=1
         and t1.ime =  #{item} or t1.ime2 =  #{item} or t1.meid =  #{item}
     </select>
-
-    <select id="findLabels" resultType="ProductIme">
-        SELECT t1.id,t1.ime,t1.product_id,t1.retail_shop_id,t1.meid
-        FROM crm_product_ime t1
-        WHERE t1.enabled = 1
-        and t1.id in
-        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
-    <select id="findByRetailDate" resultType="ProductIme">
-        select t1.*
-        from crm_product_ime t1
-        where t1.retail_date &gt;= #{dateStart}
-        and t1.retail_date &lt; #{dateEnd}
-        and t1.retail_date is not null
-    </select>
-
-    <select id="findByFilter" resultType="ProductIme">
-        SELECT t1.*
-        FROM crm_product_ime t1
-        where  t1.enabled=1
-        <if test="p.boxIme !=null" >
-            and t1.box_ime=#{p.boxIme}
-        </if>
-        <if test="p.imeReverse !=null" >
-            and t1.ime_reverse like CONCAT('%',#{p.imeReverse},'%')
-        </if>
-        <if test="p.ime2 !=null" >
-            and t1.ime2 =#{p.ime2}
-        </if>
-        <if test="p.ime !=null" >
-            and t1.ime =#{p.ime}
-        </if>
-        <if test="p.meid !=null" >
-            and t1.ime2 like CONCAT('%',#{p.meid},'%')
-        </if>
-        <if test="p.imes !=null" >
-            and t1.ime in
-            <foreach item="item" index="index" collection="p.imes" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="p.meids !=null" >
-            and t1.meid in
-            <foreach item="item" index="index" collection="p.meids" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="p.createdDateStart !=null">
-            AND t1.created_date>=#{p.createdDateStart}
-        </if>
-        <if test="p.createdDateEnd !=null">
-            AND t1.created_date &lt;=#{p.createdDateEnd}
-        </if>
-        <if test="p.retailDateStart !=null">
-            AND t1.retail_date &gt;=#{p.retailDateStart}
-        </if>
-        <if test="p.retailDateEnd !=null">
-            AND t1.retail_date &lt;=#{p.retailDateEnd}
-        </if>
-        <if test="p.createTimeStart !=null">
-            AND t1.create_time &gt;=#{p.createTimeStart}
-        </if>
-        <if test="p.createTimeEnd !=null">
-            AND t1.create_time &lt;=#{p.createTimeEnd}
-        </if>
-        <if test="p.saleDate !=null">
-            and t1.product_ime_sale_id in (
-            select t4.id from crm_product_ime_sale t4
-            where t4.created_date &gt;= #{p.saleDateStart} and t4.created_date &lt;= #{p.saleDateEnd}
-            )
-        </if>
-        <if test="p.depotName !=null" >
-            and t1.depot_id in(
-            select t2.id
-            from crm_depot t2
-            where t2.name like CONCAT('%',#{p.depotName},'%')
-            )
-        </if>
-        <if test="p.productName !=null" >
-            and t1.product_id in(
-            select t3.id
-            from crm_product t3
-            where t3.name like CONCAT('%',#{p.productName},'%')
-            )
-        </if>
-        <if test="p.inputType !=null" >
-            and t1.input_type =#{p.inputType}
-        </if>
-    </select>
-
-    <select id="findByStoreAndImeLike" resultType="ProductIme">
-        SELECT t1.*
-        FROM crm_product_ime t1
-        where t1.enabled=1
-        and t1.depot_id=#{depotId}
-        and (t1.ime like concat('%',#{ime},'%') or t1.ime2 like  concat('%',#{ime},'%') or t1.meid like  concat('%',#{ime},'%'))
-    </select>
-
 </mapper>

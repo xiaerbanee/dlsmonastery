@@ -2,6 +2,7 @@ package net.myspring.tool.modules.oppo.web;
 
 import net.myspring.tool.common.utils.Const;
 import net.myspring.tool.common.utils.DateUtils;
+import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
@@ -18,9 +19,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by guolm on 2017/5/9.
- */
 @RestController
 @RequestMapping(value = "oppo")
 public class OppoController {
@@ -55,6 +53,7 @@ public class OppoController {
         //同步电子保卡
         List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(mainCodes.get(0), mainPasswords.get(0),localDate);
         oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
-        return message;
+        RequestUtils.getRequestEntity().setAccountId("1");
+        return "OPPO同步成功";
     }
 }

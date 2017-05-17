@@ -95,7 +95,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
+      <pageable :page="page"  layout="sizes, prev, pager, next, jumper" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>

@@ -4,19 +4,17 @@ import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
-import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
 
-
     private Boolean sameDate;
     private String storeId;
-    private LocalDateTime billDate;
+    private LocalDate billDate;
     private String expressCompanyId;
     private Boolean syn;
     private Boolean takeExpress;
@@ -24,10 +22,10 @@ public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
     private String expressAddress;
     private String expressMobilePhone;
 
+
     private DepotDto shopDto;
-    private DepotDto storeDto;
+
     private GoodsOrderDto goodsOrderDto;
-    private ExpressOrderDto expressOrderDto;
     private List<DepotDto> storeList;
     private List<ExpressCompanyDto> expressCompanyList;
 
@@ -41,14 +39,6 @@ public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
         this.shopDto = shopDto;
     }
 
-    public DepotDto getStoreDto() {
-        return storeDto;
-    }
-
-    public void setStoreDto(DepotDto storeDto) {
-        this.storeDto = storeDto;
-    }
-
     public Boolean getTakeExpress() {
         return takeExpress;
     }
@@ -57,13 +47,6 @@ public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
         this.takeExpress = takeExpress;
     }
 
-    public ExpressOrderDto getExpressOrderDto() {
-        return expressOrderDto;
-    }
-
-    public void setExpressOrderDto(ExpressOrderDto expressOrderDto) {
-        this.expressOrderDto = expressOrderDto;
-    }
 
     public List<GoodsOrderDetailForm> getDetailFormList() {
         return detailFormList;
@@ -129,11 +112,11 @@ public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
         this.storeList = storeList;
     }
 
-    public LocalDateTime getBillDate() {
+    public LocalDate getBillDate() {
         return billDate;
     }
 
-    public void setBillDate(LocalDateTime billDate) {
+    public void setBillDate(LocalDate billDate) {
         this.billDate = billDate;
     }
 

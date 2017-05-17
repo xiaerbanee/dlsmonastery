@@ -283,6 +283,7 @@ export default {
     synToCloud: "sinkronisasi",
     true: "benar",
     false: "salah",
+    billDate:"开单日期",
     pass: "konfirmasi",
     auditRemarks: "keterangan pemeriksaan",
     prerequisiteMessage: "Informasi yang diperlukan",
@@ -318,6 +319,7 @@ export default {
     bankInList: "kredit penjualan",
     id: "ID",
     shopName: "nama toko",
+    shopClientName:'收款门店',
     realShopName: "toko pelanggan",
     bankName: "bank",
     amount: "jumlah",
@@ -351,7 +353,8 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "ubah"
+    audit: "ubah",
+    noSelectionFound:"没有选中任何记录",
   },
   dataReportList: {
     dataReportList: "daftar data",

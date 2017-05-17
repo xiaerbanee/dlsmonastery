@@ -11,6 +11,7 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
+import net.myspring.future.modules.crm.web.form.GoodsOrderViewInDetailForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,13 +65,15 @@ public class GoodsOrderController {
     public Object findByFormatId(String formatId) {
         return null;}
 
-    @RequestMapping(value = "detail")
-    public String detail(GoodsOrder goodsOrder) {
-        return null;  }
+    @RequestMapping(value = "getViewInDetailForm")
+    public GoodsOrderViewInDetailForm getViewInDetailForm(String id) {
+        return goodsOrderService.getViewInDetailForm(id);
+    }
 
-    @RequestMapping(value = "ship", method = RequestMethod.GET)
-    public String ship(GoodsOrder goodsOrder) {
-        return null;  }
+    @RequestMapping(value = "shipForm", method = RequestMethod.GET)
+    public String shipForm(String id) {
+        return null;
+    }
 
     @RequestMapping(value = "ship", method = RequestMethod.POST)
     public RestResponse shipSave(GoodsOrder goodsOrder, String expressCodes, BindingResult bindingResult) {
@@ -133,14 +136,27 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "getBillForm")
-    public GoodsOrderBillForm getBillForm(GoodsOrderBillForm goodsOrderBillForm) {
-        return goodsOrderService.getBillForm(goodsOrderBillForm);
+    public GoodsOrderBillForm getBillForm(String id, String storeId) {
+        return goodsOrderService.getBillForm(id, storeId);
 
     }
 
     @RequestMapping(value = "billSave")
     public RestResponse billSave(GoodsOrderBillForm goodsOrderBillForm) {
-        return null;
+        //TODO 檢查狀態和用戶權限
+//        if (!GoodsOrderStatusEnum.待开单.toString().equals(goodsOrderBillForm.getStatus())) {
+//            return new Message("message_goods_order_order_not_bill", Message.Type.danger);
+//        }
+//        // 检查用户
+//        if (goodsOrderBillForm.getSyn()) {
+//            if (StringUtils.isBlank(RequestUtils.getOutId())) {
+//                return new Message("message_goods_order_correct_finance", Message.Type.danger);
+//            }
+//        }
+
+        goodsOrderService.billSave(goodsOrderBillForm);
+        return new RestResponse("message_goods_order_bill_success", ResponseCodeEnum.saved.name());
+
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
