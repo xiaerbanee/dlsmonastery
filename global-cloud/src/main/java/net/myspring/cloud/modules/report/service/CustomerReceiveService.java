@@ -36,13 +36,13 @@ public class CustomerReceiveService {
     public List<CustomerReceiveDto>  findCustomerReceiveDtoList(CustomerReceiveQuery customerReceiveQuery) {
         LocalDate dateStart = customerReceiveQuery.getDateStart();
         LocalDate dateEnd = customerReceiveQuery.getDateEnd();
-        List<CustomerReceiveDto> beginList = customerReceiveMapper.findEndShouldGet(dateStart,customerReceiveQuery.getCustomerIdList());
-        List<CustomerReceiveDto> endList = customerReceiveMapper.findEndShouldGet(dateEnd,customerReceiveQuery.getCustomerIdList());
+        List<String> customerIdList = customerReceiveQuery.getCustomerIdList();
+        List<CustomerReceiveDto> beginList = customerReceiveMapper.findEndShouldGet(dateStart,customerIdList);
+        List<CustomerReceiveDto> endList = customerReceiveMapper.findEndShouldGet(dateEnd,customerIdList);
         //期初结余
         Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //期末结余
         Map<String,BigDecimal> endMap = endList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
-        List<String> customerIdList = Lists.newArrayList();
         for(CustomerReceiveDto customerReceiveDto:beginList) {
             if(!customerIdList.contains(customerReceiveDto.getCustomerId())) {
                 customerIdList.add(customerReceiveDto.getCustomerId());
@@ -91,6 +91,14 @@ public class CustomerReceiveService {
         Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //主单据列表(其他应收,销售出库 销售退货，收款，退款)
         List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveMapper.findMainList(customerReceiveDetailQuery);
+        //查找备注
+        List<NameValueDto> remarksList = customerReceiveMapper.findRemarks(customerReceiveDetailQuery);
+        Map<String,String> remarksMap = remarksList.stream().collect(Collectors.toMap(NameValueDto::getName,NameValueDto::getValue));
+        for (CustomerReceiveDetailDto customerReceiveDetailDto: customerReceiveDetailDtoMainList) {
+            if (remarksMap.containsKey(customerReceiveDetailDto.getBillNo())) {
+                customerReceiveDetailDto.setRemarks(remarksMap.get(customerReceiveDetailDto.getBillNo()));
+            }
+        }
         //根据customerId组织成map
         Map<String, List<CustomerReceiveDetailDto>> mainMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(customerReceiveDetailDtoMainList)) {

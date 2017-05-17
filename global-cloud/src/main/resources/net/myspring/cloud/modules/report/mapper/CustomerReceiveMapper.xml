@@ -106,7 +106,7 @@
         T_BAS_BILLTYPE_L t02
         WHERE
         t01.FBILLTYPEID = t02.FBILLTYPEID
-        AND t01.FCONTACTUNIT IN 
+        AND t01.FCONTACTUNIT IN
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -130,7 +130,7 @@
         t11.FID = t13.FID
         AND t11.FBILLTYPEID = t12.FBILLTYPEID
         AND t12.FNAME = '标准销售退货单'
-        AND t11.FRETCUSTID IN 
+        AND t11.FRETCUSTID IN
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -156,7 +156,7 @@
         T_BAS_BILLTYPE_L t22
         WHERE
         t21.FBILLTYPEID = t22.FBILLTYPEID
-        AND t21.FCONTACTUNIT IN 
+        AND t21.FCONTACTUNIT IN
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -177,7 +177,7 @@
         T_BAS_BILLTYPE_L t32
         WHERE
         t31.FBILLTYPEID = t32.FBILLTYPEID
-        AND t31.FCONTACTUNIT IN 
+        AND t31.FCONTACTUNIT IN
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -201,7 +201,7 @@
         t41.FID = t43.FID
         AND t41.FBILLTYPEID = t42.FBILLTYPEID
         AND t42.FNAME = '标准销售出库单'
-        AND t41.FCUSTOMERID IN 
+        AND t41.FCUSTOMERID IN
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -229,7 +229,7 @@
         t51.FID = t53.FID
         AND t51.FBILLTYPEID = t52.FBILLTYPEID
         AND t52.FNAME = '现销退货单'
-        AND t51.FRETCUSTID IN 
+        AND t51.FRETCUSTID IN
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -257,7 +257,7 @@
         t61.FID = t63.FID
         AND t61.FBILLTYPEID = t62.FBILLTYPEID
         AND t62.FNAME = '现销出库单'
-        AND t61.FCUSTOMERID IN 
+        AND t61.FCUSTOMERID IN
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -294,7 +294,7 @@
         t11.FID = t12.FID
         AND t12.FENTRYID = t14.FENTRYID
         AND t12.FMATERIALID = t13.FMATERIALID
-        AND t11.FCUSTOMERID IN 
+        AND t11.FCUSTOMERID IN
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -320,78 +320,59 @@
         t21.FID = t22.FID
         AND t22.FENTRYID = t24.FENTRYID
         AND t22.FMATERIALID = t23.FMATERIALID
-        AND t21.FRETCUSTID IN 
+        AND t21.FRETCUSTID IN
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
         AND t21.FDATE >=#{dateStart}
         AND t21.FDATE &lt;#{dateEnd}
-
-        UNION ALL
-        SELECT
-        t2.FID as id,
-        t2.FCONTACTUNIT AS customerId,
-        t3.FNAME AS billType,
-        t2.FBillNo AS billNo,
-        t1.FAMOUNT AS totalAmount,
-        t1.FCOMMENT AS remarks
-        FROM
-        T_AR_OTHERRECABLEENTRY t1,
-        T_AR_OTHERRECABLE t2,
-        T_BAS_BILLTYPE_L t3
-        WHERE
-        t1.FID = t2.FID
-        and  t2.FBILLTYPEID = t3.FBILLTYPEID
-        t2.FDATE &gt;=#{dateStart} AND
-        t2.FDATE  &lt;=#{dateEnd} and
-        t2.FCONTACTUNIT in
-        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-        
-        union all
-        SELECT
-        t1.FID as id,
-        t1.FCONTACTUNIT AS customerId,
-        t3.FNAME AS billType,
-        t1.FBillNo AS billNo,
-        t2.FRECAMOUNT_E AS totalAmount,
-        t2..FCOMMENT as remarks
-        FROM
-        T_AR_RECEIVEBILLENTRY t2,
-         T_AR_RECEIVEBILL t1 ,
-        LEFT JOIN T_BAS_BILLTYPE_L t3 ,
-        WHERE
-        t2.FID = t1.FID 
-        and t1.FBILLTYPEID = t3.FBILLTYPEID
-        t1.FDATE &gt;=#{dateStart} AND
-        t1.FDATE  &lt;=#{dateEnd} and
-        t1.FCONTACTUNIT in
-        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-        
-        union all
-        SELECT
-        t1.FID as id,
-        t1.FCONTACTUNIT AS customerId,
-        t3.FNAME AS billType,
-        t1.FBillNo AS billNo,
-        t2.FREALREFUNDAMOUNT AS totalAmount
-        FROM
-        T_AR_REFUNDBILLENTRY t2,
-        JOIN T_AR_REFUNDBILL t1,
-        LEFT JOIN T_BAS_BILLTYPE_L t3,
-        WHERE
-        t1.FID = t2.FID
-        and t1.FBILLTYPEID = t3.FBILLTYPEID
-        t1.FDATE &gt;=#{dateStart} AND
-        t1.FDATE  &lt;=#{dateEnd} and
-        t1.FCONTACTUNIT in
-        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
     </select>
 
+    <select id="findRemarks" resultType="net.myspring.common.dto.NameValueDto">
+        SELECT
+        t1.FBILLNO AS name,
+        t2.FCOMMENT AS value
+        FROM
+        T_AR_OTHERRECABLE t1,
+        T_AR_OTHERRECABLEENTRY t2
+        WHERE
+        t1.FID = t2.FID
+        AND t1.FCONTACTUNIT IN
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t1.FDATE  >#{dateStart}
+        AND t1.FDATE &lt;#{dateEnd}
+        UNION ALL
+        SELECT
+        t3.FBILLNO AS name,
+        t4.FCOMMENT AS value
+        FROM
+        T_AR_RECEIVEBILL t3,
+        T_AR_RECEIVEBILLENTRY t4
+        WHERE
+        t3.FID = t4.FID
+        AND t3.FCONTACTUNIT  IN
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t3.FDATE  >#{dateStart}
+        AND t3.FDATE &lt;#{dateEnd}
+        UNION ALL
+        SELECT
+        t5.FBILLNO AS name,
+        t6.FNOTE AS value
+        FROM
+        T_AR_REFUNDBILL t5,
+        T_AR_REFUNDBILLENTRY t6
+        WHERE
+        t5.FID = t6.FID
+        AND t5.FCONTACTUNIT IN
+        <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t5.FDATE  >#{dateStart}
+        AND t5.FDATE &lt;#{dateEnd}
+    </select>
 
 </mapper>

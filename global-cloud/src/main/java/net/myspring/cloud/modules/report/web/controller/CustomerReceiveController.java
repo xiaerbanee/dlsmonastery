@@ -23,9 +23,9 @@ public class CustomerReceiveController {
     private CustomerReceiveService customerReceiveService;
 
     @RequestMapping(value = "list")
-    public Map<String,CustomerReceiveDto> list(CustomerReceiveQuery customerReceiveQuery) {
+    public List<CustomerReceiveDto> list(CustomerReceiveQuery customerReceiveQuery) {
         List<CustomerReceiveDto> customerReceiveDtoList =  customerReceiveService.findCustomerReceiveDtoList(customerReceiveQuery);
-        return customerReceiveDtoList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId,customerReceiveDto -> customerReceiveDto));
+        return customerReceiveDtoList;
     }
 
     @RequestMapping(value = "detail")

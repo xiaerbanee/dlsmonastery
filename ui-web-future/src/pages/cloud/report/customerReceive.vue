@@ -86,7 +86,7 @@
         summary: [],
         detail: [],
         formData: {
-          dateRange: [new Date().toLocaleDateString(),new Date().toLocaleDateString()],
+          dateRange: [new Date().toDateString(),new Date().toDateString()],
           customerGroup:'',
           customerIdList:[],
           customerGroupList:[],
@@ -125,14 +125,15 @@
         util.setQuery("customerReceive",that.formData);
         that.formData.dateRange = util.formatDateRange(that.formData.dateRange);
         util.copyValue(that.formData,that.submitData);
-        axios.get('/api/global/cloud/kingdee/bdCustomer?'+qs.stringify(this.submitData)).then((response) => {
+        axios.get('/api/global/cloud/kingdee/bdCustomer?'+qs.stringify(that.submitData)).then((response) => {
+            that.customerPage = response.data;
             let customers = response.data.content;
             for (let item in customers){
               that.submitData.customerIdList.push(customers[item].fcustId);
             }
-            console.log(that.submitData.customerIdList);
-            if(that.submitData.customerIdList.length != 0){
-              axios.get('/api/global/cloud/report/customerReceive/list?'+qs.stringify(this.submitData)).then((response) => {
+            if(that.submitData.customerIdList .length !== 0){
+              console.log(that.submitData.customerIdList);
+              axios.get('/api/global/cloud/report/customerReceive/list?'+qs.stringify(that.submitData)).then((response) => {
                 this.summary = response.data;
               });
             }
