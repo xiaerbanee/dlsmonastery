@@ -1,6 +1,5 @@
 package net.myspring.cloud.modules.kingdee.web.controller;
 
-import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.service.BdCustomerService;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by lihx on 2017/5/12.
@@ -31,8 +29,8 @@ public class BdCustomerController {
 
 
     @RequestMapping(value = "findByNameLike")
-    public List<String> findByNameLike(String name){
+    public List<BdCustomer> findByNameLike(String name){
         List<BdCustomer> bdCustomerList = bdCustomerService.findByNameLike(name);
-        return bdCustomerList.stream().map(BdCustomer::getFName).collect(Collectors.toList());
+        return bdCustomerList;
     }
 }

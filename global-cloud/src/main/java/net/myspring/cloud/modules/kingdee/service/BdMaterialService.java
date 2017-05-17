@@ -18,10 +18,6 @@ public class BdMaterialService {
     @Autowired
     private BdMaterialMapper bdMaterialMapper;
 
-    public List<BdMaterial> findByNameLike(String name){
-        return bdMaterialMapper.findByNameLike(name);
-    }
-
     public BdMaterial findByName(String name){
         return bdMaterialMapper.findByName(name);
     }

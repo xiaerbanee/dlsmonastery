@@ -26,4 +26,5 @@ public interface ActivitiClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/sys/activiti/getActivitiDetail")
     List<ActivitiDetailDto> getActivitiDetail(@RequestParam("processInstanceId") String processInstanceId);
+
 }

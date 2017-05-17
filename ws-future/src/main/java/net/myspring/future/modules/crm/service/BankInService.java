@@ -7,6 +7,7 @@ import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.mapper.BankInMapper;
+import net.myspring.future.modules.crm.web.form.BankInDetailForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 @Service
 @Transactional
@@ -38,15 +41,7 @@ public class BankInService {
 
     public Page<BankInDto> findPage(Pageable pageable, BankInQuery bankInQuery) {
         Page<BankInDto> page = bankInMapper.findPage(pageable, bankInQuery);
-        if(page!=null && page.getContent()!=null){
-            for(BankInDto each : page.getContent()){
-                if(each.getShopParentId()!=null){
-                    each.setRealShopName(depotMapper.findOne(each.getShopParentId()).getName());
-                }else {
-                    each.setRealShopName(each.getShopName());
-                }
-            }
-        }
+
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -61,13 +56,14 @@ public class BankInService {
         bankInMapper.update(bankIn);
     }
 
-    public void audit(String id, boolean pass, String comment){
-        BankIn bankIn = bankInMapper.findOne(id);
-        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), comment, pass));
+    public void audit(BankInDetailForm bankInDetailForm){
+        BankIn bankIn = bankInMapper.findOne(bankInDetailForm.getId());
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInDetailForm.getAuditRemarks(), "1".equals(bankInDetailForm.getPass())));
         bankIn.setLocked(true);
         bankIn.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
         bankIn.setProcessStatus(activitiCompleteDto.getProcessStatus());
         bankIn.setPositionId(activitiCompleteDto.getPositionId());
+        bankIn.setBillDate(bankInDetailForm.getBillDate());
         bankInMapper.update(bankIn);
     }
 
@@ -86,9 +82,8 @@ public class BankInService {
     public BankIn save(BankInForm bankInForm) {
         BankIn bankIn;
         if(bankInForm.isCreate()) {
-            String name="销售收款";
-            String businessKey = bankInForm.getId();
-            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm(name, businessKey,BankIn.class.getSimpleName(),bankInForm.getAmount().toString()));
+
+            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("销售收款",  bankInForm.getId(),BankIn.class.getSimpleName(),bankInForm.getAmount().toString()));
             bankIn = BeanUtil.map(bankInForm, BankIn.class);
             bankIn.setProcessFlowId(activitiStartDto.getProcessFlowId());
             bankIn.setProcessStatus(activitiStartDto.getProcessStatus());
@@ -108,16 +103,18 @@ public class BankInService {
         bankInMapper.logicDeleteOne(id);
     }
 
-    public BankInDto findDetail(String id) {
+    public BankInDetailForm findDetail(String id, String action) {
 
-        BankInDto result = bankInMapper.findDto(id);
-        if(result.getShopParentId()!=null){
-            result.setRealShopName(depotMapper.findOne(result.getShopParentId()).getName());
-        }else {
-            result.setRealShopName(result.getShopName());
+        BankInDetailForm result = new BankInDetailForm();
+        result.setId(id);
+        BankInDto bankInDto = bankInMapper.findDto(id);
+        result.setBankInDto(bankInDto);
+
+        if("audit".equals(action)){
+            result.setBillDate(LocalDate.now());
         }
+
         cacheUtils.initCacheInput(result);
         return result;
-
     }
 }

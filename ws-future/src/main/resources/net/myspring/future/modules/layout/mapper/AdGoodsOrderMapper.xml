@@ -4,7 +4,7 @@
 
     <select id="findPage" resultType="AdGoodsOrderDto">
         SELECT
-        depot.office_id officeId,depot.area_id areaId,t1.*
+        depot.office_id officeId,t1.*
         FROM
         crm_ad_goods_order t1,crm_depot depot
         WHERE
@@ -23,34 +23,26 @@
             and t1.created_date >= #{p.createdDateStart}
         </if>
         <if test="p.createdDateEnd !=null">
-            and t1.created_date &lt;= #{p.createdDateEnd}
+            and t1.created_date &lt; #{p.createdDateEnd}
         </if>
         <if test="p.billDateStart !=null">
             and t1.bill_date >= #{p.billDateStart}
         </if>
         <if test="p.billDateEnd !=null">
-            and t1.bill_date &lt;= #{p.billDateEnd}
+            and t1.bill_date &lt; #{p.billDateEnd}
         </if>
         <if test="p.createdBy !=null">
-
+            and t1.created_by &lt; #{p.createdBy}
         </if>
         <if test="p.officeId != null">
-
+            and depot.office_id &lt; #{p.officeId}
         </if>
         <if test="p.storeId !=null">
             AND t1.store_id =#{p.storeId}
             )
         </if>
         <if test="p.shopId !=null">
-
-        </if>
-        <if test="p.areaType !=null">
-            and t1.shop_id in(
-            select depot.id
-            from crm_depot depot
-            where depot.area_type like concat('%',#{p.areaType},'%')
-            and depot.enabled=1
-            )
+            AND t1.shop_id =#{p.shopId}
         </if>
     </select>
 
