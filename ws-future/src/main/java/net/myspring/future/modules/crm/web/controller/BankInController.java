@@ -8,6 +8,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.service.BankService;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.service.BankInService;
+import net.myspring.future.modules.crm.web.form.BankInDetailForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,24 +64,22 @@ public class BankInController {
 
 
     @RequestMapping(value = "audit")
-    public RestResponse audit(String id, boolean pass, String comment) {
-        bankInService.audit(id,pass,comment);
+    public RestResponse audit(BankInDetailForm bankInDetailForm) {
+
+        bankInService.audit(bankInDetailForm);
         return new RestResponse("审核成功",ResponseCodeEnum.audited.name());
     }
 
-
     @RequestMapping(value = "findDetail")
-    public BankInDto findDetail(String id ){
-        return bankInService.findDetail(id);
+    public BankInDetailForm findDetail(String id, String action){
+        return bankInService.findDetail(id, action);
     }
 
-
-
-
     @RequestMapping(value = "batchAudit")
-    public String audit(@RequestParam(value = "ids[]") String[] ids,Boolean pass){
+    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids, String pass){
 
-        return null;
+        bankInService.batchAudit(ids, pass);
+        return new RestResponse("批量审核成功",ResponseCodeEnum.audited.name());
     }
 
     @RequestMapping(value = "findForm")

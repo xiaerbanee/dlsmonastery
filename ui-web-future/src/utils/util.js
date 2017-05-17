@@ -92,6 +92,15 @@ util.confirmBeforeDelRecord = function(vueObj){
     type: 'warning'
   });
 }
+util.confirmBeforeBatchPass = function(vueObj){
+  return vueObj.$confirm(vueObj.$t('util.waringMsgBeforeBatchPass'), vueObj.$t('util.typeOfWarningBeforeBatchPass'), {
+    confirmButtonText: vueObj.$t('util.confirmButton'),
+    cancelButtonText:  vueObj.$t('util.cancelButton'),
+
+    type: 'warning'
+  });
+}
+
 
 
 util.getQuery = function (routerName) {

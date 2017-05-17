@@ -2,11 +2,10 @@ package net.myspring.future.modules.crm.service;
 
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.mapper.BankMapper;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.mapper.BankInMapper;
+import net.myspring.future.modules.crm.web.form.BankInDetailForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -21,16 +20,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 @Transactional
 public class BankInService {
 
     @Autowired
     private BankInMapper bankInMapper;
-    @Autowired
-    private DepotMapper depotMapper;
-    @Autowired
-    private BankMapper bankMapper;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -53,14 +52,20 @@ public class BankInService {
         bankInMapper.update(bankIn);
     }
 
-    public void audit(String id, boolean pass, String comment){
-        BankIn bankIn = bankInMapper.findOne(id);
-        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), comment, pass));
-        bankIn.setLocked(true);
+    public void audit(BankInDetailForm bankInDetailForm){
+        //TODO 需要同步金蝶
+        BankIn bankIn = bankInMapper.findOne(bankInDetailForm.getId());
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInDetailForm.getAuditRemarks(), "1".equals(bankInDetailForm.getPass())));
+        if("已通过".equals(activitiCompleteDto.getProcessStatus())){
+            bankIn.setLocked(true);
+        }
+
         bankIn.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
         bankIn.setProcessStatus(activitiCompleteDto.getProcessStatus());
         bankIn.setPositionId(activitiCompleteDto.getPositionId());
+        bankIn.setBillDate(bankInDetailForm.getBillDate() == null ? LocalDate.now() : bankInDetailForm.getBillDate());
         bankInMapper.update(bankIn);
+
     }
 
     public BankInForm findForm(BankInForm bankInForm) {
@@ -99,12 +104,37 @@ public class BankInService {
         bankInMapper.logicDeleteOne(id);
     }
 
-    public BankInDto findDetail(String id) {
+    public BankInDetailForm findDetail(String id, String action) {
 
-        BankInDto result = bankInMapper.findDto(id);
+        BankInDetailForm result = new BankInDetailForm();
+        result.setId(id);
+        BankInDto bankInDto = bankInMapper.findDto(id);
+        result.setBankInDto(bankInDto);
+
+        if("audit".equals(action)){
+            result.setBillDate(LocalDate.now());
+        }
 
         cacheUtils.initCacheInput(result);
         return result;
+    }
+
+    public void batchAudit(String[] ids, String pass) {
+        if(ids == null){
+            return;
+        }
+        List<String> idList = Arrays.asList(ids);
+        for(String id : idList){
+            BankInDetailForm bankInDetailForm = new BankInDetailForm();
+            bankInDetailForm.setAuditRemarks("批量通过");
+            bankInDetailForm.setId(id);
+            bankInDetailForm.setPass(pass);
+            bankInDetailForm.setSyn("1");
+            bankInDetailForm.setBillDate(LocalDate.now());
+
+            audit(bankInDetailForm);
+
+        }
 
     }
 }

@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:bankIn:edit'">{{$t('bankInList.add')}}</el-button>
-        <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:bankIn:audit'">{{$t('bankInList.batchPass')}}</el-button>
+        <el-button type="primary" :disabled="submitDisabled"  @click="batchPass" icon="check" v-permit="'crm:bankIn:audit'">{{$t('bankInList.batchPass')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bankIn:view'">{{$t('bankInList.filter')}}</el-button>
         <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
@@ -128,6 +128,8 @@
         formLabelWidth: '120px',
         formVisible: false,
         selects:new Array(),
+        submitDisabled:false,
+
       };
     },
     methods: {
@@ -159,9 +161,9 @@
         if(action=="edit") {
           this.$router.push({ name: 'bankInForm', query: { id: id }})
         }else if(action=="detail"){
-          this.$router.push({ name: 'bankInDetail', query: { id: id}})
+          this.$router.push({ name: 'bankInDetail', query: { id: id, action:action}})
         }else if(action=="audit"){
-          this.$router.push({ name: 'bankInAudit', query: { id: id}})
+          this.$router.push({ name: 'bankInDetail', query: { id: id, action:action}})
         }else if(action=="delete"){
 
           util.confirmBeforeDelRecord(this).then(() => {
@@ -169,21 +171,34 @@
               this.$message(response.data.message);
               this.pageRequest();
             })
-          });
+          }).catch(()=>{});
         }
       },checkSelectable(row) {
         return row.processStatus !== '已通过' && row.processStatus !== '未通过'
       },selectionChange(selection){
-        console.log(selection);
+
         this.selects=new Array();
         for(var key in selection){
           this.selects.push(selection[key].id);
         }
+
       },batchPass(){
-        axios.get('/api/ws/future/crm/bankIn/batchAudit',{params:{ids:this.selects,pass:true}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        });
+
+          if(!this.selects || this.selects.length < 1){
+            this.$message(this.$t('bankInList.noSelectionFound'));
+            return ;
+          }
+
+        util.confirmBeforeBatchPass(this).then(() => {
+          this.submitDisabled = true;
+          this.pageLoading = true;
+          axios.get('/api/ws/future/crm/bankIn/batchAudit',{params:{ids:this.selects, pass:'1'}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageLoading = false;
+            this.submitDisabled = false;
+            this.pageRequest();
+          });
+        }).catch(()=>{});
       }
     },created () {
       var that = this;

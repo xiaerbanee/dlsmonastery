@@ -22,6 +22,12 @@ const shopAdTypeForm  = r => require.ensure([], () => r(require('pages/future/ba
 const shopAttributeList  = r => require.ensure([], () => r(require('pages/future/basic/shopAttributeList.vue')));
 const shopAttributeForm  = r => require.ensure([], () => r(require('pages/future/basic/shopAttributeForm.vue')));
 
+const depotShopForm  = r => require.ensure([], () => r(require('pages/future/basic/depotShopForm.vue')));
+const depotShopList  = r => require.ensure([], () => r(require('pages/future/basic/depotShopList.vue')));
+const shopForm  = r => require.ensure([], () => r(require('pages/future/basic/shopForm.vue')));
+const depotStoreForm  = r => require.ensure([], () => r(require('pages/future/basic/depotStoreForm.vue')));
+const depotStoreList  = r => require.ensure([], () => r(require('pages/future/basic/depotStoreList.vue')));
+
 let routes = [
   {path:'/future/basic/adPricesystemList',component:adPricesystemList,name:'adPricesystemList'},
   {path:'/future/basic/adPricesystemForm',component:adPricesystemForm,name:'adPricesystemForm',meta: {menu:"adPricesystemList"}},
@@ -46,6 +52,12 @@ let routes = [
   {path:'/future/basic/shopAdTypeForm',component:shopAdTypeForm,name:'shopAdTypeForm',meta: {menu:"shopAdTypeList"}},
   {path:'/future/basic/shopAttributeList',component:shopAttributeList,name:'shopAttributeList'},
   {path:'/future/basic/shopAttributeForm',component:shopAttributeForm,name:'shopAttributeForm',meta: {menu:"shopAttributeList"}},
+
+  {path:'/future/basic/depotShopList',component:depotShopList,name:'depotShopList'},
+  {path:'/future/basic/depotShopForm',component:depotShopForm,name:'depotShopForm',meta: {menu:"depotShopList"}},
+  {path:'/future/basic/shopForm',component:shopForm,name:'shopForm',meta: {menu:"depotShopList"}},
+  {path:'/future/basic/depotStoreList',component:depotStoreList,name:'depotStoreList'},
+  {path:'/future/basic/depotStoreForm',component:depotStoreForm,name:'depotStoreForm',meta: {menu:"depotStoreList"}},
 ];
 
 export default routes;
