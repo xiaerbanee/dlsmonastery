@@ -57,10 +57,12 @@ public class CustomerReceiveService {
         List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
         for(BdCustomer bdCustomer:customerList) {
             CustomerReceiveDto customerReceiveDto = new CustomerReceiveDto();
+            customerReceiveDto.setCustomerId(bdCustomer.getFCustId());
             customerReceiveDto.setBeginShouldGet(beginMap.get(bdCustomer.getFCustId()));
             customerReceiveDto.setEndShouldGet(endMap.get(bdCustomer.getFCustId()));
             customerReceiveDto.setCustomerName(bdCustomer.getFName());
             customerReceiveDto.setCustomerGroupName(bdCustomer.getFPrimaryGroupName());
+            customerReceiveDtoList.add(customerReceiveDto);
         }
         if(customerReceiveQuery.getQueryDetail()) {
             CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
@@ -89,14 +91,6 @@ public class CustomerReceiveService {
         Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //主单据列表(其他应收,销售出库 销售退货，收款，退款)
         List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveMapper.findMainList(customerReceiveDetailQuery);
-        //查找备注
-        List<NameValueDto> remarksList = customerReceiveMapper.findRemarks(customerReceiveDetailQuery);
-        Map<String,String> remarksMap = remarksList.stream().collect(Collectors.toMap(NameValueDto::getName,NameValueDto::getValue));
-        for (CustomerReceiveDetailDto customerReceiveDetailDto: customerReceiveDetailDtoMainList) {
-            if (remarksMap.containsKey(customerReceiveDetailDto.getBillNo())) {
-                customerReceiveDetailDto.setRemarks(remarksMap.get(customerReceiveDetailDto.getBillNo()));
-            }
-        }
         //根据customerId组织成map
         Map<String, List<CustomerReceiveDetailDto>> mainMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(customerReceiveDetailDtoMainList)) {

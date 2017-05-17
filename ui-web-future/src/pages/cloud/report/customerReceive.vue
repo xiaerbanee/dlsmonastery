@@ -15,7 +15,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.customerGroup.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.customerGroup" placeholder="请选择客户分组">
-                  <el-option v-for="item in formData.customerList" :key="item.fprimaryGroup" :label="item.fprimaryGroupName" :value="item.fprimaryGroup"></el-option>
+                  <el-option v-for="item in formData.customerGroupList" :key="item.value" :label="item.name" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.customerIdList.label" :label-width="formLabelWidth">
@@ -45,12 +45,10 @@
           <el-table-column prop="note" label="摘要"></el-table-column>
         </el-table>
       </el-dialog>
-      <el-table :data="summary" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
+      <el-table :data="summary" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="customerGroupName" label="客户分组" sortable width="150"></el-table-column>
         <el-table-column prop="customerName" label="客户名称"></el-table-column>
         <el-table-column prop="beginShouldGet" label="期初应收"></el-table-column>
-        <el-table-column prop="shouldGet" label="应收金额"></el-table-column>
-        <el-table-column prop="realGet" label="实收金额"></el-table-column>
         <el-table-column prop="endShouldGet" label="期末应收"></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template scope="scope">
@@ -58,6 +56,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <pageable :page="customerPage" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
@@ -82,6 +81,7 @@
   export default {
     data() {
       return {
+        customerPage:{},
         customers:{},
         summary: [],
         detail: [],
@@ -89,14 +89,15 @@
           dateRange: [new Date().toLocaleDateString(),new Date().toLocaleDateString()],
           customerGroup:'',
           customerIdList:[],
-          customerList:[],
+          customerGroupList:[],
         },
         submitData: {
           page:0,
           size:25,
+          sort:'t1.FCUSTID',
           dateRange: '',
           customerGroup:'',
-          customerIdList:[],
+          customerIdList:new Array(),
         },
         submitDetail: {
           dateRange: '',
@@ -124,25 +125,27 @@
         util.setQuery("customerReceive",that.formData);
         that.formData.dateRange = util.formatDateRange(that.formData.dateRange);
         util.copyValue(that.formData,that.submitData);
-        axios.get('/api/global/cloud/input/bdCustomer',{params:that.submitData}).then((response) => {
-            let customers = response.data;
+        axios.get('/api/global/cloud/kingdee/bdCustomer?'+qs.stringify(this.submitData)).then((response) => {
+            let customers = response.data.content;
             for (let item in customers){
               that.submitData.customerIdList.push(customers[item].fcustId);
             }
-            if(that.submitData.customerIdList !== ''){
-              axios.get('/api/global/cloud/report/customerReceive/list',{params:that.submitData}).then((response) => {
-                let shouldGetList = response.data;
-                for (let shouldGet in shouldGetList){
-                    for(let customer in customers){
-                        if (shouldGet.customerId === customer.customerId){
-                            this.summary.push()
-                        }
-                    }
-                }
+            console.log(that.submitData.customerIdList);
+            if(that.submitData.customerIdList.length != 0){
+              axios.get('/api/global/cloud/report/customerReceive/list?'+qs.stringify(this.submitData)).then((response) => {
+                this.summary = response.data;
               });
             }
           this.pageLoading = false;
         })
+      },pageChange(pageNumber,pageSize) {
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
+      },sortChange(column) {
+        this.formData.sort=util.getSort(column);
+        this.formData.page=0;
+        this.pageRequest();
       },search() {
         this.formVisible = false;
         this.pageRequest();
@@ -183,8 +186,8 @@
       },
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/global/cloud/kingdee/bdCustomer/getCustomerGroupList').then((response) => {
-        this.formData.customerList = response.data;
+      axios.get('/api/global/cloud/kingdee/bdCustomer/findCustomerGroupList').then((response) => {
+        this.formData.customerGroupList = response.data;
       });
       this.pageRequest();
     }

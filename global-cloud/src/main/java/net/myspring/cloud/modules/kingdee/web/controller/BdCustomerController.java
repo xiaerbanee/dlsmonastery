@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.kingdee.web.controller;
 
+import net.myspring.cloud.modules.input.dto.NameValueDto;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.service.BdCustomerService;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
@@ -33,4 +34,10 @@ public class BdCustomerController {
         List<BdCustomer> bdCustomerList = bdCustomerService.findByNameLike(name);
         return bdCustomerList;
     }
+
+    @RequestMapping(value = "findCustomerGroupList")
+    public List<NameValueDto> getCustomerGroupList(){
+        return bdCustomerService.findCustomerGroupList();
+    }
+
 }

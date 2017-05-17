@@ -83,7 +83,8 @@
         temp.customerId
     </select>
 
-    <select id="findMainList" resultType="CustomerReceiveDetailDto">SELECT
+    <select id="findMainList" resultType="CustomerReceiveDetailDto">
+        SELECT
         t.id,
         t.customerId,
         t.billType,
@@ -282,6 +283,7 @@
         t13.FNAME AS materialName,
         t12.FREALQTY AS qty,
         t14.FPRICE AS price,
+        t14.FALLAMOUNT AS totalAmount,
         t12.FNOTE AS remarks
         FROM
         T_SAL_OUTSTOCK t11,
@@ -298,14 +300,16 @@
         </foreach>
         AND t11.FDATE >#{dateStart}
         AND t11.FDATE &lt;#{dateEnd}
-                         UNION ALL
-                         SELECT
-                         t21.FID AS id,
+
+        UNION ALL
+        SELECT
+        t21.FID AS id,
         t21.FBillNo AS billNo,
         t21.FRETCUSTID AS customerId,
         t23.FNAME AS materialName,
         t22.FREALQTY AS qty,
         t24.FPRICE AS price,
+        t24.FAMOUNT AS totalAmount,
         t22.FNOTE AS remarks
         FROM
         T_SAL_RETURNSTOCK t21,
@@ -322,53 +326,71 @@
         </foreach>
         AND t21.FDATE >=#{dateStart}
         AND t21.FDATE &lt;#{dateEnd}
-    </select>
 
-    <select id="findRemarks" resultType="net.myspring.common.dto.NameValueDto">
+        UNION ALL
         SELECT
-        t1.FBILLNO AS name,
-        t2.FCOMMENT AS value
+        t2.FID as id,
+        t2.FCONTACTUNIT AS customerId,
+        t3.FNAME AS billType,
+        t2.FBillNo AS billNo,
+        t1.FAMOUNT AS totalAmount,
+        t1.FCOMMENT AS remarks
         FROM
-        T_AR_OTHERRECABLE t1,
-        T_AR_OTHERRECABLEENTRY t2
+        T_AR_OTHERRECABLEENTRY t1,
+        T_AR_OTHERRECABLE t2,
+        T_BAS_BILLTYPE_L t3
         WHERE
         t1.FID = t2.FID
-        AND t1.FCONTACTUNIT IN
+        and  t2.FBILLTYPEID = t3.FBILLTYPEID
+        t2.FDATE &gt;=#{dateStart} AND
+        t2.FDATE  &lt;=#{dateEnd} and
+        t2.FCONTACTUNIT in
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
-        AND t1.FDATE  >#{dateStart}
-        AND t1.FDATE &lt;#{dateEnd}
-                        UNION ALL
+        
+        union all
         SELECT
-        t3.FBILLNO AS name,
-        t4.FCOMMENT AS value
+        t1.FID as id,
+        t1.FCONTACTUNIT AS customerId,
+        t3.FNAME AS billType,
+        t1.FBillNo AS billNo,
+        t2.FRECAMOUNT_E AS totalAmount,
+        t2..FCOMMENT as remarks
         FROM
-        T_AR_RECEIVEBILL t3,
-        T_AR_RECEIVEBILLENTRY t4
+        T_AR_RECEIVEBILLENTRY t2,
+         T_AR_RECEIVEBILL t1 ,
+        LEFT JOIN T_BAS_BILLTYPE_L t3 ,
         WHERE
-        t3.FID = t4.FID
-        AND t3.FCONTACTUNIT  IN
+        t2.FID = t1.FID 
+        and t1.FBILLTYPEID = t3.FBILLTYPEID
+        t1.FDATE &gt;=#{dateStart} AND
+        t1.FDATE  &lt;=#{dateEnd} and
+        t1.FCONTACTUNIT in
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
-        AND t3.FDATE  >#{dateStart}
-        AND t3.FDATE &lt;#{dateEnd}
-                        UNION ALL
+        
+        union all
         SELECT
-        t5.FBILLNO AS name,
-        t6.FNOTE AS value
+        t1.FID as id,
+        t1.FCONTACTUNIT AS customerId,
+        t3.FNAME AS billType,
+        t1.FBillNo AS billNo,
+        t2.FREALREFUNDAMOUNT AS totalAmount
         FROM
-        T_AR_REFUNDBILL t5,
-        T_AR_REFUNDBILLENTRY t6
+        T_AR_REFUNDBILLENTRY t2,
+        JOIN T_AR_REFUNDBILL t1,
+        LEFT JOIN T_BAS_BILLTYPE_L t3,
         WHERE
-        t5.FID = t6.FID
-        AND t5.FCONTACTUNIT IN
+        t1.FID = t2.FID
+        and t1.FBILLTYPEID = t3.FBILLTYPEID
+        t1.FDATE &gt;=#{dateStart} AND
+        t1.FDATE  &lt;=#{dateEnd} and
+        t1.FCONTACTUNIT in
         <foreach collection="customerIdList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
-        AND t5.FDATE  >#{dateStart}
-        AND t5.FDATE &lt;#{dateEnd}
     </select>
 
 
