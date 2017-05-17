@@ -41,7 +41,14 @@ public class SalReturnStockController {
     public RestResponse save(BatchBillForm batchBillForm) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynExtendDto> codeList = salReturnStockService.save(batchBillForm,kingdeeBook,accountKingdeeBook);
-        return new RestResponse("批量开单成功：" + codeList,null,true);
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salReturnStockService.save(batchBillForm,kingdeeBook,accountKingdeeBook);
+        for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
+            if (kingdeeSynExtendDto.getSuccess()){
+                return new RestResponse("开单退货成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);
+            }else {
+                return new RestResponse("开单退货失败：" + kingdeeSynExtendDto.getResult(),null,true);
+            }
+        }
+        return null;
     }
 }
