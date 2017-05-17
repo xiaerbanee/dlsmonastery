@@ -97,7 +97,7 @@
           sort:'t1.FCUSTID',
           dateRange: '',
           customerGroup:'',
-          customerIdList:new Array(),
+          customerIdList:[],
         },
         submitDetail: {
           dateRange: '',
@@ -134,7 +134,6 @@
             }
             that.submitData.customerIdList = customerIdList;
             if(that.submitData.customerIdList.length !== 0){
-              console.log(that.submitData.customerIdList);
               axios.get('/api/global/cloud/report/customerReceive/list?'+qs.stringify(that.submitData)).then((response) => {
                 this.summary = response.data;
               });
@@ -178,7 +177,7 @@
       },remoteCustomer(query) {
         if (query !== '') {
           this.remoteLoading = true;
-          axios.get('/api/global/cloud/kingdee/bdCustomer/getByNameLike',{params:{name:query}}).then((response)=>{
+          axios.get('/api/global/cloud/kingdee/bdCustomer/findByNameLike',{params:{name:query}}).then((response)=>{
             this.customers = response.data;
             console.log(this.customers);
             this.remoteLoading = false;
