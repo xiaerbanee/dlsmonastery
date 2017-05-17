@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.sun.xml.internal.bind.v2.TODO;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.CompanyConfigCodeEnum;
@@ -9,6 +10,7 @@ import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.IdUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
@@ -31,7 +33,10 @@ import net.myspring.future.modules.layout.mapper.AdGoodsOrderMapper;
 import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
 import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
+import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
+import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
+import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
@@ -150,13 +155,13 @@ public class AdGoodsOrderService {
         ExpressOrder expressOrder;
         ExpressOrderDto expressOrderDto = adGoodsOrderForm.getExpressOrderDto();
         expressOrderDto.setToDepotId(adGoodsOrder.getShopId());
-        expressOrderDto.setExtendBusinessId(adGoodsOrder.getBusinessId());
-        expressOrderDto.setExtendType(ExpressCompanyTypeEnum.物料订单.name());
-        expressOrderDto.setShipType(ShipTypeEnum.总部发货.name());
-        expressOrderDto.setPrintDate(LocalDate.now());
-        expressOrderDto.setExtendId(adGoodsOrder.getId());
 
         if(expressOrderDto.getId()==null){
+            expressOrderDto.setExtendBusinessId(adGoodsOrder.getBusinessId());
+            expressOrderDto.setExtendType(ExpressCompanyTypeEnum.物料订单.name());
+            expressOrderDto.setShipType(ShipTypeEnum.总部发货.name());
+            expressOrderDto.setPrintDate(LocalDate.now());
+            expressOrderDto.setExtendId(adGoodsOrder.getId());
             expressOrder = BeanUtil.map(expressOrderDto,ExpressOrder.class);
             expressOrderMapper.save(expressOrder);
         }else{
@@ -173,12 +178,35 @@ public class AdGoodsOrderService {
         List<AdGoodsOrderDetailDto> adGoodsOrderDetailDtos = adGoodsOrderForm.getAdGoodsOrderDetails();
         if(adGoodsOrderDetailDtos!=null){
             for(AdGoodsOrderDetailDto adGoodsOrderDetailDto:adGoodsOrderDetailDtos){
-
                     adGoodsOrderDetailDto.setAdGoodsOrderId(adGoodsOrder.getId());
+                    adGoodsOrderDetailDto.setPrice(adGoodsOrderDetailDto.getPrice2());
                     adGoodsOrderDetail = BeanUtil.map(adGoodsOrderDetailDto,AdGoodsOrderDetail.class);
                     adGoodsOrderDetailMapper.save(adGoodsOrderDetail);
             }
         }
+        adGoodsOrder.setExpressOrderId(expressOrder.getId());
+
+        //启动流程
+        if(adGoodsOrder.getId()!=null&&adGoodsOrder.getProcessInstanceId()==null){
+            ActivitiStartForm activitiStartForm = new ActivitiStartForm();
+            activitiStartForm.setBusinessKey(adGoodsOrder.getId());
+            //待修改
+            activitiStartForm.setName("AdGoodsOrder");
+            activitiStartForm.setProcessTypeName("AdGoodsOrder");
+            activitiStartForm.setMessage("AdGoodsOrder");
+            ActivitiStartDto activitiStartDto = activitiClient.start(activitiStartForm);
+            if(activitiStartDto!=null){
+                adGoodsOrder.setProcessFlowId(activitiStartDto.getProcessFlowId());
+                adGoodsOrder.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
+                adGoodsOrder.setProcessStatus(activitiStartDto.getProcessStatus());
+                adGoodsOrder.setProcessTypeId(activitiStartDto.getProcessTypeId());
+                adGoodsOrder.setProcessPositionId(activitiStartDto.getPositionId());
+            }
+        }
+
+
+        adGoodsOrderMapper.update(adGoodsOrder);
+
     }
 
     public AdGoodsOrderDto getAdGoodsOrderDetail(AdGoodsOrderDto adGoodsOrderDto) {
@@ -222,7 +250,16 @@ public class AdGoodsOrderService {
             activitiCompleteForm.setProcessTypeId(adGoodsOrderMapper.findOne(adGoodsOrderForm.getId()).getProcessTypeId());
             activitiCompleteForm.setProcessInstanceId(adGoodsOrderMapper.findOne(adGoodsOrderForm.getId()).getProcessInstanceId());
 
-            activitiClient.complete(activitiCompleteForm);
+            ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
+
+            if(activitiCompleteDto!=null){
+                AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderForm.getId());
+                adGoodsOrder.setProcessPositionId(activitiCompleteDto.getPositionId());
+                adGoodsOrder.setProcessStatus(activitiCompleteDto.getProcessStatus());
+                adGoodsOrder.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+                adGoodsOrderMapper.update(adGoodsOrder);
+            }
+
         }
     }
     

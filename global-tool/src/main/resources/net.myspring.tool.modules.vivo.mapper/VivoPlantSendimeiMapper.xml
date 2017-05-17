@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.tool.modules.vivo.mapper.VivoPlantSendimeiMapper">
+    <select id="findSynList" resultType="VivoPlantSendimei">
+        select t.* from vivo_plant_sendimei t
+        where t.created_time &gt;= #{dateStart}
+        and t.created_time  &lt;= #{dateEnd}
+        and t.company_id in
+        <foreach item="item" index="index" collection="agentCodes" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and t.imei not in (select p.ime from crm_product_ime p where p.company_id=#{companyId})
+    </select>
+
+    <select id="findImeis" resultType="String">
+        select t.imei
+        from vivo_plant_sendimei t where t.imei in
+        <foreach item="item" index="index" collection="imeiList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findErrorItemNumbers" resultType="String">
+        select distinct t.productId
+        from vivo_plant_sendimei t
+        where t.created_time &gt; #{createdTime}
+        and t.imei not in (select p.ime from ProductIme p where p.company.id=#{companyId} )
+        and t.companyId in
+        <foreach item="item" index="index" collection="agentCodes" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    
+    <insert id="save">
+        INSERT INTO vivo_plant_sendimei
+        (
+            company_id,
+            bill_id,
+            product_id,
+            imei,
+            imei_state,
+            remark,
+            created_time,
+            main_id,
+            insert_time,
+            chain_type,
+            model,
+            meid,
+            imei2
+        )VALUES
+        <foreach item="item" index="index" collection="list" open="" separator="," close="">
+            (
+            #{item.companyId},
+            #{item.billId},
+            #{item.productId},
+            #{item.imei},
+            #{item.imeiState},
+            #{item.remark},
+            #{item.createdTime},
+            #{item.mainId},
+            #{item.insertTime},
+            #{item.chainType},
+            #{item.model},
+            #{item.meid},
+            #{item.imei2}
+            )
+        </foreach>
+    </insert>
+
+    </mapper>

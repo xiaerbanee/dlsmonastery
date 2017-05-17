@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.future.mapper.ImooPrdocutImeiDeliverMapper">
+
+    <select id="findImeis" resultType="String">
+        select t.imei from api_imoo_prdocut_imei_deliver t where t.imei in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <insert id="save">
+        INSERT INTO api_imoo_prdocut_imei_deliver
+        (
+            company_id,
+            mainagentid,
+            agentid,
+            ms_des,
+            ms_id,
+            msi_item,
+            msi_item_des,
+            msib_barcode,
+            creation_date,
+            box,
+            imei
+        )VALUES
+        <foreach item="item" index="index" collection="list" open="" separator="," close="">
+            (
+            #{item.companyId},
+            #{item.mainagentid},
+            #{item.agentid},
+            #{item.msDes},
+            #{item.msId},
+            #{item.msiItem},
+            #{item.msiItemDes},
+            #{item.msibBarcode},
+            #{item.creationDate},
+            #{item.box},
+            #{item.imei}
+            )
+        </foreach>
+    </insert>
+
+    <select id="findSynList" resultType="ImooPrdocutImeiDeliver">
+        select t.*  from api_imoo_prdocut_imei_deliver t
+        where t.creation_date &gt;= #{dateStart}
+        and t.creation_date &lt; #{dateEnd}
+        and t.company_id in
+        <foreach item="item" index="index" collection="agentCodes" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and t.imei not in (select p.ime from crm_product_ime p where p.company_id=1)
+    </select>
+
+
+
+</mapper>
