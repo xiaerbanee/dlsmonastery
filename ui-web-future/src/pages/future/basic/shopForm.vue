@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="depotShopForm"></head-tab>
+    <head-tab active="shopForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item label="选择客户" prop="clientId">
@@ -131,7 +131,7 @@
           pricesystemId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           credit:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           adPricesystemId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          expressCompanyId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}]
+          expressCompanyId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           printPrice: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           rebate: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           taxName: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
@@ -149,7 +149,7 @@
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/basic/depotShop/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/ws/future/basic/depotShop/saveDepot', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -166,7 +166,7 @@
         })
       }
     },created(){
-      axios.get('/api/ws/future/basic/depotShop/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/basic/depotShop/findDepotForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
       })
     }

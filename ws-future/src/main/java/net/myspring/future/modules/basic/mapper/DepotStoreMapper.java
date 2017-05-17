@@ -6,6 +6,7 @@ import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Page;
@@ -50,5 +51,5 @@ public interface DepotStoreMapper extends BaseMapper<DepotStore,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<DepotStore> findByIds(List<String> ids);
 
-    Page<DepotStoreDto> findPage(Pageable pageable, DepotQuery depotShopQuery);
+    Page<DepotStoreDto> findPage(Pageable pageable, DepotStoreQuery depotShopQuery);
 }

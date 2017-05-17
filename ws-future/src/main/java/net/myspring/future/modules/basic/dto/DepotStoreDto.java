@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 /**
  * Created by wangzm on 2017/5/13.
@@ -13,6 +14,16 @@ public class DepotStoreDto extends DataDto<DepotShop>{
     private String type;
     //分组
     private String group;
+    @CacheInput(inputKey = "depots",inputInstance = "depotId",outputInstance = "name")
+    private String depotName;
+
+    public String getDepotName() {
+        return depotName;
+    }
+
+    public void setDepotName(String depotName) {
+        this.depotName = depotName;
+    }
 
     public String getDepotId() {
         return depotId;
