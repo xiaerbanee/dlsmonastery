@@ -127,11 +127,13 @@
         util.copyValue(that.formData,that.submitData);
         axios.get('/api/global/cloud/kingdee/bdCustomer?'+qs.stringify(that.submitData)).then((response) => {
             that.customerPage = response.data;
+            let customerIdList = new Array();
             let customers = response.data.content;
             for (let item in customers){
-              that.submitData.customerIdList.push(customers[item].fcustId);
+              customerIdList.push(customers[item].fcustId);
             }
-            if(that.submitData.customerIdList .length !== 0){
+            that.submitData.customerIdList = customerIdList;
+            if(that.submitData.customerIdList.length !== 0){
               console.log(that.submitData.customerIdList);
               axios.get('/api/global/cloud/report/customerReceive/list?'+qs.stringify(that.submitData)).then((response) => {
                 this.summary = response.data;
