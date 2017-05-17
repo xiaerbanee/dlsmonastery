@@ -1,13 +1,13 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.service.PricesystemService;
 import net.myspring.future.modules.crm.domain.PricesystemChange;
 
 import net.myspring.future.modules.crm.dto.PricesystemChangeDto;
 import net.myspring.future.modules.crm.service.PricesystemChangeService;
 import net.myspring.future.modules.crm.web.query.PricesystemChangeQuery;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,8 +52,15 @@ public class PricesystemChangeController {
     }
 
     @RequestMapping(value = "audit")
-    public String audit(@RequestParam(value = "ids[]") String[] ids,Boolean pass){
-        return null;
+    public RestResponse audit(@RequestParam(value = "ids[]") String[] ids, Boolean pass){
+        pricesystemChangeService.audit(ids, pass);
+        return new RestResponse("通过成功",null);
+    }
+
+    @RequestMapping(value="auditOperation")
+    public RestResponse auditOperation(String id,Boolean pass){
+        pricesystemChangeService.auditOperation(id, pass);
+        return new RestResponse("设置成功",null);
     }
 
     @RequestMapping(value = "getPricesystemDetail")

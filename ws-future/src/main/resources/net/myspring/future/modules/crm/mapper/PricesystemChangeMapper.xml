@@ -29,4 +29,27 @@
         </if>
     </select>
 
+    <select id="audit">
+       <if test="pass">
+           UPDATE  crm_pricesystem_change
+           SET  status='已通过'
+           WHERE  id IN
+           <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+               #{ids[${index}]}
+           </foreach>
+       </if>
+    </select>
+
+    <select id="auditOperation">
+        <if test="pass">
+            UPDATE  crm_pricesystem_change
+            SET  status='已通过'
+            WHERE id=#{id}
+        </if>
+        <if test="!pass">
+            UPDATE  crm_pricesystem_change
+            SET  status='未通过'
+            WHERE id=#{id}
+        </if>
+    </select>
 </mapper>
