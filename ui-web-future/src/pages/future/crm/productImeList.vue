@@ -69,11 +69,11 @@
         <el-table-column prop="ime2"  :label="$t('productImeList.ime2')" sortable ></el-table-column>
         <el-table-column prop="meid" :label="$t('productImeList.meid')"></el-table-column>
         <el-table-column prop="retailDate" :label="$t('productImeList.retailDate')"></el-table-column>
-        <el-table-column prop="productImeSale.createdDate" :label="$t('productImeList.saleDate')"></el-table-column>
-        <el-table-column prop="productImeUpload.createdDate" :label="$t('productImeList.uploadDate')"></el-table-column>
-        <el-table-column prop="depot.name"  :label="$t('productImeList.depotName')"></el-table-column>
-        <el-table-column prop="product.netType"  :label="$t('productImeList.netType')" width="80"></el-table-column>
-        <el-table-column prop="product.name"  :label="$t('productImeList.productType')"></el-table-column>
+        <el-table-column prop="productImeSaleCreateDate" :label="$t('productImeList.saleDate')"></el-table-column>
+        <el-table-column prop="productImeUploadCreateDate" :label="$t('productImeList.uploadDate')"></el-table-column>
+        <el-table-column prop="depotName"  :label="$t('productImeList.depotName')"></el-table-column>
+        <el-table-column prop="productNetType"  :label="$t('productImeList.netType')" width="80"></el-table-column>
+        <el-table-column prop="productName"  :label="$t('productImeList.productType')"></el-table-column>
         <el-table-column prop="inputType" :label="$t('productImeList.inputType')"></el-table-column>
         <el-table-column prop="createdTime" :label="$t('productImeList.createdTime')"></el-table-column>
         <el-table-column prop="locked" :label="$t('productImeList.locked')" width="120">

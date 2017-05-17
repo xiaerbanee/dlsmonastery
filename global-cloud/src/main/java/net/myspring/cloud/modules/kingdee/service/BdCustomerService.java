@@ -1,10 +1,10 @@
 package net.myspring.cloud.modules.kingdee.service;
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.modules.input.dto.NameValueDto;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.mapper.BdCustomerMapper;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
+import net.myspring.common.dto.NameValueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

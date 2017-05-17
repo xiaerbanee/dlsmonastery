@@ -1,8 +1,8 @@
 package net.myspring.cloud.modules.kingdee.mapper;
 
-import net.myspring.cloud.modules.input.dto.NameValueDto;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
+import net.myspring.common.dto.NameValueDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;

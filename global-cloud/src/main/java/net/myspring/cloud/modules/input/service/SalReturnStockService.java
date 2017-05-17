@@ -63,7 +63,11 @@ public class SalReturnStockService {
                 KingdeeFormIdEnum.AR_receivable.name()) {
             @Override
             public String getNextBillNo() {
-                return arReceivableMapper.findBySourceBillNo(getBillNo()).get(0).getFBillNo();
+                if(salReturnStockDto.getBillType().contains("现销")){
+                    return null;
+                }else{
+                    return arReceivableMapper.findBySourceBillNo(getBillNo()).get(0).getFBillNo();
+                }
             }
         };
         kingdeeManager.save(kingdeeSynExtendDto);

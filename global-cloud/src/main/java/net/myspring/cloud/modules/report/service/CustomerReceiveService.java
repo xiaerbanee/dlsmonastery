@@ -36,13 +36,13 @@ public class CustomerReceiveService {
     public List<CustomerReceiveDto>  findCustomerReceiveDtoList(CustomerReceiveQuery customerReceiveQuery) {
         LocalDate dateStart = customerReceiveQuery.getDateStart();
         LocalDate dateEnd = customerReceiveQuery.getDateEnd();
-        List<CustomerReceiveDto> beginList = customerReceiveMapper.findEndShouldGet(dateStart,customerReceiveQuery.getCustomerIdList());
-        List<CustomerReceiveDto> endList = customerReceiveMapper.findEndShouldGet(dateEnd,customerReceiveQuery.getCustomerIdList());
+        List<String> customerIdList = customerReceiveQuery.getCustomerIdList();
+        List<CustomerReceiveDto> beginList = customerReceiveMapper.findEndShouldGet(dateStart,customerIdList);
+        List<CustomerReceiveDto> endList = customerReceiveMapper.findEndShouldGet(dateEnd,customerIdList);
         //期初结余
         Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //期末结余
         Map<String,BigDecimal> endMap = endList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
-        List<String> customerIdList = Lists.newArrayList();
         for(CustomerReceiveDto customerReceiveDto:beginList) {
             if(!customerIdList.contains(customerReceiveDto.getCustomerId())) {
                 customerIdList.add(customerReceiveDto.getCustomerId());
@@ -57,10 +57,12 @@ public class CustomerReceiveService {
         List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
         for(BdCustomer bdCustomer:customerList) {
             CustomerReceiveDto customerReceiveDto = new CustomerReceiveDto();
+            customerReceiveDto.setCustomerId(bdCustomer.getFCustId());
             customerReceiveDto.setBeginShouldGet(beginMap.get(bdCustomer.getFCustId()));
             customerReceiveDto.setEndShouldGet(endMap.get(bdCustomer.getFCustId()));
             customerReceiveDto.setCustomerName(bdCustomer.getFName());
             customerReceiveDto.setCustomerGroupName(bdCustomer.getFPrimaryGroupName());
+            customerReceiveDtoList.add(customerReceiveDto);
         }
         if(customerReceiveQuery.getQueryDetail()) {
             CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();

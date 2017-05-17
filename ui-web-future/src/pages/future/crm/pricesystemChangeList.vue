@@ -35,9 +35,9 @@
           <el-button type="primary" @click="search()">{{$t('pricesystemChangeList.sure')}}</el-button>
         </div>
       </el-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('pricesystemChangeList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('pricesystemChangeList.loading')"  @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column  prop="productName":label="$t('pricesystemChangeList.productName')" width="150" ></el-table-column>
+        <el-table-column prop="productName":label="$t('pricesystemChangeList.productName')" width="150" ></el-table-column>
         <el-table-column prop="pricesystemName" :label="$t('pricesystemChangeList.pricesystemName')" ></el-table-column>
         <el-table-column prop="oldPrice" :label="$t('pricesystemChangeList.oldPrice')"  ></el-table-column>
         <el-table-column prop="newPrice" :label="$t('pricesystemChangeList.newPrice')"></el-table-column>
@@ -45,14 +45,13 @@
         <el-table-column prop="createdDate" :label="$t('pricesystemChangeList.createdDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('pricesystemChangeList.status')" width="120">
           <template scope="scope">
-            <el-tag :type="scope.row.status==='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
+            <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column  :label="$t('pricesystemChangeList.operation')" width="140">
+        <el-table-column  :label="$t('pricesystemChangeList.operation')" width="160">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'通过')">通过</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'不通过')">不通过</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -95,8 +94,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-       util.copyValue(this.formData,this.submitData);
+        util.copyValue(this.formData,this.submitData);
         util.setQuery("pricesystemChangeList",this.submitData);
+        this.formLabel.pricesystemId.value = util.getLabel(this.formData.pricesystems, this.formData.pricesystemId);
         axios.get('/api/ws/future/crm/pricesystemChange?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -115,8 +115,7 @@
       },itemAdd(){
         this.$router.push({ name: 'pricesystemChangeForm'})
       },itemAction:function(id,action){
-        this.selects.push(id);
-        axios.get('/api/crm/pricesystemChange/audit',{params:{ids:this.selects,pass:action==='通过'?true:false}}).then((response) =>{
+         axios.get('/api/ws/future/crm/pricesystemChange/auditOperation',{params:{id:id,pass:action=='通过'?true:false}}).then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         });
@@ -128,8 +127,8 @@
         }
       },batchPass(){
         axios.get('/api/ws/future/crm/pricesystemChange/audit',{params:{ids:this.selects,pass:true}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
+            this.$message(response.data.message);
+            this.pageRequest();
         });
       },checkSelectable(row) {
         return row.status !== '已通过'
