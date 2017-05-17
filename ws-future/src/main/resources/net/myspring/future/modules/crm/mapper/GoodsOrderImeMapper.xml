@@ -17,4 +17,15 @@
         </foreach>
     </select>
 
+
+    <select id="findDtoListByGoodsOrderId" resultType="GoodsOrderImeDto">
+        select t2.t1.*
+        from crm_goods_order_ime t1, crm_product_ime t2
+        where t1.goods_order_Id = #{goodsOrderId}
+                  and t1.enabled=1
+                  and t2.enabled=1
+                  and t1.product_ime_id = t2.id
+    </select>
+
+
 </mapper>

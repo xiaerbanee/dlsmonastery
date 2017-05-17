@@ -34,27 +34,10 @@ public class ProductIme extends CompanyEntity<ProductIme> {
     private BigDecimal price3;
     private Depot depot;
     private String depotId;
-    private ProductImeUpload productImeUpload;
     private String productImeUploadId;
-    private ProductImeSale productImeSale;
     private String productImeSaleId;
     private Product product;
     private String productId;
-
-    @Transient
-    private String fullName;
-    @Transient
-    private List<Depot> accessDepots = Lists.newArrayList();
-    @Transient
-    private Boolean fromChain;
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
 
     public String getBillId() {
         return billId;
@@ -160,6 +143,14 @@ public class ProductIme extends CompanyEntity<ProductIme> {
         this.retailShopId = retailShopId;
     }
 
+    public Depot getRetailShop() {
+        return retailShop;
+    }
+
+    public void setRetailShop(Depot retailShop) {
+        this.retailShop = retailShop;
+    }
+
     public BigDecimal getBaokaPrice() {
         return baokaPrice;
     }
@@ -192,28 +183,12 @@ public class ProductIme extends CompanyEntity<ProductIme> {
         this.depotId = depotId;
     }
 
-    public ProductImeUpload getProductImeUpload() {
-        return productImeUpload;
-    }
-
-    public void setProductImeUpload(ProductImeUpload productImeUpload) {
-        this.productImeUpload = productImeUpload;
-    }
-
     public String getProductImeUploadId() {
         return productImeUploadId;
     }
 
     public void setProductImeUploadId(String productImeUploadId) {
         this.productImeUploadId = productImeUploadId;
-    }
-
-    public ProductImeSale getProductImeSale() {
-        return productImeSale;
-    }
-
-    public void setProductImeSale(ProductImeSale productImeSale) {
-        this.productImeSale = productImeSale;
     }
 
     public String getProductImeSaleId() {
@@ -238,29 +213,5 @@ public class ProductIme extends CompanyEntity<ProductIme> {
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public Depot getRetailShop() {
-        return retailShop;
-    }
-
-    public void setRetailShop(Depot retailShop) {
-        this.retailShop = retailShop;
-    }
-
-    public List<Depot> getAccessDepots() {
-        return accessDepots;
-    }
-
-    public void setAccessDepots(List<Depot> accessDepots) {
-        this.accessDepots = accessDepots;
-    }
-
-    public Boolean getFromChain() {
-        return fromChain;
-    }
-
-    public void setFromChain(Boolean fromChain) {
-        this.fromChain = fromChain;
     }
 }

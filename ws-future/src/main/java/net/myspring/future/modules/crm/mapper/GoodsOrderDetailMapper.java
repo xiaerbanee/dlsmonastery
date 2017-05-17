@@ -28,4 +28,6 @@ public interface GoodsOrderDetailMapper extends MyMapper<GoodsOrderDetail,String
     void deleteByGoodsOrderId(String goodsOrderId);
 
     List<GoodsOrderDetailDto> getListForNewOrUpdateOrBillWithAreaQty(@Param("p") GoodsOrderDetailQuery goodsOrderDetailQuery);
+
+    List<GoodsOrderDetailDto> findDtoListByGoodsOrderId(@Param("goodsOrderId") String goodsOrderId);
 }

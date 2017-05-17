@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.dto.ProductDto;
+import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
@@ -21,6 +22,7 @@ public class AdGoodsOrderForm extends DataForm<AdGoodsOrder> {
     private String outShopId;
     private String shopId;
     private String officeId;
+    private String bussinessId;
     private String areaId;
     private BigDecimal amount;
     private String billType;
@@ -28,13 +30,21 @@ public class AdGoodsOrderForm extends DataForm<AdGoodsOrder> {
     private String billRemarks;
     private String expressOrderId;
 
-    private ExpressOrderForm expressOrderForm;
+    private ExpressOrderDto expressOrderDto;
     private String employeeId;
 
     private String pass;
     private String passRemarks;
 
     private List<AdGoodsOrderDetailDto> adGoodsOrderDetails;
+
+    public String getBussinessId() {
+        return bussinessId;
+    }
+
+    public void setBussinessId(String bussinessId) {
+        this.bussinessId = bussinessId;
+    }
 
     public List<AdGoodsOrderDetailDto> getAdGoodsOrderDetails() {
         return adGoodsOrderDetails;
@@ -44,12 +54,12 @@ public class AdGoodsOrderForm extends DataForm<AdGoodsOrder> {
         this.adGoodsOrderDetails = adGoodsOrderDetails;
     }
 
-    public ExpressOrderForm getExpressOrderForm() {
-        return expressOrderForm;
+    public ExpressOrderDto getExpressOrderDto() {
+        return expressOrderDto;
     }
 
-    public void setExpressOrderForm(ExpressOrderForm expressOrderForm) {
-        this.expressOrderForm = expressOrderForm;
+    public void setExpressOrderDto(ExpressOrderDto expressOrderDto) {
+        this.expressOrderDto = expressOrderDto;
     }
 
     public String getStoreId() {

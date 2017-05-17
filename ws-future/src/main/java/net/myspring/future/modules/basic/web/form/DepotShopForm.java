@@ -5,6 +5,7 @@ import net.myspring.common.dto.NameValueDto;
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.dto.BasicDistrictDto;
 import net.myspring.future.modules.layout.domain.ShopAttribute;
@@ -18,7 +19,7 @@ import java.util.Map;
 /**
  * Created by lihx on 2017/4/18.
  */
-public class DepotShopForm extends DataForm<Depot>{
+public class DepotShopForm extends DataForm<DepotShop>{
     private String depotId;
     // 地区属性
     private String areaType;
@@ -59,16 +60,6 @@ public class DepotShopForm extends DataForm<Depot>{
     private Integer deskSingleNum=0;
     //展柜数量
     private Integer cabinetNum=0;
-
-    private DepotForm depotForm;
-
-    public DepotForm getDepotForm() {
-        return depotForm;
-    }
-
-    public void setDepotForm(DepotForm depotForm) {
-        this.depotForm = depotForm;
-    }
 
     public String getDepotId() {
         return depotId;

@@ -57,7 +57,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			return "";
 		} else {
 			java.text.DecimalFormat decimalFormat = new java.text.DecimalFormat(format);
-			return prefix + decimalFormat.format(id);
+			return prefix + decimalFormat.format(Long.valueOf(id));
 		}
 	}
 

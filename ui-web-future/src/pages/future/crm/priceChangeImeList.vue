@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:priceChangeIme:edit'">{{$t('priceChangeImeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('priceChangeImeList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -13,7 +13,7 @@
             <el-col :span="24">
               <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('priceChangeImeList.inputKey')">
-                  <el-option v-for="item in formData.status" :key="item":label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.statusList" :key="item":label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
@@ -101,12 +101,12 @@
           productId:'',
           shopId:'',
           isCheck:'',
-          image:'',
+          image:null,
           ime:''
         },formLabel:{
           priceChangeName:{label:this.$t('priceChangeImeList.priceChangeName')},
           status:{label:this.$t('priceChangeImeList.status')},
-          officeId:{label:this.$t('priceChangeImeList.priceChangeName'),value:''},
+          officeId:{label:this.$t('priceChangeImeList.officeName'),value:''},
           productName:{label:this.$t('priceChangeImeList.type')},
           shopName:{label:this.$t('priceChangeImeList.shopName')},
           isCheck:{label:this.$t('priceChangeImeList.isCheck'),value:''},
@@ -123,7 +123,10 @@
         this.formLabel.isCheck.value = util.bool2str(this.formData.isCheck);
         this.formLabel.image.value = util.bool2str(this.formData.image);
         this.formLabel.officeId.value = util.getLabel(this.formData.officeId, this.formData.officeId);
-
+        if(this.formData.image!=null){
+          this.formData.image = this.formData.image ==1?true:false;
+        }
+        console.log(this.formData);
         util.copyValue(this.formData,this.submitData);
         util.setQuery("priceChangeImeList",this.submitData);
         axios.get('/api/ws/future/crm/priceChangeIme',{params:this.submitData}).then((response) => {

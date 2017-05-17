@@ -114,4 +114,12 @@ public class OfficeController {
         OfficeDto officeDto=officeService.searchById(officeQuery);
         return officeDto;
     }
+
+    public List<String> getSameAreaByOfficeId(String officeId){
+        List<String> officeIds=Lists.newArrayList();
+        if(StringUtils.isNotBlank(officeId)){
+            officeIds=officeService.getSameAreaByOfficeId(officeId);
+        }
+        return officeIds;
+    }
 }

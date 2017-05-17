@@ -8,6 +8,7 @@
             <el-option v-for="item in depotList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+
         <el-form-item label="地区属性" prop="areaType">
           <el-select v-model="inputForm.areaType">
             <dict-map-select v-model="inputForm.areaType"  category="门店_地区属性" ></dict-map-select>
@@ -76,7 +77,9 @@
   </div>
 </template>
 <script>
-  export default{
+  import dictMapSelect from 'components/basic/dict-map-select'
+  export default {
+    components:{dictMapSelect},
     data(){
       return{
         isCreate:this.$route.query.id==null,
@@ -107,13 +110,13 @@
         rules: {
           depotId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           areaType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          carrierType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}]
+          carrierType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           turnoverType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           salePointType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          salePointType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}]
+          salePointType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           bussinessCenter: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           doorHead: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          enableDate: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}]
+          enableDate: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           specialityStore: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           shopArea: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
         }
