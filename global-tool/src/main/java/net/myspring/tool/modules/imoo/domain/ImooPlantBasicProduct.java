@@ -17,6 +17,7 @@ public class ImooPlantBasicProduct extends IdEntity<ImooPlantBasicProduct> {
     private String plid;
     private String plname;
     private String createdTime;
+    private String productId;
     private List<ImooProductMap> imooProductMapList = Lists.newArrayList();
     private List<String> imooProductMapIdList = Lists.newArrayList();
 
@@ -82,5 +83,13 @@ public class ImooPlantBasicProduct extends IdEntity<ImooPlantBasicProduct> {
 
     public void setImooProductMapIdList(List<String> imooProductMapIdList) {
         this.imooProductMapIdList = imooProductMapIdList;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 }

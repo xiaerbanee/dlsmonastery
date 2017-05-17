@@ -16,9 +16,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by guolm on 2017/4/15.
- */
 @RestController
 @RequestMapping(value = "vivo")
 public class VivoController {
@@ -44,6 +41,7 @@ public class VivoController {
 //        //同步电子保卡
         List<VivoPlantElectronicsn> vivoPlantElectronicsns = vivoService.plantElectronicsn(localDate);
         vivoService.pullPlantElectronicsns(vivoPlantElectronicsns);
-        return "";
+        RequestUtils.getRequestEntity().setAccountId("1");
+        return "vivo同步成功";
     }
 }

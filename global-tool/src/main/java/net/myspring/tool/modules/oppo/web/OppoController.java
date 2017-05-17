@@ -19,9 +19,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by guolm on 2017/5/9.
- */
 @RestController
 @RequestMapping(value = "oppo")
 public class OppoController {
@@ -32,8 +29,6 @@ public class OppoController {
 
     @RequestMapping(value="syn")
     public String synFactoryOppo(String date){
-        RequestUtils.getRequestEntity().setAccountId("1");
-        RequestUtils.getRequestEntity().setCompanyId("2");
         List<String> mainCodes = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_CODES").split(Const.CharEnum.COMMA.getValue()));
         List<String> mainPasswords = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_PASSWORD").split(Const.CharEnum.COMMA.getValue()));
         LocalDate localDate = DateUtils.parseLocalDate(date);
@@ -58,6 +53,7 @@ public class OppoController {
         //同步电子保卡
         List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(mainCodes.get(0), mainPasswords.get(0),localDate);
         oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
-        return message;
+        RequestUtils.getRequestEntity().setAccountId("1");
+        return "OPPO同步成功";
     }
 }
