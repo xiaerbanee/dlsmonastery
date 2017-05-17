@@ -228,7 +228,7 @@ public class GoodsOrderService {
         godq.setCompanyId(RequestUtils.getCompanyId());
         godq.setNetType(result.getNetType());
         Depot d = depotMapper.findOne(result.getShopId());
-        godq.setOfficeIdList(officeClient.getOfficeIdsOfSameArea(d.getOfficeId()));
+        godq.setOfficeIdList(officeClient.getSameAreaByOfficeId(d.getOfficeId()));
 //        godq.setAreaId(d.getAreaId());
         godq.setGoodsOrderId(result.getId());
         godq.setPricesystemId(d.getPricesystemId());
@@ -273,7 +273,7 @@ public class GoodsOrderService {
                 godq.setCompanyId(RequestUtils.getCompanyId());
                 godq.setNetType(result.getNetType());
                 Depot d = depotMapper.findOne(goodsOrderForm.getShopId());
-                godq.setOfficeIdList(officeClient.getOfficeIdsOfSameArea(d.getOfficeId()));
+                godq.setOfficeIdList(officeClient.getSameAreaByOfficeId(d.getOfficeId()));
 //                godq.setAreaId(d.getAreaId());
                 godq.setPricesystemId(d.getPricesystemId());
                 //TODO 判斷showall

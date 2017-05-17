@@ -65,4 +65,6 @@ public interface OfficeMapper extends BaseMapper<Office,String> {
 
     Office findByOfficeIdAndRuleId(@Param("officeId") String officeId,@Param("officeRuleId") String officeRuleId);
 
+    List<Office> findSameAreaByOfficeId(String officeId);
+
 }
