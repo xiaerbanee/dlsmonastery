@@ -296,6 +296,7 @@ export default {
     bankInList: "销售收款",
     id: "编号",
     shopName: "门店",
+    shopClientName:'收款门店',
     realShopName: "收款门店",
     bankName: "银行",
     amount: "金额",

@@ -38,15 +38,7 @@ public class BankInService {
 
     public Page<BankInDto> findPage(Pageable pageable, BankInQuery bankInQuery) {
         Page<BankInDto> page = bankInMapper.findPage(pageable, bankInQuery);
-        if(page!=null && page.getContent()!=null){
-            for(BankInDto each : page.getContent()){
-                if(each.getShopParentId()!=null){
-                    each.setRealShopName(depotMapper.findOne(each.getShopParentId()).getName());
-                }else {
-                    each.setRealShopName(each.getShopName());
-                }
-            }
-        }
+
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -86,9 +78,8 @@ public class BankInService {
     public BankIn save(BankInForm bankInForm) {
         BankIn bankIn;
         if(bankInForm.isCreate()) {
-            String name="销售收款";
-            String businessKey = bankInForm.getId();
-            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm(name, businessKey,BankIn.class.getSimpleName(),bankInForm.getAmount().toString()));
+
+            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("销售收款",  bankInForm.getId(),BankIn.class.getSimpleName(),bankInForm.getAmount().toString()));
             bankIn = BeanUtil.map(bankInForm, BankIn.class);
             bankIn.setProcessFlowId(activitiStartDto.getProcessFlowId());
             bankIn.setProcessStatus(activitiStartDto.getProcessStatus());
@@ -111,11 +102,7 @@ public class BankInService {
     public BankInDto findDetail(String id) {
 
         BankInDto result = bankInMapper.findDto(id);
-        if(result.getShopParentId()!=null){
-            result.setRealShopName(depotMapper.findOne(result.getShopParentId()).getName());
-        }else {
-            result.setRealShopName(result.getShopName());
-        }
+
         cacheUtils.initCacheInput(result);
         return result;
 

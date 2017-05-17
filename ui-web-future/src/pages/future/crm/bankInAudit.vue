@@ -17,7 +17,6 @@
         <el-form-item :label="$t('bankInDetail.serialNumber')">
           {{inputForm.serialNumber}}
         </el-form-item>
-
             <el-form-item :label="$t('bankInDetail.jingdie')">
               金蝶同步
             </el-form-item>
@@ -63,6 +62,11 @@
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()"  v-if="action=='审核'">{{$t('expressOrderList.save')}}</el-button>
             </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="4">
+          <el-col :span="24">
+
           </el-col>
         </el-row>
       </el-form>

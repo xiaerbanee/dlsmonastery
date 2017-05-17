@@ -13,14 +13,13 @@ import net.myspring.future.modules.crm.web.query.BankInQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "crm/bankIn")
@@ -31,31 +30,29 @@ public class BankInController {
     @Autowired
     private BankService bankService;
 
+
     @RequestMapping(method = RequestMethod.GET)
     public Page<BankInDto> list(Pageable pageable, BankInQuery bankInQuery){
         Page<BankInDto> page = bankInService.findPage(pageable, bankInQuery);
         return page;
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public BankInQuery getFormProperty(BankInQuery bankInQuery){
-        bankInQuery.setProcessStatusList(new ArrayList<>());
+    @RequestMapping(value = "getQuery")
+    public BankInQuery getQuery(BankInQuery bankInQuery){
+
+        List<String> processStatusList = new ArrayList<>();
+        processStatusList.add("已通过");
+        processStatusList.add("未通过");
+        bankInQuery.setProcessStatusList(processStatusList);
+
         return bankInQuery;
     }
 
-
-    @RequestMapping(value = "getQuery")
-    public String getQuery(){
-        return null;
-    }
-
-
     @RequestMapping(value = "save")
-    public RestResponse save(@Valid BankInForm bankInForm, BindingResult result) {
+    public RestResponse save(BankInForm bankInForm) {
         bankInService.save(bankInForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
-
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
@@ -68,7 +65,7 @@ public class BankInController {
     @RequestMapping(value = "audit")
     public RestResponse audit(String id, boolean pass, String comment) {
         bankInService.audit(id,pass,comment);
-        return new RestResponse("审核成功",null);
+        return new RestResponse("审核成功",ResponseCodeEnum.audited.name());
     }
 
 
