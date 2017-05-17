@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.TownTypeEnum;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.service.DepotShopService;
@@ -46,6 +47,7 @@ public class DepotShopController {
     @RequestMapping(value = "findForm")
     public DepotShopForm findForm(DepotShopForm depotShopForm){
         depotShopForm = depotShopService.findForm(depotShopForm);
+        depotShopForm.setTownTypeList(TownTypeEnum.getList());
         return depotShopForm;
     }
 
