@@ -2,13 +2,23 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.enums.ExpressOrderTypeEnum;
+import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.StoreAllot;
+import net.myspring.future.modules.crm.domain.StoreAllotDetail;
 import net.myspring.future.modules.crm.domain.StoreAllotIme;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
+import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
+import net.myspring.future.modules.crm.mapper.StoreAllotDetailMapper;
 import net.myspring.future.modules.crm.mapper.StoreAllotImeMapper;
 import net.myspring.future.modules.crm.mapper.StoreAllotMapper;
+import net.myspring.future.modules.crm.web.form.StoreAllotDetailForm;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -37,10 +47,14 @@ public class StoreAllotService {
     @Autowired
     private StoreAllotImeMapper storeAllotImeMapper;
     @Autowired
-    private StoreAllotDetailService storeAllotDetailService;
+    private StoreAllotDetailMapper storeAllotDetailMapper;
 
     @Autowired
-    private ExpressOrderService expressOrderService;
+    private DepotMapper depotMapper;
+
+    private ProductMapper productMapper;
+    @Autowired
+    private ExpressOrderMapper expressOrderMapper;
 
     @Autowired
     private CacheUtils cacheUtils;
@@ -148,15 +162,102 @@ public class StoreAllotService {
 
         StoreAllot storeAllot = saveStoreAllot(storeAllotForm, cloudSynId);
 
-        storeAllotDetailService.saveStoreAllotDetails(storeAllot.getId(), storeAllotForm.getStoreAllotDetailFormList());
+        saveStoreAllotDetails(storeAllot.getId(), storeAllotForm.getStoreAllotDetailFormList());
 
-        ExpressOrder expressOrder = expressOrderService.saveExpressOrder(storeAllot, storeAllotForm);
+        ExpressOrder expressOrder = saveExpressOrder(storeAllot, storeAllotForm);
 
         storeAllot.setExpressOrderId(expressOrder.getId());
         storeAllotMapper.update(storeAllot);
 
         return storeAllot;
     }
+
+    private void saveStoreAllotDetails(String storeAllotId, List<StoreAllotDetailForm> storeAllotDetailFormList) {
+//        storeAllotDetailMapper.deleteByStoreAllotId(storeAllotId);
+        if(storeAllotDetailFormList == null){
+            return;
+        }
+
+        List<StoreAllotDetail> toBeSaved = Lists.newArrayList();
+        for(StoreAllotDetailForm each : storeAllotDetailFormList){
+            if(each == null || each.getBillQty() == null || each.getBillQty() <=0){
+                continue;
+            }
+            StoreAllotDetail storeAllotDetail = BeanUtil.map(each, StoreAllotDetail.class);
+            storeAllotDetail.setStoreAllotId(storeAllotId);
+            toBeSaved.add(storeAllotDetail);
+        }
+        if(!toBeSaved.isEmpty()){
+            storeAllotDetailMapper.batchSave(toBeSaved);
+        }
+
+    }
+
+    private ExpressOrder saveExpressOrder(StoreAllot storeAllot, StoreAllotForm storeAllotForm) {
+        //增加快递单信息
+        ExpressOrder expressOrder = new ExpressOrder();
+        expressOrder.setExtendBusinessId(storeAllot.getBusinessId());
+        expressOrder.setExtendId(storeAllot.getId());
+        expressOrder.setExtendType(ExpressOrderTypeEnum.大库调拨.name());
+        expressOrder.setExpressCompanyId(storeAllotForm.getExpressCompanyId());
+        expressOrder.setFromDepotId(storeAllot.getFromStoreId());
+        expressOrder.setToDepotId(storeAllot.getToStoreId());
+        expressOrder.setPrintDate(storeAllot.getBillDate());
+        expressOrder.setOutCode(storeAllot.getOutCode());
+
+        Depot toStore = depotMapper.findOne(storeAllot.getToStoreId());
+        expressOrder.setAddress(toStore.getAddress());
+        expressOrder.setMobilePhone(toStore.getMobilePhone());
+        expressOrder.setContator(toStore.getContator());
+
+        Integer totalBillQty = 0;
+        Integer mobileQty = 0;
+        for(int i=storeAllotForm.getStoreAllotDetailFormList().size()-1;i>=0;i--){
+            StoreAllotDetailForm storeAllotDetailForm = storeAllotForm.getStoreAllotDetailFormList().get(i);
+            if(storeAllotDetailForm.getBillQty()!=null && storeAllotDetailForm.getBillQty()>0) {
+                totalBillQty = totalBillQty + storeAllotDetailForm.getBillQty();
+                Product product = productMapper.findOne(storeAllotDetailForm.getProductId());
+                if(product!=null && product.getHasIme()) {
+                    mobileQty = mobileQty + storeAllotDetailForm.getBillQty();
+                }
+            }
+        }
+        expressOrder.setTotalQty(totalBillQty);
+        expressOrder.setMobileQty(mobileQty);
+
+        //设置需要打印的快递单个数
+        Integer expressPrintQty = 0;
+        if (ShipTypeEnum.总部发货.name().equals(storeAllot.getShipType())) {
+            expressPrintQty = getExpressPrintQty(totalBillQty);
+        }
+        expressOrder.setExpressPrintQty(expressPrintQty);
+        expressOrderMapper.save(expressOrder);
+        return expressOrder;
+
+    }
+
+
+    public static Integer getExpressPrintQty(Integer totalBillQty) {
+        //TODO 需要完善该方法，
+        //String companyName= RequestUtils.getCompanyName();
+        Integer expressPrintQty = 1;
+//        if(CompanyNameEnum.JXOPPO.name().equals(companyName)){
+//            expressPrintQty=Const.OPPO_ORDER_EXPRESS_PRODUCT_QTY;
+//        }else if(CompanyNameEnum.JXVIVO.name().equals(companyName)) {
+//            expressPrintQty = Const.VIVO_ORDER_EXPRESS_PRODUCT_QTY;
+//        }else if(CompanyNameEnum.JXIMOO.name().equals(companyName)){
+//            expressPrintQty = Const.IMOO_ORDER_EXPRESS_PRODUCT_QTY;
+//        }else{
+//            expressPrintQty=Const.LX_ORDER_EXPRESS_PRODUCT_QTY;
+//        }
+        if(0 == totalBillQty % expressPrintQty){
+            expressPrintQty = totalBillQty / expressPrintQty;
+        } else{
+            expressPrintQty = totalBillQty / expressPrintQty + 1;
+        }
+        return expressPrintQty;
+    }
+
 
     public StoreAllotDto findStoreAllotDtoById(String id) {
         StoreAllotDto result = storeAllotMapper.findStoreAllotDtoById(id);

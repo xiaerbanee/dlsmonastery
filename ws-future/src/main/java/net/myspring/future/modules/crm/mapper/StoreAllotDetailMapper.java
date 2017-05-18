@@ -14,9 +14,9 @@ public interface StoreAllotDetailMapper extends MyMapper<StoreAllotDetail,String
 
     List<StoreAllotDetailDto> findByStoreAllotIds(List<String> storeAllotIds);
 
-    List<StoreAllotDetailDto> getStoreAllotDetailListForNew(@Param("companyId") String companyId);
-
     void deleteByStoreAllotId(@Param("storeAllotId") String storeAllotId);
 
-    List<StoreAllotDetailDto> findStoreAllotDetailsForFastAllot(@Param("billDate") LocalDate billDate, @Param("toStoreId") String toStoreId, @Param("status") String status);
+    List<StoreAllotDetailDto> findStoreAllotDetailsForFastAllot(@Param("billDate") LocalDate billDate, @Param("toStoreId") String toStoreId, @Param("status") String status, @Param("companyId") String companyId);
+
+    List<StoreAllotDetailDto> findStoreAllotDetailsForNew(@Param("companyId")  String companyId);
 }

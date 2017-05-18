@@ -1,6 +1,7 @@
 package net.myspring.future.common.enums;
 
 import com.google.common.collect.Lists;
+import net.myspring.util.collection.CollectionUtil;
 
 import java.util.List;
 
@@ -12,11 +13,14 @@ public enum InputTypeEnum {
     工厂入库, 手工入库;
     /*NUMBER,AREA*/
 
-    public static List<String> getValues(){
-        List<String> values= Lists.newArrayList();
-        for(InputTypeEnum inputTypeEnum: InputTypeEnum.values()){
-            values.add(inputTypeEnum.toString());
+    private static List<String> list= Lists.newArrayList();
+
+    public static List<String> getList(){
+        if(CollectionUtil.isEmpty(list)){
+            for(InputTypeEnum each : InputTypeEnum.values()){
+                list.add(each.name());
+            }
         }
-        return values;
+        return list;
     }
 }

@@ -2,47 +2,47 @@
   <div>
     <head-tab active="storeAllotDetail"></head-tab>
     <div>
-      <el-form :model="detailForm" ref="inputForm" :rules="rules" label-width="150px" class="form input-form">
+      <el-form :model="storeAllot" ref="inputForm"   label-width="150px" class="form input-form">
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('storeAllotDetail.businessId')" prop="businessId">
-              {{detailForm.businessId}}
+              {{storeAllot.formatId}}
             </el-form-item>
             <el-form-item :label="$t('storeAllotDetail.fromStore')" prop="fromStoreName">
-              {{detailForm.fromStoreName}}
+              {{storeAllot.fromStoreName}}
             </el-form-item>
             <el-form-item :label="$t('storeAllotDetail.toStore')" prop="toStoreName">
-              {{detailForm.toStoreName}}
+              {{storeAllot.toStoreName}}
             </el-form-item>
             <el-form-item :label="$t('storeAllotDetail.outCode')" prop="outCode">
-              {{detailForm.outCode}}
+              {{storeAllot.outCode}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('storeAllotDetail.createdBy')" prop="createdByName">
-              {{detailForm.createdByName}}
+              {{storeAllot.createdByName}}
             </el-form-item>
             <el-form-item :label="$t('storeAllotDetail.createdDate')" prop="createdDate">
-              {{detailForm.createdDate}}
+              {{storeAllot.createdDate}}
             </el-form-item>
             <el-form-item :label="$t('storeAllotDetail.expressOrder')" prop="expressOrderCodes">
-              {{detailForm.expressOrderCodes}}
+              {{storeAllot.expressOrderCodes}}
             </el-form-item>
             <el-form-item :label="$t('storeAllotDetail.remarks')" prop="remarks">
-              {{detailForm.remarks}}
+              {{storeAllot.remarks}}
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="detailForm.storeAllotDetailDtoList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
+        <el-table :data="storeAllotDetailList" style="margin-top:5px;" border v-loading="storeAllotDetailLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('storeAllotDetail.productName')" ></el-table-column>
           <el-table-column prop="billQty" :label="$t('storeAllotDetail.billQty')" ></el-table-column>
           <el-table-column prop="shippedQty" :label="$t('storeAllotDetail.shippedQty')" ></el-table-column>
         </el-table>
-        <el-table :data="detailForm.storeAllotImeDtoList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
+        <el-table :data="storeAllotImeList" style="margin-top:5px;" border v-loading="storeAllotImeLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
 
           <el-table-column  prop="productName" :label="$t('storeAllotDetail.productName')" ></el-table-column>
-          <el-table-column  prop="productIme" :label="$t('storeAllotDetail.productIme')" ></el-table-column>
-          <el-table-column  prop="productMeid" :label="$t('storeAllotDetail.productMeid')" ></el-table-column>
+          <el-table-column  prop="productImeIme" :label="$t('storeAllotDetail.productIme')" ></el-table-column>
+          <el-table-column  prop="productImeMeid" :label="$t('storeAllotDetail.productMeid')" ></el-table-column>
           <el-table-column  prop="createdByName" :label="$t('storeAllotDetail.sendByName')" ></el-table-column>
           <el-table-column  prop="createdDate" :label="$t('storeAllotDetail.sendDate')" ></el-table-column>
         </el-table>
@@ -54,22 +54,29 @@
   export default{
     data(){
       return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        detailForm:{},
-        rules: {},
-        pageLoading:false
-      }
-    },
-    methods:{
-      findOne(){
-        axios.get('/api/ws/future/crm/storeAllot/findForOverview',{params:{id:this.$route.query.id}} ).then((response)=>{
-          this.detailForm=response.data;
-          console.log(response.data)
-        })
+        storeAllotImeLoading:false,
+        storeAllotDetailLoading:false,
+        storeAllot:{},
+        storeAllotDetailList:[],
+        storeAllotImeList:[],
+
       }
     },created(){
-      this.findOne();
+      axios.get('/api/ws/future/crm/storeAllot/findForView',{params:{id:this.$route.query.id}} ).then((response)=>{
+        this.storeAllot=response.data;
+      });
+
+      this.storeAllotDetailLoading=true;
+      axios.get('/api/ws/future/crm/storeAllotDetail/getDetails',{params:{storeAllotId:this.$route.query.id}} ).then((response)=>{
+        this.storeAllotDetailList=response.data;
+        this.storeAllotDetailLoading=false;
+      });
+
+      this.storeAllotImeLoading=true;
+      axios.get('/api/ws/future/crm/storeAllotIme/getImes',{params:{storeAllotId:this.$route.query.id}} ).then((response)=>{
+        this.storeAllotImeList=response.data;
+        this.storeAllotImeLoading=false;
+      });
     }
   }
 </script>

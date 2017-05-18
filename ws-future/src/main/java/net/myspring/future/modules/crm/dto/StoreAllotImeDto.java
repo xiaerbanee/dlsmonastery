@@ -6,7 +6,28 @@ import net.myspring.util.cahe.annotation.CacheInput;
 
 public class StoreAllotImeDto extends DataDto<StoreAllotIme> {
 
+    private String productId;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
+    private String productName;
+    private String productImeIme;
+    private String productImeMeid;
 
+
+    public String getProductImeIme() {
+        return productImeIme;
+    }
+
+    public void setProductImeIme(String productImeIme) {
+        this.productImeIme = productImeIme;
+    }
+
+    public String getProductImeMeid() {
+        return productImeMeid;
+    }
+
+    public void setProductImeMeid(String productImeMeid) {
+        this.productImeMeid = productImeMeid;
+    }
 
     public String getProductId() {
         return productId;
@@ -24,27 +45,6 @@ public class StoreAllotImeDto extends DataDto<StoreAllotIme> {
         this.productName = productName;
     }
 
-    public String getProductIme() {
-        return productIme;
-    }
-
-    public void setProductIme(String productIme) {
-        this.productIme = productIme;
-    }
-
-    public String getProductMeid() {
-        return productMeid;
-    }
-
-    public void setProductMeid(String productMeid) {
-        this.productMeid = productMeid;
-    }
-
-    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
-    private String productName;
-    private String productIme;
-    private String productMeid;
-    private String productId;
 
 
 

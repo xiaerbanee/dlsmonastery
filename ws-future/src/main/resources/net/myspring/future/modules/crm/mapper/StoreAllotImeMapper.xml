@@ -20,7 +20,7 @@
 
 
     <select id="findByStoreAllotId" resultType="StoreAllotImeDto">
-        select ime.ime productIme, ime.meid productMeid, product.name productName, t1.*
+        select ime.ime productImeIme, ime.meid productImeMeid, product.name productName, t1.*
         from crm_store_allot_ime t1, crm_product product, crm_product_ime ime
         where t1.store_allot_id = #{storeAllotId}
         and t1.enabled = 1

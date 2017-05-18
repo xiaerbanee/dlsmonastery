@@ -24,5 +24,5 @@ public interface StoreAllotMapper extends MyMapper<StoreAllot,String> {
 
     String findMaxBusinessId(@Param("localDate") LocalDate localDate);
 
-    StoreAllotDto findStoreAllotDtoById(String id);
+    StoreAllotDto findStoreAllotDtoById( @Param("id") String id);
 }

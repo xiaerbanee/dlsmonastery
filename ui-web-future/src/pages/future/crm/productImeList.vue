@@ -3,64 +3,60 @@
     <head-tab active="productImeList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('productImeList.filterOrExport')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('productImeList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
+        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('productImeList.filter')" v-model="formVisible" size="small" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="formLabel.ime.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.ime" ></el-input>
-              </el-form-item>
               <el-form-item :label="formLabel.boxIme.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.boxIme" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
+              <el-form-item :label="formLabel.imeReverse.label" :label-width="formLabelWidth">
+                <el-input v-model="formData.imeReverse" ></el-input>
+              </el-form-item>
+
               <el-form-item :label="formLabel.ime2.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.ime2" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.meid.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.meid" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.depotName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.depotName" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
+
+              <el-form-item :label="formLabel.depotId.label" :label-width="formLabelWidth">
+                <depot-select v-model="formData.depotId" ></depot-select>
               </el-form-item>
+
               <el-form-item :label="formLabel.inputType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.inputType" clearable filterable :placeholder="$t('productImeList.selectInputType')">
-                  <el-option v-for="item in formProperty.inputTypes" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.inputTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.imes.label" :label-width="formLabelWidth">
-                <el-input  type="textarea" :rows="2"  v-model="formData.imes" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
+              <el-form-item :label="formLabel.imeOrMeids.label" :label-width="formLabelWidth">
+                <el-input  type="textarea"   v-model="formData.imeOrMeids" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
+              <el-form-item :label="formLabel.productId.label" :label-width="formLabelWidth">
+
+                <product-select v-model="formData.productId" ></product-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right"  :placeholder="$t('productImeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.retailDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.retailDate" type="daterange" align="right"  :placeholder="$t('productImeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createTimeRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createTimeRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.saleDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.saleDate" type="daterange" align="right"  :placeholder="$t('productImeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.retailDateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.retailDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.createTimeBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createTime" type="daterange" align="right"  :placeholder="$t('productImeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
-              </el-form-item>
-              <el-form-item :label="formLabel.meids.label" :label-width="formLabelWidth">
-                <el-input type="textarea" :rows="2" v-model="formData.meids" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
-              </el-form-item>
-              <el-form-item :label="formLabel.month.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.month" type="month" align="right"  :placeholder="$t('productImeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
-              </el-form-item>
+
             </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('productImeList.sure')}}</el-button>
         </div>
       </el-dialog>
@@ -76,124 +72,121 @@
         <el-table-column prop="productName"  :label="$t('productImeList.productType')"></el-table-column>
         <el-table-column prop="inputType" :label="$t('productImeList.inputType')"></el-table-column>
         <el-table-column prop="createdTime" :label="$t('productImeList.createdTime')"></el-table-column>
-        <el-table-column prop="locked" :label="$t('productImeList.locked')" width="120">
+        <el-table-column prop="locked" :label="$t('productImeList.locked')" >
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'danger' : 'primary'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="enabled" :label="$t('productImeList.enabled')" width="120">
+        <el-table-column prop="enabled" :label="$t('productImeList.enabled')" >
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="remarks" :label="$t('productImeList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('productImeList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('productImeList.operation')" width="70">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" type="text" v-permit="'crm:productIme:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('productImeList.detail')}}</el-button>
+
           </template>
         </el-table-column>
       </el-table>
-      <pageable :page="page"  layout="sizes, prev, pager, next, jumper" v-on:pageChange="pageChange"></pageable>
+      <pageable :page="page"   v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
 <script>
-  export default {
+  import depotSelect from 'components/future/depot-select'
+  import productSelect from 'components/future/product-select'
+
+  export default{
+    components:{
+      depotSelect,
+      productSelect,
+
+    },
     data() {
       return {
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
-          ime:'',
+          imeReverse:'',
           ime2:'',
           boxIme:'',
           meid:'',
-          depotName:'',
+          depotId:'',
           inputType:'',
-          imes:'',
-          productName:'',
-          createdDate:"",
-          createdDateBTW:'',
-          retailDate:"",
-          retailDateBTW:'',
-          saleDate:"",
-          saleDateBTW:'',
-          createTime:"",
-          createTimeBTW:'',
-          meids:'',
-          month:''
+          imeOrMeids:'',
+          productId:'',
+          createdDateRange:"",
+          retailDateRange:"",
+          saleDateRange:"",
+          createTimeRange:"",
         },formLabel:{
-          ime:{label:this.$t('productImeList.ime')},
+          imeReverse:{label:this.$t('productImeList.ime')},
           ime2:{label:this.$t('productImeList.ime2')},
           boxIme:{label:this.$t('productImeList.boxIme')},
           meid:{label:this.$t('productImeList.meid')},
-          depotName:{label:this.$t('productImeList.depotName')},
+          depotId:{label:this.$t('productImeList.depotName')},
           inputType:{label:this.$t('productImeList.inputType')},
-          imes:{label:this.$t('productImeList.mutilIme')},
-          productName:{label:this.$t('productImeList.productType')},
-          createdDateBTW:{label: this.$t('productImeList.createdDate')},
-          retailDateBTW:{label:this.$t('productImeList.retailDateBtw')},
-          saleDateBTW:{label:this.$t('productImeList.saleDate')},
-          createTimeBTW:{label:this.$t('productImeList.createTimeBtw')},
-          meids:{label:this.$t('productImeList.meids')},
-          month:{label:this.$t('productImeList.month')}
+          imeOrMeids:{label:this.$t('productImeList.imeOrMeids')},
+          productId:{label:this.$t('productImeList.productType')},
+          createdDateRange:{label: this.$t('productImeList.createdDate')},
+          retailDateRange:{label:this.$t('productImeList.retailDateBtw')},
+          saleDateRange:{label:this.$t('productImeList.saleDate')},
+          createTimeRange:{label:this.$t('productImeList.createTimeBtw')},
         },
-        formProperty:{},
-        pickerDateOption:util.pickerDateOption,
+
         formLabelWidth: '120px',
         formVisible: false,
-        isPageChange:false,
-        loading:false
+
       };
     },
     methods: {
       pageRequest() {
-        this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        this.formData.retailDateBTW=util.formatDateRange(this.formData.retailDate);
-        this.formData.saleDateBTW=util.formatDateRange(this.formData.saleDate);
-        this.formData.createTimeBTW=util.formatDateRange(this.formData.createTime);
 
-        util.setQuery("productImeList",this.formData);
-        axios.get('/api/ws/future/crm/productIme',{params:this.formData}).then((response) => {
+        this.pageLoading = true;
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("productImeList",this.submitData);
+        axios.get('/api/ws/future/crm/productIme?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
+
       },pageChange(pageNumber,pageSize) {
-        if(this.isPageChange){
-          this.formData.page = pageNumber;
-          this.formData.size = pageSize;
-          this.pageRequest();
-        }
-        this.isPageChange = true;
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
+
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
+
       },search() {
         this.formVisible = false;
         this.pageRequest();
-      },itemAdd(){
 
       },itemAction:function(id,action){
-        if(action=="详情") {
-          this.$router.push({ name: '串码列表详情', query: { id: id }})
+        if(action=="detail") {
+          this.$router.push({ name: 'productImeDetail', query: { id: id }})
         }
       },exportData(){
-        window.location.href= "/api/ws/future/crm/productIme/export?"+qs.stringify(this.formData);
+        window.location.href= "/api/ws/future/crm/productIme/export?"+qs.stringify(this.submitData);
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/ws/future/crm/productIme/getQuery').then((response) => {
-        this.formProperty = response.data;
-      })
-      this.pageRequest();
+
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/crm/productIme/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+      });
+
     }
   };
 </script>

@@ -57,10 +57,10 @@
         <el-table-column prop="realPay" :label="$t('expressList.realPay')"></el-table-column>
         <el-table-column prop="createdByName" :label="$t('expressList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('expressList.createdDate')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('expressList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('expressList.operation')" width="80">
           <template scope="scope">
-            <el-button size="small" v-permit="'crm:express:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('expressList.edit')}}</el-button>
-            <el-button size="small" v-permit="'crm:express:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('expressList.delete')}}</el-button>
+            <el-button size="small" type="text" v-permit="'crm:express:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('expressList.edit')}}</el-button>
+            <el-button size="small"  type="text" v-permit="'crm:express:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('expressList.delete')}}</el-button>
 
           </template>
         </el-table-column>
