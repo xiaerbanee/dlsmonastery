@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item :label="$t('shopBuildForm.shopId')" prop="shopId">
-              <shop-select v-model="inputForm.shopId"></shop-select>
+              <depot-select v-model="inputForm.shopId" category="adShop" :disabled="shopDisabled"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.shopType')" prop="shopType">
               <dict-enum-select v-model="inputForm.shopType" category="店面类型"></dict-enum-select>
@@ -55,20 +55,21 @@
 <script>
   import dictEnumSelect from 'components/basic/dict-enum-select';
   import accountSelect from 'components/basic/account-select';
-  import shopSelect from 'components/future/depot-select';
+  import depotSelect from 'components/future/depot-select';
   export default{
     components:{
         dictEnumSelect,
         accountSelect,
-      shopSelect
+      depotSelect
     },
     data(){
       return {
         isCreate: this.$route.query.id == null,
         submitDisabled: false,
-        formProperty: {},
+        shopDisabled:false,
         fileList: [],
-        inputForm: {
+        inputForm: {},
+        submitData:{
           id: '',
           shopId: '',
           shopType: '',
@@ -88,8 +89,6 @@
           buildType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
           accountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
         },
-        shops: [],
-        accounts: [],
         remoteLoading:false,
         headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
       }
@@ -101,7 +100,8 @@
         form.validate((valid) => {
           this.inputForm.scenePhoto = util.getFolderFileIdStr(this.fileList);
           if (valid) {
-            axios.post('/api/crm/shopBuild/save', qs.stringify(this.inputForm)).then((response)=> {
+              util.copyValue(this.inputForm,this.submitData);
+            axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -119,10 +119,6 @@
             this.submitDisabled = false;
           }
         })
-      },getFormProperty(){
-        axios.get('/api/ws/future/layout/shopBuild/getQuery').then((response)=>{
-          this.formProperty=response.data;
-        });
       },handlePreview(file) {
         window.open(file.url);
       },handleChange(file, fileList) {
@@ -131,15 +127,17 @@
         this.fileList = fileList;
       }
     },created(){
-      axios.get('/api/ws/future/layout/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/layout/shopBuild/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
+        if(this.inputForm.id != null){
+          this.shopDisabled = true;
+        }
         if(this.inputForm.scenePhoto !=null) {
             axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
             this.fileList= response.data;
           });
         }
       });
-      this.getFormProperty();
     }
   }
 </script>

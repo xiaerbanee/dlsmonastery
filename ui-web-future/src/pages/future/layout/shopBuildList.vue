@@ -22,7 +22,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="SHOP"></depot-select>
+                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.processFlow.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.processFlow" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
