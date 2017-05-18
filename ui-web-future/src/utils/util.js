@@ -74,7 +74,6 @@ util.copyValue = function (from, to) {
 util.cloneAndCopy = function (from, to) {
   let result = Object.assign({}, to);
   if (from != null) {
-
     for (var key in result) {
       if (from[key] != null) {
         result[key] = from[key];
