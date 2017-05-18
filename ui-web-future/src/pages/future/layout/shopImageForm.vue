@@ -102,7 +102,6 @@
     },created(){
       axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
-        console.log(this.inputForm);
         if(this.inputForm.id != null){
             this.shopDisabled = true;
         }

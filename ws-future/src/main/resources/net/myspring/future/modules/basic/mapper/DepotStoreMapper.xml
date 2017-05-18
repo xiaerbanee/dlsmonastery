@@ -4,11 +4,12 @@
 
 
     <select id="findPage" resultType="DepotStoreDto">
-        SELECT t2.*,depot.id as 'depotId'
+        SELECT t2.*,depot.id as 'depotId',depot.office_id as 'officeId',depot.tax_name as 'taxName',
+        depot.delegate_depot_id as 'delegateDepotId',depot.pop_shop as 'popShop'
         FROM crm_depot depot ,crm_depot_store t2
         where depot.enabled=1
         and t2.enabled=1
-        and depot.depot_store_id=t2.id
+        and t2.depot_id=depot.id
     </select>
 
 </mapper>

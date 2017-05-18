@@ -18,14 +18,16 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="depotName" label="名称" sortable width="120"></el-table-column>
         <el-table-column prop="type" label="仓库类型"  />
-        <el-table-column prop="group" label="分组"  />
-        <el-table-column prop="outId" label="财务编号"  />
-        <el-table-column prop="outGroupId" label="财务分组"  />
-        <el-table-column prop="outGroupName" label="财务分组名称" />
-        <el-table-column prop="outDate" label="财务同步日期"  />
+        <el-table-column prop="storeGroup" label="分组"  />
+        <el-table-column prop="officeName" label="机构"  />
+        <el-table-column prop="taxName" label="税务门店名称"  />
+        <el-table-column prop="delegateDepotName" label="寄售门店" />
         <el-table-column prop="remarks" label="备注" />
         <el-table-column fixed="right" label="操作" width="140">
           <template scope="scope">
+            <el-button size="small"  v-permit="'crm:expressCompany:edit'" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
+            <el-button size="small"  v-permit="'crm:expressCompany:edit'" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+
           </template>
         </el-table-column>
       </el-table>

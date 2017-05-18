@@ -22,7 +22,7 @@
           <el-input v-model="inputForm.depotForm.address" />
         </el-form-item>
         <el-form-item label="税务门店名称" prop="depotForm.taxName">
-          <district-select v-model="inputForm.depotForm.taxName" />
+          <el-input v-model="inputForm.depotForm.taxName" />
         </el-form-item>
         <el-form-item label="寄售门店" prop="depotForm.delegateDepotId">
           <depot-select v-model="inputForm.depotForm.delegateDepotId" category="directShop"></depot-select>
@@ -38,8 +38,8 @@
         <el-form-item label="地区" prop="depotForm.districtId">
           <district-select v-model="inputForm.depotForm.districtId"></district-select>
         </el-form-item>
-        <el-form-item label="分组" prop="group">
-          <el-input v-model="inputForm.group"></el-input>
+        <el-form-item label="分组" prop="storeGroup">
+          <el-input v-model="inputForm.storeGroup"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -81,7 +81,7 @@
             districtId:"",
           },
           type:"",
-          group:"",
+          storeGroup:"",
           remarks:"",
         },
         rules: {
@@ -94,7 +94,7 @@
           "depotForm.districtId": [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           "depotForm.taxName": [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           type: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          group:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          storeGroup:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
         }
       }
     },
@@ -105,7 +105,7 @@
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/basic/depotStore/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/ws/future/basic/depotStore/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -126,6 +126,9 @@
         this.inputForm = response.data;
         if(!response.data.depotForm){
             this.inputForm.depotForm={};
+            this,inputForm.depotForm.popShop=0;
+        }else {
+          this.inputForm.depotForm.popShop=this.inputForm.depotForm.popShop?1:0;
         }
       })
     }

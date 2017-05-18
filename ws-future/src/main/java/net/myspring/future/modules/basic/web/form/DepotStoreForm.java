@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.web.form;
 import com.google.common.collect.Lists;
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.DepotStore;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -10,13 +11,21 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/18.
  */
-public class DepotStoreForm extends DataForm<Depot>{
+public class DepotStoreForm extends DataForm<DepotStore>{
 
     private String depotId;
     private DepotForm depotForm;
     private String type;
-    private String group;
+    private String storeGroup;
     private List<String> depotStoreTypeList= Lists.newArrayList();
+
+    public String getStoreGroup() {
+        return storeGroup;
+    }
+
+    public void setStoreGroup(String storeGroup) {
+        this.storeGroup = storeGroup;
+    }
 
     public List<String> getDepotStoreTypeList() {
         return depotStoreTypeList;
@@ -32,14 +41,6 @@ public class DepotStoreForm extends DataForm<Depot>{
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
     }
 
     public String getDepotId() {
