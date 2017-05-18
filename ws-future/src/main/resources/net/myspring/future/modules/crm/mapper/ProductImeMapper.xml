@@ -22,15 +22,15 @@
         </if>
         <if test="p.imeList !=null" >
             and (t1.ime in
-            <foreach item="item" index="index" collection="p.imes" open="(" separator="," close=")">
+            <foreach item="item" index="index" collection="p.imeList" open="(" separator="," close=")">
                 #{item}
             </foreach>
-            or t1.ime1 in
-            <foreach item="item" index="index" collection="p.imes" open="(" separator="," close=")">
+            or t1.ime2 in
+            <foreach item="item" index="index" collection="p.imeList" open="(" separator="," close=")">
                 #{item}
             </foreach>
             or t1.meid in
-            <foreach item="item" index="index" collection="p.imes" open="(" separator="," close=")">
+            <foreach item="item" index="index" collection="p.imeList" open="(" separator="," close=")">
                 #{item}
             </foreach>
             )
