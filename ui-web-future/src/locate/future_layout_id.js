@@ -352,7 +352,8 @@ export default {
     selectDateRange: "pilih rentang tanggal",
     inputKey: "silahkan masukkan kata kunci",
     inputWord: "silahkan masukkan kata kunci",
-    likeSearch: "模糊搜索",
+    likeSearch: "pencarian fuzzy",
+    inputNotZeroPart:"masukkan bagian bebas-0",
     sure: "yakin",
     loading: "memuat",
     unicode: "kode",
@@ -383,7 +384,11 @@ export default {
     nodeName: "nama,",
     auditMan: "orang pemeriksaan",
     auditDate: "tanggal pemeriksaan",
-    auditRemarks: "keterangan pemeriksaan"
+    auditRemarks: "keterangan pemeriksaan",
+    pass:"pass",
+    passRemarks:"persetujuan memo",
+    inputRemarks:'masukkan catatan persetujuan',
+    save:"simpan",
   },
   shopAllotDetail: {
     shopAllotDetail: "Toko alokasi editing",

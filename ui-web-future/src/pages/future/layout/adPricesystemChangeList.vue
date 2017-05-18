@@ -84,7 +84,7 @@
       this.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response) => {
         this.formData = response.data;
-        console.log(this.formData);
+        util.copyValue(this.$route.query,this.formData);
         this.pageRequest();
       })
     }

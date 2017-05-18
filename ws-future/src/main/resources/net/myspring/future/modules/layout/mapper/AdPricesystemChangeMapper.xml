@@ -13,7 +13,7 @@
              AND t1.product_id = #{p.productId}
         </if>
     </select>
-    <select id="findFilter" resultType="AdPricesystemChange">
+    <select id="findFilter" resultType="AdPricesystemChangeDto">
         SELECT
         t1.*
         FROM

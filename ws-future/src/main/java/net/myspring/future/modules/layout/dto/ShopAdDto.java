@@ -149,6 +149,14 @@ public class ShopAdDto extends DataDto<ShopAd>{
         }
     }
 
+    public String getFormatId(){
+        if(getId()!=null){
+            return StringUtils.getFormatId(getId(),"AD");
+        }else {
+            return null;
+        }
+    }
+
     public Boolean getIsAuditable(){
         if(RequestUtils.getRequestEntity().getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
             return true;

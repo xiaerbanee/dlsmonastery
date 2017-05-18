@@ -80,7 +80,9 @@ public class ShopBuildService {
             activitiCompleteForm.setProcessInstanceId(shopBuild.getProcessInstanceId());
             activitiCompleteForm.setProcessTypeId(shopBuild.getProcessTypeId());
             activitiCompleteForm.setPass(shopBuildForm.getPass());
-            activitiCompleteForm.setComment(shopBuildForm.getPassRemarks());
+            if(shopBuildForm.getPassRemarks()!=null){
+                activitiCompleteForm.setComment(shopBuildForm.getPassRemarks());
+            }
             ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
             if(activitiCompleteDto!=null){
                 shopBuild.setProcessFlowId(activitiCompleteDto.getProcessFlowId());

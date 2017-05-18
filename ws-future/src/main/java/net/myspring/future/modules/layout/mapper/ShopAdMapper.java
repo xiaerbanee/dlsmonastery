@@ -17,5 +17,5 @@ public interface ShopAdMapper extends MyMapper<ShopAd,String> {
 
     Page<ShopAdDto> findPage(Pageable pageable, @Param("p")ShopAdQuery shopAdQuery);
 
-    List<ShopAd> findByFilter(@Param("p") Map<String, Object> map);
+    List<ShopAdDto> findByFilter(@Param("p")ShopAdQuery shopAdQuery);
 }

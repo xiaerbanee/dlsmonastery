@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopImageForm.shopName')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="SHOP" :disabled="shopDisabled"></depot-select>
+              <depot-select v-model="inputForm.shopId" category="adShop" :disabled="shopDisabled"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageType')" prop="imageType">
               <el-select v-model="inputForm.imageType" filterable clearable :placeholder="$t('shopImageForm.inputType')">
@@ -102,7 +102,7 @@
     },created(){
       axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
-        util.copyValue(this.$route.query,this.inputForm);
+        console.log(this.inputForm);
         if(this.inputForm.id != null){
             this.shopDisabled = true;
         }

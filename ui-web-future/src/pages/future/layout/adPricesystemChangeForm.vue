@@ -8,12 +8,12 @@
     </el-row>
     <el-dialog :title="$t('adPricesystemChangeForm.filter')"  v-model="formVisible"  size="tiny" class="search-form">
       <el-form :model="formData">
-        <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
-          <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adPricesystemChangeForm..likeSearch')"></el-input>
+        <el-form-item :label="formLabel.productName.label">
+          <product-select v-model="formData.productId"></product-select>
         </el-form-item>
-        <el-form-item :label="formLabel.productCode.label" :label-width="formLabelWidth">
+        <!--<el-form-item :label="formLabel.productCode.label" :label-width="formLabelWidth">
           <el-input v-model="formData.productCode" auto-complete="off" :placeholder="$t('adPricesystemChangeForm..likeSearch')"></el-input>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="search()">{{$t('adPricesystemChangeForm.sure')}}</el-button>
@@ -23,14 +23,15 @@
   </div>
 </template>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
+  import Handsontable from 'handsontable/dist/handsontable.full.js';
+  import productSelect from 'components/future/product-select';
 
   export default{
+    components:{productSelect},
     data(){
       return{
         formData:{
-          productName:'',
-          productCode:''
+          productId:''
         },formLabel:{
           productName:{label:this.$t('adPricesystemChangeForm.productName')},
           productCode:{label:this.$t('adPricesystemChangeForm.productCode')}
@@ -40,7 +41,6 @@
         },
         rules:{},
         productTypes:[],
-        formLabelWidth: '120px',
         formVisible: false,
         submitDisabled:false,
         table:null,
@@ -49,7 +49,7 @@
           rowHeaders:true,
           autoColumnSize:true,
 			    allowInsertRow:false,
-          maxRows:1000,
+          maxRows:10000,
           columns: [{
             data:"id",
             readOnly: true,
@@ -116,7 +116,7 @@
   }
 </script>
 <style>
-
+  @import "~handsontable/dist/handsontable.full.css";
 </style>
 
 

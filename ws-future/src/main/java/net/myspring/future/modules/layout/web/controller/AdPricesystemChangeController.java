@@ -3,6 +3,7 @@ package net.myspring.future.modules.layout.web.controller;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.service.AdPricesystemChangeService;
+import net.myspring.future.modules.layout.web.form.AdPricesystemChangeForm;
 import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,8 @@ public class AdPricesystemChangeController {
     }
 
     @RequestMapping(value="findFilter", method = RequestMethod.GET)
-    public String findFilter(HttpServletRequest request){
-
-        return null;
+    public List<AdPricesystemChangeForm> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery){
+        return adPricesystemChangeService.findFilter(adPricesystemChangeQuery);
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)

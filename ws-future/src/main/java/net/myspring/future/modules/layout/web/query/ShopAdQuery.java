@@ -7,6 +7,7 @@ import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class ShopAdQuery extends BaseQuery{
     private String shopAdTypeId;
     private String specialArea;
     private String createdBy;
-    private String createdDate;
+    private String createdDateRange;
     private String processStatus;
     private List<ShopAdTypeDto> shopAdTypes;
 
@@ -71,8 +72,12 @@ public class ShopAdQuery extends BaseQuery{
         this.createdBy = createdBy;
     }
 
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
+    public String getCreatedDateRange() {
+        return createdDateRange;
+    }
+
+    public void setCreatedDateRange(String createdDateRange) {
+        this.createdDateRange = createdDateRange;
     }
 
     public String getProcessStatus() {
@@ -92,17 +97,25 @@ public class ShopAdQuery extends BaseQuery{
     }
 
     public LocalDate getCreatedDateStart() {
-        if(StringUtils.isNotBlank(createdDate)) {
-            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        if(StringUtils.isNotBlank(createdDateRange)) {
+            return LocalDateUtils.parse(createdDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
     }
 
     public LocalDate getCreatedDateEnd() {
-        if(StringUtils.isNotBlank(createdDate)) {
-            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        if(StringUtils.isNotBlank(createdDateRange)) {
+            return LocalDateUtils.parse(createdDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
+            return null;
+        }
+    }
+
+    public String getIds(){
+        if(StringUtils.isNotBlank(id)){
+           return "("+StringUtils.join(id.split(",| "),CharConstant.COMMA)+")";
+        }else{
             return null;
         }
     }
