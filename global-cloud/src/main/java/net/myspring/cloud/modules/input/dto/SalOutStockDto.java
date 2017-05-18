@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.input.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
@@ -96,6 +97,7 @@ public class SalOutStockDto {
         this.salOutStockFEntityDtoList = salOutStockFEntityDtoList;
     }
 
+    @JsonIgnore
     public String getJson() {
         Map<String, Object> root = Maps.newLinkedHashMap();
         root.put("Creator", getCreator());

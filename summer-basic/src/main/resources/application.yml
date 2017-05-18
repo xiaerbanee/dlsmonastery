@@ -20,7 +20,7 @@ spring:
 mybatis:
   config-location: classpath:/mybatis-config.xml
 server:
-  port: 1300
+  port: 1400
   tomcat:
         max:
           http:

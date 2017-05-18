@@ -1,22 +1,23 @@
 package net.myspring.future.modules.layout.service;
 
-import net.myspring.common.enums.AuditTypeEnum;
+import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
+import net.myspring.future.modules.basic.manager.PricesystemDetailManager;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.service.PricesystemDetailService;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
+import net.myspring.future.modules.layout.manager.ShopAllotDetailManager;
+import net.myspring.future.modules.layout.mapper.ShopAllotDetailMapper;
 import net.myspring.future.modules.layout.mapper.ShopAllotMapper;
-import net.myspring.future.modules.layout.web.form.ShopAllotAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotForm;
+import net.myspring.future.modules.layout.web.form.ShopAllotViewOrAuditForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,10 +40,14 @@ public class ShopAllotService {
     private DepotMapper depotMapper;
     @Autowired
     private CacheUtils cacheUtils;
+
     @Autowired
-    private ShopAllotDetailService shopAllotDetailService;
+    private ShopAllotDetailManager shopAllotDetailManager;
+
     @Autowired
-    private PricesystemDetailService pricesystemDetailService;
+    private ShopAllotDetailMapper shopAllotDetailMapper;
+    @Autowired
+    private PricesystemDetailManager pricesystemDetailManager;
 
 
     public ShopAllot findOne(String id){
@@ -57,6 +62,7 @@ public class ShopAllotService {
     }
 
     public String checkShop(String fromShopId,String toShopId){
+        //TODO 需要检查与财务系统关联
         StringBuffer sb = new StringBuffer();
         Depot fromShop = depotMapper.findOne(fromShopId);
         Depot toShop = depotMapper.findOne(toShopId);
@@ -79,7 +85,7 @@ public class ShopAllotService {
 
         ShopAllotDto shopAllotDto = findShopAllotDto(shopAllotForm.getId());
         ShopAllotForm result = BeanUtil.map(shopAllotDto, ShopAllotForm.class);
-        result.setShopAllotDetailFormList(shopAllotDetailService.getShopAllotDetailListForEdit(shopAllotDto.getId(), shopAllotDto.getFromShopId(), shopAllotDto.getToShopId()));
+        result.setShopAllotDetailFormList(shopAllotDetailManager.getShopAllotDetailListForNewOrEdit(shopAllotDto.getId(), shopAllotDto.getFromShopId(), shopAllotDto.getToShopId()));
 
         return result;
     }
@@ -92,11 +98,12 @@ public class ShopAllotService {
         ShopAllot shopAllot = null;
         if(shopAllotForm.isCreate()){
             shopAllot = new ShopAllot();
-            ReflectionUtil.copyProperties(shopAllotForm, shopAllot);
-            String maxBusinessId = shopAllotMapper.findMaxBusinessId(LocalDate.now());
-            shopAllot.setBusinessId(StringUtils.getNextBusinessId(maxBusinessId));
-            shopAllot.setStatus(AuditTypeEnum.APPLYING.name());
-            shopAllot.setEnabled(Boolean.TRUE);
+            shopAllot.setFromShopId(shopAllotForm.getFromShopId());
+            shopAllot.setToShopId(shopAllotForm.getToShopId());
+            shopAllot.setRemarks(shopAllotForm.getRemarks());
+            shopAllot.setBusinessId(StringUtils.getNextBusinessId(shopAllotMapper.findMaxBusinessId(LocalDate.now())));
+            shopAllot.setStatus(AuditStatusEnum.申请中.name());
+
             shopAllotMapper.save(shopAllot);
 
             batchSaveShopAllotDetails(shopAllotForm.getShopAllotDetailFormList(), shopAllot);
@@ -116,37 +123,39 @@ public class ShopAllotService {
      * 该方法会首先清空ShopAllot已经关联的ShopAllotDetail记录。之后将传入的门店调拨明细插入ShopAllotDetail表中，并关联至传入的ShopAllot记录
      */
     private void batchSaveShopAllotDetails(List<ShopAllotDetailForm> shopAllotDetailFormList, ShopAllot shopAllot) {
-        shopAllotDetailService.deleteByShopAllotId(shopAllot.getId());
+        shopAllotDetailMapper.deleteByShopAllotId(shopAllot.getId());
         if(shopAllotDetailFormList == null || shopAllotDetailFormList.isEmpty()){
             return ;
         }
-        Map<String, PricesystemDetail> fromPricesystemMap = pricesystemDetailService.findProductPricesystemDetailMap(shopAllot.getFromShopId());
-        Map<String, PricesystemDetail> toPricesystemMap = pricesystemDetailService.findProductPricesystemDetailMap(shopAllot.getToShopId());
+        Map<String, PricesystemDetail> fromPricesystemMap = pricesystemDetailManager.findProductPricesystemDetailMap(shopAllot.getFromShopId());
+        Map<String, PricesystemDetail> toPricesystemMap = pricesystemDetailManager.findProductPricesystemDetailMap(shopAllot.getToShopId());
 
         List<ShopAllotDetail> shopAllotDetailsToBeSaved = new ArrayList<>();
         for(ShopAllotDetailForm each : shopAllotDetailFormList){
             ShopAllotDetail shopAllotDetail = new ShopAllotDetail();
-            ReflectionUtil.copyProperties(each, shopAllotDetail);
             shopAllotDetail.setId(null);
+            shopAllotDetail.setProductId(each.getProductId());
+            shopAllotDetail.setQty(each.getQty());
             shopAllotDetail.setShopAllotId(shopAllot.getId());
             shopAllotDetail.setReturnPrice(fromPricesystemMap.get(shopAllotDetail.getProductId()).getPrice());
             shopAllotDetail.setSalePrice(toPricesystemMap.get(shopAllotDetail.getProductId()).getPrice());
             shopAllotDetailsToBeSaved.add(shopAllotDetail);
         }
 
-
-        shopAllotDetailService.batchSave(shopAllotDetailsToBeSaved);
-
+        shopAllotDetailManager.batchSave(shopAllotDetailsToBeSaved);
 
     }
 
-    public void delete(ShopAllotForm shopAllotForm) {
-        shopAllotMapper.logicDeleteOne(shopAllotForm.getId());
-    }
+    public ShopAllotViewOrAuditForm getViewOrAuditForm(String shopAllotId, String action) {
+        ShopAllotViewOrAuditForm result = new ShopAllotViewOrAuditForm();
 
-    public ShopAllotDto findForViewOrAudit(String shopAllotId) {
-        ShopAllotDto result =  shopAllotMapper.findShopAllotDto(shopAllotId);
-        result.setShopAllotDetailList(shopAllotDetailService.getShopAllotDetailListForViewOrAudit(shopAllotId));
+        ShopAllotDto shopAllotDto =  shopAllotMapper.findShopAllotDto(shopAllotId);
+        cacheUtils.initCacheInput(shopAllotDto);
+
+        result.setShopAllotDto(shopAllotDto);
+        result.setId(shopAllotId);
+
+        result.setShopAllotDetailList(shopAllotDetailManager.getShopAllotDetailListForViewOrAudit(shopAllotId));
 
 //TODO 如果是申请状态，需要看到两个门店的应收
 //        if(AuditType.APPLY.toString().equals(shopAllot.getStatus())) {
@@ -156,37 +165,37 @@ public class ShopAllotService {
 //            shopAllot.getToShop().setShouldGet(k3cloudService.findShouldGet(company.getOutDbname(),shopAllot.getToShop().getOutId()));
 //        }
 
-        cacheUtils.initCacheInput(result);
+
         return result;
     }
 
-    public void audit(ShopAllotAuditForm shopAllotAuditForm) {
+    public void audit(ShopAllotViewOrAuditForm shopAllotViewOrAuditForm) {
 //        Account account = AccountUtils.getAccount();
 //        if(account.getOutId()==null){
 //            return new Message("message_shop_allot_no_finance_message_account",Message.Type.danger);
 //        }
 
-        ShopAllot shopAllot = findOne(shopAllotAuditForm.getId());
-        shopAllot.setStatus(shopAllotAuditForm.getPass() ? AuditTypeEnum.PASSED.name() : AuditTypeEnum.NOT_PASS.name());
-        shopAllot.setAuditRemarks(shopAllotAuditForm.getAuditRemarks());
+        ShopAllot shopAllot = findOne(shopAllotViewOrAuditForm.getId());
+        shopAllot.setStatus("1".equals(shopAllotViewOrAuditForm.getPass()) ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());
+        shopAllot.setAuditRemarks(shopAllotViewOrAuditForm.getAuditRemarks());
         shopAllot.setAuditBy(RequestUtils.getAccountId());
         shopAllot.setAuditDate(LocalDateTime.now());
         shopAllotMapper.update(shopAllot);
 
-        if(!shopAllotAuditForm.getPass()) {
+        if(!"1".equals(shopAllotViewOrAuditForm.getPass())) {
             return;
         }
 
-        if(shopAllotAuditForm.getShopAllotDetailList()!=null){
-            for(ShopAllotDetailForm each : shopAllotAuditForm.getShopAllotDetailList()){
-                ShopAllotDetail  shopAllotDetail = shopAllotDetailService.findOne(each.getId());
+        if(shopAllotViewOrAuditForm.getShopAllotDetailList()!=null){
+            for(ShopAllotDetailForm each : shopAllotViewOrAuditForm.getShopAllotDetailList()){
+                ShopAllotDetail  shopAllotDetail = shopAllotDetailMapper.findOne(each.getId());
                 shopAllotDetail.setReturnPrice(each.getReturnPrice());
                 shopAllotDetail.setSalePrice(each.getSalePrice());
-                shopAllotDetailService.update(shopAllotDetail);
+                shopAllotDetailMapper.update(shopAllotDetail);
             }
         }
 
-        if(shopAllotAuditForm.getSyn()) {
+        if("1".equals(shopAllotViewOrAuditForm.getSyn())) {
 //                Long defaultStoreId = Long.valueOf(Global.getCompanyConfig(shopAllot.getCompany().getId(), CompanyConfigCode.DEFAULT_STORE_ID.getCode()));
 //                shopAllot.setStore(depotDao.findOne(defaultStoreId));
 //                //都不是寄售门店  一出一退

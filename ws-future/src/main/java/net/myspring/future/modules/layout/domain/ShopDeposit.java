@@ -6,6 +6,7 @@ import net.myspring.future.common.domain.CompanyEntity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 
 @Entity
@@ -13,12 +14,21 @@ import java.math.BigDecimal;
 public class ShopDeposit extends CompanyEntity<ShopDeposit> {
     private String shopId;
     private String type;
+    private LocalDate billDate;
     private BigDecimal amount;
     private BigDecimal leftAmount;
     private Integer version = 0;
     private String outCode;
     private String bankId;
     private String cloudSynId;
+
+    public LocalDate getBillDate() {
+        return billDate;
+    }
+
+    public void setBillDate(LocalDate billDate) {
+        this.billDate = billDate;
+    }
 
     public String getShopId() {
         return shopId;

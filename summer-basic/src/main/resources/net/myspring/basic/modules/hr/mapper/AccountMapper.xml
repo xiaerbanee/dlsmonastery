@@ -28,8 +28,9 @@
         where t1.enabled=1
         and t1.login_name LIKE  concat('%',#{p.name},'%')
         <if test="p.type!=null">
-            t1.type=#{p.type}
+           and t1.type=#{p.type}
         </if>
+        limit 0, 100
     </select>
 
     <select id="findAccountPassword" resultType="string">

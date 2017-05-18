@@ -11,7 +11,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.shopId')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="shop"></depot-select>
+              <depot-select v-model="inputForm.shopId" category="adShop"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.length')" prop="length">
               <el-input v-model="inputForm.length"></el-input>
@@ -26,7 +26,7 @@
               <el-input v-model="inputForm.content" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.specialArea')" prop="specialArea">
-              <bool-radio-group v-model="inputForm.isSpecialArea"></bool-radio-group>
+              <bool-radio-group v-model="inputForm.specialArea"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
@@ -101,7 +101,7 @@
                 this.fileList=[];
                 this.submitDisabled = false;
               } else {
-                this.$router.push({name:'shopPrintList',query:util.getQuery("shopPrintList")})
+                this.$router.push({name:'shopAdList',query:util.getQuery("shopAdList")})
               }
             }).catch(function () {
             this.submitDisabled = false;
@@ -121,6 +121,11 @@
     },created(){
       axios.get('/api/ws/future/layout/shopAd/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
+        if(response.data.specialArea ==true){
+            this.inputForm.specialArea = 1;
+        }else{
+          this.inputForm.specialArea = 0;
+        }
         if(this.inputForm.attachment !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
             this.fileList= response.data;

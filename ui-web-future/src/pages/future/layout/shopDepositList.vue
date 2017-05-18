@@ -20,6 +20,10 @@
                   <el-option v-for="item in formData.typeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
+
+              <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
+                <account-select v-model="formData.createdBy"></account-select>
+              </el-form-item>
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
@@ -36,21 +40,21 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopDepositList.loading')" @sort-change="sortChange" stripe border>
 
         <el-table-column fixed prop="id" :label="$t('shopDepositList.billCode')" sortable width="100"></el-table-column>
-        <el-table-column prop="shop.name" :label="$t('shopDepositList.shopName')" sortable></el-table-column>
-        <el-table-column prop="shop.area.name" :label="$t('shopDepositList.areaName')" ></el-table-column>
-        <el-table-column prop="shop.office.name" :label="$t('shopDepositList.officeName')"></el-table-column>
+        <el-table-column prop="shopName" :label="$t('shopDepositList.shopName')" sortable></el-table-column>
+        <el-table-column prop="shopAreaName" :label="$t('shopDepositList.areaName')" ></el-table-column>
+        <el-table-column prop="shopOfficeName" :label="$t('shopDepositList.officeName')"></el-table-column>
         <el-table-column prop="type" :label="$t('shopDepositList.type')"></el-table-column>
         <el-table-column prop="amount" :label="$t('shopDepositList.amount')"></el-table-column>
         <el-table-column prop="leftAmount" :label="$t('shopDepositList.leftAmount')"></el-table-column>
         <el-table-column prop="outCode" :label="$t('shopDepositList.outCode')"></el-table-column>
-        <el-table-column prop="created.fullName" :label="$t('shopDepositList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('shopDepositList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopDepositList.createdDate')"></el-table-column>
-        <el-table-column prop="lastModified.fullName" :label="$t('shopDepositList.lastModifiedBy')"></el-table-column>
+        <el-table-column prop="lastModifiedByName" :label="$t('shopDepositList.lastModifiedBy')"></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('shopDepositList.lastModifiedDate')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopDepositList.remarks')"></el-table-column>
-        <el-table-column prop="created" :label="$t('shopDepositList.locked')"width="100">
+        <el-table-column prop="locked" :label="$t('shopDepositList.locked')"width="100">
           <template scope="scope">
-            <el-tag :type="scope.row.created ? 'primary' : 'danger'">{{scope.row.created | bool2str}}</el-tag>
+            <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="enabled" :label="$t('shopDepositList.enabled')" width="100">
@@ -65,7 +69,13 @@
   </div>
 </template>
 <script>
-  export default {
+  import accountSelect from 'components/basic/account-select'
+
+  export default{
+    components:{
+      accountSelect,
+
+    },
     data() {
       return {
         page:{},
@@ -73,11 +83,13 @@
         formData:{},
         submitData:{
           shopName:'',
+          createdBy:'',
           createdDateRange:'',
           type:'',
           remarks:''
         },formLabel:{
           shopName:{label:this.$t('shopDepositList.shopName')},
+          createdBy:{label:this.$t('shopDepositList.createdBy')},
           createdDateRange:{label:this.$t('shopDepositList.createdDate')},
           type:{label:this.$t('shopDepositList.type')},
           remarks:{label:this.$t('shopDepositList.remarks')}
@@ -91,11 +103,12 @@
       pageRequest() {
         this.pageLoading = true;
         util.copyValue(this.formData,this.submitData);
-        util.setQuery("shopDepositList",this.submitData);
-        axios.get('/api/ws/future/crm/shopDeposit',{params:this.submitData}).then((response) => {
+        util.setQuery("dictEnumList",this.submitData);
+        axios.get('/api/ws/future/crm/shopDeposit?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
+
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
@@ -119,7 +132,6 @@
         util.copyValue(that.$route.query,that.formData);
         that.pageRequest();
       });
-
     }
   };
 </script>

@@ -17,7 +17,7 @@ public interface AdPricesystemChangeMapper extends MyMapper<AdPricesystemChange,
 
     Page<AdPricesystemChangeDto> findPage(Pageable pageable, @Param("p")AdPricesystemChangeQuery adPricesystemChangeQuery);
 
-    List<AdPricesystemChange> findFilter(@Param("p") Map<String, Object> map);
+    List<AdPricesystemChangeDto> findFilter(@Param("p")AdPricesystemChangeQuery adPricesystemChangeQuery);
 
 
 }

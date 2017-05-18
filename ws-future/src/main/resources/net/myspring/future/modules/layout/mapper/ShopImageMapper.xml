@@ -4,7 +4,7 @@
 
     <select id="findPage" resultType="ShopImageDto">
         SELECT
-        depot.office_Id officeId,depot.area_Id areaId,t1.*
+        depot.office_Id officeId,t1.*
         FROM
         crm_shop_image t1,
         crm_depot depot

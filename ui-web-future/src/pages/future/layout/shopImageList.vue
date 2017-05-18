@@ -14,8 +14,8 @@
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="SHOP"></depot-select>
+              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
+                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -58,8 +58,8 @@
           officeId:"",
           shopId:""
         },formLabel:{
-          officeId:{label:this.$t('shopImageList.areaName')},
-          shopName:{label:this.$t('shopImageList.shopName')}
+          officeId:{label:this.$t('shopImageList.officeName')},
+          shopId:{label:this.$t('shopImageList.shopName')}
         },
         formLabelWidth: '120px',
         formVisible: false,

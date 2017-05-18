@@ -5,6 +5,7 @@ import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
 import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import net.myspring.future.modules.layout.domain.ShopAd;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,11 +20,60 @@ public class ShopAdForm extends DataForm<ShopAd>{
     private BigDecimal width;
     private Integer qty;
     private String content;
-    private String specialArea;
+    private Boolean specialArea;
     private String attachment;
     private BigDecimal price;
     private List<ShopAdTypeDto> shopAdTypeFormList = Lists.newArrayList();
+
+    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
+    private String shopName;
+    @CacheInput(inputKey = "shopAdTypes", inputInstance = "shopAdTypeId", outputInstance = "name")
+    private String shopAdTypeName;
     private String processInstanceId;
+    private Boolean pass;
+    private String passRemarks;
+
+    private List<String> ids;
+
+    public List<String> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<String> ids) {
+        this.ids = ids;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public String getShopAdTypeName() {
+        return shopAdTypeName;
+    }
+
+    public void setShopAdTypeName(String shopAdTypeName) {
+        this.shopAdTypeName = shopAdTypeName;
+    }
+
+    public Boolean getPass() {
+        return pass;
+    }
+
+    public void setPass(Boolean pass) {
+        this.pass = pass;
+    }
+
+    public String getPassRemarks() {
+        return passRemarks;
+    }
+
+    public void setPassRemarks(String passRemarks) {
+        this.passRemarks = passRemarks;
+    }
 
     public String getProcessInstanceId() {
         return processInstanceId;
@@ -81,11 +131,11 @@ public class ShopAdForm extends DataForm<ShopAd>{
         this.content = content;
     }
 
-    public String getSpecialArea() {
+    public Boolean getSpecialArea() {
         return specialArea;
     }
 
-    public void setSpecialArea(String specialArea) {
+    public void setSpecialArea(Boolean specialArea) {
         this.specialArea = specialArea;
     }
 

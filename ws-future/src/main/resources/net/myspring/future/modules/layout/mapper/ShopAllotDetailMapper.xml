@@ -7,32 +7,50 @@
         select t1.* from crm_shop_allot_detail t1 where t1.shop_allot_id  = #{shopAllotId}
     </select>
 
-    <select id="getShopAllotDetailListForEdit" resultType="ShopAllotDetailDto">
-
-        select validProduct.id productId, validProduct.productName productName, detail.*
-        from  (select t1.id id, t1.name productName
-                    from crm_product t1
-                    where t1.id in (select t2.product_id from crm_pricesystem_detail t2 where t2.pricesystem_id = (select depot1.pricesystem_id from crm_depot depot1 where depot1.id = #{fromDepotId}))
-                    and t1.id in (select t3.product_id from crm_pricesystem_detail t3 where t3.pricesystem_id =  (select depot2.pricesystem_id from crm_depot depot2 where depot2.id = #{toDepotId}))
-                    and t1.enabled=1) validProduct LEFT JOIN crm_shop_allot_detail detail
-                    ON validProduct.id = detail.product_id and  detail.shop_allot_id = #{shopAllotId}
+    <select id="getShopAllotDetailListForNewOrEdit" resultType="ShopAllotDetailDto">
+        SELECT
+            result.productId,
+            result.productName,
+            result.qty
+        FROM
+            (
+                (
+                    SELECT
+                        t1.product_id productId,
+                        t2.name productName,
+                        t1.qty
+                    FROM
+                        crm_shop_allot_detail t1,
+                        crm_product t2
+                    WHERE
+                        t1.shop_allot_id = #{shopAllotId}
+                    AND t1.product_id = t2.id
+                )
+                UNION ALL
+                    (
+                        SELECT
+                            t1.id productId,
+                            t1.name productName,
+                            NULL qty
+                        FROM
+                            crm_product t1
+                        WHERE
+                            t1.enabled = 1
+                            AND t1.id IN ( SELECT t2.product_id FROM crm_pricesystem_detail t2 WHERE  t2.pricesystem_id = (SELECT depot1.pricesystem_id from crm_depot depot1 where depot1.id = #{fromDepotId})  )
+                            AND t1.id IN ( SELECT t3.product_id FROM crm_pricesystem_detail t3 WHERE  t3.pricesystem_id = (SELECT depot2.pricesystem_id from crm_depot depot2 where depot2.id = #{fromDepotId}) )
+                            AND NOT EXISTS (
+                                SELECT  *
+                                FROM crm_shop_allot_detail detail
+                                WHERE detail.shop_allot_id = #{shopAllotId} AND detail.product_id = t1.id
+                            )
+                    )
+            ) result
+        ORDER BY
+            result.qty DESC
     </select>
-
-
-    <select id="getShopAllotDetailListForNew" resultType="ShopAllotDetailDto">
-
-        select t1.id productId, t1.name productName
-        from crm_product t1
-        where t1.id in (select t2.product_id from crm_pricesystem_detail t2 where t2.pricesystem_id = (select depot1.pricesystem_id from crm_depot depot1 where depot1.id = #{fromDepotId}))
-        and t1.id in (select t3.product_id from crm_pricesystem_detail t3 where t3.pricesystem_id =  (select depot2.pricesystem_id from crm_depot depot2 where depot2.id = #{toDepotId}))
-        and t1.enabled=1
-
-    </select>
-
 
     <select id="getShopAllotDetailListForViewOrAudit" resultType="ShopAllotDetailDto">
-
-        select t2.name productName, t1.*
+        select  t1.id, t1.product_id, t1.shop_allot_id, t1.qty, t1.return_price, t1.sale_price, t2.name productName
         from  crm_shop_allot_detail t1 , crm_product t2
         WHERE  t1.product_id = t2.id  and  t1.shop_allot_id = #{shopAllotId}
     </select>

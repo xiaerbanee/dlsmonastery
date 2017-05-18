@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.input.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
@@ -15,6 +16,7 @@ import java.util.Map;
  * Created by liuj on 2017/5/11.
  */
 public class SalReturnStockDto {
+    //创建人
     private String creator;
     // 客户编码
     private String customerNumber;
@@ -95,6 +97,7 @@ public class SalReturnStockDto {
         this.salReturnStockFEntityDtoList = salReturnStockFEntityDtoList;
     }
 
+    @JsonIgnore
     public String getJson() {
         Map<String, Object> root = Maps.newLinkedHashMap();
         root.put("Creator", getCreator());
@@ -143,7 +146,8 @@ public class SalReturnStockDto {
         subHeadEntity.put("FExchangeRate", 1);
         subHeadEntity.put("FLocalCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
         subHeadEntity.put("FExchangeTypeId", CollectionUtil.getMap("FNumber", "HLTX01_SYS"));
-        model.put("SAL_RETURNSTOCK__SubHeadEntity", subHeadEntity);
+        subHeadEntity.put("FSettleCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
+        model.put("SubHeadEntity", subHeadEntity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
         System.out.println(result);

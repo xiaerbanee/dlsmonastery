@@ -83,9 +83,10 @@ public class BankInService {
     public BankIn save(BankInForm bankInForm) {
         BankIn bankIn;
         if(bankInForm.isCreate()) {
-
-            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("销售收款",  bankInForm.getId(),BankIn.class.getSimpleName(),bankInForm.getAmount().toString()));
             bankIn = BeanUtil.map(bankInForm, BankIn.class);
+            bankInMapper.save(bankIn);
+
+            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("销售收款",  bankIn.getId(),BankIn.class.getSimpleName(),bankIn.getAmount().toString()));
             bankIn.setProcessFlowId(activitiStartDto.getProcessFlowId());
             bankIn.setProcessStatus(activitiStartDto.getProcessStatus());
             bankIn.setProcessInstanceId(activitiStartDto.getProcessInstanceId());

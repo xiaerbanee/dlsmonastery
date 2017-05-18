@@ -7,16 +7,16 @@ import net.myspring.future.modules.layout.dto.ShopAdDto;
 import net.myspring.future.modules.layout.service.ShopAdService;
 import net.myspring.future.modules.layout.web.form.ShopAdForm;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "layout/shopAd")
@@ -49,23 +49,26 @@ public class ShopAdController {
     }
 
     @RequestMapping(value = "findForm")
-    public ShopAdForm detail(ShopAdForm shopAdForm) {
+    public ShopAdForm findForm(ShopAdForm shopAdForm) {
         return shopAdService.findForm(shopAdForm);
     }
 
-    @RequestMapping(value = "audit", method = RequestMethod.GET)
-    public String audit() {
-        return null;
+    @RequestMapping(value = "audit")
+    public RestResponse audit(ShopAdForm shopAdForm) {
+        shopAdService.audit(shopAdForm);
+        return new RestResponse("审批成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "batchAudit")
-    public RestResponse batchAudit(Boolean pass, @RequestParam(value = "ids[]")String[] ids) {
-        return null;
+    public RestResponse batchAudit(ShopAdForm shopAdForm) {
+        shopAdService.batchAudit(shopAdForm);
+        return new RestResponse("审批成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public ModelAndView export(org.apache.catalina.servlet4preview.http.HttpServletRequest request) {
-        return null;
+    public String export(ShopAdQuery shopAdQuery) throws IOException{
+        Workbook workbook = new SXSSFWorkbook(10000);
+        return shopAdService.findSimpleExcelSheets(workbook,shopAdQuery);
     }
 
     private List<String> getActionList( ) {

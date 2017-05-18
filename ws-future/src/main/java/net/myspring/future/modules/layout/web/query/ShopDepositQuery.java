@@ -10,15 +10,22 @@ import java.util.List;
 public class ShopDepositQuery extends BaseQuery {
 
     private String shopName;
+    private String createdBy;
     private String type;
     private String remarks;
-
     private String createdDateRange;
 
     private LocalDateTime createdDateStart;
     private LocalDateTime createdDateEnd;
     private List<String> typeList= Lists.newArrayList();
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public String getType() {
         return type;

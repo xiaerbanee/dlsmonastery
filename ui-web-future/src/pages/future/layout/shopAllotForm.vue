@@ -4,20 +4,19 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <template>
-
           <el-alert :title="message" type="error" show-icon v-if="message !==''"></el-alert>
         </template>
         <el-form-item :label="$t('shopAllotForm.fromShop')" prop="fromShopId">
-            <depot-select :disabled="!isCreate" type="SHOP" v-model="inputForm.fromShopId"  @input="refreshProductListIfNeeded" ></depot-select>
+            <depot-select :disabled="!isCreate" category="directShop" v-model="inputForm.fromShopId"  @input="refreshProductListIfNeeded" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('shopAllotForm.toShop')" prop="toShopId">
-          <depot-select :disabled="!isCreate"  type="SHOP" v-model="inputForm.toShopId"   @input="refreshProductListIfNeeded"></depot-select>
+          <depot-select :disabled="!isCreate"  category="directShop" v-model="inputForm.toShopId"   @input="refreshProductListIfNeeded"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('shopAllotForm.remarks')" prop="remarks">
           <el-input type="textarea" v-model="inputForm.remarks"></el-input>
         </el-form-item>
 
-        <div v-if="inputForm.shopAllotDetailFormList!=null && inputForm.shopAllotDetailFormList.length >0 ">
+        <div v-if="inputForm.fromShopId && inputForm.toShopId ">
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('shopAllotForm.save')}}</el-button>
         </el-form-item>
@@ -101,9 +100,10 @@
         this.submitData.shopAllotDetailFormList = tempList;
       }
       ,refreshProductListIfNeeded(){
-        if(this.inputForm.fromShopId!=='' && this.inputForm.toShopId!=='' && this.isCreate){
+          //只有新增的时候才会刷新产品列表，修改的时候不能修改fromShop和toShop，所以也就不需要再次加载产品列表
+        if(this.inputForm.fromShopId && this.inputForm.toShopId && !this.inputForm.id){
           this.message='';
-          axios.get('/api/ws/future/crm/shopAllot/getShopAllotDetailFormList',{params:{fromShopId:this.inputForm.fromShopId,toShopId:this.inputForm.toShopId}}).then((response)=>{
+          axios.get('/api/ws/future/crm/shopAllot/getShopAllotDetailFormListForNew',{params:{fromShopId:this.inputForm.fromShopId,toShopId:this.inputForm.toShopId}}).then((response)=>{
             if(!response.data.success){
               this.message=response.data.message;
 
@@ -118,7 +118,6 @@
         let val=this.productName;
         let tempList=new Array();
         for(let each of this.inputForm.shopAllotDetailFormList){
-
           if(util.isNotBlank(each.qty)){
             tempList.push(each);
           }
@@ -129,12 +128,11 @@
           }
         }
         this.filterShopAllotDetailList = tempList;
-
       }
     },created(){
       axios.get('/api/ws/future/crm/shopAllot/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
-        this.filterShopAllotDetailList = this.inputForm.shopAllotDetailFormList;
+        this.searchDetail();
       })
     }
   }

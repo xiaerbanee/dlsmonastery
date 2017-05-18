@@ -7,9 +7,8 @@ import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.service.ShopAllotDetailService;
 import net.myspring.future.modules.layout.service.ShopAllotService;
-import net.myspring.future.modules.layout.web.form.ShopAllotAuditForm;
-import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotForm;
+import net.myspring.future.modules.layout.web.form.ShopAllotViewOrAuditForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "crm/shopAllot")
@@ -39,9 +36,9 @@ public class ShopAllotController {
         return page;
     }
 
-    @RequestMapping(value = "delete")
-    public RestResponse delete(ShopAllotForm shopAllotForm) {
-        shopAllotService.delete(shopAllotForm);
+    @RequestMapping(value = "logicDelete")
+    public RestResponse logicDelete(String id) {
+        shopAllotService.logicDeleteOne(id);
         RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
 
@@ -54,21 +51,21 @@ public class ShopAllotController {
     }
 
     @RequestMapping(value = "audit")
-    public RestResponse audit(ShopAllotAuditForm shopAllotAuditForm) {
+    public RestResponse audit(ShopAllotViewOrAuditForm shopAllotViewOrAuditForm) {
 
-        shopAllotService.audit(shopAllotAuditForm);
+        shopAllotService.audit(shopAllotViewOrAuditForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "getShopAllotDetailFormList")
-    public ShopAllotForm getShopAllotDetailFormList(ShopAllotForm shopAllotForm) {
-        if(shopAllotForm.getFromShopId()==null || shopAllotForm.getToShopId()==null){
+    @RequestMapping(value = "getShopAllotDetailFormListForNew")
+    public ShopAllotForm getShopAllotDetailFormListForNew(String fromShopId, String toShopId) {
+        if(fromShopId==null || toShopId==null){
             ShopAllotForm resultForm = new ShopAllotForm();
             resultForm.setSuccess(Boolean.TRUE);
             return resultForm;
         }
 
-        String message = shopAllotService.checkShop(shopAllotForm.getFromShopId(), shopAllotForm.getToShopId());
+        String message = shopAllotService.checkShop(fromShopId, toShopId);
 
         if(!StringUtils.isBlank(message)){
             ShopAllotForm resultForm = new ShopAllotForm();
@@ -77,15 +74,8 @@ public class ShopAllotController {
             return resultForm;
         }
 
-        List<ShopAllotDetailForm> resultList = null;
-        if(shopAllotForm.isCreate()){
-            resultList = shopAllotDetailService.getShopAllotDetailListForNew(shopAllotForm.getFromShopId(), shopAllotForm.getToShopId());
-        }else{
-            resultList = shopAllotDetailService.getShopAllotDetailListForEdit(shopAllotForm.getId(), shopAllotForm.getFromShopId(), shopAllotForm.getToShopId());
-        }
-
         ShopAllotForm resultForm = new ShopAllotForm();
-        resultForm.setShopAllotDetailFormList(resultList);
+        resultForm.setShopAllotDetailFormList(shopAllotDetailService.getShopAllotDetailListForNewOrEdit(null, fromShopId, toShopId));
         resultForm.setSuccess(Boolean.TRUE);
 
         return resultForm;
@@ -100,12 +90,11 @@ public class ShopAllotController {
     }
 
 
-    @RequestMapping(value="findForViewOrAudit")
-    public ShopAllotDto findForViewOrAudit(ShopAllotForm shopAllotForm) {
+    @RequestMapping(value="getViewOrAuditForm")
+    public ShopAllotViewOrAuditForm getViewOrAuditForm(String id, String action) {
 
-        return  shopAllotService.findForViewOrAudit(shopAllotForm.getId());
+        return  shopAllotService.getViewOrAuditForm(id, action);
     }
-
 
 
     @RequestMapping(value="getQuery")

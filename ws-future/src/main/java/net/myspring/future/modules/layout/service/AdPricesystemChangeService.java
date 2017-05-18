@@ -12,8 +12,10 @@ import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.mapper.AdPricesystemChangeMapper;
+import net.myspring.future.modules.layout.web.form.AdPricesystemChangeForm;
 import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,9 +51,10 @@ public class AdPricesystemChangeService {
         return page;
     }
 
-    public List<AdPricesystemChange> findFilter(Map<String, Object> map) {
-        List<AdPricesystemChange> page = adPricesystemChangeMapper.findFilter(map);
-        return page;
+    public List<AdPricesystemChangeForm> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
+        List<AdPricesystemChangeDto> page = adPricesystemChangeMapper.findFilter(adPricesystemChangeQuery);
+        List<AdPricesystemChangeForm> adPricesystemChangeForms = BeanUtil.map(page,AdPricesystemChangeForm.class);
+        return adPricesystemChangeForms;
     }
 
     public void save(List<List<String>> data){
