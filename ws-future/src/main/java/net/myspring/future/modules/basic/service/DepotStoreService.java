@@ -12,17 +12,20 @@ import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springside.modules.utils.mapper.BeanMapper;
 
 /**
  * Created by liuj on 2017/5/12.
  */
 @Service
+@Transactional
 public class DepotStoreService {
     @Autowired
     private DepotStoreMapper depotStoreMapper;
@@ -44,6 +47,7 @@ public class DepotStoreService {
             DepotStore depotStore =depotStoreMapper.findOne(depotStoreForm.getId());
             depotStoreForm= BeanUtil.map(depotStore,DepotStoreForm.class);
             Depot depot=depotMapper.findOne(depotStoreForm.getDepotId());
+            depot.setLastModifiedDate(null);
             depotStoreForm.setDepotForm(BeanMapper.map(depot,DepotForm.class));
             cacheUtils.initCacheInput(depotStoreForm);
         }
@@ -64,6 +68,9 @@ public class DepotStoreService {
             depotStoreMapper.save(depotStore);
         } else {
             depotStore = depotStoreMapper.findOne(depotStoreForm.getId());
+            ReflectionUtil.copyProperties(depotStoreForm,depotStore);
+            depotStore.setDepotId(depot.getId());
+            depotStoreMapper.update(depotStore);
         }
         return depotStore;
     }
