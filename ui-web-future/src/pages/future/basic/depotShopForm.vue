@@ -4,18 +4,15 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item label="选择仓库" prop="depotId">
-          <el-select v-model="inputForm.depotId" filterable>
-            <el-option v-for="item in depotList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <depot-select v-model="inputForm.depotId" category="shop"></depot-select>
         </el-form-item>
-
+        <el-form-item label="有无导购" prop="hasGuide">
+          <bool-radio-group v-model="inputForm.hasGuide"></bool-radio-group>
+        </el-form-item>
         <el-form-item label="地区属性" prop="areaType">
           <el-select v-model="inputForm.areaType">
             <dict-map-select v-model="inputForm.areaType"  category="门店_地区属性" ></dict-map-select>
           </el-select>
-        </el-form-item>
-        <el-form-item label="有无导购" prop="hasGuide">
-          <bool-radio-group v-model="inputForm.hasGuide"></bool-radio-group>
         </el-form-item>
         <el-form-item label="运营商类型" prop="carrierType">
           <dict-map-select v-model="inputForm.carrierType"  category="门店_运营商属性" ></dict-map-select>
@@ -30,7 +27,9 @@
           <dict-map-select v-model="inputForm.salePointType"  category="门店_售点类型" ></dict-map-select>
         </el-form-item>
         <el-form-item label="乡镇类型" prop="townType">
-          <dict-map-select v-model="inputForm.townType"  category="门店_地区属性" ></dict-map-select>
+          <el-select v-model="inputForm.townType"  filterable   :clearable=true >
+            <el-option v-for="item in inputForm.townTypeList"  :key="item" :label="item" :value="item"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="是否核心商圈" prop="bussinessCenter">
           <bool-radio-group v-model="inputForm.bussinessCenter"></bool-radio-group>
@@ -78,8 +77,9 @@
 <script>
   import boolRadioGroup from 'components/common/bool-radio-group'
   import dictMapSelect from 'components/basic/dict-map-select'
+  import depotSelect from 'components/future/depot-select'
   export default {
-    components:{dictMapSelect,boolRadioGroup},
+    components:{dictMapSelect,boolRadioGroup,depotSelect},
     data(){
       return{
         isCreate:this.$route.query.id==null,

@@ -1,12 +1,13 @@
 package net.myspring.future.modules.layout.service;
 
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.basic.mapper.BankMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
+import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
 import net.myspring.future.modules.layout.web.form.ShopDepositForm;
 import net.myspring.future.modules.layout.web.query.ShopDepositQuery;
@@ -53,6 +54,7 @@ public class ShopDepositService {
     }
 
     public int save(ShopDeposit shopDeposit){
+	    //TODO 調用金蝶
 	    return shopDepositMapper.save(shopDeposit);
     }
 
@@ -84,6 +86,7 @@ public class ShopDepositService {
     }
 
     public void save(ShopDepositForm shopDepositForm) {
+
         if(!shopDepositForm.isCreate()){
             throw new ServiceException();
         }
@@ -97,32 +100,42 @@ public class ShopDepositService {
         if(shopDepositForm.isDemoPhoneAmountPositive()){
             save(genShopDepositFromForm(shopDepositForm, ShopDepositTypeEnum.演示机押金, shopDepositForm.getDemoPhoneAmount()));
         }
+
+        if(!OutBillTypeEnum.不同步到金蝶.name().equals(shopDepositForm.getOutBillType())){
+            //        TODO 同步到金蝶
+//            k3cloudSynService.syn(idList, K3CloudSynEntity.ExtendType.押金列表.name());
+       }
+
     }
 
-    private ShopDeposit genShopDepositFromForm(ShopDepositForm shopDepositForm, ShopDepositTypeEnum type, BigDecimal amout) {
+    private ShopDeposit genShopDepositFromForm(ShopDepositForm shopDepositForm, ShopDepositTypeEnum type, BigDecimal amount) {
         ShopDeposit shopDeposit  = new ShopDeposit();
         shopDeposit.setShopId(shopDepositForm.getShopId());
-        shopDeposit.setAmount(amout);
+        shopDeposit.setBankId(shopDepositForm.getBankId());
+        shopDeposit.setBillDate(shopDepositForm.getBillDate());
+        shopDeposit.setAmount(amount);
         shopDeposit.setType(type.name());
         shopDeposit.setLocked(Boolean.FALSE);
         shopDeposit.setEnabled(Boolean.TRUE);
-        shopDeposit.setRemarks(shopDepositForm.getRemarks());
+        shopDeposit.setRemarks(type.name()+"  "+shopDepositForm.getRemarks());
 
-        shopDeposit.setLeftAmount(getLeftAmout(shopDepositForm.getShopId(), type.name()).add(amout));
+        shopDeposit.setLeftAmount(getLeftAmout(shopDepositForm.getShopId(), type.name()).add(amount));
         return shopDeposit;
     }
 
     private BigDecimal getLeftAmout(String shopId, String type) {
-        List<ShopDeposit> resultList = shopDepositMapper.findByTypeAndShopId(shopId, type, 1);
-        if(resultList!=null && resultList.size()>0){
-            return resultList.get(0).getLeftAmount();
-        }else {
-            return BigDecimal.ZERO;
+        List<ShopDeposit> sdList = shopDepositMapper.findByTypeAndShopId(shopId, type, 1);
+        BigDecimal result = null;
+        if(sdList!=null && sdList.size()>0){
+            result = sdList.get(0).getLeftAmount();
         }
-
+        if(result == null){
+            result = BigDecimal.ZERO;
+        }
+        return result;
     }
 
-    public void delete(ShopDepositForm shopDepositForm) {
+    public void logicDelete(ShopDepositForm shopDepositForm) {
         shopDepositMapper.logicDeleteOne(shopDepositForm.getId());
     }
 }

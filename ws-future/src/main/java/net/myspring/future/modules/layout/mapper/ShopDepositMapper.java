@@ -18,6 +18,6 @@ public interface ShopDepositMapper extends MyMapper<ShopDeposit,String> {
 
     List<ShopDeposit> findByTypeAndShopIds(@Param("type") String type, @Param("shopIds") List<String> shopIds);
 
-    List<ShopDeposit> findByTypeAndShopId(@Param("type") String type, @Param("shopId") String shopId, @Param("size") Integer size);
+    List<ShopDeposit> findByTypeAndShopId(@Param("shopId") String shopId, @Param("type") String type, @Param("size") Integer size);
 
 }

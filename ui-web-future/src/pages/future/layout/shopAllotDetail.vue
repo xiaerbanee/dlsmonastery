@@ -6,66 +6,56 @@
         <el-row :gutter="4">
           <el-col :span="12">
             <el-form-item :label="$t('shopAllotDetail.billCode')">
-              {{inputForm.id}}
+              {{inputForm.shopAllotDto.formatId}}
             </el-form-item>
             <el-form-item :label="$t('shopAllotDetail.status')">
-              {{inputForm.status}}
+              {{inputForm.shopAllotDto.status}}
             </el-form-item>
-            <el-form-item :label="$t('shopAllotDetail.outSaleCode')" v-if="inputForm.outSaleCode !=''">
-              {{inputForm.outSaleCode}}
+            <el-form-item :label="$t('shopAllotDetail.outSaleCode')" v-if="inputForm.shopAllotDto.outSaleCode !=''">
+              {{inputForm.shopAllotDto.outSaleCode}}
             </el-form-item>
-            <el-form-item :label="$t('shopAllotDetail.outReturnCode')" v-if="inputForm.outReturnCode !=''">
-              {{inputForm.outReturnCode}}
+            <el-form-item :label="$t('shopAllotDetail.outReturnCode')" v-if="inputForm.shopAllotDto.outReturnCode !=''">
+              {{inputForm.shopAllotDto.outReturnCode}}
             </el-form-item>
 
             <el-form-item :label="$t('shopAllotDetail.saleTotalPrice')">
-              {{inputForm.saleTotalPrice}}
+              {{inputForm.shopAllotDto.saleTotalPrice}}
             </el-form-item>
             <el-form-item :label="$t('shopAllotDetail.remarks')" >
-              {{inputForm.remarks}}
+              {{inputForm.shopAllotDto.remarks}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('shopAllotDetail.fromShop')"  >
-              {{inputForm.fromShopName}}
+              {{inputForm.shopAllotDto.fromShopName}}
               <div v-if="inputForm.status== '申请中'">
                 {{$t('shopAllotDetail.shouldGet')}} {{inputForm.fromShopShouldGet}}
               </div>
             </el-form-item>
             <el-form-item :label="$t('shopAllotDetail.toShop')">
 
-              {{inputForm.toShopName}}
+              {{inputForm.shopAllotDto.toShopName}}
               <div v-if="inputForm.status== '申请中'">
                 {{$t('shopAllotDetail.shouldGet')}} {{inputForm.toShopShouldGet}}
               </div>
 
             </el-form-item>
 
-            <div v-if="isAudit">
+            <div v-if="action == 'audit'">
               <el-form-item :label="$t('shopAllotDetail.syn')">
-                <el-radio-group v-model="auditForm.syn">
-                  <el-radio :label="true">{{$t('shopAllotDetail.true')}}</el-radio>
-                  <el-radio :label="false">{{$t('shopAllotDetail.false')}}</el-radio>
-                </el-radio-group>
+                <bool-radio-group v-model="inputForm.syn"></bool-radio-group>
               </el-form-item>
 
               <el-form-item :label="$t('shopAllotDetail.pass')">
-                <el-radio-group v-model="auditForm.pass">
-                  <el-radio :label="true">{{$t('shopAllotDetail.true')}}</el-radio>
-                  <el-radio :label="false">{{$t('shopAllotDetail.false')}}</el-radio>
-                </el-radio-group>
+                <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
               </el-form-item>
-
               <el-form-item :label="$t('shopAllotDetail.auditRemarks')">
-                <el-input type="textarea" v-model="auditForm.auditRemarks"></el-input>
+                <el-input type="textarea" v-model="inputForm.auditRemarks"></el-input>
               </el-form-item>
               <el-form-item >
                 <el-button size="small"  @click.native="auditSubmit">{{$t('shopAllotDetail.save')}}</el-button>
               </el-form-item>
             </div>
-
-
-
           </el-col>
         </el-row>
         <el-table :data="inputForm.shopAllotDetailList"  style="margin-top:5px;"   stripe border >
@@ -87,26 +77,28 @@
   </div>
 </template>
 <script>
+  import boolRadioGroup from 'components/common/bool-radio-group'
+
   export default{
+    components:{
+      boolRadioGroup,
+
+    },
     data(){
       return {
         inputForm: {
-        },
-        auditForm:{
-          syn:true,
-          pass:false,
-          auditRemarks:'',
+          shopAllotDto:{},
         },
         submitData:{
           id:'',
-          syn:true,
-          pass:false,
+          syn:'',
+          pass:'',
           auditRemarks:'',
           shopAllotDetailList:[],
         },
         isView:(this.$route.query.action == 'view'),
-        isAudit:(this.$route.query.action == 'audit'),
         submitDisabled:false,
+        action:this.$route.query.action,
       }
     }, methods:{
       auditSubmit(){
@@ -116,7 +108,6 @@
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm, this.submitData);
-            util.copyValue(this.auditForm, this.submitData);
             axios.post('/api/ws/future/crm/shopAllot/audit', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
@@ -131,9 +122,9 @@
         })
       }
     },created(){
-      axios.get('/api/ws/future/crm/shopAllot/findForViewOrAudit', {params: {id: this.$route.query.id}}).then((response) => {
+      axios.get('/api/ws/future/crm/shopAllot/getViewOrAuditForm', {params: {id: this.$route.query.id, action:this.$route.query.action}}).then((response) => {
         this.inputForm = response.data;
-      })
+      });
     }
   }
 </script>

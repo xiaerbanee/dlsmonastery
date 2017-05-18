@@ -460,7 +460,8 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "ubah"
+    audit: "ubah",
+    auditDateRange:'审核时间',
   },
   shopBuildDetail: {
     shopBuildDetail: "Detail konstruksi toko",
