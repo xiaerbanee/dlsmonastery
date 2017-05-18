@@ -6,10 +6,12 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopPrintForm.officeName')" prop="officeName">
-              <office-select v-model="inputForm.officeId"></office-select>
+              <office-select v-model="inputForm.officeId" :disabled="officeDisabled"></office-select>
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.printType')" prop="printType">
-              <dict-map-select v-model="inputForm.printType" category="门店_广告印刷"></dict-map-select>
+              <dict-map-select v-model="inputForm.printType" category="门店_广告印刷" @input="typeChange"></dict-map-select>
+            </el-form-item>
+            <el-form-item :label="$t('shopPrintForm.printTypeContent')" prop="printTypeContent">{{printTypeContent}}
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.qty')" prop="qty">
               <el-input v-model.number="inputForm.qty" ></el-input>
@@ -54,8 +56,9 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        shopDiabled:false,
+        officeDisabled:false,
         formProperty:{},
+        printTypeContent:'',
         fileList:[],
         inputForm:{},
         submitData:{
@@ -107,6 +110,10 @@
             this.submitDisabled = false;
           }
         })
+      },typeChange(){
+        axios.get('/api/basic/sys/dictMap/findByName?name=' + this.inputForm.printType).then((response)=>{
+          this.printTypeContent=response.data.remarks;
+        })
       },
       handlePreview(file) {
         window.open(file.url);
@@ -118,13 +125,18 @@
     },created(){
       axios.get('/api/ws/future/layout/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
+        if(this.inputForm.printType!=null){
+            this.typeChange();
+        }
         if(this.inputForm.attachment !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
             this.fileList= response.data;
           });
         }
       });
-
+      if(!this.isCreate){
+        this.officeDisabled = true;
+      }
       }
   }
 </script>

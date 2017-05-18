@@ -12,13 +12,10 @@
               <dict-enum-select v-model="inputForm.shopType" category="店面类型"></dict-enum-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.fixtureType')" prop="fixtureType">
-              <dict-enum-select v-model="inputForm.fixtureType" category="装修类别"></dict-enum-select>
+              <dict-enum-select v-model="inputForm.fixtureType" category="装修类别" @input="shopChange"></dict-enum-select>
             </el-form-item>
-            <div v-show="inputForm.fixtureType.indexOf('包柱')>0">
-            <el-form-item :label="$t('shopBuildForm.oldContents')" prop="oldContents" >
-              <el-input v-model="inputForm.oldContents" ></el-input>
+            <el-form-item :label="$t('shopBuildForm.fixtureContent')" prop="fixtureContent">{{fixtureContent}}
             </el-form-item>
-              </div>
             <el-form-item :label="$t('shopBuildForm.newContents')" prop="newContents">
               <el-input v-model="inputForm.newContents" ></el-input>
             </el-form-item>
@@ -68,7 +65,9 @@
         submitDisabled: false,
         shopDisabled:false,
         fileList: [],
-        inputForm: {},
+        fixtureContent:'',
+        inputForm: {
+        },
         submitData:{
           id: '',
           shopId: '',
@@ -119,7 +118,12 @@
             this.submitDisabled = false;
           }
         })
-      },handlePreview(file) {
+      },shopChange(){
+        axios.get('/api/basic/sys/dictEnum/findByValue?value=' + this.inputForm.fixtureType).then((response)=>{
+          this.fixtureContent=response.data.remarks;
+        })
+      },
+      handlePreview(file) {
         window.open(file.url);
       },handleChange(file, fileList) {
         this.fileList = fileList;
@@ -131,6 +135,9 @@
         this.inputForm = response.data;
         if(this.inputForm.id != null){
           this.shopDisabled = true;
+        }
+        if(this.inputForm.fixtureType!=null){
+            this.shopChange();
         }
         if(this.inputForm.scenePhoto !=null) {
             axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{

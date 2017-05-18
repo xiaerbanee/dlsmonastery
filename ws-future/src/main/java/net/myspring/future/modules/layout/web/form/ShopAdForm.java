@@ -30,7 +30,7 @@ public class ShopAdForm extends DataForm<ShopAd>{
     @CacheInput(inputKey = "shopAdTypes", inputInstance = "shopAdTypeId", outputInstance = "name")
     private String shopAdTypeName;
     private String processInstanceId;
-    private Boolean pass;
+    private Boolean pass = false;
     private String passRemarks;
 
     private List<String> ids;

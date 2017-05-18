@@ -35,6 +35,10 @@ public class DictEnumService {
         return dictEnumDtoList;
     }
 
+    public DictEnumDto findByValue(String value){
+        return dictEnumMapper.findByValue(value);
+    }
+
 
     public DictEnumForm findForm(DictEnumForm dictEnumForm) {
         if(!dictEnumForm.isCreate()) {

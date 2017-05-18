@@ -25,33 +25,6 @@ public class ShopBuildForm extends DataForm<ShopBuild>{
     private String content;
     private String scenePhoto;
     private String confirmPhoto;
-    private Boolean pass;
-    private String passRemarks;
-    private List<String> ids;
-
-    public Boolean getPass() {
-        return pass;
-    }
-
-    public void setPass(Boolean pass) {
-        this.pass = pass;
-    }
-
-    public String getPassRemarks() {
-        return passRemarks;
-    }
-
-    public void setPassRemarks(String passRemarks) {
-        this.passRemarks = passRemarks;
-    }
-
-    public List<String> getIds() {
-        return ids;
-    }
-
-    public void setIds(List<String> ids) {
-        this.ids = ids;
-    }
 
     public String getConfirmPhoto() {
         return confirmPhoto;

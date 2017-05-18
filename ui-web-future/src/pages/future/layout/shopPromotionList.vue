@@ -20,7 +20,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="SHOP"></depot-select>
+                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
             </el-col>
           </el-row>

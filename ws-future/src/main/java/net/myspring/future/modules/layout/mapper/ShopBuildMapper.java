@@ -17,5 +17,5 @@ public interface ShopBuildMapper extends MyMapper<ShopBuild,String> {
 
     Page<ShopBuildDto> findPage(Pageable pageable, @Param("p")ShopBuildQuery shopBuildQuery);
 
-    List<ShopBuild> findByFilter(@Param("p") Map<String, Object> map);
+    List<ShopBuildDto> findByFilter(@Param("p")ShopBuildQuery shopBuildQuery);
 }

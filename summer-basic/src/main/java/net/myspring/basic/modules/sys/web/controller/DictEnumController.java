@@ -58,4 +58,9 @@ public class DictEnumController {
     public List<DictEnumDto> findByCategory(String category){
         return dictEnumService.findByCategory(category);
     }
+
+    @RequestMapping(value = "findByValue")
+    public DictEnumDto findByvalue(String value){
+        return dictEnumService.findByValue(value);
+    }
 }

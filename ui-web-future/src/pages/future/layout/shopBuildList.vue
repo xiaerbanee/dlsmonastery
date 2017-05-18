@@ -42,12 +42,12 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="exportData" icon="upload">{{$t('shopBuildList.export')}}</el-button>
+          <el-button type="primary" @click="exportData" v-permit="'crm:shopBuild:view'" icon="upload">{{$t('shopBuildList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('shopBuildList.sure')}}</el-button>
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopBuildList.loading')" @sort-change="sortChange" @selection-change="handleSelectionChange" stripe border>
-        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column fixed prop="id" :label="$t('shopBuildList.code')" sortable></el-table-column>
         <el-table-column prop="officeName" :label="$t('shopBuildList.officeName')" ></el-table-column>
         <el-table-column prop="shopName" :label="$t('shopBuildList.shopName')" ></el-table-column>
@@ -90,6 +90,10 @@
         pageLoading: false,
         page:{},
         formData:{},
+        batchData:{
+            pass:'',
+          ids:'',
+        },
         submitData:{
           page:0,
           size:25,
@@ -140,7 +144,10 @@
         this.formVisible = false;
         this.pageRequest();
       },exportData(){
-        window.location.href= "/api/ws/future/layout/shopBuild/export?"+qs.stringify(this.formData);
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/ws/future/layout/shopBuild/export?'+qs.stringify(this.submitData)).then((response)=> {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        });
       },itemAdd(){
         this.$router.push({ name: 'shopBuildForm'});
       },itemAction:function(id,action){
@@ -159,23 +166,27 @@
           this.$router.push({name: 'shopBuildDetail', query:{id: id,action:action}});
         }
      },handleSelectionChange(val) {
-         var arr = []
+        this.multipleSelection = new Array();
          for(var key in val){
-           arr.push(val[key].id);
+           this.multipleSelection.push(val[key].id);
         }
-        this.multipleSelection = arr;
     },batchPass(){
        console.log(this.multipleSelection);
-      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{pass:true, ids:this.multipleSelection}}).then((response) =>{
+       this.batchData.pass='1';
+         this.batchData.ids=this.multipleSelection;
+      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{pass:'1', ids:this.multipleSelection}}).then((response) =>{
         this.$message(response.data.message);
         this.pageRequest();
       })
     },batchBack(){
-      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{pass:false, ids:this.multipleSelection}}).then((response) =>{
+      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{pass:'0', ids:this.multipleSelection}}).then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })
-    }
+    },
+      checkSelectable(row) {
+        return row.processStatus.indexOf('通过')<0;
+      }
     },
     created () {
         var that = this;
