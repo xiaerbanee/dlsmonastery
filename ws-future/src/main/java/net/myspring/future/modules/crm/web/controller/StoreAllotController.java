@@ -8,7 +8,6 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.enums.StoreAllotTypeEnum;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
-import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.service.*;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -78,6 +76,7 @@ public class StoreAllotController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
+
     @RequestMapping(value = "findForm")
     public StoreAllotForm findForm(StoreAllotForm storeAllotForm) {
 
@@ -107,7 +106,9 @@ public class StoreAllotController {
         }else{
             result = new StoreAllotForm();
             result.setSyn(Boolean.TRUE);
-            result.setStoreAllotDetailFormList(new ArrayList<>());
+            result.setAllotType(storeAllotForm.getAllotType());
+            result.setFromStoreId(storeAllotForm.getFromStoreId());
+            result.setStoreAllotDetailFormList(storeAllotDetailService.findStoreAllotDetailsForNew());
         }
 
         result.setAllotTypeList(StoreAllotTypeEnum.getList());
@@ -115,20 +116,11 @@ public class StoreAllotController {
         result.setShowAllotType(Boolean.TRUE);
 
         return result;
-
-
     }
 
-    @RequestMapping(value = "findForOverview")
-    public StoreAllotDto findForOverview(String id) {
-        StoreAllotDto result = storeAllotService.findStoreAllotDtoById(id);
-        if(result.getExpressOrderId() != null){
-            ExpressOrder expressOrder = expressOrderService.findOne(result.getExpressOrderId());
-            result.setExpressOrderCodes(expressOrder.getExpressCodes());
-        }
-        result.setStoreAllotDetailDtoList(storeAllotDetailService.findByStoreAllotId(id));
-        result.setStoreAllotImeDtoList(storeAllotImeService.findByStoreAllotId(id));
-        return result;
+    @RequestMapping(value = "findForView")
+    public StoreAllotDto findForView(String id) {
+        return storeAllotService.findStoreAllotDtoById(id);
     }
 
     @RequestMapping(value = "getStoreAllotData")
@@ -138,11 +130,6 @@ public class StoreAllotController {
 
     @RequestMapping(value = "getCloudQty")
     public String getCloudQty() {
-        return null;
-    }
-
-    @RequestMapping(value="getFormProperty")
-    public String getFormProperty() {
         return null;
     }
 

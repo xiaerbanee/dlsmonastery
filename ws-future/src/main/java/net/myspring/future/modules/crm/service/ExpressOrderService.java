@@ -3,25 +3,16 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.future.common.enums.ExpressOrderTypeEnum;
-import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ExpressCompanyMapper;
-import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
-import net.myspring.future.modules.crm.domain.GoodsOrder;
-import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.mapper.ExpressMapper;
 import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
 import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
-import net.myspring.future.modules.crm.web.form.StoreAllotDetailForm;
-import net.myspring.future.modules.crm.web.form.StoreAllotForm;
 import net.myspring.future.modules.crm.web.query.ExpressOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -60,8 +51,7 @@ public class ExpressOrderService {
     private DepotMapper depotMapper;
     @Autowired
     private ExpressMapper expressMapper;
-    @Autowired
-    private ProductService productService;
+
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
@@ -80,11 +70,6 @@ public class ExpressOrderService {
         return page;
     }
 
-    public void resetPrintStatus(ExpressOrder expressOrder){
-        expressOrder.setExpressPrintDate(null);
-        expressOrder.setOutPrintDate(null);
-        expressOrderMapper.update(expressOrder);
-    }
 
     public void update(ExpressOrder expressOrder){
         expressOrderMapper.update(expressOrder);
@@ -123,69 +108,6 @@ public class ExpressOrderService {
         expressOrderMapper.update(expressOrder);
     }
 
-    public ExpressOrder saveExpressOrder(StoreAllot storeAllot, StoreAllotForm storeAllotForm) {
-            //增加快递单信息
-        ExpressOrder expressOrder = new ExpressOrder();
-        expressOrder.setExtendBusinessId(storeAllot.getBusinessId());
-        expressOrder.setExtendId(storeAllot.getId());
-        expressOrder.setExtendType(ExpressOrderTypeEnum.大库调拨.name());
-        expressOrder.setExpressCompanyId(storeAllotForm.getExpressCompanyId());
-        expressOrder.setFromDepotId(storeAllot.getFromStoreId());
-        expressOrder.setToDepotId(storeAllot.getToStoreId());
-        expressOrder.setPrintDate(storeAllot.getBillDate());
-        expressOrder.setOutCode(storeAllot.getOutCode());
-
-        Depot toStore = depotMapper.findOne(storeAllot.getToStoreId());
-        expressOrder.setAddress(toStore.getAddress());
-        expressOrder.setMobilePhone(toStore.getMobilePhone());
-        expressOrder.setContator(toStore.getContator());
-
-        Integer totalBillQty = 0;
-        Integer mobileQty = 0;
-        for(int i=storeAllotForm.getStoreAllotDetailFormList().size()-1;i>=0;i--){
-                StoreAllotDetailForm storeAllotDetailForm = storeAllotForm.getStoreAllotDetailFormList().get(i);
-                if(storeAllotDetailForm.getBillQty()!=null && storeAllotDetailForm.getBillQty()>0) {
-                    totalBillQty = totalBillQty + storeAllotDetailForm.getBillQty();
-                    Product product = productService.findOne(storeAllotDetailForm.getProductId());
-                    if(product!=null && product.getHasIme()) {
-                        mobileQty = mobileQty + storeAllotDetailForm.getBillQty();
-                    }
-                }
-            }
-            expressOrder.setTotalQty(totalBillQty);
-            expressOrder.setMobileQty(mobileQty);
-
-            //设置需要打印的快递单个数
-            Integer expressPrintQty = 0;
-            if (ShipTypeEnum.总部发货.name().equals(storeAllot.getShipType())) {
-                expressPrintQty = getExpressPrintQty(totalBillQty);
-            }
-            expressOrder.setExpressPrintQty(expressPrintQty);
-            expressOrderMapper.save(expressOrder);
-        return expressOrder;
-
-    }
-
-    public static Integer getExpressPrintQty(Integer totalBillQty) {
-        //TODO 需要完善该方法，
-        //String companyName= RequestUtils.getCompanyName();
-        Integer expressPrintQty = 1;
-//        if(CompanyNameEnum.JXOPPO.name().equals(companyName)){
-//            expressPrintQty=Const.OPPO_ORDER_EXPRESS_PRODUCT_QTY;
-//        }else if(CompanyNameEnum.JXVIVO.name().equals(companyName)) {
-//            expressPrintQty = Const.VIVO_ORDER_EXPRESS_PRODUCT_QTY;
-//        }else if(CompanyNameEnum.JXIMOO.name().equals(companyName)){
-//            expressPrintQty = Const.IMOO_ORDER_EXPRESS_PRODUCT_QTY;
-//        }else{
-//            expressPrintQty=Const.LX_ORDER_EXPRESS_PRODUCT_QTY;
-//        }
-        if(0 == totalBillQty % expressPrintQty){
-            expressPrintQty = totalBillQty / expressPrintQty;
-        } else{
-            expressPrintQty = totalBillQty / expressPrintQty + 1;
-        }
-        return expressPrintQty;
-    }
 
     public ExpressOrder saveOrUpdate(ExpressOrder expressOrder) {
         if(expressOrder == null){
@@ -200,24 +122,6 @@ public class ExpressOrderService {
     }
 
 
-    public ExpressOrder saveOrUpdateExpressOrder(GoodsOrder goodsOrder) {
-        ExpressOrder expressOrder=null;
-        if(goodsOrder.getExpressOrderId()!=null){
-            expressOrder = expressOrderMapper.findOne(goodsOrder.getExpressOrderId());
-        }else{
-            expressOrder = new ExpressOrder();
-        }
-        expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
-        Depot shop=depotMapper.findOne(goodsOrder.getShopId());
-        expressOrder.setContator(shop.getContator());
-        expressOrder.setAddress(shop.getAddress());
-        expressOrder.setMobilePhone(shop.getMobilePhone());
-        expressOrder.setToDepotId(shop.getId());
-        expressOrder.setShipType(goodsOrder.getShipType());
-        expressOrder.setExtendId(goodsOrder.getId());
-        expressOrder = saveOrUpdate(expressOrder);
-        return expressOrder;
-    }
 
     public ExpressOrder reCalcAndUpdateExpressCodes(String expressOrderId) {
 

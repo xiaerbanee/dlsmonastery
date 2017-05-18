@@ -2,25 +2,75 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.ProductIme;
+import net.myspring.util.cahe.annotation.CacheInput;
+
 import java.time.LocalDateTime;
 
 /**
  * Created by haos on 2017/5/12.
  */
 public class ProductImeDto extends DataDto<ProductIme> {
-    private String billId;
+
     private String ime;
     private String ime2;
-    private LocalDateTime retailDate;
-    private LocalDateTime createdTime;
-    private String inputType;
     private String meid;
-    private String depotName;
-    private LocalDateTime productImeUploadCreateDate;
-    private LocalDateTime productImeSaleCreateDate;
-    private String productName;
+    private LocalDateTime retailDate;
+    private LocalDateTime productImeUploadCreatedDate;
+    private LocalDateTime productImeSaleCreatedDate;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "netType")
     private String productNetType;
+    private String depotId;
+    @CacheInput(inputKey = "depots",inputInstance = "depotId",outputInstance = "name")
+    private String depotName;
+    private String inputType;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
+    private String productName;
+    private String productId;
+
+    private LocalDateTime createdTime;
     private Boolean locked;
+    private Boolean enabled;
+    private String billId;
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public LocalDateTime getProductImeUploadCreatedDate() {
+        return productImeUploadCreatedDate;
+    }
+
+    public void setProductImeUploadCreatedDate(LocalDateTime productImeUploadCreatedDate) {
+        this.productImeUploadCreatedDate = productImeUploadCreatedDate;
+    }
+
+    public LocalDateTime getProductImeSaleCreatedDate() {
+        return productImeSaleCreatedDate;
+    }
+
+    public void setProductImeSaleCreatedDate(LocalDateTime productImeSaleCreatedDate) {
+        this.productImeSaleCreatedDate = productImeSaleCreatedDate;
+    }
+
+    public String getDepotId() {
+        return depotId;
+    }
+
+    public void setDepotId(String depotId) {
+        this.depotId = depotId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
     public Boolean getLocked() {
         return locked;
@@ -92,22 +142,6 @@ public class ProductImeDto extends DataDto<ProductIme> {
 
     public void setDepotName(String depotName) {
         this.depotName = depotName;
-    }
-
-    public LocalDateTime getProductImeUploadCreateDate() {
-        return productImeUploadCreateDate;
-    }
-
-    public void setProductImeUploadCreateDate(LocalDateTime productImeUploadCreateDate) {
-        this.productImeUploadCreateDate = productImeUploadCreateDate;
-    }
-
-    public LocalDateTime getProductImeSaleCreateDate() {
-        return productImeSaleCreateDate;
-    }
-
-    public void setProductImeSaleCreateDate(LocalDateTime productImeSaleCreateDate) {
-        this.productImeSaleCreateDate = productImeSaleCreateDate;
     }
 
     public String getProductName() {

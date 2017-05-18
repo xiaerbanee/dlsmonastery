@@ -89,13 +89,11 @@ public class ShopAllotController {
         return result;
     }
 
-
     @RequestMapping(value="getViewOrAuditForm")
     public ShopAllotViewOrAuditForm getViewOrAuditForm(String id, String action) {
 
         return  shopAllotService.getViewOrAuditForm(id, action);
     }
-
 
     @RequestMapping(value="getQuery")
     public ShopAllotQuery getQuery(ShopAllotQuery shopAllotQuery) {

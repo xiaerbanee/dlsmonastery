@@ -1,29 +1,22 @@
 package net.myspring.future.modules.crm.service;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
-import net.myspring.future.modules.crm.mapper.ProductImeMapper;
-import net.myspring.future.modules.crm.mapper.ProductImeSaleMapper;
-import net.myspring.future.modules.crm.mapper.ProductImeUploadMapper;
+import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
+import net.myspring.future.modules.crm.mapper.*;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.excel.SimpleExcelColumn;
-import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -33,16 +26,35 @@ public class ProductImeService {
     private ProductImeMapper productImeMapper;
     @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    private ImeAllotMapper imeAllotMapper;
+    @Autowired
+    private GoodsOrderImeMapper goodsOrderImeMapper;
+
+    @Autowired
+    private StoreAllotImeMapper storeAllotImeMapper;
+
+    @Autowired
+    private ProductImeUploadMapper productImeUploadMapper;
+
+    @Autowired
+    private ProductImeSaleMapper productImeSaleMapper;
+
+
+
+
+
     @Autowired
     private CacheUtils cacheUtils;
 
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable,ProductImeQuery productImeQuery) {
         productImeQuery.setPageable(pageable);
-        List<ProductIme> productImeList = productImeMapper.findList(productImeQuery);
-        List<ProductImeDto> productImeDtoList= BeanUtil.map(productImeList,ProductImeDto.class);
+        List<ProductImeDto> productImeDtoList = productImeMapper.findList(productImeQuery);
+
         cacheUtils.initCacheInput(productImeDtoList);
-        Page<ProductImeDto> page = new PageImpl(productImeList,pageable,(pageable.getPageNumber()+100)*pageable.getPageSize());
+        Page<ProductImeDto> page = new PageImpl(productImeDtoList,pageable,(pageable.getPageNumber()+100)*pageable.getPageSize());
         return page;
     }
 
@@ -66,5 +78,18 @@ public class ProductImeService {
             }
         }
         return map;
+    }
+
+    public ProductImeDto getProductImeDetail(String id) {
+        return productImeMapper.getProductImeDetail(id);
+
+    }
+
+    public List<ProductImeHistoryDto> getProductImeHistoryList(String productImeId) {
+
+        List<ProductImeHistoryDto> list = productImeMapper.getProductImeHistoryList(productImeId);
+        cacheUtils.initCacheInput(list);
+
+        return list;
     }
 }

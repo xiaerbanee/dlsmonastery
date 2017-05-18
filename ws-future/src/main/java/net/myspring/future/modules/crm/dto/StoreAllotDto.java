@@ -1,8 +1,10 @@
 package net.myspring.future.modules.crm.dto;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,15 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     private Boolean enabled;
     private String expressOrderId;
 
+
+
     private String expressOrderCodes;
+    private List<StoreAllotImeDto> storeAllotImeDtoList = new ArrayList<>();
+    private List<StoreAllotDetailDto> storeAllotDetailDtoList = new ArrayList<>();
+
+    public String getFormatId() {
+        return StringUtils.getFormatId(businessId, CharConstant.FORMATTER_STORE_ALLOT);
+    }
 
     public String getExpressOrderCodes() {
         return expressOrderCodes;
@@ -44,8 +54,6 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     }
 
 
-    private List<StoreAllotDetailDto> storeAllotDetailDtoList = new ArrayList<>();
-
     public List<StoreAllotDetailDto> getStoreAllotDetailDtoList() {
         return storeAllotDetailDtoList;
     }
@@ -61,8 +69,6 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     public void setStoreAllotImeDtoList(List<StoreAllotImeDto> storeAllotImeDtoList) {
         this.storeAllotImeDtoList = storeAllotImeDtoList;
     }
-
-    private List<StoreAllotImeDto> storeAllotImeDtoList = new ArrayList<>();
 
 
 

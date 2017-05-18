@@ -229,6 +229,7 @@ export default {
       productAdEdit: "Material Editor",
       productForm: "manajemen barang",
       productImeList: "daftar string kdoe",
+      productImeDetail: "串码详情",
       productImeSaleForm: "verifikasi string kode",
       productImeSaleList: "verfikasi string kode",
       productImeUploadForm: "laporan string kode",

@@ -2,9 +2,19 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.StoreAllotDetail;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 public class StoreAllotDetailDto extends DataDto<StoreAllotDetail> {
 
+    private String productId;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
+    private String productName;
+
+    private Integer billQty;
+    private Integer qty;
+    private Integer shippedQty;
+    private String storeAllotId;
+    private String outId;
 
     public String getProductId() {
         return productId;
@@ -62,13 +72,5 @@ public class StoreAllotDetailDto extends DataDto<StoreAllotDetail> {
         this.outId = outId;
     }
 
-    private String productId;
-    private String productName;
-
-    private Integer billQty;
-    private Integer qty;
-    private Integer shippedQty;
-    private String storeAllotId;
-    private String outId;
 
 }

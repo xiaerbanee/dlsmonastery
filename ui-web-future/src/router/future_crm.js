@@ -40,6 +40,7 @@ const pricesystemChangeList= r => require.ensure([], () => r(require('pages/futu
 const pricesystemChangeForm= r => require.ensure([], () => r(require('pages/future/crm/pricesystemChangeForm.vue')));
 const productAdEdit = r  => require.ensure([], () => r(require('pages/future/crm/productAdEdit.vue')));
 const productImeList = r => require.ensure([], () => r(require('pages/future/crm/productImeList.vue')));
+const productImeDetail = r => require.ensure([], () => r(require('pages/future/crm/productImeDetail.vue')));
 const productImeSaleList= r => require.ensure([], () => r(require('pages/future/crm/productImeSaleList.vue')));
 const productImeSaleForm= r => require.ensure([], () => r(require('pages/future/crm/productImeSaleForm.vue')));
 const productImeUploadList  = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadList.vue')));
@@ -102,6 +103,7 @@ let routes = [
   {path:'/future/crm/pricesystemChangeForm',component:pricesystemChangeForm,name:'pricesystemChangeForm',meta: {menu:"pricesystemChangeList"}},
   {path:'/future/crm/productAdEdit',component:productAdEdit,name:'productAdEdit',meta: {menu:"productList"}},
   {path:'/future/crm/productImeList',component:productImeList,name:'productImeList'},
+  {path:'/future/crm/productImeDetail',component:productImeDetail,name:'productImeDetail'},
   {path:'/future/crm/productImeSaleList',component:productImeSaleList,name:'productImeSaleList'},
   {path:'/future/crm/productImeSaleForm',component:productImeSaleForm,name:'productImeSaleForm',meta: {menu:"productImeSaleList"}},
   {path:'/future/crm/productImeUploadList',component:productImeUploadList,name:'productImeUploadList'},

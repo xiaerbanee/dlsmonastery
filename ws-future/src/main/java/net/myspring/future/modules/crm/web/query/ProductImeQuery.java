@@ -9,51 +9,64 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Created by haos on 2017/5/12.
- */
-public class ProductImeQuery extends BaseQuery{
-    private List<String> officeIdList;
-    private List<String> depotIdList;
 
-    private String ime;
+public class ProductImeQuery extends BaseQuery{
+
     private String imeReverse;
     private String boxIme;
     private String ime2;
     private String meid;
     private String depotId;
-    private String imes;
     private String productId;
-    private String createdDate;
-    private String retailDate;
-    private String createTime;
+    private String imeOrMeids;
+    private String createdDateRange;
+    private String retailDateRange;
+    private String createTimeRange;
     private String inputType;
+
+    private List<String> inputTypeList;
 
     //分页数据
     private Pageable pageable;
 
-    public List<String> getOfficeIdList() {
-        return officeIdList;
+    public List<String> getInputTypeList() {
+        return inputTypeList;
     }
 
-    public void setOfficeIdList(List<String> officeIdList) {
-        this.officeIdList = officeIdList;
+    public void setInputTypeList(List<String> inputTypeList) {
+        this.inputTypeList = inputTypeList;
     }
 
-    public List<String> getDepotIdList() {
-        return depotIdList;
+    public String getImeOrMeids() {
+        return imeOrMeids;
     }
 
-    public void setDepotIdList(List<String> depotIdList) {
-        this.depotIdList = depotIdList;
+    public void setImeOrMeids(String imeOrMeids) {
+        this.imeOrMeids = imeOrMeids;
     }
 
-    public String getIme() {
-        return ime;
+    public String getCreatedDateRange() {
+        return createdDateRange;
     }
 
-    public void setIme(String ime) {
-        this.ime = ime;
+    public void setCreatedDateRange(String createdDateRange) {
+        this.createdDateRange = createdDateRange;
+    }
+
+    public String getRetailDateRange() {
+        return retailDateRange;
+    }
+
+    public void setRetailDateRange(String retailDateRange) {
+        this.retailDateRange = retailDateRange;
+    }
+
+    public String getCreateTimeRange() {
+        return createTimeRange;
+    }
+
+    public void setCreateTimeRange(String createTimeRange) {
+        this.createTimeRange = createTimeRange;
     }
 
     public String getImeReverse() {
@@ -96,29 +109,12 @@ public class ProductImeQuery extends BaseQuery{
         this.depotId = depotId;
     }
 
-
-    public String getImes() {
-        return imes;
-    }
-
-    public void setImes(String imes) {
-        this.imes = imes;
-    }
-
     public String getProductId() {
         return productId;
     }
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
     }
 
     public String getInputType() {
@@ -129,22 +125,6 @@ public class ProductImeQuery extends BaseQuery{
         this.inputType = inputType;
     }
 
-    public String getRetailDate() {
-        return retailDate;
-    }
-
-    public void setRetailDate(String retailDate) {
-        this.retailDate = retailDate;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
     public Pageable getPageable() {
         return pageable;
     }
@@ -153,57 +133,57 @@ public class ProductImeQuery extends BaseQuery{
         this.pageable = pageable;
     }
 
-    public List<String> getImeList() {
-        if(StringUtils.isNotBlank(imes)) {
-            return StringUtils.getSplitList(imes, CharConstant.ENTER);
+    public List<String> getImeOrMeidList() {
+        if(StringUtils.isNotBlank(imeOrMeids)) {
+            return StringUtils.getSplitList(imeOrMeids, CharConstant.ENTER);
         } else {
             return null;
         }
     }
 
     public LocalDate getCreatedDateStart() {
-        if(StringUtils.isNotBlank(createdDate)) {
-            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        if(StringUtils.isNotBlank(createdDateRange)) {
+            return LocalDateUtils.parse(createdDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
     }
 
     public LocalDate getCreatedDateEnd() {
-        if(StringUtils.isNotBlank(createdDate)) {
-            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        if(StringUtils.isNotBlank(createdDateRange)) {
+            return LocalDateUtils.parse(createdDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }
     }
 
     public LocalDate getRetailDateStart() {
-        if(StringUtils.isNotBlank(retailDate)) {
-            return LocalDateUtils.parse(retailDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        if(StringUtils.isNotBlank(retailDateRange)) {
+            return LocalDateUtils.parse(retailDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
     }
 
     public LocalDate getRetailDateEnd() {
-        if(StringUtils.isNotBlank(retailDate)) {
-            return LocalDateUtils.parse(retailDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        if(StringUtils.isNotBlank(retailDateRange)) {
+            return LocalDateUtils.parse(retailDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }
     }
 
     public LocalDate getCreateTimeStart() {
-        if(StringUtils.isNotBlank(createTime)) {
-            return LocalDateUtils.parse(createTime.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        if(StringUtils.isNotBlank(createTimeRange)) {
+            return LocalDateUtils.parse(createTimeRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
     }
 
     public LocalDate getCreateTimeEnd() {
-        if(StringUtils.isNotBlank(createTime)) {
-            return LocalDateUtils.parse(createTime.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        if(StringUtils.isNotBlank(createTimeRange)) {
+            return LocalDateUtils.parse(createTimeRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }
