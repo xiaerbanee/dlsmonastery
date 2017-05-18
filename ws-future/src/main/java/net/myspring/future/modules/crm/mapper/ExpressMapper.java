@@ -1,9 +1,12 @@
 package net.myspring.future.modules.crm.mapper;
 
 import net.myspring.future.common.mybatis.MyMapper;
+import net.myspring.future.common.mybatis.MyProvider;
 import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.dto.ExpressDto;
 import net.myspring.future.modules.crm.web.query.ExpressQuery;
+import net.myspring.mybatis.provider.CrudProvider;
+import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -19,4 +22,8 @@ public interface ExpressMapper extends MyMapper<Express,String> {
     List<Express> findByExpressOrderId(String expressOrderId);
 
     ExpressDto findDto(String id);
+
+    @DeleteProvider(type=MyMapper.class, method = MyProvider.DELETE_BY_IDS)
+    int deleteByIds(Iterable<String> ids);
+
 }

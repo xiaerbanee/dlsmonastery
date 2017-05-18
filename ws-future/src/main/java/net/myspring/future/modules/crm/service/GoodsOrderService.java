@@ -82,7 +82,6 @@ public class GoodsOrderService {
                 restResponse.setSuccess(false);
             }
         }
-
         return restResponse;
     }
 
@@ -119,8 +118,6 @@ public class GoodsOrderService {
         }
         return goodsOrderDetailFormList;
     }
-
-
 
 
 
@@ -187,22 +184,6 @@ public class GoodsOrderService {
         return goodsOrder;
     }
 
-    private ExpressOrder getExpressOrder(GoodsOrderForm goodsOrderForm) {
-        Depot shop = depotMapper.findOne(goodsOrderForm.getShopId());
-        ExpressOrder expressOrder = new ExpressOrder();
-        if(StringUtils.isNotBlank(goodsOrderForm.getExpressOrderId())) {
-            expressOrder = expressOrderMapper.findOne(goodsOrderForm.getExpressOrderId());
-        }
-        expressOrder.setExtendId(goodsOrderForm.getId());
-        expressOrder.setExtendType(ExpressOrderExtendTypeEnum.手机订单.name());
-        expressOrder.setContator(goodsOrderForm.getContator());
-        expressOrder.setAddress(goodsOrderForm.getAddress());
-        expressOrder.setMobilePhone(goodsOrderForm.getMobilePhone());
-        expressOrder.setToDepotId(shop.getId());
-        expressOrder.setShipType(goodsOrderForm.getShipType());
-        return expressOrder;
-    }
-
     //开单
     public  GoodsOrder bill(GoodsOrderForm goodsOrderForm) {
         Integer totalBillQty = 0;
@@ -253,6 +234,22 @@ public class GoodsOrderService {
         return goodsOrder;
     }
 
+
+    private ExpressOrder getExpressOrder(GoodsOrderForm goodsOrderForm) {
+        Depot shop = depotMapper.findOne(goodsOrderForm.getShopId());
+        ExpressOrder expressOrder = new ExpressOrder();
+        if(StringUtils.isNotBlank(goodsOrderForm.getExpressOrderId())) {
+            expressOrder = expressOrderMapper.findOne(goodsOrderForm.getExpressOrderId());
+        }
+        expressOrder.setExtendId(goodsOrderForm.getId());
+        expressOrder.setExtendType(ExpressOrderExtendTypeEnum.手机订单.name());
+        expressOrder.setContator(goodsOrderForm.getContator());
+        expressOrder.setAddress(goodsOrderForm.getAddress());
+        expressOrder.setMobilePhone(goodsOrderForm.getMobilePhone());
+        expressOrder.setToDepotId(shop.getId());
+        expressOrder.setShipType(goodsOrderForm.getShipType());
+        return expressOrder;
+    }
 
     private String getDefaultStoreId(GoodsOrder goodsOrder) {
         String defaultStoreId;

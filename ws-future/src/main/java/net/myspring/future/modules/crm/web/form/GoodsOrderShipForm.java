@@ -1,151 +1,74 @@
 package net.myspring.future.modules.crm.web.form;
 
+import com.ctc.wstx.util.StringUtil;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
+import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsOrderShipForm extends DataForm<GoodsOrder> {
+    private String goodsOrderId;
+    private String boxImeStr;
+    private String imeStr;
+    private String expressStr;
+    private String shipRemarks;
 
-    private Boolean sameDate;
-    private String storeId;
-    private LocalDate billDate;
-    private String expressCompanyId;
-    private Boolean syn;
-    private Boolean takeExpress;
-    private String expressContator;
-    private String expressAddress;
-    private String expressMobilePhone;
-
-
-    private DepotDto shopDto;
-
-    private GoodsOrderDto goodsOrderDto;
-    private List<DepotDto> storeList;
-    private List<ExpressCompanyDto> expressCompanyList;
-
-    private List<GoodsOrderDetailForm> detailFormList = new ArrayList<>();
-
-    public DepotDto getShopDto() {
-        return shopDto;
+    public String getGoodsOrderId() {
+        return goodsOrderId;
     }
 
-    public void setShopDto(DepotDto shopDto) {
-        this.shopDto = shopDto;
+    public void setGoodsOrderId(String goodsOrderId) {
+        this.goodsOrderId = goodsOrderId;
     }
 
-    public Boolean getTakeExpress() {
-        return takeExpress;
+    public String getBoxImeStr() {
+        return boxImeStr;
     }
 
-    public void setTakeExpress(Boolean takeExpress) {
-        this.takeExpress = takeExpress;
+    public void setBoxImeStr(String boxImeStr) {
+        this.boxImeStr = boxImeStr;
     }
 
-
-    public List<GoodsOrderDetailForm> getDetailFormList() {
-        return detailFormList;
+    public String getImeStr() {
+        return imeStr;
     }
 
-    public void setDetailFormList(List<GoodsOrderDetailForm> detailFormList) {
-        this.detailFormList = detailFormList;
+    public void setImeStr(String imeStr) {
+        this.imeStr = imeStr;
     }
 
-    public Boolean getSameDate() {
-        return sameDate;
+    public String getExpressStr() {
+        return expressStr;
     }
 
-    public void setSameDate(Boolean sameDate) {
-        this.sameDate = sameDate;
+    public void setExpressStr(String expressStr) {
+        this.expressStr = expressStr;
     }
 
-    public String getExpressContator() {
-        return expressContator;
+    public String getShipRemarks() {
+        return shipRemarks;
     }
 
-    public void setExpressContator(String expressContator) {
-        this.expressContator = expressContator;
+    public void setShipRemarks(String shipRemarks) {
+        this.shipRemarks = shipRemarks;
     }
 
-    public String getExpressAddress() {
-        return expressAddress;
+    public List<String> getImeList() {
+        return StringUtils.getSplitList(imeStr, CharConstant.ENTER);
     }
 
-    public void setExpressAddress(String expressAddress) {
-        this.expressAddress = expressAddress;
+    public List<String> getBoxImeList() {
+        return StringUtils.getSplitList(boxImeStr, CharConstant.ENTER);
     }
 
-    public String getExpressMobilePhone() {
-        return expressMobilePhone;
+    public List<String> getExpressList() {
+        return StringUtils.getSplitList(expressStr, CharConstant.ENTER);
     }
-
-    public void setExpressMobilePhone(String expressMobilePhone) {
-        this.expressMobilePhone = expressMobilePhone;
-    }
-
-    public GoodsOrderDto getGoodsOrderDto() {
-        return goodsOrderDto;
-    }
-
-    public void setGoodsOrderDto(GoodsOrderDto goodsOrderDto) {
-        this.goodsOrderDto = goodsOrderDto;
-    }
-
-    public String getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
-    }
-
-    public List<DepotDto> getStoreList() {
-        return storeList;
-    }
-
-    public void setStoreList(List<DepotDto> storeList) {
-        this.storeList = storeList;
-    }
-
-    public LocalDate getBillDate() {
-        return billDate;
-    }
-
-    public void setBillDate(LocalDate billDate) {
-        this.billDate = billDate;
-    }
-
-    public String getExpressCompanyId() {
-        return expressCompanyId;
-    }
-
-    public void setExpressCompanyId(String expressCompanyId) {
-        this.expressCompanyId = expressCompanyId;
-    }
-
-    public List<ExpressCompanyDto> getExpressCompanyList() {
-        return expressCompanyList;
-    }
-
-    public void setExpressCompanyList(List<ExpressCompanyDto> expressCompanyList) {
-        this.expressCompanyList = expressCompanyList;
-    }
-
-    public Boolean getSyn() {
-        return syn;
-    }
-
-    public void setSyn(Boolean syn) {
-        this.syn = syn;
-    }
-
-
-
-
-
 }
