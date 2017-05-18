@@ -8,7 +8,10 @@ import net.myspring.future.modules.layout.dto.ShopPrintDto;
 import net.myspring.future.modules.layout.mapper.ShopPrintMapper;
 import net.myspring.future.modules.layout.web.form.ShopPrintForm;
 import net.myspring.future.modules.layout.web.query.ShopPrintQuery;
+import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
+import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
+import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +54,17 @@ public class ShopPrintService {
         if(shopPrintForm.isCreate()){
             shopPrint = BeanUtil.map(shopPrintForm,ShopPrint.class);
             shopPrintMapper.save(shopPrint);
+
+            //开始流程
+            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("广告印刷",shopPrint.getId(),ShopPrint.class.getSimpleName(),shopPrint.getPrintType()));
+            if(activitiStartDto!=null){
+                shopPrint.setProcessFlowId(activitiStartDto.getProcessFlowId());
+                shopPrint.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
+                shopPrint.setProcessPositionId(activitiStartDto.getPositionId());
+                shopPrint.setProcessStatus(activitiStartDto.getProcessStatus());
+                shopPrint.setProcessTypeId(activitiStartDto.getProcessTypeId());
+                shopPrintMapper.update(shopPrint);
+            }
         }else{
             shopPrint = shopPrintMapper.findOne(shopPrintForm.getId());
             ReflectionUtil.copyProperties(shopPrintForm,shopPrint);
@@ -72,12 +86,16 @@ public class ShopPrintService {
         ShopPrint shopPrint = shopPrintMapper.findOne(shopPrintForm.getId());
         activitiCompleteForm.setProcessInstanceId(shopPrint.getProcessInstanceId());
         activitiCompleteForm.setProcessTypeId(shopPrint.getProcessTypeId());
-        activitiClient.complete(activitiCompleteForm);
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
+        if(activitiCompleteDto!=null){
+            shopPrint.setProcessStatus(activitiCompleteDto.getProcessStatus());
+            shopPrint.setProcessPositionId(activitiCompleteDto.getPositionId());
+            shopPrint.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+            shopPrintMapper.update(shopPrint);
+        }
     }
 
     public ShopPrintQuery findQuery(ShopPrintQuery shopPrintQuery){
-        //shopPrintQuery.setPrintTypeList(dictMapClient.findDictMapByCategory(DictMapCategoryEnum.门店_广告印刷.name()));
-        //shopPrintQuery.setOfficeIdList(officeClient.findSortList());
         return shopPrintQuery;
     }
 

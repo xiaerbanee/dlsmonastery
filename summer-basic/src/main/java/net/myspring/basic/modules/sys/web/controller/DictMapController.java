@@ -69,4 +69,9 @@ public class DictMapController {
         return dictMapList;
     }
 
+    @RequestMapping(value = "findByName")
+    public  DictMapDto findByName(String name){
+        return dictMapService.findByName(name);
+    }
+
 }

@@ -33,6 +33,16 @@
         and t1.category=#{category}  order by sort asc
     </select>
 
+    <select id="findByValue" resultType="DictEnumDto">
+        SELECT
+        t1.*
+        FROM
+        sys_dict_enum t1
+        WHERE
+        t1.enabled=1
+        and t1.value=#{value}
+    </select>
+
     <select id="findDistinctCategory" resultType="String">
         SELECT DISTINCT
         t1.category

@@ -163,7 +163,9 @@ public class ShopAdService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qty", "数量"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "specialArea", "是否专区"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "content", "内容说明"));
+
         List<ShopAdDto> shopAdDtoList = shopAdMapper.findByFilter(shopAdQuery);
+        cacheUtils.initCacheInput(shopAdDtoList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("广告申请", shopAdDtoList, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"广告申请"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());

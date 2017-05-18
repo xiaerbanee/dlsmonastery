@@ -75,4 +75,9 @@ public class DictMapService {
         List<DictMap> dictMapList=dictMapMapper.findByCategory(category);
         return dictMapList;
     }
+
+    public DictMapDto findByName(String name){
+        DictMapDto dictMapDto = dictMapMapper.findByName(name);
+        return  dictMapDto;
+    }
 }

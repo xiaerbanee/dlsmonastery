@@ -48,5 +48,7 @@ public interface DictMapMapper extends BaseMapper<DictMap,String> {
 
     List<DictMap> findByCategory(String category);
 
+    DictMapDto findByName(String name);
+
 
 }

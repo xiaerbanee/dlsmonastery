@@ -138,7 +138,6 @@
         this.pageRequest();
       },exportData(){
         util.copyValue(this.formData,this.submitData);
-        console.log(this.submitData);
         axios.get('/api/ws/future/layout/shopAd/export?'+qs.stringify(this.submitData)).then((response)=> {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });

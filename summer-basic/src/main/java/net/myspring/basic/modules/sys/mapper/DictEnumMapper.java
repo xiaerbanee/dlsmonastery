@@ -49,4 +49,6 @@ public interface DictEnumMapper extends BaseMapper<DictEnum,String>{
 
     List<String> findDistinctCategory();
 
+    DictEnumDto findByValue(String value);
+
 }
