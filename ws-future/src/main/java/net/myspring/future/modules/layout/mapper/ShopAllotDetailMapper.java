@@ -15,11 +15,9 @@ public interface ShopAllotDetailMapper extends MyMapper<ShopAllotDetail,String> 
 
     List<ShopAllotDetail> findByShopAllotIds(List<String> shopAllotIdList);
 
-    int deleteByShopAllotId(String shopAllotId);
+    int deleteByShopAllotId(@Param("shopAllotId") String shopAllotId);
 
-    List<ShopAllotDetailDto> getShopAllotDetailListForEdit(@Param("shopAllotId")  String shopAllotId, @Param("fromDepotId")String fromDepotId, @Param("toDepotId")String toDepotId);
-
-    List<ShopAllotDetailDto> getShopAllotDetailListForNew(@Param("fromDepotId") String fromDepotId, @Param("toDepotId")String toDepotId);
+    List<ShopAllotDetailDto> getShopAllotDetailListForNewOrEdit(@Param("shopAllotId")  String shopAllotId, @Param("fromDepotId")String fromDepotId, @Param("toDepotId")String toDepotId);
 
     List<ShopAllotDetailDto> getShopAllotDetailListForViewOrAudit(@Param("shopAllotId") String shopAllotId);
 }

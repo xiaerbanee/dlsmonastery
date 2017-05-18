@@ -428,6 +428,7 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+
   },
   shopAllotList: {
     shopAllotList: "门店调拨",
@@ -461,6 +462,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    auditDateRange:'审核时间',
   },
   shopBuildDetail: {
     shopBuildDetail: "门店建设详细",

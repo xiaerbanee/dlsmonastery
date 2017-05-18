@@ -1,7 +1,7 @@
 package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.basic.domain.ExpressCompany;
+import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
@@ -9,19 +9,18 @@ import java.math.BigDecimal;
 /**
  * Created by lihx on 2017/4/17.
  */
-public class ShopDepositDto extends DataDto<ExpressCompany> {
-
-    private String name;
+public class ShopDepositDto extends DataDto<ShopDeposit> {
 
     private String shopId;
 
+    private String shopName;
+    private String shopOfficeId;
 
-    private String areaId;
-    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
-    private String areaName;
-    private String officeId;
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
-    private String officeName;
+   //TODO areaName如何获取 @CacheInput(inputKey = "offices",inputInstance = "shopOfficeId",outputInstance = "areaName")
+    private String shopAreaName;
+
+    @CacheInput(inputKey = "offices",inputInstance = "shopOfficeId",outputInstance = "name")
+    private String shopOfficeName;
 
     private String type;
     private String outCode;
@@ -30,6 +29,37 @@ public class ShopDepositDto extends DataDto<ExpressCompany> {
     private Boolean locked;
     private Boolean enabled;
 
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public String getShopOfficeId() {
+        return shopOfficeId;
+    }
+
+    public void setShopOfficeId(String shopOfficeId) {
+        this.shopOfficeId = shopOfficeId;
+    }
+
+    public String getShopAreaName() {
+        return shopAreaName;
+    }
+
+    public void setShopAreaName(String shopAreaName) {
+        this.shopAreaName = shopAreaName;
+    }
+
+    public String getShopOfficeName() {
+        return shopOfficeName;
+    }
+
+    public void setShopOfficeName(String shopOfficeName) {
+        this.shopOfficeName = shopOfficeName;
+    }
 
     public String getShopId() {
         return shopId;
@@ -37,47 +67,6 @@ public class ShopDepositDto extends DataDto<ExpressCompany> {
 
     public void setShopId(String shopId) {
         this.shopId = shopId;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAreaName() {
-        return areaName;
-    }
-
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
-    }
-
-    public String getOfficeName() {
-        return officeName;
-    }
-
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName;
-    }
-
-    public String getAreaId() {
-        return areaId;
-    }
-
-    public void setAreaId(String areaId) {
-        this.areaId = areaId;
-    }
-
-    public String getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
     }
 
     public String getType() {

@@ -4,15 +4,15 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('shopDepositForm.shopName')" prop="shopId">
-          <depot-select v-model ="inputForm.shopId"  type="SHOP" @input="changeDepartment">         </depot-select>
+          <depot-select v-model ="inputForm.shopId"  category="directShop" @input="shopChanged"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.outBillType')" prop="outBillType" >
-          <el-select v-model="inputForm.outBillType" filterable :placeholder="$t('shopDepositForm.inputKey')">
+          <el-select v-model="inputForm.outBillType" clearable :placeholder="$t('shopDepositForm.inputKey')">
             <el-option v-for="item in inputForm.outBillTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('shopDepositForm.department')" prop="department" >
-          <office-select v-model = "inputForm.department" ></office-select>
+        <el-form-item :label="$t('shopDepositForm.department')" prop="departMent" >
+          <office-select v-model = "inputForm.departMent" ></office-select>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.bank')" prop="bankId" v-if="inputForm.outBillType==='手工日记账'" >
           <bank-select v-model = "inputForm.bankId"></bank-select>
@@ -57,7 +57,7 @@
               id:'',
               shopId:'',
               departMent:'',
-              amount:'',
+              billDate:'',
               outBillType:'',
               bankId:'',
               marketAmount:'',
@@ -93,17 +93,19 @@
               this.submitDisabled = false;
             }
           })
+        },shopChanged(){
+            if(!this.inputForm.shopId || this.inputForm.shopId == ''){
+                return ;
+            }
+            axios.get('/api/ws/future/crm/shopDeposit/getDefaultDepartMent',{params:{shopId:this.inputForm.shopId}}).then((response)=>{
+              this.inputForm.departMent=response.data;
 
-        },changeDepartment(){
-           var shopId=this.inputForm.shopId;
-            axios.get('/api/ws/future/crm/shopDeposit/getDepartmentByShopId',{params:{shopId:shopId}}).then((response)=>{
-              this.inputForm.departMent=response.data.fname;
             })
         }
       }, created(){
-        axios.get('/api/ws/future/crm/shopDeposit/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          //押金列表只能增加，不能修改
+        axios.get('/api/ws/future/crm/shopDeposit/findForm').then((response)=>{
               this.inputForm = response.data;
-              console.log(this.inputForm)
           })
       }
     }

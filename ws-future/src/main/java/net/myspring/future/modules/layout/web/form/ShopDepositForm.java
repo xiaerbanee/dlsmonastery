@@ -1,10 +1,10 @@
 package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.DataForm;
-import net.myspring.future.modules.basic.dto.BankDto;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -12,6 +12,25 @@ import java.util.List;
  */
 public class ShopDepositForm extends DataForm<ShopDeposit> {
 
+    private BigDecimal imageAmount = BigDecimal.ZERO;
+    private BigDecimal demoPhoneAmount= BigDecimal.ZERO;
+    private BigDecimal marketAmount= BigDecimal.ZERO;
+    private LocalDate billDate;
+    private String bankId;
+    private String departMent;
+    private String outBillType;
+    private String shopId;
+
+    private List<String> outBillTypeList;
+
+
+    public LocalDate getBillDate() {
+        return billDate;
+    }
+
+    public void setBillDate(LocalDate billDate) {
+        this.billDate = billDate;
+    }
 
     public BigDecimal getMarketAmount() {
         return marketAmount;
@@ -36,17 +55,6 @@ public class ShopDepositForm extends DataForm<ShopDeposit> {
     public void setDemoPhoneAmount(BigDecimal demoPhoneAmount) {
         this.demoPhoneAmount = demoPhoneAmount;
     }
-
-
-    public List<String> getDepartMents() {
-        return departMents;
-    }
-
-    public void setDepartMents(List<String> departMents) {
-        this.departMents = departMents;
-    }
-
-
 
     public String getDepartMent() {
         return departMent;
@@ -81,15 +89,6 @@ public class ShopDepositForm extends DataForm<ShopDeposit> {
     }
 
 
-    private String bankId;
-    private BigDecimal imageAmount;
-    private BigDecimal demoPhoneAmount;
-    private BigDecimal marketAmount;
-    private String departMent;
-    private String outBillType;
-    private String shopId;
-    private List<String>  departMents;
-
     public List<String> getOutBillTypeList() {
         return outBillTypeList;
     }
@@ -98,17 +97,6 @@ public class ShopDepositForm extends DataForm<ShopDeposit> {
         this.outBillTypeList = outBillTypeList;
     }
 
-    private List<String> outBillTypeList;
-
-    private List<BankDto> bankDtoList;
-
-    public List<BankDto> getBankDtoList() {
-        return bankDtoList;
-    }
-
-    public void setBankDtoList(List<BankDto> bankDtoList) {
-        this.bankDtoList = bankDtoList;
-    }
 
     public boolean isImageAmountPositive() {
         if (imageAmount != null && imageAmount.compareTo(BigDecimal.ZERO) > 0) {

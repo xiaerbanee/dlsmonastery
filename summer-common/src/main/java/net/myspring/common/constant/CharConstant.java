@@ -21,4 +21,16 @@ public class CharConstant {
     public static final String DATE_RANGE_SPLITTER = " - ";
 
 
+
+    public static final String FORMATTER_GOODS_ORDER = "XK"; // 货品订货
+    public static final String FORMATTER_STORE_ALLOT = "CA";
+    public static final String FORMATTER_SHOP_ALLOT = "SA";
+    public static final String FORMATTER_BANK_IN = "XS";
+    public static final String FORMATTER_AD_GOODS_ORDER = "AK";
+    public static final String FORMATTER_SHOP_AD = "AD";
+    public static final String FORMATTER_SHOP_GOODS_DEPOSIT = "SG";
+    public static final String FORMATTER_SHOP_BUILD = "AB";
+    public static final String FORMATTER_AUDIT_FILE = "AF";
+
+
 }

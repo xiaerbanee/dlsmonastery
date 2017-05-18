@@ -3,23 +3,53 @@
 <mapper namespace="net.myspring.future.modules.layout.mapper.ShopAllotMapper">
 
     <select id="findPage" resultType="ShopAllotDto">
-        SELECT  depot1.name fromShopName, depot2.name toShopName, t1.*
-        FROM  crm_shop_allot t1,crm_depot depot1, crm_depot depot2
+        SELECT  t1.*
+        FROM  crm_shop_allot t1
         where t1.enabled=1
-        and (t1.from_shop_id=depot1.id and  t1.to_shop_id=depot2.id)
-        <include refid="shopAllotFilter" />
+        <if test="p.fromShopId!=null">
+            and t1.from_shop_id=#{p.fromShopId}
+        </if>
+        <if test="p.toShopId!=null">
+            and t1.to_shop_id=#{p.toShopId}
+        </if>
+        <if test="p.status!=null">
+            and t1.status=#{p.status}
+        </if>
+        <if test="p.businessId!=null">
+            and t1.business_id like concat('%',#{p.businessId},'%')
+        </if>
+        <if test="p.businessIdInStr!=null">
+            and t1.business_id IN #{p.businessIdInStr} <!-- 需要修改 -->
+        </if>
+        <if test="p.createdDateStart != null">
+            AND t1.created_date >= #{p.createdDateStart}
+        </if>
+        <if test="p.createdDateEnd != null">
+            AND t1.created_date &lt; #{p.createdDateEnd}
+        </if>
+        <if test="p.auditDateStart != null">
+            AND t1.audit_date >= #{p.auditDateStart}
+        </if>
+        <if test="p.auditDateEnd != null">
+            AND t1.audit_date &lt; #{p.auditDateEnd}
+        </if>
     </select>
 
 
     <select id="findShopAllotDto" resultType="ShopAllotDto">
-        SELECT  depot1.name fromShopName, depot2.name toShopName
-                     , (select sum(detail1.qty * detail1.sale_price) from crm_shop_allot_detail detail1 where detail1.shop_allot_id = #{id}) saleTotalPrice
-                     ,(select sum(detail2.qty * detail2.return_price) from crm_shop_allot_detail detail2 where  detail2.shop_allot_id = #{id}) returnTotalPrice
-                     ,t1.*
-        FROM  crm_shop_allot t1,crm_depot depot1, crm_depot depot2
-        where t1.enabled=1
-        and (t1.from_shop_id=depot1.id and  t1.to_shop_id=depot2.id)
-        and t1.id = #{id}
+        SELECT
+            sum(t2.qty * t2.sale_price) saleTotalPrice,
+            sum(t2.qty * t2.return_price) returnTotalPrice,
+            t1.*
+        FROM
+            crm_shop_allot t1,
+            crm_shop_allot_detail t2
+        WHERE
+            t1.enabled = 1
+        AND t1.id = #{id}
+        AND t1.id = t2.shop_allot_id
+        GROUP BY
+            t1.id
     </select>
 
 
@@ -33,24 +63,7 @@
 
 
     <sql id="shopAllotFilter">
-        <if test="p.fromShopId!=null">
-            and t1.from_shop_id=#{p.fromShopId}
-        </if>
-        <if test="p.toShopId!=null">
-            and t1.to_shop_id=#{p.toShopId}
-        </if>
-        <if test="p.status!=null">
-            and t1.status=#{p.status}
-        </if>
-        <if test="p.businessId!=null">
-            and t1.business_id like concat('%',#{p.businessId},'%')
-        </if>
-        <if test="p.createdDateStart != null">
-            AND t1.created_date >=#{p.createdDateStart}
-        </if>
-        <if test="p.createdDateEnd != null">
-            AND t1.created_date &lt; #{p.createdDateEnd}
-        </if>
+
     </sql>
 
 </mapper>
