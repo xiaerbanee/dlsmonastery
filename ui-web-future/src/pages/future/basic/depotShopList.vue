@@ -3,7 +3,7 @@
     <head-tab active="depotShopList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" >添加</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" >添加m'd</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
         <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
       </el-row>

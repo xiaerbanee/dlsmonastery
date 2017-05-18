@@ -1,6 +1,8 @@
 package net.myspring.common.domain;
 
 
+import net.myspring.util.text.StringUtils;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -49,5 +51,9 @@ public class IdEntity<T> implements Serializable {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    public Boolean isCreate() {
+        return StringUtils.isBlank(id);
     }
 }

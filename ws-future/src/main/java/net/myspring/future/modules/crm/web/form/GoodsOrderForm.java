@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.web.form;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.util.text.StringUtils;
@@ -8,35 +9,100 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsOrderForm extends DataForm<GoodsOrder> {
-
-    private String netType;
-    private String businessId;
+    private String expressOrderId;
     private String shopId;
+    private String netType;
+    private String shipType;
+    private String remarks;
+    private String carrierShopId;
+
+    private String id;
     private String storeId;
 
     private String clientId;
-    private String clientName;
 
-    private String isUseTicket;
-    private String shipType;
-    private List<String> shipTypeList;
-    private String shopType;
+
 
     private String priceSystemId;
     private String priceSystemName;
     private String summary;
     private String status;
 
-    private List<GoodsOrderDetailForm> detailFormList = new ArrayList<>();
     private List<String> netTypeList;
+    private List<String> shipTypeList;
 
+    private String contator;
+    private String address;
+    private String mobilePhone;
 
-    public String getIsUseTicket() {
-        return isUseTicket;
+    private List<GoodsOrderDetailForm> goodsOrderDetailFormList = Lists.newArrayList();
+
+    public String getExpressOrderId() {
+        return expressOrderId;
     }
 
-    public void setIsUseTicket(String isUseTicket) {
-        this.isUseTicket = isUseTicket;
+    public void setExpressOrderId(String expressOrderId) {
+        this.expressOrderId = expressOrderId;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getNetType() {
+        return netType;
+    }
+
+    public void setNetType(String netType) {
+        this.netType = netType;
+    }
+
+    public String getShipType() {
+        return shipType;
+    }
+
+    public void setShipType(String shipType) {
+        this.shipType = shipType;
+    }
+
+    @Override
+    public String getRemarks() {
+        return remarks;
+    }
+
+    @Override
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getCarrierShopId() {
+        return carrierShopId;
+    }
+
+    public void setCarrierShopId(String carrierShopId) {
+        this.carrierShopId = carrierShopId;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
     }
 
     public String getClientId() {
@@ -55,99 +121,6 @@ public class GoodsOrderForm extends DataForm<GoodsOrder> {
         this.priceSystemId = priceSystemId;
     }
 
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-
-
-    public List<GoodsOrderDetailForm> getDetailFormList() {
-        return detailFormList;
-    }
-
-    public void setDetailFormList(List<GoodsOrderDetailForm> detailFormList) {
-        this.detailFormList = detailFormList;
-    }
-
-
-    public List<String> getShipTypeList() {
-        return shipTypeList;
-    }
-
-    public void setShipTypeList(List<String> shipTypeList) {
-        this.shipTypeList = shipTypeList;
-    }
-
-
-
-    public String getNetType() {
-        return netType;
-    }
-
-    public void setNetType(String netType) {
-        this.netType = netType;
-    }
-
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
-    }
-
-    public List<String> getNetTypeList() {
-        return netTypeList;
-    }
-
-    public void setNetTypeList(List<String> netTypeList) {
-        this.netTypeList = netTypeList;
-    }
-
-    public String getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
-    }
-
-    public String getShipType() {
-        return shipType;
-    }
-
-    public void setShipType(String shipType) {
-        this.shipType = shipType;
-    }
-
-    public String getShopType() {
-        return shopType;
-    }
-
-    public void setShopType(String shopType) {
-        this.shopType = shopType;
-    }
-
     public String getPriceSystemName() {
         return priceSystemName;
     }
@@ -164,14 +137,59 @@ public class GoodsOrderForm extends DataForm<GoodsOrder> {
         this.summary = summary;
     }
 
-
-    public String getFormatId(){
-        if(businessId == null){
-            return null;
-        }
-        return StringUtils.getFormatId(businessId, "XK");
+    public String getStatus() {
+        return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
+    public List<String> getNetTypeList() {
+        return netTypeList;
+    }
 
+    public void setNetTypeList(List<String> netTypeList) {
+        this.netTypeList = netTypeList;
+    }
+
+    public List<String> getShipTypeList() {
+        return shipTypeList;
+    }
+
+    public void setShipTypeList(List<String> shipTypeList) {
+        this.shipTypeList = shipTypeList;
+    }
+
+    public List<GoodsOrderDetailForm> getGoodsOrderDetailFormList() {
+        return goodsOrderDetailFormList;
+    }
+
+    public void setGoodsOrderDetailFormList(List<GoodsOrderDetailForm> goodsOrderDetailFormList) {
+        this.goodsOrderDetailFormList = goodsOrderDetailFormList;
+    }
+
+    public String getContator() {
+        return contator;
+    }
+
+    public void setContator(String contator) {
+        this.contator = contator;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
 }

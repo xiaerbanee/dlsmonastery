@@ -11,9 +11,5 @@ import java.util.List;
 @Mapper
 public interface GoodsOrderImeMapper extends MyMapper<GoodsOrderIme,String> {
 
-    List<GoodsOrderIme> findByProductImeId(@Param("productImeId") String productImeId);
-
-    List<GoodsOrderIme> findByGoodsOrderIds(List<String> goodsOrderIds);
-
-    List<GoodsOrderImeDto> findDtoListByGoodsOrderId(@Param("goodsOrderId")  String goodsOrderId);
+    List<GoodsOrderIme> findByGoodsOrderId(@Param("goodsOrderId")  String goodsOrderId);
 }

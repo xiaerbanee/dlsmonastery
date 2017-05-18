@@ -19,7 +19,7 @@ public class DepotManager {
         if(StringUtils.isNotBlank(depot.getClientId())) {
             depot.setAdShop(true);
         }
-        if(StringUtils.isNotBlank(depot.getId())) {
+        if(StringUtils.isBlank(depot.getId())) {
             depotMapper.save(depot);
         } else {
             depotMapper.update(depot);

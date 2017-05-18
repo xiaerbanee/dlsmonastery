@@ -12,21 +12,4 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "crm/goodsOrderDetail")
 public class GoodsOrderDetailController {
-
-    @Autowired
-    private GoodsOrderDetailService goodsOrderDetailService;
-
-    @ModelAttribute
-    public GoodsOrderDetail get(@RequestParam(required = false) String id) {
-        return null;
-    }
-
-
-    @RequestMapping(value = "getFormListForNewWithoutAreaQty")
-    public List<GoodsOrderDetailForm> getFormListForNewWithoutAreaQty(String depotId, String netType, String shipType) {
-
-        return goodsOrderDetailService.getFormListForNewWithoutAreaQty( depotId, netType, shipType);
-
-    }
-
 }

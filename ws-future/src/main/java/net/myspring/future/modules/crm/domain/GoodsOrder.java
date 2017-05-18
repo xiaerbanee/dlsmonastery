@@ -25,19 +25,7 @@ public class GoodsOrder extends CompanyEntity<GoodsOrder> {
     private String shipType;
     private Boolean splitBill;
     private String netType;
-
-
     private String expressOrderId;
-
-
-    //金蝶中间表
-    private String transCloudSynId;
-    private String outCloudSynId;
-    private String otherCloudSynId;
-    private String returnCloudSynId;
-    private String retransCloudSynId;
-
-
 
     public String getStoreId() {
         return storeId;
@@ -157,46 +145,6 @@ public class GoodsOrder extends CompanyEntity<GoodsOrder> {
 
     public void setExpressOrderId(String expressOrderId) {
         this.expressOrderId = expressOrderId;
-    }
-
-    public String getTransCloudSynId() {
-        return transCloudSynId;
-    }
-
-    public void setTransCloudSynId(String transCloudSynId) {
-        this.transCloudSynId = transCloudSynId;
-    }
-
-    public String getOutCloudSynId() {
-        return outCloudSynId;
-    }
-
-    public void setOutCloudSynId(String outCloudSynId) {
-        this.outCloudSynId = outCloudSynId;
-    }
-
-    public String getOtherCloudSynId() {
-        return otherCloudSynId;
-    }
-
-    public void setOtherCloudSynId(String otherCloudSynId) {
-        this.otherCloudSynId = otherCloudSynId;
-    }
-
-    public String getReturnCloudSynId() {
-        return returnCloudSynId;
-    }
-
-    public void setReturnCloudSynId(String returnCloudSynId) {
-        this.returnCloudSynId = returnCloudSynId;
-    }
-
-    public String getRetransCloudSynId() {
-        return retransCloudSynId;
-    }
-
-    public void setRetransCloudSynId(String retransCloudSynId) {
-        this.retransCloudSynId = retransCloudSynId;
     }
 
 }

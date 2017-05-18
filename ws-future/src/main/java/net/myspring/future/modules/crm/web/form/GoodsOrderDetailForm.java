@@ -9,26 +9,36 @@ import java.math.BigDecimal;
  * Created by wangzm on 2017/4/21.
  */
 public class GoodsOrderDetailForm extends DataForm<GoodsOrderDetail> {
-
-
-    private String productName;
-    private String productId;
-    private Boolean productHasIme;
-    private BigDecimal price;
+    private String goodsOrderId;
+    private String prodcutId;
     private Integer qty;
     private Integer billQty;
-    private Integer areaQty;
-    private Integer areaBillQty;
-    private Boolean productAllowOrder;
-    private Boolean productAllowBill;
-    private String goodsOrderId;
+    private BigDecimal price;
+    private Boolean hasIme;
 
-    public Integer getAreaBillQty() {
-        return areaBillQty;
+
+    public String getGoodsOrderId() {
+        return goodsOrderId;
     }
 
-    public void setAreaBillQty(Integer areaBillQty) {
-        this.areaBillQty = areaBillQty;
+    public void setGoodsOrderId(String goodsOrderId) {
+        this.goodsOrderId = goodsOrderId;
+    }
+
+    public String getProdcutId() {
+        return prodcutId;
+    }
+
+    public void setProdcutId(String prodcutId) {
+        this.prodcutId = prodcutId;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
     }
 
     public Integer getBillQty() {
@@ -39,74 +49,6 @@ public class GoodsOrderDetailForm extends DataForm<GoodsOrderDetail> {
         this.billQty = billQty;
     }
 
-    public String getGoodsOrderId() {
-        return goodsOrderId;
-    }
-
-    public void setGoodsOrderId(String goodsOrderId) {
-        this.goodsOrderId = goodsOrderId;
-    }
-
-    public Boolean getProductAllowOrder() {
-        return productAllowOrder;
-    }
-
-    public void setProductAllowOrder(Boolean productAllowOrder) {
-        this.productAllowOrder = productAllowOrder;
-    }
-
-    public Boolean getProductAllowBill() {
-        return productAllowBill;
-    }
-
-    public void setProductAllowBill(Boolean productAllowBill) {
-        this.productAllowBill = productAllowBill;
-    }
-
-    public Boolean getProductAllowOrderAndBill(){
-
-        if(productAllowBill!=null && productAllowOrder !=null){
-            if(productAllowBill && productAllowOrder){
-                return Boolean.TRUE;
-            }
-        }
-
-        return Boolean.FALSE;
-    }
-
-
-    public Integer getAreaQty() {
-        return areaQty;
-    }
-
-    public void setAreaQty(Integer areaQty) {
-        this.areaQty = areaQty;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public Boolean getProductHasIme() {
-        return productHasIme;
-    }
-
-    public void setProductHasIme(Boolean productHasIme) {
-        this.productHasIme = productHasIme;
-    }
-
     public BigDecimal getPrice() {
         return price;
     }
@@ -115,13 +57,11 @@ public class GoodsOrderDetailForm extends DataForm<GoodsOrderDetail> {
         this.price = price;
     }
 
-    public Integer getQty() {
-
-        return qty;
+    public Boolean getHasIme() {
+        return hasIme;
     }
 
-    public void setQty(Integer qty) {
-        this.qty = qty;
+    public void setHasIme(Boolean hasIme) {
+        this.hasIme = hasIme;
     }
-
 }

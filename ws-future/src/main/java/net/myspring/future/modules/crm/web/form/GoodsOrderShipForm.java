@@ -12,9 +12,6 @@ import java.util.List;
 
 public class GoodsOrderShipForm extends DataForm<GoodsOrder> {
 
-
-
-
     private Boolean sameDate;
     private String storeId;
     private LocalDate billDate;
