@@ -5,16 +5,19 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.DepotStoreMapper;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springside.modules.utils.mapper.BeanMapper;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -27,6 +30,8 @@ public class DepotStoreService {
     private DepotManager depotManager;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private DepotMapper depotMapper;
 
     public Page<DepotStoreDto> findPage(Pageable pageable, DepotStoreQuery depotStoreQuery){
         Page<DepotStoreDto> page=depotStoreMapper.findPage(pageable,depotStoreQuery);
@@ -38,6 +43,8 @@ public class DepotStoreService {
         if(!depotStoreForm.isCreate()) {
             DepotStore depotStore =depotStoreMapper.findOne(depotStoreForm.getId());
             depotStoreForm= BeanUtil.map(depotStore,DepotStoreForm.class);
+            Depot depot=depotMapper.findOne(depotStoreForm.getDepotId());
+            depotStoreForm.setDepotForm(BeanMapper.map(depot,DepotForm.class));
             cacheUtils.initCacheInput(depotStoreForm);
         }
         return depotStoreForm;
@@ -48,6 +55,7 @@ public class DepotStoreService {
         DepotForm depotForm = depotStoreForm.getDepotForm();
         //保存depot
         Depot depot = BeanUtil.map(depotForm, Depot.class);
+        depot.setNamePinyin(StringUtils.getFirstSpell(depotStoreForm.getDepotForm().getName()));
         depotManager.save(depot);
         //保存depotStore
         if(depotStoreForm.isCreate()) {
