@@ -10,5 +10,6 @@ public enum ResponseCodeEnum {
     audited,
     missing_field,
     invalid,
+    valid,
     already_exists
 }

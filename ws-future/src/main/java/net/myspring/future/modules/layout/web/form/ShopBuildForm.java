@@ -14,13 +14,6 @@ import java.util.List;
 public class ShopBuildForm extends DataForm<ShopBuild>{
 
     private String shopId;
-    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
-    private String shopName;
-    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "address")
-    private String address;
-    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "officeId")
-    private String officeId;
-    private String officeName;
     private String shopType;
     private String fixtureType;
     private String oldContents;
@@ -28,17 +21,10 @@ public class ShopBuildForm extends DataForm<ShopBuild>{
     private Integer monthSaleQty;
     private String buildType;
     private String applyAccountId;
-    @CacheInput(inputKey = "accounts", inputInstance = "applyAccountId", outputInstance = "loginName")
-    private String applyAccountName;
-    @CacheInput(inputKey = "accounts", inputInstance = "applyAccountId", outputInstance = "loginName")
-    private String applyAccountPhone;
+
     private String content;
     private String scenePhoto;
     private String confirmPhoto;
-    private String createdByName;
-    private LocalDateTime createdDate;
-    private String processInstanceId;
-    private String processStatus;
     private Boolean pass;
     private String passRemarks;
     private List<String> ids;
@@ -75,37 +61,6 @@ public class ShopBuildForm extends DataForm<ShopBuild>{
         this.confirmPhoto = confirmPhoto;
     }
 
-    public String getShopName() {
-        return shopName;
-    }
-
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
-    }
-
-    public String getOfficeName() {
-        return officeName;
-    }
-
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName;
-    }
 
     public String getShopId() {
         return shopId;
@@ -171,29 +126,6 @@ public class ShopBuildForm extends DataForm<ShopBuild>{
         this.scenePhoto = scenePhoto;
     }
 
-    public String getCreatedByName() {
-        return createdByName;
-    }
-
-    public void setCreatedByName(String createdByName) {
-        this.createdByName = createdByName;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public void setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
-    }
 
     public String getOldContents() {
         return oldContents;
@@ -209,29 +141,5 @@ public class ShopBuildForm extends DataForm<ShopBuild>{
 
     public void setMonthSaleQty(Integer monthSaleQty) {
         this.monthSaleQty = monthSaleQty;
-    }
-
-    public String getProcessStatus() {
-        return processStatus;
-    }
-
-    public void setProcessStatus(String processStatus) {
-        this.processStatus = processStatus;
-    }
-
-    public String getApplyAccountName() {
-        return applyAccountName;
-    }
-
-    public void setApplyAccountName(String applyAccountName) {
-        this.applyAccountName = applyAccountName;
-    }
-
-    public String getApplyAccountPhone() {
-        return applyAccountPhone;
-    }
-
-    public void setApplyAccountPhone(String applyAccountPhone) {
-        this.applyAccountPhone = applyAccountPhone;
     }
 }

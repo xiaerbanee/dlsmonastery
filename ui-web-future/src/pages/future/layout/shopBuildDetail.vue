@@ -71,6 +71,7 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <process-details v-model="inputForm.processInstanceId"></process-details>
       </el-form>
     </div>
   </div>

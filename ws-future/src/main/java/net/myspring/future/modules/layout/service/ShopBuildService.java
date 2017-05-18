@@ -9,6 +9,7 @@ import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.layout.domain.ShopBuild;
 import net.myspring.future.modules.layout.dto.ShopBuildDto;
 import net.myspring.future.modules.layout.mapper.ShopBuildMapper;
+import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
 import net.myspring.future.modules.layout.web.form.ShopBuildForm;
 import net.myspring.future.modules.layout.web.query.ShopBuildQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -54,6 +55,16 @@ public class ShopBuildService {
         }
 
         return shopBuildForm;
+    }
+
+    public ShopBuildDto detail(ShopBuildForm shopBuildForm){
+        ShopBuildDto shopBuildDto = new ShopBuildDto();
+        if(!shopBuildForm.isCreate()){
+            ShopBuild shopBuild = shopBuildMapper.findOne(shopBuildForm.getId());
+            shopBuildDto = BeanUtil.map(shopBuild,ShopBuildDto.class);
+            cacheUtils.initCacheInput(shopBuildDto);
+        }
+        return shopBuildDto;
     }
 
     public ShopBuild save(ShopBuildForm shopBuildForm) {

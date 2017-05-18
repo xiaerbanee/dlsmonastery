@@ -37,7 +37,6 @@ public class ShopBuildController {
 
     @RequestMapping(value = "getQuery")
     public ShopBuildQuery getQuery(ShopBuildQuery shopBuildQuery) {
-        shopBuildQuery.setAuditType("1");
         return shopBuildQuery;
     }
 
@@ -57,7 +56,7 @@ public class ShopBuildController {
     @RequestMapping(value = "batchAudit")
     public RestResponse batchAudit(ShopBuildForm shopBuildForm) {
         shopBuildService.batchAudit(shopBuildForm);
-        RestResponse restResponse = new RestResponse("成功", ResponseCodeEnum.removed.name());
+        RestResponse restResponse = new RestResponse("批量审批成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
 
@@ -68,10 +67,16 @@ public class ShopBuildController {
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
-    @RequestMapping(value = "detail")
-    public ShopBuildForm detail(ShopBuildForm shopBuildForm) {
+    @RequestMapping(value = "findForm")
+    public ShopBuildForm findForm(ShopBuildForm shopBuildForm) {
         return shopBuildService.findForm(shopBuildForm);
     }
+
+    @RequestMapping(value = "detail")
+    public ShopBuildDto detail(ShopBuildForm shopBuildForm){
+        return shopBuildService.detail(shopBuildForm);
+    }
+
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public ModelAndView export(ShopBuildQuery shopBuildQuery) {

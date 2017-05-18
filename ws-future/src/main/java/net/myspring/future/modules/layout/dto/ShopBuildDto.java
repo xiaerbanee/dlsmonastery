@@ -12,16 +12,97 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     private String shopId;
     @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
     private String shopName;
+    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "address")
+    private String address;
+    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "officeId")
     private String officeId;
     @CacheInput(inputKey = "offices", inputInstance = "officeId", outputInstance = "name")
     private String officeName;
+    private String shopType;
+
+    private String applyAccountId;
+    @CacheInput(inputKey = "accounts", inputInstance = "applyAccountId", outputInstance = "loginName")
+    private String applyAccountName;
+    @CacheInput(inputKey = "accounts", inputInstance = "applyAccountId", outputInstance = "employeeId")
+    private String employeeId;
+    @CacheInput(inputKey = "accounts", inputInstance = "employeeId", outputInstance = "mobilePhone")
+    private String applyAccountPhone;
+
+
     private String fixtureType;
+    private String buildType;
     private String content;
     private String oldContents;
     private String newContents;
-    private String processStatus;
     private String scenePhoto;
+
+    private String processStatus;
+    private String processInstanceId;
     private String processPositionId;
+
+    public String getShopType() {
+        return shopType;
+    }
+
+    public void setShopType(String shopType) {
+        this.shopType = shopType;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getBuildType() {
+        return buildType;
+    }
+
+    public void setBuildType(String buildType) {
+        this.buildType = buildType;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getApplyAccountId() {
+        return applyAccountId;
+    }
+
+    public void setApplyAccountId(String applyAccountId) {
+        this.applyAccountId = applyAccountId;
+    }
+
+    public String getApplyAccountName() {
+        return applyAccountName;
+    }
+
+    public void setApplyAccountName(String applyAccountName) {
+        this.applyAccountName = applyAccountName;
+    }
+
+    public String getApplyAccountPhone() {
+        return applyAccountPhone;
+    }
+
+    public void setApplyAccountPhone(String applyAccountPhone) {
+        this.applyAccountPhone = applyAccountPhone;
+    }
+
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
 
     public String getShopId() {
         return shopId;
