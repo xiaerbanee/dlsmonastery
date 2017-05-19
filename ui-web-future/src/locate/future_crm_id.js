@@ -1396,6 +1396,9 @@ export default {
   },
   productImeUploadList: {
     productImeUploadList: "laporan string kode",
+    imeOrMeidsMultiLine:'可输入多行',
+    imeOrMeids:'ime或meid(多行)',
+    noSelectionFound:'没有选中任何记录',
     batchPass: "konfirmasi",
     month: "penilaian bulanan",
     updateShopName: "laporan toko",

@@ -11,20 +11,21 @@
       <el-dialog :title="$t('productImeUploadList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="4">
-            <el-col :span="8">
+            <el-col :span="24">
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.officeId" filterable remote :placeholder="$t('productImeUploadList.inputWord')" :remote-method="remoteOffice" :loading="remoteLoading" :clearable=true>
-                  <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-                </el-select>
+                <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right"  :placeholder="$t('productImeUploadList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.month.label" :label-width="formLabelWidth">
+                <month-picker  v-model="inputForm.month" ></month-picker>
+              </el-form-item>
+              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('productImeUploadList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.ime.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.ime" auto-complete="off"  :placeholder="$t('productImeUploadList.likeSearch')"></el-input>
+              <el-form-item :label="formLabel.imeOrMeids.label"  :label-width="formLabelWidth">
+                <el-input  type="textarea" v-model="formData.imeOrMeids"  :placeholder="$t('productImeUploadList.imeOrMeidsMultiLine')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -36,76 +37,76 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"   :element-loading-text="$t('productImeUploadList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column  prop="month" :label="$t('productImeUploadList.month')" width="180" ></el-table-column>
-        <el-table-column prop="shop.name" :label="$t('productImeUploadList.updateShopName')"  ></el-table-column>
-        <el-table-column prop="productIme.ime" :label="$t('productImeUploadList.ime')"></el-table-column>
+        <el-table-column prop="shopName" :label="$t('productImeUploadList.updateShopName')"  ></el-table-column>
+        <el-table-column prop="productImeIme" :label="$t('productImeUploadList.ime')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('productImeUploadList.updateDate')"></el-table-column>
-        <el-table-column prop="employee.name" :label="$t('productImeUploadList.employeeName')"></el-table-column>
+        <el-table-column prop="employeeName" :label="$t('productImeUploadList.employeeName')"></el-table-column>
         <el-table-column prop="status"  :label="$t('productImeUploadList.status')" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('productImeUploadList.operation')" width="140">
-          <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
-          </template>
-        </el-table-column>
+
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
 <script>
-  export default {
+
+  import officeSelect from 'components/basic/office-select'
+  import monthPicker from 'components/common/month-picker'
+
+  export default{
+    components:{
+      officeSelect,
+      monthPicker,
+
+    },
     data() {
       return {
         pageLoading: false,
         pageHeight:600,
         page:{},
-        offices:[],
-        formData:{
+
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           officeId:'',
-          createdDate:"",
-          createdDateBTW:'',
+          createdDateRange:'',
           shopName:"",
-          ime:""
+          imeOrMeids:"",
+          month:"",
         },formLabel:{
           officeId:{label:this.$t('productImeUploadList.officeId')},
-          createdDateBTW:{label: this.$t('productImeUploadList.createdDate')},
+          createdDateRange:{label: this.$t('productImeUploadList.createdDate')},
           shopName:{label:this.$t('productImeUploadList.shopName')},
-          ime:{label:this.$t('productImeUploadList.ime')},
+          imeOrMeids:{label:this.$t('productImeUploadList.imeOrMeids')},
+          month:{label:this.$t('productImeUploadList.month')},
         },
-        formProperty:{},
-        pickerDateOption:util.pickerDateOption,
+
         selects:new Array(),
         formLabelWidth: '120px',
         formVisible: false,
-        isPageChange:false,
-        remoteLoading:false
+
       };
     },
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        util.setQuery("productImeUploadList",this.formData);
-        axios.get('/api/crm/productImeUpload',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("productImeUploadList",this.submitData);
+        axios.get('/api/ws/future/crm/productImeUpload?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
       },pageChange(pageNumber,pageSize) {
-        if(this.isPageChange){
-          this.formData.page = pageNumber;
-          this.formData.size = pageSize;
-          this.pageRequest();
-        }
-        this.isPageChange = true;
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -113,13 +114,7 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'productImeUploadForm'})
-      },itemAction:function(id,action){
-        if(action=="删除") {
-          axios.get('/api/crm/productImeSale/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          })
-        }
+
       },selectionChange(selection){
         console.log(selection);
         this.selects=new Array();
@@ -127,28 +122,29 @@
           this.selects.push(selection[key].id)
         }
       },batchPass(){
-        axios.get('/api/crm/productImeUpload/audit',{params:{ids:this.selects,pass:true}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        });
-      },checkSelectable(row) {
-        return row.status === '申请中'
-      },remoteOffice(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/hr/office/search',{params:{name:query}}).then((response)=>{
-            this.offices=response.data;
-            this.remoteLoading = false;
-          })
+
+        if(!this.selects || this.selects.length < 1){
+          this.$message(this.$t('productImeUploadList.noSelectionFound'));
+          return ;
         }
-      },
+
+        util.confirmBeforeBatchPass(this).then(() => {
+          this.submitDisabled = true;
+          this.pageLoading = true;
+          axios.get('/api/ws/future/crm/productImeUpload/audit',{params:{ids:this.selects, pass:'1'}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageLoading = false;
+            this.submitDisabled = false;
+            this.pageRequest();
+          });
+        }).catch(()=>{});
+
+
+      },checkSelectable(row) {
+        return row.status === '申请中';
+      }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/crm/productImeSale/getQuery').then((response) =>{
-        this.formProperty=response.data;
-        this.pageRequest();
-      });
+      this.pageRequest();
     }
   };
 </script>

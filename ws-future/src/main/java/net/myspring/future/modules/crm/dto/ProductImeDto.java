@@ -32,6 +32,83 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private Boolean enabled;
     private String billId;
 
+    @CacheInput(inputKey = "depots",inputInstance = "productImeSaleShopId",outputInstance = "name")
+    private String productImeSaleShopName;
+    private String productImeSaleShopId;
+    private String productImeSaleCreatedBy;
+    @CacheInput(inputKey = "accounts",inputInstance = "productImeSaleCreatedBy",outputInstance = "loginName")
+    private String productImeSaleCreatedByName;
+    private String productImeUploadShopId;
+    @CacheInput(inputKey = "depots",inputInstance = "productImeUploadShopId",outputInstance = "name")
+    private String productImeUploadShopName;
+    private String productImeUploadCreatedBy;
+    @CacheInput(inputKey = "accounts",inputInstance = "productImeUploadCreatedBy",outputInstance = "loginName")
+    private String productImeUploadCreatedByName;
+
+    public String getProductImeSaleShopName() {
+        return productImeSaleShopName;
+    }
+
+    public void setProductImeSaleShopName(String productImeSaleShopName) {
+        this.productImeSaleShopName = productImeSaleShopName;
+    }
+
+    public String getProductImeSaleShopId() {
+        return productImeSaleShopId;
+    }
+
+    public void setProductImeSaleShopId(String productImeSaleShopId) {
+        this.productImeSaleShopId = productImeSaleShopId;
+    }
+
+    public String getProductImeSaleCreatedBy() {
+        return productImeSaleCreatedBy;
+    }
+
+    public void setProductImeSaleCreatedBy(String productImeSaleCreatedBy) {
+        this.productImeSaleCreatedBy = productImeSaleCreatedBy;
+    }
+
+    public String getProductImeSaleCreatedByName() {
+        return productImeSaleCreatedByName;
+    }
+
+    public void setProductImeSaleCreatedByName(String productImeSaleCreatedByName) {
+        this.productImeSaleCreatedByName = productImeSaleCreatedByName;
+    }
+
+    public String getProductImeUploadShopId() {
+        return productImeUploadShopId;
+    }
+
+    public void setProductImeUploadShopId(String productImeUploadShopId) {
+        this.productImeUploadShopId = productImeUploadShopId;
+    }
+
+    public String getProductImeUploadShopName() {
+        return productImeUploadShopName;
+    }
+
+    public void setProductImeUploadShopName(String productImeUploadShopName) {
+        this.productImeUploadShopName = productImeUploadShopName;
+    }
+
+    public String getProductImeUploadCreatedBy() {
+        return productImeUploadCreatedBy;
+    }
+
+    public void setProductImeUploadCreatedBy(String productImeUploadCreatedBy) {
+        this.productImeUploadCreatedBy = productImeUploadCreatedBy;
+    }
+
+    public String getProductImeUploadCreatedByName() {
+        return productImeUploadCreatedByName;
+    }
+
+    public void setProductImeUploadCreatedByName(String productImeUploadCreatedByName) {
+        this.productImeUploadCreatedByName = productImeUploadCreatedByName;
+    }
+
     public Boolean getEnabled() {
         return enabled;
     }

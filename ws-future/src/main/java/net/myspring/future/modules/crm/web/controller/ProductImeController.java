@@ -45,4 +45,10 @@ public class ProductImeController {
         return productImeService.getProductImeHistoryList(id);
     }
 
+    @RequestMapping(value="findDtoListByImes")
+    public List<ProductImeDto> findDtoListByImes(String imeStr) {
+        return productImeService.findDtoListByImes(imeStr);
+    }
+
+
 }

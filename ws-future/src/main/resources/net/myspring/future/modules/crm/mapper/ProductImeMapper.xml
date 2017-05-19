@@ -87,6 +87,41 @@
     </select>
 
 
+    <select id="findDtoListByImeList" resultType="ProductImeDto">
+
+        SELECT
+        sale.created_date productImeSaleCreatedDate,
+        sale.created_by productImeSaleCreatedBy,
+        sale.shop_id productImeSaleShopId,
+        upload.created_date productImeUploadCreatedDate,
+        upload.created_by productImeUploadCreatedBy,
+        upload.shop_id productImeUploadShopId,
+        validProductIme.*
+        FROM
+        (
+            SELECT
+            t1.*
+            FROM
+            crm_product_ime t1,
+            crm_depot depot
+            WHERE
+                t1.enabled = 1
+                AND t1.depot_id = depot.id
+                AND depot.enabled = 1
+                AND t1.company_id =  #{companyId}
+                AND t1.ime in
+                <foreach item="item" index="index" collection="imeList" open="(" separator="," close=")">
+                      #{item}
+                </foreach>
+            ) validProductIme
+            LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id
+            LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id
+    </select>
+
+
+
+
+
     <select id="getProductImeDetail" resultType="ProductImeDto">
         SELECT
             sale.created_date productImeSaleCreatedDate,

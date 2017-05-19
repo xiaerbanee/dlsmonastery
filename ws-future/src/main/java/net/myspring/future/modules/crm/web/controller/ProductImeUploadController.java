@@ -1,6 +1,8 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto;
 import net.myspring.future.modules.crm.service.ProductImeUploadService;
@@ -13,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "crm/productImeUpload")
@@ -42,12 +42,12 @@ public class ProductImeUploadController {
     }
 
     @RequestMapping(value = "audit")
-    public String audit(@RequestParam(value = "ids[]") String[] ids,Boolean pass){
-        return null;
+    public RestResponse audit(@RequestParam(value = "ids[]") String[] ids,String pass){
+
+        productImeUploadService.batchAudit(ids, pass);
+        return new RestResponse("批量审核成功", ResponseCodeEnum.audited.name());
     }
 
-    private List<String> getActionList(ProductImeUpload productImeUpload) {
-        return null;
-    }
+
 
 }

@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">{{ $t('goodsOrderList.add') }}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderList.filter') }}</el-button>
-        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form">
         <el-form :model="formData">
