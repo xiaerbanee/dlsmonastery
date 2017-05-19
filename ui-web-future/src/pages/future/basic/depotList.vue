@@ -6,7 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:depot:edit'">{{$t('depotList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depot:view'">{{$t('depotList.filter')}}</el-button>
         <el-button type="primary" @click="synData"  icon="plus" v-permit="'crm:bank:edit'">{{$t('depotList.syn')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('bankList.filter')" v-model="formVisible" size="large" class="search-form">
         <el-form :model="formData">

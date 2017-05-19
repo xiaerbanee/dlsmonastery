@@ -23,6 +23,13 @@ public class DictEnumService {
     @Autowired
     private CacheUtils cacheUtils;
 
+    public DictEnumDto findOne(String id) {
+        DictEnum dictEnum= dictEnumMapper.findOne(id);
+        DictEnumDto dictEnumDto = BeanUtil.map(dictEnum,DictEnumDto.class);
+        cacheUtils.initCacheInput(dictEnumDto);
+        return dictEnumDto;
+    }
+
     public List<String> findValueByCategory(String category){
         List<DictEnum> dictEnumList=dictEnumMapper.findByCategory(category);
         return CollectionUtil.extractToList(dictEnumList,"value");
@@ -37,16 +44,6 @@ public class DictEnumService {
 
     public DictEnumDto findByValue(String value){
         return dictEnumMapper.findByValue(value);
-    }
-
-
-    public DictEnumForm findForm(DictEnumForm dictEnumForm) {
-        if(!dictEnumForm.isCreate()) {
-            DictEnum dictEnum =dictEnumMapper.findOne(dictEnumForm.getId());
-            dictEnumForm= BeanUtil.map(dictEnum,DictEnumForm.class);
-            cacheUtils.initCacheInput(dictEnumForm);
-        }
-        return dictEnumForm;
     }
 
     public DictEnum save(DictEnumForm dictEnumForm) {

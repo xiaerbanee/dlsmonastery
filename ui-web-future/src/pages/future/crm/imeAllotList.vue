@@ -6,7 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:imeAllot:edit'">{{$t('imeAllotList.imeAllotList')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:imeAllot:edit'">{{$t('imeAllotList.batchPass')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:imeAllot:view'">{{$t('imeAllotList.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('imeAllotList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">

@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depotDetail:view'">{{$t('depotDetailList.filterOrExport')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="upload2" v-permit="'crm:depotDetail:edit'">{{$t('depotDetailList.syn')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('depotDetailList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData" >

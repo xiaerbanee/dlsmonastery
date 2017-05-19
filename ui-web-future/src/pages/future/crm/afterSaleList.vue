@@ -7,7 +7,7 @@
         <el-button type="primary" @click="itemEdit" icon="edit" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.edit')}}</el-button>
         <el-button type="primary" @click="itemSyn" icon="plus" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.syn')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:afterSale:view'">{{$t('afterSaleList.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('afterSaleList.filter')" v-model="formVisible" size="large" class="search-form">
         <el-form :model="formData">

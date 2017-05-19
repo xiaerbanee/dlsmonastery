@@ -41,12 +41,17 @@ public class DictEnumController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findForm")
-    public DictEnumForm findForm(DictEnumForm dictEnumForm){
-        dictEnumForm=dictEnumService.findForm(dictEnumForm);
+    @RequestMapping(value = "findOne")
+    public DictEnumDto findOne(String id){
+        return dictEnumService.findOne(id);
+    }
+
+    @RequestMapping(value = "getForm")
+    public DictEnumForm getForm(DictEnumForm dictEnumForm){
         dictEnumForm.setCategoryList(dictEnumService.findDistinctCategory());
         return dictEnumForm;
     }
+
 
     @RequestMapping(value="getQuery")
     public  DictEnumQuery getQuery(DictEnumQuery dictEnumQuery){
@@ -60,7 +65,7 @@ public class DictEnumController {
     }
 
     @RequestMapping(value = "findByValue")
-    public DictEnumDto findByvalue(String value){
+    public DictEnumDto findByValue(String value){
         return dictEnumService.findByValue(value);
     }
 }

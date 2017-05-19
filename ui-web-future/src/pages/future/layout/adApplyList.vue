@@ -7,7 +7,7 @@
         <el-button type="primary" @click="itemBillAdd" icon="plus" v-permit="'crm:adApply:edit'">{{$t('adApplyList.adApplyBillForm')}}</el-button>
         <el-button type="primary" @click="grain" icon="plus" v-permit="'crm:adApply:goods'">{{$t('adApplyList.adApplyGoods')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adApply:view'">{{$t('adApplyList.filterOrExport')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('adApplyList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData" method="get" >

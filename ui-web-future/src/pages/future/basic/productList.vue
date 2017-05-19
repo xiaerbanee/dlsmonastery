@@ -6,7 +6,7 @@
         <el-button type="primary" @click="productEdit" icon="edit" v-permit="'crm:product:edit'">{{$t('productList.productEdit')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:product:view'">{{$t('productList.filter')}}</el-button>
         <el-button type="primary" @click="synData"  icon="plus" v-permit="'crm:bank:edit'">{{$t('productList.syn')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('productList.filter')" v-model="formVisible"  size="small" class="search-form">
         <el-form :model="formData">
