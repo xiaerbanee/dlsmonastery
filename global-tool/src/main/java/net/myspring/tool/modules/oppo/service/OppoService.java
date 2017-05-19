@@ -36,7 +36,8 @@ public class OppoService {
     private OppoPlantProductItemelectronSelMapper oppoPlantProductItemelectronSelMapper;
 
     public String getCodes(String type) {
-        return Const.CompanyConfig.getMap().get("JXOPPO" + Const.CharEnum.UNDER_LINE.getValue() + type);
+        return null;
+        //return Const.CompanyConfig.getMap().get("JXOPPO" + Const.CharEnum.UNDER_LINE.getValue() + type);
     }
 
     @FactoryDataSource

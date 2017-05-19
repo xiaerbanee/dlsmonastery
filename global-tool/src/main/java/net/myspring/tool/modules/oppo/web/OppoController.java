@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.oppo.web;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.utils.Const;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
@@ -29,8 +30,8 @@ public class OppoController {
 
     @RequestMapping(value="syn")
     public String synFactoryOppo(String date){
-        List<String> mainCodes = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_CODES").split(Const.CharEnum.COMMA.getValue()));
-        List<String> mainPasswords = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_PASSWORD").split(Const.CharEnum.COMMA.getValue()));
+        List<String> mainCodes = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_CODES").split(CharConstant.COMMA));
+        List<String> mainPasswords = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_PASSWORD").split(CharConstant.COMMA));
         LocalDate localDate = LocalDateUtils.parse(date);
         List<OppoPlantProductSel> plantProductSel = oppoService.plantProductSel(mainCodes.get(0), mainPasswords.get(0), "");
         for(OppoPlantProductSel oppoPlantProductSel:plantProductSel){

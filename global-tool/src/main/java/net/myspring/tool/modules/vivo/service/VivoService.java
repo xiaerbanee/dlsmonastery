@@ -65,7 +65,8 @@ public class VivoService {
     }
 
     public String getCodes(String type) {
-        return Const.CompanyConfig.getMap().get("JXVIVO" + Const.CharEnum.UNDER_LINE.getValue() + type);
+        return null;
+        //return Const.CompanyConfig.getMap().get("JXVIVO" + Const.CharEnum.UNDER_LINE.getValue() + type);
     }
 
 

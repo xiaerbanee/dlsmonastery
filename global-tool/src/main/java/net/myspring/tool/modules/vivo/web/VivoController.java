@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.vivo.web;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.utils.Const;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
@@ -26,7 +27,7 @@ public class VivoController {
     public String synFactoryVivo(String date){
         RequestUtils.getRequestEntity().setAccountId("1");
         RequestUtils.getRequestEntity().setCompanyId("1");
-        List<String> agentCodes =  Arrays.asList(vivoService.getCodes("FACTORY_AGENT_CODES").split(Const.CharEnum.COMMA.getValue()));
+        List<String> agentCodes =  Arrays.asList(vivoService.getCodes("FACTORY_AGENT_CODES").split(CharConstant.COMMA));
         //同步颜色编码
         LocalDate localDate= LocalDateUtils.parse(date);
         List<VivoProducts> vivoProductsList = vivoService.products();

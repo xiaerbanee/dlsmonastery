@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.imoo.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.utils.Const;
@@ -33,7 +34,8 @@ public class ImooService {
     private ImooPrdocutImeiDeliverMapper imooPrdocutImeiDeliverMapper;
 
     public String getCodes(String type){
-        return Const.CompanyConfig.getMap().get("JXIMOO"+Const.CharEnum.UNDER_LINE.getValue()+type);
+        return null;
+        //return Const.CompanyConfig.getMap().get("JXIMOO"+ CharConstant.UNDER_LINE+type);
     }
 
     @FactoryDataSource
@@ -72,7 +74,7 @@ public class ImooService {
     @Transactional(readOnly = false)
     public String pullPlantSendimeis(List<ImooPrdocutImeiDeliver> imooPrdocutImeiDelivers){
         String agentCodeStr = getCodes("FACTORY_AGENT_CODES");
-        List<String> agentCodes = Arrays.asList(agentCodeStr.split(Const.CharEnum.COMMA.getValue()));
+        List<String> agentCodes = Arrays.asList(agentCodeStr.split(CharConstant.COMMA));
         List<ImooPrdocutImeiDeliver> list = Lists.newArrayList();
         for(String agentCode:agentCodes) {
             if(CollectionUtil.isNotEmpty(imooPrdocutImeiDelivers)) {
