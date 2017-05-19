@@ -1546,6 +1546,7 @@ export default {
     inputLegalValue: "请输入合法的数值",
     yes:"是",
     no:"否",
+    selectTowKey:"输入关键字",
   },
   storeAllotList: {
     storeAllotList: "大库调拨",

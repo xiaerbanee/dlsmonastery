@@ -55,10 +55,14 @@
         this.$emit('input', newVal);
         return true;
       },setValue(val) {
-        if(this.innerId == val || val=="") {
-          return;
+        if(this.innerId != val ) {
+          this.innerId=val;
         }
-        this.innerId=val;
+
+        if(!this.innerId){
+            return;
+        }
+
         this.remoteLoading = true;
         axios.get(this.searchByIdUrl+'?id=' + this.innerId).then((response)=>{
           this.itemList=[];
@@ -70,9 +74,9 @@
       this.setValue(this.value);
     },watch: {
       value :function (newVal) {
-        if(newVal){
+
           this.setValue(newVal);
-        }
+
       }
     }
   };
