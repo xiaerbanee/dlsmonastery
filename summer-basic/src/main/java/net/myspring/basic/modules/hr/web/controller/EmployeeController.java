@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.enums.DictEnumCategoryEnum;
+import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;

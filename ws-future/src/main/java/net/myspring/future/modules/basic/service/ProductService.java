@@ -5,7 +5,6 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.future.common.enums.CompanyNameEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.IdUtils;
@@ -19,7 +18,6 @@ import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
-import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -131,24 +129,6 @@ public class ProductService {
         if(adApplyForm.getShopId() != null){
             Depot depot = depotMapper.findOne(adApplyForm.getShopId());
             adApplyForm.setShop(depot);
-            if(CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyId())){
-                if(depot != null && depot.getCode().startsWith("IM0")){
-                    for(int i= adProducts.size()-1;i >= 0; i--){
-                        Product product = adProducts.get(i);
-                        if(!product.getOutGroupName().startsWith("imoo")){
-                            adProducts.remove(i);
-                        }
-                    }
-                }
-                if(depot != null && depot.getCode().startsWith("DJ")){
-                    for(int i = adProducts.size()-1; i>=0; i--){
-                        Product product = adProducts.get(i);
-                        if(!product.getOutGroupName().startsWith("电玩")){
-                            adProducts.remove(i);
-                        }
-                    }
-                }
-            }
         }
         return adProducts;
     }
@@ -199,19 +179,6 @@ public class ProductService {
                 product.setOutGroupId(map.get("fgroup").toString());
                 product.setOutGroupName(map.get("groupName").toString());
                 product.setCode(map.get("code").toString());
-                if(CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyId()) || CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyId())){
-                    if("商品类".equals(map.get("groupName").toString())){
-                        if(map.get("name").toString().trim().contains("移动")){
-                            product.setNetType("移动");
-                        }else{
-                            product.setNetType("联信");
-                        }
-                    }else{
-                        product.setNetType("全网通");
-                    }
-                }else{
-                    product.setNetType("全网通");
-                }
                 productMapper.update(product);
 
             }

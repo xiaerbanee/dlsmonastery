@@ -10,7 +10,6 @@ import java.util.List;
  */
 public enum NetTypeEnum {
     全网通, 移动, 联信;
-    /*NETMOSA,CMCC,CHUCHA*/
     private static List<String> list= Lists.newArrayList();
 
     public static List<String> getList(){

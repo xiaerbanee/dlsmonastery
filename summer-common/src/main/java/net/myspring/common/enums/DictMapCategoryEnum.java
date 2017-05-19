@@ -1,4 +1,4 @@
-package net.myspring.future.common.enums;
+package net.myspring.common.enums;
 
 /**
  * Created by liuj on 2016/12/31.
@@ -15,17 +15,5 @@ public enum DictMapCategoryEnum {
     门店_核心商圈,
     门店_广告印刷,
     机构分类,
-    门店_体验店类型
-    /*STORE_CHAINPRO,
-    STORE_MNOPRO,
-    STORE_TURNOVER,
-    STORE_BUSINESSPATTERN,
-    STORE_CHANNELS,
-    STORE_AREAS,
-    STORE_POSTYPE,
-    STORE_SHOPSIZE,
-    STORE_COREBUSINESSAREA,
-    STORE_SHOPPRINT,
-    ORGANIZATIONSORT,
-    STORE_EXPERIENCETYPE;*/
+    门店_体验店类型;
 }

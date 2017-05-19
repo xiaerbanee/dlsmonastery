@@ -11,7 +11,6 @@ import java.util.List;
 public enum InputTypeEnum {
 
     工厂入库, 手工入库;
-    /*NUMBER,AREA*/
 
     private static List<String> list= Lists.newArrayList();
 

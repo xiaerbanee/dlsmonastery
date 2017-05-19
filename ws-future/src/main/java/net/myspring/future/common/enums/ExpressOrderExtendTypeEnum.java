@@ -7,7 +7,6 @@ import java.util.List;
 
 public enum ExpressOrderExtendTypeEnum {
         手机订单, 物料订单;
-        /*MOBIE_ORDER,MATERIAL_ORDER,DEPOT_ALLOT*/
 
         private static List<String> list= Lists.newArrayList();
 
