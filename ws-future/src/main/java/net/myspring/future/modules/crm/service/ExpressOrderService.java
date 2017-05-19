@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -126,12 +127,13 @@ public class ExpressOrderService {
     public ExpressOrder reCalcAndUpdateExpressCodes(String expressOrderId) {
 
         ExpressOrder eo = expressOrderMapper.findOne(expressOrderId);
-        eo.setExpressCodes(CollectionUtil.extractAndJoin( expressMapper.findByExpressOrderId(expressOrderId), "code"));
+        List<Express> expressList = expressMapper.findByExpressOrderId(expressOrderId);
+        eo.setExpressCodes(StringUtils.join(CollectionUtil.extractToList(expressList, "code"), CharConstant.COMMA));
         expressOrderMapper.update(eo);
         return eo;
     }
 
-    public ExpressOrderForm findForm(ExpressOrderForm expressOrderForm) {
+    public ExpressOrderForm getForm(ExpressOrderForm expressOrderForm) {
 
         if(expressOrderForm.isCreate()){
             throw new ServiceException("expressOrderCantNew");

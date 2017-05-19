@@ -1,4 +1,5 @@
 package net.myspring.tool.common.utils;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
 import net.myspring.tool.modules.oppo.service.OppoService;
 import org.slf4j.Logger;
@@ -21,8 +22,8 @@ public class ScheduleUtils {
 
 	@Transactional
 	public String synOppo(LocalDate date) {
-		List<String> mainCodes = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_CODES").split(Const.CharEnum.COMMA.getValue()));
-		List<String> mainPasswords = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_PASSWORD").split(Const.CharEnum.COMMA.getValue()));
+		List<String> mainCodes = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_CODES").split(CharConstant.COMMA));
+		List<String> mainPasswords = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_PASSWORD").split(CharConstant.COMMA));
 		//同步颜色编码
 		List<OppoPlantProductSel> plantProductSel = oppoService.plantProductSel(mainCodes.get(0), mainPasswords.get(0), "");
 		String message=oppoService.pullPlantProductSels(plantProductSel);
@@ -59,7 +60,7 @@ public class ScheduleUtils {
 //		List<VivoPlantProducts> vivoPlantProductsList = vivoService.plantProducts();
 //		futureVivoService.pullPlantProducts(vivoPlantProductsList);
 //		//同步发货串吗
-//		List<String> agentCodes =  Arrays.asList(futureVivoService.getCodes("FACTORY_AGENT_CODES").split(Const.CharEnum.COMMA.getValue()));
+//		List<String> agentCodes =  Arrays.asList(futureVivoService.getCodes("FACTORY_AGENT_CODES").split(CharConstant.COMMA));
 //		List<VivoPlantSendimei> vivoPlantSendimeis = vivoService.plantSendimei(date,agentCodes);
 //		futureVivoService.pullPlantSendimeis(vivoPlantSendimeis);
 //		//同步电子保卡
@@ -76,7 +77,7 @@ public class ScheduleUtils {
 //
 //		List<ImooPlantBasicProduct> imooPlantBasicProducts = imooService.imooPlantBasicProducts();
 //		futureImooService.pullPlantProducts(imooPlantBasicProducts);
-//		List<String> agentCodes = Arrays.asList(futureImooService.getCodes("FACTORY_AGENT_CODES").split(Const.CharEnum.COMMA.getValue()));
+//		List<String> agentCodes = Arrays.asList(futureImooService.getCodes("FACTORY_AGENT_CODES").split(CharConstant.COMMA));
 //		List<ImooPrdocutImeiDeliver> imooPrdocutImeiDelivers = imooService.plantPrdocutImeiDeliverByDate(agentCodes);
 //		futureImooService.pullPlantProducts(imooPlantBasicProducts);
 //		futureImooService.pullPlantSendimeis(imooPrdocutImeiDelivers);

@@ -21,7 +21,7 @@ Page({
   initPage: function () {
     var that = this;
     wx.request({
-      url: $util.getUrl("basic/hr/dutyLeave/getFormProperty"),
+      url: $util.getUrl("basic/hr/dutyLeave/getForm"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId,

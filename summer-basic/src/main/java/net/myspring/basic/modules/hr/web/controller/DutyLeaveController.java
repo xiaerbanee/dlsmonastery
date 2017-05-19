@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 
-import net.myspring.basic.common.enums.DictEnumCategoryEnum;
+import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
@@ -35,7 +35,7 @@ public class DutyLeaveController {
     }
 
     @RequestMapping(value="findOne")
-    public DutyLeaveForm getFormProperty(DutyLeaveForm dutyLeaveForm){
+    public DutyLeaveForm getForm(DutyLeaveForm dutyLeaveForm){
         dutyLeaveForm.setDateList(DutyDateTypeEnum.values());
         dutyLeaveForm.setLeaveList(dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.toString()));
         return dutyLeaveForm;

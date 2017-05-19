@@ -132,7 +132,7 @@
           }
         }
       },created(){
-        axios.get('/api/crm/productImeSale/getFormProperty').then((response)=>{
+        axios.get('/api/crm/productImeSale/getForm').then((response)=>{
           this.companyName=response.data.companyName;
         })
       }

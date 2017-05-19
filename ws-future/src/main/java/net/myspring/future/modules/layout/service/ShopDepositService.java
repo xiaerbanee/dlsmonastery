@@ -76,7 +76,7 @@ public class ShopDepositService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public ShopDepositForm findForm(ShopDepositForm shopDepositForm) {
+    public ShopDepositForm getForm(ShopDepositForm shopDepositForm) {
         if(!shopDepositForm.isCreate()){
             ShopDeposit shopDeposit=shopDepositMapper.findOne(shopDepositForm.getId());
             shopDepositForm= BeanUtil.map(shopDeposit, ShopDepositForm.class);

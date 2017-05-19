@@ -37,10 +37,10 @@ public class AccountChangeService {
         return accountChange;
     }
 
-    public AccountChangeForm findForm(AccountChangeQuery accountChangeQuery){
+    public AccountChangeForm getForm(AccountChangeQuery accountChangeQuery){
         AccountChangeForm accountChangeForm =new AccountChangeForm();
         if(StringUtils.isNotBlank(accountChangeQuery.getId())||StringUtils.isNotBlank(accountChangeQuery.getAccountId())){
-            accountChangeForm = accountChangeMapper.findForm(accountChangeQuery);
+            accountChangeForm = accountChangeMapper.getForm(accountChangeQuery);
             if(StringUtils.isNotBlank(accountChangeQuery.getId())){
                 AccountChange accountChange=accountChangeMapper.findOne(accountChangeQuery.getId());
                 accountChangeForm.setType(accountChange.getType());

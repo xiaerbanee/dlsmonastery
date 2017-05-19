@@ -82,7 +82,7 @@ public class DutyLeaveService {
         return dutyLeave;
     }
 
-    public DutyLeaveForm findForm(DutyLeaveForm dutyLeaveForm) {
+    public DutyLeaveForm getForm(DutyLeaveForm dutyLeaveForm) {
         if(!dutyLeaveForm.isCreate()){
             DutyLeave dutyLeave=dutyLeaveMapper.findOne(dutyLeaveForm.getId());
             dutyLeaveForm= BeanUtil.map(dutyLeave,DutyLeaveForm.class);

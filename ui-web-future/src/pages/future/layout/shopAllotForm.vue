@@ -130,7 +130,7 @@
         this.filterShopAllotDetailList = tempList;
       }
     },created(){
-      axios.get('/api/ws/future/crm/shopAllot/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/crm/shopAllot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
         this.searchDetail();
       })

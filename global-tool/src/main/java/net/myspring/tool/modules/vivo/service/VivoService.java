@@ -2,17 +2,14 @@ package net.myspring.tool.modules.vivo.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.netflix.discovery.converters.Auto;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.utils.Const;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.mapper.*;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +62,8 @@ public class VivoService {
     }
 
     public String getCodes(String type) {
-        return Const.CompanyConfig.getMap().get("JXVIVO" + Const.CharEnum.UNDER_LINE.getValue() + type);
+        return null;
+        //return Const.CompanyConfig.getMap().get("JXVIVO" + Const.CharEnum.UNDER_LINE.getValue() + type);
     }
 
 

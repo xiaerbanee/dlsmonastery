@@ -38,7 +38,7 @@ public class ShopImageController {
 
     @RequestMapping(value = "findOne")
     public ShopImageForm findOne(ShopImageForm shopImageForm) {
-        shopImageForm = shopImageService.findForm(shopImageForm);
+        shopImageForm = shopImageService.getForm(shopImageForm);
         List<String> imageTypeList=Arrays.asList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.name()).getValue().split(","));
         shopImageForm.setImageTypeList(imageTypeList);
         return shopImageForm;

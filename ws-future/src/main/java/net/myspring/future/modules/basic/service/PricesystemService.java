@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.IdUtils;
+import net.myspring.util.text.IdUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
@@ -110,7 +110,7 @@ public class PricesystemService {
         return pricesystem;
     }
 
-    public PricesystemForm findForm(PricesystemForm pricesystemForm) {
+    public PricesystemForm getForm(PricesystemForm pricesystemForm) {
         if(!pricesystemForm.isCreate()){
             Pricesystem pricesystem = pricesystemMapper.findOne(pricesystemForm.getId());
             pricesystemForm=BeanUtil.map(pricesystem, PricesystemForm.class);

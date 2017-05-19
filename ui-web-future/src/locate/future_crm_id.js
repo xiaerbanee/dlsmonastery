@@ -1657,6 +1657,7 @@ export default {
     inputLegalValue: "silahkan masukkan angka yang valid",
     yes:"是",
     no:"否",
+    selectTowKey:"输入关键字",
 
   },
   storeAllotList: {

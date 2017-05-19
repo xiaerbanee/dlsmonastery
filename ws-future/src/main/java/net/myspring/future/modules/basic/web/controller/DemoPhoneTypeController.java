@@ -43,9 +43,9 @@ public class DemoPhoneTypeController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findForm")
+    @RequestMapping(value = "getForm")
     public DemoPhoneTypeForm findOne(DemoPhoneTypeForm demoPhoneTypeForm){
-        demoPhoneTypeForm=demoPhoneTypeService.findForm(demoPhoneTypeForm);
+        demoPhoneTypeForm=demoPhoneTypeService.getForm(demoPhoneTypeForm);
 //        demoPhoneTypeForm.setProductTypeList(productTypeService.findAll());
         return demoPhoneTypeForm;
     }

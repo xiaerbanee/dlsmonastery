@@ -131,7 +131,7 @@
         this.fileList = fileList;
       }
     },created(){
-      axios.get('/api/ws/future/layout/shopBuild/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/layout/shopBuild/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         if(this.inputForm.id != null){
           this.shopDisabled = true;

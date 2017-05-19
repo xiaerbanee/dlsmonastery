@@ -92,7 +92,7 @@
         }
       },created(){
 
-        axios.get('/api/ws/future/crm/bankIn/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/bankIn/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
       }

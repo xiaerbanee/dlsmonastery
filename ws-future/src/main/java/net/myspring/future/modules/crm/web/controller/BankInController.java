@@ -82,9 +82,9 @@ public class BankInController {
         return new RestResponse("批量审核成功",ResponseCodeEnum.audited.name());
     }
 
-    @RequestMapping(value = "findForm")
-    public BankInForm findForm(BankInForm bankInForm ){
-        BankInForm  result =bankInService.findForm(bankInForm);
+    @RequestMapping(value = "getForm")
+    public BankInForm getForm(BankInForm bankInForm ){
+        BankInForm  result =bankInService.getForm(bankInForm);
 
         result.setTypeList(BankInTypeEnum.getList());
         result.setBankDtoList(bankService.findBankDtosByAccountId(RequestUtils.getAccountId()));

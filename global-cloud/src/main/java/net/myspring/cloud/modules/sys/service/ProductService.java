@@ -34,7 +34,7 @@ public class ProductService {
         return productMapper.findMaxOutDate(companyId);
     }
 
-    public Map<String,Object> getFormProperty(){
+    public Map<String,Object> getForm(){
         String companyId = RequestUtils.getCompanyId();
         List<Product> productList = productMapper.findByCompanyId(companyId);
         List<ProductDto> productDtoList = BeanUtil.map(productList,ProductDto.class);

@@ -63,9 +63,9 @@ public class DutySignController {
         return restResponse;
     }
 
-    @RequestMapping(value = "findForm")
+    @RequestMapping(value = "getForm")
     public DutySignForm detail(DutySignForm dutySignForm) {
-        dutySignForm = dutySignService.findForm(dutySignForm);
+        dutySignForm = dutySignService.getForm(dutySignForm);
         return dutySignForm;
     }
 

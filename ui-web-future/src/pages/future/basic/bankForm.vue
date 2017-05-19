@@ -70,7 +70,7 @@
           })
         }
       },created(){
-          axios.get('/api/ws/future/basic/bank/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/bank/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm=response.data;
             if(response.data.accountList!=null&&response.data.accountList.length>0){
               this.accounts=response.data.accountList;

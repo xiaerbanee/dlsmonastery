@@ -10,7 +10,6 @@ import java.util.List;
  */
 public enum ActivityTypeEnum {
     路演,拉销;
-    /*ROADSHOW,BROACHING;*/
     private static List<String> list= Lists.newArrayList();
 
     public static List<String> getList(){

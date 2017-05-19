@@ -104,7 +104,7 @@
         }
       }, created(){
           //押金列表只能增加，不能修改
-        axios.get('/api/ws/future/crm/shopDeposit/findForm').then((response)=>{
+        axios.get('/api/ws/future/crm/shopDeposit/getForm').then((response)=>{
               this.inputForm = response.data;
           })
       }

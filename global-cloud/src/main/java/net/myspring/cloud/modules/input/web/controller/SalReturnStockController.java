@@ -33,7 +33,7 @@ public class SalReturnStockController {
 
     @RequestMapping(value = "form")
     public BatchBillQuery form (BatchBillQuery batchBillQuery) {
-        batchBillQuery = salReturnStockService.getFormProperty(batchBillQuery);
+        batchBillQuery = salReturnStockService.getForm(batchBillQuery);
         return batchBillQuery;
     }
 

@@ -53,8 +53,8 @@ public class ShopDepositController {
     /**
      * 押金列表只能够新增，不能修改和删除
      */
-    @RequestMapping(value = "findForm")
-    public ShopDepositForm findForm() {
+    @RequestMapping(value = "getForm")
+    public ShopDepositForm getForm() {
         ShopDepositForm shopDepositForm = new ShopDepositForm();
         shopDepositForm.setOutBillTypeList(OutBillTypeEnum.getList());
         return shopDepositForm;

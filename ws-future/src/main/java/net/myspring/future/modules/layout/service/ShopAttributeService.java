@@ -5,8 +5,8 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.DictEnumCategoryEnum;
-import net.myspring.future.common.enums.DictMapCategoryEnum;
+import net.myspring.common.enums.DictEnumCategoryEnum;
+import net.myspring.common.enums.DictMapCategoryEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.client.DictMapClient;
@@ -61,12 +61,12 @@ public class ShopAttributeService {
     }
 
 
-    public ShopAttributeForm findForm(ShopAttributeForm shopAttributeForm){
+    public ShopAttributeForm getForm(ShopAttributeForm shopAttributeForm){
         if(StringUtils.isNotBlank(shopAttributeForm.getShopId())){
             shopAttributeForm.setShop(depotMapper.findOne(shopAttributeForm.getShopId()));
             List<ShopAttribute> shopAttributeList=shopAttributeMapper.findByShopId(shopAttributeForm.getShopId());
             Map<String,ShopAttribute> shopAttributeMap= CollectionUtil.extractToMap(shopAttributeList,"typeName");
-            List<DictEnumDto> dictEnumList=dictEnumClient.findByCategory(DictEnumCategoryEnum.SHOP_ATTRIBUTE_TYPE.getValue());
+            List<DictEnumDto> dictEnumList=dictEnumClient.findByCategory(DictEnumCategoryEnum.SHOP_ATTRIBUTE_TYPE.name());
             List<ShopAttribute> shopAttributes=Lists.newArrayList();
             for(DictEnumDto dictEnumDto:dictEnumList){
                 ShopAttribute shopAttribute=shopAttributeMap.get(dictEnumDto.getValue());

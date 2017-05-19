@@ -74,7 +74,6 @@ public class DepotDto extends DataDto<Depot> {
         //TODO 是否定金門店
 //        String isNotDepotStoreId=Global.getCompanyConfig(AccountUtils.getCompany().getId(),CompanyConfigCode.IS_NOT_DEPOSIT_STORE.getCode());
 //        if(store!=null&& StringUtils.isNotBlank(isNotDepotStoreId)){
-//            List<Long> storeIds= IdUtils.getIdList(isNotDepotStoreId);
 //            if(storeIds.contains(store.getId())){
 //                model.addAttribute("isNotDepotStore",true);
 //            }

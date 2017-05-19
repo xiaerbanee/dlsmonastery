@@ -48,7 +48,7 @@ public class DutyTripService {
         return dutyTrip;
     }
 
-    public DutyTripForm findForm(DutyTripForm dutyTripForm) {
+    public DutyTripForm getForm(DutyTripForm dutyTripForm) {
         DutyTrip dutyTrip =dutyTripMapper.findOne(dutyTripForm.getId());
         dutyTripForm= BeanUtil.map(dutyTrip,DutyTripForm.class);
         cacheUtils.initCacheInput(dutyTripForm);

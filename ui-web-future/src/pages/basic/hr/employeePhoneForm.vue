@@ -100,11 +100,11 @@
           })
         }
       },created(){
-        axios.get('/api/basic/hr/employeePhone/getFormProperty').then((response)=>{
+        axios.get('/api/basic/hr/employeePhone/getForm').then((response)=>{
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/basic/hr/employeePhone/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/hr/employeePhone/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
             if(response.data.depot!=null){
                 this.depots=new Array(response.data.depot)

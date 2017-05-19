@@ -208,7 +208,7 @@
           this.shipForm.shouldPay=this.inputForm.expressOrder.shouldPay
 
         })
-      },getFormProperty(){
+      },getForm(){
         axios.get('/api/crm/adGoodsOrder/getShipFormProperty',{params:{id:this.$route.query.id,}}).then((response)=>{
           this.shipFormProperty=response.data;
           this.activitiEntity = response.data.activitiEntity;
@@ -216,7 +216,7 @@
       }
     },created(){
       this.findOne();
-      this.getFormProperty();
+      this.getForm();
     }
   }
 </script>

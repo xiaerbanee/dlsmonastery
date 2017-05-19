@@ -25,7 +25,7 @@ Page({
     var that = this;
     var options = that.data.options;
     wx.request({
-      url: $util.getUrl("crm/shopAd/getFormProperty"),
+      url: $util.getUrl("crm/shopAd/getForm"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId },

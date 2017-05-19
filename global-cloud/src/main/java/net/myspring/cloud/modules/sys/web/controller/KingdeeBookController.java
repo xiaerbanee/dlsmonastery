@@ -34,9 +34,9 @@ public class KingdeeBookController {
         return kingdeeBookQuery;
     }
 
-    @RequestMapping(value = "findForm")
-    public KingdeeBookForm findForm(KingdeeBookForm kingdeeBookForm){
-         kingdeeBookForm = kingdeeBookService.findForm(kingdeeBookForm);
+    @RequestMapping(value = "getForm")
+    public KingdeeBookForm getForm(KingdeeBookForm kingdeeBookForm){
+         kingdeeBookForm = kingdeeBookService.getForm(kingdeeBookForm);
         return kingdeeBookForm;
     }
 

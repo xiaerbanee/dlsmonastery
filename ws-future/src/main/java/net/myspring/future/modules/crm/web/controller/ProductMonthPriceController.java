@@ -2,14 +2,12 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import net.myspring.future.modules.crm.domain.ProductMonthPrice;
-import net.myspring.future.modules.crm.service.ProductMonthPriceService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/productMonthPrice")
@@ -27,11 +25,11 @@ public class ProductMonthPriceController {
         return null;
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public String getFormProperty() {
+    @RequestMapping(value = "getForm")
+    public String getForm() {
         return null;
     }
-    @RequestMapping(value = "findForm")
+    @RequestMapping(value = "findOne")
     public String findOne(ProductMonthPrice productMonthPrice){
         return null;
     }

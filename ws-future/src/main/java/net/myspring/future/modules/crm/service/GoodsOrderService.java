@@ -7,7 +7,7 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.ExpressOrderExtendTypeEnum;
+import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
@@ -242,7 +242,7 @@ public class GoodsOrderService {
             expressOrder = expressOrderMapper.findOne(goodsOrderForm.getExpressOrderId());
         }
         expressOrder.setExtendId(goodsOrderForm.getId());
-        expressOrder.setExtendType(ExpressOrderExtendTypeEnum.手机订单.name());
+        expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
         expressOrder.setContator(goodsOrderForm.getContator());
         expressOrder.setAddress(goodsOrderForm.getAddress());
         expressOrder.setMobilePhone(goodsOrderForm.getMobilePhone());

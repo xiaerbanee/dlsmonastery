@@ -4,7 +4,7 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopAd;
 import net.myspring.util.cahe.annotation.CacheInput;
-import net.myspring.util.text.StringUtils;
+import net.myspring.util.text.IdUtils;
 
 import java.math.BigDecimal;
 
@@ -151,7 +151,7 @@ public class ShopAdDto extends DataDto<ShopAd>{
 
     public String getFormatId(){
         if(getId()!=null){
-            return StringUtils.getFormatId(getId(),"AD");
+            return IdUtils.getFormatId(getId(),"AD");
         }else {
             return null;
         }

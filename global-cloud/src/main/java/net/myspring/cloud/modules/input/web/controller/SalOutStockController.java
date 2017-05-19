@@ -32,7 +32,7 @@ public class SalOutStockController {
 
     @RequestMapping(value = "form")
     public BatchBillQuery form (BatchBillQuery batchBillQuery) {
-        batchBillQuery = salOutStockService.getFormProperty(batchBillQuery);
+        batchBillQuery = salOutStockService.getForm(batchBillQuery);
         return batchBillQuery;
     }
 

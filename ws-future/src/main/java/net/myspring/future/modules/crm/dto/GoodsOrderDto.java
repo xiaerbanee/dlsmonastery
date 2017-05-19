@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.dto;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
@@ -57,7 +58,7 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     }
 
     public String getFormatId(){
-        return StringUtils.getFormatId(businessId, "XK");
+        return IdUtils.getFormatId(businessId, "XK");
     }
 
 

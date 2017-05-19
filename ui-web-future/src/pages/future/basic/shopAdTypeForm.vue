@@ -72,7 +72,7 @@
       },created(){
 
 
-          axios.get('/api/ws/future/basic/shopAdType/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/shopAdType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
             this.formData = response.data;
           })
 

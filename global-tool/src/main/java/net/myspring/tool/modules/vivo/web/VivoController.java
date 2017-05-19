@@ -1,13 +1,13 @@
 package net.myspring.tool.modules.vivo.web;
 
-import net.myspring.tool.common.utils.Const;
-import net.myspring.tool.common.utils.DateUtils;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.service.VivoService;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,9 +26,9 @@ public class VivoController {
     public String synFactoryVivo(String date){
         RequestUtils.getRequestEntity().setAccountId("1");
         RequestUtils.getRequestEntity().setCompanyId("1");
-        List<String> agentCodes =  Arrays.asList(vivoService.getCodes("FACTORY_AGENT_CODES").split(Const.CharEnum.COMMA.getValue()));
+        List<String> agentCodes =  Arrays.asList(vivoService.getCodes("FACTORY_AGENT_CODES").split(CharConstant.COMMA));
         //同步颜色编码
-        LocalDate localDate= DateUtils.parseLocalDate(date);
+        LocalDate localDate= LocalDateUtils.parse(date);
         List<VivoProducts> vivoProductsList = vivoService.products();
         List<VivoPlantProducts> vivoPlantProductsList = vivoService.plantProducts();
         List<VivoPlantSendimei> vivoPlantSendimeis = vivoService.plantSendimei(localDate,agentCodes);

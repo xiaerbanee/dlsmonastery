@@ -142,7 +142,7 @@ public class SalOutStockService {
         return kingdeeSynExtendDtoList;
     }
 
-    public BatchBillQuery getFormProperty(BatchBillQuery batchBillQuery){
+    public BatchBillQuery getForm(BatchBillQuery batchBillQuery){
         batchBillQuery.setOutStockBillTypeEnums(SalOutStockBillTypeEnum.values());
         List<String> customerNameList = bdCustomerMapper.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList());
         List<String> materialNameList = bdMaterialMapper.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList());

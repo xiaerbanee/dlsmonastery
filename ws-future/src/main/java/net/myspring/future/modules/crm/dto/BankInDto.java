@@ -4,6 +4,7 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
@@ -38,7 +39,7 @@ public class BankInDto extends DataDto<BankIn> {
     }
 
     public String getFormatId() {
-        return StringUtils.getFormatId(getId(), "XS");
+        return IdUtils.getFormatId(getId(), "XS");
     }
 
     public String getShopClientId() {

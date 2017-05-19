@@ -292,11 +292,11 @@
           }
         }
       },created(){
-        axios.get('/api/basic/hr/recruit/getFormProperty').then((response)=>{
+        axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/basic/hr/recruit/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/hr/recruit/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
           })
         }

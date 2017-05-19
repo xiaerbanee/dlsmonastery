@@ -18,7 +18,7 @@ Page({
   initPage: function () {
     var that = this;
     wx.request({
-      url: $util.getUrl( "crm/productImeSale/getFormProperty"),
+      url: $util.getUrl( "crm/productImeSale/getForm"),
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId },
       success: function (res) {

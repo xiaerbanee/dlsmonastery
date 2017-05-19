@@ -43,7 +43,7 @@ public class KingdeeBookService {
 
     }
 
-    public KingdeeBookForm findForm(KingdeeBookForm kingdeeBookForm){
+    public KingdeeBookForm getForm(KingdeeBookForm kingdeeBookForm){
         KingdeeBook kingdeeBook = kingdeeBookMapper.findOne(kingdeeBookForm.getId());
         kingdeeBookForm = BeanUtil.map(kingdeeBook,KingdeeBookForm.class);
         kingdeeBookForm.setNameList(kingdeeBookMapper.findNames());

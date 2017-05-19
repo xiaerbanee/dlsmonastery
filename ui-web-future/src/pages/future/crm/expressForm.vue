@@ -86,7 +86,7 @@
           })
         }
       },created(){
-        axios.get('/api/ws/future/crm/express/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/express/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
 

@@ -131,7 +131,7 @@
      }
     },created () {
         this.pageHeight = window.outerHeight -320;
-        axios.get('api/crm/adApply/getFormProperty').then((response) =>{
+        axios.get('api/crm/adApply/getForm').then((response) =>{
         this.formProperty.billTypes = response.data.billTypes;
       });
     }

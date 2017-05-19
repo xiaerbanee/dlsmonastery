@@ -41,14 +41,14 @@ public class ShopPrintController {
         return shopPrintService.findQuery(shopPrintQuery);
     }
 
-    @RequestMapping(value="getFormProperty",method = RequestMethod.GET)
-    public String getFormProperty() {
+    @RequestMapping(value="getForm",method = RequestMethod.GET)
+    public String getForm() {
         return null;
     }
 
     @RequestMapping(value = "detail", method = RequestMethod.GET)
     public ShopPrintForm detail(ShopPrintForm shopPrintForm) {
-        return shopPrintService.findForm(shopPrintForm);
+        return shopPrintService.getForm(shopPrintForm);
     }
 
     @RequestMapping(value = "delete")

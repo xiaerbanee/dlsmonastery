@@ -195,7 +195,7 @@
       }
     },
     created () {
-      axios.get('/api/basic/hr/duty/findForm',{params:{id:this.$route.query.id,dutyType:this.$route.query.dutyType}}).then((response)=>{
+      axios.get('/api/basic/hr/duty/getForm',{params:{id:this.$route.query.id,dutyType:this.$route.query.dutyType}}).then((response)=>{
         this.dutyType = response.data.dutyType;
         this.showForm = response.data.item;
         this.inputForm.bools = response.data.boolMap;

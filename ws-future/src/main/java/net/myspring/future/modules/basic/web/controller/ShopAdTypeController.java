@@ -39,9 +39,9 @@ public class ShopAdTypeController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findForm")
-    public ShopAdTypeForm findForm(ShopAdTypeForm shopAdTypeForm){
-        shopAdTypeForm=shopAdTypeService.findForm(shopAdTypeForm);
+    @RequestMapping(value = "getForm")
+    public ShopAdTypeForm getForm(ShopAdTypeForm shopAdTypeForm){
+        shopAdTypeForm=shopAdTypeService.getForm(shopAdTypeForm);
         shopAdTypeForm.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
        return shopAdTypeForm;
     }

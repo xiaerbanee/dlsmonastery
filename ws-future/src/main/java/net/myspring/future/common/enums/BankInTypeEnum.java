@@ -7,9 +7,7 @@ import java.util.List;
 
 public enum BankInTypeEnum {
     销售收款,
-		定金收款;
-	/*SALES_RECEIPT,
-	DEPOSIT_RECEIPT;*/
+	定金收款;
 
 	private static List<String> list = Lists.newArrayList();
 

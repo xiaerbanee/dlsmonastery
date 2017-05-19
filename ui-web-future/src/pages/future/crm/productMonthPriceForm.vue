@@ -98,7 +98,7 @@
             this.inputForm.productMonthPriceDetailList = response.data.productMonthPriceDetailList;
           })
         }else{
-          axios.get('/api/crm/productMonthPrice/getFormProperty').then((response)=>{
+          axios.get('/api/crm/productMonthPrice/getForm').then((response)=>{
             this.inputForm.productMonthPriceDetailList = response.data.productMonthPriceDetailList;
           })
         }

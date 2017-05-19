@@ -94,7 +94,7 @@
           })
         }
       },created(){
-        axios.get('/api/crm/reportScore/getFormProperty').then((response)=>{
+        axios.get('/api/crm/reportScore/getForm').then((response)=>{
           this.productNames=response.data.productNames;
         })
       }

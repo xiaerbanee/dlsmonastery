@@ -404,7 +404,7 @@
         }
       }
     },created(){
-      axios.get('/api/ws/future/basic/depot/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/basic/depot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         util.copyValue(response.data,this.inputForm);
         this.inputForm.doorHead = response.data.doorHead?1:0;
         this.inputForm.rebate = response.data.rebate?1:0;

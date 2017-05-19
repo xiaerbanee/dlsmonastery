@@ -97,7 +97,7 @@
           })
         }
       },created(){
-          axios.get('/api/ws/future/basic/expressCompany/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/expressCompany/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           });
       }

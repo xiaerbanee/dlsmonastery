@@ -42,7 +42,7 @@ public class DepotStoreService {
         return page;
     }
 
-    public DepotStoreForm findForm(DepotStoreForm depotStoreForm) {
+    public DepotStoreForm getForm(DepotStoreForm depotStoreForm) {
         if(!depotStoreForm.isCreate()) {
             DepotStore depotStore =depotStoreMapper.findOne(depotStoreForm.getId());
             depotStoreForm= BeanUtil.map(depotStore,DepotStoreForm.class);

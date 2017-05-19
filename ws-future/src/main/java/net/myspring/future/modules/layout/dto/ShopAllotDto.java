@@ -2,9 +2,11 @@ package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
@@ -45,7 +47,7 @@ public class ShopAllotDto extends DataDto<ShopAllot> {
     }
 
     public String getFormatId() {
-        return StringUtils.getFormatId(businessId, CharConstant.FORMATTER_SHOP_ALLOT);
+        return IdUtils.getFormatId(businessId, FormatterConstant.SHOP_ALLOT);
     }
 
     public String getBusinessId() {

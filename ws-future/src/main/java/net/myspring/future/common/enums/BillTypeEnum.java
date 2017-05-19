@@ -10,7 +10,6 @@ import java.util.List;
  */
 public enum BillTypeEnum {
     柜台, 配件赠品, POP;
-   /*COUNTERS,ACCESSORIES,POP;*/
 
     private static List<String> list= Lists.newArrayList();
 

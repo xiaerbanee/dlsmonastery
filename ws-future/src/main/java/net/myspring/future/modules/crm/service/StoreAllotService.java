@@ -26,6 +26,7 @@ import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,7 +141,7 @@ public class StoreAllotService {
         StoreAllot storeAllot = new StoreAllot();
         ReflectionUtil.copyProperties(storeAllotForm, storeAllot);
         String maxBusinessId = storeAllotMapper.findMaxBusinessId(LocalDate.now());
-        storeAllot.setBusinessId(StringUtils.getNextBusinessId(maxBusinessId));
+        storeAllot.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
         storeAllot.setBillDate(LocalDate.now());
         storeAllot.setCloudSynId(cloudSynId);
         storeAllotMapper.save(storeAllot);

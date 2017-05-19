@@ -47,7 +47,7 @@ public class DutyPublicFreeService {
         return dutyPublicFree;
     }
 
-    public DutyPublicFreeForm findForm(DutyPublicFreeForm dutyPublicFreeForm) {
+    public DutyPublicFreeForm getForm(DutyPublicFreeForm dutyPublicFreeForm) {
         if(!dutyPublicFreeForm.isCreate()){
             DutyPublicFree dutyPublicFree =dutyPublicFreeMapper.findOne(dutyPublicFreeForm.getId());
             dutyPublicFreeForm= BeanUtil.map(dutyPublicFree,DutyPublicFreeForm.class);

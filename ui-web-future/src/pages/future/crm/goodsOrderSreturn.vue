@@ -96,13 +96,13 @@
           this.inputForm.goodsOrderDetailList=response.data.goodsOrderDetailList
         })
       },
-      getFormProperty(){
+      getForm(){
         axios.get('/api/crm/goodsOrder/sreturnFormProperty').then((response)=>{
           this.sreturnFormProperty=response.data;
         });
       }
     },created(){
-      this.getFormProperty()
+      this.getForm()
       this.findOne();
     }
   }
