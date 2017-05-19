@@ -1,22 +1,14 @@
 package net.myspring.future.modules.basic.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.dto.NameValueDto;
 import net.myspring.common.form.DataForm;
-import net.myspring.future.modules.basic.domain.AdPricesystem;
-import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
-import net.myspring.future.modules.basic.dto.BasicDistrictDto;
 import net.myspring.future.modules.basic.dto.ChainDto;
 import net.myspring.future.modules.basic.dto.PricesystemDto;
-import net.myspring.future.modules.layout.domain.ShopAttribute;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lihx on 2017/4/18.

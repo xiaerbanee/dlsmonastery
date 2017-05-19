@@ -13,7 +13,6 @@ import javax.persistence.Table;
 public class AdPricesystem extends CompanyEntity<AdPricesystem> {
     private String name;
     private Integer version = 0;
-    private String companyId;
 
     public String getName() {
         return name;
@@ -29,13 +28,5 @@ public class AdPricesystem extends CompanyEntity<AdPricesystem> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 }
