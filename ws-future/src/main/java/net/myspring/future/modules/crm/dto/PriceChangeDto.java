@@ -19,6 +19,16 @@ public class PriceChangeDto extends DataDto<PriceChange> {
     private Integer checkPercent;
     private String status;
 
+    private List<String> productTypeIdList;
+
+    public List<String> getProductTypeIdList() {
+        return productTypeIdList;
+    }
+
+    public void setProductTypeIdList(List<String> productTypeIdList) {
+        this.productTypeIdList = productTypeIdList;
+    }
+
     public String getName() {
         return name;
     }

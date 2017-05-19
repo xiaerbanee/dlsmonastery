@@ -15,8 +15,7 @@ public class PriceChangeForm extends DataForm<PriceChange>{
     private String name;
     private LocalDate priceChangeDate;
     private LocalDate uploadEndDate;
-    private List<ProductTypeDto> productTypeDtos;
-    private List<String> productTypeIds;
+    private List<String> productTypeIdList;
     private String productTypeNames;
     private Integer checkPercent;
 
@@ -36,12 +35,12 @@ public class PriceChangeForm extends DataForm<PriceChange>{
         this.checkPercent = checkPercent;
     }
 
-    public List<String> getProductTypeIds() {
-        return productTypeIds;
+    public List<String> getProductTypeIdList() {
+        return productTypeIdList;
     }
 
-    public void setProductTypeIds(List<String> productTypeIds) {
-        this.productTypeIds = productTypeIds;
+    public void setProductTypeIdList(List<String> productTypeIdList) {
+        this.productTypeIdList = productTypeIdList;
     }
 
     public String getName() {
@@ -68,11 +67,4 @@ public class PriceChangeForm extends DataForm<PriceChange>{
         this.uploadEndDate = uploadEndDate;
     }
 
-    public List<ProductTypeDto> getProductTypeDtos() {
-        return productTypeDtos;
-    }
-
-    public void setProductTypeDtos(List<ProductTypeDto> productTypeDtos) {
-        this.productTypeDtos = productTypeDtos;
-    }
 }

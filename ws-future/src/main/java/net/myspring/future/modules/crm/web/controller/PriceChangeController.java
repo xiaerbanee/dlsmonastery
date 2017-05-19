@@ -62,6 +62,10 @@ public class PriceChangeController {
         return restResponse;
     }
 
+    @RequestMapping(value = "findOne")
+    public PriceChangeDto detail(String id){
+        return priceChangeService.findOne(id);
+    }
 
     @RequestMapping(value = "getForm")
     public PriceChangeForm getForm(PriceChangeForm priceChangeForm){

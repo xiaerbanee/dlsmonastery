@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:priceChange:edit'">{{$t('priceChangeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:priceChange:view'">{{$t('priceChangeList.filter')}}</el-button>
-        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('priceChangeList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -33,7 +33,7 @@
         <el-table-column  :label="$t('priceChangeList.operation')" width="140">
           <template scope="scope">
             <el-button v-if="scope.row.status === '上报中'" size="small" v-permit="'crm:priceChange:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeList.audit')}}</el-button>
-            <el-button size="small" v-permit="'crm:priceChange:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('priceChangeList.edit')}}</el-button>
+            <el-button v-if="scope.row.status === '上报中'" size="small" v-permit="'crm:priceChange:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('priceChangeList.edit')}}</el-button>
             <el-button v-if="scope.row.status === '上报中'" size="small" v-permit="'crm:priceChange:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopImageList.delete')}}</el-button>
           </template>
         </el-table-column>
@@ -86,19 +86,19 @@
         this.$router.push({ name: 'priceChangeForm'})
       },itemAction:function(id,action){
         if(action=="edit") {
-          this.$router.push({ name: 'priceChangeForm', query: { id: id }})
+          this.$router.push({ name: 'priceChangeForm', query: { id: id,action:action}})
         } else if(action=="delete") {
-          axios.get('/api/crm/priceChange/delete',{params:{id:id}}).then((response) =>{
-              this.$message(response.data.message);
+          axios.get('/api/ws/future/crm/priceChange/delete',{params:{id:id}}).then((response) =>{
+            this.$message(response.data.message);
             this.pageRequest();
           })
         }else if(action =='audit'){
-          this.$router.push({ name: 'priceChangeDetail', query: { id: id }})
+          this.$router.push({ name: 'priceChangeForm', query: { id: id,action:action}})
         }
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/priceChange/getQuery').then((response) =>{
+      axios.get('/api/ws/future/crm/priceChange/getQuery',{params:this.formData}).then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
         this.pageRequest();

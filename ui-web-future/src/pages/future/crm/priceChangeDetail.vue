@@ -7,7 +7,7 @@
           {{inputForm.name}}
         </el-form-item>
         <el-form-item :label="$t('priceChangeDetail.productTypeNames')" prop="productTypeIdList">
-            {{inputForm.productTypeNames}}
+          {{inputForm.productTypeNames}}
         </el-form-item>
         <el-form-item :label="$t('priceChangeDetail.priceChangeDate')" prop="priceChangeDate">
           {{inputForm.priceChangeDate}}
@@ -29,51 +29,51 @@
   </div>
 </template>
 <script>
-    export default{
-      data(){
-          return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            formProperty:{},
-            inputForm:{},
-            submitData:{
-              id:"",
-              checkPercent:"",
-            },
-            rules: {
-              checkPercent: [{ type: 'number', message: this.$t('priceChangeDetail.checkPercentIdNumber')}]
-            }
-          }
-      },
-      methods:{
-        formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-                util.copyValue(this.inputForm,this.submitData);
+  export default{
+    data(){
+      return{
+        isCreate:this.$route.query.id==null,
+        submitDisabled:false,
+        formProperty:{},
+        inputForm:{},
+        submitData:{
+          id:"",
+          checkPercent:"",
+        },
+        rules: {
+          checkPercent: [{ type: 'number', message: this.$t('priceChangeDetail.checkPercentIdNumber')}]
+        }
+      }
+    },
+    methods:{
+      formSubmit(){
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            util.copyValue(this.inputForm,this.submitData);
 
-              axios.post('/api/ws/future/crm/priceChange/check',qs.stringify(this.submitData)).then((response)=> {
-                this.$message(response.data.message);
-                if(this.isCreate){
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
-                  this.$router.push({name:'priceChangeList',query:util.getQuery("priceChangeList")})
-                }
-              }).catch(function () {
+            axios.post('/api/ws/future/crm/priceChange/check',qs.stringify(this.submitData)).then((response)=> {
+              this.$message(response.data.message);
+              if(this.isCreate){
+                form.resetFields();
                 this.submitDisabled = false;
-              });
-            }else{
+              } else {
+                this.$router.push({name:'priceChangeList',query:util.getQuery("priceChangeList")})
+              }
+            }).catch(function () {
               this.submitDisabled = false;
-            }
-          })
-        }
-      },created(){
-          axios.get('/api/ws/future/crm/priceChange/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
-          })
-        }
-
+            });
+          }else{
+            this.submitDisabled = false;
+          }
+        })
+      }
+    },created(){
+      axios.get('/api/ws/future/crm/priceChange/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
+      })
     }
+
+  }
 </script>

@@ -4,27 +4,18 @@
 
 
     <select id="findPage" resultType="PriceChangeDto">
-        SELECT(
-          SELECT
-            group_concat(NAME)
-          FROM
-             crm_price_change_product product ,
-             crm_product_type type
-          WHERE
-            product.product_type_id = type.id
-          AND
-            product.price_change_id = t1.id
-          GROUP BY
-            product.price_change_id
-        ) productTypeName,
-        t1.*
+        SELECT
+            group_concat(DISTINCT productType.name) productTypeName, t1.*
         FROM
-        crm_price_change t1
+        crm_price_change t1,crm_price_change_product product,crm_product_type productType
         WHERE
         t1.enabled=1
+        AND product.product_type_id = productType.id
+        AND product.price_change_id = t1.id
         <if test="p.name != null">
             AND t1.name LIKE CONCAT('%',#{p.name},'%')
         </if>
+        GROUP BY product.price_change_id
     </select>
 
     <select id="findNearPriceChange" resultType="PriceChange">

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <el-date-picker  v-model="innerDate"  align="left"  @change="onChange" format="yyyy-MM-dd"></el-date-picker>
+    <el-date-picker  v-model="innerDate" :disabled="disabled"  align="left"  @change="onChange" format="yyyy-MM-dd"></el-date-picker>
   </div>
 </template>
 <script>
   export default {
-    props: ['value'],
+    props: ['value','disabled'],
     data() {
       return {
         innerDate:null
