@@ -19,8 +19,6 @@ public interface AfterSaleMapper extends MyMapper<AfterSale,String> {
 
     List<AfterSale> findFilter(@Param("p") Map<String, Object> map);
 
-    List<AfterSale> findByIds(List<String> ids);
-
     List<AfterSale> findByBadProductImeIn(List<String> imeList);
 
     String findMaxBusinessId(LocalDate dateStart);

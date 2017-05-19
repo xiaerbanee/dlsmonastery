@@ -49,17 +49,6 @@
     </select>
 
 
-
-    <select id="findByIds" resultType="AfterSale">
-        SELECT t1.id
-        FROM crm_after_sale t1
-        WHERE t1.enabled = 1
-        and t1.id in
-        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
     <sql id="afterSaleFilter">
         <if test="p.id !=null">
             and ( t1.id like concat('%',#{p.id},'%') or t1.id=#{p.id})
