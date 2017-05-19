@@ -3,7 +3,6 @@ package net.myspring.tool.modules.oppo.service;
 import com.google.common.collect.Lists;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.utils.Const;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 /**

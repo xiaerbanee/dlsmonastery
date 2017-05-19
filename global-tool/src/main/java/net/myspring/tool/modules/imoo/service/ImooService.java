@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.utils.Const;
 import net.myspring.tool.modules.imoo.domain.ImooPlantBasicProduct;
 import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver;
 import net.myspring.tool.modules.imoo.mapper.ImooMapper;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by guolm on 2017/5/16.

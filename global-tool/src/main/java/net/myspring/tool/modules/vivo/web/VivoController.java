@@ -1,7 +1,6 @@
 package net.myspring.tool.modules.vivo.web;
 
 import net.myspring.common.constant.CharConstant;
-import net.myspring.tool.common.utils.Const;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
