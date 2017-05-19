@@ -16,7 +16,6 @@ import java.util.List;
 
 public class PermissionForm extends DataForm<Permission> {
 
-    private List<String> roleIdList=Lists.newArrayList();
     private String menuId;
     private String name;
     private String permission;
@@ -24,9 +23,8 @@ public class PermissionForm extends DataForm<Permission> {
     private String url;
     private String method;
     private List<MenuDto> menuList= Lists.newArrayList();
-    @CacheInput(inputKey = "roles",inputInstance = "roleIdList",outputInstance = "name")
-    private List<String> roleNameList=Lists.newArrayList();
     private List<RoleDto> roleList = Lists.newArrayList();
+    private List<String> roleIdList = Lists.newArrayList();
 
     public String getUrl() {
         return url;
@@ -50,14 +48,6 @@ public class PermissionForm extends DataForm<Permission> {
 
     public void setRoleIdList(List<String> roleIdList) {
         this.roleIdList = roleIdList;
-    }
-
-    public List<String> getRoleNameList() {
-        return roleNameList;
-    }
-
-    public void setRoleNameList(List<String> roleNameList) {
-        this.roleNameList = roleNameList;
     }
 
     public List<MenuDto> getMenuList() {
@@ -100,12 +90,11 @@ public class PermissionForm extends DataForm<Permission> {
         this.remarks = remarks;
     }
 
+    public List<RoleDto> getRoleList() {
+        return roleList;
+    }
 
     public void setRoleList(List<RoleDto> roleList) {
         this.roleList = roleList;
-    }
-
-    public List<RoleDto> getRoleList() {
-        return roleList;
     }
 }

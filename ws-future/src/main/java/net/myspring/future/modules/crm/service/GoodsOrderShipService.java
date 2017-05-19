@@ -202,7 +202,7 @@ public class GoodsOrderShipService {
         goodsOrder.setShipDate(null);
         //删除快递单
         List<Express> expressList = expressMapper.findByExpressOrderId(goodsOrder.getExpressOrderId());
-        expressMapper.deleteByIds(CollectionUtil.extractToList(expressList, "id"));
+        expressMapper.logicDeleteByIds(CollectionUtil.extractToList(expressList, "id"));
         goodsOrderMapper.save(goodsOrder);
     }
 

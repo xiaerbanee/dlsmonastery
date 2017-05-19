@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('permissionForm.menu')" prop="menuId">
           <el-select v-model="inputForm.menuId" filterable :placeholder="$t('permissionForm.selectCategory')">
-            <el-option v-for="menu in inputForm.menuList" :key="menu.id" :label="menu.name" :value="menu.id"></el-option>
+            <el-option v-for="menu in inputProperty.menuList" :key="menu.id" :label="menu.name" :value="menu.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('permissionForm.name')" prop="name">
@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item label="角色" prop="roleIdList">
           <el-select v-model="inputForm.roleIdList" multiple filterable  :placeholder="$t('accountForm.inputWord')" >
-            <el-option v-for="item in inputForm.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputProperty.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="请求Url" prop="url">
@@ -43,6 +43,7 @@
             submitDisabled:false,
             roleList:[],
             inputForm:{},
+            inputProperty:{},
             submitData:{
               id:'',
               menuId:'',
@@ -87,16 +88,13 @@
           })
         }
       },created(){
-        axios.get('/api/basic/sys/permission/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/sys/permission/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-          if(response.data.roleIdList !=null){
-            let roleList=new Array();
-            for(var i=response.data.roleIdList.length-1;i>=0;i--){
-              roleList.push({id:response.data.roleIdList[i],name:response.data.roleNameList[i]})
-            }
-            this.roleList=roleList;
-            this.inputForm.roleIdList=response.data.roleIdList
-          }
+
+        })
+        axios.get('/api/basic/sys/permission/getForm').then((response)=>{
+          this.inputProperty = response.data;
+          console.log(this.inputProperty)
         })
       }
     }

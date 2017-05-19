@@ -1,5 +1,7 @@
 package net.myspring.common.dto;
 
+import net.myspring.util.text.StringUtils;
+
 import java.io.Serializable;
 
 /**
@@ -14,5 +16,9 @@ public class IdDto<T> implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean isCreate() {
+        return StringUtils.isBlank(id);
     }
 }

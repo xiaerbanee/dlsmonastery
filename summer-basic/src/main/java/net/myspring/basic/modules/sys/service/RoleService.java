@@ -1,10 +1,8 @@
 package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.hr.mapper.RoleModuleMapper;
-import net.myspring.basic.modules.sys.domain.OfficeBusiness;
+import net.myspring.basic.modules.sys.mapper.RoleModuleMapper;
 import net.myspring.basic.modules.sys.domain.Role;
 import net.myspring.basic.modules.sys.domain.RoleModule;
 import net.myspring.basic.modules.sys.domain.RolePermission;
@@ -39,13 +37,13 @@ public class RoleService {
     private CacheUtils cacheUtils;
 
 
-    public RoleForm findForm(RoleForm roleForm) {
-        if (!roleForm.isCreate()) {
-            Role Role = roleMapper.findOne(roleForm.getId());
-            roleForm = BeanUtil.map(Role, RoleForm.class);
-            cacheUtils.initCacheInput(roleForm);
+    public RoleDto findOne(RoleDto roleDto) {
+        if (!roleDto.isCreate()) {
+            Role Role = roleMapper.findOne(roleDto.getId());
+            roleDto = BeanUtil.map(Role, RoleDto.class);
+            cacheUtils.initCacheInput(roleDto);
         }
-        return roleForm;
+        return roleDto;
     }
 
     public Role save(RoleForm roleForm) {

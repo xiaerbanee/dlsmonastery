@@ -28,10 +28,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -82,9 +85,14 @@ public class AccountController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findForm")
-    public AccountForm findForm(AccountForm accountForm) {
-        accountForm = accountService.findForm(accountForm);
+    @RequestMapping(value = "findOne")
+    public AccountDto findOne(AccountDto accountDto) {
+        accountDto = accountService.findOne(accountDto);
+        return accountDto;
+    }
+
+    @RequestMapping(value = "getForm")
+    public AccountForm getForm(AccountForm accountForm) {
         accountForm.setPositionDtoList(positionService.findAll());
         accountForm.setBoolMap( BoolEnum.getMap());
         return accountForm;
@@ -105,9 +113,10 @@ public class AccountController {
         return accountDtoList;
     }
 
-    @RequestMapping(value = "findById")
-    public List<AccountDto> findById(String id) {
-        List<AccountDto> accountDtoList =accountService.findById(id);
+    @RequestMapping(value = "findByIds")
+    public List<AccountDto> findByIds(String idStr) {
+        List<String> ids=StringUtils.getSplitList(idStr,CharConstant.COMMA);
+        List<AccountDto> accountDtoList =accountService.findByIds(ids);
         return accountDtoList;
     }
 

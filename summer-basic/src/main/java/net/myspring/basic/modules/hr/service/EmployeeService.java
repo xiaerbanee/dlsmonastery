@@ -34,13 +34,13 @@ public class EmployeeService {
         return employee;
     }
 
-    public EmployeeForm findForm(EmployeeForm employeeForm){
-        if(!employeeForm.isCreate()){
-            Employee employee=employeeMapper.findOne(employeeForm.getId());
-            employeeForm= BeanUtil.map(employee,EmployeeForm.class);
-            cacheUtils.initCacheInput(employeeForm);
+    public EmployeeDto findOne(EmployeeDto employeeDto){
+        if(!employeeDto.isCreate()){
+            Employee employee=employeeMapper.findOne(employeeDto.getId());
+            employeeDto= BeanUtil.map(employee,EmployeeDto.class);
+            cacheUtils.initCacheInput(employeeDto);
         }
-        return employeeForm;
+        return employeeDto;
     }
 
     public Page<EmployeeDto> findPage(Pageable pageable, EmployeeQuery employeeQuery){

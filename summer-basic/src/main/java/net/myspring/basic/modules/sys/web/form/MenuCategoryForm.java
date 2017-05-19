@@ -15,8 +15,17 @@ public class MenuCategoryForm extends DataForm<MenuCategory> {
     private String name;
     private Integer sort;
     private String remarks;
+    private String code;
     private String backendModuleId;
     private List<BackendModuleDto> backendModuleList= Lists.newArrayList();
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getBackendModuleId() {
         return backendModuleId;

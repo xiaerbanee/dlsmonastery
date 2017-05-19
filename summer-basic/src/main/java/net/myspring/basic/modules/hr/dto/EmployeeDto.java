@@ -20,6 +20,7 @@ public class EmployeeDto extends DataDto<Employee> {
     private String mobilePhone;
     private String name;
     private String accountId;
+    private AccountDto account;
 
     @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
     private String accountName;
@@ -29,6 +30,14 @@ public class EmployeeDto extends DataDto<Employee> {
     private String leaderName;
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
     private String positionName;
+
+    public AccountDto getAccount() {
+        return account;
+    }
+
+    public void setAccount(AccountDto account) {
+        this.account = account;
+    }
 
     public String getSex() {
         return sex;

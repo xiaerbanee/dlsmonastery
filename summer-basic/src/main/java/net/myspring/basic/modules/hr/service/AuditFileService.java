@@ -47,14 +47,14 @@ public class AuditFileService {
         return auditFile;
     }
 
-    public AuditFileForm findForm(AuditFileForm auditFileForm) {
-        if (!auditFileForm.isCreate()) {
-            AuditFile auditFile = auditFileMapper.findOne(auditFileForm.getId());
-            auditFileForm = BeanUtil.map(auditFile, AuditFileForm.class);
-            auditFileForm.setActivitiDetailList(activitiClient.getActivitiDetail(auditFile.getProcessInstanceId()));
-            cacheUtils.initCacheInput(auditFileForm);
+    public AuditFileDto findOne(AuditFileDto auditFileDto) {
+        if (!auditFileDto.isCreate()) {
+            AuditFile auditFile = auditFileMapper.findOne(auditFileDto.getId());
+            auditFileDto = BeanUtil.map(auditFile, AuditFileDto.class);
+            auditFileDto.setActivitiDetailList(activitiClient.getActivitiDetail(auditFile.getProcessInstanceId()));
+            cacheUtils.initCacheInput(auditFileDto);
         }
-        return auditFileForm;
+        return auditFileDto;
     }
 
     public AuditFile save(AuditFileForm auditFileForm) {

@@ -25,13 +25,13 @@ public class BackendModuleService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public BackendModuleForm findForm(BackendModuleForm backendModuleForm) {
-        if(!backendModuleForm.isCreate()) {
-            BackendModule backendModule =backendModuleMapper.findOne(backendModuleForm.getId());
-            backendModuleForm= BeanUtil.map(backendModule,BackendModuleForm.class);
-            cacheUtils.initCacheInput(backendModuleForm);
+    public BackendModuleDto findOne(BackendModuleDto backendModuleDto) {
+        if(!backendModuleDto.isCreate()) {
+            BackendModule backendModule =backendModuleMapper.findOne(backendModuleDto.getId());
+            backendModuleDto= BeanUtil.map(backendModule,BackendModuleDto.class);
+            cacheUtils.initCacheInput(backendModuleDto);
         }
-        return backendModuleForm;
+        return backendModuleDto;
     }
 
     public BackendModule save(BackendModuleForm backendModuleForm) {

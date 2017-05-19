@@ -75,13 +75,13 @@ public class AccountService {
         return account;
     }
 
-    public AccountForm findForm(AccountForm accountForm) {
-        if(!accountForm.isCreate()){
-            Account account = accountMapper.findOne(accountForm.getId());
-            accountForm = BeanUtil.map(account, AccountForm.class);
-            cacheUtils.initCacheInput(accountForm);
+    public AccountDto findOne(AccountDto accountDto) {
+        if(!accountDto.isCreate()){
+            Account account = accountMapper.findOne(accountDto.getId());
+            accountDto = BeanUtil.map(account, AccountDto.class);
+            cacheUtils.initCacheInput(accountDto);
         }
-        return accountForm;
+        return accountDto;
     }
 
     public AccountDto findByLoginName(String loginName) {
@@ -202,8 +202,8 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public List<AccountDto> findById(String id){
-        List<Account> districts = accountMapper.findById(id);
+    public List<AccountDto> findByIds(List<String> ids){
+        List<Account> districts = accountMapper.findByIds(ids);
         List<AccountDto> districtDtos= BeanUtil.map(districts,AccountDto.class);
         return districtDtos;
     }

@@ -46,6 +46,9 @@ public interface AccountMapper extends BaseMapper<Account,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL)
     List<Account> findAll();
 
+    @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
+    List<Account> findByIds(Iterable<String> var1);
+
     Account findByLoginName(String loginName);
 
     List<Account> findByLoginNameLikeAndType(@Param("p")Map<String,Object> map);

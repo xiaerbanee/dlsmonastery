@@ -62,11 +62,10 @@ public class AuditFileController {
     }
 
 
-    @RequestMapping(value = "findForm", method = RequestMethod.GET)
-    public AuditFileForm detail(AuditFileForm auditFileForm) {
-        auditFileForm=auditFileService.findForm(auditFileForm);
-        auditFileForm.setBoolMap(BoolEnum.getMap());
-        return auditFileForm;
+    @RequestMapping(value = "findOne", method = RequestMethod.GET)
+    public AuditFileDto findOne(AuditFileDto auditFileDto) {
+        auditFileDto=auditFileService.findOne(auditFileDto);
+        return auditFileDto;
     }
 
     @RequestMapping(value = "audit")

@@ -2,7 +2,6 @@ package net.myspring.basic.modules.sys.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.mapper.*;
-import net.myspring.basic.modules.sys.domain.CompanyConfig;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.mapper.*;
 import net.myspring.util.time.LocalDateTimeUtils;

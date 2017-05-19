@@ -50,13 +50,13 @@ public class PositionService {
         return positionDto;
     }
 
-    public PositionForm findForm(PositionForm positionForm){
-        if(!positionForm.isCreate()){
-            Position position = positionMapper.findOne(positionForm.getId());
-            positionForm= BeanUtil.map(position,PositionForm.class);
-            cacheUtils.initCacheInput(positionForm);
+    public PositionDto findOne(PositionDto positionDto){
+        if(!positionDto.isCreate()){
+            Position position = positionMapper.findOne(positionDto.getId());
+            positionDto= BeanUtil.map(position,PositionDto.class);
+            cacheUtils.initCacheInput(positionDto);
         }
-        return positionForm;
+        return positionDto;
     }
 
     public Position save(PositionForm positionForm){

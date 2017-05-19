@@ -7,7 +7,7 @@
           <el-col :span="15">
             <el-form-item label="上级" prop="parentId">
               <el-select v-model="inputForm.parentId" filterable>
-                <el-option v-for="item in inputForm.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in inputProperty.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeRuleForm.name')" prop="name">
@@ -17,9 +17,7 @@
               <el-input v-model="inputForm.code"></el-input>
             </el-form-item>
             <el-form-item label="是否有点位" prop="hasPoint">
-              <el-radio-group v-model="inputForm.hasPoint">
-                <el-radio v-for="(value,key) in inputForm.boolMap" :key="key" :label="value">{{key | bool2str}}</el-radio>
-              </el-radio-group>
+              <bool-radio-group v-model="inputForm.hasPoint"></bool-radio-group>
             </el-form-item>
             <el-form-item label="备注" prop="remark">
               <el-input v-model="inputForm.remarks"></el-input>
@@ -34,12 +32,17 @@
   </div>
 </template>
 <script>
+  import boolRadioGroup from 'components/common/bool-radio-group'
   export default{
+    components:{
+      boolRadioGroup,
+    },
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{},
+        inputProperty:{},
         submitData:{
           id:'',
           type:"",
@@ -80,14 +83,13 @@
         })
       }
     },created(){
-      axios.get('/api/basic/sys/officeRule/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/sys/officeRule/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
-        if(response.data.parenId){
-          this.inputForm.officeRuleList=new Array({id:response.data.parenId,name:response.data.parentName});
-        }
-        this.inputForm.hasPoint=this.inputForm.hasPoint?"1":"0"
-        console.log(this.inputForm.officeRuleEnumList)
       })
+      axios.get('/api/basic/sys/officeRule/getForm').then((response)=>{
+        this.inputProperty = response.data;
+      })
+
     }
   }
 </script>

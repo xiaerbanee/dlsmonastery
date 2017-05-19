@@ -53,13 +53,14 @@ public class PermissionService {
         return permission;
     }
 
-    public PermissionForm findForm(PermissionForm permissionForm) {
-        if (!permissionForm.isCreate()) {
-            Permission permission = permissionMapper.findOne(permissionForm.getId());
-            permissionForm = BeanUtil.map(permission, PermissionForm.class);
-            cacheUtils.initCacheInput(permissionForm);
+    public PermissionDto findOne(PermissionDto permissionDto) {
+        if (!permissionDto.isCreate()) {
+            Permission permission = permissionMapper.findOne(permissionDto.getId());
+            permissionDto = BeanUtil.map(permission, PermissionDto.class);
+            permissionDto.setRoleIdList(CollectionUtil.extractToList(rolePermissionMapper.findAllByPermissionId(permission.getId()),"roleId"));
+            cacheUtils.initCacheInput(permissionDto);
         }
-        return permissionForm;
+        return permissionDto;
     }
 
     public List<Permission> findAll() {
@@ -93,7 +94,7 @@ public class PermissionService {
             List<String> addIdList = CollectionUtil.subtract(permissionForm.getRoleIdList(), roleIdList);
             List<RolePermission> rolePermissions=Lists.newArrayList();
             for(String roleId:addIdList){
-                rolePermissions.add(new RolePermission(permission.getId(),roleId));
+                rolePermissions.add(new RolePermission(roleId,permission.getId()));
             }
             rolePermissionMapper.setEnabledByPermissionId(true, permission.getId());
             if (CollectionUtil.isNotEmpty(removeIdList)) {

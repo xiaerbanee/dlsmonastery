@@ -91,19 +91,19 @@ public class OfficeService {
         return CollectionUtil.extractToList(sameAreaByOfficeId,"id");
     }
 
-    public OfficeForm findForm(OfficeForm officeForm) {
-        if (!officeForm.isCreate()) {
-            Office office = officeMapper.findOne(officeForm.getId());
-            officeForm = BeanUtil.map(office, OfficeForm.class);
+    public OfficeDto findOne(OfficeDto officeDto) {
+        if (!officeDto.isCreate()) {
+            Office office = officeMapper.findOne(officeDto.getId());
+            officeDto = BeanUtil.map(office, OfficeDto.class);
             if (OfficeTypeEnum.SUPPORT.name().equals(office.getType())) {
                 List<OfficeBusiness> businessOffices = officeBusinessMapper.findBusinessIdById(office.getId());
-                officeForm.setOfficeTree(getOfficeTree(CollectionUtil.extractToList(businessOffices, "id")));
+                officeDto.setOfficeTree(getOfficeTree(CollectionUtil.extractToList(businessOffices, "id")));
             }
-            List<OfficeLeader> officeLeaderList = officeLeaderMapper.findByOfficeId(officeForm.getId());
-            officeForm.setLeaderIdList(CollectionUtil.extractToList(officeLeaderList, "leaderId"));
-            cacheUtils.initCacheInput(officeForm);
+            List<OfficeLeader> officeLeaderList = officeLeaderMapper.findByOfficeId(officeDto.getId());
+            officeDto.setLeaderIdList(CollectionUtil.extractToList(officeLeaderList, "leaderId"));
+            cacheUtils.initCacheInput(officeDto);
         }
-        return officeForm;
+        return officeDto;
     }
 
     public RestResponse check(OfficeForm officeForm) {

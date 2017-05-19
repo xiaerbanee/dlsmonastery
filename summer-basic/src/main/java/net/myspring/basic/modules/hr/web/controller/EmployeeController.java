@@ -51,14 +51,19 @@ public class EmployeeController {
         return restResponse;
     }
 
-    @RequestMapping(value = "findForm")
+    @RequestMapping(value = "findOne")
+    public EmployeeDto findOne(EmployeeDto employeeDto){
+        employeeDto=employeeService.findOne(employeeDto);
+        AccountDto accountDto=new AccountDto();
+        accountDto.setId(employeeDto.getAccountId());
+        employeeDto.setAccount(accountService.findOne(accountDto));
+        return employeeDto;
+    }
+
+    @RequestMapping(value = "getForm")
     public EmployeeForm findForm(EmployeeForm employeeForm){
-        employeeForm=employeeService.findForm(employeeForm);
         employeeForm.setPositionList(positionService.findAll());
         employeeForm.setEducationList( dictEnumService.findValueByCategory(DictEnumCategoryEnum.EDUCATION.toString()));
-        AccountForm accountForm=new AccountForm();
-        accountForm.setId(employeeForm.getAccountId());
-        employeeForm.setAccount(accountService.findForm(accountForm));
         return employeeForm;
     }
 

@@ -28,9 +28,7 @@
               </el-upload>
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.isPass')" prop="pass" v-if="isAudit">
-              <el-radio-group v-model="submitData.pass">
-                <el-radio v-for="(value,key) in inputForm.boolMap" :key="key" :label="value">{{key | bool2str}}</el-radio>
-              </el-radio-group>
+              <bool-radio-group v-model="submitData.pass"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.comment')" prop="comment" v-if="isAudit">
               <el-input v-model="submitData.comment"></el-input>
@@ -55,7 +53,9 @@
   </div>
 </template>
 <script>
+  import boolRadioGroup from 'components/common/bool-radio-group';
   export default{
+    components:{boolRadioGroup},
     data(){
       return{
         isCreate:this.$route.query.id==null,
@@ -96,7 +96,7 @@
         })
       }
     },created(){
-        axios.get('/api/basic/hr/auditFile/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           if(this.inputForm.attachment != null) {
              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{

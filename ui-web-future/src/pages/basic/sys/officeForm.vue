@@ -9,11 +9,11 @@
               <office-select v-model="inputForm.parentId" ></office-select>
             </el-form-item>
             <el-form-item label="部门管理人" prop="leaderIdList">
-              <account-select v-model="inputForm.leaderIdList" :multiple="multiple"></account-select>
+              <account-select v-model="inputForm.leaderIdList" :multiple="true"></account-select>
             </el-form-item>
             <el-form-item label="类型" prop="type">
               <el-select v-model="inputForm.type" filterable @change="typeChange">
-                <el-option v-for="item in inputForm.officeTypeList" :key="item" :label="$t('OfficeRuleEnum.'+item)"  :value="item"></el-option>
+                <el-option v-for="item in inputProperty.officeTypeList" :key="item" :label="$t('OfficeRuleEnum.'+item)"  :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.officeName')" prop="name">
@@ -21,12 +21,12 @@
             </el-form-item>
             <el-form-item label="业务类型" prop="officeRuleId" v-show="isBusiness">
               <el-select v-model="inputForm.officeRuleId" filterable >
-                <el-option v-for="item in inputForm.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in inputProperty.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.jointType')" prop="jointType">
               <el-select v-model="inputForm.jointType" filterable>
-                <el-option v-for="item in inputForm.jointTypeList" :key="item" :label="$t('JointTypeEnum.'+item)" :value="item"></el-option>
+                <el-option v-for="item in inputProperty.jointTypeList" :key="item" :label="$t('JointTypeEnum.'+item)" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.point')" prop="point">
@@ -77,6 +77,7 @@
         multiple:true,
         submitDisabled: false,
         isBusiness:false,
+        inputProperty:{},
         offices: [],
         accountList: [],
         inputForm: {},
@@ -163,23 +164,16 @@
           }
       }
     }, created(){
-      axios.get('/api/basic/sys/office/findForm', {params: {id: this.$route.query.id}}).then((response) => {
+      axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
         this.inputForm = response.data;
-        if (response.data.parentId != null) {
-          this.offices = new Array({id: response.data.parentId, name: response.data.parentName})
-        }
         if(response.data.type =="SUPPORT" ){
             this.isBusiness=false;
         }else {
             this.isBusiness=true;
         }
-        if (response.data.leaderIdList != null) {
-            let officeLeaderList=new Array();
-          for(var index in response.data.leaderIdList){
-              officeLeaderList.push({id:response.data.leaderIdList[index],loginName:response.data.leaderNameList[index]});
-          }
-          this.accountList=officeLeaderList;
-        }
+      })
+      axios.get('/api/basic/sys/office/getForm').then((response) => {
+        this.inputProperty = response.data;
       })
     }
   }

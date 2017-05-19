@@ -1,37 +1,69 @@
 package net.myspring.basic.modules.sys.dto;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.dto.DataDto;
+import net.myspring.common.tree.TreeNode;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by admin on 2017/4/5.
  */
-public class OfficeDto{
+public class OfficeDto extends DataDto{
 
-    private String id;
     private String name;
     private String type;
-    private BigDecimal point;
     private String parentId;
     private boolean locked;
     private boolean enabled;
-    private BigDecimal taskPoint;
     private String officeRuleId;
     @CacheInput(inputKey = "officeRules",inputInstance = "officeRuleId",outputInstance = "name")
     private String officeRuleName;
 
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
+    private String jointType;
+    private BigDecimal point;
+    private BigDecimal taskPoint;
+    private String sort;
 
-    public String getId() {
-        return id;
+    private TreeNode officeTree;
+    private List<String> leaderIdList= Lists.newArrayList();
+
+    public String getJointType() {
+        return jointType;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setJointType(String jointType) {
+        this.jointType = jointType;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public TreeNode getOfficeTree() {
+        return officeTree;
+    }
+
+    public void setOfficeTree(TreeNode officeTree) {
+        this.officeTree = officeTree;
+    }
+
+    public List<String> getLeaderIdList() {
+        return leaderIdList;
+    }
+
+    public void setLeaderIdList(List<String> leaderIdList) {
+        this.leaderIdList = leaderIdList;
     }
 
     public String getType() {

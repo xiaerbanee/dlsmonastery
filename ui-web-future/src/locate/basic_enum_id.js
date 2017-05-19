@@ -83,8 +83,8 @@ export default {
     PROXY_SHOP:"代理",
   },
   OfficeRuleEnum:{
-    BUSINESS_OFFICE:"业务部门",
-    SUPPORT_OFFICE:"后勤部门",
+    BUSINESS:"业务部门",
+    SUPPORT:"职能部门",
   },
   WorkTimeTypeEnum:{
     PUNCH_THE_CLOCK:"打卡",

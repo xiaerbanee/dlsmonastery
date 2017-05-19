@@ -58,11 +58,15 @@ public class MenuController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findForm")
-    public MenuForm findForm(MenuForm menuForm){
-        menuForm = menuService.findForm(menuForm);
+    @RequestMapping(value = "findOne")
+    public MenuDto findOne(MenuDto menuDto){
+        menuDto = menuService.findOne(menuDto);
+        return menuDto;
+    }
+
+    @RequestMapping(value = "getForm")
+    public MenuForm getForm(MenuForm menuForm){
         menuForm.setMenuCategoryList(menuCategoryService.findAll());
-        menuForm.setBoolMap(BoolEnum.getMap());
         return menuForm;
     }
 

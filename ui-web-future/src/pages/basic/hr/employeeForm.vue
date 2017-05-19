@@ -10,7 +10,7 @@
             </el-form-item>
             <el-form-item :label="$t('employeeForm.education')" prop="education">
               <el-select v-model="employeeForm.education" >
-                <el-option v-for="item in employeeForm.educationList":key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputProperty.educationList":key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.code')" prop="code">
@@ -82,7 +82,7 @@
             </el-form-item>
             <el-form-item :label="$t('employeeForm.position')" prop="positionId">
               <el-select v-model="accountForm.positionId"  filterable :placeholder="$t('employeeForm.selectGroup')" :clearable=true>
-                <el-option v-for="position in employeeForm.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
+                <el-option v-for="position in inputProperty.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -112,6 +112,7 @@
         submitDisabled:false,
         employeeForm:{},
         accountForm:{},
+        inputProperty:{},
         employeeSubmitData:{
           id:'',
           accountId:"",
@@ -203,7 +204,7 @@
         })
       }
     },created(){
-      axios.get('/api/basic/hr/employee/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         var account=response.data.account;
         var employee=response.data;
         if(account.officeId!=null){
@@ -227,6 +228,9 @@
         this.employeeForm=employee;
         this.employeeForm.sex=employee.sex=="男"?1:0;
         this.accountForm=account;
+      })
+      axios.get('/api/basic/hr/employee/getForm').then((response)=>{
+          this.inputProperty=response.data
       })
     }
   }

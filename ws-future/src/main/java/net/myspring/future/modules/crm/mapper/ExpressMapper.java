@@ -22,8 +22,4 @@ public interface ExpressMapper extends MyMapper<Express,String> {
     List<Express> findByExpressOrderId(String expressOrderId);
 
     ExpressDto findDto(String id);
-
-    @DeleteProvider(type=MyMapper.class, method = MyProvider.DELETE_BY_IDS)
-    int deleteByIds(Iterable<String> ids);
-
 }

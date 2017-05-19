@@ -37,10 +37,14 @@ public class OfficeRuleController {
     }
 
 
-    @RequestMapping(value = "findForm")
-    public OfficeRuleForm findForm(OfficeRuleForm officeRuleForm){
-        officeRuleForm=officeRuleService.findForm(officeRuleForm);
-        officeRuleForm.setBoolMap(BoolEnum.getMap());
+    @RequestMapping(value = "findOne")
+    public OfficeRuleDto findOne(OfficeRuleDto officeRuleDto){
+        officeRuleDto=officeRuleService.findOne(officeRuleDto);
+        return officeRuleDto;
+    }
+
+    @RequestMapping(value = "getForm")
+    public OfficeRuleForm getForm(OfficeRuleForm officeRuleForm){
         officeRuleForm.setOfficeRuleList(officeRuleService.findAll());
         return officeRuleForm;
     }

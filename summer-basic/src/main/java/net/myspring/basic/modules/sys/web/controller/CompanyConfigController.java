@@ -41,9 +41,9 @@ public class CompanyConfigController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findForm")
-    public CompanyConfigDto findForm(String id) {
-        CompanyConfigDto companyConfigDto=companyConfigService.findForm(id);
+    @RequestMapping(value = "findOne")
+    public CompanyConfigDto findOne(CompanyConfigDto companyConfigDto) {
+        companyConfigDto=companyConfigService.findOne(companyConfigDto);
         return companyConfigDto;
     }
 

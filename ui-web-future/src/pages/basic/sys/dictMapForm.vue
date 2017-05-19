@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('dictMapForm.category')" prop="category">
           <el-select v-model="inputForm.category" filterable :placeholder="$t('dictMapForm.selectCategory')">
-            <el-option v-for="category in inputForm.categoryList" :key="category" :label="category" :value="category"></el-option>
+            <el-option v-for="category in inputProperty.categoryList" :key="category" :label="category" :value="category"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('dictMapForm.name')" prop="name">
@@ -31,6 +31,7 @@
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{},
+            inputProperty:{},
             submitData:{
               id:'',
               category:'',
@@ -69,9 +70,12 @@
           })
         }
       },created(){
-          axios.get('/api/basic/sys/dictMap/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/sys/dictMap/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
+        axios.get('/api/basic/sys/dictMap/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputProperty = response.data;
+        })
       }
     }
 </script>

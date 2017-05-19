@@ -1,8 +1,12 @@
 package net.myspring.basic.modules.hr.dto;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.AuditFile;
+import net.myspring.general.modules.sys.dto.ActivitiDetailDto;
 import net.myspring.util.cahe.annotation.CacheInput;
+
+import java.util.List;
 
 /**
  * Created by admin on 2017/4/5.
@@ -14,6 +18,8 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String processTypeId;
     private String areaId;
     private String officeId;
+    private List<ActivitiDetailDto> activitiDetailList= Lists.newArrayList();
+    private String attachment;
 
     @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
@@ -21,6 +27,22 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String officeName;
     @CacheInput(inputKey = "processTypes",inputInstance = "processTypeId",outputInstance = "name")
     private String processTypeName;
+
+    public String getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
+    }
+
+    public List<ActivitiDetailDto> getActivitiDetailList() {
+        return activitiDetailList;
+    }
+
+    public void setActivitiDetailList(List<ActivitiDetailDto> activitiDetailList) {
+        this.activitiDetailList = activitiDetailList;
+    }
 
     public String getProcessTypeId() {
         return processTypeId;

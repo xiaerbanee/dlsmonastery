@@ -151,9 +151,8 @@
             this.inputForm.processFlowDtoList.push({name:"",sort:(i+1)*10,positionId:""});
           }
         } else {
-          axios.get('/api/basic/sys/processType/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
-            this.inputForm.auditFileType=response.data.auditFileType?"1":"0";
             this.inputForm.processFlowDtoList=response.data.processFlowDtoList;
             if(response.data.createPermission!=null){
               this.createPermissions=new Array(response.data.createPermission);

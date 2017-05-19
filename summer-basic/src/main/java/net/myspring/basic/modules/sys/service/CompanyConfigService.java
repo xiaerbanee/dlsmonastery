@@ -27,34 +27,36 @@ public class CompanyConfigService {
     @Autowired
     private CacheUtils cacheUtils;
 
-   public Page<CompanyConfigDto> findPage(Pageable pageable,CompanyConfigQuery companyConfigQuery){
-       Page<CompanyConfigDto> companyConfigDtoPage = companyConfigMapper.findPage(pageable,companyConfigQuery);
-       cacheUtils.initCacheInput(companyConfigDtoPage.getContent());
-       return companyConfigDtoPage;
-   }
+    public Page<CompanyConfigDto> findPage(Pageable pageable, CompanyConfigQuery companyConfigQuery) {
+        Page<CompanyConfigDto> companyConfigDtoPage = companyConfigMapper.findPage(pageable, companyConfigQuery);
+        cacheUtils.initCacheInput(companyConfigDtoPage.getContent());
+        return companyConfigDtoPage;
+    }
 
-   public CompanyConfigForm save(CompanyConfigForm companyConfigForm){
-       if(companyConfigForm.isCreate()){
-           CompanyConfig companyConfig= BeanUtil.map(companyConfigForm,CompanyConfig.class);
-           companyConfigMapper.save(companyConfig);
-       }else{
-           CompanyConfig companyConfig = companyConfigMapper.findOne(companyConfigForm.getId());
-           ReflectionUtil.copyProperties(companyConfigForm,companyConfig);
-           companyConfigMapper.update(companyConfig);
-       }
-       return companyConfigForm;
-   }
+    public CompanyConfigForm save(CompanyConfigForm companyConfigForm) {
+        if (companyConfigForm.isCreate()) {
+            CompanyConfig companyConfig = BeanUtil.map(companyConfigForm, CompanyConfig.class);
+            companyConfigMapper.save(companyConfig);
+        } else {
+            CompanyConfig companyConfig = companyConfigMapper.findOne(companyConfigForm.getId());
+            ReflectionUtil.copyProperties(companyConfigForm, companyConfig);
+            companyConfigMapper.update(companyConfig);
+        }
+        return companyConfigForm;
+    }
 
-    public CompanyConfigDto findForm(String id){
-        CompanyConfig companyConfig= companyConfigMapper.findOne(id);
-        CompanyConfigDto companyConfigDto = BeanUtil.map(companyConfig, CompanyConfigDto.class);
-        cacheUtils.initCacheInput(companyConfigDto);
+    public CompanyConfigDto findOne(CompanyConfigDto companyConfigDto) {
+        if (!companyConfigDto.isCreate()) {
+            CompanyConfig companyConfig = companyConfigMapper.findOne(companyConfigDto.getId());
+            companyConfigDto = BeanUtil.map(companyConfig, CompanyConfigDto.class);
+            cacheUtils.initCacheInput(companyConfigDto);
+        }
         return companyConfigDto;
     }
 
-    public String getValueByCode(String code){
-        CompanyConfig companyConfig=companyConfigMapper.findByCode(code);
-        if(companyConfig!=null){
+    public String getValueByCode(String code) {
+        CompanyConfig companyConfig = companyConfigMapper.findByCode(code);
+        if (companyConfig != null) {
             return companyConfig.getValue();
         }
         return "";

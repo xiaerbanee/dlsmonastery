@@ -6,6 +6,7 @@ import net.myspring.basic.modules.sys.dto.BackendModuleDto;
 import net.myspring.basic.modules.sys.service.BackendService;
 import net.myspring.basic.modules.sys.web.form.BackendForm;
 import net.myspring.basic.modules.sys.web.form.BackendModuleForm;
+import net.myspring.basic.modules.sys.web.form.DictEnumForm;
 import net.myspring.basic.modules.sys.web.query.BackendModuleQuery;
 import net.myspring.basic.modules.sys.web.query.BackendQuery;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -48,9 +49,14 @@ public class BackendModuleController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findForm")
-    public BackendModuleForm findForm(BackendModuleForm backendModuleForm){
-        backendModuleForm=backendModuleService.findForm(backendModuleForm);
+    @RequestMapping(value = "findOne")
+    public BackendModuleDto findForm(BackendModuleDto backendModuleDto){
+        backendModuleDto=backendModuleService.findOne(backendModuleDto);
+        return backendModuleDto;
+    }
+
+    @RequestMapping(value = "getForm")
+    public BackendModuleForm getForm(BackendModuleForm backendModuleForm){
         backendModuleForm.setBackendList(backendService.findAll());
         return backendModuleForm;
     }

@@ -19,23 +19,23 @@ import java.util.List;
 
 @Service
 public class DictMapService {
-    
+
     @Autowired
     private DictMapMapper dictMapMapper;
     @Autowired
     private CacheUtils cacheUtils;
 
 
-    public DictMapForm findForm(DictMapForm dictMapForm){
-        if(!dictMapForm.isCreate()){
-            DictMap dictMap= dictMapMapper.findOne(dictMapForm.getId());
-            dictMapForm = BeanUtil.map(dictMap, DictMapForm.class);
-            cacheUtils.initCacheInput(dictMapForm);
+    public DictMapDto findOne(DictMapDto dictMapDto) {
+        if (!dictMapDto.isCreate()) {
+            DictMap dictMap = dictMapMapper.findOne(dictMapDto.getId());
+            dictMapDto = BeanUtil.map(dictMap, DictMapDto.class);
+            cacheUtils.initCacheInput(dictMapDto);
         }
-        return dictMapForm;
+        return dictMapDto;
     }
 
-    public List<String> findDistinctCategory(){
+    public List<String> findDistinctCategory() {
         return dictMapMapper.findDistinctCategory();
     }
 
@@ -45,24 +45,24 @@ public class DictMapService {
         return dictMapDtoPage;
     }
 
-    public DictMap save(DictMapForm dictMapForm){
+    public DictMap save(DictMapForm dictMapForm) {
         DictMap dictMap;
-        if(StringUtils.isBlank(dictMapForm.getId())){
-            dictMap=BeanUtil.map(dictMapForm,DictMap.class);
+        if (StringUtils.isBlank(dictMapForm.getId())) {
+            dictMap = BeanUtil.map(dictMapForm, DictMap.class);
             dictMapMapper.save(dictMap);
-        }else{
+        } else {
             dictMap = dictMapMapper.findOne(dictMapForm.getId());
-            ReflectionUtil.copyProperties(dictMapForm,dictMap);
+            ReflectionUtil.copyProperties(dictMapForm, dictMap);
             dictMapMapper.update(dictMap);
         }
-        return  dictMap;
+        return dictMap;
     }
 
-    public HashBiMap<String,String> getDictMapList(String category) {
+    public HashBiMap<String, String> getDictMapList(String category) {
         List<DictMap> dictMaps = dictMapMapper.findByCategory(category);
-        HashBiMap<String,String> map = HashBiMap.create();
+        HashBiMap<String, String> map = HashBiMap.create();
         for (DictMap dictMap : dictMaps) {
-            map.put(dictMap.toString(),dictMap.getName());
+            map.put(dictMap.toString(), dictMap.getName());
         }
         return map;
     }
@@ -71,13 +71,13 @@ public class DictMapService {
         dictMapMapper.logicDeleteOne(id);
     }
 
-    public List<DictMap> findByCategory(String category){
-        List<DictMap> dictMapList=dictMapMapper.findByCategory(category);
+    public List<DictMap> findByCategory(String category) {
+        List<DictMap> dictMapList = dictMapMapper.findByCategory(category);
         return dictMapList;
     }
 
-    public DictMapDto findByName(String name){
+    public DictMapDto findByName(String name) {
         DictMapDto dictMapDto = dictMapMapper.findByName(name);
-        return  dictMapDto;
+        return dictMapDto;
     }
 }

@@ -7,7 +7,7 @@
           <el-col :span="10">
             <el-form-item :label="$t('menuForm.menuCategory')" prop="menuCategoryId">
             <el-select v-model="inputForm.menuCategoryId" filterable :placeholder="$t('menuForm.selectGroup')">
-              <el-option v-for="category in inputForm.menuCategoryList" :key="category.id" :label="category.name" :value="category.id"></el-option>
+              <el-option v-for="category in inputProperty.menuCategoryList" :key="category.id" :label="category.name" :value="category.id"></el-option>
             </el-select>
             </el-form-item>
             <el-form-item :label="$t('menuForm.name')" prop="name">
@@ -53,6 +53,7 @@
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{},
+            inputProperty:{},
             submitData:{
               id:'',
               menuCategoryId:'',
@@ -96,11 +97,12 @@
           })
         }
       },created(){
-        axios.get('/api/basic/sys/menu/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/sys/menu/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-          this.inputForm.mobile = response.data.mobile?"1":"0";
-          this.inputForm.visible = response.data.visible?"1":"0";
         })
+      axios.get('/api/basic/sys/menu/getForm').then((response)=>{
+        this.inputProperty = response.data;
+      })
       }
     }
 </script>

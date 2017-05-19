@@ -99,9 +99,11 @@
         this.inputForm.moduleIdStr=modules.join();
       }
     },created(){
-      axios.get('/api/basic/sys/role/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm=response.data;
-        this.treeData =new Array(response.data.treeNode);
+      axios.get('/api/basic/sys/role/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+        this.inputForm = response.data;
+      })
+      axios.get('/api/basic/sys/role/getForm', {params: {id: this.$route.query.id}}).then((response) => {
+        this.treeData = new Array(response.data.treeNode);
         this.checked = response.data.treeNode.checked;
         this.inputForm.moduleIdStr = response.data.treeNode.checked.join();
       })

@@ -47,7 +47,7 @@
         this.pageLoading = true;
         util.setQuery("folderList",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/folder?'+qs.stringify(this.submitData)).then((response) => {
+        axios.get('/api/general/sys/folder?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

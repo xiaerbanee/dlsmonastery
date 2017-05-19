@@ -40,11 +40,17 @@ public class FolderController {
         return restResponse;
     }
 
-    @RequestMapping(value = "findForm")
-    public FolderForm findOne(FolderForm folderForm){
-        folderForm=folderService.findForm(folderForm.getId());
+    @RequestMapping(value = "findOne")
+    public FolderDto findOne(FolderDto folderDto){
+        folderDto=folderService.findOne(folderDto);
+        return folderDto;
+    }
+
+    @RequestMapping(value = "getForm")
+    public FolderForm getForm(FolderForm folderForm){
         folderForm.setFolderList(folderService.findAll(RequestUtils.getAccountId()));
         return folderForm;
     }
+
 
 }
