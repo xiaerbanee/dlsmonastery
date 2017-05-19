@@ -98,7 +98,7 @@ public class ProductTypeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "scoreType", "是否打分"));
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-        List<ProductType> productTypeList = productTypeMapper.findByFilter(map);
+        List<ProductType> productTypeList = productTypeMapper.findList(map);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("货品类型", productTypeList, simpleExcelColumnList);
         simpleExcelSheetList.add(simpleExcelSheet);
         return simpleExcelSheetList;
