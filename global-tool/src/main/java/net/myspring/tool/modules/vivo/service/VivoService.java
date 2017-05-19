@@ -61,12 +61,6 @@ public class VivoService {
         return vivoMapper.plantElectronicsn(dateStart, dateEnd);
     }
 
-    public String getCodes(String type) {
-        return null;
-        //return Const.CompanyConfig.getMap().get("JXVIVO" + Const.CharEnum.UNDER_LINE.getValue() + type);
-    }
-
-
     //获取颜色编码
     @LocalDataSource
     @Transactional(readOnly = false)
