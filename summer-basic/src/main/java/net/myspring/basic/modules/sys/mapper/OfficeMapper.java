@@ -1,8 +1,8 @@
 package net.myspring.basic.modules.sys.mapper;
 
 import net.myspring.basic.modules.sys.domain.Office;
-import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
+import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import net.myspring.basic.common.mybatis.MyProvider;
 import net.myspring.mybatis.mapper.BaseMapper;

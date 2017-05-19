@@ -23,4 +23,8 @@ public interface OfficeClient {
     @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getSameAreaByOfficeId")
     List<String> getSameAreaByOfficeId(@RequestParam(value = "officeId") String officeId);
 
+    @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findById")
+    List<OfficeDto> findById(@RequestParam(value = "id")String id);
+
+
 }
