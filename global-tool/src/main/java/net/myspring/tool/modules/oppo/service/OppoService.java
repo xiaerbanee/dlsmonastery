@@ -10,6 +10,7 @@ import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
 import net.myspring.tool.modules.oppo.mapper.*;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,11 +34,6 @@ public class OppoService {
     @Autowired
     private OppoPlantProductItemelectronSelMapper oppoPlantProductItemelectronSelMapper;
 
-    public String getCodes(String type) {
-        return null;
-        //return Const.CompanyConfig.getMap().get("JXOPPO" + Const.CharEnum.UNDER_LINE.getValue() + type);
-    }
-
     @FactoryDataSource
     public List<OppoPlantProductSel> plantProductSel(String companyId, String password, String branchId) {
         return oppoMapper.plantProductSel(companyId, password, branchId);
@@ -58,12 +54,13 @@ public class OppoService {
         return oppoMapper.plantProductItemelectronSel(companyId, password, systemDate);
     }
 
-
-
     //获取颜色编码
     @LocalDataSource
     @Transactional(readOnly = false)
     public String pullPlantProductSels(List<OppoPlantProductSel> oppoPlantProductSels) {
+        for(OppoPlantProductSel oppoPlantProductSel:oppoPlantProductSels){
+            oppoPlantProductSel.setColorId(oppoPlantProductSel.getColorId().trim());
+        }
         List<OppoPlantProductSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantProductSels)) {
             List<String> colorIds = Lists.newArrayList();
@@ -123,7 +120,6 @@ public class OppoService {
     }
 
     // 获取电子保卡信息
-    @Transactional(readOnly = false)
     public String pullPlantProductItemelectronSels(List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels) {
         List<OppoPlantProductItemelectronSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)) {

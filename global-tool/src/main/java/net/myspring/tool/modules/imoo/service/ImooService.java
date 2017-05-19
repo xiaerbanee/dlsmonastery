@@ -73,7 +73,6 @@ public class ImooService {
 
     //查询发货串码
     @LocalDataSource
-    @Transactional(readOnly = false)
     public String pullPlantSendimeis(List<ImooPrdocutImeiDeliver> imooPrdocutImeiDelivers) {
         String agentCodes = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         List<String> agentCodeList = StringUtils.getSplitList(agentCodes, CharConstant.COMMA);

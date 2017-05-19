@@ -22,12 +22,13 @@ public class ScheduleUtils {
 
 	@Transactional
 	public String synOppo(LocalDate date) {
-		List<String> mainCodes = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_CODES").split(CharConstant.COMMA));
-		List<String> mainPasswords = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_PASSWORD").split(CharConstant.COMMA));
+		return null;
+		//List<String> mainCodes = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_CODES").split(CharConstant.COMMA));
+		//List<String> mainPasswords = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_PASSWORD").split(CharConstant.COMMA));
 		//同步颜色编码
-		List<OppoPlantProductSel> plantProductSel = oppoService.plantProductSel(mainCodes.get(0), mainPasswords.get(0), "");
-		String message=oppoService.pullPlantProductSels(plantProductSel);
-		return message;
+		//List<OppoPlantProductSel> plantProductSel = oppoService.plantProductSel(mainCodes.get(0), mainPasswords.get(0), "");
+		//String message=oppoService.pullPlantProductSels(plantProductSel);
+		//return message;
 //		//同步物料编码
 //		List<OppoPlantAgentProductSel> oppoPlantAgentProductSels = oppoService.plantAgentProductSel(mainCodes.get(0), mainPasswords.get(0), "");
 //		futureOppoService.pullPlantAgentProductSels(oppoPlantAgentProductSels);
