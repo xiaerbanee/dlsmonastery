@@ -1304,6 +1304,9 @@ export default {
   },
   productImeUploadList: {
     productImeUploadList: "串码上报",
+    imeOrMeidsMultiLine:'可输入多行',
+    imeOrMeids:'ime或meid(多行)',
+    noSelectionFound:'没有选中任何记录',
     batchPass: "批量通过",
     month: "月份",
     updateShopName: "上报门店",

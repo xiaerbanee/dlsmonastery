@@ -18,6 +18,8 @@ public interface ProductImeMapper extends MyMapper<ProductIme, String> {
 
     ProductIme findByIme(String ime);
 
+    List<ProductImeDto> findDtoListByImeList(@Param("imeList")List<String> imeList, @Param("companyId") String companyId);
+
     List<ProductIme> findShipList(ProductImeShipQuery productImeShipQuery);
 
     List<ProductImeDto> findList(@Param("p")ProductImeQuery productImeQuery);

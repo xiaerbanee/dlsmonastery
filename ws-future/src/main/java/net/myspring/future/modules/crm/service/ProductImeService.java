@@ -1,7 +1,9 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Maps;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.crm.domain.ProductIme;
@@ -11,12 +13,14 @@ import net.myspring.future.modules.crm.mapper.*;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -91,5 +95,15 @@ public class ProductImeService {
         cacheUtils.initCacheInput(list);
 
         return list;
+    }
+
+    public List<ProductImeDto> findDtoListByImes(String imeStr) {
+        if(StringUtils.isBlank(imeStr)){
+            return new ArrayList<>();
+        }
+        List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+        List<ProductImeDto> productImeDtoList  = productImeMapper.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
+        cacheUtils.initCacheInput(productImeDtoList);
+        return productImeDtoList;
     }
 }
