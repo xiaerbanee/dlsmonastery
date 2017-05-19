@@ -5,8 +5,8 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
-import net.myspring.future.modules.basic.manager.PricesystemDetailManager;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
@@ -17,9 +17,9 @@ import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotViewOrAuditForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
-import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +48,7 @@ public class ShopAllotService {
     @Autowired
     private ShopAllotDetailMapper shopAllotDetailMapper;
     @Autowired
-    private PricesystemDetailManager pricesystemDetailManager;
+    private PricesystemDetailMapper pricesystemDetailMapper;
 
 
     public ShopAllot findOne(String id){
@@ -128,8 +128,8 @@ public class ShopAllotService {
         if(shopAllotDetailFormList == null || shopAllotDetailFormList.isEmpty()){
             return ;
         }
-        Map<String, PricesystemDetail> fromPricesystemMap = pricesystemDetailManager.findProductPricesystemDetailMap(shopAllot.getFromShopId());
-        Map<String, PricesystemDetail> toPricesystemMap = pricesystemDetailManager.findProductPricesystemDetailMap(shopAllot.getToShopId());
+        Map<String, PricesystemDetail> fromPricesystemMap = CollectionUtil.extractToMap(pricesystemDetailMapper.findByDepotId(shopAllot.getFromShopId()),"productId");
+        Map<String, PricesystemDetail> toPricesystemMap = CollectionUtil.extractToMap(pricesystemDetailMapper.findByDepotId(shopAllot.getToShopId()),"productId");
 
         List<ShopAllotDetail> shopAllotDetailsToBeSaved = new ArrayList<>();
         for(ShopAllotDetailForm each : shopAllotDetailFormList){
