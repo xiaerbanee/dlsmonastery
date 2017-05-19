@@ -12,7 +12,6 @@ import java.util.Map;
 
 public class IdUtils {
 
-	private static Map<String,Long> businessIdMap = Maps.newConcurrentMap();
 
 	private static Integer DEFAULT_PREIX_LENGTH = 2;
 

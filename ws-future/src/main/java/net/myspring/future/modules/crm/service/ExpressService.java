@@ -3,7 +3,6 @@ package net.myspring.future.modules.crm.service;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.JsonBuilder;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
@@ -14,6 +13,7 @@ import net.myspring.future.modules.crm.mapper.ExpressMapper;
 import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
 import net.myspring.future.modules.crm.web.form.ExpressForm;
 import net.myspring.future.modules.crm.web.query.ExpressQuery;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -138,7 +138,7 @@ public class ExpressService {
             return null;
         }
 
-        List<Map<String, Object>> list = JsonBuilder.getNonEmptyMapper().fromJson(rule, List.class);
+        List<Map<String, Object>> list = ObjectMapperUtils.readValue(rule, List.class);
         if(list == null){
             return null;
         }
