@@ -45,6 +45,9 @@ public interface ProductTypeMapper extends BaseMapper<ProductType,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL_ENABLED)
     List<ProductType> findAllEnabled();
 
+    @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
+    List<ProductType> findByIds(List<String> ids);
+
     Page<ProductTypeDto> findPage(Pageable pageable, @Param("p") ProductTypeQuery productTypeQuery);
 
     List<ProductType> findList(@Param("p") Map<String, Object> map);
@@ -52,8 +55,6 @@ public interface ProductTypeMapper extends BaseMapper<ProductType,String> {
     List<ProductType> findByDemoPhoneTypeIds(List<String> dempProductTypeIds);
 
     List<ProductType> findByNameLike(@Param("name") String name);
-
-    List<ProductType> findByIds(List<String> ids);
 
     int updateDemoPhoneType(@Param("demoPhoneTypeId") String demoPhoneTypeId, @Param("list") List<String> ids);
 

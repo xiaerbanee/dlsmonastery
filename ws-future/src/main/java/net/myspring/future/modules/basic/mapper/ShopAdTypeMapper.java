@@ -49,6 +49,7 @@ public interface ShopAdTypeMapper extends BaseMapper<ShopAdType,String> {
 
     Page<ShopAdTypeDto> findPage(Pageable pageable, @Param("p")ShopAdTypeQuery shopAdTypeQuery);
 
+    @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<ShopAdType> findByIds(List<String> ids);
 
 }
