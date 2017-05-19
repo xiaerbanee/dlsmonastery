@@ -23,10 +23,12 @@ public class DictEnumService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public DictEnumDto findOne(String id) {
-        DictEnum dictEnum= dictEnumMapper.findOne(id);
-        DictEnumDto dictEnumDto = BeanUtil.map(dictEnum,DictEnumDto.class);
-        cacheUtils.initCacheInput(dictEnumDto);
+    public DictEnumDto findOne(DictEnumDto dictEnumDto) {
+        if(!dictEnumDto.isCreate()){
+            DictEnum dictEnum= dictEnumMapper.findOne(dictEnumDto.getId());
+            dictEnumDto = BeanUtil.map(dictEnum,DictEnumDto.class);
+            cacheUtils.initCacheInput(dictEnumDto);
+        }
         return dictEnumDto;
     }
 

@@ -20,7 +20,7 @@ public class MenuForm extends DataForm<Menu>{
     private String remarks;
     private boolean mobile;
     private boolean visible;
-    private String sort;
+    private Integer sort;
     private String name;
     private String code;
     private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
@@ -91,11 +91,11 @@ public class MenuForm extends DataForm<Menu>{
         this.visible = visible;
     }
 
-    public String getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(String sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 

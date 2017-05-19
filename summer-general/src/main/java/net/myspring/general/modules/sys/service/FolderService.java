@@ -27,13 +27,15 @@ public class FolderService {
     private FolderMapper folderMapper;
 
     @Transactional(readOnly = true)
-    public FolderForm getForm(String id){
-        Folder folder = folderMapper.findOne(id);
-        FolderForm folderForm = BeanUtil.map(folder, FolderForm.class);
-        return folderForm;
+    public FolderDto findOne(FolderDto folderDto) {
+        if (!folderDto.isCreate()) {
+            Folder folder = folderMapper.findOne(folderDto.getId());
+            folderDto = BeanUtil.map(folder, FolderDto.class);
+        }
+        return folderDto;
     }
 
-    public void logicDeleteOne(String id){
+    public void logicDeleteOne(String id) {
         folderMapper.logicDeleteOne(id);
     }
 
@@ -62,7 +64,7 @@ public class FolderService {
                     folderForm.setParentId(parent.getId());
                     folderForm.setName(p);
                     folderForm.setParentIds(parent.getParentIds() + parent.getId() + ",");
-                    folderMapper.save(BeanUtil.map(folderForm,Folder.class));
+                    folderMapper.save(BeanUtil.map(folderForm, Folder.class));
                 }
                 parent = folder;
             }
@@ -72,13 +74,13 @@ public class FolderService {
 
     @Transactional(readOnly = true)
     public List<FolderDto> findAll(String accountId) {
-        List<FolderDto> folderDtoList=Lists.newArrayList();
+        List<FolderDto> folderDtoList = Lists.newArrayList();
         Folder parent = getRoot(accountId);
         List<Folder> folders = Lists.newArrayList();
         List<Folder> sourceList = folderMapper.findByCreatedBy(accountId);
         sortList(folders, sourceList, parent.getId());
         if (!CollectionUtil.isEmpty(folders)) {
-            folderDtoList= BeanUtil.map(folders,FolderDto.class);
+            folderDtoList = BeanUtil.map(folders, FolderDto.class);
             for (FolderDto folderDto : folderDtoList) {
                 if (folderDto.getParentId() == null) {
                     folderDto.setLevelName(folderDto.getName().trim());
@@ -98,13 +100,17 @@ public class FolderService {
         // 无法将上级部门设置为自己或者自己的下级部门
         folderForm.setParentIds(parent.getParentIds() + folderForm.getParentId() + ",");
         if (!folderForm.isCreate() && folderForm.getParentIds().contains("," + folderForm.getId() + ",")) {
-            return new RestResponse("无法将上级目录设置为自己或者自己的下级目录",ResponseCodeEnum.invalid.name());
+            return new RestResponse("无法将上级目录设置为自己或者自己的下级目录", ResponseCodeEnum.invalid.name());
         }
-        Folder folder=BeanUtil.map(folderForm,Folder.class);
-        folderMapper.save(folder);
-        List<Folder> list = folderMapper.findByParentIdsLike("%," + folderForm.getId() + ",%");
-        for (Folder e : list) {
-            e.setParentIds(e.getParentIds().replace(oldParentIds, folderForm.getParentIds()));
+        if(folderForm.isCreate()){
+            Folder folder = BeanUtil.map(folderForm, Folder.class);
+            folderMapper.save(folder);
+        }else {
+            folderMapper.updateForm(folderForm);
+            List<Folder> list = folderMapper.findByParentIdsLike("%," + folderForm.getId() + ",%");
+            for (Folder e : list) {
+                e.setParentIds(e.getParentIds().replace(oldParentIds, folderForm.getParentIds()));
+            }
         }
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }

@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.imoo.web;
 
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.modules.imoo.domain.ImooPlantBasicProduct;
 import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver;
@@ -17,7 +18,7 @@ import java.util.List;
 
 /**
  * Created by guolm on 2017/5/9.
- */
+        */
 @RestController
 @RequestMapping(value = "imoo")
 public class ImooController {
@@ -27,13 +28,12 @@ public class ImooController {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value="syn")
-    public String synFactoryImoo(String date){
-        List<String> agentCodes = Arrays.asList(imooService.getCodes("FACTORY_AGENT_CODES").split(CharConstant.COMMA));
+    public String syn(String date){
         logger.info(LocalDateTime.now()+"imoo开始同步物料编码:");
         List<ImooPlantBasicProduct> imooPlantBasicProducts = imooService.imooPlantBasicProducts();
         imooService.pullPlantProducts(imooPlantBasicProducts);
         logger.info(LocalDateTime.now()+"imoo开始同步发货:");
-        List<ImooPrdocutImeiDeliver> imooPrdocutImeiDelivers = imooService.plantPrdocutImeiDeliverByDate(agentCodes, LocalDateUtils.parse(date));
+        List<ImooPrdocutImeiDeliver> imooPrdocutImeiDelivers = imooService.plantPrdocutImeiDeliverByDate(LocalDateUtils.parse(date));
         imooService.pullPlantSendimeis(imooPrdocutImeiDelivers);
         return "imoo同步成功";
     }

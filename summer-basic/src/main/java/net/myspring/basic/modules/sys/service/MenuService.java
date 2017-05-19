@@ -61,20 +61,20 @@ public class MenuService {
         return menu;
     }
 
-    public MenuForm getForm(MenuForm menuForm) {
-        if (!menuForm.isCreate()) {
-            Menu menu = findOne(menuForm.getId());
+    public MenuDto findOne(MenuDto menuDto) {
+        if (!menuDto.isCreate()) {
+            Menu menu = findOne(menuDto.getId());
             if (menu != null) {
-                menuForm = BeanUtil.map(menu, MenuForm.class);
-                List<Permission> permissionList = permissionMapper.findByMenuId(menuForm.getId());
+                menuDto = BeanUtil.map(menu, MenuDto.class);
+                List<Permission> permissionList = permissionMapper.findByMenuId(menuDto.getId());
                 String permissionStr = "";
                 for (Permission permission : permissionList) {
                     permissionStr = permissionStr + permission.getName() + CharConstant.SPACE+ permission.getPermission() + CharConstant.ENTER;
                 }
-                menuForm.setPermissionStr(permissionStr);
+                menuDto.setPermissionStr(permissionStr);
             }
         }
-        return menuForm;
+        return menuDto;
     }
 
     public Page<MenuDto> findPage(Pageable pageable, MenuQuery menuQuery) {

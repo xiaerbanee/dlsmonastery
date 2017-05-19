@@ -22,7 +22,6 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('folderFileList.loading')" @sort-change="sortChange"  stripe border>
         <el-table-column  prop="id" :label="$t('folderFileList.id')" sortable width="150"></el-table-column>
-        <el-table-column  prop="folderName" :label="$t('folderFileList.folderName')" ></el-table-column>
         <el-table-column  prop="name" :label="$t('folderFileList.name')" ></el-table-column>
         <el-table-column  prop="contentType" :label="$t('folderFileList.contentType')" ></el-table-column>
         <el-table-column  prop="size" :label="$t('folderFileList.size')" ></el-table-column>
@@ -58,7 +57,7 @@
         this.pageLoading = true;
         util.copyValue(this.formData,this.submitData);
         util.setQuery("folderFileList",this.submitData);
-        axios.get('/api/basic/sys/folderFile?'+qs.stringify(this.submitData)).then((response) => {
+        axios.get('/api/general/sys/folderFile?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

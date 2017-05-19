@@ -2,9 +2,7 @@ package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.HashBiMap;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.domain.DictMap;
-import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.web.form.DictMapForm;
 import net.myspring.basic.modules.sys.web.query.DictMapQuery;
@@ -21,20 +19,23 @@ import java.util.List;
 
 @Service
 public class DictMapService {
-    
+
     @Autowired
     private DictMapMapper dictMapMapper;
     @Autowired
     private CacheUtils cacheUtils;
 
 
-    public DictMapDto findOne(String id) {
-        DictMap dictMap= dictMapMapper.findOne(id);
-        DictMapDto dictMapDto= BeanUtil.map(dictMap,DictMapDto.class);
-        cacheUtils.initCacheInput(dictMapDto);
+    public DictMapDto findOne(DictMapDto dictMapDto) {
+        if (!dictMapDto.isCreate()) {
+            DictMap dictMap = dictMapMapper.findOne(dictMapDto.getId());
+            dictMapDto = BeanUtil.map(dictMap, DictMapDto.class);
+            cacheUtils.initCacheInput(dictMapDto);
+        }
         return dictMapDto;
     }
-    public List<String> findDistinctCategory(){
+
+    public List<String> findDistinctCategory() {
         return dictMapMapper.findDistinctCategory();
     }
 
@@ -44,24 +45,24 @@ public class DictMapService {
         return dictMapDtoPage;
     }
 
-    public DictMap save(DictMapForm dictMapForm){
+    public DictMap save(DictMapForm dictMapForm) {
         DictMap dictMap;
-        if(StringUtils.isBlank(dictMapForm.getId())){
-            dictMap=BeanUtil.map(dictMapForm,DictMap.class);
+        if (StringUtils.isBlank(dictMapForm.getId())) {
+            dictMap = BeanUtil.map(dictMapForm, DictMap.class);
             dictMapMapper.save(dictMap);
-        }else{
+        } else {
             dictMap = dictMapMapper.findOne(dictMapForm.getId());
-            ReflectionUtil.copyProperties(dictMapForm,dictMap);
+            ReflectionUtil.copyProperties(dictMapForm, dictMap);
             dictMapMapper.update(dictMap);
         }
-        return  dictMap;
+        return dictMap;
     }
 
-    public HashBiMap<String,String> getDictMapList(String category) {
+    public HashBiMap<String, String> getDictMapList(String category) {
         List<DictMap> dictMaps = dictMapMapper.findByCategory(category);
-        HashBiMap<String,String> map = HashBiMap.create();
+        HashBiMap<String, String> map = HashBiMap.create();
         for (DictMap dictMap : dictMaps) {
-            map.put(dictMap.toString(),dictMap.getName());
+            map.put(dictMap.toString(), dictMap.getName());
         }
         return map;
     }
@@ -70,13 +71,13 @@ public class DictMapService {
         dictMapMapper.logicDeleteOne(id);
     }
 
-    public List<DictMap> findByCategory(String category){
-        List<DictMap> dictMapList=dictMapMapper.findByCategory(category);
+    public List<DictMap> findByCategory(String category) {
+        List<DictMap> dictMapList = dictMapMapper.findByCategory(category);
         return dictMapList;
     }
 
-    public DictMapDto findByName(String name){
+    public DictMapDto findByName(String name) {
         DictMapDto dictMapDto = dictMapMapper.findByName(name);
-        return  dictMapDto;
+        return dictMapDto;
     }
 }

@@ -11,7 +11,7 @@
         </el-form-item>
         <el-form-item label="所属项目" prop="backendId">
           <el-select v-model="inputForm.backendId" filterable placeholder="所属项目">
-            <el-option v-for="item in inputForm.backendList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputProperty.backendList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('backendModuleForm.remarks')" prop="remarks">
@@ -30,6 +30,7 @@
           return{
             submitDisabled:false,
             inputForm:{},
+            inputProperty:{},
             submitData:{
               id:'',
               code:'',
@@ -68,9 +69,12 @@
           })
         }
       },created(){
-          axios.get('/api/basic/sys/backendModule/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/sys/backendModule/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
+        axios.get('/api/basic/sys/backendModule/getForm').then((response)=>{
+          this.inputProperty = response.data;
+        })
       }
     }
 </script>

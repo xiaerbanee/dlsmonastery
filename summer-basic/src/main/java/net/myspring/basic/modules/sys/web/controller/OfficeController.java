@@ -81,9 +81,14 @@ public class OfficeController {
     }
 
 
+    @RequestMapping(value = "findOne")
+    public OfficeDto findOne(OfficeDto officeDto) {
+        officeDto = officeService.findOne(officeDto);
+        return officeDto;
+    }
+
     @RequestMapping(value = "getForm")
     public OfficeForm getForm(OfficeForm officeForm) {
-        officeForm = officeService.getForm(officeForm);
         officeForm.setOfficeRuleList(officeService.findOfficeRuleList());
         officeForm.setJointTypeList(JointTypeEnum.getList());
         officeForm.setOfficeTypeList(OfficeTypeEnum.getList());

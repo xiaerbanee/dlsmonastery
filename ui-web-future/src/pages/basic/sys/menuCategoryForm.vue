@@ -5,11 +5,14 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item label="所属模块" prop="backendModuleId">
           <el-select v-model="inputForm.backendModuleId" clearable>
-            <el-option v-for="item in inputForm.backendModuleList" :key="item.id" :label="$t('menus.backendModule.'+item.code)" :value="item.id"></el-option>
+            <el-option v-for="item in inputProperty.backendModuleList" :key="item.id" :label="$t('menus.backendModule.'+item.code)" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('menuCategoryForm.name')" prop="name">
           <el-input v-model.number="inputForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="Code" prop="code">
+          <el-input v-model="inputForm.code"></el-input>
         </el-form-item>
         <el-form-item :label="$t('menuCategoryForm.sort')"  prop="sort">
           <el-input v-model.number="inputForm.sort"></el-input>
@@ -31,16 +34,19 @@
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{},
+            inputProperty:{},
             submitData:{
               id:'',
               name:'',
               sort:'',
               remarks:'',
+              code:"",
               backendModuleId:""
             },
             rules: {
               backendModuleId: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')}],
               name: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')}],
+              code: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')}],
               sort: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')},{ type: 'number', message: this.$t('menuCategoryForm.inputLegalValue')}]
             }
           }
@@ -69,8 +75,11 @@
           })
         }
       },created(){
-        axios.get('/api/basic/sys/menuCategory/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/sys/menuCategory/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
+        })
+        axios.get('/api/basic/sys/menuCategory/getForm').then((response)=>{
+          this.inputProperty = response.data;
         })
       }
     }

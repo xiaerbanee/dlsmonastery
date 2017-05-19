@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import com.google.common.collect.Maps;
-import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
@@ -12,6 +11,7 @@ import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.sys.service.DictEnumService;
+import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,14 +51,19 @@ public class EmployeeController {
         return restResponse;
     }
 
+    @RequestMapping(value = "findOne")
+    public EmployeeDto findOne(EmployeeDto employeeDto){
+        employeeDto=employeeService.findOne(employeeDto);
+        AccountDto accountDto=new AccountDto();
+        accountDto.setId(employeeDto.getAccountId());
+        employeeDto.setAccount(accountService.findOne(accountDto));
+        return employeeDto;
+    }
+
     @RequestMapping(value = "getForm")
-    public EmployeeForm getForm(EmployeeForm employeeForm){
-        employeeForm=employeeService.getForm(employeeForm);
+    public EmployeeForm findForm(EmployeeForm employeeForm){
         employeeForm.setPositionList(positionService.findAll());
         employeeForm.setEducationList( dictEnumService.findValueByCategory(DictEnumCategoryEnum.EDUCATION.toString()));
-        AccountForm accountForm=new AccountForm();
-        accountForm.setId(employeeForm.getAccountId());
-        employeeForm.setAccount(accountService.getForm(accountForm));
         return employeeForm;
     }
 

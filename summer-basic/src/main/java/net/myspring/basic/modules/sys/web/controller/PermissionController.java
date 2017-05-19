@@ -51,9 +51,14 @@ public class PermissionController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "findOne")
+    public PermissionDto findOne(PermissionDto permissionDto) {
+        permissionDto=permissionService.findOne(permissionDto);
+        return permissionDto;
+    }
+
     @RequestMapping(value = "getForm")
     public PermissionForm getForm(PermissionForm permissionForm) {
-        permissionForm=permissionService.getForm(permissionForm);
         permissionForm.setMenuList(menuService.findAll());
         permissionForm.setRoleList(roleService.findAll());
         return permissionForm;

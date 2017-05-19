@@ -21,8 +21,35 @@ public class PermissionDto extends DataDto<Permission> {
 
     private String locked;
     private String remarks;
+    private String url;
+    private String method;
     private List<Position> positionList = Lists.newArrayList();
     private List<String> positionIdList = Lists.newArrayList();
+    private List<String> roleIdList=Lists.newArrayList();
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public List<String> getRoleIdList() {
+        return roleIdList;
+    }
+
+    public void setRoleIdList(List<String> roleIdList) {
+        this.roleIdList = roleIdList;
+    }
 
     public List<Position> getPositionList() {
         return positionList;

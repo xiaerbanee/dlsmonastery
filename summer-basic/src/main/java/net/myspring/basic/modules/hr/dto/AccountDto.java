@@ -20,7 +20,8 @@ public class AccountDto extends DataDto<Account> {
     private String leaderId;
     private String employeeId;
     private String companyId;
-    private List<String> officeIdList= Lists.newArrayList();
+    private String outId;
+
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
@@ -40,6 +41,13 @@ public class AccountDto extends DataDto<Account> {
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "status")
     private String employeeStatus;
 
+    public String getOutId() {
+        return outId;
+    }
+
+    public void setOutId(String outId) {
+        this.outId = outId;
+    }
     public LocalDate getEntryDate() {
         return entryDate;
     }
@@ -169,11 +177,4 @@ public class AccountDto extends DataDto<Account> {
         this.employeeStatus = employeeStatus;
     }
 
-    public List<String> getOfficeIdList() {
-        return officeIdList;
-    }
-
-    public void setOfficeIdList(List<String> officeIdList) {
-        this.officeIdList = officeIdList;
-    }
 }

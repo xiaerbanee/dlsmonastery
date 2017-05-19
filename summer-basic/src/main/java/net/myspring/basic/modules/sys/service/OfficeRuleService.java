@@ -42,13 +42,13 @@ public class OfficeRuleService {
         return officeRuleDtoList;
     }
 
-    public OfficeRuleForm getForm(OfficeRuleForm officeRuleForm) {
-        if(!officeRuleForm.isCreate()){
-            OfficeRule officeRule = officeRuleMapper.findOne(officeRuleForm.getId());
-            officeRuleForm= BeanUtil.map(officeRule,OfficeRuleForm.class);
-            cacheUtils.initCacheInput(officeRuleForm);
+    public OfficeRuleDto findOne(OfficeRuleDto officeRuleDto) {
+        if(!officeRuleDto.isCreate()){
+            OfficeRule officeRule = officeRuleMapper.findOne(officeRuleDto.getId());
+            officeRuleDto= BeanUtil.map(officeRule,OfficeRuleDto.class);
+            cacheUtils.initCacheInput(officeRuleDto);
         }
-        return officeRuleForm;
+        return officeRuleDto;
     }
 
     public OfficeRule findOne(String id){

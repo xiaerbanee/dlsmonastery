@@ -23,13 +23,13 @@ public class BackendService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public BackendForm getForm(BackendForm backendForm) {
-        if(!backendForm.isCreate()) {
-            Backend backend =backendMapper.findOne(backendForm.getId());
-            backendForm= BeanUtil.map(backend,BackendForm.class);
-            cacheUtils.initCacheInput(backendForm);
+    public BackendDto findOne(BackendDto backendDto) {
+        if(!backendDto.isCreate()) {
+            Backend backend =backendMapper.findOne(backendDto.getId());
+            backendDto= BeanUtil.map(backend,BackendDto.class);
+            cacheUtils.initCacheInput(backendDto);
         }
-        return backendForm;
+        return backendDto;
     }
 
     public List<BackendDto> findByNameLike(String name){
@@ -49,6 +49,12 @@ public class BackendService {
             backendMapper.update(backend);
         }
         return backend;
+    }
+
+    public BackendDto findOne(String id){
+        Backend backend=backendMapper.findOne(id);
+        BackendDto backendDto=BeanUtil.map(backend,BackendDto.class);
+        return backendDto;
     }
 
     public List<BackendDto> findAll(){

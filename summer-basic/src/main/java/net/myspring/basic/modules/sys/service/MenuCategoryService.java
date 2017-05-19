@@ -23,18 +23,13 @@ public class MenuCategoryService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public MenuCategory findOne(String id){
-        MenuCategory menuCategory = menuCategoryMapper.findOne(id);
-        return menuCategory;
-    }
-
-    public MenuCategoryForm getForm(MenuCategoryForm menuCategoryForm){
-        if(!menuCategoryForm.isCreate()){
-            MenuCategory menuCategory = menuCategoryMapper.findOne(menuCategoryForm.getId());
-            menuCategoryForm= BeanUtil.map(menuCategory,MenuCategoryForm.class);
-            cacheUtils.initCacheInput(menuCategoryForm);
+    public MenuCategoryDto findOne(MenuCategoryDto menuCategoryDto){
+        if(!menuCategoryDto.isCreate()){
+            MenuCategory menuCategory = menuCategoryMapper.findOne(menuCategoryDto.getId());
+            menuCategoryDto= BeanUtil.map(menuCategory,MenuCategoryDto.class);
+            cacheUtils.initCacheInput(menuCategoryDto);
         }
-        return menuCategoryForm;
+        return menuCategoryDto;
     }
 
     public Page<MenuCategoryDto> findPage(Pageable pageable,MenuCategoryQuery menuCategoryQuery) {

@@ -99,7 +99,7 @@
         this.fileList = fileList;
       }
     },created(){
-     axios.get('/api/basic/hr/auditFile/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+     axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
          this.inputForm = response.data;
       })
       axios.get('/api/general/sys/processType/findAll',{params: {id:this.$route.query.id}}).then((response)=>{

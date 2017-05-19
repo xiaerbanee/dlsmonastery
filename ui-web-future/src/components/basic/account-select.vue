@@ -32,7 +32,11 @@
         }
         this.innerId=val;
         this.remoteLoading = true;
-        axios.get('/api/basic/hr/account/findById?id=' + this.innerId).then((response)=>{
+        let idStr=this.innerId;
+        if(this.multiple){
+            idStr=this.innerId.join();
+        }
+        axios.get('/api/basic/hr/account/findByIds?idStr='+idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })

@@ -19,7 +19,7 @@
             </el-form-item>
             <el-form-item :label="$t('accountForm.position')" prop="positionId">
               <el-select v-model="inputForm.positionId"  filterable :placeholder="$t('accountForm.selectGroup')" :clearable=true>
-                <el-option v-for="position in formProperty.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
+                <el-option v-for="position in inputProperty.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -66,23 +66,15 @@
         isCreate:this.$route.query.id==null,
         multiple:true,
         submitDisabled:false,
-        formProperty:{positionDtoList:[]},
-        employees:[],
-        leaders:[],
-        offices:[],
-        depots:[],
-        dataScopeOffices:[],
+        inputProperty:{},
         inputForm:{},
         submitData:{
           id:'',
           employeeId:'',
           loginName:'',
           officeId:"",
-          depotIdList:"",
           leaderId:'',
           positionId:"",
-          officeIdList:'',
-          viewReport:'',
           outId:'',
           outPassword:'',
           remarks:''
@@ -121,27 +113,11 @@
         })
       }
     },created(){
-      axios.get('/api/basic/hr/account/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
-        this.formProperty.positionDtoList = response.data.positionDtoList;
-        this.inputForm.viewReport = response.data.viewReport?1:0;
-        if(response.data.officeId!=null){
-          this.offices=new Array({id:response.data.officeId,name:response.data.officeName})
-        }
-        if(response.data.officeIdList!=null&&response.data.officeIdList.length>0){
-          let officeList=new Array();
-          for(var i=response.data.officeIdList.length-1;i>=0;i--){
-            officeList.push({id:response.data.officeIdList[i],name:response.data.officeListName[i]})
-          }
-          this.dataScopeOffices=officeList;
-          this.inputForm.officeIdList=response.data.officeIdList;
-        }
-        if(response.data.employeeId!=null){
-          this.employees=new Array({id:response.data.employeeId,name:response.data.employeeName})
-        }
-        if(response.data.leaderId!=null){
-          this.leaders=new Array({id:response.data.leaderId,loginName:response.data.leaderName})
-        }
+      })
+      axios.get('/api/basic/hr/account/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputProperty=response.data;
       })
     }
   }

@@ -64,9 +64,14 @@ public class RoleController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "findOne")
+    public RoleDto findOne(RoleDto roleDto){
+        roleDto= roleService.findOne(roleDto);
+        return roleDto;
+    }
+
     @RequestMapping(value = "getForm")
     public RoleForm getForm(RoleForm roleForm){
-        roleForm= roleService.getForm(roleForm);
         List<String> backendModuleIdList = roleForm.isCreate()? Lists.newArrayList() : backendModuleService.findBackendModuleIdByRoleId(roleForm.getId());
         roleForm.setTreeNode(permissionService.findBackendTree(backendModuleIdList));
         return roleForm;
