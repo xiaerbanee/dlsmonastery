@@ -71,8 +71,8 @@ public class ExpressService {
         return result;
     }
 
-    public void delete(ExpressForm expressForm) {
-        expressMapper.logicDeleteOne(expressForm.getId());
+    public void logicDeleteOne(String expressId) {
+        expressMapper.logicDeleteOne(expressId);
     }
 
 

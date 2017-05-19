@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('dictEnumForm.category')" prop="category">
           <el-select v-model="inputForm.category" filterable :placeholder="$t('dictEnumForm.selectGroup')">
-            <el-option v-for="category in inputForm.categoryList" :key="category" :label="category" :value="category"></el-option>
+            <el-option v-for="category in inputProperty.categoryList" :key="category" :label="category" :value="category"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('dictEnumForm.sort')" prop="sort">
@@ -30,6 +30,7 @@
           return{
             submitDisabled:false,
             inputForm:{},
+            inputProperty:{},
             submitData:{
               id:'',
               category:'',
@@ -68,9 +69,12 @@
           })
         }
       },created(){
-          axios.get('/api/basic/sys/dictEnum/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
+        axios.get('/api/basic/sys/dictEnum/getForm').then((response)=>{
+          this.inputProperty = response.data;
+        })
       }
     }
 </script>

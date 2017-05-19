@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.web.query;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
@@ -10,13 +11,6 @@ import java.util.List;
 
 public class StoreAllotQuery extends BaseQuery {
 
-    private String businessIds;
-
-    public List<String> getBusinessIdList() {
-        return businessIdList;
-    }
-
-    private List<String> businessIdList;
     private String fromStoreId;
     private String toStoreId;
     private String status;
@@ -25,7 +19,25 @@ public class StoreAllotQuery extends BaseQuery {
     private LocalDateTime createdDateEnd;
     private String outCode;
     private String remarks;
+    private String createdBy;
+    private String businessIds;
     private List<String> statusList = new ArrayList<String>();
+
+    public List<String> getBusinessIdList() {
+        if(StringUtils.isNotBlank(businessIds)) {
+            return StringUtils.getSplitList(businessIds, CharConstant.ENTER);
+        } else {
+            return null;
+        }
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public String getBusinessIds() {
         return businessIds;
@@ -33,20 +45,7 @@ public class StoreAllotQuery extends BaseQuery {
 
     public void setBusinessIds(String businessIds) {
         this.businessIds = businessIds;
-        if(StringUtils.isEmpty(businessIds)) {
-            businessIdList = null;
-        }else{
-            String tmp =  businessIds.replaceAll("\\R" , ",");
-            tmp =  tmp.replaceAll("，" , ",");
-            String[] result = tmp.split(",", 0);
-            businessIdList = new ArrayList<>();
-            for(int i =0; i< result.length; i++ ){
-                businessIdList.add(StringUtils.trimToEmpty(result[i]));
-
-            }
-        }
     }
-
 
     public String getOutCode() {
         return outCode;

@@ -9,12 +9,4 @@ import java.util.List;
 
 @Service
 public class GoodsOrderImeService {
-
-    @Autowired
-    private GoodsOrderImeMapper goodsOrderImeMapper;
-
-
-    public List<GoodsOrderImeDto> findDtoList(String goodsOrderId) {
-        return goodsOrderImeMapper.findDtoListByGoodsOrderId(goodsOrderId);
-    }
 }

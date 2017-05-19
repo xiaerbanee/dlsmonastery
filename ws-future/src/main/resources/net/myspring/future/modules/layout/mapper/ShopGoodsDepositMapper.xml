@@ -21,7 +21,7 @@
             AND t1.created_date &gt;=#{p.createdDateStart}
         </if>
         <if test="p.createdDateEnd !=null">
-            AND t1.created_date &lt;=#{p.createdDateEnd}
+            AND t1.created_date &lt; #{p.createdDateEnd}
         </if>
         <if test="p.remarks !=null">
             and t1.out_code like concat('%',#{p.remarks},'%')

@@ -9,48 +9,48 @@
              {{inputForm.id}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.office')" prop="depotDto">
-              {{inputForm.officeName}}
+              {{shopBuildForm.officeName}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.shopName')" prop="shopId">
-              {{inputForm.shopName}}
+              {{shopBuildForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.monthSaleQty')" prop="monthSaleQty">
-              {{inputForm.monthSaleQty}}
+              {{shopBuildForm.monthSaleQty}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.shopType')" prop="shopType">
-              {{inputForm.shopType}}
+              {{shopBuildForm.shopType}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.address')" prop="address">
-              {{inputForm.address}}
+              {{shopBuildForm.address}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.applyAccount')" prop="loginName">
-              {{inputForm.applyAccountName}}
+              {{shopBuildForm.applyAccountName}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.mobilePhone')" prop="mobilePhone">
-              {{inputForm.applyAccountPhone}}
+              {{shopBuildForm.applyAccountPhone}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.remarks')"  prop="remarks">
-              {{inputForm.remarks}}
+              {{shopBuildForm.remarks}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item  :label="$t('shopBuildDetail.fixtureType')" prop="fixtureType">
-              {{inputForm.fixtureType}}
+              {{shopBuildForm.fixtureType}}
             </el-form-item>
             <el-form-item  :label="$t('shopBuildDetail.oldContents')" prop="oldContents">
-              {{inputForm.oldContents}}
+              {{shopBuildForm.oldContents}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.newContents')" prop="newContents">
-              {{inputForm.newContents}}
+              {{shopBuildForm.newContents}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.buildType')" prop="buildType">
-              {{inputForm.buildType}}
+              {{shopBuildForm.buildType}}
             </el-form-item>
             <el-form-item  :label="$t('shopBuildDetail.content')" prop="content">
-              {{inputForm.content}}
+              {{shopBuildForm.content}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.processStatus')" prop="processStatus">
-              {{inputForm.processStatus}}
+              {{shopBuildForm.processStatus}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.scenePhoto')" prop="scenePhoto">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设":on-change="handleChange1" :on-remove="handleRemove1"  :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
@@ -71,7 +71,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <process-details v-model="inputForm.processInstanceId"></process-details>
+        <process-details v-model="shopBuildForm.processInstanceId"></process-details>
       </el-form>
     </div>
   </div>
@@ -88,6 +88,7 @@
         isCreate:this.$route.query.id==null,
         action:this.$route.query.action,
         inputForm:{},
+        shopBuildForm:{},
         submitData:{
             id:'',
           pass:'',
@@ -104,7 +105,6 @@
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm,this.submitData);
-            console.log(this.submitData);
             axios.post('/api/ws/future/layout/shopBuild/audit', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
@@ -133,12 +133,13 @@
     },created(){
       axios.get('/api/ws/future/layout/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
-        if(this.inputForm.scenePhoto !=null) {
+        this.shopBuildForm=response.data.shopBuildDto;
+        if(this.shopBuildForm.scenePhoto !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
             this.fileList1= response.data;
           });
         }
-        if(this.inputForm.confirmPhoto !=null) {
+        if(this.shopBuildForm.confirmPhoto !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.confirmPhoto}}).then((response)=>{
             this.fileList2= response.data;
           });

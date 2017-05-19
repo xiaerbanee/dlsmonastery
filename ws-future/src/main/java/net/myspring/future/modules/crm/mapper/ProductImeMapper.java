@@ -3,16 +3,13 @@ package net.myspring.future.modules.crm.mapper;
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
+import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface ProductImeMapper extends MyMapper<ProductIme, String> {
@@ -23,6 +20,11 @@ public interface ProductImeMapper extends MyMapper<ProductIme, String> {
 
     List<ProductIme> findShipList(ProductImeShipQuery productImeShipQuery);
 
-    List<ProductIme> findList(@Param("p")ProductImeQuery productImeQuery);
+    List<ProductImeDto> findList(@Param("p")ProductImeQuery productImeQuery);
+
+    ProductImeDto getProductImeDetail(@Param("productImeId") String productImeId);
+
+    List<ProductImeHistoryDto> getProductImeHistoryList(@Param("productImeId") String productImeId);
+
 
 }

@@ -3,19 +3,23 @@
 <mapper namespace="net.myspring.future.modules.crm.mapper.StoreAllotMapper">
 
     <select id="findPage" resultType="StoreAllotDto">
-        SELECT depot1.name fromStoreName, depot2.name toStoreName, t1.*
-        FROM  crm_store_allot t1, crm_depot depot1, crm_depot depot2
+        SELECT  t1.*
+        FROM  crm_store_allot t1
         where t1.enabled=1
-        and (t1.from_store_id=depot1.id and  t1.to_store_id=depot2.id)
+
         <include refid="storeAllotFilter" />
     </select>
 
     <select id="findStoreAllotDtoById" resultType="StoreAllotDto">
-        SELECT depot1.name fromStoreName, depot2.name toStoreName, t1.*
-        FROM  crm_store_allot t1, crm_depot depot1, crm_depot depot2
-        where t1.enabled=1
-        and (t1.from_store_id=depot1.id and  t1.to_store_id=depot2.id)
-        and t1.id = #{id};
+        SELECT
+            t2.express_codes,
+            t1.*
+        FROM
+            crm_store_allot t1
+            LEFT JOIN crm_express_order t2 ON t1.express_order_id = t2.id
+        WHERE
+            t1.enabled = 1
+            AND t1.id = #{id}
     </select>
 
     <select id="findByFilter" resultType="StoreAllot">
@@ -41,6 +45,9 @@
         <if test="p.status!=null">
             and t1.status=#{p.status}
         </if>
+        <if test="p.createdBy!=null">
+            and t1.created_by =#{p.createdBy}
+        </if>
         <if test="p.fromStoreId!=null">
             and t1.from_store_id=#{p.fromStoreId}
         </if>
@@ -61,7 +68,7 @@
             and t1.created_date &gt;= #{p.createdDateStart}
         </if>
         <if test="p.createdDateEnd!=null">
-            and t1.created_date &lt; #{p.createdDateEnd}
+            and t1.created_date &lt;  #{p.createdDateEnd}
         </if>
 
     </sql>

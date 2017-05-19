@@ -29,6 +29,7 @@ public class GoodsOrderQuery extends BaseQuery {
     private LocalDateTime shipDateEnd;
     private LocalDateTime shipDateStart;
 
+    private String shopId;
     private String shopName;
     private String storeId;
     private String createdBy;
@@ -160,6 +161,14 @@ public class GoodsOrderQuery extends BaseQuery {
 
     public LocalDateTime getShipDateStart() {
         return shipDateStart;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
     }
 
     public String getShopName() {

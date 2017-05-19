@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" >添加</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">

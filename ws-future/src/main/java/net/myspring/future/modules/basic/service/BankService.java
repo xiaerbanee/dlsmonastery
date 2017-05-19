@@ -1,7 +1,7 @@
 package net.myspring.future.modules.basic.service;
 
 import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.future.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
@@ -96,7 +96,7 @@ public class BankService {
 
     @Transactional
     public void syn(){
-        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.CLOUD_DB_NAME.getCode()).getValue();
+        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
         LocalDateTime dateTime=bankMapper.getMaxOutDate();
         String result = cloudClient.getSynBankData(cloudName, LocalDateTimeUtils.format(dateTime));
         List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);

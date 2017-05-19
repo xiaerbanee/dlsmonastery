@@ -6,21 +6,21 @@
         <el-row>
           <el-col :span="12">
            <el-form-item :label="$t('shopPromotionForm.shopId')" prop="shopId">
-             <depot-select v-model="inputForm.shopId" category="shop" :disabled="shopDisabled"></depot-select>
+             <depot-select v-model="inputForm.shopId" category="adShop" :disabled="shopDisabled"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityDate')" prop="activityDate">
-              <el-date-picker v-model="inputForm.activityDate" type="date" :placeholder="$t('shopPromotionForm.inputDate')"></el-date-picker>
+              <date-picker v-model="inputForm.activityDate" type="date" :placeholder="$t('shopPromotionForm.inputDate')"></date-picker>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityType')" prop="activityType">
               <el-select v-model="inputForm.activityType" filterable clearable :placeholder="$t('shopPromotionForm.inputType')">
                 <el-option v-for="(key,value) in inputForm.activityTypeList" :key="key" :label="key" :value="key"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('shopPromotionForm.amount')" prop="amount">
-              <el-input v-model.number="inputForm.amount" ></el-input>
-            </el-form-item>
-            <el-form-item  :label="$t('shopPromotionForm.dayAmount')" prop="dayAmount">
+            <el-form-item :label="$t('shopPromotionForm.dayAmount')" prop="dayAmount">
               <el-input v-model.number="inputForm.dayAmount" ></el-input>
+            </el-form-item>
+            <el-form-item  :label="$t('shopPromotionForm.amount')" prop="amount">
+              <el-input v-model.number="inputForm.amount" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.salerComment')"prop="salerComment">
               <el-input v-model="inputForm.salerComment" ></el-input>
@@ -121,7 +121,7 @@
           this.inputForm.activityImage3 = util.getFolderFileIdStr(this.fileList3);
 
           if (valid) {
-              util.copyValue(this.formData,this.submitData);
+              util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/layout/shopPromotion/save', qs.stringify(this.submitData)).then((response) => {
               if (response.data.message) {
                 this.$message(response.data.message);

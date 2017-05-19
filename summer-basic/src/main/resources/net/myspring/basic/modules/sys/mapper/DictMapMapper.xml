@@ -33,6 +33,16 @@
         and t1.enabled=1
     </select>
 
+    <select id="findByName" resultType="DictMapDto">
+        SELECT
+        t1.*
+        FROM
+        sys_dict_map t1
+        WHERE
+        t1.name=#{name}
+        and t1.enabled=1
+    </select>
+
     <select id="findDistinctCategory" resultType="String">
         SELECT DISTINCT
         t1.category

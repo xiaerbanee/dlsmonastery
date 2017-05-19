@@ -8,7 +8,7 @@
       <el-row>
         <el-button type="primary" @click="" icon="check">{{$t('productAdEdit.save')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('productAdEdit.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('productAdEdit.filter')" v-model="formVisible"  size="small" class="search-form">
         <el-form :model="formData">

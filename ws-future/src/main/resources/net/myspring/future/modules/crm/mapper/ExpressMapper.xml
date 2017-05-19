@@ -4,51 +4,66 @@
 
     <select id="findPage" resultType="ExpressDto">
         SELECT
-        ord.extend_type expressOrderExtendType, ord.extend_business_id expressOrderExtendBusinessId, ord.contator expressOrderContator, ord.mobile_phone expressOrderMobilePhone,
-        ord.address expressOrderAddress, ord.from_depot_id expressOrderFromDepotId, ord.to_depot_id expressOrderToDepotId, ord.express_company_id expressOrderExpressCompanyId, t1.*
+            ord.extend_type expressOrderExtendType,
+            ord.extend_business_id expressOrderExtendBusinessId,
+            ord.contator expressOrderContator,
+            ord.mobile_phone expressOrderMobilePhone,
+            ord.address expressOrderAddress,
+            ord.from_depot_id expressOrderFromDepotId,
+            ord.to_depot_id expressOrderToDepotId,
+            ord.express_company_id expressOrderExpressCompanyId,
+            t1.*
         FROM
-        crm_express t1 LEFT JOIN crm_express_order ord
-        ON t1.enabled=1
-        and t1.express_order_id=ord.id
-        WHERE 1=1
-        <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
-        <if test="p.code !=null">
-            and t1.code like concat('%',#{p.code},'%')
-        </if>
-        <if test="p.createdDateStart !=null">
-            and t1.created_date >= #{p.createdDateStart}
-        </if>
-        <if test="p.createdDateEnd !=null">
-            and t1.created_date &lt; #{p.createdDateEnd}
-        </if>
-        <if test="p.expressOrderExtendType !=null">
-            and ord.extend_type = #{p.expressOrderExtendType}
-        </if>
-        <if test="p.expressOrderExtendBusinessId !=null">
-            and ord.extend_business_id like concat('%',#{p.expressOrderExtendBusinessId},'%')
-        </if>
-        <if test="p.expressOrderExpressCompanyId !=null">
-            and ord.express_company_id = #{p.expressOrderExpressCompanyId}
-        </if>
-        <if test="p.expressOrderToDepotId !=null">
-            and ord.to_depot_id = #{p.expressOrderToDepotId}
-        </if>
-        <if test="p.expressOrderFromDepotId !=null">
-            and ord.from_depot_id = #{p.expressOrderFromDepotId}
-        </if>
+            crm_express t1
+            LEFT JOIN crm_express_order ord ON t1.express_order_id = ord.id
+        WHERE
+            t1.enabled = 1
+            <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
+            <if test="p.code !=null">
+                and t1.code like concat('%',#{p.code},'%')
+            </if>
+            <if test="p.createdDateStart !=null">
+                and t1.created_date >= #{p.createdDateStart}
+            </if>
+            <if test="p.createdDateEnd !=null">
+                and t1.created_date &lt; #{p.createdDateEnd}
+            </if>
+            <if test="p.expressOrderExtendType !=null">
+                and ord.extend_type = #{p.expressOrderExtendType}
+            </if>
+            <if test="p.expressOrderExtendBusinessId !=null">
+                and ord.extend_business_id like concat('%',#{p.expressOrderExtendBusinessId},'%')
+            </if>
+            <if test="p.expressOrderExpressCompanyId !=null">
+                and ord.express_company_id = #{p.expressOrderExpressCompanyId}
+            </if>
+            <if test="p.expressOrderToDepotId !=null">
+                and ord.to_depot_id = #{p.expressOrderToDepotId}
+            </if>
+            <if test="p.expressOrderFromDepotId !=null">
+                and ord.from_depot_id = #{p.expressOrderFromDepotId}
+            </if>
 
     </select>
 
     <select id="findDto" resultType="ExpressDto">
         SELECT
-        ord.extend_type expressOrderExtendType, ord.extend_business_id expressOrderExtendBusinessId, ord.contator expressOrderContator, ord.mobile_phone expressOrderMobilePhone,
-        ord.address expressOrderAddress, ord.from_depot_id expressOrderFromDepotId, ord.to_depot_id expressOrderToDepotId, ord.express_company_id expressOrderExpressCompanyId, t1.*
+            ord.extend_type expressOrderExtendType,
+            ord.extend_business_id expressOrderExtendBusinessId,
+            ord.contator expressOrderContator,
+            ord.mobile_phone expressOrderMobilePhone,
+            ord.address expressOrderAddress,
+            ord.from_depot_id expressOrderFromDepotId,
+            ord.to_depot_id expressOrderToDepotId,
+            ord.express_company_id expressOrderExpressCompanyId,
+            t1.*
         FROM
-        crm_express t1 LEFT JOIN crm_express_order ord
-        ON t1.enabled=1
-        and t1.express_order_id=ord.id
-        WHERE t1.id = #{id}
-        <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
+            crm_express t1
+            LEFT JOIN crm_express_order ord ON t1.express_order_id = ord.id
+        WHERE
+            t1.enabled = 1
+            AND t1.id = #{id}
+            <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
 
     </select>
 

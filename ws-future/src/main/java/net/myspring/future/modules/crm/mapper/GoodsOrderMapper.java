@@ -17,6 +17,8 @@ public interface GoodsOrderMapper extends MyMapper<GoodsOrder,String> {
 
     Page<GoodsOrderDto> findPage(Pageable pageable, @Param("p") GoodsOrderQuery goodsOrderQuery);
 
+    List<GoodsOrder> findList(GoodsOrderQuery goodsOrderQuery);
+
     GoodsOrder findByBusinessId(String businessId);
 
     List<GoodsOrder> findByStoreBillData(@Param("billDate") LocalDate billDate, @Param("storeId") String storeId, @Param("status") String status);

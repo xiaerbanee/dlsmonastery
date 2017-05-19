@@ -4,8 +4,11 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.layout.dto.ShopBuildDto;
 import net.myspring.future.modules.layout.service.ShopBuildService;
+import net.myspring.future.modules.layout.web.form.ShopBuildDetailOrAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopBuildForm;
 import net.myspring.future.modules.layout.web.query.ShopBuildQuery;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -47,15 +51,15 @@ public class ShopBuildController {
     }
 
     @RequestMapping(value = "audit")
-    public RestResponse audit(ShopBuildForm shopBuildForm){
-        shopBuildService.audit(shopBuildForm);
+    public RestResponse audit(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm){
+        shopBuildService.audit(shopBuildDetailOrAuditForm);
         RestResponse restResponse = new RestResponse("审核成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
 
     @RequestMapping(value = "batchAudit")
-    public RestResponse batchAudit(ShopBuildForm shopBuildForm) {
-        shopBuildService.batchAudit(shopBuildForm);
+    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids, String pass) {
+        shopBuildService.batchAudit(ids,pass);
         RestResponse restResponse = new RestResponse("批量审批成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
@@ -73,14 +77,17 @@ public class ShopBuildController {
     }
 
     @RequestMapping(value = "detail")
-    public ShopBuildDto detail(ShopBuildForm shopBuildForm){
-        return shopBuildService.detail(shopBuildForm);
+    public ShopBuildDetailOrAuditForm detail(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm){
+        ShopBuildDto shopBuildDto = shopBuildService.detail(shopBuildDetailOrAuditForm);
+        shopBuildDetailOrAuditForm.setShopBuildDto(shopBuildDto);
+        return shopBuildDetailOrAuditForm;
     }
 
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public ModelAndView export(ShopBuildQuery shopBuildQuery) {
-        return null;
+    public String export(ShopBuildQuery shopBuildQuery) throws IOException{
+        Workbook workbook = new SXSSFWorkbook(10000);
+        return shopBuildService.findSimpleExcelSheets(workbook,shopBuildQuery);
     }
 
     private List<String> getActionList() {

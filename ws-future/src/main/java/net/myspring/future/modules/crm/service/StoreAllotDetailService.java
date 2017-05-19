@@ -72,16 +72,16 @@ public class StoreAllotDetailService {
 
     }
 
-    public List<StoreAllotDetailForm> getStoreAllotDetailListForNew() {
-        List<StoreAllotDetailDto> result = storeAllotDetailMapper.getStoreAllotDetailListForNew(RequestUtils.getCompanyId());
-        cacheUtils.initCacheInput(result);
-
-        return BeanUtil.map(result, StoreAllotDetailForm.class);
-    }
-
     public List<StoreAllotDetailForm> findStoreAllotDetailsForFastAllot(LocalDate billDate, String toStockId, String status) {
 
-        List<StoreAllotDetailDto> tmp = storeAllotDetailMapper.findStoreAllotDetailsForFastAllot(billDate, toStockId, status);
+        List<StoreAllotDetailDto> tmp = storeAllotDetailMapper.findStoreAllotDetailsForFastAllot(billDate, toStockId, status, RequestUtils.getCompanyId());
+
+        cacheUtils.initCacheInput(tmp);
+        return BeanUtil.map(tmp, StoreAllotDetailForm.class);
+    }
+
+    public List<StoreAllotDetailForm> findStoreAllotDetailsForNew() {
+        List<StoreAllotDetailDto> tmp = storeAllotDetailMapper.findStoreAllotDetailsForNew(RequestUtils.getCompanyId());
 
         cacheUtils.initCacheInput(tmp);
         return BeanUtil.map(tmp, StoreAllotDetailForm.class);

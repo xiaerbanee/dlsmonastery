@@ -19,16 +19,19 @@
                   <el-option v-for="item in formData.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
+                <account-select v-model="formData.createdBy" ></account-select>
+              </el-form-item>
               <el-form-item :label="formLabel.remarks.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="formLabel.fromStoreId.label" :label-width="formLabelWidth">
-                <depot-select type="STORE" v-model="formData.fromStoreId"  ></depot-select>
+                <depot-select category="store" v-model="formData.fromStoreId"  ></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.toStoreId.label" :label-width="formLabelWidth">
-                <depot-select type="STORE" v-model="formData.toStoreId"  ></depot-select>
+                <depot-select category="store" v-model="formData.toStoreId"  ></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.outCode.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.outCode" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
@@ -46,7 +49,7 @@
       </el-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('storeAllotList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="businessId" :label="$t('storeAllotList.businessId')" sortable ></el-table-column>
+        <el-table-column fixed prop="formatId" :label="$t('storeAllotList.businessId')" sortable ></el-table-column>
         <el-table-column prop="fromStoreName" :label="$t('storeAllotList.fromStore')"></el-table-column>
         <el-table-column prop="toStoreName" :label="$t('storeAllotList.toStore')"></el-table-column>
         <el-table-column prop="outCode" :label="$t('storeAllotList.outCode')" width="120"></el-table-column>
@@ -58,7 +61,7 @@
         <el-table-column prop="remarks" :label="$t('storeAllotList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('storeAllotList.operation')" width="120">
           <template scope="scope">
-            <el-button  type="text"  size="small"v-permit="'crm:storeAllot:view'" @click.native="itemAction(scope.row.id, 'view')">{{$t('storeAllotList.detail')}}</el-button>
+            <el-button  type="text"  size="small" v-permit="'crm:storeAllot:view'" @click.native="itemAction(scope.row.id, 'view')">{{$t('storeAllotList.detail')}}</el-button>
             <el-button v-if="scope.row.status === '待发货' || scope.row.status === '发货中'"   type="text"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'ship')">{{$t('storeAllotList.ship')}}</el-button>
             <el-button v-if="scope.row.status === '待发货'"   type="text"   size="small"  v-permit="'crm:storeAllot:delete'" @click.native="itemAction(scope.row.id,'delete')"> {{$t('storeAllotList.delete')}}</el-button>
             <el-button v-if="scope.row.isPrint"   type="text"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'print')">{{$t('storeAllotList.print')}}</el-button>
@@ -75,9 +78,11 @@
 </template>
 <script>
   import depotSelect from 'components/future/depot-select'
+  import accountSelect from 'components/basic/account-select'
   export default{
     components:{
       depotSelect,
+      accountSelect,
     },
     data() {
       return {
@@ -90,15 +95,17 @@
           createdDateRange:"",
           remarks:"",
           toStoreId:"",
-          fromStoreId:""
+          fromStoreId:"",
+          createdBy:"",
         },formLabel:{
           outCode:{label:this.$t('storeAllotList.outCode')},
           businessIds:{label:this.$t('storeAllotList.businessId')},
           status:{label:this.$t('storeAllotList.status')},
           remarks:{label:this.$t('storeAllotList.remarks')},
-          fromStoreId:{label:this.$t('storeAllotList.fromStore'),value:""},
-          toStoreId:{label:this.$t('storeAllotList.toStore'),value:""},
-          createdDateRange:{label:this.$t('storeAllotList.createdDate')}
+          fromStoreId:{label:this.$t('storeAllotList.fromStore')},
+          toStoreId:{label:this.$t('storeAllotList.toStore')},
+          createdDateRange:{label:this.$t('storeAllotList.createdDate')},
+          createdBy:{label:this.$t('storeAllotList.createdBy')}
         },
         formLabelWidth: '120px',
         formVisible: false,

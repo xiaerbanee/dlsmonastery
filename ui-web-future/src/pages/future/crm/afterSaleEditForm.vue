@@ -5,7 +5,7 @@
       <el-row class="button">
         <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleEditForm.save')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleEditForm.filter')}}</el-button>
-        <search-tag  :formData="formData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('afterSaleEditForm.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
