@@ -64,12 +64,4 @@ public class LocalDateTimeUtils {
     public static LocalDateTime getLastDayOfMonth(LocalDateTime localDateTime) {
         return localDateTime.withDayOfMonth(localDateTime.toLocalDate().lengthOfMonth());
     }
-
-
-    public static String getThisMonthDateRange(){
-        LocalDateTime now = LocalDateTime.now();
-        LocalDate dateStart = getFirstDayOfMonth(now).toLocalDate();
-        return LocalDateUtils.format(dateStart) + " - "+LocalDateUtils.format(now.toLocalDate()) ;
-    }
-
 }

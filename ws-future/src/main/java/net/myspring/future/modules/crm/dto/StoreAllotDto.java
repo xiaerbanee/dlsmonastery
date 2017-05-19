@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.StringUtils;
@@ -34,7 +35,7 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     private List<StoreAllotDetailDto> storeAllotDetailDtoList = new ArrayList<>();
 
     public String getFormatId() {
-        return StringUtils.getFormatId(businessId, CharConstant.FORMATTER_STORE_ALLOT);
+        return StringUtils.getFormatId(businessId, FormatterConstant.STORE_ALLOT);
     }
 
     public String getExpressOrderCodes() {

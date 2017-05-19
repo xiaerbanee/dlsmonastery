@@ -12,12 +12,6 @@ import java.util.*;
  */
 public class CollectionUtil extends org.springside.modules.utils.collection.CollectionUtil {
 
-
-
-    public static String extractAndJoin(final Collection collection, final String propertyName) {
-        return StringUtils.join(extractToList(collection, propertyName),",");
-    }
-
     public static <E> List<E> extractToList(final Collection collection, final String propertyName) {
         if (isEmpty(collection)) {
             return Lists.newArrayList();
