@@ -2,12 +2,12 @@ package net.myspring.future.modules.crm.web.controller;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/depotChange")
@@ -19,7 +19,7 @@ public class DepotChangeController {
         return null;
     }
 
-    @RequestMapping(value = "getForm")
+    @RequestMapping(value = "findOne")
     public String findOne(String id){
         return null;
     }

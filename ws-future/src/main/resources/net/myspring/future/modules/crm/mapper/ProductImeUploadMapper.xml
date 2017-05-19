@@ -2,27 +2,52 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.myspring.future.modules.crm.mapper.ProductImeUploadMapper">
 
-    <select id="findPage" resultType="ProductImeUpload">
+    <select id="findList" resultType="ProductImeUploadDto">
         select
-        t1.*
+        ime.ime productImeIme, t1.*
         from
-        crm_product_ime_upload t1,crm_depot depot,hr_office office
+        crm_product_ime_upload t1,crm_depot depot, crm_product_ime ime
         where
         t1.enabled=1
-        and t1.shop_id=depot.id and depot.office_id=office.id
+        and t1.shop_id=depot.id
+        and depot.enabled = 1
+        and t1.product_ime_id = ime.id
+        and ime.enabled = 1
         <if test="p.createdDateStart !=null">
-            and t1.created_date >=#{p.createdDateStart}
+            and t1.created_date >= #{p.createdDateStart}
         </if>
         <if test="p.createdDateEnd !=null">
-            and t1.created_date &lt;=#{p.createdDateEnd}
+            and t1.created_date &lt; #{p.createdDateEnd}
         </if>
         <if test="p.shopName != null">
             and depot.name LIKE CONCAT('%',#{p.shopName},'%')
         </if>
         <if test="p.officeId != null">
-            and office.id = #{p.officeId}
+            and depot.office_id = #{p.officeId}
         </if>
-        <include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />
+        <if test="p.month != null">
+            and t1.month = #{p.month}
+        </if>
+        <if test="p.imeOrMeidList !=null" >
+            and (ime.ime in
+            <foreach item="item" index="index" collection="p.imeOrMeidList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            or ime.ime2 in
+            <foreach item="item" index="index" collection="p.imeOrMeidList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            or ime.meid in
+            <foreach item="item" index="index" collection="p.imeOrMeidList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="p.pageable.sort !=null" >
+            order by t1.${p.pageable.sort}
+        </if>
+        limit ${p.pageable.offset},${p.pageable.pageSize}
+        <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
     </select>
 
 

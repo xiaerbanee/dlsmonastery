@@ -1,42 +1,23 @@
 package net.myspring.future.modules.crm.service;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.common.constant.CharConstant;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
-import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
-import net.myspring.future.common.enums.NetTypeEnum;
-import net.myspring.future.common.enums.ShipTypeEnum;
-import net.myspring.future.common.utils.ExpressUtils;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.mapper.*;
-import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
-import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
-import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.LockModeType;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -202,7 +183,7 @@ public class GoodsOrderShipService {
         goodsOrder.setShipDate(null);
         //删除快递单
         List<Express> expressList = expressMapper.findByExpressOrderId(goodsOrder.getExpressOrderId());
-        expressMapper.deleteByIds(CollectionUtil.extractToList(expressList, "id"));
+        expressMapper.logicDeleteByIds(CollectionUtil.extractToList(expressList, "id"));
         goodsOrderMapper.save(goodsOrder);
     }
 
