@@ -8,7 +8,7 @@ import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.IdUtils;
+import net.myspring.util.text.IdUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
@@ -137,7 +137,7 @@ public class AdGoodsOrderService {
         }
         adGoodsOrderForm.setBillType(BillTypeEnum.柜台.name());
         String maxBusinessId  =adGoodsOrderMapper.findMaxBusinessId(LocalDate.now());
-        adGoodsOrderForm.setBussinessId(StringUtils.getNextBusinessId(maxBusinessId));
+        adGoodsOrderForm.setBussinessId(IdUtils.getNextBusinessId(maxBusinessId));
         if(adGoodsOrderForm.isCreate()){
             adGoodsOrder = BeanUtil.map(adGoodsOrderForm,AdGoodsOrder.class);
             adGoodsOrderMapper.save(adGoodsOrder);

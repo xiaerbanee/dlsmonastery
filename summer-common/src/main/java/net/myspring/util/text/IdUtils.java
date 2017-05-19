@@ -1,14 +1,11 @@
-package net.myspring.future.common.utils;
+package net.myspring.util.text;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.time.LocalDateUtils;
-import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 public class IdUtils {
 	private static Integer DEFAULT_PREIX_LENGTH = 2;

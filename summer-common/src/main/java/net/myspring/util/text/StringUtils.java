@@ -48,19 +48,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return result;
 	}
 
-	public static String getFormatId(String id, String prefix) {
-		return getFormatId(id, prefix, "000000000000");
-	}
-
-	public static String getFormatId(String id, String prefix, String format) {
-		if (id == null) {
-			return "";
-		} else {
-			java.text.DecimalFormat decimalFormat = new java.text.DecimalFormat(format);
-			return prefix + decimalFormat.format(Long.valueOf(id));
-		}
-	}
-
 	public static String getEncryptPassword(String plainPassword) {
 		byte[] salt = Digests.generateSalt(8);
 		byte[] hashPassword = Digests.sha1(plainPassword.getBytes(), salt, 1024);
@@ -103,14 +90,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			}
 		}
 		return pybf.toString().replaceAll("\\W", "").trim();
-	}
-
-	public static String getNextBusinessId(String maxBusinessId) {
-		if(maxBusinessId==null) {
-			String businessId = LocalDateUtils.formatLocalDate(LocalDate.now(),"yyMMdd") + "00000";
-			maxBusinessId = String.valueOf(businessId);
-		}
-		return String.valueOf(Long.valueOf(maxBusinessId)+1);
 	}
 
 

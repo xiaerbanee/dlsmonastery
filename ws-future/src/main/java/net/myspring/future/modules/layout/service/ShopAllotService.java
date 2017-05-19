@@ -18,6 +18,7 @@ import net.myspring.future.modules.layout.web.form.ShopAllotForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotViewOrAuditForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -101,7 +102,7 @@ public class ShopAllotService {
             shopAllot.setFromShopId(shopAllotForm.getFromShopId());
             shopAllot.setToShopId(shopAllotForm.getToShopId());
             shopAllot.setRemarks(shopAllotForm.getRemarks());
-            shopAllot.setBusinessId(StringUtils.getNextBusinessId(shopAllotMapper.findMaxBusinessId(LocalDate.now())));
+            shopAllot.setBusinessId(IdUtils.getNextBusinessId(shopAllotMapper.findMaxBusinessId(LocalDate.now())));
             shopAllot.setStatus(AuditStatusEnum.申请中.name());
 
             shopAllotMapper.save(shopAllot);

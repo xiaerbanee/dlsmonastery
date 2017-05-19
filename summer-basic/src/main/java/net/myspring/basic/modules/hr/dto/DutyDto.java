@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.dto;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class DutyDto {
 
     public String getFormatId() {
         if(StringUtils.isBlank(formatId)&&StringUtils.isNotBlank(id)){
-            this.formatId=StringUtils.getFormatId(id,prefix);
+            this.formatId= IdUtils.getFormatId(id,prefix);
         }
         return formatId;
     }
