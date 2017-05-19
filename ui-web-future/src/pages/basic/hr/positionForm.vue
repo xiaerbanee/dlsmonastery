@@ -74,7 +74,7 @@
         })
       }
     },created(){
-      axios.get('/api/basic/hr/position/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/hr/position/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
         console.log(response.data)
       })

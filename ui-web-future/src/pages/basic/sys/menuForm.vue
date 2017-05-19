@@ -96,7 +96,7 @@
           })
         }
       },created(){
-        axios.get('/api/basic/sys/menu/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/sys/menu/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
           this.inputForm.mobile = response.data.mobile?"1":"0";
           this.inputForm.visible = response.data.visible?"1":"0";

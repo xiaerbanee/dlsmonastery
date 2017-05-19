@@ -48,9 +48,9 @@ public class ProductTypeController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public ProductTypeForm getFormProperty(ProductTypeForm productTypeForm){
-        productTypeForm = productTypeService.getFormProperty(productTypeForm);
+    @RequestMapping(value = "getForm")
+    public ProductTypeForm getForm(ProductTypeForm productTypeForm){
+        productTypeForm = productTypeService.getForm(productTypeForm);
         return productTypeForm;
     }
 

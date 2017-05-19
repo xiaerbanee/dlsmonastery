@@ -77,7 +77,7 @@ public class ShopAllotService {
     }
 
 
-    public ShopAllotForm getFormProperty(ShopAllotForm shopAllotForm) {
+    public ShopAllotForm getForm(ShopAllotForm shopAllotForm) {
 
         if(shopAllotForm.isCreate()){
             return new ShopAllotForm();

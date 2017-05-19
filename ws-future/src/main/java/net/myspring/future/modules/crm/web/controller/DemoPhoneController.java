@@ -23,7 +23,7 @@ public class DemoPhoneController {
         return null;
     }
 
-    @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
+    @RequestMapping(value = "getForm", method = RequestMethod.GET)
     public String form(Model model) {
         return null;
     }
@@ -33,7 +33,7 @@ public class DemoPhoneController {
         return null;
     }
 
-    @RequestMapping(value = "getFormProperty")
+    @RequestMapping(value = "getForm")
     public String findOne(DemoPhone demoPhone){
         return null;
     }

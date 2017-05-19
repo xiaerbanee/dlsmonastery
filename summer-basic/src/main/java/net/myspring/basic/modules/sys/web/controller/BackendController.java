@@ -47,9 +47,9 @@ public class BackendController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public BackendForm getFormProperty(BackendForm backendForm){
-        backendForm=backendService.getFormProperty(backendForm);
+    @RequestMapping(value = "getForm")
+    public BackendForm getForm(BackendForm backendForm){
+        backendForm=backendService.getForm(backendForm);
         return backendForm;
     }
 

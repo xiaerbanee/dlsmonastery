@@ -39,7 +39,7 @@ public class RoleService {
     private CacheUtils cacheUtils;
 
 
-    public RoleForm getFormProperty(RoleForm roleForm) {
+    public RoleForm getForm(RoleForm roleForm) {
         if (!roleForm.isCreate()) {
             Role Role = roleMapper.findOne(roleForm.getId());
             roleForm = BeanUtil.map(Role, RoleForm.class);

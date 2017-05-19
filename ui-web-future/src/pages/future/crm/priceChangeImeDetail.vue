@@ -106,7 +106,7 @@
           this.fileList = fileList;
         }
       },created(){
-          axios.get('/api/ws/future/crm/priceChangeIme/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/crm/priceChangeIme/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
             if(this.inputForm.image != null) {
               axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((res)=>{

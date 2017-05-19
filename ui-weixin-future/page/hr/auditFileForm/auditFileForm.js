@@ -19,7 +19,7 @@ Page({
     var that = this;
     var options = that.data.options;
     wx.request({
-      url: $util.getUrl("basic/hr/auditFile/getFormProperty"),
+      url: $util.getUrl("basic/hr/auditFile/getForm"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId,

@@ -77,8 +77,8 @@ public class StoreAllotController {
     }
 
 
-    @RequestMapping(value = "getFormProperty")
-    public StoreAllotForm getFormProperty(StoreAllotForm storeAllotForm) {
+    @RequestMapping(value = "getForm")
+    public StoreAllotForm getForm(StoreAllotForm storeAllotForm) {
 
         if(!storeAllotForm.isCreate()){
            throw new ServiceException("error.storeAllot.cantEdit");

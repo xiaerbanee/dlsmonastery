@@ -35,7 +35,7 @@ public class DutyLeaveController {
     }
 
     @RequestMapping(value="findOne")
-    public DutyLeaveForm getFormProperty(DutyLeaveForm dutyLeaveForm){
+    public DutyLeaveForm getForm(DutyLeaveForm dutyLeaveForm){
         dutyLeaveForm.setDateList(DutyDateTypeEnum.values());
         dutyLeaveForm.setLeaveList(dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.toString()));
         return dutyLeaveForm;

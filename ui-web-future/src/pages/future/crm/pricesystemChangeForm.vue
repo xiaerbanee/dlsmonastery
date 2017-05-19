@@ -100,7 +100,7 @@
         }
       }
     },created(){
-      axios.get('/api/crm/pricesystemChange/getFormProperty').then((response)=>{
+      axios.get('/api/crm/pricesystemChange/getForm').then((response)=>{
         this.formProperty=response.data;
       });
     }

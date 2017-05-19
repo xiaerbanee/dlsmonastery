@@ -21,8 +21,8 @@ public class AdApplyController {
         return null;
     }
 
-    @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
-    public String getFormProperty() {
+    @RequestMapping(value = "getForm", method = RequestMethod.GET)
+    public String getForm() {
         return null;
     }
 

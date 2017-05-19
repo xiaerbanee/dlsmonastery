@@ -125,7 +125,7 @@
         }
       }
     },created(){
-      axios.get('/api/crm/depotChange/getFormProperty').then((response)=>{
+      axios.get('/api/crm/depotChange/getForm').then((response)=>{
         this.formProperty = response.data;
       });
       if(!this.isCreate){

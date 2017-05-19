@@ -34,8 +34,8 @@ public class ShopBuildController {
         return page;
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public String getFormProperty() {
+    @RequestMapping(value = "getForm")
+    public String getForm() {
         return null;
     }
 
@@ -71,9 +71,9 @@ public class ShopBuildController {
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
-    @RequestMapping(value = "getFormProperty")
-    public ShopBuildForm getFormProperty(ShopBuildForm shopBuildForm) {
-        return shopBuildService.getFormProperty(shopBuildForm);
+    @RequestMapping(value = "getForm")
+    public ShopBuildForm getForm(ShopBuildForm shopBuildForm) {
+        return shopBuildService.getForm(shopBuildForm);
     }
 
     @RequestMapping(value = "detail")

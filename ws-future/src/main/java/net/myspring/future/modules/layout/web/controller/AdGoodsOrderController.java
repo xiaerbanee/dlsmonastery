@@ -65,14 +65,14 @@ public class  AdGoodsOrderController {
         return null;
     }
 
-    @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
-    public AdGoodsOrderForm getFormProperty(AdGoodsOrderForm adGoodsOrderForm) {
-        adGoodsOrderForm = adGoodsOrderService.getFormProperty(adGoodsOrderForm);
+    @RequestMapping(value = "getForm", method = RequestMethod.GET)
+    public AdGoodsOrderForm getForm(AdGoodsOrderForm adGoodsOrderForm) {
+        adGoodsOrderForm = adGoodsOrderService.getForm(adGoodsOrderForm);
         return adGoodsOrderForm;
     }
 
-    @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
-    public String getFormProperty() {
+    @RequestMapping(value = "getForm", method = RequestMethod.GET)
+    public String getForm() {
         Map<String, Object> map = Maps.newHashMap();
         return null;
     }

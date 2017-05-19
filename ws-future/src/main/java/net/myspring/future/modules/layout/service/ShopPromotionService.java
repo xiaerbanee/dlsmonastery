@@ -49,7 +49,7 @@ public class ShopPromotionService {
         return shopPromotion;
     }
 
-    public ShopPromotionForm getFormProperty(ShopPromotionForm shopPromotionForm){
+    public ShopPromotionForm getForm(ShopPromotionForm shopPromotionForm){
         if(!shopPromotionForm.isCreate()){
             ShopPromotion shopPromotion = shopPromotionMapper.findOne(shopPromotionForm.getId());
             shopPromotionForm = BeanUtil.map(shopPromotion,ShopPromotionForm.class);

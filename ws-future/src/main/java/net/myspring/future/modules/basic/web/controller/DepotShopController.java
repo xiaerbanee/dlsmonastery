@@ -57,9 +57,9 @@ public class DepotShopController {
         return new RestResponse("保存成功",null);
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public DepotShopForm getFormProperty(DepotShopForm depotShopForm){
-        depotShopForm = depotShopService.getFormProperty(depotShopForm);
+    @RequestMapping(value = "getForm")
+    public DepotShopForm getForm(DepotShopForm depotShopForm){
+        depotShopForm = depotShopService.getForm(depotShopForm);
         depotShopForm.setTownTypeList(TownTypeEnum.getList());
         return depotShopForm;
     }

@@ -47,7 +47,7 @@ public class ProcessTypeService {
         return BeanUtil.map(processTypeList,ProcessTypeDto.class);
     }
 
-    public ProcessTypeForm getFormProperty(String id){
+    public ProcessTypeForm getForm(String id){
         ProcessType processType=processTypeMapper.findOne(id);
         return BeanUtil.map(processType,ProcessTypeForm.class);
     }

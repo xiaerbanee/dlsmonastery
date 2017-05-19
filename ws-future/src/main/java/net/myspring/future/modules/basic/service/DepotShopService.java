@@ -38,7 +38,7 @@ public class DepotShopService {
         return page;
     }
 
-    public DepotShopForm getFormProperty(DepotShopForm depotShopForm) {
+    public DepotShopForm getForm(DepotShopForm depotShopForm) {
         if(!depotShopForm.isCreate()) {
             DepotShop depotShop =depotShopMapper.findOne(depotShopForm.getId());
             depotShopForm= BeanUtil.map(depotShop,DepotShopForm.class);

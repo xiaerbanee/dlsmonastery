@@ -26,8 +26,8 @@ public class ProductImeSaleController {
         return null;
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public String getFormProperty(ProductImeSale productImeSale) {
+    @RequestMapping(value = "getForm")
+    public String getForm(ProductImeSale productImeSale) {
         return null;
     }
     @RequestMapping(value = "save")

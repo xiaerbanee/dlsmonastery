@@ -27,7 +27,7 @@ public class FolderService {
     private FolderMapper folderMapper;
 
     @Transactional(readOnly = true)
-    public FolderForm getFormProperty(String id){
+    public FolderForm getForm(String id){
         Folder folder = folderMapper.findOne(id);
         FolderForm folderForm = BeanUtil.map(folder, FolderForm.class);
         return folderForm;

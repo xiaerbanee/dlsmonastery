@@ -131,7 +131,7 @@ public class ExpressOrderService {
         return eo;
     }
 
-    public ExpressOrderForm getFormProperty(ExpressOrderForm expressOrderForm) {
+    public ExpressOrderForm getForm(ExpressOrderForm expressOrderForm) {
 
         if(expressOrderForm.isCreate()){
             throw new ServiceException("expressOrderCantNew");

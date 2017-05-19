@@ -68,7 +68,7 @@ public class DutySignService {
         return dutySign;
     }
 
-    public DutySignForm getFormProperty(DutySignForm dutySignForm) {
+    public DutySignForm getForm(DutySignForm dutySignForm) {
         if(!dutySignForm.isCreate()){
             DutySign dutySign =findOne(dutySignForm.getId());
             dutySignForm= BeanUtil.map(dutySign,DutySignForm.class);

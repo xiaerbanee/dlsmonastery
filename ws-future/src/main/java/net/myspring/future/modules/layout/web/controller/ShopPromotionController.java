@@ -27,9 +27,9 @@ public class ShopPromotionController {
         return shopPromotionService.findPage(pageable,shopPromotionQuery);
    }
 
-    @RequestMapping(value = "getFormProperty")
+    @RequestMapping(value = "getForm")
     public ShopPromotionForm findOne(ShopPromotionForm shopPromotionForm) {
-        shopPromotionForm = shopPromotionService.getFormProperty(shopPromotionForm);
+        shopPromotionForm = shopPromotionService.getForm(shopPromotionForm);
         shopPromotionForm.setActivityTypeList(ActivityTypeEnum.getList());
         return shopPromotionForm;
     }

@@ -157,7 +157,7 @@
            }
          }
          this.filterAdGoodsOrderDetailList = tempList;
-       },getFormProperty(){
+       },getForm(){
         axios.get('/api/crm/adGoodsOrder/getBillFormProperty',{params:{id:this.$route.query.id}}).then((response)=>{
           this.billFormProperty=response.data;
         });
@@ -186,7 +186,7 @@
       }
     },created(){
       this.findOne();
-      this.getFormProperty();
+      this.getForm();
     }
   }
 </script>

@@ -40,7 +40,7 @@ public class ShopPrintService {
         return page;
     }
 
-    public ShopPrintForm getFormProperty(ShopPrintForm  shopPrintForm){
+    public ShopPrintForm getForm(ShopPrintForm  shopPrintForm){
         if(!shopPrintForm.isCreate()){
             ShopPrint shopPrint = shopPrintMapper.findOne(shopPrintForm.getId());
             shopPrintForm = BeanUtil.map(shopPrint,ShopPrintForm.class);

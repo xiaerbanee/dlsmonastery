@@ -22,7 +22,7 @@ Page({
     var that = this;
     var options=that.data.options;
     wx.request({
-      url: $util.getUrl("crm/shopImage/getFormProperty"),
+      url: $util.getUrl("crm/shopImage/getForm"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId },

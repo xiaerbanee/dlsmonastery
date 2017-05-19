@@ -53,7 +53,7 @@ public class PermissionService {
         return permission;
     }
 
-    public PermissionForm getFormProperty(PermissionForm permissionForm) {
+    public PermissionForm getForm(PermissionForm permissionForm) {
         if (!permissionForm.isCreate()) {
             Permission permission = permissionMapper.findOne(permissionForm.getId());
             permissionForm = BeanUtil.map(permission, PermissionForm.class);

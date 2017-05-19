@@ -37,7 +37,7 @@ public class StkMisDeliveryController {
 
     @RequestMapping(value = "form")
     public StkMisDeliveryQuery form (StkMisDeliveryQuery stkMisDeliveryQuery) {
-        stkMisDeliveryQuery = stkMisDeliveryService.getFormProperty(stkMisDeliveryQuery);
+        stkMisDeliveryQuery = stkMisDeliveryService.getForm(stkMisDeliveryQuery);
         return stkMisDeliveryQuery;
     }
 

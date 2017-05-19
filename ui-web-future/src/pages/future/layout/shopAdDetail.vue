@@ -98,7 +98,7 @@
         window.open(file.url);
       }
     },created(){
-      axios.get('/api/ws/future/layout/shopAd/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/layout/shopAd/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         if(this.inputForm.attachment !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{

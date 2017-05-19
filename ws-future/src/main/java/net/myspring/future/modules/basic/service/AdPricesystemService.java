@@ -41,7 +41,7 @@ public class AdPricesystemService {
         return page;
     }
 
-    public AdPricesystemForm getFormProperty(AdPricesystemForm adPricesystemForm){
+    public AdPricesystemForm getForm(AdPricesystemForm adPricesystemForm){
         if(!adPricesystemForm.isCreate()){
             AdPricesystem adPricesystem=adPricesystemMapper.findOne(adPricesystemForm.getId());
             adPricesystemForm=BeanUtil.map(adPricesystem,AdPricesystemForm.class);

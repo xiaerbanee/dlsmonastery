@@ -41,8 +41,8 @@ public class PricesystemChangeController {
         return pricesystemChangeQuery;
     }
 
-    @RequestMapping(value="getFormProperty")
-    public String getFormProperty(){
+    @RequestMapping(value="getForm")
+    public String getForm(){
         return null;
     }
 

@@ -46,7 +46,7 @@ public class DutyFreeService {
         return dutyFree;
     }
 
-    public DutyFreeForm getFormProperty(DutyFreeForm dutyFreeForm) {
+    public DutyFreeForm getForm(DutyFreeForm dutyFreeForm) {
         if(!dutyFreeForm.isCreate()){
             DutyFree dutyFree =dutyFreeMapper.findOne(dutyFreeForm.getId());
             dutyFreeForm = BeanUtil.map(dutyFree,DutyFreeForm.class);

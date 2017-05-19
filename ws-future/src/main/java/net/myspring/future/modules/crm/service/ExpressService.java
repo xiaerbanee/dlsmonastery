@@ -59,7 +59,7 @@ public class ExpressService {
         return page;
     }
 
-    public ExpressForm getFormProperty(ExpressForm expressForm) {
+    public ExpressForm getForm(ExpressForm expressForm) {
         if(expressForm.isCreate()){
             return  new ExpressForm();
         }

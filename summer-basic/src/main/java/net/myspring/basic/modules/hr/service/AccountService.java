@@ -75,7 +75,7 @@ public class AccountService {
         return account;
     }
 
-    public AccountForm getFormProperty(AccountForm accountForm) {
+    public AccountForm getForm(AccountForm accountForm) {
         if(!accountForm.isCreate()){
             Account account = accountMapper.findOne(accountForm.getId());
             accountForm = BeanUtil.map(account, AccountForm.class);

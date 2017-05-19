@@ -144,7 +144,7 @@
         },
       }
     }, mounted () {
-      axios.get("/api/crm/afterSale/getFormProperty").then((response)=>{
+      axios.get("/api/crm/afterSale/getForm").then((response)=>{
         this.settings.columns[5].source=response.data.packageStatus;
         this.settings.columns[6].source=response.data.toStoreType;
         this.settings.columns[7].source=response.data.memory;

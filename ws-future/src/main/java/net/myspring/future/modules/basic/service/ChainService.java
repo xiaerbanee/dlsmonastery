@@ -56,7 +56,7 @@ public class ChainService {
         chainMapper.logicDeleteOne(chainForm.getId());
     }
 
-    public ChainForm getFormProperty(ChainForm chainForm){
+    public ChainForm getForm(ChainForm chainForm){
         if(!chainForm.isCreate()){
             Chain chain=chainMapper.findOne(chainForm.getId());
             chainForm= BeanUtil.map(chain,ChainForm.class);

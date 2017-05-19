@@ -24,8 +24,8 @@ public class ReportScoreController {
     public String getQuery() {
         return null;
     }
-    @RequestMapping(value = "getFormProperty")
-    public String getFormProperty() {
+    @RequestMapping(value = "getForm")
+    public String getForm() {
         return null;
     }
 

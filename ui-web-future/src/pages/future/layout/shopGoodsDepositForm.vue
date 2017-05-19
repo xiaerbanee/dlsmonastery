@@ -85,13 +85,13 @@
             }
           })
         },shopChanged(){
-          axios.get('/api/ws/future/crm/shopGoodsDeposit/getFormProperty',{params: {shopId:this.inputForm.shopId}}).then((response)=>{
+          axios.get('/api/ws/future/crm/shopGoodsDeposit/getForm',{params: {shopId:this.inputForm.shopId}}).then((response)=>{
             this.inputForm = response.data;
           })
 
         }
       },created(){
-        axios.get('/api/ws/future/crm/shopGoodsDeposit/getFormProperty',{params: {id: this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/shopGoodsDeposit/getForm',{params: {id: this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
       }

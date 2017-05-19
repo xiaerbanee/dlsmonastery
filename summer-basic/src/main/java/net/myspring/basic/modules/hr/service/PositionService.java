@@ -50,7 +50,7 @@ public class PositionService {
         return positionDto;
     }
 
-    public PositionForm getFormProperty(PositionForm positionForm){
+    public PositionForm getForm(PositionForm positionForm){
         if(!positionForm.isCreate()){
             Position position = positionMapper.findOne(positionForm.getId());
             positionForm= BeanUtil.map(position,PositionForm.class);

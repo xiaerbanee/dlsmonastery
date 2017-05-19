@@ -39,9 +39,9 @@ public class AdPricesystemController {
         return restResponse;
     }
 
-    @RequestMapping(value = "getFormProperty")
+    @RequestMapping(value = "getForm")
     public AdPricesystemForm findOne(AdPricesystemForm adPricesystemForm){
-        adPricesystemForm=adPricesystemService.getFormProperty(adPricesystemForm);
+        adPricesystemForm=adPricesystemService.getForm(adPricesystemForm);
         return adPricesystemForm;
     }
 }

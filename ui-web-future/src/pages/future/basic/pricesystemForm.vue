@@ -103,7 +103,7 @@
         this.filterPricesystemDetailList = tempList;
       }
     },created(){
-        axios.get('/api/ws/future/crm/pricesystem/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/pricesystem/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           console.log(this.inputForm)
           this.searchDetail();

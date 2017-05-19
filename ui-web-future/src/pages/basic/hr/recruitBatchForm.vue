@@ -73,7 +73,7 @@
         })
       }
     },created(){
-      axios.get('/api/basic/hr/recruit/getFormProperty').then((response)=>{
+      axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
         this.formProperty=response.data;
       });
       console.log(this.inputForm.ids)

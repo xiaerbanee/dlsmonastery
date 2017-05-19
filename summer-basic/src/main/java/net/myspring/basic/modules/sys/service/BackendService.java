@@ -23,7 +23,7 @@ public class BackendService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public BackendForm getFormProperty(BackendForm backendForm) {
+    public BackendForm getForm(BackendForm backendForm) {
         if(!backendForm.isCreate()) {
             Backend backend =backendMapper.findOne(backendForm.getId());
             backendForm= BeanUtil.map(backend,BackendForm.class);

@@ -80,7 +80,7 @@
         })
       }
     },created(){
-      axios.get('/api/basic/sys/officeRule/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/sys/officeRule/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         if(response.data.parenId){
           this.inputForm.officeRuleList=new Array({id:response.data.parenId,name:response.data.parentName});

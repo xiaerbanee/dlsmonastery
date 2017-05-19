@@ -91,7 +91,7 @@ public class OfficeService {
         return CollectionUtil.extractToList(sameAreaByOfficeId,"id");
     }
 
-    public OfficeForm getFormProperty(OfficeForm officeForm) {
+    public OfficeForm getForm(OfficeForm officeForm) {
         if (!officeForm.isCreate()) {
             Office office = officeMapper.findOne(officeForm.getId());
             officeForm = BeanUtil.map(office, OfficeForm.class);

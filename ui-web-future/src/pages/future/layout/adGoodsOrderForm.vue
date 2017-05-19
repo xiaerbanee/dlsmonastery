@@ -196,7 +196,7 @@
       this.totalQty=totalQty;
       this.totalPrice=totalPrice;
     }},created(){
-      axios.get('/api/ws/future/layout/adGoodsOrder/getFormProperty',{params:{id:this.$route.query.id}}).then((response)=> {
+      axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=> {
         this.inputForm =response.data;
         this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
         this.shopChange();

@@ -106,7 +106,7 @@
           })
         }
       },created() {
-        axios.get('/api/ws/future/crm/priceChangeIme/getFormProperty').then((response)=>{
+        axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response)=>{
           this.formData=response.data;
         });
       }

@@ -52,9 +52,9 @@ public class ProductController {
         return productQuery;
     }
 
-    @RequestMapping(value = "getFormProperty")
+    @RequestMapping(value = "getForm")
     public ProductForm findOne(ProductForm productForm){
-        productForm=productService.getFormProperty(productForm);
+        productForm=productService.getForm(productForm);
         productForm.setNetTypeList(NetTypeEnum.getList());
         return productForm;
     }

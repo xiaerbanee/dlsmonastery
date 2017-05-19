@@ -41,9 +41,9 @@ public class CompanyConfigController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public CompanyConfigDto getFormProperty(String id) {
-        CompanyConfigDto companyConfigDto=companyConfigService.getFormProperty(id);
+    @RequestMapping(value = "getForm")
+    public CompanyConfigDto getForm(String id) {
+        CompanyConfigDto companyConfigDto=companyConfigService.getForm(id);
         return companyConfigDto;
     }
 

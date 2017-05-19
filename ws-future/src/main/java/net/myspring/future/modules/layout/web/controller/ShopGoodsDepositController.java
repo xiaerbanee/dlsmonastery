@@ -71,10 +71,10 @@ public class ShopGoodsDepositController {
 
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public ShopGoodsDepositForm getFormProperty(ShopGoodsDepositForm shopGoodsDepositForm) {
+    @RequestMapping(value = "getForm")
+    public ShopGoodsDepositForm getForm(ShopGoodsDepositForm shopGoodsDepositForm) {
 
-        ShopGoodsDepositForm result = shopGoodsDepositService.getFormProperty(shopGoodsDepositForm);
+        ShopGoodsDepositForm result = shopGoodsDepositService.getForm(shopGoodsDepositForm);
         return result;
     }
 

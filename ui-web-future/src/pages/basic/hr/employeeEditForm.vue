@@ -136,7 +136,7 @@
             this.submitDisabled = false;
           }
         })
-      },getFormProperty(){
+      },getForm(){
           axios.get('/api/basic/hr/employee/editForm').then((response)=>{
               this.formProperty=response.data
           })
@@ -148,9 +148,9 @@
         this.fileList = fileList;
       }
     },created(){
-       this.getFormProperty();
+       this.getForm();
       if(!this.isCreate){
-        axios.get('/api/basic/hr/employee/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/hr/employee/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.employeeForm);
           util.copyValue(response.data.account,this.accountForm);
           this.employeeForm.sexLabel=response.data.sex=="男"?1:0;

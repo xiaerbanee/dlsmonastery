@@ -70,7 +70,7 @@
           })
         }
       },created(){
-          axios.get('/api/ws/future/crm/priceChange/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/crm/priceChange/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
         }

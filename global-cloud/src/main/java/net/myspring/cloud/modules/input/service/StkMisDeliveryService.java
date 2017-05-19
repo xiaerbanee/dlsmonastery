@@ -101,7 +101,7 @@ public class StkMisDeliveryService {
         return kingdeeSynDtoList;
     }
 
-    public StkMisDeliveryQuery getFormProperty(StkMisDeliveryQuery stkMisDeliveryQuery){
+    public StkMisDeliveryQuery getForm(StkMisDeliveryQuery stkMisDeliveryQuery){
         List<String> stockName = bdStockMapper.findAll().stream().map(BdStock::getFName).collect(Collectors.toList());
         List<BdMaterial> materialList = bdMaterialMapper.findAll();
         stkMisDeliveryQuery.setMaterialNameList(materialList.stream().map(BdMaterial::getFName).collect(Collectors.toList()));

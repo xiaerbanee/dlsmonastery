@@ -50,9 +50,9 @@ public class ExpressController {
 
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public ExpressForm getFormProperty(ExpressForm expressForm){
-        ExpressForm result = expressService.getFormProperty(expressForm);
+    @RequestMapping(value = "getForm")
+    public ExpressForm getForm(ExpressForm expressForm){
+        ExpressForm result = expressService.getForm(expressForm);
 
         return result;
     }

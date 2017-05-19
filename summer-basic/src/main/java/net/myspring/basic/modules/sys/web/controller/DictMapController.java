@@ -41,8 +41,8 @@ public class DictMapController {
         return page;
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public DictMapForm getFormProperty(DictMapForm dictMapForm) {
+    @RequestMapping(value = "getForm")
+    public DictMapForm getForm(DictMapForm dictMapForm) {
         dictMapForm.setCategoryList(dictMapService.findDistinctCategory());
         return dictMapForm;
     }

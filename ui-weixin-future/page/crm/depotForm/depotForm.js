@@ -29,7 +29,7 @@ Page({
                         that.setData({ "formData.town.name": res.data.town.provinceName + res.data.town.cityName + res.data.town.countyName+ res.data.town.townName })
                     }
                     wx.request({
-                        url: $util.getUrl("crm/depot/getFormProperty"),
+                        url: $util.getUrl("crm/depot/getForm"),
                         header: { 'x-auth-token': app.globalData.sessionId },
                         success: function (res) {
                             that.setData({ formProperty: res.data });

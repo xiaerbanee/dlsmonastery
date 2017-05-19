@@ -82,9 +82,9 @@ public class AccountController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public AccountForm getFormProperty(AccountForm accountForm) {
-        accountForm = accountService.getFormProperty(accountForm);
+    @RequestMapping(value = "getForm")
+    public AccountForm getForm(AccountForm accountForm) {
+        accountForm = accountService.getForm(accountForm);
         accountForm.setPositionDtoList(positionService.findAll());
         accountForm.setBoolMap( BoolEnum.getMap());
         return accountForm;

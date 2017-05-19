@@ -48,7 +48,7 @@ public class PriceChangeImeService {
         return page;
     }
 
-    public PriceChangeImeForm getFormProperty(PriceChangeImeForm priceChangeImeForm){
+    public PriceChangeImeForm getForm(PriceChangeImeForm priceChangeImeForm){
         if(!priceChangeImeForm.isCreate()){
             PriceChangeIme priceChangeIme = priceChangeImeMapper.findOne(priceChangeImeForm.getId());
             priceChangeImeForm = BeanUtil.map(priceChangeIme,PriceChangeImeForm.class);

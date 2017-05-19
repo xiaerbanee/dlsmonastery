@@ -73,7 +73,7 @@
           axios.get('/api/basic/sys/dictMap/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
-          axios.get('/api/basic/sys/dictMap/getFormProperty').then((response)=>{
+          axios.get('/api/basic/sys/dictMap/getForm').then((response)=>{
             this.inputProperty = response.data;
           })
       }

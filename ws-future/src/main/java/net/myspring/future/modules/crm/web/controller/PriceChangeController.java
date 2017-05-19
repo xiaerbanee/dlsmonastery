@@ -63,9 +63,9 @@ public class PriceChangeController {
     }
 
 
-    @RequestMapping(value = "getFormProperty")
-    public PriceChangeForm getFormProperty(PriceChangeForm priceChangeForm){
-        priceChangeForm = priceChangeService.getFormProperty(priceChangeForm);
+    @RequestMapping(value = "getForm")
+    public PriceChangeForm getForm(PriceChangeForm priceChangeForm){
+        priceChangeForm = priceChangeService.getForm(priceChangeForm);
         return priceChangeForm;
     }
 

@@ -43,7 +43,7 @@ public class ProductTypeService {
         return productType;
     }
 
-    public ProductTypeForm getFormProperty(ProductTypeForm productTypeForm){
+    public ProductTypeForm getForm(ProductTypeForm productTypeForm){
         if(!productTypeForm.isCreate()){
             ProductType productType = productTypeMapper.findOne(productTypeForm.getId());
             productTypeForm = BeanUtil.map(productType,productTypeForm.getClass());

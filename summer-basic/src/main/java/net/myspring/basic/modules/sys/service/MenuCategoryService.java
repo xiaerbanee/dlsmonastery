@@ -28,7 +28,7 @@ public class MenuCategoryService {
         return menuCategory;
     }
 
-    public MenuCategoryForm getFormProperty(MenuCategoryForm menuCategoryForm){
+    public MenuCategoryForm getForm(MenuCategoryForm menuCategoryForm){
         if(!menuCategoryForm.isCreate()){
             MenuCategory menuCategory = menuCategoryMapper.findOne(menuCategoryForm.getId());
             menuCategoryForm= BeanUtil.map(menuCategory,MenuCategoryForm.class);

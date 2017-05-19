@@ -27,11 +27,11 @@ public class ProductMonthPriceController {
         return null;
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public String getFormProperty() {
+    @RequestMapping(value = "getForm")
+    public String getForm() {
         return null;
     }
-    @RequestMapping(value = "getFormProperty")
+    @RequestMapping(value = "getForm")
     public String findOne(ProductMonthPrice productMonthPrice){
         return null;
     }

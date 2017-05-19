@@ -164,7 +164,7 @@
 
       }
     },created(){
-      axios.get('/api/ws/future/layout/shopPromotion/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/layout/shopPromotion/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         if(response.data.shopId!=null){
           this.shops=new Array(response.data.shopId);

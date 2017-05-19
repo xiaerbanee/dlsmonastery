@@ -217,7 +217,7 @@ public class AdGoodsOrderService {
         return adGoodsOrderDto;
     }
 
-    public AdGoodsOrderForm getFormProperty(AdGoodsOrderForm adGoodsOrderForm){
+    public AdGoodsOrderForm getForm(AdGoodsOrderForm adGoodsOrderForm){
 
         List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 

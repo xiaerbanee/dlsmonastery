@@ -72,7 +72,7 @@
           axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
-        axios.get('/api/basic/sys/dictEnum/getFormProperty').then((response)=>{
+        axios.get('/api/basic/sys/dictEnum/getForm').then((response)=>{
           this.inputProperty = response.data;
         })
       }

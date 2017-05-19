@@ -56,7 +56,7 @@ public class ShopGoodsDepositService {
     public void audit(String[] ids){
     }
 
-    public ShopGoodsDepositForm getFormProperty(ShopGoodsDepositForm shopGoodsDepositForm) {
+    public ShopGoodsDepositForm getForm(ShopGoodsDepositForm shopGoodsDepositForm) {
         ShopGoodsDepositForm result;
 
         if(shopGoodsDepositForm.isCreate()){

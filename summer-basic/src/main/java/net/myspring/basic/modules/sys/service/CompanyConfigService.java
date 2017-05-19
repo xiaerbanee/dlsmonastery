@@ -45,7 +45,7 @@ public class CompanyConfigService {
        return companyConfigForm;
    }
 
-    public CompanyConfigDto getFormProperty(String id){
+    public CompanyConfigDto getForm(String id){
         CompanyConfig companyConfig= companyConfigMapper.findOne(id);
         CompanyConfigDto companyConfigDto = BeanUtil.map(companyConfig, CompanyConfigDto.class);
         cacheUtils.initCacheInput(companyConfigDto);

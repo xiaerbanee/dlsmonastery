@@ -67,7 +67,7 @@ public class DutyOvertimeService {
         return dutyOvertime;
     }
 
-    public DutyOvertimeForm getFormProperty(DutyOvertimeForm dutyOvertimeForm) {
+    public DutyOvertimeForm getForm(DutyOvertimeForm dutyOvertimeForm) {
         if(!dutyOvertimeForm.isCreate()){
             DutyOvertime dutyOvertime =dutyOvertimeMapper.findOne(dutyOvertimeForm.getId());
             dutyOvertimeForm= BeanUtil.map(dutyOvertime,DutyOvertimeForm.class);

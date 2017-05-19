@@ -174,7 +174,7 @@
 
         if(this.inputForm.shopId&&this.inputForm.netType&&this.inputForm.shipType) {
           this.pageLoading = true;
-          axios.get('/api/ws/future/crm/goodsOrder/getFormProperty', {params: {id:this.$route.query.id, shopId:this.inputForm.shopId, netType: this.inputForm.netType, shipType:this.inputForm.shipType}}).then((response)=>{
+          axios.get('/api/ws/future/crm/goodsOrder/getForm', {params: {id:this.$route.query.id, shopId:this.inputForm.shopId, netType: this.inputForm.netType, shipType:this.inputForm.shipType}}).then((response)=>{
 
             this.inputForm = response.data;
             this.filterProducts();
@@ -185,7 +185,7 @@
       }
     }, created(){
 
-      axios.get('/api/ws/future/crm/goodsOrder/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/crm/goodsOrder/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         this.filterProducts();
 

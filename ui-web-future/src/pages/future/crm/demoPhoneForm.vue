@@ -110,7 +110,7 @@
         }
       },
     },created(){
-      axios.get('/api/crm/demoPhone/getFormProperty').then((response)=>{
+      axios.get('/api/crm/demoPhone/getForm').then((response)=>{
         this.formProperty=response.data;
       });
       if(!this.isCreate){

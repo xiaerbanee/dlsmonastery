@@ -51,14 +51,14 @@ public class EmployeeController {
         return restResponse;
     }
 
-    @RequestMapping(value = "getFormProperty")
-    public EmployeeForm getFormProperty(EmployeeForm employeeForm){
-        employeeForm=employeeService.getFormProperty(employeeForm);
+    @RequestMapping(value = "getForm")
+    public EmployeeForm getForm(EmployeeForm employeeForm){
+        employeeForm=employeeService.getForm(employeeForm);
         employeeForm.setPositionList(positionService.findAll());
         employeeForm.setEducationList( dictEnumService.findValueByCategory(DictEnumCategoryEnum.EDUCATION.toString()));
         AccountForm accountForm=new AccountForm();
         accountForm.setId(employeeForm.getAccountId());
-        employeeForm.setAccount(accountService.getFormProperty(accountForm));
+        employeeForm.setAccount(accountService.getForm(accountForm));
         return employeeForm;
     }
 

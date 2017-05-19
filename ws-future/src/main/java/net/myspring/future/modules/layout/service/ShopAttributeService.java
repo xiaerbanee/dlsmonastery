@@ -61,7 +61,7 @@ public class ShopAttributeService {
     }
 
 
-    public ShopAttributeForm getFormProperty(ShopAttributeForm shopAttributeForm){
+    public ShopAttributeForm getForm(ShopAttributeForm shopAttributeForm){
         if(StringUtils.isNotBlank(shopAttributeForm.getShopId())){
             shopAttributeForm.setShop(depotMapper.findOne(shopAttributeForm.getShopId()));
             List<ShopAttribute> shopAttributeList=shopAttributeMapper.findByShopId(shopAttributeForm.getShopId());
