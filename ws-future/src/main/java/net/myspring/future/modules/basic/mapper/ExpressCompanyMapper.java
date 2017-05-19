@@ -45,7 +45,7 @@ public interface ExpressCompanyMapper extends BaseMapper<ExpressCompany,String> 
 
     Page<ExpressCompanyDto> findPage(Pageable pageable, @Param("p")ExpressCompanyQuery expressCompanyQuery);
 
-    List<ExpressCompany> findLabels(List<String> ids);
+    List<ExpressCompany> findByIds(List<String> ids);
 
     List<ExpressCompany> findByExpressType(String type);
 

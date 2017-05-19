@@ -50,7 +50,7 @@
 
 
 
-    <select id="findLabels" resultType="AfterSale">
+    <select id="findByIds" resultType="AfterSale">
         SELECT t1.id
         FROM crm_after_sale t1
         WHERE t1.enabled = 1

@@ -53,7 +53,7 @@ public interface ProductTypeMapper extends BaseMapper<ProductType,String> {
 
     List<ProductType> findByNameLike(@Param("name") String name);
 
-    List<ProductType> findLabels(List<String> ids);
+    List<ProductType> findByIds(List<String> ids);
 
     int updateDemoPhoneType(@Param("demoPhoneTypeId") String demoPhoneTypeId, @Param("list") List<String> ids);
 

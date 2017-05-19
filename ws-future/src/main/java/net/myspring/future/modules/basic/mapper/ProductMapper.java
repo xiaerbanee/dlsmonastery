@@ -75,8 +75,6 @@ public interface ProductMapper extends BaseMapper<Product,String> {
 
     int updateProductTypeToNull(String productTypeId);
 
-    List<Product> findLabels(List<String> ids);
-
     List<ProductDto> findByOutGroupIdsAndAllowOrder(@Param("outGroupIds") List<String> outGroupIds, @Param("allowOrder") boolean allowOrder);
 
     LocalDateTime getMaxOutDate();

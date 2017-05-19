@@ -57,7 +57,7 @@ public interface OfficeMapper extends BaseMapper<Office,String> {
 
     List<Office> findByFilterAll(@Param("p") Map<String, Object> map);
 
-    List<Office> findLabels(List<String> ids);
+    List<Office> findByIds(List<String> ids);
 
     List<Office> findByAreaIds(List<String> areaIds);
 

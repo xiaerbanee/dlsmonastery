@@ -44,7 +44,7 @@ public interface ChainMapper extends BaseMapper<Chain,String> {
 
     Page<ChainDto> findPage(Pageable pageable, @Param("p")ChainQuery chainQuery);
 
-    List<Chain> findLabels(List<String> ids);
+    List<Chain> findByIds(List<String> ids);
 
     int deleteByChainId(String chainId);
 

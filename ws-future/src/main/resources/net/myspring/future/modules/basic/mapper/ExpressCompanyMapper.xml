@@ -28,7 +28,7 @@
 
     </select>
 
-    <select id="findLabels" resultType="ExpressCompany">
+    <select id="findByIds" resultType="ExpressCompany">
         SELECT t1.id,t1.name
         FROM crm_express_company t1
         WHERE t1.enabled = 1

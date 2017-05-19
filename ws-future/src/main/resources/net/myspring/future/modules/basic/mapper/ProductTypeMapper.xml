@@ -41,7 +41,7 @@
         </foreach>
     </select>
 
-    <select id="findLabels" resultType="ProductType">
+    <select id="findByIds" resultType="ProductType">
         SELECT t1.id,t1.name
         FROM crm_product_type t1
         where t1.enabled=1

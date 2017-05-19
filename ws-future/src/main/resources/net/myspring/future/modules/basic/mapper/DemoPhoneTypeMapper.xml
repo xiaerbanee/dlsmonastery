@@ -23,7 +23,7 @@
         GROUP BY t1.id
     </select>
 
-    <select id="findLabels" resultType="DemoPhoneType">
+    <select id="findByIds" resultType="DemoPhoneType">
         SELECT t1.*
         FROM crm_demo_phone_type t1
         WHERE t1.enabled = 1

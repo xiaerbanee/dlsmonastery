@@ -76,7 +76,7 @@
 
 
 
-    <select id="findLabels" resultType="Office">
+    <select id="findByIds" resultType="Office">
         SELECT t1.id,t1.name
         FROM sys_office t1
         WHERE t1.enabled = 1

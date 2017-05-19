@@ -15,7 +15,7 @@
 
     </select>
 
-    <select id="findLabels" resultType="Pricesystem">
+    <select id="findByIds" resultType="Pricesystem">
         SELECT t1.id,t1.name
         FROM crm_pricesystem t1
         WHERE t1.enabled = 1

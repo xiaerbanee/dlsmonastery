@@ -85,7 +85,7 @@
        and t1.extend_type=#{extendType}
    </select>
 
-    <select id="findLabels" resultType="ExpressOrder">
+    <select id="findByIds" resultType="ExpressOrder">
         SELECT t1.id,t1.extend_type,t1.extend_id,t1.contator,t1.address,t1.mobile_phone,t1.from_depot_id,t1.to_depot_id,t1.extend_business_id,t1.express_company_id
         FROM crm_express_order t1
         WHERE t1.enabled = 1

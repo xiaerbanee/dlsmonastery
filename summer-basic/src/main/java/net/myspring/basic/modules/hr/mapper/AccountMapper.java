@@ -63,7 +63,7 @@ public interface AccountMapper extends BaseMapper<Account,String> {
 
     List<Account> findByFilter(@Param("p")AccountQuery accountQuery);
 
-    List<Account> findLabels(List<String> ids);
+    List<Account> findByIds(List<String> ids);
 
     List<Account> findByLoginNameList(List<String> loginNames);
 

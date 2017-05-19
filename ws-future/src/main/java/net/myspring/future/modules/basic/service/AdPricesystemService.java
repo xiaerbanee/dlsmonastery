@@ -51,7 +51,7 @@ public class AdPricesystemService {
     }
 
     public List<AdPricesystemDto> findFilter(AdPricesystemQuery adPricesystemQuery){
-        List<AdPricesystem> adPricesystemList = adPricesystemMapper.findFilter(adPricesystemQuery);
+        List<AdPricesystem> adPricesystemList = adPricesystemMapper.findList(adPricesystemQuery);
         List<AdPricesystemDto> adPricesystemDtoList = BeanUtil.map(adPricesystemList,AdPricesystemDto.class);
         cacheUtils.initCacheInput(adPricesystemDtoList);
         return adPricesystemDtoList;

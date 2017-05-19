@@ -49,6 +49,6 @@ public interface DemoPhoneTypeMapper extends BaseMapper<DemoPhoneType,String> {
 
     Page<DemoPhoneTypeDto> findPage(Pageable pageable, @Param("p")DemoPhoneTypeQuery demoPhoneTypeQuery);
 
-    List<DemoPhoneType> findLabels(List<String> ids);
+    List<DemoPhoneType> findByIds(List<String> ids);
 
 }

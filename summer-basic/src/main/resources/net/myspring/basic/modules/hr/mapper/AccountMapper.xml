@@ -82,7 +82,7 @@
         <include refid="accountFilter"/>
     </select>
 
-    <select id="findLabels" resultType="Account">
+    <select id="findByIds" resultType="Account">
         SELECT t1.id,t1.login_name,t1.position_id,t1.office_id,t1.employee_id
         FROM hr_account t1
         WHERE t1.enabled = 1

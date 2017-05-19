@@ -59,7 +59,7 @@ public class AdPricesystemChangeService {
 
     public void save(List<List<String>> data){
         int pricesystemFromIndex = 5;
-        List<AdPricesystem> adPricesystems = adPricesystemMapper.findFilter(null);
+        List<AdPricesystem> adPricesystems = adPricesystemMapper.findList(null);
         List<Map<String, AdPricesystemDetail>> adPricesystemList = Lists.newArrayList();
         for (AdPricesystem adPricesystem : adPricesystems) {
             Map<String, AdPricesystemDetail> map = Maps.newHashMap();

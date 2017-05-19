@@ -49,6 +49,6 @@ public interface ShopAdTypeMapper extends BaseMapper<ShopAdType,String> {
 
     Page<ShopAdTypeDto> findPage(Pageable pageable, @Param("p")ShopAdTypeQuery shopAdTypeQuery);
 
-    List<ShopAdType> findLabels(List<String> ids);
+    List<ShopAdType> findByIds(List<String> ids);
 
 }

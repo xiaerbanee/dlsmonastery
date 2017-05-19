@@ -44,9 +44,7 @@ public interface AdPricesystemMapper extends BaseMapper<AdPricesystem,String> {
 
     Page<AdPricesystemDto> findPage(Pageable pageable, @Param("p") AdPricesystemQuery adPricesystemQuery);
 
-    List<AdPricesystem> findLabels(List<String> ids);
-
-    List<AdPricesystem> findFilter(@Param("p") AdPricesystemQuery adPricesystemQuery);
+    List<AdPricesystem> findList(AdPricesystemQuery adPricesystemQuery);
 
     AdPricesystem findByName(String name);
 }

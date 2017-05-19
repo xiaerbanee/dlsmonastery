@@ -14,7 +14,7 @@
         </if>
     </select>
 
-    <select id="findLabels" resultType="Chain">
+    <select id="findByIds" resultType="Chain">
         SELECT t1.id,t1.name
         FROM crm_chain t1
         WHERE t1.enabled = 1
