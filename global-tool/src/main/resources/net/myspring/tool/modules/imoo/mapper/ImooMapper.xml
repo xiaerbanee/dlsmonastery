@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.myspring.tool.modules.imoo.mapper.ImooMapper">
+
+    <select id="plantBasicProducts" resultType="ImooPlantBasicProduct">
+        select * from PlantBasicProduct
+    </select>
+
+    <select id="plantPrdocutImeiDeliverByDate" resultType="ImooPrdocutImeiDeliver">
+        select * from prdocutimeideliver t
+        where t.creation_date &gt;= #{dateStart}
+        and t.creation_date &lt; #{dateEnd}
+        and mainagentid in
+        <foreach item="item" index="index" collection="agentCodes" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+</mapper>
