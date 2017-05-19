@@ -15,7 +15,7 @@ public class ExpressUtils {
     private RedisTemplate redisTemplate;
 
     public Integer getExpressPrintQty(Integer totalBillQty) {
-        Integer expressPrintQty = Integer.valueOf(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.EXPRESS_PRINT_QTY.name()).getValue());
+        Integer expressPrintQty = Integer.valueOf(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.EXPRESS_PRINT_QTY.name()).getValue());
         if(0 == totalBillQty % expressPrintQty){
             expressPrintQty = totalBillQty / expressPrintQty;
         } else{

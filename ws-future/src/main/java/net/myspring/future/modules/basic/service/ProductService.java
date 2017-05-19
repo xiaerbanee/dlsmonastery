@@ -119,10 +119,10 @@ public class ProductService {
     public  List<Product> findAdProduct(String billType,AdApplyForm adApplyForm){
         List<String> outGroupIds =Lists.newArrayList();
         if(BillTypeEnum.POP.name().equals(billType)){
-            String value = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue();
+            String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }else if (BillTypeEnum.配件赠品.name().equals(billType)){
-            String value = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue();
+            String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }
         List<Product> adProducts  = productMapper.findByOutGroupIds(outGroupIds);
@@ -151,9 +151,9 @@ public class ProductService {
 
     public void syn() {
         LocalDateTime dateTime=productMapper.getMaxOutDate();
-        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
+        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
         String result = cloudClient.getSynProductData(cloudName, LocalDateTimeUtils.format(dateTime));
-        String value = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
+        String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
         List<String> outGroupIds = IdUtils.getIdList(value);
         List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);
         if(CollectionUtil.isNotEmpty(dataList)) {

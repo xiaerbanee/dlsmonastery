@@ -5,6 +5,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
 import net.myspring.future.modules.layout.service.ShopImageService;
 import net.myspring.future.modules.layout.web.form.ShopImageForm;
@@ -39,7 +40,7 @@ public class ShopImageController {
     @RequestMapping(value = "findOne")
     public ShopImageForm findOne(ShopImageForm shopImageForm) {
         shopImageForm = shopImageService.getForm(shopImageForm);
-        List<String> imageTypeList=Arrays.asList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.name()).getValue().split(","));
+        List<String> imageTypeList=Arrays.asList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.name()).getValue().split(","));
         shopImageForm.setImageTypeList(imageTypeList);
         return shopImageForm;
     }

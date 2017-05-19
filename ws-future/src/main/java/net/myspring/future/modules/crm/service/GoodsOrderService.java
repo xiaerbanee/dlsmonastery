@@ -12,6 +12,7 @@ import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.ExpressUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
@@ -254,16 +255,16 @@ public class GoodsOrderService {
     private String getDefaultStoreId(GoodsOrder goodsOrder) {
         String defaultStoreId;
         if(NetTypeEnum.联信.name().equals(goodsOrder.getNetType())){
-            defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).getValue();
+            defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).getValue();
         }else {
-            defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
+            defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
         }
-        String carrierLockOfficeIds = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.CARRIER_LOCK_OFFICE.name()).getValue();
+        String carrierLockOfficeIds = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.CARRIER_LOCK_OFFICE.name()).getValue();
         if(StringUtils.isNotBlank(carrierLockOfficeIds)){
             List<String> officeIdList = StringUtils.getSplitList(carrierLockOfficeIds, CharConstant.COMMA);
             Depot shop = depotMapper.findOne(goodsOrder.getShopId());
             if(officeIdList.contains(shop.getOfficeId())) {
-                defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
+                defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
             }
         }
         return defaultStoreId;

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.util.text.IdUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Pricesystem;
@@ -90,7 +91,7 @@ public class PricesystemService {
                         return p1.getProductName().compareTo(p2.getProductName());
                     }
                 });
-                String expressProductId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
+                String expressProductId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
                 for(int i = 0;i<pricesystemDetails.size();i++) {
                     if(StringUtils.isNotBlank(expressProductId) && expressProductId.equals(pricesystemDetails.get(i).getProductId())) {
                         pricesystemDetails.get(i).setSort(0);
@@ -122,7 +123,7 @@ public class PricesystemService {
     public void initPricesystemDetail(PricesystemForm pricesystemForm){
         List<PricesystemDetailForm> pricesystemDetailFormList=Lists.newArrayList();
         if(pricesystemForm.isCreate()){
-            String value =CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
+            String value =CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
             List<String> outGroupIds = IdUtils.getIdList(value);
             List<Product> productList = productMapper.findByOutGroupIds(outGroupIds);
             for(Product product:productList){

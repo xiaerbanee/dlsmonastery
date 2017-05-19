@@ -2,8 +2,11 @@ package net.myspring.basic.modules.sys.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.mapper.*;
+import net.myspring.basic.modules.sys.domain.CompanyConfig;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
+import net.myspring.basic.modules.sys.dto.CompanyConfigDto;
 import net.myspring.basic.modules.sys.mapper.*;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +71,10 @@ public class CacheService {
         cacheUtils.initCache("positionModules",positionBackendMapper.findAll());
         cacheUtils.initCache("officeRules",officeRuleMapper.findAll());
         List<CompanyConfigCacheDto> companyConfigs=companyConfigMapper.findAllCache();
-        cacheUtils.initCache("companyConfigCodes",companyConfigs,"code");
+        for(CompanyConfigCacheDto companyConfigCacheDto:companyConfigs) {
+            companyConfigCacheDto.setKey(companyConfigCacheDto.getCompanyId() + CharConstant.ENTER + companyConfigCacheDto.getCode());
+        }
+        cacheUtils.initCache("companyConfigCodes",companyConfigs,"key");
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");

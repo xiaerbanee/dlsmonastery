@@ -6,6 +6,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
+import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.imoo.domain.ImooPlantBasicProduct;
 import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver;
 import net.myspring.tool.modules.imoo.mapper.ImooMapper;
@@ -46,7 +47,7 @@ public class ImooService {
     @FactoryDataSource
     @Transactional(readOnly = true)
     public List<ImooPrdocutImeiDeliver> plantPrdocutImeiDeliverByDate(LocalDate date) {
-        String agentCodes = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
+        String agentCodes = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         LocalDate dateStart = date.minusDays(2);
         LocalDate dateEnd = date.plusDays(1);
         return imooMapper.plantPrdocutImeiDeliverByDate(dateStart, dateEnd, StringUtils.getSplitList(agentCodes, CharConstant.COMMA));
@@ -74,7 +75,7 @@ public class ImooService {
     @LocalDataSource
     @Transactional(readOnly = false)
     public String pullPlantSendimeis(List<ImooPrdocutImeiDeliver> imooPrdocutImeiDelivers) {
-        String agentCodes = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
+        String agentCodes = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         List<String> agentCodeList = StringUtils.getSplitList(agentCodes, CharConstant.COMMA);
         List<ImooPrdocutImeiDeliver> list = Lists.newArrayList();
         for (String agentCode : agentCodeList) {

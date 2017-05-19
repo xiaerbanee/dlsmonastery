@@ -8,6 +8,7 @@ import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.util.text.IdUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
@@ -219,7 +220,7 @@ public class AdGoodsOrderService {
 
     public AdGoodsOrderForm getForm(AdGoodsOrderForm adGoodsOrderForm){
 
-        List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
+        List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
         if(!adGoodsOrderForm.isCreate()){
             AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderForm.getId());

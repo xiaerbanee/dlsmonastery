@@ -96,7 +96,7 @@ public class BankService {
 
     @Transactional
     public void syn(){
-        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
+        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
         LocalDateTime dateTime=bankMapper.getMaxOutDate();
         String result = cloudClient.getSynBankData(cloudName, LocalDateTimeUtils.format(dateTime));
         List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);
