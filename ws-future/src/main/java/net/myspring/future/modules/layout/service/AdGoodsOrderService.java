@@ -2,28 +2,24 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.sun.xml.internal.bind.v2.TODO;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
-import net.myspring.future.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.IdUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.mapper.AdPricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
-import net.myspring.future.modules.crm.mapper.*;
-import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
+import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
@@ -223,7 +219,7 @@ public class AdGoodsOrderService {
 
     public AdGoodsOrderForm findForm(AdGoodsOrderForm adGoodsOrderForm){
 
-        List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.getCode()).getValue());
+        List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
         if(!adGoodsOrderForm.isCreate()){
             AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderForm.getId());
