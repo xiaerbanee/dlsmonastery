@@ -2,6 +2,8 @@ package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.domain.Chain;
+import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.service.ClientService;
 import net.myspring.future.modules.basic.web.query.ClientQuery;
@@ -11,8 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping(value = "crm/client")
+@RequestMapping(value = "basic/client")
 public class ClientController {
 
     @Autowired
@@ -40,6 +44,12 @@ public class ClientController {
     @RequestMapping(value = "getClientName")
     public String getClientName(String depotId) {
         return clientService.getClientName(depotId);
+    }
+
+    @RequestMapping(value = "search")
+    public List<ClientDto> search(String name){
+        List<ClientDto> clientDtoList=clientService.findByNameLike(name);
+        return clientDtoList;
     }
 
 }

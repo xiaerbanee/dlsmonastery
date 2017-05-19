@@ -1,6 +1,8 @@
 package net.myspring.general.modules.sys.dto;
 
+import com.alibaba.druid.sql.visitor.functions.Concat;
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.common.dto.IdDto;
 import net.myspring.general.modules.sys.domain.Town;
@@ -82,5 +84,9 @@ public class TownDto extends IdDto<Town> {
 
     public void setTownId(String townId) {
         this.townId = townId;
+    }
+
+    public String getFullName(){
+        return provinceName+ CharConstant.UNDER_LINE+cityName+CharConstant.UNDER_LINE+countyName+CharConstant.UNDER_LINE+townName;
     }
 }

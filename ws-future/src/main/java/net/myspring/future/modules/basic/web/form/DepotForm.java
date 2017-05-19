@@ -3,10 +3,14 @@ package net.myspring.future.modules.basic.web.form;
 import com.google.common.collect.Lists;
 import net.myspring.common.dto.NameValueDto;
 import net.myspring.common.form.DataForm;
+import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Pricesystem;
+import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.dto.BasicDistrictDto;
+import net.myspring.future.modules.basic.dto.ChainDto;
+import net.myspring.future.modules.basic.dto.PricesystemDto;
 import net.myspring.future.modules.layout.domain.ShopAttribute;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -66,6 +70,34 @@ public class DepotForm extends DataForm<Depot>{
     private Boolean popShop = false;
     //公司分组（imoo，电玩，oppo不写）
     private String companyGroup;
+
+    private List<ChainDto> chainList=Lists.newArrayList();
+    private List<PricesystemDto> pricesystemList=Lists.newArrayList();
+    private List<AdPricesystemDto> adPricesystemList=Lists.newArrayList();
+
+    public List<ChainDto> getChainList() {
+        return chainList;
+    }
+
+    public void setChainList(List<ChainDto> chainList) {
+        this.chainList = chainList;
+    }
+
+    public List<PricesystemDto> getPricesystemList() {
+        return pricesystemList;
+    }
+
+    public void setPricesystemList(List<PricesystemDto> pricesystemList) {
+        this.pricesystemList = pricesystemList;
+    }
+
+    public List<AdPricesystemDto> getAdPricesystemList() {
+        return adPricesystemList;
+    }
+
+    public void setAdPricesystemList(List<AdPricesystemDto> adPricesystemList) {
+        this.adPricesystemList = adPricesystemList;
+    }
 
     public String getNamePinyin() {
         return namePinyin;

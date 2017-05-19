@@ -4,11 +4,14 @@
 
 
     <select id="findPage" resultType="DepotShopDto">
-        SELECT t2.*,depot.id as 'depotId'
+        SELECT depot.id as 'depotId',t2.*
         FROM crm_depot depot ,crm_depot_shop t2
         where depot.enabled=1
         and t2.enabled=1
         and depot.depot_shop_id=t2.id
+        <if test="p.name!=null">
+            and depot.name like concat('%',#{p.name},'%')
+        </if>
     </select>
 
 </mapper>

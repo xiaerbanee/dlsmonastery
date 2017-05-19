@@ -47,8 +47,7 @@ public class DepotStoreService {
             DepotStore depotStore =depotStoreMapper.findOne(depotStoreForm.getId());
             depotStoreForm= BeanUtil.map(depotStore,DepotStoreForm.class);
             Depot depot=depotMapper.findOne(depotStoreForm.getDepotId());
-            depot.setLastModifiedDate(null);
-            depotStoreForm.setDepotForm(BeanMapper.map(depot,DepotForm.class));
+            depotStoreForm.setDepotForm(BeanUtil.map(depot,DepotForm.class));
             cacheUtils.initCacheInput(depotStoreForm);
         }
         return depotStoreForm;

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProfile name="!production">
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+        <logger name="net.myspring.future.modules.basic.mapper" level="DEBUG"/>
+        <logger name="net.myspring.future.modules.basic.mapper" level="DEBUG"/>
+    </springProfile>
+    <springProfile name="production">
+        <include resource="org/springframework/boot/logging/logback/default.xml"/>
+        <logger name="net.myspring.future.modules.basic.mapper" level="DEBUG"/>
+        <logger name="net.myspring.future.modules.basic.mapper" level="DEBUG"/>
+    </springProfile>
+</configuration>

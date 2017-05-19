@@ -5,9 +5,11 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.IdUtils;
+import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.dto.PricesystemDto;
 import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.PricesystemMapper;
@@ -42,6 +44,12 @@ public class PricesystemService {
     private CacheUtils cacheUtils;
     @Autowired
     private RedisTemplate redisTemplate;
+
+    public List<PricesystemDto> findAllEnabled(){
+        List<Pricesystem> pricesystemList=pricesystemMapper.findAllEnabled();
+        List<PricesystemDto> pricesystemDtoList= BeanUtil.map(pricesystemList,PricesystemDto.class);
+        return pricesystemDtoList;
+    }
 
     public Page<PricesystemDto> findPage(Pageable pageable, PricesystemQuery pricesystemQuery) {
         Page<PricesystemDto> page = pricesystemMapper.findPage(pageable, pricesystemQuery);

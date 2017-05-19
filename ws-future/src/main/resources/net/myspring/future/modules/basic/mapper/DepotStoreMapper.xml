@@ -10,6 +10,9 @@
         where depot.enabled=1
         and t2.enabled=1
         and t2.depot_id=depot.id
+        <if test="p.name">
+            and depot.name like concat('%',#{p.name},'%')
+        </if>
     </select>
 
 </mapper>

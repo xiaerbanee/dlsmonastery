@@ -3,50 +3,56 @@
     <head-tab active="depotStoreForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
-        <el-form-item label="名称" prop="depotForm.name">
-          <el-input v-model="inputForm.depotForm.name" />
-        </el-form-item>
-        <el-form-item label="Code" prop="depotForm.code">
-          <el-input v-model="inputForm.depotForm.code" />
-        </el-form-item>
-        <el-form-item label="机构" prop="depotForm.officeId">
-          <office-select v-model="inputForm.depotForm.officeId"></office-select>
-        </el-form-item>
-        <el-form-item label="负责人" prop="depotForm.contator">
-          <account-select  v-model="inputForm.depotForm.contator"/>
-        </el-form-item>
-        <el-form-item label="手机号" prop="depotForm.mobilePhone">
-          <el-input v-model="inputForm.depotForm.mobilePhone" />
-        </el-form-item>
-        <el-form-item label="地址" prop="depotForm.address">
-          <el-input v-model="inputForm.depotForm.address" />
-        </el-form-item>
-        <el-form-item label="税务门店名称" prop="depotForm.taxName">
-          <el-input v-model="inputForm.depotForm.taxName" />
-        </el-form-item>
-        <el-form-item label="寄售门店" prop="depotForm.delegateDepotId">
-          <depot-select v-model="inputForm.depotForm.delegateDepotId" category="directShop"></depot-select>
-        </el-form-item>
-        <el-form-item label="仓库类型" prop="type">
-          <el-select v-model="inputForm.type" filterable>
-            <el-option v-for="item in inputForm.depotStoreTypeList" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否是广告仓库" prop="depotForm.popShop">
-          <bool-radio-group v-model="inputForm.depotForm.popShop"></bool-radio-group>
-        </el-form-item>
-        <el-form-item label="地区" prop="depotForm.districtId">
-          <district-select v-model="inputForm.depotForm.districtId"></district-select>
-        </el-form-item>
-        <el-form-item label="分组" prop="storeGroup">
-          <el-input v-model="inputForm.storeGroup"></el-input>
-        </el-form-item>
-        <el-form-item label="备注" prop="remarks">
-          <el-input v-model="inputForm.remarks"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{$t('dictMapForm.save')}}</el-button>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="10">
+            <el-form-item label="名称" prop="depotForm.name">
+              <el-input v-model="inputForm.depotForm.name" />
+            </el-form-item>
+            <el-form-item label="Code" prop="depotForm.code">
+              <el-input v-model="inputForm.depotForm.code" />
+            </el-form-item>
+            <el-form-item label="机构" prop="depotForm.officeId">
+              <office-select v-model="inputForm.depotForm.officeId"></office-select>
+            </el-form-item>
+            <el-form-item label="负责人" prop="depotForm.contator">
+              <account-select  v-model="inputForm.depotForm.contator"/>
+            </el-form-item>
+            <el-form-item label="手机号" prop="depotForm.mobilePhone">
+              <el-input v-model="inputForm.depotForm.mobilePhone" />
+            </el-form-item>
+            <el-form-item label="地址" prop="depotForm.address">
+              <el-input v-model="inputForm.depotForm.address" />
+            </el-form-item>
+            <el-form-item label="税务门店名称" prop="depotForm.taxName">
+              <el-input v-model="inputForm.depotForm.taxName" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="寄售门店" prop="depotForm.delegateDepotId">
+              <depot-select v-model="inputForm.depotForm.delegateDepotId" category="directShop"></depot-select>
+            </el-form-item>
+            <el-form-item label="仓库类型" prop="type">
+              <el-select v-model="inputForm.type" filterable>
+                <el-option v-for="item in inputForm.depotStoreTypeList" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="是否是广告仓库" prop="depotForm.popShop">
+              <bool-radio-group v-model="inputForm.depotForm.popShop"></bool-radio-group>
+            </el-form-item>
+            <el-form-item label="地区" prop="depotForm.districtId">
+              <district-select v-model="inputForm.depotForm.districtId"></district-select>
+            </el-form-item>
+            <el-form-item label="分组" prop="storeGroup">
+              <el-input v-model="inputForm.storeGroup"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="remarks">
+              <el-input v-model="inputForm.remarks"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{$t('dictMapForm.save')}}</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
   </div>

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springside.modules.utils.mapper.BeanMapper;
 
 import java.util.List;
 
@@ -79,6 +80,12 @@ public class AdPricesystemService {
             }
         }
         return adPricesystem;
+    }
+
+    public List<AdPricesystemDto> findAllEnabled(){
+        List<AdPricesystem> adPricesystemList=adPricesystemMapper.findAllEnabled();
+        List<AdPricesystemDto> adPricesystemDtoList= BeanUtil.map(adPricesystemList,AdPricesystemDto.class);
+        return adPricesystemDtoList;
     }
 
     public void delete(AdPricesystemForm adPricesystemForm){

@@ -5,6 +5,7 @@ import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,6 +16,6 @@ import org.springframework.data.domain.Pageable;
 @Mapper
 public interface DepotShopMapper extends MyMapper<DepotShop,String> {
 
-    Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotShopQuery);
+    Page<DepotShopDto> findPage(Pageable pageable,@Param("p") DepotQuery depotQuery);
 
 }

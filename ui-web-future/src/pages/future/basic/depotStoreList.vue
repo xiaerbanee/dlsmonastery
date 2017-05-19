@@ -9,7 +9,9 @@
       </el-row>
       <el-dialog title="过滤" v-model="formVisible"  size="tiny" class="search-form">
         <el-form :model="formData">
-
+          <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+            <el-input v-model="formData.name" auto-complete="off"></el-input>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">过滤</el-button>
@@ -27,7 +29,6 @@
           <template scope="scope">
             <el-button size="small"  v-permit="'crm:expressCompany:edit'" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
             <el-button size="small"  v-permit="'crm:expressCompany:edit'" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
-
           </template>
         </el-table-column>
       </el-table>
@@ -43,7 +44,9 @@
         formData:{
           page:0,
           size:25,
+          name:"",
         },formLabel:{
+          name:{label:"名称"},
         },
         formProperty:{},
         formLabelWidth: '120px',

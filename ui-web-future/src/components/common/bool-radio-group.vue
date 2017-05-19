@@ -20,7 +20,11 @@
         return true;
       },setValue(val) {
         if(util.isNotBlank(val)){
-          this.innerBool=parseInt(val);
+            if(val==true){
+              this.innerBool=1
+            }else if(val==false){
+              this.innerBool=0
+            }
         }
       }
     },created () {

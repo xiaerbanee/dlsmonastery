@@ -60,8 +60,35 @@ public class DepotShopForm extends DataForm<DepotShop>{
     private Integer deskSingleNum=0;
     //展柜数量
     private Integer cabinetNum=0;
+    private String townId;
+    private String townName;
+    private String depotName;
 
     private List<String> townTypeList=Lists.newArrayList();
+
+    public String getTownName() {
+        return townName;
+    }
+
+    public void setTownName(String townName) {
+        this.townName = townName;
+    }
+
+    public String getTownId() {
+        return townId;
+    }
+
+    public void setTownId(String townId) {
+        this.townId = townId;
+    }
+
+    public String getDepotName() {
+        return depotName;
+    }
+
+    public void setDepotName(String depotName) {
+        this.depotName = depotName;
+    }
 
     public List<String> getTownTypeList() {
         return townTypeList;

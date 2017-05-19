@@ -120,7 +120,6 @@
         where t1.depot_shop_id=t2.id
         and t1.enabled=1
         and t2.enabled=1
-
         <if test="p.clientIsNull != null">
             <if test="p.clientIsNull">
                 and t1.client_id is NULL
