@@ -33,7 +33,7 @@ public class DemoPhoneController {
         return null;
     }
 
-    @RequestMapping(value = "findForm")
+    @RequestMapping(value = "getFormProperty")
     public String findOne(DemoPhone demoPhone){
         return null;
     }

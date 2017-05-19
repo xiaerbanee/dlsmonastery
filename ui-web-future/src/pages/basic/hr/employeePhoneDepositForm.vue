@@ -97,7 +97,7 @@
           this.formProperty=response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/basic/hr/employeePhoneDeposit/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/hr/employeePhoneDeposit/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
             if(response.data.depot!=null){
                 this.depots=new Array(response.data.depot)

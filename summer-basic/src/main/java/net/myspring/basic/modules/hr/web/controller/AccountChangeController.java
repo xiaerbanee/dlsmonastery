@@ -42,8 +42,8 @@ public class AccountChangeController {
     }
 
     @RequestMapping(value = "findData")
-    public AccountChangeForm findForm(AccountChangeQuery accountChangeQuery){
-        AccountChangeForm accountChangeForm=accountChangeService.findForm(accountChangeQuery);
+    public AccountChangeForm getFormProperty(AccountChangeQuery accountChangeQuery){
+        AccountChangeForm accountChangeForm=accountChangeService.getFormProperty(accountChangeQuery);
         accountChangeForm.setTypeList(AccountChangeTypeEnum.getList());
         accountChangeForm.setPositionList(positionService.findAll());
         return accountChangeForm;

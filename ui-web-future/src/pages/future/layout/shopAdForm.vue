@@ -119,7 +119,7 @@
         this.fileList = fileList;
       }
     },created(){
-      axios.get('/api/ws/future/layout/shopAd/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/layout/shopAd/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         if(response.data.specialArea ==true){
             this.inputForm.specialArea = 1;

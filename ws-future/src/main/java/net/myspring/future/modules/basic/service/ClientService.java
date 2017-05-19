@@ -72,7 +72,7 @@ public class ClientService {
         return client;
     }
 
-    public ClientForm findForm(ClientForm clientForm){
+    public ClientForm getFormProperty(ClientForm clientForm){
         if(!clientForm.isCreate()){
             Client client=clientMapper.findOne(clientForm.getId());
             clientForm= BeanUtil.map(client,ClientForm.class);

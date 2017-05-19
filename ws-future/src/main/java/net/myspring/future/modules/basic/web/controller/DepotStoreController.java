@@ -33,9 +33,9 @@ public class DepotStoreController {
         return page;
     }
 
-    @RequestMapping(value = "findForm")
-    public DepotStoreForm findForm(DepotStoreForm depotStoreForm){
-        depotStoreForm=depotStoreService.findForm(depotStoreForm);
+    @RequestMapping(value = "getFormProperty")
+    public DepotStoreForm getFormProperty(DepotStoreForm depotStoreForm){
+        depotStoreForm=depotStoreService.getFormProperty(depotStoreForm);
         depotStoreForm.setDepotStoreTypeList(DepotStoreTypeEnum.getList());
         return depotStoreForm;
     }

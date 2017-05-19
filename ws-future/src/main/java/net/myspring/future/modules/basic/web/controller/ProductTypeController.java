@@ -48,9 +48,9 @@ public class ProductTypeController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findForm")
-    public ProductTypeForm findForm(ProductTypeForm productTypeForm){
-        productTypeForm = productTypeService.findForm(productTypeForm);
+    @RequestMapping(value = "getFormProperty")
+    public ProductTypeForm getFormProperty(ProductTypeForm productTypeForm){
+        productTypeForm = productTypeService.getFormProperty(productTypeForm);
         return productTypeForm;
     }
 

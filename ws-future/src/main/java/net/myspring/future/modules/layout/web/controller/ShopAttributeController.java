@@ -26,9 +26,9 @@ public class ShopAttributeController {
         return page;
     }
 
-    @RequestMapping(value = "findForm")
-    public ShopAttributeForm findForm(ShopAttributeForm shopAttributeForm){
-        shopAttributeForm=shopAttributeService.findForm(shopAttributeForm);
+    @RequestMapping(value = "getFormProperty")
+    public ShopAttributeForm getFormProperty(ShopAttributeForm shopAttributeForm){
+        shopAttributeForm=shopAttributeService.getFormProperty(shopAttributeForm);
         return shopAttributeForm;
     }
 

@@ -76,7 +76,7 @@ public class BankService {
         bankMapper.update(bank);
     }
 
-    public BankForm findForm(BankForm bankForm){
+    public BankForm getFormProperty(BankForm bankForm){
         if(!bankForm.isCreate()){
             Bank bank=bankMapper.findOne(bankForm.getId());
             bankForm= BeanUtil.map(bank,BankForm.class);

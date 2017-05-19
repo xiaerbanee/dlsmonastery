@@ -25,7 +25,7 @@ public class BackendModuleService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public BackendModuleForm findForm(BackendModuleForm backendModuleForm) {
+    public BackendModuleForm getFormProperty(BackendModuleForm backendModuleForm) {
         if(!backendModuleForm.isCreate()) {
             BackendModule backendModule =backendModuleMapper.findOne(backendModuleForm.getId());
             backendModuleForm= BeanUtil.map(backendModule,BackendModuleForm.class);

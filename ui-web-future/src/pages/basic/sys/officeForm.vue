@@ -163,7 +163,7 @@
           }
       }
     }, created(){
-      axios.get('/api/basic/sys/office/findForm', {params: {id: this.$route.query.id}}).then((response) => {
+      axios.get('/api/basic/sys/office/getFormProperty', {params: {id: this.$route.query.id}}).then((response) => {
         this.inputForm = response.data;
         if (response.data.parentId != null) {
           this.offices = new Array({id: response.data.parentId, name: response.data.parentName})

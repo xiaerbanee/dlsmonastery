@@ -42,7 +42,7 @@
             </if>
         </select>
 
-    <select id="findForm" resultType="net.myspring.basic.modules.hr.web.form.AccountChangeForm">
+    <select id="getFormProperty" resultType="net.myspring.basic.modules.hr.web.form.AccountChangeForm">
         SELECT t2.id as 'accountId' ,t2.office_id,t2.leader_id,t2.position_id,t3.mobile_phone as 'employee.mobilePhone',t3.idcard as 'employee.idcard',t3.entry_date as 'employee.entryDate',
         t3.bank_number as 'employee.bankNumber',t3.salary as 'employee.salary',t3.regular_date as 'employee.regularDate',t3.leave_date as 'employee.leaveDate'
         from

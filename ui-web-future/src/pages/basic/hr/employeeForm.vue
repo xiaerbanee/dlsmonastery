@@ -203,7 +203,7 @@
         })
       }
     },created(){
-      axios.get('/api/basic/hr/employee/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/hr/employee/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
         var account=response.data.account;
         var employee=response.data;
         if(account.officeId!=null){

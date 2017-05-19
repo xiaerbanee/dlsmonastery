@@ -99,7 +99,7 @@
         this.inputForm.moduleIdStr=modules.join();
       }
     },created(){
-      axios.get('/api/basic/sys/role/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/sys/role/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
         this.treeData =new Array(response.data.treeNode);
         this.checked = response.data.treeNode.checked;

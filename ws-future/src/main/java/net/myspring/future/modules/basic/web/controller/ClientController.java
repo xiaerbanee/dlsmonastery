@@ -34,9 +34,9 @@ public class ClientController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findForm")
+    @RequestMapping(value = "getFormProperty")
     public ClientForm findOne(ClientForm clientForm) {
-        clientForm=clientService.findForm(clientForm);
+        clientForm=clientService.getFormProperty(clientForm);
         return clientForm;
     }
 

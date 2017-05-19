@@ -117,7 +117,7 @@
         })
       }, refreshForm() {
 
-        axios.get('/api/ws/future/crm/storeAllot/findForm', {
+        axios.get('/api/ws/future/crm/storeAllot/getFormProperty', {
           params: {
             id: this.$route.query.id,
             allotType: this.inputForm.allotType,
@@ -127,7 +127,7 @@
           this.inputForm = response.data;
         });
       }, refreshForm() {
-        axios.get('/api/ws/future/crm/storeAllot/findForm', {
+        axios.get('/api/ws/future/crm/storeAllot/getFormProperty', {
           params: {
             id: this.$route.query.id,
             allotType: this.inputForm.allotType,
@@ -138,7 +138,7 @@
         });
       }
     },created(){
-      axios.get('/api/ws/future/crm/storeAllot/findForm', {params: {id: this.$route.query.id}}).then((response) => {
+      axios.get('/api/ws/future/crm/storeAllot/getFormProperty', {params: {id: this.$route.query.id}}).then((response) => {
         this.inputForm = response.data;
 
       });

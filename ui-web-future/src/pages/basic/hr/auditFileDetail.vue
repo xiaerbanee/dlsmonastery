@@ -96,7 +96,7 @@
         })
       }
     },created(){
-        axios.get('/api/basic/hr/auditFile/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/hr/auditFile/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           if(this.inputForm.attachment != null) {
              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{

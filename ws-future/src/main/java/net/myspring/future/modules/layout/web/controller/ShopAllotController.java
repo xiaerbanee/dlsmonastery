@@ -82,9 +82,9 @@ public class ShopAllotController {
 
     }
 
-    @RequestMapping(value="findForm")
-    public ShopAllotForm findForm(ShopAllotForm shopAllotForm ) {
-        ShopAllotForm result = shopAllotService.findForm(shopAllotForm);
+    @RequestMapping(value="getFormProperty")
+    public ShopAllotForm getFormProperty(ShopAllotForm shopAllotForm ) {
+        ShopAllotForm result = shopAllotService.getFormProperty(shopAllotForm);
 
         return result;
     }

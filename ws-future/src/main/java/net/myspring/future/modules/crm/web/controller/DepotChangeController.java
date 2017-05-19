@@ -19,7 +19,7 @@ public class DepotChangeController {
         return null;
     }
 
-    @RequestMapping(value = "findForm")
+    @RequestMapping(value = "getFormProperty")
     public String findOne(String id){
         return null;
     }

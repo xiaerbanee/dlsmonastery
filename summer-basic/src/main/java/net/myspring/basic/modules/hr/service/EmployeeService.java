@@ -34,7 +34,7 @@ public class EmployeeService {
         return employee;
     }
 
-    public EmployeeForm findForm(EmployeeForm employeeForm){
+    public EmployeeForm getFormProperty(EmployeeForm employeeForm){
         if(!employeeForm.isCreate()){
             Employee employee=employeeMapper.findOne(employeeForm.getId());
             employeeForm= BeanUtil.map(employee,EmployeeForm.class);

@@ -61,7 +61,7 @@ public class MenuService {
         return menu;
     }
 
-    public MenuForm findForm(MenuForm menuForm) {
+    public MenuForm getFormProperty(MenuForm menuForm) {
         if (!menuForm.isCreate()) {
             Menu menu = findOne(menuForm.getId());
             if (menu != null) {

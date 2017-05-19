@@ -51,9 +51,9 @@ public class ExpressOrderController {
 
     }
 
-    @RequestMapping(value = "findForm")
-    public ExpressOrderForm findForm(ExpressOrderForm expressOrderForm){
-        ExpressOrderForm result = expressOrderService.findForm(expressOrderForm);
+    @RequestMapping(value = "getFormProperty")
+    public ExpressOrderForm getFormProperty(ExpressOrderForm expressOrderForm){
+        ExpressOrderForm result = expressOrderService.getFormProperty(expressOrderForm);
         return result;
     }
 

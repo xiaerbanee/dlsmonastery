@@ -42,7 +42,7 @@ public class OfficeRuleService {
         return officeRuleDtoList;
     }
 
-    public OfficeRuleForm findForm(OfficeRuleForm officeRuleForm) {
+    public OfficeRuleForm getFormProperty(OfficeRuleForm officeRuleForm) {
         if(!officeRuleForm.isCreate()){
             OfficeRule officeRule = officeRuleMapper.findOne(officeRuleForm.getId());
             officeRuleForm= BeanUtil.map(officeRule,OfficeRuleForm.class);

@@ -48,7 +48,7 @@ public class DutyRestService {
         return dutyRest;
     }
 
-    public DutyRestForm findForm(DutyRestForm dutyRestForm) {
+    public DutyRestForm getFormProperty(DutyRestForm dutyRestForm) {
         if(!dutyRestForm.isCreate()){
             DutyRest dutyRest =findOne(dutyRestForm.getId());
             dutyRestForm= BeanUtil.map(dutyRest,DutyRestForm.class);

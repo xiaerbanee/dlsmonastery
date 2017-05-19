@@ -34,7 +34,7 @@ public class ShopAdTypeService {
         return shopAdType;
     }
 
-    public ShopAdTypeForm findForm(ShopAdTypeForm shopAdTypeForm){
+    public ShopAdTypeForm getFormProperty(ShopAdTypeForm shopAdTypeForm){
         if(!shopAdTypeForm.isCreate()){
             ShopAdType shopAdType=shopAdTypeMapper.findOne(shopAdTypeForm.getId());
             shopAdTypeForm=BeanUtil.map(shopAdType,ShopAdTypeForm.class);

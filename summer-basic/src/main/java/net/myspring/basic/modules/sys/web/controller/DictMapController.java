@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.domain.DictMap;
+import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.web.form.DictMapForm;
 import net.myspring.basic.modules.sys.web.query.DictMapQuery;
@@ -40,9 +41,8 @@ public class DictMapController {
         return page;
     }
 
-    @RequestMapping(value = "findForm")
-    public DictMapForm findForm(DictMapForm dictMapForm) {
-        dictMapForm=dictMapService.findForm(dictMapForm);
+    @RequestMapping(value = "getFormProperty")
+    public DictMapForm getFormProperty(DictMapForm dictMapForm) {
         dictMapForm.setCategoryList(dictMapService.findDistinctCategory());
         return dictMapForm;
     }
@@ -73,5 +73,11 @@ public class DictMapController {
     public  DictMapDto findByName(String name){
         return dictMapService.findByName(name);
     }
+
+    @RequestMapping(value = "findOne")
+    public DictMapDto findOne(String id){
+        return dictMapService.findOne(id);
+    }
+
 
 }

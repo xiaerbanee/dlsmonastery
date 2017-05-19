@@ -65,9 +65,9 @@ public class  AdGoodsOrderController {
         return null;
     }
 
-    @RequestMapping(value = "findForm", method = RequestMethod.GET)
-    public AdGoodsOrderForm findForm(AdGoodsOrderForm adGoodsOrderForm) {
-        adGoodsOrderForm = adGoodsOrderService.findForm(adGoodsOrderForm);
+    @RequestMapping(value = "getFormProperty", method = RequestMethod.GET)
+    public AdGoodsOrderForm getFormProperty(AdGoodsOrderForm adGoodsOrderForm) {
+        adGoodsOrderForm = adGoodsOrderService.getFormProperty(adGoodsOrderForm);
         return adGoodsOrderForm;
     }
 

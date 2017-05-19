@@ -134,7 +134,7 @@ public class ShopAdService {
         return shopAd;
     }
 
-    public ShopAdForm findForm(ShopAdForm shopAdForm){
+    public ShopAdForm getFormProperty(ShopAdForm shopAdForm){
         if(!shopAdForm.isCreate()){
             ShopAd shopAd = shopAdMapper.findOne(shopAdForm.getId());
             shopAdForm = BeanUtil.map(shopAd,ShopAdForm.class);

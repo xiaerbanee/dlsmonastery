@@ -121,7 +121,7 @@
         })
       }
     },created(){
-      axios.get('/api/basic/hr/account/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/basic/hr/account/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         this.formProperty.positionDtoList = response.data.positionDtoList;
         this.inputForm.viewReport = response.data.viewReport?1:0;

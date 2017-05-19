@@ -39,9 +39,9 @@ public class PositionController {
         return page;
     }
 
-    @RequestMapping(value = "findForm")
-    public PositionForm findForm(PositionForm positionForm) {
-        positionForm= positionService.findForm(positionForm);
+    @RequestMapping(value = "getFormProperty")
+    public PositionForm getFormProperty(PositionForm positionForm) {
+        positionForm= positionService.getFormProperty(positionForm);
         positionForm.setRoleList(roleService.findAll());
         return positionForm;
     }

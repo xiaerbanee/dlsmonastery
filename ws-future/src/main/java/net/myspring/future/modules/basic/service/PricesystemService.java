@@ -110,7 +110,7 @@ public class PricesystemService {
         return pricesystem;
     }
 
-    public PricesystemForm findForm(PricesystemForm pricesystemForm) {
+    public PricesystemForm getFormProperty(PricesystemForm pricesystemForm) {
         if(!pricesystemForm.isCreate()){
             Pricesystem pricesystem = pricesystemMapper.findOne(pricesystemForm.getId());
             pricesystemForm=BeanUtil.map(pricesystem, PricesystemForm.class);

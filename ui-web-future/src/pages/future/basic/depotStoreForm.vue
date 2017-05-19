@@ -128,7 +128,7 @@
         })
       }
     },created(){
-      axios.get('/api/ws/future/basic/depotStore/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/basic/depotStore/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         if(!response.data.depotForm){
             this.inputForm.depotForm={};

@@ -2,7 +2,9 @@ package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.HashBiMap;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.modules.sys.domain.DictEnum;
 import net.myspring.basic.modules.sys.domain.DictMap;
+import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.basic.modules.sys.dto.DictMapDto;
 import net.myspring.basic.modules.sys.web.form.DictMapForm;
 import net.myspring.basic.modules.sys.web.query.DictMapQuery;
@@ -26,15 +28,12 @@ public class DictMapService {
     private CacheUtils cacheUtils;
 
 
-    public DictMapForm findForm(DictMapForm dictMapForm){
-        if(!dictMapForm.isCreate()){
-            DictMap dictMap= dictMapMapper.findOne(dictMapForm.getId());
-            dictMapForm = BeanUtil.map(dictMap, DictMapForm.class);
-            cacheUtils.initCacheInput(dictMapForm);
-        }
-        return dictMapForm;
+    public DictMapDto findOne(String id) {
+        DictMap dictMap= dictMapMapper.findOne(id);
+        DictMapDto dictMapDto= BeanUtil.map(dictMap,DictMapDto.class);
+        cacheUtils.initCacheInput(dictMapDto);
+        return dictMapDto;
     }
-
     public List<String> findDistinctCategory(){
         return dictMapMapper.findDistinctCategory();
     }

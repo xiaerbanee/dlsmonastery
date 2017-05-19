@@ -49,7 +49,7 @@ public class DemoPhoneTypeService {
         return demoPhoneType;
     }
 
-    public DemoPhoneTypeForm findForm(DemoPhoneTypeForm demoPhoneTypeForm){
+    public DemoPhoneTypeForm getFormProperty(DemoPhoneTypeForm demoPhoneTypeForm){
         List<OfficeDto> areaList = officeClient.findByOfficeRuleName("办事处");
         List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = demoPhoneTypeOfficeMapper.findByDemoPhoneTypeId(demoPhoneTypeForm.getId());
         List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtos= BeanUtil.map(demoPhoneTypeOfficeList,DemoPhoneTypeOfficeDto.class);

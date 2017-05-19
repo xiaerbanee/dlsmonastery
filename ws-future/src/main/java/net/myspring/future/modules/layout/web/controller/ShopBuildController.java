@@ -71,9 +71,9 @@ public class ShopBuildController {
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
-    @RequestMapping(value = "findForm")
-    public ShopBuildForm findForm(ShopBuildForm shopBuildForm) {
-        return shopBuildService.findForm(shopBuildForm);
+    @RequestMapping(value = "getFormProperty")
+    public ShopBuildForm getFormProperty(ShopBuildForm shopBuildForm) {
+        return shopBuildService.getFormProperty(shopBuildForm);
     }
 
     @RequestMapping(value = "detail")

@@ -87,7 +87,7 @@
           })
         }
       },created(){
-        axios.get('/api/basic/sys/permission/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/basic/sys/permission/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
           if(response.data.roleIdList !=null){
             let roleList=new Array();

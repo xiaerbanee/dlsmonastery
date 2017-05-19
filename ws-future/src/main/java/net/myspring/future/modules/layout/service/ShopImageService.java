@@ -35,7 +35,7 @@ public class ShopImageService {
         return page;
     }
 
-    public ShopImageForm findForm(ShopImageForm shopImageForm){
+    public ShopImageForm getFormProperty(ShopImageForm shopImageForm){
         if(!shopImageForm.isCreate()){
             ShopImage shopImage=shopImageMapper.findOne(shopImageForm.getId());
             shopImageForm = BeanUtil.map(shopImage,ShopImageForm.class);

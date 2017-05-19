@@ -98,7 +98,7 @@
           });
         }
       },findOne(){
-        axios.get('/api/ws/future/crm/demoPhoneType/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/demoPhoneType/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
           this.inputForm.demoPhoneTypeOfficeList=response.data.demoPhoneTypeOfficeList;
           this.inputForm.productTypeIdList=util.getIdList(response.data.productTypeList)

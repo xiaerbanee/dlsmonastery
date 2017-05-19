@@ -49,7 +49,7 @@ public class PriceChangeService {
         return priceChangeMapper.finAllByEnabled(uploadEndDate);
     }
 
-    public PriceChangeForm findForm(PriceChangeForm priceChangeForm){
+    public PriceChangeForm getFormProperty(PriceChangeForm priceChangeForm){
         if(priceChangeForm.isCreate()){
             return new PriceChangeForm();
         }

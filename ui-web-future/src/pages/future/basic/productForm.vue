@@ -135,7 +135,7 @@
         }
       }
     },created(){
-        axios.get('/api/ws/future/basic/product/findForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/basic/product/getFormProperty',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           this.inputForm.hasIme = response.data.hasIme?1:0;
           this.inputForm.allowOrder = response.data.allowOrder?1:0;

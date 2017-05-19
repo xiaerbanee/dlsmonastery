@@ -33,7 +33,7 @@ public class ExpressCompanyService {
         return expressCompany;
     }
 
-    public ExpressCompanyForm findForm(ExpressCompanyForm expressCompanyForm){
+    public ExpressCompanyForm getFormProperty(ExpressCompanyForm expressCompanyForm){
         if(!expressCompanyForm.isCreate()){
             ExpressCompany expressCompany=expressCompanyMapper.findOne(expressCompanyForm.getId());
             expressCompanyForm=BeanUtil.map(expressCompany,ExpressCompanyForm.class);

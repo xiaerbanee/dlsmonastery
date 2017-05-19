@@ -40,9 +40,9 @@ public class PriceChangeImeController {
     }
 
 
-    @RequestMapping(value = "findForm" ,method = RequestMethod.GET)
+    @RequestMapping(value = "getFormProperty" ,method = RequestMethod.GET)
     public PriceChangeImeForm detail(PriceChangeImeForm priceChangeImeForm){
-        return priceChangeImeService.findForm(priceChangeImeForm);
+        return priceChangeImeService.getFormProperty(priceChangeImeForm);
     }
 
 

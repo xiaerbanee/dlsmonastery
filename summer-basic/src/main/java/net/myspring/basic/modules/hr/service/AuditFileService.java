@@ -47,7 +47,7 @@ public class AuditFileService {
         return auditFile;
     }
 
-    public AuditFileForm findForm(AuditFileForm auditFileForm) {
+    public AuditFileForm getFormProperty(AuditFileForm auditFileForm) {
         if (!auditFileForm.isCreate()) {
             AuditFile auditFile = auditFileMapper.findOne(auditFileForm.getId());
             auditFileForm = BeanUtil.map(auditFile, AuditFileForm.class);

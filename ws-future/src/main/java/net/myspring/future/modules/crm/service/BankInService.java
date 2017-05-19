@@ -68,7 +68,7 @@ public class BankInService {
 
     }
 
-    public BankInForm findForm(BankInForm bankInForm) {
+    public BankInForm getFormProperty(BankInForm bankInForm) {
         BankIn bankIn=bankInMapper.findOne(bankInForm.getId());
         BankInForm result = BeanUtil.map(bankIn, BankInForm.class);
 

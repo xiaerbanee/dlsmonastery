@@ -60,7 +60,7 @@ public class ShopBuildService {
         return page;
     }
 
-    public ShopBuildForm findForm(ShopBuildForm shopBuildForm){
+    public ShopBuildForm getFormProperty(ShopBuildForm shopBuildForm){
         if(!shopBuildForm.isCreate()){
             ShopBuild shopBuild=shopBuildMapper.findOne(shopBuildForm.getId());
             shopBuildForm = BeanUtil.map(shopBuild,ShopBuildForm.class);

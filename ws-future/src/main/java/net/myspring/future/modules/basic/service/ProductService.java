@@ -140,7 +140,7 @@ public class ProductService {
         return product;
     }
 
-    public ProductForm findForm(ProductForm productForm){
+    public ProductForm getFormProperty(ProductForm productForm){
         if(!productForm.isCreate()){
             Product product=productMapper.findOne(productForm.getId());
             productForm=BeanUtil.map(product,ProductForm.class);

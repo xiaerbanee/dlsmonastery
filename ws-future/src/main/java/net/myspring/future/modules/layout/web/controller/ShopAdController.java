@@ -48,9 +48,9 @@ public class ShopAdController {
         return new RestResponse("删除成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findForm")
-    public ShopAdForm findForm(ShopAdForm shopAdForm) {
-        return shopAdService.findForm(shopAdForm);
+    @RequestMapping(value = "getFormProperty")
+    public ShopAdForm getFormProperty(ShopAdForm shopAdForm) {
+        return shopAdService.getFormProperty(shopAdForm);
     }
 
     @RequestMapping(value = "audit")

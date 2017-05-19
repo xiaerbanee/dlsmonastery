@@ -27,7 +27,7 @@ public class OfficeChangeService {
         return officeChange;
     }
 
-    public OfficeChangeForm findForm(OfficeChangeForm officeChangeForm){
+    public OfficeChangeForm getFormProperty(OfficeChangeForm officeChangeForm){
         if(!officeChangeForm.isCreate()){
             OfficeChange officeChange=findOne(officeChangeForm.getId());
             officeChangeForm= BeanUtil.map(officeChange,OfficeChangeForm.class);
