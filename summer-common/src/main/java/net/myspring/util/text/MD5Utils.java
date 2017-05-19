@@ -1,4 +1,4 @@
-package net.myspring.tool.common.utils;
+package net.myspring.util.text;
 
 import java.io.IOException;
 import java.io.InputStream;

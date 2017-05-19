@@ -1,5 +1,6 @@
 package net.myspring.tool.common.utils;
 import com.google.common.collect.Maps;
+import net.myspring.util.text.MD5Utils;
 import org.springframework.util.Base64Utils;
 
 import java.util.Map;
