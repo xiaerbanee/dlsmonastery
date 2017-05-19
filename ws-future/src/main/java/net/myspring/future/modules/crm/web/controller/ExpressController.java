@@ -3,7 +3,7 @@ package net.myspring.future.modules.crm.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.ExpressOrderExtendTypeEnum;
+import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.modules.crm.dto.ExpressDto;
 import net.myspring.future.modules.crm.service.ExpressService;
 import net.myspring.future.modules.crm.web.form.ExpressForm;
@@ -31,7 +31,7 @@ public class ExpressController {
     @RequestMapping(value = "getQuery")
     public ExpressQuery getQuery() {
         ExpressQuery result = new ExpressQuery();
-        result.setExpressOrderExtendTypeList(ExpressOrderExtendTypeEnum.getList());
+        result.setExpressOrderExtendTypeList(ExpressOrderTypeEnum.getList());
         return result;
     }
 

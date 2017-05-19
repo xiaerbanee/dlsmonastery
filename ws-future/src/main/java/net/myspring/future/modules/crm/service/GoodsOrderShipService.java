@@ -8,7 +8,7 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.ExpressOrderExtendTypeEnum;
+import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;

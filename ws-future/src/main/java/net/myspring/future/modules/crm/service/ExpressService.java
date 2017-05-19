@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
 import net.myspring.common.exception.ServiceException;
-import net.myspring.future.common.enums.ExpressOrderExtendTypeEnum;
+import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.JsonBuilder;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -166,7 +166,7 @@ public class ExpressService {
             expressOrder.setContator(toDepot.getContator());
             expressOrder.setMobilePhone(toDepot.getMobilePhone());
             expressOrder.setAddress(toDepot.getAddress());
-            expressOrder.setExtendType(ExpressOrderExtendTypeEnum.手机订单.name());
+            expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
             expressOrder.setPrintDate(LocalDate.now());
             expressOrder.setExpressCompanyId(expressCompanyService.getDefaultExpressCompanyId());
         } else {
