@@ -51,5 +51,5 @@ public interface DepotStoreMapper extends BaseMapper<DepotStore,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<DepotStore> findByIds(List<String> ids);
 
-    Page<DepotStoreDto> findPage(Pageable pageable, DepotStoreQuery depotShopQuery);
+    Page<DepotStoreDto> findPage(Pageable pageable,@Param("p") DepotStoreQuery depotShopQuery);
 }

@@ -4,8 +4,8 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item label="选择客户" prop="clientId">
-          <el-select v-model="inputForm.clientId" filterable>
-            <el-option v-for="item in clientList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select v-model="inputForm.clientId"  filterable remote  :remote-method="remoteClient" :loading="remoteLoading"  :clearable=true>
+            <el-option v-for="item in clientList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
@@ -24,16 +24,19 @@
           <el-input v-model="inputForm.mobilePhone" />
         </el-form-item>
         <el-form-item label="地址" prop="address">
-          <district-select v-model="inputForm.address" />
+          <el-input v-model="inputForm.address" />
+        </el-form-item>
+        <el-form-item label="地区" prop="districtId">
+          <district-select v-model="inputForm.districtId"></district-select>
         </el-form-item>
         <el-form-item label="价格体系" prop="pricesystemId">
           <el-select v-model="inputForm.pricesystemId" filterable>
-            <el-option v-for="item in pricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.pricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="价格体系" prop="chainId">
+        <el-form-item label="连锁体系" prop="chainId">
           <el-select v-model="inputForm.chainId" filterable>
-            <el-option v-for="item in chainList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.chainList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="额度" prop="credit">
@@ -41,13 +44,11 @@
         </el-form-item>
         <el-form-item label="物料价格体系" prop="adPricesystemId">
           <el-select v-model="inputForm.adPricesystemId" filterable>
-            <el-option v-for="item in adPricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.adPricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="快递公司" prop="expressCompanyId">
-          <el-select v-model="inputForm.expressCompanyId" filterable>
-            <el-option v-for="item in expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <express-company-select v-model="inputForm.expressCompanyId"></express-company-select>
         </el-form-item>
         <el-form-item label="是否打印价格" prop="printPrice">
           <bool-radio-group v-model="inputForm.printPrice"></bool-radio-group>
@@ -67,9 +68,6 @@
         <el-form-item label="是否隐藏" prop="isHidden">
           <bool-radio-group v-model="inputForm.isHidden"></bool-radio-group>
         </el-form-item>
-        <el-form-item label="是否是广告仓库" prop="popShop">
-          <bool-radio-group v-model="inputForm.popShop"></bool-radio-group>
-        </el-form-item>
         <el-form-item label="公司分组" prop="companyGroup">
           <el-input v-model="inputForm.companyGroup" />
         </el-form-item>
@@ -86,15 +84,23 @@
 <script>
   import officeSelect from 'components/basic/office-select'
   import districtSelect from 'components/general/district-select'
+  import boolRadioGroup from 'components/common/bool-radio-group'
+  import expressCompanySelect from 'components/future/express-company-select'
   export default {
-    components:{officeSelect,districtSelect},
+    components:{officeSelect,districtSelect,boolRadioGroup,expressCompanySelect},
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{},
+        adPricesystemList:[],
+        remoteLoading:false,
+        clientList:[],
+        chainList:[],
+        pricesystemList:[],
         submitData:{
           id:'',
+          districtId:"",
           clientId:"",
           code:"",
           depotShopId:"",
@@ -109,9 +115,9 @@
           chainId:"",
           adPricesystemId:"",
           expressCompanyId:"",
-          printPrice:"",
+          printPrice:false,
           printType:"",
-          rebate:"",
+          rebate:false,
           taxName:"",
           adShop:false,
           isHidden:false,
@@ -139,6 +145,7 @@
           isHidden:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           popShop:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           companyGroup:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          districtId:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
         }
       }
     },
@@ -164,6 +171,14 @@
             this.submitDisabled = false;
           }
         })
+      },remoteClient(query){
+        if (query !== '') {
+          this.remoteLoading = true;
+          axios.get('/api/ws/future/basic/client/search',{params:{name:query}}).then((response)=>{
+            this.clientList = response.data;
+            this.remoteLoading = false;
+          });
+        }
       }
     },created(){
       axios.get('/api/ws/future/basic/depotShop/findDepotForm',{params: {id:this.$route.query.id}}).then((response)=>{

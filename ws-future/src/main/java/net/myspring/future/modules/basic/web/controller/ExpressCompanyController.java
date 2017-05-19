@@ -67,7 +67,6 @@ public class ExpressCompanyController {
 
     @RequestMapping(value = "search")
     public List<ExpressCompanyDto> search(String key){
-
         return  expressCompanyService.findByNameLike(key);
     }
 

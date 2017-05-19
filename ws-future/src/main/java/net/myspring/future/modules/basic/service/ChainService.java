@@ -3,7 +3,9 @@ package net.myspring.future.modules.basic.service;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.dto.ChainDto;
+import net.myspring.future.modules.basic.dto.PricesystemDto;
 import net.myspring.future.modules.basic.mapper.ChainMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.DepotShopMapper;
@@ -32,6 +34,12 @@ public class ChainService {
     private DepotShopMapper depotShopMapper;
     @Autowired
     private CacheUtils cacheUtils;
+
+    public List<ChainDto> findAllEnabled(){
+        List<Chain> chainList=chainMapper.findAllEnabled();
+        List<ChainDto> chainDtoList= BeanUtil.map(chainList,ChainDto.class);
+        return chainDtoList;
+    }
 
     public Chain findOne(String id) {
         Chain chain = chainMapper.findOne(id);

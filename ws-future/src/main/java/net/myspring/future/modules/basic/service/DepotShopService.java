@@ -61,14 +61,18 @@ public class DepotShopService {
         if(depotShopForm.isCreate()) {
             depotShop = BeanUtil.map(depotShopForm,DepotShop.class);
             depotShopMapper.save(depotShop);
+            Depot depot=new Depot();
+            depot.setName(depotShopForm.getDepotName());
+            depot.setNamePinyin(StringUtils.getFirstSpell(depotShopForm.getDepotName()));
+            depot.setDepotShopId(depotShop.getId());
+            depotMapper.save(depot);
+            depotShop.setDepotId(depot.getId());
+            depotShopMapper.update(depotShop);
         } else {
             depotShop = depotShopMapper.findOne(depotShopForm.getId());
             ReflectionUtil.copyProperties(depotShopForm,depotShop);
-            depotShopMapper.save(depotShop);
+            depotShopMapper.update(depotShop);
         }
-        Depot depot=depotMapper.findOne(depotShopForm.getDepotId());
-        depot.setDepotShopId(depotShop.getId());
-        depotMapper.update(depot);
         return depotShop;
     }
 
@@ -78,6 +82,11 @@ public class DepotShopService {
         if(depotForm.isCreate()){
             depot=BeanUtil.map(depotForm,Depot.class);
             depotMapper.save(depot);
+            DepotShop depotShop=new DepotShop();
+            depotShop.setDepotId(depot.getId());
+            depotShopMapper.save(depotShop);
+            depot.setDepotShopId(depotShop.getId());
+            depotMapper.update(depot);
         }else {
             depot=depotMapper.findOne(depotForm.getId());
             ReflectionUtil.copyProperties(depotForm,depot);

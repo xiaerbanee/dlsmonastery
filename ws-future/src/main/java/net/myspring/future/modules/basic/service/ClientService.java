@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -18,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -81,5 +84,14 @@ public class ClientService {
     public String getClientName(String depotId) {
         Client c = clientMapper.findByDepotId(depotId);
         return c.getName();
+    }
+
+    public List<ClientDto> findByNameLike(String name){
+        List<ClientDto> clientDtoList= Lists.newArrayList();
+        if(StringUtils.isNotBlank(name)){
+            List<Client> clientList=clientMapper.findByNameLike(name);
+            clientDtoList=BeanUtil.map(clientList,ClientDto.class);
+        }
+        return clientDtoList;
     }
 }

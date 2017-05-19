@@ -23,6 +23,12 @@
     </select>
 
 
+    <select id="findByNameLike" resultType="Client">
+        SELECT t1.*
+        FROM crm_client t1
+        where t1.enabled=1
+        and t1.name like concat('%',#{name},'%')
+    </select>
 
 
 </mapper>
