@@ -45,10 +45,12 @@ public interface DemoPhoneTypeMapper extends BaseMapper<DemoPhoneType,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL_ENABLED)
     List<DemoPhoneType> findAllEnabled();
 
+    @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
+    List<DemoPhoneType> findByIds(List<String> ids);
+
     List<DemoPhoneType> findAllByApplyEndDate(LocalDate applyEndDate);
 
     Page<DemoPhoneTypeDto> findPage(Pageable pageable, @Param("p")DemoPhoneTypeQuery demoPhoneTypeQuery);
 
-    List<DemoPhoneType> findByIds(List<String> ids);
 
 }

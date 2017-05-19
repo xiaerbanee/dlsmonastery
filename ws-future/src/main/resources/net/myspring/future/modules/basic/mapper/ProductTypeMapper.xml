@@ -17,7 +17,7 @@
         group by t1.id
     </select>
 
-    <select id="findByFilter" resultType="ProductType">
+    <select id="findList" resultType="ProductType">
         SELECT  t1.*
         FROM  crm_product_type t1
         where t1.enabled=1

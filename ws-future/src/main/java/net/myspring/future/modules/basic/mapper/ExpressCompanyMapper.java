@@ -42,14 +42,14 @@ public interface ExpressCompanyMapper extends BaseMapper<ExpressCompany,String> 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ALL_ENABLED)
     List<ExpressCompany> findAllEnabled();
 
+    @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
+    List<ExpressCompany> findByIds(List<String> ids);
 
     Page<ExpressCompanyDto> findPage(Pageable pageable, @Param("p")ExpressCompanyQuery expressCompanyQuery);
 
-    List<ExpressCompany> findByIds(List<String> ids);
-
-    List<ExpressCompany> findByExpressType(String type);
+    List<ExpressCompany> findByExpressType(String expressType);
 
     List<ExpressCompanyDto> findByNameLike(@Param("companyId") String companyId, @Param("name") String name);
 
-    List<ExpressCompanyDto> findDtoListByCompanyIdAndExpressType(@Param("companyId") String companyId, @Param("expressType")  String expressType);
+    List<ExpressCompanyDto> findByCompanyIdAndExpressType(@Param("companyId") String companyId, @Param("expressType")  String expressType);
 }

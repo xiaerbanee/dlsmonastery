@@ -47,7 +47,7 @@ public interface ProductTypeMapper extends BaseMapper<ProductType,String> {
 
     Page<ProductTypeDto> findPage(Pageable pageable, @Param("p") ProductTypeQuery productTypeQuery);
 
-    List<ProductType> findByFilter(@Param("p") Map<String, Object> map);
+    List<ProductType> findList(@Param("p") Map<String, Object> map);
 
     List<ProductType> findByDemoPhoneTypeIds(List<String> dempProductTypeIds);
 

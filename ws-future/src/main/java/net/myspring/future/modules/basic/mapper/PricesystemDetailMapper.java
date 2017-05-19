@@ -25,5 +25,5 @@ public interface PricesystemDetailMapper extends MyMapper<PricesystemDetail,Stri
 
     List<PricesystemDetail> findByPricesystemId(String pricesystemId);
 
-    List<PricesystemDetail> findByDepotId(@Param("depotId") String depotId);
+    List<PricesystemDetail> findByDepotId(String depotId);
 }

@@ -23,14 +23,4 @@
         GROUP BY t1.id
     </select>
 
-    <select id="findByIds" resultType="DemoPhoneType">
-        SELECT t1.*
-        FROM crm_demo_phone_type t1
-        WHERE t1.enabled = 1
-        and t1.id in
-        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
 </mapper>

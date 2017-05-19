@@ -44,6 +44,7 @@ public interface ChainMapper extends BaseMapper<Chain,String> {
 
     Page<ChainDto> findPage(Pageable pageable, @Param("p")ChainQuery chainQuery);
 
+    @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<Chain> findByIds(List<String> ids);
 
     int deleteByChainId(String chainId);

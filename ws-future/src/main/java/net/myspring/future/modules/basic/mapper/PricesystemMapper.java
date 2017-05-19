@@ -46,6 +46,7 @@ public interface PricesystemMapper extends BaseMapper<Pricesystem,String> {
 
     Page<PricesystemDto> findPage(Pageable pageable, @Param("p")PricesystemQuery pricesystemQuery);
 
+    @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<Pricesystem> findByIds(List<String> ids);
 
     List<Pricesystem> findPricesystem();

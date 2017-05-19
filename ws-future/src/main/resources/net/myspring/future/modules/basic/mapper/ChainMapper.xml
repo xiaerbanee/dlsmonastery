@@ -14,16 +14,6 @@
         </if>
     </select>
 
-    <select id="findByIds" resultType="Chain">
-        SELECT t1.id,t1.name
-        FROM crm_chain t1
-        WHERE t1.enabled = 1
-        and t1.id in
-        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
     <delete id="deleteByChainId">
         DELETE FROM crm_account_chain where chain_id = #{chainId}
     </delete>
