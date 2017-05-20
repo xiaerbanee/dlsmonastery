@@ -38,10 +38,6 @@ public class BankService {
     private CacheUtils cacheUtils;
     @Autowired
     private OfficeClient officeClient;
-    @Autowired
-    private CloudClient cloudClient;
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     public List<BankDto> findByAccountId(String accountId){
         List<Bank> banks = bankMapper.findByAccountId(accountId);
