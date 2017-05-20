@@ -113,7 +113,7 @@
         })
       }
     },created(){
-      axios.get('/api/ws/future/layout/adGoodsOrder/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/layout/adGoodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.detailForm = response.data;
         if(response.data.expressOrderDto!=null){
           this.expressOrderForm = response.data.expressOrderDto;

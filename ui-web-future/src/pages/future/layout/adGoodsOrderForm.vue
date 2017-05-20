@@ -124,11 +124,10 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.expressOrder = this.expressOrder;
             util.copyValue(this.inputForm,this.submitData);
             var tempList=new Array();
             for(var index in this.adGoodsOrderDetails){
-              var detail=this.inputForm.adGoodsOrderDetails[index];
+              var detail=this.adGoodsOrderDetails[index];
               if(util.isNotBlank(detail.qty)){
                 tempList.push(detail)
               }
@@ -137,7 +136,7 @@
             this.submitData.expressOrderDto = this.expressOrderDto;
             console.log(this.submitData);
             axios.post('/api/ws/future/layout/adGoodsOrder/save',qs.stringify(this.submitData,{allowDots:true})).then((response)=> {
-              if(!response.data.errors){
+              if(response.data.message){
                 this.$message(response.data.message);
                 if(this.isCreate){
                   form.resetFields();
@@ -163,8 +162,8 @@
         axios.get('/api/ws/future/basic/depot/findById'+'?id=' + this.inputForm.outShopId).then((response)=>{
             console.log(response.data);
           var jointType=response.data.jointType;
-          if(jointType == '代理'){
-              this.adShop = true;
+          if(jointType =='代理'){
+              this.isAdShop = true;
           }
         })
       },searchDetail(){
@@ -196,14 +195,16 @@
       this.totalQty=totalQty;
       this.totalPrice=totalPrice;
     }},created(){
-      axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=> {
+      axios.get('/api/ws/future/layout/adGoodsOrder/findOne',{params:{id:this.$route.query.id}}).then((response)=> {
         this.inputForm =response.data;
-        this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
         this.shopChange();
         if(response.data.expressOrderDto!=null){
           this.expressOrderDto=response.data.expressOrderDto;
         }
-      });
+      })
+      axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=>{
+        this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
+      })
     }
   }
 </script>

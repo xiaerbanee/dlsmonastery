@@ -15,8 +15,8 @@ public interface AdGoodsOrderDetailMapper extends MyMapper<AdGoodsOrderDetail,St
 
     List<AdGoodsOrderDetailDto> findByAdGoodsOrderIds(List<String> adGoodsOrderIds);
 
-    List<AdGoodsOrderDetailDto> findByAdGoodsOrderForEdit(@Param("outGroupIds") List<String> outGroupIds,@Param("adGoodsOrderId") String adGoodsOrderId);
+    List<AdGoodsOrderDetailDto> findByAdGoodsOrderForEdit(@Param("outGroupIdList") List<String> outGroupIdList,@Param("adGoodsOrderId") String adGoodsOrderId);
 
-    List<AdGoodsOrderDetailDto> findByAdGoodsOrderForNew(@Param("outGroupIds") List<String> outGroupIds);
+    List<AdGoodsOrderDetailDto> findByAdGoodsOrderForNew(@Param("outGroupIdList") List<String> outGroupIdList);
 
 }

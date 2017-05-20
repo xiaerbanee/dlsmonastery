@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adGoodsOrder:edit'">{{$t('adGoodsOrderList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.filter')}}</el-button>
-        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="large" class="search-form">
         <el-form :model="formData">
@@ -173,7 +173,7 @@
           this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "detail"}})
         } else if (action == "audit") {
           this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "audit"}})
-        } else if (action == "开单") {
+        } else if (action == "bill") {
           this.$router.push({name: 'adGoodsOrderBill', query: {id: id}})
         } else if (action == "发货") {
           this.$router.push({name: 'adGoodsOrderShip', query: {id: id}})

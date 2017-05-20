@@ -43,12 +43,6 @@ public class  AdGoodsOrderController {
         return adGoodsOrderQuery;
     }
 
-    @RequestMapping(value = "detail")
-    public AdGoodsOrderDto detail(AdGoodsOrderDto adGoodsOrderDto){
-        adGoodsOrderDto = adGoodsOrderService.getAdGoodsOrderDetail(adGoodsOrderDto);
-        return adGoodsOrderDto;
-    }
-
     @RequestMapping(value = "audit")
     public RestResponse audit(AdGoodsOrderForm adGoodsOrderForm) {
         adGoodsOrderService.audit(adGoodsOrderForm);
@@ -61,6 +55,11 @@ public class  AdGoodsOrderController {
 
         map.put("adGoodsOrder", adGoodsOrder);
         return null;
+    }
+
+    @RequestMapping(value = "findOne")
+    public AdGoodsOrderDto findOne(String id){
+        return adGoodsOrderService.findOne(id);
     }
 
     @RequestMapping(value = "getForm", method = RequestMethod.GET)

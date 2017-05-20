@@ -1,6 +1,9 @@
 package net.myspring.future.modules.layout.service;
 
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.layout.domain.ShopImage;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
@@ -12,10 +15,12 @@ import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -28,6 +33,8 @@ public class ShopImageService {
     private DepotMapper depotMapper;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public Page findPage(Pageable pageable, ShopImageQuery shopImageQuery){
         Page<ShopImageDto> page=shopImageMapper.findPage(pageable,shopImageQuery);
@@ -35,12 +42,19 @@ public class ShopImageService {
         return page;
     }
 
-    public ShopImageForm getForm(ShopImageForm shopImageForm){
-        if(!shopImageForm.isCreate()){
-            ShopImage shopImage=shopImageMapper.findOne(shopImageForm.getId());
-            shopImageForm = BeanUtil.map(shopImage,ShopImageForm.class);
-            cacheUtils.initCacheInput(shopImageForm);
+    public ShopImageDto findOne(String id){
+        ShopImageDto shopImageDto = new ShopImageDto();
+        if(id!=null){
+            ShopImage shopImage=shopImageMapper.findOne(id);
+            shopImageDto = BeanUtil.map(shopImage,ShopImageDto.class);
+            cacheUtils.initCacheInput(shopImageDto);
         }
+        return shopImageDto;
+    }
+
+    public ShopImageForm getForm(ShopImageForm shopImageForm){
+        List<String> imageTypeList= Arrays.asList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.name()).getValue().split(","));
+        shopImageForm.setImageTypeList(imageTypeList);
         return shopImageForm;
     }
 

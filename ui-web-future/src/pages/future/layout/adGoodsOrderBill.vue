@@ -9,19 +9,19 @@
               {{inputForm.id}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.billDate')" prop="billDate">
-              <el-date-picker v-model="inputForm.billDate" align="right" :placeholder="$t('adGoodsOrderBill.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <date-picker v-model="inputForm.billDate"></date-picker>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.outShopName')" prop="outShopId">
-              {{inputForm.outShop.name}}
+              {{inputForm.outShopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.shopName')" prop="shopId">
-              {{inputForm.shop.name}}
+              {{inputForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.saleContact')" prop="contator">
-              {{inputForm.expressOrder.contator}}
+              {{inputForm.employeeName}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderBill.address')" prop="address">
-              {{inputForm.expressOrder.address}}
+            <el-form-item :label="$t('adGoodsOrderBill.mobilePhone')" prop="address">
+              {{inputForm.employeePhone}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.summery')" prop="summery">
             </el-form-item>
@@ -35,16 +35,16 @@
             <el-col :span="12">
             </el-col>
             <el-form-item :label="$t('adGoodsOrderBill.contact')" prop="contator">
-              <el-input v-model="inputForm.expressOrder.contator"></el-input>
+              <el-input v-model="expressOrderDto.contator"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.address')" prop="address">
-              <el-input v-model="inputForm.expressOrder.address"></el-input>
+              <el-input v-model="expressOrderDto.address"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.mobilePhone')" prop="mobilePhone">
-              <el-input v-model="inputForm.expressOrder.mobilePhone"></el-input>
+              <el-input v-model="expressOrderDto.mobilePhone"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.expressCompany')" prop="expressCompanyId">
-              <el-select v-model="inputForm.expressOrder.expressCompanyId" clearable  >
+              <el-select v-model="expressOrderDto.expressCompanyId" clearable  >
                 <el-option v-for="item in billFormProperty.expressCompanys":key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -69,9 +69,9 @@
         </el-row>
       </el-form>
       <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adGoodsOrderBill.inputTwoKey')" style="width:200px;"></el-input>
-      <el-table :data="filterAdGoodsOrderDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderBill.loading')" stripe border >
-        <el-table-column  prop="product.code" :label="$t('adGoodsOrderBill.code')" ></el-table-column>
-        <el-table-column  prop="product.name" :label="$t('adGoodsOrderBill.productName')" ></el-table-column>
+      <el-table :data="adGoodsOrderDetails" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderBill.loading')" stripe border >
+        <el-table-column  prop="productCode" :label="$t('adGoodsOrderBill.code')" ></el-table-column>
+        <el-table-column  prop="productName" :label="$t('adGoodsOrderBill.productName')" ></el-table-column>
         <el-table-column prop="stock" :label="$t('adGoodsOrderBill.stock')"></el-table-column>
         <el-table-column prop="confirmQty" :label="$t('adGoodsOrderBill.confirmQty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('adGoodsOrderBill.billQty')" >
@@ -90,8 +90,15 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        filterAdGoodsOrderDetailList:[],
+        adGoodsOrderDetails:[],
         productName:"",
+        expressOrderDto:{
+          id:'',
+          expressCompanyId:'',
+          address:'',
+          contator:'',
+          mobilePhone:'',
+        },
         inputForm:{
           id:this.$route.query.id,
           billDate:"",
@@ -107,7 +114,6 @@
           splitBill:'',
           syn:'',
           billRemarks:'',
-          adGoodsOrderDetailList:[]
         },
         rules: {
 
@@ -157,21 +163,7 @@
            }
          }
          this.filterAdGoodsOrderDetailList = tempList;
-       },getForm(){
-        axios.get('/api/crm/adGoodsOrder/getBillFormProperty',{params:{id:this.$route.query.id}}).then((response)=>{
-          this.billFormProperty=response.data;
-        });
-      },findOne(){
-        axios.get('/api/crm/adGoodsOrder/bill',{params:{id:this.$route.query.id}}).then((response)=>{
-           util.copyValue(response.data,this.inputForm);
-           for(var index in response.data.adGoodsOrderDetailList){
-              response.data.adGoodsOrderDetailList[index].billQty=response.data.adGoodsOrderDetailList[index].confirmQty
-           }
-           this.inputForm.adGoodsOrderDetailList=response.data.adGoodsOrderDetailList;
-           this.getSummery();
-           this.filterAdGoodsOrderDetailList=response.data.adGoodsOrderDetailList;
-        });
-      },getSummery(){
+       },getSummery(){
         let list=this.inputForm.goodsOrderDetailList;
         let totalQty=0;
         let totalPrice=0;
@@ -185,8 +177,15 @@
         this.totalPrice=totalPrice;
       }
     },created(){
-      this.findOne();
-      this.getForm();
+      axios.get('/api/ws/future/layout/adGoodsOrder/findOne',{params:{id:this.$route.query.id}}).then((response)=> {
+        this.inputForm =response.data;
+        if(response.data.expressOrderDto!=null){
+          this.expressOrderDto=response.data.expressOrderDto;
+        }
+      })
+      axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=>{
+        this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
+      })
     }
   }
 </script>
