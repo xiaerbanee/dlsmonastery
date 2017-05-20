@@ -31,8 +31,12 @@
           return;
         }
         this.innerId=val;
+        let idStr=this.innerId;
+        if(this.innerId instanceof Array){
+          idStr=this.innerId.join();
+        }
         this.remoteLoading = true;
-        axios.get('/api/basic/hr/employee/findById?id=' + this.innerId).then((response)=>{
+        axios.get('/api/basic/hr/employee/findByIds?id=' + idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })

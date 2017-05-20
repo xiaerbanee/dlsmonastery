@@ -11,9 +11,11 @@ import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.sys.service.DictEnumService;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,9 +82,8 @@ public class EmployeeController {
     }
 
     @RequestMapping(value = "findById")
-    public List<EmployeeDto> findById(String id) {
-        List<EmployeeDto> employeeDtoList =employeeService.findById(id);
-        return employeeDtoList;
+    public EmployeeDto findOne(String id) {
+        return employeeService.findOne(id);
     }
 
 
@@ -99,4 +100,12 @@ public class EmployeeController {
         map.put("educationsList", dictEnumService.findByCategory(DictEnumCategoryEnum.EDUCATION.toString()));
         return map;
     }
+
+    @RequestMapping(value = "findByIds")
+    public List<EmployeeDto> findByIds(String idStr) {
+        List<String> ids= StringUtils.getSplitList(idStr, CharConstant.COMMA);
+        List<EmployeeDto> employeeDtoList =employeeService.findByIds(ids);
+        return employeeDtoList;
+    }
+
 }

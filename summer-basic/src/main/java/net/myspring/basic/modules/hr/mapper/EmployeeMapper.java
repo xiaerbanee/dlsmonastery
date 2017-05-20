@@ -54,6 +54,7 @@ public interface EmployeeMapper extends BaseMapper<Employee,String> {
 
     List<Employee> findByStatusAndregularDate(@Param("status") String status,@Param("regularDate") LocalDateTime regularDate);
 
-    List<Employee> findById(String id);
+    @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
+    List<Employee> findByIds(List<String> ids);
 
 }

@@ -11,6 +11,7 @@ import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,10 @@ public class EmployeeService {
     private OfficeManager officeManager;
 
 
-    public Employee findOne(String id){
+    public EmployeeDto findOne(String id){
         Employee employee = employeeMapper.findOne(id);
-        return employee;
+        EmployeeDto employeeDto = BeanUtil.map(employee,EmployeeDto.class);
+        return employeeDto;
     }
 
     public EmployeeDto findOne(EmployeeDto employeeDto){
@@ -75,8 +77,8 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public List<EmployeeDto> findById(String id){
-        List<Employee> employees = employeeMapper.findById(id);
+    public List<EmployeeDto> findByIds(List<String> ids){
+        List<Employee> employees = employeeMapper.findByIds(ids);
         List<EmployeeDto> employeeDto= BeanUtil.map(employees,EmployeeDto.class);
         return employeeDto;
     }

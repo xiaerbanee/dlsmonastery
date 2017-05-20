@@ -47,10 +47,9 @@
   export default {
     data() {
       return {
-        pageLoading: false,
-        pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:''
@@ -66,8 +65,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("chainList",this.formData);
-        axios.get('/api/ws/future/basic/chain',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("chainList",this.submitData);
+        axios.get('/api/ws/future/basic/chain',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

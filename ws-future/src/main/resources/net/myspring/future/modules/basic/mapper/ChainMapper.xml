@@ -15,7 +15,7 @@
     </select>
 
     <select id="findDepotIds" resultType="String">
-      select id from crm_chain where chain_id=#{id}
+      select id from crm_depot where chain_id=#{id}
     </select>
 
 </mapper>
