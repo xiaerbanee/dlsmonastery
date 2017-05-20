@@ -26,7 +26,7 @@ public class AdGoodsOrderForm extends DataForm<AdGoodsOrder> {
     private String areaId;
     private BigDecimal amount;
     private String billType;
-    private LocalDate billDate;
+    private LocalDate billDate = LocalDate.now();
     private String billRemarks;
     private String expressOrderId;
 

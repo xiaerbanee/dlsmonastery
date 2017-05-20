@@ -117,7 +117,8 @@ export default {
     stock: "persediaan",
     confirmQty: "确定数",
     billQty: "jumlah",
-    price: "harga"
+    price: "harga",
+    save:"simpan",
   },
   adGoodsOrderDetail: {
     adGoodsOrderDetail: "perincian bahan",
