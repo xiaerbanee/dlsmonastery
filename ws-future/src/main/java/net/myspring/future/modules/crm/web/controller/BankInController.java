@@ -87,7 +87,7 @@ public class BankInController {
         BankInForm  result =bankInService.getForm(bankInForm);
 
         result.setTypeList(BankInTypeEnum.getList());
-        result.setBankDtoList(bankService.findBankDtosByAccountId(RequestUtils.getAccountId()));
+        result.setBankDtoList(bankService.findByAccountId(RequestUtils.getAccountId()));
         return result;
     }
 
