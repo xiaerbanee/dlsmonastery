@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional(readOnly = false)
+@Transactional
 public class AdGoodsOrderService {
 
     @Autowired

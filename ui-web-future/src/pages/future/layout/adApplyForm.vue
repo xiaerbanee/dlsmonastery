@@ -8,10 +8,11 @@
             <el-option v-for="billType in formProperty.billTypes"  :key="billType" :label="billType" :value="billType"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('adApplyForm.shopName')" prop="shopId">
-          <el-select v-model="inputForm.shopId" filterable remote :placeholder="$t('adApplyForm.inputWord')" :remote-method="remoteShop" :loading="remoteLoading" :clearable=true @change="getShopTypeLabel(inputForm.shopId)">
-            <el-option v-for="shop in shops" :key="shop.id" :label="shop.name" :value="shop.id"></el-option>
-          </el-select>
+        <el-form-item  v-if="this.inputForm.billType=='POP'" :label="$t('adApplyForm.shopName')" prop="shopId">
+          <depot-select v-model="inputForm.shopId" category="popShop"></depot-select>
+        </el-form-item>
+        <el-form-item  v-if="this.inputForm.billType=='配件赠品'" :label="$t('adApplyForm.shopName')" prop="shopId">
+          <depot-select v-model="inputForm.shopId" category="directShop"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('adApplyForm.shopType')" prop="shopTypeLabel" v-if="shopTypeLabel">
           {{shopTypeLabel}}
@@ -28,22 +29,26 @@
         <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adApplyForm.inputTowKey')" style="width:200px;margin-right:10px"></el-input>
       </el-row>
       <el-table :data="inputForm.adApplyList"  stripe border>
-        <el-table-column prop="product.code" :label="$t('adApplyForm.productCode')"></el-table-column>
+        <el-table-column prop="code" :label="$t('adApplyForm.productCode')"></el-table-column>
         <el-table-column prop="applyQty" :label="$t('adApplyForm.applyQty')">
           <template scope="scope">
             <el-input v-model="scope.row.applyQty"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="product.name" :label="$t('adApplyForm.productName')"></el-table-column>
-        <el-table-column prop="product.expiryDateRemarks" sortable :label="$t('adApplyForm.expiryDateRemarks')"></el-table-column>
-        <el-table-column prop="product.remarks" sortable :label="$t('adApplyForm.remarks')"></el-table-column>
-        <el-table-column prop="product.price2" :label="$t('adApplyForm.price2')"></el-table-column>
+        <el-table-column prop="name" :label="$t('adApplyForm.productName')"></el-table-column>
+        <el-table-column prop="expiryDateRemarks" sortable :label="$t('adApplyForm.expiryDateRemarks')"></el-table-column>
+        <el-table-column prop="remarks" sortable :label="$t('adApplyForm.remarks')"></el-table-column>
+        <el-table-column prop="price2" :label="$t('adApplyForm.price2')"></el-table-column>
       </el-table>
     </div>
   </div>
 </template>
 <script>
+  import depotSelect from 'components/future/depot-select';
   export default{
+    components:{
+      depotSelect
+    },
     data(){
       return{
         submitDisabled:false,
@@ -114,7 +119,7 @@
         }
       },onchange(){
           this.submitDisabled = true;
-          axios.get('api/crm/adApply/getAdApplyList',{params:{shopId:this.inputForm.shopId,billType:this.inputForm.billType}}).then((response) =>{
+          axios.get('api/ws/future/layout/adApply/getAdApplyList',{params:{billType:this.inputForm.billType}}).then((response) =>{
           this.inputForm.adApplyList = response.data;
           this.submitDisabled = false;
           });
@@ -131,7 +136,7 @@
      }
     },created () {
         this.pageHeight = window.outerHeight -320;
-        axios.get('api/crm/adApply/getForm').then((response) =>{
+        axios.get('api/ws/future/layout/adApply/getForm').then((response) =>{
         this.formProperty.billTypes = response.data.billTypes;
       });
     }

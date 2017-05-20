@@ -14,26 +14,22 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('adApplyList.likeSearch')"></el-input>
+                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.productCodeList.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.productCodeList"  multiple filterable remote :placeholder="$t('adApplyList.inputWord')" :remote-method="getProductList" :loading="remoteLoading" :clearable=true >
-                  <el-option v-for="product in productList" :key="product.id" :label="product.code" :value="product.code"></el-option>
-                </el-select>
+                <el-input v-model="formData.productCode" auto-complete="off" :placeholder="$t('adApplyList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.createdLoginName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.createdLoginName" auto-complete="off" :placeholder="$t('adApplyList.likeSearch')"></el-input>
+                <account-select v-model="formData.createdBy"></account-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('adApplyList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+                <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adApplyList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.isBilled.label" :label-width="formLabelWidth">
-                <el-radio-group v-model="formData.isBilled">
-                  <el-radio v-for="(value,key) in formProperty.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
-                </el-radio-group>
+                <bool-select v-model="formData.isBilled"></bool-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -44,12 +40,12 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adApplyList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="shop.name" :label="$t('adApplyList.shopName')" sortable></el-table-column>
+        <el-table-column prop="shopName" :label="$t('adApplyList.shopName')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('adApplyList.createdDate')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('adApplyList.createdBy')"></el-table-column>
-        <el-table-column prop="product.code" :label="$t('adApplyList.productCode')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('adApplyList.createdBy')"></el-table-column>
+        <el-table-column prop="productCode" :label="$t('adApplyList.productCode')"></el-table-column>
         <el-table-column prop="expiryDateRemarks" :label="$t('adApplyList.expiryDateRemarks')"></el-table-column>
-        <el-table-column prop="product.name" :label="$t('adApplyList.product')"></el-table-column>
+        <el-table-column prop="productName" :label="$t('adApplyList.product')"></el-table-column>
         <el-table-column prop="applyQty" :label="$t('adApplyList.applyQty')"></el-table-column>
         <el-table-column prop="confirmQty" :label="$t('adApplyList.confirmQty')"></el-table-column>
         <el-table-column prop="billedQty" :label="$t('adApplyList.billedQty')"></el-table-column>
@@ -62,20 +58,28 @@
   </div>
 </template>
 <script>
+  import accountSelect from 'components/basic/account-select';
+  import depotSelect from 'components/future/depot-select';
+  import boolSelect from 'components/common/bool-select';
   export default {
+    components:{
+      accountSelect,depotSelect,boolSelect
+    },
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
-          shopName:'',
-          productCodeList:'',
-          createdLoginName:'',
+          shopId:'',
+          productCode:'',
+          createdBy:'',
           createdDate:'',
           productName:'',
           isBilled:''
-        },formLabel:{
+        },
+        formLabel:{
           shopName:{label:this.$t('adApplyList.shopName')},
           productCodeList:{label:this.$t('adApplyList.productCode')},
           createdLoginName:{label:this.$t('adApplyList.createdBy')},
@@ -83,7 +87,8 @@
           productName:{label:this.$t('adApplyList.productName')},
           isBilled:{label:this.$t('adApplyList.isBilled'),value:""}
         },
-        formProperty:{bools:[]},
+
+
         pickerDateOption:util.pickerDateOption,
         productList:[],
         formLabelWidth: '120px',
@@ -95,9 +100,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formLabel.isBilled.value = util.bool2str(this.formData.isBilled);
-        this.formData.createdDateBTW = util.formatDateRange(this.formData.createdDate);
-        axios.get('/api/crm/adApply',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("adApplyList", this.submitData);
+        axios.get('/api/ws/future/layout/adApply',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -131,10 +136,11 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/crm/adApply/getQuery').then((response)=>{
-        this.formProperty = response.data;
+      axios.get('/api/ws/future/layout/adApply/getQuery').then((response)=>{
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>

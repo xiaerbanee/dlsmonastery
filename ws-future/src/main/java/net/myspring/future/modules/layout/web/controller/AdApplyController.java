@@ -1,34 +1,49 @@
 package net.myspring.future.modules.layout.web.controller;
 
+import net.myspring.future.modules.basic.dto.ProductDto;
+import net.myspring.future.modules.layout.domain.AdApply;
+import net.myspring.future.modules.layout.dto.AdApplyDto;
+import net.myspring.future.modules.layout.service.AdApplyService;
+import net.myspring.future.modules.layout.web.form.AdApplyForm;
+import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
+
 @RestController
-@RequestMapping(value = "crm/adApply")
+@RequestMapping(value = "layout/adApply")
 public class AdApplyController {
+
+    @Autowired
+    private AdApplyService adApplyService;
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public String findPage(HttpServletRequest request){
-        return null;
+    public Page<AdApplyDto> findPage(Pageable pageable, AdApplyQuery adApplyQuery){
+        return adApplyService.findPage(pageable,adApplyQuery);
     }
 
     @RequestMapping(value = "getQuery", method = RequestMethod.GET)
-    public String getQuery() {
-        return null;
+    public AdApplyQuery getQuery(AdApplyQuery adApplyQuery) {
+        return adApplyQuery;
     }
 
     @RequestMapping(value = "getForm", method = RequestMethod.GET)
-    public String getForm() {
-        return null;
+    public AdApplyForm getForm(AdApplyForm adApplyForm) {
+        return adApplyService.getForm(adApplyForm);
     }
 
     @RequestMapping(value = "getAdApplyList", method = RequestMethod.GET)
-    public String form(String billType,String shopId){
-        return null;
+    public List<ProductDto> getAdApplyList(String billType){
+        return adApplyService.findAdApplyList(billType);
     }
 
     @RequestMapping(value = "getAdApplyGoodsList", method = RequestMethod.GET)
