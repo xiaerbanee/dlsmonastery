@@ -9,7 +9,7 @@
               {{inputForm.id}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.billDate')" prop="billDate">
-              <date-picker v-model="inputForm.billDate"></date-picker>
+              <date-picker v-model="formProperty.billDate"></date-picker>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.outShopName')" prop="outShopId">
               {{inputForm.outShopName}}
@@ -44,19 +44,13 @@
               <el-input v-model="expressOrderDto.mobilePhone"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.expressCompany')" prop="expressCompanyId">
-              <el-select v-model="expressOrderDto.expressCompanyId" clearable  >
-                <el-option v-for="item in billFormProperty.expressCompanys":key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+              <express-company-select v-model="expressOrderDto.expressCompanyId"></express-company-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.splitBill')" prop="splitBill">
-              <el-select v-model="inputForm.splitBill" clearable  >
-                <el-option v-for="(value,key) in billFormProperty.bools" :key="key" :value="value" :label="key | bool2str"></el-option>
-              </el-select>
+              <bool-select v-model="inputForm.splitBill"></bool-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.synToCloud')" prop="syn">
-              <el-radio-group v-model="inputForm.syn">
-                <el-radio v-for="(value,key) in billFormProperty.bools" :key="key" :label="value">{{key | bool2str}} </el-radio>
-              </el-radio-group>
+              <bool-radio-group v-model="inputForm.syn"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.billRemarks')" prop="billRemarks">
               <el-input v-model="inputForm.billRemarks"></el-input>
@@ -69,11 +63,11 @@
         </el-row>
       </el-form>
       <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adGoodsOrderBill.inputTwoKey')" style="width:200px;"></el-input>
-      <el-table :data="adGoodsOrderDetails" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderBill.loading')" stripe border >
+      <el-table :data="formProperty.adGoodsOrderDetails" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderBill.loading')" stripe border >
         <el-table-column  prop="productCode" :label="$t('adGoodsOrderBill.code')" ></el-table-column>
         <el-table-column  prop="productName" :label="$t('adGoodsOrderBill.productName')" ></el-table-column>
         <el-table-column prop="stock" :label="$t('adGoodsOrderBill.stock')"></el-table-column>
-        <el-table-column prop="confirmQty" :label="$t('adGoodsOrderBill.confirmQty')"></el-table-column>
+        <el-table-column prop="qty" :label="$t('adGoodsOrderBill.confirmQty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('adGoodsOrderBill.billQty')" >
           <template scope="scope">
             <input type="text" v-model="scope.row.billQty" class="el-input__inner"  @blur="getSummery()"/>
@@ -85,12 +79,16 @@
   </div>
 </template>
 <script>
+  import expressCompanySelect from 'components/future/express-company-select'
+  import boolSelect from 'components/common/bool-select'
+  import boolRadioGroup from 'components/common/bool-radio-group'
   export default{
+    components:{expressCompanySelect,boolSelect,boolRadioGroup},
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        adGoodsOrderDetails:[],
+        formProperty:{},
         productName:"",
         expressOrderDto:{
           id:'',
@@ -129,8 +127,6 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.adGoodsOrderDetailList=this.filterAdGoodsOrderDetailList
-            this.inputForm.billDate=util.formatLocalDate(this.inputForm.billDate)
             axios.post('/api/crm/adGoodsOrder/bill',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
@@ -184,7 +180,7 @@
         }
       })
       axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=>{
-        this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
+        this.formProperty = response.data;
       })
     }
   }

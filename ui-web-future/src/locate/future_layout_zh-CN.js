@@ -118,6 +118,7 @@ export default {
     confirmQty: "确定数",
     billQty: "开单数",
     price: "单价",
+    save:"保存",
   },
   adGoodsOrderDetail: {
     adGoodsOrderDetail: "柜台订货详细",
