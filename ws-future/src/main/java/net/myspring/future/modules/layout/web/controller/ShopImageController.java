@@ -27,8 +27,7 @@ public class ShopImageController {
 
     @Autowired
     private ShopImageService shopImageService;
-    @Autowired
-    private RedisTemplate redisTemplate;
+
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -38,11 +37,13 @@ public class ShopImageController {
     }
 
     @RequestMapping(value = "findOne")
-    public ShopImageForm findOne(ShopImageForm shopImageForm) {
-        shopImageForm = shopImageService.getForm(shopImageForm);
-        List<String> imageTypeList=Arrays.asList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.name()).getValue().split(","));
-        shopImageForm.setImageTypeList(imageTypeList);
-        return shopImageForm;
+    public ShopImageDto detail(String id) {
+        return shopImageService.findOne(id);
+    }
+
+    @RequestMapping(value = "getForm")
+    public ShopImageForm getForm(ShopImageForm shopImageForm){
+        return shopImageService.getForm(shopImageForm);
     }
 
     @RequestMapping(value = "getQuery", method = RequestMethod.GET)
@@ -63,8 +64,5 @@ public class ShopImageController {
         return restResponse;
     }
 
-    public List<String> getActionList() {
-        return null;
-    }
 
 }

@@ -85,10 +85,6 @@ public class AdGoodsOrderService {
         return page;
     }
 
-    public AdGoodsOrder findOne(String id) {
-        AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(id);
-        return adGoodsOrder;
-    }
 
     public Map<String,Object> getAmountMap(AdGoodsOrder adGoodsOrder){
         Map<String,Object> map=Maps.newHashMap();
@@ -185,13 +181,8 @@ public class AdGoodsOrderService {
 
         //启动流程
         if(adGoodsOrder.getId()!=null&&adGoodsOrder.getProcessInstanceId()==null){
-            ActivitiStartForm activitiStartForm = new ActivitiStartForm();
-            activitiStartForm.setBusinessKey(adGoodsOrder.getId());
-            //待修改
-            activitiStartForm.setName("AdGoodsOrder");
-            activitiStartForm.setProcessTypeName("AdGoodsOrder");
-            activitiStartForm.setMessage("AdGoodsOrder");
-            ActivitiStartDto activitiStartDto = activitiClient.start(activitiStartForm);
+
+            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("柜台订货",adGoodsOrder.getId(),AdGoodsOrder.class.getSimpleName(),adGoodsOrder.getOutShopId()));
             if(activitiStartDto!=null){
                 adGoodsOrder.setProcessFlowId(activitiStartDto.getProcessFlowId());
                 adGoodsOrder.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
@@ -206,9 +197,10 @@ public class AdGoodsOrderService {
 
     }
 
-    public AdGoodsOrderDto getAdGoodsOrderDetail(AdGoodsOrderDto adGoodsOrderDto) {
-        if(adGoodsOrderDto.getId()!=null){
-            AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderDto.getId());
+    public AdGoodsOrderDto findOne(String id) {
+        AdGoodsOrderDto adGoodsOrderDto = new AdGoodsOrderDto();
+        if(id!=null){
+            AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(id);
             adGoodsOrderDto = BeanUtil.map(adGoodsOrder,AdGoodsOrderDto.class);
             if(adGoodsOrderDto.getExpressOrderId()!=null){
                 adGoodsOrderDto.setExpressOrderDto(expressOrderMapper.findDto(adGoodsOrderDto.getExpressOrderId()));
@@ -223,25 +215,21 @@ public class AdGoodsOrderService {
         List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
         if(!adGoodsOrderForm.isCreate()){
-            AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderForm.getId());
-            adGoodsOrderForm = BeanUtil.map(adGoodsOrder,AdGoodsOrderForm.class);
-            ExpressOrder expressOrder = expressOrderMapper.findOne(adGoodsOrderForm.getExpressOrderId());
-            adGoodsOrderForm.setExpressOrderDto(BeanUtil.map(expressOrder, ExpressOrderDto.class));
             List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailMapper.findByAdGoodsOrderForEdit(outGroupIds,adGoodsOrderForm.getId());
             adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
-            cacheUtils.initCacheInput(adGoodsOrderForm);
         }else{
            List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailMapper.findByAdGoodsOrderForNew(outGroupIds);
             adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
-            cacheUtils.initCacheInput(adGoodsOrderForm);
+
         }
+        cacheUtils.initCacheInput(adGoodsOrderForm);
         return adGoodsOrderForm;
     }
 
     public void audit(AdGoodsOrderForm adGoodsOrderForm) {
         if(!adGoodsOrderForm.isCreate()) {
             ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
-            activitiCompleteForm.setPass(adGoodsOrderForm.getPass() == "1" ? true : false);
+            activitiCompleteForm.setPass(adGoodsOrderForm.getPass().equalsIgnoreCase("1") ? true : false);
             activitiCompleteForm.setComment(adGoodsOrderForm.getPassRemarks());
 
             activitiCompleteForm.setProcessTypeId(adGoodsOrderMapper.findOne(adGoodsOrderForm.getId()).getProcessTypeId());

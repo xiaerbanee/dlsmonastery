@@ -7,7 +7,7 @@
         <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopAd:view'">{{$t('shopAdList.batchBlack')}}</el-button>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAd:edit'">{{$t('shopAdList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAd:view'">{{$t('shopAdList.filterOrExport')}}</el-button>
-        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('shopAdList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
