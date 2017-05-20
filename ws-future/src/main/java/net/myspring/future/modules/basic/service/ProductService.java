@@ -128,7 +128,7 @@ public class ProductService {
         List<Product> adProducts  = productMapper.findByOutGroupIds(outGroupIds);
         if(adApplyForm.getShopId() != null){
             Depot depot = depotMapper.findOne(adApplyForm.getShopId());
-            adApplyForm.setShop(depot);
+            //adApplyForm.setShop(depot);
         }
         return adProducts;
     }

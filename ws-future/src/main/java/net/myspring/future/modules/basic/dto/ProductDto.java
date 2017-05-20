@@ -24,7 +24,16 @@ public class ProductDto extends DataDto<Product> {
     private String image;
     private Boolean locked;
 
+    private String expiryDateRemarks;
     private BigDecimal price2;
+
+    public String getExpiryDateRemarks() {
+        return expiryDateRemarks;
+    }
+
+    public void setExpiryDateRemarks(String expiryDateRemarks) {
+        this.expiryDateRemarks = expiryDateRemarks;
+    }
 
     public BigDecimal getPrice2() {
         return price2;

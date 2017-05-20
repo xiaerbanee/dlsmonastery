@@ -2,20 +2,31 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.future.common.enums.BillTypeEnum;
+import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.layout.domain.AdApply;
+import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.mapper.AdApplyMapper;
+import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.text.IdUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,9 +40,14 @@ public class AdApplyService {
     private DepotMapper depotMapper;
     @Autowired
     private ProductMapper productMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
-    public Page<AdApply> findPage(Pageable pageable, AdApplyQuery adApplyQuery) {
-        Page<AdApply> page = adApplyMapper.findPage(pageable, adApplyQuery);
+    public Page<AdApplyDto> findPage(Pageable pageable, AdApplyQuery adApplyQuery) {
+        Page<AdApplyDto> page = adApplyMapper.findPage(pageable, adApplyQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
@@ -40,8 +56,28 @@ public class AdApplyService {
         return adApply;
     }
 
-    public List<AdApply> findAdApplyList(String billType, String shopId){
-        return null;
+    public AdApplyForm getForm(AdApplyForm adApplyForm){
+        List<String> billTypes = new ArrayList<>();
+        billTypes.add(BillTypeEnum.POP.name());
+        billTypes.add(BillTypeEnum.配件赠品.name());
+        adApplyForm.setBillTypes(billTypes);
+        return adApplyForm;
+    }
+
+    public List<ProductDto> findAdApplyList(String billType){
+        List<ProductDto> productDtos = new ArrayList<>();
+        if(billType ==null){
+            return null;
+        }
+        if(billType.equalsIgnoreCase(BillTypeEnum.POP.name())){
+            List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
+            productDtos = productMapper.findByOutGroupIdsAndAllowOrder(outGroupIds,true);
+        }
+        if(billType.equalsIgnoreCase(BillTypeEnum.配件赠品.name())){
+            List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
+            productDtos  = productMapper.findByOutGroupIdsAndAllowOrder(outGroupIds,true);
+        }
+        return productDtos;
     }
 
     public List<AdApply> findAdApplyGoodsList(){
@@ -51,6 +87,32 @@ public class AdApplyService {
         List<AdApply> adApplys = Lists.newArrayList();
 
         return adApplys;
+    }
+
+    public void save(AdApplyForm adApplyForm){
+        if(adApplyForm.getApplyQty()==null){
+            return;
+        }
+        if(adApplyForm.getApplyQty().size()!=adApplyForm.getProductDtos().size()){
+            return;
+        }
+        for(int i = 0;i<adApplyForm.getApplyQty().size();i++){
+            String productId = adApplyForm.getProductDtos().get(i).getId();
+            String expiryDateRemarks = adApplyForm.getProductDtos().get(i).getExpiryDateRemarks();
+            Integer applyQty = adApplyForm.getApplyQty().get(i);
+            if(applyQty!=null&&applyQty>0){
+                AdApply adApply = new AdApply();
+                adApply.setApplyQty(applyQty);
+                adApply.setConfirmQty(applyQty);
+                adApply.setBilledQty(0);
+                adApply.setLeftQty(applyQty);
+                adApply.setShopId(adApplyForm.getShopId());
+                adApply.setProductId(productId);
+                adApply.setRemarks(adApplyForm.getRemarks());
+                adApply.setExpiryDateRemarks(expiryDateRemarks);
+                adApplyMapper.save(adApply);
+            }
+        }
     }
 
     public Map<String,Object> findBillAdApplyMap(String billType){
