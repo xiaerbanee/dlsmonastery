@@ -49,25 +49,24 @@
         this.$emit('input', newVal);
       },setValue(val) {
         this.innerId=val;
-        if(util.isBlank(this.innerId) || this.itemList.length>0){
+        let idStr=this.innerId;
+        if(this.multiple && this.innerId){
+          idStr=this.innerId.join();
+        }
+        if(util.isBlank(idStr) || this.itemList.length>0) {
           return;
         }
         this.remoteLoading = true;
-        let idStr=this.innerId;
-        if(this.multiple){
-          idStr=this.innerId.join();
-        }
         axios.get('/api/basic/sys/office/findByIds?idStr=' + idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })
       }
     },created () {
+      this.setValue(this.value);
     },watch: {
       value :function (newVal) {
-          if(newVal){
-            this.setValue(newVal);
-          }
+        this.setValue(newVal);
       }
     }
   };
