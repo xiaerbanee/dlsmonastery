@@ -24,7 +24,7 @@
         axios.get("/api/ws/future/basic/depot/" + this.category,{params:{name:query}}).then((response)=>{
           var newList = new Array();
           var idList = new Array();
-          if(this.multiple) {
+          if(this.multiple && this.innerId) {
             idList = this.innerId;
           } else {
             if(util.isNotBlank(this.innerId)) {
