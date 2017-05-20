@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Employee;
@@ -8,6 +9,7 @@ import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +80,9 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public List<EmployeeDto> findByIds(List<String> ids){
+        if(CollectionUtil.isEmpty(ids)) {
+            return Lists.newArrayList();
+        }
         List<Employee> employees = employeeMapper.findByIds(ids);
         List<EmployeeDto> employeeDto= BeanUtil.map(employees,EmployeeDto.class);
         return employeeDto;

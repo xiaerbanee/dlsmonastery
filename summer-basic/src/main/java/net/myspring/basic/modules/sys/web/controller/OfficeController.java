@@ -111,10 +111,11 @@ public class OfficeController {
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
-    @RequestMapping(value = "findById")
-    public OfficeDto findById(OfficeQuery officeQuery){
-        OfficeDto officeDto=officeService.searchById(officeQuery);
-        return officeDto;
+    @RequestMapping(value = "findByIds")
+    public List<OfficeDto> findByIds(String idStr){
+        List<String> idList = StringUtils.getSplitList(idStr,CharConstant.COMMA);
+        List<OfficeDto> officeDtoList = officeService.findByIds(idList);
+        return officeDtoList;
     }
 
     public List<String> getSameAreaByOfficeId(String officeId){

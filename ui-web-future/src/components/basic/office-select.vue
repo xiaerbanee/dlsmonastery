@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled"  :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+    <el-select v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled"  placeholder="输入关键字" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList"  :key="item.id" :label="item.fullName" :value="item.id"></el-option>
     </el-select>
   </div>
@@ -10,30 +10,55 @@
     props: ['value','multiple','disabled'],
     data() {
       return {
-        innerId:this.value,
-        itemList : null,
+        innerId:null,
+        itemList : [],
         remoteLoading:false,
       };
     } ,methods:{
       remoteSelect(query) {
-        if(query=="" || query == this.innerId || query == util.getLabel(this.itemList,this.innerId,"fullName")) {
+        if(util.isBlank(query)) {
           return;
         }
         this.remoteLoading = true;
         axios.get('/api/basic/sys/office/search',{params:{name:query}}).then((response)=>{
-          this.itemList=response.data;
+          var newList = new Array();
+          var idList = new Array();
+          if(this.multiple) {
+            idList = this.innerId;
+          } else {
+            if(util.isNotBlank(this.innerId)) {
+              idList.push(this.innerId);
+            }
+          }
+          for(var index in this.itemList) {
+            var item = this.itemList[index];
+            if(idList.indexOf(item.id)>=0) {
+              newList.push(item);
+            }
+          }
+          for(var index in response.data) {
+            var item = response.data[index];
+            if(idList.indexOf(item.id)<0) {
+              newList.push(item);
+            }
+          }
+          this.itemList = newList;
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
-        if(this.innerId == val || val=="") {
+        this.innerId=val;
+        if(util.isBlank(this.innerId) || this.itemList.length>0){
           return;
         }
-        this.innerId=val;
         this.remoteLoading = true;
-        axios.get('/api/basic/sys/office/findById?id=' + this.innerId).then((response)=>{
-          this.itemList=new Array(response.data);
+        let idStr=this.innerId;
+        if(this.multiple){
+          idStr=this.innerId.join();
+        }
+        axios.get('/api/basic/sys/office/findByIds?idStr=' + idStr).then((response)=>{
+          this.itemList=response.data;
           this.remoteLoading = false;
         })
       }

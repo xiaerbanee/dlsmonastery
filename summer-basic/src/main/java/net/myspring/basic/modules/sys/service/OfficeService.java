@@ -235,4 +235,10 @@ public class OfficeService {
             }
         }
     }
+
+    public List<OfficeDto> findByIds(List<String> ids){
+        List<Office> officeList=officeMapper.findByIds(ids);
+        List<OfficeDto> officeDtoList= BeanUtil.map(officeList,OfficeDto.class);
+        return officeDtoList;
+    }
 }

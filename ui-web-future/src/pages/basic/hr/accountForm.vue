@@ -12,7 +12,7 @@
               <el-input v-model="inputForm.loginName"></el-input>
             </el-form-item>
             <el-form-item :label="$t('accountForm.officeName')" prop="officeId">
-              <office-select v-model="inputForm.officeId" :multiple="multiple"></office-select>
+              <office-select v-model="inputForm.officeId"></office-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.leader')" prop="leaderId">
               <account-select v-model="inputForm.leaderId"></account-select>

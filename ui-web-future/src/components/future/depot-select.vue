@@ -17,7 +17,7 @@
       };
     },methods:{
       remoteSelect(query) {
-        if(query=="") {
+        if(util.isBlank(query)) {
           return;
         }
         this.remoteLoading = true;
