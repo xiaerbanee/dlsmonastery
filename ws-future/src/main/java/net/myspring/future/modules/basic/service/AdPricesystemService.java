@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springside.modules.utils.mapper.BeanMapper;
+import sun.misc.Cache;
 
 import java.util.List;
 
@@ -26,13 +27,13 @@ public class AdPricesystemService {
     @Autowired
     private AdPricesystemMapper adPricesystemMapper;
     @Autowired
-    private DepotMapper depotMapper;
-    @Autowired
     private CacheUtils cacheUtils;
 
-    public AdPricesystem findOne(String id){
+    public AdPricesystemDto findOne(String id){
         AdPricesystem adPricesystem = adPricesystemMapper.findOne(id);
-        return adPricesystem;
+        AdPricesystemDto adPricesystemDto = BeanUtil.map(adPricesystem,AdPricesystemDto.class);
+        cacheUtils.initCacheInput(adPricesystemDto);
+        return adPricesystemDto;
     }
 
     public Page<AdPricesystemDto> findPage(Pageable pageable, AdPricesystemQuery adPricesystemQuery) {
@@ -41,16 +42,7 @@ public class AdPricesystemService {
         return page;
     }
 
-    public AdPricesystemForm getForm(AdPricesystemForm adPricesystemForm){
-        if(!adPricesystemForm.isCreate()){
-            AdPricesystem adPricesystem=adPricesystemMapper.findOne(adPricesystemForm.getId());
-            adPricesystemForm=BeanUtil.map(adPricesystem,AdPricesystemForm.class);
-            cacheUtils.initCacheInput(adPricesystemForm);
-        }
-        return adPricesystemForm;
-    }
-
-    public List<AdPricesystemDto> findFilter(AdPricesystemQuery adPricesystemQuery){
+    public List<AdPricesystemDto> findList(AdPricesystemQuery adPricesystemQuery){
         List<AdPricesystem> adPricesystemList = adPricesystemMapper.findList(adPricesystemQuery);
         List<AdPricesystemDto> adPricesystemDtoList = BeanUtil.map(adPricesystemList,AdPricesystemDto.class);
         cacheUtils.initCacheInput(adPricesystemDtoList);
@@ -66,19 +58,10 @@ public class AdPricesystemService {
             adPricesystem = adPricesystemMapper.findOne(adPricesystemForm.getId());
             ReflectionUtil.copyProperties(adPricesystemForm,adPricesystem);
             adPricesystemMapper.update(adPricesystem);
+            adPricesystemMapper.deleteOfficeIds(adPricesystem.getId());
         }
-        List<Depot> depotList = depotMapper.findByIds(adPricesystemForm.getPageIds());
-        for(Depot depot : depotList){
-            if(!adPricesystemForm.getNewDepotIds().contains(depot.getId())){
-                depot.setAdPricesystemId(null);
-                depotMapper.update(depot);
-            }else {
-                if(!adPricesystemForm.getId().equals(depot.getAdPricesystemId())){
-                    depot.setAdPricesystemId(adPricesystemForm.getId());
-                    depotMapper.update(depot);
-                }
-            }
-        }
+        //修改机构绑定
+        adPricesystemMapper.saveOfficeIds(adPricesystem.getId(),adPricesystemForm.getOfficeIdList());
         return adPricesystem;
     }
 
@@ -88,10 +71,7 @@ public class AdPricesystemService {
         return adPricesystemDtoList;
     }
 
-    public void delete(AdPricesystemForm adPricesystemForm){
-        adPricesystemForm.setEnabled(false);
-        AdPricesystem adPricesystem = adPricesystemMapper.findOne(adPricesystemForm.getId());
-        ReflectionUtil.copyProperties(adPricesystemForm,adPricesystem);
-        adPricesystemMapper.update(adPricesystem);
+    public void logicDeleteOne(String id){
+        adPricesystemMapper.logicDeleteOne(id);
     }
 }

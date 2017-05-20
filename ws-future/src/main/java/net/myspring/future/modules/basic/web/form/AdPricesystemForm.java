@@ -11,25 +11,8 @@ import java.util.List;
  */
 public class AdPricesystemForm extends DataForm<AdPricesystem> {
     private String name;
-    private Boolean enabled;
-    private List<String> pageIds = Lists.newArrayList();
-    private List<String> newDepotIds = Lists.newArrayList();
 
-    public List<String> getNewDepotIds() {
-        return newDepotIds;
-    }
-
-    public void setNewDepotIds(List<String> newDepotIds) {
-        this.newDepotIds = newDepotIds;
-    }
-
-    public List<String> getPageIds() {
-        return pageIds;
-    }
-
-    public void setPageIds(List<String> pageIds) {
-        this.pageIds = pageIds;
-    }
+    private List<String> officeIdList;
 
     public String getName() {
         return name;
@@ -39,11 +22,11 @@ public class AdPricesystemForm extends DataForm<AdPricesystem> {
         this.name = name;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
+    public List<String> getOfficeIdList() {
+        return officeIdList;
     }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
     }
 }

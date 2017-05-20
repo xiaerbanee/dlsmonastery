@@ -47,4 +47,9 @@ public interface AdPricesystemMapper extends BaseMapper<AdPricesystem,String> {
     List<AdPricesystem> findList(AdPricesystemQuery adPricesystemQuery);
 
     AdPricesystem findByName(String name);
+
+    int deleteOfficeIds(String id);
+
+    int saveOfficeIds(@Param("adPricesystemId") String adPricesystemId,@Param("officeIds") List<String> officeIds);
+
 }

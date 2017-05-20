@@ -31,4 +31,22 @@
         and t1.name=#{name}
     </select>
 
+
+    <delete id="deleteOfficeIds">
+        DELETE FROM crm_ad_pricesystem_office where ad_pricesystem_id = #{adPricesystemId}
+    </delete>
+
+    <insert id="saveOfficeIds">
+        INSERT INTO crm_ad_pricesystem_office
+        (
+          ad_pricesystem_id,office_id
+        )VALUES
+        <foreach item="item" index="index" collection="officeIds" open="" separator="," close="">
+            (
+            #{adPricesystemId},
+            #{item}
+            )
+        </foreach>
+    </insert>
+
 </mapper>
