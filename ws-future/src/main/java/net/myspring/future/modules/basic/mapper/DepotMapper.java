@@ -54,6 +54,8 @@ public interface DepotMapper extends BaseMapper<Depot,String> {
 
     List<Depot> findByAccountId(String accountId);
 
+    List<Depot> findByChainId(String chainId);
+
     List<Depot> findByNameList(List<String> nameList);
 
     Depot findByName(String name);

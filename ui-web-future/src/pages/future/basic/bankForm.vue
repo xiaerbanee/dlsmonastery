@@ -21,7 +21,6 @@
 </template>
 <script>
   import accountSelect from 'components/basic/account-select'
-
   export default{
     components:{
       accountSelect

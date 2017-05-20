@@ -23,6 +23,17 @@
             and t2.account_id=#{accountId}
     </select>
 
+
+    <select id="findByChainId" resultType="Depot">
+        select
+        t1.*
+        from
+        crm_depot t1
+        where
+        t1.chain_id = #{chainId}
+    </select>
+
+
     <sql id="depotParamFilter">
         <if test="p.types !=null and p.types.size() !=0">
             and depot.type IN

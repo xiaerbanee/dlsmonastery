@@ -10,7 +10,7 @@
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item :label="$t('chainForm.shopType')" prop="depotList">
-          <depot-select v-model="inputForm.depotList" category="SHOP" :multiple="multiple"></depot-select>
+          <depot-select v-model="inputForm.depotIdList" category="SHOP" multiple="multiple"></depot-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('chainForm.save')}}</el-button>
@@ -20,42 +20,23 @@
   </div>
 </template>
 <script>
-  import officeSelect from 'components/basic/office-select'
-  import accountSelect from 'components/basic/account-select'
   import depotSelect from 'components/future/depot-select'
   export default{
       components:{
-          officeSelect,
-          accountSelect,
           depotSelect
       },
-    updated(){
-    if (this.pageUpdated) {
-      this.pageUpdated = false;
-      if (this.content != null && this.content.length > 0) {
-        this.$refs['table'].clearSelection();
-        this.content.map((v, index) => {
-          if (v.chainId === this.inputForm.id) {
-            this.$refs['table'].toggleRowSelection(this.content[index], true);
-          }
-        })
-        this.selectChange = true;
-      }
-    }
-  },
     data(){
       return{
         isCreate:this.$route.query.id==null,
-        multiple:true,
         submitDisabled:false,
         inputForm:{},
         loading:false,
         submitData:{
             id:"",
             name:"",
-            remarks:""
+            remarks:"",
+            depotIdList:[]
         },
-//        states:[],
         rules: {
           name: [{ required: true, message: this.$t('chainForm.prerequisiteMessage')}]
         }
@@ -85,7 +66,7 @@
         })
       }
       },created(){
-        axios.get('/api/ws/future/basic/chain/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/basic/chain/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
     }

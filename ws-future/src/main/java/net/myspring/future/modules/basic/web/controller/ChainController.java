@@ -2,7 +2,6 @@ package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.dto.ChainDto;
 import net.myspring.future.modules.basic.service.ChainService;
 import net.myspring.future.modules.basic.web.form.ChainForm;
@@ -10,12 +9,9 @@ import net.myspring.future.modules.basic.web.query.ChainQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "basic/chain")
@@ -32,8 +28,8 @@ public class ChainController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(ChainForm chainForm, BindingResult bindingResult) {
-        chainService.delete(chainForm);
+    public RestResponse delete(String id) {
+        chainService.logicDeleteOne(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
@@ -43,10 +39,9 @@ public class ChainController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "getForm")
-    public ChainForm findOne(ChainForm chainForm){
-        chainForm=chainService.getForm(chainForm);
-        return chainForm;
+    @RequestMapping(value = "findOne")
+    public ChainDto findOne(String id){
+        return chainService.findOne(id);
     }
 
 

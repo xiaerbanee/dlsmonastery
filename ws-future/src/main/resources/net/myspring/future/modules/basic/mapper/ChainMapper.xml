@@ -14,15 +14,8 @@
         </if>
     </select>
 
-    <delete id="deleteByChainId">
-        DELETE FROM crm_account_chain where chain_id = #{chainId}
-    </delete>
-
-    <insert id="saveAccountAndChain">
-        INSERT INTO crm_account_chain(account_id,chain_id) VALUES
-        <foreach collection="accountIdList" index="index" item="item" open="" separator="," close="">
-            (#{item},#{chainId})
-        </foreach>
-    </insert>
+    <select id="findDepotIds" resultType="String">
+      select id from crm_chain where chain_id=#{id}
+    </select>
 
 </mapper>

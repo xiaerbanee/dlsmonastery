@@ -31,9 +31,9 @@ public class ChainService {
     @Autowired
     private ChainMapper chainMapper;
     @Autowired
-    private DepotShopMapper depotShopMapper;
-    @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private DepotMapper depotMapper;
 
     public List<ChainDto> findAllEnabled(){
         List<Chain> chainList=chainMapper.findAllEnabled();
@@ -41,9 +41,12 @@ public class ChainService {
         return chainDtoList;
     }
 
-    public Chain findOne(String id) {
+    public ChainDto findOne(String id) {
         Chain chain = chainMapper.findOne(id);
-        return chain;
+        ChainDto chainDto = BeanUtil.map(chain,ChainDto.class);
+        chainDto.setDepotIdList(chainMapper.findDepotIds(id));
+        cacheUtils.initCacheInput(chainDto);
+        return chainDto;
     }
 
     public Page<ChainDto> findPage(Pageable pageable, ChainQuery chainQuery) {
@@ -52,17 +55,8 @@ public class ChainService {
         return page;
     }
 
-    public void delete(ChainForm chainForm) {
-        chainMapper.logicDeleteOne(chainForm.getId());
-    }
-
-    public ChainForm getForm(ChainForm chainForm){
-        if(!chainForm.isCreate()){
-            Chain chain=chainMapper.findOne(chainForm.getId());
-            chainForm= BeanUtil.map(chain,ChainForm.class);
-            cacheUtils.initCacheInput(chainForm);
-        }
-        return chainForm;
+    public void logicDeleteOne(String id) {
+        chainMapper.logicDeleteOne(id);
     }
 
     public Chain save(ChainForm chainForm) {
@@ -74,10 +68,19 @@ public class ChainService {
             chain = chainMapper.findOne(chainForm.getId());
             ReflectionUtil.copyProperties(chainForm,chain);
             chainMapper.update(chain);
-            chainMapper.deleteByChainId(chain.getId());
+            List<Depot> depotList = depotMapper.findByChainId(chainForm.getId());
+            for(Depot depot:depotList) {
+                depot.setChainId(null);
+                depotMapper.update(depot);
+            }
         }
-        if(CollectionUtil.isNotEmpty(chainForm.getAccountIdList())){
-            chainMapper.saveAccountAndChain(chain.getId(),chainForm.getAccountIdList());
+        //保存门店
+        if(CollectionUtil.isNotEmpty(chainForm.getDepotIdList())){
+            List<Depot> depotList = depotMapper.findByIds(chainForm.getDepotIdList());
+            for(Depot depot:depotList) {
+                depot.setChainId(chain.getId());
+                depotMapper.update(depot);
+            }
         }
         return chain;
     }

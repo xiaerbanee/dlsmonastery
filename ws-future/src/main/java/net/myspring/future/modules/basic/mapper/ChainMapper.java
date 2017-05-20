@@ -47,7 +47,5 @@ public interface ChainMapper extends BaseMapper<Chain,String> {
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<Chain> findByIds(List<String> ids);
 
-    int deleteByChainId(String chainId);
-
-    int saveAccountAndChain(@Param("chainId") String chainId, @Param("accountIdList") List<String> accountIdList);
+    List<String> findDepotIds(String id);
 }

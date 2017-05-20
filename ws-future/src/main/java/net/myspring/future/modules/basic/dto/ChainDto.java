@@ -13,6 +13,10 @@ import java.util.List;
 public class ChainDto extends DataDto<Chain>{
     private String name;
 
+    private List<String> depotIdList;
+
+    private List<String> depotNameList;
+
     public String getName() {
         return name;
     }
@@ -21,4 +25,19 @@ public class ChainDto extends DataDto<Chain>{
         this.name = name;
     }
 
+    public List<String> getDepotIdList() {
+        return depotIdList;
+    }
+
+    public void setDepotIdList(List<String> depotIdList) {
+        this.depotIdList = depotIdList;
+    }
+
+    public List<String> getDepotNameList() {
+        return depotNameList;
+    }
+
+    public void setDepotNameList(List<String> depotNameList) {
+        this.depotNameList = depotNameList;
+    }
 }
