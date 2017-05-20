@@ -71,4 +71,7 @@
         WHERE t1.name like CONCAT('%',#{name},'%')
     </select>
 
+    <select id="findAccountIdList" resultSetType="String">
+      select account_id from crm_account_bank where bank_id=#{id}
+    </select>
 </mapper>

@@ -60,4 +60,6 @@ public interface BankMapper extends MyMapper<Bank,String> {
     LocalDateTime getMaxOutDate();
 
     List<Bank> findByNameLike(String name);
+
+    List<String> findAccountIdList(String id);
 }

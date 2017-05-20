@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -42,22 +43,10 @@ public class BankService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public Bank findOne(String id){
-        Bank bank=bankMapper.findOne(id);
-        return bank;
-    }
-
-    public List<Bank> findByAccountId(String accountId){
-        return  bankMapper.findByAccountId(accountId);
-    }
-
-    public List<BankDto> findBankDtosByAccountId(String accountId){
+    public List<BankDto> findByAccountId(String accountId){
         List<Bank> banks = bankMapper.findByAccountId(accountId);
         List<BankDto> result = BeanUtil.map(banks, BankDto.class);
-        if(result == null){
-            result = new ArrayList<>();
-        }
-        return  result;
+        return  result==null?Lists.newArrayList():result;
     }
 
     public List<Bank> findAll(){
@@ -71,19 +60,10 @@ public class BankService {
         return page;
     }
 
-    public void delete(Bank bank) {
-        bank.setEnabled(false);
-        bankMapper.update(bank);
+    public void logicDeleteOne(String id) {
+        bankMapper.logicDeleteOne(id);
     }
 
-    public BankForm getForm(BankForm bankForm){
-        if(!bankForm.isCreate()){
-            Bank bank=bankMapper.findOne(bankForm.getId());
-            bankForm= BeanUtil.map(bank,BankForm.class);
-            cacheUtils.initCacheInput(bankForm);
-        }
-        return bankForm;
-    }
 
     public void save(BankForm bankForm){
         bankMapper.updateForm(bankForm);
@@ -96,27 +76,6 @@ public class BankService {
 
     @Transactional
     public void syn(){
-        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
-        LocalDateTime dateTime=bankMapper.getMaxOutDate();
-        String result = cloudClient.getSynBankData(cloudName, LocalDateTimeUtils.format(dateTime));
-        List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);
-        if(CollectionUtil.isNotEmpty(dataList)){
-            for(Map<String,Object> map:dataList){
-                Bank bank = bankMapper.findByOutId(map.get("outId").toString());
-                if(bank==null) {
-                    bank=bankMapper.findByName(map.get("name").toString());
-                    if(bank==null){
-                        bank = new Bank();
-                        bankMapper.save(bank);
-                    }
-                }
-                bank.setName(map.get("name").toString());
-                bank.setOutDate(LocalDateTimeUtils.parse(map.get("modifyDate").toString()));
-                bank.setOutId(map.get("outId").toString());
-                bank.setCode(map.get("code").toString());
-                bankMapper.update(bank);
-            }
-        }
     }
 
     @Transactional(readOnly = true)
@@ -127,9 +86,11 @@ public class BankService {
     }
 
     @Transactional(readOnly = true)
-    public BankDto findById(String id){
+    public BankDto findOne(String id){
         Bank bank= bankMapper.findOne(id);
         BankDto bankDto= BeanUtil.map(bank,BankDto.class);
+        List<String> accountIdList = bankMapper.findAccountIdList(id);
+        bankDto.setAccountIdList(accountIdList);
         return bankDto;
     }
 }

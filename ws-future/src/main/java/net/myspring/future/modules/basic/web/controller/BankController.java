@@ -35,7 +35,6 @@ public class BankController {
     public RestResponse save(BankForm bankForm){
         bankService.save(bankForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
-
     }
 
     @RequestMapping(value = "syn")
@@ -45,26 +44,19 @@ public class BankController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(Bank bank,BindingResult bindingResult) {
-        bankService.delete(bank);
+    public RestResponse delete(String id) {
+        bankService.logicDeleteOne(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
-    @RequestMapping(value = "getForm")
-    public BankForm findOne(BankForm bankForm){
-        bankForm=bankService.getForm(bankForm);
-        return bankForm;
+    @RequestMapping(value = "findOne")
+    public BankDto findOne(String id){
+        return bankService.findOne(id);
     }
 
     @RequestMapping(value = "search")
     public List<BankDto> search(String key) {
         List<BankDto> bankDtoList =bankService.findByNameLike(key);
         return bankDtoList;
-    }
-
-    @RequestMapping(value = "findById")
-    public BankDto findById(String id) {
-        BankDto bankDto =bankService.findById(id);
-        return bankDto;
     }
 }

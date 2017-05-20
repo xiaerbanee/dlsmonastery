@@ -7,7 +7,7 @@
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('bankForm.account')" prop="accountIdList">
-          <account-select  v-model="inputForm.accountIdList" :multiple="multiple"></account-select>
+          <account-select  v-model="inputForm.accountIdList" multiple="multiple"></account-select>
         </el-form-item>
         <el-form-item :label="$t('bankForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -29,10 +29,7 @@
       data(){
           return{
             isCreate:this.$route.query.id==null,
-            multiple:true,
             submitDisabled:false,
-            formProperty:{},
-            accounts:[],
             remoteLoading:false,
             inputForm:{},
             submitData:{
@@ -70,12 +67,8 @@
           })
         }
       },created(){
-          axios.get('/api/ws/future/basic/bank/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm=response.data;
-            if(response.data.accountList!=null&&response.data.accountList.length>0){
-              this.accounts=response.data.accountList;
-              this.inputForm.accountIdList=util.getIdList(this.accounts);
-            }
           })
       }
     }
