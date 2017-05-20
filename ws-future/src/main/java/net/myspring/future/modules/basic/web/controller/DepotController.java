@@ -1,8 +1,11 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import com.ctc.wstx.util.StringUtil;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -75,7 +78,8 @@ public class DepotController {
     }
 
     @RequestMapping(value = "findByIds")
-    public List<DepotDto> findByListIds(List<String> ids) {
+    public List<DepotDto> findByIds(String idStr) {
+        List<String> ids = StringUtils.getSplitList(idStr, CharConstant.COMMA);
         List<DepotDto> depotDtoList =depotService.findByIds(ids);
         return depotDtoList;
     }

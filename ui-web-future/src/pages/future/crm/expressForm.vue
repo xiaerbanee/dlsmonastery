@@ -10,7 +10,7 @@
           {{inputForm.expressOrderId}}
         </el-form-item>
         <el-form-item :label="$t('expressForm.expressOrderToDepotId')" prop="expressOrderToDepotId">
-          <depot-select :disabled="!isCreate" v-model="inputForm.expressOrderToDepotId" category="SHOP" ></depot-select>
+          <depot-select :disabled="!isCreate" v-model="inputForm.expressOrderToDepotId" category="shop" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('expressForm.code')" prop="code">
           <el-input v-model="inputForm.code"></el-input>

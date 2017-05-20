@@ -42,7 +42,7 @@
                 <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.storeId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.storeId"  type="STORE"></depot-select>
+                <depot-select v-model="formData.storeId"  type="store"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
                 <account-select v-model="formData.createdBy"  ></account-select>

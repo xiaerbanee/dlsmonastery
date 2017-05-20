@@ -131,31 +131,31 @@
         where t1.depot_shop_id=t2.id
         and t1.enabled=1
         and t2.enabled=1
-        <if test="clientIsNull != null">
-            <if test="clientIsNull">
+        <if test="p.clientIsNull != null">
+            <if test="p.clientIsNull">
                 and t1.client_id is NULL
             </if>
-            <if test="!clientIsNull">
+            <if test="!p.clientIsNull">
                 and t1.client_id is not NULL
             </if>
         </if>
-        <if test="adShop != null">
-            <if test="adShop">
+        <if test="p.adShop != null">
+            <if test="p.adShop">
                 and t1.ad_shop is NULL
             </if>
-            <if test="!adShop">
+            <if test="!p.adShop">
                 and t1.ad_shop is not NULL
             </if>
         </if>
-        <if test="popShop != null">
-            <if test="popShop">
+        <if test="p.popShop != null">
+            <if test="p.popShop">
                 and t1.pop_shop is NULL
             </if>
-            <if test="!popShop">
+            <if test="!p.popShop">
                 and t1.pop_shop is not NULL
             </if>
         </if>
-        and t1.name like concat('%',#{name},'%')
+        and t1.name like concat('%',#{p.name},'%')
         <include refid="depotFilter" />
         limit 0,25
     </select>
@@ -167,16 +167,16 @@
         and t1.enabled=1
         and t2.enabled=1
 
-        <if test="outIdIsNull != null">
-            <if test="outIdIsNull">
+        <if test="p.outIdIsNull != null">
+            <if test="p.outIdIsNull">
                 and t2.out_id is NULL
             </if>
-            <if test="!outIdIsNull">
+            <if test="!p.outIdIsNull">
                 and t1.out_id is not NULL
             </if>
         </if>
-        <if test="name != null">
-            and t1.name like concat('%',#{name},'%')
+        <if test="p.name != null">
+            and t1.name like concat('%',#{p.name},'%')
         </if>
 
         <include refid="depotFilter" />
