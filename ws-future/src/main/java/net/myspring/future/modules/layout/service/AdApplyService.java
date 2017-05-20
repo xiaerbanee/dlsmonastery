@@ -89,6 +89,32 @@ public class AdApplyService {
         return adApplys;
     }
 
+    public void save(AdApplyForm adApplyForm){
+        if(adApplyForm.getApplyQty()==null){
+            return;
+        }
+        if(adApplyForm.getApplyQty().size()!=adApplyForm.getProductDtos().size()){
+            return;
+        }
+        for(int i = 0;i<adApplyForm.getApplyQty().size();i++){
+            String productId = adApplyForm.getProductDtos().get(i).getId();
+            String expiryDateRemarks = adApplyForm.getProductDtos().get(i).getExpiryDateRemarks();
+            Integer applyQty = adApplyForm.getApplyQty().get(i);
+            if(applyQty!=null&&applyQty>0){
+                AdApply adApply = new AdApply();
+                adApply.setApplyQty(applyQty);
+                adApply.setConfirmQty(applyQty);
+                adApply.setBilledQty(0);
+                adApply.setLeftQty(applyQty);
+                adApply.setShopId(adApplyForm.getShopId());
+                adApply.setProductId(productId);
+                adApply.setRemarks(adApplyForm.getRemarks());
+                adApply.setExpiryDateRemarks(expiryDateRemarks);
+                adApplyMapper.save(adApply);
+            }
+        }
+    }
+
     public Map<String,Object> findBillAdApplyMap(String billType){
         return null;
     }

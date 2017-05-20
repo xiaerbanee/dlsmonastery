@@ -5,14 +5,12 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('adApplyForm.billType')" prop="billType">
           <el-select v-model="inputForm.billType" :placeholder="$t('adApplyForm.selectInput')" :clearable=true @change="onchange">
-            <el-option v-for="billType in formProperty.billTypes"  :key="billType" :label="billType" :value="billType"></el-option>
+            <el-option v-for="billType in inputForm.billTypes"  :key="billType" :label="billType" :value="billType"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item  v-if="this.inputForm.billType=='POP'" :label="$t('adApplyForm.shopName')" prop="shopId">
-          <depot-select v-model="inputForm.shopId" category="popShop"></depot-select>
-        </el-form-item>
-        <el-form-item  v-if="this.inputForm.billType=='配件赠品'" :label="$t('adApplyForm.shopName')" prop="shopId">
-          <depot-select v-model="inputForm.shopId" category="directShop"></depot-select>
+        <el-form-item  :label="$t('adApplyForm.shopName')" prop="shopId">
+          <depot-select v-if="this.inputForm.billType=='POP'" v-model="inputForm.shopId" category="popShop"></depot-select>
+          <depot-select v-if="this.inputForm.billType=='配件赠品'" v-model="inputForm.shopId" category="directShop"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('adApplyForm.shopType')" prop="shopTypeLabel" v-if="shopTypeLabel">
           {{shopTypeLabel}}
@@ -52,14 +50,16 @@
     data(){
       return{
         submitDisabled:false,
-        formProperty:{billTypes:[]},
         shopTypeLabel:'',
         filterAdApplyList:[],
+        filterApplyQty:[],
         productName:"",
         shops:{},
-        inputForm:{
+        inputForm:{},
+        submitData:{
           billType:'',
-          adApplyList:[],
+          productDtos:[],
+          applyQty:[],
           shopId:'',
           remarks:'',
         },
@@ -76,8 +76,20 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.adApplyList=this.filterAdApplyList
-            axios.post('/api/crm/adApply/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
+            util.copyValue(this.inputForm,this.submitData);
+            var tempList=new Array();
+            var qtyList=new Array();
+            for(var index in this.inputForm.adApplyList){
+              var detail=this.inputForm.adApplyList[index];
+              if(util.isNotBlank(detail.applyQty)){
+                tempList.push(detail)
+                qtyList.push(detail.applyQty);
+              }
+            }
+            this.submitData.productDtos=tempList;
+            this.submitData.applyQty = qtyList;
+
+            axios.post('/api/ws/future/layout/adApply/save',qs.stringify(this.submitData,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -96,48 +108,34 @@
        searchDetail(){
          var val=this.productName;
          var tempList=new Array();
+         var qtyList = new Array();
           for(var index in this.inputForm.adApplyList){
             var detail=this.inputForm.adApplyList[index];
             if(util.isNotBlank(detail.applyQty)){
-              tempList.push(detail)
+              tempList.push(detail);
+              qtyList.push(detail.applyQty);
              }
           }
          for(var index in this.inputForm.adApplyList){
            var detail=this.inputForm.adApplyList[index];
            if((val.length>=1 && util.contains(detail.product.name,val)) && util.isBlank(detail.applyQty)){
-             tempList.push(detail)
+             tempList.push(detail);
+             qtyList.push(detail.applyQty);
            }
          }
          this.filterAdApplyList = tempList;
-       },remoteShop(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-            axios.get('/api/crm/depot/adShop',{params:{adShopName:query,billType:this.inputForm.billType}}).then((response)=>{
-            this.shops = response.data;
-            this.remoteLoading = false;
-           })
-        }
-      },onchange(){
+         this.filterApplyQty = qtyList;
+       },onchange(){
           this.submitDisabled = true;
-          axios.get('api/ws/future/layout/adApply/getAdApplyList',{params:{billType:this.inputForm.billType}}).then((response) =>{
+          axios.get('api/ws/future/layout/adApply/getAdApplyGoodsList',{params:{billType:this.inputForm.billType}}).then((response) =>{
           this.inputForm.adApplyList = response.data;
           this.submitDisabled = false;
           });
-      },getShopTypeLabel(id) {
-        var arr = this.shops;
-        if(id){
-         for(var i in arr){
-            if(arr[i].id === id){
-               this.shopTypeLabel =  arr[i].typeLabel;
-               return;
-            }
-         }
-       }
-     }
+      }
     },created () {
         this.pageHeight = window.outerHeight -320;
         axios.get('api/ws/future/layout/adApply/getForm').then((response) =>{
-        this.formProperty.billTypes = response.data.billTypes;
+        this.inputForm = response.data;
       });
     }
   }

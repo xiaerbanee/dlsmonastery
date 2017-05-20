@@ -1,5 +1,7 @@
 package net.myspring.future.modules.layout.web.controller;
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
@@ -41,18 +43,20 @@ public class AdApplyController {
         return adApplyService.getForm(adApplyForm);
     }
 
-    @RequestMapping(value = "getAdApplyList", method = RequestMethod.GET)
+    @RequestMapping(value = "getAdApplyGoodsList", method = RequestMethod.GET)
     public List<ProductDto> getAdApplyList(String billType){
         return adApplyService.findAdApplyList(billType);
     }
 
-    @RequestMapping(value = "getAdApplyGoodsList", method = RequestMethod.GET)
-    public String form(){
-        return null;
+    @RequestMapping(value = "save")
+    public RestResponse save(AdApplyForm adApplyForm){
+        adApplyService.save(adApplyForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
+
     @RequestMapping(value = "getBillFormProperty", method = RequestMethod.GET)
-    public String getBillFormProperty(String billType){
+    public String getBillFormProperty(AdApplyForm adApplyForm){
         return null;
     }
 
