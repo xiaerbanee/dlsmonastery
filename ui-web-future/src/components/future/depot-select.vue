@@ -11,7 +11,7 @@
     props: ['value','category','multiple','disabled'],
     data() {
       return {
-        innerId:this.value,
+        innerId:null,
         itemList : [],
         remoteLoading:false
       };
@@ -48,7 +48,6 @@
         })
       }, handleChange(newVal) {
         this.$emit('input', newVal);
-        return true;
       },setValue(val) {
         this.innerId=val;
         if(util.isBlank(this.innerId) || this.itemList.length>0){
