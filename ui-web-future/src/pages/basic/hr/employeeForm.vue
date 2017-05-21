@@ -143,11 +143,6 @@
           type:"主账号",
           officeIdList:'',
         },
-        leaders:[],
-        offices:[],
-        depots:[],
-        origins:[],
-        dataScopeOffices:[],
         remoteLoading:false,
         employeeRules: {
           name: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
@@ -205,29 +200,11 @@
       }
     },created(){
       axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        var account=response.data.account;
-        var employee=response.data;
-        if(account.officeId!=null){
-          this.offices=new Array({id:account.officeId,name:account.officeName})
-        }
-        if(account.officeIdList!=null&&account.officeIdList.length>0){
-          let officeList=new Array();
-          for(var i=account.officeIdList.length-1;i>=0;i--){
-            officeList.push({id:account.officeIdList[i],name:account.officeListName[i]})
-          }
-          this.dataScopeOffices=officeList;
-          this.accountForm.officeIdList=account.officeIdList;
-          console.log(officeList)
-        }
-        if(account.leaderId!=null){
-          this.leaders=new Array({id:account.leaderId,loginName:account.leaderName})
-        }
-        if(account.leaderId!=null){
-          this.leaders=new Array({id:account.leaderId,loginName:account.leaderName})
-        }
-        this.employeeForm=employee;
+        this.employeeForm=response.data;
         this.employeeForm.sex=employee.sex=="男"?1:0;
-        this.accountForm=account;
+      })
+      axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.accountForm=response.data;
       })
       axios.get('/api/basic/hr/employee/getForm').then((response)=>{
           this.inputProperty=response.data
