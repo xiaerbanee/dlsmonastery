@@ -33,9 +33,8 @@
         <el-table-column prop="remarks" :label="$t('clientList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('clientList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,18 +51,9 @@
           page:0,
           size:25,
           name:'',
-          type:'',
-          hasIme:'',
-          allowBill:'',
-          productType:'',
-          allowOrder:'',
-          outGroupName:'',
-          netType:'',
         },formLabel:{
           name:this.$t('clientList.name'),
         },
-        offices:[],
-        pickerDateOption:util.pickerDateOption,
         formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
@@ -74,7 +64,7 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("productList",this.formData);
+        util.setQuery("clientList",this.formData);
         axios.get('/api/ws/future/basic/client',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -93,8 +83,15 @@
       },itemAdd(){
         this.$router.push({ name: 'clientForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'clientForm', query: { id: id }})
+        }else if(action=="delete"){
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/basic/client/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          });
         }
       }
     },created () {

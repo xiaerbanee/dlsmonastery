@@ -34,10 +34,16 @@ public class ClientController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "getForm")
-    public ClientForm findOne(ClientForm clientForm) {
-        clientForm=clientService.getForm(clientForm);
-        return clientForm;
+    @RequestMapping(value = "findOne")
+    public ClientDto findOne(ClientDto clientDto) {
+        clientDto=clientService.findOne(clientDto);
+        return clientDto;
+    }
+
+    @RequestMapping(value = "delete")
+    public RestResponse delete(ClientDto clientDto) {
+        clientService.delete(clientDto);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
 //TODO 貨品訂貨時，名稱顯示不對，不能動態及時相應

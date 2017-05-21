@@ -72,13 +72,17 @@ public class ClientService {
         return client;
     }
 
-    public ClientForm getForm(ClientForm clientForm){
-        if(!clientForm.isCreate()){
-            Client client=clientMapper.findOne(clientForm.getId());
-            clientForm= BeanUtil.map(client,ClientForm.class);
-            cacheUtils.initCacheInput(clientForm);
+    public ClientDto findOne(ClientDto clientDto){
+        if(!clientDto.isCreate()){
+            Client client=clientMapper.findOne(clientDto.getId());
+            clientDto= BeanUtil.map(client,ClientDto.class);
+            cacheUtils.initCacheInput(clientDto);
        }
-       return clientForm;
+       return clientDto;
+    }
+
+    public void delete(ClientDto clientDto){
+        clientMapper.logicDeleteOne(clientDto.getId());
     }
 
     public String getClientName(String depotId) {
