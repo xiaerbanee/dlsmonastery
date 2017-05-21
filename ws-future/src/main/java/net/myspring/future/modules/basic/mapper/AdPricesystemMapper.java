@@ -52,4 +52,6 @@ public interface AdPricesystemMapper extends BaseMapper<AdPricesystem,String> {
 
     int saveOfficeIds(@Param("adPricesystemId") String adPricesystemId,@Param("officeIds") List<String> officeIds);
 
+    List<String> findOfficeById(String id);
+
 }

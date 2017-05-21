@@ -49,4 +49,10 @@
         </foreach>
     </insert>
 
+    <select id="findOfficeById" resultType="String">
+        SELECT t1.office_id
+        FROM crm_ad_pricesystem_office t1
+        where t1.ad_pricesystem_id=#{id}
+    </select>
+
 </mapper>

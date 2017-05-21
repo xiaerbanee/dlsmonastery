@@ -97,7 +97,8 @@ public class OfficeService {
             officeDto = BeanUtil.map(office, OfficeDto.class);
             if (OfficeTypeEnum.SUPPORT.name().equals(office.getType())) {
                 List<OfficeBusiness> businessOffices = officeBusinessMapper.findBusinessIdById(office.getId());
-                officeDto.setOfficeTree(getOfficeTree(CollectionUtil.extractToList(businessOffices, "id")));
+                officeDto.setOfficeTree(getOfficeTree());
+                officeDto.getOfficeTree().setChecked(CollectionUtil.extractToList(businessOffices,"id"));
             }
             List<OfficeLeader> officeLeaderList = officeLeaderMapper.findByOfficeId(officeDto.getId());
             officeDto.setLeaderIdList(CollectionUtil.extractToList(officeLeaderList, "leaderId"));
@@ -218,11 +219,10 @@ public class OfficeService {
         return officeRuleDtoList;
     }
 
-    public TreeNode getOfficeTree(List<String> officeIdList) {
+    public TreeNode getOfficeTree() {
         TreeNode treeNode = new TreeNode("0", "部门列表");
         List<Office> officeList = officeMapper.findAll();
         getTreeNodeList(officeList, treeNode.getChildren(), TreeConstant.ROOT_PARENT_IDS);
-        treeNode.setChecked(Lists.newArrayList(Sets.newHashSet(officeIdList)));
         return treeNode;
     }
 

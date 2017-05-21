@@ -10,6 +10,7 @@ import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.DepotShopMapper;
 import net.myspring.future.modules.basic.web.query.AdPricesystemQuery;
 import net.myspring.future.modules.basic.web.form.AdPricesystemForm;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.data.domain.Page;
@@ -29,10 +30,13 @@ public class AdPricesystemService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public AdPricesystemDto findOne(String id){
-        AdPricesystem adPricesystem = adPricesystemMapper.findOne(id);
-        AdPricesystemDto adPricesystemDto = BeanUtil.map(adPricesystem,AdPricesystemDto.class);
-        cacheUtils.initCacheInput(adPricesystemDto);
+    public AdPricesystemDto findOne(AdPricesystemDto adPricesystemDto){
+        if(!adPricesystemDto.isCreate()){
+            AdPricesystem adPricesystem = adPricesystemMapper.findOne(adPricesystemDto.getId());
+            adPricesystemDto = BeanUtil.map(adPricesystem,AdPricesystemDto.class);
+            adPricesystemDto.setOfficeIdList(adPricesystemMapper.findOfficeById(adPricesystemDto.getId()));
+            cacheUtils.initCacheInput(adPricesystemDto);
+        }
         return adPricesystemDto;
     }
 
