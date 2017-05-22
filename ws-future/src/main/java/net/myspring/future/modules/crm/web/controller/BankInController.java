@@ -91,4 +91,12 @@ public class BankInController {
         return result;
     }
 
+
+    @RequestMapping(value="export")
+    public String export(BankInQuery bankInQuery) {
+
+        return bankInService.export(bankInQuery);
+    }
+
+
 }

@@ -12,12 +12,13 @@ import java.time.LocalDate;
 
 public class BankInDto extends DataDto<BankIn> {
 
-
+    @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
     private String shopId;
     private String shopClientId;
     @CacheInput(inputKey = "clients",inputInstance = "shopClientId",outputInstance = "name")
     private String shopClientName;
+    @CacheInput(inputKey = "banks",inputInstance = "bankId",outputInstance = "name")
     private String bankName;
     private String bankId;
 

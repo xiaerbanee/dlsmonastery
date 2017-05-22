@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
  */
 public class ProductImeDto extends DataDto<ProductIme> {
 
+    private String boxIme;
     private String ime;
     private String ime2;
     private String meid;
@@ -26,6 +27,27 @@ public class ProductImeDto extends DataDto<ProductIme> {
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
     private String productId;
+
+    private String depotOfficeId;
+    @CacheInput(inputKey = "offices",inputInstance = "depotOfficeId",outputInstance = "name")
+    private String depotOfficeName;
+    private String depotAreaName;
+    private String depotAreaType;
+
+    private String productImeSaleEmployeeId;
+    @CacheInput(inputKey = "employees",inputInstance = "productImeSaleEmployeeId",outputInstance = "name")
+    private String productImeSaleEmployeeName;
+
+    private String productImeUploadEmployeeId;
+    @CacheInput(inputKey = "employees",inputInstance = "productImeUploadEmployeeId",outputInstance = "name")
+    private String productImeUploadEmployeeName;
+
+
+
+
+    private String productTypeId;
+    @CacheInput(inputKey = "productTypes",inputInstance = "productTypeId",outputInstance = "name")
+    private String productTypeName;
 
     private LocalDateTime createdTime;
     private Boolean locked;
@@ -44,6 +66,95 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String productImeUploadCreatedBy;
     @CacheInput(inputKey = "accounts",inputInstance = "productImeUploadCreatedBy",outputInstance = "loginName")
     private String productImeUploadCreatedByName;
+
+
+    public String getDepotOfficeId() {
+        return depotOfficeId;
+    }
+
+    public void setDepotOfficeId(String depotOfficeId) {
+        this.depotOfficeId = depotOfficeId;
+    }
+
+    public String getDepotOfficeName() {
+        return depotOfficeName;
+    }
+
+    public void setDepotOfficeName(String depotOfficeName) {
+        this.depotOfficeName = depotOfficeName;
+    }
+
+    public String getDepotAreaName() {
+        return depotAreaName;
+    }
+
+    public void setDepotAreaName(String depotAreaName) {
+        this.depotAreaName = depotAreaName;
+    }
+
+    public String getDepotAreaType() {
+        return depotAreaType;
+    }
+
+    public void setDepotAreaType(String depotAreaType) {
+        this.depotAreaType = depotAreaType;
+    }
+
+    public String getProductImeSaleEmployeeId() {
+        return productImeSaleEmployeeId;
+    }
+
+    public void setProductImeSaleEmployeeId(String productImeSaleEmployeeId) {
+        this.productImeSaleEmployeeId = productImeSaleEmployeeId;
+    }
+
+    public String getProductImeSaleEmployeeName() {
+        return productImeSaleEmployeeName;
+    }
+
+    public void setProductImeSaleEmployeeName(String productImeSaleEmployeeName) {
+        this.productImeSaleEmployeeName = productImeSaleEmployeeName;
+    }
+
+    public String getProductImeUploadEmployeeId() {
+        return productImeUploadEmployeeId;
+    }
+
+    public void setProductImeUploadEmployeeId(String productImeUploadEmployeeId) {
+        this.productImeUploadEmployeeId = productImeUploadEmployeeId;
+    }
+
+    public String getProductImeUploadEmployeeName() {
+        return productImeUploadEmployeeName;
+    }
+
+    public void setProductImeUploadEmployeeName(String productImeUploadEmployeeName) {
+        this.productImeUploadEmployeeName = productImeUploadEmployeeName;
+    }
+
+    public String getProductTypeId() {
+        return productTypeId;
+    }
+
+    public void setProductTypeId(String productTypeId) {
+        this.productTypeId = productTypeId;
+    }
+
+    public String getProductTypeName() {
+        return productTypeName;
+    }
+
+    public void setProductTypeName(String productTypeName) {
+        this.productTypeName = productTypeName;
+    }
+
+    public String getBoxIme() {
+        return boxIme;
+    }
+
+    public void setBoxIme(String boxIme) {
+        this.boxIme = boxIme;
+    }
 
     public String getProductImeSaleShopName() {
         return productImeSaleShopName;

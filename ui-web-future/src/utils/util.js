@@ -100,6 +100,16 @@ util.confirmBeforeBatchPass = function(vueObj){
   });
 }
 
+util.confirmBeforeExportData = function(vueObj){
+  return vueObj.$confirm(vueObj.$t('util.waringMsgBeforeExportData'), vueObj.$t('util.typeOfWarningBeforeExportData'), {
+    confirmButtonText: vueObj.$t('util.confirmButton'),
+    cancelButtonText:  vueObj.$t('util.cancelButton'),
+
+    type: 'warning'
+  });
+}
+
+
 
 
 util.getQuery = function (routerName) {

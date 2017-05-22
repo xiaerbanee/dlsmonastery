@@ -3,9 +3,9 @@
     <head-tab active="productImeList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('productImeList.filter')}}</el-button>
-        <el-button type="primary" @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
-        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
+        <el-button type="primary" v-permit="'crm:productIme:view'" @click="formVisible = true" icon="search">{{$t('productImeList.filterOrExport')}}</el-button>
+
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('productImeList.filter')" v-model="formVisible" size="small" class="search-form">
         <el-form :model="formData">
@@ -57,11 +57,23 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
+          <el-button @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('productImeList.sure')}}</el-button>
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="ime" :label="$t('productImeList.ime')" sortable width="160"></el-table-column>
+
+        <el-table-column type="expand">
+          <template scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item :label="$t('productImeList.remarks')">
+                <span>{{ props.row.remarks }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="ime" :label="$t('productImeList.ime')" sortable width="160"></el-table-column>
         <el-table-column prop="ime2"  :label="$t('productImeList.ime2')" sortable ></el-table-column>
         <el-table-column prop="meid" :label="$t('productImeList.meid')"></el-table-column>
         <el-table-column prop="retailDate" :label="$t('productImeList.retailDate')"></el-table-column>
@@ -175,7 +187,13 @@
           this.$router.push({ name: 'productImeDetail', query: { id: id }})
         }
       },exportData(){
-        window.location.href= "/api/ws/future/crm/productIme/export?"+qs.stringify(this.submitData);
+
+        util.confirmBeforeExportData(this).then(() => {
+          util.copyValue(this.formData,this.submitData);
+          axios.get('/api/ws/future/crm/productIme/export?'+qs.stringify(this.submitData)).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        });
       }
     },created () {
 

@@ -8,8 +8,10 @@ export default {
     latestMonth: "最近一个月",
     waringMsgBeforeDelRecord:"此操作将删除该记录, 是否继续?",
     waringMsgBeforeBatchPass:"确认批量通过?",
+    waringMsgBeforeExportData:"最多导出10000行记录，确认导出?",
     typeOfWarningBeforeDelRecord:"提示",
     typeOfWarningBeforeBatchPass:"提示",
+    typeOfWarningBeforeExportData:"提示",
     confirmButton:"确定",
     cancelButton:"取消",
 

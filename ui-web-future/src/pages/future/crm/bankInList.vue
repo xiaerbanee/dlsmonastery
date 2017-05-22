@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:bankIn:edit'">{{$t('bankInList.add')}}</el-button>
         <el-button type="primary" :disabled="submitDisabled"  @click="batchPass" icon="check" v-permit="'crm:bankIn:audit'">{{$t('bankInList.batchPass')}}</el-button>
+        <el-button   type="primary" @click="exportData" v-permit="'crm:bankIn:view'">{{$t('bankInList.export')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bankIn:view'">{{$t('bankInList.filter')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
@@ -199,6 +200,13 @@
             this.pageRequest();
           });
         }).catch(()=>{});
+      },exportData(){
+
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/crm/bankIn/export?'+qs.stringify(this.submitData)).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        });
       }
     },created () {
       var that = this;

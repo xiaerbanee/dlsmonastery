@@ -6,20 +6,24 @@
 
         SELECT
             sale.created_date productImeSaleCreatedDate,
+            sale.employee_id productImeSaleEmployeeId,
             upload.created_date productImeUploadCreatedDate,
+            upload.employee_id productImeUploadEmployeeId,
             validProductIme.*
         FROM
         (
             SELECT
-              t1.*
+              product.product_type_id, depot.office_id depotOfficeId, t1.*
             FROM
                 crm_product_ime t1,
-                crm_depot depot
+                crm_depot depot,
+                crm_product product
             WHERE
                 t1.enabled = 1
                 AND t1.depot_id = depot.id
                 AND depot.enabled = 1
                 AND t1.company_id =  #{p.companyId}
+                AND t1.product_id = product.id
                 <!--<include refid="net.myspring.future.modules.basic.mapper.DepotMapper.depotFilter" />-->
 
                 <if test="p.boxIme !=null" >
@@ -92,23 +96,27 @@
         SELECT
         sale.created_date productImeSaleCreatedDate,
         sale.created_by productImeSaleCreatedBy,
+        sale.employee_id productImeSaleEmployeeId,
         sale.shop_id productImeSaleShopId,
         upload.created_date productImeUploadCreatedDate,
         upload.created_by productImeUploadCreatedBy,
+        upload.employee_id productImeUploadEmployeeId,
         upload.shop_id productImeUploadShopId,
         validProductIme.*
         FROM
         (
             SELECT
-            t1.*
+            product.product_type_id, depot.office_id depotOfficeId, t1.*
             FROM
             crm_product_ime t1,
-            crm_depot depot
+            crm_depot depot,
+            crm_product product
             WHERE
                 t1.enabled = 1
                 AND t1.depot_id = depot.id
                 AND depot.enabled = 1
                 AND t1.company_id =  #{companyId}
+                AND t1.product_id =  product.id
                 AND t1.ime in
                 <foreach item="item" index="index" collection="imeList" open="(" separator="," close=")">
                       #{item}

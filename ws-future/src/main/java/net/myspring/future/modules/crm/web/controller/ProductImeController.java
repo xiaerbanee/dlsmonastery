@@ -50,5 +50,10 @@ public class ProductImeController {
         return productImeService.findDtoListByImes(imeStr);
     }
 
+    @RequestMapping(value="export")
+    public String export(ProductImeQuery productImeQuery) {
+
+        return productImeService.export(productImeQuery);
+    }
 
 }
