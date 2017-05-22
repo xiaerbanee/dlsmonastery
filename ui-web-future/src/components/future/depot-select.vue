@@ -56,6 +56,7 @@
         }
         if(util.isBlank(idStr) || this.itemList.length>0) {
           return;
+
         }
         this.remoteLoading = true;
         axios.get('/api/ws/future/basic/depot/findByIds'+'?idStr=' + idStr).then((response)=>{

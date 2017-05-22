@@ -1,13 +1,12 @@
 package net.myspring.future.modules.basic.web.controller;
 
-import com.ctc.wstx.util.StringUtil;
-import net.myspring.common.constant.CharConstant;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -78,14 +77,33 @@ public class DepotController {
     }
 
     @RequestMapping(value = "findByIds")
-    public List<DepotDto> findByIds(String idStr) {
-        List<String> ids = StringUtils.getSplitList(idStr, CharConstant.COMMA);
+    public List<DepotDto> findByListIds(@RequestParam("idStr") List<String> ids) {
         List<DepotDto> depotDtoList =depotService.findByIds(ids);
         return depotDtoList;
     }
 
     @RequestMapping(value = "findById")
     public DepotDto findById(String id) {
+        if(StringUtils.isBlank(id)){
+            return new DepotDto();
+        }
         return depotService.findById(id);
     }
+
+    @RequestMapping(value = "findShopByGoodsOrderId")
+    public DepotDto findShopByGoodsOrderId(String goodsOrderId) {
+        if(StringUtils.isBlank(goodsOrderId)){
+            return new DepotDto();
+        }
+        return depotService.findShopByGoodsOrderId(goodsOrderId);
+    }
+
+    @RequestMapping(value = "findStoreByGoodsOrderId")
+    public DepotDto findStoreByGoodsOrderId(String goodsOrderId) {
+        if(StringUtils.isBlank(goodsOrderId)){
+            return new DepotDto();
+        }
+        return depotService.findStoreByGoodsOrderId(goodsOrderId);
+    }
+
 }

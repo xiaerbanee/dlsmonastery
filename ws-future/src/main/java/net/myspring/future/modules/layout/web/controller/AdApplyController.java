@@ -6,6 +6,7 @@ import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.service.AdApplyService;
+import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -43,10 +44,6 @@ public class AdApplyController {
         return adApplyService.getForm(adApplyForm);
     }
 
-    @RequestMapping(value = "getAdApplyGoodsList", method = RequestMethod.GET)
-    public List<ProductDto> getAdApplyList(String billType){
-        return adApplyService.findAdApplyList(billType);
-    }
 
     @RequestMapping(value = "save")
     public RestResponse save(AdApplyForm adApplyForm){
@@ -55,9 +52,9 @@ public class AdApplyController {
     }
 
 
-    @RequestMapping(value = "getBillFormProperty", method = RequestMethod.GET)
-    public String getBillFormProperty(AdApplyForm adApplyForm){
-        return null;
+    @RequestMapping(value = "getBillForm", method = RequestMethod.GET)
+    public AdApplyBillForm getBillForm(AdApplyBillForm adApplyBillForm){
+        return adApplyService.getBillForm(adApplyBillForm);
     }
 
     @RequestMapping(value = "getBillAdApplyMap", method = RequestMethod.GET)

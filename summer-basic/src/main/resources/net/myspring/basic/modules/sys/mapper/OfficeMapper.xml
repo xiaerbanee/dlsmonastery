@@ -130,7 +130,7 @@
             SELECT
             t2.area_id
             FROM
-            sys_officet2
+            sys_office t2
             WHERE
             t2.id = #{officeId}
          )

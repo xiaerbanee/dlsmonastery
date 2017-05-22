@@ -2,84 +2,86 @@
   <div>
     <head-tab active="goodsOrderBill"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px" class="form input-form">
+      <el-form :model="submitData" ref="inputForm" :rules="rules" label-width="150px" class="form input-form">
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.store')" prop="storeId">
-              <el-select v-model="inputForm.storeId" clearable filterable @change="billChange">
-                <el-option v-for="item in inputForm.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-select v-model="goodsOrder.storeId" clearable filterable @change="storeChanged">
+                <el-option v-for="item in inputProperty.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.billDate')" prop="billDate">
-              <date-picker v-model="inputForm.billDate"  ></date-picker>
+              <date-picker v-model="goodsOrder.billDate"  ></date-picker>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.expressCompany')" prop="expressCompanyId">
-              <el-select v-model="inputForm.expressCompanyId" clearable  >
-                <el-option v-for="item in inputForm.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-select v-model="expressOrder.expressCompanyId" clearable  >
+                <el-option v-for="item in inputProperty.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.synToCloud')" prop="syn">
-             <boolRadioGroup v-model="inputForm.syn"  ></boolRadioGroup>
+              <bool-radio-group v-model="syn"  ></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shipType')" >
-              {{inputForm.shipType}}
+              {{goodsOrder.shipType}}
             </el-form-item>
 
             <el-form-item :label="$t('goodsOrderBill.goodsOrderRemarks')" prop="remarks">
-              <el-input type="textarea" v-model="inputForm.remarks"></el-input>
+              <el-input type="textarea" v-model="goodsOrder.remarks"></el-input>
             </el-form-item>
 
             <el-form-item :label="$t('goodsOrderBill.formatId')" >
-              {{inputForm.goodsOrderDto.formatId}}
+              {{goodsOrder.formatId}}
+            </el-form-item>
+            <el-form-item :label="$t('goodsOrderBill.contact')" prop="contator">
+              <el-input v-model="expressOrder.contator"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('goodsOrderBill.address')" prop="address">
+              <el-input type="textarea" v-model="expressOrder.address"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('goodsOrderBill.mobilePhone')" prop="mobilePhone">
+              <el-input v-model="expressOrder.mobilePhone"></el-input>
             </el-form-item>
 
           </el-col>
           <el-col :span="12">
-            <el-form-item :label="$t('goodsOrderBill.contact')" prop="contator">
-              <el-input v-model="inputForm.expressContator"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.address')" prop="address">
-              <el-input v-model="inputForm.expressAddress"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.mobilePhone')" prop="mobilePhone">
-              <el-input v-model="inputForm.expressMobilePhone"></el-input>
-            </el-form-item>
 
             <el-form-item :label="$t('goodsOrderBill.areaName')" >
-              {{inputForm.goodsOrderDto.shopAreaName}}
+              {{goodsOrder.shopAreaName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shopName')" >
-              {{inputForm.shopDto.name}} <div style="color:red;font-size:16px">{{inputForm.shopDto.areaType}}</div>
+              {{shop.name}} <div style="color:red;font-size:16px">{{shop.areaType}}</div>
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.parentName')"  v-if="inputForm.shopDto.clientName">
-              {{inputForm.shopDto.clientName}}
+            <el-form-item :label="$t('goodsOrderBill.parentName')"  >
+              {{shop.clientName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shopCredit')" prop="title">
-              {{inputForm.shopDto.credit}}
+              {{shop.credit}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shouldGet')" prop="remarks" >
-              {{inputForm.goodsOrderDto.shopShouldGet}}
+              {{goodsOrder.shopShouldGet}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shopRemarks')" prop="remarks">
-              {{inputForm.shopDto.remarks}}
+              {{shop.remarks}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.credit')" prop="title">
-              {{inputForm.shopDto.credit}}
+              {{shop.credit}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.goodsDeposit')" prop="title">
-              {{inputForm.goodsOrderDto.shopGoodsDeposit}}
+              {{goodsOrder.shopGoodsDeposit}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.costGoodsDeposit')" prop="remarks">
-              {{inputForm.goodsOrderDto.costGoodsDeposit}}
+              {{summary.totalProductDeposit}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.leftGoodsDeposit')" prop="title">
-              {{inputForm.goodsOrderDto.leftGoodsDeposit}}
+              {{summary.leftDeposit}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.summary')" prop="summary">
-              {{$t('goodsOrderBill.totalQty')}}:{{this.totalQty}},{{$t('goodsOrderBill.totalPrice')}}:{{this.totalPrice}}
+              {{$t('goodsOrderBill.totalQty')}}:{{summary.totalQty}},{{$t('goodsOrderBill.totalPrice')}}:{{summary.totalPrice}},{{$t('goodsOrderBill.totalProduct')}}:{{summary.totalProduct}}
+              ,{{$t('goodsOrderBill.totalProductPrice')}}:{{summary.totalProductPrice}},{{$t('goodsOrderBill.totalProductDeposit')}}:{{summary.totalProductDeposit}}
+              ,{{$t('goodsOrderBill.shopShouldGetAfterBill')}}:{{summary.shopShouldGetAfterBill}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.goodsOrderRebateRule')" >
-              {{inputForm.goodsOrderDto.goodsOrderRebateRuleRemarks}}
+              {{goodsOrder.goodsOrderRebateRuleRemarks}}
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderBill.save')}}</el-button>
@@ -103,7 +105,12 @@
             <input type="text" v-model="scope.row.billQty" @change="refreshSummary()" class="el-input__inner"/>
           </template>
         </el-table-column>
-        <el-table-column prop="price" :label="$t('goodsOrderBill.price')"></el-table-column>
+        <el-table-column prop="price" :label="$t('goodsOrderBill.price')">
+          <template scope="scope">
+            <input type="text" v-model="scope.row.price" @change="refreshSummary()" class="el-input__inner"/>
+          </template>
+
+        </el-table-column>
         <el-table-column prop="productHasIme" :label="$t('goodsOrderBill.hasIme')" >
           <template scope="scope">
             <el-tag :type="scope.row.productHasIme ? 'primary' : 'danger'">{{scope.row.productHasIme | bool2str}}</el-tag>
@@ -131,10 +138,12 @@
         submitDisabled:false,
         productName:"",
         filterGoodsOrderDetailList:[],
-        inputForm:{
-          goodsOrderDto:{},
-          shopDto:{},
-        },
+        inputProperty:{},
+        goodsOrder:{},
+        shop:{},
+        expressOrder:{},
+        goodsOrderDetailList:[],
+        syn:true,
         submitData:{
           id:'',
           storeId:"",
@@ -143,106 +152,152 @@
           expressContator:"",
           expressAddress:"",
           expressMobilePhone:"",
-          syn:"1",
+          syn:'',
           remarks:"",
-          detailFormList:[],
+          goodsOrderDetailList:[],
         },
+        summary:{},
         rules: {},
         initForm:false,
         pageLoading:false,
-
         totalQty:'',
         totalPrice:''
       }
     },
     methods:{
-       formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-               this.initSubmitDataBeforeSubmit();
-              axios.post('/api/ws/future/crm/goodsOrder/billSave',qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
-               this.$message(response.data.message);
-                if(response.data.success){
-                  if(this.isCreate){
-                      form.resetFields();
-                      this.submitDisabled = false;
-                    } else {
-                      this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
-                    }
-                  }else{
-                    this.submitDisabled = false;
-                  }
-              }).catch(function () {
+      formSubmit(){
+        this.submitDisabled = true;
+        let form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            this.initSubmitDataBeforeSubmit();
+            axios.post('/api/ws/future/crm/goodsOrder/bill',qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+              this.$message(response.data.message);
+              if(response.data.success){
+                if(this.isCreate){
+                  form.resetFields();
+                  this.submitDisabled = false;
+                } else {
+                  this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
+                }
+              }else{
                 this.submitDisabled = false;
-              });
-            }else{
+              }
+            }).catch(function () {
               this.submitDisabled = false;
-            }
-          })
-        }, billChange(newVal){
-        if(newVal=="" || newVal == this.inputForm.storeId || newVal == util.getLabel(this.inputForm.storeList,this.inputForm.storeId,"name")) {
-          return;
-        }
-        this.refreshForm();
-
-        },searchDetail(){
+            });
+          }else{
+            this.submitDisabled = false;
+          }
+        })
+      },searchDetail(){
         let val=this.productName;
-         let tempList=new Array();
-          for(let each of this.inputForm.detailFormList){
+        let tempList=[];
+        for(let goodsOrderDetail of this.goodsOrderDetailList){
 
-            if(util.isNotBlank(each.billQty) || util.isNotBlank(each.qty)){
-              tempList.push(each)
-             }
+          if(util.isNotBlank(goodsOrderDetail.billQty) || util.isNotBlank(goodsOrderDetail.qty)){
+            tempList.push(goodsOrderDetail)
           }
-         for(let each of this.inputForm.detailFormList){
-           if(util.contains(each.productName,val) && util.isBlank(each.billQty) && util.isBlank(each.qty)){
-             tempList.push(each);
-           }
-         }
-         this.filterGoodsOrderDetailList = tempList;
-       },refreshSummary(){
-        let list=this.filterGoodsOrderDetailList;
+        }
+        for(let goodsOrderDetail of this.goodsOrderDetailList){
+          if(util.contains(goodsOrderDetail.productName,val) && util.isBlank(goodsOrderDetail.billQty) && util.isBlank(goodsOrderDetail.qty)){
+            tempList.push(goodsOrderDetail);
+          }
+        }
+        this.filterGoodsOrderDetailList = tempList;
+      },refreshSummary(){
+
+        let isDepotStore = true;
+        if(this.inputProperty.notDepotStoreIdList && this.submitData.storeId){
+          for(let notDepotStoreId of this.inputProperty.notDepotStoreIdList){
+            if(notDepotStoreId === this.submitData.storeId){
+              isDepotStore = false;
+              break;
+            }
+          }
+        }
+
         let totalQty=0;
-        let totalPrice=0;
-        for(let item in list){
-          if(list[item].billQty){
-            totalQty=totalQty+parseInt(list[item].billQty);
-            totalPrice=totalPrice+parseInt(list[item].billQty)*parseInt(list[item].price);
+        let totalPrice = 0;
+        let totalProductQty = 0;
+        let totalProductPrice = 0;
+        let totalProductDeposit=0;
+
+        for(let goodsOrderDetail of this.filterGoodsOrderDetailList){
+          if(goodsOrderDetail.billQty){
+            let goodsOrderDetailBillQty = parseInt(goodsOrderDetail.billQty);
+            let goodsOrderDetailPrice = parseFloat(goodsOrderDetail.price);
+
+            totalQty += goodsOrderDetailBillQty;
+            totalPrice += goodsOrderDetailBillQty * goodsOrderDetailPrice;
+            if(goodsOrderDetail.hasIme){
+              totalProductQty += goodsOrderDetailBillQty;
+              totalProductPrice +=goodsOrderDetailBillQty * goodsOrderDetailPrice;
+              if(isDepotStore){
+                totalProductDeposit += goodsOrderDetailBillQty*parseFloat(goodsOrderDetail.productDepositPrice);
+              }
+            }
           }
         }
-        this.totalQty=totalQty;
-        this.totalPrice=totalPrice;
-      },initSubmitDataBeforeSubmit(){
-
-        util.copyValue(this.inputForm, this.submitData);
-
-        let tempList=new Array();
-        for(let each of this.inputForm.detailFormList){
-
-          if(util.isNotBlank(each.qty) || util.isNotBlank(each.billQty)){
-            tempList.push(each);
-          }
+        if(totalProductDeposit>this.goodsOrder.shopGoodsDeposit){
+          totalProductDeposit=this.goodsOrder.shopGoodsDeposit;
         }
-        this.submitData.detailFormList = tempList;
-      },refreshForm(){
-          if(this.initForm){
-              return;
-          }
-          this.initForm = true;
-        axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id, storeId:this.inputForm.storeId}}).then((response)=>{
-          this.inputForm = response.data;
+
+        this.summary={
+            totalQty :totalQty,
+            shopShouldGetAfterBill:this.goodsOrder.shopShouldGet +  (totalPrice-totalProductDeposit),
+            totalProductQty:totalProductQty,
+            totalPrice:totalPrice.toFixed(2),
+            totalProductPrice:totalProductPrice.toFixed(2),
+            totalProductDeposit: totalProductDeposit.toFixed(2),
+            leftDeposit : (this.goodsOrder.shopGoodsDeposit - totalProductDeposit).toFixed(2),
+        };
+
+      },
+      storeChanged(){
+        axios.get('/api/ws/future/crm/goodsOrder/findDetailListForBill',{params: {id:this.$route.query.id, storeId:this.submitData.storeId}}).then((response)=>{
+          this.goodsOrderDetailList = response.data;
           this.searchDetail();
           this.refreshSummary();
-          this.initForm = false;
-        })
+        });
+
+
+      },initSubmitDataBeforeSubmit(){
+          this.submitData.id = this.goodsOrder.id;
+          this.submitData.storeId = this.goodsOrder.storeId;
+          this.submitData.expressCompanyId = this.expressOrder.expressCompanyId;
+          this.submitData.expressContator = this.expressOrder.contator;
+          this.submitData.expressAddress = this.expressOrder.address;
+          this.submitData.expressMobilePhone = this.expressOrder.mobilePhone;
+          this.submitData.syn = this.syn;
+          this.submitData.remarks = this.goodsOrder.remarks;
+
+          let tempList=[];
+          for(let goodsOrderDetail of this.goodsOrderDetailList){
+
+            if(util.isNotBlank(goodsOrderDetail.id) || util.isNotBlank(goodsOrderDetail.qty) || util.isNotBlank(goodsOrderDetail.billQty)){
+              tempList.push(goodsOrderDetail);
+            }
+          }
+          this.submitData.goodsOrderDetailList = tempList;
       }
     },created(){
-
-        this.refreshForm();
-
-
+      axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputProperty = response.data;
+      });
+      axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.goodsOrder = response.data;
+      });
+      axios.get('/api/ws/future/basic/depot/findShopByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
+        this.shop = response.data;
+      });
+      axios.get('/api/ws/future/crm/expressOrder/findByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
+        this.expressOrder = response.data;
+      });
+      axios.get('/api/ws/future/crm/goodsOrder/findDetailListForBill',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.goodsOrderDetailList = response.data;
+        this.searchDetail();
+      });
     }
   }
 </script>

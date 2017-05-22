@@ -4,7 +4,6 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
-import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -48,6 +47,7 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
 
     private String  goodsOrderRebateRuleRemarks;
     private String expressOrderId;
+
 
     public String getExpressOrderId() {
         return expressOrderId;

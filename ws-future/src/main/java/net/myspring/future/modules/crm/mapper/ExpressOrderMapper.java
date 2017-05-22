@@ -9,8 +9,6 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 @Mapper
 public interface ExpressOrderMapper extends MyMapper<ExpressOrder,String> {
 
@@ -19,4 +17,6 @@ public interface ExpressOrderMapper extends MyMapper<ExpressOrder,String> {
     ExpressOrder findByExtendIdAndType(@Param("extendId") String extendId, @Param("extendType") String type);
 
     ExpressOrderDto findDto(@Param("id")  String id);
+
+    ExpressOrderDto findByGoodsOrderId(String goodsOrderId);
 }

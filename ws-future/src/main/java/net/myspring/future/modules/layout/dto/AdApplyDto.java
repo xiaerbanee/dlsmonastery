@@ -6,6 +6,8 @@ import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.util.cahe.annotation.CacheInput;
 
+import java.math.BigDecimal;
+
 
 /**
  * Created by lihx on 2017/4/15.
@@ -27,8 +29,17 @@ public class AdApplyDto extends DataDto<AdApply> {
     private String productName;
     @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "code")
     private String productCode;
+    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "price2")
+    private BigDecimal price2;
     private Integer storeQty;
-    private Integer billQty;
+
+    public BigDecimal getPrice2() {
+        return price2;
+    }
+
+    public void setPrice2(BigDecimal price2) {
+        this.price2 = price2;
+    }
 
     public String getShopId() {
         return shopId;
@@ -134,11 +145,4 @@ public class AdApplyDto extends DataDto<AdApply> {
         this.storeQty = storeQty;
     }
 
-    public Integer getBillQty() {
-        return billQty;
-    }
-
-    public void setBillQty(Integer billQty) {
-        this.billQty = billQty;
-    }
 }

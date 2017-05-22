@@ -730,6 +730,15 @@ export default {
   },
   goodsOrderBill: {
     goodsOrderBill: "pengiriman barang",
+    costGoodsDeposit:'需扣除定金',
+    leftGoodsDeposit:'剩余定金',
+    summary:'汇总信息',
+    areaBillQty:'办事处已开单数',
+    totalProduct:'总货品数',
+    totalProductPrice:'总货品金额',
+    totalProductDeposit:'扣定金',
+    shopShouldGetAfterBill:'开单后应收',
+
     store: "gudang",
     billDate: "tanggal",
     selectDateRange: "pilih tanggal",
@@ -804,6 +813,7 @@ export default {
   },
   goodsOrderForm: {
     goodsOrderForm: "pengiriman barang",
+    clientName: "总店",
     shop: "toko",
     selectWord: "Masukkan kata kunci ditampilkan sebelum 20",
     parentShop: "toko",
@@ -1392,7 +1402,10 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    reset:'重置',
+    search:'搜索',
+    pleaseInputImes:'请输入串码',
   },
   productImeUploadList: {
     productImeUploadList: "laporan string kode",

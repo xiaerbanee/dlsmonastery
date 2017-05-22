@@ -13,11 +13,14 @@ import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.mapper.AdApplyMapper;
+import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.IdUtils;
+import net.myspring.util.time.LocalDateUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +29,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -61,13 +66,42 @@ public class AdApplyService {
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyForm.setBillTypes(billTypes);
+        adApplyForm.setProductDtos(findProductList(adApplyForm.getBillType()));
         return adApplyForm;
     }
 
-    public List<ProductDto> findAdApplyList(String billType){
+    public AdApplyBillForm getBillForm(AdApplyBillForm adApplyBillForm){
+        List<String> billTypes = new ArrayList<>();
+        billTypes.add(BillTypeEnum.POP.name());
+        billTypes.add(BillTypeEnum.配件赠品.name());
+        adApplyBillForm.setBillTypes(billTypes);
+        if(adApplyBillForm.getBillType()==null){
+            adApplyBillForm.setBillType(BillTypeEnum.POP.name());
+        }
+        if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.POP.name())){
+            adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue());
+            List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
+            adApplyBillForm.setAdApplyDtos(findAdApplyList(outGroupIds));
+        }
+        if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.配件赠品.name())){
+            adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue());
+            List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
+            adApplyBillForm.setAdApplyDtos(findAdApplyList(outGroupIds));
+        }
+        return adApplyBillForm;
+    }
+
+    public List<AdApplyDto> findAdApplyList(List<String> outGroupIds){
+        LocalDate dateStart = LocalDate.now().plusYears(-1);
+        List<AdApplyDto> adApplyDtos = adApplyMapper.findByOutGroupIdAndDate(dateStart,outGroupIds);
+        cacheUtils.initCacheInput(adApplyDtos);
+        return adApplyDtos;
+    }
+
+    public List<ProductDto> findProductList(String billType){
         List<ProductDto> productDtos = new ArrayList<>();
         if(billType ==null){
-            return null;
+            billType = BillTypeEnum.POP.name();
         }
         if(billType.equalsIgnoreCase(BillTypeEnum.POP.name())){
             List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());

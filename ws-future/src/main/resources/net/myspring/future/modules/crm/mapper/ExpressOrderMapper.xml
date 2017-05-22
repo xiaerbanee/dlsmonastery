@@ -77,6 +77,17 @@
 
     </select>
 
+    <select id="findByGoodsOrderId" resultType="ExpressOrderDto">
+        SELECT
+        t1.*
+        FROM
+        crm_express_order t1, crm_goods_order t2
+        WHERE
+        t1.enabled=1  and t1.id = t2.express_order_id
+        and t2.id = #{goodsOrderId}
+
+    </select>
+
 
     <select id="findByExtendIdAndType" resultType="ExpressOrder">
        SELECT t1.*

@@ -114,6 +114,7 @@ public class OfficeController {
         return officeDtoList;
     }
 
+    @RequestMapping(value = "getSameAreaByOfficeId")
     public List<String> getSameAreaByOfficeId(String officeId){
         List<String> officeIds=Lists.newArrayList();
         if(StringUtils.isNotBlank(officeId)){
