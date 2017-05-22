@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -43,14 +45,19 @@ public class ShopAdController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(ShopAdForm shopAdForm) {
-        shopAdService.logicDelete(shopAdForm.getId());
+    public RestResponse delete(String id) {
+        shopAdService.logicDelete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getForm")
     public ShopAdForm getForm(ShopAdForm shopAdForm) {
         return shopAdService.getForm(shopAdForm);
+    }
+
+    @RequestMapping(value = "findOne")
+    public ShopAdDto detail(String id){
+        return shopAdService.findOne(id);
     }
 
     @RequestMapping(value = "audit")
@@ -71,7 +78,4 @@ public class ShopAdController {
         return shopAdService.findSimpleExcelSheets(workbook,shopAdQuery);
     }
 
-    private List<String> getActionList( ) {
-        return null;
-    }
 }

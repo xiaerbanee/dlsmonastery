@@ -129,23 +129,20 @@ public class ShopAdService {
         }
     }
 
-    public ShopAd findOne(String id) {
-        ShopAd shopAd = shopAdMapper.findOne(id);
-        return shopAd;
+    public ShopAdDto findOne(String id) {
+        ShopAdDto shopAdDto = new ShopAdDto();
+        if(StringUtils.isNotBlank(id)){
+            ShopAd shopAd = shopAdMapper.findOne(id);
+            shopAdDto = BeanUtil.map(shopAd,ShopAdDto.class);
+            cacheUtils.initCacheInput(shopAdDto);
+        }
+
+        return shopAdDto;
     }
 
     public ShopAdForm getForm(ShopAdForm shopAdForm){
-        if(!shopAdForm.isCreate()){
-            ShopAd shopAd = shopAdMapper.findOne(shopAdForm.getId());
-            shopAdForm = BeanUtil.map(shopAd,ShopAdForm.class);
-            cacheUtils.initCacheInput(shopAdForm);
-        }
         shopAdForm.setShopAdTypeFormList(shopAdTypeMapper.findAllByEnabled());
         return shopAdForm;
-    }
-
-    public Boolean getAuditable(ShopAd shopAd) {
-        return true;
     }
 
     public void logicDelete(String id) {

@@ -20,7 +20,7 @@ public class ShopAdQuery extends BaseQuery{
     private String shopAdTypeId;
     private String specialArea;
     private String createdBy;
-    private String createdDateRange;
+    private String createdDate;
     private String processStatus;
     private List<ShopAdTypeDto> shopAdTypes;
 
@@ -72,12 +72,12 @@ public class ShopAdQuery extends BaseQuery{
         this.createdBy = createdBy;
     }
 
-    public String getCreatedDateRange() {
-        return createdDateRange;
+    public String getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreatedDateRange(String createdDateRange) {
-        this.createdDateRange = createdDateRange;
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getProcessStatus() {
@@ -97,16 +97,16 @@ public class ShopAdQuery extends BaseQuery{
     }
 
     public LocalDate getCreatedDateStart() {
-        if(StringUtils.isNotBlank(createdDateRange)) {
-            return LocalDateUtils.parse(createdDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        if(StringUtils.isNotBlank(createdDate)) {
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
     }
 
     public LocalDate getCreatedDateEnd() {
-        if(StringUtils.isNotBlank(createdDateRange)) {
-            return LocalDateUtils.parse(createdDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        if(StringUtils.isNotBlank(createdDate)) {
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }

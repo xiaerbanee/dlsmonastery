@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:priceChangeIme:edit'">{{$t('priceChangeImeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.filter')}}</el-button>
-        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('priceChangeImeList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -126,8 +126,8 @@
         if(this.formData.image!=null){
           this.formData.image = this.formData.image ==1?true:false;
         }
-        console.log(this.formData);
         util.copyValue(this.formData,this.submitData);
+        console.log(this.submitData);
         util.setQuery("priceChangeImeList",this.submitData);
         axios.get('/api/ws/future/crm/priceChangeIme',{params:this.submitData}).then((response) => {
           this.page = response.data;
@@ -158,6 +158,7 @@
       this.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/priceChangeIme/getQuery').then((response) =>{
         this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
         this.pageRequest();
       });
     }

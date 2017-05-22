@@ -20,9 +20,6 @@ public class PriceChangeImeDto extends DataDto<PriceChangeIme> {
     private String officeId;
     @CacheInput(inputKey = "depots",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
-    private String areaId;
-    @CacheInput(inputKey = "depots",inputInstance = "areaId",outputInstance = "name")
-    private String areaName;
     private Boolean isCheck;
     private String productImeId;
     private String ime;
@@ -73,21 +70,6 @@ public class PriceChangeImeDto extends DataDto<PriceChangeIme> {
         this.officeName = officeName;
     }
 
-    public String getAreaId() {
-        return areaId;
-    }
-
-    public void setAreaId(String areaId) {
-        this.areaId = areaId;
-    }
-
-    public String getAreaName() {
-        return areaName;
-    }
-
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
-    }
 
     public String getPriceChangeName() {
         return priceChangeName;

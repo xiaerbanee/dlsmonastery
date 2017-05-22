@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 public class ShopPrintForm extends DataForm<ShopPrint>{
 
     private String officeId;
-    @CacheInput(inputKey = "offices", inputInstance = "officeId", outputInstance = "name")
-    private String officeName;
     private String printType;
     private Integer qty;
     private String contator;
@@ -22,9 +20,7 @@ public class ShopPrintForm extends DataForm<ShopPrint>{
     private String content;
     private String attachment;
     private String createdBy;
-    @CacheInput(inputKey = "accounts",inputInstance = "createdBy",outputInstance = "loginName")
-    private String createdByName;
-    private String processInstanceId;
+
     private LocalDateTime createdDate;
     private String pass;
     private String passRemarks;
@@ -117,22 +113,6 @@ public class ShopPrintForm extends DataForm<ShopPrint>{
         this.attachment = attachment;
     }
 
-    public String getOfficeName() {
-        return officeName;
-    }
-
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName;
-    }
-
-    public String getCreatedByName() {
-        return createdByName;
-    }
-
-    public void setCreatedByName(String createdByName) {
-        this.createdByName = createdByName;
-    }
-
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
@@ -141,11 +121,4 @@ public class ShopPrintForm extends DataForm<ShopPrint>{
         this.createdDate = createdDate;
     }
 
-    public String getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public void setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
-    }
 }

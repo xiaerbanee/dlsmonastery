@@ -58,8 +58,8 @@ public class ShopImageController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse logicDelete(ShopImageForm shopImageForm) {
-        shopImageService.logicDelete(shopImageForm.getId());
+    public RestResponse logicDelete(String id) {
+        shopImageService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

@@ -22,6 +22,15 @@ public class ShopPrintDto extends DataDto<ShopPrint>{
     private String attachment;
     private String processStatus;
     private String processPositionId;
+    private String processInstanceId;
+
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
 
     public String getOfficeId() {
         return officeId;

@@ -12,6 +12,7 @@ import net.myspring.future.modules.layout.web.form.ShopImageForm;
 import net.myspring.future.modules.layout.web.query.ShopImageQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +45,7 @@ public class ShopImageService {
 
     public ShopImageDto findOne(String id){
         ShopImageDto shopImageDto = new ShopImageDto();
-        if(id!=null){
+        if(StringUtils.isNotBlank(id)){
             ShopImage shopImage=shopImageMapper.findOne(id);
             shopImageDto = BeanUtil.map(shopImage,ShopImageDto.class);
             cacheUtils.initCacheInput(shopImageDto);

@@ -3,8 +3,8 @@
     <head-tab active="shopAdList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopAd:view'">{{$t('shopAdList.batchPass')}}</el-button>
-        <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopAd:view'">{{$t('shopAdList.batchBlack')}}</el-button>
+        <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopAd:edit'">{{$t('shopAdList.batchPass')}}</el-button>
+        <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopAd:edit'">{{$t('shopAdList.batchBlack')}}</el-button>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAd:edit'">{{$t('shopAdList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAd:view'">{{$t('shopAdList.filterOrExport')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
@@ -31,7 +31,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
+                <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
                 <account-select  v-model="formData.createdBy" :multiple="multiple"></account-select>
@@ -99,7 +99,7 @@
           specialArea:'',
           shopAdTypeId:'',
           createdBy:"",
-          createdDateRange:""
+          createdDate:""
         },formLabel:{
           officeId:{label:this.$t('shopAdList.areaName'),value:""},
           id:{label:this.$t('shopAdList.adCode'),value:""},

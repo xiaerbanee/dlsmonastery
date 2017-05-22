@@ -91,7 +91,7 @@
         page:{},
         formData:{},
         batchData:{
-            pass:'',
+          pass:'',
           ids:'',
         },
         submitData:{

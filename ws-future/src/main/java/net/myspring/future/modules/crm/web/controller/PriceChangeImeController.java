@@ -45,6 +45,10 @@ public class PriceChangeImeController {
         return priceChangeImeService.getForm(priceChangeImeForm);
     }
 
+    @RequestMapping(value = "findOne")
+    public PriceChangeImeDto findForm(String id){
+        return priceChangeImeService.findOne(id);
+    }
 
     @RequestMapping(value = "save")
     public RestResponse save(PriceChangeImeForm priceChangeImeForm) {

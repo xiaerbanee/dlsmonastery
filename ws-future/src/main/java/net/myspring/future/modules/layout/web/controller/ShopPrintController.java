@@ -42,13 +42,13 @@ public class ShopPrintController {
     }
 
     @RequestMapping(value="getForm",method = RequestMethod.GET)
-    public String getForm() {
-        return null;
+    public ShopPrintForm getForm(ShopPrintForm shopPrintForm) {
+        return shopPrintService.getForm(shopPrintForm);
     }
 
-    @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public ShopPrintForm detail(ShopPrintForm shopPrintForm) {
-        return shopPrintService.getForm(shopPrintForm);
+    @RequestMapping(value = "findOne", method = RequestMethod.GET)
+    public ShopPrintDto detail(String id) {
+        return shopPrintService.findOne(id);
     }
 
     @RequestMapping(value = "delete")

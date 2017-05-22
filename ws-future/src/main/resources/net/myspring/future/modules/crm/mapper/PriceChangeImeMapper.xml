@@ -4,7 +4,7 @@
 
     <select id="findPage" resultType="PriceChangeImeDto">
         SELECT
-        depot.office_id officeId,depot.area_id areaId,t2.name priceChangeName,productIme.ime ime,productIme.product_id productId,t1.*
+        depot.office_id officeId,t2.name priceChangeName,productIme.ime ime,productIme.product_id productId,t1.*
         FROM
         crm_price_change_ime t1,crm_price_change t2,crm_depot depot,crm_product_ime productIme
         WHERE

@@ -13,6 +13,7 @@ import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,9 +38,15 @@ public class PriceChangeImeService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public PriceChangeIme findOne(String id){
-        PriceChangeIme priceChangeIme=priceChangeImeMapper.findOne(id);
-        return priceChangeIme;
+    public PriceChangeImeDto findOne(String id){
+        PriceChangeImeDto priceChangeImeDto = new PriceChangeImeDto();
+        if(StringUtils.isNotBlank(id)){
+            PriceChangeIme priceChangeIme=priceChangeImeMapper.findOne(id);
+            priceChangeImeDto = BeanUtil.map(priceChangeIme,PriceChangeImeDto.class);
+            cacheUtils.initCacheInput(priceChangeImeDto);
+        }
+
+        return priceChangeImeDto;
     }
 
     public Page<PriceChangeImeDto> findPage(Pageable pageable, PriceChangeImeQuery priceChangeImeQuery){

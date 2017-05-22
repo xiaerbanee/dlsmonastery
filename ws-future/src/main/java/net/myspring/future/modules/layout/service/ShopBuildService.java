@@ -60,14 +60,14 @@ public class ShopBuildService {
         return page;
     }
 
-    public ShopBuildForm getForm(ShopBuildForm shopBuildForm){
-        if(!shopBuildForm.isCreate()){
-            ShopBuild shopBuild=shopBuildMapper.findOne(shopBuildForm.getId());
-            shopBuildForm = BeanUtil.map(shopBuild,ShopBuildForm.class);
-            cacheUtils.initCacheInput(shopBuildForm);
+    public ShopBuildDto findOne(String id){
+        ShopBuildDto shopBuildDto = new ShopBuildDto();
+        if(StringUtils.isNotBlank(id)){
+            ShopBuild shopBuild = shopBuildMapper.findOne(id);
+            shopBuildDto = BeanUtil.map(shopBuild,ShopBuildDto.class);
+            cacheUtils.initCacheInput(shopBuildDto);
         }
-
-        return shopBuildForm;
+        return shopBuildDto;
     }
 
     public ShopBuildDto detail(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm){

@@ -24,11 +24,6 @@ public class ShopAdForm extends DataForm<ShopAd>{
     private String attachment;
     private BigDecimal price;
     private List<ShopAdTypeDto> shopAdTypeFormList = Lists.newArrayList();
-
-    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
-    private String shopName;
-    @CacheInput(inputKey = "shopAdTypes", inputInstance = "shopAdTypeId", outputInstance = "name")
-    private String shopAdTypeName;
     private String processInstanceId;
     private Boolean pass = false;
     private String passRemarks;
@@ -43,21 +38,6 @@ public class ShopAdForm extends DataForm<ShopAd>{
         this.ids = ids;
     }
 
-    public String getShopName() {
-        return shopName;
-    }
-
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
-    }
-
-    public String getShopAdTypeName() {
-        return shopAdTypeName;
-    }
-
-    public void setShopAdTypeName(String shopAdTypeName) {
-        this.shopAdTypeName = shopAdTypeName;
-    }
 
     public Boolean getPass() {
         return pass;

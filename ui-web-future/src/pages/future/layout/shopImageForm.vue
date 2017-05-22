@@ -10,7 +10,7 @@
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageType')" prop="imageType">
               <el-select v-model="inputForm.imageType" filterable clearable :placeholder="$t('shopImageForm.inputType')">
-                <el-option v-for="item in inputProperty.imageTypeList" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in formProperty.imageTypeList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageSize')" prop="imageSize">
@@ -48,7 +48,6 @@
         formProperty:{},
         fileList:[],
         inputForm:{},
-        inputProperty:{},
         submitData:{
           id:'',
           shopId:'',
@@ -112,7 +111,7 @@
         }
       })
       axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
-        this.inputProperty = response.data;
+        this.formProperty = response.data;
       })
     }
   }

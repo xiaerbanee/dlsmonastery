@@ -66,10 +66,12 @@ public class ShopBuildController {
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
-    @RequestMapping(value = "getForm")
-    public ShopBuildForm getForm(ShopBuildForm shopBuildForm) {
-        return shopBuildService.getForm(shopBuildForm);
+
+    @RequestMapping(value = "findOne")
+    public ShopBuildDto findOne(String id){
+        return shopBuildService.findOne(id);
     }
+
 
     @RequestMapping(value = "detail")
     public ShopBuildDetailOrAuditForm detail(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm){
@@ -85,7 +87,4 @@ public class ShopBuildController {
         return shopBuildService.findSimpleExcelSheets(workbook,shopBuildQuery);
     }
 
-    private List<String> getActionList() {
-        return null;
-    }
 }

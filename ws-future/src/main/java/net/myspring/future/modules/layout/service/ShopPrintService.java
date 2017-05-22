@@ -14,6 +14,7 @@ import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +48,16 @@ public class ShopPrintService {
             cacheUtils.initCacheInput(shopPrintForm);
         }
         return shopPrintForm;
+    }
+
+    public ShopPrintDto findOne(String id){
+        ShopPrintDto shopPrintDto = new ShopPrintDto();
+        if(StringUtils.isNotBlank(id)){
+            ShopPrint shopPrint = shopPrintMapper.findOne(id);
+            shopPrintDto = BeanUtil.map(shopPrint,ShopPrintDto.class);
+            cacheUtils.initCacheInput(shopPrintDto);
+        }
+        return shopPrintDto;
     }
 
     public ShopPrint save(ShopPrintForm shopPrintForm) {

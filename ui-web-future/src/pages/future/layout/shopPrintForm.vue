@@ -123,7 +123,7 @@
         this.fileList = fileList;
       }
     },created(){
-      axios.get('/api/ws/future/layout/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/layout/shopPrint/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         if(this.inputForm.printType!=null){
             this.typeChange();

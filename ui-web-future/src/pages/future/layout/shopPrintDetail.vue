@@ -104,7 +104,7 @@
         window.open(file.url);
       }
     },created(){
-      axios.get('/api/ws/future/layout/shopPrint/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/layout/shopPrint/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.shopPrint = response.data;
         if(this.shopPrint.attachment != null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.shopPrint.attachment}}).then((response)=>{

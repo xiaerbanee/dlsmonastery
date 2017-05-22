@@ -7,7 +7,7 @@
           <el-input v-model="inputForm.name" :disabled="!isCreate"></el-input>
         </el-form-item>
         <el-form-item :label="$t('priceChangeForm.productTypeId')" prop="productTypeIdList">
-          <product-type  v-model="inputForm.productTypeIdList" :multiple=true :disabled="!isCreate"></product-type>
+          <product-type-select  v-model="inputForm.productTypeIdList" :multiple=true :disabled="!isCreate"></product-type-select>
         </el-form-item>
         <el-form-item  :label="$t('priceChangeForm.priceChangeDate')" prop="priceChangeDate">
           <date-picker  v-model="inputForm.priceChangeDate" :disabled="action=='audit'"></date-picker>
@@ -29,9 +29,9 @@
   </div>
 </template>
 <script>
-  import productType from 'components/future/product-type-select'
+  import productTypeSelect from 'components/future/product-type-select'
   export default{
-    components:{productType},
+    components:{productTypeSelect},
     data(){
       return{
         isCreate:this.$route.query.id==null,

@@ -7,7 +7,7 @@
           <el-col :span="6">
             <el-form-item :label="$t('shopAdForm.shopAdTypeId')" prop="shopAdTypeId">
               <el-select v-model="inputForm.shopAdTypeId" filterable clearable :placeholder="$t('shopAdForm.inputWord')">
-                <el-option v-for="shopAdType in inputForm.shopAdTypeFormList" :key="shopAdType.id" :label="shopAdType.name+' ('+shopAdType.remarks+')'" :value="shopAdType.id"></el-option>
+                <el-option v-for="shopAdType in formProperty.shopAdTypeFormList" :key="shopAdType.id" :label="shopAdType.name+' ('+shopAdType.remarks+')'" :value="shopAdType.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.shopId')" prop="shopId">
@@ -59,7 +59,6 @@
         submitDisabled:false,
         remoteLoading:false,
         formProperty:{},
-        shops:[],
         fileList:[],
         inputForm:{},
         submitData:{
@@ -119,9 +118,9 @@
         this.fileList = fileList;
       }
     },created(){
-      axios.get('/api/ws/future/layout/shopAd/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
-        if(response.data.specialArea ==true){
+        if(response.data.specialArea == true){
             this.inputForm.specialArea = 1;
         }else{
           this.inputForm.specialArea = 0;
@@ -132,7 +131,9 @@
           });
         }
       });
-
+      axios.get('/api/ws/future/layout/shopAd/getForm').then((response)=>{
+        this.formProperty = response.data;
+      })
     }
   }
 </script>

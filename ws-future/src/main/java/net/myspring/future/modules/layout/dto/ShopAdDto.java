@@ -121,6 +121,18 @@ public class ShopAdDto extends DataDto<ShopAd>{
         this.processPositionId = processPositionId;
     }
 
+    public BigDecimal getLength() {
+        return length;
+    }
+
+    public BigDecimal getWidth() {
+        return width;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
     public void setLength(BigDecimal length) {
         this.length = length;
     }
