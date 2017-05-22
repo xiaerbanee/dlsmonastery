@@ -10,20 +10,17 @@
         <include refid="filter"></include>
     </select>
 
-    <select id="findByOutGroupIdAndDate" resultType="AdApply">
-        select adApply.*
-        from crm_ad_apply adApply
-        where adApply.enabled = 1
-        AND  adApply.confirm_qty > adApply.billed_qty
-        and   created_date>#{p.createdDateStart}
-        and   adApply.product_id in (
-            select product.id
-            from crm_product product
-            where product.enabled = 1 and product.out_group_id in
-            <foreach collection="p.outGroupIds" index="index" item="item" open="(" separator="," close=")">
-                #{p.outGroupIds[${index}]}
+    <select id="findByOutGroupIdAndDate" resultType="AdApplyDto">
+        select t.*
+        from crm_ad_apply t,crm_product product
+        where t.enabled = 1
+        AND t.product_id = product.id
+        AND t.confirm_qty > t.billed_qty
+        and t.created_date>#{dateStart}
+        and product.out_group_id in
+            <foreach collection="outGroupIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
             </foreach>
-        )
     </select>
 
     <select id="findByFilter" resultType="AdApply">

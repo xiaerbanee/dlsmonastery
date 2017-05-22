@@ -26,7 +26,7 @@
         <span>{{$t('adApplyForm.search')}}</span>
         <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adApplyForm.inputTowKey')" style="width:200px;margin-right:10px"></el-input>
       </el-row>
-      <el-table :data="inputForm.adApplyList"  stripe border>
+      <el-table :data="inputForm.productDtos"  stripe border>
         <el-table-column prop="code" :label="$t('adApplyForm.productCode')"></el-table-column>
         <el-table-column prop="applyQty" :label="$t('adApplyForm.applyQty')">
           <template scope="scope">
@@ -127,7 +127,7 @@
          this.filterApplyQty = qtyList;
        },onchange(){
           this.submitDisabled = true;
-          axios.get('api/ws/future/layout/adApply/getAdApplyGoodsList',{params:{billType:this.inputForm.billType}}).then((response) =>{
+          axios.get('api/ws/future/layout/adApply/getForm',{params:{billType:this.inputForm.billType}}).then((response) =>{
           this.inputForm.adApplyList = response.data;
           this.submitDisabled = false;
           });
