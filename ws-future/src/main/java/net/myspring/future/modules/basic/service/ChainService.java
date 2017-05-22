@@ -43,12 +43,11 @@ public class ChainService {
         return chainDtoList;
     }
 
-    public ChainDto findOne(String id) {
-        ChainDto chainDto;
-        if (StringUtils.isBlank(id)) {
+    public ChainDto findOne(ChainDto chainDto) {
+        if (chainDto.isCreate()) {
             chainDto = new ChainDto();
         } else {
-            Chain chain = chainMapper.findOne(id);
+            Chain chain = chainMapper.findOne(chainDto.getId());
             chainDto = BeanUtil.map(chain, ChainDto.class);
             chainDto.setDepotIdList(chainMapper.findDepotIds(chainDto.getId()));
             cacheUtils.initCacheInput(chainDto);
