@@ -63,6 +63,12 @@ public class ExpressOrderService {
         return expressOrder;
     }
 
+    public ExpressOrderDto findDto(String id){
+        ExpressOrderDto expressOrderDto = expressOrderMapper.findDto(id);
+        return expressOrderDto;
+    }
+
+
     public Page<ExpressOrderDto> findPage(Pageable pageable, ExpressOrderQuery expressOrderQuery) {
         Page<ExpressOrderDto> page = expressOrderMapper.findPage(pageable, expressOrderQuery);
         page.getContent().stream().filter(each-> (each.getWeight()!=null && each.getTotalQty()!=null&&each.getTotalQty()>0)).forEach(each -> each.setAverageWeight(each.getWeight().divide(new BigDecimal(each.getTotalQty()),2, BigDecimal.ROUND_HALF_UP)));
@@ -197,6 +203,16 @@ public class ExpressOrderService {
         ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
         GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());
+
+    }
+
+    public ExpressOrderDto findByGoodsOrderId(String goodsOrderId) {
+        ExpressOrderDto expressOrderDto = expressOrderMapper.findByGoodsOrderId(goodsOrderId);
+        if(expressOrderDto != null){
+            cacheUtils.initCacheInput(expressOrderDto);
+        }
+
+        return expressOrderDto;
 
     }
 }

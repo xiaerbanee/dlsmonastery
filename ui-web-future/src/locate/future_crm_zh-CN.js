@@ -707,6 +707,8 @@ export default {
   },
   goodsOrderForm: {
     goodsOrderForm: "货品订货编辑",
+    clientName: "总店",
+
     shop: "门店",
     selectWord: "请输入关键词,显示前20条",
     parentShop: "总店",
@@ -771,6 +773,15 @@ export default {
   },
   goodsOrderBill: {
     goodsOrderBill: "货品订货开单",
+    costGoodsDeposit:'需扣除定金',
+    leftGoodsDeposit:'剩余定金',
+    summary:'汇总信息',
+    areaBillQty:'办事处已开单数',
+    totalProduct:'总货品数',
+    totalProductPrice:'总货品金额',
+    totalProductDeposit:'扣定金',
+    shopShouldGetAfterBill:'开单后应收',
+
     store: "仓库",
     billDate: "开单日期",
     selectDateRange: "选择日期范围",
@@ -1301,6 +1312,9 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    reset:'重置',
+    search:'搜索',
+    pleaseInputImes:'请输入串码',
   },
   productImeUploadList: {
     productImeUploadList: "串码上报",

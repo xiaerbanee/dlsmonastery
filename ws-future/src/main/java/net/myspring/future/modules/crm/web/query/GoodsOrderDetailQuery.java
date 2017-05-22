@@ -12,14 +12,11 @@ public class GoodsOrderDetailQuery extends BaseQuery {
     private String netType;
     private Boolean showAll;
 
-    //用来计算该区间内的办事处已订货数
+    //用来计算该区间内的办事处已订货数已下单数
     private LocalDateTime createDateStart;
     private LocalDateTime createDateEnd;
-
-    //用来计算该区间内的办事处已开单数
     private LocalDateTime billDateStart;
     private LocalDateTime billDateEnd;
-
     private List<String> shipTypeList;
     private List<String> officeIdList;
 

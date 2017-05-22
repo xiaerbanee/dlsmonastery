@@ -14,13 +14,12 @@ import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CachePut;
 import javax.cache.annotation.CacheResult;
 import javax.cache.annotation.CacheValue;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
 @CacheDefaults(cacheName = "depots")
 public interface DepotMapper extends BaseMapper<Depot,String> {
-    
+
     @CacheResult
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_ONE)
     Depot findOne(String id);
@@ -45,18 +44,22 @@ public interface DepotMapper extends BaseMapper<Depot,String> {
 
     @SelectProvider(type = MyProvider.class, method = MyProvider.FIND_BY_IDS)
     List<Depot> findByIds(List<String> ids);
-    
+
     Page<DepotDto> findPage(Pageable pageable, @Param("p")DepotQuery depotQuery);
 
-    List<DepotDto> findShopList(@Param("p")DepotQuery depotShopQuery);
+    List<DepotDto> findShopList(DepotQuery depotShopQuery);
 
-    List<DepotDto> findStoreList(@Param("p")DepotQuery depotShopQuery);
-
-    List<Depot> findByAccountId(String accountId);
+    List<DepotDto> findStoreList(DepotQuery depotShopQuery);
 
     List<Depot> findByChainId(String chainId);
+
+    List<Depot> findByAccountId(String accountId);
 
     List<Depot> findByNameList(List<String> nameList);
 
     Depot findByName(String name);
+
+    DepotDto findShopByGoodsOrderId(String goodsOrderId);
+
+    DepotDto findStoreByGoodsOrderId(String goodsOrderId);
 }

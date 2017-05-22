@@ -33,6 +33,7 @@ public class DepotDto extends DataDto<Depot> {
     private String contator;
     private String address;
     private String mobilePhone;
+
     private String areaId;
     private BigDecimal credit;
     private String areaType;
