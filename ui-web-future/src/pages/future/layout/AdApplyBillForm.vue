@@ -36,9 +36,9 @@
         <el-table-column prop="applyQty" :label="$t('adApplyBillForm.applyQty')" ></el-table-column>
         <el-table-column prop="confirmQty" sortable :label="$t('adApplyBillForm.confirmQty')" ></el-table-column>
         <el-table-column prop="leftQty" :label="$t('adApplyBillForm.leftQty')" ></el-table-column>
-        <el-table-column prop="billQty" :label="$t('adApplyBillForm.billQty')" >
+        <el-table-column prop="billedQty" :label="$t('adApplyBillForm.billQty')" >
           <template scope="scope">
-            <el-input v-model="scope.row.billQty"></el-input>
+            <el-input v-model="scope.row.billedQty"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="storeQty" sortable :label="$t('adApplyBillForm.financeQty')" ></el-table-column>
@@ -56,8 +56,6 @@
       return{
         submitDisabled:false,
         productOrShopName:"",
-        filterAdApplyList:[],
-        formProperty:{},
         applyQtys:"",
         leftQtys:"",
         confirmQtys:"",
