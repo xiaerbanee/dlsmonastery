@@ -11,7 +11,7 @@
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderShip.businessId')" prop="businessId">
-              <el-input v-model="inputForm.businessId"></el-input>
+              <el-input v-model="inputForm.formatId"></el-input>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.storeName')" prop="storeId">
               {{shipForm.store.name}}
@@ -37,9 +37,7 @@
               {{shipForm.remarks}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.redictView')" prop="redictView">
-              <el-radio-group v-model="inputForm.redictView">
-                <el-radio v-for="(value,key) in formProperty.bools" :key="key" :label="value">{{key | bool2str}} </el-radio>
-              </el-radio-group>
+              <bool-radio-group v-model="inputForm.redictView"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.imeStr')" prop="imeStr">
               <textarea v-model="inputForm.imeStr"  :rows="5" class="el-textarea__inner"
@@ -76,7 +74,13 @@
   </div>
 </template>
 <script>
+  import depotSelect from 'components/future/depot-select'
+  import accountSelect from 'components/basic/account-select'
   export default{
+    components:{
+      depotSelect,
+      accountSelect,
+    },
     data(){
       return{
         isCreate:this.$route.query.id==null,
@@ -90,6 +94,8 @@
           remarks:'',
         },
         inputForm:{},
+        formProperty:{},
+        goodsOrder:{},
         submitData:{
           id:'',
           businessId:'',
@@ -163,9 +169,13 @@
         })
       }
     },created(){
-      axios.get('/api/ws/future/crm/goodsOrder/shipForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
-      })
+      axios.get('/api/ws/future/crm/goodsOrder/getShipForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.formProperty = response.data;
+      });
+
+      axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.goodsOrder = response.data;
+      });
 
     }
   }
