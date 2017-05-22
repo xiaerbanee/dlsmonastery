@@ -16,6 +16,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.time.LocalDateTimeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -78,10 +79,15 @@ public class BankService {
 
     @Transactional(readOnly = true)
     public BankDto findOne(String id){
-        Bank bank= bankMapper.findOne(id);
-        BankDto bankDto= BeanUtil.map(bank,BankDto.class);
-        List<String> accountIdList = bankMapper.findAccountIdList(id);
-        bankDto.setAccountIdList(accountIdList);
+        BankDto bankDto;
+        if(StringUtils.isBlank(id)) {
+            bankDto = new BankDto();
+        } else {
+            Bank bank= bankMapper.findOne(id);
+            bankDto= BeanUtil.map(bank,BankDto.class);
+            List<String> accountIdList = bankMapper.findAccountIdList(id);
+            bankDto.setAccountIdList(accountIdList);
+        }
         return bankDto;
     }
 }
