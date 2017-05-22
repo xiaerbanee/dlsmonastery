@@ -51,7 +51,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -303,68 +302,6 @@ public class GoodsOrderService {
         return result;
 
     }
-
-    public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm) {
-        if(goodsOrderForm.isCreate()){
-            return findFormForCreate();
-        }
-
-        GoodsOrderForm result = new GoodsOrderForm();
-        result.setShipTypeList(ShipTypeEnum.getList());
-        //TODO 需要修改
-        result.setNetTypeList(Arrays.asList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
-//TODO 判斷公司類比額
-//        if(CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyId().getCompany().getName()) || Company.CompanyName.JXvivo.name().equals(AccountUtils.getCompany().getName()) ){
-//            result.setNetTypeList(Arrays.asList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
-//        }else{
-//            result.setNetTypeList(Arrays.asList(NetTypeEnum.全网通.name()));
-//        }
-
-
-
-        //TODO  還不可以修改
-        GoodsOrderDto god= goodsOrderMapper.findDto(goodsOrderForm.getId());
-        cacheUtils.initCacheInput(god);
-        result =  BeanUtil.map(god, GoodsOrderForm.class);
-
-
-        GoodsOrderDetailQuery godq = new GoodsOrderDetailQuery();
-        godq.setCompanyId(RequestUtils.getCompanyId());
-        godq.setNetType(result.getNetType());
-        Depot d = depotMapper.findOne(result.getShopId());
-        godq.setOfficeIdList(officeClient.getSameAreaByOfficeId(d.getOfficeId()));
-//        godq.setAreaId(d.getAreaId());
-        godq.setGoodsOrderId(result.getId());
-        godq.setPricesystemId(d.getPricesystemId());
-        //TODO 判斷showall
-        Boolean showAll = Boolean.FALSE;
-        godq.setShowAll(showAll);
-        LocalDateTime dateStart = LocalDate.now().atStartOfDay();
-        LocalDateTime dateEnd = dateStart.plusDays(1);
-        godq.setCreateDateStart(dateStart);
-        godq.setCreateDateEnd(dateEnd);
-
-//        result.setGoodsOrderDetailFormList(goodsOrderDetailService.getListForNewOrUpdateWithAreaQty(godq));
-
-        return result;
-    }
-
-    private GoodsOrderForm findFormForCreate() {
-        GoodsOrderForm result = new GoodsOrderForm();
-        result.setShipTypeList(ShipTypeEnum.getList());
-        //TODO 需要修改判斷公司類別
-        result.setNetTypeList(Arrays.asList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
-//TODO 判斷公司類別
-//        if(CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyId().getCompany().getName()) || Company.CompanyName.JXvivo.name().equals(AccountUtils.getCompany().getName()) ){
-//            result.setNetTypeList(Arrays.asList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
-//        }else{
-//            result.setNetTypeList(Arrays.asList(NetTypeEnum.全网通.name()));
-//        }
-
-        return result;
-
-    }
-
 
     //检测门店
     @Transactional(readOnly = true)
