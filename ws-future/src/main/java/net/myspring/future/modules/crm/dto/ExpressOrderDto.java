@@ -1,9 +1,12 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.crm.domain.Express;
+import net.myspring.future.common.constant.FormatterConstant;
+import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.IdUtils;
+import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -43,6 +46,22 @@ public class ExpressOrderDto extends DataDto<ExpressOrder> {
     private BigDecimal averageWeight;
 
     private String expressCodes;
+
+    public String getFormatId() {
+
+            if(StringUtils.isNotBlank(extendType) && extendBusinessId != null) {
+                if(ExpressOrderTypeEnum.手机订单.name().equals(extendType)) {
+                    return IdUtils.getFormatId(extendBusinessId, FormatterConstant.GOODS_ORDER);
+                } else if (ExpressOrderTypeEnum.大库调拨.name().equals(extendType)) {
+                    return IdUtils.getFormatId(extendBusinessId, FormatterConstant.STORE_ALLOT);
+                } else if(ExpressOrderTypeEnum.物料订单.name().equals(extendType)) {
+                    return IdUtils.getFormatId(extendBusinessId, FormatterConstant.AD_GOODS_ORDER);
+                }
+            }
+            return null;
+
+    }
+
 
     public String getExtendId() {
         return extendId;

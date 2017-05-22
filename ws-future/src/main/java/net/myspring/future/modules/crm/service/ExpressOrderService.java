@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -170,15 +171,86 @@ public class ExpressOrderService {
         expressOrderMapper.update(eo);
     }
 
+    public String exportEMS(ExpressOrderQuery expressOrderQuery) {
+        Workbook workbook = new SXSSFWorkbook(10000);
 
-    public String genEMSDataFileForExport(ExpressOrderQuery expressOrderQuery) {
-        return null;
+
+        List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)->" ",  "邮件号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)->"11","配货单号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)->" ","客户订单号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)->"沈丽萍","寄件人姓名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)->"0791-88513567","寄件人联系方式"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"formatId","寄件人联系方式（2）"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (ExpressOrderDto row, Integer i)->"南昌市洪都北大道636号西格玛商务大厦16楼("+row.getFromDepotName()+")","寄件人地址"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)->"南昌市欧珀电子有限公司", "寄件人公司"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> "江西省", "寄件省"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> "南昌市", "寄件市"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)->" ", "寄件县"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ", "寄件人邮编"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"contator","收件人姓名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"mobilePhone","收件人联系方式"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ",  "收件人联系方式（2）"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,(ExpressOrderDto row, Integer i)-> {
+            if (row.getExpressPrintQty()!=null && row.getExpressPrintQty() > 1) {
+               return  "(" + (i + 1) + ")" + row.getAddress();
+            }else {
+               return  row.getAddress();
+            }
+        },"收件人地址"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ","收件人公司"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> "江西省","到件省/直辖市"));
+        //TODO 獲取depotCItyName
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,(row, i)-> "depotCItyName","到件城市"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ", "到件县/区"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ", "收件人邮编"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ", "物品重量"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ", "物品长度"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ", "物品宽度"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ", "物品高度"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> "", "打单时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> "", "备注"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " 标准快递", "业务类型"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ", "代收货款"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ", "收件人付费"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> "", "应收货款/邮资"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> "", "应收货款/邮资（大写）"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " 物品", "内件性质"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> "", "内件数"));
+        final String companyName = "companyName";//TODO 獲取companyName
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,(ExpressOrderDto row, Integer i)-> (row.getFormatId() + CharConstant.SPACE_FULL + companyName),"内件信息"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> "如在投递过程中遇到问题请拨打客服0791-86775186.86735571","留白一"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> "","留白二"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ","付费类型"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ","所负责任"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ","保价金额"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ","保险金额"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, (row, i)-> " ","其他费"));
+
+
+        List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,10000), expressOrderQuery).getContent();
+        cacheUtils.initCacheInput(expressOrderDtoList);
+
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("快递打印列表", expressOrderDtoList, simpleExcelColumnList, (data)->{
+            List result = new ArrayList();
+            ExpressOrderDto  expressOrderDto = (ExpressOrderDto) data;
+            if(expressOrderDto.getExpressPrintQty()!=null && expressOrderDto.getExpressPrintQty()>=1){
+                for(int i=0; i< expressOrderDto.getExpressPrintQty(); i++){
+                    result.add(expressOrderDto);
+                }
+            }
+            return result;
+        });
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"快递打印列表"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
+        ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
+
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        return StringUtils.toString(gridFSFile.getId());
 
     }
 
-    public String genDataFileForExport(ExpressOrderQuery expressOrderQuery) {
+    public String export(ExpressOrderQuery expressOrderQuery) {
         Workbook workbook = new SXSSFWorkbook(10000);
-        Page<ExpressOrderDto> page=findPage(new PageRequest(0,10000), expressOrderQuery);
 
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"extendBusinessId","订单号"));
@@ -198,7 +270,10 @@ public class ExpressOrderService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"averageWeight","单机重量"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"remarks","备注"));
 
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("快递打印列表",page.getContent(), simpleExcelColumnList);
+        List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,10000), expressOrderQuery).getContent();
+        cacheUtils.initCacheInput(expressOrderDtoList);
+
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("快递打印列表", expressOrderDtoList, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"快递打印列表"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
         GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());

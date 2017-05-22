@@ -60,12 +60,12 @@ public class ExpressOrderController {
 
     @RequestMapping(value = "exportEMS", method = RequestMethod.GET)
     public String exportEMS(ExpressOrderQuery expressOrderQuery) throws IOException {
-        return expressOrderService.genEMSDataFileForExport(expressOrderQuery);
+        return expressOrderService.exportEMS(expressOrderQuery);
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public String export(ExpressOrderQuery expressOrderQuery) throws IOException {
-        return expressOrderService.genDataFileForExport(expressOrderQuery);
+        return expressOrderService.export(expressOrderQuery);
     }
 
     @RequestMapping(value = "findOne")

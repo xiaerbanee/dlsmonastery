@@ -20,6 +20,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -208,19 +209,32 @@ public class ExcelUtils {
                 cell.setCellStyle(simpleExcelColumn.getHeaderStyle());
                 setCellValue(cell,simpleExcelColumn.getLabel());
             }
-            for(Object rowValue:simpleExcelSheet.getDataList()) {
-                rowIndex = rowIndex + 1;
-                row = sheet.createRow(rowIndex);
-                for(int i=0;i<simpleExcelSheet.getSimpleExcelColumnList().size();i++) {
-                    SimpleExcelColumn simpleExcelColumn = simpleExcelSheet.getSimpleExcelColumnList().get(i);
-                    Object value=null;
-                    if(StringUtils.isNotBlank(simpleExcelColumn.getFieldName())){
-                        value = ReflectionUtil.getFieldValue(rowValue,simpleExcelColumn.getFieldName());
-                    }
-                    Cell cell = row.createCell(i);
-                    cell.setCellStyle(simpleExcelColumn.getCellStyle());
-                    setCellValue(cell,value);
+            for(Object data:simpleExcelSheet.getDataList()) {
+
+                List expandedRows = new ArrayList();
+                if(simpleExcelSheet.getRowExpander()!=null){
+                    expandedRows =simpleExcelSheet.getRowExpander().apply(data);
+                }else{
+                    expandedRows.add(data);
                 }
+                for(int expandedRowIdx= 0;   expandedRowIdx < expandedRows.size(); expandedRowIdx++ ){
+                    Object expandedRow = expandedRows.get(expandedRowIdx);
+                    rowIndex = rowIndex + 1;
+                    row = sheet.createRow(rowIndex);
+                    for(int i=0;i<simpleExcelSheet.getSimpleExcelColumnList().size();i++) {
+                        SimpleExcelColumn simpleExcelColumn = simpleExcelSheet.getSimpleExcelColumnList().get(i);
+                        Object value=null;
+                        if(simpleExcelColumn.getColValueGetter()!=null){
+                            value = simpleExcelColumn.getColValueGetter().apply(expandedRow, expandedRowIdx);
+                        }else if(StringUtils.isNotBlank(simpleExcelColumn.getFieldName())){
+                            value = ReflectionUtil.getProperty(expandedRow,simpleExcelColumn.getFieldName());
+                        }
+                        Cell cell = row.createCell(i);
+                        cell.setCellStyle(simpleExcelColumn.getCellStyle());
+                        setCellValue(cell,value);
+                    }
+                }
+
             }
         }
     }

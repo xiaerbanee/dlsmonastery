@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
@@ -58,10 +59,8 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     }
 
     public String getFormatId(){
-        return IdUtils.getFormatId(businessId, "XK");
+        return IdUtils.getFormatId(businessId, FormatterConstant.GOODS_ORDER);
     }
-
-
 
     public String getGoodsOrderRebateRuleRemarks() {
         return goodsOrderRebateRuleRemarks;

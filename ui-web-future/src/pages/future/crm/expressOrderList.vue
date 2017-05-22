@@ -183,13 +183,19 @@
           })
         }
       },exportData(){
-        axios.get('/api/ws/future/crm/expressOrder/export?'+qs.stringify(this.submitData)).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/crm/expressOrder/export?'+qs.stringify(this.submitData)).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});
+
       },exportEMSData(){
-        axios.get('/api/ws/future/crm/expressOrder/exportEMS?'+qs.stringify(this.submitData)).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/crm/expressOrder/exportEMS?'+qs.stringify(this.submitData)).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});;
+
       }
     },created () {
       var that = this;
