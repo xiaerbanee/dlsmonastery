@@ -1,18 +1,18 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
-import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class BankInDto extends DataDto<BankIn> {
 
-    private Boolean selected = Boolean.FALSE;
+
     private String shopName;
     private String shopId;
     private String shopClientId;
@@ -39,7 +39,7 @@ public class BankInDto extends DataDto<BankIn> {
     }
 
     public String getFormatId() {
-        return IdUtils.getFormatId(getId(), "XS");
+        return IdUtils.getFormatId(getId(), FormatterConstant.BANK_IN);
     }
 
     public String getShopClientId() {
@@ -66,22 +66,12 @@ public class BankInDto extends DataDto<BankIn> {
         this.locked = locked;
     }
 
-
     public BigDecimal getAmount() {
         return amount;
     }
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-
-    public Boolean getSelected() {
-        return selected;
-    }
-
-    public void setSelected(Boolean selected) {
-        this.selected = selected;
     }
 
     public String getShopName() {
@@ -158,8 +148,8 @@ public class BankInDto extends DataDto<BankIn> {
     }
 
     public Boolean getAuditable(){
-        //TODO 判斷auditable的邏輯
-        return Boolean.TRUE;
+
+        return !getFinished();
     }
 
     public Boolean getEditable(){

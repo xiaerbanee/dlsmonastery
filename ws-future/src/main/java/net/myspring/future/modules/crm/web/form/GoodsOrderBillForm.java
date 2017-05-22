@@ -4,7 +4,6 @@ import net.myspring.common.form.DataForm;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
-import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,56 +11,36 @@ import java.util.List;
 
 public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
 
-    private Boolean sameDate;
+
     private String storeId;
     private LocalDate billDate;
     private String expressCompanyId;
     private Boolean syn;
-    private Boolean takeExpress;
+
     private String expressContator;
     private String expressAddress;
     private String expressMobilePhone;
 
-
-    private DepotDto shopDto;
-
-    private GoodsOrderDto goodsOrderDto;
     private List<DepotDto> storeList;
     private List<ExpressCompanyDto> expressCompanyList;
+    private List<String> notDepotStoreIdList;
 
-    private List<GoodsOrderDetailForm> detailFormList = new ArrayList<>();
+    private List<GoodsOrderBillDetailForm> goodsOrderDetailList = new ArrayList<>();
 
-    public DepotDto getShopDto() {
-        return shopDto;
+    public List<GoodsOrderBillDetailForm> getGoodsOrderDetailList() {
+        return goodsOrderDetailList;
     }
 
-    public void setShopDto(DepotDto shopDto) {
-        this.shopDto = shopDto;
+    public void setGoodsOrderDetailList(List<GoodsOrderBillDetailForm> goodsOrderDetailList) {
+        this.goodsOrderDetailList = goodsOrderDetailList;
     }
 
-    public Boolean getTakeExpress() {
-        return takeExpress;
+    public List<String> getNotDepotStoreIdList() {
+        return notDepotStoreIdList;
     }
 
-    public void setTakeExpress(Boolean takeExpress) {
-        this.takeExpress = takeExpress;
-    }
-
-
-    public List<GoodsOrderDetailForm> getDetailFormList() {
-        return detailFormList;
-    }
-
-    public void setDetailFormList(List<GoodsOrderDetailForm> detailFormList) {
-        this.detailFormList = detailFormList;
-    }
-
-    public Boolean getSameDate() {
-        return sameDate;
-    }
-
-    public void setSameDate(Boolean sameDate) {
-        this.sameDate = sameDate;
+    public void setNotDepotStoreIdList(List<String> notDepotStoreIdList) {
+        this.notDepotStoreIdList = notDepotStoreIdList;
     }
 
     public String getExpressContator() {
@@ -86,14 +65,6 @@ public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
 
     public void setExpressMobilePhone(String expressMobilePhone) {
         this.expressMobilePhone = expressMobilePhone;
-    }
-
-    public GoodsOrderDto getGoodsOrderDto() {
-        return goodsOrderDto;
-    }
-
-    public void setGoodsOrderDto(GoodsOrderDto goodsOrderDto) {
-        this.goodsOrderDto = goodsOrderDto;
     }
 
     public String getStoreId() {

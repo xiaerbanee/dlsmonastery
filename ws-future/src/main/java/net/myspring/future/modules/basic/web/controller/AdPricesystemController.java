@@ -40,7 +40,7 @@ public class AdPricesystemController {
     }
 
     @RequestMapping(value = "findOne")
-    public AdPricesystemDto findOne(AdPricesystemDto adPricesystemDto){
-        return adPricesystemService.findOne(adPricesystemDto);
+    public AdPricesystemDto findOne(String id){
+        return adPricesystemService.findOne(id);
     }
 }

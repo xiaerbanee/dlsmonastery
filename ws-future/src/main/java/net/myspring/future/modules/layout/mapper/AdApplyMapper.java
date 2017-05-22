@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public interface AdApplyMapper extends MyMapper<AdApply,String> {
 
     List<AdApply> findByFilter(@Param("p") Map<String, Object> map);
 
-    List<AdApply> findByOutGroupIdAndDate(@Param("p") Map<String, Object> map);
+    List<AdApplyDto> findByOutGroupIdAndDate(@Param("dateStart")LocalDate dateStart,@Param("outGroupIds")List<String> outGroupIds);
 
     List<String> findAllId();
 }

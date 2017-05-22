@@ -25,9 +25,9 @@ public interface GoodsOrderDetailMapper extends MyMapper<GoodsOrderDetail,String
 
     GoodsOrderDetailDto getDtoWithAreaQty(@Param("productId")  String productId, @Param("depotId")   String depotId, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd);
 
-    void deleteByGoodsOrderId(String goodsOrderId);
-
-    List<GoodsOrderDetailDto> getListForNewOrUpdateOrBillWithAreaQty(@Param("p") GoodsOrderDetailQuery goodsOrderDetailQuery);
+    List<GoodsOrderDetailDto> findListForNewOrEditOrBillWithAreaQty(@Param("p") GoodsOrderDetailQuery goodsOrderDetailQuery);
 
     List<GoodsOrderDetailDto> findDtoListByGoodsOrderId(@Param("goodsOrderId") String goodsOrderId);
+
+    void deleteOne(String id);
 }

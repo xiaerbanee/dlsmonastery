@@ -13,10 +13,20 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     private Boolean productHasIme;
     private BigDecimal price;
     private Integer qty;
+    private Integer billQty;
 
     private Integer areaQty;
     private Boolean productAllowOrder;
     private Boolean productAllowBill;
+
+
+    public Integer getBillQty() {
+        return billQty;
+    }
+
+    public void setBillQty(Integer billQty) {
+        this.billQty = billQty;
+    }
 
     public Boolean getProductAllowOrder() {
         return productAllowOrder;

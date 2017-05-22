@@ -92,7 +92,7 @@ public class BankInService {
             bankIn.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
             bankIn.setPositionId(activitiStartDto.getPositionId());
             bankIn.setProcessTypeId(activitiStartDto.getProcessTypeId());
-            bankInMapper.save(bankIn);
+            bankInMapper.update(bankIn);
         } else {
             bankIn = bankInMapper.findOne(bankInForm.getId());
             ReflectionUtil.copyProperties(bankInForm,bankIn);

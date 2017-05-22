@@ -10,19 +10,35 @@ import java.time.LocalDate;
 public class ShopGoodsDepositDto extends DataDto<ShopGoodsDeposit> {
 
 
-    private Boolean selected;
     private String shopId;
 
+    @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
-    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
-    private String areaId;
+    private String depotOfficeId;
 
     private String departMentName;
     private String departMent;
 
+    private BigDecimal amount;
+    private String outCode;
+    private String outBillType;
+    private LocalDate billDate;
+    private String status;
+    private Boolean locked;
 
+
+    private String bankId;
+    @CacheInput(inputKey = "banks",inputInstance = "bankId",outputInstance = "name")
     private String bankName;
+
+    public String getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(String bankId) {
+        this.bankId = bankId;
+    }
 
     public String getDepartMentName() {
         return departMentName;
@@ -40,21 +56,6 @@ public class ShopGoodsDepositDto extends DataDto<ShopGoodsDeposit> {
         this.departMent = departMent;
     }
 
-
-    private BigDecimal amount;
-    private String outCode;
-    private String outBillType;
-    private LocalDate billDate;
-    private String status;
-    private Boolean locked;
-
-    public Boolean getSelected() {
-        return selected;
-    }
-
-    public void setSelected(Boolean selected) {
-        this.selected = selected;
-    }
 
     public String getShopId() {
         return shopId;
@@ -80,14 +81,13 @@ public class ShopGoodsDepositDto extends DataDto<ShopGoodsDeposit> {
         this.areaName = areaName;
     }
 
-    public String getAreaId() {
-        return areaId;
+    public String getDepotOfficeId() {
+        return depotOfficeId;
     }
 
-    public void setAreaId(String areaId) {
-        this.areaId = areaId;
+    public void setDepotOfficeId(String depotOfficeId) {
+        this.depotOfficeId = depotOfficeId;
     }
-
 
     public String getBankName() {
         return bankName;

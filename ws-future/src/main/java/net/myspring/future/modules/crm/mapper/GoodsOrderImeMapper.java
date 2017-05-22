@@ -9,7 +9,9 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface GoodsOrderImeMapper extends MyMapper<GoodsOrderIme,String> {
+public interface GoodsOrderImeMapper extends MyMapper<GoodsOrderIme, String> {
 
     List<GoodsOrderIme> findByGoodsOrderId(@Param("goodsOrderId")  String goodsOrderId);
+
+    List<GoodsOrderImeDto> findDtoListByGoodsOrderId(String goodsOrderId);
 }

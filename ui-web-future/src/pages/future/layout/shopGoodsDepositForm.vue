@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopGoodsDepositForm.shopName')" prop="shopId" >
-              <depot-select  :disabled="!isCreate" category="SHOP" v-model="inputForm.shopId"  @input="shopChanged"></depot-select>
+              <depot-select  :disabled="!isCreate" category="shop" v-model="inputForm.shopId"  @input="shopChanged"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopGoodsDepositForm.bank')" prop="bankId" >
               <bank-select v-model="inputForm.bankId"></bank-select>

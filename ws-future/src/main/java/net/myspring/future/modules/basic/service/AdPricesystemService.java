@@ -2,23 +2,17 @@ package net.myspring.future.modules.basic.service;
 
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.DepotShopMapper;
-import net.myspring.future.modules.basic.web.query.AdPricesystemQuery;
 import net.myspring.future.modules.basic.web.form.AdPricesystemForm;
-import net.myspring.util.collection.CollectionUtil;
+import net.myspring.future.modules.basic.web.query.AdPricesystemQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springside.modules.utils.mapper.BeanMapper;
-import sun.misc.Cache;
 
 import java.util.List;
 
@@ -30,9 +24,12 @@ public class AdPricesystemService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public AdPricesystemDto findOne(AdPricesystemDto adPricesystemDto){
-        if(!adPricesystemDto.isCreate()){
-            AdPricesystem adPricesystem = adPricesystemMapper.findOne(adPricesystemDto.getId());
+    public AdPricesystemDto findOne(String id){
+        AdPricesystemDto adPricesystemDto;
+        if(StringUtils.isBlank(id)){
+            adPricesystemDto = new AdPricesystemDto();
+        } else {
+            AdPricesystem adPricesystem = adPricesystemMapper.findOne(id);
             adPricesystemDto = BeanUtil.map(adPricesystem,AdPricesystemDto.class);
             adPricesystemDto.setOfficeIdList(adPricesystemMapper.findOfficeById(adPricesystemDto.getId()));
             cacheUtils.initCacheInput(adPricesystemDto);

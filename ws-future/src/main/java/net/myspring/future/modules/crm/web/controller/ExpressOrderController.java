@@ -8,6 +8,7 @@ import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.service.ExpressOrderService;
 import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.crm.web.query.ExpressOrderQuery;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,4 +67,24 @@ public class ExpressOrderController {
     public String export(ExpressOrderQuery expressOrderQuery) throws IOException {
         return expressOrderService.genDataFileForExport(expressOrderQuery);
     }
+
+    @RequestMapping(value = "findOne")
+    public ExpressOrderDto findOne(String id) throws IOException {
+        if(StringUtils.isBlank(id)){
+            return new ExpressOrderDto();
+        }
+
+        return expressOrderService.findDto(id);
+
+    }
+
+    @RequestMapping(value = "findByGoodsOrderId")
+    public ExpressOrderDto findByGoodsOrderId(String goodsOrderId) throws IOException {
+        if(StringUtils.isBlank(goodsOrderId)){
+            return new ExpressOrderDto();
+        }
+        return expressOrderService.findByGoodsOrderId(goodsOrderId);
+    }
+
+
 }

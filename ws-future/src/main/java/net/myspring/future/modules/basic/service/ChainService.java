@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.service;
 
+import com.ctc.wstx.util.StringUtil;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -14,6 +15,7 @@ import net.myspring.future.modules.basic.web.form.ChainForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +44,9 @@ public class ChainService {
     }
 
     public ChainDto findOne(ChainDto chainDto) {
-        if (!chainDto.isCreate()) {
+        if (chainDto.isCreate()) {
+            chainDto = new ChainDto();
+        } else {
             Chain chain = chainMapper.findOne(chainDto.getId());
             chainDto = BeanUtil.map(chain, ChainDto.class);
             chainDto.setDepotIdList(chainMapper.findDepotIds(chainDto.getId()));

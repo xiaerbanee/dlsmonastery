@@ -129,7 +129,7 @@
         <el-table-column prop="pullStatus" :label="$t('goodsOrderList.pullStatus')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('goodsOrderList.operate')" width="80">
           <template scope="scope">
-            <el-button  type="text"  size="small"v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'view')">{{$t('goodsOrderList.detail')}}</el-button>
+            <el-button  type="text"  size="small"v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderList.detail')}}</el-button>
 
             <el-button  v-if="scope.row.enabled && scope.row.status=='待开单'" type="text"  size="small"v-permit="'crm:goodsOrder:bill'" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button>
             <el-button  v-if="scope.row.enabled && scope.row.status=='待开单'" type="text"  size="small"v-permit="'crm:goodsOrder:edit'" @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button>
@@ -138,10 +138,10 @@
             <el-button  v-if="scope.row.enabled && scope.row.status=='待发货' && scope.row.isSreturn" type="text"  size="small"v-permit="'crm:goodsOrder:edit'" @click.native="itemAction(scope.row.id, 'sreturn')">{{$t('goodsOrderList.sreturn')}}</el-button>
             <el-button  v-if="scope.row.enabled && scope.row.status=='待签收'" type="text"  size="small"v-permit="'crm:goodsOrder:edit'" @click.native="itemAction(scope.row.id, 'sign')">{{$t('goodsOrderList.sign')}}</el-button>
             <el-button  v-if="scope.row.enabled && scope.row.status=='待签收'" type="text"  size="small"v-permit="'crm:goodsOrder:shipBack'" @click.native="itemAction(scope.row.id, 'shipBack')">{{$t('goodsOrderList.shipBack')}}</el-button>
-            <el-button  v-if="scope.row.isPrint" type="text"  size="small"v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'print')">{{$t('goodsOrderList.print')}}</el-button>
-            <el-button  v-if="!scope.row.isPrint" type="text" style="color:red;"  size="small"v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'print')">{{$t('goodsOrderList.print')}}</el-button>
-            <el-button  v-if="scope.row.isShipPrint" type="text" size="small"v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('goodsOrderList.shipPrint')}}</el-button>
-            <el-button  v-if="!scope.row.isShipPrint" type="text" style="color:red;"   size="small"v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('goodsOrderList.shipPrint')}}</el-button>
+            <el-button  v-if="scope.row.isPrint" type="text"  size="small" v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'print')">{{$t('goodsOrderList.print')}}</el-button>
+            <el-button  v-if="!scope.row.isPrint" type="text" style="color:red;"  size="small" v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'print')">{{$t('goodsOrderList.print')}}</el-button>
+            <el-button  v-if="scope.row.isShipPrint" type="text" size="small" v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('goodsOrderList.shipPrint')}}</el-button>
+            <el-button  v-if="!scope.row.isShipPrint" type="text" style="color:red;"   size="small" v-permit="'crm:goodsOrder:print'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('goodsOrderList.shipPrint')}}</el-button>
 
           </template>
 
@@ -254,10 +254,10 @@
       }else if(action =="ship"){
         this.$router.push({name:'goodsOrderShip',query:{id:id}})
       }else if(action =="shipPrint"){
-        var newWindow = window.open('/#/crm/goodsOrderShipPrint?id=' + id, '', '');
+        let newWindow = window.open('/#/crm/goodsOrderShipPrint?id=' + id, '', '');
         newWindow.print();
       }else if(action =="print"){
-        var newWindow = window.open('/#/crm/goodsOrderPrint?id=' + id, '', '');
+        let newWindow = window.open('/#/crm/goodsOrderPrint?id=' + id, '', '');
         newWindow.print();
       }else if(action =="sign"){
         this.$router.push({name:'goodsOrderSign',query:{id:id}})
@@ -276,7 +276,7 @@
     }
  },created () {
 
-    var that = this;
+      var that = this;
     that.pageHeight = window.outerHeight -320;
     axios.get('/api/ws/future/crm/goodsOrder/getQuery').then((response) =>{
       that.formData=response.data;
