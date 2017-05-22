@@ -1,6 +1,5 @@
 package net.myspring.future.modules.basic.service;
 
-import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -23,9 +22,6 @@ public class DepotService {
     private DepotMapper depotMapper;
     @Autowired
     private OfficeClient officeClient;
-
-    @Autowired
-    private CacheUtils cacheUtils;
 
 
     public List<DepotDto> findShopList(DepotQuery depotQuery) {
@@ -71,22 +67,5 @@ public class DepotService {
         }else{
             return null;
         }
-    }
-
-    public DepotDto findShopByGoodsOrderId(String goodsOrderId) {
-        DepotDto depotDto =  depotMapper.findShopByGoodsOrderId(goodsOrderId);
-        if(depotDto != null){
-            cacheUtils.initCacheInput(depotDto);
-        }
-
-        return depotDto;
-    }
-
-    public DepotDto findStoreByGoodsOrderId(String goodsOrderId) {
-        DepotDto depotDto =  depotMapper.findStoreByGoodsOrderId(goodsOrderId);
-        if(depotDto != null){
-            cacheUtils.initCacheInput(depotDto);
-        }
-        return depotDto;
     }
 }

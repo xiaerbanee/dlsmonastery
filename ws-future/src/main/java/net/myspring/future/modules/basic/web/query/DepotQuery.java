@@ -29,6 +29,8 @@ public class DepotQuery extends BaseQuery {
     //直营仓库
     private Boolean outIdIsNull;
 
+    private String shipType;
+
     public String getName() {
         return name;
     }
@@ -84,5 +86,13 @@ public class DepotQuery extends BaseQuery {
 
     public void setOutIdIsNull(Boolean outIdIsNull) {
         this.outIdIsNull = outIdIsNull;
+    }
+
+    public String getShipType() {
+        return shipType;
+    }
+
+    public void setShipType(String shipType) {
+        this.shipType = shipType;
     }
 }
