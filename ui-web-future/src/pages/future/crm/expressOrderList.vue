@@ -6,7 +6,7 @@
         <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('expressOrderList.filter') }}</el-button>
         <el-button  type="primary" @click="exportData">{{$t('expressOrderList.export')}}</el-button>
         <el-button  type="primary" @click="exportEMSData">{{$t('expressOrderList.EMSExportData')}}</el-button>
-        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('expressOrderList.filter')" v-model="formVisible" size="small" class="search-form">
         <el-form :model="formData">

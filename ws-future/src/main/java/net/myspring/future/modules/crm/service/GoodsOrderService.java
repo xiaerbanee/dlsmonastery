@@ -473,13 +473,15 @@ public class GoodsOrderService {
                 //防止前台篡改
                 if(goodsOrderDetailMap.containsKey(goodsOrderDetailForm.getId())) {
 
-                    GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMapper.findOne(goodsOrderDetailForm.getId());
-                    goodsOrderDetail.setQty(goodsOrderDetailForm.getQty());
-                    goodsOrderDetail.setBillQty(goodsOrderDetailForm.getQty());
-                    goodsOrderDetailMapper.update(goodsOrderDetail);
-                    amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
-
-
+                    if (goodsOrderDetailForm.getQty() <= 0) {
+                        goodsOrderDetailMapper.deleteOne(goodsOrderDetailForm.getId());
+                    }else{
+                        GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMapper.findOne(goodsOrderDetailForm.getId());
+                        goodsOrderDetail.setQty(goodsOrderDetailForm.getQty());
+                        goodsOrderDetail.setBillQty(goodsOrderDetailForm.getQty());
+                        goodsOrderDetailMapper.update(goodsOrderDetail);
+                        amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
+                    }
                 }
             }
         }
