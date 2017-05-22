@@ -9,6 +9,7 @@ import net.myspring.basic.modules.sys.web.query.DictEnumQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +24,12 @@ public class DictEnumService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public DictEnumDto findOne(DictEnumDto dictEnumDto) {
-        if(!dictEnumDto.isCreate()){
-            DictEnum dictEnum= dictEnumMapper.findOne(dictEnumDto.getId());
+    public DictEnumDto findOne(String id) {
+        DictEnumDto dictEnumDto;
+        if(StringUtils.isBlank(id)){
+            dictEnumDto = new DictEnumDto();
+        } else {
+            DictEnum dictEnum= dictEnumMapper.findOne(id);
             dictEnumDto = BeanUtil.map(dictEnum,DictEnumDto.class);
             cacheUtils.initCacheInput(dictEnumDto);
         }

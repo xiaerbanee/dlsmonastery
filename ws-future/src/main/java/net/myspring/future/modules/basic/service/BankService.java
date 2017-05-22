@@ -45,10 +45,6 @@ public class BankService {
         return  bankDtoList==null?Lists.newArrayList():bankDtoList;
     }
 
-    public List<Bank> findAll(){
-        return bankMapper.findAll();
-    }
-
     public Page<BankDto> findPage(Pageable pageable,BankQuery bankQuery) {
         bankQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         Page<BankDto> page = bankMapper.findPage(pageable, bankQuery);

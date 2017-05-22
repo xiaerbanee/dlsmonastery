@@ -90,20 +90,4 @@ public class DepotController {
         return depotService.findById(id);
     }
 
-    @RequestMapping(value = "findShopByGoodsOrderId")
-    public DepotDto findShopByGoodsOrderId(String goodsOrderId) {
-        if(StringUtils.isBlank(goodsOrderId)){
-            return new DepotDto();
-        }
-        return depotService.findShopByGoodsOrderId(goodsOrderId);
-    }
-
-    @RequestMapping(value = "findStoreByGoodsOrderId")
-    public DepotDto findStoreByGoodsOrderId(String goodsOrderId) {
-        if(StringUtils.isBlank(goodsOrderId)){
-            return new DepotDto();
-        }
-        return depotService.findStoreByGoodsOrderId(goodsOrderId);
-    }
-
 }

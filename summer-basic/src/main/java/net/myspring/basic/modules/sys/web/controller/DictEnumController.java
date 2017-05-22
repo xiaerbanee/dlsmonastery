@@ -42,8 +42,8 @@ public class DictEnumController {
     }
 
     @RequestMapping(value = "findOne")
-    public DictEnumDto findOne(DictEnumDto dictEnumDto){
-        return dictEnumService.findOne(dictEnumDto);
+    public DictEnumDto findOne(String id){
+        return dictEnumService.findOne(id);
     }
 
     @RequestMapping(value = "getForm")
