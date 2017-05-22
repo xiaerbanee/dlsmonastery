@@ -16,38 +16,30 @@
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.hasIme.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.hasIme" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="(item,key) in formProperty.boolMap" :key="key" :label="item | bool2str" :value="item"></el-option>
-                </el-select>
+                <bool-select v-model="formData.hasIme"></bool-select>
               </el-form-item>
               <el-form-item :label="formLabel.code.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('productList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.allowBill.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.allowBill" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="(item,key) in formProperty.boolMap" :key="key" :label="item | bool2str " :value="item"></el-option>
-                </el-select>
+                <bool-select v-model="formData.allowBill"></bool-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="formLabel.productType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.productType" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="productType in formProperty.productTypeList" :key="productType.name" :label="productType.name" :value="productType.name"></el-option>
-                </el-select>
+                <product-type-select v-model="formData.productType"></product-type-select>
               </el-form-item>
               <el-form-item :label="formLabel.allowOrder.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.allowOrder" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="(item,key) in formProperty.boolMap" :key="key" :label="item | bool2str " :value="item"></el-option>
-                </el-select>
+                <bool-select v-model="formData.allowOrder"></bool-select>
               </el-form-item>
               <el-form-item :label="formLabel.outGroupName.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.outGroupName" filterable clearable :placeholder="$t('productList.inputWord')">
-                  <el-option v-for="product  in formProperty.outGroupNameList" :key="product.outGroupName" :label="product.outGroupName" :value="product.outGroupName"></el-option>
+                  <el-option v-for="product  in formData.outGroupNameList" :key="product.outGroupName" :label="product.outGroupName" :value="product.outGroupName"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.netType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.netType" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="netType in formProperty.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
+                  <el-option v-for="netType in formData.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -98,13 +90,19 @@
     </div>
   </div>
 </template>
-
 <script>
+  import boolSelect from 'components/common/bool-select'
+  import productTypeSelect from 'components/future/product-type-select'
   export default {
+    components:{
+      boolSelect,
+      productTypeSelect
+    },
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:'',
@@ -125,7 +123,6 @@
           outGroupName:{label:this.$t('productList.outGroupName')},
           netType:{label:this.$t('productList.netType')}
         },
-        formProperty:{},
         formLabelWidth: '120px',
         pageHeight:'',
         formVisible: false,
@@ -138,9 +135,10 @@
         this.formLabel.hasIme.value = util.bool2str(this.formData.hasIme);
         this.formLabel.allowBill.value = util.bool2str(this.formData.allowBill);
         this.formLabel.allowOrder.value =  util.bool2str(this.formData.allowOrder);
-        this.formLabel.productType.value = util.getLabel(this.formProperty.productTypes, this.formData.productType);
-        util.setQuery("productList",this.formData);
-        axios.get('/api/ws/future/basic/product',{params:this.formData}).then((response) => {
+        this.formLabel.productType.value = util.getLabel(this.formData.productType);
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("productList",this.submitData);
+        axios.get('/api/ws/future/basic/product',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -175,7 +173,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
-        this.formProperty = response.data;
+        this.formData = response.data;
         util.copyValue(this.$route.query,this.formData);
         this.pageRequest();
       });

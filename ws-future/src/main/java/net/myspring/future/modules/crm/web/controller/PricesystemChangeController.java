@@ -1,13 +1,18 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.service.PricesystemService;
 import net.myspring.future.modules.crm.domain.PricesystemChange;
 
 import net.myspring.future.modules.crm.dto.PricesystemChangeDto;
 import net.myspring.future.modules.crm.service.PricesystemChangeService;
+import net.myspring.future.modules.crm.web.form.PricesystemChangeForm;
 import net.myspring.future.modules.crm.web.query.PricesystemChangeQuery;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,8 +52,9 @@ public class PricesystemChangeController {
     }
 
     @RequestMapping(value = "save")
-    public String save(PricesystemChange pricesystemChange, BindingResult bindingResult) {
-        return null;
+    public RestResponse save(PricesystemChangeForm pricesystemChangeForm, BindingResult bindingResult) {
+         pricesystemChangeService.save(pricesystemChangeForm);
+        return new RestResponse("保存成功",null );
     }
 
     @RequestMapping(value = "audit")

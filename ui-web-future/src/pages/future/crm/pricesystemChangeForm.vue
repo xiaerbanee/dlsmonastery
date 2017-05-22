@@ -5,10 +5,8 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="24">
           <el-col :span="6">
-            <el-form-item :label="$t('pricesystemChangeForm.product')" prop="productIdList">
-              <el-select v-model="inputForm.productIdList" multiple filterable  :placeholder="$t('pricesystemChangeForm.inputWord')" @change="onchange" :clearable=true >
-                <el-option v-for="item in formProperty.products" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+            <el-form-item :label="$t('pricesystemChangeForm.product')" prop="productId">
+              <product-select v-model="inputForm.productId"></product-select>
             </el-form-item>
             <el-form-item :label="$t('pricesystemChangeForm.remarks')" prop="remarks">
               <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
@@ -29,7 +27,11 @@
 </template>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
+  import productSelect from 'components/future/product-select'
   export default{
+    components:{
+      productSelect,
+    },
     data(){
       return{
         submitDisabled:false,
@@ -74,7 +76,7 @@
             form.validate((valid) => {
               if (valid) {
                 that.inputForm.data = that.settings.data;
-                axios.post('/api/crm/pricesystemChange/save',qs.stringify(that.inputForm)).then((response)=> {
+                axios.post('/api/ws/future/crm/pricesystemChange/save',qs.stringify(that.inputForm)).then((response)=> {
                   that.$message(response.data.message);
                   form.resetFields();
                   that.submitDisabled = false;
@@ -88,19 +90,10 @@
               that.submitDisabled = false;
           }
         });
-      },onchange(){
-        if(this.inputForm.productIdList.length>0){
-          axios.get('/api/crm/pricesystemChange/getPricesystemDetail',{params:{productIdList:this.inputForm.productIdList}}).then((response)=>{
-            this.settings.data=response.data;
-            this.table.loadData(this.settings.data);
-          });
-        } else {
-            this.settings.data=[];
-            this.table.loadData(this.settings.data);
-        }
       }
-    },created(){
-      axios.get('/api/crm/pricesystemChange/getForm').then((response)=>{
+    },
+      created(){
+      axios.get('/api/ws/future/crm/pricesystemChange/getForm').then((response)=>{
         this.formProperty=response.data;
       });
     }

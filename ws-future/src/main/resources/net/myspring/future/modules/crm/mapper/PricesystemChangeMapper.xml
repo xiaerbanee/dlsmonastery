@@ -52,4 +52,11 @@
             WHERE id=#{id}
         </if>
     </select>
+
+    <update id="updateRemark">
+        UPDATE  crm_pricesystem_change
+        SET  remarks=#{p.remarks}
+        WHERE product_id =#{p.productId}
+    </update>
+
 </mapper>

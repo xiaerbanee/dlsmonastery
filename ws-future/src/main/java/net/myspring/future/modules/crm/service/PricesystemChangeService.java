@@ -1,13 +1,16 @@
 package net.myspring.future.modules.crm.service;
 
 import net.myspring.future.common.enums.StatusEnum;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.PricesystemMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.crm.domain.PricesystemChange;
 import net.myspring.future.modules.crm.dto.PricesystemChangeDto;
 import net.myspring.future.modules.crm.mapper.PricesystemChangeMapper;
+import net.myspring.future.modules.crm.web.form.PricesystemChangeForm;
 import net.myspring.future.modules.crm.web.query.PricesystemChangeQuery;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +43,10 @@ public class PricesystemChangeService {
     }
 
     @Transactional
-    public void save(PricesystemChange pricesystemChange){
+    public void save(PricesystemChangeForm pricesystemChangeForm){
+//        PricesystemChange pricesystemChange=pricesystemChangeMapper.findOne(pricesystemChangeForm.getProductId());
+//        ReflectionUtil.copyProperties(pricesystemChangeForm,pricesystemChange);
+        pricesystemChangeMapper.updateRemark(pricesystemChangeForm);
     }
 
     @Transactional

@@ -128,8 +128,7 @@ public class ProductController {
     @RequestMapping(value="getQuery")
     public ProductQuery getQuery(ProductQuery productQuery){
         productQuery.setNetTypeList(productService.findNetTypeList());
-        productQuery.setBoolMap(productService.getMap());
-        productQuery.setProductTypeList(productService.findProductTypeList());
+//        productQuery.setProductTypeList(productService.findProductTypeList());
         productQuery.setOutGroupNameList(productService.findByOutName());
         return productQuery;
     }
