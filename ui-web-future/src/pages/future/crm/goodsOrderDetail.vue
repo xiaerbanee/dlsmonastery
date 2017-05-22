@@ -116,10 +116,10 @@
       axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.goodsOrder = response.data;
       });
-      axios.get('/api/ws/future/basic/depot/findShopByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/crm/goodsOrder/findShopByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
         this.shop = response.data;
       });
-      axios.get('/api/ws/future/basic/depot/findStoreByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/crm/goodsOrder/findStoreByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
         this.store = response.data;
       });
       axios.get('/api/ws/future/crm/expressOrder/findByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{

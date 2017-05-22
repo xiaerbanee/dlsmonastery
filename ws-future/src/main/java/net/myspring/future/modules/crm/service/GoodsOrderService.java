@@ -19,6 +19,7 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
@@ -634,5 +635,21 @@ public class GoodsOrderService {
         return result;
     }
 
+    public DepotDto findShopByGoodsOrderId(String goodsOrderId) {
+        DepotDto depotDto =  depotMapper.findShopByGoodsOrderId(goodsOrderId);
+        if(depotDto != null){
+            cacheUtils.initCacheInput(depotDto);
+        }
+
+        return depotDto;
+    }
+
+    public DepotDto findStoreByGoodsOrderId(String goodsOrderId) {
+        DepotDto depotDto =  depotMapper.findStoreByGoodsOrderId(goodsOrderId);
+        if(depotDto != null){
+            cacheUtils.initCacheInput(depotDto);
+        }
+        return depotDto;
+    }
 
 }

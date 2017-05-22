@@ -11,6 +11,7 @@ import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
@@ -282,6 +283,24 @@ public class GoodsOrderController {
     @RequestMapping(value = "findDetailListForBill")
     public List<GoodsOrderDetailDto> findDetailListForBill(String id, String storeId) {
         return goodsOrderService.findDetailListForBill(id, storeId);
+    }
+
+
+
+    @RequestMapping(value = "findShopByGoodsOrderId")
+    public DepotDto findShopByGoodsOrderId(String goodsOrderId) {
+        if(StringUtils.isBlank(goodsOrderId)){
+            return new DepotDto();
+        }
+        return goodsOrderService.findShopByGoodsOrderId(goodsOrderId);
+    }
+
+    @RequestMapping(value = "findStoreByGoodsOrderId")
+    public DepotDto findStoreByGoodsOrderId(String goodsOrderId) {
+        if(StringUtils.isBlank(goodsOrderId)){
+            return new DepotDto();
+        }
+        return goodsOrderService.findStoreByGoodsOrderId(goodsOrderId);
     }
 
 
