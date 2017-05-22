@@ -1,6 +1,5 @@
 package net.myspring.future.modules.basic.service;
 
-import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -24,9 +23,6 @@ public class DepotService {
     @Autowired
     private OfficeClient officeClient;
 
-    @Autowired
-    private CacheUtils cacheUtils;
-
 
     public List<DepotDto> findShopList(DepotQuery depotQuery) {
         List<Depot> depotList = depotMapper.findByAccountId(RequestUtils.getAccountId());
@@ -46,6 +42,16 @@ public class DepotService {
         return depotMapper.findStoreList(depotQuery);
     }
 
+
+
+    public List<DepotDto> findStoreList(String shipType) {
+        //TODO  需要完成根據shipType選擇倉庫
+        return findStoreList(new DepotQuery());
+
+    }
+
+
+
     public List<DepotDto> findByIds(List<String> ids){
         List<Depot> depotList=depotMapper.findByIds(ids);
         List<DepotDto> depotDtoList= BeanUtil.map(depotList,DepotDto.class);
@@ -61,22 +67,5 @@ public class DepotService {
         }else{
             return null;
         }
-    }
-
-    public DepotDto findShopByGoodsOrderId(String goodsOrderId) {
-        DepotDto depotDto =  depotMapper.findShopByGoodsOrderId(goodsOrderId);
-        if(depotDto != null){
-            cacheUtils.initCacheInput(depotDto);
-        }
-
-        return depotDto;
-    }
-
-    public DepotDto findStoreByGoodsOrderId(String goodsOrderId) {
-        DepotDto depotDto =  depotMapper.findStoreByGoodsOrderId(goodsOrderId);
-        if(depotDto != null){
-            cacheUtils.initCacheInput(depotDto);
-        }
-        return depotDto;
     }
 }
