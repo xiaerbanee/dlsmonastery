@@ -42,16 +42,6 @@ public class DepotService {
         return depotMapper.findStoreList(depotQuery);
     }
 
-
-
-    public List<DepotDto> findStoreList(String shipType) {
-        //TODO  需要完成根據shipType選擇倉庫
-        return findStoreList(new DepotQuery());
-
-    }
-
-
-
     public List<DepotDto> findByIds(List<String> ids){
         List<Depot> depotList=depotMapper.findByIds(ids);
         List<DepotDto> depotDtoList= BeanUtil.map(depotList,DepotDto.class);
