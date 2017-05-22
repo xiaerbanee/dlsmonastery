@@ -12,7 +12,7 @@
     </select>
 
     <select id="findPage" resultType="ShopGoodsDepositDto">
-        select depot.name shopName, depot.area_id areaId, (select b.name from crm_bank b where b.id = t1.bank_id) bankName,  t1.*
+        select  depot.office_id depotOfficeId, t1.*
         from crm_shop_goods_deposit t1, crm_depot depot
         where t1.enabled = 1
         and t1.shop_id = depot.id
@@ -36,11 +36,7 @@
             and t1.out_bill_type=#{p.outBillType}
         </if>
         <if test="p.shopName!=null">
-            and t1.shop_id in(
-            select shop.id
-            from crm_depot shop
-            where shop.name like concat('%',#{p.shopName},'%')
-            )
+            and depot.name  like concat('%',#{p.shopName},'%')
         </if>
         <if test="p.bankName!=null">
             and t1.bank_id in(

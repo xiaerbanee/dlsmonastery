@@ -212,5 +212,11 @@
           </foreach>
     </select>
 
+    <delete id="deleteOne" >
+        DELETE FROM crm_goods_order_detail where id = #{id}
+    </delete>
+
+
+
 
 </mapper>
