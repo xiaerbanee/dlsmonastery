@@ -4,13 +4,19 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.layout.domain.AdApply;
+import net.myspring.util.cahe.annotation.CacheInput;
+
+import java.math.BigDecimal;
 
 
 /**
  * Created by lihx on 2017/4/15.
  */
 public class AdApplyDto extends DataDto<AdApply> {
+
     private String shopId;
+    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
+    private String shopName;
     private Integer applyQty;
     private Integer confirmQty;
     private Integer billedQty;
@@ -19,10 +25,21 @@ public class AdApplyDto extends DataDto<AdApply> {
     private String expiryDateRemarks;
     private Integer version;
     private String productId;
-    private Product product;
-    private Depot shop;
+    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "name")
+    private String productName;
+    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "code")
+    private String productCode;
+    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "price2")
+    private BigDecimal price2;
     private Integer storeQty;
-    private Integer billQty;
+
+    public BigDecimal getPrice2() {
+        return price2;
+    }
+
+    public void setPrice2(BigDecimal price2) {
+        this.price2 = price2;
+    }
 
     public String getShopId() {
         return shopId;
@@ -96,20 +113,28 @@ public class AdApplyDto extends DataDto<AdApply> {
         this.productId = productId;
     }
 
-    public Product getProduct() {
-        return product;
+    public String getShopName() {
+        return shopName;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 
-    public Depot getShop() {
-        return shop;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setShop(Depot shop) {
-        this.shop = shop;
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductCode() {
+        return productCode;
+    }
+
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
     }
 
     public Integer getStoreQty() {
@@ -120,11 +145,4 @@ public class AdApplyDto extends DataDto<AdApply> {
         this.storeQty = storeQty;
     }
 
-    public Integer getBillQty() {
-        return billQty;
-    }
-
-    public void setBillQty(Integer billQty) {
-        this.billQty = billQty;
-    }
 }

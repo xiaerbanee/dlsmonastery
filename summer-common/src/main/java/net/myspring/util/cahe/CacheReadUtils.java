@@ -36,10 +36,16 @@ public class CacheReadUtils {
     private static Map<String, List<CacheInputField>> cacheInputMap = Maps.newHashMap();
 
     public static void initCacheInput(RedisTemplate redisTemplate, Object object) {
+        if(object==null) {
+            return;
+        }
         initCacheInput(redisTemplate, Lists.newArrayList(object));
     }
 
     public static void initCacheInput(RedisTemplate redisTemplate, Collection objects) {
+        if(CollectionUtil.isEmpty(objects)) {
+            return;
+        }
         LocalDateTime start = LocalDateTime.now();
         logger.info("read cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         Class clazz;

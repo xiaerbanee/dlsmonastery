@@ -42,7 +42,7 @@ public class DemoPhoneTypeService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    private static BigDecimal MIN_AREA_POINT = new BigDecimal("0.01");
+    private static BigDecimal MIN_POINT = new BigDecimal("0.01");
 
     public DemoPhoneType findOne(String id) {
         DemoPhoneType demoPhoneType = demoPhoneTypeMapper.findOne(id);
@@ -55,7 +55,7 @@ public class DemoPhoneTypeService {
         List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtos= BeanUtil.map(demoPhoneTypeOfficeList,DemoPhoneTypeOfficeDto.class);
         Map<String, DemoPhoneTypeOfficeDto> DemoPhoneTypeOfficeDtoMap = CollectionUtil.extractToMap(demoPhoneTypeOfficeDtos,"officeId");
         for (OfficeDto area : areaList) {
-            if (area.getTaskPoint()!=null&&MIN_AREA_POINT.compareTo(area.getTaskPoint()) < 0) {
+            if (area.getTaskPoint()!=null&&MIN_POINT.compareTo(area.getTaskPoint()) < 0) {
                 DemoPhoneTypeOfficeDto demoPhoneTypeOfficeDto = DemoPhoneTypeOfficeDtoMap.get(area.getId());
                 if (demoPhoneTypeOfficeDto == null) {
                     demoPhoneTypeOfficeDto = new DemoPhoneTypeOfficeDto();

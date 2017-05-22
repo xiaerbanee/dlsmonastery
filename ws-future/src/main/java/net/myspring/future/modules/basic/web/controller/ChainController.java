@@ -40,8 +40,8 @@ public class ChainController {
     }
 
     @RequestMapping(value = "findOne")
-    public ChainDto findOne(String id){
-        return chainService.findOne(id);
+    public ChainDto findOne(ChainDto chainDto){
+        return chainService.findOne(chainDto);
     }
 
 

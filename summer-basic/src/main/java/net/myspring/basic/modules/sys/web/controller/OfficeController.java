@@ -96,13 +96,9 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "getOfficeTree")
-    public TreeNode getOfficeTree(String id) {
-        if (StringUtils.isNotBlank(id)) {
-            List<OfficeBusiness> businessList = officeService.findBusinessIdById(id);
-            TreeNode treeNode = officeService.getOfficeTree(CollectionUtil.extractToList(businessList,"businessOfficeId"));
-            return treeNode;
-        }
-        return null;
+    public TreeNode getOfficeTree() {
+        TreeNode treeNode = officeService.getOfficeTree();
+        return treeNode;
     }
 
     @RequestMapping(value = "delete")

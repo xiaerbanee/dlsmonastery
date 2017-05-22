@@ -1,7 +1,10 @@
 package net.myspring.future.modules.basic.dto;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
+
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/17.
@@ -10,6 +13,15 @@ public class AdPricesystemDto extends DataDto<AdPricesystem> {
     private String name;
     protected Boolean enabled;
     protected Boolean locked;
+    private List<String> officeIdList= Lists.newArrayList();
+
+    public List<String> getOfficeIdList() {
+        return officeIdList;
+    }
+
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
+    }
 
     public String getName() {
         return name;

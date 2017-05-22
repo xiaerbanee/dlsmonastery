@@ -56,9 +56,6 @@ public class EmployeeController {
     @RequestMapping(value = "findOne")
     public EmployeeDto findOne(EmployeeDto employeeDto){
         employeeDto=employeeService.findOne(employeeDto);
-        AccountDto accountDto=new AccountDto();
-        accountDto.setId(employeeDto.getAccountId());
-        employeeDto.setAccount(accountService.findOne(accountDto));
         return employeeDto;
     }
 

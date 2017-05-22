@@ -41,8 +41,8 @@ public class BankService {
 
     public List<BankDto> findByAccountId(String accountId){
         List<Bank> banks = bankMapper.findByAccountId(accountId);
-        List<BankDto> result = BeanUtil.map(banks, BankDto.class);
-        return  result==null?Lists.newArrayList():result;
+        List<BankDto> bankDtoList = BeanUtil.map(banks, BankDto.class);
+        return  bankDtoList==null?Lists.newArrayList():bankDtoList;
     }
 
     public List<Bank> findAll(){
@@ -59,7 +59,6 @@ public class BankService {
     public void logicDeleteOne(String id) {
         bankMapper.logicDeleteOne(id);
     }
-
 
     public void save(BankForm bankForm){
         bankMapper.updateForm(bankForm);

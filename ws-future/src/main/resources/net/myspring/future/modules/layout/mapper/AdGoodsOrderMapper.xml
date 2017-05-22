@@ -32,14 +32,13 @@
             and t1.bill_date &lt; #{p.billDateEnd}
         </if>
         <if test="p.createdBy !=null">
-            and t1.created_by &lt; #{p.createdBy}
+            and t1.created_by = #{p.createdBy}
         </if>
         <if test="p.officeId != null">
-            and depot.office_id &lt; #{p.officeId}
+            and depot.office_id = #{p.officeId}
         </if>
         <if test="p.storeId !=null">
             AND t1.store_id =#{p.storeId}
-            )
         </if>
         <if test="p.shopId !=null">
             AND t1.shop_id =#{p.shopId}
