@@ -23,13 +23,13 @@
               <el-input v-model="inputForm.qty" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.content')" prop="content">
-              <el-input v-model="inputForm.content" ></el-input>
+              <el-input v-model="inputForm.content" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.specialArea')" prop="specialArea">
               <bool-radio-group v-model="inputForm.specialArea"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.remarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks"></el-input>
+              <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.attachment')" prop="attachment">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/广告申请" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">

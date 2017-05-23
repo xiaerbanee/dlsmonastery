@@ -34,7 +34,7 @@ public class AdPricesystemChangeController {
     }
 
     @RequestMapping(value="findFilter", method = RequestMethod.GET)
-    public List<AdPricesystemChangeForm> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery){
+    public List<AdPricesystemChangeDto> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery){
         return adPricesystemChangeService.findFilter(adPricesystemChangeQuery);
     }
 
@@ -46,7 +46,7 @@ public class AdPricesystemChangeController {
     }
     @RequestMapping(value = "getQuery")
     public AdPricesystemChangeQuery getQuery(AdPricesystemChangeQuery adPricesystemChangeQuery){
-        return new AdPricesystemChangeQuery();
+        return adPricesystemChangeQuery;
     }
 
 

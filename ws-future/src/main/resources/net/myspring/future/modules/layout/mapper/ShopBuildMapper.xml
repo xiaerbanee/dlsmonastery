@@ -10,7 +10,7 @@
         WHERE
         t1.enabled=1
         and t1.shop_id=depot.id
-
+        <include refid="shopBuildFilter"/>
     </select>
     <select id="findByFilter" resultType="ShopBuildDto">
         SELECT
