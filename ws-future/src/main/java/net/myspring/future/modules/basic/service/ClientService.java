@@ -55,13 +55,12 @@ public class ClientService {
             Depot depot = new Depot();
             depot.setClientId(client.getId());
             depot.setName(client.getName());
-            depot.setNamePinyin(StringUtils.getFirstSpell(depot.getName()));
+            depot.setNamePinyin(StringUtils.getFirstSpell(client.getName()));
             depotManager.save(depot);
             //保存depotShop
             DepotShop depotShop = new DepotShop();
             depotShop.setDepotId(depot.getId());
             depotShopMapper.save(depotShop);
-
             depot.setDepotShopId(depotShop.getId());
             depotManager.save(depot);
         } else {

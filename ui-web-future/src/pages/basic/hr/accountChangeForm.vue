@@ -6,7 +6,9 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('accountChangeForm.account')" prop="accountId">
-              <account-select  v-model="inputForm.accountId"></account-select>
+              <el-select v-model="inputForm.accountId" filterable remote clearable :placeholder="$t('accountChangeForm.inputWord')"  :remote-method="remoteAccount" :loading="remoteLoading" @change="getAccount(inputForm.accountId)">
+                <el-option v-for="item in accounts" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item :label="$t('accountChangeForm.type')"  prop="type">
               <el-select v-model="inputForm.type" filterable clearable :placeholder="$t('accountChangeForm.selectGroup')"  @change="getOldValue">
@@ -19,12 +21,7 @@
             <el-form-item v-show="inputForm.type=='MOBILE_PHONE' ||inputForm.type=='ID_CARD' || inputForm.type=='BANK_CARD' ||inputForm.type=='BASE_SALARY'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
               <el-input v-model="inputForm.newValue" ></el-input>
             </el-form-item>
-            <el-form-item v-show="inputForm.type=='有无导购' || inputForm.type=='是否让利'" :label="$t('accountChangeForm.account')"  prop="newValue">
-              <el-select v-model="inputForm.newValue"  clearable :placeholder="$t('accountChangeForm.inputKey')" >
-                <el-option v-for="(value,key) in inputForm.boolMap"  :key="key" :label="value" :value="key"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="inputForm.type=='DEPARTMENT'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
+            <el-form-item v-show="inputForm.type=='OFFICE'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
               <office-select v-model="inputForm.officeId"></office-select>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='POSITION'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
@@ -111,6 +108,16 @@
             this.submitDisabled = false;
       }
       })
+      },remoteAccount(query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          axios.get('/api/basic/hr/account/searchFilter',{params:{loginName:query}}).then((response)=>{
+            this.accounts=response.data;
+            this.remoteLoading = false;
+          })
+        } else {
+          this.accounts = [];
+        }
       },getAccount(id){
         if(id){
             var type=this.inputForm.type;
@@ -133,7 +140,7 @@
           this.inputForm.oldValue = this.inputForm.employee.bankNumber;
         }else if(this.inputForm.type == "BASE_SALARY"){
           this.inputForm.oldValue = this.inputForm.employee.salary;
-        }else if(this.inputForm.type == "DEPARTMENT"){
+        }else if(this.inputForm.type == "OFFICE"){
           this.inputForm.oldValue = this.inputForm.officeName;
         }else if(this.inputForm.type == "POSITION"){
           this.inputForm.oldValue = this.inputForm.positionName;
@@ -145,6 +152,8 @@
           this.inputForm.oldValue = this.inputForm.employee.entryDate;
         }else if(this.inputForm.type == "LEAVE_WORKER"){
           this.inputForm.oldValue = this.inputForm.employee.leaveDate;
+        }else {
+          this.inputForm.oldValue ="";
         }
       }
     },created(){
@@ -154,9 +163,6 @@
       }
       axios.get('/api/basic/hr/accountChange/findData',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
-        if(response.data.accountId!=null){
-          this.accounts=new Array({id:response.data.accountId,loginName:response.data.accountName})
-        }
     })
     }
   }

@@ -3,13 +3,13 @@
     <head-tab active="clientList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:client:edit'">{{$t('clientList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:client:view'">{{$t('clientList.filter')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" >{{$t('clientList.add')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" >{{$t('clientList.filter')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('clientList.filter')" v-model="formVisible"  size="tiny" class="search-form">
         <el-form :model="formData">
-          <el-form-item :label="formLabel.name" :label-width="formLabelWidth">
+          <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
             <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('clientList.likeSearch')"></el-input>
           </el-form-item>
         </el-form>
@@ -47,12 +47,13 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:'',
         },formLabel:{
-          name:this.$t('clientList.name'),
+          name:{label: this.$t('clientList.name')}
         },
         formProperty:{},
         formLabelWidth: '120px',
@@ -64,7 +65,8 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("clientList",this.formData);
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("clientList",this.submitData);
         axios.get('/api/ws/future/basic/client',{params:this.formData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;

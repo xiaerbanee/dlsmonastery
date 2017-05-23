@@ -6,6 +6,7 @@ import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
 import net.myspring.future.modules.basic.web.form.AdPricesystemForm;
 import net.myspring.future.modules.basic.web.query.AdPricesystemQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -62,7 +63,9 @@ public class AdPricesystemService {
             adPricesystemMapper.deleteOfficeIds(adPricesystem.getId());
         }
         //修改机构绑定
-        adPricesystemMapper.saveOfficeIds(adPricesystem.getId(),adPricesystemForm.getOfficeIdList());
+        if(CollectionUtil.isNotEmpty(adPricesystemForm.getOfficeIdList())){
+            adPricesystemMapper.saveOfficeIds(adPricesystem.getId(),adPricesystemForm.getOfficeIdList());
+        }
         return adPricesystem;
     }
 

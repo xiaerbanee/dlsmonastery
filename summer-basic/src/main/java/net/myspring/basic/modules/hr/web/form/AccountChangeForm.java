@@ -16,21 +16,21 @@ public class AccountChangeForm extends DataForm<AccountChange> {
 
     private String type;
     private String accountId;
-    @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
-    private String accountName;
     private String officeId;
     private String positionId;
+    private String leaderId;
+    private Employee employee;
+    private String remarks;
+    private String oldValue;
+    private String newValue;
+    @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
+    private String accountName;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
     private String positionName;
     @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
     private String leaderName;
-    private String leaderId;
-    private Employee employee;
-    private String remarks;
-    private String oldValue;
-    private String newValue;
     private List<String> typeList= Lists.newArrayList();
     private List<PositionDto> positionList=Lists.newArrayList();
 

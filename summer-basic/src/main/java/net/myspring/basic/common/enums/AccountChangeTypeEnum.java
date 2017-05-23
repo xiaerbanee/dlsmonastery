@@ -15,7 +15,7 @@ public enum AccountChangeTypeEnum {
     BANK_CARD,
     BASE_SALARY,
     // 调职调岗
-    DEPARTMENT,
+    OFFICE,
     POSITION,
     LEADER,
     REGULAR_WORKER,

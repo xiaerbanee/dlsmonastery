@@ -30,9 +30,16 @@ public class OfficeDto extends DataDto{
     private BigDecimal point;
     private BigDecimal taskPoint;
     private String sort;
-
-    private TreeNode officeTree;
+    private List<String> businessIdList=Lists.newArrayList();
     private List<String> leaderIdList= Lists.newArrayList();
+
+    public List<String> getBusinessIdList() {
+        return businessIdList;
+    }
+
+    public void setBusinessIdList(List<String> businessIdList) {
+        this.businessIdList = businessIdList;
+    }
 
     public String getJointType() {
         return jointType;
@@ -48,14 +55,6 @@ public class OfficeDto extends DataDto{
 
     public void setSort(String sort) {
         this.sort = sort;
-    }
-
-    public TreeNode getOfficeTree() {
-        return officeTree;
-    }
-
-    public void setOfficeTree(TreeNode officeTree) {
-        this.officeTree = officeTree;
     }
 
     public List<String> getLeaderIdList() {

@@ -1,16 +1,22 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.basic.common.enums.AccountChangeTypeEnum;
+import net.myspring.basic.modules.hr.domain.AccountChange;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.service.AccountChangeService;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
+import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "hr/accountChange")
@@ -22,11 +28,6 @@ public class AccountChangeController {
     private OfficeService officeService;
     @Autowired
     private PositionService positionService;
-
-    @RequestMapping(value = "audit", method = RequestMethod.GET)
-    public String audit(AccountChangeForm accountChangeForm,boolean pass,String comment) {
-        return null;
-    }
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AccountChangeDto> list(Pageable pageable, AccountChangeQuery accountChangeQuery){
@@ -47,5 +48,18 @@ public class AccountChangeController {
         accountChangeForm.setTypeList(AccountChangeTypeEnum.getList());
         accountChangeForm.setPositionList(positionService.findAll());
         return accountChangeForm;
+    }
+
+    @RequestMapping(value = "audit", method = RequestMethod.GET)
+    public RestResponse audit(String id,boolean pass,String comment) {
+        RestResponse restResponse=new RestResponse("用户信息调整审核成功",null);
+        accountChangeService.audit(id,pass,comment);
+        return restResponse;
+    }
+
+    @RequestMapping(value = "save", method = RequestMethod.POST)
+    public RestResponse save( AccountChangeForm accountChangeForm) {
+        accountChangeService.save(accountChangeForm);
+        return new RestResponse("员工信息调整成功",null);
     }
 }

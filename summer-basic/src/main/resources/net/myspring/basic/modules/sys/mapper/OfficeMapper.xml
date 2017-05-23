@@ -29,6 +29,12 @@
         </foreach>
     </select>
 
+    <select id="findParentIdIsNull" resultType="Office">
+        SELECT t1.*
+        FROM sys_office t1
+        where t1.parent_id is NULL
+    </select>
+
     <select id="findByParentIdsLike" resultType="Office">
         SELECT t1.*
         FROM sys_office t1
@@ -135,7 +141,6 @@
             t2.id = #{officeId}
          )
     </select>
-
 
     <sql id="officeFilter">
         <if test="p.officeIds !=null and p.officeIds.size() !=0">
