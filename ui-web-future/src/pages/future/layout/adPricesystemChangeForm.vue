@@ -19,20 +19,20 @@
         <el-button type="primary" @click="search()">{{$t('adPricesystemChangeForm.sure')}}</el-button>
       </div>
     </el-dialog>
-    <div ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top:20px"></div>
   </div>
 </template>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js';
   import productSelect from 'components/future/product-select';
 
   export default{
     components:{productSelect},
     data(){
       return{
-        formData:{
-          productId:''
-        },formLabel:{
+        formData:{},
+        submitData:{
+            productId:'',
+        },
+        formLabel:{
           productName:{label:this.$t('adPricesystemChangeForm.productName')},
           productCode:{label:this.$t('adPricesystemChangeForm.productCode')}
         },
@@ -43,46 +43,8 @@
         productTypes:[],
         formVisible: false,
         submitDisabled:false,
-        table:null,
-        settings: {
-          colHeaders: [this.$t('adPricesystemChangeForm.id'),this.$t('adPricesystemChangeForm.productCode'),this.$t('adPricesystemChangeForm.productName'),this.$t('adPricesystemChangeForm.volume'),this.$t('adPricesystemChangeForm.shouldGet'),this.$t('adPricesystemChangeForm.materialA'),this.$t('adPricesystemChangeForm.materialB')],
-          rowHeaders:true,
-          autoColumnSize:true,
-			    allowInsertRow:false,
-          maxRows:10000,
-          columns: [{
-            data:"id",
-            readOnly: true,
-            width:100
-          },{
-            data:"code",
-            readOnly: true,
-            width:150
-          },{
-            data:"name",
-            readOnly: true,
-            width:300
-          },{
-            data:"volume",
-            type:"numeric",
-            width:150
-          },{
-            data:"shouldGet",
-            type:"numeric",
-            width:150
-          },{
-            width:150,
-            type:"numeric",
-          },{
-            width:150,
-            type:"numeric",
-          }]
-        },
       }
 
-    },
-    mounted () {
-      this.table = new Handsontable(this.$refs["handsontable"], this.settings)
     },
     methods:{
       formSubmit(){
@@ -105,18 +67,20 @@
         this.formVisible = false;
         this.getData();
       },getData(){
-        axios.get('/api/ws/future/layout/adPricesystemChange/findFilter',{params:this.formData}).then((response)=>{
+          util.copyValue(this.formData,this.submitData);
+        axios.get('/api/ws/future/layout/adPricesystemChange/findFilter',{params:this.submitData}).then((response)=>{
           this.settings.data = response.data;
           this.table.loadData(this.settings.data);
         })
       }
     }, created(){
+      axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response)=>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
         this.getData();
+      })
     }
   }
 </script>
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-</style>
 
 

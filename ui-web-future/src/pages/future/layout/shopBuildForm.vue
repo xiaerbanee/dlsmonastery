@@ -66,8 +66,7 @@
         shopDisabled:false,
         fileList: [],
         fixtureContent:'',
-        inputForm: {
-        },
+        inputForm: {},
         submitData:{
           id: '',
           shopId: '',

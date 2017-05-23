@@ -17,7 +17,7 @@
               <el-input v-model="inputForm.imageSize"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.remarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks"></el-input>
+              <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
             <el-form-item  :label="$t('shopImageForm.image')" prop="image">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/形象更换" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
