@@ -21,7 +21,6 @@
                 show-checkbox
                 node-key="id"
                 ref="tree"
-                :default-checked-keys="checked"
                 :default-expanded-keys="checked"
                 @check-change="handleCheckChange"
                 :props="defaultProps">
@@ -98,7 +97,8 @@
         this.inputForm.permissionIdList = permissions;
       },getTreeCheckData(id){
         axios.get('/api/basic/hr/account/getTreeCheckData', {params: {id: id}}).then((response) => {
-          this.checked = response.data;
+          this.$refs.tree.setCheckedKeys(response.data);
+          this.checked=response.data
         })
       }
     }, created(){

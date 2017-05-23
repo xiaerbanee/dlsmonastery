@@ -35,6 +35,7 @@ export default {
       accountAboutCategory:"员工相关",
       salCategory:"工资管理",
       productImeCategory:"货品串码",
+      goodsOrderCategory:"订货管理",
       baseCategory:"基础资料",
       adCategory:"物料广告",
       customerCategory:"客服中心",
