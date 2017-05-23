@@ -201,13 +201,14 @@
     },created(){
       axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.employeeForm=response.data;
-        this.employeeForm.sex=employee.sex=="男"?1:0;
-      })
-      axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.accountForm=response.data;
+        this.employeeForm.sex=response.data.sex=="男"?1:0;
+        axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
+          this.accountForm=response.data;
+        })
       })
       axios.get('/api/basic/hr/employee/getForm').then((response)=>{
           this.inputProperty=response.data
+        console.log(this.inputProperty)
       })
     }
   }

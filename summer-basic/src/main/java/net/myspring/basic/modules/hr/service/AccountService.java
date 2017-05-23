@@ -121,7 +121,9 @@ public class AccountService {
             accountMapper.update(account);
         }
         if ("主账号".equals(accountForm.getType())) {
-            employeeMapper.updateAccountId(accountForm.getEmployeeId(), account.getId());
+            Employee employee=employeeMapper.findOne(accountForm.getEmployeeId());
+            employee.setAccountId(account.getId());
+            employeeMapper.update(employee);
         }
         return account;
     }

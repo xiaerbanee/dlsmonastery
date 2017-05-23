@@ -20,7 +20,6 @@ public class Account extends CompanyEntity<Account> {
     private String positionId;
     private String officeId;
     private String employeeId;
-    private String clientId;
 
     public String getLoginName() {
         return loginName;
@@ -101,11 +100,4 @@ public class Account extends CompanyEntity<Account> {
         this.employeeId = employeeId;
     }
 
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
 }

@@ -28,6 +28,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return list;
 	}
 
+	public static String reverse(String str) {
+		return str == null?null:(new StringBuilder(str)).reverse().toString();
+	}
+
 	public static String getReplaced(String str) {
 		List<String> beforeList = Lists.newArrayList();
 		beforeList.add("，");

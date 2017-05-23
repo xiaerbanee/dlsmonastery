@@ -15,7 +15,6 @@ import java.util.List;
  */
 
 public class EmployeeForm extends DataForm<Employee> {
-    private String code;
     private String mobilePhone;
     private LocalDate entryDate;
     private LocalDate regularDate;
@@ -34,9 +33,17 @@ public class EmployeeForm extends DataForm<Employee> {
     private String dutyCode;
     private String salerName;
     private String accountId;
-    private AccountForm account;
+    private String code;
     private List<PositionDto> positionList= Lists.newArrayList();
     private List<String> educationList= Lists.newArrayList();
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getAccountId() {
         return accountId;
@@ -44,14 +51,6 @@ public class EmployeeForm extends DataForm<Employee> {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
-    }
-
-    public AccountForm getAccount() {
-        return account;
-    }
-
-    public void setAccount(AccountForm account) {
-        this.account = account;
     }
 
     public List<PositionDto> getPositionList() {
@@ -68,14 +67,6 @@ public class EmployeeForm extends DataForm<Employee> {
 
     public void setEducationList(List<String> educationList) {
         this.educationList = educationList;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getMobilePhone() {

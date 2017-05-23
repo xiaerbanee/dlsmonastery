@@ -35,8 +35,6 @@ public interface EmployeeMapper extends BaseMapper<Employee,String> {
     @UpdateProvider(type = MyProvider.class, method = MyProvider.UPDATE)
     int update(@CacheValue Employee employee);
 
-    int updateAccountId(@Param("employeeId")String employeeId,@Param("accountId")String accountId);
-
     @UpdateProvider(type=MyProvider.class, method = MyProvider.LOGIC_DELETE_ONE)
     int logicDeleteOne(String id);
 
