@@ -263,4 +263,16 @@
         where t1.enabled=1
         and t1.ime =  #{item} or t1.ime2 =  #{item} or t1.meid =  #{item}
     </select>
+
+    <select id="findByImeLike" resultType="ProductIme">
+        SELECT
+        t1.*
+        FROM
+        crm_product_ime t1
+        where t1.enabled=1
+        AND t1.depot_id = #{shopId}
+        AND t1.ime_reverse LIKE CONCAT(#{imeReverse},'%')
+        Limit 20
+    </select>
+
 </mapper>

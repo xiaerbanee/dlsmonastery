@@ -30,7 +30,7 @@
                   <el-option v-for="shopAdType in formData.shopAdTypes" :key="shopAdType.id" :label="shopAdType.name" :value="shopAdType.id"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
@@ -68,7 +68,7 @@
         <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
           <template scope="scope">
             <el-button size="small" v-permit="'crm:shopAd:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button>
-            <el-button size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopAd:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
+            <el-button size="small" v-if="scope.row.isAuditable" v-permit="'crm:shopAd:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
             <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:shopAd:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button>
             <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:shopAd:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button>
           </template>
@@ -107,7 +107,7 @@
           specialArea:{label:this.$t('shopAdList.specialArea'),value:''},
           shopAdTypeId:{label:this.$t('shopAdList.shopAdType'),value:''},
           createdBy:{label:this.$t('shopAdList.createdBy')},
-          createdDateRange:{label:this.$t('shopAdList.createdDate')}
+          createdDate:{label:this.$t('shopAdList.createdDate')}
         },
         formLabelWidth: '120px',
         formVisible: false,

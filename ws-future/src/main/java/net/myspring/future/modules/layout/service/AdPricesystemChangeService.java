@@ -51,10 +51,10 @@ public class AdPricesystemChangeService {
         return page;
     }
 
-    public List<AdPricesystemChangeForm> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
-        List<AdPricesystemChangeDto> page = adPricesystemChangeMapper.findFilter(adPricesystemChangeQuery);
-        List<AdPricesystemChangeForm> adPricesystemChangeForms = BeanUtil.map(page,AdPricesystemChangeForm.class);
-        return adPricesystemChangeForms;
+    public List<AdPricesystemChangeDto> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
+        List<AdPricesystemChangeDto> adPricesystemChangeDtos = adPricesystemChangeMapper.findFilter(adPricesystemChangeQuery);
+        cacheUtils.initCacheInput(adPricesystemChangeDtos);
+        return adPricesystemChangeDtos;
     }
 
     public void save(List<List<String>> data){
