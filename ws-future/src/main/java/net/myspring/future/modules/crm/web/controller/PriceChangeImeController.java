@@ -8,6 +8,7 @@ import net.myspring.future.modules.crm.domain.PriceChangeIme;
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
 import net.myspring.future.modules.crm.service.PriceChangeImeService;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
+import net.myspring.future.modules.crm.web.form.PriceChangeImeUploadForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,8 +52,8 @@ public class PriceChangeImeController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(PriceChangeImeForm priceChangeImeForm) {
-        priceChangeImeService.save(priceChangeImeForm);
+    public RestResponse save(PriceChangeImeUploadForm priceChangeImeUploadForm) {
+        priceChangeImeService.save(priceChangeImeUploadForm);
         return new RestResponse("上传成功", ResponseCodeEnum.saved.name());
     }
 

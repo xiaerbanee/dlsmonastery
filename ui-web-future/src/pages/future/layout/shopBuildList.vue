@@ -67,10 +67,10 @@
         <el-table-column prop="remarks" :label="$t('shopBuildList.remarks')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('shopBuildList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" v-permit="'crm:shopBuild:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopBuildList.detail')}}</el-button>
-            <el-button size="small" v-if="scope.row.isAuditable" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
-            <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button>
-            <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button>
+            <el-button type="text" size="small" v-permit="'crm:shopBuild:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopBuildList.detail')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -90,10 +90,6 @@
         pageLoading: false,
         page:{},
         formData:{},
-        batchData:{
-          pass:'',
-          ids:'',
-        },
         submitData:{
           page:0,
           size:25,
@@ -171,15 +167,12 @@
            this.multipleSelection.push(val[key].id);
         }
     },batchPass(){
-       console.log(this.multipleSelection);
-       this.batchData.pass='1';
-         this.batchData.ids=this.multipleSelection;
-      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{pass:'1', ids:this.multipleSelection}}).then((response) =>{
+      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:true}}).then((response) =>{
         this.$message(response.data.message);
         this.pageRequest();
       })
     },batchBack(){
-      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{pass:'0', ids:this.multipleSelection}}).then((response) =>{
+      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:false}}).then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })

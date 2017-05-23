@@ -75,6 +75,7 @@
               }]
             },
             inputForm:{
+              imeUploadList:'',
               priceChangeId:''
             },
             formData:{},
@@ -93,13 +94,21 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/ws/future/crm/priceChangeIme/save',qs.stringify(this.inputForm)).then((response)=> {
-                this.$message(response.data.message);
-                form.resetFields();
-                this.submitDisabled = false;
-              }).catch(function () {
-                this.submitDisabled = false;
-              });
+                this.inputForm.imeUploadList=new Array();
+                let list=this.table.getData();
+                for(var item in list){
+                  if(!this.table.isEmptyRow(item)){
+                    this.inputForm.imeUploadList.push(list[item]);
+                  }
+                }
+                this.inputForm.imeUploadList = JSON.stringify(this.inputForm.imeUploadList);
+                axios.post('/api/ws/future/crm/priceChangeIme/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
+                  this.$message(response.data.message);
+                  form.resetFields();
+                  this.submitDisabled = false;
+                }).catch(function () {
+                  this.submitDisabled = false;
+                });
             }else{
               this.submitDisabled = false;
             }

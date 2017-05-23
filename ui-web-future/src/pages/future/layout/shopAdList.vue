@@ -67,10 +67,10 @@
         <el-table-column prop="remarks" :label="$t('expressOrderList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" v-permit="'crm:shopAd:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button>
-            <el-button size="small" v-if="scope.row.isAuditable" v-permit="'crm:shopAd:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
-            <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:shopAd:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button>
-            <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:shopAd:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button>
+            <el-button type="text" size="small" v-permit="'crm:shopAd:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopAd:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopAd:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopAd:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -161,9 +161,11 @@
         }else if(action =="audit"){
             this.$router.push({name:'shopAdDetail',query:{id:id,action:action}})
         }else if(action=="delete") {
-          axios.get('/api/crm/shopAd/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/ws/future/layout/shopAd/delete', {params: {id: id}}).then((response) => {
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
           })
         }
       },handleSelectionChange(val) {
