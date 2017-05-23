@@ -7,20 +7,11 @@ import java.util.List;
 public class TreeNode {
 	private String id;
 	private String label;
-	private List<String> checked = Lists.newArrayList();
 	private List<TreeNode> children = Lists.newArrayList();
 
 	public TreeNode(String id, String label){
 		this.id = id;
 		this.label = label;
-	}
-
-	public List<String> getChecked() {
-		return checked;
-	}
-
-	public void setChecked(List<String> checked) {
-		this.checked = checked;
 	}
 
 	public String getId() {

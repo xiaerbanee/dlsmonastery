@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.RoleDto;
 import net.myspring.basic.modules.sys.service.BackendModuleService;
@@ -52,14 +53,12 @@ public class RoleController {
 
     @RequestMapping(value = "save")
     public RestResponse save(RoleForm roleForm) {
-        roleForm.setModuleIdList(StringUtils.getSplitList(roleForm.getModuleIdStr(), CharConstant.COMMA));
         roleService.save(roleForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "saveAuthorityList")
     public RestResponse saveAuthorityList(RoleForm roleForm) {
-        roleForm.setPermissionIdList(StringUtils.getSplitList(roleForm.getPermissionIdStr(), CharConstant.COMMA));
         roleService.saveRoleAndPermission(roleForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
@@ -73,20 +72,19 @@ public class RoleController {
     @RequestMapping(value = "getForm")
     public RoleForm getForm(RoleForm roleForm){
         List<String> backendModuleIdList = roleForm.isCreate()? Lists.newArrayList() : backendModuleService.findBackendModuleIdByRoleId(roleForm.getId());
-        roleForm.setTreeNode(permissionService.findBackendTree(backendModuleIdList));
+        roleForm.setTreeNode(permissionService.findBackendTree());
+        roleForm.setModuleIdList(Lists.newArrayList(Sets.newHashSet(backendModuleIdList)));
         return roleForm;
     }
 
     @RequestMapping(value = "getTreeNode")
-    public TreeNode getTreeNode(RoleForm roleForm) {
-        if(StringUtils.isNotBlank(roleForm.getId())){
-            List<Permission> permissionList=permissionService.findByRoleId(roleForm.getId());
-            List<String> permissionIds = CollectionUtil.extractToList(permissionList, "id");
-            roleForm.setPermissionIdList(permissionIds);
-            TreeNode treeNode=permissionService.findRoleTree(roleForm.getId(),permissionIds);
-            return treeNode;
-        }
-        return null;
+    public RoleForm getTreeNode(RoleForm roleForm) {
+        TreeNode treeNode=permissionService.findRoleTree(roleForm.getId());
+        List<Permission> permissionList=permissionService.findByRoleId(roleForm.getId());
+        List<String> permissionIds = CollectionUtil.extractToList(permissionList, "id");
+        roleForm.setPermissionIdList(permissionIds);
+        roleForm.setTreeNode(treeNode);
+        return roleForm;
     }
 
     @RequestMapping(value = "search")

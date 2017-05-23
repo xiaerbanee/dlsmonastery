@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="7">
             <el-form-item label="账号名称" prop="id">
-              <el-select v-model="inputForm.id" filterable :clearable=true remote placeholder="请输入关键字" :loading="remoteLoading">
+              <el-select v-model="inputForm.id" filterable :clearable=true remote placeholder="请输入关键字" :remote-method="remoteAccount" @change="getTreeCheckData(inputForm.id)" :loading="remoteLoading">
                 <el-option v-for="item in accountList" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -42,7 +42,7 @@
         submitDisabled: false,
         inputForm: {
           id: "",
-          permissionIdStr: ""
+          permissionIdList: ""
         },
         rules: {
           id: [{required: true, message: "必填属性"}],
@@ -62,7 +62,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/hr/account/saveAuthorityList', qs.stringify(this.inputForm)).then((response) => {
+            axios.post('/api/basic/hr/account/saveAuthorityList', qs.stringify(this.inputForm, {allowDots:true})).then((response) => {
               this.$message(response.data.message);
               if (this.isCreate) {
                 form.resetFields();
@@ -77,6 +77,16 @@
             this.submitDisabled = false;
           }
         })
+      }, remoteAccount(query){
+        if (query !== '') {
+          this.remoteLoading = true;
+          axios.get('/api/basic/hr/account/searchFilter', {params: {loginName: query}}).then((response) => {
+            this.accountList = response.data;
+            this.remoteLoading = false;
+          })
+        } else {
+          this.accountList = [];
+        }
       }, handleCheckChange(data, checked, indeterminate) {
         var permissions = new Array()
         var check = this.$refs.tree.getCheckedKeys();
@@ -85,15 +95,15 @@
             permissions.push(check[index])
           }
         }
-        this.inputForm.permissionIdStr = permissions.join();
+        this.inputForm.permissionIdList = permissions;
       },getTreeCheckData(id){
         axios.get('/api/basic/hr/account/getTreeCheckData', {params: {id: id}}).then((response) => {
-          this.checked = response.data.checked;
+          this.checked = response.data;
         })
       }
     }, created(){
       axios.get('/api/basic/hr/account/getTreeNode').then((response) => {
-        this.treeData = response.data.children;
+        this.treeData = new Array(response.data);
       })
     }
   }
