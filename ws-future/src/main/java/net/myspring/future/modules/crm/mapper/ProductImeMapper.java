@@ -28,5 +28,5 @@ public interface ProductImeMapper extends MyMapper<ProductIme, String> {
 
     List<ProductImeHistoryDto> getProductImeHistoryList(@Param("productImeId") String productImeId);
 
-
+    List<ProductIme> findByImeLike(@Param("imeReverse")String ime, @Param("shopId")String shopId);
 }

@@ -1,16 +1,23 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.enums.AuditStatusEnum;
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.crm.dto.DemoPhoneDto;
 import net.myspring.future.modules.crm.mapper.DemoPhoneMapper;
 import net.myspring.future.modules.crm.mapper.ProductImeMapper;
+import net.myspring.future.modules.crm.web.form.DemoPhoneForm;
+import net.myspring.future.modules.crm.web.query.DemoPhoneQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.mapper.BeanUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import sun.misc.Cache;
 
 import java.util.List;
 import java.util.Map;
@@ -22,24 +29,32 @@ public class DemoPhoneService {
     private DemoPhoneMapper demoPhoneMapper;
     @Autowired
     private ProductImeMapper productImeMapper;
+    @Autowired
+    private CacheUtils cacheUtils;
 
-    public DemoPhone findOne(String id) {
-        DemoPhone demoPhone = demoPhoneMapper.findOne(id);
-        return demoPhone;
+    public DemoPhoneDto findOne(DemoPhoneDto demoPhoneDto) {
+        if(!demoPhoneDto.isCreate()){
+            DemoPhone demoPhone = demoPhoneMapper.findOne(demoPhoneDto.getId());
+            demoPhoneDto = BeanUtil.map(demoPhone,DemoPhoneDto.class);
+            cacheUtils.initCacheInput(demoPhoneDto);
+        }
+        return demoPhoneDto;
     }
 
 
-    public Page<DemoPhone> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<DemoPhone> page = demoPhoneMapper.findPage(pageable, map);
+    public Page<DemoPhoneDto> findPage(Pageable pageable, DemoPhoneQuery demoPhoneQuery) {
+        Page<DemoPhoneDto> page = demoPhoneMapper.findPage(pageable, demoPhoneQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
-    public void delete(DemoPhone demoPhone) {
-       demoPhoneMapper.logicDeleteOne(demoPhone.getId());
+    public void delete(String id) {
+       demoPhoneMapper.logicDeleteOne(id);
     }
 
-    public DemoPhone save(DemoPhone demoPhone) {
-        demoPhone.setStatus("");
+    public DemoPhone save(DemoPhoneForm demoPhoneForm) {
+        DemoPhone demoPhone = BeanUtil.map(demoPhoneForm,DemoPhone.class);
+        demoPhone.setStatus(AuditStatusEnum.已通过.name());
         demoPhoneMapper.save(demoPhone);
         return demoPhone;
     }

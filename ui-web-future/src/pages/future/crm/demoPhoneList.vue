@@ -15,13 +15,13 @@
                 <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('demoPhoneList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('demoPhoneList.likeSearch')"></el-input>
+                <depot-select v-model="formData.shopId" category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.demoPhoneType.label" :label-width="formLabelWidth">
               <el-input v-model="formData.demoPhoneType" auto-complete="off" :placeholder="$t('demoPhoneList.likeSearch')"></el-input>
             </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('demoPhoneList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -31,10 +31,10 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="productIme.ime" :label="$t('demoPhoneList.ime')"></el-table-column>
+        <el-table-column fixed prop="ime" :label="$t('demoPhoneList.ime')"></el-table-column>
         <el-table-column prop="shopName" :label="$t('demoPhoneList.shopName')"></el-table-column>
-        <el-table-column prop="demoPhoneType.name" :label="$t('demoPhoneList.demoPhoneType')"></el-table-column>
-        <el-table-column prop="employee.name" :label="$t('demoPhoneList.employeeName')"></el-table-column>
+        <el-table-column prop="demoPhoneType" :label="$t('demoPhoneList.demoPhoneType')"></el-table-column>
+        <el-table-column prop="employeeName" :label="$t('demoPhoneList.employeeName')"></el-table-column>
         <el-table-column prop="status" :label="$t('demoPhoneList.status')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('demoPhoneList.createdDate')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('demoPhoneList.remarks')"></el-table-column>
@@ -50,9 +50,7 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('demoPhoneList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('demoPhoneList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -61,25 +59,28 @@
   </div>
 </template>
 <script>
+  import depotSelect from 'components/future/depot-select'
+
   export default {
+    components:{depotSelect},
     data() {
       return {
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           ime:'',
-          shopName:'',
+          shopId:'',
           demoPhoneType:'',
           createdDate:'',
-          createdDateBTW:'',
         },formLabel:{
           ime:{label: this.$t('demoPhoneList.ime')},
           shopName:{label: this.$t('demoPhoneList.shopName')},
           demoPhoneType:{label: this.$t('demoPhoneList.demoPhoneType')},
-          createdDateBTW:{label: this.$t('demoPhoneList.createdDate')},
+          createdDate:{label: this.$t('demoPhoneList.createdDate')},
         },
         formProperty:{},
         formLabelWidth: '120px',
@@ -90,9 +91,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        util.setQuery("demoPhoneList",this.formData);
-        axios.get('/api/crm/demoPhone',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("demoPhoneList",this.submitData);
+        axios.get('/api/ws/future/crm/demoPhone?'+qs.stringify(this.submitData)).then((response)  => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -110,10 +111,8 @@
       },itemAdd(){
         this.$router.push({ name: 'demoPhoneForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
-          this.$router.push({ name: 'demoPhoneForm', query: { id: id }})
-        } else if(action=="删除") {
-          axios.get('/api/crm/demoPhone/delete',{params:{id:id}}).then((response) =>{
+        if(action=="delete") {
+          axios.get('/api/ws/future/crm/demoPhone/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
@@ -121,8 +120,11 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      axios.get('/api/ws/future/crm/demoPhone/getQuery').then((response) => {
+        this.formData = response.data;
+        util.copyValue(this.$route.query, this.formData);
+        this.pageRequest();
+      })
     }
   };
 </script>

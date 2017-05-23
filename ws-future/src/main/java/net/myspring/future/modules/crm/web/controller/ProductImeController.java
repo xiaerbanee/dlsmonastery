@@ -2,10 +2,13 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import net.myspring.future.common.enums.InputTypeEnum;
+import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
 import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
+import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +57,13 @@ public class ProductImeController {
     public String export(ProductImeQuery productImeQuery) {
 
         return productImeService.export(productImeQuery);
+    }
+    @RequestMapping(value = "search")
+    public List<ProductImeDto> search(String productIme,String shopId){
+        String imeReverse = StringUtils.reverse(productIme);
+        List<ProductIme> productImeList =productImeService.findByImeLike(imeReverse,shopId);
+        List<ProductImeDto> productImeDtoList = BeanUtil.map(productImeList,ProductImeDto.class);
+        return productImeDtoList;
     }
 
 }
