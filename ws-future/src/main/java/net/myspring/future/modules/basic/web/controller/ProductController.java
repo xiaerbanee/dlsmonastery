@@ -43,22 +43,6 @@ public class ProductController {
         return productList;
     }
 
-    @RequestMapping(value = "getListProperty")
-    public ProductQuery getListProperty(ProductQuery productQuery) {
-        productQuery.setNetTypeList(NetTypeEnum.getList());
-        productQuery.setOutGroupNameList(productService.findByOutName());
-        productQuery.setBoolMap(BoolEnum.getMap());
-        productQuery.setProductTypeList(productTypeService.findAll());
-        return productQuery;
-    }
-
-    @RequestMapping(value = "getForm")
-    public ProductForm findOne(ProductForm productForm){
-        productForm=productService.getForm(productForm);
-        productForm.setNetTypeList(NetTypeEnum.getList());
-        return productForm;
-    }
-
     @RequestMapping(value = "findHasImeProduct")
     public List<ProductDto> findHasImeProduct(){
         List<ProductDto> productList= productService.findHasImeProduct();
@@ -95,9 +79,9 @@ public class ProductController {
 
     @RequestMapping(value = "searchById")
     public List<ProductDto> searchById(String id){
-        Product p = productService.findOne(id);
+        ProductDto productDto = productService.findOne(id);
         List<ProductDto> productList = Lists.newArrayList();
-        productList.add(BeanUtil.map(p, ProductDto.class));
+        productList.add(productDto);
         return productList;
     }
 
@@ -125,12 +109,20 @@ public class ProductController {
         return new RestResponse("同步成功",null);
     }
 
+    @RequestMapping(value = "findOne")
+    public ProductDto detail(String id){
+        return productService.findOne(id);
+    }
+
     @RequestMapping(value="getQuery")
     public ProductQuery getQuery(ProductQuery productQuery){
-        productQuery.setNetTypeList(productService.findNetTypeList());
-//        productQuery.setProductTypeList(productService.findProductTypeList());
-        productQuery.setOutGroupNameList(productService.findByOutName());
-        return productQuery;
+        return productService.getQuery(productQuery);
+    }
+
+    @RequestMapping(value = "getForm")
+    public ProductForm findOne(ProductForm productForm){
+        productForm=productService.getForm(productForm);
+        return productForm;
     }
 
     @RequestMapping(value = "delete")

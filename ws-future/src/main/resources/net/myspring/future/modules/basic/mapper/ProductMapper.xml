@@ -56,9 +56,9 @@
     </select>
 
     <select id="findPage" resultType="ProductDto">
-        select t1.* ,t2.name as 'productTypeName'
-        from crm_product t1,crm_product_type t2
-        where t1.enabled=1 and t2.enabled=1 and t1.product_type_id=t2.id
+        select t1.*
+        from crm_product t1
+        where t1.enabled=1
         <include refid="filter"></include>
     </select>
 
@@ -80,7 +80,7 @@
         <include refid="filter"></include>
     </select>
 
-    <select id="findByOutName" resultType="Product">
+    <select id="findByOutName" resultType="ProductDto">
         select DISTINCT  t1.out_group_name
         FROM crm_product t1
         WHERE  t1.enabled=1
@@ -156,19 +156,18 @@
         <if test="p.allowBill !=null">
             and t1.allow_bill = #{p.allowBill}
         </if>
-        <if test="p.productType !=null">
-            <!--and t1.product_type_id=#{p.productType}-->
-            and t2.name=#{p.productType}
+        <if test="p.productTypeId !=null">
+            and t1.product_type_id=#{p.productTypeId}
         </if>
         <if test="p.outGroupName !=null">
             and t1.out_group_name =#{p.outGroupName}
         </if>
-        <if test="p.outGroupNameList !=null and p.outGroupNameList.size() !=0">
+        <!--<if test="p.outGroupNameList !=null and p.outGroupNameList.size() !=0">
             and t1.out_group_id in
             <foreach collection="p.outGroupNameList" index="index" item="item" open="(" separator="," close=")">
                 #{p.outGroupNameList[${index}]}
             </foreach>
-        </if>
+        </if>-->
         <if test="p.netType !=null">
             and t1.net_type =#{p.netType}
         </if>

@@ -27,7 +27,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item :label="formLabel.productType.label" :label-width="formLabelWidth">
-                <product-type-select v-model="formData.productType"></product-type-select>
+                <product-type-select v-model="formData.productTypeId"></product-type-select>
               </el-form-item>
               <el-form-item :label="formLabel.allowOrder.label" :label-width="formLabelWidth">
                 <bool-select v-model="formData.allowOrder"></bool-select>
@@ -79,10 +79,9 @@
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('productList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('productList.operation')">
           <template scope="scope">
-              <el-button size="small"  v-permit="'crm:shopAdType:edit'" @click.native="itemEdit(scope.row.id)">{{$t('shopAdTypeList.edit')}}</el-button>
-              <el-button size="small"  v-permit="'crm:shopAdType:delete'" @click.native="itemDelete(scope.row.id)">{{$t('shopAdTypeList.delete')}}</el-button>
+              <el-button type="text" size="small"  v-permit="'crm:shopAdType:edit'" @click.native="itemEdit(scope.row.id)">{{$t('shopAdTypeList.edit')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -109,7 +108,7 @@
           type:'',
           hasIme:'',
           allowBill:'',
-          productType:'',
+          productTypeId:'',
           allowOrder:'',
           outGroupName:'',
           netType:'',
@@ -162,13 +161,6 @@
         })
       },itemEdit:function(id){
           this.$router.push({ name: 'productForm', query: { id: id }})
-      },itemDelete:function(id){
-            util.confirmBeforeDelRecord(this).then(() => {
-            axios.get('/api/ws/future/basic/product/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          })
-        });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

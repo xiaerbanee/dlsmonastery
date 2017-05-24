@@ -51,7 +51,7 @@
         <el-table-column fixed="right" :label="$t('shopPrintList.operation')" width="140">
           <template scope="scope">
             <el-button type="text" size="small" v-permit="'crm:shopPrint:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isAuditable" v-permit="'crm:shopPrint:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopPrintList.audit')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus!='已通过'&&scope.row.processStatus!='未通过'" v-permit="'crm:shopPrint:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopPrintList.audit')}}</el-button>
             <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopPrint:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPrintList.edit')}}</el-button>
             <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopPrint:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPrintList.delete')}}</el-button>
           </template>
