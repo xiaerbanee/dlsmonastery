@@ -1,5 +1,7 @@
 package net.myspring.tool.modules.vivo.repository;
 
+import net.myspring.tool.common.repository.BaseRepository
+import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel
 import net.myspring.tool.modules.vivo.domain.CommonEntity;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,7 +15,7 @@ import java.util.List;
 /**
  * Created by admin on 2016/10/17.
  */
-interface VivoPlantElectronicsnRepository {
+interface VivoPlantElectronicsnRepository: BaseRepository<VivoPlantElectronicsn, String> {
 
     @Query("""
         update crm_product_ime t1,vivo_plant_electronicsn t2

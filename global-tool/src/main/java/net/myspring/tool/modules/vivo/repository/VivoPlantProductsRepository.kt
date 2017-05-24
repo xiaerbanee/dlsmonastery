@@ -1,17 +1,15 @@
 package net.myspring.tool.modules.vivo.repository;
 
-import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import net.myspring.tool.common.repository.BaseRepository
+import net.myspring.tool.modules.vivo.domain.VivoPlantProducts
 import org.springframework.data.jpa.repository.Query
-
-import java.util.Collection;
-import java.util.List;
+import java.util.Collection
+import java.util.List
 
 /**
  * Created by admin on 2016/10/17.
  */
-interface VivoPlantProductsRepository{
+interface VivoPlantProductsRepository: BaseRepository<VivoPlantProducts, String> {
 
     @Query("""
         select t.item_number
