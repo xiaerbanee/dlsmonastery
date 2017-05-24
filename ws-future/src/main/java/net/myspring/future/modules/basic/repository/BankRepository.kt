@@ -14,7 +14,7 @@ interface BankRepository : BaseRepository<Bank, String> {
     override fun findOne(id: String): Bank
 
     @CachePut(key="#id")
-    fun save(bank: Bank): Int
+    fun save(bank: Bank): Bank
 
     fun findAllEnabled(): List<Bank>
 
