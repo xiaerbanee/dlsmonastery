@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param
 import java.time.LocalDate
 
 
-interface ImooMapper {
+interface ImooRepository {
 
     @Query("select * from PlantBasicProduct",nativeQuery = true)
     fun plantBasicProducts(): List<ImooPlantBasicProduct>
