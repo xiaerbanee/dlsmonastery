@@ -10,9 +10,11 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.mapper.AdApplyMapper;
+import net.myspring.future.modules.layout.repository.AdApplyRepository;
 import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
@@ -42,9 +44,11 @@ public class AdApplyService {
     @Autowired
     private AdApplyMapper adApplyMapper;
     @Autowired
-    private DepotMapper depotMapper;
+    private AdApplyRepository adApplyRepository;
     @Autowired
     private ProductMapper productMapper;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -57,7 +61,7 @@ public class AdApplyService {
     }
 
     public AdApply findOne(String id){
-        AdApply adApply = adApplyMapper.findOne(id);
+        AdApply adApply = adApplyRepository.findOne(id);
         return adApply;
     }
 
@@ -93,7 +97,7 @@ public class AdApplyService {
 
     public List<AdApplyDto> findAdApplyList(List<String> outGroupIds){
         LocalDate dateStart = LocalDate.now().plusYears(-1);
-        List<AdApplyDto> adApplyDtos = adApplyMapper.findByOutGroupIdAndDate(dateStart,outGroupIds);
+        List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
         cacheUtils.initCacheInput(adApplyDtos);
         return adApplyDtos;
     }
@@ -105,11 +109,11 @@ public class AdApplyService {
         }
         if(billType.equalsIgnoreCase(BillTypeEnum.POP.name())){
             List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
-            productDtos = productMapper.findByOutGroupIdsAndAllowOrder(outGroupIds,true);
+            productDtos = productRepository.findByOutGroupIdsAndAllowOrder(outGroupIds,true);
         }
         if(billType.equalsIgnoreCase(BillTypeEnum.配件赠品.name())){
             List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
-            productDtos  = productMapper.findByOutGroupIdsAndAllowOrder(outGroupIds,true);
+            productDtos  = productRepository.findByOutGroupIdsAndAllowOrder(outGroupIds,true);
         }
         return productDtos;
     }
@@ -117,7 +121,7 @@ public class AdApplyService {
     public List<AdApply> findAdApplyGoodsList(){
         Map<String,Object> filter = Maps.newHashMap();
         filter.put("adShop",true);
-        List<String> adApplyIdList = adApplyMapper.findAllId();
+        List<String> adApplyIdList = adApplyRepository.findAllId();
         List<AdApply> adApplys = Lists.newArrayList();
 
         return adApplys;
@@ -144,7 +148,7 @@ public class AdApplyService {
                 adApply.setProductId(productId);
                 adApply.setRemarks(adApplyForm.getRemarks());
                 adApply.setExpiryDateRemarks(expiryDateRemarks);
-                adApplyMapper.save(adApply);
+                adApplyRepository.save(adApply);
             }
         }
     }
@@ -155,7 +159,7 @@ public class AdApplyService {
 
     public List<SimpleExcelSheet> findSimpleExcelSheets(Workbook workbook, Map<String, Object> map) {
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-        List<AdApply> adApplyList = adApplyMapper.findByFilter(map);
+        List<AdApply> adApplyList = adApplyRepository.findByFilter(map);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "id", "编码"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shop.name", "门店"));

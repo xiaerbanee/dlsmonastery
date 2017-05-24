@@ -9,6 +9,12 @@ import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
+import net.myspring.future.modules.basic.repository.AdpricesystemRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.ExpressOrderRepository;
+import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
+import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
 import net.myspring.util.text.IdUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
@@ -59,19 +65,31 @@ public class AdGoodsOrderService {
     @Autowired
     private AdGoodsOrderMapper adGoodsOrderMapper;
     @Autowired
+    private AdGoodsOrderRepository adGoodsOrderRepository;
+    @Autowired
     private ProductMapper productMapper;
     @Autowired
     private AdGoodsOrderDetailMapper adGoodsOrderDetailMapper;
     @Autowired
+    private AdGoodsOrderDetailRepository adGoodsOrderDetailRepository;
+    @Autowired
     private ExpressOrderMapper expressOrderMapper;
     @Autowired
+    private ExpressOrderRepository expressOrderRepository;
+    @Autowired
     private DepotMapper depotMapper;
+    @Autowired
+    private DepotRepository depotRepository;
     @Autowired
     private ShopDepositMapper shopDepositMapper;
     @Autowired
     private AdPricesystemDetailMapper adPricesystemDetailMapper;
     @Autowired
+    private AdPricesystemDetailRepository adPricesystemDetailRepository;
+    @Autowired
     private AdPricesystemMapper adPricesystemMapper;
+    @Autowired
+    private AdpricesystemRepository adpricesystemRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -90,7 +108,7 @@ public class AdGoodsOrderService {
         Map<String,Object> map=Maps.newHashMap();
         // 统计应付运费,以门店物料运费为准
         Map<String,AdPricesystemDetail> priceMap = Maps.newHashMap();
-        Depot shop=depotMapper.findOne(adGoodsOrder.getShopId());
+        Depot shop=depotRepository.findOne(adGoodsOrder.getShopId());
         
         
         BigDecimal yfyfAmount = BigDecimal.ZERO;
@@ -104,9 +122,9 @@ public class AdGoodsOrderService {
         }
         // 统计应收运费 ，全部以A类物料运费为准
         Map<String, AdPricesystemDetail> ysyfMap = Maps.newHashMap();
-        AdPricesystem defaultAdPricesystem = adPricesystemMapper.findByName("");
+        AdPricesystem defaultAdPricesystem = adpricesystemRepository.findByName("");
         if (defaultAdPricesystem != null) {
-            List<AdPricesystemDetail> adPricesystemDetailList=adPricesystemDetailMapper.findByAdPricesystemId(defaultAdPricesystem.getId());
+            List<AdPricesystemDetail> adPricesystemDetailList=adPricesystemDetailRepository.findByAdPricesystemId(defaultAdPricesystem.getId());
             for (AdPricesystemDetail adDetail : adPricesystemDetailList) {
                 ysyfMap.put(adDetail.getProductId(), adDetail);
             }
@@ -133,15 +151,15 @@ public class AdGoodsOrderService {
             adGoodsOrderForm.setShopId(adGoodsOrderForm.getOutShopId());
         }
         adGoodsOrderForm.setBillType(BillTypeEnum.柜台.name());
-        String maxBusinessId  =adGoodsOrderMapper.findMaxBusinessId(LocalDate.now());
+        String maxBusinessId  =adGoodsOrderRepository.findMaxBusinessId(LocalDate.now());
         adGoodsOrderForm.setBussinessId(IdUtils.getNextBusinessId(maxBusinessId));
         if(adGoodsOrderForm.isCreate()){
             adGoodsOrder = BeanUtil.map(adGoodsOrderForm,AdGoodsOrder.class);
-            adGoodsOrderMapper.save(adGoodsOrder);
+            adGoodsOrderRepository.save(adGoodsOrder);
         }else{
-            adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderForm.getId());
+            adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderForm.getId());
             ReflectionUtil.copyProperties(adGoodsOrderForm,adGoodsOrder);
-            adGoodsOrderMapper.update(adGoodsOrder);
+            adGoodsOrderRepository.save(adGoodsOrder);
         }
 
         //快递信息
@@ -156,16 +174,16 @@ public class AdGoodsOrderService {
             expressOrderDto.setPrintDate(LocalDate.now());
             expressOrderDto.setExtendId(adGoodsOrder.getId());
             expressOrder = BeanUtil.map(expressOrderDto,ExpressOrder.class);
-            expressOrderMapper.save(expressOrder);
+            expressOrderRepository.save(expressOrder);
         }else{
-            expressOrder = expressOrderMapper.findOne(expressOrderDto.getId());
+            expressOrder = expressOrderRepository.findOne(expressOrderDto.getId());
             ReflectionUtil.copyProperties(expressOrderDto,expressOrder);
-            expressOrderMapper.update(expressOrder);
+            expressOrderRepository.save(expressOrder);
         }
         //物料订单详细信息,若是修改，先获取所有的detail>delete,再新增
-        List<AdGoodsOrderDetailDto> adGoodsOrderDetailDtosBefore = adGoodsOrderDetailMapper.findByAdGoodsOrderIds(Arrays.asList(adGoodsOrder.getId()));
+        List<AdGoodsOrderDetailDto> adGoodsOrderDetailDtosBefore = adGoodsOrderDetailRepository.findByAdGoodsOrderIds(Arrays.asList(adGoodsOrder.getId()));
         if(adGoodsOrderDetailDtosBefore!=null){
-            adGoodsOrderDetailMapper.deleteById(adGoodsOrder.getId());
+            adGoodsOrderDetailRepository.deleteById(adGoodsOrder.getId());
         }
         AdGoodsOrderDetail adGoodsOrderDetail;
         List<AdGoodsOrderDetailDto> adGoodsOrderDetailDtos = adGoodsOrderForm.getAdGoodsOrderDetails();
@@ -174,7 +192,7 @@ public class AdGoodsOrderService {
                     adGoodsOrderDetailDto.setAdGoodsOrderId(adGoodsOrder.getId());
                     adGoodsOrderDetailDto.setPrice(adGoodsOrderDetailDto.getPrice2());
                     adGoodsOrderDetail = BeanUtil.map(adGoodsOrderDetailDto,AdGoodsOrderDetail.class);
-                    adGoodsOrderDetailMapper.save(adGoodsOrderDetail);
+                adGoodsOrderDetailRepository.save(adGoodsOrderDetail);
             }
         }
         adGoodsOrder.setExpressOrderId(expressOrder.getId());
@@ -193,17 +211,17 @@ public class AdGoodsOrderService {
         }
 
 
-        adGoodsOrderMapper.update(adGoodsOrder);
+        adGoodsOrderRepository.save(adGoodsOrder);
 
     }
 
     public AdGoodsOrderDto findOne(String id) {
         AdGoodsOrderDto adGoodsOrderDto = new AdGoodsOrderDto();
         if(id!=null){
-            AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(id);
+            AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(id);
             adGoodsOrderDto = BeanUtil.map(adGoodsOrder,AdGoodsOrderDto.class);
             if(adGoodsOrderDto.getExpressOrderId()!=null){
-                adGoodsOrderDto.setExpressOrderDto(expressOrderMapper.findDto(adGoodsOrderDto.getExpressOrderId()));
+                adGoodsOrderDto.setExpressOrderDto(expressOrderRepository.findDto(adGoodsOrderDto.getExpressOrderId()));
             }
             cacheUtils.initCacheInput(adGoodsOrderDto);
         }
@@ -215,10 +233,10 @@ public class AdGoodsOrderService {
         List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
         if(!adGoodsOrderForm.isCreate()){
-            List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailMapper.findByAdGoodsOrderForEdit(outGroupIds,adGoodsOrderForm.getId());
+            List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailRepository.findByAdGoodsOrderForEdit(outGroupIds,adGoodsOrderForm.getId());
             adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
         }else{
-           List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailMapper.findByAdGoodsOrderForNew(outGroupIds);
+           List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailRepository.findByAdGoodsOrderForNew(outGroupIds);
             adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
 
         }
@@ -232,17 +250,17 @@ public class AdGoodsOrderService {
             activitiCompleteForm.setPass(adGoodsOrderForm.getPass().equalsIgnoreCase("1") ? true : false);
             activitiCompleteForm.setComment(adGoodsOrderForm.getPassRemarks());
 
-            activitiCompleteForm.setProcessTypeId(adGoodsOrderMapper.findOne(adGoodsOrderForm.getId()).getProcessTypeId());
-            activitiCompleteForm.setProcessInstanceId(adGoodsOrderMapper.findOne(adGoodsOrderForm.getId()).getProcessInstanceId());
+            activitiCompleteForm.setProcessTypeId(adGoodsOrderRepository.findOne(adGoodsOrderForm.getId()).getProcessTypeId());
+            activitiCompleteForm.setProcessInstanceId(adGoodsOrderRepository.findOne(adGoodsOrderForm.getId()).getProcessInstanceId());
 
             ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
 
             if(activitiCompleteDto!=null){
-                AdGoodsOrder adGoodsOrder = adGoodsOrderMapper.findOne(adGoodsOrderForm.getId());
+                AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderForm.getId());
                 adGoodsOrder.setProcessPositionId(activitiCompleteDto.getPositionId());
                 adGoodsOrder.setProcessStatus(activitiCompleteDto.getProcessStatus());
                 adGoodsOrder.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
-                adGoodsOrderMapper.update(adGoodsOrder);
+                adGoodsOrderRepository.save(adGoodsOrder);
             }
 
         }
@@ -250,7 +268,7 @@ public class AdGoodsOrderService {
     
     public AdGoodsOrder bill(AdGoodsOrder adGoodsOrder) {
         Map<String,AdPricesystemDetail> priceMap = Maps.newHashMap();
-        Depot shop=depotMapper.findOne(adGoodsOrder.getShopId());
+        Depot shop=depotRepository.findOne(adGoodsOrder.getShopId());
         List<AdGoodsOrderDetail> adGoodsOrderDetailList=Lists.newArrayList();
         for (int i = adGoodsOrder.getAdGoodsOrderDetailList().size() - 1; i >= 0; i--) {
             AdGoodsOrderDetail agod = adGoodsOrder.getAdGoodsOrderDetailList().get(i);
@@ -263,7 +281,7 @@ public class AdGoodsOrderService {
                 agod.setAdGoodsOrderId(adGoodsOrder.getId());
                 adGoodsOrderDetailList.add(agod);
             }else if(agod.getBillQty()!=null&&agod.getBillQty() > 0){
-                adGoodsOrderDetailMapper.update(agod);
+                adGoodsOrderDetailRepository.save(agod);
             }
         }
         //应付运费
@@ -314,7 +332,7 @@ public class AdGoodsOrderService {
                 Integer shippedQty = adGoodsOrderDetail.getShippedQty();
                 Integer shipQty = adGoodsOrderDetail.getShipQty();
                 adGoodsOrderDetail.setShippedQty(shippedQty + shipQty);
-                adGoodsOrderDetailMapper.update(adGoodsOrderDetail);
+                adGoodsOrderDetailRepository.save(adGoodsOrderDetail);
             }
         }
         boolean isAllShipped = true;
@@ -324,8 +342,8 @@ public class AdGoodsOrderService {
                 break;
             }
         }
-        expressOrderMapper.update(adGoodsOrder.getExpressOrder());
-        adGoodsOrderMapper.update(adGoodsOrder);
+        expressOrderRepository.save(adGoodsOrder.getExpressOrder());
+        adGoodsOrderRepository.save(adGoodsOrder);
         return true;
     }
 
@@ -333,7 +351,7 @@ public class AdGoodsOrderService {
     }
 
     public void logicDelete(String id) {
-        adGoodsOrderMapper.logicDeleteOne(id);
+        adGoodsOrderRepository.logicDeleteOne(id);
     }
 
 
@@ -343,7 +361,7 @@ public class AdGoodsOrderService {
             if(expressOrder.getOutPrintDate() == null){
                 expressOrder.setOutPrintDate(LocalDateTime.now());
             }
-            expressOrderMapper.update(expressOrder);
+            expressOrderRepository.save(expressOrder);
         }
     }
 

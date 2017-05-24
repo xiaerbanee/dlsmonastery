@@ -10,6 +10,7 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.dto.BankDto;
 import net.myspring.future.modules.basic.mapper.BankMapper;
+import net.myspring.future.modules.basic.repository.BankRepository;
 import net.myspring.future.modules.basic.web.form.BankForm;
 import net.myspring.future.modules.basic.web.query.BankQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -37,12 +38,14 @@ public class BankService {
     @Autowired
     private BankMapper bankMapper;
     @Autowired
+    private BankRepository bankRepository;
+    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private OfficeClient officeClient;
 
     public List<BankDto> findByAccountId(String accountId){
-        List<Bank> banks = bankMapper.findByAccountId(accountId);
+        List<Bank> banks = bankRepository.findByAccountId(accountId);
         List<BankDto> bankDtoList = BeanUtil.map(banks, BankDto.class);
         return  bankDtoList==null?Lists.newArrayList():bankDtoList;
     }
@@ -55,16 +58,15 @@ public class BankService {
     }
 
     public void logicDeleteOne(String id) {
-        bankMapper.logicDeleteOne(id);
+        bankRepository.logicDeleteOne(id);
     }
 
     public void save(BankForm bankForm){
-        Bank bank = bankMapper.findOne(bankForm.getId());
-        ReflectionUtil.copyProperties(bankForm,bank);
-        bankMapper.update(bank);
-        bankMapper.deleteBankAccount(bankForm.getId());
+        Bank bank = bankRepository.findOne(bankForm.getId());
+        bankRepository.save(bank);
+        bankRepository.deleteBankAccount(bankForm.getId());
         if(CollectionUtil.isNotEmpty(bankForm.getAccountIdList())){
-            bankMapper.saveAccount(bankForm.getId(),bankForm.getAccountIdList());
+            bankRepository.saveAccount(bankForm.getId(),bankForm.getAccountIdList());
         }
     }
 
@@ -75,7 +77,7 @@ public class BankService {
 
     @Transactional(readOnly = true)
     public List<BankDto> findByNameLike(String name){
-        List<Bank> banks = bankMapper.findByNameLike(name);
+        List<Bank> banks = bankRepository.findByNameLike(name);
         List<BankDto> bankDtos= BeanUtil.map(banks, BankDto.class);
         return bankDtos;
     }
@@ -86,9 +88,9 @@ public class BankService {
         if(StringUtils.isBlank(id)) {
             bankDto = new BankDto();
         } else {
-            Bank bank= bankMapper.findOne(id);
+            Bank bank= bankRepository.findOne(id);
             bankDto= BeanUtil.map(bank,BankDto.class);
-            List<String> accountIdList = bankMapper.findAccountIdList(id);
+            List<String> accountIdList = bankRepository.findAccountIdList(id);
             bankDto.setAccountIdList(accountIdList);
         }
         return bankDto;
