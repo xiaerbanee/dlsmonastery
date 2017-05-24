@@ -15,6 +15,7 @@ import net.myspring.future.modules.basic.web.query.BankQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,9 @@ public class BankService {
     }
 
     public void save(BankForm bankForm){
-        bankMapper.updateForm(bankForm);
+        Bank bank = bankMapper.findOne(bankForm.getId());
+        ReflectionUtil.copyProperties(bankForm,bank);
+        bankMapper.update(bank);
         bankMapper.deleteBankAccount(bankForm.getId());
         if(CollectionUtil.isNotEmpty(bankForm.getAccountIdList())){
             bankMapper.saveAccount(bankForm.getId(),bankForm.getAccountIdList());

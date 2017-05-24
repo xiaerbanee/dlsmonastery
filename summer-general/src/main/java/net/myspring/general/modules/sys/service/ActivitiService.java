@@ -16,9 +16,9 @@ import net.myspring.general.modules.sys.dto.ActivitiDetailDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
-import net.myspring.general.modules.sys.mapper.ProcessFlowMapper;
-import net.myspring.general.modules.sys.mapper.ProcessTaskMapper;
-import net.myspring.general.modules.sys.mapper.ProcessTypeMapper;
+import net.myspring.general.modules.sys.repository.ProcessFlowRepository;
+import net.myspring.general.modules.sys.repository.ProcessTaskRepository;
+import net.myspring.general.modules.sys.repository.ProcessTypeRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.activiti.engine.*;
@@ -45,20 +45,20 @@ public class ActivitiService {
     @Autowired
     private RuntimeService runtimeService;
     @Autowired
-    private ProcessFlowMapper processFlowMapper;
+    private ProcessFlowRepository processFlowRepository;
     @Autowired
     private IdentityService identityService;
     @Autowired
-    private ProcessTaskMapper processTaskMapper;
+    private ProcessTaskRepository processTaskRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private ProcessTypeMapper processTypeMapper;
+    private ProcessTypeRepository processTypeRepository;
 
     public ActivitiStartDto start(ActivitiStartForm activitiStartForm){
         //启动流程
         ActivitiStartDto activitiStartDto=new ActivitiStartDto();
-        ProcessType processType=processTypeMapper.findByName(activitiStartForm.getProcessTypeName());
+        ProcessType processType=processTypeRepository.findByName(activitiStartForm.getProcessTypeName());
         activitiStartDto.setProcessTypeId(processType.getId());
         identityService.setAuthenticatedUserId(RequestUtils.getAccountId());
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process_type_" + processType.getId(), activitiStartForm.getBusinessKey());
@@ -66,7 +66,7 @@ public class ActivitiService {
         activitiStartDto.setProcessInstanceId(processInstanceId);
         String processStatus = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult().getName();
         activitiStartDto.setProcessStatus(processStatus);
-        ProcessFlow processFlow = processFlowMapper.findByProcessTypeAndName(processType.getId(), processStatus);
+        ProcessFlow processFlow = processFlowRepository.findByProcessTypeIdAndName(processType.getId(), processStatus);
         activitiStartDto.setProcessFlowId(processFlow==null?"":processFlow.getId());
         activitiStartDto.setPositionId(processFlow.getPositionId());
         //创建任务
@@ -77,7 +77,7 @@ public class ActivitiService {
         processTask.setOfficeId(RequestUtils.getRequestEntity().getOfficeId());
         processTask.setPositionId(activitiStartDto.getPositionId());
         processTask.setMessage(activitiStartForm.getMessage());
-        processTaskMapper.save(processTask);
+        processTaskRepository.save(processTask);
         return activitiStartDto;
     }
 
@@ -95,12 +95,12 @@ public class ActivitiService {
         task = taskService.createTaskQuery().processInstanceId(activitiCompleteForm.getProcessInstanceId()).singleResult();
         ProcessFlow processFlow = null;
         if (task != null) {
-            processFlow = processFlowMapper.findByProcessTypeAndName(activitiCompleteForm.getProcessTypeId(), task.getName());
+            processFlow = processFlowRepository.findByProcessTypeIdAndName(activitiCompleteForm.getProcessTypeId(), task.getName());
             activitiCompleteDto.setProcessFlowId(processFlow.getId());
             activitiCompleteDto.setPositionId(processFlow.getPositionId());
         }
         activitiCompleteDto.setProcessStatus(getProcessStatus(processFlow, activitiCompleteForm.getPass()));
-        ProcessTask processTask = processTaskMapper.findByProcessInstanceId(activitiCompleteForm.getProcessInstanceId());
+        ProcessTask processTask = processTaskRepository.findByProcessInstanceId(activitiCompleteForm.getProcessInstanceId());
         if(activitiCompleteForm.getPass()){
             String processStatus = getProcessStatus(processFlow, activitiCompleteForm.getPass());
             if(AuditTypeEnum.PASSED.name().equals(processStatus)){
@@ -114,7 +114,7 @@ public class ActivitiService {
             processTask.setStatus(AuditTypeEnum.NOT_PASS.name());
             processTask.setEnabled(false);
         }
-        processTaskMapper.update(processTask);
+        processTaskRepository.save(processTask);
         return activitiCompleteDto;
     }
 

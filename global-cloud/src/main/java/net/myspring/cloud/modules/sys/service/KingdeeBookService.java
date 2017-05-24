@@ -8,6 +8,7 @@ import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
 import net.myspring.cloud.modules.sys.web.form.KingdeeBookForm;
 import net.myspring.cloud.modules.sys.web.query.KingdeeBookQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,15 +57,16 @@ public class KingdeeBookService {
         kingdeeBookMapper.logicDeleteOne(id);
     }
 
-    public int save(KingdeeBookForm kingdeeBookForm){
+    public void save(KingdeeBookForm kingdeeBookForm){
         int count;
         if (kingdeeBookForm.isCreate()){
             KingdeeBook kingdeeBook = BeanUtil.map(kingdeeBookForm,KingdeeBook.class);
-            count = kingdeeBookMapper.save(kingdeeBook);
+             kingdeeBookMapper.save(kingdeeBook);
         } else {
-            count = kingdeeBookMapper.updateForm(kingdeeBookForm);
+            KingdeeBook kingdeeBook = kingdeeBookMapper.findOne(kingdeeBookForm.getId());
+            ReflectionUtil.copyProperties(kingdeeBookForm,kingdeeBook);
+            kingdeeBookMapper.update(kingdeeBook);
         }
-        return count;
     }
 
     public KingdeeBook findByAccountId(String accountId) {

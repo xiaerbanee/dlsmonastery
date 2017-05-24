@@ -23,6 +23,12 @@ public class FolderController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<FolderDto> list()  {
+
+        FolderForm folderForm = new FolderForm();
+        folderForm.setName(String.valueOf(System.currentTimeMillis()));
+        folderForm.setParentIds("0,9719,");
+        folderForm.setParentId("9719");
+        folderService.save(folderForm);
         List<FolderDto> list = folderService.findAll(RequestUtils.getAccountId());
         return list;
     }

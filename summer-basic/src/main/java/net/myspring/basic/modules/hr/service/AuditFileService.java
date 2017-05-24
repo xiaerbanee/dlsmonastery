@@ -13,6 +13,7 @@ import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -83,7 +84,8 @@ public class AuditFileService {
         auditFileForm.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
         auditFileForm.setProcessStatus(activitiCompleteDto.getProcessStatus());
         auditFileForm.setPositionId(activitiCompleteDto.getPositionId());
-        auditFileMapper.updateForm(auditFileForm);
+        ReflectionUtil.copyProperties(auditFileForm,auditFile);
+        auditFileMapper.update(auditFile);
 
     }
 

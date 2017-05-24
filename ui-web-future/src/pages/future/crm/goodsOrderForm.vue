@@ -19,9 +19,7 @@
             <el-form-item  :label="$t('goodsOrderForm.isUseTicket')" prop="isUseTicket">
               <bool-radio-group v-model="goodsOrder.isUseTicket"></bool-radio-group>
             </el-form-item>
-
             <div v-show="goodsOrder.shopId">
-
               <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
                 <el-select  :disabled="!isCreate" v-model="goodsOrder.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
                   <el-option v-for="item in inputProperty.netTypeList" :key="item":label="item" :value="item"></el-option>
@@ -87,13 +85,11 @@
   import depotSelect from 'components/future/depot-select'
   import productSelect from 'components/future/product-select'
   import boolRadioGroup from 'components/common/bool-radio-group'
-
   export default{
     components:{
       depotSelect,
       productSelect,
-      boolRadioGroup,
-
+      boolRadioGroup
     },
     data(){
       return{
@@ -123,13 +119,11 @@
     },
     methods:{
       formSubmit(){
-
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             this.initSubmitDataBeforeSubmit();
-
             axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
@@ -146,16 +140,13 @@
           }
         })
       },filterProducts(){
-
         if(!this.goodsOrderDetailList){
           this.filterDetailList = [];
           return;
         }
         let val=this.productName;
         let tempList=[];
-
         for(let goodsOrderDetail of this.goodsOrderDetailList){
-
           if(util.isNotBlank(goodsOrderDetail.qty)){
             tempList.push(goodsOrderDetail);
           }
@@ -166,7 +157,6 @@
           }
         }
         this.filterDetailList = tempList;
-
       }, initSubmitDataBeforeSubmit(){
         this.submitData.id = this.goodsOrder.id;
         this.submitData.shopId = this.goodsOrder.shopId;
@@ -187,18 +177,14 @@
         }
 
       },shopChanged(){
-
         axios.get('/api/ws/future/basic/depot/findById',{params: {id:this.goodsOrder.shopId}}).then((response)=>{
           this.shop = response.data;
         });
         this.refreshDetailList();
-
       },refreshDetailList(){
-
           if(!this.isCreate){
               return ;  //修改时不能改变detail列表，只能修改detail里每条记录的数量
           }
-
         if(this.goodsOrder.shopId&&this.goodsOrder.netType) {
             this.pageLoading = true;
             axios.get('/api/ws/future/crm/goodsOrder/findDetailListForNew', {params: {shopId:this.goodsOrder.shopId, netType: this.goodsOrder.netType}}).then((response)=>{

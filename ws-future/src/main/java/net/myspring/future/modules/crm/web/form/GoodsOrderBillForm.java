@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
-
-
     private String storeId;
     private LocalDate billDate;
     private String expressCompanyId;
@@ -26,6 +24,7 @@ public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
     private List<String> notDepotStoreIdList;
 
     private List<GoodsOrderBillDetailForm> goodsOrderDetailList = new ArrayList<>();
+
 
     public List<GoodsOrderBillDetailForm> getGoodsOrderDetailList() {
         return goodsOrderDetailList;

@@ -6,14 +6,14 @@ import net.myspring.util.text.StringUtils;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
+
 
 /**
  * Created by liuj on 2016-07-25.
  */
+@MappedSuperclass
 public class IdEntity<T> implements Serializable {
     private static final long serialVersionUID = -864662154371775680L;
     @Id

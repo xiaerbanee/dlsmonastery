@@ -21,9 +21,8 @@ public class DistrictController {
         return districtDtoList;
     }
 
-    @RequestMapping(value = "findById")
-    public List<DistrictDto> findById(String id) {
-        List<DistrictDto> districtDtoList =districtService.findById(id);
-        return districtDtoList;
+    @RequestMapping(value = "findOne")
+    public DistrictDto findOne(String id) {
+        return districtService.findOne(id);
     }
 }
