@@ -46,6 +46,7 @@
           id: this.$route.query.id,
           name: '',
           remarks: '',
+          officeIdList:[],
         },
         rules: {
           name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
@@ -66,7 +67,7 @@
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm, this.submitData);
-            axios.post('/api/ws/future/basic/adPricesystem/save', qs.stringify(this.submitData)).then((response) => {
+            axios.post('/api/ws/future/basic/adPricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
                 if (this.isCreate) {
@@ -94,11 +95,11 @@
         var officeIdList=new Array()
         var check=this.$refs.tree.getCheckedKeys();
         for(var index in check){
-          if(check[index]!=0){
+          if(check[index].match("\^(0|[1-9][0-9]*)$")&& check[index]!=0){
             officeIdList.push(check[index])
           }
         }
-        this.inputForm.officeIdStr=officeIdList.join();
+        this.inputForm.officeIdList=officeIdList;
       }
     }, created(){
       axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
@@ -106,7 +107,7 @@
         this.checked = response.data.officeIdList;
       })
       axios.get('/api/basic/sys/office/getOfficeTree').then((response) => {
-        this.treeData =response.data.children;
+        this.treeData =new Array(response.data);
       })
     }
   }

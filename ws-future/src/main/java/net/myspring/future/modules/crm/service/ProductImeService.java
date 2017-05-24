@@ -160,4 +160,9 @@ public class ProductImeService {
             return StringUtils.toString(gridFSFile.getId());
         }
 
+
+    public List<ProductIme> findByImeLike(String imeReverse,String shopId){
+        List<ProductIme> productImeList = productImeMapper.findByImeLike(imeReverse,shopId);
+        return productImeList;
+    }
 }

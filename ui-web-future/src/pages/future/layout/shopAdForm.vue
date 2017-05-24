@@ -11,7 +11,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.shopId')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="adShop"></depot-select>
+              <depot-select v-model="inputForm.shopId" category="adShop" :disabled="shopDisabled"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.length')" prop="length">
               <el-input v-model="inputForm.length"></el-input>
@@ -54,6 +54,7 @@
     components:{depotSelect,boolRadioGroup},
     data(){
       return{
+        shopDisabled:true,
         isCreate:this.$route.query.id==null,
         action:this.$route.query.action,
         submitDisabled:false,
@@ -120,6 +121,9 @@
     },created(){
       axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
+        if(this.isCreate){
+            this.shopDisabled = false;
+        }
         if(response.data.specialArea == true){
             this.inputForm.specialArea = 1;
         }else{

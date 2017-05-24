@@ -30,8 +30,15 @@ public class ShopAdDto extends DataDto<ShopAd>{
     private String content;
     private String processStatus;
     private String processPositionId;
+    private String processInstanceId;
 
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
 
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
 
     public String getShopId() {
         return shopId;

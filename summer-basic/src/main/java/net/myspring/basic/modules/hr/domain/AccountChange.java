@@ -20,6 +20,15 @@ public class AccountChange extends CompanyEntity<AccountChange> {
     private String accountId;
     private String processTypeId;
     private String processFlowId;
+    private String positionId;
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
 
     public String getType() {
         return type;

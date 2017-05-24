@@ -1,12 +1,28 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.domain.DemoPhoneType;
+import net.myspring.future.modules.basic.dto.DemoPhoneTypeDto;
+import net.myspring.future.modules.basic.service.DemoPhoneTypeService;
 import net.myspring.future.modules.crm.domain.DemoPhone;
+import net.myspring.future.modules.crm.domain.ProductIme;
+import net.myspring.future.modules.crm.dto.DemoPhoneDto;
+import net.myspring.future.modules.crm.dto.ProductImeDto;
+import net.myspring.future.modules.crm.service.DemoPhoneService;
+import net.myspring.future.modules.crm.service.ProductImeService;
+import net.myspring.future.modules.crm.web.form.DemoPhoneForm;
+import net.myspring.future.modules.crm.web.query.DemoPhoneQuery;
+import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.springframework.ui.Model;
+import org.omg.CORBA.PRIVATE_MEMBER;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,31 +32,48 @@ import java.util.Map;
 @RequestMapping(value = "crm/demoPhone")
 public class DemoPhoneController {
 
+    @Autowired
+    private DemoPhoneService demoPhoneService;
+
+    @Autowired
+    private DemoPhoneTypeService demoPhoneTypeService;
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(HttpServletRequest request) {
-        return null;
+    public Page<DemoPhoneDto> list(Pageable pageable, DemoPhoneQuery demoPhoneQuery) {
+        Page<DemoPhoneDto> page = demoPhoneService.findPage(pageable,demoPhoneQuery);
+        return page;
     }
 
-    @RequestMapping(value = "getForm", method = RequestMethod.GET)
-    public String form(Model model) {
-        return null;
+    @RequestMapping(value = "findOne")
+    public DemoPhoneDto findOne(DemoPhoneDto demoPhoneDto){
+        return demoPhoneService.findOne(demoPhoneDto);
     }
 
-    @RequestMapping(value = "save", method = RequestMethod.POST)
-    public String save( DemoPhone demoPhone){
-        return null;
+    @RequestMapping(value = "getQuery")
+    public DemoPhoneQuery getQuery(DemoPhoneQuery demoPhoneQuery){
+        return demoPhoneQuery;
+    }
+
+    @RequestMapping(value = "save")
+    public RestResponse save(DemoPhoneForm demoPhoneForm){
+        demoPhoneService.save(demoPhoneForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getForm")
-    public String findOne(DemoPhone demoPhone){
-        return null;
+    public DemoPhoneForm findOne(DemoPhoneForm demoPhoneForm){
+        List<DemoPhoneType> demoPhoneTypeList = demoPhoneTypeService.findAllByApplyEndDate(LocalDate.now());
+        List<DemoPhoneTypeDto> DemoPhoneTypeDtoList = BeanUtil.map(demoPhoneTypeList,DemoPhoneTypeDto.class);
+        demoPhoneForm.setDemoPhoneTypeList(DemoPhoneTypeDtoList);
+        return demoPhoneForm;
     }
 
     @RequestMapping(value = "delete")
-    public String delete(DemoPhone demoPhone, RedirectAttributes redirectAttributes) {
-        return null;
+    public RestResponse delete(String id) {
+        demoPhoneService.delete(id);
+        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)

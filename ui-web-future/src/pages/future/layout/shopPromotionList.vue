@@ -47,8 +47,8 @@
         <el-table-column prop="remarks" :label="$t('shopPromotionList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('shopPromotionList.operation')" width="160">
           <template scope="scope">
-            <el-button size="small" v-permit="'crm:shopPromotion:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPromotionList.edit')}}</el-button>
-            <el-button size="small" v-permit="'crm:shopPromotion:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPromotionList.delete')}}</el-button>
+            <el-button type="text" size="small" v-permit="'crm:shopPromotion:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPromotionList.edit')}}</el-button>
+            <el-button type="text" size="small" v-permit="'crm:shopPromotion:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPromotionList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -108,9 +108,11 @@
         if(action=="edit") {
           this.$router.push({ name: 'shopPromotionForm', query: { id: id }})
         } else if(action=="delete") {
-          axios.get('/api/ws/future/layout/shopPromotion/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/layout/shopPromotion/delete', {params: {id: id}}).then((response) => {
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
           })
         }
       }

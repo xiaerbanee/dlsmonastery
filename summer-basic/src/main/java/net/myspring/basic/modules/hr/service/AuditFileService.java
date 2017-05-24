@@ -58,21 +58,18 @@ public class AuditFileService {
     }
 
     public AuditFile save(AuditFileForm auditFileForm) {
-        AuditFile auditFile;
-        if (auditFileForm.isCreate()) {
-            String name="文件审批";
-            String businessKey = auditFileForm.getId();
-            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm(name, businessKey, auditFileForm.getProcessTypeName(),auditFileForm.getTitle()));
-            auditFile = BeanUtil.map(auditFileForm, AuditFile.class);
-            auditFile.setProcessStatus(activitiStartDto.getProcessStatus());
-            auditFile.setProcessFlowId(activitiStartDto.getProcessFlowId());
-            auditFile.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
-            auditFile.setPositionId(activitiStartDto.getPositionId());
-            auditFile.setProcessTypeId(activitiStartDto.getProcessTypeId());
-            auditFileMapper.save(auditFile);
-            return auditFile;
-        }
-        return null;
+        AuditFile auditFile=BeanUtil.map(auditFileForm,AuditFile.class);
+        auditFileMapper.save(auditFile);
+        String name="文件审批";
+        String businessKey = auditFileForm.getId();
+        ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm(name, businessKey, auditFileForm.getProcessTypeName(),auditFileForm.getTitle()));
+        auditFile.setProcessStatus(activitiStartDto.getProcessStatus());
+        auditFile.setProcessFlowId(activitiStartDto.getProcessFlowId());
+        auditFile.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
+        auditFile.setPositionId(activitiStartDto.getPositionId());
+        auditFile.setProcessTypeId(activitiStartDto.getProcessTypeId());
+        auditFileMapper.update(auditFile);
+        return auditFile;
     }
 
     public void audit(String id, boolean pass, String comment) {
@@ -84,7 +81,6 @@ public class AuditFileService {
         auditFileForm.setProcessStatus(activitiCompleteDto.getProcessStatus());
         auditFileForm.setPositionId(activitiCompleteDto.getPositionId());
         auditFileMapper.updateForm(auditFileForm);
-
     }
 
     public void logicDeleteOne(String id) {

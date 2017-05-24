@@ -15,7 +15,7 @@
             </el-form-item>
           </el-col>
           <el-col :span = "10">
-            <el-form-item  label="权限" prop="permissionIdStr">
+            <el-form-item  label="权限" prop="permissionIdList">
               <el-tree
                 :data="treeData"
                 show-checkbox
@@ -43,7 +43,7 @@
         inputForm:{},
         submitData:{
           id:"",
-          permissionIdStr:""
+          permissionIdList:""
         },
         rules: {
           id: [{ required: true, message: "必填属性"}],
@@ -88,7 +88,7 @@
             permissions.push(check[index])
           }
         }
-        this.inputForm.permissionIdStr=permissions.join();
+        this.inputForm.permissionIdList=permissions;
       },remoteRole(query){
         if (query !== '') {
           this.remoteLoading = true;
@@ -101,8 +101,8 @@
         }
       },getTreeNode(id){
           axios.get('/api/basic/sys/role/getTreeNode',{params:{id:id}}).then((response)=>{
-            this.treeData =response.data.children;
-            this.checked = response.data.checked;
+            this.treeData =response.data.treeNode.children;
+            this.checked = response.data.permissionIdList;
           })
       }
     }

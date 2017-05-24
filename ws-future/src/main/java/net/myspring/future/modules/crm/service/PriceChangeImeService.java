@@ -1,5 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.common.enums.AuditStatusEnum;
+import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.PriceChange;
@@ -10,6 +12,7 @@ import net.myspring.future.modules.crm.mapper.PriceChangeImeMapper;
 import net.myspring.future.modules.crm.mapper.PriceChangeMapper;
 import net.myspring.future.modules.crm.mapper.ProductImeMapper;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
+import net.myspring.future.modules.crm.web.form.PriceChangeImeUploadForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
@@ -73,26 +76,24 @@ public class PriceChangeImeService {
         return priceChangeImeForm;
     }
 
-    public void save(PriceChangeImeForm priceChangeImeForm){
+    public void save(PriceChangeImeUploadForm priceChangeImeUploadForm){
 
     }
 
-    @Transactional
     public void imageUpload(PriceChangeImeForm priceChangeImeForm){
         PriceChangeIme priceChangeIme = priceChangeImeMapper.findOne(priceChangeImeForm.getId());
         priceChangeIme.setImage(priceChangeImeForm.getImage());
-        priceChangeIme.setStatus("上报中");
+        priceChangeIme.setStatus(PriceChangeStatusEnum.上报中.name());
         priceChangeImeMapper.update(priceChangeIme);
     }
 
-    @Transactional
     public void audit(PriceChangeImeForm priceChangeImeForm){
         if(priceChangeImeForm.getPass()!=null) {
             PriceChangeIme priceChangeIme = priceChangeImeMapper.findOne(priceChangeImeForm.getId());
             if (priceChangeImeForm.getPass().equalsIgnoreCase("1")) {
-                priceChangeIme.setStatus("已通过");
+                priceChangeIme.setStatus(PriceChangeStatusEnum.已通过.name());
             } else {
-                priceChangeIme.setStatus("未通过");
+                priceChangeIme.setStatus(PriceChangeStatusEnum.未通过.name());
             }
             priceChangeIme.setAuditRemarks(priceChangeImeForm.getAuditRemarks());
             priceChangeIme.setAuditDate(LocalDateTime.now());

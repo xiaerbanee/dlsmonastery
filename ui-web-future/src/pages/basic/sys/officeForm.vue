@@ -153,7 +153,6 @@
             this.isBusiness=false;
             axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
               this.treeData =new Array(response.data);
-              this.checked = response.data.checked;
               this.inputForm.officeIdStr = response.data.checked.join();
             })
           }else {
@@ -168,6 +167,7 @@
         this.inputForm = response.data;
         if(response.data.type =="SUPPORT" ){
             this.isBusiness=false;
+            this.checked=response.data.businessIdList
         }else {
             this.isBusiness=true;
         }

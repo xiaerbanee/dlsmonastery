@@ -49,6 +49,8 @@ public interface OfficeMapper extends BaseMapper<Office,String> {
 
     List<Office> findByAccountIds(List<String> accountIds);
 
+    Office findParentIdIsNull();
+
     List<Office> findByParentIdsLike(String parentId);
 
     List<Office> findByParentIdsListLike(List<String> parentIdList);

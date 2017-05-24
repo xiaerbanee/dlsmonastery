@@ -50,7 +50,8 @@ export default {
       reportCategory:"报表中心",
       cloudBatchBillCategory:"批量录入",
       cloudReportCategory:"财务报表",
-      cloudSysCategory:"系统设置"
+      cloudSysCategory:"系统设置",
+      goodsOrderCategory:"订货管理",
     },
     menu:{
       monitor:"报表监控",

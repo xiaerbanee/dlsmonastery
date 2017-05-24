@@ -11,9 +11,7 @@ import java.util.List;
  */
 public class ShopBuildDetailOrAuditForm extends DataForm<ShopBuild>{
 
-    private ShopBuildDto shopBuildDto;
-
-    private String pass = "0";
+    private Boolean pass;
 
     private String passRemarks;
 
@@ -27,19 +25,11 @@ public class ShopBuildDetailOrAuditForm extends DataForm<ShopBuild>{
         this.ids = ids;
     }
 
-    public ShopBuildDto getShopBuildDto() {
-        return shopBuildDto;
-    }
-
-    public void setShopBuildDto(ShopBuildDto shopBuildDto) {
-        this.shopBuildDto = shopBuildDto;
-    }
-
-    public String getPass() {
+    public Boolean getPass() {
         return pass;
     }
 
-    public void setPass(String pass) {
+    public void setPass(Boolean pass) {
         this.pass = pass;
     }
 

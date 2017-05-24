@@ -45,8 +45,8 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-              util.copyValue(this.inputForm,this.submitData)
-            axios.get('/api/ws/future/basic/client/save', qs.stringify(this.submitData)).then((response)=> {
+            util.copyValue(this.inputForm,this.submitData)
+            axios.post('/api/ws/future/basic/client/save', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
