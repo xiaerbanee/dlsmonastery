@@ -2,7 +2,7 @@ package net.myspring.cloud.modules.kingdee.service;
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
-import net.myspring.cloud.modules.kingdee.mapper.BdMaterialMapper;
+import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 @KingdeeDataSource
 public class BdMaterialService {
     @Autowired
-    private BdMaterialMapper bdMaterialMapper;
+    private BdMaterialRepository bdMaterialRepository;
 
     public BdMaterial findByName(String name){
-        return bdMaterialMapper.findByName(name);
+        return bdMaterialRepository.findByName(name);
     }
 
 }

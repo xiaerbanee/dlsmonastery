@@ -1,11 +1,10 @@
 package net.myspring.cloud.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.domain.Voucher;
 import net.myspring.cloud.modules.sys.dto.VoucherEntryDto;
-import net.myspring.mybatis.form.BaseForm;
+import net.myspring.common.form.DataForm;
 
 import java.time.LocalDate;
 import java.util.List;
