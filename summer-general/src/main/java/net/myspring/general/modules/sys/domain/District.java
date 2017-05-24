@@ -1,6 +1,5 @@
 package net.myspring.general.modules.sys.domain;
 
-import net.myspring.general.common.domain.CompanyEntity;
 import net.myspring.common.domain.IdEntity;
 
 import javax.persistence.Entity;

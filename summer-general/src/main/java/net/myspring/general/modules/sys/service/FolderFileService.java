@@ -7,7 +7,7 @@ import com.mongodb.gridfs.GridFSFile;
 import net.myspring.general.common.utils.RequestUtils;
 import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.dto.FolderFileDto;
-import net.myspring.general.modules.sys.mapper.FolderFileMapper;
+import net.myspring.general.modules.sys.repository.FolderFileRepository;
 import net.myspring.general.modules.sys.web.query.FolderFileQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -26,9 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.persistence.criteria.Predicate;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +41,7 @@ public class FolderFileService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FolderFileMapper folderFileMapper;
+    private FolderFileRepository folderFileRepository;
     @Autowired
     private GridFsTemplate storageGridFsTemplate;
     @Autowired
@@ -74,7 +77,7 @@ public class FolderFileService {
                         folderFile.setMongoPreviewId(StringUtils.toString(preview.getId()));
                     }
                     folderFile.setCompanyId(RequestUtils.getCompanyId());
-                    folderFileMapper.save(folderFile);
+                    folderFileRepository.save(folderFile);
                     list.add(folderFile);
                 }
             }
@@ -98,7 +101,7 @@ public class FolderFileService {
 
     @Transactional(readOnly = true)
     public FolderFile findOne(String id) {
-        FolderFile folderFile =  folderFileMapper.findOne(id);
+        FolderFile folderFile =  folderFileRepository.findOne(id);
         return folderFile;
     }
 
@@ -108,13 +111,26 @@ public class FolderFileService {
         if(CollectionUtil.isEmpty(ids)) {
             return Lists.newArrayList();
         }
-        List<FolderFile> folderFileList =  folderFileMapper.findByIds(ids);
+        List<FolderFile> folderFileList =  folderFileRepository.findAll(ids);
         return BeanUtil.map(folderFileList,FolderFileDto.class);
     }
 
     @Transactional(readOnly = true)
     public Page<FolderFileDto> findPage(Pageable pageable, FolderFileQuery folderFileQuery) {
-        Page<FolderFileDto> FolderFileDtoPage= folderFileMapper.findPage(pageable, folderFileQuery);
-        return FolderFileDtoPage;
+        Specification<FolderFile> specification = (root, query, cb) -> {
+           List<Predicate> predicates  = Lists.newArrayList();
+            predicates.add(cb.equal(root.get("companyId").as(String.class), RequestUtils.getCompanyId()));
+            if(folderFileQuery.getCreatedDateStart() != null) {
+                predicates.add(cb.greaterThan(root.get("createdDate").as(LocalDate.class),folderFileQuery.getCreatedDateStart()));
+            }
+            if(folderFileQuery.getCreatedDateEnd() != null) {
+                predicates.add(cb.lessThan(root.get("createdDate").as(LocalDate.class),folderFileQuery.getCreatedDateEnd()));
+            }
+            return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+
+        Page<FolderFile> folderFilePage= folderFileRepository.findAll(specification,pageable);
+        Page<FolderFileDto> page = BeanUtil.map(folderFilePage,FolderFileDto.class);
+        return page;
     }
 }

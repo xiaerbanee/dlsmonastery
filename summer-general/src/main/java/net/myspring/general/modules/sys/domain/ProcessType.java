@@ -10,8 +10,8 @@ import javax.persistence.Table;
 public class ProcessType extends CompanyEntity<ProcessType> {
     private String type;
     private String name;
-    private String viewPositions;
-    private String createPositions;
+    private String viewPositionIds;
+    private String createPositionIds;
     private Integer version = 0;
     private Boolean auditFileType;
 
@@ -31,20 +31,20 @@ public class ProcessType extends CompanyEntity<ProcessType> {
         this.name = name;
     }
 
-    public String getViewPositions() {
-        return viewPositions;
+    public String getViewPositionIds() {
+        return viewPositionIds;
     }
 
-    public void setViewPositions(String viewPositions) {
-        this.viewPositions = viewPositions;
+    public void setViewPositionIds(String viewPositionIds) {
+        this.viewPositionIds = viewPositionIds;
     }
 
-    public String getCreatePositions() {
-        return createPositions;
+    public String getCreatePositionIds() {
+        return createPositionIds;
     }
 
-    public void setCreatePositions(String createPositions) {
-        this.createPositions = createPositions;
+    public void setCreatePositionIds(String createPositionIds) {
+        this.createPositionIds = createPositionIds;
     }
 
     public Integer getVersion() {

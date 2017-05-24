@@ -1,12 +1,11 @@
 package net.myspring.common.form;
 
-import net.myspring.mybatis.form.BaseForm;
 import net.myspring.util.text.StringUtils;
 
 /**
  * Created by liuj on 2017/4/12.
  */
-public class IdForm<T> extends BaseForm<T> {
+public class IdForm<T> {
     private String id;
 
     public String getId() {

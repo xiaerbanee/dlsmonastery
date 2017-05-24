@@ -1,7 +1,6 @@
 package net.myspring.cloud.common.domain;
 
 import net.myspring.cloud.common.utils.RequestUtils;
-import net.myspring.common.domain.DataEntity;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;

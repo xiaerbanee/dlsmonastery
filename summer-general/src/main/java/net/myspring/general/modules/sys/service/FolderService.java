@@ -8,10 +8,11 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.general.common.utils.RequestUtils;
 import net.myspring.general.modules.sys.domain.Folder;
 import net.myspring.general.modules.sys.dto.FolderDto;
-import net.myspring.general.modules.sys.mapper.FolderMapper;
+import net.myspring.general.modules.sys.repository.FolderRepository;
 import net.myspring.general.modules.sys.web.form.FolderForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,29 +25,29 @@ import java.util.List;
 @Transactional
 public class FolderService {
     @Autowired
-    private FolderMapper folderMapper;
+    private FolderRepository folderRepository;
 
     @Transactional(readOnly = true)
     public FolderDto findOne(FolderDto folderDto) {
         if (!folderDto.isCreate()) {
-            Folder folder = folderMapper.findOne(folderDto.getId());
+            Folder folder = folderRepository.findOne(folderDto.getId());
             folderDto = BeanUtil.map(folder, FolderDto.class);
         }
         return folderDto;
     }
 
     public void logicDeleteOne(String id) {
-        folderMapper.logicDeleteOne(id);
+        folderRepository.logicDeleteOne(id);
     }
 
     public Folder getRoot(String accountId) {
-        Folder folder = folderMapper.findByCreatedByAndParentIds(accountId, TreeConstant.ROOT_PARENT_IDS);
+        Folder folder = folderRepository.findByCreatedByAndParentIds(accountId, TreeConstant.ROOT_PARENT_IDS);
         if (folder == null) {
             folder = new Folder();
             folder.setName(accountId);
             folder.setCompanyId(RequestUtils.getCompanyId());
             folder.setParentIds(TreeConstant.ROOT_PARENT_IDS);
-            folderMapper.save(folder);
+            folderRepository.save(folder);
         }
         return folder;
     }
@@ -58,13 +59,13 @@ public class FolderService {
         for (String p : paths) {
             p = p.trim();
             if (StringUtils.isNotBlank(p)) {
-                folder = folderMapper.findByParentIdAndName(parent.getId(), p);
+                folder = folderRepository.findByParentIdAndName(parent.getId(), p);
                 if (folder == null) {
                     FolderForm folderForm = new FolderForm();
                     folderForm.setParentId(parent.getId());
                     folderForm.setName(p);
                     folderForm.setParentIds(parent.getParentIds() + parent.getId() + ",");
-                    folderMapper.save(BeanUtil.map(folderForm, Folder.class));
+                    folderRepository.save(BeanUtil.map(folderForm, Folder.class));
                 }
                 parent = folder;
             }
@@ -77,7 +78,7 @@ public class FolderService {
         List<FolderDto> folderDtoList = Lists.newArrayList();
         Folder parent = getRoot(accountId);
         List<Folder> folders = Lists.newArrayList();
-        List<Folder> sourceList = folderMapper.findByCreatedBy(accountId);
+        List<Folder> sourceList = folderRepository.findByCreatedBy(accountId);
         sortList(folders, sourceList, parent.getId());
         if (!CollectionUtil.isEmpty(folders)) {
             folderDtoList = BeanUtil.map(folders, FolderDto.class);
@@ -96,18 +97,21 @@ public class FolderService {
 
     public RestResponse save(FolderForm folderForm) {
         String oldParentIds = folderForm.getParentIds();
-        Folder parent = folderMapper.findOne(folderForm.getParentId());
+        Folder parent = folderRepository.findOne(folderForm.getParentId());
         // 无法将上级部门设置为自己或者自己的下级部门
         folderForm.setParentIds(parent.getParentIds() + folderForm.getParentId() + ",");
         if (!folderForm.isCreate() && folderForm.getParentIds().contains("," + folderForm.getId() + ",")) {
             return new RestResponse("无法将上级目录设置为自己或者自己的下级目录", ResponseCodeEnum.invalid.name());
         }
+        Folder folder;
         if(folderForm.isCreate()){
-            Folder folder = BeanUtil.map(folderForm, Folder.class);
-            folderMapper.save(folder);
+            folder = BeanUtil.map(folderForm, Folder.class);
+            folderRepository.save(folder);
         }else {
-            folderMapper.updateForm(folderForm);
-            List<Folder> list = folderMapper.findByParentIdsLike("%," + folderForm.getId() + ",%");
+            folder = folderRepository.findOne(folderForm.getId());
+            ReflectionUtil.copyProperties(folderForm,folder);
+            folderRepository.save(folder);
+            List<Folder> list = folderRepository.findByParentIdsLike("%," + folderForm.getId() + ",%");
             for (Folder e : list) {
                 e.setParentIds(e.getParentIds().replace(oldParentIds, folderForm.getParentIds()));
             }

@@ -53,14 +53,6 @@ public class ShopPrintQuery extends BaseQuery {
         this.createdBy = createdBy;
     }
 
-    public List<OfficeDto> getOfficeIdList() {
-        return officeIdList;
-    }
-
-    public void setOfficeIdList(List<OfficeDto> officeIdList) {
-        this.officeIdList = officeIdList;
-    }
-
     public List<NameValueDto> getPrintTypeList() {
         return printTypeList;
     }

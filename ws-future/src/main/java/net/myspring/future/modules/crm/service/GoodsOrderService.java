@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.service;
 
+import com.ctc.wstx.util.StringUtil;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
@@ -42,6 +43,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -71,237 +73,20 @@ public class GoodsOrderService {
     private ExpressUtils expressUtils;
     @Autowired
     private PricesystemDetailMapper pricesystemDetailMapper;
-
     @Autowired
     private ProductMapper productMapper;
-
     @Autowired
     private OfficeClient officeClient;
-
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public Page<GoodsOrderDto> findPage(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         Page<GoodsOrderDto> page = goodsOrderMapper.findPage(pageable, goodsOrderQuery);
-
-        for (GoodsOrderDto each : page.getContent()) {
-            if (GoodsOrderStatusEnum.待开单.name().equals(each.getStatus())) {
-//               TODO 设置应收 each.setShopShouldGet();
-
-            }
-        }
-
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
-
-    public GoodsOrderBillForm getBillForm(GoodsOrderBillForm goodsOrderBillForm) {
-
-        GoodsOrderBillForm result = new GoodsOrderBillForm();
-
-
-        result.setId(goodsOrderBillForm.getId());
-
-
-
-
-//        Company company = AccountUtils.getCompany();
-//        //检查是否存在已经缓存的日期
-//        Date date = new Date();
-//        Object billDateObj = AccountUtils.getCacheMap().get("goodsOrder_billDate");
-//        if(billDateObj !=null) {
-//            date = (Date)billDateObj;
-//        }
-//        AccountUtils.getCacheMap().put("goodsOrder_billDate",date);
-//        boolean sameDate = false;
-//        if(DateUtils.formatDate(new Date()).equals(DateUtils.formatDate(date))) {
-//            sameDate = true;
-//        }
-//        model.addAttribute("sameDate",sameDate);
-//        TODO 需要修改開單日期和sameDate
-//        result.setSameDate(Boolean.TRUE);
-//        result.setBillDate(LocalDate.now());
-//
-//        result.setGoodsOrderDetailFormList(findDetailFormList(god.getId()));
-//
-//        ExpressOrderDto eod = expressOrderMapper.findDto(god.getExpressOrderId());
-//        if(eod!=null){
-//            result.setExpressMobilePhone(eod.getMobilePhone());
-//            result.setExpressAddress(eod.getAddress());
-//            result.setExpressContator(eod.getContator());
-//            if(eod.getExpressCompanyId() == null){
-//                result.setExpressCompanyId(expressCompanyService.getDefaultExpressCompanyId());
-//            }else{
-//                result.setExpressCompanyId(eod.getExpressCompanyId());
-//            }
-//        }else{
-//            result.setExpressMobilePhone(shopDto.getMobilePhone());
-//            result.setExpressAddress(shopDto.getAddress());
-//            result.setExpressContator(shopDto.getContator());
-//            result.setExpressCompanyId(expressCompanyService.getDefaultExpressCompanyId());
-//        }
-//
-//        result.setRemarks(god.getRemarks());
-
-
-//      TODO  账上余额及信誉
-//        if (goodsOrder.getSyn()) {
-//            shop.setShouldGet(k3cloudService.findShouldGet(company.getOutDbname(), shop.getRealOutId()));
-//        }
-        // TODO 财务库存
-//        Map<String, Integer> storeDetailMap = Maps.newHashMap();
-//        if (store != null) {
-//            if (goodsOrder.getSyn()) {
-//                List<BdInventory> Inventorys = k3cloudService.findBdInventorys(company.getOutDbname(), store.getOutId());
-//                Map<String, BdInventory> stockMap = Collections3.extractToMap(Inventorys, "FMATERIALID");
-//                for (PricesystemDetail pricesystemDetail : shop.getPricesystem().getPricesystemDetails()) {
-//                    BdInventory bdInventory = stockMap.get(pricesystemDetail.getProduct().getOutId());
-//                    if (bdInventory != null) {
-//                        storeDetailMap.put(pricesystemDetail.getProduct().getOutId(), bdInventory.getFBASEQTY());
-//                    }
-//                }
-//                // 移动仓库，省公司仓库，必须合并库存，根据配置文件中的需要合并仓库来判断
-//                String mergeStoreIds = Global.getConfig("crm.goodsOrder.mergeStoreIds");
-//                if (StringUtils.isNotBlank(mergeStoreIds)) {
-//                    List<String> storeIds = StringUtils.getSplitList(mergeStoreIds, Const.CHAR_COMMA);
-//                    if (storeIds.contains(store.getIdStr())) {
-//                        for (String storeId : storeIds) {
-//                            Long id = Long.valueOf(storeId);
-//                            if (!id.equals(store.getId())) {
-//                                Depot mergeStore = depotService.findOne(id);
-//                                Inventorys = k3cloudService.findBdInventorys(company.getOutDbname(),mergeStore.getOutId());
-//                                stockMap = Collections3.extractToMap(Inventorys, "FMATERIALID");
-//                                for (PricesystemDetail pricesystemDetail : shop.getPricesystem().getPricesystemDetails()) {
-//                                    String outId = pricesystemDetail.getProduct().getOutId();
-//                                    BdInventory bdInventory = stockMap.get(outId);
-//                                    if (bdInventory != null) {
-//                                        if (!storeDetailMap.containsKey(outId)) {
-//                                            storeDetailMap.put(outId, 0);
-//                                        }
-//                                        storeDetailMap.put(outId, storeDetailMap.get(outId) + bdInventory.getFBASEQTY());
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            } else {
-//                Map<String, Integer> stockMap = productImeService.findProductQty(store.getId());
-//                for (PricesystemDetail pricesystemDetail : shop.getPricesystem().getPricesystemDetails()) {
-//                    if (stockMap.containsKey(pricesystemDetail.getProduct().getOutId())) {
-//                        storeDetailMap.put(pricesystemDetail.getProduct().getOutId(), stockMap.get(pricesystemDetail.getProduct().getId()));
-//                    }
-//                }
-//            }
-//        }
-
-//    TODO 設置是否計算運費
-//            if(StringUtils.isBlank(Global.getCompanyConfig(AccountUtils.getCompany().getId(), CompanyConfigCode.EXPRESS_PRODUCT_ID.getCode()))) {
-//                return false;
-//            }
-//            if(StringUtils.isBlank(Global.getCompanyConfig(AccountUtils.getCompany().getId(), CompanyConfigCode.EXPRESS_SHOULD_GET_RULE.getCode()))) {
-//                return false;
-//            }
-//            return true;
-//        result.setTakeExpress(Boolean.TRUE);
-
-
-//        if (result.getTakeExpress()) {
-        // TODO 設置運費計算規則
-//            result.expressProductId
-//            model.addAttribute("expressProductId", Global.getCompanyConfig(AccountUtils.getCompany().getId(),CompanyConfigCode.EXPRESS_PRODUCT_ID.getCode()));
-//            model.addAttribute("expressRule", Global.getCompanyConfig(AccountUtils.getCompany().getId(),CompanyConfigCode.EXPRESS_SHOULD_GET_RULE.getCode()));
-//        } else {
-//            model.addAttribute("expressProductId", "");
-//            model.addAttribute("expressRule", "{}");
-//        }
-
-        // 办事处已开单数
-        //TODO 設置rebateRULe
-//        CompanyConfig goodsOrderRebateRule = companyConfigService.findByCode(AccountUtils.getCompany().getId(),CompanyConfigCode.GOODS_ORDER_REBATE_RULE.name());
-//        if (goodsOrderRebateRule != null) {
-//            result.set
-//            model.addAttribute("goodsOrderRebateRule", goodsOrderRebateRule);
-//        }
-
-        return result;
-    }
-
-
-    public List<GoodsOrderDetailDto> findDetailListForNew(String shopId, String netType) {
-
-        GoodsOrderDetailQuery goodsOrderDetailQuery = new GoodsOrderDetailQuery();
-        goodsOrderDetailQuery.setCompanyId(RequestUtils.getCompanyId());
-        goodsOrderDetailQuery.setNetType(netType);
-        Depot depot = depotMapper.findOne(shopId);
-        goodsOrderDetailQuery.setPricesystemId(depot.getPricesystemId());
-        goodsOrderDetailQuery.setShowAll(Boolean.FALSE);
-        //已下条件用于统计办事处已订货数
-        LocalDateTime createDateStart = LocalDate.now().atStartOfDay();
-        goodsOrderDetailQuery.setCreateDateStart(createDateStart);
-        goodsOrderDetailQuery.setCreateDateEnd(createDateStart.plusDays(1));
-        goodsOrderDetailQuery.setOfficeIdList(officeClient.getSameAreaByOfficeId(depot.getOfficeId()));
-
-        List<GoodsOrderDetailDto> result = goodsOrderDetailMapper.findListForNewOrEditOrBillWithAreaQty(goodsOrderDetailQuery);
-
-        return result;
-
-    }
-
-    public List<GoodsOrderDetailDto> findDetailListForEdit(String goodsOrderId) {
-
-        GoodsOrder goodsOrder = goodsOrderMapper.findOne(goodsOrderId);
-        GoodsOrderDetailQuery goodsOrderDetailQuery = new GoodsOrderDetailQuery();
-        goodsOrderDetailQuery.setGoodsOrderId(goodsOrderId);
-        goodsOrderDetailQuery.setCompanyId(RequestUtils.getCompanyId());
-        goodsOrderDetailQuery.setNetType(goodsOrder.getNetType());
-        Depot depot = depotMapper.findOne(goodsOrder.getShopId());
-        goodsOrderDetailQuery.setPricesystemId(depot.getPricesystemId());
-        goodsOrderDetailQuery.setShowAll(Boolean.FALSE);
-
-        //已下条件用于统计办事处已订货数
-        LocalDateTime createDateStart = LocalDate.now().atStartOfDay();
-        goodsOrderDetailQuery.setCreateDateStart(createDateStart);
-        goodsOrderDetailQuery.setCreateDateEnd(createDateStart.plusDays(1));
-        goodsOrderDetailQuery.setOfficeIdList(officeClient.getSameAreaByOfficeId(depot.getOfficeId()));
-
-        List<GoodsOrderDetailDto> result = goodsOrderDetailMapper.findListForNewOrEditOrBillWithAreaQty(goodsOrderDetailQuery);
-
-        return result;
-    }
-
-
-    public List<GoodsOrderDetailDto> findDetailListForBill(String goodsOrderId, String storeId) {
-
-        GoodsOrder goodsOrder = goodsOrderMapper.findOne(goodsOrderId);
-        GoodsOrderDetailQuery goodsOrderDetailQuery = new GoodsOrderDetailQuery();
-        goodsOrderDetailQuery.setGoodsOrderId(goodsOrderId);
-        goodsOrderDetailQuery.setCompanyId(RequestUtils.getCompanyId());
-        goodsOrderDetailQuery.setNetType(goodsOrder.getNetType());
-        Depot depot = depotMapper.findOne(goodsOrder.getShopId());
-        goodsOrderDetailQuery.setPricesystemId(depot.getPricesystemId());
-        goodsOrderDetailQuery.setShowAll(Boolean.FALSE);
-
-        //已下条件用于统计办事处已开单数
-        LocalDateTime billDateStart = LocalDate.now().atStartOfDay();
-        goodsOrderDetailQuery.setBillDateStart(billDateStart);
-        goodsOrderDetailQuery.setBillDateEnd(billDateStart.plusDays(1));
-        goodsOrderDetailQuery.setOfficeIdList(officeClient.getSameAreaByOfficeId(depot.getOfficeId()));
-
-        List<String> shipTypes= Lists.newArrayList();
-        shipTypes.add(ShipTypeEnum.总部发货.name());
-        shipTypes.add(ShipTypeEnum.总部自提.name());
-        shipTypes.add(ShipTypeEnum.地区发货.name());
-        shipTypes.add(ShipTypeEnum.地区自提.name());
-        goodsOrderDetailQuery.setShipTypeList(shipTypes);
-
-        List<GoodsOrderDetailDto> result = goodsOrderDetailMapper.findListForNewOrEditOrBillWithAreaQty(goodsOrderDetailQuery);
-
-        return result;
-
-    }
 
     //检测门店
     @Transactional(readOnly = true)
@@ -320,53 +105,7 @@ public class GoodsOrderService {
         if (CollectionUtil.isNotEmpty(goodsOrderList)) {
             restResponse.getErrors().add(new RestErrorField("门店有未处理的单据","exist_order_for_bill","shopId"));
         }
-        //检查门店价格体系是否和订单价格体系一致
-        if(StringUtils.isNotBlank(goodsOrderId)) {
-            GoodsOrder goodsOrder = goodsOrderMapper.findOne(goodsOrderId);
-            Depot currentShop = depotMapper.findOne(goodsOrder.getShopId());
-            if(!currentShop.getPricesystemId().equals(shop.getPricesystemId())) {
-                restResponse.getErrors().add(new RestErrorField("订单门店与修改后门店价格体系不一致","not_same_pricesystem","shopId"));
-                restResponse.setSuccess(false);
-            }
-        }
         return restResponse;
-    }
-
-    //根据订单号查明细单
-    public List<GoodsOrderDetailDto> findDetailDtoList(String goodsOrderId) {
-        GoodsOrder goodsOrder = goodsOrderMapper.findOne(goodsOrderId);
-        List<GoodsOrderDetail> goodsOrderDetailList  =goodsOrderDetailMapper.findByGoodsOrderId(goodsOrderId);
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap = CollectionUtil.extractToMap(goodsOrderDetailList,"productId");
-        List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
-        if(CollectionUtil.isNotEmpty(goodsOrderDetailList)) {
-            for(GoodsOrderDetail goodsOrderDetail:goodsOrderDetailList) {
-                GoodsOrderDetailDto goodsOrderDetailDto  = new GoodsOrderDetailDto();
-                goodsOrderDetailDtoList.add(goodsOrderDetailDto);
-            }
-        }
-        List<GoodsOrderDetailDto> list = findDetailDtoList(goodsOrder.getShopId(),goodsOrder.getNetType());
-        for(GoodsOrderDetailDto goodsOrderDetailDto:list) {
-            if(!goodsOrderDetailMap.containsKey(goodsOrderDetailDto.getProductId())) {
-                goodsOrderDetailDtoList.add(goodsOrderDetailDto);
-            }
-        }
-        return goodsOrderDetailDtoList;
-    }
-
-
-    //根据门店和netType查明细单
-    public List<GoodsOrderDetailDto> findDetailDtoList(String shopId,String netType) {
-        Depot shop = depotMapper.findOne(shopId);
-        List<PricesystemDetail> pricesystemDetailList  = pricesystemDetailMapper.findByPricesystemId(shop.getPricesystemId());
-        List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
-        for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
-            GoodsOrderDetailDto goodsOrderDetailDto = new GoodsOrderDetailDto();
-            goodsOrderDetailDto.setProductId(pricesystemDetail.getProductId());
-            goodsOrderDetailDto.setPrice(pricesystemDetail.getPrice());
-
-            goodsOrderDetailDtoList.add(goodsOrderDetailDto);
-        }
-        return goodsOrderDetailDtoList;
     }
 
     //保存及修改订单
@@ -426,7 +165,7 @@ public class GoodsOrderService {
         //更新总价
         goodsOrder.setAmount(amount);
         //更新快递单信息
-        ExpressOrder expressOrder = getExpressOrder(goodsOrderForm, goodsOrder.getExpressOrderId());
+        ExpressOrder expressOrder = getExpressOrder(goodsOrderForm);
         if(expressOrder.isCreate()) {
             expressOrderMapper.save(expressOrder);
         } else {
@@ -479,7 +218,7 @@ public class GoodsOrderService {
         goodsOrder.setAmount(amount);
         goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
         goodsOrderMapper.update(goodsOrder);
-        ExpressOrder expressOrder = getExpressOrder(goodsOrderBillForm, goodsOrder);
+        ExpressOrder expressOrder = getExpressOrder(goodsOrderBillForm);
         //设置需要打印的快递单个数
         Integer expressPrintQty = 0;
         if (ShipTypeEnum.总部发货.name().equals(goodsOrder.getShipType())) {
@@ -493,11 +232,11 @@ public class GoodsOrderService {
     }
 
 
-    private ExpressOrder getExpressOrder(GoodsOrderForm goodsOrderForm, String expressOrderId) {
+    private ExpressOrder getExpressOrder(GoodsOrderForm goodsOrderForm) {
         Depot shop = depotMapper.findOne(goodsOrderForm.getShopId());
         ExpressOrder expressOrder = new ExpressOrder();
-        if(StringUtils.isNotBlank(expressOrderId)) {
-            expressOrder = expressOrderMapper.findOne(expressOrderId);
+        if(StringUtils.isNotBlank(goodsOrderForm.getExpressOrderId())) {
+            expressOrder = expressOrderMapper.findOne(goodsOrderForm.getExpressOrderId());
         }
         expressOrder.setExtendId(goodsOrderForm.getId());
         expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
@@ -509,12 +248,11 @@ public class GoodsOrderService {
         return expressOrder;
     }
 
-    private ExpressOrder getExpressOrder(GoodsOrderBillForm goodsOrderBillForm, GoodsOrder goodsOrder) {
+
+    private ExpressOrder getExpressOrder(GoodsOrderBillForm goodsOrderBillForm) {
+        GoodsOrder goodsOrder = goodsOrderMapper.findOne(goodsOrderBillForm.getId());
         Depot shop = depotMapper.findOne(goodsOrder.getShopId());
-        ExpressOrder expressOrder = new ExpressOrder();
-        if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())) {
-            expressOrder = expressOrderMapper.findOne(goodsOrder.getExpressOrderId());
-        }
+        ExpressOrder expressOrder = expressOrderMapper.findOne(goodsOrder.getExpressOrderId());
         expressOrder.setExtendId(goodsOrder.getId());
         expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
         expressOrder.setContator(goodsOrderBillForm.getExpressContator());
@@ -524,6 +262,7 @@ public class GoodsOrderService {
         expressOrder.setShipType(goodsOrder.getShipType());
         return expressOrder;
     }
+
 
     private String getDefaultStoreId(GoodsOrder goodsOrder) {
         String defaultStoreId;
@@ -543,50 +282,16 @@ public class GoodsOrderService {
         return defaultStoreId;
     }
 
-    public GoodsOrderDto findOne(String goodsOrderId) {
-        GoodsOrderDto goodsOrderDto = goodsOrderMapper.findDto(goodsOrderId);
-        if(goodsOrderDto == null){
-            return null;
+    public GoodsOrderDto findOne(String id) {
+        GoodsOrderDto goodsOrderDto;
+        if(StringUtils.isBlank(id)) {
+            goodsOrderDto = new GoodsOrderDto();
+        } else {
+            GoodsOrder goodsOrder = goodsOrderMapper.findOne(id);
+            goodsOrderDto = BeanUtil.map(goodsOrder,GoodsOrderDto.class);
+            cacheUtils.initCacheInput(goodsOrderDto);
         }
-        CompanyConfigCacheDto goodsOrderRebateRule = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.GOODS_ORDER_REBATE_RULE.name());
-        if (goodsOrderRebateRule != null) {
-            goodsOrderDto.setGoodsOrderRebateRuleRemarks( goodsOrderRebateRule.getValue());
-        }
-
-//        TODO 金蝶 outCode 和purchaseinfo
-//        goodsOrderDto.setPurchaseInfo(sb.toString());
-//
-//        if(StringUtils.isEmpty(goodsOrder.getOutCode())){
-//            String outCode = k3cloudSynService.getOutCode(goodsOrder.getId(), K3CloudSynEntity.ExtendType.货品订货.name());
-//            goodsOrderDto.setOutCode(outCode);
-//        }
-
-        cacheUtils.initCacheInput(goodsOrderDto);
         return goodsOrderDto;
-    }
-
-    public List<GoodsOrderDetailDto> findDtoListByGoodsOrderIdForView(String goodsOrderId) {
-
-        List<GoodsOrderDetailDto> result =  goodsOrderDetailMapper.findDtoListByGoodsOrderId(goodsOrderId);
-        cacheUtils.initCacheInput(result);
-        return result;
-    }
-
-    public DepotDto findShopByGoodsOrderId(String goodsOrderId) {
-        DepotDto depotDto =  depotMapper.findShopByGoodsOrderId(goodsOrderId);
-        if(depotDto != null){
-            cacheUtils.initCacheInput(depotDto);
-        }
-
-        return depotDto;
-    }
-
-    public DepotDto findStoreByGoodsOrderId(String goodsOrderId) {
-        DepotDto depotDto =  depotMapper.findStoreByGoodsOrderId(goodsOrderId);
-        if(depotDto != null){
-            cacheUtils.initCacheInput(depotDto);
-        }
-        return depotDto;
     }
 
 }

@@ -1,12 +1,15 @@
 package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.general.common.utils.RequestUtils;
+import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
 import net.myspring.general.modules.sys.domain.ProcessType;
+import net.myspring.general.modules.sys.dto.FolderFileDto;
 import net.myspring.general.modules.sys.dto.ProcessFlowDto;
 import net.myspring.general.modules.sys.dto.ProcessTypeDto;
-import net.myspring.general.modules.sys.mapper.ProcessFlowMapper;
-import net.myspring.general.modules.sys.mapper.ProcessTypeMapper;
+import net.myspring.general.modules.sys.repository.ProcessFlowRepository;
+import net.myspring.general.modules.sys.repository.ProcessTypeRepository;
 import net.myspring.general.modules.sys.web.form.ProcessFlowForm;
 import net.myspring.general.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.general.modules.sys.web.query.ProcessTypeQuery;
@@ -19,9 +22,12 @@ import org.activiti.engine.RepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Predicate;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -31,32 +37,32 @@ public class ProcessTypeService {
 
 
     @Autowired
-    private ProcessTypeMapper processTypeMapper;
+    private ProcessTypeRepository processTypeRepository;
     @Autowired
-    private ProcessFlowMapper processFlowMapper;
+    private ProcessFlowRepository processFlowRepository;
     @Autowired
     private RepositoryService repositoryService;
 
     public ProcessTypeDto findByName(String name){
-        ProcessType processType =processTypeMapper.findByName(name);
+        ProcessType processType =processTypeRepository.findByName(name);
         return BeanUtil.map(processType,ProcessTypeDto.class);
     }
 
     public List<ProcessTypeDto> findEnabledAuditFileType(){
-        List<ProcessType> processTypeList = processTypeMapper.findEnabledAuditFileType();
+        List<ProcessType> processTypeList = processTypeRepository.findEnabledAuditFileType();
         return BeanUtil.map(processTypeList,ProcessTypeDto.class);
     }
 
     public ProcessTypeForm getForm(String id){
-        ProcessType processType=processTypeMapper.findOne(id);
+        ProcessType processType=processTypeRepository.findOne(id);
         return BeanUtil.map(processType,ProcessTypeForm.class);
     }
 
     public void logicDeleteOne(String id) {
-        ProcessType processType = processTypeMapper.findOne(id);
+        ProcessType processType = processTypeRepository.findOne(id);
         processType.setEnabled(false);
         processType.setName(processType.getName() +"removed("+System.currentTimeMillis()+")");
-        processTypeMapper.update(processType);
+        processTypeRepository.save(processType);
     }
 
     @Transactional
@@ -68,11 +74,11 @@ public class ProcessTypeService {
             }
         }
         ProcessType processType = BeanUtil.map(processTypeForm,ProcessType.class);
-        processTypeMapper.save(processType);
+        processTypeRepository.save(processType);
         for(ProcessFlowForm processFlowForm:processTypeForm.getProcessFlowFormList()) {
             processFlowForm.setProcessTypeId(processType.getId());
         }
-        processFlowMapper.batchSave(BeanUtil.map(processTypeForm.getProcessFlowFormList(),ProcessFlow.class));
+        processFlowRepository.save(BeanUtil.map(processTypeForm.getProcessFlowFormList(),ProcessFlow.class));
         // 部署流程
         String processId = "process_type_" + processType.getId();
         BpmnModel model = new BpmnModel();
@@ -85,7 +91,7 @@ public class ProcessTypeService {
         StartEvent startEvent = new StartEvent();
         startEvent.setId("start");
         process.addFlowElement(startEvent);
-        List<ProcessFlow> processFlows = processFlowMapper.findByProcessType(processType.getId());
+        List<ProcessFlow> processFlows = processFlowRepository.findByProcessTypeId(processType.getId());
         for (int i = 0; i < processFlows.size(); i++) {
             ProcessFlow processFlow = processFlows.get(i);
             List<String> candidataGroups = Lists.newArrayList();
@@ -144,12 +150,21 @@ public class ProcessTypeService {
     }
 
     public Page<ProcessTypeDto> findPage(Pageable pageable, ProcessTypeQuery processTypeQuery) {
-        Page<ProcessTypeDto> page = processTypeMapper.findPage(pageable, processTypeQuery);
-        return page;
+        Specification<ProcessType> specification = (root, query, cb) -> {
+            List<Predicate> predicates  = Lists.newArrayList();
+            predicates.add(cb.equal(root.get("companyId").as(String.class), RequestUtils.getCompanyId()));
+            if(StringUtils.isNotBlank(processTypeQuery.getName())) {
+                predicates.add(cb.like(root.get("name").as(String.class),"%" + processTypeQuery.getName() + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+
+        Page<ProcessType> page = processTypeRepository.findAll(specification,pageable);
+        return BeanUtil.map(page,ProcessTypeDto.class);
     }
 
     public List<ProcessTypeDto>  findAll(){
-        List<ProcessType> processTypeList=processTypeMapper.findAllEnabled();
+        List<ProcessType> processTypeList=processTypeRepository.findAll();
         return BeanUtil.map(processTypeList,ProcessTypeDto.class);
     }
 

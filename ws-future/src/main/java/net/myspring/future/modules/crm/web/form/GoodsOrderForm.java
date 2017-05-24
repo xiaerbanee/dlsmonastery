@@ -7,16 +7,24 @@ import net.myspring.future.modules.crm.domain.GoodsOrder;
 import java.util.List;
 
 public class GoodsOrderForm extends DataForm<GoodsOrder> {
-
+    private String expressOrderId;
     private String shopId;
     private String netType;
     private String shipType;
     private Boolean isUseTicket;
-
     private List<String> netTypeList;
     private List<String> shipTypeList;
 
     private List<GoodsOrderDetailForm> goodsOrderDetailList = Lists.newArrayList();
+
+
+    public String getExpressOrderId() {
+        return expressOrderId;
+    }
+
+    public void setExpressOrderId(String expressOrderId) {
+        this.expressOrderId = expressOrderId;
+    }
 
     public Boolean getUseTicket() {
         return isUseTicket;
