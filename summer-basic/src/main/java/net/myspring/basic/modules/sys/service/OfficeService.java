@@ -97,8 +97,7 @@ public class OfficeService {
             officeDto = BeanUtil.map(office, OfficeDto.class);
             if (OfficeTypeEnum.SUPPORT.name().equals(office.getType())) {
                 List<OfficeBusiness> businessOffices = officeBusinessMapper.findBusinessIdById(office.getId());
-                officeDto.setOfficeTree(getOfficeTree());
-                officeDto.getOfficeTree().setChecked(CollectionUtil.extractToList(businessOffices,"id"));
+                officeDto.setBusinessIdList(CollectionUtil.extractToList(businessOffices,"businessOfficeId"));
             }
             List<OfficeLeader> officeLeaderList = officeLeaderMapper.findByOfficeId(officeDto.getId());
             officeDto.setLeaderIdList(CollectionUtil.extractToList(officeLeaderList, "leaderId"));
@@ -209,10 +208,6 @@ public class OfficeService {
         return officeDtoList;
     }
 
-    public List<OfficeBusiness> findBusinessIdById(String id) {
-        return officeBusinessMapper.findBusinessIdById(id);
-    }
-
     public List<OfficeRuleDto> findOfficeRuleList() {
         List<OfficeRule> officeRuleList = officeRuleMapper.findAllEnabled();
         List<OfficeRuleDto> officeRuleDtoList = BeanUtil.map(officeRuleList, OfficeRuleDto.class);
@@ -220,9 +215,10 @@ public class OfficeService {
     }
 
     public TreeNode getOfficeTree() {
-        TreeNode treeNode = new TreeNode("0", "部门列表");
-        List<Office> officeList = officeMapper.findAll();
-        getTreeNodeList(officeList, treeNode.getChildren(), TreeConstant.ROOT_PARENT_IDS);
+        Office topOffice = officeMapper.findParentIdIsNull();
+        TreeNode treeNode = new TreeNode("t"+topOffice.getId(), topOffice.getName());
+        List<Office> officeList = officeMapper.findAllEnabled();
+        getTreeNodeList(officeList, treeNode.getChildren(), TreeConstant.ROOT_PARENT_IDS+topOffice.getId()+CharConstant.COMMA);
         return treeNode;
     }
 

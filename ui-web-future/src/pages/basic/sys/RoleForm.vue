@@ -19,7 +19,7 @@
             </el-form-item>
           </el-col>
           <el-col :span = "10">
-            <el-form-item  label="授权" prop="moduleIdStr">
+            <el-form-item  label="授权" prop="moduleIdList">
               <el-tree
                 :data="treeData"
                 show-checkbox
@@ -50,7 +50,7 @@
           name:'',
           permission:'',
           remarks:'',
-          moduleIdStr:""
+          moduleIdList:""
         },
         rules: {
           name: [{ required: true, message: this.$t('roleForm.prerequisiteMessage')}],
@@ -92,11 +92,11 @@
         var modules=new Array()
         var check=this.$refs.tree.getCheckedKeys();
         for(var index in check){
-          if(check[index].indexOf("p")!=0&& check[index]!=0){
+          if (check[index].match("\^(0|[1-9][0-9]*)$") && check[index] != 0) {
             modules.push(check[index])
           }
         }
-        this.inputForm.moduleIdStr=modules.join();
+        this.inputForm.moduleIdList=modules;
       }
     },created(){
       axios.get('/api/basic/sys/role/findOne', {params: {id: this.$route.query.id}}).then((response) => {
@@ -104,8 +104,7 @@
       })
       axios.get('/api/basic/sys/role/getForm', {params: {id: this.$route.query.id}}).then((response) => {
         this.treeData = new Array(response.data.treeNode);
-        this.checked = response.data.treeNode.checked;
-        this.inputForm.moduleIdStr = response.data.treeNode.checked.join();
+        this.checked = response.data.moduleIdList;
       })
     }
   }

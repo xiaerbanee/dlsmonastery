@@ -9,48 +9,48 @@
              {{inputForm.id}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.office')" prop="depotDto">
-              {{shopBuildForm.officeName}}
+              {{inputForm.officeName}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.shopName')" prop="shopId">
-              {{shopBuildForm.shopName}}
+              {{inputForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.monthSaleQty')" prop="monthSaleQty">
-              {{shopBuildForm.monthSaleQty}}
+              {{inputForm.monthSaleQty}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.shopType')" prop="shopType">
-              {{shopBuildForm.shopType}}
+              {{inputForm.shopType}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.address')" prop="address">
-              {{shopBuildForm.address}}
+              {{inputForm.address}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.applyAccount')" prop="loginName">
-              {{shopBuildForm.applyAccountName}}
+              {{inputForm.applyAccountName}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.mobilePhone')" prop="mobilePhone">
-              {{shopBuildForm.applyAccountPhone}}
+              {{inputForm.applyAccountPhone}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.remarks')"  prop="remarks">
-              {{shopBuildForm.remarks}}
+              {{inputForm.remarks}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item  :label="$t('shopBuildDetail.fixtureType')" prop="fixtureType">
-              {{shopBuildForm.fixtureType}}
+              {{inputForm.fixtureType}}
             </el-form-item>
             <el-form-item  :label="$t('shopBuildDetail.oldContents')" prop="oldContents">
-              {{shopBuildForm.oldContents}}
+              {{inputForm.oldContents}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.newContents')" prop="newContents">
-              {{shopBuildForm.newContents}}
+              {{inputForm.newContents}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.buildType')" prop="buildType">
-              {{shopBuildForm.buildType}}
+              {{inputForm.buildType}}
             </el-form-item>
             <el-form-item  :label="$t('shopBuildDetail.content')" prop="content">
-              {{shopBuildForm.content}}
+              {{inputForm.content}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.processStatus')" prop="processStatus">
-              {{shopBuildForm.processStatus}}
+              {{inputForm.processStatus}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.scenePhoto')" prop="scenePhoto">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设":on-change="handleChange1" :on-remove="handleRemove1"  :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
@@ -61,17 +61,17 @@
               </el-upload>
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.pass')"  v-if="action=='audit'">
-              <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
+              <bool-radio-group v-model="formProperty.pass"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.passRemarks')"  v-if="action=='audit'">
-              <el-input v-model="inputForm.passRemarks" :placeholder="$t('shopBuildDetail.inputRemarks')" type="textarea"></el-input>
+              <el-input v-model="formProperty.passRemarks" :placeholder="$t('shopBuildDetail.inputRemarks')" type="textarea"></el-input>
             </el-form-item>
             <el-form-item v-if="action=='audit'">
               <el-button type="primary" :disabled="submitDisabled"  @click="passSubmit()">{{$t('shopBuildDetail.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
-        <process-details v-model="shopBuildForm.processInstanceId"></process-details>
+        <process-details v-model="inputForm.processInstanceId"></process-details>
       </el-form>
     </div>
   </div>
@@ -88,7 +88,7 @@
         isCreate:this.$route.query.id==null,
         action:this.$route.query.action,
         inputForm:{},
-        shopBuildForm:{},
+        formProperty:{},
         submitData:{
             id:'',
           pass:'',
@@ -131,19 +131,21 @@
         this.fileList2 = fileList;
     },
     },created(){
-      axios.get('/api/ws/future/layout/shopBuild/detail',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;
-        this.shopBuildForm=response.data.shopBuildDto;
-        if(this.shopBuildForm.scenePhoto !=null) {
+        if(this.inputForm.scenePhoto !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
             this.fileList1= response.data;
           });
         }
-        if(this.shopBuildForm.confirmPhoto !=null) {
+        if(this.inputForm.confirmPhoto !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.confirmPhoto}}).then((response)=>{
             this.fileList2= response.data;
           });
         }
+      })
+      axios.get('/api/ws/future/layout/shopBuild/getAuditForm').then((response)=>{
+        this.formProperty = response.data;
       })
     }
   }

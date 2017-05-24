@@ -67,8 +67,8 @@ public class ShopAdController {
     }
 
     @RequestMapping(value = "batchAudit")
-    public RestResponse batchAudit(ShopAdForm shopAdForm) {
-        shopAdService.batchAudit(shopAdForm);
+    public RestResponse batchAudit(@RequestParam(value = "ids[]")String[] ids, Boolean pass) {
+        shopAdService.batchAudit(ids,pass);
         return new RestResponse("审批成功", ResponseCodeEnum.saved.name());
     }
 

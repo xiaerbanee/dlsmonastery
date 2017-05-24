@@ -53,7 +53,8 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:''
@@ -69,8 +70,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("adPricesystemList",this.formData);
-        axios.get('/api/ws/future/basic/adPricesystem',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData)
+        util.setQuery("adPricesystemList",this.submitData);
+        axios.get('/api/ws/future/basic/adPricesystem',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

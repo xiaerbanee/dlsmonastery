@@ -109,7 +109,7 @@ public class PermissionService {
         return permission;
     }
 
-    public TreeNode findBackendTree(List<String> backendModuleIdList) {
+    public TreeNode findBackendTree() {
         TreeNode treeNode = new TreeNode("0", "项目列表");
         List<Backend> backendList = backendMapper.findAllEnabled();
         List<BackendModule> backendModuleList = backendModuleMapper.findAllEnabled();
@@ -122,27 +122,25 @@ public class PermissionService {
             }
             treeNode.getChildren().add(backendTree);
         }
-        treeNode.setChecked(Lists.newArrayList(Sets.newHashSet(backendModuleIdList)));
         return treeNode;
     }
 
-    public TreeNode findRoleTree(String roleId,List<String> permissionIdList) {
+    public TreeNode findRoleTree(String roleId) {
         List<BackendMenuDto> backendMenuDtoList = backendMapper.findByRoleId(roleId);
         List<Permission> permissionList=permissionMapper.findAll();
-        TreeNode treeNode=getTreeNode(backendMenuDtoList,permissionList,permissionIdList);
+        TreeNode treeNode=getTreeNode(backendMenuDtoList,permissionList);
         return treeNode;
     }
 
-    public TreeNode findRolePermissionTree(String roleId,List<String> permissionIdList) {
+    public TreeNode findRolePermissionTree(String roleId) {
         List<BackendMenuDto> backendMenuDtoList = backendMapper.findRolePermissionByRoleId(roleId);
         List<Permission> permissionList=permissionMapper.findByRoleId(roleId);
-        TreeNode treeNode=getTreeNode(backendMenuDtoList,permissionList,permissionIdList);
+        TreeNode treeNode=getTreeNode(backendMenuDtoList,permissionList);
         return treeNode;
     }
 
-    private TreeNode getTreeNode(List<BackendMenuDto> backendMenuDtoList,List<Permission> permissionList,List<String> permissionIdList){
+    private TreeNode getTreeNode(List<BackendMenuDto> backendMenuDtoList,List<Permission> permissionList){
         TreeNode treeNode = new TreeNode("0", "权限列表");
-        Set<String> permissionIdSet = Sets.newHashSet(permissionIdList);
         Map<String,List<Permission>> permissionMap=CollectionUtil.extractToMapList(permissionList,"menuId");
         for(BackendMenuDto backend:backendMenuDtoList){
             TreeNode backendTree = new TreeNode("b" + backend.getId(), backend.getName());
@@ -170,15 +168,12 @@ public class PermissionService {
             }
             treeNode.getChildren().add(backendTree);
         }
-        treeNode.setChecked(Lists.newArrayList(permissionIdSet));
         return treeNode;
     }
 
-    public TreeNode getAccountPermissionCheckData(String accountId){
-        TreeNode treeNode = new TreeNode("0", "权限列表");
+    public List<String> getAccountPermissionCheckData(String accountId){
         List<String> accountPermissionList=accountPermissionMapper.findPermissionIdByAccount(accountId);
-        treeNode.setChecked(accountPermissionList);
-        return treeNode;
+        return accountPermissionList;
     }
 
     public void logicDeleteOne(String id) {

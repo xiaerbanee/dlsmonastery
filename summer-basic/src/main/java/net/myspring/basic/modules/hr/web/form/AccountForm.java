@@ -38,7 +38,6 @@ public class AccountForm extends DataForm<Account>{
     private List<PositionDto> positionDtoList= Lists.newArrayList();
     private Map<String,String> boolMap= Maps.newHashMap();
     private List<String> permissionIdList=Lists.newArrayList();
-    private String permissionIdStr;
 
     public List<String> getPermissionIdList() {
         return permissionIdList;
@@ -46,14 +45,6 @@ public class AccountForm extends DataForm<Account>{
 
     public void setPermissionIdList(List<String> permissionIdList) {
         this.permissionIdList = permissionIdList;
-    }
-
-    public String getPermissionIdStr() {
-        return permissionIdStr;
-    }
-
-    public void setPermissionIdStr(String permissionIdStr) {
-        this.permissionIdStr = permissionIdStr;
     }
 
     public String getPassword() {

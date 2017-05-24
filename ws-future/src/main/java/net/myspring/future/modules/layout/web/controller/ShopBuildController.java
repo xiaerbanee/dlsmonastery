@@ -53,7 +53,7 @@ public class ShopBuildController {
     }
 
     @RequestMapping(value = "batchAudit")
-    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids, String pass) {
+    public RestResponse batchAudit(@RequestParam(value = "ids[]")String[] ids, Boolean pass) {
         shopBuildService.batchAudit(ids,pass);
         RestResponse restResponse = new RestResponse("批量审批成功", ResponseCodeEnum.removed.name());
         return restResponse;
@@ -73,10 +73,8 @@ public class ShopBuildController {
     }
 
 
-    @RequestMapping(value = "detail")
-    public ShopBuildDetailOrAuditForm detail(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm){
-        ShopBuildDto shopBuildDto = shopBuildService.detail(shopBuildDetailOrAuditForm);
-        shopBuildDetailOrAuditForm.setShopBuildDto(shopBuildDto);
+    @RequestMapping(value = "getAuditForm")
+    public ShopBuildDetailOrAuditForm auditForm(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm){
         return shopBuildDetailOrAuditForm;
     }
 

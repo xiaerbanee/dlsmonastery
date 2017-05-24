@@ -113,7 +113,7 @@ public class ShopBuildService {
             shopBuild = shopBuildMapper.findOne(shopBuildDetailOrAuditForm.getId());
             activitiCompleteForm.setProcessInstanceId(shopBuild.getProcessInstanceId());
             activitiCompleteForm.setProcessTypeId(shopBuild.getProcessTypeId());
-            activitiCompleteForm.setPass(shopBuildDetailOrAuditForm.getPass().equalsIgnoreCase("1")?true:false);
+            activitiCompleteForm.setPass(shopBuildDetailOrAuditForm.getPass());
             if(shopBuildDetailOrAuditForm.getPassRemarks()!=null){
                 activitiCompleteForm.setComment(shopBuildDetailOrAuditForm.getPassRemarks());
             }
@@ -127,16 +127,16 @@ public class ShopBuildService {
         }
     }
 
-    public void batchAudit(String[] ids,String pass){
+    public void batchAudit(String[] ids,Boolean pass){
         if(ids ==null){
             return;
         }
-        //List<String> idList = Arrays.asList(ids);
+        List<String> idList = Arrays.asList(ids);
         ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm = new ShopBuildDetailOrAuditForm();
-        for(String id:ids){
+        shopBuildDetailOrAuditForm.setPass(pass);
+        shopBuildDetailOrAuditForm.setPassRemarks("批量操作");
+        for(String id:idList){
             shopBuildDetailOrAuditForm.setId(id);
-            shopBuildDetailOrAuditForm.setPass(pass);
-            shopBuildDetailOrAuditForm.setPassRemarks("批量操作");
             audit(shopBuildDetailOrAuditForm);
         }
 

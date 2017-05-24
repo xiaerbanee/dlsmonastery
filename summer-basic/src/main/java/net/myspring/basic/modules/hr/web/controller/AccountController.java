@@ -179,7 +179,6 @@ public class AccountController {
 
     @RequestMapping(value = "saveAuthorityList")
     public RestResponse saveAuthorityList(AccountForm accountForm) {
-        accountForm.setPermissionIdList(StringUtils.getSplitList(accountForm.getPermissionIdStr(), CharConstant.COMMA));
         accountService.saveAccountAndPermission(accountForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
@@ -187,14 +186,14 @@ public class AccountController {
     @RequestMapping(value = "getTreeNode")
     public TreeNode getTreeNode() {
         String roleId=roleManager.findIdByAccountId(RequestUtils.getAccountId());
-        TreeNode treeNode=permissionService.findRolePermissionTree(roleId, Lists.newArrayList());
+        TreeNode treeNode=permissionService.findRolePermissionTree(roleId);
         return treeNode;
     }
 
     @RequestMapping(value = "getTreeCheckData")
-    public TreeNode getTreeCheckData(String id) {
-        TreeNode treeNode=permissionService.getAccountPermissionCheckData(id);
-        return treeNode;
+    public List<String> getTreeCheckData(String id) {
+        List<String> permissionIdList=permissionService.getAccountPermissionCheckData(id);
+        return permissionIdList;
     }
 
 }

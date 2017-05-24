@@ -34,7 +34,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -107,9 +109,7 @@ public class ShopAdService {
             shopAd = shopAdMapper.findOne(shopAdForm.getId());
             activitiCompleteForm.setProcessInstanceId(shopAd.getProcessInstanceId());
             activitiCompleteForm.setProcessTypeId(shopAd.getProcessTypeId());
-            if(shopAdForm.getPassRemarks()!=null){
-                activitiCompleteForm.setComment(shopAdForm.getPassRemarks());
-            }
+            activitiCompleteForm.setComment(shopAdForm.getPassRemarks());
             activitiCompleteForm.setPass(shopAdForm.getPass());
             ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
             if(activitiCompleteDto!=null){
@@ -121,10 +121,16 @@ public class ShopAdService {
         }
     }
 
-    public void batchAudit(ShopAdForm shopAdForm){
-        List<ShopAd> shopAds = shopAdMapper.findByIds(shopAdForm.getIds());
-        for (ShopAd shopAd:shopAds){
-            shopAdForm = BeanUtil.map(shopAd,ShopAdForm.class);
+    public void batchAudit(String[] ids, Boolean pass){
+        if(ids==null){
+            return;
+        }
+        List<String> idList = Arrays.asList(ids);
+        ShopAdForm shopAdForm = new ShopAdForm();
+        shopAdForm.setPass(pass);
+        shopAdForm.setPassRemarks("批量操作");
+        for (String id:idList){
+            shopAdForm.setId(id);
             audit(shopAdForm);
         }
     }
@@ -136,7 +142,6 @@ public class ShopAdService {
             shopAdDto = BeanUtil.map(shopAd,ShopAdDto.class);
             cacheUtils.initCacheInput(shopAdDto);
         }
-
         return shopAdDto;
     }
 

@@ -80,13 +80,13 @@
         <el-table-column prop="createdByName" :label="$t('adGoodsOrderList.createdBy')"></el-table-column>
         <el-table-column fixed="right" :label="$t('adGoodsOrderList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" v-permit="'crm:adGoodsOrder:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('adGoodsOrderList.detail')}}</el-button>
-            <el-button size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('审核')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('adGoodsOrderList.audit')}}</el-button>
-            <el-button size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('开单')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'bill')">{{$t('adGoodsOrderList.bill')}}</el-button>
-            <el-button size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('发货')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'ship')">{{$t('adGoodsOrderList.ship')}}</el-button>
-            <el-button size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button>
-            <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button>
-            <el-button size="small" v-if="scope.row.isEditable" v-permit="'crm:adGoodsOrder:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button>
+            <el-button type="text" size="small" v-permit="'crm:adGoodsOrder:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('adGoodsOrderList.detail')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('审核')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('adGoodsOrderList.audit')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('开单')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'bill')">{{$t('adGoodsOrderList.bill')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('发货')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'ship')">{{$t('adGoodsOrderList.ship')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button>
+            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:adGoodsOrder:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>

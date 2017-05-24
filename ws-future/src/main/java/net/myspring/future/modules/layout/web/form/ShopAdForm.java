@@ -28,16 +28,6 @@ public class ShopAdForm extends DataForm<ShopAd>{
     private Boolean pass = false;
     private String passRemarks;
 
-    private List<String> ids;
-
-    public List<String> getIds() {
-        return ids;
-    }
-
-    public void setIds(List<String> ids) {
-        this.ids = ids;
-    }
-
 
     public Boolean getPass() {
         return pass;
