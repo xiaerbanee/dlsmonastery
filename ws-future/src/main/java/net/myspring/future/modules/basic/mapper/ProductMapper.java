@@ -65,7 +65,7 @@ public interface ProductMapper extends BaseMapper<Product,String> {
 
     List<Product> findFilter(@Param("p") ProductQuery productQuery);
 
-    List<Product> findByOutName();
+    List<ProductDto> findByOutName();
 
     List<Product> findByOutGroupIds(List<String> outGroupIds);
 

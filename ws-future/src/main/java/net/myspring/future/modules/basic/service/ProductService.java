@@ -23,6 +23,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -71,7 +72,7 @@ public class ProductService {
         return productMapper.findByName(name);
     }
 
-    public List<Product> findByOutName(){
+    public List<ProductDto> findByOutName(){
         return productMapper.findByOutName();
     }
 
@@ -99,9 +100,14 @@ public class ProductService {
         return productDtoList;
     }
 
-    public Product findOne(String id) {
-        Product product=productMapper.findOne(id);
-        return product;
+    public ProductDto findOne(String id) {
+        ProductDto productDto = new ProductDto();
+        if(StringUtils.isNotBlank(id)){
+            Product product=productMapper.findOne(id);
+            productDto = BeanUtil.map(product,ProductDto.class);
+            cacheUtils.initCacheInput(productDto);
+        }
+        return productDto;
     }
 
     public List<ProductDto> findHasImeProduct(){
@@ -133,19 +139,25 @@ public class ProductService {
         return adProducts;
     }
 
-    public Product save(ProductForm productForm) {
-        Product product= productMapper.findOne(productForm.getId());
-        ReflectionUtil.copyProperties(productForm,product);
-        productMapper.update(product);
-        return product;
+    public void save(ProductForm productForm) {
+        if(!productForm.isCreate()){
+            Product product= productMapper.findOne(productForm.getId());
+            ReflectionUtil.copyProperties(productForm,product);
+            productMapper.update(product);
+        }else{
+
+        }
+
+    }
+
+    public ProductQuery getQuery(ProductQuery productQuery){
+        productQuery.setNetTypeList(NetTypeEnum.getList());
+        productQuery.setOutGroupNameList(productMapper.findByOutName());
+        return productQuery;
     }
 
     public ProductForm getForm(ProductForm productForm){
-        if(!productForm.isCreate()){
-            Product product=productMapper.findOne(productForm.getId());
-            productForm=BeanUtil.map(product,ProductForm.class);
-            cacheUtils.initCacheInput(productForm);
-        }
+        productForm.setNetTypeList(NetTypeEnum.getList());
         return productForm;
     }
 
@@ -185,17 +197,6 @@ public class ProductService {
         }
     }
 
-    public List<String> findNetTypeList(){
-        return NetTypeEnum.getList();
-    }
-
-    public Map<String,String> getMap(){
-        return BoolEnum.getMap();
-    }
-
-    public List<ProductType> findProductTypeList() {
-        return productMapper.findProductTypeList();
-    }
 
     public void delete(ProductDto productDto) {
         productMapper.logicDeleteOne(productDto.getId());

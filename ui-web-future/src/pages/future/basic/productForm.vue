@@ -5,23 +5,19 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row>
           <el-col :span="8">
-            <el-form-item :label="$t('productForm.name')">
-              <el-input v-model="inputForm.name" disabled></el-input>
+            <el-form-item :label="$t('productForm.name')">{{inputForm.name}}
             </el-form-item>
             <el-form-item :label="$t('productForm.code')" prop="code">
               <el-input v-model="inputForm.code"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('productForm.outGroupName')" prop="outGroupName">
-              <el-input v-model="inputForm.outGroupName" disabled></el-input>
+            <el-form-item :label="$t('productForm.outGroupName')" prop="outGroupName">{{inputForm.outGroupName}}
             </el-form-item>
             <el-form-item :label="$t('productForm.productTypeName')" prop="productTypeName">
-              <el-select v-model="inputForm.productTypeId"  clearable filterable remote :placeholder="$t('productForm.inputWord')" :remote-method="remoteProductType" :loading="remoteLoading">
-                <el-option v-for="productType in productTypeList" :key="productType.id"  :label="productType.name" :value="productType.id"></el-option>
-              </el-select>
+              <product-type-select v-model="inputForm.productTypeId"></product-type-select>
             </el-form-item>
             <el-form-item  :label="$t('productForm.netType')" prop="netType">
               <el-select v-model="inputForm.netType"   clearable  :placeholder="$t('productForm.select')">
-                <el-option v-for="netType in inputForm.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
+                <el-option v-for="netType in formProperty.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('productForm.hasIme')" prop="hasIme">
@@ -56,8 +52,11 @@
             <el-form-item :label="$t('productForm.mappingName')" prop="mappingName">
               <el-input v-model="inputForm.mappingName"></el-input>
             </el-form-item>
-            <el-form-item  :label="$t('productForm.image')" prop="image">
-              <el-input v-model="inputForm.image"></el-input>
+            <el-form-item :label="$t('productForm.image')" prop="image">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/货品管理" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+                <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
+                <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
+              </el-upload>
             </el-form-item>
             <el-form-item :label="$t('productForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
@@ -72,13 +71,17 @@
   </div>
 </template>
 <script>
+  import productTypeSelect from 'components/future/product-type-select'
   export default{
+    components:{
+      productTypeSelect
+    },
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         formProperty:{},
-        productTypeList:[],
+        fileList: [],
         inputForm:{},
         submitData:{
           id:'',
@@ -99,7 +102,8 @@
          },
         rules: {
         },
-        remoteLoading:false
+        remoteLoading:false,
+        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
       }
     },
     methods:{
@@ -108,7 +112,8 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/ws/future/basic/product/save', qs.stringify(this.inputForm)).then((response)=> {
+              util.copyValue(this.inputForm,this.submitData);
+            axios.post('/api/ws/future/basic/product/save', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -133,9 +138,15 @@
             this.remoteLoading = false;
           })
         }
+      },handlePreview(file) {
+        window.open(file.url);
+      },handleChange(file, fileList) {
+        this.fileList = fileList;
+      },handleRemove(file, fileList) {
+        this.fileList = fileList;
       }
     },created(){
-        axios.get('/api/ws/future/basic/product/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           this.inputForm.hasIme = response.data.hasIme?1:0;
           this.inputForm.allowOrder = response.data.allowOrder?1:0;
@@ -144,6 +155,9 @@
             this.productTypeList = new Array(response.data.productType)
           }
         })
+      axios.get('/api/ws/future/basic/product/getForm').then((response)=>{
+        this.formProperty = response.data;
+      })
     }
   }
 </script>

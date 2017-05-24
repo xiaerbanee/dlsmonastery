@@ -4,8 +4,11 @@ import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
+import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
 import net.myspring.future.modules.crm.mapper.PriceChangeImeMapper;
@@ -14,6 +17,7 @@ import net.myspring.future.modules.crm.mapper.ProductImeMapper;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeUploadForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -25,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +43,8 @@ public class PriceChangeImeService {
     private ProductImeMapper productImeMapper;
     @Autowired
     private PriceChangeMapper priceChangeMapper;
+    @Autowired
+    private DepotMapper depotMapper;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -77,7 +84,9 @@ public class PriceChangeImeService {
     }
 
     public void save(PriceChangeImeUploadForm priceChangeImeUploadForm){
-
+        PriceChange priceChange = priceChangeMapper.findOne(priceChangeImeUploadForm.getPriceChangeId());
+        List<List<String>> imeUploadList = priceChangeImeUploadForm.getImeUploadList();
+        checkUploadIme(priceChange,imeUploadList);
     }
 
     public void imageUpload(PriceChangeImeForm priceChangeImeForm){
@@ -100,5 +109,30 @@ public class PriceChangeImeService {
             priceChangeIme.setAuditBy(RequestUtils.getAccountId());
             priceChangeImeMapper.update(priceChangeIme);
         }
+    }
+
+    public String checkUploadIme(PriceChange priceChange,List<List<String>> imeUploadList){
+        if(CollectionUtil.isEmpty(imeUploadList)){
+            return null;
+        }
+        List<String> shopNameList = new ArrayList<>();
+        List<String> imeList = new ArrayList<>();
+        for(List<String> row:imeUploadList){
+            String shopName = StringUtils.toString(row.get(0)).trim();
+            String ime = StringUtils.toString(row.get(1)).trim();
+            shopNameList.add(shopName);
+            imeList.add(ime);
+        }
+        if(shopNameList == null||imeList == null){
+            return null;
+        }
+        if(shopNameList.size()!=imeList.size()){
+            return null;
+        }
+
+        //检查门店，串码在系统中是否存在
+        List<Depot> depots = depotMapper.findByNameList(shopNameList);
+        List<ProductIme> productImes = productImeMapper.findByImeList(imeList);
+        return null;
     }
 }
