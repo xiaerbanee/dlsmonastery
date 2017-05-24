@@ -5,9 +5,9 @@ import net.myspring.uaa.dto.AccountDto;
 import net.myspring.uaa.dto.AccountWeixinDto;
 import net.myspring.uaa.dto.WeixinSessionDto;
 import net.myspring.uaa.manager.WeixinManager;
-import net.myspring.uaa.mapper.AccountDtoMapper;
-import net.myspring.uaa.mapper.AccountWeixinDtoMapper;
-import net.myspring.uaa.mapper.CompanyMapper;
+import net.myspring.uaa.repository.AccountDtoRepository;
+import net.myspring.uaa.repository.AccountWeixinDtoRepository;
+import net.myspring.uaa.repository.CompanyRepository;
 import net.myspring.util.collection.CollectionUtil;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,13 +31,13 @@ import java.util.Set;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
-    private AccountDtoMapper accountMapper;
+    private AccountDtoRepository accountDtoRepository;
     @Autowired
-    private AccountWeixinDtoMapper accountWeixinDtoMapper;
+    private AccountWeixinDtoRepository accountWeixinDtoRepository;
     @Autowired
     private WeixinManager weixinManager;
     @Autowired
-    private CompanyMapper companyMapper;
+    private CompanyRepository companyRepository;
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -49,7 +49,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             String accountId = ObjectUtils.toString(request.getAttribute("accountId"));
             WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(weixinCode);
             if(weixinSessionDto != null && StringUtils.isNotBlank(weixinSessionDto.getOpenid())) {
-                List<AccountWeixinDto> accountWeixinDtoList = accountWeixinDtoMapper.findByOpenId(weixinSessionDto.getOpenid());
+                List<AccountWeixinDto> accountWeixinDtoList = accountWeixinDtoRepository.findByOpenId(weixinSessionDto.getOpenid());
                 if(CollectionUtil.isNotEmpty(accountWeixinDtoList)) {
                     Map<String,AccountWeixinDto>  accountWeixinDtoMap = CollectionUtil.extractToMap(accountWeixinDtoList,"accountId");
                     if(!accountWeixinDtoMap.containsKey(accountId)) {
@@ -61,13 +61,13 @@ public class CustomUserDetailsService implements UserDetailsService {
                 }
             }
             if(StringUtils.isNotBlank(accountId)) {
-                accountDto = accountMapper.findById(accountId);
+                accountDto = accountDtoRepository.findById(accountId);
             }
         } else {
-            accountDto = accountMapper.findByLoginName(username);
+            accountDto = accountDtoRepository.findByLoginName(username);
         }
         if(accountDto != null) {
-            accountDto.setCompanyName(companyMapper.findNameById(accountDto.getCompanyId()));
+            accountDto.setCompanyName(companyRepository.findNameById(accountDto.getCompanyId()));
             LocalDate leaveDate = accountDto.getLeaveDate();
             boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
