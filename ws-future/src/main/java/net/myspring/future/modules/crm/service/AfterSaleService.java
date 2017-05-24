@@ -6,12 +6,16 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.AfterSaleRepository;
 import net.myspring.future.modules.crm.domain.AfterSale;
 import net.myspring.future.modules.crm.domain.AfterSaleDetail;
 import net.myspring.future.modules.crm.domain.AfterSaleFlee;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
-import net.myspring.future.modules.crm.mapper.*;
+import net.myspring.future.modules.crm.mapper.AfterSaleDetailMapper;
+import net.myspring.future.modules.crm.mapper.AfterSaleFleeMapper;
+import net.myspring.future.modules.crm.mapper.AfterSaleMapper;
+import net.myspring.future.modules.crm.mapper.ProductImeMapper;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -33,6 +37,8 @@ public class AfterSaleService {
     @Autowired
     private AfterSaleMapper afterSaleMapper;
     @Autowired
+    private AfterSaleRepository afterSaleRepository;
+    @Autowired
     private DepotMapper depotMapper;
     @Autowired
     private ProductImeMapper productImeMapper;
@@ -44,13 +50,13 @@ public class AfterSaleService {
     private AfterSaleFleeMapper afterSaleFleeMapper;
 
     public List<AfterSale> findByImeList(List<String> imeList) {
-        List<AfterSale> afterSales = afterSaleMapper.findByBadProductImeIn(imeList);
+        List<AfterSale> afterSales = afterSaleRepository.findByBadProductImeIn(imeList);
         return afterSales;
     }
 
     public List<AfterSaleCompanyDto> getFromCompanyData(List<String> imeList){
         List<AfterSaleCompanyDto> afterSaleCompanyList=Lists.newArrayList();
-        List<AfterSale> afterSaleList=afterSaleMapper.findByBadProductImeIn(imeList);
+        List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
         List<ProductIme> productImeList=productImeMapper.findByIds(CollectionUtil.extractToList(afterSaleList,"badProductImeId"));
         List<Product> productList=productMapper.findByIds(CollectionUtil.extractToList(afterSaleList,"badProductId"));
         List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailMapper.findByAfterSaleListAndType(CollectionUtil.extractToList(afterSaleList,"id"),"工厂录入");
@@ -172,7 +178,7 @@ public class AfterSaleService {
                         break;
                 }
             }
-            afterSaleMapper.save(afterSale);
+            afterSaleRepository.save(afterSale);
             afterSaleDetail.setAfterSaleId(afterSale.getId());
             afterSaleDetailMapper.save(afterSaleDetail);
             if(AfterSaleTypeEnum.窜货机.name().equals(type)){
@@ -192,7 +198,7 @@ public class AfterSaleService {
             productNameList.add( StringUtils.toString(row.get(1)).trim());
             depotNameList.add( StringUtils.toString(row.get(2)).trim());
         }
-        List<AfterSale> afterSaleList=afterSaleMapper.findByBadProductImeIn(imeList);
+        List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
         List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeMapper.findByImeList(imeList);
         List<ProductIme> productImeList=productImeMapper.findByImeList(imeList);
         List<Product> productList=productMapper.findByNameList(productNameList);
@@ -292,9 +298,9 @@ public class AfterSaleService {
                 }
             }
             if(StringUtils.isBlank(afterSale.getId())){
-                afterSaleMapper.save(afterSale);
+                afterSaleRepository.save(afterSale);
             }else {
-                afterSaleMapper.update(afterSale);
+                afterSaleRepository.save(afterSale);
             }
             afterSaleDetail.setAfterSaleId(afterSale.getId());
             afterSaleDetailMapper.save(afterSaleDetail);
@@ -313,7 +319,7 @@ public class AfterSaleService {
     //坏机返厂
     @Transactional
     public void toCompany(List<String> badImes,LocalDate toCompanyDate,String toCompanyRemarks) {
-        List<AfterSale> afterSaleList=afterSaleMapper.findByBadProductImeIn(badImes);
+        List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(badImes);
         List<AfterSaleDetail> afterSaleDetailList=Lists.newArrayList();
         for(AfterSale afterSale:afterSaleList){
             AfterSaleDetail afterSaleDetail=new AfterSaleDetail();
@@ -338,7 +344,7 @@ public class AfterSaleService {
             imeList.add( StringUtils.toString(row.get(0)).trim());
             productNameList.add( StringUtils.toString(row.get(1)).trim());
         }
-        List<AfterSale> afterSaleList=afterSaleMapper.findByBadProductImeIn(imeList);
+        List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
         List<ProductIme> productImeList=productImeMapper.findByImeList(imeList);
         List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailMapper.findByAfterSaleListAndType(CollectionUtil.extractToList(afterSaleList,"id"),"工厂录入");
         List<Product> productList=productMapper.findByNameList(productNameList);

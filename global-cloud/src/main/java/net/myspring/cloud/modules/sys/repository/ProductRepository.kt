@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.sys.repository
 
+import net.myspring.cloud.common.repository.BaseRepository
 import net.myspring.cloud.modules.sys.domain.Product
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -8,7 +9,7 @@ import java.time.LocalDateTime
 /**
  * Created by haos on 2017/5/24.
  */
-interface ProductRepository{
+interface ProductRepository:BaseRepository<Product,String>{
     @Query("""
         SELECT
         t1.*

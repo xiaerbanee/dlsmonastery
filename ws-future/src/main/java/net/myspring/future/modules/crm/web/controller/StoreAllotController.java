@@ -8,23 +8,22 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.enums.StoreAllotTypeEnum;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
-import net.myspring.future.modules.crm.domain.StoreAllot;
+import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
+import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.service.*;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/storeAllot")
@@ -49,8 +48,8 @@ public class StoreAllotController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<StoreAllotDto> list(Pageable pageable, StoreAllotQuery storeAllotQuery){
-        Page<StoreAllotDto> page = storeAllotService.findPage(pageable, storeAllotQuery);
-        return page;
+        return storeAllotService.findPage(pageable, storeAllotQuery);
+
     }
 
     @RequestMapping(value = "save")
@@ -64,63 +63,73 @@ public class StoreAllotController {
             throw new ServiceException("error.storeAllot.cantEdit");
         }
 
-        StoreAllot storeAllot = storeAllotService.saveForm(storeAllotForm);
-        if(storeAllotForm.getSyn()){
+        storeAllotService.saveForm(storeAllotForm);
+//        if(storeAllotForm.getSyn()){
 //            k3cloudSynService.syn(store.getId(), K3CloudSynEntity.ExtendType.大库调拨.name());
 //            if(store.getExpressOrder()!=null){
 //                ExpressOrder expressOrder = store.getExpressOrder();
 //                expressOrder.setOutCode(k3cloudSynService.getOutCode(store.getId(), K3CloudSynEntity.ExtendType.大库调拨.name()));
 //                expressOrderService.save(expressOrder);
 //            }
-        }
+//        }
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
-
 
     @RequestMapping(value = "getForm")
     public StoreAllotForm getForm(StoreAllotForm storeAllotForm) {
 
-        if(!storeAllotForm.isCreate()){
-           throw new ServiceException("error.storeAllot.cantEdit");
-        }
-        StoreAllotForm result;
+        storeAllotForm.setAllotTypeList(StoreAllotTypeEnum.getList());
+        storeAllotForm.setShipTypeList(ShipTypeEnum.getList());
+        storeAllotForm.setShowAllotType(storeAllotService.getShowAllotType());
 
-        if(StoreAllotTypeEnum.快速调拨.name().equals(storeAllotForm.getAllotType())){
-
-            result = new StoreAllotForm();
-
-            LocalDate billDate = LocalDateUtils.parse(LocalDateUtils.format(LocalDate.now()));
-            String mergeStoreIds ="3489,9873";//TODO 需要调用配置参数
-            List<String> storeIds = StringUtils.getSplitList(mergeStoreIds, ",");
-            String fromStoreId =storeIds.get(0);
-            String toStoreId =storeIds.get(1);
-
-            result.setExpressCompanyId( expressCompanyService.getDefaultExpressCompanyId());
-            result.setShipType(ShipTypeEnum.总部自提.name());
-            result.setStoreAllotDetailFormList(storeAllotDetailService.findStoreAllotDetailsForFastAllot(billDate, toStoreId, "待发货"));
-            result.setFromStoreId(fromStoreId);
-            result.setToStoreId(toStoreId);
-            result.setSyn(Boolean.FALSE);
-            result.setAllotType(StoreAllotTypeEnum.快速调拨.name());
-
-        }else{
-            result = new StoreAllotForm();
-            result.setSyn(Boolean.TRUE);
-            result.setAllotType(storeAllotForm.getAllotType());
-            result.setFromStoreId(storeAllotForm.getFromStoreId());
-            result.setStoreAllotDetailFormList(storeAllotDetailService.findStoreAllotDetailsForNew());
-        }
-
-        result.setAllotTypeList(StoreAllotTypeEnum.getList());
-        result.setShipTypeList(ShipTypeEnum.getList());
-        result.setShowAllotType(Boolean.TRUE);
-
-        return result;
+        return storeAllotForm;
     }
 
     @RequestMapping(value = "findForView")
     public StoreAllotDto findForView(String id) {
         return storeAllotService.findStoreAllotDtoById(id);
+    }
+
+    @RequestMapping(value = "findDetailList")
+    public List<StoreAllotDetailDto> findDetailList(String storeAllotId) {
+        return storeAllotDetailService.findByStoreAllotId(storeAllotId);
+    }
+
+    @RequestMapping(value = "findDetailListForCommonAllot")
+    public List<SimpleStoreAllotDetailDto> findDetailListForCommonAllot(String fromStoreId) {
+        return storeAllotService.findDetailListForCommonAllot(fromStoreId);
+    }
+
+    @RequestMapping(value = "findDetailListForFastAllot")
+    public List<SimpleStoreAllotDetailDto> findDetailListForFastAllot() {
+
+        return storeAllotService.findDetailListForFastAllot();
+
+    }
+
+    @RequestMapping(value = "findDto")
+    public StoreAllotDto findDto(String id) {
+
+        if(StringUtils.isBlank(id)){
+            return new StoreAllotDto();
+        }
+
+        return storeAllotService.findDto(id);
+
+    }
+
+    @RequestMapping(value = "findStoreAllotForFastAllot")
+    public StoreAllotDto findStoreAllotForFastAllot() {
+
+        StoreAllotDto storeAllotDto = new StoreAllotDto();
+
+        List<String> storeIds = storeAllotService.getMergeStoreIds();
+        storeAllotDto.setFromStoreId(storeIds.get(0));
+        storeAllotDto.setToStoreId(storeIds.get(1));
+        storeAllotDto.setExpressCompanyId(expressCompanyService.getDefaultExpressCompanyId());
+        storeAllotDto.setShipType(ShipTypeEnum.总部自提.name());
+
+        return storeAllotDto;
     }
 
     @RequestMapping(value = "getStoreAllotData")
@@ -139,19 +148,14 @@ public class StoreAllotController {
         return storeAllotQuery;
     }
 
-    @RequestMapping(value = "export", method = RequestMethod.GET)
-    public ModelAndView export() {
-        return null;
-    }
-
     @RequestMapping(value = "ship", method=RequestMethod.GET)
     public String shipForm() {
         return null;
     }
 
     @RequestMapping(value = "shipBoxAndIme", method = RequestMethod.GET)
-    public String shipBoxAndIme() {
-        return null;
+    public Map<String, Object> shipBoxAndIme(String id, String boxImeStr, String imeStr) {
+        return storeAllotService.shipBoxAndIme(id, boxImeStr, imeStr);
     }
 
     @RequestMapping(value = "ship", method=RequestMethod.POST)
@@ -160,9 +164,18 @@ public class StoreAllotController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete() {
-        return null;
+    public RestResponse delete(String id) {
+        storeAllotService.delete(id);
+        return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
+
+
+    @RequestMapping(value="export")
+    public String export(StoreAllotQuery storeAllotQuery) {
+
+        return storeAllotService.export(storeAllotQuery);
+    }
+
 
 
 }

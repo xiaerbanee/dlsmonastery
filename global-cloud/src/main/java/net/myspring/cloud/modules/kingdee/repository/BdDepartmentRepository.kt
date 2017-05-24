@@ -34,5 +34,5 @@ interface  BdDepartmentRepository{
         t1.FDEPTID = t2.FDEPTID
         and t2.FFULLNAME like %?1%
      """, nativeQuery = true)
-    fun findByNameLike(name:List<BdDepartment>):List<BdDepartment>
+    fun findByNameLike(name:String):List<BdDepartment>
 }

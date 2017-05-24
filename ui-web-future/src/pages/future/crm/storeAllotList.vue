@@ -4,7 +4,8 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:storeAllot:edit'">{{$t('storeAllotList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.filterOrExport')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" icon="search" v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.export')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('storeAllotList.filter')" v-model="formVisible" size="small" class="search-form">
@@ -43,7 +44,6 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="exportData">{{$t('storeAllotList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('storeAllotList.sure')}}</el-button>
         </div>
       </el-dialog>
@@ -137,7 +137,12 @@
       },itemAdd(){
         this.$router.push({ name: 'storeAllotForm'})
       },exportData(){
-        window.location.href= "/api/crm/storeAllot/export?"+qs.stringify(this.formData);
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/crm/storeAllot/export',{params:this.submitData}).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});
+
       },itemAction:function(id,action){
         if(action=="edit") {
           this.$router.push({ name: 'storeAllotForm', query: { id: id }});
@@ -154,7 +159,7 @@
               this.$message(response.data.message);
               this.pageRequest();
             })
-          });
+          }).catch(()=>{});
         }
       },handleSelectionChange(val) {
         var arrs=[];

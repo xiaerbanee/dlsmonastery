@@ -3,7 +3,7 @@
 <mapper namespace="net.myspring.future.modules.crm.mapper.StoreAllotDetailMapper">
 
     <select id="findByStoreAllotIds" resultType="StoreAllotDetailDto">
-      SELECT product.name productName, product.out_id outId, t1.*
+      SELECT product.name productName, product.out_id outId, product.has_ime productHasIme, 0 shipQty, t1.*
        from crm_store_allot_detail t1, crm_product product
         where t1.product_id = product.id
         and  t1.store_allot_id in
@@ -11,10 +11,11 @@
             #{item}
         </foreach>
 
+        ORDER BY t1.store_allot_id, product.has_ime DESC
 
     </select>
 
-    <select id="findStoreAllotDetailsForFastAllot" resultType="StoreAllotDetailDto">
+    <select id="findStoreAllotDetailsForFastAllot" resultType="SimpleStoreAllotDetailDto">
         SELECT result.productId productId, SUM(result.billQty) billQty
         FROM
             (
@@ -36,7 +37,7 @@
         ORDER BY result.billQty DESC
     </select>
 
-    <select id="findStoreAllotDetailsForNew" resultType="StoreAllotDetailDto">
+    <select id="findStoreAllotDetailListForNew" resultType="SimpleStoreAllotDetailDto">
 
         select t1.id productId
         from crm_product t1

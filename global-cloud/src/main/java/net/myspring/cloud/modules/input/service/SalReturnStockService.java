@@ -18,10 +18,10 @@ import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
-import net.myspring.cloud.modules.kingdee.mapper.ArReceivableMapper;
-import net.myspring.cloud.modules.kingdee.mapper.BdCustomerMapper;
-import net.myspring.cloud.modules.kingdee.mapper.BdDepartmentMapper;
-import net.myspring.cloud.modules.kingdee.mapper.BdMaterialMapper;
+import net.myspring.cloud.modules.kingdee.repository.ArReceivableRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdCustomerRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.common.constant.CharConstant;
@@ -49,13 +49,13 @@ public class SalReturnStockService {
     @Autowired
     private KingdeeManager kingdeeManager;
     @Autowired
-    private ArReceivableMapper arReceivableMapper;
+    private ArReceivableRepository arReceivableRepository;
     @Autowired
-    private BdCustomerMapper bdCustomerMapper;
+    private BdCustomerRepository bdCustomerRepository;
     @Autowired
-    private BdDepartmentMapper bdDepartmentMapper;
+    private BdDepartmentRepository bdDepartmentRepository;
     @Autowired
-    private BdMaterialMapper bdMaterialMapper;
+    private BdMaterialRepository bdMaterialRepository;
 
     public KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
@@ -68,7 +68,7 @@ public class SalReturnStockService {
                 if(salReturnStockDto.getBillType().contains("现销")){
                     return null;
                 }else{
-                    List<ArReceivable> arReceivableList = arReceivableMapper.findBySourceBillNo(getBillNo());
+                    List<ArReceivable> arReceivableList = arReceivableRepository.findBySourceBillNo(getBillNo());
                     if (arReceivableList.size()>0){
                         return arReceivableList.get(0).getFBillNo();
                     }else {
@@ -97,12 +97,12 @@ public class SalReturnStockService {
         Map<String, String> customerDepartmentMap = Maps.newHashMap();
 
         List<String> departmentIdList = Lists.newArrayList();
-        for (BdCustomer bdCustomer : bdCustomerMapper.findByNameList(customerNameList)) {
+        for (BdCustomer bdCustomer : bdCustomerRepository.findByNameList(customerNameList)) {
             customerNumMap.put(bdCustomer.getFName(), bdCustomer.getFNumber());
             customerDepartmentMap.put(bdCustomer.getFName(), bdCustomer.getFSalDeptId());
             departmentIdList.add(bdCustomer.getFSalDeptId());
         }
-        List<BdDepartment> bdDepartmentList = bdDepartmentMapper.findByIdList(departmentIdList);
+        List<BdDepartment> bdDepartmentList = bdDepartmentRepository.findByIdList(departmentIdList);
         Map<String,BdDepartment> bdDepartmentMap = bdDepartmentList.stream().collect(Collectors.toMap(BdDepartment::getFDeptId, bdDepartment -> bdDepartment));
         Map<String, SalReturnStockDto> billMap = Maps.newLinkedHashMap();
         for (List<Object> row : data) {
@@ -151,8 +151,8 @@ public class SalReturnStockService {
 
     public BatchBillQuery getForm(BatchBillQuery batchBillQuery){
         batchBillQuery.setReturnStockBillTypeEnums(SalReturnStockBillTypeEnum.values());
-        List<String> customerNameList = bdCustomerMapper.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList());
-        List<String> materialNameList = bdMaterialMapper.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList());
+        List<String> customerNameList = bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList());
+        List<String> materialNameList = bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList());
         batchBillQuery.setBdCustomerNameList(customerNameList);
         batchBillQuery.setBdMaterialNameList(materialNameList);
         return batchBillQuery;

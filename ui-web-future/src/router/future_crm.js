@@ -18,6 +18,7 @@ const expressForm = r => require.ensure([], () => r(require('pages/future/crm/ex
 const expressOrderList  = r => require.ensure([], () => r(require('pages/future/crm/expressOrderList.vue')));
 const expressOrderForm = r => require.ensure([], () => r(require('pages/future/crm/expressOrderForm.vue')));
 const depotAccountList = r => require.ensure([], () => r(require('pages/future/crm/depotAccountList.vue')));
+const depotAccountDetail = r => require.ensure([], () => r(require('pages/future/crm/depotAccountDetail.vue')));
 
 const goodsOrderList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderList.vue')));
 const goodsOrderForm = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderForm.vue')));
@@ -79,6 +80,7 @@ let routes = [
   {path:'/future/crm/expressOrderList',component:expressOrderList,name:'expressOrderList'},
   {path:'/future/crm/expressOrderForm',component:expressOrderForm,name:'expressOrderForm',meta: {menu:"expressOrderList"}},
   {path:'/future/crm/depotAccountList',component:depotAccountList,name:'depotAccountList',meta: {menu:"depotAccountList"}},
+  {path:'/future/crm/depotAccountDetail',component:depotAccountDetail,name:'depotAccountDetail',meta: {menu:"depotAccountDetail"}},
 
 
 

@@ -37,7 +37,7 @@ public class ProductImeShipQuery extends BaseQuery{
         this.imeList = imeList;
     }
 
-    public Boolean boxImeAndIme() {
+    public Boolean getBoxImeAndIme() {
         if(CollectionUtil.isNotEmpty(boxImeList) && CollectionUtil.isNotEmpty(imeList)) {
             return true;
         } else {

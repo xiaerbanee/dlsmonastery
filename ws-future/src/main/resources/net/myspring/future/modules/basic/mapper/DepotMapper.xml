@@ -206,4 +206,32 @@
             </foreach>
         </if>
     </sql>
+
+    <select id="findDepotAccountList" resultType="DepotAccountDto">
+        select
+        t1.id, t1.name, t1.office_id, t1.client_id
+        from
+        crm_depot t1 , crm_depot_shop t2
+        where
+        t1.enabled =1
+        and t1.is_hidden=0
+        and t1.id = t2.depot_id
+        and t1.client_id IS NOT NULL
+
+        <if test="p.specialityStore !=null and p.specialityStore">
+            and t2.speciality_store_type in ("总公司自营", "总公司经销商联营", "综合卖场")
+        </if>
+        <if test="(p.specialityStore ==null or !p.specialityStore) and #{accountTaxPermitted}">
+            and t1.tax_name IS NOT NULL
+            and t1.tax_name != ''
+        </if>
+        <if test="p.name!=null">
+            and t1.name like concat('%',#{p.name},'%')
+        </if>
+        <if test="p.officeId!=null">
+            and t1.office_id = #{p.officeId}
+        </if>
+    </select>
+
+
 </mapper>

@@ -3,8 +3,11 @@
     <head-tab active="depotAccountList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('depotAccountList.filterOrExport')}}</el-button>
-        <search-tag  :formData="submitData" :formLabel="formLabel"></search-tag>
+        <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="formVisible = true" icon="search">{{$t('depotAccountList.filter')}}</el-button>
+        <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportDetail"  >{{$t('depotAccountList.exportDetail')}}</el-button>
+        <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportConfirmation" >{{$t('depotAccountList.exportConfirmation')}}</el-button>
+        <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportAllDepots"  >{{$t('depotAccountList.exportAllDepots')}}</el-button>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('depotAccountList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
@@ -13,47 +16,34 @@
               <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('depotAccountList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.dutyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.dateRange" type="daterange" align="right" :placeholder="$t('depotAccountList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.dutyDateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dutyDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.officeId" filterable remote :placeholder="$t('depotAccountList.inputWord')" :remote-method="remoteOffice" :loading="remoteLoading" :clearable=true>
-                  <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item :label="formLabel.areaId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.areaId" clearable  filterable :placeholder="$t('depotAccountList.inputKey')">
-                  <el-option v-for="area in formProperty.areas" :key="area.id" :label="area.name" :value="area.id"></el-option>
-                </el-select>
+                <office-select v-model="formData.officeId"  ></office-select>
               </el-form-item>
               <el-form-item :label="formLabel.specialityStore.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.specialityStore" filterable clearable :placeholder="$t('depotAccountList.inputKey')">
-                  <el-option v-for="(value,key) in formProperty.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
-                </el-select>
+                <bool-select v-model="formData.specialityStore" ></bool-select>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="exportData">{{$t('depotAccountList.exportData')}}</el-button>
-          <el-button @click="exportDataDetail">{{$t('depotAccountList.exportDataDetail')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('depotAccountList.sure')}}</el-button>
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotAccountList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="office.name" :label="$t('depotAccountList.officeName')"></el-table-column>
-        <el-table-column prop="area.name" :label="$t('depotAccountList.areaName')" ></el-table-column>
+        <el-table-column fixed prop="officeName" :label="$t('depotAccountList.officeName')"></el-table-column>
+        <el-table-column prop="areaName" :label="$t('depotAccountList.areaName')" ></el-table-column>
         <el-table-column  prop="name" :label="$t('depotAccountList.name')" width="250px"></el-table-column>
-        <el-table-column prop="depositMap.qcys" :label="$t('depotAccountList.qcys')"></el-table-column>
-        <el-table-column prop="depositMap.qmys" :label="$t('depotAccountList.qmys')" ></el-table-column>
-        <el-table-column prop="depositMap.xxbzj" :label="$t('depotAccountList.xxbzj')"></el-table-column>
-        <el-table-column prop="depositMap.scbzj" :label="$t('depotAccountList.scbzj')"></el-table-column>
-        <el-table-column prop="depositMap.ysjyj" :label="$t('depotAccountList.ysjyj')"></el-table-column>
+        <el-table-column prop="qcys" :label="$t('depotAccountList.qcys')"></el-table-column>
+        <el-table-column prop="qmys" :label="$t('depotAccountList.qmys')" ></el-table-column>
+        <el-table-column prop="xxbzj" :label="$t('depotAccountList.xxbzj')"></el-table-column>
+        <el-table-column prop="scbzj" :label="$t('depotAccountList.scbzj')"></el-table-column>
+        <el-table-column prop="ysjyj" :label="$t('depotAccountList.ysjyj')"></el-table-column>
         <el-table-column fixed="right" :label="$t('depotAccountList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small"  type="text"  v-permit="'crm:depot:depotAccountData'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('depotAccountList.detail')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -62,7 +52,16 @@
 </div>
 </template>
 <script>
-  export default {
+  import officeSelect from 'components/basic/office-select'
+  import boolSelect from 'components/common/bool-select'
+
+
+  export default{
+    components:{
+      officeSelect,
+      boolSelect,
+
+    },
     data() {
       return {
         page: {},
@@ -71,17 +70,14 @@
           page: 0,
           size: 25,
           name: '',
-          dateRange: '',
           dutyDateRange: '',
-          areaId: '',
           officeId: '',
           specialityStore: ''
         }, formLabel: {
           name: {label: this.$t('depotAccountList.name')},
           dutyDateRange: {label: this.$t('depotAccountList.dateRange')},
-          officeId: {label: this.$t('depotAccountList.officeName'), value: ""},
-          areaId: {label: this.$t('depotAccountList.areaName'), value: ""},
-          specialityStore: {label: this.$t('depotAccountList.isSpecialityStore'), value: ""}
+          officeId: {label: this.$t('depotAccountList.officeName')},
+          specialityStore: {label: this.$t('depotAccountList.isSpecialityStore')}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -93,7 +89,7 @@
         this.pageLoading = true;
         util.copyValue(this.formData, this.submitData);
         util.setQuery("depotAccountList", this.submitData);
-        axios.get('/api/ws/future/crm/depot/depotAccountData?' + qs.stringify(this.submitData)).then((response) => {
+        axios.get('/api/ws/future/basic/depot/findDepotAccountList?' + qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -108,36 +104,36 @@
       }, search() {
         this.formVisible = false;
         this.pageRequest();
-      }, itemAdd(){
-        this.$router.push({name: 'dictEnumForm'})
       }, itemAction: function (id, action) {
-        if (action == "detail") {
-          this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.formData.dateRange}})
+        if(action=="detail") {
+          this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.submitData.dateRange}});
         }
-      }
+      }, exportAllDepots() {
 
-    , shopExportRequest() {
-      this.request();
-      window.location.href = "/api/crm/depot/shopExport?" + qs.stringify(this.formData);
-    }, shopExportDataRequest() {
-      this.request();
-      window.location.href = "/api/crm/depot/accountExport?" + qs.stringify(this.formData);
-    }, exportData(){
-      this.formVisible = false;
-      this.shopExportRequest();
-    }, exportDataDetail(){
-      this.formVisible = false;
-      this.shopExportDataRequest();
-    }, itemAction: function (id, action) {
+      util.confirmBeforeExportData(this).then(() => {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportAllDepots', {params:{dutyDateRange:this.submitData.dutyDateRange}}).then((response)=> {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        });
+      }).catch(()=>{});
 
-        this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.formData.dateRange}})
+    }, exportConfirmation(){
+      util.confirmBeforeExportData(this).then(() => {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportConfirmation', {params:{dutyDateRange:this.submitData.dutyDateRange,specialityStore: this.submitData.specialityStore}}).then((response) => {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        });
+      }).catch(()=>{});
 
+    }, exportDetail(){
+      util.confirmBeforeExportData(this).then(() => {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportDetail', {params:{dutyDateRange:this.submitData.dutyDateRange,specialityStore: this.submitData.specialityStore}}).then((response) => {
+          window.location.href = "/api/general/sys/folderFile/download?id=" + response.data;
+        });
+      }).catch(()=>{});
     }
-  },
-    created (){
+  }, created (){
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/depot/getQuery').then((response) =>{
+      axios.get('/api/ws/future/basic/depot/getDepotAccountQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
         that.pageRequest();

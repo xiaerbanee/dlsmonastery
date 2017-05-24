@@ -9,32 +9,8 @@ import net.myspring.future.modules.crm.domain.StoreAllotDetail;
 public class StoreAllotDetailForm extends DataForm<StoreAllotDetail> {
 
     private String productId;
-    private String productName;
+
     private Integer billQty;
-    private Integer shippedQty;
-    private String storeAllotId;
-
-    private String outId;
-    private Integer cloudQty;
-
-
-    public Integer getCloudQty() {
-        return cloudQty;
-    }
-
-    public void setCloudQty(Integer cloudQty) {
-        this.cloudQty = cloudQty;
-    }
-
-
-    public String getOutId() {
-        return outId;
-    }
-
-    public void setOutId(String outId) {
-        this.outId = outId;
-    }
-
 
     public String getProductId() {
         return productId;
@@ -42,14 +18,6 @@ public class StoreAllotDetailForm extends DataForm<StoreAllotDetail> {
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
     }
 
     public Integer getBillQty() {
@@ -60,21 +28,6 @@ public class StoreAllotDetailForm extends DataForm<StoreAllotDetail> {
         this.billQty = billQty;
     }
 
-    public Integer getShippedQty() {
-        return shippedQty;
-    }
-
-    public void setShippedQty(Integer shippedQty) {
-        this.shippedQty = shippedQty;
-    }
-
-    public String getStoreAllotId() {
-        return storeAllotId;
-    }
-
-    public void setStoreAllotId(String storeAllotId) {
-        this.storeAllotId = storeAllotId;
-    }
 
 
 }

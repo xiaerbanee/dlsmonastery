@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.mapper;
 
 import net.myspring.future.common.mybatis.MyMapper;
 import net.myspring.future.modules.crm.domain.StoreAllotDetail;
+import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,7 +17,9 @@ public interface StoreAllotDetailMapper extends MyMapper<StoreAllotDetail,String
 
     void deleteByStoreAllotId(@Param("storeAllotId") String storeAllotId);
 
-    List<StoreAllotDetailDto> findStoreAllotDetailsForFastAllot(@Param("billDate") LocalDate billDate, @Param("toStoreId") String toStoreId, @Param("status") String status, @Param("companyId") String companyId);
+    List<SimpleStoreAllotDetailDto> findStoreAllotDetailsForFastAllot(@Param("billDate") LocalDate billDate, @Param("toStoreId") String toStoreId, @Param("status") String status, @Param("companyId") String companyId);
 
-    List<StoreAllotDetailDto> findStoreAllotDetailsForNew(@Param("companyId")  String companyId);
+    List<SimpleStoreAllotDetailDto> findStoreAllotDetailListForNew(@Param("companyId")  String companyId);
+
+
 }
