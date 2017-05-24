@@ -1,17 +1,13 @@
 package net.myspring.future.modules.basic.service;
 
-import com.ctc.wstx.util.StringUtil;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.dto.ChainDto;
-import net.myspring.future.modules.basic.dto.PricesystemDto;
 import net.myspring.future.modules.basic.mapper.ChainMapper;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.DepotShopMapper;
-import net.myspring.future.modules.basic.web.query.ChainQuery;
 import net.myspring.future.modules.basic.web.form.ChainForm;
+import net.myspring.future.modules.basic.web.query.ChainQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
@@ -22,9 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -44,9 +38,9 @@ public class ChainService {
     }
 
     public ChainDto findOne(String id) {
-        ChainDto chainDto;
+        ChainDto chainDto = null;
         if (StringUtils.isBlank(id)) {
-            chainDto = new ChainDto();
+            return new ChainDto();
         } else {
             Chain chain = chainMapper.findOne(id);
             chainDto = BeanUtil.map(chain, ChainDto.class);

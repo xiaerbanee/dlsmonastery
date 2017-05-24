@@ -3,7 +3,9 @@ package net.myspring.future.modules.basic.mapper;
 import net.myspring.common.cache.IdCacheKeyGenerator;
 import net.myspring.future.common.mybatis.MyProvider;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
@@ -62,4 +64,6 @@ public interface DepotMapper extends BaseMapper<Depot,String> {
     DepotDto findShopByGoodsOrderId(String goodsOrderId);
 
     DepotDto findStoreByGoodsOrderId(String goodsOrderId);
+
+    Page<DepotAccountDto> findDepotAccountList(Pageable pageable, DepotAccountQuery depotAccountQuery);
 }

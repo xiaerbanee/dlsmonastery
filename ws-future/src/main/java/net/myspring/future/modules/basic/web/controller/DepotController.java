@@ -1,14 +1,20 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
+import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -81,6 +87,39 @@ public class DepotController {
         List<DepotDto> depotDtoList =depotService.findByIds(ids);
         return depotDtoList;
     }
+
+    @RequestMapping(value = "getDepotAccountQuery")
+    public DepotAccountQuery getDepotAccountQuery(DepotAccountQuery depotAccountQuery) {
+
+        LocalDate now = LocalDate.now();
+        LocalDate dutyDateStart = now.minusDays(30);
+        depotAccountQuery.setDutyDateRange(LocalDateUtils.format(dutyDateStart) + " - "+LocalDateUtils.format(now));
+
+        return depotAccountQuery;
+    }
+
+    @RequestMapping(value = "findDepotAccountList")
+    public Page<DepotAccountDto> findDepotAccountList(Pageable pageable, DepotAccountQuery depotAccountQuery) {
+        return depotService.findDepotAccountList(pageable, depotAccountQuery);
+    }
+
+
+    @RequestMapping(value="depotAccountExportDetail")
+    public String depotAccountExportDetail(DepotAccountQuery depotAccountQuery) {
+        return depotService.depotAccountExportDetail(depotAccountQuery);
+    }
+
+    @RequestMapping(value="depotAccountExportConfirmation")
+    public String depotAccountExportConfirmation(DepotAccountQuery depotAccountQuery) {
+        return depotService.depotAccountExportConfirmation(depotAccountQuery);
+    }
+
+    @RequestMapping(value="depotAccountExportAllDepots")
+    public String depotAccountExportAllDepots(DepotAccountQuery depotAccountQuery) {
+        return depotService.depotAccountExportAllDepots(depotAccountQuery);
+    }
+
+
 
     @RequestMapping(value = "findById")
     public DepotDto findById(String id) {
