@@ -13,7 +13,7 @@ interface  KingdeeBookRepository{
         where t1.enabled = 1
         and t2.enabled=1
         and t1.id = t2.kingdee_book_id
-        and t2.account_id = :accountId}
+        and t2.account_id = ?1}
      """, nativeQuery = true)
     fun findByAccountId(accountId:String): KingdeeBook
 

@@ -26,7 +26,7 @@ interface  CustomerReceiveRepository{
         JOIN T_AR_OTHERRECABLE t2 ON t1.FID = t2.FID
     WHERE
         t2.FDATE <:dateEnd
-        and t2.FCONTACTUNIT in ?2
+        and t2.FCONTACTUNIT in  :customerIdList
         UNION ALL
     SELECT
         t2.FRETCUSTID AS customerId,
@@ -39,7 +39,7 @@ interface  CustomerReceiveRepository{
     WHERE
         t4.FNAME = '标准销售退货单'
         and t2.FDATE <:dateEnd
-        and t2.FRETCUSTID in ?2
+        and t2.FRETCUSTID in  :customerIdList
         UNION ALL
         SELECT
         t2.FCUSTOMERID AS customerId,
@@ -52,7 +52,7 @@ interface  CustomerReceiveRepository{
      WHERE
         t4.FNAME = '标准销售出库单'
         and t2.FDATE <:dateEnd
-        and t2.FCUSTOMERID in ?2
+        and t2.FCUSTOMERID in :customerIdList
         UNION ALL
      SELECT
         t2.FCONTACTUNIT AS customerId,
@@ -62,7 +62,7 @@ interface  CustomerReceiveRepository{
         JOIN T_AR_RECEIVEBILL t2 ON t1.FID = t2.FID
      WHERE
         t2.FDATE <:dateEnd
-        and t2.FCONTACTUNIT in ?2
+        and t2.FCONTACTUNIT in :customerIdList
         UNION ALL
      SELECT
         t2.FCONTACTUNIT AS customerId,
@@ -72,12 +72,12 @@ interface  CustomerReceiveRepository{
         JOIN T_AR_REFUNDBILL t2 ON t2.FID = t1.FID
      WHERE
         t2.FDATE <:dateEnd
-        and t2.FCONTACTUNIT in ?2
+        and t2.FCONTACTUNIT in :customerIdList
         ) temp
         GROUP BY
         temp.customerId
      """, nativeQuery = true)
-    fun findEndShouldGet(@Param("dateEnd") dateEnd :LocalDate,customerIdList:List<String> ):List<CustomerReceiveDto>
+    fun findEndShouldGet(@Param("dateEnd") dateEnd :LocalDate,@Param("customerIdList")customerIdList:List<String> ):List<CustomerReceiveDto>
 
     @Query("""
       SELECT
