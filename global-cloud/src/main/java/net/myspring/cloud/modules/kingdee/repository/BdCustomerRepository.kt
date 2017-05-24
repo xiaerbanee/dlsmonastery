@@ -93,7 +93,7 @@ interface BdCustomerRepository {
         t1.FCUSTID = t2.FCUSTID
         AND t1.FPRIMARYGROUP = t3.FID
         AND t3.FID = t4.FID
-        and t1.FCUSTID = :#{#id}
+        and t1.FCUSTID = :id
      """, nativeQuery = true)
     fun findById(@Param("id") id: String): BdCustomer
 

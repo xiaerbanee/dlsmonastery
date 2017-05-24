@@ -45,7 +45,7 @@ interface  BdMaterialRepository{
             t1.FMATERIALID = t2.FMATERIALID
             AND t1.FMATERIALGROUP = t3.FID
             AND t3.FID = t4.FID
-            and t2.FNAME = :#{#name}
+            and t2.FNAME = :name
      """, nativeQuery = true)
     fun findByName(@Param("name")name:String):BdMaterial
 }
