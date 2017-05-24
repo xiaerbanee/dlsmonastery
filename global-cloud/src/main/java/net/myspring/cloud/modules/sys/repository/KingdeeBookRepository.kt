@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.sys.repository
 import net.myspring.cloud.common.repository.BaseRepository
 import net.myspring.cloud.modules.sys.domain.KingdeeBook
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
 /**
  * Created by haos on 2017/5/24.
@@ -14,9 +15,9 @@ interface  KingdeeBookRepository:BaseRepository<KingdeeBook,String>{
         where t1.enabled = 1
         and t2.enabled=1
         and t1.id = t2.kingdee_book_id
-        and t2.account_id = ?1}
+        and t2.account_id = :accountId
      """, nativeQuery = true)
-    fun findByAccountId(accountId:String): KingdeeBook
+    fun findByAccountId(@Param("accountId")accountId:String): KingdeeBook
 
     @Query("""
         select t1.name
