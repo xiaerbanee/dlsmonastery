@@ -444,23 +444,30 @@ export default {
   },
   depotAccountDetail: {
     depotAccountDetail: "Akun Laporan Detail",
+
     loading: "memuat",
     billType: "jenis nota",
     billNo: "nomor nota",
     date: "tanggal",
     materialName: "nama",
-    quantity: "jumlah",
+    qty: "jumlah",
     price: "harga",
     amount: "jumlah",
     payableAmount: "jumlah pwmbayaran",
     actualPayAmount: "pembayaran pokok",
     endAmount: "total pembayaran",
-    note: "keterangan"
+    note: "keterangan",
+    receiveAmount: "预收",
+    shouldGet: "应收",
+    endShouldGet: "期末",
+    remarks: "备注",
   },
   depotAccountList: {
     depotAccountList: "akun laporan",
-    exportData: "ekspor data",
-    exportDataDetail: "ekspor perincian",
+    depotAccountList: "应收报表",
+    exportDetail:"导出(有明细)",
+    exportConfirmation:"确认书导出",
+    exportAllDepots:"导出(所有门店)",
     officeName: "nama kantor",
     areaName: "area",
     name: "nama",
@@ -1678,6 +1685,7 @@ export default {
   },
   storeAllotList: {
     storeAllotList: "transfer gudang besar",
+    ship: "发货",
     businessId: "kode nota",
     fromStore: "sebelum tramnsfer",
     toStore: "sesudah transfer",
@@ -1712,6 +1720,8 @@ export default {
   },
   storeAllotShip: {
     storeAllotShip: "alokasi gudang besar",
+    save: "保存",
+    loading: "memuat",
     businessId: "nomor transfer",
     fromStore: "sebelum transfer",
     toStore: "sesudah transfer",
@@ -1723,7 +1733,7 @@ export default {
     remarks: "keterangan",
     billQty: "jumlah nota",
     shippedQty: "jumlah pengiriman barang",
-    waitShipQty: "jumlah pengiriman yang masih menunggu",
-    shipQty: "jumlah pengiriman barang"
+    leftQty: "待发货数",
+    sendQty: "发货数",
   }
 }

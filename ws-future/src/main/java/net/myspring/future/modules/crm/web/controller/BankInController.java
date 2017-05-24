@@ -58,8 +58,7 @@ public class BankInController {
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
         bankInService.logicDeleteOne(id);
-        RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
-        return restResponse;
+        return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 
 

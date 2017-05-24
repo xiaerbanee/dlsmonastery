@@ -6,12 +6,11 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.ExpressCompanyMapper;
+import net.myspring.future.modules.basic.repository.ExpressOrderRepository;
+import net.myspring.future.modules.basic.repository.ExpressRepository;
 import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
-import net.myspring.future.modules.crm.mapper.ExpressMapper;
 import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
 import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.crm.web.query.ExpressOrderQuery;
@@ -48,11 +47,10 @@ public class ExpressOrderService {
     @Autowired
     private ExpressOrderMapper expressOrderMapper;
     @Autowired
-    private ExpressCompanyMapper expressCompanyMapper;
+    private ExpressOrderRepository expressOrderRepository;
+
     @Autowired
-    private DepotMapper depotMapper;
-    @Autowired
-    private ExpressMapper expressMapper;
+    private ExpressRepository expressRepository;
 
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
@@ -60,12 +58,12 @@ public class ExpressOrderService {
     private CacheUtils cacheUtils;
 
     public ExpressOrder findOne(String id){
-        ExpressOrder expressOrder = expressOrderMapper.findOne(id);
+        ExpressOrder expressOrder = expressOrderRepository.findOne(id);
         return expressOrder;
     }
 
     public ExpressOrderDto findDto(String id){
-        ExpressOrderDto expressOrderDto = expressOrderMapper.findDto(id);
+        ExpressOrderDto expressOrderDto = expressOrderRepository.findDto(id);
         return expressOrderDto;
     }
 
@@ -80,26 +78,26 @@ public class ExpressOrderService {
 
 
     public void update(ExpressOrder expressOrder){
-        expressOrderMapper.update(expressOrder);
+        expressOrderRepository.save(expressOrder);
     }
 
     public void save(ExpressOrder expressOrder){
-        expressOrderMapper.save(expressOrder);
+        expressOrderRepository.save(expressOrder);
     }
 
     public void save(String extendType,String extendId,String expressCodes,String expressCompanyId) {
-        ExpressOrder expressOrder = expressOrderMapper.findByExtendIdAndType(extendId, extendType);
+        ExpressOrder expressOrder = expressOrderRepository.findByExtendIdAndExtendType(extendId, extendType);
         expressOrder.setExpressCompanyId(expressCompanyId);
         expressOrder.setExpressCodes(expressCodes);
 
         List<String> expressCodeList = StringUtils.getSplitList(expressCodes, "");
-        List<Express> expresses = expressMapper.findByExpressOrderId(expressOrder.getId());
+        List<Express> expresses = expressRepository.findByExpressOrderId(expressOrder.getId());
         if(CollectionUtil.isNotEmpty(expresses)) {
             for(int i = expresses.size()-1;i>=0;i--) {
                 Express express = expresses.get(i);
                 if(!expressCodeList.contains(express.getCode())) {
                     express.setEnabled(false);
-                    expressMapper.update(express);
+                    expressRepository.save(express);
                     expresses.remove(i);
                 }
             }
@@ -110,10 +108,10 @@ public class ExpressOrderService {
                 Express express = new Express();
                 express.setExpressOrderId(expressOrder.getId());
                 express.setCode(code);
-                expressMapper.save(express);
+                expressRepository.save(express);
             }
         }
-        expressOrderMapper.update(expressOrder);
+        expressOrderRepository.save(expressOrder);
     }
 
 
@@ -122,9 +120,9 @@ public class ExpressOrderService {
             return null;
         }
         if(StringUtils.isNotBlank(expressOrder.getId())){
-            expressOrderMapper.update(expressOrder);
+            expressOrderRepository.save(expressOrder);
         }else{
-            expressOrderMapper.save(expressOrder);
+            expressOrderRepository.save(expressOrder);
         }
         return expressOrder;
     }
@@ -133,10 +131,10 @@ public class ExpressOrderService {
 
     public ExpressOrder reCalcAndUpdateExpressCodes(String expressOrderId) {
 
-        ExpressOrder eo = expressOrderMapper.findOne(expressOrderId);
-        List<Express> expressList = expressMapper.findByExpressOrderId(expressOrderId);
+        ExpressOrder eo = expressOrderRepository.findOne(expressOrderId);
+        List<Express> expressList = expressRepository.findByExpressOrderId(expressOrderId);
         eo.setExpressCodes(StringUtils.join(CollectionUtil.extractToList(expressList, "code"), CharConstant.COMMA));
-        expressOrderMapper.update(eo);
+        expressOrderRepository.save(eo);
         return eo;
     }
 
@@ -146,7 +144,7 @@ public class ExpressOrderService {
             throw new ServiceException("expressOrderCantNew");
         }
 
-        ExpressOrderDto expressOrderDto = expressOrderMapper.findDto(expressOrderForm.getId());
+        ExpressOrderDto expressOrderDto = expressOrderRepository.findDto(expressOrderForm.getId());
         cacheUtils.initCacheInput(expressOrderDto);
         ExpressOrderForm result = BeanUtil.map(expressOrderDto, ExpressOrderForm.class);
 
@@ -158,17 +156,17 @@ public class ExpressOrderService {
         if(expressOrderForm.isCreate()){
             throw new ServiceException("expressOrderCantNew");
         }
-        ExpressOrder eo = expressOrderMapper.findOne(expressOrderForm.getId());
+        ExpressOrder eo = expressOrderRepository.findOne(expressOrderForm.getId());
         ReflectionUtil.copyProperties(expressOrderForm, eo);
-        expressOrderMapper.update(eo);
+        expressOrderRepository.save(eo);
     }
 
     public void resetPrintStatus(String id) {
-        ExpressOrder eo = expressOrderMapper.findOne(id);
+        ExpressOrder eo = expressOrderRepository.findOne(id);
 
         eo.setExpressPrintDate(null);
         eo.setOutPrintDate(null);
-        expressOrderMapper.update(eo);
+        expressOrderRepository.save(eo);
     }
 
     public String exportEMS(ExpressOrderQuery expressOrderQuery) {
@@ -282,7 +280,7 @@ public class ExpressOrderService {
     }
 
     public ExpressOrderDto findByGoodsOrderId(String goodsOrderId) {
-        ExpressOrderDto expressOrderDto = expressOrderMapper.findByGoodsOrderId(goodsOrderId);
+        ExpressOrderDto expressOrderDto = expressOrderRepository.findDtoByGoodsOrderId(goodsOrderId);
         if(expressOrderDto != null){
             cacheUtils.initCacheInput(expressOrderDto);
         }

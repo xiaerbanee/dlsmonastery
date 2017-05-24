@@ -1,17 +1,11 @@
 package net.myspring.future.modules.crm.domain;
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name="crm_product_ime")
@@ -29,14 +23,14 @@ public class ProductIme extends CompanyEntity<ProductIme> {
     private String itemNumber;
     private String colorId;
     private String retailShopId;
-    private Depot retailShop;
+
     private BigDecimal baokaPrice;
     private BigDecimal price3;
-    private Depot depot;
+
     private String depotId;
     private String productImeUploadId;
     private String productImeSaleId;
-    private Product product;
+
     private String productId;
 
     public String getBillId() {
@@ -143,14 +137,6 @@ public class ProductIme extends CompanyEntity<ProductIme> {
         this.retailShopId = retailShopId;
     }
 
-    public Depot getRetailShop() {
-        return retailShop;
-    }
-
-    public void setRetailShop(Depot retailShop) {
-        this.retailShop = retailShop;
-    }
-
     public BigDecimal getBaokaPrice() {
         return baokaPrice;
     }
@@ -165,14 +151,6 @@ public class ProductIme extends CompanyEntity<ProductIme> {
 
     public void setPrice3(BigDecimal price3) {
         this.price3 = price3;
-    }
-
-    public Depot getDepot() {
-        return depot;
-    }
-
-    public void setDepot(Depot depot) {
-        this.depot = depot;
     }
 
     public String getDepotId() {
@@ -197,14 +175,6 @@ public class ProductIme extends CompanyEntity<ProductIme> {
 
     public void setProductImeSaleId(String productImeSaleId) {
         this.productImeSaleId = productImeSaleId;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public String getProductId() {

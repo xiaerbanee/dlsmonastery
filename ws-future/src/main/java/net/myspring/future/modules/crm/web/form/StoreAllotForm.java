@@ -9,7 +9,7 @@ import java.util.List;
 public class StoreAllotForm extends DataForm<StoreAllot> {
 
     private String allotType;
-    private Boolean showAllotType = Boolean.TRUE;
+
     private String fromStoreId;
     private String toStoreId;
     private String shipType;
@@ -18,7 +18,8 @@ public class StoreAllotForm extends DataForm<StoreAllot> {
     private Boolean syn = Boolean.TRUE;  //默认同步至财务
     private List<String> shipTypeList = new ArrayList<>();
     private List<String> allotTypeList = new ArrayList<>();
-    private List<StoreAllotDetailForm> storeAllotDetailFormList = new ArrayList<>();
+    private List<StoreAllotDetailForm> storeAllotDetailList = new ArrayList<>();
+    private Boolean showAllotType = Boolean.TRUE;
 
     public String getAllotType() {
         return allotType;
@@ -94,12 +95,12 @@ public class StoreAllotForm extends DataForm<StoreAllot> {
         this.allotTypeList = allotTypeList;
     }
 
-    public List<StoreAllotDetailForm> getStoreAllotDetailFormList() {
-        return storeAllotDetailFormList;
+    public List<StoreAllotDetailForm> getStoreAllotDetailList() {
+        return storeAllotDetailList;
     }
 
-    public void setStoreAllotDetailFormList(List<StoreAllotDetailForm> storeAllotDetailFormList) {
-        this.storeAllotDetailFormList = storeAllotDetailFormList;
+    public void setStoreAllotDetailList(List<StoreAllotDetailForm> storeAllotDetailList) {
+        this.storeAllotDetailList = storeAllotDetailList;
     }
 
 

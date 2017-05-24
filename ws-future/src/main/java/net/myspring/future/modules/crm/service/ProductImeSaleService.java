@@ -1,7 +1,6 @@
 package net.myspring.future.modules.crm.service;
 
 import net.myspring.future.modules.crm.domain.ProductImeSale;
-import net.myspring.future.modules.crm.mapper.ProductImeMapper;
 import net.myspring.future.modules.crm.mapper.ProductImeSaleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,8 +16,7 @@ public class ProductImeSaleService {
 
     @Autowired
     private ProductImeSaleMapper productImeSaleMapper;
-    @Autowired
-    private ProductImeMapper productImeMapper;
+
 
     public ProductImeSale findOne(String id) {
         return productImeSaleMapper.findOne(id);

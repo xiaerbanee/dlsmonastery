@@ -4,33 +4,28 @@ import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
+import net.myspring.future.modules.basic.repository.ProductMonthPriceRepository;
 import net.myspring.future.modules.crm.domain.ProductMonthPrice;
 import net.myspring.future.modules.crm.domain.ProductMonthPriceDetail;
-import net.myspring.future.modules.crm.mapper.ProductMonthPriceDetailMapper;
-import net.myspring.future.modules.crm.mapper.ProductMonthPriceMapper;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @Service
+@Transactional
 public class ProductMonthPriceService {
 
     @Autowired
-    private ProductMonthPriceMapper productMonthPriceMapper;
-    @Autowired
-    private ProductMonthPriceDetailMapper productMonthPriceDetailMapper;
+    private ProductMonthPriceRepository productMonthPriceRepository;
+
     @Autowired
     private ProductTypeMapper productTypeMapper;
 
     public ProductMonthPrice findOne(String id) {
-        ProductMonthPrice productMonthPrice=productMonthPriceMapper.findOne(id);
+        ProductMonthPrice productMonthPrice=productMonthPriceRepository.findOne(id);
         List<ProductType> productTypeList = productTypeMapper.findAllScoreType();
         List<ProductMonthPriceDetail> productMonthPriceDetailList = productMonthPrice.getProductMonthPriceDetailList();
         List<String> productMonthPriceDetailProductTypeIdList = CollectionUtil.extractToList(CollectionUtil.extractToList(productMonthPriceDetailList,"productType"),"id");
@@ -50,10 +45,6 @@ public class ProductMonthPriceService {
     }
 
 
-    public Page<ProductMonthPrice> findPage(Pageable pageable, Map<String, Object> map) {
-        Page<ProductMonthPrice> page = productMonthPriceMapper.findPage(pageable, map);
-        return page;
-    }
 
     public List<ProductMonthPriceDetail> getProductTypeList(){
         List<ProductType> productTypeList = productTypeMapper.findAllScoreType();
@@ -74,7 +65,7 @@ public class ProductMonthPriceService {
         return null;
     }
 
-    @Transactional
+
     public void save(ProductMonthPrice productMonthPrice){
     }
 

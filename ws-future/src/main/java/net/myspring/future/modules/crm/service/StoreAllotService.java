@@ -1,73 +1,183 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.mongodb.gridfs.GridFSFile;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
+import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.ExpressOrderRepository;
+import net.myspring.future.modules.basic.repository.ProductImeRepository;
+import net.myspring.future.modules.basic.repository.StoreAllotDetailRepository;
+import net.myspring.future.modules.basic.repository.StoreAllotRepository;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
+import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.domain.StoreAllotDetail;
-import net.myspring.future.modules.crm.domain.StoreAllotIme;
+import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
+import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
-import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
+import net.myspring.future.modules.crm.dto.StoreAllotImeDto;
 import net.myspring.future.modules.crm.mapper.StoreAllotDetailMapper;
-import net.myspring.future.modules.crm.mapper.StoreAllotImeMapper;
 import net.myspring.future.modules.crm.mapper.StoreAllotMapper;
 import net.myspring.future.modules.crm.web.form.StoreAllotDetailForm;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
+import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
-import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
-import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
-@Transactional(readOnly = false)
+@Transactional
 public class StoreAllotService {
 
     @Autowired
     private StoreAllotMapper storeAllotMapper;
     @Autowired
-    private StoreAllotImeMapper storeAllotImeMapper;
+    private StoreAllotRepository storeAllotRepository;
+
     @Autowired
     private StoreAllotDetailMapper storeAllotDetailMapper;
+    @Autowired
+    private StoreAllotDetailRepository storeAllotDetailRepository;
 
     @Autowired
     private DepotMapper depotMapper;
-
-    private ProductMapper productMapper;
     @Autowired
-    private ExpressOrderMapper expressOrderMapper;
+    private ProductMapper productMapper;
+
+    @Autowired
+    private ExpressOrderRepository expressOrderRepository;
 
     @Autowired
     private CacheUtils cacheUtils;
 
+    @Autowired
+    private GridFsTemplate tempGridFsTemplate;
 
-    public StoreAllot findOne(String id) {
-        StoreAllot storeAllot = storeAllotMapper.findOne(id);
-        return storeAllot;
+    @Autowired
+    private ProductImeRepository productImeRepository;
+
+
+    public StoreAllotDto findDto(String id) {
+        StoreAllotDto storeAllotDto = storeAllotRepository.findStoreAllotDtoById(id);
+        cacheUtils.initCacheInput(storeAllotDto);
+        return storeAllotDto;
     }
 
-    public StoreAllot shipBoxAndIme(StoreAllot storeAllot, String boxIme, String imeStr) {
-        return null;
+    public Map<String, Object> shipBoxAndIme(String storeAllotId, String boxImeStr, String imeStr) {
+
+        StringBuffer stringBuffer = new StringBuffer();
+        Integer totalShouldShipQty = 0;
+        Integer totalShippedQty=0;
+        StoreAllotDto storeAllotDto = storeAllotRepository.findStoreAllotDtoById(storeAllotId);
+        cacheUtils.initCacheInput(storeAllotDto);
+        final List<String> boxImeList = StringUtils.getSplitList(boxImeStr, CharConstant.ENTER);
+        final List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+        String regex="^\\d*";
+        for(int i=0;i<imeList.size();i++){
+            String ime=imeList.get(i);
+            if(ime.startsWith("86")){
+                Pattern pattern=Pattern.compile(regex);
+                Matcher matcher=pattern.matcher(ime);
+                while(matcher.find()){
+                    String newStr=matcher.group();
+                    imeList.set(i,newStr);
+                }
+            }
+        }
+
+        final String fromStoreId = storeAllotDto.getFromStoreId();
+        Map<String, StoreAllotDetailDto> storeAllotDetailMap = Maps.newHashMap();
+        List<StoreAllotDetailDto> storeAllotDetailDtoList = storeAllotDetailRepository.findByStoreAllotIds(Lists.newArrayList(storeAllotId));
+        cacheUtils.initCacheInput(storeAllotDetailDtoList);
+        for(StoreAllotDetailDto storeAllotDetailDto : storeAllotDetailDtoList) {
+            if(storeAllotDetailDto.getBillQty()>0 && storeAllotDetailDto.getProductHasIme()){
+                storeAllotDetailDto.setShipQty(0);
+                storeAllotDetailMap.put(storeAllotDetailDto.getProductId(), storeAllotDetailDto);
+            }
+        }
+        ProductImeShipQuery productImeShipQuery = new ProductImeShipQuery();
+        productImeShipQuery.setDepotId(fromStoreId);
+        productImeShipQuery.setBoxImeList(boxImeList);
+        productImeShipQuery.setImeList(imeList);
+        productImeShipQuery.setCompanyId(RequestUtils.getCompanyId());
+
+        List<ProductIme> productImeList = productImeRepository.findShipList(productImeShipQuery);
+        Set<String> boxImeSet = Sets.newHashSet();
+        Set<String> imeSet = Sets.newHashSet();
+
+        for(ProductIme productIme : productImeList) {
+            boxImeSet.add(productIme.getBoxIme());
+            imeSet.add(productIme.getIme());
+            if(!storeAllotDetailMap.containsKey(productIme.getProductId())) {
+                stringBuffer.append("箱号  "+productIme.getBoxIme()+",串码  "+ productIme.getIme()+" 不属于此次要调拨的产品；");
+            } else {
+                storeAllotDetailMap.get(productIme.getProductId()).setShipQty(storeAllotDetailMap.get(productIme.getProductId()).getShipQty()+1);
+            }
+        }
+        for(String boxIme:boxImeList) {
+            if(!boxImeSet.contains(boxIme)) {
+                stringBuffer.append("箱号  " + boxIme + " 不在选定的仓库  "+storeAllotDto.getFromStoreName()+"；");
+            }
+        }
+        for(String ime : imeList){
+            if(!imeSet.contains(ime)) {
+                stringBuffer.append("串码  " + ime + " 不在选定的仓库  "+storeAllotDto.getFromStoreName()+"；");
+            }
+        }
+        for(StoreAllotDetailDto storeAllotDetailDto : storeAllotDetailMap.values()) {
+            totalShouldShipQty = totalShouldShipQty + storeAllotDetailDto.getBillQty();
+            totalShippedQty = totalShippedQty + storeAllotDetailDto.getShippedQty()+storeAllotDetailDto.getShipQty();
+            Integer qty = storeAllotDetailDto.getShippedQty()+storeAllotDetailDto.getShipQty();
+            if(qty > storeAllotDetailDto.getBillQty()){
+                stringBuffer.append("产品 " + storeAllotDetailDto.getProductName()+" 已经发货 " + qty.toString() + " 台，超过该产品的调拨量  "+storeAllotDetailDto.getBillQty().toString()+" 台；");
+            }
+        }
+        Map<String,Object> result = Maps.newHashMap();
+        if(!totalShouldShipQty.equals(totalShippedQty)) {
+            result.put("warnMsg", "货品总开单数为" + totalShouldShipQty + "，与总实际发货数为"+totalShippedQty + "不一致；");
+        }
+        Map<String, Integer> shipQtyMap = Maps.newHashMap();
+        for(StoreAllotDetailDto storeAllotDetailDto : storeAllotDetailMap.values()) {
+            shipQtyMap.put(storeAllotDetailDto.getProductId(), storeAllotDetailDto.getShipQty());
+        }
+        result.put("errMsg", stringBuffer.toString());
+        result.put("shipQtyMap", shipQtyMap);
+        result.put("totalQty", productImeList.size());
+
+        return result;
     }
 
     public void ship(StoreAllot storeAllot) {
@@ -92,60 +202,45 @@ public class StoreAllotService {
         return page;
     }
 
-    public List<SimpleExcelSheet> findSimpleExcelSheets(Workbook workbook, Map<String, Object> map) {
+    public String export(StoreAllotQuery storeAllotQuery) {
+
+        Workbook workbook = new SXSSFWorkbook(10000);
+
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> storeAllotColumnList = Lists.newArrayList();
-        storeAllotColumnList.add(new SimpleExcelColumn(workbook, "businessId", "单据编号"));
-        storeAllotColumnList.add(new SimpleExcelColumn(workbook, "fromStore.name", "调拨前"));
-        storeAllotColumnList.add(new SimpleExcelColumn(workbook, "toStore.name", "调拨后"));
+        storeAllotColumnList.add(new SimpleExcelColumn(workbook, "formatId", "单据编号"));
+        storeAllotColumnList.add(new SimpleExcelColumn(workbook, "fromStoreName", "调拨前"));
+        storeAllotColumnList.add(new SimpleExcelColumn(workbook, "toStoreName", "调拨后"));
         storeAllotColumnList.add(new SimpleExcelColumn(workbook, "outCode", "外部编号"));
         storeAllotColumnList.add(new SimpleExcelColumn(workbook, "status", "状态"));
-        storeAllotColumnList.add(new SimpleExcelColumn(workbook, "created.loginName", "创建人"));
+        storeAllotColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
         storeAllotColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
-        storeAllotColumnList.add(new SimpleExcelColumn(workbook, "lastModified.loginName", "更新人"));
+        storeAllotColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "更新人"));
         storeAllotColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
         storeAllotColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
-        List<StoreAllot> storeAllotList = storeAllotMapper.findByFilter(map);
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("调拨单" + LocalDate.now(), storeAllotList, storeAllotColumnList);
-        simpleExcelSheetList.add(simpleExcelSheet);
+        List<StoreAllotDto> storeAllotDtoList = findPage(new PageRequest(0,10000), storeAllotQuery).getContent();
+        simpleExcelSheetList.add(new SimpleExcelSheet("调拨单", storeAllotDtoList, storeAllotColumnList));
 
         List<SimpleExcelColumn> storeAllotImeColumnList = Lists.newArrayList();
-        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllot.businessId", "订单编号"));
-        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllot.outCode", "外部编号"));
-        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllot.billDate", "开单日期"));
-        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllot.fromStore.name", "发货仓库"));
-        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllot.toStore.area.name", "办事处"));
-        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllot.toStore.name", "门店"));
-        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "productIme.product.name", "产品名称"));
-        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "productIme.ime", "串码"));
-        List<StoreAllotIme> storeAllotImes = storeAllotImeMapper.findByStoreAllotFilter(CollectionUtil.extractToList(storeAllotList,"id"),map);
-        SimpleExcelSheet imeSheet = new SimpleExcelSheet("串码" + LocalDate.now(), storeAllotImes, storeAllotImeColumnList);
-        simpleExcelSheetList.add(imeSheet);
-
-        return simpleExcelSheetList;
-    }
+        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllotFormatId", "订单编号"));
+        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllotOutCode", "外部编号"));
+        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllotBillDate", "开单日期"));
+        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllotFromStoreName", "发货仓库"));
+        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllotToStoreAreaName", "办事处"));
+        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllotToStoreName", "门店"));
+        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "productName", "产品名称"));
+        storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "productImeIme", "串码"));
+        List<StoreAllotImeDto> storeAllotImeDtoList = storeAllotMapper.findStoreAllotImeDtoList(new PageRequest(0,10000), storeAllotQuery).getContent();
+        cacheUtils.initCacheInput(storeAllotImeDtoList);
+        simpleExcelSheetList.add(new SimpleExcelSheet("串码", storeAllotImeDtoList, storeAllotImeColumnList));
 
 
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"大库调拨"+LocalDate.now()+".xlsx", simpleExcelSheetList);
+        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        return StringUtils.toString(gridFSFile.getId());
 
-    public StoreAllotForm findFormWithoutStoreAllotDetails(StoreAllotForm storeAllotForm) {
-       if(storeAllotForm.isCreate()){
-           return storeAllotForm;
-       }
-       StoreAllot storeAllot=storeAllotMapper.findOne(storeAllotForm.getId());
-       StoreAllotForm result= BeanUtil.map(storeAllot, StoreAllotForm.class);
-       cacheUtils.initCacheInput(result);
-       return result;
-    }
 
-    public StoreAllot saveStoreAllot(StoreAllotForm storeAllotForm, String cloudSynId) {
-        StoreAllot storeAllot = new StoreAllot();
-        ReflectionUtil.copyProperties(storeAllotForm, storeAllot);
-        String maxBusinessId = storeAllotMapper.findMaxBusinessId(LocalDate.now());
-        storeAllot.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
-        storeAllot.setBillDate(LocalDate.now());
-        storeAllot.setCloudSynId(cloudSynId);
-        storeAllotMapper.save(storeAllot);
-        return storeAllot;
     }
 
     public StoreAllot saveForm(StoreAllotForm storeAllotForm) {
@@ -154,38 +249,53 @@ public class StoreAllotService {
             throw new ServiceException("error.storeAllot.cantEdit");
         }
 
-        String cloudSynId = null;
-
         if(storeAllotForm.getSyn()){
             //TODO 金蝶接口调用，调用成功之后设置cloudSynId
             // cloudSynId=
         }
 
-        StoreAllot storeAllot = saveStoreAllot(storeAllotForm, cloudSynId);
-
-        saveStoreAllotDetails(storeAllot.getId(), storeAllotForm.getStoreAllotDetailFormList());
-
+        StoreAllot storeAllot = saveStoreAllot(storeAllotForm);
+        saveStoreAllotDetails(storeAllot.getId(), storeAllotForm.getStoreAllotDetailList());
         ExpressOrder expressOrder = saveExpressOrder(storeAllot, storeAllotForm);
 
         storeAllot.setExpressOrderId(expressOrder.getId());
+//       TODO  需要设置财务返回的id storeAllot.setCloudSynId();
         storeAllotMapper.update(storeAllot);
 
         return storeAllot;
     }
 
-    private void saveStoreAllotDetails(String storeAllotId, List<StoreAllotDetailForm> storeAllotDetailFormList) {
-//        storeAllotDetailMapper.deleteByStoreAllotId(storeAllotId);
-        if(storeAllotDetailFormList == null){
+    private StoreAllot saveStoreAllot(StoreAllotForm storeAllotForm) {
+        StoreAllot storeAllot = new StoreAllot();
+        storeAllot.setFromStoreId(storeAllotForm.getFromStoreId());
+        storeAllot.setToStoreId(storeAllotForm.getToStoreId());
+        storeAllot.setShipType(storeAllotForm.getShipType());
+        storeAllot.setRemarks(storeAllotForm.getRemarks());
+        String maxBusinessId = storeAllotRepository.findMaxBusinessId(LocalDate.now());
+        storeAllot.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
+        storeAllot.setBillDate(LocalDate.now());
+        storeAllot.setStatus(StoreAllotStatusEnum.待发货.name());
+
+        storeAllotRepository.save(storeAllot);
+        return storeAllot;
+    }
+
+    private void saveStoreAllotDetails(String storeAllotId, List<StoreAllotDetailForm> storeAllotDetailList) {
+        storeAllotDetailRepository.deleteByStoreAllotId(storeAllotId);
+        if(storeAllotDetailList == null){
             return;
         }
 
         List<StoreAllotDetail> toBeSaved = Lists.newArrayList();
-        for(StoreAllotDetailForm each : storeAllotDetailFormList){
-            if(each == null || each.getBillQty() == null || each.getBillQty() <=0){
+        for(StoreAllotDetailForm storeAllotDetailForm : storeAllotDetailList){
+            if(storeAllotDetailForm == null || storeAllotDetailForm.getBillQty() == null || storeAllotDetailForm.getBillQty() <=0){
                 continue;
             }
-            StoreAllotDetail storeAllotDetail = BeanUtil.map(each, StoreAllotDetail.class);
+            StoreAllotDetail storeAllotDetail = new StoreAllotDetail();
             storeAllotDetail.setStoreAllotId(storeAllotId);
+            storeAllotDetail.setBillQty(storeAllotDetailForm.getBillQty());
+            storeAllotDetail.setProductId(storeAllotDetailForm.getProductId());
+
             toBeSaved.add(storeAllotDetail);
         }
         if(!toBeSaved.isEmpty()){
@@ -213,8 +323,8 @@ public class StoreAllotService {
 
         Integer totalBillQty = 0;
         Integer mobileQty = 0;
-        for(int i=storeAllotForm.getStoreAllotDetailFormList().size()-1;i>=0;i--){
-            StoreAllotDetailForm storeAllotDetailForm = storeAllotForm.getStoreAllotDetailFormList().get(i);
+        for(int i = storeAllotForm.getStoreAllotDetailList().size()-1; i>=0; i--){
+            StoreAllotDetailForm storeAllotDetailForm = storeAllotForm.getStoreAllotDetailList().get(i);
             if(storeAllotDetailForm.getBillQty()!=null && storeAllotDetailForm.getBillQty()>0) {
                 totalBillQty = totalBillQty + storeAllotDetailForm.getBillQty();
                 Product product = productMapper.findOne(storeAllotDetailForm.getProductId());
@@ -232,7 +342,7 @@ public class StoreAllotService {
             expressPrintQty = getExpressPrintQty(totalBillQty);
         }
         expressOrder.setExpressPrintQty(expressPrintQty);
-        expressOrderMapper.save(expressOrder);
+        expressOrderRepository.save(expressOrder);
         return expressOrder;
 
     }
@@ -261,9 +371,58 @@ public class StoreAllotService {
 
 
     public StoreAllotDto findStoreAllotDtoById(String id) {
-        StoreAllotDto result = storeAllotMapper.findStoreAllotDtoById(id);
+        StoreAllotDto result = storeAllotRepository.findStoreAllotDtoById(id);
         cacheUtils.initCacheInput(result);
         return result;
 
+    }
+
+    public void delete(String id) {
+        storeAllotRepository.logicDeleteOne(id);
+    }
+
+    public List<SimpleStoreAllotDetailDto> findDetailListForCommonAllot(String fromStoreId) {
+
+        List<SimpleStoreAllotDetailDto> result =  storeAllotDetailRepository.findStoreAllotDetailListForNew(RequestUtils.getCompanyId());
+
+
+        cacheUtils.initCacheInput(result);
+
+
+        if(StringUtils.isNotBlank(fromStoreId)){
+//        TODO 初始化财务存量
+        }
+
+        return result;
+    }
+
+    public List<String> getMergeStoreIds(){
+        String mergeStoreIds ="3489,9873";//TODO 需要调用配置参数
+        return StringUtils.getSplitList(mergeStoreIds, ",");
+    }
+
+    public List<SimpleStoreAllotDetailDto> findDetailListForFastAllot() {
+
+        LocalDate billDate = LocalDateUtils.parse(LocalDateUtils.format(LocalDate.now()));
+        String toStoreId =getMergeStoreIds().get(1);
+
+        List<SimpleStoreAllotDetailDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(billDate, toStoreId, "待发货", RequestUtils.getCompanyId());
+        if(result!=null){
+            cacheUtils.initCacheInput(result);
+            //TODO 初始化财务存量
+
+            result.stream().forEach((each)->{
+                if(each.getBillQty() != null && each.getBillQty()<=0 ) {
+                    each.setBillQty(null);
+                }
+            });
+        }
+
+        return result;
+
+    }
+
+    public Boolean getShowAllotType() {
+        return getMergeStoreIds() != null;
     }
 }

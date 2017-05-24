@@ -1,25 +1,23 @@
 package net.myspring.future.modules.crm.service;
 
-import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.PriceChangeRepository;
+import net.myspring.future.modules.basic.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
 import net.myspring.future.modules.crm.mapper.PriceChangeImeMapper;
-import net.myspring.future.modules.crm.mapper.PriceChangeMapper;
-import net.myspring.future.modules.crm.mapper.ProductImeMapper;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeUploadForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,11 +25,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -39,10 +35,13 @@ public class PriceChangeImeService {
 
     @Autowired
     private PriceChangeImeMapper priceChangeImeMapper;
+
+
     @Autowired
-    private ProductImeMapper productImeMapper;
+    private ProductImeRepository productImeRepository;
+
     @Autowired
-    private PriceChangeMapper priceChangeMapper;
+    private PriceChangeRepository priceChangeRepository;
     @Autowired
     private DepotMapper depotMapper;
     @Autowired
@@ -70,21 +69,21 @@ public class PriceChangeImeService {
             PriceChangeIme priceChangeIme = priceChangeImeMapper.findOne(priceChangeImeForm.getId());
             priceChangeImeForm = BeanUtil.map(priceChangeIme,PriceChangeImeForm.class);
             if(priceChangeImeForm.getPriceChangeId()!=null){
-                priceChangeImeForm.setPriceChangeName(priceChangeMapper.findOne(priceChangeImeForm.getPriceChangeId()).getName());
+                priceChangeImeForm.setPriceChangeName(priceChangeRepository.findOne(priceChangeImeForm.getPriceChangeId()).getName());
             }
             if(priceChangeImeForm.getProductImeId()!=null){
-                priceChangeImeForm.setProductId(productImeMapper.findOne(priceChangeImeForm.getProductImeId()).getProductId());
-                priceChangeImeForm.setIme(productImeMapper.findOne(priceChangeImeForm.getProductImeId()).getIme());
+                priceChangeImeForm.setProductId(productImeRepository.findOne(priceChangeImeForm.getProductImeId()).getProductId());
+                priceChangeImeForm.setIme(productImeRepository.findOne(priceChangeImeForm.getProductImeId()).getIme());
             }
         }else {
-            List<PriceChange> priceChange = priceChangeMapper.findAllEnabled();
+            List<PriceChange> priceChange = priceChangeRepository.findAllEnabled();
             priceChangeImeForm.setPriceChangeDtos(BeanUtil.map(priceChange, PriceChangeDto.class));
         }
         return priceChangeImeForm;
     }
 
     public void save(PriceChangeImeUploadForm priceChangeImeUploadForm){
-        PriceChange priceChange = priceChangeMapper.findOne(priceChangeImeUploadForm.getPriceChangeId());
+        PriceChange priceChange = priceChangeRepository.findOne(priceChangeImeUploadForm.getPriceChangeId());
         List<List<String>> imeUploadList = priceChangeImeUploadForm.getImeUploadList();
         checkUploadIme(priceChange,imeUploadList);
     }
@@ -132,7 +131,7 @@ public class PriceChangeImeService {
 
         //检查门店，串码在系统中是否存在
         List<Depot> depots = depotMapper.findByNameList(shopNameList);
-        List<ProductIme> productImes = productImeMapper.findByImeList(imeList);
+        List<ProductIme> productImes = productImeRepository.findByImeList(imeList);
         return null;
     }
 }

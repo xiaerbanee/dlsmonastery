@@ -3,10 +3,8 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto;
-import net.myspring.future.modules.crm.mapper.ProductImeMapper;
 import net.myspring.future.modules.crm.mapper.ProductImeUploadMapper;
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -24,10 +22,6 @@ public class ProductImeUploadService {
 
     @Autowired
     private ProductImeUploadMapper productImeUploadMapper;
-    @Autowired
-    private ProductMapper productMapper;
-    @Autowired
-    private ProductImeMapper productImeMapper;
 
     @Autowired
     private CacheUtils cacheUtils;

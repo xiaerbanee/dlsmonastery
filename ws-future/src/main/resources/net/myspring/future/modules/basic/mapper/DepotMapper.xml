@@ -211,7 +211,7 @@
         select
         t1.id, t1.name, t1.office_id, t1.client_id
         from
-        crm_depot t1 , cmr_depot_shop t2
+        crm_depot t1 , crm_depot_shop t2
         where
         t1.enabled =1
         and t1.is_hidden=0

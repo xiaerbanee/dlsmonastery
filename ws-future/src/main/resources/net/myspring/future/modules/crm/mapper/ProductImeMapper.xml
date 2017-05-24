@@ -218,15 +218,15 @@
     </select>
 
     <select id="findShipList" resultType="ProductIme">
-        <if test="boxList !=null and boxList.size() !=0">
+        <if test="boxImeList !=null and boxImeList.size() !=0">
             SELECT
             t1.*
             FROM
             crm_product_ime t1
             where t1.enabled=1
-            and t1.depot_id=#{storeId}
+            and t1.depot_id=#{depotId}
             and t1.box_ime IN
-            <foreach item="item" index="index" collection="boxList" open="(" separator="," close=")">
+            <foreach item="item" index="index" collection="boxImeList" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
@@ -239,6 +239,7 @@
             FROM
             crm_product_ime t1
             where t1.enabled=1
+            and t1.depot_id=#{depotId}
             and (t1.ime IN
             <foreach item="item" index="index" collection="imeList" open="(" separator="," close=")">
                 #{item}

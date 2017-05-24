@@ -11,10 +11,45 @@ public class StoreAllotDetailDto extends DataDto<StoreAllotDetail> {
     private String productName;
 
     private Integer billQty;
+    private Integer cloudQty;
+
     private Integer qty;
     private Integer shippedQty;
     private String storeAllotId;
     private String outId;
+    private Boolean productHasIme;
+    private Integer shipQty;
+
+    public Integer getShipQty() {
+        return shipQty;
+    }
+
+    public void setShipQty(Integer shipQty) {
+        this.shipQty = shipQty;
+    }
+
+    public Boolean getProductHasIme() {
+        return productHasIme;
+    }
+
+    public Integer getLeftQty(){
+        if(billQty==null || shippedQty==null || shipQty==null){
+            return null;
+        }
+        return billQty - shippedQty - shipQty;
+    }
+
+    public void setProductHasIme(Boolean productHasIme) {
+        this.productHasIme = productHasIme;
+    }
+
+    public Integer getCloudQty() {
+        return cloudQty;
+    }
+
+    public void setCloudQty(Integer cloudQty) {
+        this.cloudQty = cloudQty;
+    }
 
     public String getProductId() {
         return productId;

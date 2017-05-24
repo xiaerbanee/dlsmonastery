@@ -1,9 +1,6 @@
 package net.myspring.future.modules.crm.service;
 
-import com.ctc.wstx.util.StringUtil;
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -20,30 +17,26 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.ExpressOrderRepository;
+import net.myspring.future.modules.basic.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
-import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
-import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
-import net.myspring.future.modules.crm.mapper.GoodsOrderDetailMapper;
 import net.myspring.future.modules.crm.mapper.GoodsOrderMapper;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
-import net.myspring.future.modules.crm.web.query.GoodsOrderDetailQuery;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -51,8 +44,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -61,18 +52,21 @@ import java.util.Map;
 public class GoodsOrderService {
     @Autowired
     private GoodsOrderMapper goodsOrderMapper;
+
     @Autowired
-    private GoodsOrderDetailMapper goodsOrderDetailMapper;
+    private GoodsOrderDetailRepository goodsOrderDetailRepository;
     @Autowired
     private DepotMapper depotMapper;
+
     @Autowired
-    private ExpressOrderMapper expressOrderMapper;
+    private ExpressOrderRepository expressOrderRepository;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
     private ExpressUtils expressUtils;
     @Autowired
     private PricesystemDetailMapper pricesystemDetailMapper;
+
     @Autowired
     private ProductMapper productMapper;
     @Autowired
@@ -124,7 +118,7 @@ public class GoodsOrderService {
             goodsOrderMapper.update(goodsOrder);
         }
 
-        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailMapper.findByGoodsOrderId(goodsOrder.getId());
+        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
         //保存订单明细
         BigDecimal amount = BigDecimal.ZERO;
@@ -143,7 +137,7 @@ public class GoodsOrderService {
                     goodsOrderDetail.setBillQty(goodsOrderDetail.getQty());
                     PricesystemDetail pricesystemDetail = pricesystemDetailMapper.findByPricesystemIdAndProductId(shop.getPricesystemId(), goodsOrderDetailForm.getProductId());
                     goodsOrderDetail.setPrice(pricesystemDetail.getPrice());
-                    goodsOrderDetailMapper.save(goodsOrderDetail);
+                    goodsOrderDetailRepository.save(goodsOrderDetail);
                     amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
                 }
             } else {
@@ -151,12 +145,12 @@ public class GoodsOrderService {
                 if(goodsOrderDetailMap.containsKey(goodsOrderDetailForm.getId())) {
 
                     if (goodsOrderDetailForm.getQty() <= 0) {
-                        goodsOrderDetailMapper.deleteOne(goodsOrderDetailForm.getId());
+                        goodsOrderDetailRepository.deleteById(goodsOrderDetailForm.getId());
                     }else{
-                        GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMapper.findOne(goodsOrderDetailForm.getId());
+                        GoodsOrderDetail goodsOrderDetail = goodsOrderDetailRepository.findOne(goodsOrderDetailForm.getId());
                         goodsOrderDetail.setQty(goodsOrderDetailForm.getQty());
                         goodsOrderDetail.setBillQty(goodsOrderDetailForm.getQty());
-                        goodsOrderDetailMapper.update(goodsOrderDetail);
+                        goodsOrderDetailRepository.save(goodsOrderDetail);
                         amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
                     }
                 }
@@ -167,9 +161,9 @@ public class GoodsOrderService {
         //更新快递单信息
         ExpressOrder expressOrder = getExpressOrder(goodsOrderForm);
         if(expressOrder.isCreate()) {
-            expressOrderMapper.save(expressOrder);
+            expressOrderRepository.save(expressOrder);
         } else {
-            expressOrderMapper.update(expressOrder);
+            expressOrderRepository.save(expressOrder);
         }
         goodsOrder.setExpressOrderId(expressOrder.getId());
         goodsOrderMapper.update(goodsOrder);
@@ -182,7 +176,7 @@ public class GoodsOrderService {
         Integer mobileBillQty = 0;
         GoodsOrder goodsOrder = goodsOrderMapper.findOne(goodsOrderBillForm.getId());
         BigDecimal amount = BigDecimal.ZERO;
-        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailMapper.findByGoodsOrderId(goodsOrder.getId());
+        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
         for (int i = goodsOrderBillForm.getGoodsOrderDetailList().size() - 1; i >= 0; i--) {
             GoodsOrderBillDetailForm goodsOrderBillDetailForm=goodsOrderBillForm.getGoodsOrderDetailList().get(i);
@@ -202,15 +196,15 @@ public class GoodsOrderService {
                     goodsOrderDetail.setQty(0);
                     goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
 
-                    goodsOrderDetailMapper.save(goodsOrderDetail);
+                    goodsOrderDetailRepository.save(goodsOrderDetail);
                     amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
                 }
             } else {
                 if(goodsOrderDetailMap.containsKey(goodsOrderBillDetailForm.getId())) {
-                    GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMapper.findOne(goodsOrderBillDetailForm.getId());
+                    GoodsOrderDetail goodsOrderDetail = goodsOrderDetailRepository.findOne(goodsOrderBillDetailForm.getId());
                     goodsOrderDetail.setBillQty(goodsOrderBillDetailForm.getBillQty());
                     goodsOrderDetail.setPrice(goodsOrderBillDetailForm.getPrice());
-                    goodsOrderDetailMapper.update(goodsOrderDetail);
+                    goodsOrderDetailRepository.save(goodsOrderDetail);
                     amount = amount.add(new BigDecimal(goodsOrderBillDetailForm.getBillQty()).multiply(goodsOrderBillDetailForm.getPrice()));
                 }
             }
@@ -227,7 +221,7 @@ public class GoodsOrderService {
         expressOrder.setExpressPrintQty(expressPrintQty);
         expressOrder.setTotalQty(totalBillQty);
         expressOrder.setMobileQty(mobileBillQty);
-        expressOrderMapper.update(expressOrder);
+        expressOrderRepository.save(expressOrder);
         return goodsOrder;
     }
 
@@ -236,7 +230,7 @@ public class GoodsOrderService {
         Depot shop = depotMapper.findOne(goodsOrderForm.getShopId());
         ExpressOrder expressOrder = new ExpressOrder();
         if(StringUtils.isNotBlank(goodsOrderForm.getExpressOrderId())) {
-            expressOrder = expressOrderMapper.findOne(goodsOrderForm.getExpressOrderId());
+            expressOrder = expressOrderRepository.findOne(goodsOrderForm.getExpressOrderId());
         }
         expressOrder.setExtendId(goodsOrderForm.getId());
         expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
@@ -252,7 +246,7 @@ public class GoodsOrderService {
     private ExpressOrder getExpressOrder(GoodsOrderBillForm goodsOrderBillForm) {
         GoodsOrder goodsOrder = goodsOrderMapper.findOne(goodsOrderBillForm.getId());
         Depot shop = depotMapper.findOne(goodsOrder.getShopId());
-        ExpressOrder expressOrder = expressOrderMapper.findOne(goodsOrder.getExpressOrderId());
+        ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
         expressOrder.setExtendId(goodsOrder.getId());
         expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
         expressOrder.setContator(goodsOrderBillForm.getExpressContator());

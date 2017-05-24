@@ -10,7 +10,6 @@ import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.dto.ExpressDto;
 import net.myspring.future.modules.crm.mapper.ExpressMapper;
-import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
 import net.myspring.future.modules.crm.web.form.ExpressForm;
 import net.myspring.future.modules.crm.web.query.ExpressQuery;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -37,8 +36,7 @@ public class ExpressService {
     private ExpressMapper expressMapper;
     @Autowired
     private DepotMapper depotMapper;
-    @Autowired
-    private ExpressOrderMapper expressOrderMapper;
+
     @Autowired
     private CacheUtils cacheUtils;
 

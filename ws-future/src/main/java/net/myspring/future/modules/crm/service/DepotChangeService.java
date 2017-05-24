@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.modules.basic.repository.DepotChangeRepository;
 import net.myspring.future.modules.crm.domain.DepotChange;
 import net.myspring.future.modules.crm.mapper.DepotChangeMapper;
 import net.myspring.util.excel.SimpleExcelColumn;
@@ -20,9 +21,11 @@ public class DepotChangeService {
 
     @Autowired
     private DepotChangeMapper depotChangeMapper;
+    @Autowired
+    private DepotChangeRepository depotChangeRepository;
 
     public DepotChange findOne(String id) {
-        DepotChange depotChange = depotChangeMapper.findOne(id);
+        DepotChange depotChange = depotChangeRepository.findOne(id);
         return depotChange;
     }
 
@@ -36,7 +39,7 @@ public class DepotChangeService {
     }
 
     public void logicDeleteOne(String id) {
-        depotChangeMapper.logicDeleteOne(id);
+        depotChangeRepository.logicDeleteOne(id);
     }
 
     @Transactional

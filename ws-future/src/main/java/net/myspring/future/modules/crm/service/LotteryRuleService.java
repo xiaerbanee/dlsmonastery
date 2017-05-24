@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.modules.basic.repository.LotteryRuleRepository;
 import net.myspring.future.modules.crm.domain.LotteryRule;
-import net.myspring.future.modules.crm.mapper.LotteryRuleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 public class LotteryRuleService {
 
     @Autowired
-    private LotteryRuleMapper lotteryRuleMapper;
+    private LotteryRuleRepository lotteryRuleRepository;
 
     public LotteryRule findOne(String id){
-        LotteryRule lotteryRule=lotteryRuleMapper.findOne(id);
+        LotteryRule lotteryRule=lotteryRuleRepository.findOne(id);
         return lotteryRule;
     }
 }

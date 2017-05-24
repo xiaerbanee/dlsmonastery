@@ -44,20 +44,6 @@ public class ProductImeService {
     private ProductMapper productMapper;
 
     @Autowired
-    private ImeAllotMapper imeAllotMapper;
-    @Autowired
-    private GoodsOrderImeMapper goodsOrderImeMapper;
-
-    @Autowired
-    private StoreAllotImeMapper storeAllotImeMapper;
-
-    @Autowired
-    private ProductImeUploadMapper productImeUploadMapper;
-
-    @Autowired
-    private ProductImeSaleMapper productImeSaleMapper;
-
-    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;

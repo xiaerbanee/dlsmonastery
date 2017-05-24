@@ -2,49 +2,62 @@
   <div>
     <head-tab active="storeAllotShip"></head-tab>
     <div>
-      <el-form :model="shipForm" ref="inputForm" :rules="rules" label-width="150px" class="form input-form">
+      <audio id="mediaError"><source src="../../assets/media/notify.mp3"  type="audio/ogg"></audio>
+      <audio id="mediaSuccess"><source src="/src/assets/media/success.mp3"  type="audio/ogg"></audio>
+
+      <el-form :model="storeAllot" ref="inputForm"   label-width="150px" class="form input-form">
+        <el-row >
+          <el-col :span="21">
+            <el-form-item >
+              <el-alert  v-show="warnMsg"  :closable=false title=""  :description="warnMsg"    type="warning">  </el-alert>
+            </el-form-item>
+            <el-form-item >
+              <el-alert  v-show="errMsg"  :closable=false  title=""  :description="errMsg" type="error"> </el-alert>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row >
           <el-col :span="12">
 
             <el-form-item :label="$t('storeAllotShip.businessId')" prop="storeId">
-              {{shipForm.businessId}}
+              {{storeAllot.formatId}}
             </el-form-item>
             <el-form-item :label="$t('storeAllotShip.fromStore')" prop="storeId">
-              {{shipForm.fromStore.name}}
+              {{storeAllot.fromStoreName}}
             </el-form-item>
             <el-form-item :label="$t('storeAllotShip.toStore')" prop="storeId">
-            {{shipForm.toStore.name}}
+            {{storeAllot.toStoreName}}
           </el-form-item>
 
             <el-form-item :label="$t('storeAllotShip.boxImeStr')" prop="boxImeStr">
-              <el-input type="textarea" :autosize="autosize" v-model="inputForm.boxImeStr" @change="shipBoxAndIme(inputForm.boxImeStr,inputForm.imeStr)"></el-input>
+              <el-input type="textarea" :autosize="autosize" v-model="boxImeStr" @change="shipBoxAndIme()"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('storeAllotShip.imeStr')" prop="imeStr">
-              <el-input type="textarea" :autosize="autosize"v-model="inputForm.imeStr" @change="shipBoxAndIme(inputForm.boxImeStr,inputForm.imeStr)"></el-input>
+              <el-input type="textarea" :autosize="autosize"v-model="imeStr" @change="shipBoxAndIme()"></el-input>
             </el-form-item>
             <el-form-item :label="$t('storeAllotShip.expressCodes')" prop="expressCodes">
-              <el-input type="textarea" :autosize="autosize"v-model="inputForm.expressCodes" ></el-input>
+              <el-input type="textarea" :autosize="autosize"v-model="storeAllot.expressOrderExpressCodes" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('storeAllotShip.remarks')" prop="remarks">
-              <el-input  v-model="inputForm.remarks"></el-input>
+              <el-input  type="textarea" v-model="shipRemarks"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('storeAllotShip.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="inputForm.storeAllotDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('storeAllotShip.loading')" stripe border >
-          <el-table-column  prop="product.name" :label="$t('storeAllotShip.productName')" sortable width="200"></el-table-column>
-          <el-table-column prop="product.hasIme" :label="$t('storeAllotShip.hasIme')" >
+        <el-table :data="storeAllotDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('storeAllotShip.loading')" stripe border >
+          <el-table-column  prop="productName" :label="$t('storeAllotShip.productName')" sortable width="200"></el-table-column>
+          <el-table-column prop="productHasIme" :label="$t('storeAllotShip.hasIme')" >
             <template scope="scope">
-              <el-tag :type="scope.row.product.hasIme ? 'primary' : 'danger'">{{scope.row.product.hasIme | bool2str}}</el-tag>
+              <el-tag :type="scope.row.productHasIme ? 'primary' : 'danger'">{{scope.row.productHasIme | bool2str}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="billQty" :label="$t('storeAllotShip.billQty')"></el-table-column>
           <el-table-column prop="shippedQty" :label="$t('storeAllotShip.shippedQty')"></el-table-column>
-          <el-table-column prop="extendMap.waitShipQty" :label="$t('storeAllotShip.waitShipQty')" ></el-table-column>
+          <el-table-column prop="leftQty" :label="$t('storeAllotShip.leftQty')" ></el-table-column>
           <el-table-column prop="shipQty" :label="$t('storeAllotShip.shipQty')"></el-table-column>
         </el-table>
       </el-form>
@@ -56,26 +69,28 @@
   export default{
     data(){
       return{
-        isCreate:this.$route.query.id==null,
+        isCreate:this.$route.query.id===null,
         submitDisabled:false,
-        formProperty:{},
-        shipForm:{
-          fromStore:{name:''},
-          toStore:{name:''},
-        },
-        inputForm:{
-          id:this.$route.query.id,
-          boxImeStr:'',
-          expressOrder:{
-             expressCodes:'',
-          },
+        errMsg:'',
+        warnMsg:'',
+
+        storeAllot:{},
+        boxImeStr:'',
+        imeStr:'',
+        shipRemarks:'',
+        storeAllotDetailList:[],
+
+        submitData:{
+          id:'',
+          expressOrderExpressCodes:'',
           imeStr:'',
-          remarks:"",
+          boxImeStr:'',
+          shipRemarks:"",
           storeAllotDetailList:[]
         },
         rules: {},
         autosize: { minRows: 5},
-        pageLoading:'',
+        pageLoading:false,
       }
     },
     methods:{
@@ -91,7 +106,7 @@
                   form.resetFields();
                   this.submitDisabled = false;
                 } else {
-                  this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList")})
+                  this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList")});
                 }
               }
             }).catch(function () {
@@ -101,21 +116,49 @@
             this.submitDisabled = false;
           }
         })
-      },shipBoxAndIme(boxImeStr,imeStr){
-        this.pageLoading = true;
-        axios.get('/api/crm/storeAllot/shipBoxAndIme',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
-          this.inputForm.storeAllotDetailList=response.data.storeAllotDetailList;
-          this.pageLoading = false;
-        })
-      }, findOne(){
-        axios.get('/api/crm/storeAllot/ship',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.shipForm=response.data;
-            this.inputForm.storeAllotDetailList=response.data.storeAllotDetailList;
-            console.log(response.data);
-        })
+      },shipBoxAndIme(){
+
+        if(util.isBlank(this.boxImeStr) && util.isBlank(this.imeStr)){
+          if(this.storeAllotDetailList ){
+            for(let storeAllotDetail of this.storeAllotDetailList){
+              storeAllotDetail.shipQty = 0;
+              storeAllotDetail.leftQty = storeAllotDetail.billQty - storeAllotDetail.shippedQty ;
+            }
+          }
+          this.errMsg = '';
+          this.warnMsg = '';
+        }else{
+          this.pageLoading = true;
+          axios.get('/api/ws/future/crm/storeAllot/shipBoxAndIme',{params:{id:this.storeAllot.id,boxImeStr:this.boxImeStr,imeStr:this.imeStr}}).then((response) => {
+            if(this.storeAllotDetailList && response.data.shipQtyMap){
+              for(let storeAllotDetail of this.storeAllotDetailList){
+                  if(response.data.shipQtyMap[storeAllotDetail.productId]){
+                    storeAllotDetail.shipQty = response.data.shipQtyMap[storeAllotDetail.productId];
+                  }else{
+                    storeAllotDetail.shipQty = 0;
+                  }
+
+                storeAllotDetail.leftQty = storeAllotDetail.billQty - storeAllotDetail.shippedQty - storeAllotDetail.shipQty;
+              }
+            }
+            this.errMsg = response.data.errMsg;
+            this.warnMsg = response.data.warnMsg;
+
+            this.pageLoading = false;
+          });
+        }
+
       }
     },created(){
-      this.findOne();
+
+      axios.get('/api/ws/future/crm/storeAllot/findDetailList' ,{params:{storeAllotId:this.$route.query.id}}).then((response)=>{
+        this.storeAllotDetailList = response.data;
+      });
+
+      axios.get('/api/ws/future/crm/storeAllot/findDto' ,{params: {id:this.$route.query.id}}).then((response)=>{
+        this.storeAllot = response.data;
+      });
+
     }
   }
 </script>

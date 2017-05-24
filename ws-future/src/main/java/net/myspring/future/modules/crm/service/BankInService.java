@@ -5,6 +5,7 @@ import com.mongodb.gridfs.GridFSFile;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
+import net.myspring.future.modules.basic.repository.BankInRepository;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.mapper.BankInMapper;
@@ -45,6 +46,8 @@ public class BankInService {
     @Autowired
     private BankInMapper bankInMapper;
     @Autowired
+    private BankInRepository bankInRepository;
+    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private ActivitiClient activitiClient;
@@ -59,13 +62,8 @@ public class BankInService {
     }
 
     public BankIn findOne(String id){
-        BankIn bankIn=bankInMapper.findOne(id);
+        BankIn bankIn=bankInRepository.findOne(id);
         return bankIn;
-    }
-
-    public void delete(BankIn bankIn) {
-        bankIn.setEnabled(false);
-        bankInMapper.update(bankIn);
     }
 
     public void audit(BankInDetailForm bankInDetailForm){
@@ -80,12 +78,12 @@ public class BankInService {
         bankIn.setProcessStatus(activitiCompleteDto.getProcessStatus());
         bankIn.setPositionId(activitiCompleteDto.getPositionId());
         bankIn.setBillDate(bankInDetailForm.getBillDate() == null ? LocalDate.now() : bankInDetailForm.getBillDate());
-        bankInMapper.update(bankIn);
+        bankInRepository.save(bankIn);
 
     }
 
     public BankInForm getForm(BankInForm bankInForm) {
-        BankIn bankIn=bankInMapper.findOne(bankInForm.getId());
+        BankIn bankIn=bankInRepository.findOne(bankInForm.getId());
         BankInForm result = BeanUtil.map(bankIn, BankInForm.class);
 
         if(result == null){
@@ -100,7 +98,7 @@ public class BankInService {
         BankIn bankIn;
         if(bankInForm.isCreate()) {
             bankIn = BeanUtil.map(bankInForm, BankIn.class);
-            bankInMapper.save(bankIn);
+            bankInRepository.save(bankIn);
 
             ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("销售收款",  bankIn.getId(),BankIn.class.getSimpleName(),bankIn.getAmount().toString()));
             bankIn.setProcessFlowId(activitiStartDto.getProcessFlowId());
@@ -108,24 +106,24 @@ public class BankInService {
             bankIn.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
             bankIn.setPositionId(activitiStartDto.getPositionId());
             bankIn.setProcessTypeId(activitiStartDto.getProcessTypeId());
-            bankInMapper.update(bankIn);
+            bankInRepository.save(bankIn);
         } else {
-            bankIn = bankInMapper.findOne(bankInForm.getId());
+            bankIn = bankInRepository.findOne(bankInForm.getId());
             ReflectionUtil.copyProperties(bankInForm,bankIn);
-            bankInMapper.update(bankIn);
+            bankInRepository.save(bankIn);
         }
         return bankIn;
     }
 
     public void logicDeleteOne(String id) {
-        bankInMapper.logicDeleteOne(id);
+        bankInRepository.logicDeleteOne(id);
     }
 
     public BankInDetailForm findDetail(String id, String action) {
 
         BankInDetailForm result = new BankInDetailForm();
         result.setId(id);
-        BankInDto bankInDto = bankInMapper.findDto(id);
+        BankInDto bankInDto = bankInRepository.findDto(id);
         result.setBankInDto(bankInDto);
 
         if("audit".equals(action)){

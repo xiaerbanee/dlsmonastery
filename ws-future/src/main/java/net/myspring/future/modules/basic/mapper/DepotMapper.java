@@ -65,5 +65,5 @@ public interface DepotMapper extends BaseMapper<Depot,String> {
 
     DepotDto findStoreByGoodsOrderId(String goodsOrderId);
 
-    Page<DepotAccountDto> findDepotAccountList(Pageable pageable, DepotAccountQuery depotAccountQuery);
+    Page<DepotAccountDto> findDepotAccountList(Pageable pageable, @Param("p") DepotAccountQuery depotAccountQuery, @Param("accountTaxPermitted") Boolean accountTaxPermitted);
 }

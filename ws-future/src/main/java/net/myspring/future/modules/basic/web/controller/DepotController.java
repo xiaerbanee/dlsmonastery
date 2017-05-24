@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
@@ -118,6 +119,13 @@ public class DepotController {
     public String depotAccountExportAllDepots(DepotAccountQuery depotAccountQuery) {
         return depotService.depotAccountExportAllDepots(depotAccountQuery);
     }
+
+
+    @RequestMapping(value="depotAccountDetailList")
+    public List<DepotAccountDetailDto> depotAccountDetailList(DepotAccountQuery depotAccountQuery) {
+        return depotService.depotAccountDetailList(depotAccountQuery);
+    }
+
 
 
 

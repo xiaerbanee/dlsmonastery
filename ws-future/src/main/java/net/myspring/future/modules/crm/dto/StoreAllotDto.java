@@ -1,12 +1,10 @@
 package net.myspring.future.modules.crm.dto;
 
-import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
-import net.myspring.util.text.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,23 +26,39 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     private String status;
     private Boolean enabled;
     private String expressOrderId;
+    private String expressCompanyId;
+    private String shipType;
 
-
-
-    private String expressOrderCodes;
+    private String expressOrderExpressCodes;
     private List<StoreAllotImeDto> storeAllotImeDtoList = new ArrayList<>();
     private List<StoreAllotDetailDto> storeAllotDetailDtoList = new ArrayList<>();
+
+    public String getShipType() {
+        return shipType;
+    }
+
+    public void setShipType(String shipType) {
+        this.shipType = shipType;
+    }
+
+    public String getExpressCompanyId() {
+        return expressCompanyId;
+    }
+
+    public void setExpressCompanyId(String expressCompanyId) {
+        this.expressCompanyId = expressCompanyId;
+    }
 
     public String getFormatId() {
         return IdUtils.getFormatId(businessId, FormatterConstant.STORE_ALLOT);
     }
 
-    public String getExpressOrderCodes() {
-        return expressOrderCodes;
+    public String getExpressOrderExpressCodes() {
+        return expressOrderExpressCodes;
     }
 
-    public void setExpressOrderCodes(String expressOrderCodes) {
-        this.expressOrderCodes = expressOrderCodes;
+    public void setExpressOrderExpressCodes(String expressOrderExpressCodes) {
+        this.expressOrderExpressCodes = expressOrderExpressCodes;
     }
 
     public String getExpressOrderId() {

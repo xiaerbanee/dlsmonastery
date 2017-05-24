@@ -3,7 +3,7 @@
     <head-tab active="depotAccountList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="formVisible = true" icon="search">{{$t('depotAccountList.filterOrExport')}}</el-button>
+        <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="formVisible = true" icon="search">{{$t('depotAccountList.filter')}}</el-button>
         <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportDetail"  >{{$t('depotAccountList.exportDetail')}}</el-button>
         <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportConfirmation" >{{$t('depotAccountList.exportConfirmation')}}</el-button>
         <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportAllDepots"  >{{$t('depotAccountList.exportAllDepots')}}</el-button>
@@ -89,7 +89,7 @@
         this.pageLoading = true;
         util.copyValue(this.formData, this.submitData);
         util.setQuery("depotAccountList", this.submitData);
-        axios.get('/api/ws/future/crm/depot/findDepotAccountList?' + qs.stringify(this.submitData)).then((response) => {
+        axios.get('/api/ws/future/basic/depot/findDepotAccountList?' + qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -111,21 +111,21 @@
       }, exportAllDepots() {
 
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/crm/depot/depotAccountExportAllDepots?'+qs.stringify(this.submitData)).then((response)=> {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportAllDepots', {params:{dutyDateRange:this.submitData.dutyDateRange}}).then((response)=> {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       }).catch(()=>{});
 
     }, exportConfirmation(){
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/crm/depot/depotAccountExportConfirmation?'+qs.stringify(this.submitData)).then((response)=> {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportConfirmation', {params:{dutyDateRange:this.submitData.dutyDateRange,specialityStore: this.submitData.specialityStore}}).then((response) => {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       }).catch(()=>{});
 
     }, exportDetail(){
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/crm/depot/depotAccountExportDetail?' + qs.stringify(this.submitData)).then((response) => {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportDetail', {params:{dutyDateRange:this.submitData.dutyDateRange,specialityStore: this.submitData.specialityStore}}).then((response) => {
           window.location.href = "/api/general/sys/folderFile/download?id=" + response.data;
         });
       }).catch(()=>{});
@@ -133,7 +133,7 @@
   }, created (){
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/depot/getDepotAccountQuery').then((response) =>{
+      axios.get('/api/ws/future/basic/depot/getDepotAccountQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
         that.pageRequest();
