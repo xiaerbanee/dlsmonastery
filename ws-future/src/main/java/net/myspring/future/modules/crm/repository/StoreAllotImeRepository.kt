@@ -44,4 +44,23 @@ interface StoreAllotImeRepository : BaseRepository<StoreAllotIme, String> {
         """, nativeQuery = true)
     fun findByStoreAllotId(storeAllotId: String): List<StoreAllotImeDto>
 
+
+    @Query("""
+        SELECT t1.business_id storeAllotBusinessId, t1.out_code storeAllotOutCode,
+                    t1.bill_date storeAllotBillDate, t1.from_store_id storeAllotFromStoreId, t1.to_store_id storeAllotToStoreId,
+                    toStore.office_id storeAllotToStoreOfficeId, t3.ime productImeIme, t3.meid productImeMeid, t2.*
+        FROM  crm_store_allot t1, crm_store_allot_ime t2, crm_product_ime t3, crm_depot toStore
+        where t1.enabled=1
+                  AND t1.id = t2.store_allot_id
+                  AND t2.enabled = 1
+                  AND t2.product_ime_id = t3.id
+                  AND t3.enabled = 1
+                  AND t1.to_store_id = toStore.id
+                  AND toStore.enabled = 1
+                  AND t1.id in :idList
+        ORDER BY t1.id, t2.created_date
+        limit 0, :limit
+        """, nativeQuery = true)
+     fun findDtoListByStoreAllotIdList(@Param("idList") idList: List<String>, @Param("limit") limit: Int): List<StoreAllotImeDto>
+
 }

@@ -15,10 +15,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.basic.repository.ExpressOrderRepository;
-import net.myspring.future.modules.basic.repository.ProductImeRepository;
-import net.myspring.future.modules.basic.repository.StoreAllotDetailRepository;
-import net.myspring.future.modules.basic.repository.StoreAllotRepository;
+import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.StoreAllot;
@@ -27,16 +24,16 @@ import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto;
-import net.myspring.future.modules.crm.mapper.StoreAllotDetailMapper;
-import net.myspring.future.modules.crm.mapper.StoreAllotMapper;
 import net.myspring.future.modules.crm.web.form.StoreAllotDetailForm;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -46,12 +43,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Predicate;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,20 +62,21 @@ import java.util.regex.Pattern;
 @Transactional
 public class StoreAllotService {
 
-    @Autowired
-    private StoreAllotMapper storeAllotMapper;
+
     @Autowired
     private StoreAllotRepository storeAllotRepository;
 
-    @Autowired
-    private StoreAllotDetailMapper storeAllotDetailMapper;
+
     @Autowired
     private StoreAllotDetailRepository storeAllotDetailRepository;
+    @Autowired
+    private StoreAllotImeRepository storeAllotImeRepository;
 
     @Autowired
     private DepotMapper depotMapper;
     @Autowired
     private ProductMapper productMapper;
+
 
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
@@ -188,18 +189,46 @@ public class StoreAllotService {
         return null;
     }
 
-    public StoreAllot update(StoreAllot storeAllot){
-        storeAllotMapper.update(storeAllot);
-        return storeAllot;
-    }
-
-    public void delete(StoreAllot storeAllot) {
-    }
-
     public Page<StoreAllotDto> findPage(Pageable pageable, StoreAllotQuery storeAllotQuery) {
-        Page<StoreAllotDto> page = storeAllotMapper.findPage(pageable, storeAllotQuery);
+
+
+        Specification<StoreAllot> specification = (root, query, cb) -> {
+            List<Predicate> predicates  = Lists.newArrayList();
+            predicates.add(cb.equal(root.get("companyId").as(String.class), RequestUtils.getCompanyId()));
+            if(storeAllotQuery.getCreatedDateStart() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("createdDate").as(LocalDateTime.class),storeAllotQuery.getCreatedDateStart()));
+            }
+            if(storeAllotQuery.getCreatedDateEnd() != null) {
+                predicates.add(cb.lessThan(root.get("createdDate").as(LocalDateTime.class),storeAllotQuery.getCreatedDateEnd()));
+            }
+            if(storeAllotQuery.getOutCode() != null) {
+                predicates.add(cb.like(root.get("outCode").as(String.class), storeAllotQuery.getOutCode()));
+            }
+            if(storeAllotQuery.getToStoreId() != null) {
+                predicates.add(cb.equal(root.get("toStoreId").as(String.class), storeAllotQuery.getToStoreId()));
+            }
+            if(storeAllotQuery.getFromStoreId() != null) {
+                predicates.add(cb.equal(root.get("fromStoreId").as(String.class), storeAllotQuery.getFromStoreId()));
+            }
+            if(storeAllotQuery.getCreatedBy() != null) {
+                predicates.add(cb.equal(root.get("createdBy").as(String.class), storeAllotQuery.getCreatedBy()));
+            }
+            if(storeAllotQuery.getStatus() != null) {
+                predicates.add(cb.equal(root.get("status").as(String.class), storeAllotQuery.getStatus()));
+            }
+            if(storeAllotQuery.getRemarks() != null) {
+                predicates.add(cb.like(root.get("remarks").as(String.class), storeAllotQuery.getRemarks()));
+            }
+            if(storeAllotQuery.getBusinessIdList() != null) {
+                predicates.add(cb.isTrue(root.get("businessId").as(String.class).in(storeAllotQuery.getBusinessIdList())));
+            }
+            return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+
+        Page<StoreAllotDto> page = BeanUtil.map(storeAllotRepository.findAll(specification, pageable), StoreAllotDto.class);
         cacheUtils.initCacheInput(page.getContent());
         return page;
+
     }
 
     public String export(StoreAllotQuery storeAllotQuery) {
@@ -230,7 +259,7 @@ public class StoreAllotService {
         storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllotToStoreName", "门店"));
         storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "productName", "产品名称"));
         storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "productImeIme", "串码"));
-        List<StoreAllotImeDto> storeAllotImeDtoList = storeAllotMapper.findStoreAllotImeDtoList(new PageRequest(0,10000), storeAllotQuery).getContent();
+        List<StoreAllotImeDto> storeAllotImeDtoList = storeAllotImeRepository.findDtoListByStoreAllotIdList(CollectionUtil.extractToList(storeAllotDtoList, "id"), 10000);
         cacheUtils.initCacheInput(storeAllotImeDtoList);
         simpleExcelSheetList.add(new SimpleExcelSheet("串码", storeAllotImeDtoList, storeAllotImeColumnList));
 
@@ -242,6 +271,7 @@ public class StoreAllotService {
 
 
     }
+
 
     public StoreAllot saveForm(StoreAllotForm storeAllotForm) {
         //大库调拨单只允许新增和删除，不能修改
@@ -260,7 +290,7 @@ public class StoreAllotService {
 
         storeAllot.setExpressOrderId(expressOrder.getId());
 //       TODO  需要设置财务返回的id storeAllot.setCloudSynId();
-        storeAllotMapper.update(storeAllot);
+        storeAllotRepository.save(storeAllot);
 
         return storeAllot;
     }
@@ -299,7 +329,7 @@ public class StoreAllotService {
             toBeSaved.add(storeAllotDetail);
         }
         if(!toBeSaved.isEmpty()){
-            storeAllotDetailMapper.batchSave(toBeSaved);
+            storeAllotDetailRepository.save(toBeSaved);
         }
 
     }
