@@ -46,8 +46,12 @@ public class DemoPhoneTypeController {
     @RequestMapping(value = "getForm")
     public DemoPhoneTypeForm findOne(DemoPhoneTypeForm demoPhoneTypeForm){
         demoPhoneTypeForm=demoPhoneTypeService.getForm(demoPhoneTypeForm);
-//        demoPhoneTypeForm.setProductTypeList(productTypeService.findAll());
         return demoPhoneTypeForm;
+    }
+
+    @RequestMapping(value = "getQuery")
+    public DemoPhoneTypeQuery getQuery(DemoPhoneTypeQuery demoPhoneTypeQuery){
+        return demoPhoneTypeQuery;
     }
 
     @RequestMapping(value = "detail", method = RequestMethod.GET)

@@ -11,6 +11,9 @@ import net.myspring.future.modules.basic.dto.DemoPhoneTypeOfficeDto;
 import net.myspring.future.modules.basic.mapper.DemoPhoneTypeMapper;
 import net.myspring.future.modules.basic.mapper.DemoPhoneTypeOfficeMapper;
 import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
+import net.myspring.future.modules.basic.repository.DemoPhoneTypeOfficeRepository;
+import net.myspring.future.modules.basic.repository.DemoPhoneTypeRepository;
+import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.basic.web.query.DemoPhoneTypeQuery;
 import net.myspring.future.modules.basic.web.form.DemoPhoneTypeDetailForm;
 import net.myspring.future.modules.basic.web.form.DemoPhoneTypeForm;
@@ -34,24 +37,30 @@ public class DemoPhoneTypeService {
     @Autowired
     private DemoPhoneTypeMapper demoPhoneTypeMapper;
     @Autowired
+    private DemoPhoneTypeRepository demoPhoneTypeRepository;
+    @Autowired
     private DemoPhoneTypeOfficeMapper demoPhoneTypeOfficeMapper;
+    @Autowired
+    private DemoPhoneTypeOfficeRepository demoPhoneTypeOfficeRepository;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
     private ProductTypeMapper productTypeMapper;
+    @Autowired
+    private ProductTypeRepository productTypeRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     private static BigDecimal MIN_POINT = new BigDecimal("0.01");
 
     public DemoPhoneType findOne(String id) {
-        DemoPhoneType demoPhoneType = demoPhoneTypeMapper.findOne(id);
+        DemoPhoneType demoPhoneType = demoPhoneTypeRepository.findOne(id);
         return demoPhoneType;
     }
 
     public DemoPhoneTypeForm getForm(DemoPhoneTypeForm demoPhoneTypeForm){
         List<OfficeDto> areaList = officeClient.findByOfficeRuleName("办事处");
-        List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = demoPhoneTypeOfficeMapper.findByDemoPhoneTypeId(demoPhoneTypeForm.getId());
+        List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = demoPhoneTypeOfficeRepository.findByDemoPhoneTypeId(demoPhoneTypeForm.getId());
         List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtos= BeanUtil.map(demoPhoneTypeOfficeList,DemoPhoneTypeOfficeDto.class);
         Map<String, DemoPhoneTypeOfficeDto> DemoPhoneTypeOfficeDtoMap = CollectionUtil.extractToMap(demoPhoneTypeOfficeDtos,"officeId");
         for (OfficeDto area : areaList) {
@@ -67,16 +76,16 @@ public class DemoPhoneTypeService {
             }
             cacheUtils.initCacheInput(demoPhoneTypeOfficeDtos);
         }
-        DemoPhoneType demoPhoneType = demoPhoneTypeMapper.findOne(demoPhoneTypeForm.getId());
+        DemoPhoneType demoPhoneType = demoPhoneTypeRepository.findOne(demoPhoneTypeForm.getId());
         demoPhoneTypeForm = BeanUtil.map(demoPhoneType,DemoPhoneTypeForm.class);
         demoPhoneTypeForm.setDemoPhoneTypeOfficeList(demoPhoneTypeOfficeDtos);
-        demoPhoneTypeForm.setProductTypeList(productTypeMapper.findByDemoPhoneTypeId(demoPhoneTypeForm.getId()));
+        demoPhoneTypeForm.setProductTypeList(productTypeRepository.findByDemoPhoneTypeId(demoPhoneTypeForm.getId()));
         return demoPhoneTypeForm;
     }
 
     public DemoPhoneTypeDetailForm findDetailForm(DemoPhoneTypeDetailForm demoPhoneTypeDetailForm){
         if(!demoPhoneTypeDetailForm.isCreate()){
-            DemoPhoneType demoPhoneType=demoPhoneTypeMapper.findOne(demoPhoneTypeDetailForm.getId());
+            DemoPhoneType demoPhoneType=demoPhoneTypeRepository.findOne(demoPhoneTypeDetailForm.getId());
             demoPhoneTypeDetailForm=BeanUtil.map(demoPhoneType,DemoPhoneTypeDetailForm.class);
             cacheUtils.initCacheInput(demoPhoneTypeDetailForm);
         }
@@ -84,7 +93,7 @@ public class DemoPhoneTypeService {
     }
 
     public List<DemoPhoneType> findAllByApplyEndDate(LocalDate applyEndDate) {
-        List<DemoPhoneType> demoPhoneTypeList = demoPhoneTypeMapper.findAllByApplyEndDate(applyEndDate);
+        List<DemoPhoneType> demoPhoneTypeList = demoPhoneTypeRepository.findAllByApplyEndDate(applyEndDate);
         return demoPhoneTypeList;
     }
 
@@ -95,22 +104,22 @@ public class DemoPhoneTypeService {
     }
 
     public void delete(DemoPhoneTypeForm demoPhoneTypeForm) {
-        demoPhoneTypeMapper.logicDeleteOne(demoPhoneTypeForm.getId());
+        demoPhoneTypeRepository.logicDeleteOne(demoPhoneTypeForm.getId());
     }
 
     public DemoPhoneType save(DemoPhoneTypeForm demoPhoneTypeForm) {
         DemoPhoneType demoPhoneType;
         if (demoPhoneTypeForm.isCreate()) {
             demoPhoneType= BeanUtil.map(demoPhoneTypeForm, DemoPhoneType.class);
-            demoPhoneTypeMapper.save(demoPhoneType);
+            demoPhoneTypeRepository.save(demoPhoneType);
         } else {
-            productTypeMapper.updateDemoPhoneTypeToNull(demoPhoneTypeForm.getId());
-            demoPhoneType= demoPhoneTypeMapper.findOne(demoPhoneTypeForm.getId());
+            productTypeRepository.updateDemoPhoneTypeToNull(demoPhoneTypeForm.getId());
+            demoPhoneType= demoPhoneTypeRepository.findOne(demoPhoneTypeForm.getId());
             ReflectionUtil.copyProperties(demoPhoneTypeForm,demoPhoneType);
-            demoPhoneTypeMapper.update(demoPhoneType);
+            demoPhoneTypeRepository.save(demoPhoneType);
         }
         if (CollectionUtil.isNotEmpty(demoPhoneTypeForm.getProductTypeIdList())) {
-            productTypeMapper.updateDemoPhoneType(demoPhoneType.getId(), demoPhoneTypeForm.getProductTypeIdList());
+            productTypeRepository.updateDemoPhoneType(demoPhoneType.getId(), demoPhoneTypeForm.getProductTypeIdList());
         }
         List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtoList = Lists.newArrayList();
         for (DemoPhoneTypeOfficeDto demoPhoneTypeOfficeDto : demoPhoneTypeForm.getDemoPhoneTypeOfficeList()) {
@@ -119,7 +128,7 @@ public class DemoPhoneTypeService {
                 demoPhoneTypeOfficeDtoList.add(demoPhoneTypeOfficeDto);
             } else {
                 DemoPhoneTypeOffice demoPhoneTypeOffice = BeanUtil.map(demoPhoneTypeOfficeDto,DemoPhoneTypeOffice.class);
-                demoPhoneTypeOfficeMapper.update(demoPhoneTypeOffice);
+                demoPhoneTypeOfficeRepository.save(demoPhoneTypeOffice);
             }
         }
         if (CollectionUtil.isNotEmpty(demoPhoneTypeOfficeDtoList)) {

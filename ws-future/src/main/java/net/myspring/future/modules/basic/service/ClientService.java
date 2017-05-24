@@ -9,6 +9,9 @@ import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.mapper.ClientMapper;
 import net.myspring.future.modules.basic.mapper.DepotShopMapper;
+import net.myspring.future.modules.basic.repository.ClientRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.query.ClientQuery;
 import net.myspring.future.modules.basic.web.form.ClientForm;
 import net.myspring.util.mapper.BeanUtil;
@@ -29,14 +32,20 @@ public class ClientService {
     @Autowired
     private DepotShopMapper depotShopMapper;
     @Autowired
+    private DepotShopRepository depotShopRepository;
+    @Autowired
     private DepotManager depotManager;
     @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
     private ClientMapper clientMapper;
+    @Autowired
+    private ClientRepository clientRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public Client findOne(String id){
-        Client client=clientMapper.findOne(id);
+        Client client=clientRepository.findOne(id);
         return client;
     }
 
@@ -50,30 +59,30 @@ public class ClientService {
         Client client;
         if(clientForm.isCreate()) {
             client=BeanUtil.map(clientForm,Client.class);
-            clientMapper.save(client);
+            clientRepository.save(client);
             //保存depot
             Depot depot = new Depot();
             depot.setClientId(client.getId());
             depot.setName(client.getName());
             depot.setNamePinyin(StringUtils.getFirstSpell(client.getName()));
-            depotManager.save(depot);
+            depotRepository.save(depot);
             //保存depotShop
             DepotShop depotShop = new DepotShop();
             depotShop.setDepotId(depot.getId());
-            depotShopMapper.save(depotShop);
+            depotShopRepository.save(depotShop);
             depot.setDepotShopId(depotShop.getId());
-            depotManager.save(depot);
+            depotRepository.save(depot);
         } else {
-            client =clientMapper.findOne(clientForm.getId());
+            client =clientRepository.findOne(clientForm.getId());
             ReflectionUtil.copyProperties(clientForm,client);
-            clientMapper.update(client);
+            clientRepository.save(client);
         }
         return client;
     }
 
     public ClientDto findOne(ClientDto clientDto){
         if(!clientDto.isCreate()){
-            Client client=clientMapper.findOne(clientDto.getId());
+            Client client=clientRepository.findOne(clientDto.getId());
             clientDto= BeanUtil.map(client,ClientDto.class);
             cacheUtils.initCacheInput(clientDto);
        }
@@ -81,18 +90,18 @@ public class ClientService {
     }
 
     public void delete(ClientDto clientDto){
-        clientMapper.logicDeleteOne(clientDto.getId());
+        clientRepository.logicDeleteOne(clientDto.getId());
     }
 
     public String getClientName(String depotId) {
-        Client c = clientMapper.findByDepotId(depotId);
+        Client c = clientRepository.findByDepotId(depotId);
         return c.getName();
     }
 
     public List<ClientDto> findByNameLike(String name){
         List<ClientDto> clientDtoList= Lists.newArrayList();
         if(StringUtils.isNotBlank(name)){
-            List<Client> clientList=clientMapper.findByNameLike(name);
+            List<Client> clientList=clientRepository.findByNameLike(name);
             clientDtoList=BeanUtil.map(clientList,ClientDto.class);
         }
         return clientDtoList;
