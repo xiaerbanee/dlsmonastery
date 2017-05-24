@@ -17,5 +17,5 @@ interface ArReceivableRepository {
         and t2.FSOURCEBILLNO = ?1
         order by t1.fid DESC
         """, nativeQuery = true)
-    abstract fun findBySourceBillNo(sourceBillNo: String): List<ArReceivable>
+    fun findBySourceBillNo(sourceBillNo: String): List<ArReceivable>
 }
