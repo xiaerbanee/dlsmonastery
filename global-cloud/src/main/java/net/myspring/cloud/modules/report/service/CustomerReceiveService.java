@@ -5,10 +5,10 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.cloud.common.enums.CustomerReceiveEnum;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
-import net.myspring.cloud.modules.kingdee.mapper.*;
+import net.myspring.cloud.modules.kingdee.repository.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
-import net.myspring.cloud.modules.report.mapper.CustomerReceiveMapper;
+import net.myspring.cloud.modules.report.repository.CustomerReceiveRepository;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.constant.CharConstant;
@@ -29,16 +29,16 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerReceiveService {
     @Autowired
-    private CustomerReceiveMapper customerReceiveMapper;
+    private CustomerReceiveRepository customerReceiveRepository;
     @Autowired
-    private BdCustomerMapper bdCustomerMapper;
+    private BdCustomerRepository bdCustomerRepository;
 
     public List<CustomerReceiveDto>  findCustomerReceiveDtoList(CustomerReceiveQuery customerReceiveQuery) {
         LocalDate dateStart = customerReceiveQuery.getDateStart();
         LocalDate dateEnd = customerReceiveQuery.getDateEnd();
         List<String> customerIdList = customerReceiveQuery.getCustomerIdList();
-        List<CustomerReceiveDto> beginList = customerReceiveMapper.findEndShouldGet(dateStart,customerIdList);
-        List<CustomerReceiveDto> endList = customerReceiveMapper.findEndShouldGet(dateEnd,customerIdList);
+        List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart,customerIdList);
+        List<CustomerReceiveDto> endList = customerReceiveRepository.findEndShouldGet(dateEnd,customerIdList);
         //期初结余
         Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //期末结余
@@ -53,7 +53,7 @@ public class CustomerReceiveService {
                 customerIdList.add(customerReceiveDto.getCustomerId());
             }
         }
-        List<BdCustomer> customerList =  bdCustomerMapper.findByIdList(customerIdList);
+        List<BdCustomer> customerList =  bdCustomerRepository.findByIdList(customerIdList);
         List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
         for(BdCustomer bdCustomer:customerList) {
             CustomerReceiveDto customerReceiveDto = new CustomerReceiveDto();
@@ -87,12 +87,12 @@ public class CustomerReceiveService {
     public Map<String,List<CustomerReceiveDetailDto>>  findCustomerReceiveDetailDtoMap(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
         LocalDate dateStart = customerReceiveDetailQuery.getDateStart();
         //期初应收
-        List<CustomerReceiveDto> beginList = customerReceiveMapper.findEndShouldGet(dateStart,customerReceiveDetailQuery.getCustomerIdList());
+        List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart,customerReceiveDetailQuery.getCustomerIdList());
         Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //主单据列表(其他应收,销售出库 销售退货，收款，退款)
-        List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveMapper.findMainList(customerReceiveDetailQuery);
+        List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveRepository.findMainList(customerReceiveDetailQuery);
         //查找备注
-        List<NameValueDto> remarksList = customerReceiveMapper.findRemarks(customerReceiveDetailQuery);
+        List<NameValueDto> remarksList = customerReceiveRepository.findRemarks(customerReceiveDetailQuery);
         Map<String,String> remarksMap = remarksList.stream().collect(Collectors.toMap(NameValueDto::getName,NameValueDto::getValue));
         for (CustomerReceiveDetailDto customerReceiveDetailDto: customerReceiveDetailDtoMainList) {
             if (remarksMap.containsKey(customerReceiveDetailDto.getBillNo())) {
@@ -110,7 +110,7 @@ public class CustomerReceiveService {
             }
         }
         //单据明细(根据billNo组织成map)
-        List<CustomerReceiveDetailDto> customerReceiveDetailDtoDetailList = customerReceiveMapper.findDetailList(customerReceiveDetailQuery);
+        List<CustomerReceiveDetailDto> customerReceiveDetailDtoDetailList = customerReceiveRepository.findDetailList(customerReceiveDetailQuery);
         Map<String, List<CustomerReceiveDetailDto>> detailMap =Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(customerReceiveDetailDtoDetailList)) {
             for (CustomerReceiveDetailDto customerReceiveDetailDto: customerReceiveDetailDtoDetailList) {
@@ -121,7 +121,7 @@ public class CustomerReceiveService {
             }
         }
         //所有客户
-        List<BdCustomer> bdCustomerList = bdCustomerMapper.findByIdList(customerReceiveDetailQuery.getCustomerIdList());
+        List<BdCustomer> bdCustomerList = bdCustomerRepository.findByIdList(customerReceiveDetailQuery.getCustomerIdList());
         Map<String,BdCustomer> bdCustomerMap = bdCustomerList.stream().collect(Collectors.toMap(BdCustomer::getFCustId,bdCustomer -> bdCustomer));
         Map<String,List<CustomerReceiveDetailDto>> result = Maps.newHashMap();
         if (mainMap.size()>0) {

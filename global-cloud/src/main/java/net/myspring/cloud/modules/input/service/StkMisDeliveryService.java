@@ -13,8 +13,8 @@ import net.myspring.cloud.modules.input.web.form.StkMisDeliveryForm;
 import net.myspring.cloud.modules.input.web.query.StkMisDeliveryQuery;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
 import net.myspring.cloud.modules.kingdee.domain.BdStock;
-import net.myspring.cloud.modules.kingdee.mapper.BdMaterialMapper;
-import net.myspring.cloud.modules.kingdee.mapper.BdStockMapper;
+import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdStockRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.common.constant.CharConstant;
@@ -40,9 +40,9 @@ public class StkMisDeliveryService {
     @Autowired
     private KingdeeManager kingdeeManager;
     @Autowired
-    private BdStockMapper bdStockMapper;
+    private BdStockRepository bdStockRepository;
     @Autowired
-    private BdMaterialMapper bdMaterialMapper;
+    private BdMaterialRepository bdMaterialRepository;
 
     public KingdeeSynDto save(StkMisDeliveryDto stkMisDeliveryDto,KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
@@ -65,7 +65,7 @@ public class StkMisDeliveryService {
             stockNameList.add(HandsontableUtils.getValue(row, 2));
         }
         Map<String, String> stockNumMap = Maps.newHashMap();
-        for (BdStock bdstock : bdStockMapper.findByNameList(stockNameList)) {
+        for (BdStock bdstock : bdStockRepository.findByNameList(stockNameList)) {
             stockNumMap.put(bdstock.getFName(), bdstock.getFNumber());
         }
         for (List<Object> row : data) {
@@ -102,8 +102,8 @@ public class StkMisDeliveryService {
     }
 
     public StkMisDeliveryQuery getForm(StkMisDeliveryQuery stkMisDeliveryQuery){
-        List<String> stockName = bdStockMapper.findAll().stream().map(BdStock::getFName).collect(Collectors.toList());
-        List<BdMaterial> materialList = bdMaterialMapper.findAll();
+        List<String> stockName = bdStockRepository.findAll().stream().map(BdStock::getFName).collect(Collectors.toList());
+        List<BdMaterial> materialList = bdMaterialRepository.findAll();
         stkMisDeliveryQuery.setMaterialNameList(materialList.stream().map(BdMaterial::getFName).collect(Collectors.toList()));
         stkMisDeliveryQuery.setMaterialNumberList(materialList.stream().map(BdMaterial::getFNumber).collect(Collectors.toList()));
         stkMisDeliveryQuery.setStockNameList(stockName);

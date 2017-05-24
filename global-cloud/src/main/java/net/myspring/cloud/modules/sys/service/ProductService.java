@@ -6,8 +6,8 @@ import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.sys.domain.Product;
 import net.myspring.cloud.modules.sys.dto.ProductDto;
-import net.myspring.cloud.modules.sys.mapper.KingdeeBookMapper;
-import net.myspring.cloud.modules.sys.mapper.ProductMapper;
+import net.myspring.cloud.modules.sys.repository.KingdeeBookRepository;
+import net.myspring.cloud.modules.sys.repository.ProductRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
@@ -26,17 +26,17 @@ import java.util.Map;
 @LocalDataSource
 public class ProductService {
     @Autowired
-    private ProductMapper productMapper;
+    private ProductRepository productRepository;
     @Autowired
-    private KingdeeBookMapper kingdeeBookMapper;
+    private KingdeeBookRepository kingdeeBookRepository;
 
     public LocalDateTime findMaxOutDate(String companyId){
-        return productMapper.findMaxOutDate(companyId);
+        return productRepository.findMaxOutDate(companyId);
     }
 
     public Map<String,Object> getForm(){
         String companyId = RequestUtils.getCompanyId();
-        List<Product> productList = productMapper.findByCompanyId(companyId);
+        List<Product> productList = productRepository.findByCompanyId(companyId);
         List<ProductDto> productDtoList = BeanUtil.map(productList,ProductDto.class);
         Map<String,Object> map= Maps.newHashMap();
         map.put("productNames", CollectionUtil.extractToList(productList,"name"));
@@ -51,7 +51,7 @@ public class ProductService {
 
     public void save(List<List<Object>> datas) {
         String companyId = RequestUtils.getCompanyId();
-        List<Product> productList = productMapper.findByCompanyId(companyId);
+        List<Product> productList = productRepository.findByCompanyId(companyId);
         Map<String,Product> productMap = CollectionUtil.extractToMap(productList,"code");
         for (List<Object> row : datas) {
             String code = HandsontableUtils.getValue(row,1);
@@ -60,7 +60,7 @@ public class ProductService {
             if(productMap.get(code) != null){
                 Product product = productMap.get(code);
                 product.setPrice1(price);
-                productMapper.update(product);
+                productRepository.save(product);
             }
         }
     }

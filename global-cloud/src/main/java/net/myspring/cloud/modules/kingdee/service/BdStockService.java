@@ -2,7 +2,7 @@ package net.myspring.cloud.modules.kingdee.service;
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.modules.kingdee.domain.BdStock;
-import net.myspring.cloud.modules.kingdee.mapper.BdStockMapper;
+import net.myspring.cloud.modules.kingdee.repository.BdStockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +15,9 @@ import java.util.List;
 @KingdeeDataSource
 public class BdStockService {
     @Autowired
-    private BdStockMapper bdStockMapper;
+    private BdStockRepository bdStockRepository;
 
     public List<BdStock> findByNameLike(String name){
-        return bdStockMapper.findByNameLike(name);
+        return bdStockRepository.findByNameLike(name);
     }
 }

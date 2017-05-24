@@ -2,7 +2,7 @@ package net.myspring.cloud.modules.kingdee.service;
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
-import net.myspring.cloud.modules.kingdee.mapper.BdCustomerMapper;
+import net.myspring.cloud.modules.kingdee.repository.BdCustomerRepository;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
 import net.myspring.common.dto.NameValueDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +19,18 @@ import java.util.List;
 @KingdeeDataSource
 public class BdCustomerService {
     @Autowired
-    private BdCustomerMapper bdCustomerMapper;
+    private BdCustomerRepository bdCustomerRepository;
 
     public Page<BdCustomer> findPage(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
-        Page<BdCustomer> bdCustomerPage= bdCustomerMapper.findPage(pageable, bdCustomerQuery);
+        Page<BdCustomer> bdCustomerPage= null;
         return bdCustomerPage;
     }
 
     public List<BdCustomer> findByNameLike(String name) {
-        return bdCustomerMapper.findByNameLike(name);
+        return bdCustomerRepository.findByNameLike(name);
     }
 
     public List<NameValueDto> findCustomerGroupList(){
-        return bdCustomerMapper.findPrimaryGroupAndPrimaryGroupName();
+        return bdCustomerRepository.findPrimaryGroupAndPrimaryGroupName();
     }
 }
