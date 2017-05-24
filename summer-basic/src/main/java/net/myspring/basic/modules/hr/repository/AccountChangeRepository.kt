@@ -54,9 +54,7 @@ class AccountChangeRepositoryImpl @Autowired constructor(val entityManager: Enti
         }
 
         var query = entityManager.createNativeQuery(sb.toString(),AccountChangeForm::class.java);
-        return query.resultList as AccountChangeForm
-
-
+        return query.firstResult as AccountChangeForm
 
     }
 }
