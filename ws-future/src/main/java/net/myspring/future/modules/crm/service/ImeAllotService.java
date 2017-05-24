@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class ImeAllotService {
 
     @Autowired
@@ -21,7 +22,7 @@ public class ImeAllotService {
     private ProductImeRepository productImeRepository;
 
 
-    @Transactional
+
     public void save(ImeAllot imeAllot) {
         List<String> imeList = StringUtils.getSplitList(imeAllot.getImeStr(), "");
         List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);

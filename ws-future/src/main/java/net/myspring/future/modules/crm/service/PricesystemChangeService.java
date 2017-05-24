@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class PricesystemChangeService {
 
     @Autowired
@@ -31,19 +32,18 @@ public class PricesystemChangeService {
         return page;
     }
 
-    @Transactional
+
     public void save(PricesystemChangeForm pricesystemChangeForm){
 //        PricesystemChange pricesystemChange=pricesystemChangeMapper.findOne(pricesystemChangeForm.getProductId());
 //        ReflectionUtil.copyProperties(pricesystemChangeForm,pricesystemChange);
         pricesystemChangeMapper.updateRemark(pricesystemChangeForm);
     }
 
-    @Transactional
+
     public void audit(String[] ids,Boolean pass){
         pricesystemChangeMapper.audit(ids,pass);
     }
 
-    @Transactional
     public void auditOperation(String id,Boolean pass){
         pricesystemChangeMapper.auditOperation(id, pass);
     }

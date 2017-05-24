@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductImeUploadService {
 
     @Autowired
@@ -40,11 +41,11 @@ public class ProductImeUploadService {
         return page;
     }
 
-    @Transactional
+
     public void save(ProductImeUpload productImeUpload){
     }
 
-    @Transactional
+
     public void audit(String[] ids,Boolean pass){
     }
 

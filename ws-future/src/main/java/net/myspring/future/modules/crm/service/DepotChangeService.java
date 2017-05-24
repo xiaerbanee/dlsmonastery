@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 public class DepotChangeService {
 
     @Autowired
@@ -42,7 +43,7 @@ public class DepotChangeService {
         depotChangeRepository.logicDeleteOne(id);
     }
 
-    @Transactional
+
     public void audit(DepotChange depotChange, boolean pass, String comment) {
     }
 
