@@ -19,12 +19,12 @@ public interface CustomerReceiveMapper {
     //期末查询
     List<CustomerReceiveDto> findEndShouldGet(@Param("dateEnd") LocalDate dateEnd, @Param("customerIdList") List<String> customerIdList);
 
-    List<CustomerReceiveDetailDto> findMainList(CustomerReceiveDetailQuery customerReceiveDetailQuery);
+    List<CustomerReceiveDetailDto> findMainList(@Param("p") CustomerReceiveDetailQuery customerReceiveDetailQuery);
 
-    List<CustomerReceiveDetailDto> findDetailList(CustomerReceiveDetailQuery customerReceiveDetailQuery);
+    List<CustomerReceiveDetailDto> findDetailList(@Param("p")CustomerReceiveDetailQuery customerReceiveDetailQuery);
 
 
-    List<NameValueDto> findRemarks(CustomerReceiveDetailQuery customerReceiveDetailQuery);
+    List<NameValueDto> findRemarks(@Param("p")CustomerReceiveDetailQuery customerReceiveDetailQuery);
 
 
 }
