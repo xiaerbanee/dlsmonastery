@@ -30,7 +30,7 @@ interface DutyPublicFreeRepository : BaseRepository<DutyPublicFree,String>{
         WHERE
         t1.enabled=1
         AND t1.free_date >= ?1
-        and t1.free_date &lt;= ?2
+        and t1.free_date <= ?2
         and t1.status in ?3
     """, nativeQuery = true)
     fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: List<String>): List<DutyPublicFree>
@@ -44,7 +44,7 @@ interface DutyPublicFreeRepository : BaseRepository<DutyPublicFree,String>{
         t1.enabled=1
         and t1.employee_id=?1
         and t1.free_date >= ?2
-        and t1.free_date &lt;= ?3
+        and t1.free_date <= ?3
     """, nativeQuery = true)
     fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): List<DutyPublicFree>
 }

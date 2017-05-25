@@ -93,9 +93,7 @@ class DutyTripRepositoryImpl @Autowired constructor(val entityManager: EntityMan
             tr.enabled=1
         """)
         if (CollectionUtil.isNotEmpty(accountIds)) {
-            sb.append("""
-                 and tr.employee_id in :accountIds
-            """)
+            sb.append(" and tr.employee_id in :accountIds")
         }
         var query = entityManager.createNativeQuery(sb.toString(), DutyTrip::class.java)
         query.setParameter("dateStart", dateStart)

@@ -89,13 +89,9 @@ class AccountRepositoryImpl @Autowired constructor(val entityManager: EntityMana
             and t1.login_name LIKE %:name%)
         """)
         if (StringUtils.isNotBlank(name)) {
-            sb.append("""
-                and t1.type=:type
-            """)
+            sb.append(" and t1.type=:type")
         }
-        sb.append("""
-            limit 0, 100
-        """)
+        sb.append(" limit 0, 100")
         var query = entityManager.createNativeQuery(sb.toString(), Account::class.java)
         query.setParameter("name", name)
         query.setParameter("type", type)

@@ -60,9 +60,7 @@ class DutyWorktimeRepositoryImpl  @Autowired constructor(val entityManager: Enti
             and  w.duty_date &lt;= :dateEnd
         """)
         if (CollectionUtil.isNotEmpty(accountIds)) {
-            sb.append("""
-                and w.employee_id in :accountIds
-            """)
+            sb.append(" and w.employee_id in :accountIds")
         }
         sb.append("""
             GROUP BY
