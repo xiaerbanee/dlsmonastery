@@ -2,8 +2,12 @@ package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Permission
+import net.myspring.basic.modules.sys.dto.PermissionDto
+import net.myspring.basic.modules.sys.web.query.PermissionQuery
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
@@ -99,5 +103,7 @@ interface  PermissionRepository: BaseRepository<Permission, String> {
     fun findAllEnabled(): List<Permission>
 
     fun logicDeleteByIds(removePermissionIds:List<String>)
+
+    fun findPage(pageable: Pageable, permissionQuery: PermissionQuery): Page<PermissionDto>
 
 }
