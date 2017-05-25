@@ -40,7 +40,7 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
     """, nativeQuery = true)
     fun deleteBankAccount(bankId: String): Int
 
-    fun saveAccount(bankId: String,accountIds: List<String>): Int
+//    fun saveAccount(bankId: String,accountIds: List<String>): Int
 
     @Query("""
         select

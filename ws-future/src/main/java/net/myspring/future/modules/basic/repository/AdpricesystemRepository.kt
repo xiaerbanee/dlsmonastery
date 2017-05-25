@@ -50,7 +50,7 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
     """, nativeQuery = true)
     fun deleteOfficeIds(id: String): Int
 
-    fun saveOfficeIds(@Param("adPricesystemId")adPricesystemId: String,@Param("officeIds")officeIds: List<String>): Int
+//    fun saveOfficeIds(@Param("adPricesystemId")adPricesystemId: String,@Param("officeIds")officeIds: List<String>): Int
 
     @Query("""
        SELECT t1.office_id

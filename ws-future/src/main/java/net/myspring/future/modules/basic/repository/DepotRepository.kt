@@ -44,12 +44,33 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
     """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<Depot>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_depot t1
+        where t1.enabled=1
+        and t1.id in ?1
+    """, nativeQuery = true)
+    //TODO 需要重写该方法
     fun findShopList(depotShopQuery: DepotQuery): List<DepotDto>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_depot t1
+        where t1.enabled=1
+        and t1.id in ?1
+    """, nativeQuery = true)
+            //TODO 需要重写该方法
     fun findStoreList(depotShopQuery: DepotQuery): List<DepotDto>
 
     fun findByChainId(chainId: String): List<Depot>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_depot t1
+        where t1.enabled=1
+        and t1.id in ?1
+    """, nativeQuery = true)
+            //TODO 需要重写该方法
     fun findByAccountId(accountId: String): List<Depot>
 
     @Query("""
@@ -65,9 +86,6 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByName(name: String): Depot
 
-    fun findShopByGoodsOrderId(goodsOrderId: String): DepotDto
-
-    fun findStoreByGoodsOrderId(goodsOrderId: String): DepotDto
 }
 
 interface DepotRepositoryCustom{

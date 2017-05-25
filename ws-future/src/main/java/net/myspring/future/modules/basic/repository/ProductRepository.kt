@@ -40,23 +40,57 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     """, nativeQuery = true)
     fun findAllEnabled(): List<Product>
 
-
+    @Query("""
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.out_group_id in ?1
+    """, nativeQuery = true)
+            //TODO 需要重写sql
     fun findHasImeProduct(): List<Product>
 
     fun findByNameLike(name: String): List<Product>
 
     fun findByCodeLike(code: String): List<Product>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.out_group_id in ?1
+    """, nativeQuery = true)
+    //TODO 需要重写sql
     fun findByNameLikeHasIme(name: String): List<Product>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.out_group_id in ?1
+    """, nativeQuery = true)
+            //TODO 需要重写sql
     fun findByCodeLikeHasIme(code: String): List<Product>
 
     fun findByName(name: String): Product
 
     fun findByOutId(outId: String): Product
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.out_group_id in ?1
+    """, nativeQuery = true)
+            //TODO 需要重写sql
     fun findFilter(@Param("p") productQuery: ProductQuery): List<Product>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.out_group_id in ?1
+    """, nativeQuery = true)
+    //TODO 需要重写该sql
     fun findByOutName(): List<ProductDto>
 
     @Query("""
@@ -69,11 +103,11 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
     fun findByProductTypeId(productTypeId: String): List<Product>
 
-    fun updateProductTypeId(@Param("productTypeId") id: String, @Param("list") ids: List<String>): Int
+//    fun updateProductTypeId(@Param("productTypeId") id: String, @Param("list") ids: List<String>): Int
 
-    fun updateProductTypeToNull(productTypeId: String): Int
+//    fun updateProductTypeToNull(productTypeId: String): Int
 
-    fun findByOutGroupIdsAndAllowOrder(@Param("outGroupIds") outGroupIds: List<String>, @Param("allowOrder") allowOrder: Boolean): List<ProductDto>
+    fun findByOutGroupIdInAndAllowOrder(outGroupIds: List<String>, allowOrder: Boolean): List<ProductDto>
 
     @Query("""
         select
@@ -91,9 +125,16 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     """, nativeQuery = true)
     fun findProductTypeList(): List<ProductType>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.out_group_id in ?1
+    """, nativeQuery = true)
+            //TODO 需要重写该sql
     fun findIntersectionOfBothPricesystem(@Param("pricesystemId1") pricesystemId1: String, @Param("pricesystemId2") pricesystemId2: String): List<ProductDto>
 
-    fun findByNameList(nameList: List<String>): List<Product>
+    fun findByNameIn(nameList: List<String>): List<Product>
 }
 
 interface ProductRepositoryCustom{

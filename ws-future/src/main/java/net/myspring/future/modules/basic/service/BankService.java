@@ -53,7 +53,8 @@ public class BankService {
         bankRepository.save(bank);
         bankRepository.deleteBankAccount(bankForm.getId());
         if(CollectionUtil.isNotEmpty(bankForm.getAccountIdList())){
-            bankRepository.saveAccount(bankForm.getId(),bankForm.getAccountIdList());
+            //TODO 需要重新写该方法
+//            bankRepository.saveAccount(bankForm.getId(),bankForm.getAccountIdList());
         }
     }
 

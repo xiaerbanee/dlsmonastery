@@ -104,13 +104,15 @@ public class DemoPhoneTypeService {
             demoPhoneType= BeanUtil.map(demoPhoneTypeForm, DemoPhoneType.class);
             demoPhoneTypeRepository.save(demoPhoneType);
         } else {
-            productTypeRepository.updateDemoPhoneTypeToNull(demoPhoneTypeForm.getId());
+            //TODO 不这样写update
+//            productTypeRepository.updateDemoPhoneTypeToNull(demoPhoneTypeForm.getId());
             demoPhoneType= demoPhoneTypeRepository.findOne(demoPhoneTypeForm.getId());
             ReflectionUtil.copyProperties(demoPhoneTypeForm,demoPhoneType);
             demoPhoneTypeRepository.save(demoPhoneType);
         }
         if (CollectionUtil.isNotEmpty(demoPhoneTypeForm.getProductTypeIdList())) {
-            productTypeRepository.updateDemoPhoneType(demoPhoneType.getId(), demoPhoneTypeForm.getProductTypeIdList());
+            //TODO 不这样写update
+//            productTypeRepository.updateDemoPhoneType(demoPhoneType.getId(), demoPhoneTypeForm.getProductTypeIdList());
         }
         List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtoList = Lists.newArrayList();
         for (DemoPhoneTypeOfficeDto demoPhoneTypeOfficeDto : demoPhoneTypeForm.getDemoPhoneTypeOfficeList()) {
