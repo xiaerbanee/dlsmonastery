@@ -51,7 +51,7 @@ public interface AccountMapper extends BaseMapper<Account,String> {
 
     Account findByLoginName(String loginName);
 
-    List<Account> findByLoginNameLikeAndType(@Param("p")Map<String,Object> map);
+    List<Account> findByLoginNameLikeAndType(String type,String key);
 
     String findAccountPassword(String id);
 

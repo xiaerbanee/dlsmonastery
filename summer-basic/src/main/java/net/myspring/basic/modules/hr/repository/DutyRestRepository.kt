@@ -60,18 +60,18 @@ class DutyRestRepositoryImpl  @Autowired constructor(val entityManager: EntityMa
         var sb = StringBuilder();
         sb.append("""
             SELECT
-        dr.employee_id,
-        dr.duty_date,
-        dr.type,
-        ov.time_start,
-        ov.time_end,
-        dr.status
-        FROM
-        hr_duty_rest dr
-        WHERE
-        dr.duty_date gt;= :dateStart
-        AND dr.duty_date lt;= :dateEnd
-        and dr.enabled=1
+            dr.employee_id,
+            dr.duty_date,
+            dr.type,
+            ov.time_start,
+            ov.time_end,
+            dr.status
+            FROM
+            hr_duty_rest dr
+            WHERE
+            dr.duty_date gt;= :dateStart
+            AND dr.duty_date lt;= :dateEnd
+            and dr.enabled=1
         """)
         if (CollectionUtil.isNotEmpty(accountIds)) {
             sb.append("""

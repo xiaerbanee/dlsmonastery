@@ -1,29 +1,14 @@
 package net.myspring.tool.modules.vivo.repository;
 
-import net.myspring.tool.modules.vivo.domain.*;
-import net.myspring.tool.modules.vivo.model.SCustomersM13e00;
-import net.myspring.tool.modules.vivo.model.SZonesM13e00;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
-import java.time.LocalDate;
-import java.util.List;
-import net.myspring.tool.modules.vivo.domain.SPlantStockStoresM13e00
-import net.myspring.tool.modules.vivo.domain.SPlantStockDealerM13e00
-import net.myspring.tool.modules.vivo.domain.SPlantStockSupplyM13e00
-import net.myspring.tool.modules.vivo.domain.SPlantEndProductSaleM13e00
-import net.myspring.tool.modules.vivo.domain.SProductItemStocksM13e00
-import net.myspring.tool.modules.vivo.domain.SProductItem000M13e00
-import net.myspring.tool.modules.vivo.domain.SStoresM13e00
-import net.myspring.tool.modules.vivo.domain.SProductItemLendM13e00
-import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn
-import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei
-import net.myspring.tool.modules.vivo.domain.VivoPlantProducts
-import net.myspring.tool.modules.vivo.domain.VivoProducts
-import net.myspring.util.collection.CollectionUtil
+import net.myspring.tool.modules.vivo.domain.*
+import net.myspring.tool.modules.vivo.model.SCustomersM13e00
+import net.myspring.tool.modules.vivo.model.SZonesM13e00
 import net.myspring.util.repository.QueryUtils
+import org.apache.ibatis.annotations.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
+import java.time.LocalDate
+import java.util.List
 import javax.persistence.EntityManager
 
 

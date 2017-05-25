@@ -36,7 +36,6 @@ interface ProductRepository : BaseRepository<Product,String> {
     """, nativeQuery = true)
     fun findAllEnabled(): List<Product>
 
-    fun findByIds(ids: List<String>): List<Product>
 
     fun findHasImeProduct(): List<Product>
 
@@ -56,7 +55,13 @@ interface ProductRepository : BaseRepository<Product,String> {
 
     fun findByOutName(): List<ProductDto>
 
-    fun findByOutGroupIdIn(outGroupIds: List<String>): List<Product>
+    @Query("""
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.out_group_id in ?1
+    """, nativeQuery = true)
+    fun findByOutGroupIds(outGroupIds: List<String>): List<Product>
 
     fun findByProductTypeId(productTypeId: String): List<Product>
 

@@ -35,6 +35,12 @@ interface DepotRepository :BaseRepository<Depot,String> {
     """, nativeQuery = true)
     fun findAllEnabled(): List<Depot>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_depot t1
+        where t1.enabled=1
+        and t1.id in ?1
+    """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<Depot>
 
     fun findShopList(depotShopQuery: DepotQuery): List<DepotDto>
@@ -45,6 +51,15 @@ interface DepotRepository :BaseRepository<Depot,String> {
 
     fun findByAccountId(accountId: String): List<Depot>
 
+    @Query("""
+        SELECT
+            t1.*
+        FROM
+            crm_depot t1
+        WHERE
+            t1.enabled = 1
+        AND t1.name IN ?1
+    """, nativeQuery = true)
     fun findByNameList(nameList: List<String>): List<Depot>
 
     fun findByName(name: String): Depot

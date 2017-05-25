@@ -12,6 +12,7 @@ import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -44,6 +45,8 @@ public class DepotService {
     @Autowired
     private DepotMapper depotMapper;
     @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
     private OfficeClient officeClient;
 
     @Autowired
@@ -54,21 +57,21 @@ public class DepotService {
 
 
     public List<DepotDto> findShopList(DepotQuery depotQuery) {
-        List<Depot> depotList = depotMapper.findByAccountId(RequestUtils.getAccountId());
+        List<Depot> depotList = depotRepository.findByAccountId(RequestUtils.getAccountId());
         depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         if(CollectionUtil.isNotEmpty(depotList)) {
             depotQuery.setDepotIdList(CollectionUtil.extractToList(depotList,"id"));
         }
-        return depotMapper.findShopList(depotQuery);
+        return depotRepository.findShopList(depotQuery);
     }
 
     public List<DepotDto> findStoreList(DepotQuery depotQuery) {
-        List<Depot> depotList = depotMapper.findByAccountId(RequestUtils.getAccountId());
+        List<Depot> depotList = depotRepository.findByAccountId(RequestUtils.getAccountId());
         depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         if(CollectionUtil.isNotEmpty(depotList)) {
             depotQuery.setDepotIdList(CollectionUtil.extractToList(depotList,"id"));
         }
-        return depotMapper.findStoreList(depotQuery);
+        return depotRepository.findStoreList(depotQuery);
     }
 
 
@@ -82,7 +85,7 @@ public class DepotService {
 
 
     public List<DepotDto> findByIds(List<String> ids){
-        List<Depot> depotList=depotMapper.findByIds(ids);
+        List<Depot> depotList=depotRepository.findByIds(ids);
         List<DepotDto> depotDtoList= BeanUtil.map(depotList,DepotDto.class);
         return depotDtoList;
     }

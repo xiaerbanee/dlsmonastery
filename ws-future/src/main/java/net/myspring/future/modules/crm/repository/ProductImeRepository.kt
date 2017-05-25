@@ -1,10 +1,8 @@
-package net.myspring.future.modules.basic.repository
+package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Bank
 import net.myspring.future.modules.crm.domain.*
-import net.myspring.future.modules.crm.dto.BankInDto
-import net.myspring.future.modules.crm.web.query.BankInQuery
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
@@ -12,26 +10,23 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.query.Param
 import java.time.LocalDateTime
-import net.myspring.future.modules.crm.web.query.StoreAllotQuery
-import net.myspring.future.modules.crm.dto.StoreAllotImeDto
-import net.myspring.future.modules.crm.dto.StoreAllotDto
 import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
 import net.myspring.common.dto.NameValueDto
+import net.myspring.future.modules.basic.repository.PriceChangeRepositoryCustom
 import net.myspring.future.modules.crm.domain.ProductImeSale
 import net.myspring.future.modules.crm.domain.ProductIme
-import net.myspring.future.modules.crm.dto.ProductImeHistoryDto
-import net.myspring.future.modules.crm.dto.ProductImeDto
-import net.myspring.future.modules.crm.web.query.ProductImeQuery
-import net.myspring.future.modules.crm.web.query.ProductImeShipQuery
+import net.myspring.future.modules.crm.dto.*
+import net.myspring.future.modules.crm.web.query.*
+import net.myspring.util.repository.QueryUtils
+import net.myspring.util.text.StringUtils
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageImpl
+import javax.persistence.EntityManager
 
 
-
-
-
-
-interface ProductImeRepository : BaseRepository<ProductIme, String> {
+interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeRepositoryCustom{
 
     fun findByIme(ime: String): ProductIme
 
@@ -189,5 +184,116 @@ interface ProductImeRepository : BaseRepository<ProductIme, String> {
     Limit 20
         """, nativeQuery = true)
     fun findByImeReverseLike(@Param("imeReverse") ime: String, @Param("depotId") depotId: String): List<ProductIme>
+
+}
+
+
+interface ProductImeRepositoryCustom{
+    fun findPage(pageable: Pageable, productImeQuery : ProductImeQuery): Page<ProductImeDto>
+}
+
+class ProductImeRepositoryImpl @Autowired constructor(val entityManager: EntityManager): ProductImeRepositoryCustom {
+    override fun findPage(pageable: Pageable, productImeQuery: ProductImeQuery): Page<ProductImeDto> {
+
+//        ) validProductIme
+//        LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id
+//                LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id
+//
+//        <if test="p.pageable.sort !=null" >
+//                order by validProductIme.${p.pageable.sort}
+//        </if>
+//        limit ${p.pageable.offset},${p.pageable.pageSize}
+//
+
+        val sb = StringBuffer()
+        sb.append("""
+        SELECT
+            sale.created_date productImeSaleCreatedDate,
+            sale.employee_id productImeSaleEmployeeId,
+            upload.created_date productImeUploadCreatedDate,
+            upload.employee_id productImeUploadEmployeeId,
+            validProductIme.*
+        FROM
+        (
+                SELECT
+                        product.product_type_id, depot.office_id depotOfficeId, t1.*
+                FROM
+                    crm_product_ime t1,
+                    crm_depot depot,
+                    crm_product product
+                WHERE
+                    t1.enabled = 1
+                    AND t1.depot_id = depot.id
+                            AND depot.enabled = 1
+                    AND t1.company_id =  #{p.companyId}
+                    AND t1.product_id = product.id
+        """)
+        if (StringUtils.isNotEmpty(productImeQuery.boxIme)) {
+            sb.append("""  and t1.box_ime like CONCAT('%', :boxIme,'%') """)
+        }
+        if (StringUtils.isNotEmpty(productImeQuery.imeReverse)) {
+            sb.append("""  and t1.ime_reverse like CONCAT( :imeReverse,'%') """)
+        }
+        if (StringUtils.isNotEmpty(productImeQuery.ime2)) {
+            sb.append("""  and t1.ime2  like CONCAT('%', :ime2,'%') """)
+        }
+        if (StringUtils.isNotEmpty(productImeQuery.meid)) {
+            sb.append("""  and t1.meid like CONCAT('%', :meid,'%')    """)
+        }
+        if (productImeQuery.imeOrMeidList != null) {
+            sb.append("""  and (t1.ime in :imeOrMeidList or t1.ime2 in :imeOrMeidList or t1.meid in :imeOrMeidList ) """)
+        }
+        if (productImeQuery.createdDateStart != null) {
+            sb.append("""  AND t1.created_date>= :createdDateStart """)
+        }
+        if (productImeQuery.createdDateEnd != null) {
+            sb.append("""  AND t1.created_date < :createdDateEnd """)
+        }
+        if (productImeQuery.retailDateStart != null) {
+            sb.append("""  AND t1.retail_date >= :retailDateStart  """)
+        }
+        if (productImeQuery.retailDateEnd != null) {
+            sb.append("""  AND t1.retail_date <  :retailDateEnd  """)
+        }
+        if (productImeQuery.createTimeStart != null) {
+            sb.append("""  AND t1.create_time >= :createTimeStart  """)
+        }
+        if (productImeQuery.createTimeEnd != null) {
+            sb.append("""  AND t1.create_time < :createTimeEnd  """)
+        }
+        if (StringUtils.isNotBlank(productImeQuery.depotId )) {
+            sb.append("""  and t1.depot_id = :depotId  """)
+        }
+        if (StringUtils.isNotBlank(productImeQuery.productId )) {
+            sb.append("""  and t1.product_id = :productId  """)
+        }
+        if (StringUtils.isNotBlank(productImeQuery.inputType )) {
+            sb.append("""  and t1.input_type = :inputType  """)
+        }
+        if (StringUtils.isNotBlank(productImeQuery.depotId )) {
+            sb.append("""  and t1.depot_id = :depotId  """)
+        }
+        if (StringUtils.isNotBlank(productImeQuery.depotId )) {
+            sb.append("""  and t1.depot_id = :depotId  """)
+        }
+        sb.append("""
+          ) validProductIme
+                LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id
+                LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id
+        """)
+        if (pageable.sort != null) {
+            sb.append("""  order by validProductIme.${pageable.sort}  """)
+        }
+        sb.append("""  limit ${pageable.offset}, ${pageable.pageSize} """)
+        val query = entityManager.createNativeQuery(sb.toString(), ProductImeDto::class.java)
+        QueryUtils.setParameter(query, productImeQuery)
+
+        val result = query.resultList
+        return PageImpl<ProductImeDto>(result as List<ProductImeDto>, pageable, ((pageable.pageNumber + 100) * pageable.pageSize).toLong())
+
+
+
+    }
+
 
 }

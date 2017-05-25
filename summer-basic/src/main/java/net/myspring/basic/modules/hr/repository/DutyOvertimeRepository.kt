@@ -112,9 +112,7 @@ class DutyOvertimeRepositoryImpl @Autowired constructor(val entityManager: Entit
             and ov.enabled=1
         """)
         if (CollectionUtil.isNotEmpty(accountIds)) {
-            sb.append("""
-                and ov.employee_id in :accountIds
-            """)
+            sb.append(" and ov.employee_id in :accountIds")
         }
         var query = entityManager.createNativeQuery(sb.toString(), DutyOvertime::class.java)
         query.setParameter("dateStart", dateStart)

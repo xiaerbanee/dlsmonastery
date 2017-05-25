@@ -5,6 +5,7 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.future.modules.layout.mapper.ShopGoodsDepositMapper;
+import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
 import net.myspring.future.modules.layout.web.form.ShopGoodsDepositForm;
 import net.myspring.future.modules.layout.web.query.ShopGoodsDepositQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -27,6 +28,8 @@ public class ShopGoodsDepositService {
     @Autowired
     private ShopGoodsDepositMapper shopGoodsDepositMapper;
     @Autowired
+    private ShopGoodsDepositRepository shopGoodsDepositRepository;
+    @Autowired
     private CacheUtils cacheUtils;
 
     public BigDecimal getTotalAmount(String shopId) {
@@ -39,7 +42,7 @@ public class ShopGoodsDepositService {
     }
 
     public ShopGoodsDeposit findOne(String id){
-        ShopGoodsDeposit shopGoodsDeposit=shopGoodsDepositMapper.findOne(id);
+        ShopGoodsDeposit shopGoodsDeposit=shopGoodsDepositRepository.findOne(id);
         return shopGoodsDeposit;
     }
 
@@ -67,7 +70,7 @@ public class ShopGoodsDepositService {
             }
 
         }else{
-            ShopGoodsDeposit sgd = shopGoodsDepositMapper.findOne(shopGoodsDepositForm.getId());
+            ShopGoodsDeposit sgd = shopGoodsDepositRepository.findOne(shopGoodsDepositForm.getId());
             result = BeanUtil.map(sgd, ShopGoodsDepositForm.class);
 
         }
@@ -83,15 +86,15 @@ public class ShopGoodsDepositService {
             ReflectionUtil.copyProperties(shopGoodsDepositForm, shopGoodsDeposit);
             shopGoodsDeposit.setStatus("省公司审核");
             shopGoodsDeposit.setOutBillType(OutBillTypeEnum.手工日记账.name());
-            shopGoodsDepositMapper.save(shopGoodsDeposit);
+            shopGoodsDepositRepository.save(shopGoodsDeposit);
 
         }else{
 
-            ShopGoodsDeposit shopGoodsDeposit = shopGoodsDepositMapper.findOne(shopGoodsDepositForm.getId());
+            ShopGoodsDeposit shopGoodsDeposit = shopGoodsDepositRepository.findOne(shopGoodsDepositForm.getId());
             shopGoodsDeposit.setBankId(shopGoodsDepositForm.getBankId());
             shopGoodsDeposit.setRemarks(shopGoodsDepositForm.getRemarks());
             shopGoodsDeposit.setAmount(shopGoodsDepositForm.getAmount());
-            shopGoodsDepositMapper.update(shopGoodsDeposit);
+            shopGoodsDepositRepository.save(shopGoodsDeposit);
         }
 
 
@@ -131,13 +134,13 @@ public class ShopGoodsDepositService {
                 shopGoodsDeposit.setStatus("已通过");
                 shopGoodsDeposit.setLocked(true);
                 shopGoodsDeposit.setBillDate(LocalDateTime.now());
-                shopGoodsDepositMapper.update(shopGoodsDeposit);
+                shopGoodsDepositRepository.save(shopGoodsDeposit);
             }
 
     }
 
     public void delete(ShopGoodsDepositForm shopGoodsDepositForm) {
-        shopGoodsDepositMapper.logicDeleteOne(shopGoodsDepositForm.getId());
+        shopGoodsDepositRepository.logicDeleteOne(shopGoodsDepositForm.getId());
     }
 
 }

@@ -1,4 +1,4 @@
-package net.myspring.future.modules.basic.repository
+package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
 
@@ -31,5 +31,6 @@ interface GoodsOrderImeRepository : BaseRepository<GoodsOrderIme, String> {
         """, nativeQuery = true)
     fun findDtoListByGoodsOrderId(goodsOrderId: String): List<GoodsOrderImeDto>
 
+    interface GoodsOrderImeRepository : BaseRepository<GoodsOrderIme, String>
 
 }

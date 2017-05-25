@@ -106,10 +106,7 @@ public class AccountController {
 
     @RequestMapping(value = "search")
     public List<AccountDto> search(String type, String key) {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("name", key);
-        map.put("type", type);
-        List<AccountDto> accountDtoList = accountService.findByLoginNameLikeAndType(map);
+        List<AccountDto> accountDtoList = accountService.findByLoginNameLikeAndType(type,key);
         return accountDtoList;
     }
 
