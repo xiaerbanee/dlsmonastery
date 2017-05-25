@@ -1,5 +1,5 @@
 global-*/build/
-future-*/build/
+ws-*/build/
 summer-*/build/
 
 /.idea/
