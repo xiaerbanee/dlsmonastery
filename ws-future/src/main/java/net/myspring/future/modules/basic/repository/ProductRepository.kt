@@ -5,7 +5,7 @@ import net.myspring.future.modules.basic.domain.Product
 import net.myspring.future.modules.basic.domain.ProductType
 import net.myspring.future.modules.basic.dto.ProductDto
 import net.myspring.future.modules.basic.web.query.ProductQuery
-import org.apache.ibatis.annotations.Param
+import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut

@@ -7,7 +7,7 @@ import java.time.LocalDate
 import net.myspring.future.modules.crm.domain.GoodsOrder
 import net.myspring.future.modules.crm.domain.GoodsOrderIme
 import net.myspring.future.modules.crm.dto.GoodsOrderImeDto
-import org.apache.ibatis.annotations.Param
+import org.springframework.data.repository.query.Param
 import org.springframework.data.jpa.repository.Query
 
 

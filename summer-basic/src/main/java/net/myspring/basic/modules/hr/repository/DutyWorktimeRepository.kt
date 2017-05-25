@@ -5,7 +5,7 @@ import net.myspring.basic.modules.hr.domain.DutyWorktime
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery
 import net.myspring.util.collection.CollectionUtil
-import org.apache.ibatis.annotations.Param
+import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

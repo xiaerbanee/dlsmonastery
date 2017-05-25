@@ -7,7 +7,7 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery
-import org.apache.ibatis.annotations.Param
+import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

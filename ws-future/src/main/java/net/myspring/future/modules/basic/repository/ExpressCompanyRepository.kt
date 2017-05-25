@@ -2,11 +2,8 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ExpressCompany
-import net.myspring.future.modules.basic.dto.DepotStoreDto
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto
-import net.myspring.future.modules.basic.web.query.DepotStoreQuery
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery
-import org.apache.ibatis.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
