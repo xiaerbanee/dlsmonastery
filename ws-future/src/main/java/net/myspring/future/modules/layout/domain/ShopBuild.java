@@ -2,8 +2,6 @@ package net.myspring.future.modules.layout.domain;
 
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.ExpressCompany;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -37,11 +35,11 @@ public class ShopBuild extends CompanyEntity<ShopBuild> {
     private String oldContents;
     private String newContents;
     private Boolean isUrgent;
-    private ExpressCompany expressCompany;
+
     private String expressCompanyId;
     private String processTypeId;
     private String processFlowId;
-    private Depot shop;
+
     private String processPositionId;
 
     public String getProcessPositionId() {
@@ -237,14 +235,6 @@ public class ShopBuild extends CompanyEntity<ShopBuild> {
         isUrgent = urgent;
     }
 
-    public ExpressCompany getExpressCompany() {
-        return expressCompany;
-    }
-
-    public void setExpressCompany(ExpressCompany expressCompany) {
-        this.expressCompany = expressCompany;
-    }
-
     public String getExpressCompanyId() {
         return expressCompanyId;
     }
@@ -267,14 +257,6 @@ public class ShopBuild extends CompanyEntity<ShopBuild> {
 
     public void setProcessFlowId(String processFlowId) {
         this.processFlowId = processFlowId;
-    }
-
-    public Depot getShop() {
-        return shop;
-    }
-
-    public void setShop(Depot shop) {
-        this.shop = shop;
     }
 
 }

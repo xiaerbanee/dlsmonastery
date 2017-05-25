@@ -1,8 +1,6 @@
 package net.myspring.future.modules.layout.domain;
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.ShopAdType;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -22,11 +20,11 @@ public class ShopAd extends CompanyEntity<ShopAd> {
     private Integer version = 0;
     private String processInstanceId;
     private String processStatus;
-    private ShopAdType shopAdType;
+
     private String shopAdTypeId;
     private String processTypeId;
     private String processFlowId;
-    private Depot shop;
+
     private String processPositionId;
 
     public String getProcessPositionId() {
@@ -127,14 +125,6 @@ public class ShopAd extends CompanyEntity<ShopAd> {
         this.processStatus = processStatus;
     }
 
-    public ShopAdType getShopAdType() {
-        return shopAdType;
-    }
-
-    public void setShopAdType(ShopAdType shopAdType) {
-        this.shopAdType = shopAdType;
-    }
-
     public String getShopAdTypeId() {
         return shopAdTypeId;
     }
@@ -159,11 +149,4 @@ public class ShopAd extends CompanyEntity<ShopAd> {
         this.processFlowId = processFlowId;
     }
 
-    public Depot getShop() {
-        return shop;
-    }
-
-    public void setShop(Depot shop) {
-        this.shop = shop;
-    }
 }

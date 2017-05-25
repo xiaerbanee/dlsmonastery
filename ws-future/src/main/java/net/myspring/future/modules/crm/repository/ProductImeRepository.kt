@@ -190,25 +190,12 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
 
 interface ProductImeRepositoryCustom{
     fun findPage(pageable: Pageable, productImeQuery : ProductImeQuery): Page<ProductImeDto>
-    fun findList(productImeQuery : ProductImeQuery): List<ProductImeDto>?
+
 }
 
 class ProductImeRepositoryImpl @Autowired constructor(val entityManager: EntityManager): ProductImeRepositoryCustom {
-    override fun findList(productImeQuery: ProductImeQuery): List<ProductImeDto>? {
-        return null
-    }
 
     override fun findPage(pageable: Pageable, productImeQuery: ProductImeQuery): Page<ProductImeDto> {
-
-//        ) validProductIme
-//        LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id
-//                LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id
-//
-//        <if test="p.pageable.sort !=null" >
-//                order by validProductIme.${p.pageable.sort}
-//        </if>
-//        limit ${p.pageable.offset},${p.pageable.pageSize}
-//
 
         val sb = StringBuffer()
         sb.append("""

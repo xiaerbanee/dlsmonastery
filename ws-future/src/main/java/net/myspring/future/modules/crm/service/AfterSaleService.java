@@ -376,18 +376,10 @@ public class AfterSaleService {
         }
     }
 
-
-    @Transactional
-    public void synToFinance(){
-    }
-
     public Page findPage(Pageable pageable, AfterSaleQuery afterSaleQuery){
         Page<AfterSale> page=afterSaleRepository.findPage(pageable,afterSaleQuery);
         return page;
     }
 
-    public List<AfterSale> findFilter(Map<String,Object> map){
-        List<AfterSale> page=afterSaleRepository.findFilter(map);
-        return page;
-    }
+
 }
