@@ -3,11 +3,10 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.domain.ProductType;
-import net.myspring.future.modules.crm.repository.ProductMonthPriceRepository;
 import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.crm.domain.ProductMonthPrice;
 import net.myspring.future.modules.crm.domain.ProductMonthPriceDetail;
-import net.myspring.util.collection.CollectionUtil;
+import net.myspring.future.modules.crm.repository.ProductMonthPriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,25 +23,25 @@ public class ProductMonthPriceService {
     @Autowired
     private ProductTypeRepository productTypeRepository;
 
-    public ProductMonthPrice findOne(String id) {
-        ProductMonthPrice productMonthPrice=productMonthPriceRepository.findOne(id);
-        List<ProductType> productTypeList = productTypeRepository.findAllScoreType();
-        List<ProductMonthPriceDetail> productMonthPriceDetailList = productMonthPrice.getProductMonthPriceDetailList();
-        List<String> productMonthPriceDetailProductTypeIdList = CollectionUtil.extractToList(CollectionUtil.extractToList(productMonthPriceDetailList,"productType"),"id");
-        for(ProductType productType:productTypeList){
-            if(!productMonthPriceDetailProductTypeIdList.contains(productType.getId())){
-                ProductMonthPriceDetail productMonthPriceDetail = new ProductMonthPriceDetail();
-                productMonthPriceDetail.setProductType(productType);
-                productMonthPriceDetail.setProductTypeId(productType.getId());
-                productMonthPriceDetail.setPrice3(productType.getPrice3());
-                productMonthPriceDetail.setPrice2(productType.getPrice2());
-                productMonthPriceDetail.setBaokaPrice(productType.getBaokaPrice());
-                productMonthPriceDetailList.add(productMonthPriceDetail);
-            }
-        }
-        productMonthPrice.setProductMonthPriceDetailList(productMonthPriceDetailList);
-        return productMonthPrice;
-    }
+//    public ProductMonthPrice findOne(String id) {
+//        ProductMonthPrice productMonthPrice=productMonthPriceRepository.findOne(id);
+//        List<ProductType> productTypeList = productTypeRepository.findAllScoreType();
+//        List<ProductMonthPriceDetail> productMonthPriceDetailList = productMonthPrice.getProductMonthPriceDetailList();
+//        List<String> productMonthPriceDetailProductTypeIdList = CollectionUtil.extractToList(CollectionUtil.extractToList(productMonthPriceDetailList,"productType"),"id");
+//        for(ProductType productType:productTypeList){
+//            if(!productMonthPriceDetailProductTypeIdList.contains(productType.getId())){
+//                ProductMonthPriceDetail productMonthPriceDetail = new ProductMonthPriceDetail();
+//                productMonthPriceDetail.setProductType(productType);
+//                productMonthPriceDetail.setProductTypeId(productType.getId());
+//                productMonthPriceDetail.setPrice3(productType.getPrice3());
+//                productMonthPriceDetail.setPrice2(productType.getPrice2());
+//                productMonthPriceDetail.setBaokaPrice(productType.getBaokaPrice());
+//                productMonthPriceDetailList.add(productMonthPriceDetail);
+//            }
+//        }
+//        productMonthPrice.setProductMonthPriceDetailList(productMonthPriceDetailList);
+//        return productMonthPrice;
+//    }
 
 
 
@@ -51,7 +50,6 @@ public class ProductMonthPriceService {
         List<ProductMonthPriceDetail> list = Lists.newArrayList();
         for(ProductType productType:productTypeList){
             ProductMonthPriceDetail productMonthPriceDetail = new ProductMonthPriceDetail();
-            productMonthPriceDetail.setProductType(productType);
             productMonthPriceDetail.setProductTypeId(productType.getId());
             productMonthPriceDetail.setPrice3(productType.getPrice3());
             productMonthPriceDetail.setPrice2(productType.getPrice2());

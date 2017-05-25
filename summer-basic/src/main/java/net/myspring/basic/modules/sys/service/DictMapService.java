@@ -53,7 +53,7 @@ public class DictMapService {
         } else {
             dictMap = dictMapRepository.findOne(dictMapForm.getId());
             ReflectionUtil.copyProperties(dictMapForm, dictMap);
-            dictMapRepository.update(dictMap);
+            dictMapRepository.save(dictMap);
         }
         return dictMap;
     }

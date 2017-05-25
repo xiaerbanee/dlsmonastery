@@ -137,7 +137,7 @@ public class OfficeService {
             if(officeForm.getParent()==null){
                 officeForm.setAreaId(office.getId());
             }
-            officeRepository.update(office);
+            officeRepository.save(office);
         } else {
             if(officeForm.getParent()==null){
                 officeForm.setAreaId(officeForm.getId());
@@ -146,11 +146,11 @@ public class OfficeService {
             office = officeRepository.findOne(officeForm.getId());
             String oldParentIds=office.getParentIds();
             ReflectionUtil.copyProperties(officeForm, office);
-            officeRepository.update(office);
+            officeRepository.save(office);
             List<Office> list = officeRepository.findByParentIdsLike("%," + office.getId() + ",%");
             for (Office item : list) {
                 item.setParentIds(item.getParentIds().replace(oldParentIds, office.getParentIds()));
-                officeRepository.update(item);
+                officeRepository.save(item);
             }
         }
 

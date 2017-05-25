@@ -3,13 +3,16 @@ package net.myspring.future.modules.crm.repository
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.*
 import net.myspring.future.modules.crm.dto.PriceChangeDto
+import net.myspring.future.modules.crm.dto.ProductImeDto
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery
+import net.myspring.util.repository.QueryUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageImpl
 
 import javax.persistence.EntityManager
 
@@ -71,15 +74,14 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val entityManager: E
             """)
         }
 
-        val query = entityManager.createNativeQuery(sb.toString(), ProductImeUploadDto::class.java)
-        query.setParameter("createdDateStart", productImeUploadQuery.createdDateStart)
-        query.setParameter("createdDateEnd", productImeUploadQuery.createdDateEnd)
-        query.setParameter("shopName", productImeUploadQuery.shopName)
-        query.setParameter("officeId", productImeUploadQuery.officeId)
-        query.setParameter("month", productImeUploadQuery.month)
-        query.setParameter("imeOrMeidList", productImeUploadQuery.imeOrMeidList)
+        val queryStr = QueryUtils.getMySQLDialect().getPageableSql(sb.toString(), pageable)
 
-        return query.resultList as Page<ProductImeUploadDto>
+        val query = entityManager.createNativeQuery(queryStr, ProductImeUploadDto::class.java)
+        QueryUtils.setParameter(query, pageable, productImeUploadQuery)
+
+        val result = query.resultList
+
+        return PageImpl<ProductImeUploadDto>(result as List<ProductImeUploadDto>, pageable, ((pageable.pageNumber + 100) * pageable.pageSize).toLong())
 
     }
 

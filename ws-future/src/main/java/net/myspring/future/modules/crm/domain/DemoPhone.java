@@ -2,8 +2,6 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.future.common.domain.AuditEntity;
-import net.myspring.future.modules.basic.domain.DemoPhoneType;
-import net.myspring.future.modules.basic.domain.Depot;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,20 +11,12 @@ import javax.persistence.Table;
 public class DemoPhone extends AuditEntity<DemoPhone> {
     private String shopId;
     private Integer version = 0;
-    private ProductIme productIme;
+
     private String productImeId;
     private String employeeId;
-    private DemoPhoneType demoPhoneType;
+
     private String demoPhoneTypeId;
-    private Depot shop;
 
-    public Depot getShop() {
-        return shop;
-    }
-
-    public void setShop(Depot shop) {
-        this.shop = shop;
-    }
 
     public String getShopId() {
         return shopId;
@@ -44,14 +34,6 @@ public class DemoPhone extends AuditEntity<DemoPhone> {
         this.version = version;
     }
 
-    public ProductIme getProductIme() {
-        return productIme;
-    }
-
-    public void setProductIme(ProductIme productIme) {
-        this.productIme = productIme;
-    }
-
     public String getProductImeId() {
         return productImeId;
     }
@@ -66,14 +48,6 @@ public class DemoPhone extends AuditEntity<DemoPhone> {
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
-    }
-
-    public DemoPhoneType getDemoPhoneType() {
-        return demoPhoneType;
-    }
-
-    public void setDemoPhoneType(DemoPhoneType demoPhoneType) {
-        this.demoPhoneType = demoPhoneType;
     }
 
     public String getDemoPhoneTypeId() {

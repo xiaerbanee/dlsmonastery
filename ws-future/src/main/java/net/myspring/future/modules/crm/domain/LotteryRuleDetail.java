@@ -13,7 +13,7 @@ public class LotteryRuleDetail extends IdEntity<LotteryRuleDetail> {
     private Integer qty;
     private String maxType;
     private Integer maxQty;
-    private LotteryRule lotteryRule;
+
     private String lotteryRuleId;
 
     public String getName() {
@@ -46,14 +46,6 @@ public class LotteryRuleDetail extends IdEntity<LotteryRuleDetail> {
 
     public void setMaxQty(Integer maxQty) {
         this.maxQty = maxQty;
-    }
-
-    public LotteryRule getLotteryRule() {
-        return lotteryRule;
-    }
-
-    public void setLotteryRule(LotteryRule lotteryRule) {
-        this.lotteryRule = lotteryRule;
     }
 
     public String getLotteryRuleId() {

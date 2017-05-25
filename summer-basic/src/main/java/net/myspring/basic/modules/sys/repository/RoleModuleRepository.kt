@@ -47,4 +47,6 @@ interface RoleModuleRepository: BaseRepository<RoleModule, String> {
             where backend_module_id in ?2
      """, nativeQuery = true)
     fun setEnabledByModuleIdList(enabled: Boolean, moduleIds: List<String>): Int
+
+    fun batchSave(addRoleModules:List<RoleModule>)
 }

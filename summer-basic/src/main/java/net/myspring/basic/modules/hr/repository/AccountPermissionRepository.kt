@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query
 /**
  * Created by lihx on 2017/5/24.
  */
-interface AccountPermissinRepository : BaseRepository<AccountPermission,String>{
+interface AccountPermissionRepository : BaseRepository<AccountPermission,String>{
     @Query("""
         DELETE  FROM hr_account_permission where permission_id IN ?1
         """, nativeQuery = true)

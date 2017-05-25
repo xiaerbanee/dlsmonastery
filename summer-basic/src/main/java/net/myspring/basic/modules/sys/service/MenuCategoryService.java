@@ -50,7 +50,7 @@ public class MenuCategoryService {
         } else {
             menuCategory = menuCategoryRepository.findOne(menuCategoryForm.getId());
             ReflectionUtil.copyProperties(menuCategoryForm,menuCategory);
-            menuCategoryRepository.update(menuCategory);
+            menuCategoryRepository.save(menuCategory);
         }
         return menuCategory;
     }

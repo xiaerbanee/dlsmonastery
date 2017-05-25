@@ -1,21 +1,17 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Depot;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.List;
 
 
 @Entity
 @Table(name="crm_product_ime_sale")
 public class ProductImeSale extends CompanyEntity<ProductImeSale> {
     private String shopId;
-    private Depot shop;
+
     private Boolean isBack;
     private Integer credit;
     private Integer leftCredit;
@@ -27,10 +23,9 @@ public class ProductImeSale extends CompanyEntity<ProductImeSale> {
     private String buyerPhone;
     private String buyerSchool;
     private String buyerGrade;
-    private List<ProductIme> productImeList = Lists.newArrayList();
-    private List<String> productImeIdList = Lists.newArrayList();
+
     private String employeeId;
-    private ProductIme productIme;
+
     private String productImeId;
 
     public String getShopId() {
@@ -39,14 +34,6 @@ public class ProductImeSale extends CompanyEntity<ProductImeSale> {
 
     public void setShopId(String shopId) {
         this.shopId = shopId;
-    }
-
-    public Depot getShop() {
-        return shop;
-    }
-
-    public void setShop(Depot shop) {
-        this.shop = shop;
     }
 
     public Boolean getBack() {
@@ -137,36 +124,12 @@ public class ProductImeSale extends CompanyEntity<ProductImeSale> {
         this.buyerGrade = buyerGrade;
     }
 
-    public List<ProductIme> getProductImeList() {
-        return productImeList;
-    }
-
-    public void setProductImeList(List<ProductIme> productImeList) {
-        this.productImeList = productImeList;
-    }
-
-    public List<String> getProductImeIdList() {
-        return productImeIdList;
-    }
-
-    public void setProductImeIdList(List<String> productImeIdList) {
-        this.productImeIdList = productImeIdList;
-    }
-
     public String getEmployeeId() {
         return employeeId;
     }
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
-    }
-
-    public ProductIme getProductIme() {
-        return productIme;
-    }
-
-    public void setProductIme(ProductIme productIme) {
-        this.productIme = productIme;
     }
 
     public String getProductImeId() {
