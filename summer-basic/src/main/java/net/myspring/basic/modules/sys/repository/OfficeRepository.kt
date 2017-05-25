@@ -1,19 +1,22 @@
 package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
+import net.myspring.basic.modules.hr.domain.DutyRest
 import net.myspring.basic.modules.sys.domain.Office
+import net.myspring.basic.modules.sys.web.query.OfficeQuery
+import net.myspring.util.collection.CollectionUtil
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.Query
-import net.myspring.basic.modules.sys.web.query.OfficeQuery
-import net.myspring.basic.modules.sys.dto.OfficeDto
 import org.springframework.data.repository.query.Param
+import javax.persistence.EntityManager
 
 
 /**
  * Created by haos on 2017/5/24.
  */
-interface OfficeRepository :BaseRepository<Office,String>{
+interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom{
     @CachePut(key="#id")
     fun save(office: Office): Office
 
@@ -63,32 +66,12 @@ interface OfficeRepository :BaseRepository<Office,String>{
     fun findByParentIdsLike(parentId: String): List<Office>
 
     @Query("""
-
-     """, nativeQuery = true)
-    fun findByParentIdsListLike(parentIdList: List<String>): List<Office>
-
-    @Query("""
-
-     """, nativeQuery = true)
-    fun findByFilter(@Param("p") officeQuery: OfficeQuery): List<Office>
-
-    @Query("""
-
-     """, nativeQuery = true)
-    fun findByFilterAll(@Param("p") map: Map<String, Any>): List<Office>
-
-    @Query("""
        SELECT t1.id,t1.name
         FROM sys_office t1
         WHERE t1.enabled = 1
         and t1.id in ?1
      """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<Office>
-
-    @Query("""
-
-     """, nativeQuery = true)
-    fun findByAreaIds(areaIds: List<String>): List<Office>
 
     @Query("""
         SELECT t1.*
@@ -115,5 +98,50 @@ interface OfficeRepository :BaseRepository<Office,String>{
          )
      """, nativeQuery = true)
     fun findSameAreaByOfficeId(officeId: String): List<Office>
+}
 
+interface OfficeRepositoryCustom {
+    fun findByParentIdsListLike(parentIdList: List<String>): List<Office>
+
+    fun findByFilter(officeQuery: OfficeQuery): List<Office>
+
+    fun findByFilterAll(@Param("p") map: Map<String, Any>): List<Office>
+
+    fun findByAreaIds(areaIds: List<String>): List<Office>
+}
+
+class OfficeRepositoryImpl@Autowired constructor(val entityManager: EntityManager): OfficeRepositoryCustom {
+    override fun findByParentIdsListLike(parentIdList: List<String>): List<Office> {
+        var sb = StringBuilder();
+        sb.append("""
+            SELECT t1.*
+            FROM sys_office t1
+            where  t1.enabled =1
+            and (
+        """)
+        for((index,value) in parentIdList.withIndex()) {
+            sb.append(" t1.parent_ids like ?").append(index);
+            if(index < parentIdList.size-1) {
+                sb.append(" or ");
+            }
+        }
+
+        var query = entityManager.createNativeQuery(sb.toString());
+        for((index,value) in parentIdList.withIndex()) {
+            query.setParameter(index,"%$value%");
+        }
+        return query.resultList as List<Office>;
+    }
+
+    override fun findByFilter(officeQuery: OfficeQuery): List<Office> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun findByFilterAll(map: Map<String, Any>): List<Office> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun findByAreaIds(areaIds: List<String>): List<Office> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }
