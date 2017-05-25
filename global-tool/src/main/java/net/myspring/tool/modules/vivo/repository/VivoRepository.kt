@@ -150,6 +150,12 @@ interface VivoRepository:VivoRepositoryCustom {
         select ProductNo  from S_ProductItem000_R2500823
         """, nativeQuery = true)
    fun idvivoSProductItem(): List<String>
+
+
+   @Query("""
+        delete from S_ProductItemLend_M13e00 where CompanyID =?1
+        """, nativeQuery = true)
+   fun deleteProductItemLend(mainCode: String)
 }
 
 
@@ -165,7 +171,6 @@ interface VivoRepositoryCustom {
    fun insertPlantStockDealerR250082(@Param("list") list: List<SPlantStockDealerM13e00>, @Param("name") name: String)
    fun insertPlantStockStores(list: List<SPlantStockStoresM13e00>)
    fun insertPlantStockStoresR250082(@Param("list") list: List<SPlantStockStoresM13e00>, @Param("name") name: String)
-   fun deleteProductItemLend(mainCode: String)
    fun insertProductItemLend(list: List<SProductItemLendM13e00>)
    fun insertProductItem000(list: List<SProductItem000M13e00>)
    fun deleteProductItem000()
@@ -195,8 +200,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
 
    override fun insertZones(sZonesM13e00s: List<SZonesM13e00>) {
       for(sZonesM13e00 in sZonesM13e00s) {
-         var sb = StringBuffer()
-         sb.append("""
+         var query = entityManager.createNativeQuery("""
            insert into S_ZONES_M13E00
            (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes)
            values (
@@ -208,8 +212,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :fatherID,
             :subCount,
             :zoneTypes
-        """);
-         var query = entityManager.createNativeQuery(sb.toString())
+        """)
          QueryUtils.setParameter(query,sZonesM13e00);
          query.executeUpdate();
       }
@@ -253,10 +256,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
    }
 
-   override fun deleteProductItemLend(mainCode: String) {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-   }
-
    override fun insertProductItemLend(list: List<SProductItemLendM13e00>) {
       TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
    }
@@ -266,7 +265,10 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
    }
 
    override fun deleteProductItem000() {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+      entityManager.createNativeQuery("delete from  S_ProductItem000_R250082").executeUpdate();
+      entityManager.createNativeQuery("delete from  S_ProductItem000_R2500821").executeUpdate();
+      entityManager.createNativeQuery("delete from S_ProductItem000_R2500822").executeUpdate();
+      entityManager.createNativeQuery("delete from  S_ProductItem000_R2500823").executeUpdate();
    }
 
    override fun deleteProductItem000R250082() {
