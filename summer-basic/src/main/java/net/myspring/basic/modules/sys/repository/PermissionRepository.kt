@@ -97,4 +97,7 @@ interface  PermissionRepository: BaseRepository<Permission, String> {
         where t1.enabled=1
     """, nativeQuery = true)
     fun findAllEnabled(): List<Permission>
+
+    fun logicDeleteByIds(removePermissionIds:List<String>)
+
 }
