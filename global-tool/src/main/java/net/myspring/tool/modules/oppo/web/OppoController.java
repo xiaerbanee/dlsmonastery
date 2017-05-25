@@ -10,6 +10,7 @@ import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
 import net.myspring.tool.modules.oppo.service.OppoService;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -58,5 +58,11 @@ public class OppoController {
         oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
         RequestUtils.getRequestEntity().setAccountId("1");
         return "OPPO同步成功";
+    }
+
+    @RequestMapping(value="synIme")
+    public  String synIme (String date){
+        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselDtos=oppoService.synIme(date);
+        return ObjectMapperUtils.writeValueAsString(oppoPlantSendImeiPpselDtos);
     }
 }

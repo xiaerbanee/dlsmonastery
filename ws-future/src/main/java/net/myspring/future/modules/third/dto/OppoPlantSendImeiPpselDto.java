@@ -1,16 +1,13 @@
-package net.myspring.tool.modules.oppo.domain;
+package net.myspring.future.modules.third.dto;
 
+import net.myspring.common.dto.IdDto;
 
-import net.myspring.common.domain.IdEntity;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name="oppo_plant_send_imei_ppsel")
-public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
+/**
+ * Created by guolm on 2017/5/23.
+ */
+public class OppoPlantSendImeiPpselDto extends IdDto {
     private String billId;
     private String imei;
     private String meid;
@@ -20,7 +17,6 @@ public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
     private String remark;
     private String imei2;
     private String companyId;
-
     private String lxProductId;
     private String productId;
 
@@ -96,22 +92,18 @@ public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
         this.companyId = companyId;
     }
 
-    @Transient
     public String getLxProductId() {
         return lxProductId;
     }
 
-    @Transient
     public void setLxProductId(String lxProductId) {
         this.lxProductId = lxProductId;
     }
 
-    @Transient
     public String getProductId() {
         return productId;
     }
 
-    @Transient
     public void setProductId(String productId) {
         this.productId = productId;
     }
