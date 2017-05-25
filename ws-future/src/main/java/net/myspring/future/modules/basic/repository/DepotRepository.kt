@@ -86,6 +86,7 @@ interface DepotRepositoryCustom{
     fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,boolean: Boolean):Page<DepotAccountDto>
 }
 
+@Suppress("UNCHECKED_CAST")
 class DepotRepositoryImpl @Autowired constructor(val entityManager: EntityManager):DepotRepositoryCustom{
 
     override fun findShopList(depotStoreQuery: DepotQuery): List<DepotDto> {
