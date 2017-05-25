@@ -21,7 +21,7 @@ interface ShopAdRepository : BaseRepository<ShopAd,String>,ShopAdRepositoryCusto
 interface ShopAdRepositoryCustom{
     fun findPage(pageable: Pageable,shopAdQuery: ShopAdQuery): Page<ShopAdDto>
 
-    fun findByFilter(shopAdQuery: ShopAdQuery): List<ShopAdDto>
+    fun findByFilter(shopAdQuery: ShopAdQuery): MutableList<ShopAdDto>
 }
 
 class ShopAdRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopAdRepositoryCustom{
@@ -71,7 +71,7 @@ class ShopAdRepositoryImpl @Autowired constructor(val entityManager: EntityManag
 
     }
 
-    override fun findByFilter(shopAdQuery: ShopAdQuery): List<ShopAdDto>{
+    override fun findByFilter(shopAdQuery: ShopAdQuery): MutableList<ShopAdDto>{
         val sb = StringBuffer()
         sb.append("""
             SELECT
@@ -112,6 +112,6 @@ class ShopAdRepositoryImpl @Autowired constructor(val entityManager: EntityManag
 
         var query = entityManager.createNativeQuery(sb.toString(),ShopAdDto::class.java)
 
-        return query.resultList as List<ShopAdDto>
+        return query.resultList as MutableList<ShopAdDto>
     }
 }

@@ -31,7 +31,7 @@ interface PriceChangeRepository : BaseRepository<PriceChange, String>,PriceChang
         and t1.enabled=1
         ORDER BY  t1.id DESC
         """, nativeQuery = true)
-    fun finAllByEnabled(uploadEndDate: LocalDateTime): List<PriceChange>
+    fun finAllByEnabled(uploadEndDate: LocalDateTime): MutableList<PriceChange>
 
 
     @Query("""
@@ -49,7 +49,7 @@ interface PriceChangeRepository : BaseRepository<PriceChange, String>,PriceChang
         and t1.enabled=1
     ORDER BY  t1.id DESC
         """, nativeQuery = true)
-    fun findAllEnabled(): List<PriceChange>
+    fun findAllEnabled(): MutableList<PriceChange>
 
 }
 

@@ -34,7 +34,7 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>,BackendM
         where t1.enabled=1
         and t1.backend_id IN ?1
      """, nativeQuery = true)
-    fun findByBackendIds( backendIds:List<String>):List<BackendModule>
+    fun findByBackendIds( backendIds:MutableList<String>):MutableList<BackendModule>
 
     @Query("""
          SELECT t1.*
@@ -44,14 +44,14 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>,BackendM
           and t2.backend_module_id=t1.id
           and t2.role_id=:roleId
      """, nativeQuery = true)
-    fun findByRoleId(@Param("roleId")roleId:String):List<BackendModule>
+    fun findByRoleId(@Param("roleId")roleId:String):MutableList<BackendModule>
 
     @Query("""
     SELECT t1.*
     FROM  sys_backend_module
     WHERE t1.enabled=1
      """, nativeQuery = true)
-    fun findAllEnabled():List<BackendModule>
+    fun findAllEnabled():MutableList<BackendModule>
 }
 
 

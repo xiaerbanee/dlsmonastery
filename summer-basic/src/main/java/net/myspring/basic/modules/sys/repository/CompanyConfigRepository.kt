@@ -39,7 +39,7 @@ interface CompanyConfigRepository :BaseRepository<CompanyConfig,String>, Company
         FROM sys_company_config t1
         where t1.enabled=1
      """, nativeQuery = true)
-    fun  findAllCache():List<CompanyConfigCacheDto>
+    fun  findAllCache():MutableList<CompanyConfigCacheDto>
 
 
 }

@@ -29,7 +29,7 @@ interface BdCustomerRepository {
         AND t1.FPRIMARYGROUP = t3.FID
         AND t3.FID = t4.FID
      """, nativeQuery = true)
-    fun findAll(): List<BdCustomer>
+    fun findAll(): MutableList<BdCustomer>
 
     @Query("""
      SELECT
@@ -51,7 +51,7 @@ interface BdCustomerRepository {
             AND t3.FID = t4.FID
             and t2.FNAME in ?1
     """, nativeQuery = true)
-    fun findByNameList(nameList: List<String>): List<BdCustomer>
+    fun findByNameList(nameList: MutableList<String>): MutableList<BdCustomer>
 
     @Query("""
   SELECT
@@ -73,7 +73,7 @@ interface BdCustomerRepository {
         AND t3.FID = t4.FID
         and t1.FCUSTID in ?1
     """, nativeQuery = true)
-    fun findByIdList(idList: List<String>): List<BdCustomer>
+    fun findByIdList(idList: MutableList<String>): MutableList<BdCustomer>
 
     @Query("""
     SELECT
@@ -117,7 +117,7 @@ interface BdCustomerRepository {
         AND t3.FID = t4.FID
         AND t2.FNAME like %?1%
      """, nativeQuery = true)
-    fun findByNameLike(name: String): List<BdCustomer>
+    fun findByNameLike(name: String): MutableList<BdCustomer>
 
     @Query("""
     SELECT
@@ -136,7 +136,7 @@ interface BdCustomerRepository {
         t1.FPRIMARYGROUP,
         t4.FNAME
      """, nativeQuery = true)
-    fun findPrimaryGroupAndPrimaryGroupName():List<NameValueDto>
+    fun findPrimaryGroupAndPrimaryGroupName():MutableList<NameValueDto>
 
 }
 

@@ -23,7 +23,7 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
     @Cacheable
     override fun findOne(id: String): ProductType
 
-    override fun findAll(): List<ProductType>
+    override fun findAll(): MutableList<ProductType>
 
     @CachePut(key = "#id")
     fun save(productType: ProductType): Int
@@ -33,7 +33,7 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
         FROM crm_product t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<ProductType>
+    fun findAllEnabled(): MutableList<ProductType>
 
     @Query("""
         SELECT t1.*
@@ -41,9 +41,9 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
         where t1.enabled=1
         and t1.id in ?1
     """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<ProductType>
+    fun findByIds(ids: MutableList<String>): MutableList<ProductType>
 
-//    fun findList(@Param("p") map: Map<String, Any>): List<ProductType>
+//    fun findList(@Param("p") map: Map<String, Any>): MutableList<ProductType>
 
     @Query("""
         SELECT t1.*
@@ -51,11 +51,11 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
         where t1.enabled=1
         and t1.demo_phone_type_id in ?1
     """, nativeQuery = true)
-    fun findByDemoPhoneTypeIds(dempProductTypeIds: List<String>): List<ProductType>
+    fun findByDemoPhoneTypeIds(dempProductTypeIds: MutableList<String>): MutableList<ProductType>
 
-    fun findByNameLike(@Param("name") name: String): List<ProductType>
+    fun findByNameLike(@Param("name") name: String): MutableList<ProductType>
 
-//    fun updateDemoPhoneType(@Param("demoPhoneTypeId") demoPhoneTypeId: String, @Param("list") ids: List<String>): Int
+//    fun updateDemoPhoneType(@Param("demoPhoneTypeId") demoPhoneTypeId: String, @Param("list") ids: MutableList<String>): Int
 //
 //    fun updateDemoPhoneTypeToNull(demoPhoneTypeId: String): Int
 
@@ -65,9 +65,9 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
         and t1.enabled = 1
         and t1.price1 is not null order by t1.name
     """, nativeQuery = true)
-    fun findAllScoreType(): List<ProductType>
+    fun findAllScoreType(): MutableList<ProductType>
 
-    fun findByDemoPhoneTypeId(demoPhoneTypeId: String): List<ProductType>
+    fun findByDemoPhoneTypeId(demoPhoneTypeId: String): MutableList<ProductType>
 }
 
 interface ProductTypeRepositoryCustom{

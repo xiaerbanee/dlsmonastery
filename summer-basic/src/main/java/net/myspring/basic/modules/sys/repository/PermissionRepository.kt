@@ -36,7 +36,7 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
         AND t1.enabled = 1
         AND t2.enabled = 1
      """, nativeQuery = true)
-    fun findByRoleId(roleId: String): List<Permission>
+    fun findByRoleId(roleId: String): MutableList<Permission>
 
     @Query("""
              SELECT
@@ -54,7 +54,7 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
         AND t3.enabled = 1
         AND t2.enabled = 1
      """, nativeQuery = true)
-    fun findByRoleAndAccount(roleId: String, accountId: String): List<Permission>
+    fun findByRoleAndAccount(roleId: String, accountId: String): MutableList<Permission>
 
     @Query("""
              SELECT
@@ -64,7 +64,7 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
         where
         t1.menu_id = ?1
      """, nativeQuery = true)
-    fun findByMenuId(menuId: String): List<Permission>
+    fun findByMenuId(menuId: String): MutableList<Permission>
 
     @Query("""
             SELECT
@@ -75,7 +75,7 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
         t1.enabled=1
         and t1.menu_id IN ?1
      """, nativeQuery = true)
-    fun findByMenuIds(menuIds: List<String>): List<Permission>
+    fun findByMenuIds(menuIds: MutableList<String>): MutableList<Permission>
 
     @Query("""
         SELECT
@@ -95,14 +95,14 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
         where
         t1.permission LIKE %?1%
      """, nativeQuery = true)
-    fun findByPermissionLike(permissionStr: String): List<Permission>
+    fun findByPermissionLike(permissionStr: String): MutableList<Permission>
 
     @Query("""
         SELECT t1.*
         FROM sys_permission t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<Permission>
+    fun findAllEnabled(): MutableList<Permission>
 
 
 
@@ -113,13 +113,13 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
 interface PermissionRepositoryCustom{
 
 
-    fun logicDeleteByIds(removePermissionIds:List<String>)
+    fun logicDeleteByIds(removePermissionIds:MutableList<String>)
 
     fun findPage(pageable: Pageable, permissionQuery: PermissionQuery): Page<PermissionDto>?
 }
 
 class PermissionRepositoryImpl @Autowired constructor(val entityManager: EntityManager):PermissionRepositoryCustom{
-    override fun logicDeleteByIds(removePermissionIds: List<String>) {
+    override fun logicDeleteByIds(removePermissionIds: MutableList<String>) {
 
     }
 

@@ -40,7 +40,7 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
           AND t1.status=:status
           AND t1.created_date>=:createdDateStart
     """, nativeQuery = true)
-    fun findByAuditable(@Param("leaderId") leaderId: String, @Param("status") status: String, @Param("createdDateStart") createdDateStart: LocalDateTime): List<DutyDto>
+    fun findByAuditable(@Param("leaderId") leaderId: String, @Param("status") status: String, @Param("createdDateStart") createdDateStart: LocalDateTime): MutableList<DutyDto>
 
     @Query("""
         SELECT
@@ -55,7 +55,7 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
         or  (t1.date_end >= :dateStart
         and t1.date_end &lt;= :dateEnd))
     """, nativeQuery = true)
-    fun findByEmployeeAndDate(@Param("employeeId") employeeId: String, @Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): List<DutyTrip>
+    fun findByEmployeeAndDate(@Param("employeeId") employeeId: String, @Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<DutyTrip>
 
     @Query("""
         SELECT
@@ -68,12 +68,12 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
         and t1.date_end &lt;= :dateEnd
         and t1.status in :statusList
     """, nativeQuery = true)
-    fun findByDateAndStatusList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("statusList") statusList: List<String>): List<DutyTrip>
+    fun findByDateAndStatusList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("statusList") statusList: MutableList<String>): MutableList<DutyTrip>
 
 
 }
 interface DutyTripRepositoryCustom{
-    fun findByAccountIdAndDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("accountIds") accountIds: List<Long>): List<DutyTrip>
+    fun findByAccountIdAndDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("accountIds") accountIds: MutableList<Long>): MutableList<DutyTrip>
 
     fun findPage(pageable: Pageable, dutyTripQuery: DutyTripQuery): Page<DutyTripDto>
 }
@@ -82,7 +82,7 @@ class DutyTripRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyTrip> {
+    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyTrip> {
         var sb = StringBuilder()
         sb.append("""
             SELECT
@@ -108,7 +108,7 @@ class DutyTripRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         query.setParameter("dateStart", dateStart)
         query.setParameter("dateEnd", dateEnd)
         query.setParameter("accountIds", accountIds)
-        return query.resultList as List<DutyTrip>
+        return query.resultList as MutableList<DutyTrip>
     }
 
 }

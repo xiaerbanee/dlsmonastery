@@ -38,7 +38,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
             t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
             AND t2.leader_id=?1 AND t1.status=?2 AND t1.created_date>=?3
     """, nativeQuery = true)
-    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): List<DutyDto>
+    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto>
 
     @Query("""
         SELECT
@@ -50,7 +50,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
         AND t1.employee_id=?1
         AND t1.duty_date in ?2
     """, nativeQuery = true)
-    fun findByDutyDateList(employeeId: String, dutyDateList: List<LocalDate>): List<DutyLeave>
+    fun findByDutyDateList(employeeId: String, dutyDateList: MutableList<LocalDate>): MutableList<DutyLeave>
 
     @Query("""
         SELECT
@@ -62,7 +62,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
             AND t1.employee_id=?1
             AND t1.duty_date =?2
     """, nativeQuery = true)
-    fun findByDutyDate(employeeId: String, dutyDate: LocalDate): List<DutyLeave>
+    fun findByDutyDate(employeeId: String, dutyDate: LocalDate): MutableList<DutyLeave>
 
     @Query("""
         SELECT
@@ -74,7 +74,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
             AND t1.duty_date >= ?1 and t1.duty_date &lt;= ?2
             and t1.status in ?3
     """, nativeQuery = true)
-    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: List<String>): List<DutyLeave>
+    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyLeave>
 
     @Query("""
         SELECT
@@ -87,13 +87,13 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
             AND t1.duty_date >=?2
             and t1.duty_date &lt;=?3
     """, nativeQuery = true)
-    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): List<DutyLeave>
+    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyLeave>
 
 
 
 }
 interface DutyLeaveRepositoryCustom{
-    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyLeave>
+    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyLeave>
 
     fun findPage(pageable: Pageable, dutyLeaveQuery: DutyLeaveQuery): Page<DutyLeaveDto>
 }
@@ -103,7 +103,7 @@ class DutyLeaveRepositoryImpl @Autowired constructor(val entityManager: EntityMa
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyLeave> {
+    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyLeave> {
         var sb = StringBuilder();
         sb.append("""
             SELECT
@@ -125,7 +125,7 @@ class DutyLeaveRepositoryImpl @Autowired constructor(val entityManager: EntityMa
         query.setParameter("dateStart", dateStart);
         query.setParameter("dateEnd", dateEnd);
         query.setParameter("accountIds", accountIds);
-        return query.resultList as List<DutyLeave>
+        return query.resultList as MutableList<DutyLeave>
     }
 
 }

@@ -17,7 +17,7 @@ interface OfficeLeaderRepository : BaseRepository<OfficeLeader,String>{
     @Query("""
         UPDATE  hr_office_leader set enabled=:enabled where leader_id in :leaderList
     """, nativeQuery = true)
-    fun setEnabledByLeaderIds(@Param("enabled") enabled: Boolean, @Param("leaderList") leaderList: List<String>): Int
+    fun setEnabledByLeaderIds(@Param("enabled") enabled: Boolean, @Param("leaderList") leaderList: MutableList<String>): Int
 
     @Query("""
         SELECT t1.*
@@ -25,7 +25,7 @@ interface OfficeLeaderRepository : BaseRepository<OfficeLeader,String>{
         where t1.enabled=1
         and t1.office_id=:officeId
     """, nativeQuery = true)
-    fun findByOfficeId(officeId: String): List<OfficeLeader>
+    fun findByOfficeId(officeId: String): MutableList<OfficeLeader>
 
     @Query("""
         SELECT t1.*
@@ -33,6 +33,6 @@ interface OfficeLeaderRepository : BaseRepository<OfficeLeader,String>{
         where t1.enabled=1
         and t1.office_id=:officeId
     """, nativeQuery = true)
-    fun findAllByOfficeId(officeId: String): List<OfficeLeader>
+    fun findAllByOfficeId(officeId: String): MutableList<OfficeLeader>
 
 }

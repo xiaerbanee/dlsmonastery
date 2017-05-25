@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 import java.time.LocalDate;
-import java.util.List;
+;
 
 /**
  * Created by admin on 2016/10/11.
@@ -15,7 +15,7 @@ interface OppoPlantSendImeiPpselRepository:BaseRepository<OppoPlantSendImeiPpsel
 
 
     @Query("select t.imei from oppo_plant_send_imei_ppsel t where t.imei in ?1",nativeQuery = true)
-    fun findImeis(imeis: List<String>): List<String>
+    fun findImeis(imeis: MutableList<String>): MutableList<String>
 
     @Query("""
         select t.*  from oppo_plant_send_imei_ppsel t
@@ -24,6 +24,6 @@ interface OppoPlantSendImeiPpselRepository:BaseRepository<OppoPlantSendImeiPpsel
         and t.company_id in :agentCodes
         and t.imei not in (select p.ime from crm_product_ime p )
         """, nativeQuery = true)
-    fun findSynList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: List<String>): List<OppoPlantSendImeiPpsel>
+    fun findSynList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>): MutableList<OppoPlantSendImeiPpsel>
 
 }

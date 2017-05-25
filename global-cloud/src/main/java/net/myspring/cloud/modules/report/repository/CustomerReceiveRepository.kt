@@ -77,7 +77,7 @@ interface  CustomerReceiveRepository{
         GROUP BY
         temp.customerId
      """, nativeQuery = true)
-    fun findEndShouldGet(@Param("dateEnd") dateEnd :LocalDate,@Param("customerIdList")customerIdList:List<String> ):List<CustomerReceiveDto>
+    fun findEndShouldGet(@Param("dateEnd") dateEnd :LocalDate,@Param("customerIdList")customerIdList:MutableList<String> ):MutableList<CustomerReceiveDto>
 
     @Query("""
       SELECT
@@ -250,7 +250,7 @@ interface  CustomerReceiveRepository{
         t.date,
         t.billNo
      """, nativeQuery = true)
-    fun findMainList(@Param("p")customerReceiveDetailQuery: CustomerReceiveDetailQuery ):List<CustomerReceiveDetailDto>
+    fun findMainList(@Param("p")customerReceiveDetailQuery: CustomerReceiveDetailQuery ):MutableList<CustomerReceiveDetailDto>
 
     @Query("""
        SELECT
@@ -298,7 +298,7 @@ interface  CustomerReceiveRepository{
         AND t21.FDATE >=:#{#p.dateStart}
         AND t21.FDATE <:#{#p.dateEnd}
      """, nativeQuery = true)
-    fun findDetailList(@Param("p")customerReceiveDetailQuery:CustomerReceiveDetailQuery):List<CustomerReceiveDetailDto>
+    fun findDetailList(@Param("p")customerReceiveDetailQuery:CustomerReceiveDetailQuery):MutableList<CustomerReceiveDetailDto>
 
     @Query("""
      SELECT
@@ -337,5 +337,5 @@ interface  CustomerReceiveRepository{
         AND t5.FDATE  >:#{#p.dateStart}
         AND t5.FDATE <:#{#p.dateEnd}
      """, nativeQuery = true)
-    fun findRemarks(@Param("p") customerReceiveDetailQuery:CustomerReceiveDetailQuery):List<NameValueDto>
+    fun findRemarks(@Param("p") customerReceiveDetailQuery:CustomerReceiveDetailQuery):MutableList<NameValueDto>
 }

@@ -20,7 +20,7 @@ import javax.persistence.EntityManager
 
 interface PriceChangeImeRepository : BaseRepository<PriceChangeIme, String>,PriceChangeImeRepositoryCustom {
 
-    fun findByPriceChangeId(priceChangeId: String): List<PriceChangeIme>
+    fun findByPriceChangeId(priceChangeId: String): MutableList<PriceChangeIme>
 
 
     @Query("""
@@ -32,7 +32,7 @@ interface PriceChangeImeRepository : BaseRepository<PriceChangeIme, String>,Pric
         t1.enabled = 1
         AND t1.price_change_id = ?1 and  t1.uploadDate is not null
         """, nativeQuery = true)
-    fun findByPriceChangeIdAndUploadDateIsNotNull(priceChangeId: String): List<PriceChangeIme>
+    fun findByPriceChangeIdAndUploadDateIsNotNull(priceChangeId: String): MutableList<PriceChangeIme>
 
 
 

@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.Query
 interface GoodsOrderImeRepository : BaseRepository<GoodsOrderIme, String> {
 
 
-    fun findByGoodsOrderId(goodsOrderId: String): List<GoodsOrderIme>
+    fun findByGoodsOrderId(goodsOrderId: String): MutableList<GoodsOrderIme>
 
     @Query("""
     SELECT
@@ -29,7 +29,7 @@ interface GoodsOrderImeRepository : BaseRepository<GoodsOrderIme, String> {
     AND t1.enabled = 1
     AND t1.product_ime_id = t2.id
         """, nativeQuery = true)
-    fun findDtoListByGoodsOrderId(goodsOrderId: String): List<GoodsOrderImeDto>
+    fun findDtoListByGoodsOrderId(goodsOrderId: String): MutableList<GoodsOrderImeDto>
 
     interface GoodsOrderImeRepository : BaseRepository<GoodsOrderIme, String>
 

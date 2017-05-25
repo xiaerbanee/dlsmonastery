@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 import java.time.LocalDate;
-import java.util.List;
+;
 
 /**
  * Created by admin on 2016/10/11.
@@ -17,7 +17,7 @@ interface OppoPlantProductItemelectronSelRepository:BaseRepository<OppoPlantProd
         select t.product_no from oppo_plant_product_itemelectron_sel t
         where t.product_no in ?1
         """, nativeQuery = true)
-    fun findProductNos(productNos: List<String>): List<String>
+    fun findProductNos(productNos: MutableList<String>): MutableList<String>
 
     @Query("""
         update crm_product_ime t1,oppo_plant_product_itemelectron_sel t2

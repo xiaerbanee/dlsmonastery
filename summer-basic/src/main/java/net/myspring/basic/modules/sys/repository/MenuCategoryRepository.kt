@@ -44,7 +44,7 @@ interface  MenuCategoryRepository :BaseRepository<MenuCategory,String>,MenuCateg
         t1.enabled=1
         and t1.backend_module_id IN ?1
      """, nativeQuery = true)
-    fun findByBackendModuleIds(backendModuleIds:List<String>):List<MenuCategory>
+    fun findByBackendModuleIds(backendModuleIds:MutableList<String>):MutableList<MenuCategory>
 
     @Query("""
         SELECT
@@ -54,7 +54,7 @@ interface  MenuCategoryRepository :BaseRepository<MenuCategory,String>,MenuCateg
         WHERE
         t1.enabled=1
      """, nativeQuery = true)
-    fun findAllEnabled():List<MenuCategory>
+    fun findAllEnabled():MutableList<MenuCategory>
 }
 
 

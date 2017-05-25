@@ -8,7 +8,7 @@ import net.myspring.future.modules.crm.domain.GoodsOrderDetail
 
 interface GoodsOrderDetailRepository : BaseRepository<GoodsOrderDetail, String> {
 
-    fun findByGoodsOrderId(goodsOrderId: String): List<GoodsOrderDetail>
+    fun findByGoodsOrderId(goodsOrderId: String): MutableList<GoodsOrderDetail>
 
     fun deleteById(id: String)
 

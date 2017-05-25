@@ -40,7 +40,7 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRule
         where t1.enabled=1
         and t1.type=?1
      """, nativeQuery = true)
-    fun findByType(type: String): List<OfficeRule>
+    fun findByType(type: String): MutableList<OfficeRule>
 
     @Query("""
             SELECT t1.*
@@ -67,7 +67,7 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRule
         FROM sys_office_rule t1
         where t1.enabled=1
      """, nativeQuery = true)
-    fun findAllEnabled():List<OfficeRule>
+    fun findAllEnabled():MutableList<OfficeRule>
 }
 
 

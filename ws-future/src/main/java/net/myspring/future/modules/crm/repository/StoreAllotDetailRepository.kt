@@ -28,7 +28,7 @@ interface StoreAllotDetailRepository : BaseRepository<StoreAllotDetail, String> 
         AND  t1.store_allot_id in ?1
         ORDER BY t1.store_allot_id, product.has_ime DESC
         """, nativeQuery = true)
-    fun findByStoreAllotIds(storeAllotIds: List<String>): List<StoreAllotDetailDto>
+    fun findByStoreAllotIds(storeAllotIds: MutableList<String>): MutableList<StoreAllotDetailDto>
 
     fun deleteByStoreAllotId(storeAllotId: String)
 
@@ -54,7 +54,7 @@ interface StoreAllotDetailRepository : BaseRepository<StoreAllotDetail, String> 
         GROUP BY result.productId
         ORDER BY result.billQty DESC
         """, nativeQuery = true)
-    fun findStoreAllotDetailsForFastAllot(@Param("billDate") billDate: LocalDate, @Param("toStoreId") toStoreId: String, @Param("status") status: String, @Param("companyId") companyId: String): List<SimpleStoreAllotDetailDto>
+    fun findStoreAllotDetailsForFastAllot(@Param("billDate") billDate: LocalDate, @Param("toStoreId") toStoreId: String, @Param("status") status: String, @Param("companyId") companyId: String): MutableList<SimpleStoreAllotDetailDto>
 
     @Query("""
     SELECT
@@ -65,7 +65,7 @@ interface StoreAllotDetailRepository : BaseRepository<StoreAllotDetail, String> 
         t1.enabled = 1
         AND t1.company_id = ?1
         """, nativeQuery = true)
-    fun findStoreAllotDetailListForNew(companyId: String): List<SimpleStoreAllotDetailDto>
+    fun findStoreAllotDetailListForNew(companyId: String): MutableList<SimpleStoreAllotDetailDto>
 
 
 }

@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query
  */
 interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>{
 
-    fun findByShopAllotId(shopAllotId: String): List<ShopAllotDetail>
+    fun findByShopAllotId(shopAllotId: String): MutableList<ShopAllotDetail>
 
 
     @Query("""
@@ -59,7 +59,7 @@ interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>{
     ) result
     ORDER BY result.qty DESC
     """, nativeQuery = true)
-    fun getShopAllotDetailListForNewOrEdit(@Param("shopAllotId") shopAllotId: String, @Param("fromDepotId") fromDepotId: String, @Param("toDepotId") toDepotId: String): List<ShopAllotDetailDto>
+    fun getShopAllotDetailListForNewOrEdit(@Param("shopAllotId") shopAllotId: String, @Param("fromDepotId") fromDepotId: String, @Param("toDepotId") toDepotId: String): MutableList<ShopAllotDetailDto>
 
     @Query("""
     SELECT
@@ -77,5 +77,5 @@ interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>{
         t1.product_id = t2.id
     AND t1.shop_allot_id = ?1
     """, nativeQuery = true)
-    fun getShopAllotDetailListForViewOrAudit(shopAllotId: String): List<ShopAllotDetailDto>
+    fun getShopAllotDetailListForViewOrAudit(shopAllotId: String): MutableList<ShopAllotDetailDto>
 }

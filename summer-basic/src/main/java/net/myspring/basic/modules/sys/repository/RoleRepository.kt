@@ -30,7 +30,7 @@ interface RoleRepository: BaseRepository<Role, String>,RoleRepositoryCustom {
         where t1.enabled=1
         and t1.name like %?1%
      """, nativeQuery = true)
-    fun findByNameLike(name: String): List<Role>
+    fun findByNameLike(name: String): MutableList<Role>
 
     @Query("""
        SELECT t1.*

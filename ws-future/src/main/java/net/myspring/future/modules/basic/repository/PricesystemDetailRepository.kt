@@ -10,13 +10,13 @@ import org.springframework.data.jpa.repository.Query
  */
 interface PricesystemDetailRepository : BaseRepository<PricesystemDetail,String>{
 
-    fun findByPricesystemIdIn(pricesystemIds: List<String>): List<PricesystemDetail>
+    fun findByPricesystemIdIn(pricesystemIds: MutableList<String>): MutableList<PricesystemDetail>
 
     fun findByPricesystemIdAndProductId( pricesystemId: String, productId: String): PricesystemDetail
 
-    fun findByProductIdIn(productIdList: List<String>): List<PricesystemDetail>
+    fun findByProductIdIn(productIdList: MutableList<String>): MutableList<PricesystemDetail>
 
-    fun findByPricesystemId(pricesystemId: String): List<PricesystemDetail>
+    fun findByPricesystemId(pricesystemId: String): MutableList<PricesystemDetail>
 
     @Query("""
         SELECT
@@ -28,5 +28,5 @@ interface PricesystemDetailRepository : BaseRepository<PricesystemDetail,String>
             t1.pricesystem_id = t2.pricesystem_id
         AND t2.id = ?1
     """, nativeQuery = true)
-    fun findByDepotId(depotId: String): List<PricesystemDetail>
+    fun findByDepotId(depotId: String): MutableList<PricesystemDetail>
 }

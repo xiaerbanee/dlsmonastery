@@ -25,7 +25,7 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
     @Cacheable
     override fun findOne(id: String): ExpressCompany
 
-    override fun findAll(): List<ExpressCompany>
+    override fun findAll(): MutableList<ExpressCompany>
 
     @CachePut(key = "#id")
     fun save(expressCompany: ExpressCompany): Int
@@ -35,7 +35,7 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
         FROM crm_express_company t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<ExpressCompany>
+    fun findAllEnabled(): MutableList<ExpressCompany>
 
     @Query("""
         SELECT t1.*
@@ -43,11 +43,11 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
         where t1.enabled=1
         and t1.id in ?1
     """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<ExpressCompany>
+    fun findByIds(ids: MutableList<String>): MutableList<ExpressCompany>
 
-    fun findByExpressType(expressType: String): List<ExpressCompany>
+    fun findByExpressType(expressType: String): MutableList<ExpressCompany>
 
-//    fun findByNameLike(@Param("companyId") companyId: String, @Param("name") name: String): List<ExpressCompanyDto>
+//    fun findByNameLike(@Param("companyId") companyId: String, @Param("name") name: String): MutableList<ExpressCompanyDto>
 
 }
 

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.time.LocalDate
 import java.util.Collection
-import java.util.List
+
 
 /**
  * Created by admin on 2016/10/17.
@@ -29,7 +29,7 @@ interface VivoPlantElectronicsnRepository: BaseRepository<VivoPlantElectronicsn,
       from vivo_plant_electronicsn t
       where t.sn_imei in :snImeis
         """, nativeQuery = true)
-    fun findSnImeis(@Param("snImeis") snImeis: Collection<String>): List<String>
+    fun findSnImeis(@Param("snImeis") snImeis: Collection<String>): MutableList<String>
 
     @Query("""
         select
@@ -40,5 +40,5 @@ interface VivoPlantElectronicsnRepository: BaseRepository<VivoPlantElectronicsn,
         and t.retailDate <=:dateEnd
         group by t.product_id
         """, nativeQuery = true)
-    fun findNameQtyList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): List<CommonEntity>
+    fun findNameQtyList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<CommonEntity>
 }

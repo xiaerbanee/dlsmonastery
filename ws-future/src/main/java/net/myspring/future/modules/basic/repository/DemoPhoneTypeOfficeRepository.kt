@@ -8,5 +8,5 @@ import net.myspring.future.modules.basic.domain.DemoPhoneTypeOffice
  */
 interface DemoPhoneTypeOfficeRepository : BaseRepository<DemoPhoneTypeOffice,String>{
 
-    fun findByDemoPhoneTypeId(demoPhoneTypeId: String): List<DemoPhoneTypeOffice>
+    fun findByDemoPhoneTypeId(demoPhoneTypeId: String): MutableList<DemoPhoneTypeOffice>
 }

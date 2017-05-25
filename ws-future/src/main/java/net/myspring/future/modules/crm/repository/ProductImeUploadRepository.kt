@@ -19,7 +19,7 @@ import javax.persistence.EntityManager
 
 interface ProductImeUploadRepository : BaseRepository<ProductImeUpload, String>,  ProductImeUploadRepositoryCustom{
 
-    fun findByProductImeId(productImeId: String): List<ProductImeUpload>
+    fun findByProductImeId(productImeId: String): MutableList<ProductImeUpload>
 
 }
 
@@ -81,7 +81,7 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val entityManager: E
 
         val result = query.resultList
 
-        return PageImpl<ProductImeUploadDto>(result as List<ProductImeUploadDto>, pageable, ((pageable.pageNumber + 100) * pageable.pageSize).toLong())
+        return PageImpl<ProductImeUploadDto>(result as MutableList<ProductImeUploadDto>, pageable, ((pageable.pageNumber + 100) * pageable.pageSize).toLong())
 
     }
 

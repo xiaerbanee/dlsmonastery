@@ -24,12 +24,12 @@ interface  KingdeeBookRepository:BaseRepository<KingdeeBook,String>{
         from sys_kingdee_book t1
         where t1.enabled = 1
      """, nativeQuery = true)
-    fun findNames():List<String>
+    fun findNames():MutableList<String>
 
     @Query("""
         select distinct t1.type
         from sys_kingdee_book t1
         where t1.enabled = 1
      """, nativeQuery = true)
-    fun findTypes():List<String>
+    fun findTypes():MutableList<String>
 }

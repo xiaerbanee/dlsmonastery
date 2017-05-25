@@ -37,7 +37,7 @@ interface ShopDepositRepository : BaseRepository<ShopDeposit,String>,ShopDeposit
                 type
         )
     """, nativeQuery = true)
-    fun findByTypeAndShopIds(@Param("type") type: String, @Param("shopIds") shopIds: List<String>): List<ShopDeposit>
+    fun findByTypeAndShopIds(@Param("type") type: String, @Param("shopIds") shopIds: MutableList<String>): MutableList<ShopDeposit>
 
     @Query("""
     SELECT
@@ -54,7 +54,7 @@ interface ShopDepositRepository : BaseRepository<ShopDeposit,String>,ShopDeposit
     LIMIT 0,
      :size
     """, nativeQuery = true)
-    fun findByTypeAndShopId(@Param("shopId") shopId: String, @Param("type") type: String, @Param("size") size: Int?): List<ShopDeposit>
+    fun findByTypeAndShopId(@Param("shopId") shopId: String, @Param("type") type: String, @Param("size") size: Int?): MutableList<ShopDeposit>
 }
 
 interface ShopDepositRepositoryCustom{

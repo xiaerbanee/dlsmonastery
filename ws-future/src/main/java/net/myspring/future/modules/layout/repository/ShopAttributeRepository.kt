@@ -18,5 +18,5 @@ interface ShopAttributeRepository : BaseRepository<ShopAttribute,String> {
         t1.shop_id = ?1
     AND t1.enabled = 1
     """, nativeQuery = true)
-    fun findByShopId(shopId: String): List<ShopAttribute>
+    fun findByShopId(shopId: String): MutableList<ShopAttribute>
 }

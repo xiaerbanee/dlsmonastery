@@ -11,7 +11,7 @@ interface AccountPermissionRepository : BaseRepository<AccountPermission,String>
     @Query("""
         DELETE  FROM hr_account_permission where permission_id IN ?1
         """, nativeQuery = true)
-    fun removeByPermissionList(permissionIdList: List<String>): Int
+    fun removeByPermissionList(permissionIdList: MutableList<String>): Int
 
     @Query("""
          SELECT t1.permission_id
@@ -19,6 +19,6 @@ interface AccountPermissionRepository : BaseRepository<AccountPermission,String>
         where t1.enabled=1
         and t1.account_id=?1
         """, nativeQuery = true)
-    fun findPermissionIdByAccount(account: String): List<String>
+    fun findPermissionIdByAccount(account: String): MutableList<String>
 
 }

@@ -19,7 +19,7 @@ interface ProductRepository:BaseRepository<Product,String>{
         t1.enabled=1
         AND  t1.company_id = :companyId
      """, nativeQuery = true)
-    fun findByCompanyId(@Param("companyId")companyId:String):List<Product>
+    fun findByCompanyId(@Param("companyId")companyId:String):MutableList<Product>
 
     @Query("""
         SELECT max(t1.out_date)

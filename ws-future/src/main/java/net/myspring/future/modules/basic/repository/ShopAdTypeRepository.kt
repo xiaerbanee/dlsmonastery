@@ -22,7 +22,7 @@ interface ShopAdTypeRepository : BaseRepository<ShopAdType,String>,ShopAdTypeRep
     @Cacheable
     override fun findOne(id: String): ShopAdType
 
-    override fun findAll(): List<ShopAdType>
+    override fun findAll(): MutableList<ShopAdType>
 
     @CachePut(key = "#id")
     fun save(shopAdType: ShopAdType): Int
@@ -33,7 +33,7 @@ interface ShopAdTypeRepository : BaseRepository<ShopAdType,String>,ShopAdTypeRep
         where t1.enabled=1
     """, nativeQuery = true)
     //TODO 需要修改
-    fun findAllByEnabled(): List<ShopAdTypeDto>
+    fun findAllByEnabled(): MutableList<ShopAdTypeDto>
 
 
 }

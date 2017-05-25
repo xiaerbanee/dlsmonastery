@@ -34,7 +34,7 @@ interface BackendRepository:BaseRepository<Backend,String>,BackendRepositoryCust
         where t1.enabled=1
         and t1.name like %?1%
      """, nativeQuery = true)
-    fun findByNameLike(name:String):List<Backend>
+    fun findByNameLike(name:String):MutableList<Backend>
 
     @Query("""
         SELECT
@@ -63,7 +63,7 @@ interface BackendRepository:BaseRepository<Backend,String>,BackendRepositoryCust
         and t4.enabled=1
         and t4.id IN ?1
      """, nativeQuery = true)
-    fun findByMenuList(menuList:List<String>):List<BackendMenuDto>
+    fun findByMenuList(menuList:MutableList<String>):MutableList<BackendMenuDto>
 
     @Query("""
         SELECT
@@ -94,7 +94,7 @@ interface BackendRepository:BaseRepository<Backend,String>,BackendRepositoryCust
         and t5.enabled=1
         and t5.role_id=:roleId
      """, nativeQuery = true)
-    fun findByRoleId(@Param("roleId")roleId:String):List<BackendMenuDto>
+    fun findByRoleId(@Param("roleId")roleId:String):MutableList<BackendMenuDto>
 
     @Query("""
         SELECT
@@ -129,21 +129,21 @@ interface BackendRepository:BaseRepository<Backend,String>,BackendRepositoryCust
         and t6.enabled=1
         and t6.role_id=:roleId
      """, nativeQuery = true)
-    fun findRolePermissionByRoleId(@Param("roleId")roleId:String):List<BackendMenuDto>
+    fun findRolePermissionByRoleId(@Param("roleId")roleId:String):MutableList<BackendMenuDto>
 
 
 }
 
 
 interface BackendRepositoryCustom{
-    fun findAllEnabled():List<Backend>?
+    fun findAllEnabled():MutableList<Backend>?
 
     fun findPage(pageable: Pageable,backendQuery: BackendQuery): Page<BackendDto>?
 
 }
 
 class BackendRepositoryImpl @Autowired constructor(val entityManager: EntityManager): BackendRepositoryCustom{
-    override fun findAllEnabled(): List<Backend>? {
+    override fun findAllEnabled(): MutableList<Backend>? {
         return null
     }
 

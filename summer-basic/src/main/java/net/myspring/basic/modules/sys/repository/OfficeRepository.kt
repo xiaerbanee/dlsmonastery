@@ -33,7 +33,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         and t2.name=?1
         and t1.enabled =1
      """, nativeQuery = true)
-    fun findByOfficeRuleName(officeRuleName:String):List<Office>
+    fun findByOfficeRuleName(officeRuleName:String):MutableList<Office>
 
     @Query("""
     SELECT t1.*
@@ -51,7 +51,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         and t1.id=t3.office_id
         and t3.account_id in ?1
      """, nativeQuery = true)
-    fun findByAccountIds(accountIds:List<String>):List<Office>
+    fun findByAccountIds(accountIds:MutableList<String>):MutableList<Office>
 
     @Query("""
         SELECT t1.*
@@ -66,7 +66,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         where t1.parent_ids like %?1%
         and t1.enabled =1
      """, nativeQuery = true)
-    fun findByParentIdsLike(parentId: String): List<Office>
+    fun findByParentIdsLike(parentId: String): MutableList<Office>
 
     @Query("""
        SELECT t1.id,t1.name
@@ -74,7 +74,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         WHERE t1.enabled = 1
         and t1.id in ?1
      """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<Office>
+    fun findByIds(ids: MutableList<String>): MutableList<Office>
 
     @Query("""
         SELECT t1.*
@@ -100,7 +100,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
             t2.id = ?1
          )
      """, nativeQuery = true)
-    fun findSameAreaByOfficeId(officeId: String): List<Office>
+    fun findSameAreaByOfficeId(officeId: String): MutableList<Office>
 
 
 
@@ -110,17 +110,17 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         WHERE t1.enabled=1
      """, nativeQuery = true)
             //TODO 修改
-    fun findAllEnabled():List<Office>
+    fun findAllEnabled():MutableList<Office>
 }
 
 interface OfficeRepositoryCustom {
-    fun findByParentIdsListLike(parentIdList: List<String>): List<Office>
+    fun findByParentIdsListLike(parentIdList: MutableList<String>): MutableList<Office>
 
-    fun findByFilter(officeQuery: OfficeQuery): List<Office>
+    fun findByFilter(officeQuery: OfficeQuery): MutableList<Office>
 
-    fun findByFilterAll(@Param("p") map: Map<String, Any>): List<Office>
+    fun findByFilterAll(@Param("p") map: Map<String, Any>): MutableList<Office>
 
-    fun findByAreaIds(areaIds: List<String>): List<Office>
+    fun findByAreaIds(areaIds: MutableList<String>): MutableList<Office>
 
     fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>?
 }
@@ -130,7 +130,7 @@ class OfficeRepositoryImpl@Autowired constructor(val entityManager: EntityManage
         return null;
     }
 
-    override fun findByParentIdsListLike(parentIdList: List<String>): List<Office> {
+    override fun findByParentIdsListLike(parentIdList: MutableList<String>): MutableList<Office> {
         var sb = StringBuilder();
         sb.append("""
             SELECT t1.*
@@ -144,14 +144,14 @@ class OfficeRepositoryImpl@Autowired constructor(val entityManager: EntityManage
                 sb.append(" or ");
             }
         }
-        var query = entityManager.createNativeQuery(sb.toString());
+        var query = entityManager.createNativeQuery(sb.toString(),Office::class.java);
         for((index,value) in parentIdList.withIndex()) {
             query.setParameter("parentId" + index ,"%$value%");
         }
-        return query.resultList as List<Office>;
+        return query.resultList as MutableList<Office>;
     }
 
-    override fun findByFilter(officeQuery: OfficeQuery): List<Office> {
+    override fun findByFilter(officeQuery: OfficeQuery): MutableList<Office> {
         var sb = StringBuilder();
         sb.append("""
             select office.*
@@ -172,10 +172,10 @@ class OfficeRepositoryImpl@Autowired constructor(val entityManager: EntityManage
         """)
         var query = entityManager.createNativeQuery(sb.toString());
         QueryUtils.setParameter(query,officeQuery);
-        return query.resultList as List<Office>;
+        return query.resultList as MutableList<Office>;
     }
 
-    override fun findByFilterAll(map: Map<String, Any>): List<Office> {
+    override fun findByFilterAll(map: Map<String, Any>): MutableList<Office> {
         var sb = StringBuilder();
         sb.append("""
             select office.*
@@ -184,11 +184,11 @@ class OfficeRepositoryImpl@Autowired constructor(val entityManager: EntityManage
             where
             office.enabled=1
         """)
-        var query = entityManager.createNativeQuery(sb.toString());
-        return query.resultList as List<Office>;
+        var query = entityManager.createNativeQuery(sb.toString(),Office::class.java);
+        return query.resultList as MutableList<Office>;
     }
 
-    override fun findByAreaIds(areaIds: List<String>): List<Office> {
+    override fun findByAreaIds(areaIds: MutableList<String>): MutableList<Office> {
         var sb = StringBuilder();
         sb.append("""
             SELECT t1.*
@@ -204,12 +204,12 @@ class OfficeRepositoryImpl@Autowired constructor(val entityManager: EntityManage
                 sb.append(" or ");
             }
         }
-        var query = entityManager.createNativeQuery(sb.toString());
+        var query = entityManager.createNativeQuery(sb.toString(),Office::class.java);
         query.setParameter("areaIds",areaIds);
         for((index,value) in areaIds.withIndex()) {
             query.setParameter("parentId" + index ,"%$value%");
         }
-        return query.resultList as List<Office>;
+        return query.resultList as MutableList<Office>;
     }
 
 }

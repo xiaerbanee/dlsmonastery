@@ -49,7 +49,7 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
         where t1.enabled=1
         and t1.office_id IN ?1
     """, nativeQuery = true)
-    fun findByOfficeIds(officeIds: List<String>): List<Account>
+    fun findByOfficeIds(officeIds: MutableList<String>): MutableList<Account>
 
     @Query("""
         SELECT
@@ -59,7 +59,7 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
         where t1.position_id=t2.id
         and t2.id=?1
     """, nativeQuery = true)
-    fun findByPosition(positionId: String): List<Account>
+    fun findByPosition(positionId: String): MutableList<Account>
 
     @Query("""
         SELECT t1.*
@@ -67,33 +67,33 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
         WHERE t1.enabled=1
         and t1.login_name in ?1
     """, nativeQuery = true)
-    fun findByLoginNameList(loginNames: List<String>): List<Account>
+    fun findByLoginNameList(loginNames: MutableList<String>): MutableList<Account>
 
     @Query("""
         SELECT t1.*
         FROM hr_account t1
         WHERE t1.id=?1
     """, nativeQuery = true)
-    fun findById(id: String): List<Account>
+    fun findById(id: String): MutableList<Account>
 
     @Query("""
         SELECT t1.*
         FROM hr_account t1
         WHERE t1.id IN ?1
     """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<Account>
+    fun findByIds(ids: MutableList<String>): MutableList<Account>
 }
 
 interface AccountRepositoryCustom{
-    fun findByLoginNameLikeAndType(type: String, name: String): List<Account>
+    fun findByLoginNameLikeAndType(type: String, name: String): MutableList<Account>
 
     fun findPage(pageable: Pageable, accountQuery: AccountQuery): Page<AccountDto>
 
-    fun findByFilter(accountQuery: AccountQuery): List<Account>
+    fun findByFilter(accountQuery: AccountQuery): MutableList<Account>
 }
 
 class AccountRepositoryImpl @Autowired constructor(val entityManager: EntityManager): AccountRepositoryCustom{
-    override fun findByFilter(accountQuery: AccountQuery): List<Account> {
+    override fun findByFilter(accountQuery: AccountQuery): MutableList<Account> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -101,7 +101,7 @@ class AccountRepositoryImpl @Autowired constructor(val entityManager: EntityMana
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findByLoginNameLikeAndType(type: String, name: String): List<Account> {
+    override fun findByLoginNameLikeAndType(type: String, name: String): MutableList<Account> {
         var sb = StringBuilder()
         sb.append("""
             SELECT
@@ -118,7 +118,7 @@ class AccountRepositoryImpl @Autowired constructor(val entityManager: EntityMana
         var query = entityManager.createNativeQuery(sb.toString(), Account::class.java)
         query.setParameter("name", name)
         query.setParameter("type", type)
-        return query.resultList as List<Account>
+        return query.resultList as MutableList<Account>
 
     }
 

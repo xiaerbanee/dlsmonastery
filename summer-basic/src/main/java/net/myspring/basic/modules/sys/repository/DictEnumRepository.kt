@@ -34,7 +34,7 @@ interface DictEnumRepository :BaseRepository<DictEnum,String>,DictEnumRepository
         t1.enabled=1
         and t1.category=:category order by sort asc
      """, nativeQuery = true)
-    fun findByCategory(@Param("category")category:String):List<DictEnum>
+    fun findByCategory(@Param("category")category:String):MutableList<DictEnum>
 
     @Query("""
          SELECT DISTINCT
@@ -42,7 +42,7 @@ interface DictEnumRepository :BaseRepository<DictEnum,String>,DictEnumRepository
         FROM
         sys_dict_enum t1
      """, nativeQuery = true)
-    fun findDistinctCategory():List<String>
+    fun findDistinctCategory():MutableList<String>
 
     @Query("""
         SELECT

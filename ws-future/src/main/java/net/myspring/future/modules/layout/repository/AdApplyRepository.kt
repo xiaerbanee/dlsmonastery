@@ -24,14 +24,14 @@ interface AdApplyRepository : BaseRepository<AdApply,String>,AdApplyRepositoryCu
         where t.enabled = 1
     """, nativeQuery = true)
     //TODO 修改该query
-    fun findByOutGroupIdAndDate(@Param("dateStart") dateStart: LocalDate, @Param("outGroupIds") outGroupIds: List<String>): List<AdApplyDto>
+    fun findByOutGroupIdAndDate(@Param("dateStart") dateStart: LocalDate, @Param("outGroupIds") outGroupIds: MutableList<String>): MutableList<AdApplyDto>
 
     @Query("""
         select t.id
         from crm_ad_apply t
         where t.enabled = 1
     """, nativeQuery = true)
-    fun findAllId(): List<String>
+    fun findAllId(): MutableList<String>
 
     @Query("""
         select t.id
@@ -39,7 +39,7 @@ interface AdApplyRepository : BaseRepository<AdApply,String>,AdApplyRepositoryCu
         where t.enabled = 1
     """, nativeQuery = true)
             //TODO 修改该query
-    fun findByFilter(@Param("p") map: Map<String, Any>): List<AdApply>
+    fun findByFilter(@Param("p") map: Map<String, Any>): MutableList<AdApply>
 
 }
 

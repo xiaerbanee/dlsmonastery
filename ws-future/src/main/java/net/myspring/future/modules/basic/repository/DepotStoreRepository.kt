@@ -22,7 +22,7 @@ interface DepotStoreRepository : BaseRepository<DepotStore,String>,DepotStoreRep
     @Cacheable
     override fun findOne(id: String): DepotStore
 
-    override fun findAll(): List<DepotStore>
+    override fun findAll(): MutableList<DepotStore>
 
     @CachePut(key = "#id")
     fun save(depotStore: DepotStore): Int
@@ -32,7 +32,7 @@ interface DepotStoreRepository : BaseRepository<DepotStore,String>,DepotStoreRep
         FROM crm_depot_store t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<DepotStore>
+    fun findAllEnabled(): MutableList<DepotStore>
 
     @Query("""
         SELECT t1.*
@@ -40,7 +40,7 @@ interface DepotStoreRepository : BaseRepository<DepotStore,String>,DepotStoreRep
         where t1.enabled=1
         and t1.id in ?1
     """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<DepotStore>
+    fun findByIds(ids: MutableList<String>): MutableList<DepotStore>
 
 }
 

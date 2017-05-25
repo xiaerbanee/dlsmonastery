@@ -32,7 +32,7 @@ interface  MenuRepository :BaseRepository<Menu,String>,MenuRepositoryCustom{
         where
         t1.enabled=1 and t1.id not in (select DISTINCT menu_id from sys_permission)
      """, nativeQuery = true)
-    fun findByPermissionIsEmpty():List<Menu>
+    fun findByPermissionIsEmpty():MutableList<Menu>
 
     @Query("""
         SELECT
@@ -42,14 +42,14 @@ interface  MenuRepository :BaseRepository<Menu,String>,MenuRepositoryCustom{
         where
         t1.enabled=1 and t1.id  in (select DISTINCT menu_id from sys_permission)
      """, nativeQuery = true)
-    fun findByPermissionIsNotEmpty(): List<Menu>
+    fun findByPermissionIsNotEmpty(): MutableList<Menu>
 
     @Query("""
             select t1.*
             from sys_menu t1
             where t1.enabled = 1 and t1.menu_category_id = ?1
      """, nativeQuery = true)
-    fun findByMenuCategoryId(menuCategoryId:String):List<Menu>
+    fun findByMenuCategoryId(menuCategoryId:String):MutableList<Menu>
 
     @Query("""
        SELECT t1.*
@@ -62,14 +62,14 @@ interface  MenuRepository :BaseRepository<Menu,String>,MenuRepositoryCustom{
         </if>
         and t1.id in ?1
      """, nativeQuery = true)
-    fun findByMenuIdsAndMobile(menuIds:List<String>,isMobile:Boolean):List<Menu>
+    fun findByMenuIdsAndMobile(menuIds:MutableList<String>,isMobile:Boolean):MutableList<Menu>
 
     @Query("""
        SELECT t1.*
         FROM sys_menu t1
         where t1.enabled=1
      """, nativeQuery = true)
-    fun findAllEnabled():List<Menu>
+    fun findAllEnabled():MutableList<Menu>
 
 }
 

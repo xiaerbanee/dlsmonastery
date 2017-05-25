@@ -28,7 +28,7 @@ interface ShopGoodsDepositRepository : BaseRepository<ShopGoodsDeposit,String>,S
     ORDER BY
         created_date DESC
     """, nativeQuery = true)
-    fun findByShopId(@Param("shopId") shopId: String, @Param("status") status: String): List<ShopGoodsDeposit>
+    fun findByShopId(@Param("shopId") shopId: String, @Param("status") status: String): MutableList<ShopGoodsDeposit>
 }
 
 interface ShopGoodsDepositRepositoryCustom{

@@ -24,7 +24,7 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
     @Cacheable
     override fun findOne(id: String): AdPricesystem
 
-    override fun findAll(): List<AdPricesystem>
+    override fun findAll(): MutableList<AdPricesystem>
 
     @CachePut(key = "#id")
     fun save(adPricesystem: AdPricesystem): Int
@@ -34,14 +34,14 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
         FROM crm_ad_price_system t1
         WHERE t1.enabled = 1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<AdPricesystem>
+    fun findAllEnabled(): MutableList<AdPricesystem>
 
     @Query("""
         SELECT t1.*
         FROM crm_ad_price_system t1
         WHERE t1.enabled = 1
     """, nativeQuery = true)
-    fun findList(adPricesystemQuery: AdPricesystemQuery): List<AdPricesystem>
+    fun findList(adPricesystemQuery: AdPricesystemQuery): MutableList<AdPricesystem>
 
     fun findByName(name: String): AdPricesystem
 
@@ -50,14 +50,14 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
     """, nativeQuery = true)
     fun deleteOfficeIds(id: String): Int
 
-//    fun saveOfficeIds(@Param("adPricesystemId")adPricesystemId: String,@Param("officeIds")officeIds: List<String>): Int
+//    fun saveOfficeIds(@Param("adPricesystemId")adPricesystemId: String,@Param("officeIds")officeIds: MutableList<String>): Int
 
     @Query("""
        SELECT t1.office_id
         FROM crm_ad_pricesystem_office t1
         where t1.ad_pricesystem_id=?1
     """, nativeQuery = true)
-    fun findOfficeById(id: String): List<String>
+    fun findOfficeById(id: String): MutableList<String>
 }
 
 interface AdpricesystemRepositoryCustom{

@@ -26,7 +26,7 @@ interface  BdMaterialRepository{
         AND t1.FMATERIALGROUP = t3.FID
         AND t3.FID = t4.FID
      """, nativeQuery = true)
-    fun findAll():List<BdMaterial>
+    fun findAll():MutableList<BdMaterial>
 
     @Query("""
         SELECT

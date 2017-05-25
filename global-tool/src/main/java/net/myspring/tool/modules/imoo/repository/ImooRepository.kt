@@ -12,7 +12,7 @@ import java.time.LocalDate
 interface ImooRepository {
 
     @Query("select * from PlantBasicProduct",nativeQuery = true)
-    fun plantBasicProducts(): List<ImooPlantBasicProduct>
+    fun plantBasicProducts(): MutableList<ImooPlantBasicProduct>
 
     @Query("""
         select * from prdocutimeideliver t
@@ -20,6 +20,6 @@ interface ImooRepository {
         and t.creation_date < :dateEnd
         and mainagentid in :agentCodes
         """, nativeQuery = true)
-    fun plantPrdocutImeiDeliverByDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: List<String>): List<ImooPrdocutImeiDeliver>
+    fun plantPrdocutImeiDeliverByDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>): MutableList<ImooPrdocutImeiDeliver>
 
 }

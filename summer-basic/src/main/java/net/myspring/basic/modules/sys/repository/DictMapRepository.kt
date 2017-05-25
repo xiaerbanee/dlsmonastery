@@ -31,7 +31,7 @@ interface  DictMapRepository :BaseRepository<DictMap,String>, DictMapRepositoryC
         FROM
         sys_dict_map t1
      """, nativeQuery = true)
-    fun findDistinctCategory():List<String>
+    fun findDistinctCategory():MutableList<String>
 
     @Query("""
         SELECT
@@ -42,7 +42,7 @@ interface  DictMapRepository :BaseRepository<DictMap,String>, DictMapRepositoryC
         t1.category=?1
         and t1.enabled=1
      """, nativeQuery = true)
-    fun findByCategory(category:String):List<DictMap>
+    fun findByCategory(category:String):MutableList<DictMap>
 
     @Query("""
          SELECT
