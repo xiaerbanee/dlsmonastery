@@ -2,16 +2,22 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Client
+import net.myspring.future.modules.basic.dto.ClientDto
+import net.myspring.future.modules.basic.web.query.ClientQuery
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("client"))
-interface ClientRepository :BaseRepository<Client,String> {
+interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom {
 
     @Cacheable
     override fun findOne(id: String): Client
@@ -40,4 +46,19 @@ interface ClientRepository :BaseRepository<Client,String> {
     fun findByDepotId(depotId: String): Client
 
     fun findByNameLike(name: String): List<Client>
+}
+
+interface ClientRepositoryCustom{
+    fun findPage(pageable: Pageable, clientQuery: ClientQuery): Page<ClientDto>
+}
+
+class ClientRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ClientRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, clientQuery: ClientQuery): Page<ClientDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), ClientDto::class.java)
+
+        return query.resultList as Page<ClientDto>
+    }
 }

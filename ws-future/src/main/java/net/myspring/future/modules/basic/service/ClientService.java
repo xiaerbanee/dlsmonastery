@@ -9,9 +9,7 @@ import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
-import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.query.ClientQuery;
 import net.myspring.future.modules.basic.web.form.ClientForm;
 import net.myspring.util.mapper.BeanUtil;
@@ -32,13 +30,9 @@ public class ClientService {
     @Autowired
     private DepotShopRepository depotShopRepository;
     @Autowired
-    private DepotShopRepository depotShopRepository;
-    @Autowired
     private DepotManager depotManager;
     @Autowired
     private DepotRepository depotRepository;
-    @Autowired
-    private ClientRepository clientRepository;
     @Autowired
     private ClientRepository clientRepository;
     @Autowired

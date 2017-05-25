@@ -5,9 +5,12 @@ import net.myspring.future.common.mybatis.MyProvider
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Product
 import net.myspring.future.modules.basic.domain.ProductType
+import net.myspring.future.modules.basic.dto.PricesystemDto
 import net.myspring.future.modules.basic.dto.ProductDto
+import net.myspring.future.modules.basic.web.query.PricesystemQuery
 import net.myspring.future.modules.basic.web.query.ProductQuery
 import org.apache.ibatis.annotations.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
@@ -15,12 +18,13 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("products"))
-interface ProductRepository : BaseRepository<Product,String> {
+interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCustom {
     @Cacheable
     override fun findOne(id: String): Product
 
@@ -90,4 +94,19 @@ interface ProductRepository : BaseRepository<Product,String> {
     fun findIntersectionOfBothPricesystem(@Param("pricesystemId1") pricesystemId1: String, @Param("pricesystemId2") pricesystemId2: String): List<ProductDto>
 
     fun findByNameList(nameList: List<String>): List<Product>
+}
+
+interface ProductRepositoryCustom{
+    fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto>
+}
+
+class ProductRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ProductRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), ProductDto::class.java)
+
+        return query.resultList as Page<ProductDto>
+    }
 }

@@ -5,7 +5,6 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
 import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
-import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
 import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -20,8 +19,6 @@ import java.util.List;
 @Service
 public class ShopAdTypeService {
 
-    @Autowired
-    private ShopAdTypeRepository shopAdTypeRepository;
     @Autowired
     private ShopAdTypeRepository shopAdTypeRepository;
     @Autowired

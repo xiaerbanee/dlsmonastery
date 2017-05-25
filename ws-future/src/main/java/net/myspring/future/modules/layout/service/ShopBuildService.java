@@ -5,13 +5,9 @@ import com.mongodb.gridfs.GridFSFile;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopBuild;
 import net.myspring.future.modules.layout.dto.ShopBuildDto;
-import net.myspring.future.modules.layout.repository.ShopBuildRepository;
-import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.future.modules.layout.repository.ShopBuildRepository;
 import net.myspring.future.modules.layout.web.form.ShopBuildDetailOrAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopBuildForm;
@@ -37,14 +33,11 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class ShopBuildService {
 
-    @Autowired
-    private ShopBuildRepository shopBuildRepository;
     @Autowired
     private ShopBuildRepository shopBuildRepository;
     @Autowired

@@ -8,7 +8,6 @@ import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopImage;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
 import net.myspring.future.modules.layout.repository.ShopImageRepository;
-import net.myspring.future.modules.layout.repository.ShopImageRepository;
 import net.myspring.future.modules.layout.web.form.ShopImageForm;
 import net.myspring.future.modules.layout.web.query.ShopImageQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -21,7 +20,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,8 +27,6 @@ import java.util.List;
 @Transactional
 public class ShopImageService {
 
-    @Autowired
-    private ShopImageRepository shopImageRepository;
     @Autowired
     private ShopImageRepository shopImageRepository;
     @Autowired

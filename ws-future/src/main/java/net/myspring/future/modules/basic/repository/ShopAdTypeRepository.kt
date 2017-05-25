@@ -4,21 +4,25 @@ import net.myspring.common.cache.IdCacheKeyGenerator
 import net.myspring.future.common.mybatis.MyProvider
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ShopAdType
+import net.myspring.future.modules.basic.dto.ProductTypeDto
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto
+import net.myspring.future.modules.basic.web.query.ProductTypeQuery
 import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery
 import org.apache.ibatis.annotations.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("shopAdTypes"))
-interface ShopAdTypeRepository : BaseRepository<ShopAdType,String> {
+interface ShopAdTypeRepository : BaseRepository<ShopAdType,String>,ShopAdTypeRepositoryCustom {
 
     @Cacheable
     override fun findOne(id: String): ShopAdType
@@ -44,4 +48,19 @@ interface ShopAdTypeRepository : BaseRepository<ShopAdType,String> {
         and t1.id in ?1
     """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<ShopAdType>
+}
+
+interface ShopAdTypeRepositoryCustom{
+    fun findPage(pageable: Pageable, shopAdTypeQuery: ShopAdTypeQuery): Page<ShopAdTypeDto>
+}
+
+class ShopAdTypeRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopAdTypeRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, shopAdTypeQuery: ShopAdTypeQuery): Page<ShopAdTypeDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), ShopAdTypeDto::class.java)
+
+        return query.resultList as Page<ShopAdTypeDto>
+    }
 }

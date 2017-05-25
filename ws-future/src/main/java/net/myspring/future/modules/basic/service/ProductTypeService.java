@@ -34,10 +34,6 @@ public class ProductTypeService {
     @Autowired
     private ProductTypeRepository productTypeRepository;
     @Autowired
-    private ProductTypeRepository productTypeRepository;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
     private ProductRepository productRepository;
     @Autowired
     private CacheUtils cacheUtils;

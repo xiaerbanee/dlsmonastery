@@ -7,14 +7,10 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
-import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.manager.ShopAllotDetailManager;
-import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
-import net.myspring.future.modules.layout.repository.ShopAllotRepository;
 import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import net.myspring.future.modules.layout.repository.ShopAllotRepository;
 import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
@@ -42,10 +38,6 @@ public class ShopAllotService {
     @Autowired
     private ShopAllotRepository shopAllotRepository;
     @Autowired
-    private ShopAllotRepository shopAllotRepository;
-    @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
     private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
@@ -54,10 +46,6 @@ public class ShopAllotService {
     private ShopAllotDetailManager shopAllotDetailManager;
     @Autowired
     private ShopAllotDetailRepository shopAllotDetailRepository;
-    @Autowired
-    private ShopAllotDetailRepository shopAllotDetailRepository;
-    @Autowired
-    private PricesystemDetailRepository pricesystemDetailRepository;
     @Autowired
     private PricesystemDetailRepository pricesystemDetailRepository;
 

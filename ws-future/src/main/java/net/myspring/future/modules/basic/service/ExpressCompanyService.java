@@ -6,7 +6,6 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.repository.ExpressCompanyRepository;
-import net.myspring.future.modules.basic.repository.ExpressCompanyRepository;
 import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -23,8 +22,6 @@ import java.util.List;
 @Transactional
 public class ExpressCompanyService {
 
-    @Autowired
-    private ExpressCompanyRepository expressCompanyRepository;
     @Autowired
     private ExpressCompanyRepository expressCompanyRepository;
     @Autowired

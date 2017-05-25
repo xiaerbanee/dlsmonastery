@@ -7,22 +7,15 @@ import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
-import net.myspring.future.modules.basic.repository.AdPricesystemRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
-import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
 import net.myspring.future.modules.basic.repository.AdpricesystemRepository;
-import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.repository.AdPricesystemChangeRepository;
-import net.myspring.future.modules.layout.repository.AdPricesystemChangeRepository;
-import net.myspring.future.modules.layout.web.form.AdPricesystemChangeForm;
 import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.AfterDomainEventPublication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,17 +30,9 @@ public class AdPricesystemChangeService {
     @Autowired
     private AdPricesystemChangeRepository adPricesystemChangeRepository;
     @Autowired
-    private AdPricesystemChangeRepository adPricesystemChangeRepository;
-    @Autowired
-    private AdPricesystemRepository adPricesystemRepository;
-    @Autowired
     private AdpricesystemRepository adpricesystemRepository;
     @Autowired
     private ProductRepository productRepository;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private AdPricesystemDetailRepository adPricesystemDetailRepository;
     @Autowired
     private AdPricesystemDetailRepository adPricesystemDetailRepository;
     @Autowired

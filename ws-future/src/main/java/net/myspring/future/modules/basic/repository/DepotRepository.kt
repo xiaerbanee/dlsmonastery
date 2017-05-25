@@ -1,24 +1,25 @@
 package net.myspring.future.modules.basic.repository
 
-import net.myspring.common.cache.IdCacheKeyGenerator
-import net.myspring.future.common.mybatis.MyProvider
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Depot
+import net.myspring.future.modules.basic.dto.DepotAccountDto
 import net.myspring.future.modules.basic.dto.DepotDto
+import net.myspring.future.modules.basic.web.query.DepotAccountQuery
 import net.myspring.future.modules.basic.web.query.DepotQuery
-import org.apache.ibatis.annotations.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("depots"))
-interface DepotRepository :BaseRepository<Depot,String> {
+interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     @Cacheable
     override fun findOne(id: String): Depot
@@ -67,4 +68,29 @@ interface DepotRepository :BaseRepository<Depot,String> {
     fun findShopByGoodsOrderId(goodsOrderId: String): DepotDto
 
     fun findStoreByGoodsOrderId(goodsOrderId: String): DepotDto
+}
+
+interface DepotRepositoryCustom{
+    fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto>
+
+    fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,boolean: Boolean):Page<DepotAccountDto>
+}
+
+class DepotRepositoryImpl @Autowired constructor(val entityManager: EntityManager):DepotRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
+
+        return query.resultList as Page<DepotDto>
+    }
+
+    override fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,boolean: Boolean):Page<DepotAccountDto>{
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), DepotAccountDto::class.java)
+
+        return query.resultList as Page<DepotAccountDto>
+    }
 }

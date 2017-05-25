@@ -1,23 +1,23 @@
 package net.myspring.future.modules.basic.repository
 
-import net.myspring.common.cache.IdCacheKeyGenerator
-import net.myspring.future.common.mybatis.MyProvider
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Pricesystem
 import net.myspring.future.modules.basic.dto.PricesystemDto
 import net.myspring.future.modules.basic.web.query.PricesystemQuery
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("pricesystems"))
-interface PricesystemRepository : BaseRepository<Pricesystem,String>{
+interface PricesystemRepository : BaseRepository<Pricesystem,String>,PricesystemRepositoryCustom {
     @Cacheable
     override fun findOne(id: String): Pricesystem
 
@@ -47,4 +47,19 @@ interface PricesystemRepository : BaseRepository<Pricesystem,String>{
         where t1.enabled=1
     """, nativeQuery = true)
     fun findPricesystem(): List<Pricesystem>
+}
+
+interface PricesystemRepositoryCustom{
+    fun findPage(pageable: Pageable, pricesystemQuery: PricesystemQuery): Page<PricesystemDto>
+}
+
+class PricesystemRepositoryImpl @Autowired constructor(val entityManager: EntityManager):PricesystemRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, pricesystemQuery: PricesystemQuery): Page<PricesystemDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), PricesystemDto::class.java)
+
+        return query.resultList as Page<PricesystemDto>
+    }
 }
