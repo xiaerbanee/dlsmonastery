@@ -37,8 +37,22 @@ interface DemoPhoneTypeRepository : BaseRepository<DemoPhoneType,String> {
     """, nativeQuery = true)
     fun findAllEnabled(): List<DemoPhoneType>
 
-
+    @Query("""
+        SELECT t1.*
+        FROM crm_demo_phone_type t1
+        where t1.enabled=1
+        and t1.id in ?1
+    """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<DemoPhoneType>
 
+    @Query("""
+        SELECT
+            t1.*
+        FROM
+            crm_demo_phone_type t1
+        WHERE
+            t1.enabled = 1
+        AND t1.apply_end_date > ?1
+    """, nativeQuery = true)
     fun findAllByApplyEndDate(applyEndDate: LocalDate): List<DemoPhoneType>
 }

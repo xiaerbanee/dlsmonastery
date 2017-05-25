@@ -52,11 +52,11 @@ interface BankRepository : BaseRepository<Bank, String> {
 
     @Query("""
         select
-        MAX(out_date)
+            MAX(out_date)
         from
-        crm_bank t1
+            crm_bank t1
         where
-        t1.enabled=1
+            t1.enabled=1
     """, nativeQuery = true)
     fun getMaxOutDate(): LocalDateTime
 

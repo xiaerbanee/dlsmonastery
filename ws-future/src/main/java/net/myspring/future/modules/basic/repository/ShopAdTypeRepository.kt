@@ -37,5 +37,11 @@ interface ShopAdTypeRepository : BaseRepository<ShopAdType,String> {
 
     fun findAllByEnabled(): List<ShopAdTypeDto>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_shop_ad_type t1
+        where t1.enabled=1
+        and t1.id in ?1
+    """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<ShopAdType>
 }
