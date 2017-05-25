@@ -17,7 +17,7 @@ import javax.persistence.EntityManager
 /**
  * Created by haos on 2017/5/24.
  */
-interface  MenuCategoryRepository :BaseRepository<MenuCategory,String>{
+interface  MenuCategoryRepository :BaseRepository<MenuCategory,String>,MenuCategoryRepositoryCustom{
     @CachePut(key="#id")
     fun save(menuCategory: MenuCategory): MenuCategory
 
