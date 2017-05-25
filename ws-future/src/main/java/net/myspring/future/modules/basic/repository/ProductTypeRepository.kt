@@ -35,10 +35,22 @@ interface ProductTypeRepository : BaseRepository<ProductType,String> {
     """, nativeQuery = true)
     fun findAllEnabled(): List<ProductType>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.id in ?1
+    """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<ProductType>
 
     fun findList(@Param("p") map: Map<String, Any>): List<ProductType>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.demo_phone_type_id in ?1
+    """, nativeQuery = true)
     fun findByDemoPhoneTypeIds(dempProductTypeIds: List<String>): List<ProductType>
 
     fun findByNameLike(@Param("name") name: String): List<ProductType>

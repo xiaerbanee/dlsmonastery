@@ -33,6 +33,12 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>{
     """, nativeQuery = true)
     fun findAllEnabled(): List<ExpressCompany>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_express_company t1
+        where t1.enabled=1
+        and t1.id in ?1
+    """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<ExpressCompany>
 
     fun findByExpressType(expressType: String): List<ExpressCompany>

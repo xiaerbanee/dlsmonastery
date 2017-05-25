@@ -8,9 +8,11 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.mapper.ShopAdTypeMapper;
+import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
 import net.myspring.future.modules.layout.domain.ShopAd;
 import net.myspring.future.modules.layout.dto.ShopAdDto;
 import net.myspring.future.modules.layout.mapper.ShopAdMapper;
+import net.myspring.future.modules.layout.repository.ShopAdRepository;
 import net.myspring.future.modules.layout.web.form.ShopAdForm;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -48,7 +50,11 @@ public class ShopAdService {
     @Autowired
     private ShopAdMapper shopAdMapper;
     @Autowired
+    private ShopAdRepository shopAdRepository;
+    @Autowired
     private ShopAdTypeMapper shopAdTypeMapper;
+    @Autowired
+    private ShopAdTypeRepository shopAdTypeRepository;
     @Autowired
     private ActivitiClient activitiClient;
     @Autowired
@@ -64,7 +70,7 @@ public class ShopAdService {
 
     public ShopAd save(ShopAdForm shopAdForm) {
         ShopAd shopAd;
-        ShopAdType shopAdType = shopAdTypeMapper.findOne(shopAdForm.getShopAdTypeId());
+        ShopAdType shopAdType = shopAdTypeRepository.findOne(shopAdForm.getShopAdTypeId());
         BigDecimal price=BigDecimal.ZERO;
         if(TotalPriceTypeEnum.按数量.toString().equals(shopAdType.getTotalPriceType())){
             price=shopAdType.getPrice().multiply(new BigDecimal(shopAdForm.getQty()));
@@ -77,7 +83,7 @@ public class ShopAdService {
 
         if(shopAdForm.isCreate()){
             shopAd = BeanUtil.map(shopAdForm,ShopAd.class);
-            shopAdMapper.save(shopAd);
+            shopAdRepository.save(shopAd);
             //启动流程
             ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("广告申请",shopAd.getId(),ShopAd.class.getSimpleName(),shopAdForm.getPrice().toString()));
             if(activitiStartDto!=null){
@@ -86,18 +92,18 @@ public class ShopAdService {
                 shopAd.setProcessFlowId(activitiStartDto.getProcessFlowId());
                 shopAd.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
                 shopAd.setProcessTypeId(activitiStartDto.getProcessTypeId());
-                shopAdMapper.update(shopAd);
+                shopAdRepository.save(shopAd);
             }
         }else {
-            shopAd = shopAdMapper.findOne(shopAdForm.getId());
+            shopAd = shopAdRepository.findOne(shopAdForm.getId());
             ReflectionUtil.copyProperties(shopAdForm,shopAd);
-            shopAdMapper.update(shopAd);
+            shopAdRepository.save(shopAd);
         }
         return shopAd;
     }
 
     public ShopAdQuery getQuery(ShopAdQuery shopAdQuery) {
-        shopAdQuery.setShopAdTypes(shopAdTypeMapper.findAllByEnabled());
+        shopAdQuery.setShopAdTypes(shopAdTypeRepository.findAllByEnabled());
         return shopAdQuery;
     }
 
@@ -106,7 +112,7 @@ public class ShopAdService {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         ShopAd shopAd;
         if(!shopAdForm.isCreate()){
-            shopAd = shopAdMapper.findOne(shopAdForm.getId());
+            shopAd = shopAdRepository.findOne(shopAdForm.getId());
             activitiCompleteForm.setProcessInstanceId(shopAd.getProcessInstanceId());
             activitiCompleteForm.setProcessTypeId(shopAd.getProcessTypeId());
             activitiCompleteForm.setComment(shopAdForm.getPassRemarks());
@@ -116,7 +122,7 @@ public class ShopAdService {
                 shopAd.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
                 shopAd.setProcessStatus(activitiCompleteDto.getProcessStatus());
                 shopAd.setProcessPositionId(activitiCompleteDto.getPositionId());
-                shopAdMapper.update(shopAd);
+                shopAdRepository.save(shopAd);
             }
         }
     }
@@ -138,7 +144,7 @@ public class ShopAdService {
     public ShopAdDto findOne(String id) {
         ShopAdDto shopAdDto = new ShopAdDto();
         if(StringUtils.isNotBlank(id)){
-            ShopAd shopAd = shopAdMapper.findOne(id);
+            ShopAd shopAd = shopAdRepository.findOne(id);
             shopAdDto = BeanUtil.map(shopAd,ShopAdDto.class);
             cacheUtils.initCacheInput(shopAdDto);
         }
@@ -146,12 +152,12 @@ public class ShopAdService {
     }
 
     public ShopAdForm getForm(ShopAdForm shopAdForm){
-        shopAdForm.setShopAdTypeFormList(shopAdTypeMapper.findAllByEnabled());
+        shopAdForm.setShopAdTypeFormList(shopAdTypeRepository.findAllByEnabled());
         return shopAdForm;
     }
 
     public void logicDelete(String id) {
-        shopAdMapper.logicDeleteOne(id);
+        shopAdRepository.logicDeleteOne(id);
     }
 
     public String findSimpleExcelSheets(Workbook workbook, ShopAdQuery shopAdQuery) throws IOException{
@@ -166,7 +172,7 @@ public class ShopAdService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "specialArea", "是否专区"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "content", "内容说明"));
 
-        List<ShopAdDto> shopAdDtoList = shopAdMapper.findByFilter(shopAdQuery);
+        List<ShopAdDto> shopAdDtoList = shopAdRepository.findByFilter(shopAdQuery);
         cacheUtils.initCacheInput(shopAdDtoList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("广告申请", shopAdDtoList, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"广告申请"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);

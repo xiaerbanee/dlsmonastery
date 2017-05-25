@@ -7,12 +7,16 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.manager.ShopAllotDetailManager;
 import net.myspring.future.modules.layout.mapper.ShopAllotDetailMapper;
 import net.myspring.future.modules.layout.mapper.ShopAllotMapper;
+import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
+import net.myspring.future.modules.layout.repository.ShopAllotRepository;
 import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotViewOrAuditForm;
@@ -38,17 +42,24 @@ public class ShopAllotService {
     @Autowired
     private ShopAllotMapper shopAllotMapper;
     @Autowired
+    private ShopAllotRepository shopAllotRepository;
+    @Autowired
     private DepotMapper depotMapper;
+    @Autowired
+    private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     @Autowired
     private ShopAllotDetailManager shopAllotDetailManager;
-
     @Autowired
     private ShopAllotDetailMapper shopAllotDetailMapper;
     @Autowired
+    private ShopAllotDetailRepository shopAllotDetailRepository;
+    @Autowired
     private PricesystemDetailMapper pricesystemDetailMapper;
+    @Autowired
+    private PricesystemDetailRepository pricesystemDetailRepository;
 
 
     public ShopAllot findOne(String id){
@@ -74,7 +85,7 @@ public class ShopAllotService {
     }
 
     public void logicDeleteOne(String id) {
-        shopAllotMapper.logicDeleteOne(id);
+        shopAllotRepository.logicDeleteOne(id);
     }
 
 
@@ -92,7 +103,7 @@ public class ShopAllotService {
     }
 
     private ShopAllotDto findShopAllotDto(String id) {
-        return shopAllotMapper.findShopAllotDto(id);
+        return shopAllotRepository.findShopAllotDto(id);
     }
 
     public ShopAllot saveOrUpdate(ShopAllotForm shopAllotForm) {
@@ -102,16 +113,16 @@ public class ShopAllotService {
             shopAllot.setFromShopId(shopAllotForm.getFromShopId());
             shopAllot.setToShopId(shopAllotForm.getToShopId());
             shopAllot.setRemarks(shopAllotForm.getRemarks());
-            shopAllot.setBusinessId(IdUtils.getNextBusinessId(shopAllotMapper.findMaxBusinessId(LocalDate.now())));
+            shopAllot.setBusinessId(IdUtils.getNextBusinessId(shopAllotRepository.findMaxBusinessId(LocalDate.now())));
             shopAllot.setStatus(AuditStatusEnum.申请中.name());
 
-            shopAllotMapper.save(shopAllot);
+            shopAllotRepository.save(shopAllot);
 
             batchSaveShopAllotDetails(shopAllotForm.getShopAllotDetailFormList(), shopAllot);
         }else{
-            shopAllot = shopAllotMapper.findOne(shopAllotForm.getId());
+            shopAllot = shopAllotRepository.findOne(shopAllotForm.getId());
             shopAllot.setRemarks( shopAllotForm.getRemarks());
-            shopAllotMapper.update(shopAllot);
+            shopAllotRepository.save(shopAllot);
 
 
             batchSaveShopAllotDetails(shopAllotForm.getShopAllotDetailFormList(), shopAllot);
@@ -124,12 +135,12 @@ public class ShopAllotService {
      * 该方法会首先清空ShopAllot已经关联的ShopAllotDetail记录。之后将传入的门店调拨明细插入ShopAllotDetail表中，并关联至传入的ShopAllot记录
      */
     private void batchSaveShopAllotDetails(List<ShopAllotDetailForm> shopAllotDetailFormList, ShopAllot shopAllot) {
-        shopAllotDetailMapper.deleteByShopAllotId(shopAllot.getId());
+        shopAllotDetailRepository.deleteByShopAllotId(shopAllot.getId());
         if(shopAllotDetailFormList == null || shopAllotDetailFormList.isEmpty()){
             return ;
         }
-        Map<String, PricesystemDetail> fromPricesystemMap = CollectionUtil.extractToMap(pricesystemDetailMapper.findByDepotId(shopAllot.getFromShopId()),"productId");
-        Map<String, PricesystemDetail> toPricesystemMap = CollectionUtil.extractToMap(pricesystemDetailMapper.findByDepotId(shopAllot.getToShopId()),"productId");
+        Map<String, PricesystemDetail> fromPricesystemMap = CollectionUtil.extractToMap(pricesystemDetailRepository.findByDepotId(shopAllot.getFromShopId()),"productId");
+        Map<String, PricesystemDetail> toPricesystemMap = CollectionUtil.extractToMap(pricesystemDetailRepository.findByDepotId(shopAllot.getToShopId()),"productId");
 
         List<ShopAllotDetail> shopAllotDetailsToBeSaved = new ArrayList<>();
         for(ShopAllotDetailForm each : shopAllotDetailFormList){
@@ -150,7 +161,7 @@ public class ShopAllotService {
     public ShopAllotViewOrAuditForm getViewOrAuditForm(String shopAllotId, String action) {
         ShopAllotViewOrAuditForm result = new ShopAllotViewOrAuditForm();
 
-        ShopAllotDto shopAllotDto =  shopAllotMapper.findShopAllotDto(shopAllotId);
+        ShopAllotDto shopAllotDto =  shopAllotRepository.findShopAllotDto(shopAllotId);
         cacheUtils.initCacheInput(shopAllotDto);
 
         result.setShopAllotDto(shopAllotDto);
@@ -181,7 +192,7 @@ public class ShopAllotService {
         shopAllot.setAuditRemarks(shopAllotViewOrAuditForm.getAuditRemarks());
         shopAllot.setAuditBy(RequestUtils.getAccountId());
         shopAllot.setAuditDate(LocalDateTime.now());
-        shopAllotMapper.update(shopAllot);
+        shopAllotRepository.save(shopAllot);
 
         if(!"1".equals(shopAllotViewOrAuditForm.getPass())) {
             return;
@@ -189,10 +200,10 @@ public class ShopAllotService {
 
         if(shopAllotViewOrAuditForm.getShopAllotDetailList()!=null){
             for(ShopAllotDetailForm each : shopAllotViewOrAuditForm.getShopAllotDetailList()){
-                ShopAllotDetail  shopAllotDetail = shopAllotDetailMapper.findOne(each.getId());
+                ShopAllotDetail  shopAllotDetail = shopAllotDetailRepository.findOne(each.getId());
                 shopAllotDetail.setReturnPrice(each.getReturnPrice());
                 shopAllotDetail.setSalePrice(each.getSalePrice());
-                shopAllotDetailMapper.update(shopAllotDetail);
+                shopAllotDetailRepository.save(shopAllotDetail);
             }
         }
 

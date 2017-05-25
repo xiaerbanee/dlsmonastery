@@ -9,15 +9,20 @@ import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.AdPricesystemDetailMapper;
 import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
+import net.myspring.future.modules.basic.repository.AdpricesystemRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.mapper.AdPricesystemChangeMapper;
+import net.myspring.future.modules.layout.repository.AdPricesystemChangeRepository;
 import net.myspring.future.modules.layout.web.form.AdPricesystemChangeForm;
 import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.AfterDomainEventPublication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,16 +37,24 @@ public class AdPricesystemChangeService {
     @Autowired
     private AdPricesystemChangeMapper adPricesystemChangeMapper;
     @Autowired
+    private AdPricesystemChangeRepository adPricesystemChangeRepository;
+    @Autowired
     private AdPricesystemMapper adPricesystemMapper;
+    @Autowired
+    private AdpricesystemRepository adpricesystemRepository;
     @Autowired
     private ProductMapper productMapper;
     @Autowired
+    private ProductRepository productRepository;
+    @Autowired
     private AdPricesystemDetailMapper adPricesystemDetailMapper;
+    @Autowired
+    private AdPricesystemDetailRepository adPricesystemDetailRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public AdPricesystemChange findOne(String id){
-        AdPricesystemChange adPricesystemChange=adPricesystemChangeMapper.findOne(id);
+        AdPricesystemChange adPricesystemChange=adPricesystemChangeRepository.findOne(id);
         return adPricesystemChange;
     }
 
@@ -59,11 +72,11 @@ public class AdPricesystemChangeService {
 
     public void save(List<List<String>> data){
         int pricesystemFromIndex = 5;
-        List<AdPricesystem> adPricesystems = adPricesystemMapper.findList(null);
+        List<AdPricesystem> adPricesystems = adpricesystemRepository.findList(null);
         List<Map<String, AdPricesystemDetail>> adPricesystemList = Lists.newArrayList();
         for (AdPricesystem adPricesystem : adPricesystems) {
             Map<String, AdPricesystemDetail> map = Maps.newHashMap();
-            List<AdPricesystemDetail> adPricesystemDetailList = adPricesystemDetailMapper.findByAdPricesystemId(adPricesystem.getId());
+            List<AdPricesystemDetail> adPricesystemDetailList = adPricesystemDetailRepository.findByAdPricesystemId(adPricesystem.getId());
             if (CollectionUtil.isNotEmpty(adPricesystemDetailList)) {
                 for (AdPricesystemDetail adPricesystemDetail : adPricesystemDetailList) {
                     map.put(adPricesystemDetail.getProductId(), adPricesystemDetail);
@@ -72,7 +85,7 @@ public class AdPricesystemChangeService {
             adPricesystemList.add(map);
         }
         for (List<String> row : data) {
-            Product product = productMapper.findOne(StringUtils.toString(row.get(0)).trim());
+            Product product = productRepository.findOne(StringUtils.toString(row.get(0)).trim());
             for (int i = 0; i < row.size(); i++) {
                 String value = StringUtils.toString(row.get(i)).trim();
                 switch (i) {
@@ -109,14 +122,14 @@ public class AdPricesystemChangeService {
                         }
                         if ((adPricesystemDetail.getPrice() == null && price != null) || (adPricesystemDetail.getPrice() != null && price == null) || (adPricesystemDetail.getPrice() != null && price != null && adPricesystemDetail.getPrice().compareTo(price) != 0)) {
                             AdPricesystemChange adPricesystemChange = new AdPricesystemChange();
-                            adPricesystemChangeMapper.save(adPricesystemChange);
+                            adPricesystemChangeRepository.save(adPricesystemChange);
                         }
                         adPricesystemDetail.setPrice(price);
-                        adPricesystemDetailMapper.save(adPricesystemDetail);
+                        adPricesystemDetailRepository.save(adPricesystemDetail);
                         break;
                 }
             }
-            productMapper.save(product);
+            productRepository.save(product);
         }
     }
 
