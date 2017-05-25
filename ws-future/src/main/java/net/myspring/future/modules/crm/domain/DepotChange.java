@@ -2,8 +2,6 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Depot;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -21,7 +19,7 @@ public class DepotChange extends CompanyEntity<DepotChange> {
     private Integer version = 0;
     private String processInstanceId;
     private String processStatus;
-    private Depot depot;
+
     private String depotId;
     private String processTypeId;
     private String processFlowId;
@@ -96,14 +94,6 @@ public class DepotChange extends CompanyEntity<DepotChange> {
 
     public void setProcessStatus(String processStatus) {
         this.processStatus = processStatus;
-    }
-
-    public Depot getDepot() {
-        return depot;
-    }
-
-    public void setDepot(Depot depot) {
-        this.depot = depot;
     }
 
     public String getDepotId() {

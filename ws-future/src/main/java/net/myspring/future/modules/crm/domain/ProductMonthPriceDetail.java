@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.common.domain.IdEntity;
-import net.myspring.future.modules.basic.domain.ProductType;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -14,9 +13,9 @@ public class ProductMonthPriceDetail extends IdEntity<ProductMonthPriceDetail> {
     private BigDecimal price2;
     private BigDecimal price3;
     private BigDecimal baokaPrice;
-    private ProductType productType;
+
     private String productTypeId;
-    private ProductMonthPrice productMonthPrice;
+
     private String productMonthPriceId;
 
     public BigDecimal getPrice2() {
@@ -43,28 +42,12 @@ public class ProductMonthPriceDetail extends IdEntity<ProductMonthPriceDetail> {
         this.baokaPrice = baokaPrice;
     }
 
-    public ProductType getProductType() {
-        return productType;
-    }
-
-    public void setProductType(ProductType productType) {
-        this.productType = productType;
-    }
-
     public String getProductTypeId() {
         return productTypeId;
     }
 
     public void setProductTypeId(String productTypeId) {
         this.productTypeId = productTypeId;
-    }
-
-    public ProductMonthPrice getProductMonthPrice() {
-        return productMonthPrice;
-    }
-
-    public void setProductMonthPrice(ProductMonthPrice productMonthPrice) {
-        this.productMonthPrice = productMonthPrice;
     }
 
     public String getProductMonthPriceId() {

@@ -4,7 +4,6 @@ import net.myspring.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -23,7 +22,7 @@ public class ReportScoreOffice extends IdEntity<ReportScoreOffice> {
     private BigDecimal monthSaleMoney;
     private BigDecimal recentMonthSaleMoney;
     private String officeId;
-    private ReportScoreArea reportScoreArea;
+
     private String reportScoreAreaId;
 
     public LocalDate getScoreDate() {
@@ -120,14 +119,6 @@ public class ReportScoreOffice extends IdEntity<ReportScoreOffice> {
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
-    }
-
-    public ReportScoreArea getReportScoreArea() {
-        return reportScoreArea;
-    }
-
-    public void setReportScoreArea(ReportScoreArea reportScoreArea) {
-        this.reportScoreArea = reportScoreArea;
     }
 
     public String getReportScoreAreaId() {

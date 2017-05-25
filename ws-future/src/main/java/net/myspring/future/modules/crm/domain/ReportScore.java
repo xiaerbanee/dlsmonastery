@@ -1,15 +1,12 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import com.google.common.collect.Lists;
-import net.myspring.common.domain.DataEntity;
 import net.myspring.future.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name="crm_report_score")
@@ -35,8 +32,7 @@ public class ReportScore extends CompanyEntity<ReportScore> {
     private Integer totalMonthSaleQty;
     private Integer totalScoreSaleQty;
     private Integer totalMonthScoreSaleQty;
-    private List<ReportScoreArea> reportScoreAreaList = Lists.newArrayList();
-    private List<String> reportScoreAreaIdList = Lists.newArrayList();
+
 
     public LocalDate getScoreDate() {
         return scoreDate;
@@ -206,19 +202,4 @@ public class ReportScore extends CompanyEntity<ReportScore> {
         this.totalMonthScoreSaleQty = totalMonthScoreSaleQty;
     }
 
-    public List<ReportScoreArea> getReportScoreAreaList() {
-        return reportScoreAreaList;
-    }
-
-    public void setReportScoreAreaList(List<ReportScoreArea> reportScoreAreaList) {
-        this.reportScoreAreaList = reportScoreAreaList;
-    }
-
-    public List<String> getReportScoreAreaIdList() {
-        return reportScoreAreaIdList;
-    }
-
-    public void setReportScoreAreaIdList(List<String> reportScoreAreaIdList) {
-        this.reportScoreAreaIdList = reportScoreAreaIdList;
-    }
 }

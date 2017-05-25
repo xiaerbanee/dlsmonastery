@@ -17,12 +17,13 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.repository.*;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
-import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
@@ -49,8 +50,7 @@ import java.util.Map;
 @Service
 @Transactional
 public class GoodsOrderService {
-    @Autowired
-    private GoodsOrderRepository goodsOrderRepository;
+
     @Autowired
     private GoodsOrderRepository goodsOrderRepository;
     @Autowired
@@ -111,7 +111,7 @@ public class GoodsOrderService {
         } else {
             goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
             ReflectionUtil.copyProperties(goodsOrderForm,goodsOrder);
-            goodsOrderRepository.update(goodsOrder);
+            goodsOrderRepository.save(goodsOrder);
         }
 
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
@@ -162,7 +162,7 @@ public class GoodsOrderService {
             expressOrderRepository.save(expressOrder);
         }
         goodsOrder.setExpressOrderId(expressOrder.getId());
-        goodsOrderRepository.update(goodsOrder);
+        goodsOrderRepository.save(goodsOrder);
         return goodsOrder;
     }
 
@@ -207,7 +207,7 @@ public class GoodsOrderService {
         }
         goodsOrder.setAmount(amount);
         goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
-        goodsOrderRepository.update(goodsOrder);
+        goodsOrderRepository.save(goodsOrder);
         ExpressOrder expressOrder = getExpressOrder(goodsOrderBillForm);
         //设置需要打印的快递单个数
         Integer expressPrintQty = 0;

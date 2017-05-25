@@ -2,12 +2,9 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.time.LocalDate;
 
 
@@ -25,7 +22,7 @@ public class ImeStockReport extends CompanyEntity<ImeStockReport> {
     private Integer quanwangtongStock;
     private Integer version = 0;
     private String officeId;
-    private Product product;
+
     private String productId;
 
     public LocalDate getReportDate() {
@@ -114,14 +111,6 @@ public class ImeStockReport extends CompanyEntity<ImeStockReport> {
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public String getProductId() {
