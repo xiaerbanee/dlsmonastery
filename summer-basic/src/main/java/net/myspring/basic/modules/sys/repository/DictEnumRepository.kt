@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.repository
 
+import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.DictEnum
 import net.myspring.basic.modules.sys.dto.DictEnumDto
 import org.springframework.cache.annotation.CachePut
@@ -10,12 +11,12 @@ import org.springframework.data.repository.query.Param
 /**
  * Created by haos on 2017/5/24.
  */
-interface DictEnumRepository{
+interface DictEnumRepository :BaseRepository<DictEnum,String>{
     @CachePut(key="#id")
     fun save(dictEnum: DictEnum): DictEnum
 
     @Cacheable
-    fun findOne(id: String): DictEnum
+    override  fun findOne(id: String): DictEnum
 
     @Query("""
         SELECT

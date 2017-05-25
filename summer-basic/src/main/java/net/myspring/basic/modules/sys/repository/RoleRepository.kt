@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.repository
 
+import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Role
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
@@ -8,9 +9,9 @@ import org.springframework.data.jpa.repository.Query
 /**
  * Created by haos on 2017/5/24.
  */
-interface RoleRepository{
+interface RoleRepository: BaseRepository<Role, String> {
     @Cacheable
-    fun findOne(id: String): Role
+    override fun findOne(id: String): Role
 
     @CachePut(key="#id")
     fun save(role: Role): Int
