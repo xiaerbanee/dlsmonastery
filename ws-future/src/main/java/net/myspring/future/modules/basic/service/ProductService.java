@@ -71,7 +71,7 @@ public class ProductService {
     }
 
     public List<Product> findByIds(List<String> ids) {
-        return productRepository.findByIds(ids);
+        return productRepository.findAll(ids);
     }
 
     public Product findByName(String name){
