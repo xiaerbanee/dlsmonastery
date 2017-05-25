@@ -24,7 +24,6 @@ interface DutySignRepository : BaseRepository<DutySign,String>,DutySignRepositor
         AND t2.leader_id=?1 AND t1.status=?2 AND t1.created_date>=?3
     """, nativeQuery = true)
     fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): List<DutyDto>
-    /*fun findByFilter(dutySignQuery: DutySignQuery): List<DutySign>*/
 
     @Query("""
         SELECT
@@ -35,7 +34,7 @@ interface DutySignRepository : BaseRepository<DutySign,String>,DutySignRepositor
         t1.enabled=1
         and t1.employee_id=?1
         AND t1.duty_date >= ?2
-        and t1.duty_date &lt;=?3
+        and t1.duty_date <=?3
     """, nativeQuery = true)
     fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): List<DutySign>
 }
@@ -53,14 +52,12 @@ class DutySignRepositoryImpl @Autowired constructor(val entityManager: EntityMan
             FROM
             hr_duty_sign ds
             WHERE
-            ds.duty_date gt;= :dateStart
-            AND ds.duty_date lt;= :dateEnd
+            ds.duty_date >= :dateStart
+            AND ds.duty_date <= :dateEnd
             and ds.enabled=1
         """)
         if (CollectionUtil.isNotEmpty(accountIds)) {
-            sb.append("""
-                and ds.employee_id in :accountIds
-            """)
+            sb.append(" and ds.employee_id in :accountIds")
         }
         var query = entityManager.createNativeQuery(sb.toString(), DutySign::class.java)
         query.setParameter("dateStart", dateStart)
