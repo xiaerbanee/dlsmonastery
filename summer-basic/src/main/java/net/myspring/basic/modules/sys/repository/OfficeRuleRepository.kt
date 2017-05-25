@@ -3,18 +3,22 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.OfficeRule
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto
+import net.myspring.basic.modules.sys.dto.PermissionDto
 import net.myspring.basic.modules.sys.web.query.OfficeRuleQuery
+import net.myspring.basic.modules.sys.web.query.PermissionQuery
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import javax.persistence.EntityManager
 
 /**
  * Created by haos on 2017/5/24.
  */
 
-interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> {
+interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRuleRepositoryCustom{
 
     @Cacheable
     override fun findOne(id: String): OfficeRule
@@ -58,7 +62,26 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> {
      """, nativeQuery = true)
     fun findNextOfficeRule(id: String): OfficeRule
 
-    fun findPage(pageable: Pageable, officeRuleQuery: OfficeRuleQuery): Page<OfficeRuleDto>
-
+    @Query("""
+    SELECT t1.*
+        FROM sys_office_rule t1
+        where t1.enabled=1
+     """, nativeQuery = true)
     fun findAllEnabled():List<OfficeRule>
+}
+
+
+interface OfficeRuleRepositoryCustom{
+
+    fun findPage(pageable: Pageable, officeRuleQuery: OfficeRuleQuery): Page<OfficeRuleDto>?
+
+
+}
+
+class OfficeRuleRepositoryImpl @Autowired constructor(val entityManager: EntityManager): OfficeRuleRepositoryCustom{
+    override fun findPage(pageable: Pageable, officeRuleQuery: OfficeRuleQuery): Page<OfficeRuleDto>? {
+        return null
+    }
+
+
 }

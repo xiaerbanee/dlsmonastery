@@ -4,12 +4,16 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.DictMap
 import net.myspring.basic.modules.sys.dto.DictMapDto
+import net.myspring.basic.modules.sys.dto.MenuCategoryDto
 import net.myspring.basic.modules.sys.web.query.DictMapQuery
+import net.myspring.basic.modules.sys.web.query.MenuCategoryQuery
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import javax.persistence.EntityManager
 
 /**
  * Created by haos on 2017/5/24.
@@ -51,5 +55,20 @@ interface  DictMapRepository :BaseRepository<DictMap,String>{
      """, nativeQuery = true)
     fun findByName(name:String): DictMapDto
 
-    fun findPage(pageable: Pageable, dictMapQuery: DictMapQuery): Page<DictMapDto>
+
+}
+
+
+interface DictMapRepositoryCustom{
+    fun findPage(pageable: Pageable, dictMapQuery: DictMapQuery): Page<DictMapDto>?
+
+
+}
+
+class DictMapRepositoryImpl @Autowired constructor(val entityManager: EntityManager): DictMapRepositoryCustom{
+    override fun findPage(pageable: Pageable, dictMapQuery: DictMapQuery): Page<DictMapDto>? {
+        return null
+    }
+
+
 }

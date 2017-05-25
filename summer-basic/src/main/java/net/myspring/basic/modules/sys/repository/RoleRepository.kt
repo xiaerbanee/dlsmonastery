@@ -2,18 +2,22 @@ package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Role
+import net.myspring.basic.modules.sys.dto.PermissionDto
 import net.myspring.basic.modules.sys.dto.RoleDto
+import net.myspring.basic.modules.sys.web.query.PermissionQuery
 import net.myspring.basic.modules.sys.web.query.RoleQuery
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import javax.persistence.EntityManager
 
 /**
  * Created by haos on 2017/5/24.
  */
-interface RoleRepository: BaseRepository<Role, String> {
+interface RoleRepository: BaseRepository<Role, String>,RoleRepositoryCustom {
     @Cacheable
     override fun findOne(id: String): Role
 
@@ -40,5 +44,20 @@ interface RoleRepository: BaseRepository<Role, String> {
      """, nativeQuery = true)
     fun findByAccountId(accountId: String): Role
 
-    fun findPage(pageable: Pageable, roleQuery: RoleQuery): Page<RoleDto>
+
+}
+
+
+
+interface RoleRepositoryCustom{
+
+    fun findPage(pageable: Pageable, roleQuery: RoleQuery): Page<RoleDto>?
+}
+
+class RoleRepositoryImpl @Autowired constructor(val entityManager: EntityManager):RoleRepositoryCustom{
+    override fun findPage(pageable: Pageable, roleQuery: RoleQuery): Page<RoleDto>? {
+        return null
+    }
+
+
 }

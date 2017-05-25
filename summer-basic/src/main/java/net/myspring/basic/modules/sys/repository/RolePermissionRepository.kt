@@ -67,5 +67,11 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
      """, nativeQuery = true)
     fun setEnabledByRoleIdList( enabled: Boolean,  roleIdList: List<String>): Int
 
+    @Query("""
+        UPDATE  sys_role_permission
+        SET enabled=?1
+        where role_id in ?2
+     """, nativeQuery = true)
+    //TODO 修改sql
     fun batchSave(rolePermissions:List<RolePermission>)
 }

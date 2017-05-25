@@ -102,8 +102,14 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
      """, nativeQuery = true)
     fun findSameAreaByOfficeId(officeId: String): List<Office>
 
-    fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>
 
+
+    @Query("""
+       SELECT t1.*
+        FROM sys_office t1
+        WHERE t1.enabled=1
+     """, nativeQuery = true)
+            //TODO 修改
     fun findAllEnabled():List<Office>
 }
 
@@ -115,9 +121,15 @@ interface OfficeRepositoryCustom {
     fun findByFilterAll(@Param("p") map: Map<String, Any>): List<Office>
 
     fun findByAreaIds(areaIds: List<String>): List<Office>
+
+    fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>?
 }
 
 class OfficeRepositoryImpl@Autowired constructor(val entityManager: EntityManager): OfficeRepositoryCustom {
+    override fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>? {
+        return null;
+    }
+
     override fun findByParentIdsListLike(parentIdList: List<String>): List<Office> {
         var sb = StringBuilder();
         sb.append("""

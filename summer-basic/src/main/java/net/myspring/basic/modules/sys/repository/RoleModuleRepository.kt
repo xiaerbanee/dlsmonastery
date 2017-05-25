@@ -48,5 +48,11 @@ interface RoleModuleRepository: BaseRepository<RoleModule, String> {
      """, nativeQuery = true)
     fun setEnabledByModuleIdList(enabled: Boolean, moduleIds: List<String>): Int
 
+    @Query("""
+            UPDATE  sys_role_module
+            SET enabled=?1
+            where backend_module_id in ?2
+     """, nativeQuery = true)
+    //TODO 修改sql
     fun batchSave(addRoleModules:List<RoleModule>)
 }

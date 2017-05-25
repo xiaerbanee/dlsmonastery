@@ -44,5 +44,11 @@ interface  OfficeBusinessRepository: BaseRepository<OfficeBusiness, String> {
      """, nativeQuery = true)
     fun setEnabledByOfficeId(enabled:Boolean,officeId:String ):Int
 
+    @Query("""
+            UPDATE  sys_office_business
+            set enabled=?1
+            where office_id=?2
+     """, nativeQuery = true)
+    //TODO 修改
     fun batchSave(officeBusinessList:List<OfficeBusiness>)
 }
