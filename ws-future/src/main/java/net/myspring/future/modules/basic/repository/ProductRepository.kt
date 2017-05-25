@@ -36,7 +36,6 @@ interface ProductRepository : BaseRepository<Product,String> {
     """, nativeQuery = true)
     fun findAllEnabled(): List<Product>
 
-    fun findByIds(ids: List<String>): List<Product>
 
     fun findHasImeProduct(): List<Product>
 

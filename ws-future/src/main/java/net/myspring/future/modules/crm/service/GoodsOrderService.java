@@ -17,16 +17,14 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.basic.repository.ExpressOrderRepository;
-import net.myspring.future.modules.basic.repository.GoodsOrderDetailRepository;
+import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.mapper.GoodsOrderMapper;
+import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
+import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
@@ -52,12 +50,10 @@ import java.util.Map;
 public class GoodsOrderService {
     @Autowired
     private GoodsOrderMapper goodsOrderMapper;
-
     @Autowired
     private GoodsOrderDetailRepository goodsOrderDetailRepository;
     @Autowired
-    private DepotMapper depotMapper;
-
+    private DepotRepository depotRepository;
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
@@ -65,15 +61,13 @@ public class GoodsOrderService {
     @Autowired
     private ExpressUtils expressUtils;
     @Autowired
-    private PricesystemDetailMapper pricesystemDetailMapper;
-
+    private PricesystemDetailRepository pricesystemDetailRepository;
     @Autowired
-    private ProductMapper productMapper;
+    private ProductRepository productRepository;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
     private CacheUtils cacheUtils;
-
 
     public Page<GoodsOrderDto> findPage(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         Page<GoodsOrderDto> page = goodsOrderMapper.findPage(pageable, goodsOrderQuery);
@@ -81,11 +75,10 @@ public class GoodsOrderService {
         return page;
     }
 
-
     //检测门店
     @Transactional(readOnly = true)
     public RestResponse validateShop(String goodsOrderId,String shopId) {
-        Depot shop = depotMapper.findOne(shopId);
+        Depot shop = depotRepository.findOne(shopId);
         RestResponse restResponse = new RestResponse("有效门店", ResponseCodeEnum.valid.name(),true);
         if(StringUtils.isBlank(shop.getPricesystemId())) {
             restResponse.getErrors().add(new RestErrorField("没有价格体系","no_pricesystem","shopId"));
@@ -122,7 +115,7 @@ public class GoodsOrderService {
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
         //保存订单明细
         BigDecimal amount = BigDecimal.ZERO;
-        Depot shop = depotMapper.findOne(goodsOrder.getShopId());
+        Depot shop = depotRepository.findOne(goodsOrder.getShopId());
         for (int i = goodsOrderForm.getGoodsOrderDetailList().size() - 1; i >= 0; i--) {
             GoodsOrderDetailForm goodsOrderDetailForm = goodsOrderForm.getGoodsOrderDetailList().get(i);
             if(goodsOrderDetailForm.getQty()==null) {
@@ -135,7 +128,7 @@ public class GoodsOrderService {
 
                     goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
                     goodsOrderDetail.setBillQty(goodsOrderDetail.getQty());
-                    PricesystemDetail pricesystemDetail = pricesystemDetailMapper.findByPricesystemIdAndProductId(shop.getPricesystemId(), goodsOrderDetailForm.getProductId());
+                    PricesystemDetail pricesystemDetail = pricesystemDetailRepository.findByPricesystemIdAndProductId(shop.getPricesystemId(), goodsOrderDetailForm.getProductId());
                     goodsOrderDetail.setPrice(pricesystemDetail.getPrice());
                     goodsOrderDetailRepository.save(goodsOrderDetail);
                     amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
@@ -185,7 +178,7 @@ public class GoodsOrderService {
                 goodsOrderBillDetailForm.setBillQty(0);
             }
             totalBillQty = totalBillQty + goodsOrderBillDetailForm.getBillQty();
-            Product product = productMapper.findOne(goodsOrderBillDetailForm.getProductId());
+            Product product = productRepository.findOne(goodsOrderBillDetailForm.getProductId());
             if(product.getHasIme()) {
                 mobileBillQty = mobileBillQty + goodsOrderBillDetailForm.getBillQty();
             }
@@ -227,7 +220,7 @@ public class GoodsOrderService {
 
 
     private ExpressOrder getExpressOrder(GoodsOrderForm goodsOrderForm) {
-        Depot shop = depotMapper.findOne(goodsOrderForm.getShopId());
+        Depot shop = depotRepository.findOne(goodsOrderForm.getShopId());
         ExpressOrder expressOrder = new ExpressOrder();
         if(StringUtils.isNotBlank(goodsOrderForm.getExpressOrderId())) {
             expressOrder = expressOrderRepository.findOne(goodsOrderForm.getExpressOrderId());
@@ -245,7 +238,7 @@ public class GoodsOrderService {
 
     private ExpressOrder getExpressOrder(GoodsOrderBillForm goodsOrderBillForm) {
         GoodsOrder goodsOrder = goodsOrderMapper.findOne(goodsOrderBillForm.getId());
-        Depot shop = depotMapper.findOne(goodsOrder.getShopId());
+        Depot shop = depotRepository.findOne(goodsOrder.getShopId());
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
         expressOrder.setExtendId(goodsOrder.getId());
         expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
@@ -268,7 +261,7 @@ public class GoodsOrderService {
         String carrierLockOfficeIds = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.CARRIER_LOCK_OFFICE.name()).getValue();
         if(StringUtils.isNotBlank(carrierLockOfficeIds)){
             List<String> officeIdList = StringUtils.getSplitList(carrierLockOfficeIds, CharConstant.COMMA);
-            Depot shop = depotMapper.findOne(goodsOrder.getShopId());
+            Depot shop = depotRepository.findOne(goodsOrder.getShopId());
             if(officeIdList.contains(shop.getOfficeId())) {
                 defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
             }

@@ -3,13 +3,12 @@ package net.myspring.future.modules.crm.service;
 import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.basic.repository.PriceChangeProductRepository;
 import net.myspring.future.modules.basic.repository.PriceChangeRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.domain.PriceChangeProduct;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
-import net.myspring.future.modules.crm.mapper.PriceChangeMapper;
+import net.myspring.future.modules.crm.repository.PriceChangeProductRepository;
 import net.myspring.future.modules.crm.web.form.PriceChangeForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -30,24 +29,17 @@ import java.util.List;
 public class PriceChangeService {
 
     @Autowired
-    private PriceChangeMapper priceChangeMapper;
-    @Autowired
     private PriceChangeRepository priceChangeRepository;
-
-
     @Autowired
     private PriceChangeProductRepository priceChangeProductRepository;
-
     @Autowired
-    private ProductMapper productMapper;
-
+    private ProductRepository productRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public PriceChange findNearPriceChange(){
         return priceChangeRepository.findNearPriceChange();
     }
-
 
     public List<PriceChange> findAllByEnabledAndDate(LocalDateTime uploadEndDate) {
         return priceChangeRepository.finAllByEnabled(uploadEndDate);
@@ -74,7 +66,8 @@ public class PriceChangeService {
 
 
     public Page<PriceChangeDto> findPage(Pageable pageable, PriceChangeQuery priceChangeQuery) {
-        Page<PriceChangeDto> page = priceChangeMapper.findPage(pageable, priceChangeQuery);
+
+        Page<PriceChangeDto> page = priceChangeRepository.findPage(pageable, priceChangeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -90,7 +83,7 @@ public class PriceChangeService {
 
             List<String> productTypeIdList = priceChangeForm.getProductTypeIdList();
             for(String productTypeId:productTypeIdList){
-                List<Product> productList = productMapper.findByProductTypeId(productTypeId);
+                List<Product> productList = productRepository.findByProductTypeId(productTypeId);
                 List<String> productIdList = CollectionUtil.extractToList(productList,"id");
                 for(String productId:productIdList){
                     PriceChangeProduct priceChangeProduct = new PriceChangeProduct();

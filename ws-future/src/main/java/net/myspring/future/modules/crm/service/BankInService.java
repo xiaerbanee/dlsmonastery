@@ -5,7 +5,7 @@ import com.mongodb.gridfs.GridFSFile;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.repository.BankInRepository;
+import net.myspring.future.modules.crm.repository.BankInRepository;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.mapper.BankInMapper;
@@ -68,7 +68,7 @@ public class BankInService {
 
     public void audit(BankInDetailForm bankInDetailForm){
         //TODO 需要同步金蝶
-        BankIn bankIn = bankInMapper.findOne(bankInDetailForm.getId());
+        BankIn bankIn = bankInRepository.findOne(bankInDetailForm.getId());
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInDetailForm.getAuditRemarks(), "1".equals(bankInDetailForm.getPass())));
         if("已通过".equals(activitiCompleteDto.getProcessStatus())){
             bankIn.setLocked(true);

@@ -6,7 +6,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.mapper.DepotMapper;
 import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.basic.repository.AfterSaleRepository;
+import net.myspring.future.modules.crm.repository.AfterSaleRepository;
 import net.myspring.future.modules.crm.domain.AfterSale;
 import net.myspring.future.modules.crm.domain.AfterSaleDetail;
 import net.myspring.future.modules.crm.domain.AfterSaleFlee;
