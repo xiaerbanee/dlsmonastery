@@ -3,8 +3,12 @@ package net.myspring.basic.modules.hr.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.DutySign
 import net.myspring.basic.modules.hr.dto.DutyDto
+import net.myspring.basic.modules.hr.dto.DutySignDto
+import net.myspring.basic.modules.hr.web.query.DutySignQuery
 import net.myspring.util.collection.CollectionUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -40,8 +44,20 @@ interface DutySignRepository : BaseRepository<DutySign,String>,DutySignRepositor
 }
 interface DutySignRepositoryCustom{
     fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutySign>
+
+    fun findPage(pageable: Pageable, dutySignQuery: DutySignQuery): Page<DutySignDto>
+
+    fun findByFilter(dutySignQuery: DutySignQuery): List<DutySign>
 }
 class DutySignRepositoryImpl @Autowired constructor(val entityManager: EntityManager): DutySignRepositoryCustom{
+    override fun findByFilter(dutySignQuery: DutySignQuery): List<DutySign> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun findPage(pageable: Pageable, dutySignQuery: DutySignQuery): Page<DutySignDto> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutySign> {
         var sb = StringBuilder()
         sb.append("""

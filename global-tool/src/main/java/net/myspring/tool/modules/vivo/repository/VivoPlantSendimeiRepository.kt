@@ -2,9 +2,8 @@ package net.myspring.tool.modules.vivo.repository;
 
 import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
 import java.time.LocalDate;
 import java.util.List;

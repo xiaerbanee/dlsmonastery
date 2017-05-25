@@ -2,11 +2,15 @@ package net.myspring.basic.modules.hr.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.Account
+import net.myspring.basic.modules.hr.dto.AccountDto
+import net.myspring.basic.modules.hr.web.query.AccountQuery
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import javax.persistence.EntityManager
 
@@ -71,13 +75,32 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
         WHERE t1.id=?1
     """, nativeQuery = true)
     fun findById(id: String): List<Account>
+
+    @Query("""
+        SELECT t1.*
+        FROM hr_account t1
+        WHERE t1.id IN ?1
+    """, nativeQuery = true)
+    fun findByIds(ids: List<String>): List<Account>
 }
 
 interface AccountRepositoryCustom{
     fun findByLoginNameLikeAndType(type: String, name: String): List<Account>
+
+    fun findPage(pageable: Pageable, accountQuery: AccountQuery): Page<AccountDto>
+
+    fun findByFilter(accountQuery: AccountQuery): List<Account>
 }
 
 class AccountRepositoryImpl @Autowired constructor(val entityManager: EntityManager): AccountRepositoryCustom{
+    override fun findByFilter(accountQuery: AccountQuery): List<Account> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun findPage(pageable: Pageable, accountQuery: AccountQuery): Page<AccountDto> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun findByLoginNameLikeAndType(type: String, name: String): List<Account> {
         var sb = StringBuilder()
         sb.append("""

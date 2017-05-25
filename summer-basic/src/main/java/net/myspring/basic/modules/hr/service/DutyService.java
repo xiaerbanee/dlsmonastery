@@ -49,6 +49,8 @@ public class DutyService {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
+    private DutyRestOvertimeRepository dutyRestOvertimeRepository;
+    @Autowired
     private CacheUtils cacheUtils;
 
 
@@ -218,7 +220,7 @@ public class DutyService {
                     }
                 }
                if(CollectionUtil.isNotEmpty(dutyRestOvertimes)){
-                   dutyRestOvertimeRepository.batchSave(dutyRestOvertimes);
+                   dutyRestOvertimeRepository.save(dutyRestOvertimes);
                }
             } else {
                 restHour = DutyDateTypeEnum.DAY.toString().equals(dutyRest.getDateType()) ? 8.0 : 4.0;
@@ -236,7 +238,7 @@ public class DutyService {
         dutyRest.setAuditDate(LocalDateTime.now());
         dutyRest.setAuditRemarks(auditRemarks);
         dutyRest.setLocked(true);
-        dutyRestRepository.update(dutyRest);
+        dutyRestRepository.save(dutyRest);
         return true;
     }
 
