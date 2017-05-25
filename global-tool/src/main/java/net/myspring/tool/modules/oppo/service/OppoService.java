@@ -9,6 +9,7 @@ import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
 import net.myspring.tool.modules.oppo.mapper.*;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ public class OppoService {
     private OppoPlantSendImeiPpselMapper oppoPlantSendImeiPpselMapper;
     @Autowired
     private OppoPlantProductItemelectronSelMapper oppoPlantProductItemelectronSelMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @FactoryDataSource
     public List<OppoPlantProductSel> plantProductSel(String companyId, String password, String branchId) {
@@ -135,5 +138,16 @@ public class OppoService {
             }
         }
         return "电子保卡同步成功，共"+list.size()+"条";
+    }
+
+    @Transactional
+    public  List<OppoPlantSendImeiPpsel>  synIme(String date) {
+        LocalDate nowDate= LocalDateUtils.parse(date);
+        LocalDate dateStart = nowDate.minusDays(1);
+        LocalDate dateEnd = nowDate.plusDays(1);
+       List<String>  mainCodes=Lists.newArrayList();
+        mainCodes.add("M13AMB");
+        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels = oppoPlantSendImeiPpselMapper.findSynList(dateStart, dateEnd, mainCodes);
+        return oppoPlantSendImeiPpsels;
     }
 }
