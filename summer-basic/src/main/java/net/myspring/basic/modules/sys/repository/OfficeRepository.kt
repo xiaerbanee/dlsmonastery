@@ -3,6 +3,8 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Office
 import net.myspring.basic.modules.sys.web.query.OfficeQuery
+import net.myspring.util.repository.QueryUtils
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
@@ -118,28 +120,76 @@ class OfficeRepositoryImpl@Autowired constructor(val entityManager: EntityManage
             and (
         """)
         for((index,value) in parentIdList.withIndex()) {
-            sb.append(" t1.parent_ids like ?").append(index);
+            sb.append(" t1.parent_ids like :parentId").append(index);
             if(index < parentIdList.size-1) {
                 sb.append(" or ");
             }
         }
-
         var query = entityManager.createNativeQuery(sb.toString());
         for((index,value) in parentIdList.withIndex()) {
-            query.setParameter(index,"%$value%");
+            query.setParameter("parentId" + index ,"%$value%");
         }
         return query.resultList as List<Office>;
     }
 
     override fun findByFilter(officeQuery: OfficeQuery): List<Office> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var sb = StringBuilder();
+        sb.append("""
+            select office.*
+            from
+            sys_office office
+            where
+            office.enabled=1
+        """)
+        if(StringUtils.isNotBlank(officeQuery.name)) {
+            sb.append("  and office.name like %:name%")
+        }
+        if(StringUtils.isNotBlank(officeQuery.id)) {
+            sb.append(" and office.name = :id")
+        }
+        sb.append("""
+            order by office.name
+            limit 0,20
+        """)
+        var query = entityManager.createNativeQuery(sb.toString());
+        QueryUtils.setParameter(query,officeQuery);
+        return query.resultList as List<Office>;
     }
 
     override fun findByFilterAll(map: Map<String, Any>): List<Office> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var sb = StringBuilder();
+        sb.append("""
+            select office.*
+            from
+            sys_office office
+            where
+            office.enabled=1
+        """)
+        var query = entityManager.createNativeQuery(sb.toString());
+        return query.resultList as List<Office>;
     }
 
     override fun findByAreaIds(areaIds: List<String>): List<Office> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var sb = StringBuilder();
+        sb.append("""
+            SELECT t1.*
+            FROM sys_office t1
+            where t1.enabled=1
+            and (
+            t1.id IN :areaIds or
+        """)
+
+        for((index,value) in areaIds.withIndex()) {
+            sb.append(" t1.parent_ids like :parentId").append(index);
+            if(index < areaIds.size-1) {
+                sb.append(" or ");
+            }
+        }
+        var query = entityManager.createNativeQuery(sb.toString());
+        query.setParameter("areaIds",areaIds);
+        for((index,value) in areaIds.withIndex()) {
+            query.setParameter("parentId" + index ,"%$value%");
+        }
+        return query.resultList as List<Office>;
     }
 }

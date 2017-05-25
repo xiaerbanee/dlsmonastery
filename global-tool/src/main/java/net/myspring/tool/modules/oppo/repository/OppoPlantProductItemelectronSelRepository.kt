@@ -1,6 +1,8 @@
 package net.myspring.tool.modules.oppo.repository;
 
+import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
+import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.Query
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * Created by admin on 2016/10/11.
  */
-interface OppoPlantProductItemelectronSelMapper {
+interface OppoPlantProductItemelectronSelRepository:BaseRepository<OppoPlantProductItemelectronSel,String> {
 
     @Query("""
         select t.product_no from oppo_plant_product_itemelectron_sel t

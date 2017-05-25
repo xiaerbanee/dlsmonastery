@@ -8,7 +8,7 @@ import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
-import net.myspring.tool.modules.vivo.mapper.*;
+import net.myspring.tool.modules.vivo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,38 +27,38 @@ import java.util.Set;
 @LocalDataSource
 public class VivoService {
     @Autowired
-    private VivoMapper vivoMapper;
+    private VivoRepository vivoRepository;
     @Autowired
-    private VivoProductsMapper vivoProductsMapper;
+    private VivoProductsRepository vivoProductsRepository;
     @Autowired
-    private VivoPlantProductsMapper vivoPlantProductsMapper;
+    private VivoPlantProductsRepository vivoPlantProductsRepository;
     @Autowired
-    private VivoPlantSendimeiMapper vivoPlantSendimeiMapper;
+    private VivoPlantSendimeiRepository vivoPlantSendimeiRepository;
     @Autowired
-    private VivoPlantElectronicsnMapper vivoPlantElectronicsnMapper;
+    private VivoPlantElectronicsnRepository vivoPlantElectronicsnRepository;
 
     @FactoryDataSource
     public List<VivoProducts> products() {
-        return vivoMapper.products();
+        return vivoRepository.products();
     }
 
     @FactoryDataSource
     public List<VivoPlantProducts> plantProducts() {
-        return vivoMapper.plantProducts();
+        return vivoRepository.plantProducts();
     }
 
     @FactoryDataSource
     public List<VivoPlantSendimei> plantSendimei(LocalDate createdTime, List<String> agentCodes) {
         LocalDate dateStart = createdTime;
         LocalDate dateEnd = createdTime.plusDays(1);
-        return vivoMapper.plantSendimei(dateStart, dateEnd, agentCodes);
+        return vivoRepository.plantSendimei(dateStart, dateEnd, agentCodes);
     }
 
     @FactoryDataSource
     public List<VivoPlantElectronicsn> plantElectronicsn(LocalDate retailDate) {
         LocalDate dateStart = retailDate;
         LocalDate dateEnd = retailDate.plusDays(1);
-        return vivoMapper.plantElectronicsn(dateStart, dateEnd);
+        return vivoRepository.plantElectronicsn(dateStart, dateEnd);
     }
 
     //获取颜色编码
@@ -67,7 +67,7 @@ public class VivoService {
     public void pullProducts(List<VivoProducts> vivoProducts){
         if(CollectionUtil.isNotEmpty(vivoProducts)) {
             List<String> colorIds = CollectionUtil.extractToList(vivoProducts, "colorId");
-            List<String > localColorIds = vivoProductsMapper.findColorIds(colorIds);
+            List<String > localColorIds = vivoProductsRepository.findColorIds(colorIds);
             List<VivoProducts> list = Lists.newArrayList();
             for(VivoProducts item : vivoProducts){
                 if( ! localColorIds.contains(item.getColorId())){
@@ -75,7 +75,7 @@ public class VivoService {
                 }
             }
             if(CollectionUtil.isNotEmpty(list)){
-                vivoProductsMapper.batchSave(list);
+                vivoProductsRepository.save(list);
             }
         }
     }
@@ -88,7 +88,7 @@ public class VivoService {
             for(String itemNumber:itemNumbers){
                 newItemNumbers.add(itemNumber.trim());
             }
-            List<String> localItemNumbers = vivoPlantProductsMapper.findItemNumbers(newItemNumbers);
+            List<String> localItemNumbers = vivoPlantProductsRepository.findItemNumbers(newItemNumbers);
             List<VivoPlantProducts> list= Lists.newArrayList();
             for(VivoPlantProducts item : vivoPlantProducts){
                 if(!localItemNumbers.contains(item.getItemNumber().trim())){
@@ -96,7 +96,7 @@ public class VivoService {
                 }
             }
             if(CollectionUtil.isNotEmpty(list)) {
-                vivoPlantProductsMapper.save(list);
+                vivoPlantProductsRepository.save(list);
             }
         }
     }
@@ -117,7 +117,7 @@ public class VivoService {
         Map<String,VivoPlantSendimei> map = CollectionUtil.extractToMap(vivoPlantSendimeis,"imei");
         Set<String> imeis=map.keySet();
         for(List<String> imeiList:Lists.partition(new ArrayList<String>(imeis),1500)){
-            Set<String> localImeis = vivoPlantSendimeiMapper.findImeis(imeiList);
+            Set<String> localImeis = vivoPlantSendimeiRepository.findImeis(imeiList);
             for(String imei:imeiList){
                 if(!localImeis.contains(imei)){
                     list.add(map.get(imei));
@@ -126,7 +126,7 @@ public class VivoService {
         }
         if(CollectionUtil.isNotEmpty(list)){
             for(List<VivoPlantSendimei> vivoPlantSendimeisList :Lists.partition(list,1500)) {
-                vivoPlantSendimeiMapper.save(vivoPlantSendimeisList);
+                vivoPlantSendimeiRepository.save(vivoPlantSendimeisList);
             }
         }
         return "发货串码同步成功，共同步"+list.size()+"条数据";
@@ -140,14 +140,14 @@ public class VivoService {
         List<VivoPlantElectronicsn> list = Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(vivoPlantElectronicsns)) {
             List<String> snImeis = CollectionUtil.extractToList(vivoPlantElectronicsns, "snImei");
-            List<String> localsnImeis  = vivoPlantElectronicsnMapper.findSnImeis(snImeis);
+            List<String> localsnImeis  = vivoPlantElectronicsnRepository.findSnImeis(snImeis);
             for(VivoPlantElectronicsn item : vivoPlantElectronicsns){
                 if( ! localsnImeis.contains(item.getSnImei())){
                     list.add(item);
                 }
             }
             if(CollectionUtil.isNotEmpty(list)) {
-                vivoPlantElectronicsnMapper.save(list);
+                vivoPlantElectronicsnRepository.save(list);
             }
         }
         return "电子保卡同步成功,共同步"+list.size()+"条数据";
