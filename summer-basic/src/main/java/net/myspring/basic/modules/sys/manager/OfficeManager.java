@@ -7,9 +7,9 @@ import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
-import net.myspring.basic.modules.sys.mapper.OfficeBusinessMapper;
-import net.myspring.basic.modules.sys.mapper.OfficeMapper;
-import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
+import net.myspring.basic.modules.sys.repository.OfficeBusinessRepository;
+import net.myspring.basic.modules.sys.repository.OfficeRepository;
+import net.myspring.basic.modules.sys.repository.OfficeRuleRepository;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -26,27 +26,27 @@ import java.util.List;
 public class OfficeManager {
 
     @Autowired
-    private OfficeMapper officeMapper;
+    private OfficeRepository officeRepository;
     @Autowired
-    private OfficeRuleMapper officeRuleMapper;
+    private OfficeRuleRepository officeRuleRepository;
     @Autowired
-    private OfficeBusinessMapper officeBusinessMapper;
+    private OfficeBusinessRepository officeBusinessRepository;
     @Value("${setting.adminIdList}")
     private String adminIdList;
 
     public List<String> officeFilter(String officeId) {
         List<String> officeIdList = Lists.newArrayList();
         if (!StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())) {
-            Office office = officeMapper.findOne(officeId);
+            Office office = officeRepository.findOne(officeId);
             officeIdList.add(office.getId());
             if (OfficeTypeEnum.BUSINESS.name().equalsIgnoreCase(office.getType())) {
-                officeIdList.addAll(CollectionUtil.extractToList(officeMapper.findByParentIdsLike(office.getParentId()), "id"));
+                officeIdList.addAll(CollectionUtil.extractToList(officeRepository.findByParentIdsLike(office.getParentId()), "id"));
             } else {
-                List<OfficeBusiness> businessList = officeBusinessMapper.findBusinessIdById(office.getId());
+                List<OfficeBusiness> businessList = officeBusinessRepository.findBusinessIdById(office.getId());
                 if (CollectionUtil.isNotEmpty(businessList)) {
                     List<String> officeIds = CollectionUtil.extractToList(businessList, "id");
                     officeIdList.addAll(officeIds);
-                    List<Office> childOfficeList = officeMapper.findByParentIdsListLike(officeIds);
+                    List<Office> childOfficeList = officeRepository.findByParentIdsListLike(officeIds);
                     officeIdList.addAll(CollectionUtil.extractToList(childOfficeList, "id"));
                 }
             }
@@ -60,7 +60,7 @@ public class OfficeManager {
 
     public String findByOfficeIdAndRuleName(String officeId, String ruleName) {
         String id = null;
-        OfficeRule officeRule = officeRuleMapper.findByName(ruleName);
+        OfficeRule officeRule = officeRuleRepository.findByName(ruleName);
         if (officeRule != null) {
             id = findByOfficeIdAndRuleId(officeId, officeRule.getId());
         }
@@ -68,7 +68,7 @@ public class OfficeManager {
     }
 
     public String findByOfficeIdAndRuleId(String officeId, String ruleId) {
-        Office office = officeMapper.findByOfficeIdAndRuleId(officeId, ruleId);
+        Office office = officeRepository.findByOfficeIdAndRuleId(officeId, ruleId);
         if (office != null) {
             return office.getId();
         }
@@ -77,18 +77,18 @@ public class OfficeManager {
 
     //根据officeId获取某个级别的Office
     public  String getOfficeIdByOfficeRule(String officeId, String officeRuleId) {
-        Office office = officeMapper.findOne(officeId);
+        Office office = officeRepository.findOne(officeId);
         if(office!=null){
             if (officeRuleId.equals(office.getOfficeRuleId())) {
                 return officeId;
             } else {
-                Office parent = officeMapper.findOne(office.getParentId());
+                Office parent = officeRepository.findOne(office.getParentId());
                 for (int i = 1; i < 10; i++) {
                     if (parent != null) {
                         if (officeRuleId.equals(parent.getOfficeRuleId())) {
                             return parent.getId();
                         } else {
-                            parent = officeMapper.findOne(parent.getParentId());
+                            parent = officeRepository.findOne(parent.getParentId());
                         }
                     }
                 }

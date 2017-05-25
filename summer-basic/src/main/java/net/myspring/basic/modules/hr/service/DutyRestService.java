@@ -5,7 +5,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyRest;
 import net.myspring.basic.modules.hr.dto.DutyRestDto;
-import net.myspring.basic.modules.hr.mapper.DutyRestMapper;
+import net.myspring.basic.modules.hr.repository.DutyRestRepository;
 import net.myspring.basic.modules.hr.web.form.DutyRestForm;
 import net.myspring.basic.modules.hr.web.query.DutyRestQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -20,13 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class DutyRestService {
 
     @Autowired
-    private DutyRestMapper dutyRestMapper;
+    private DutyRestRepository dutyRestRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public Page<DutyRestDto> findPage(Pageable pageable,DutyRestQuery dutyRestQuery) {
-        Page<DutyRestDto> page = dutyRestMapper.findPage(pageable, dutyRestQuery);
+        Page<DutyRestDto> page = dutyRestRepository.findPage(pageable, dutyRestQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -35,16 +35,16 @@ public class DutyRestService {
         dutyRestForm.setStatus(AuditTypeEnum.APPLYING.toString());
         dutyRestForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
         DutyRest dutyRest = BeanUtil.map(dutyRestForm, DutyRest.class);
-        dutyRestMapper.save(dutyRest);
+        dutyRestRepository.save(dutyRest);
         return dutyRest;
     }
 
     public void logicDeleteOne(String id) {
-        dutyRestMapper.logicDeleteOne(id);
+        dutyRestRepository.logicDeleteOne(id);
     }
 
     public DutyRest findOne(String id) {
-        DutyRest dutyRest = dutyRestMapper.findOne(id);
+        DutyRest dutyRest = dutyRestRepository.findOne(id);
         return dutyRest;
     }
 

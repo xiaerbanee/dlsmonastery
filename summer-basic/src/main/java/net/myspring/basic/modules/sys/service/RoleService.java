@@ -2,13 +2,13 @@ package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.sys.mapper.RoleModuleMapper;
+import net.myspring.basic.modules.sys.repository.RoleModuleRepository;
 import net.myspring.basic.modules.sys.domain.Role;
 import net.myspring.basic.modules.sys.domain.RoleModule;
 import net.myspring.basic.modules.sys.domain.RolePermission;
 import net.myspring.basic.modules.sys.dto.RoleDto;
-import net.myspring.basic.modules.sys.mapper.RoleMapper;
-import net.myspring.basic.modules.sys.mapper.RolePermissionMapper;
+import net.myspring.basic.modules.sys.repository.RoleRepository;
+import net.myspring.basic.modules.sys.repository.RolePermissionRepository;
 import net.myspring.basic.modules.sys.web.form.RoleForm;
 import net.myspring.basic.modules.sys.web.query.RoleQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -28,18 +28,18 @@ import java.util.List;
 public class RoleService {
 
     @Autowired
-    private RoleMapper roleMapper;
+    private RoleRepository roleRepository;
     @Autowired
-    private RoleModuleMapper roleModuleMapper;
+    private RoleModuleRepository roleModuleRepository;
     @Autowired
-    private RolePermissionMapper rolePermissionMapper;
+    private RolePermissionRepository rolePermissionRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public RoleDto findOne(RoleDto roleDto) {
         if (!roleDto.isCreate()) {
-            Role Role = roleMapper.findOne(roleDto.getId());
+            Role Role = roleRepository.findOne(roleDto.getId());
             roleDto = BeanUtil.map(Role, RoleDto.class);
             cacheUtils.initCacheInput(roleDto);
         }
@@ -50,13 +50,13 @@ public class RoleService {
         Role role;
         if (roleForm.isCreate()) {
             role = BeanUtil.map(roleForm, Role.class);
-            roleMapper.save(role);
+            roleRepository.save(role);
         } else {
-            role = roleMapper.findOne(roleForm.getId());
+            role = roleRepository.findOne(roleForm.getId());
             ReflectionUtil.copyProperties(roleForm, role);
-            roleMapper.update(role);
+            roleRepository.update(role);
         }
-        List<RoleModule> roleModuleList = roleModuleMapper.findAllByRoleId(role.getId());
+        List<RoleModule> roleModuleList = roleModuleRepository.findAllByRoleId(role.getId());
         if (CollectionUtil.isNotEmpty(roleForm.getModuleIdList())) {
             List<String> roleModuleIdList = CollectionUtil.extractToList(roleModuleList, "backendModuleId");
             List<String> removeIdList = CollectionUtil.subtract(roleModuleIdList, roleForm.getModuleIdList());
@@ -65,21 +65,21 @@ public class RoleService {
             for (String moduleId : addIdList) {
                 addRoleModules.add(new RoleModule(role.getId(), moduleId));
             }
-            roleModuleMapper.setEnabledByRoleId(true, role.getId());
+            roleModuleRepository.setEnabledByRoleId(true, role.getId());
             if (CollectionUtil.isNotEmpty(removeIdList)) {
-                roleModuleMapper.setEnabledByModuleIdList(false,removeIdList);
+                roleModuleRepository.setEnabledByModuleIdList(false,removeIdList);
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
-                roleModuleMapper.batchSave(addRoleModules);
+                roleModuleRepository.batchSave(addRoleModules);
             }
         } else if (CollectionUtil.isNotEmpty(roleModuleList)) {
-            roleModuleMapper.setEnabledByRoleId(false, role.getId());
+            roleModuleRepository.setEnabledByRoleId(false, role.getId());
         }
         return role;
     }
 
     public void saveRoleAndPermission(RoleForm roleForm) {
-        List<RolePermission> rolePermissionList = rolePermissionMapper.findAllByRoleId(roleForm.getId());
+        List<RolePermission> rolePermissionList = rolePermissionRepository.findAllByRoleId(roleForm.getId());
         if (CollectionUtil.isNotEmpty(roleForm.getPermissionIdList())) {
             List<String> rolePermissionIdList = CollectionUtil.extractToList(rolePermissionList, "permissionId");
             List<String> removeIdList = CollectionUtil.subtract(rolePermissionIdList, roleForm.getPermissionIdList());
@@ -88,37 +88,37 @@ public class RoleService {
             for (String permissionId : addIdList) {
                 rolePermissions.add(new RolePermission(roleForm.getId(), permissionId));
             }
-            rolePermissionMapper.setEnabledByRoleId(true, roleForm.getId());
+            rolePermissionRepository.setEnabledByRoleId(true, roleForm.getId());
             if (CollectionUtil.isNotEmpty(removeIdList)) {
-                rolePermissionMapper.setEnabledByPermissionIdList(false,removeIdList);
+                rolePermissionRepository.setEnabledByPermissionIdList(false,removeIdList);
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
-                rolePermissionMapper.batchSave(rolePermissions);
+                rolePermissionRepository.batchSave(rolePermissions);
             }
         } else if (CollectionUtil.isNotEmpty(rolePermissionList)) {
-            rolePermissionMapper.setEnabledByRoleId(false, roleForm.getId());
+            rolePermissionRepository.setEnabledByRoleId(false, roleForm.getId());
         }
     }
 
     public void logicDeleteOne(String id) {
-        roleMapper.logicDeleteOne(id);
+        roleRepository.logicDeleteOne(id);
     }
 
     public Page<RoleDto> findPage(Pageable pageable, RoleQuery roleQuery) {
-        Page<RoleDto> roleDtoPage = roleMapper.findPage(pageable, roleQuery);
+        Page<RoleDto> roleDtoPage = roleRepository.findPage(pageable, roleQuery);
         cacheUtils.initCacheInput(roleDtoPage.getContent());
         return roleDtoPage;
     }
 
     public List<RoleDto> findByNameLike(String name) {
-        List<Role> roleList = roleMapper.findByNameLike(name);
+        List<Role> roleList = roleRepository.findByNameLike(name);
         List<RoleDto> roleDtoList = BeanUtil.map(roleList, RoleDto.class);
         cacheUtils.initCacheInput(roleDtoList);
         return roleDtoList;
     }
 
     public List<RoleDto> findAll(){
-        List<Role> roleList=roleMapper.findAll();
+        List<Role> roleList=roleRepository.findAll();
         List<RoleDto> roleDtoList = BeanUtil.map(roleList, RoleDto.class);
         cacheUtils.initCacheInput(roleDtoList);
         return  roleDtoList;

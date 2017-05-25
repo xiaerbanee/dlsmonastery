@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.service;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
-import net.myspring.basic.modules.hr.mapper.AuditFileMapper;
+import net.myspring.basic.modules.hr.repository.AuditFileRepository;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuditFileService {
 
     @Autowired
-    private AuditFileMapper auditFileMapper;
+    private AuditFileRepository auditFileRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -35,7 +35,7 @@ public class AuditFileService {
 
 
     public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery) {
-        Page<AuditFileDto> page = auditFileMapper.findPage(pageable, auditFileQuery);
+        Page<AuditFileDto> page = auditFileRepository.findPage(pageable, auditFileQuery);
         for(AuditFileDto auditFileDto:page.getContent()){
             auditFileDto.setAreaId(officeManager.findByOfficeIdAndRuleName(auditFileDto.getOfficeId(),"办事处"));
         }
@@ -44,13 +44,13 @@ public class AuditFileService {
     }
 
     public AuditFile findOne(String id) {
-        AuditFile auditFile = auditFileMapper.findOne(id);
+        AuditFile auditFile = auditFileRepository.findOne(id);
         return auditFile;
     }
 
     public AuditFileDto findOne(AuditFileDto auditFileDto) {
         if (!auditFileDto.isCreate()) {
-            AuditFile auditFile = auditFileMapper.findOne(auditFileDto.getId());
+            AuditFile auditFile = auditFileRepository.findOne(auditFileDto.getId());
             auditFileDto = BeanUtil.map(auditFile, AuditFileDto.class);
             auditFileDto.setActivitiDetailList(activitiClient.getActivitiDetail(auditFile.getProcessInstanceId()));
             cacheUtils.initCacheInput(auditFileDto);
@@ -70,14 +70,14 @@ public class AuditFileService {
             auditFile.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
             auditFile.setPositionId(activitiStartDto.getPositionId());
             auditFile.setProcessTypeId(activitiStartDto.getProcessTypeId());
-            auditFileMapper.save(auditFile);
+            auditFileRepository.save(auditFile);
             return auditFile;
         }
         return null;
     }
 
     public void audit(String id, boolean pass, String comment) {
-        AuditFile auditFile = auditFileMapper.findOne(id);
+        AuditFile auditFile = auditFileRepository.findOne(id);
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(auditFile.getProcessInstanceId(), auditFile.getProcessTypeId(), comment, pass));
         AuditFileForm auditFileForm = BeanUtil.map(auditFile, AuditFileForm.class);
         auditFileForm.setLocked(true);
@@ -85,11 +85,11 @@ public class AuditFileService {
         auditFileForm.setProcessStatus(activitiCompleteDto.getProcessStatus());
         auditFileForm.setPositionId(activitiCompleteDto.getPositionId());
         ReflectionUtil.copyProperties(auditFileForm,auditFile);
-        auditFileMapper.update(auditFile);
+        auditFileRepository.update(auditFile);
 
     }
 
     public void logicDeleteOne(String id) {
-        auditFileMapper.logicDeleteOne(id);
+        auditFileRepository.logicDeleteOne(id);
     }
 }

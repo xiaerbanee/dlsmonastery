@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.*;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto;
-import net.myspring.basic.modules.hr.mapper.*;
+import net.myspring.basic.modules.hr.repository.*;
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,28 +18,28 @@ import java.util.Map;
 @Service
 public class DutyWorktimeService {
     @Autowired
-    private DutyWorktimeMapper dutyWorktimeMapper;
+    private DutyWorktimeRepository dutyWorktimeRepository;
     @Autowired
-    private DutyLeaveMapper dutyLeaveMapper;
+    private DutyLeaveRepository dutyLeaveRepository;
     @Autowired
-    private DutyOvertimeMapper dutyOvertimeMapper;
+    private DutyOvertimeRepository dutyOvertimeRepository;
     @Autowired
-    private DutyRestMapper dutyRestMapper;
+    private DutyRestRepository dutyRestRepository;
     @Autowired
-    private DutySignMapper dutySignMapper;
+    private DutySignRepository dutySignRepository;
     @Autowired
-    private DutyFreeMapper dutyFreeMapper;
+    private DutyFreeRepository dutyFreeRepository;
     @Autowired
-    private DutyPublicFreeMapper dutyPublicFreeMapper;
+    private DutyPublicFreeRepository dutyPublicFreeRepository;
     @Autowired
-    private DutyTripMapper dutyTripMapper;
+    private DutyTripRepository dutyTripRepository;
     @Autowired
-    private EmployeeMapper employeeMapper;
+    private EmployeeRepository employeeRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery){
-        Page<DutyWorktimeDto> page = dutyWorktimeMapper.findPage(pageable, dutyWorktimeQuery);
+        Page<DutyWorktimeDto> page = dutyWorktimeRepository.findPage(pageable, dutyWorktimeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -49,12 +49,12 @@ public class DutyWorktimeService {
         if(accountId!=null){
             accountIds.add(accountId);
         }
-        List<DutyWorktime>  dutyWorktimeList=dutyWorktimeMapper.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
-        List<DutySign> dutySignList=dutySignMapper.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
-        List<DutyOvertime> dutyOvertimeList=dutyOvertimeMapper.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
-        List<DutyLeave> dutyLeaveList=dutyLeaveMapper.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
-        List<DutyRest> dutyRestList=dutyRestMapper.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
-        List<DutyFree> dutyFreeList=dutyFreeMapper.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
+        List<DutyWorktime>  dutyWorktimeList=dutyWorktimeRepository.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
+        List<DutySign> dutySignList=dutySignRepository.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
+        List<DutyOvertime> dutyOvertimeList=dutyOvertimeRepository.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
+        List<DutyLeave> dutyLeaveList=dutyLeaveRepository.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
+        List<DutyRest> dutyRestList=dutyRestRepository.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
+        List<DutyFree> dutyFreeList=dutyFreeRepository.findByAccountIdAndDutyDate(dateStart,dateEnd,accountIds);
         return null;
     }
 }

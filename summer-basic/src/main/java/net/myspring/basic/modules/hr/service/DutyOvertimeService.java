@@ -4,7 +4,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyOvertime;
 import net.myspring.basic.modules.hr.dto.DutyOvertimeDto;
-import net.myspring.basic.modules.hr.mapper.DutyOvertimeMapper;
+import net.myspring.basic.modules.hr.repository.DutyOvertimeRepository;
 import net.myspring.basic.modules.hr.web.form.DutyOvertimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyOvertimeQuery;
 import net.myspring.common.enums.AuditTypeEnum;
@@ -26,14 +26,14 @@ import java.util.List;
 public class DutyOvertimeService {
 
     @Autowired
-    private DutyOvertimeMapper dutyOvertimeMapper;
+    private DutyOvertimeRepository dutyOvertimeRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
 
 
     public Page<DutyOvertimeDto> findPage(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
-        Page<DutyOvertimeDto> page = dutyOvertimeMapper.findPage(pageable, dutyOvertimeQuery);
+        Page<DutyOvertimeDto> page = dutyOvertimeRepository.findPage(pageable, dutyOvertimeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -43,33 +43,33 @@ public class DutyOvertimeService {
         dutyOvertimeForm.setStatus(AuditTypeEnum.APPLYING.toString());
         dutyOvertimeForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
         DutyOvertime dutyOvertime = BeanUtil.map(dutyOvertimeForm, DutyOvertime.class);
-        dutyOvertimeMapper.save(dutyOvertime);
+        dutyOvertimeRepository.save(dutyOvertime);
         return dutyOvertime;
     }
 
     public List<DutyOvertime> findByDutyDate(String employeeId, LocalDate dutyDate) {
-        List<DutyOvertime> dutyOvertimes = dutyOvertimeMapper.findByDutyDate(employeeId, dutyDate);
+        List<DutyOvertime> dutyOvertimes = dutyOvertimeRepository.findByDutyDate(employeeId, dutyDate);
         return dutyOvertimes;
     }
 
     public List<DutyOvertime> findByDutyDateAndStatus(String employeeId, LocalDate dutyDateStart, LocalDate dutyDateEnd, String status) {
-        List<DutyOvertime> dutyOvertimes = dutyOvertimeMapper.findByDutyDateAndStatus(employeeId, dutyDateStart, dutyDateEnd, status);
+        List<DutyOvertime> dutyOvertimes = dutyOvertimeRepository.findByDutyDateAndStatus(employeeId, dutyDateStart, dutyDateEnd, status);
         return dutyOvertimes;
     }
 
     public void logicDeleteOne(String id) {
-        dutyOvertimeMapper.logicDeleteOne(id);
+        dutyOvertimeRepository.logicDeleteOne(id);
     }
 
 
     public DutyOvertime findOne(String id) {
-        DutyOvertime dutyOvertime = dutyOvertimeMapper.findOne(id);
+        DutyOvertime dutyOvertime = dutyOvertimeRepository.findOne(id);
         return dutyOvertime;
     }
 
     public DutyOvertimeForm getForm(DutyOvertimeForm dutyOvertimeForm) {
         if(!dutyOvertimeForm.isCreate()){
-            DutyOvertime dutyOvertime =dutyOvertimeMapper.findOne(dutyOvertimeForm.getId());
+            DutyOvertime dutyOvertime =dutyOvertimeRepository.findOne(dutyOvertimeForm.getId());
             dutyOvertimeForm= BeanUtil.map(dutyOvertime,DutyOvertimeForm.class);
             cacheUtils.initCacheInput(dutyOvertimeForm);
         }
@@ -83,7 +83,7 @@ public class DutyOvertimeService {
         }
         LocalDateTime dateStart = LocalDateTimeUtils.getFirstDayOfMonth(currentDate.minusMonths(3));
         LocalDateTime dateEnd = currentDate;
-        List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
+        List<DutyOvertime> overtimeList = dutyOvertimeRepository.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
         if (CollectionUtil.isNotEmpty(overtimeList)) {
             for (DutyOvertime dutyOvertime : overtimeList) {
                 overtimeHour = overtimeHour + dutyOvertime.getLeftHour();
@@ -99,7 +99,7 @@ public class DutyOvertimeService {
         }
         LocalDateTime dateStart = LocalDateTimeUtils.getFirstDayOfMonth(currentDate.minusMonths(3));
         LocalDateTime dateEnd =  LocalDateTimeUtils.getLastDayOfMonth(currentDate.minusMonths(3));
-        List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
+        List<DutyOvertime> overtimeList = dutyOvertimeRepository.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
         if (CollectionUtil.isNotEmpty(overtimeList)) {
             for (DutyOvertime dutyOvertime : overtimeList) {
                 overtimeHour = overtimeHour + dutyOvertime.getLeftHour();

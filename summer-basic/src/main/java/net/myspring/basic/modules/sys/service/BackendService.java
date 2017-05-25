@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import net.myspring.basic.modules.sys.mapper.BackendMapper;
+import net.myspring.basic.modules.sys.repository.BackendRepository;
 
 import java.util.List;
 
@@ -19,13 +19,13 @@ import java.util.List;
 public class BackendService {
 
     @Autowired
-    private BackendMapper backendMapper;
+    private BackendRepository backendRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public BackendDto findOne(BackendDto backendDto) {
         if(!backendDto.isCreate()) {
-            Backend backend =backendMapper.findOne(backendDto.getId());
+            Backend backend =backendRepository.findOne(backendDto.getId());
             backendDto= BeanUtil.map(backend,BackendDto.class);
             cacheUtils.initCacheInput(backendDto);
         }
@@ -33,7 +33,7 @@ public class BackendService {
     }
 
     public List<BackendDto> findByNameLike(String name){
-        List<Backend> backendList=backendMapper.findByNameLike(name);
+        List<Backend> backendList=backendRepository.findByNameLike(name);
         List<BackendDto> backendDtoList=BeanUtil.map(backendList,BackendDto.class);
         return backendDtoList;
     }
@@ -42,34 +42,34 @@ public class BackendService {
         Backend backend;
         if(backendForm.isCreate()) {
             backend = BeanUtil.map(backendForm, Backend.class);
-            backendMapper.save(backend);
+            backendRepository.save(backend);
         } else {
-            backend = backendMapper.findOne(backendForm.getId());
+            backend = backendRepository.findOne(backendForm.getId());
             ReflectionUtil.copyProperties(backendForm,backend);
-            backendMapper.update(backend);
+            backendRepository.update(backend);
         }
         return backend;
     }
 
     public BackendDto findOne(String id){
-        Backend backend=backendMapper.findOne(id);
+        Backend backend=backendRepository.findOne(id);
         BackendDto backendDto=BeanUtil.map(backend,BackendDto.class);
         return backendDto;
     }
 
     public List<BackendDto> findAll(){
-        List<Backend> backendList = backendMapper.findAllEnabled();
+        List<Backend> backendList = backendRepository.findAllEnabled();
         List<BackendDto> backendDtoList=BeanUtil.map(backendList,BackendDto.class);
         return backendDtoList;
     }
 
 
     public void logicDeleteOne(String id) {
-        backendMapper.logicDeleteOne(id);
+        backendRepository.logicDeleteOne(id);
     }
 
     public Page<BackendDto> findPage(Pageable pageable, BackendQuery backendQuery) {
-        Page<BackendDto> backendDtoPage= backendMapper.findPage(pageable, backendQuery);
+        Page<BackendDto> backendDtoPage= backendRepository.findPage(pageable, backendQuery);
         cacheUtils.initCacheInput(backendDtoPage.getContent());
         return backendDtoPage;
     }

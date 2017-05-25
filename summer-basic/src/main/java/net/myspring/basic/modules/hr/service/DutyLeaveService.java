@@ -8,7 +8,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyLeave;
 import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
-import net.myspring.basic.modules.hr.mapper.DutyLeaveMapper;
+import net.myspring.basic.modules.hr.repository.DutyLeaveRepository;
 import net.myspring.basic.modules.hr.web.form.DutyLeaveForm;
 import net.myspring.basic.modules.hr.web.query.DutyLeaveQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -27,13 +27,13 @@ import java.util.List;
 public class DutyLeaveService {
 
     @Autowired
-    private DutyLeaveMapper dutyLeaveMapper;
+    private DutyLeaveRepository dutyLeaveRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public Page<DutyLeaveDto> findPage(Pageable pageable, DutyLeaveQuery dutyLeaveQuery) {
-        Page<DutyLeaveDto> page = dutyLeaveMapper.findPage(pageable, dutyLeaveQuery);
+        Page<DutyLeaveDto> page = dutyLeaveRepository.findPage(pageable, dutyLeaveQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -42,13 +42,13 @@ public class DutyLeaveService {
         List<DutyLeave> dutyLeaveList= Lists.newArrayList();
         if (dutyLeaveForm.getDutyDateStart().equals(dutyLeaveForm.getDutyDateEnd())) {
             LocalDate date = LocalDate.parse(dutyLeaveForm.getDutyDateStart());
-            if (dutyLeaveMapper.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, dutyLeaveForm.getDateType())  == null) {
+            if (dutyLeaveRepository.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, dutyLeaveForm.getDateType())  == null) {
                 dutyLeaveForm.setDutyDate(date);
                 dutyLeaveForm.setStatus(AuditTypeEnum.APPLYING.toString());
                 dutyLeaveForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
                 DutyLeave dutyLeave=BeanUtil.map(dutyLeaveForm,DutyLeave.class);
-                dutyLeaveMapper.save(dutyLeave);
-                dutyLeave=dutyLeaveMapper.findOne(dutyLeave.getId());
+                dutyLeaveRepository.save(dutyLeave);
+                dutyLeave=dutyLeaveRepository.findOne(dutyLeave.getId());
                 dutyLeaveList.add(dutyLeave);
             }
         }else {
@@ -56,7 +56,7 @@ public class DutyLeaveService {
             LocalDate dateEnd = LocalDate.parse(dutyLeaveForm.getDutyDateEnd());
             List<LocalDate> dateList = LocalDateUtils.getDateList(dateStart, dateEnd);
             for (LocalDate date : dateList) {
-                if (dutyLeaveMapper.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, DutyDateTypeEnum.DAY.toString()) == null) {
+                if (dutyLeaveRepository.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, DutyDateTypeEnum.DAY.toString()) == null) {
                     DutyLeave item = new DutyLeave();
                     item.setDateType(DutyDateTypeEnum.DAY.toString());
                     item.setDutyDate(date);
@@ -65,7 +65,7 @@ public class DutyLeaveService {
                     item.setAttachment(dutyLeaveForm.getAttachment());
                     item.setRemarks(dutyLeaveForm.getRemarks());
                     item.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
-                    dutyLeaveMapper.save(item);
+                    dutyLeaveRepository.save(item);
                     dutyLeaveList.add(item);
                 }
             }
@@ -74,17 +74,17 @@ public class DutyLeaveService {
     }
 
     public void logicDeleteOne(String id) {
-        dutyLeaveMapper.logicDeleteOne(id);
+        dutyLeaveRepository.logicDeleteOne(id);
     }
 
     public DutyLeave findOne(String id) {
-        DutyLeave dutyLeave=dutyLeaveMapper.findOne(id);
+        DutyLeave dutyLeave=dutyLeaveRepository.findOne(id);
         return dutyLeave;
     }
 
     public DutyLeaveForm getForm(DutyLeaveForm dutyLeaveForm) {
         if(!dutyLeaveForm.isCreate()){
-            DutyLeave dutyLeave=dutyLeaveMapper.findOne(dutyLeaveForm.getId());
+            DutyLeave dutyLeave=dutyLeaveRepository.findOne(dutyLeaveForm.getId());
             dutyLeaveForm= BeanUtil.map(dutyLeave,DutyLeaveForm.class);
             cacheUtils.initCacheInput(dutyLeaveForm);
         }
@@ -92,10 +92,10 @@ public class DutyLeaveService {
     }
 
     public List<DutyLeave> findByDutyDateList(String employeeId,List<LocalDate> dutyDateList){
-        return dutyLeaveMapper.findByDutyDateList(employeeId,dutyDateList);
+        return dutyLeaveRepository.findByDutyDateList(employeeId,dutyDateList);
     }
 
     public List<DutyLeave>  findByDutyDate(String employeeId,LocalDate dutyDate){
-        return dutyLeaveMapper.findByDutyDate(employeeId,dutyDate);
+        return dutyLeaveRepository.findByDutyDate(employeeId,dutyDate);
     }
 }

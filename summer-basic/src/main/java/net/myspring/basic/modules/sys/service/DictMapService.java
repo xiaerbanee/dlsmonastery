@@ -13,7 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import net.myspring.basic.modules.sys.mapper.DictMapMapper;
+import net.myspring.basic.modules.sys.repository.DictMapRepository;
 
 import java.util.List;
 
@@ -21,14 +21,14 @@ import java.util.List;
 public class DictMapService {
 
     @Autowired
-    private DictMapMapper dictMapMapper;
+    private DictMapRepository dictMapRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public DictMapDto findOne(DictMapDto dictMapDto) {
         if (!dictMapDto.isCreate()) {
-            DictMap dictMap = dictMapMapper.findOne(dictMapDto.getId());
+            DictMap dictMap = dictMapRepository.findOne(dictMapDto.getId());
             dictMapDto = BeanUtil.map(dictMap, DictMapDto.class);
             cacheUtils.initCacheInput(dictMapDto);
         }
@@ -36,11 +36,11 @@ public class DictMapService {
     }
 
     public List<String> findDistinctCategory() {
-        return dictMapMapper.findDistinctCategory();
+        return dictMapRepository.findDistinctCategory();
     }
 
     public Page<DictMapDto> findPage(Pageable pageable, DictMapQuery dictMapQuery) {
-        Page<DictMapDto> dictMapDtoPage = dictMapMapper.findPage(pageable, dictMapQuery);
+        Page<DictMapDto> dictMapDtoPage = dictMapRepository.findPage(pageable, dictMapQuery);
         cacheUtils.initCacheInput(dictMapDtoPage.getContent());
         return dictMapDtoPage;
     }
@@ -49,17 +49,17 @@ public class DictMapService {
         DictMap dictMap;
         if (StringUtils.isBlank(dictMapForm.getId())) {
             dictMap = BeanUtil.map(dictMapForm, DictMap.class);
-            dictMapMapper.save(dictMap);
+            dictMapRepository.save(dictMap);
         } else {
-            dictMap = dictMapMapper.findOne(dictMapForm.getId());
+            dictMap = dictMapRepository.findOne(dictMapForm.getId());
             ReflectionUtil.copyProperties(dictMapForm, dictMap);
-            dictMapMapper.update(dictMap);
+            dictMapRepository.update(dictMap);
         }
         return dictMap;
     }
 
     public HashBiMap<String, String> getDictMapList(String category) {
-        List<DictMap> dictMaps = dictMapMapper.findByCategory(category);
+        List<DictMap> dictMaps = dictMapRepository.findByCategory(category);
         HashBiMap<String, String> map = HashBiMap.create();
         for (DictMap dictMap : dictMaps) {
             map.put(dictMap.toString(), dictMap.getName());
@@ -68,16 +68,16 @@ public class DictMapService {
     }
 
     public void logicDeleteOne(String id) {
-        dictMapMapper.logicDeleteOne(id);
+        dictMapRepository.logicDeleteOne(id);
     }
 
     public List<DictMap> findByCategory(String category) {
-        List<DictMap> dictMapList = dictMapMapper.findByCategory(category);
+        List<DictMap> dictMapList = dictMapRepository.findByCategory(category);
         return dictMapList;
     }
 
     public DictMapDto findByName(String name) {
-        DictMapDto dictMapDto = dictMapMapper.findByName(name);
+        DictMapDto dictMapDto = dictMapRepository.findByName(name);
         return dictMapDto;
     }
 }

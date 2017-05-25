@@ -8,18 +8,15 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountPermission;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.AccountDto;
-import net.myspring.basic.modules.hr.dto.EmployeeDto;
-import net.myspring.basic.modules.hr.mapper.AccountMapper;
-import net.myspring.basic.modules.hr.mapper.AccountPermissionMapper;
-import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
+import net.myspring.basic.modules.hr.repository.AccountRepository;
+import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.manager.RoleManager;
-import net.myspring.basic.modules.sys.mapper.PermissionMapper;
+import net.myspring.basic.modules.sys.repository.PermissionRepository;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -39,9 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -53,15 +48,13 @@ public class AccountService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private AccountMapper accountMapper;
+    private AccountRepository accountRepository;
     @Autowired
-    private PermissionMapper permissionMapper;
+    private PermissionRepository permissionRepository;
     @Autowired
-    private EmployeeMapper employeeMapper;
+    private EmployeeRepository employeeRepository;
     @Autowired
     private RoleManager roleManager;
-    @Autowired
-    private AccountPermissionMapper accountPermissionMapper;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
@@ -71,13 +64,13 @@ public class AccountService {
     private String adminIdList;
 
     public Account findOne(String id) {
-        Account account = accountMapper.findOne(id);
+        Account account = accountRepository.findOne(id);
         return account;
     }
 
     public AccountDto findOne(AccountDto accountDto) {
         if(!accountDto.isCreate()){
-            Account account = accountMapper.findOne(accountDto.getId());
+            Account account = accountRepository.findOne(accountDto.getId());
             accountDto = BeanUtil.map(account, AccountDto.class);
             cacheUtils.initCacheInput(accountDto);
         }
@@ -85,20 +78,20 @@ public class AccountService {
     }
 
     public AccountDto findByLoginName(String loginName) {
-        Account account = accountMapper.findByLoginName(loginName);
+        Account account = accountRepository.findByLoginName(loginName);
         AccountDto accountDto = BeanUtil.map(account, AccountDto.class);
         cacheUtils.initCacheInput(accountDto);
         return accountDto;
     }
 
     public Page<AccountDto> findPage(Pageable pageable, AccountQuery accountQuery) {
-        Page<AccountDto> accountDtoPage = accountMapper.findPage(pageable, accountQuery);
+        Page<AccountDto> accountDtoPage = accountRepository.findPage(pageable, accountQuery);
         cacheUtils.initCacheInput(accountDtoPage.getContent());
         return accountDtoPage;
     }
 
     public List<AccountDto> findByFilter(AccountQuery accountQuery) {
-        List<Account> accountList = accountMapper.findByFilter(accountQuery);
+        List<Account> accountList = accountRepository.findByFilter(accountQuery);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         cacheUtils.initCacheInput(accountList);
         return accountDtoList;
@@ -109,32 +102,32 @@ public class AccountService {
         if (accountForm.isCreate()) {
             accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getLoginName()));
             account = BeanUtil.map(accountForm, Account.class);
-            accountMapper.save(account);
+            accountRepository.save(account);
         } else {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
                 accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
             } else {
-                accountForm.setPassword(accountMapper.findOne(accountForm.getId()).getPassword());
+                accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
             }
-            account = accountMapper.findOne(accountForm.getId());
+            account = accountRepository.findOne(accountForm.getId());
             ReflectionUtil.copyProperties(accountForm,account);
-            accountMapper.update(account);
+            accountRepository.save(account);
         }
         if ("主账号".equals(accountForm.getType())) {
-            Employee employee=employeeMapper.findOne(accountForm.getEmployeeId());
+            Employee employee=employeeRepository.findOne(accountForm.getEmployeeId());
             employee.setAccountId(account.getId());
-            employeeMapper.update(employee);
+            employeeRepository.save(employee);
         }
         return account;
     }
 
 
     public void logicDeleteOne(String id) {
-        accountMapper.logicDeleteOne(id);
+        accountRepository.logicDeleteOne(id);
     }
 
     public List<AccountDto> findByLoginNameLikeAndType(String type,String key) {
-        List<Account> accountList = accountMapper.findByLoginNameLikeAndType(type,key);
+        List<Account> accountList = accountRepository.findByLoginNameLikeAndType(type,key);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         return accountDtoList;
     }
@@ -145,13 +138,13 @@ public class AccountService {
         List<String> authorityList;
         List<Permission> permissionList;
         if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())){
-            permissionList=permissionMapper.findAllEnabled();
+            permissionList=permissionRepository.findAllEnabled();
         }else {
-            List<String> accountPermissions=accountPermissionMapper.findPermissionIdByAccount(accountId);
+            List<String> accountPermissions=accountPermissionRepository.findPermissionIdByAccount(accountId);
             if(CollectionUtil.isNotEmpty(accountPermissions)){
-                permissionList=permissionMapper.findByRoleAndAccount(roleId,accountId);
+                permissionList=permissionRepository.findByRoleAndAccount(roleId,accountId);
             }else {
-                permissionList=permissionMapper.findByRoleId(roleId);
+                permissionList=permissionRepository.findByRoleId(roleId);
             }
         }
         authorityList= CollectionUtil.extractToList(permissionList,"permission");
@@ -159,7 +152,7 @@ public class AccountService {
     }
 
     public AccountDto getAccountDto(String accountId){
-        AccountDto accountDto=BeanUtil.map(accountMapper.findOne(accountId),AccountDto.class);
+        AccountDto accountDto=BeanUtil.map(accountRepository.findOne(accountId),AccountDto.class);
         cacheUtils.initCacheInput(accountDto);
         return accountDto;
     }
@@ -167,7 +160,7 @@ public class AccountService {
 
     public String findSimpleExcelSheet(Workbook workbook,AccountQuery accountQuery) throws IOException {
         accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getRequestEntity().getOfficeId()));
-        List<Account> accountList = accountMapper.findByFilter(accountQuery);
+        List<Account> accountList = accountRepository.findByFilter(accountQuery);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         cacheUtils.initCacheInput(accountDtoList);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
@@ -188,31 +181,31 @@ public class AccountService {
     }
 
     public void saveAccountAndPermission(AccountForm accountForm){
-        List<String> permissionIdList=accountPermissionMapper.findPermissionIdByAccount(accountForm.getId());
+        List<String> permissionIdList=accountPermissionRepository.findPermissionIdByAccount(accountForm.getId());
         List<String>removeIdList=CollectionUtil.subtract(permissionIdList,accountForm.getPermissionIdList());
         List<String> addIdList=CollectionUtil.subtract(accountForm.getPermissionIdList(),permissionIdList);
         List<AccountPermission> accountPermissions=Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(removeIdList)){
-            accountPermissionMapper.removeByPermissionList(removeIdList);
+            accountPermissionRepository.removeByPermissionList(removeIdList);
         }
         if(CollectionUtil.isNotEmpty(addIdList)){
             for(String permissionId:addIdList){
                 accountPermissions.add(new AccountPermission(accountForm.getId(), permissionId));
             }
-            accountPermissionMapper.batchSave(accountPermissions);
+            accountPermissionRepository.batchSave(accountPermissions);
         }
     }
 
     @Transactional(readOnly = true)
     public List<AccountDto> findByIds(List<String> ids){
-        List<Account> districts = accountMapper.findByIds(ids);
+        List<Account> districts = accountRepository.findByIds(ids);
         List<AccountDto> districtDtos= BeanUtil.map(districts,AccountDto.class);
         return districtDtos;
     }
 
 
     public Boolean checkLoginName(AccountQuery accountQuery){
-        Account account = accountMapper.findByLoginName(accountQuery.getLoginName());
+        Account account = accountRepository.findByLoginName(accountQuery.getLoginName());
         return account == null || (account.getId().equals(accountQuery.getId()));
     }
 

@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.service;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.PositionDto;
-import net.myspring.basic.modules.hr.mapper.PositionMapper;
+import net.myspring.basic.modules.hr.repository.PositionRepository;
 import net.myspring.basic.modules.hr.web.form.PositionForm;
 import net.myspring.basic.modules.hr.web.query.PositionQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -19,40 +19,40 @@ import java.util.List;
 public class PositionService {
     
     @Autowired
-    private PositionMapper positionMapper;
+    private PositionRepository positionRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public List<PositionDto> findAll(){
-        List<Position> positionList=positionMapper.findAll();
+        List<Position> positionList=positionRepository.findAll();
         List<PositionDto> positionDtoList= BeanUtil.map(positionList,PositionDto.class);
         cacheUtils.initCacheInput(positionDtoList);
         return positionDtoList;
     }
 
     public Page<PositionDto> findPage(Pageable pageable, PositionQuery positionQuery) {
-        Page<PositionDto> page = positionMapper.findPage(pageable, positionQuery);
+        Page<PositionDto> page = positionRepository.findPage(pageable, positionQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public List<PositionDto> findByNameLike(String name){
-        List<Position> positionList=positionMapper.findByNameLike(name);
+        List<Position> positionList=positionRepository.findByNameLike(name);
         List<PositionDto> positionDtoList= BeanUtil.map(positionList,PositionDto.class);
         cacheUtils.initCacheInput(positionDtoList);
         return  positionDtoList;
     }
 
     public PositionDto findOne(String id){
-        Position position = positionMapper.findOne(id);
+        Position position = positionRepository.findOne(id);
         PositionDto positionDto=BeanUtil.map(position,PositionDto.class);
         return positionDto;
     }
 
     public PositionDto findOne(PositionDto positionDto){
         if(!positionDto.isCreate()){
-            Position position = positionMapper.findOne(positionDto.getId());
+            Position position = positionRepository.findOne(positionDto.getId());
             positionDto= BeanUtil.map(position,PositionDto.class);
             cacheUtils.initCacheInput(positionDto);
         }
@@ -63,17 +63,17 @@ public class PositionService {
         Position position;
         if(positionForm.isCreate()){
             position=BeanUtil.map(positionForm,Position.class);
-            positionMapper.save(position);
+            positionRepository.save(position);
         }else{
-            position = positionMapper.findOne(positionForm.getId());
+            position = positionRepository.findOne(positionForm.getId());
             ReflectionUtil.copyProperties(positionForm,position);
-            positionMapper.update(position);
+            positionRepository.update(position);
         }
         return position;
     }
 
     public void delete(String id){
-        positionMapper.logicDeleteOne(id);
+        positionRepository.logicDeleteOne(id);
     }
 
 }

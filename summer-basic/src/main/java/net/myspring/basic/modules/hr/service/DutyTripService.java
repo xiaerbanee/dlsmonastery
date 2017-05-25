@@ -5,7 +5,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyTrip;
 import net.myspring.basic.modules.hr.dto.DutyTripDto;
-import net.myspring.basic.modules.hr.mapper.DutyTripMapper;
+import net.myspring.basic.modules.hr.repository.DutyTripRepository;
 import net.myspring.basic.modules.hr.web.form.DutyTripForm;
 import net.myspring.basic.modules.hr.web.query.DutyTripQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -20,13 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class DutyTripService {
 
     @Autowired
-    private DutyTripMapper dutyTripMapper;
+    private DutyTripRepository dutyTripRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public Page<DutyTripDto> findPage(Pageable pageable, DutyTripQuery dutyTripQuery) {
-        Page<DutyTripDto> page = dutyTripMapper.findPage(pageable, dutyTripQuery);
+        Page<DutyTripDto> page = dutyTripRepository.findPage(pageable, dutyTripQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -35,21 +35,21 @@ public class DutyTripService {
         dutyTripForm.setStatus(AuditTypeEnum.APPLYING.toString());
         dutyTripForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
         DutyTrip dutyTrip = BeanUtil.map(dutyTripForm, DutyTrip.class);
-        dutyTripMapper.save(dutyTrip);
+        dutyTripRepository.save(dutyTrip);
         return dutyTrip;
     }
 
     public void logicDeleteOne(String id) {
-        dutyTripMapper.logicDeleteOne(id);
+        dutyTripRepository.logicDeleteOne(id);
     }
 
     public DutyTrip findOne(String id) {
-        DutyTrip dutyTrip = dutyTripMapper.findOne(id);
+        DutyTrip dutyTrip = dutyTripRepository.findOne(id);
         return dutyTrip;
     }
 
     public DutyTripForm getForm(DutyTripForm dutyTripForm) {
-        DutyTrip dutyTrip =dutyTripMapper.findOne(dutyTripForm.getId());
+        DutyTrip dutyTrip =dutyTripRepository.findOne(dutyTripForm.getId());
         dutyTripForm= BeanUtil.map(dutyTrip,DutyTripForm.class);
         cacheUtils.initCacheInput(dutyTripForm);
         return dutyTripForm;

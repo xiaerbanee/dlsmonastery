@@ -15,7 +15,7 @@ import javax.persistence.EntityManager
  * Created by lihx on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("accounts"))
-interface AccountRepository : BaseRepository<Account, String> {
+interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryCustom {
     @Cacheable
     override fun findOne(id: String): Account
 

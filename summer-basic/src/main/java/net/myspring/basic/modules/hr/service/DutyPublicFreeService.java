@@ -5,7 +5,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyPublicFree;
 import net.myspring.basic.modules.hr.dto.DutyPublicFreeDto;
-import net.myspring.basic.modules.hr.mapper.DutyPublicFreeMapper;
+import net.myspring.basic.modules.hr.repository.DutyPublicFreeRepository;
 import net.myspring.basic.modules.hr.web.form.DutyPublicFreeForm;
 import net.myspring.basic.modules.hr.web.query.DutyPublicFreeQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class DutyPublicFreeService {
 
     @Autowired
-    private DutyPublicFreeMapper dutyPublicFreeMapper;
+    private DutyPublicFreeRepository dutyPublicFreeRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -28,28 +28,28 @@ public class DutyPublicFreeService {
         dutyPublicFreeForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
         dutyPublicFreeForm.setStatus(AuditTypeEnum.APPLYING.toString());
         DutyPublicFree dutyPublicFree = BeanUtil.map(dutyPublicFreeForm, DutyPublicFree.class);
-        dutyPublicFreeMapper.save(dutyPublicFree);
+        dutyPublicFreeRepository.save(dutyPublicFree);
         return dutyPublicFree;
     }
 
     public Page<DutyPublicFreeDto> findPage(Pageable pageable, DutyPublicFreeQuery dutyPublicFreeQuery) {
-        Page<DutyPublicFreeDto> page = dutyPublicFreeMapper.findPage(pageable,dutyPublicFreeQuery);
+        Page<DutyPublicFreeDto> page = dutyPublicFreeRepository.findPage(pageable,dutyPublicFreeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public void logicDeleteOne(String id) {
-        dutyPublicFreeMapper.logicDeleteOne(id);
+        dutyPublicFreeRepository.logicDeleteOne(id);
     }
 
     public DutyPublicFree findOne(String id) {
-        DutyPublicFree dutyPublicFree = dutyPublicFreeMapper.findOne(id);
+        DutyPublicFree dutyPublicFree = dutyPublicFreeRepository.findOne(id);
         return dutyPublicFree;
     }
 
     public DutyPublicFreeForm getForm(DutyPublicFreeForm dutyPublicFreeForm) {
         if(!dutyPublicFreeForm.isCreate()){
-            DutyPublicFree dutyPublicFree =dutyPublicFreeMapper.findOne(dutyPublicFreeForm.getId());
+            DutyPublicFree dutyPublicFree =dutyPublicFreeRepository.findOne(dutyPublicFreeForm.getId());
             dutyPublicFreeForm= BeanUtil.map(dutyPublicFree,DutyPublicFreeForm.class);
             cacheUtils.initCacheInput(dutyPublicFree);
         }

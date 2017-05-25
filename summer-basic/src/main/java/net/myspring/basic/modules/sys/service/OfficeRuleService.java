@@ -3,7 +3,7 @@ package net.myspring.basic.modules.sys.service;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
-import net.myspring.basic.modules.sys.mapper.OfficeRuleMapper;
+import net.myspring.basic.modules.sys.repository.OfficeRuleRepository;
 import net.myspring.basic.modules.sys.web.form.OfficeRuleForm;
 import net.myspring.basic.modules.sys.web.query.OfficeRuleQuery;
 import net.myspring.common.constant.TreeConstant;
@@ -24,12 +24,12 @@ import java.util.List;
 public class OfficeRuleService {
     
     @Autowired
-    private OfficeRuleMapper officeRuleMapper;
+    private OfficeRuleRepository officeRuleRepository;
     @Autowired
     private CacheUtils cacheUtils;
     
     public Page<OfficeRuleDto> findPage(Pageable pageable, OfficeRuleQuery officeRuleQuery) {
-        Page<OfficeRuleDto> page = officeRuleMapper.findPage(pageable, officeRuleQuery);
+        Page<OfficeRuleDto> page = officeRuleRepository.findPage(pageable, officeRuleQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -37,14 +37,14 @@ public class OfficeRuleService {
 
 
     public List<OfficeRuleDto> findAll(){
-        List<OfficeRule> officeRuleList=officeRuleMapper.findAllEnabled();
+        List<OfficeRule> officeRuleList=officeRuleRepository.findAllEnabled();
         List<OfficeRuleDto> officeRuleDtoList=BeanUtil.map(officeRuleList,OfficeRuleDto.class);
         return officeRuleDtoList;
     }
 
     public OfficeRuleDto findOne(OfficeRuleDto officeRuleDto) {
         if(!officeRuleDto.isCreate()){
-            OfficeRule officeRule = officeRuleMapper.findOne(officeRuleDto.getId());
+            OfficeRule officeRule = officeRuleRepository.findOne(officeRuleDto.getId());
             officeRuleDto= BeanUtil.map(officeRule,OfficeRuleDto.class);
             cacheUtils.initCacheInput(officeRuleDto);
         }
@@ -52,7 +52,7 @@ public class OfficeRuleService {
     }
 
     public OfficeRule findOne(String id){
-        OfficeRule officeRule=officeRuleMapper.findOne(id);
+        OfficeRule officeRule=officeRuleRepository.findOne(id);
         return officeRule;
     }
 
@@ -61,18 +61,18 @@ public class OfficeRuleService {
         setParentIdsAndLevel(officeRuleForm);
         if (officeRuleForm.isCreate()) {
             officeRule=BeanUtil.map(officeRuleForm,OfficeRule.class);
-            officeRuleMapper.save(officeRule);
+            officeRuleRepository.save(officeRule);
         } else {
-            officeRule = officeRuleMapper.findOne(officeRuleForm.getId());
+            officeRule = officeRuleRepository.findOne(officeRuleForm.getId());
             ReflectionUtil.copyProperties(officeRuleForm,officeRule);
-            officeRuleMapper.update(officeRule);
+            officeRuleRepository.update(officeRule);
 
         }
         return officeRule;
     }
 
     public void logicDeleteOne(OfficeRuleForm officeRuleForm) {
-        officeRuleMapper.logicDeleteOne(officeRuleForm.getId());
+        officeRuleRepository.logicDeleteOne(officeRuleForm.getId());
     }
 
     private void setParentIdsAndLevel(OfficeRuleForm officeRuleForm){
@@ -80,7 +80,7 @@ public class OfficeRuleService {
             officeRuleForm.setParentIds(TreeConstant.ROOT_PARENT_IDS);
             officeRuleForm.setLevel(1);
         }else {
-            OfficeRule parent=officeRuleMapper.findOne(officeRuleForm.getParentId());
+            OfficeRule parent=officeRuleRepository.findOne(officeRuleForm.getParentId());
             if(parent!=null){
                 String parentIds=parent.getParentIds()+officeRuleForm.getParentId();
                 officeRuleForm.setParentIds(parentIds);

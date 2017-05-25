@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.service;
 
-import net.myspring.basic.modules.hr.mapper.EmployeeSalaryMapper;
+import net.myspring.basic.modules.hr.repository.EmployeeSalaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 public class EmployeeSalaryService {
 
     @Autowired
-    private EmployeeSalaryMapper employeeSalaryMapper;
+    private EmployeeSalaryRepository employeeSalaryRepository;
 
 }
