@@ -21,6 +21,7 @@ import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts
 import net.myspring.tool.modules.vivo.domain.VivoProducts
 import net.myspring.util.collection.CollectionUtil
+import net.myspring.util.repository.QueryUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
 import javax.persistence.EntityManager
@@ -192,17 +193,25 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       entityManager.createNativeQuery("delete from S_ZONES_R2500823").executeUpdate();
    }
 
-   override fun insertZones(SZonesM13e00s: List<SZonesM13e00>) {
-      var sb = StringBuffer()
-      sb.append("""
+   override fun insertZones(sZonesM13e00s: List<SZonesM13e00>) {
+      for(sZonesM13e00 in sZonesM13e00s) {
+         var sb = StringBuffer()
+         sb.append("""
            insert into S_ZONES_M13E00
            (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes)
            values (
-        """)
-      if (CollectionUtil.isNotEmpty(SZonesM13e00s)) {
-         sb.append("""
-                and ov.employee_id in :accountIds
-            """)
+            :zoneID,
+            :zoneName,
+            :shortCut,
+            :zoneDepth,
+            :zonePath,
+            :fatherID,
+            :subCount,
+            :zoneTypes
+        """);
+         var query = entityManager.createNativeQuery(sb.toString())
+         QueryUtils.setParameter(query,sZonesM13e00);
+         query.executeUpdate();
       }
    }
 
