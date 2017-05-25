@@ -3,6 +3,7 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Backend
 import net.myspring.basic.modules.sys.dto.BackendMenuDto
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.Query
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param
 /**
  * Created by haos on 2017/5/24.
  */
+@CacheConfig(cacheNames = arrayOf("backends"))
 interface BackendRepository:BaseRepository<Backend,String>{
     @Cacheable
     override fun findOne(id: String): Backend
