@@ -1,15 +1,11 @@
 package net.myspring.future.modules.layout.domain;
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.crm.domain.ExpressOrder;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 
 @Entity
@@ -32,19 +28,15 @@ public class AdGoodsOrder extends CompanyEntity<AdGoodsOrder> {
     private String businessId;
     private Boolean splitBill;
     private Boolean isUrgent;
-    private ExpressOrder expressOrder;
+
     private String expressOrderId;
     private String employeeId;
     private String processTypeId;
     private String processFlowId;
     private String cloudSynId;
-    private List<AdGoodsOrderDetail> adGoodsOrderDetailList = Lists.newArrayList();
-    private List<String> adGoodsOrderDetailIdList = Lists.newArrayList();
-    private Depot store;
-    private Depot shop;
-    private Depot outShop;
+
     private String parentId;
-    private AdGoodsOrder parent;
+
     private String processPositionId;
 
     public String getProcessPositionId() {
@@ -192,14 +184,6 @@ public class AdGoodsOrder extends CompanyEntity<AdGoodsOrder> {
         isUrgent = urgent;
     }
 
-    public ExpressOrder getExpressOrder() {
-        return expressOrder;
-    }
-
-    public void setExpressOrder(ExpressOrder expressOrder) {
-        this.expressOrder = expressOrder;
-    }
-
     public String getExpressOrderId() {
         return expressOrderId;
     }
@@ -240,46 +224,6 @@ public class AdGoodsOrder extends CompanyEntity<AdGoodsOrder> {
         this.cloudSynId = cloudSynId;
     }
 
-    public List<AdGoodsOrderDetail> getAdGoodsOrderDetailList() {
-        return adGoodsOrderDetailList;
-    }
-
-    public void setAdGoodsOrderDetailList(List<AdGoodsOrderDetail> adGoodsOrderDetailList) {
-        this.adGoodsOrderDetailList = adGoodsOrderDetailList;
-    }
-
-    public List<String> getAdGoodsOrderDetailIdList() {
-        return adGoodsOrderDetailIdList;
-    }
-
-    public void setAdGoodsOrderDetailIdList(List<String> adGoodsOrderDetailIdList) {
-        this.adGoodsOrderDetailIdList = adGoodsOrderDetailIdList;
-    }
-
-    public Depot getStore() {
-        return store;
-    }
-
-    public void setStore(Depot store) {
-        this.store = store;
-    }
-
-    public Depot getShop() {
-        return shop;
-    }
-
-    public void setShop(Depot shop) {
-        this.shop = shop;
-    }
-
-    public Depot getOutShop() {
-        return outShop;
-    }
-
-    public void setOutShop(Depot outShop) {
-        this.outShop = outShop;
-    }
-
     public String getParentId() {
         return parentId;
     }
@@ -288,11 +232,4 @@ public class AdGoodsOrder extends CompanyEntity<AdGoodsOrder> {
         this.parentId = parentId;
     }
 
-    public AdGoodsOrder getParent() {
-        return parent;
-    }
-
-    public void setParent(AdGoodsOrder parent) {
-        this.parent = parent;
-    }
 }

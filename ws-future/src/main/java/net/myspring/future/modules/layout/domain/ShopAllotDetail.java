@@ -2,7 +2,6 @@ package net.myspring.future.modules.layout.domain;
 
 
 import net.myspring.common.domain.IdEntity;
-import net.myspring.future.modules.basic.domain.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -14,7 +13,7 @@ public class ShopAllotDetail extends IdEntity<ShopAllotDetail> {
     private Integer qty;
     private BigDecimal salePrice;
     private BigDecimal returnPrice;
-    private Product product;
+
     private String productId;
     private String shopAllotId;
 
@@ -40,14 +39,6 @@ public class ShopAllotDetail extends IdEntity<ShopAllotDetail> {
 
     public void setReturnPrice(BigDecimal returnPrice) {
         this.returnPrice = returnPrice;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public String getProductId() {

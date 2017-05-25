@@ -46,17 +46,10 @@ interface AfterSaleRepository : BaseRepository<AfterSale, String>,AfterSaleRepos
 
 interface AfterSaleRepositoryCustom{
     fun findPage(pageable: Pageable, afterSaleQuery : AfterSaleQuery): Page<AfterSale>?
-    fun findFilter(map: Map<String, Object>): List<AfterSale>?
 }
 
 class AfterSaleRepositoryImpl @Autowired constructor(val entityManager: EntityManager): AfterSaleRepositoryCustom {
     override fun findPage(pageable: Pageable, afterSaleQuery: AfterSaleQuery): Page<AfterSale>? {
-        return null
-
-
-    }
-
-    override fun findFilter(map: Map<String, Object>): List<AfterSale>? {
         return null
 
 

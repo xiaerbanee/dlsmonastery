@@ -1,42 +1,51 @@
 package net.myspring.uaa.repository
 
 import net.myspring.uaa.dto.AccountWeixinDto
-import org.springframework.data.jpa.repository.Query
+import net.myspring.util.repository.QueryUtils
+import net.myspring.util.text.StringUtils
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+import javax.persistence.EntityManager
+import javax.persistence.Query
 
-interface AccountWeixinDtoRepository{
-    @Query("""
-        SELECT
-        t1.company_id,
-        t1.account_id,
-        t1.open_id
-        FROM
-        hr_account_weixin t1
-        WHERE
-        t1.open_id = ?1
-        and t1.enabled=1
-        """, nativeQuery = true)
-    fun findByOpenId(openId: String): List<AccountWeixinDto>
+@Component
+class AccountWeixinDtoRepository @Autowired constructor(val entityManager: EntityManager) {
+    fun findByOpenId(openId: String): List<AccountWeixinDto> {
+        return entityManager.createNativeQuery("""
+                    SELECT
+                    t1.company_id,
+                    t1.account_id,
+                    t1.open_id
+                    FROM
+                    hr_account_weixin t1
+                    WHERE
+                    t1.open_id = :openId
+                    and t1.enabled=1
+                """).setParameter("openId",openId).resultList as List<AccountWeixinDto>;
+    }
 
-    @Query("""
-        SELECT
-        t1.company_id,
-        t1.account_id,
-        t1.open_id
-        FROM
-        hr_account_weixin t1
-        WHERE
-        t1.account_id = ?1
-        and t1.enabled=1
-        """, nativeQuery = true)
-    fun findByAccountId(accountId: String): AccountWeixinDto
+    fun findByAccountId(accountId: String): AccountWeixinDto {
+        return entityManager.createNativeQuery("""
+                    SELECT
+                    t1.company_id,
+                    t1.account_id,
+                    t1.open_id
+                    FROM
+                    hr_account_weixin t1
+                    WHERE
+                    t1.account_id = :accountId
+                    and t1.enabled=1
+                """).setParameter("accountId",accountId).resultList as AccountWeixinDto;
+    }
 
-    @Query("""
-        INSERT  INTO hr_account_weixin(account_id,company_id,open_id) VALUE (?#{[0].accountId},?#{[0].companyId},?#{[0].openId})
-        """, nativeQuery = true)
-    fun save(accountWeixinDto: AccountWeixinDto): Int
-
-    @Query("""
-        UPDATE  hr_account_weixin SET acount_id=?#{[0].accountId},company_id=?#{[0].companyId},openId=?#{[0].openId} where id=?#{[0].id}
-        """, nativeQuery = true)
-    fun update(accountWeixinDto: AccountWeixinDto): Int
+    fun save(accountWeixinDto: AccountWeixinDto) {
+        var query: Query;
+        if(StringUtils.isBlank(accountWeixinDto.id)) {
+            query = entityManager.createNativeQuery("INSERT  INTO hr_account_weixin(account_id,company_id,open_id) VALUE (:accountId,:companyId,:openId)");
+        } else {
+            query =  entityManager.createNativeQuery("UPDATE  hr_account_weixin SET acount_id=:accountId,company_id=:companyId,openId=:openId where id=:id");
+        }
+        QueryUtils.setParameter(query,accountWeixinDto);
+        query.executeUpdate();
+    }
 }

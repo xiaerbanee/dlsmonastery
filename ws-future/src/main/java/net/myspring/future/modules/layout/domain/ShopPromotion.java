@@ -1,8 +1,6 @@
 package net.myspring.future.modules.layout.domain;
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Depot;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -27,7 +25,6 @@ public class ShopPromotion extends CompanyEntity<ShopPromotion> {
     private String phone;
     private Integer version = 0;
 
-    private Depot shop;
 
     public String getBusinessId() {
         return businessId;
@@ -141,11 +138,4 @@ public class ShopPromotion extends CompanyEntity<ShopPromotion> {
         this.version = version;
     }
 
-    public Depot getShop() {
-        return shop;
-    }
-
-    public void setShop(Depot shop) {
-        this.shop = shop;
-    }
 }

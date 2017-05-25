@@ -38,6 +38,7 @@ import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -91,8 +92,8 @@ public class GoodsOrderService {
         GoodsOrderQuery goodsOrderQuery = new GoodsOrderQuery();
         goodsOrderQuery.setShopId(shop.getId());
         goodsOrderQuery.setStatus(GoodsOrderStatusEnum.待开单.name());
-        List<GoodsOrder> goodsOrderList = goodsOrderRepository.findList(goodsOrderQuery);
-        if (CollectionUtil.isNotEmpty(goodsOrderList)) {
+        List<GoodsOrderDto> goodsOrderDtoList = goodsOrderRepository.findPage(new PageRequest(0, 1), goodsOrderQuery).getContent();
+        if (CollectionUtil.isNotEmpty(goodsOrderDtoList)) {
             restResponse.getErrors().add(new RestErrorField("门店有未处理的单据","exist_order_for_bill","shopId"));
         }
         return restResponse;

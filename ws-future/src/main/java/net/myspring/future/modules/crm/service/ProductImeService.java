@@ -24,7 +24,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -52,11 +51,9 @@ public class ProductImeService {
 
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable,ProductImeQuery productImeQuery) {
-        productImeQuery.setPageable(pageable);
-        List<ProductImeDto> productImeDtoList = productImeRepository.findList(productImeQuery);
+        Page<ProductImeDto> page = productImeRepository.findPage(pageable, productImeQuery);
 
-        cacheUtils.initCacheInput(productImeDtoList);
-        Page<ProductImeDto> page = new PageImpl(productImeDtoList,pageable,(pageable.getPageNumber()+100)*pageable.getPageSize());
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
@@ -135,8 +132,7 @@ public class ProductImeService {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedBy", "更新人"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
 
-            productImeQuery.setPageable(new PageRequest(0, 10000));
-            List<ProductImeDto> productImeDtoList = productImeRepository.findList(productImeQuery);
+            List<ProductImeDto> productImeDtoList = productImeRepository.findPage(new PageRequest(0, 10000) , productImeQuery).getContent();
             cacheUtils.initCacheInput(productImeDtoList);
 
             SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);
