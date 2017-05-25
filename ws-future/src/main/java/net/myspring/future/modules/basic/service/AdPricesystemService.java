@@ -56,7 +56,8 @@ public class AdPricesystemService {
         adpricesystemRepository.deleteOfficeIds(adPricesystem.getId());
         //修改机构绑定
         if(CollectionUtil.isNotEmpty(adPricesystemForm.getOfficeIdList())){
-            adpricesystemRepository.saveOfficeIds(adPricesystem.getId(),adPricesystemForm.getOfficeIdList());
+            //TODO 需要重新写该方法
+//            adpricesystemRepository.saveOfficeIds(adPricesystem.getId(),adPricesystemForm.getOfficeIdList());
         }
         return adPricesystem;
     }

@@ -13,7 +13,6 @@ interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>{
 
     fun findByShopAllotId(shopAllotId: String): List<ShopAllotDetail>
 
-    fun findByShopAllotIds(shopAllotIdList: List<String>): List<ShopAllotDetail>
 
     @Query("""
     DELETE
@@ -53,44 +52,12 @@ interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>{
 				crm_product t1
 			WHERE
 				t1.enabled = 1
-			AND t1.id IN (
-				SELECT
-					t2.product_id
-				FROM
-					crm_pricesystem_detail t2
-				WHERE
-					t2.pricesystem_id = (
-						SELECT
-							depot1.pricesystem_id
-						FROM
-							crm_depot depot1
-						WHERE
-							depot1.id = :fromDepotId)
-						)
-						AND t1.id IN (
-							SELECT
-								t3.product_id
-							FROM
-								crm_pricesystem_detail t3
-							WHERE
-								t3.pricesystem_id = (
-									SELECT
-										depot2.pricesystem_id
-									FROM
-										crm_depot depot2
-									WHERE
-										depot2.id = :fromDepotId) )
-									AND NOT EXISTS (
-										SELECT detail.*
-										FROM
-											crm_shop_allot_detail detail
-										WHERE
-											detail.shop_allot_id = :shopAllotId AND detail.product_id = t1.id
-									)
-								)
-			) result
-			ORDER BY
-				result.qty DESC
+                AND t1.id IN ( SELECT t2.product_id FROM crm_pricesystem_detail t2 WHERE t2.pricesystem_id = ( SELECT depot1.pricesystem_id FROM crm_depot depot1 WHERE depot1.id = :fromDepotId) )
+                AND t1.id IN ( SELECT t3.product_id FROM crm_pricesystem_detail t3 WHERE t3.pricesystem_id = ( SELECT depot2.pricesystem_id FROM crm_depot depot2 WHERE depot2.id = :toDepotId) )
+                AND NOT EXISTS ( SELECT detail.* FROM crm_shop_allot_detail detail WHERE detail.shop_allot_id = :shopAllotId AND detail.product_id = t1.id)
+        )
+    ) result
+    ORDER BY result.qty DESC
     """, nativeQuery = true)
     fun getShopAllotDetailListForNewOrEdit(@Param("shopAllotId") shopAllotId: String, @Param("fromDepotId") fromDepotId: String, @Param("toDepotId") toDepotId: String): List<ShopAllotDetailDto>
 

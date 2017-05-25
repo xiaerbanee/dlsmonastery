@@ -40,23 +40,58 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     """, nativeQuery = true)
     fun findAllEnabled(): List<Product>
 
-
+    @Query("""
+        SELECT
+            t1.*
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.has_ime = 1
+    """, nativeQuery = true)
     fun findHasImeProduct(): List<Product>
 
     fun findByNameLike(name: String): List<Product>
 
     fun findByCodeLike(code: String): List<Product>
 
+    @Query("""
+        SELECT
+            t1.*
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.has_ime = 1
+        AND t1.name LIKE concat( '%', ?1,'%')
+    """, nativeQuery = true)
     fun findByNameLikeHasIme(name: String): List<Product>
 
+    @Query("""
+        SELECT
+            t1.*
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.has_ime = 1
+        AND t1.code LIKE concat( '%', ?1,'%')
+    """, nativeQuery = true)
     fun findByCodeLikeHasIme(code: String): List<Product>
 
     fun findByName(name: String): Product
 
     fun findByOutId(outId: String): Product
 
-    fun findFilter(@Param("p") productQuery: ProductQuery): List<Product>
-
+    @Query("""
+        SELECT DISTINCT
+            t1.out_group_name
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.out_group_id IS NOT NULL
+    """, nativeQuery = true)
     fun findByOutName(): List<ProductDto>
 
     @Query("""
@@ -69,11 +104,11 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
     fun findByProductTypeId(productTypeId: String): List<Product>
 
-    fun updateProductTypeId(@Param("productTypeId") id: String, @Param("list") ids: List<String>): Int
+//    fun updateProductTypeId(@Param("productTypeId") id: String, @Param("list") ids: List<String>): Int
 
-    fun updateProductTypeToNull(productTypeId: String): Int
+//    fun updateProductTypeToNull(productTypeId: String): Int
 
-    fun findByOutGroupIdsAndAllowOrder(@Param("outGroupIds") outGroupIds: List<String>, @Param("allowOrder") allowOrder: Boolean): List<ProductDto>
+    fun findByOutGroupIdInAndAllowOrder(outGroupIds: List<String>, allowOrder: Boolean): List<ProductDto>
 
     @Query("""
         select
@@ -91,16 +126,49 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     """, nativeQuery = true)
     fun findProductTypeList(): List<ProductType>
 
+    @Query("""
+        SELECT
+	t1.*
+FROM
+	crm_product t1
+WHERE
+	t1.product_id IN (
+		SELECT
+			product_id
+		FROM
+			crm_pricesystem_detail t2
+		WHERE
+			t2.pricesystem_id = :pricesystemId1)
+		AND t1.product_id IN (
+			SELECT
+				product_id
+			FROM
+				crm_pricesystem_detail t3
+			WHERE
+				t3.pricesystem_id = :pricesystemId2)
+			AND t1.enabled = 1
+    """, nativeQuery = true)
     fun findIntersectionOfBothPricesystem(@Param("pricesystemId1") pricesystemId1: String, @Param("pricesystemId2") pricesystemId2: String): List<ProductDto>
 
-    fun findByNameList(nameList: List<String>): List<Product>
+    fun findByNameIn(nameList: List<String>): List<Product>
 }
 
 interface ProductRepositoryCustom{
+
+    fun findFilter(productQuery: ProductQuery): List<Product>
+
     fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto>
 }
 
 class ProductRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ProductRepositoryCustom{
+
+    override fun findFilter(productQuery: ProductQuery): List<Product>{
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), Product::class.java)
+
+        return query.resultList as List<Product>
+    }
 
     override fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto> {
         val sb = StringBuffer()

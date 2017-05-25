@@ -47,9 +47,8 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
 
     fun findByExpressType(expressType: String): List<ExpressCompany>
 
-    fun findByNameLike(@Param("companyId") companyId: String, @Param("name") name: String): List<ExpressCompanyDto>
+//    fun findByNameLike(@Param("companyId") companyId: String, @Param("name") name: String): List<ExpressCompanyDto>
 
-    fun findByCompanyIdAndExpressType(@Param("companyId") companyId: String, @Param("expressType") expressType: String): List<ExpressCompanyDto>
 }
 
 interface ExpressCompanyRepositoryCustom{

@@ -47,7 +47,7 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
     """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<ProductType>
 
-    fun findList(@Param("p") map: Map<String, Any>): List<ProductType>
+//    fun findList(@Param("p") map: Map<String, Any>): List<ProductType>
 
     @Query("""
         SELECT t1.*
@@ -59,9 +59,9 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
 
     fun findByNameLike(@Param("name") name: String): List<ProductType>
 
-    fun updateDemoPhoneType(@Param("demoPhoneTypeId") demoPhoneTypeId: String, @Param("list") ids: List<String>): Int
-
-    fun updateDemoPhoneTypeToNull(demoPhoneTypeId: String): Int
+//    fun updateDemoPhoneType(@Param("demoPhoneTypeId") demoPhoneTypeId: String, @Param("list") ids: List<String>): Int
+//
+//    fun updateDemoPhoneTypeToNull(demoPhoneTypeId: String): Int
 
     @Query("""
         SELECT t1.* from crm_product_type t1

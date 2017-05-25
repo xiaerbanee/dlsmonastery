@@ -44,12 +44,20 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
     """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<Depot>
 
-    fun findShopList(depotShopQuery: DepotQuery): List<DepotDto>
-
-    fun findStoreList(depotShopQuery: DepotQuery): List<DepotDto>
-
     fun findByChainId(chainId: String): List<Depot>
 
+    @Query("""
+        SELECT
+            t1.*
+        FROM
+            crm_depot t1,
+            crm_account_depot t2
+        WHERE
+            t1.enabled = 1
+        AND t1.is_hidden = 0
+        AND t1.id = t2.depot_id
+        AND t2.account_id = ?1
+    """, nativeQuery = true)
     fun findByAccountId(accountId: String): List<Depot>
 
     @Query("""
@@ -65,18 +73,36 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByName(name: String): Depot
 
-    fun findShopByGoodsOrderId(goodsOrderId: String): DepotDto
-
-    fun findStoreByGoodsOrderId(goodsOrderId: String): DepotDto
 }
 
 interface DepotRepositoryCustom{
+
+    fun findShopList(depotShopQuery: DepotQuery): List<DepotDto>
+
+    fun findStoreList(depotShopQuery: DepotQuery): List<DepotDto>
+
     fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto>
 
     fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,boolean: Boolean):Page<DepotAccountDto>
 }
 
 class DepotRepositoryImpl @Autowired constructor(val entityManager: EntityManager):DepotRepositoryCustom{
+
+    override fun findShopList(depotStoreQuery: DepotQuery): List<DepotDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
+
+        return query.resultList as List<DepotDto>
+    }
+
+    override fun findStoreList(depotShopQuery: DepotQuery): List<DepotDto>{
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
+
+        return query.resultList as List<DepotDto>
+    }
 
     override fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto> {
         val sb = StringBuffer()
