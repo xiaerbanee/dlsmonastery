@@ -22,7 +22,7 @@ import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
-import net.myspring.future.modules.crm.mapper.GoodsOrderMapper;
+import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
@@ -50,7 +50,7 @@ import java.util.Map;
 @Transactional
 public class GoodsOrderService {
     @Autowired
-    private GoodsOrderMapper goodsOrderMapper;
+    private GoodsOrderRepository goodsOrderRepository;
     @Autowired
     private GoodsOrderRepository goodsOrderRepository;
     @Autowired
@@ -107,11 +107,11 @@ public class GoodsOrderService {
             goodsOrder = BeanUtil.map(goodsOrderForm,GoodsOrder.class);
             goodsOrder.setStoreId(getDefaultStoreId(goodsOrder));
             goodsOrder.setStatus(GoodsOrderStatusEnum.待开单.name());
-            goodsOrderMapper.save(goodsOrder);
+            goodsOrderRepository.save(goodsOrder);
         } else {
-            goodsOrder = goodsOrderMapper.findOne(goodsOrderForm.getId());
+            goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
             ReflectionUtil.copyProperties(goodsOrderForm,goodsOrder);
-            goodsOrderMapper.update(goodsOrder);
+            goodsOrderRepository.update(goodsOrder);
         }
 
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
@@ -162,7 +162,7 @@ public class GoodsOrderService {
             expressOrderRepository.save(expressOrder);
         }
         goodsOrder.setExpressOrderId(expressOrder.getId());
-        goodsOrderMapper.update(goodsOrder);
+        goodsOrderRepository.update(goodsOrder);
         return goodsOrder;
     }
 
@@ -170,7 +170,7 @@ public class GoodsOrderService {
     public  GoodsOrder bill(GoodsOrderBillForm goodsOrderBillForm) {
         Integer totalBillQty = 0;
         Integer mobileBillQty = 0;
-        GoodsOrder goodsOrder = goodsOrderMapper.findOne(goodsOrderBillForm.getId());
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderBillForm.getId());
         BigDecimal amount = BigDecimal.ZERO;
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
@@ -207,7 +207,7 @@ public class GoodsOrderService {
         }
         goodsOrder.setAmount(amount);
         goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
-        goodsOrderMapper.update(goodsOrder);
+        goodsOrderRepository.update(goodsOrder);
         ExpressOrder expressOrder = getExpressOrder(goodsOrderBillForm);
         //设置需要打印的快递单个数
         Integer expressPrintQty = 0;
@@ -240,7 +240,7 @@ public class GoodsOrderService {
 
 
     private ExpressOrder getExpressOrder(GoodsOrderBillForm goodsOrderBillForm) {
-        GoodsOrder goodsOrder = goodsOrderMapper.findOne(goodsOrderBillForm.getId());
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderBillForm.getId());
         Depot shop = depotRepository.findOne(goodsOrder.getShopId());
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
         expressOrder.setExtendId(goodsOrder.getId());
@@ -277,7 +277,7 @@ public class GoodsOrderService {
         if(StringUtils.isBlank(id)) {
             goodsOrderDto = new GoodsOrderDto();
         } else {
-            GoodsOrder goodsOrder = goodsOrderMapper.findOne(id);
+            GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
             goodsOrderDto = BeanUtil.map(goodsOrder,GoodsOrderDto.class);
             cacheUtils.initCacheInput(goodsOrderDto);
         }

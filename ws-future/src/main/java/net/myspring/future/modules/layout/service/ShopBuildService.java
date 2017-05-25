@@ -7,11 +7,11 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopBuild;
 import net.myspring.future.modules.layout.dto.ShopBuildDto;
-import net.myspring.future.modules.layout.mapper.ShopBuildMapper;
-import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
+import net.myspring.future.modules.layout.repository.ShopBuildRepository;
+import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.future.modules.layout.repository.ShopBuildRepository;
 import net.myspring.future.modules.layout.web.form.ShopBuildDetailOrAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopBuildForm;
@@ -44,13 +44,13 @@ import java.util.UUID;
 public class ShopBuildService {
 
     @Autowired
-    private ShopBuildMapper shopBuildMapper;
+    private ShopBuildRepository shopBuildRepository;
     @Autowired
     private ShopBuildRepository shopBuildRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
     private ActivitiClient activitiClient;
     @Autowired
@@ -58,7 +58,7 @@ public class ShopBuildService {
 
 
     public Page<ShopBuildDto> findPage(Pageable pageable, ShopBuildQuery shopBuildQuery) {
-        Page<ShopBuildDto> page = shopBuildMapper.findPage(pageable, shopBuildQuery);
+        Page<ShopBuildDto> page = shopBuildRepository.findPage(pageable, shopBuildQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

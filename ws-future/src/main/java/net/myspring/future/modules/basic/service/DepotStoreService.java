@@ -5,8 +5,8 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.DepotStoreMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.web.form.DepotForm;
@@ -21,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springside.modules.utils.mapper.BeanMapper;
+import org.springside.modules.utils.repository.BeanRepository;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -30,7 +30,7 @@ import org.springside.modules.utils.mapper.BeanMapper;
 @Transactional
 public class DepotStoreService {
     @Autowired
-    private DepotStoreMapper depotStoreMapper;
+    private DepotStoreRepository depotStoreRepository;
     @Autowired
     private DepotStoreRepository depotStoreRepository;
     @Autowired
@@ -40,10 +40,10 @@ public class DepotStoreService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
 
     public Page<DepotStoreDto> findPage(Pageable pageable, DepotStoreQuery depotStoreQuery){
-        Page<DepotStoreDto> page=depotStoreMapper.findPage(pageable,depotStoreQuery);
+        Page<DepotStoreDto> page=depotStoreRepository.findPage(pageable,depotStoreQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

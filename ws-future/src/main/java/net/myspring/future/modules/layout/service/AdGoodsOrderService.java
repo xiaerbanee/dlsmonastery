@@ -20,20 +20,20 @@ import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.mapper.AdPricesystemDetailMapper;
-import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
+import net.myspring.future.modules.basic.repository.AdPricesystemRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
-import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
+import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
-import net.myspring.future.modules.layout.mapper.AdGoodsOrderDetailMapper;
-import net.myspring.future.modules.layout.mapper.AdGoodsOrderMapper;
-import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
+import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
+import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
+import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -60,33 +60,20 @@ import java.util.Map;
 @Service
 @Transactional
 public class AdGoodsOrderService {
-
-    @Autowired
-    private AdGoodsOrderMapper adGoodsOrderMapper;
     @Autowired
     private AdGoodsOrderRepository adGoodsOrderRepository;
     @Autowired
-    private ProductMapper productMapper;
-    @Autowired
-    private AdGoodsOrderDetailMapper adGoodsOrderDetailMapper;
+    private ProductRepository productRepository;
     @Autowired
     private AdGoodsOrderDetailRepository adGoodsOrderDetailRepository;
     @Autowired
-    private ExpressOrderMapper expressOrderMapper;
-    @Autowired
     private ExpressOrderRepository expressOrderRepository;
-    @Autowired
-    private DepotMapper depotMapper;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
-    private ShopDepositMapper shopDepositMapper;
-    @Autowired
-    private AdPricesystemDetailMapper adPricesystemDetailMapper;
+    private ShopDepositRepository shopDepositRepository;
     @Autowired
     private AdPricesystemDetailRepository adPricesystemDetailRepository;
-    @Autowired
-    private AdPricesystemMapper adPricesystemMapper;
     @Autowired
     private AdpricesystemRepository adpricesystemRepository;
     @Autowired
@@ -97,7 +84,7 @@ public class AdGoodsOrderService {
     private RedisTemplate redisTemplate;
 
     public Page<AdGoodsOrderDto> findPage(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
-        Page<AdGoodsOrderDto> page = adGoodsOrderMapper.findPage(pageable, adGoodsOrderQuery);
+        Page<AdGoodsOrderDto> page = adGoodsOrderRepository.findPage(pageable, adGoodsOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

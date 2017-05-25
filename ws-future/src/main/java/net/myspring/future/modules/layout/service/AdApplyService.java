@@ -8,12 +8,12 @@ import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.dto.ProductDto;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
-import net.myspring.future.modules.layout.mapper.AdApplyMapper;
+import net.myspring.future.modules.layout.repository.AdApplyRepository;
 import net.myspring.future.modules.layout.repository.AdApplyRepository;
 import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
@@ -42,11 +42,7 @@ import java.util.Map;
 public class AdApplyService {
 
     @Autowired
-    private AdApplyMapper adApplyMapper;
-    @Autowired
     private AdApplyRepository adApplyRepository;
-    @Autowired
-    private ProductMapper productMapper;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -55,7 +51,7 @@ public class AdApplyService {
     private RedisTemplate redisTemplate;
 
     public Page<AdApplyDto> findPage(Pageable pageable, AdApplyQuery adApplyQuery) {
-        Page<AdApplyDto> page = adApplyMapper.findPage(pageable, adApplyQuery);
+        Page<AdApplyDto> page = adApplyRepository.findPage(pageable, adApplyQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

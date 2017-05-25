@@ -7,11 +7,11 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.ShopAdType;
-import net.myspring.future.modules.basic.mapper.ShopAdTypeMapper;
+import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
 import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
 import net.myspring.future.modules.layout.domain.ShopAd;
 import net.myspring.future.modules.layout.dto.ShopAdDto;
-import net.myspring.future.modules.layout.mapper.ShopAdMapper;
+import net.myspring.future.modules.layout.repository.ShopAdRepository;
 import net.myspring.future.modules.layout.repository.ShopAdRepository;
 import net.myspring.future.modules.layout.web.form.ShopAdForm;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
@@ -48,11 +48,11 @@ import java.util.UUID;
 public class ShopAdService {
 
     @Autowired
-    private ShopAdMapper shopAdMapper;
+    private ShopAdRepository shopAdRepository;
     @Autowired
     private ShopAdRepository shopAdRepository;
     @Autowired
-    private ShopAdTypeMapper shopAdTypeMapper;
+    private ShopAdTypeRepository shopAdTypeRepository;
     @Autowired
     private ShopAdTypeRepository shopAdTypeRepository;
     @Autowired
@@ -63,7 +63,7 @@ public class ShopAdService {
     private CacheUtils cacheUtils;
 
     public Page<ShopAdDto> findPage(Pageable pageable, ShopAdQuery shopAdQuery) {
-        Page<ShopAdDto> page = shopAdMapper.findPage(pageable, shopAdQuery);
+        Page<ShopAdDto> page = shopAdRepository.findPage(pageable, shopAdQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

@@ -11,7 +11,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -43,7 +43,7 @@ import java.util.Set;
 @Transactional
 public class DepotService {
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
@@ -108,7 +108,7 @@ public class DepotService {
         }
 
         //TODO  判断是否有tax权限
-        Page<DepotAccountDto> depotAccountDtoList = depotMapper.findDepotAccountList(pageable, depotAccountQuery, true);
+        Page<DepotAccountDto> depotAccountDtoList = depotRepository.findDepotAccountList(pageable, depotAccountQuery, true);
         //TODO 设置应收项
         cacheUtils.initCacheInput(depotAccountDtoList.getContent());
 

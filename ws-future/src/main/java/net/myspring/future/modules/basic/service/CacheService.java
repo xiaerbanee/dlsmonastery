@@ -4,7 +4,7 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.domain.Pricesystem;
-import net.myspring.future.modules.basic.mapper.*;
+import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.slf4j.Logger;
@@ -23,23 +23,23 @@ import java.util.List;
 public class CacheService {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
-    private ChainMapper chainMapper;
+    private ChainRepository chainRepository;
     @Autowired
     private ChainRepository chainRepository;
     @Autowired
-    private PricesystemMapper pricesystemMapper;
+    private PricesystemRepository pricesystemRepository;
     @Autowired
     private PricesystemRepository pricesystemRepository;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
-    private ExpressCompanyMapper expressCompanyMapper;
+    private ExpressCompanyRepository expressCompanyRepository;
     @Autowired
     private ExpressCompanyRepository expressCompanyRepository;
     @Autowired
-    private AdPricesystemMapper adPricesystemMapper;
+    private AdPricesystemRepository adPricesystemRepository;
     @Autowired
     private AdpricesystemRepository adpricesystemRepository;
     @Autowired

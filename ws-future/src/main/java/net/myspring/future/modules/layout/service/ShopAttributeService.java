@@ -12,12 +12,12 @@ import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.layout.domain.ShopAttribute;
 import net.myspring.future.modules.layout.dto.ShopAttributeDetailDto;
-import net.myspring.future.modules.layout.mapper.ShopAttributeMapper;
+import net.myspring.future.modules.layout.repository.ShopAttributeRepository;
 import net.myspring.future.modules.layout.repository.ShopAttributeRepository;
 import net.myspring.future.modules.layout.web.form.ShopAttributeForm;
 import net.myspring.future.modules.layout.web.query.ShopAttributeQuery;
@@ -36,11 +36,11 @@ import java.util.*;
 public class ShopAttributeService {
 
     @Autowired
-    private ShopAttributeMapper shopAttributeMapper;
+    private ShopAttributeRepository shopAttributeRepository;
     @Autowired
     private ShopAttributeRepository shopAttributeRepository;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
@@ -62,7 +62,7 @@ public class ShopAttributeService {
     public Page<DepotDto> findPage(Pageable pageable, ShopAttributeQuery shopAttributeQuery){
         DepotQuery depotQuery=new DepotQuery();
         ReflectionUtil.copyProperties(shopAttributeQuery,depotQuery);
-        Page<DepotDto> page = depotMapper.findPage(pageable, depotQuery);
+        Page<DepotDto> page = depotRepository.findPage(pageable, depotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

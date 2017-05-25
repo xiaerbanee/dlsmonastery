@@ -5,7 +5,7 @@ import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.layout.domain.ShopPrint;
 import net.myspring.future.modules.layout.dto.ShopPrintDto;
-import net.myspring.future.modules.layout.mapper.ShopPrintMapper;
+import net.myspring.future.modules.layout.repository.ShopPrintRepository;
 import net.myspring.future.modules.layout.repository.ShopPrintRepository;
 import net.myspring.future.modules.layout.web.form.ShopPrintForm;
 import net.myspring.future.modules.layout.web.query.ShopPrintQuery;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ShopPrintService {
 
     @Autowired
-    private ShopPrintMapper shopPrintMapper;
+    private ShopPrintRepository shopPrintRepository;
     @Autowired
     private ShopPrintRepository shopPrintRepository;
     @Autowired
@@ -39,7 +39,7 @@ public class ShopPrintService {
 
 
     public Page<ShopPrintDto> findPage(Pageable pageable, ShopPrintQuery shopPrintQuery) {
-        Page<ShopPrintDto> page = shopPrintMapper.findPage(pageable, shopPrintQuery);
+        Page<ShopPrintDto> page = shopPrintRepository.findPage(pageable, shopPrintQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

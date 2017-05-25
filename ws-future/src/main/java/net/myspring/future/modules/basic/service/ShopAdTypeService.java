@@ -4,7 +4,7 @@ import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
-import net.myspring.future.modules.basic.mapper.ShopAdTypeMapper;
+import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
 import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
 import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ShopAdTypeService {
 
     @Autowired
-    private ShopAdTypeMapper shopAdTypeMapper;
+    private ShopAdTypeRepository shopAdTypeRepository;
     @Autowired
     private ShopAdTypeRepository shopAdTypeRepository;
     @Autowired
@@ -47,7 +47,7 @@ public class ShopAdTypeService {
     }
 
     public Page<ShopAdTypeDto> findPage(Pageable pageable, ShopAdTypeQuery shopAdTypeQuery) {
-        Page<ShopAdTypeDto> page = shopAdTypeMapper.findPage(pageable, shopAdTypeQuery);
+        Page<ShopAdTypeDto> page = shopAdTypeRepository.findPage(pageable, shopAdTypeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

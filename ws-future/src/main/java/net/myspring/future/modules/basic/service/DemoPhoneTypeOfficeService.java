@@ -1,6 +1,6 @@
 package net.myspring.future.modules.basic.service;
 
-import net.myspring.future.modules.basic.mapper.DemoPhoneTypeOfficeMapper;
+import net.myspring.future.modules.basic.repository.DemoPhoneTypeOfficeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 public class DemoPhoneTypeOfficeService {
 
     @Autowired
-    private DemoPhoneTypeOfficeMapper demoPhoneTypeOfficeMapper;
+    private DemoPhoneTypeOfficeRepository demoPhoneTypeOfficeRepository;
 
 }

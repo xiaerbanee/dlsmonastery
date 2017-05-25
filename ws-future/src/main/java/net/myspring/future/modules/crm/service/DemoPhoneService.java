@@ -68,7 +68,7 @@ public class DemoPhoneService {
 //        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 //
 //        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-//        List<DemoPhone> demoPhones=demoPhoneMapper.findByFilter(map);
+//        List<DemoPhone> demoPhones=demoPhoneRepository.findByFilter(map);
 //        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("演示用机", demoPhones, simpleExcelColumnList);
 //        simpleExcelSheetList.add(simpleExcelSheet);
 //        return simpleExcelSheetList;

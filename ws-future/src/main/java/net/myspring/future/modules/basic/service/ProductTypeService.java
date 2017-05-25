@@ -6,8 +6,8 @@ import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
+import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.basic.web.form.ProductForm;
@@ -32,11 +32,11 @@ import java.util.Map;
 public class ProductTypeService {
 
     @Autowired
-    private ProductTypeMapper productTypeMapper;
+    private ProductTypeRepository productTypeRepository;
     @Autowired
     private ProductTypeRepository productTypeRepository;
     @Autowired
-    private ProductMapper productMapper;
+    private ProductRepository productRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -85,7 +85,7 @@ public class ProductTypeService {
     }
 
     public Page<ProductTypeDto> findPage(Pageable pageable, ProductTypeQuery productTypeQuery) {
-        Page<ProductTypeDto> page = productTypeMapper.findPage(pageable, productTypeQuery);
+        Page<ProductTypeDto> page = productTypeRepository.findPage(pageable, productTypeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

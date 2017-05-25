@@ -5,7 +5,7 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
-import net.myspring.future.modules.basic.mapper.ExpressCompanyMapper;
+import net.myspring.future.modules.basic.repository.ExpressCompanyRepository;
 import net.myspring.future.modules.basic.repository.ExpressCompanyRepository;
 import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
@@ -24,7 +24,7 @@ import java.util.List;
 public class ExpressCompanyService {
 
     @Autowired
-    private ExpressCompanyMapper expressCompanyMapper;
+    private ExpressCompanyRepository expressCompanyRepository;
     @Autowired
     private ExpressCompanyRepository expressCompanyRepository;
     @Autowired
@@ -56,7 +56,7 @@ public class ExpressCompanyService {
     }
 
     public Page<ExpressCompanyDto> findPage(Pageable pageable, ExpressCompanyQuery expressCompanyQuery) {
-        Page<ExpressCompanyDto> page = expressCompanyMapper.findPage(pageable, expressCompanyQuery);
+        Page<ExpressCompanyDto> page = expressCompanyRepository.findPage(pageable, expressCompanyQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

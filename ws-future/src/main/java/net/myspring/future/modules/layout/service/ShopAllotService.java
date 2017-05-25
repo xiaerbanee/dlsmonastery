@@ -5,16 +5,16 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.manager.ShopAllotDetailManager;
-import net.myspring.future.modules.layout.mapper.ShopAllotDetailMapper;
-import net.myspring.future.modules.layout.mapper.ShopAllotMapper;
+import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
+import net.myspring.future.modules.layout.repository.ShopAllotRepository;
 import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import net.myspring.future.modules.layout.repository.ShopAllotRepository;
 import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
@@ -40,11 +40,11 @@ import java.util.Map;
 @Transactional
 public class ShopAllotService {
     @Autowired
-    private ShopAllotMapper shopAllotMapper;
+    private ShopAllotRepository shopAllotRepository;
     @Autowired
     private ShopAllotRepository shopAllotRepository;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
@@ -53,22 +53,22 @@ public class ShopAllotService {
     @Autowired
     private ShopAllotDetailManager shopAllotDetailManager;
     @Autowired
-    private ShopAllotDetailMapper shopAllotDetailMapper;
+    private ShopAllotDetailRepository shopAllotDetailRepository;
     @Autowired
     private ShopAllotDetailRepository shopAllotDetailRepository;
     @Autowired
-    private PricesystemDetailMapper pricesystemDetailMapper;
+    private PricesystemDetailRepository pricesystemDetailRepository;
     @Autowired
     private PricesystemDetailRepository pricesystemDetailRepository;
 
 
     public ShopAllot findOne(String id){
 
-        return shopAllotMapper.findOne(id);
+        return shopAllotRepository.findOne(id);
     }
 
     public Page<ShopAllotDto> findPage(Pageable pageable, ShopAllotQuery shopAllotQuery) {
-        Page<ShopAllotDto> page = shopAllotMapper.findPage(pageable, shopAllotQuery);
+        Page<ShopAllotDto> page = shopAllotRepository.findPage(pageable, shopAllotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -76,8 +76,8 @@ public class ShopAllotService {
     public String checkShop(String fromShopId,String toShopId){
         //TODO 需要检查与财务系统关联
         StringBuffer sb = new StringBuffer();
-        Depot fromShop = depotMapper.findOne(fromShopId);
-        Depot toShop = depotMapper.findOne(toShopId);
+        Depot fromShop = depotRepository.findOne(fromShopId);
+        Depot toShop = depotRepository.findOne(toShopId);
         if(fromShopId.equals(toShopId)){
             sb.append("调拨前后门店不能相同");
         }
