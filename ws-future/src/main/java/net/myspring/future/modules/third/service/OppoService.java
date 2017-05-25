@@ -3,10 +3,9 @@ package net.myspring.future.modules.third.service;
 import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.mapper.ProductImeMapper;
+import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.third.client.OppoClient;
 import net.myspring.future.modules.third.domain.OppoPlantSendImeiPpsel;
-import net.myspring.future.modules.third.dto.OppoPlantSendImeiPpselDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -26,13 +25,13 @@ public class OppoService {
     @Autowired
     private OppoClient oppoClient;
     @Autowired
-    private ProductImeMapper productImeMapper;
+    private ProductImeRepository productImeRepository;
 
     public String synIme(String date){
         String imeStr=oppoClient.findSynImeList("2017-05-16");
         List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels=ObjectMapperUtils.readValue(imeStr, ArrayList.class);
         List<String> imeList=CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
-        List<String> localImeList=CollectionUtil.extractToList( productImeMapper.findByImeList(imeList), "ime");
+        List<String> localImeList=CollectionUtil.extractToList( productImeRepository.findByImeList(imeList), "ime");
         List<String> uploadProductIds=Lists.newArrayList();
         List<ProductIme> productImes=Lists.newArrayList();
         String defaultStoreId = "1";
