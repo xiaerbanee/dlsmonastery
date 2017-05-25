@@ -4,9 +4,9 @@ import net.myspring.tool.modules.vivo.domain.*
 import net.myspring.tool.modules.vivo.model.SCustomersM13e00
 import net.myspring.tool.modules.vivo.model.SZonesM13e00
 import net.myspring.util.repository.QueryUtils
-import org.apache.ibatis.annotations.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
 import java.util.List

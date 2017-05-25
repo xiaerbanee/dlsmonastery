@@ -4,9 +4,8 @@ import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel
 import net.myspring.tool.modules.vivo.domain.CommonEntity;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
 import java.time.LocalDate;
 import java.util.Collection;

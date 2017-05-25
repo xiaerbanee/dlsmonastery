@@ -2,8 +2,8 @@ package net.myspring.tool.modules.imoo.repository;
 
 import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver
-import org.apache.ibatis.annotations.Param
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
 import java.util.List
