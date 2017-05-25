@@ -1,10 +1,8 @@
 package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
-import net.myspring.basic.modules.hr.domain.DutyRest
 import net.myspring.basic.modules.sys.domain.Office
 import net.myspring.basic.modules.sys.web.query.OfficeQuery
-import net.myspring.util.collection.CollectionUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
