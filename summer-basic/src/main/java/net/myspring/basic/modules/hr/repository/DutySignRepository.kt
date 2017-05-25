@@ -47,15 +47,15 @@ class DutySignRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         var sb = StringBuilder()
         sb.append("""
             SELECT
-        ds.employee_id,
-        ds.duty_date,
-        ds.duty_time
-        FROM
-        hr_duty_sign ds
-        WHERE
-        ds.duty_date gt;= :dateStart
-        AND ds.duty_date lt;= :dateEnd
-        and ds.enabled=1
+            ds.employee_id,
+            ds.duty_date,
+            ds.duty_time
+            FROM
+            hr_duty_sign ds
+            WHERE
+            ds.duty_date gt;= :dateStart
+            AND ds.duty_date lt;= :dateEnd
+            and ds.enabled=1
         """)
         if (CollectionUtil.isNotEmpty(accountIds)) {
             sb.append("""
