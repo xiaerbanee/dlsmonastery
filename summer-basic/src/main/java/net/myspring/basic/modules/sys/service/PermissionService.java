@@ -85,7 +85,7 @@ public class PermissionService {
         } else {
             permission = permissionRepository.findOne(permissionForm.getId());
             ReflectionUtil.copyProperties(permissionForm,permission);
-            permissionRepository.update(permission);
+            permissionRepository.save(permission);
         }
         List<RolePermission> rolePermissionList=rolePermissionRepository.findAllByPermissionId(permission.getId());
         if (CollectionUtil.isNotEmpty(permissionForm.getRoleIdList())) {

@@ -3,13 +3,18 @@ package net.myspring.future.modules.layout.repository
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopAllot
 import net.myspring.future.modules.layout.dto.ShopAllotDto
+import net.myspring.future.modules.layout.web.query.ShopAllotQuery
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
-interface ShopAllotRepository : BaseRepository<ShopAllot,String> {
+interface ShopAllotRepository : BaseRepository<ShopAllot,String>,ShopAllotRepositoryCustom{
 
     @Query("""
     select
@@ -35,4 +40,18 @@ interface ShopAllotRepository : BaseRepository<ShopAllot,String> {
         t1.id
     """, nativeQuery = true)
     fun findShopAllotDto(id: String): ShopAllotDto
+}
+
+interface ShopAllotRepositoryCustom{
+    fun findPage(pageable: Pageable, shopAllotQuery: ShopAllotQuery): Page<ShopAllotDto>
+}
+
+class ShopAllotRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopAllotRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, shopAllotQuery: ShopAllotQuery): Page<ShopAllotDto> {
+        val sb = StringBuffer()
+        var query = entityManager.createNativeQuery(sb.toString(), ShopAllotDto::class.java)
+
+        return query.resultList as Page<ShopAllotDto>
+    }
 }

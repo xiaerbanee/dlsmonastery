@@ -2,12 +2,15 @@ package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Office
+import net.myspring.basic.modules.sys.dto.OfficeDto
 import net.myspring.basic.modules.sys.web.query.OfficeQuery
 import net.myspring.util.repository.QueryUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import javax.persistence.EntityManager
@@ -98,6 +101,10 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
          )
      """, nativeQuery = true)
     fun findSameAreaByOfficeId(officeId: String): List<Office>
+
+    fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>
+
+    fun findAllEnabled():List<Office>
 }
 
 interface OfficeRepositoryCustom {
@@ -192,4 +199,5 @@ class OfficeRepositoryImpl@Autowired constructor(val entityManager: EntityManage
         }
         return query.resultList as List<Office>;
     }
+
 }

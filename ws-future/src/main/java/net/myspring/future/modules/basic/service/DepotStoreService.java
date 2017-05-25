@@ -7,11 +7,8 @@ import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
-import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
@@ -21,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springside.modules.utils.repository.BeanRepository;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -32,11 +28,7 @@ public class DepotStoreService {
     @Autowired
     private DepotStoreRepository depotStoreRepository;
     @Autowired
-    private DepotStoreRepository depotStoreRepository;
-    @Autowired
     private DepotManager depotManager;
-    @Autowired
-    private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired

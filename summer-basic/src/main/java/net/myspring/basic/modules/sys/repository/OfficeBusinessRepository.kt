@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
+import net.myspring.basic.modules.hr.domain.OfficeLeader
 import net.myspring.basic.modules.sys.domain.OfficeBusiness
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
@@ -42,4 +43,6 @@ interface  OfficeBusinessRepository: BaseRepository<OfficeBusiness, String> {
             where office_id=?2
      """, nativeQuery = true)
     fun setEnabledByOfficeId(enabled:Boolean,officeId:String ):Int
+
+    fun batchSave(officeBusinessList:List<OfficeBusiness>)
 }

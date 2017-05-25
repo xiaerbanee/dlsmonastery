@@ -4,19 +4,20 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Chain
 import net.myspring.future.modules.basic.dto.ChainDto
 import net.myspring.future.modules.basic.web.query.ChainQuery
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("chains"))
-interface ChainRepository : BaseRepository<Chain,String> {
+interface ChainRepository : BaseRepository<Chain,String>,ChainRepositoryCustom {
 
     @Cacheable
     override fun findOne(id: String): Chain
@@ -45,3 +46,19 @@ interface ChainRepository : BaseRepository<Chain,String> {
     """, nativeQuery = true)
     fun findDepotIds(id: String): List<String>
 }
+
+interface ChainRepositoryCustom{
+    fun findPage(pageable: Pageable, chainQuery: ChainQuery): Page<ChainDto>
+}
+
+class ChainRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ChainRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, chainQuery: ChainQuery): Page<ChainDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), ChainDto::class.java)
+
+        return query.resultList as Page<ChainDto>
+    }
+}
+

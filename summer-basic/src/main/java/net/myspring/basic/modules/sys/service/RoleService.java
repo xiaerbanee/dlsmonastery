@@ -54,7 +54,7 @@ public class RoleService {
         } else {
             role = roleRepository.findOne(roleForm.getId());
             ReflectionUtil.copyProperties(roleForm, role);
-            roleRepository.update(role);
+            roleRepository.save(role);
         }
         List<RoleModule> roleModuleList = roleModuleRepository.findAllByRoleId(role.getId());
         if (CollectionUtil.isNotEmpty(roleForm.getModuleIdList())) {

@@ -1,14 +1,11 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name="crm_lottery_rule")
@@ -20,8 +17,7 @@ public class LotteryRule extends CompanyEntity<LotteryRule> {
     private String productIds;
     private String image;
     private Integer version = 0;
-    private List<LotteryRuleDetail> lotteryRuleDetailList = Lists.newArrayList();
-    private List<String> lotteryRuleDetailIdList = Lists.newArrayList();
+
 
     public String getName() {
         return name;
@@ -79,19 +75,4 @@ public class LotteryRule extends CompanyEntity<LotteryRule> {
         this.version = version;
     }
 
-    public List<LotteryRuleDetail> getLotteryRuleDetailList() {
-        return lotteryRuleDetailList;
-    }
-
-    public void setLotteryRuleDetailList(List<LotteryRuleDetail> lotteryRuleDetailList) {
-        this.lotteryRuleDetailList = lotteryRuleDetailList;
-    }
-
-    public List<String> getLotteryRuleDetailIdList() {
-        return lotteryRuleDetailIdList;
-    }
-
-    public void setLotteryRuleDetailIdList(List<String> lotteryRuleDetailIdList) {
-        this.lotteryRuleDetailIdList = lotteryRuleDetailIdList;
-    }
 }

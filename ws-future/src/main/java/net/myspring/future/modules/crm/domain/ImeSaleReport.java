@@ -2,12 +2,9 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.time.LocalDate;
 
 
@@ -25,13 +22,9 @@ public class ImeSaleReport extends CompanyEntity<ImeSaleReport> {
     private Integer quanwangtongQty;
     private Integer version = 0;
     private String officeId;
-    private Product product;
+
     private String productId;
 
-    @Transient
-    private String value;
-    @Transient
-    private String key;
 
     public LocalDate getReportDate() {
         return reportDate;
@@ -121,14 +114,6 @@ public class ImeSaleReport extends CompanyEntity<ImeSaleReport> {
         this.officeId = officeId;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public String getProductId() {
         return productId;
     }
@@ -137,19 +122,4 @@ public class ImeSaleReport extends CompanyEntity<ImeSaleReport> {
         this.productId = productId;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
 }

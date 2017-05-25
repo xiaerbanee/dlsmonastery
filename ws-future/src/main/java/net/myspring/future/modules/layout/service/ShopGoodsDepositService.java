@@ -5,7 +5,6 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
-import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
 import net.myspring.future.modules.layout.web.form.ShopGoodsDepositForm;
 import net.myspring.future.modules.layout.web.query.ShopGoodsDepositQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -28,8 +27,6 @@ public class ShopGoodsDepositService {
     @Autowired
     private ShopGoodsDepositRepository shopGoodsDepositRepository;
     @Autowired
-    private ShopGoodsDepositRepository shopGoodsDepositRepository;
-    @Autowired
     private CacheUtils cacheUtils;
 
     public BigDecimal getTotalAmount(String shopId) {
@@ -37,7 +34,7 @@ public class ShopGoodsDepositService {
     }
 
     public List<ShopGoodsDeposit> findByIds(List<String> ids){
-        List<ShopGoodsDeposit> shopGoodsDepositList = shopGoodsDepositRepository.findByIds(ids);
+        List<ShopGoodsDeposit> shopGoodsDepositList = shopGoodsDepositRepository.findAll(ids);
         return shopGoodsDepositList;
     }
 

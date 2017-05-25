@@ -2,8 +2,12 @@ package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Menu
+import net.myspring.basic.modules.sys.dto.MenuDto
+import net.myspring.basic.modules.sys.web.query.MenuQuery
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 
 /**
@@ -55,4 +59,9 @@ interface  MenuRepository :BaseRepository<Menu,String>{
         and t1.id in ?1
      """, nativeQuery = true)
     fun findByMenuIdsAndMobile(menuIds:List<String>,isMobile:Boolean):List<Menu>
+
+    fun findPage(pageable: Pageable, menuQuery: MenuQuery): Page<MenuDto>
+
+    fun findAllEnabled():List<Menu>
+
 }

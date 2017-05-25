@@ -11,9 +11,6 @@ import net.myspring.future.modules.basic.dto.DemoPhoneTypeOfficeDto;
 import net.myspring.future.modules.basic.repository.DemoPhoneTypeRepository;
 import net.myspring.future.modules.basic.repository.DemoPhoneTypeOfficeRepository;
 import net.myspring.future.modules.basic.repository.ProductTypeRepository;
-import net.myspring.future.modules.basic.repository.DemoPhoneTypeOfficeRepository;
-import net.myspring.future.modules.basic.repository.DemoPhoneTypeRepository;
-import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.basic.web.query.DemoPhoneTypeQuery;
 import net.myspring.future.modules.basic.web.form.DemoPhoneTypeDetailForm;
 import net.myspring.future.modules.basic.web.form.DemoPhoneTypeForm;
@@ -37,15 +34,9 @@ public class DemoPhoneTypeService {
     @Autowired
     private DemoPhoneTypeRepository demoPhoneTypeRepository;
     @Autowired
-    private DemoPhoneTypeRepository demoPhoneTypeRepository;
-    @Autowired
-    private DemoPhoneTypeOfficeRepository demoPhoneTypeOfficeRepository;
-    @Autowired
     private DemoPhoneTypeOfficeRepository demoPhoneTypeOfficeRepository;
     @Autowired
     private OfficeClient officeClient;
-    @Autowired
-    private ProductTypeRepository productTypeRepository;
     @Autowired
     private ProductTypeRepository productTypeRepository;
     @Autowired

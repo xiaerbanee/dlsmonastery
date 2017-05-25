@@ -2,8 +2,12 @@ package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Role
+import net.myspring.basic.modules.sys.dto.RoleDto
+import net.myspring.basic.modules.sys.web.query.RoleQuery
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 
 /**
@@ -35,4 +39,6 @@ interface RoleRepository: BaseRepository<Role, String> {
         and t3.id=?1
      """, nativeQuery = true)
     fun findByAccountId(accountId: String): Role
+
+    fun findPage(pageable: Pageable, roleQuery: RoleQuery): Page<RoleDto>
 }

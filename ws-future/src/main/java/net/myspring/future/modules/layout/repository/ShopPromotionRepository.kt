@@ -2,13 +2,21 @@ package net.myspring.future.modules.layout.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopPromotion
+import net.myspring.future.modules.layout.dto.ShopPrintDto
+import net.myspring.future.modules.layout.dto.ShopPromotionDto
+import net.myspring.future.modules.layout.web.query.ShopPrintQuery
+import net.myspring.future.modules.layout.web.query.ShopPromotionQuery
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
-interface ShopPromotionRepository : BaseRepository<ShopPromotion,String> {
+interface ShopPromotionRepository : BaseRepository<ShopPromotion,String>,ShopPromotionRepositoryCustom {
 
     @Query("""
     SELECT
@@ -19,4 +27,18 @@ interface ShopPromotionRepository : BaseRepository<ShopPromotion,String> {
         t1.created_date >= ?1
     """, nativeQuery = true)
     fun findMaxBusinessId(localDate: LocalDate): String
+}
+
+interface ShopPromotionRepositoryCustom{
+    fun findPage(pageable: Pageable, shopPromotionQuery: ShopPromotionQuery): Page<ShopPromotionDto>
+}
+
+class ShopPromotionRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopPromotionRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, shopPromotionQuery: ShopPromotionQuery): Page<ShopPromotionDto> {
+        val sb = StringBuffer()
+        var query = entityManager.createNativeQuery(sb.toString(), ShopPromotionDto::class.java)
+
+        return query.resultList as Page<ShopPromotionDto>
+    }
 }

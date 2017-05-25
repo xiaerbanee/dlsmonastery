@@ -1,16 +1,11 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.ProductType;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.List;
 
 
 @Entity
@@ -22,14 +17,13 @@ public class ProductImeUpload extends CompanyEntity<ProductImeUpload> {
     private Integer version = 0;
     private BigDecimal baokaPrice;
     private String oldIme;
-    private List<ProductIme> productImeList = Lists.newArrayList();
-    private List<String> productImeIdList = Lists.newArrayList();
+
     private String employeeId;
-    private ProductIme productIme;
+
     private String productImeId;
-    private ProductType productType;
+
     private String productTypeId;
-    private Depot shop;
+
 
     public String getMonth() {
         return month;
@@ -79,36 +73,12 @@ public class ProductImeUpload extends CompanyEntity<ProductImeUpload> {
         this.oldIme = oldIme;
     }
 
-    public List<ProductIme> getProductImeList() {
-        return productImeList;
-    }
-
-    public void setProductImeList(List<ProductIme> productImeList) {
-        this.productImeList = productImeList;
-    }
-
-    public List<String> getProductImeIdList() {
-        return productImeIdList;
-    }
-
-    public void setProductImeIdList(List<String> productImeIdList) {
-        this.productImeIdList = productImeIdList;
-    }
-
     public String getEmployeeId() {
         return employeeId;
     }
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
-    }
-
-    public ProductIme getProductIme() {
-        return productIme;
-    }
-
-    public void setProductIme(ProductIme productIme) {
-        this.productIme = productIme;
     }
 
     public String getProductImeId() {
@@ -119,14 +89,6 @@ public class ProductImeUpload extends CompanyEntity<ProductImeUpload> {
         this.productImeId = productImeId;
     }
 
-    public ProductType getProductType() {
-        return productType;
-    }
-
-    public void setProductType(ProductType productType) {
-        this.productType = productType;
-    }
-
     public String getProductTypeId() {
         return productTypeId;
     }
@@ -135,11 +97,4 @@ public class ProductImeUpload extends CompanyEntity<ProductImeUpload> {
         this.productTypeId = productTypeId;
     }
 
-    public Depot getShop() {
-        return shop;
-    }
-
-    public void setShop(Depot shop) {
-        this.shop = shop;
-    }
 }

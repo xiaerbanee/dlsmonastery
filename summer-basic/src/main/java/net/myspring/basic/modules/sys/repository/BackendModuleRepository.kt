@@ -3,9 +3,13 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Backend
 import net.myspring.basic.modules.sys.domain.BackendModule
+import net.myspring.basic.modules.sys.dto.BackendModuleDto
+import net.myspring.basic.modules.sys.web.query.BackendModuleQuery
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
@@ -37,4 +41,8 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>{
           and t2.role_id=:roleId
      """, nativeQuery = true)
     fun findByRoleId(@Param("roleId")roleId:String):List<BackendModule>
+
+    fun findPage(pageable: Pageable,backendModuleQuery: BackendModuleQuery): Page<BackendModuleDto>
+
+    fun findAllEnabled():List<BackendModule>
 }

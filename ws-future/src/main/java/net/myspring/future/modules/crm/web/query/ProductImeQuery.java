@@ -4,7 +4,6 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,8 +25,6 @@ public class ProductImeQuery extends BaseQuery{
 
     private List<String> inputTypeList;
 
-    //分页数据
-    private Pageable pageable;
 
     public List<String> getInputTypeList() {
         return inputTypeList;
@@ -123,14 +120,6 @@ public class ProductImeQuery extends BaseQuery{
 
     public void setInputType(String inputType) {
         this.inputType = inputType;
-    }
-
-    public Pageable getPageable() {
-        return pageable;
-    }
-
-    public void setPageable(Pageable pageable) {
-        this.pageable = pageable;
     }
 
     public List<String> getImeOrMeidList() {

@@ -65,7 +65,7 @@ public class OfficeRuleService {
         } else {
             officeRule = officeRuleRepository.findOne(officeRuleForm.getId());
             ReflectionUtil.copyProperties(officeRuleForm,officeRule);
-            officeRuleRepository.update(officeRule);
+            officeRuleRepository.save(officeRule);
 
         }
         return officeRule;

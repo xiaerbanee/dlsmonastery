@@ -40,7 +40,7 @@ public class CompanyConfigService {
         } else {
             CompanyConfig companyConfig = companyConfigRepository.findOne(companyConfigForm.getId());
             ReflectionUtil.copyProperties(companyConfigForm, companyConfig);
-            companyConfigRepository.update(companyConfig);
+            companyConfigRepository.save(companyConfig);
         }
         return companyConfigForm;
     }

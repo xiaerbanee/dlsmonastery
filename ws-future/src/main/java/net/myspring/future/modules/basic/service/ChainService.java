@@ -6,8 +6,6 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ChainDto;
 import net.myspring.future.modules.basic.repository.ChainRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.ChainRepository;
-import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.form.ChainForm;
 import net.myspring.future.modules.basic.web.query.ChainQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -29,11 +27,7 @@ public class ChainService {
     @Autowired
     private ChainRepository chainRepository;
     @Autowired
-    private ChainRepository chainRepository;
-    @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
 

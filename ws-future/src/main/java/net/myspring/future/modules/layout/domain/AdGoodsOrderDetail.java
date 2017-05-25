@@ -2,7 +2,6 @@ package net.myspring.future.modules.layout.domain;
 
 
 import net.myspring.common.domain.IdEntity;
-import net.myspring.future.modules.basic.domain.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -19,9 +18,9 @@ public class AdGoodsOrderDetail extends IdEntity<AdGoodsOrderDetail> {
     private Integer shippedQty;
     private BigDecimal shouldPay;
     private BigDecimal shouldGet;
-    private Product product;
+
     private String productId;
-    private AdGoodsOrder adGoodsOrder;
+
     private String adGoodsOrderId;
 
     @Transient
@@ -91,28 +90,12 @@ public class AdGoodsOrderDetail extends IdEntity<AdGoodsOrderDetail> {
         this.shouldGet = shouldGet;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public String getProductId() {
         return productId;
     }
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public AdGoodsOrder getAdGoodsOrder() {
-        return adGoodsOrder;
-    }
-
-    public void setAdGoodsOrder(AdGoodsOrder adGoodsOrder) {
-        this.adGoodsOrder = adGoodsOrder;
     }
 
     public String getAdGoodsOrderId() {

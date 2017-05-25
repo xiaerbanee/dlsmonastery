@@ -7,8 +7,6 @@ import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
-import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -28,11 +26,7 @@ public class DepotShopService {
     @Autowired
     private DepotShopRepository depotShopRepository;
     @Autowired
-    private DepotShopRepository depotShopRepository;
-    @Autowired
     private DepotManager depotManager;
-    @Autowired
-    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired

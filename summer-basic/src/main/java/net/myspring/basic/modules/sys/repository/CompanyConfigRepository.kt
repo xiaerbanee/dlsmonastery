@@ -3,8 +3,12 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.CompanyConfig
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto
+import net.myspring.basic.modules.sys.dto.CompanyConfigDto
+import net.myspring.basic.modules.sys.web.query.CompanyConfigQuery
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
@@ -33,4 +37,5 @@ interface CompanyConfigRepository :BaseRepository<CompanyConfig,String>{
      """, nativeQuery = true)
     fun  findAllCache():List<CompanyConfigCacheDto>
 
+    fun findPage(pageable: Pageable, companyConfigQuery: CompanyConfigQuery): Page<CompanyConfigDto>
 }

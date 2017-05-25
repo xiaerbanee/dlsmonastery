@@ -31,17 +31,11 @@ interface GoodsOrderRepository : BaseRepository<GoodsOrder, String> , GoodsOrder
 
 interface GoodsOrderRepositoryCustom{
     fun findPage(pageable : Pageable, goodsOrderQuery : GoodsOrderQuery): Page<GoodsOrderDto>?
-    fun findList(goodsOrderQuery : GoodsOrderQuery): List<GoodsOrder>?
+
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val entityManager: EntityManager): GoodsOrderRepositoryCustom {
     override fun findPage(pageable : Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
-
-        return null
-
-    }
-
-    override   fun findList(goodsOrderQuery : GoodsOrderQuery): List<GoodsOrder>? {
 
         return null
 

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.basic.modules.hr.repository.AccountPermissionRepository;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
@@ -95,7 +96,7 @@ public class MenuService {
         } else {
             menu = menuRepository.findOne(menuForm.getId());
             ReflectionUtil.copyProperties(menuForm,menu);
-            menuRepository.update(menu);
+            menuRepository.save(menu);
             oldPermissions = Sets.newHashSet(permissionRepository.findByMenuId(menuForm.getId()));
         }
         if (StringUtils.isNotBlank(menuForm.getPermissionStr())) {
@@ -110,7 +111,7 @@ public class MenuService {
                         if (permission != null) {
                             permission.setName(name);
                             permission.setMenuId(menuForm.getId());
-                            permissionRepository.update(permission);
+                            permissionRepository.save(permission);
                         } else {
                             permission = new Permission();
                             permission.setName(name);
