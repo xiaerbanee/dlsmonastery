@@ -33,6 +33,11 @@ interface ChainRepository : BaseRepository<Chain,String> {
     """, nativeQuery = true)
     fun findAllEnabled(): List<Chain>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_chain t1
+        WHERE t1.id IN ?1
+    """, nativeQuery = true)
     fun findByIds(ids: List<String>): List<Chain>
 
     @Query("""

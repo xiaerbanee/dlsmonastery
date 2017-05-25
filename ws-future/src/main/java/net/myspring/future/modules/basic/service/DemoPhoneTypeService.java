@@ -133,7 +133,7 @@ public class DemoPhoneTypeService {
         }
         if (CollectionUtil.isNotEmpty(demoPhoneTypeOfficeDtoList)) {
             List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = BeanUtil.map(demoPhoneTypeOfficeDtoList,DemoPhoneTypeOffice.class);
-            demoPhoneTypeOfficeMapper.batchSave(demoPhoneTypeOfficeList);
+            demoPhoneTypeOfficeRepository.save(demoPhoneTypeOfficeList);
         }
         return demoPhoneType;
     }

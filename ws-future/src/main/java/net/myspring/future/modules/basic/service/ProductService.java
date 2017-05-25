@@ -7,6 +7,8 @@ import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.util.text.IdUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
@@ -43,7 +45,11 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
     @Autowired
+    private ProductRepository productRepository;
+    @Autowired
     private DepotMapper depotMapper;
+    @Autowired
+    private DepotRepository depotRepository;
     @Autowired
     private CloudClient cloudClient;
     @Autowired
@@ -59,43 +65,43 @@ public class ProductService {
     }
 
     public List<ProductDto> findFilter(ProductQuery productQuery){
-        List<Product> productList = productMapper.findFilter(productQuery);
+        List<Product> productList = productRepository.findFilter(productQuery);
         List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
 
     public List<Product> findByIds(List<String> ids) {
-        return productMapper.findByIds(ids);
+        return productRepository.findByIds(ids);
     }
 
     public Product findByName(String name){
-        return productMapper.findByName(name);
+        return productRepository.findByName(name);
     }
 
     public List<ProductDto> findByOutName(){
-        return productMapper.findByOutName();
+        return productRepository.findByOutName();
     }
 
     public List<ProductDto> findByNameLikeHasIme(String name){
-        List<Product> productList=productMapper.findByNameLikeHasIme(name);
+        List<Product> productList=productRepository.findByNameLikeHasIme(name);
         List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
 
     public List<ProductDto> findByCodeLikeHasIme(String code){
-        List<Product> productList=productMapper.findByCodeLikeHasIme(code);
+        List<Product> productList=productRepository.findByCodeLikeHasIme(code);
         List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
 
     public List<ProductDto> findByNameLike(String name){
-        List<Product> productList=productMapper.findByNameLike(name);
+        List<Product> productList=productRepository.findByNameLike(name);
         List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
 
     public List<ProductDto> findByCodeLike(String code){
-        List<Product> productList=productMapper.findByCodeLike(code);
+        List<Product> productList=productRepository.findByCodeLike(code);
         List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
@@ -103,7 +109,7 @@ public class ProductService {
     public ProductDto findOne(String id) {
         ProductDto productDto = new ProductDto();
         if(StringUtils.isNotBlank(id)){
-            Product product=productMapper.findOne(id);
+            Product product=productRepository.findOne(id);
             productDto = BeanUtil.map(product,ProductDto.class);
             cacheUtils.initCacheInput(productDto);
         }
@@ -111,13 +117,13 @@ public class ProductService {
     }
 
     public List<ProductDto> findHasImeProduct(){
-        List<Product> productList=productMapper.findHasImeProduct();
+        List<Product> productList=productRepository.findHasImeProduct();
         List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
 
     public List<ProductDto> findByOutGroupIds(List<String> outGroupIds){
-        List<Product> productList = productMapper.findByOutGroupIds(outGroupIds);
+        List<Product> productList = productRepository.findByOutGroupIds(outGroupIds);
         List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
@@ -131,28 +137,23 @@ public class ProductService {
             String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }
-        List<Product> adProducts  = productMapper.findByOutGroupIds(outGroupIds);
+        List<Product> adProducts  = productRepository.findByOutGroupIds(outGroupIds);
         if(adApplyForm.getShopId() != null){
-            Depot depot = depotMapper.findOne(adApplyForm.getShopId());
+            Depot depot = depotRepository.findOne(adApplyForm.getShopId());
             //adApplyForm.setShop(depot);
         }
         return adProducts;
     }
 
     public void save(ProductForm productForm) {
-        if(!productForm.isCreate()){
-            Product product= productMapper.findOne(productForm.getId());
+            Product product= productRepository.findOne(productForm.getId());
             ReflectionUtil.copyProperties(productForm,product);
-            productMapper.update(product);
-        }else{
-
-        }
-
+            productRepository.save(product);
     }
 
     public ProductQuery getQuery(ProductQuery productQuery){
         productQuery.setNetTypeList(NetTypeEnum.getList());
-        productQuery.setOutGroupNameList(productMapper.findByOutName());
+        productQuery.setOutGroupNameList(productRepository.findByOutName());
         return productQuery;
     }
 
@@ -162,7 +163,7 @@ public class ProductService {
     }
 
     public void syn() {
-        LocalDateTime dateTime=productMapper.getMaxOutDate();
+        LocalDateTime dateTime=productRepository.getMaxOutDate();
         String cloudName = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
         String result = cloudClient.getSynProductData(cloudName, LocalDateTimeUtils.format(dateTime));
         String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
@@ -170,9 +171,9 @@ public class ProductService {
         List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);
         if(CollectionUtil.isNotEmpty(dataList)) {
             for (Map<String, Object> map : dataList) {
-                Product product = productMapper.findByOutId(map.get("outId").toString());
+                Product product = productRepository.findByOutId(map.get("outId").toString());
                 if(product==null) {
-                    product = productMapper.findByName(map.get("name").toString());
+                    product = productRepository.findByName(map.get("name").toString());
                     if(product ==null) {
                         product = new Product();
                         product.setAllowBill(false);
@@ -182,7 +183,7 @@ public class ProductService {
                         }else {
                             product.setHasIme(false);
                         }
-                        productMapper.save(product);
+                        productRepository.save(product);
                     }
                 }
                 product.setOutDate(LocalDateTimeUtils.parse(map.get("modifyDate").toString()));
@@ -191,7 +192,7 @@ public class ProductService {
                 product.setOutGroupId(map.get("fgroup").toString());
                 product.setOutGroupName(map.get("groupName").toString());
                 product.setCode(map.get("code").toString());
-                productMapper.update(product);
+                productRepository.save(product);
 
             }
         }
