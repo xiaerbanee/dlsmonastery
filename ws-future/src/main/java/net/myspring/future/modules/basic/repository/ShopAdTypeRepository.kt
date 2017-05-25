@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.stereotype.Repository
 import javax.persistence.EntityManager
 
 /**
@@ -37,17 +38,10 @@ interface ShopAdTypeRepository : BaseRepository<ShopAdType,String>,ShopAdTypeRep
         FROM crm_shop_ad_type t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<ShopAdType>
-
+    //TODO 需要修改
     fun findAllByEnabled(): List<ShopAdTypeDto>
 
-    @Query("""
-        SELECT t1.*
-        FROM crm_shop_ad_type t1
-        where t1.enabled=1
-        and t1.id in ?1
-    """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<ShopAdType>
+
 }
 
 interface ShopAdTypeRepositoryCustom{
