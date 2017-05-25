@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.repository
 
+import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Permission
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
@@ -9,10 +10,10 @@ import org.springframework.data.repository.query.Param
 /**
  * Created by haos on 2017/5/24.
  */
-interface  PermissionRepository{
+interface  PermissionRepository: BaseRepository<Permission, String> {
 
     @Cacheable
-    fun findOne(id: String): Permission
+    override fun findOne(id: String): Permission
 
     @CachePut(key="#id")
     fun save(permission: Permission): Int

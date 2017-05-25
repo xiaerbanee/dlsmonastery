@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.repository
 
+import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.CompanyConfig
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto
 import org.springframework.cache.annotation.CachePut
@@ -10,12 +11,12 @@ import org.springframework.data.repository.query.Param
 /**
  * Created by haos on 2017/5/24.
  */
-interface CompanyConfigRepository{
+interface CompanyConfigRepository :BaseRepository<CompanyConfig,String>{
     @CachePut(key="#id")
     fun save(companyConfig: CompanyConfig): CompanyConfig
 
     @Cacheable
-    fun findOne(id: String): CompanyConfig
+    override fun findOne(id: String): CompanyConfig
 
     @Query("""
         SELECT t1.*
