@@ -4,18 +4,17 @@ import com.google.common.collect.Lists;
 import net.myspring.future.common.enums.AfterSaleTypeEnum;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.crm.repository.AfterSaleRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.AfterSale;
 import net.myspring.future.modules.crm.domain.AfterSaleDetail;
 import net.myspring.future.modules.crm.domain.AfterSaleFlee;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
-import net.myspring.future.modules.crm.mapper.AfterSaleDetailMapper;
-import net.myspring.future.modules.crm.mapper.AfterSaleFleeMapper;
-import net.myspring.future.modules.crm.mapper.AfterSaleMapper;
-import net.myspring.future.modules.crm.mapper.ProductImeMapper;
+import net.myspring.future.modules.crm.repository.AfterSaleDetailRepository;
+import net.myspring.future.modules.crm.repository.AfterSaleFleeRepository;
+import net.myspring.future.modules.crm.repository.AfterSaleRepository;
+import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -35,19 +34,17 @@ import java.util.Map;
 public class AfterSaleService {
 
     @Autowired
-    private AfterSaleMapper afterSaleMapper;
-    @Autowired
     private AfterSaleRepository afterSaleRepository;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
-    private ProductImeMapper productImeMapper;
+    private ProductImeRepository productImeRepository;
     @Autowired
-    private AfterSaleDetailMapper afterSaleDetailMapper;
+    private AfterSaleDetailRepository afterSaleDetailRepository;
     @Autowired
-    private ProductMapper productMapper;
+    private ProductRepository productRepository;
     @Autowired
-    private AfterSaleFleeMapper afterSaleFleeMapper;
+    private AfterSaleFleeRepository afterSaleFleeRepository;
 
     public List<AfterSale> findByImeList(List<String> imeList) {
         List<AfterSale> afterSales = afterSaleRepository.findByBadProductImeIn(imeList);
@@ -57,9 +54,9 @@ public class AfterSaleService {
     public List<AfterSaleCompanyDto> getFromCompanyData(List<String> imeList){
         List<AfterSaleCompanyDto> afterSaleCompanyList=Lists.newArrayList();
         List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
-        List<ProductIme> productImeList=productImeMapper.findByIds(CollectionUtil.extractToList(afterSaleList,"badProductImeId"));
-        List<Product> productList=productMapper.findByIds(CollectionUtil.extractToList(afterSaleList,"badProductId"));
-        List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailMapper.findByAfterSaleListAndType(CollectionUtil.extractToList(afterSaleList,"id"),"工厂录入");
+        List<ProductIme> productImeList=productImeRepository.findAll(CollectionUtil.extractToList(afterSaleList,"badProductImeId"));
+        List<Product> productList=productRepository.findAll(CollectionUtil.extractToList(afterSaleList,"badProductId"));
+        List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList,"id"),"工厂录入");
         Map<String,AfterSaleDetail> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
         Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"id");
         Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"id");
@@ -89,9 +86,9 @@ public class AfterSaleService {
             productNameList.add( StringUtils.toString(row.get(1)).trim());
             depotNameList.add( StringUtils.toString(row.get(2)).trim());
         }
-        List<ProductIme> productImeList=productImeMapper.findByImeList(imeList);
-        List<Product> productList=productMapper.findByNameList(productNameList);
-        List<Depot> depotList=depotMapper.findByNameList(depotNameList);
+        List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
+        List<Product> productList=productRepository.findByNameList(productNameList);
+        List<Depot> depotList=depotRepository.findByNameList(depotNameList);
         Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
         Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"name");
         Map<String,Depot> depotMap=CollectionUtil.extractToMap(depotList,"name");
@@ -142,19 +139,19 @@ public class AfterSaleService {
                         break;
                     case 7:
                         if(StringUtils.isNotBlank(value)){
-                            Depot fromDepot=depotMapper.findByName(value);
+                            Depot fromDepot=depotRepository.findByName(value);
                             afterSaleDetail.setFromDepotId(fromDepot.getId());
                         }
                         break;
                     case 8:
                         if(StringUtils.isNotBlank(value)){
-                            Depot toDepot=depotMapper.findByName(value);
+                            Depot toDepot=depotRepository.findByName(value);
                             afterSaleDetail.setToDepotId(toDepot.getId());
                         }
                         break;
                     case 9:
                         if(StringUtils.isNotBlank(value)){
-                            ProductIme replaceProductIme=productImeMapper.findByIme(value);
+                            ProductIme replaceProductIme=productImeRepository.findByIme(value);
                             afterSaleDetail.setReplaceProductImeId(replaceProductIme.getId());
                             afterSaleDetail.setReplaceProductId(replaceProductIme.getProductId());
                         }
@@ -180,10 +177,10 @@ public class AfterSaleService {
             }
             afterSaleRepository.save(afterSale);
             afterSaleDetail.setAfterSaleId(afterSale.getId());
-            afterSaleDetailMapper.save(afterSaleDetail);
+            afterSaleDetailRepository.save(afterSaleDetail);
             if(AfterSaleTypeEnum.窜货机.name().equals(type)){
                 afterSaleFlee.setAfterSaleId(afterSale.getId());
-                afterSaleFleeMapper.save(afterSaleFlee);
+                afterSaleFleeRepository.save(afterSaleFlee);
             }
         }
     }
@@ -199,10 +196,10 @@ public class AfterSaleService {
             depotNameList.add( StringUtils.toString(row.get(2)).trim());
         }
         List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
-        List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeMapper.findByImeList(imeList);
-        List<ProductIme> productImeList=productImeMapper.findByImeList(imeList);
-        List<Product> productList=productMapper.findByNameList(productNameList);
-        List<Depot> depotList=depotMapper.findByNameList(depotNameList);
+        List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByImeList(imeList);
+        List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
+        List<Product> productList=productRepository.findByNameList(productNameList);
+        List<Depot> depotList=depotRepository.findByNameList(depotNameList);
         Map<String,AfterSale> afterSaleMap=CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
         Map<String,AfterSaleFlee> afterSaleFleeMap=CollectionUtil.extractToMap(afterSaleFleeList,"ime");
         Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
@@ -261,19 +258,19 @@ public class AfterSaleService {
                         break;
                     case 7:
                         if(StringUtils.isNotBlank(value)){
-                            Depot fromDepot=depotMapper.findByName(value);
+                            Depot fromDepot=depotRepository.findByName(value);
                             afterSaleDetail.setFromDepotId(fromDepot.getId());
                         }
                         break;
                     case 8:
                         if(StringUtils.isNotBlank(value)){
-                            Depot toDepot=depotMapper.findByName(value);
+                            Depot toDepot=depotRepository.findByName(value);
                             afterSaleDetail.setToDepotId(toDepot.getId());
                         }
                         break;
                     case 9:
                         if(StringUtils.isNotBlank(value)){
-                            ProductIme replaceProductIme=productImeMapper.findByIme(value);
+                            ProductIme replaceProductIme=productImeRepository.findByIme(value);
                             afterSaleDetail.setReplaceProductImeId(replaceProductIme.getId());
                             afterSaleDetail.setReplaceProductId(replaceProductIme.getProductId());
                         }
@@ -303,13 +300,13 @@ public class AfterSaleService {
                 afterSaleRepository.save(afterSale);
             }
             afterSaleDetail.setAfterSaleId(afterSale.getId());
-            afterSaleDetailMapper.save(afterSaleDetail);
+            afterSaleDetailRepository.save(afterSaleDetail);
             if(AfterSaleTypeEnum.窜货机.name().equals(type)){
                 afterSaleFlee.setAfterSaleId(afterSale.getId());
                 if(StringUtils.isBlank(afterSaleFlee.getId())){
-                    afterSaleFleeMapper.save(afterSaleFlee);
+                    afterSaleFleeRepository.save(afterSaleFlee);
                 }else {
-                    afterSaleFleeMapper.update(afterSaleFlee);
+                    afterSaleFleeRepository.save(afterSaleFlee);
                 }
             }
         }
@@ -330,7 +327,7 @@ public class AfterSaleService {
             afterSaleDetailList.add(afterSaleDetail);
         }
         if(CollectionUtil.isNotEmpty(afterSaleDetailList)){
-            afterSaleDetailMapper.batchSave(afterSaleDetailList);
+            afterSaleDetailRepository.save(afterSaleDetailList);
         }
     }
 
@@ -345,9 +342,9 @@ public class AfterSaleService {
             productNameList.add( StringUtils.toString(row.get(1)).trim());
         }
         List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
-        List<ProductIme> productImeList=productImeMapper.findByImeList(imeList);
-        List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailMapper.findByAfterSaleListAndType(CollectionUtil.extractToList(afterSaleList,"id"),"工厂录入");
-        List<Product> productList=productMapper.findByNameList(productNameList);
+        List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
+        List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList,"id"),"工厂录入");
+        List<Product> productList=productRepository.findByNameList(productNameList);
         Map<String,AfterSale> afterSaleMap=CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
         Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
         Map<String,AfterSaleDetail> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
@@ -374,7 +371,7 @@ public class AfterSaleService {
                     default:
                         break;
                 }
-                afterSaleDetailMapper.update(afterSaleDetail);
+                afterSaleDetailRepository.save(afterSaleDetail);
             }
         }
     }
@@ -385,12 +382,12 @@ public class AfterSaleService {
     }
 
     public Page findPage(Pageable pageable, AfterSaleQuery afterSaleQuery){
-        Page<AfterSale> page=afterSaleMapper.findPage(pageable,afterSaleQuery);
+        Page<AfterSale> page=afterSaleRepository.findPage(pageable,afterSaleQuery);
         return page;
     }
 
     public List<AfterSale> findFilter(Map<String,Object> map){
-        List<AfterSale> page=afterSaleMapper.findFilter(map);
+        List<AfterSale> page=afterSaleRepository.findFilter(map);
         return page;
     }
 }

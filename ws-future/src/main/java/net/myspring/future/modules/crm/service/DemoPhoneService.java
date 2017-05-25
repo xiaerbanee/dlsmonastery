@@ -2,10 +2,9 @@ package net.myspring.future.modules.crm.service;
 
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.crm.repository.DemoPhoneRepository;
 import net.myspring.future.modules.crm.domain.DemoPhone;
 import net.myspring.future.modules.crm.dto.DemoPhoneDto;
-import net.myspring.future.modules.crm.mapper.DemoPhoneMapper;
+import net.myspring.future.modules.crm.repository.DemoPhoneRepository;
 import net.myspring.future.modules.crm.web.form.DemoPhoneForm;
 import net.myspring.future.modules.crm.web.query.DemoPhoneQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -19,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DemoPhoneService {
 
-    @Autowired
-    private DemoPhoneMapper demoPhoneMapper;
     @Autowired
     private DemoPhoneRepository demoPhoneRepository;
 
@@ -38,7 +35,7 @@ public class DemoPhoneService {
 
 
     public Page<DemoPhoneDto> findPage(Pageable pageable, DemoPhoneQuery demoPhoneQuery) {
-        Page<DemoPhoneDto> page = demoPhoneMapper.findPage(pageable, demoPhoneQuery);
+        Page<DemoPhoneDto> page = demoPhoneRepository.findPage(pageable, demoPhoneQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

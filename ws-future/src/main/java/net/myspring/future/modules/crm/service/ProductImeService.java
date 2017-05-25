@@ -7,12 +7,11 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
-import net.myspring.future.modules.crm.mapper.ProductImeMapper;
+import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -41,8 +40,7 @@ import java.util.UUID;
 @Service
 @Transactional
 public class ProductImeService {
-    @Autowired
-    private ProductImeMapper productImeMapper;
+
     @Autowired
     private ProductImeRepository productImeRepository;
     @Autowired
@@ -55,7 +53,7 @@ public class ProductImeService {
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable,ProductImeQuery productImeQuery) {
         productImeQuery.setPageable(pageable);
-        List<ProductImeDto> productImeDtoList = productImeMapper.findList(productImeQuery);
+        List<ProductImeDto> productImeDtoList = productImeRepository.findList(productImeQuery);
 
         cacheUtils.initCacheInput(productImeDtoList);
         Page<ProductImeDto> page = new PageImpl(productImeDtoList,pageable,(pageable.getPageNumber()+100)*pageable.getPageSize());
@@ -138,7 +136,7 @@ public class ProductImeService {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
 
             productImeQuery.setPageable(new PageRequest(0, 10000));
-            List<ProductImeDto> productImeDtoList = productImeMapper.findList(productImeQuery);
+            List<ProductImeDto> productImeDtoList = productImeRepository.findList(productImeQuery);
             cacheUtils.initCacheInput(productImeDtoList);
 
             SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);

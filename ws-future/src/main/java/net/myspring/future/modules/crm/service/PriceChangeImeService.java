@@ -5,15 +5,14 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.crm.repository.PriceChangeImeRepository;
 import net.myspring.future.modules.basic.repository.PriceChangeRepository;
-import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
-import net.myspring.future.modules.crm.mapper.PriceChangeImeMapper;
+import net.myspring.future.modules.crm.repository.PriceChangeImeRepository;
+import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeUploadForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
@@ -35,17 +34,11 @@ import java.util.List;
 public class PriceChangeImeService {
 
     @Autowired
-    private PriceChangeImeMapper priceChangeImeMapper;
-    @Autowired
     private PriceChangeImeRepository priceChangeImeRepository;
-
-
     @Autowired
     private ProductImeRepository productImeRepository;
-
     @Autowired
     private PriceChangeRepository priceChangeRepository;
-
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
@@ -63,7 +56,7 @@ public class PriceChangeImeService {
     }
 
     public Page<PriceChangeImeDto> findPage(Pageable pageable, PriceChangeImeQuery priceChangeImeQuery){
-        Page<PriceChangeImeDto> page=priceChangeImeMapper.findPage(pageable,priceChangeImeQuery);
+        Page<PriceChangeImeDto> page=priceChangeImeRepository.findPage(pageable,priceChangeImeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

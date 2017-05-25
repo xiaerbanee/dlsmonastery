@@ -190,9 +190,14 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
 
 interface ProductImeRepositoryCustom{
     fun findPage(pageable: Pageable, productImeQuery : ProductImeQuery): Page<ProductImeDto>
+    fun findList(productImeQuery : ProductImeQuery): List<ProductImeDto>?
 }
 
 class ProductImeRepositoryImpl @Autowired constructor(val entityManager: EntityManager): ProductImeRepositoryCustom {
+    override fun findList(productImeQuery: ProductImeQuery): List<ProductImeDto>? {
+        return null
+    }
+
     override fun findPage(pageable: Pageable, productImeQuery: ProductImeQuery): Page<ProductImeDto> {
 
 //        ) validProductIme

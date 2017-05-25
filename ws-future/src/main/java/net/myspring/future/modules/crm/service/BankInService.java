@@ -5,10 +5,9 @@ import com.mongodb.gridfs.GridFSFile;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.crm.repository.BankInRepository;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
-import net.myspring.future.modules.crm.mapper.BankInMapper;
+import net.myspring.future.modules.crm.repository.BankInRepository;
 import net.myspring.future.modules.crm.web.form.BankInDetailForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
@@ -43,8 +42,7 @@ import java.util.UUID;
 @Transactional
 public class BankInService {
 
-    @Autowired
-    private BankInMapper bankInMapper;
+
     @Autowired
     private BankInRepository bankInRepository;
     @Autowired
@@ -55,7 +53,7 @@ public class BankInService {
     private GridFsTemplate tempGridFsTemplate;
 
     public Page<BankInDto> findPage(Pageable pageable, BankInQuery bankInQuery) {
-        Page<BankInDto> page = bankInMapper.findPage(pageable, bankInQuery);
+        Page<BankInDto> page = bankInRepository.findPage(pageable, bankInQuery);
 
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -172,7 +170,7 @@ public class BankInService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
         PageRequest pageRequest = new PageRequest(0,10000);
-        List<BankInDto> bankInDtoList = bankInMapper.findPage(pageRequest, bankInQuery).getContent();
+        List<BankInDto> bankInDtoList = bankInRepository.findPage(pageRequest, bankInQuery).getContent();
         cacheUtils.initCacheInput(bankInDtoList);
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售收款列表", bankInDtoList, simpleExcelColumnList);
