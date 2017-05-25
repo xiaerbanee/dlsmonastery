@@ -19,10 +19,14 @@ interface PricesystemDetailRepository : BaseRepository<PricesystemDetail,String>
     fun findByPricesystemId(pricesystemId: String): List<PricesystemDetail>
 
     @Query("""
-        DELETE FROM
-        crm_account_bank
-        where bank_id=?1
+        SELECT
+            t1.*
+        FROM
+            crm_pricesystem_detail t1,
+            crm_depot t2
+        WHERE
+            t1.pricesystem_id = t2.pricesystem_id
+        AND t2.id = ?1
     """, nativeQuery = true)
-    //TODO 需要重写该sql
     fun findByDepotId(depotId: String): List<PricesystemDetail>
 }

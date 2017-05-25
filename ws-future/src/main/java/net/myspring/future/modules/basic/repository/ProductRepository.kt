@@ -41,12 +41,14 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     fun findAllEnabled(): List<Product>
 
     @Query("""
-        SELECT t1.*
-        FROM crm_product t1
-        where t1.enabled=1
-        and t1.out_group_id in ?1
+        SELECT
+            t1.*
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.has_ime = 1
     """, nativeQuery = true)
-            //TODO 需要重写sql
     fun findHasImeProduct(): List<Product>
 
     fun findByNameLike(name: String): List<Product>
@@ -54,21 +56,27 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     fun findByCodeLike(code: String): List<Product>
 
     @Query("""
-        SELECT t1.*
-        FROM crm_product t1
-        where t1.enabled=1
-        and t1.out_group_id in ?1
+        SELECT
+            t1.*
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.has_ime = 1
+        AND t1.name LIKE concat( '%', ?1,'%')
     """, nativeQuery = true)
-    //TODO 需要重写sql
     fun findByNameLikeHasIme(name: String): List<Product>
 
     @Query("""
-        SELECT t1.*
-        FROM crm_product t1
-        where t1.enabled=1
-        and t1.out_group_id in ?1
+        SELECT
+            t1.*
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.has_ime = 1
+        AND t1.code LIKE concat( '%', ?1,'%')
     """, nativeQuery = true)
-            //TODO 需要重写sql
     fun findByCodeLikeHasIme(code: String): List<Product>
 
     fun findByName(name: String): Product
@@ -76,21 +84,14 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     fun findByOutId(outId: String): Product
 
     @Query("""
-        SELECT t1.*
-        FROM crm_product t1
-        where t1.enabled=1
-        and t1.out_group_id in ?1
+        SELECT DISTINCT
+            t1.out_group_name
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.out_group_id IS NOT NULL
     """, nativeQuery = true)
-            //TODO 需要重写sql
-    fun findFilter(@Param("p") productQuery: ProductQuery): List<Product>
-
-    @Query("""
-        SELECT t1.*
-        FROM crm_product t1
-        where t1.enabled=1
-        and t1.out_group_id in ?1
-    """, nativeQuery = true)
-    //TODO 需要重写该sql
     fun findByOutName(): List<ProductDto>
 
     @Query("""
@@ -126,22 +127,48 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     fun findProductTypeList(): List<ProductType>
 
     @Query("""
-        SELECT t1.*
-        FROM crm_product t1
-        where t1.enabled=1
-        and t1.out_group_id in ?1
+        SELECT
+	t1.*
+FROM
+	crm_product t1
+WHERE
+	t1.product_id IN (
+		SELECT
+			product_id
+		FROM
+			crm_pricesystem_detail t2
+		WHERE
+			t2.pricesystem_id = :pricesystemId1)
+		AND t1.product_id IN (
+			SELECT
+				product_id
+			FROM
+				crm_pricesystem_detail t3
+			WHERE
+				t3.pricesystem_id = :pricesystemId2)
+			AND t1.enabled = 1
     """, nativeQuery = true)
-            //TODO 需要重写该sql
     fun findIntersectionOfBothPricesystem(@Param("pricesystemId1") pricesystemId1: String, @Param("pricesystemId2") pricesystemId2: String): List<ProductDto>
 
     fun findByNameIn(nameList: List<String>): List<Product>
 }
 
 interface ProductRepositoryCustom{
+
+    fun findFilter(productQuery: ProductQuery): List<Product>
+
     fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto>
 }
 
 class ProductRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ProductRepositoryCustom{
+
+    override fun findFilter(productQuery: ProductQuery): List<Product>{
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), Product::class.java)
+
+        return query.resultList as List<Product>
+    }
 
     override fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto> {
         val sb = StringBuffer()
