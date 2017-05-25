@@ -1,16 +1,13 @@
 package net.myspring.tool.modules.vivo.repository;
 
 import net.myspring.tool.common.repository.BaseRepository
-import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel
-import net.myspring.tool.modules.vivo.domain.CommonEntity;
-import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import net.myspring.tool.modules.vivo.domain.CommonEntity
+import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn
 import org.springframework.data.jpa.repository.Query
-
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
+import org.springframework.data.repository.query.Param
+import java.time.LocalDate
+import java.util.Collection
+import java.util.List
 
 /**
  * Created by admin on 2016/10/17.
