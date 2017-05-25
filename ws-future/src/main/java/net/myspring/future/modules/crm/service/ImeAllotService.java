@@ -1,10 +1,8 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.modules.crm.domain.ImeAllot;
 import net.myspring.future.modules.crm.repository.ImeAllotRepository;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
-import net.myspring.future.modules.crm.domain.ImeAllot;
-import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,23 +21,23 @@ public class ImeAllotService {
 
 
 
-    public void save(ImeAllot imeAllot) {
-        List<String> imeList = StringUtils.getSplitList(imeAllot.getImeStr(), "");
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
-        for(ProductIme productIme:productImeList) {
-            if(!productIme.getDepotId().equals(imeAllot.getToDepotId())) {
-                ImeAllot allot = new ImeAllot();
-                allot.setProductImeId(productIme.getId());
-                allot.setFromDepotId(productIme.getDepotId());
-                allot.setToDepotId(imeAllot.getToDepotId());
-                allot.setRemarks(imeAllot.getRemarks());
-                allot.setCrossArea(crossArea(imeAllot.getToDepotId(),productIme.getDepotId()));
-                imeAllotRepository.save(allot);
-                productIme.setDepotId(imeAllot.getToDepotId());
-                productImeRepository.save(productIme);
-            }
-        }
-    }
+//    public void save(ImeAllot imeAllot) {
+//        List<String> imeList = StringUtils.getSplitList(imeAllot.getImeStr(), "");
+//        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
+//        for(ProductIme productIme:productImeList) {
+//            if(!productIme.getDepotId().equals(imeAllot.getToDepotId())) {
+//                ImeAllot allot = new ImeAllot();
+//                allot.setProductImeId(productIme.getId());
+//                allot.setFromDepotId(productIme.getDepotId());
+//                allot.setToDepotId(imeAllot.getToDepotId());
+//                allot.setRemarks(imeAllot.getRemarks());
+//                allot.setCrossArea(crossArea(imeAllot.getToDepotId(),productIme.getDepotId()));
+//                imeAllotRepository.save(allot);
+//                productIme.setDepotId(imeAllot.getToDepotId());
+//                productImeRepository.save(productIme);
+//            }
+//        }
+//    }
 
     public void logicDeleteOne(String id) {
         imeAllotRepository.logicDeleteOne(id);

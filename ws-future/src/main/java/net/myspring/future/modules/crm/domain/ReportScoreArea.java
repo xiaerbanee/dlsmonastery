@@ -1,14 +1,11 @@
 package net.myspring.future.modules.crm.domain;
 
-import com.google.common.collect.Lists;
 import net.myspring.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name="crm_report_score_area")
@@ -25,10 +22,8 @@ public class ReportScoreArea extends IdEntity<ReportScoreArea> {
     private Integer monthRank;
     private LocalDate scoreDate;
     private String officeId;
-    private ReportScore reportScore;
+
     private String reportScoreId;
-    private List<ReportScoreOffice> reportScoreOfficeList = Lists.newArrayList();
-    private List<String> reportScoreOfficeIdList = Lists.newArrayList();
 
     public BigDecimal getScore() {
         return score;
@@ -126,14 +121,6 @@ public class ReportScoreArea extends IdEntity<ReportScoreArea> {
         this.officeId = officeId;
     }
 
-    public ReportScore getReportScore() {
-        return reportScore;
-    }
-
-    public void setReportScore(ReportScore reportScore) {
-        this.reportScore = reportScore;
-    }
-
     public String getReportScoreId() {
         return reportScoreId;
     }
@@ -142,19 +129,4 @@ public class ReportScoreArea extends IdEntity<ReportScoreArea> {
         this.reportScoreId = reportScoreId;
     }
 
-    public List<ReportScoreOffice> getReportScoreOfficeList() {
-        return reportScoreOfficeList;
-    }
-
-    public void setReportScoreOfficeList(List<ReportScoreOffice> reportScoreOfficeList) {
-        this.reportScoreOfficeList = reportScoreOfficeList;
-    }
-
-    public List<String> getReportScoreOfficeIdList() {
-        return reportScoreOfficeIdList;
-    }
-
-    public void setReportScoreOfficeIdList(List<String> reportScoreOfficeIdList) {
-        this.reportScoreOfficeIdList = reportScoreOfficeIdList;
-    }
 }

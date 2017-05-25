@@ -2,9 +2,6 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -17,9 +14,9 @@ public class DepotDetail extends CompanyEntity<DepotDetail> {
     private Integer version = 0;
     private Boolean isSame;
     private Integer outQty;
-    private Product product;
+
     private String productId;
-    private Depot depot;
+
     private String depotId;
 
     public Integer getQty() {
@@ -62,28 +59,12 @@ public class DepotDetail extends CompanyEntity<DepotDetail> {
         this.outQty = outQty;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public String getProductId() {
         return productId;
     }
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public Depot getDepot() {
-        return depot;
-    }
-
-    public void setDepot(Depot depot) {
-        this.depot = depot;
     }
 
     public String getDepotId() {

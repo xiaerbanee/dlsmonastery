@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.common.domain.IdEntity;
-import net.myspring.future.modules.basic.domain.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -14,7 +13,7 @@ public class StoreAllotDetail extends IdEntity<StoreAllotDetail> {
     private Integer qty;
     private Integer billQty;
     private Integer shippedQty;
-    private Product product;
+
     private String productId;
     private String storeAllotId;
 
@@ -40,14 +39,6 @@ public class StoreAllotDetail extends IdEntity<StoreAllotDetail> {
 
     public void setShippedQty(Integer shippedQty) {
         this.shippedQty = shippedQty;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public String getProductId() {
