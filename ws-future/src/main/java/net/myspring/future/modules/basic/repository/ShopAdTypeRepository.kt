@@ -1,14 +1,9 @@
 package net.myspring.future.modules.basic.repository
 
-import net.myspring.common.cache.IdCacheKeyGenerator
-import net.myspring.future.common.mybatis.MyProvider
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ShopAdType
-import net.myspring.future.modules.basic.dto.ProductTypeDto
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto
-import net.myspring.future.modules.basic.web.query.ProductTypeQuery
 import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery
-import org.apache.ibatis.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -16,7 +11,6 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
-import org.springframework.stereotype.Repository
 import javax.persistence.EntityManager
 
 /**
@@ -28,7 +22,7 @@ interface ShopAdTypeRepository : BaseRepository<ShopAdType,String>,ShopAdTypeRep
     @Cacheable
     override fun findOne(id: String): ShopAdType
 
-    override fun findAll(): List<ShopAdType>
+    override fun findAll(): MutableList<ShopAdType>
 
     @CachePut(key = "#id")
     fun save(shopAdType: ShopAdType): Int
@@ -39,7 +33,7 @@ interface ShopAdTypeRepository : BaseRepository<ShopAdType,String>,ShopAdTypeRep
         where t1.enabled=1
     """, nativeQuery = true)
     //TODO 需要修改
-    fun findAllByEnabled(): List<ShopAdTypeDto>
+    fun findAllByEnabled(): MutableList<ShopAdTypeDto>
 
 
 }

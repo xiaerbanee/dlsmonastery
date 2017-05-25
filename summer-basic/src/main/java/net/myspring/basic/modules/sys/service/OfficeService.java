@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
@@ -188,7 +187,7 @@ public class OfficeService {
                 officeLeaderRepository.setEnabledByLeaderIds(false,removeIdList);
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
-                officeLeaderRepository.batchSave(leaderList);
+                officeLeaderRepository.save(leaderList);
             }
         }else if(CollectionUtil.isNotEmpty(officeLeaderList)){
             officeLeaderRepository.setEnabledByOfficeId(false,office.getId());

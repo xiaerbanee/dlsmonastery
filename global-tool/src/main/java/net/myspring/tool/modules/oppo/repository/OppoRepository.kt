@@ -3,13 +3,12 @@ import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 import java.time.LocalDate;
-import java.util.List;
+;
 
 /**
  * Created by admin on 2016/10/29.
@@ -24,7 +23,7 @@ interface OppoRepository {
               :branchId
           )
         """, nativeQuery = true)
-    fun plantProductSel(@Param("companyId") companyId: String, @Param("password") password: String, @Param("branchId") branchId: String): List<OppoPlantProductSel>
+    fun plantProductSel(@Param("companyId") companyId: String, @Param("password") password: String, @Param("branchId") branchId: String): MutableList<OppoPlantProductSel>
 
 
     @Query("""
@@ -34,7 +33,7 @@ interface OppoRepository {
             :branchId
         )
         """, nativeQuery = true)
-    fun plantAgentProductSel(@Param("companyId") companyId: String, @Param("password") password: String, @Param("branchId") branchId: String): List<OppoPlantAgentProductSel>
+    fun plantAgentProductSel(@Param("companyId") companyId: String, @Param("password") password: String, @Param("branchId") branchId: String): MutableList<OppoPlantAgentProductSel>
 
     @Query("""
         call PlantSendImeiPPSel (
@@ -43,7 +42,7 @@ interface OppoRepository {
             :createdTime
         )
         """, nativeQuery = true)
-    fun plantSendImeiPPSel(@Param("companyId") companyId: String, @Param("password") password: String, @Param("createdTime") createdTime: LocalDate): List<OppoPlantSendImeiPpsel>
+    fun plantSendImeiPPSel(@Param("companyId") companyId: String, @Param("password") password: String, @Param("createdTime") createdTime: LocalDate): MutableList<OppoPlantSendImeiPpsel>
 
     @Query("""
         call PlantProductItemelectronSel (
@@ -52,5 +51,5 @@ interface OppoRepository {
          :systemDate
         )
     """, nativeQuery = true)
-    fun plantProductItemelectronSel(@Param("companyId") companyId: String, @Param("password") password: String, @Param("systemDate") systemDate: LocalDate): List<OppoPlantProductItemelectronSel>
+    fun plantProductItemelectronSel(@Param("companyId") companyId: String, @Param("password") password: String, @Param("systemDate") systemDate: LocalDate): MutableList<OppoPlantProductItemelectronSel>
 }

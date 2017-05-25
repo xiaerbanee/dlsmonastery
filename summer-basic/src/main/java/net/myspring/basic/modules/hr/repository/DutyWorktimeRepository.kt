@@ -28,7 +28,7 @@ interface DutyWorktimeRepository : BaseRepository<DutyWorktime,String>,DutyWorkt
         AND t1.duty_date >= :dateStart
         and t1.duty_date &lt;= :dateEnd
     """, nativeQuery = true)
-    fun findByDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): List<DutyWorktime>
+    fun findByDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<DutyWorktime>
 
     @Query("""
         SELECT
@@ -41,12 +41,12 @@ interface DutyWorktimeRepository : BaseRepository<DutyWorktime,String>,DutyWorkt
         AND t1.duty_date >= :dateStart
         and t1.duty_date &lt;= :dateEnd
     """, nativeQuery = true)
-    fun findByEmployeeAndDate(@Param("employeeId") employeeId: String, @Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): List<DutyWorktime>
+    fun findByEmployeeAndDate(@Param("employeeId") employeeId: String, @Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<DutyWorktime>
 
 
 }
 interface DutyWorktimeRepositoryCustom{
-    fun findByAccountIdAndDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("accountIds") accountIds: List<Long>): List<DutyWorktime>
+    fun findByAccountIdAndDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("accountIds") accountIds: MutableList<Long>): MutableList<DutyWorktime>
 
     fun findPage(pageable: Pageable, dutyWorktimeQuery: DutyWorktimeQuery): Page<DutyWorktimeDto>
 }
@@ -55,7 +55,7 @@ class DutyWorktimeRepositoryImpl  @Autowired constructor(val entityManager: Enti
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyWorktime> {
+    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyWorktime> {
         var sb = StringBuilder()
         sb.append("""
             SELECT
@@ -82,7 +82,7 @@ class DutyWorktimeRepositoryImpl  @Autowired constructor(val entityManager: Enti
         query.setParameter("dateEnd", dateEnd)
         query.setParameter("accountIds", accountIds)
 
-        return query.resultList as List<DutyWorktime>
+        return query.resultList as MutableList<DutyWorktime>
     }
 
 }

@@ -32,7 +32,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
         where t1.enabled=1
         and t1.name like %?1%
     """, nativeQuery = true)
-    fun findByNameLike(name: String): List<Employee>
+    fun findByNameLike(name: String): MutableList<Employee>
 
     @Query("""
         SELECT t1.*
@@ -40,7 +40,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
         where t1.enabled=1
         and t1.name IN ?1
     """, nativeQuery = true)
-    fun findByNameList(employeeNameList: List<String>): List<Employee>
+    fun findByNameList(employeeNameList: MutableList<String>): MutableList<Employee>
 
     @Query("""
         SELECT t1.*
@@ -49,14 +49,14 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
         and t1.status=:status
         and t1.regular_date>:regularDate
     """, nativeQuery = true)
-    fun findByStatusAndregularDate(@Param("status") status: String, @Param("regularDate") regularDate: LocalDateTime): List<Employee>
+    fun findByStatusAndregularDate(@Param("status") status: String, @Param("regularDate") regularDate: LocalDateTime): MutableList<Employee>
 
     @Query("""
         SELECT t1.*
         FROM  hr_employee t1
         where t1.id in ?1
     """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<Employee>
+    fun findByIds(ids: MutableList<String>): MutableList<Employee>
 
 }
 interface EmployeeRepositoryCustom{

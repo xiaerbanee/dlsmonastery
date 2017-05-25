@@ -8,5 +8,5 @@ import net.myspring.future.modules.basic.domain.AdPricesystemDetail
  */
 interface AdPricesystemDetailRepository : BaseRepository<AdPricesystemDetail,String> {
 
-    fun findByAdPricesystemId(adPricesystemId: String): List<AdPricesystemDetail>
+    fun findByAdPricesystemId(adPricesystemId: String): MutableList<AdPricesystemDetail>
 }

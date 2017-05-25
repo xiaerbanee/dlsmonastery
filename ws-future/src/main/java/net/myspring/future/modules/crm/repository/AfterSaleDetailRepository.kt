@@ -24,7 +24,7 @@ import java.time.LocalDateTime
 interface AfterSaleDetailRepository : BaseRepository<AfterSaleDetail, String> {
 
 
-     fun findByAfterSaleIdInAndType(afterSaleId: List<String>, type: String): List<AfterSaleDetail>
+     fun findByAfterSaleIdInAndType(afterSaleId: MutableList<String>, type: String): MutableList<AfterSaleDetail>
 
 
 }

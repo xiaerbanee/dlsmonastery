@@ -26,7 +26,7 @@ interface  BdStockRepository{
             AND t3.FID = t4.FID
             and t2.FNAME like %?1%
      """, nativeQuery = true)
-    fun findByNameLike(name:String):List<BdStock>
+    fun findByNameLike(name:String):MutableList<BdStock>
 
     @Query("""
      SELECT
@@ -47,7 +47,7 @@ interface  BdStockRepository{
         AND t3.FID = t4.FID
         and t2.FNAME in ?1
      """, nativeQuery = true)
-    fun findByNameList(nameList:List<String>):List<BdStock>
+    fun findByNameList(nameList:MutableList<String>):MutableList<BdStock>
 
     @Query("""
     SELECT
@@ -67,5 +67,5 @@ interface  BdStockRepository{
         AND t1.FGROUP = t3.FID
         AND t3.FID = t4.FID
      """, nativeQuery = true)
-    fun findAll():List<BdStock>
+    fun findAll():MutableList<BdStock>
 }

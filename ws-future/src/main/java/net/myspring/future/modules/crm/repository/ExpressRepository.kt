@@ -21,7 +21,7 @@ import javax.persistence.EntityManager
 interface ExpressRepository : BaseRepository<Express, String>,ExpressRepositoryCustom {
 
 
-    fun findByExpressOrderId(expressOrderId: String): List<Express>
+    fun findByExpressOrderId(expressOrderId: String): MutableList<Express>
 
 
     @Query("""

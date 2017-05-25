@@ -4,17 +4,19 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Permission
 import net.myspring.basic.modules.sys.dto.PermissionDto
 import net.myspring.basic.modules.sys.web.query.PermissionQuery
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import javax.persistence.EntityManager
 
 /**
  * Created by haos on 2017/5/24.
  */
-interface  PermissionRepository: BaseRepository<Permission, String> {
+interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRepositoryCustom {
 
     @Cacheable
     override fun findOne(id: String): Permission
@@ -34,7 +36,7 @@ interface  PermissionRepository: BaseRepository<Permission, String> {
         AND t1.enabled = 1
         AND t2.enabled = 1
      """, nativeQuery = true)
-    fun findByRoleId(roleId: String): List<Permission>
+    fun findByRoleId(roleId: String): MutableList<Permission>
 
     @Query("""
              SELECT
@@ -52,7 +54,7 @@ interface  PermissionRepository: BaseRepository<Permission, String> {
         AND t3.enabled = 1
         AND t2.enabled = 1
      """, nativeQuery = true)
-    fun findByRoleAndAccount(roleId: String, accountId: String): List<Permission>
+    fun findByRoleAndAccount(roleId: String, accountId: String): MutableList<Permission>
 
     @Query("""
              SELECT
@@ -62,7 +64,7 @@ interface  PermissionRepository: BaseRepository<Permission, String> {
         where
         t1.menu_id = ?1
      """, nativeQuery = true)
-    fun findByMenuId(menuId: String): List<Permission>
+    fun findByMenuId(menuId: String): MutableList<Permission>
 
     @Query("""
             SELECT
@@ -73,7 +75,7 @@ interface  PermissionRepository: BaseRepository<Permission, String> {
         t1.enabled=1
         and t1.menu_id IN ?1
      """, nativeQuery = true)
-    fun findByMenuIds(menuIds: List<String>): List<Permission>
+    fun findByMenuIds(menuIds: MutableList<String>): MutableList<Permission>
 
     @Query("""
         SELECT
@@ -93,17 +95,36 @@ interface  PermissionRepository: BaseRepository<Permission, String> {
         where
         t1.permission LIKE %?1%
      """, nativeQuery = true)
-    fun findByPermissionLike(permissionStr: String): List<Permission>
+    fun findByPermissionLike(permissionStr: String): MutableList<Permission>
 
     @Query("""
         SELECT t1.*
         FROM sys_permission t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<Permission>
+    fun findAllEnabled(): MutableList<Permission>
 
-    fun logicDeleteByIds(removePermissionIds:List<String>)
 
-    fun findPage(pageable: Pageable, permissionQuery: PermissionQuery): Page<PermissionDto>
+
+}
+
+
+
+interface PermissionRepositoryCustom{
+
+
+    fun logicDeleteByIds(removePermissionIds:MutableList<String>)
+
+    fun findPage(pageable: Pageable, permissionQuery: PermissionQuery): Page<PermissionDto>?
+}
+
+class PermissionRepositoryImpl @Autowired constructor(val entityManager: EntityManager):PermissionRepositoryCustom{
+    override fun logicDeleteByIds(removePermissionIds: MutableList<String>) {
+
+    }
+
+    override fun findPage(pageable: Pageable, permissionQuery: PermissionQuery): Page<PermissionDto>? {
+        return null
+    }
 
 }

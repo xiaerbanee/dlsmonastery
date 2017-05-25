@@ -9,7 +9,7 @@ interface FolderRepository : BaseRepository<Folder, String> {
 
     fun findByCreatedByAndParentIds(createdBy: String, parentIds: String): Folder
 
-    fun findByCreatedBy(createdBy: String): List<Folder>
+    fun findByCreatedBy(createdBy: String): MutableList<Folder>
 
-    fun findByParentIdsLike(parentIds: String): List<Folder>
+    fun findByParentIdsLike(parentIds: String): MutableList<Folder>
 }

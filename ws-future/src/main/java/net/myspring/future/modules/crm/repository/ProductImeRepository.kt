@@ -43,7 +43,7 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
             OR t1.meid IN ? 1
         )
         """, nativeQuery = true)
-    fun findByImeList(imeList: List<String>): List<ProductIme>
+    fun findByImeList(imeList: MutableList<String>): MutableList<ProductIme>
 
     @Query("""
         SELECT
@@ -75,7 +75,7 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
             LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id
             LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id
         """, nativeQuery = true)
-    fun findDtoListByImeList(@Param("imeList") imeList: List<String>, @Param("companyId") companyId: String): List<ProductImeDto>
+    fun findDtoListByImeList(@Param("imeList") imeList: MutableList<String>, @Param("companyId") companyId: String): MutableList<ProductImeDto>
 
     @Query("""
     SELECT
@@ -101,7 +101,7 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
             )
         """, nativeQuery = true)
     //TODO 调用时，要确保传入的参数里的list不为null
-    fun findShipList(@Param("p") productImeShipQuery: ProductImeShipQuery): List<ProductIme>
+    fun findShipList(@Param("p") productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme>
 
     @Query("""
     SELECT
@@ -169,7 +169,7 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
         ORDER BY
             result.created_date DESC
         """, nativeQuery = true)
-    fun findProductImeHistoryList(productImeId: String): List<ProductImeHistoryDto>
+    fun findProductImeHistoryList(productImeId: String): MutableList<ProductImeHistoryDto>
 
 
 
@@ -183,7 +183,7 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
         AND t1.ime_reverse LIKE CONCAT( :imeReverse,'%')
     Limit 20
         """, nativeQuery = true)
-    fun findByImeReverseLike(@Param("imeReverse") ime: String, @Param("depotId") depotId: String): List<ProductIme>
+    fun findByImeReverseLike(@Param("imeReverse") ime: String, @Param("depotId") depotId: String): MutableList<ProductIme>
 
 }
 
@@ -281,7 +281,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val entityManager: EntityM
         QueryUtils.setParameter(query, productImeQuery)
 
         val result = query.resultList
-        return PageImpl<ProductImeDto>(result as List<ProductImeDto>, pageable, ((pageable.pageNumber + 100) * pageable.pageSize).toLong())
+        return PageImpl<ProductImeDto>(result as MutableList<ProductImeDto>, pageable, ((pageable.pageNumber + 100) * pageable.pageSize).toLong())
 
 
 

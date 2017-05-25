@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.query.Param
 import org.springframework.data.jpa.repository.Query
+import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 import javax.persistence.EntityManager
 
 /**
@@ -35,7 +37,7 @@ interface ShopDepositRepository : BaseRepository<ShopDeposit,String>,ShopDeposit
                 type
         )
     """, nativeQuery = true)
-    fun findByTypeAndShopIds(@Param("type") type: String, @Param("shopIds") shopIds: List<String>): List<ShopDeposit>
+    fun findByTypeAndShopIds(@Param("type") type: String, @Param("shopIds") shopIds: MutableList<String>): MutableList<ShopDeposit>
 
     @Query("""
     SELECT
@@ -52,14 +54,14 @@ interface ShopDepositRepository : BaseRepository<ShopDeposit,String>,ShopDeposit
     LIMIT 0,
      :size
     """, nativeQuery = true)
-    fun findByTypeAndShopId(@Param("shopId") shopId: String, @Param("type") type: String, @Param("size") size: Int?): List<ShopDeposit>
+    fun findByTypeAndShopId(@Param("shopId") shopId: String, @Param("type") type: String, @Param("size") size: Int?): MutableList<ShopDeposit>
 }
 
 interface ShopDepositRepositoryCustom{
     fun findPage(pageable: Pageable, shopDepositQuery: ShopDepositQuery): Page<ShopDepositDto>
 }
 
-class ShopDepositReositorypImpl @Autowired constructor(val entityManager: EntityManager):ShopDepositRepositoryCustom{
+class ShopDepositRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopDepositRepositoryCustom{
 
     override fun findPage(pageable: Pageable, shopDepositQuery: ShopDepositQuery): Page<ShopDepositDto> {
         val sb = StringBuffer()

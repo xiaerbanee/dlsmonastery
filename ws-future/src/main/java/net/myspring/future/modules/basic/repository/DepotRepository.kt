@@ -24,7 +24,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
     @Cacheable
     override fun findOne(id: String): Depot
 
-    override fun findAll(): List<Depot>
+    override fun findAll(): MutableList<Depot>
 
     @CachePut(key = "#id")
     fun save(depot: Depot): Int
@@ -34,7 +34,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
         FROM crm_depot t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<Depot>
+    fun findAllEnabled(): MutableList<Depot>
 
     @Query("""
         SELECT t1.*
@@ -42,9 +42,9 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
         where t1.enabled=1
         and t1.id in ?1
     """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<Depot>
+    fun findByIds(ids: MutableList<String>): MutableList<Depot>
 
-    fun findByChainId(chainId: String): List<Depot>
+    fun findByChainId(chainId: String): MutableList<Depot>
 
     @Query("""
         SELECT
@@ -58,7 +58,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
         AND t1.id = t2.depot_id
         AND t2.account_id = ?1
     """, nativeQuery = true)
-    fun findByAccountId(accountId: String): List<Depot>
+    fun findByAccountId(accountId: String): MutableList<Depot>
 
     @Query("""
         SELECT
@@ -69,7 +69,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
             t1.enabled = 1
         AND t1.name IN ?1
     """, nativeQuery = true)
-    fun findByNameList(nameList: List<String>): List<Depot>
+    fun findByNameList(nameList: MutableList<String>): MutableList<Depot>
 
     fun findByName(name: String): Depot
 
@@ -77,31 +77,32 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
 interface DepotRepositoryCustom{
 
-    fun findShopList(depotShopQuery: DepotQuery): List<DepotDto>
+    fun findShopList(depotShopQuery: DepotQuery): MutableList<DepotDto>
 
-    fun findStoreList(depotShopQuery: DepotQuery): List<DepotDto>
+    fun findStoreList(depotShopQuery: DepotQuery): MutableList<DepotDto>
 
     fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto>
 
     fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,boolean: Boolean):Page<DepotAccountDto>
 }
 
+@Suppress("UNCHECKED_CAST")
 class DepotRepositoryImpl @Autowired constructor(val entityManager: EntityManager):DepotRepositoryCustom{
 
-    override fun findShopList(depotStoreQuery: DepotQuery): List<DepotDto> {
+    override fun findShopList(depotStoreQuery: DepotQuery): MutableList<DepotDto> {
         val sb = StringBuffer()
 
         var query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
 
-        return query.resultList as List<DepotDto>
+        return query.resultList as MutableList<DepotDto>
     }
 
-    override fun findStoreList(depotShopQuery: DepotQuery): List<DepotDto>{
+    override fun findStoreList(depotShopQuery: DepotQuery): MutableList<DepotDto>{
         val sb = StringBuffer()
 
         var query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
 
-        return query.resultList as List<DepotDto>
+        return query.resultList as MutableList<DepotDto>
     }
 
     override fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto> {

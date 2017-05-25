@@ -1,6 +1,5 @@
 global-*/build/
 future-*/build/
-mybatis-smart/build/
 summer-*/build/
 
 /.idea/

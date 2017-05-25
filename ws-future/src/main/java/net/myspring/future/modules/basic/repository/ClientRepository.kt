@@ -23,7 +23,7 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
     override fun findOne(id: String): Client
 
 
-    override fun findAll(): List<Client>
+    override fun findAll(): MutableList<Client>
 
     @CachePut(key = "#id")
     fun save(client: Client): Int
@@ -33,7 +33,7 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
         FROM crm_client t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<Client>
+    fun findAllEnabled(): MutableList<Client>
 
     @Query("""
         select t1.*
@@ -45,7 +45,7 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
     """, nativeQuery = true)
     fun findByDepotId(depotId: String): Client
 
-    fun findByNameLike(name: String): List<Client>
+    fun findByNameLike(name: String): MutableList<Client>
 }
 
 interface ClientRepositoryCustom{

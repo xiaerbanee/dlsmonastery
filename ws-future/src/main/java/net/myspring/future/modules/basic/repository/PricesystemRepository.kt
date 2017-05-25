@@ -21,7 +21,7 @@ interface PricesystemRepository : BaseRepository<Pricesystem,String>,Pricesystem
     @Cacheable
     override fun findOne(id: String): Pricesystem
 
-    override fun findAll(): List<Pricesystem>
+    override fun findAll(): MutableList<Pricesystem>
 
     @CachePut(key = "#id")
     fun save(pricesystem: Pricesystem): Int
@@ -31,7 +31,7 @@ interface PricesystemRepository : BaseRepository<Pricesystem,String>,Pricesystem
         FROM crm_pricesystem t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<Pricesystem>
+    fun findAllEnabled(): MutableList<Pricesystem>
 
     @Query("""
         SELECT t1.*
@@ -39,14 +39,14 @@ interface PricesystemRepository : BaseRepository<Pricesystem,String>,Pricesystem
         where t1.enabled=1
         and t1.id in ?1
     """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<Pricesystem>
+    fun findByIds(ids: MutableList<String>): MutableList<Pricesystem>
 
     @Query("""
         SELECT t1.*
         FROM crm_pricesystem t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findPricesystem(): List<Pricesystem>
+    fun findPricesystem(): MutableList<Pricesystem>
 }
 
 interface PricesystemRepositoryCustom{

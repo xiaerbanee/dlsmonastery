@@ -8,7 +8,7 @@ interface ProcessFlowRepository : BaseRepository<ProcessFlow, String> {
 
     fun findByProcessTypeIdAndName(processTypeId: String, name: String): ProcessFlow
 
-    fun findByProcessTypeId(processTypeId: String): List<ProcessFlow>
+    fun findByProcessTypeId(processTypeId: String): MutableList<ProcessFlow>
 
 
     @Query("""
@@ -18,7 +18,7 @@ interface ProcessFlowRepository : BaseRepository<ProcessFlow, String> {
         and t2.enabled=1
         and t2.name=?1
         """, nativeQuery = true)
-    fun findByProcessTypeName(processTypeName: String): List<ProcessFlow>
+    fun findByProcessTypeName(processTypeName: String): MutableList<ProcessFlow>
 
 
 }

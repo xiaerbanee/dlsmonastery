@@ -16,6 +16,6 @@ import java.time.LocalDateTime
 
 interface ImeAllotRepository : BaseRepository<ImeAllot, String> {
 
-    fun findByProductImeId(productImeId: String): List<ImeAllot>
+    fun findByProductImeId(productImeId: String): MutableList<ImeAllot>
 
 }
