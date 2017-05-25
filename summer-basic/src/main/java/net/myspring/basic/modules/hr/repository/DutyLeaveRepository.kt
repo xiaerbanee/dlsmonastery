@@ -47,6 +47,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
         AND t1.duty_date in ?2
     """, nativeQuery = true)
     fun findByDutyDateList(employeeId: String, dutyDateList: List<LocalDate>): List<DutyLeave>
+
     @Query("""
         SELECT
             t1.*
@@ -90,6 +91,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
 interface DutyLeaveRepositoryCustom{
     fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyLeave>
 }
+
 class DutyLeaveRepositoryImpl @Autowired constructor(val entityManager: EntityManager):DutyLeaveRepositoryCustom{
     override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyLeave> {
         var sb = StringBuilder();
@@ -106,19 +108,14 @@ class DutyLeaveRepositoryImpl @Autowired constructor(val entityManager: EntityMa
             AND le.duty_date  <= :dateEnd
         """);
         if (CollectionUtil.isNotEmpty(accountIds)){
-            sb.append("""
-                and le.employee_id in :accountIds
-            """)
+            sb.append(" and le.employee_id in :accountIds")
         }
-        sb.append("""
-            ORDER BY le.employee_id,le.duty_date asc
-        """);
+        sb.append(" ORDER BY le.employee_id,le.duty_date asc");
         var query = entityManager.createNativeQuery(sb.toString(), DutyLeave::class.java);
         query.setParameter("dateStart", dateStart);
         query.setParameter("dateEnd", dateEnd);
         query.setParameter("accountIds", accountIds);
         return query.resultList as List<DutyLeave>
-
     }
 
 }

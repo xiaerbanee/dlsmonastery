@@ -96,9 +96,7 @@ class DutyFreeRepositoryImpl @Autowired constructor(val entityManager: EntityMan
             AND fr.free_date <= :dateEnd
         """);
         if (CollectionUtil.isNotEmpty(accountIds)) {
-            sb.append("""
-            and fr.employee_id in :accountIds
-            """)
+            sb.append(" and fr.employee_id in :accountIds")
         }
 
         var query = entityManager.createNativeQuery(sb.toString(), DutyFree::class.java);
