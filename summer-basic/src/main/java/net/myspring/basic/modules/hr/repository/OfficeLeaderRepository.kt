@@ -35,4 +35,5 @@ interface OfficeLeaderRepository : BaseRepository<OfficeLeader,String>{
     """, nativeQuery = true)
     fun findAllByOfficeId(officeId: String): List<OfficeLeader>
 
+    fun batchSave(leaderList:List<OfficeLeader>)
 }

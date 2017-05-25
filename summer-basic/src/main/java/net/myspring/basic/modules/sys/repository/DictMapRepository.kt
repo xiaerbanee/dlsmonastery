@@ -4,8 +4,11 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.DictMap
 import net.myspring.basic.modules.sys.dto.DictMapDto
+import net.myspring.basic.modules.sys.web.query.DictMapQuery
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 
 /**
@@ -48,4 +51,5 @@ interface  DictMapRepository :BaseRepository<DictMap,String>{
      """, nativeQuery = true)
     fun findByName(name:String): DictMapDto
 
+    fun findPage(pageable: Pageable, dictMapQuery: DictMapQuery): Page<DictMapDto>
 }

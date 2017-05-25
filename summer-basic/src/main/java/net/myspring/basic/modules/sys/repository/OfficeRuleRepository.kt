@@ -2,8 +2,12 @@ package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.OfficeRule
+import net.myspring.basic.modules.sys.dto.OfficeRuleDto
+import net.myspring.basic.modules.sys.web.query.OfficeRuleQuery
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 
 /**
@@ -53,4 +57,8 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> {
         limit 0,1
      """, nativeQuery = true)
     fun findNextOfficeRule(id: String): OfficeRule
+
+    fun findPage(pageable: Pageable, officeRuleQuery: OfficeRuleQuery): Page<OfficeRuleDto>
+
+    fun findAllEnabled():List<OfficeRule>
 }

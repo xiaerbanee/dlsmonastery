@@ -46,7 +46,7 @@ public class BackendService {
         } else {
             backend = backendRepository.findOne(backendForm.getId());
             ReflectionUtil.copyProperties(backendForm,backend);
-            backendRepository.update(backend);
+            backendRepository.save(backend);
         }
         return backend;
     }

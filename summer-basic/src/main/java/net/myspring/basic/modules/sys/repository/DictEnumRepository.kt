@@ -3,8 +3,11 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.DictEnum
 import net.myspring.basic.modules.sys.dto.DictEnumDto
+import net.myspring.basic.modules.sys.web.query.DictEnumQuery
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
@@ -47,4 +50,6 @@ interface DictEnumRepository :BaseRepository<DictEnum,String>{
         and t1.value=:value
      """, nativeQuery = true)
     fun findByValue(@Param("value")value:String): DictEnumDto
+
+    fun findPage(pageable: Pageable, dictEnumQuery: DictEnumQuery): Page<DictEnumDto>
 }

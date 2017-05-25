@@ -60,7 +60,7 @@ public class DictEnumService {
         } else {
             dictEnum = dictEnumRepository.findOne(dictEnumForm.getId());
             ReflectionUtil.copyProperties(dictEnumForm,dictEnum);
-            dictEnumRepository.update(dictEnum);
+            dictEnumRepository.save(dictEnum);
         }
         return dictEnum;
     }

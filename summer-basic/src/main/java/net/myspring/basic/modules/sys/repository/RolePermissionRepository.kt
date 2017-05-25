@@ -66,4 +66,6 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
         where role_id in ?2
      """, nativeQuery = true)
     fun setEnabledByRoleIdList( enabled: Boolean,  roleIdList: List<String>): Int
+
+    fun batchSave(rolePermissions:List<RolePermission>)
 }
