@@ -9,6 +9,7 @@ import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,5 +135,18 @@ public class OppoService {
             }
         }
         return "电子保卡同步成功，共"+list.size()+"条";
+    }
+
+
+
+    @Transactional
+    public  List<OppoPlantSendImeiPpsel>  synIme(String date) {
+        LocalDate nowDate= LocalDateUtils.parse(date);
+        LocalDate dateStart = nowDate.minusDays(1);
+        LocalDate dateEnd = nowDate.plusDays(1);
+       List<String>  mainCodes=Lists.newArrayList();
+        mainCodes.add("M13AMB");
+        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels = oppoPlantSendImeiPpselRepository.findSynList(dateStart, dateEnd, mainCodes);
+        return oppoPlantSendImeiPpsels;
     }
 }

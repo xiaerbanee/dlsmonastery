@@ -1,15 +1,10 @@
-package net.myspring.tool.modules.oppo.domain;
+package net.myspring.future.modules.third.domain;
 
 
 import net.myspring.common.domain.IdEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name="oppo_plant_send_imei_ppsel")
 public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
     private String billId;
     private String imei;
@@ -20,9 +15,9 @@ public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
     private String remark;
     private String imei2;
     private String companyId;
-
-    private String lxProductId;
     private String productId;
+    private String lxProductId;
+    private String colorId;
 
     public String getBillId() {
         return billId;
@@ -96,23 +91,27 @@ public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
         this.companyId = companyId;
     }
 
-    @Transient
-    public String getLxProductId() {
-        return lxProductId;
-    }
-
-    @Transient
-    public void setLxProductId(String lxProductId) {
-        this.lxProductId = lxProductId;
-    }
-
-    @Transient
     public String getProductId() {
         return productId;
     }
 
-    @Transient
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public String getLxProductId() {
+        return lxProductId;
+    }
+
+    public void setLxProductId(String lxProductId) {
+        this.lxProductId = lxProductId;
+    }
+
+    public String getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(String colorId) {
+        this.colorId = colorId;
     }
 }

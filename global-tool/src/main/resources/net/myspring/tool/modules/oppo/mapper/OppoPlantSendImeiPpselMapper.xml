@@ -39,13 +39,13 @@
     </insert>
 
     <select id="findSynList" resultType="OppoPlantSendImeiPpsel">
-        select t.*  from oppo_plant_send_imei_ppsel t
+        select t.*  from oppo_plant_send_imei_ppsel t,oppo_plant_agent_product_sel sel
         where t.created_time &gt;= #{dateStart}
         and t.created_time &lt;= #{dateEnd}
         and t.company_id in
         <foreach item="item" index="index" collection="agentCodes" open="(" separator="," close=")">
             #{item}
         </foreach>
-        and t.imei not in (select p.ime from crm_product_ime p )
+        and t.dls_product_id=sel.item_number
     </select>
 </mapper>
