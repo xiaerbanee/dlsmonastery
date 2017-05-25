@@ -67,7 +67,7 @@ public class PositionService {
         }else{
             position = positionRepository.findOne(positionForm.getId());
             ReflectionUtil.copyProperties(positionForm,position);
-            positionRepository.update(position);
+            positionRepository.save(position);
         }
         return position;
     }

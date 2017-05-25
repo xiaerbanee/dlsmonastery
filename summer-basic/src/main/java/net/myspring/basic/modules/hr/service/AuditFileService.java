@@ -85,7 +85,7 @@ public class AuditFileService {
         auditFileForm.setProcessStatus(activitiCompleteDto.getProcessStatus());
         auditFileForm.setPositionId(activitiCompleteDto.getPositionId());
         ReflectionUtil.copyProperties(auditFileForm,auditFile);
-        auditFileRepository.update(auditFile);
+        auditFileRepository.save(auditFile);
 
     }
 

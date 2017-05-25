@@ -2,11 +2,15 @@ package net.myspring.basic.modules.hr.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.Position
+import net.myspring.basic.modules.hr.dto.PositionDto
+import net.myspring.basic.modules.hr.web.query.PositionQuery
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.query.Param
 import javax.persistence.EntityManager
 
@@ -25,8 +29,14 @@ interface PositionRepository : BaseRepository<Position,String>,PositionRepositor
 }
 interface PositionRepositoryCustom{
     fun findByNameLike(@Param("name") name: String): List<Position>
+
+    fun findPage(pageable: Pageable, positionQuery: PositionQuery): Page<PositionDto>
 }
 class PositionRepositoryImpl @Autowired constructor(val entityManager: EntityManager): PositionRepositoryCustom{
+    override fun findPage(pageable: Pageable, positionQuery: PositionQuery): Page<PositionDto> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun findByNameLike(name: String): List<Position> {
         var sb = StringBuilder()
         sb.append("""

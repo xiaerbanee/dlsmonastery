@@ -3,8 +3,12 @@ package net.myspring.basic.modules.hr.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.DutyLeave
 import net.myspring.basic.modules.hr.dto.DutyDto
+import net.myspring.basic.modules.hr.dto.DutyLeaveDto
+import net.myspring.basic.modules.hr.web.query.DutyLeaveQuery
 import net.myspring.util.collection.CollectionUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -90,9 +94,15 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
 }
 interface DutyLeaveRepositoryCustom{
     fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyLeave>
+
+    fun findPage(pageable: Pageable, dutyLeaveQuery: DutyLeaveQuery): Page<DutyLeaveDto>
 }
 
 class DutyLeaveRepositoryImpl @Autowired constructor(val entityManager: EntityManager):DutyLeaveRepositoryCustom{
+    override fun findPage(pageable: Pageable, dutyLeaveQuery: DutyLeaveQuery): Page<DutyLeaveDto> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyLeave> {
         var sb = StringBuilder();
         sb.append("""

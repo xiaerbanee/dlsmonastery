@@ -3,11 +3,15 @@ package net.myspring.basic.modules.hr.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.DutyFree
 import net.myspring.basic.modules.hr.dto.DutyDto
+import net.myspring.basic.modules.hr.dto.DutyFreeDto
+import net.myspring.basic.modules.hr.web.query.DutyFreeQuery
 import net.myspring.util.collection.CollectionUtil
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
 import java.time.LocalDateTime
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import javax.persistence.EntityManager
 
 /**
@@ -79,9 +83,15 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
 
 interface DutyFreeRepositoryCustom {
     fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyFree>
+
+    fun findPage(pageable: Pageable, dutyFreeQuery: DutyFreeQuery): Page<DutyFreeDto>
 }
 
 class DutyFreeRepositoryImpl @Autowired constructor(val entityManager: EntityManager) : DutyFreeRepositoryCustom {
+    override fun findPage(pageable: Pageable, dutyFreeQuery: DutyFreeQuery): Page<DutyFreeDto> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyFree> {
         var sb = StringBuilder()
         sb.append("""

@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountPermission;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.AccountDto;
+import net.myspring.basic.modules.hr.repository.AccountPermissionRepository;
 import net.myspring.basic.modules.hr.repository.AccountRepository;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
@@ -59,6 +60,8 @@ public class AccountService {
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private OfficeManager officeManager;
+    @Autowired
+    private AccountPermissionRepository accountPermissionRepository;
 
     @Value("${setting.adminIdList}")
     private String adminIdList;
@@ -192,7 +195,7 @@ public class AccountService {
             for(String permissionId:addIdList){
                 accountPermissions.add(new AccountPermission(accountForm.getId(), permissionId));
             }
-            accountPermissionRepository.batchSave(accountPermissions);
+            accountPermissionRepository.save(accountPermissions);
         }
     }
 

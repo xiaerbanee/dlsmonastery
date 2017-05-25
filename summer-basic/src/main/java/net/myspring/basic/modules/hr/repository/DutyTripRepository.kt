@@ -5,8 +5,12 @@ import net.myspring.basic.modules.hr.domain.DutyTrip
 import org.springframework.beans.factory.annotation.Autowired
 import javax.persistence.EntityManager
 import net.myspring.basic.modules.hr.dto.DutyDto
+import net.myspring.basic.modules.hr.dto.DutyTripDto
+import net.myspring.basic.modules.hr.web.query.DutyTripQuery
 import net.myspring.util.collection.CollectionUtil
 import org.apache.ibatis.annotations.Param
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -16,7 +20,7 @@ import java.time.LocalDateTime
  * Created by lihx on 2017/5/24.
  */
 
-interface DutyTripRepository : BaseRepository<DutyTrip, String> {
+interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripRepositoryCustom {
     @Query("""
          SELECT
             '出差' as dutyType,
@@ -71,8 +75,13 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String> {
 interface DutyTripRepositoryCustom{
     fun findByAccountIdAndDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("accountIds") accountIds: List<Long>): List<DutyTrip>
 
+    fun findPage(pageable: Pageable, dutyTripQuery: DutyTripQuery): Page<DutyTripDto>
 }
 class DutyTripRepositoryImpl @Autowired constructor(val entityManager: EntityManager): DutyTripRepositoryCustom{
+    override fun findPage(pageable: Pageable, dutyTripQuery: DutyTripQuery): Page<DutyTripDto> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyTrip> {
         var sb = StringBuilder()
         sb.append("""
