@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.query.Param
 import org.springframework.data.jpa.repository.Query
+import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 import javax.persistence.EntityManager
 
 /**
@@ -59,7 +61,7 @@ interface ShopDepositRepositoryCustom{
     fun findPage(pageable: Pageable, shopDepositQuery: ShopDepositQuery): Page<ShopDepositDto>
 }
 
-class ShopDepositReositorypImpl @Autowired constructor(val entityManager: EntityManager):ShopDepositRepositoryCustom{
+class ShopDepositRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopDepositRepositoryCustom{
 
     override fun findPage(pageable: Pageable, shopDepositQuery: ShopDepositQuery): Page<ShopDepositDto> {
         val sb = StringBuffer()

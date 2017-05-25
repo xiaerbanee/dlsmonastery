@@ -35,7 +35,7 @@ interface ShopGoodsDepositRepositoryCustom{
     fun findPage(pageable: Pageable, shopGoodsDepositQuery: ShopGoodsDepositQuery): Page<ShopGoodsDepositDto>
 }
 
-class ShopGoodsDepositReositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopGoodsDepositRepositoryCustom{
+class ShopGoodsDepositRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopGoodsDepositRepositoryCustom{
 
     override fun findPage(pageable: Pageable, shopGoodsDepositQuery: ShopGoodsDepositQuery): Page<ShopGoodsDepositDto> {
         val sb = StringBuffer()
