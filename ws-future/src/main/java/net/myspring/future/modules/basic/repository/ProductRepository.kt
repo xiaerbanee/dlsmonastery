@@ -1,15 +1,11 @@
 package net.myspring.future.modules.basic.repository
 
-import net.myspring.common.cache.IdCacheKeyGenerator
-import net.myspring.future.common.mybatis.MyProvider
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Product
 import net.myspring.future.modules.basic.domain.ProductType
-import net.myspring.future.modules.basic.dto.PricesystemDto
 import net.myspring.future.modules.basic.dto.ProductDto
-import net.myspring.future.modules.basic.web.query.PricesystemQuery
 import net.myspring.future.modules.basic.web.query.ProductQuery
-import org.apache.ibatis.annotations.*
+import org.apache.ibatis.annotations.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
