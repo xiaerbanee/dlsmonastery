@@ -104,7 +104,6 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
     """, nativeQuery = true)
     fun findAllEnabled(): List<Permission>
 
-    fun logicDeleteByIds(removePermissionIds:List<String>)
 
 
 }
@@ -113,10 +112,17 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
 
 interface PermissionRepositoryCustom{
 
+
+    fun logicDeleteByIds(removePermissionIds:List<String>)
+
     fun findPage(pageable: Pageable, permissionQuery: PermissionQuery): Page<PermissionDto>?
 }
 
 class PermissionRepositoryImpl @Autowired constructor(val entityManager: EntityManager):PermissionRepositoryCustom{
+    override fun logicDeleteByIds(removePermissionIds: List<String>) {
+
+    }
+
     override fun findPage(pageable: Pageable, permissionQuery: PermissionQuery): Page<PermissionDto>? {
         return null
     }
