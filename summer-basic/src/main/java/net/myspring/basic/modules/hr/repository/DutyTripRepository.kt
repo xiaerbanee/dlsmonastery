@@ -36,7 +36,7 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
           t1.enabled=1
           AND t1.employee_id=t3.id
           and t3.account_id=t2.id
-          AND t2.leader_id=:leader
+          AND t2.leader_id=:leaderId
           AND t1.status=:status
           AND t1.created_date>=:createdDateStart
     """, nativeQuery = true)
@@ -49,7 +49,7 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
         hr_duty_trip t1
         WHERE
         t1.enabled=1
-        and t1.employee_id=#{employeeId}
+        and t1.employee_id= :employeeId
         and ((t1.date_start >= :dateStart
         and t1.date_start <= :dateEnd)
         or  (t1.date_end >= :dateStart
