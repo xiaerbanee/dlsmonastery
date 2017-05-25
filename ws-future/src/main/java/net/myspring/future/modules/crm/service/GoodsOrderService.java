@@ -25,6 +25,7 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.mapper.GoodsOrderMapper;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
+import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
@@ -51,6 +52,8 @@ public class GoodsOrderService {
     @Autowired
     private GoodsOrderMapper goodsOrderMapper;
     @Autowired
+    private GoodsOrderRepository goodsOrderRepository;
+    @Autowired
     private GoodsOrderDetailRepository goodsOrderDetailRepository;
     @Autowired
     private DepotRepository depotRepository;
@@ -70,7 +73,7 @@ public class GoodsOrderService {
     private CacheUtils cacheUtils;
 
     public Page<GoodsOrderDto> findPage(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
-        Page<GoodsOrderDto> page = goodsOrderMapper.findPage(pageable, goodsOrderQuery);
+        Page<GoodsOrderDto> page = goodsOrderRepository.findPage(pageable, goodsOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -88,7 +91,7 @@ public class GoodsOrderService {
         GoodsOrderQuery goodsOrderQuery = new GoodsOrderQuery();
         goodsOrderQuery.setShopId(shop.getId());
         goodsOrderQuery.setStatus(GoodsOrderStatusEnum.待开单.name());
-        List<GoodsOrder> goodsOrderList = goodsOrderMapper.findList(goodsOrderQuery);
+        List<GoodsOrder> goodsOrderList = goodsOrderRepository.findList(goodsOrderQuery);
         if (CollectionUtil.isNotEmpty(goodsOrderList)) {
             restResponse.getErrors().add(new RestErrorField("门店有未处理的单据","exist_order_for_bill","shopId"));
         }

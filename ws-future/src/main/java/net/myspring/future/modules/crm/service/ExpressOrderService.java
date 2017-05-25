@@ -6,12 +6,11 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
-import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
-import net.myspring.future.modules.crm.mapper.ExpressOrderMapper;
+import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
+import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.crm.web.query.ExpressOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -44,8 +43,7 @@ import java.util.UUID;
 @Transactional
 public class ExpressOrderService {
 
-    @Autowired
-    private ExpressOrderMapper expressOrderMapper;
+
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
@@ -60,7 +58,7 @@ public class ExpressOrderService {
     }
 
     public Page<ExpressOrderDto> findPage(Pageable pageable, ExpressOrderQuery expressOrderQuery) {
-        Page<ExpressOrderDto> page = expressOrderMapper.findPage(pageable, expressOrderQuery);
+        Page<ExpressOrderDto> page = expressOrderRepository.findPage(pageable, expressOrderQuery);
         page.getContent().stream().filter(each-> (each.getWeight()!=null && each.getTotalQty()!=null&&each.getTotalQty()>0)).forEach(each -> each.setAverageWeight(each.getWeight().divide(new BigDecimal(each.getTotalQty()),2, BigDecimal.ROUND_HALF_UP)));
 
         cacheUtils.initCacheInput(page.getContent());

@@ -6,12 +6,11 @@ import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
-import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.dto.ExpressDto;
-import net.myspring.future.modules.crm.mapper.ExpressMapper;
+import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
+import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.future.modules.crm.web.form.ExpressForm;
 import net.myspring.future.modules.crm.web.query.ExpressQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -36,8 +35,6 @@ import java.util.Optional;
 public class ExpressService {
 
     @Autowired
-    private ExpressMapper expressMapper;
-    @Autowired
     private ExpressRepository expressRepository;
     @Autowired
     private DepotRepository depotRepository;
@@ -47,7 +44,7 @@ public class ExpressService {
     private ExpressOrderRepository expressOrderRepository;
 
     public Page<ExpressDto> findPage(Pageable pageable, ExpressQuery expressQuery) {
-        Page<ExpressDto> page = expressMapper.findPage(pageable, expressQuery);
+        Page<ExpressDto> page = expressRepository.findPage(pageable, expressQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
