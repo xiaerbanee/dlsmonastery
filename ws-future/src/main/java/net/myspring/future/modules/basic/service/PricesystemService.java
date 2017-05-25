@@ -41,13 +41,7 @@ public class PricesystemService {
     @Autowired
     private PricesystemRepository pricesystemRepository;
     @Autowired
-    private PricesystemRepository pricesystemRepository;
-    @Autowired
     private PricesystemDetailRepository pricesystemDetailRepository;
-    @Autowired
-    private PricesystemDetailRepository pricesystemDetailRepository;
-    @Autowired
-    private ProductRepository productRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired

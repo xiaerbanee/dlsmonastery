@@ -2,15 +2,20 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Bank
+import net.myspring.future.modules.basic.dto.BankDto
+import net.myspring.future.modules.basic.web.query.BankQuery
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import java.time.LocalDateTime
+import javax.persistence.EntityManager
 
 @CacheConfig(cacheNames = arrayOf("banks"))
-interface BankRepository : BaseRepository<Bank, String> {
+interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
     @Cacheable
     override fun findOne(id: String): Bank
 
@@ -66,4 +71,19 @@ interface BankRepository : BaseRepository<Bank, String> {
         select account_id from crm_account_bank where bank_id=?1
     """, nativeQuery = true)
     fun findAccountIdList(id: String): List<String>
+}
+
+interface BankRepositoryCustom{
+    fun findPage(pageable: Pageable, bankQuery: BankQuery): Page<BankDto>
+}
+
+class BankRepositoryImpl @Autowired constructor(val entityManager: EntityManager):BankRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, bankQuery: BankQuery): Page<BankDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), BankDto::class.java)
+
+        return query.resultList as Page<BankDto>
+    }
 }

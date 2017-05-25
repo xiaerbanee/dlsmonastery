@@ -2,21 +2,25 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ExpressCompany
+import net.myspring.future.modules.basic.dto.DepotStoreDto
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto
+import net.myspring.future.modules.basic.web.query.DepotStoreQuery
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery
 import org.apache.ibatis.annotations.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("expressCompanies"))
-interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>{
+interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,ExpressCompanyRepositoryCustom{
 
     @Cacheable
     override fun findOne(id: String): ExpressCompany
@@ -46,4 +50,19 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>{
     fun findByNameLike(@Param("companyId") companyId: String, @Param("name") name: String): List<ExpressCompanyDto>
 
     fun findByCompanyIdAndExpressType(@Param("companyId") companyId: String, @Param("expressType") expressType: String): List<ExpressCompanyDto>
+}
+
+interface ExpressCompanyRepositoryCustom{
+    fun findPage(pageable: Pageable, expressCompanyQuery: ExpressCompanyQuery): Page<ExpressCompanyDto>
+}
+
+class ExpressCompanyRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ExpressCompanyRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, expressCompanyQuery: ExpressCompanyQuery): Page<ExpressCompanyDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), ExpressCompanyDto::class.java)
+
+        return query.resultList as Page<ExpressCompanyDto>
+    }
 }

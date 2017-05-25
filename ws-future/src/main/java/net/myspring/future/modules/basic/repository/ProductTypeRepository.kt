@@ -4,21 +4,25 @@ import net.myspring.common.cache.IdCacheKeyGenerator
 import net.myspring.future.common.mybatis.MyProvider
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ProductType
+import net.myspring.future.modules.basic.dto.ProductDto
 import net.myspring.future.modules.basic.dto.ProductTypeDto
+import net.myspring.future.modules.basic.web.query.ProductQuery
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery
 import org.apache.ibatis.annotations.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("productTypes"))
-interface ProductTypeRepository : BaseRepository<ProductType,String> {
+interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductTypeRepositoryCustom {
 
     @Cacheable
     override fun findOne(id: String): ProductType
@@ -68,4 +72,19 @@ interface ProductTypeRepository : BaseRepository<ProductType,String> {
     fun findAllScoreType(): List<ProductType>
 
     fun findByDemoPhoneTypeId(demoPhoneTypeId: String): List<ProductType>
+}
+
+interface ProductTypeRepositoryCustom{
+    fun findPage(pageable: Pageable, productTypeQuery: ProductTypeQuery): Page<ProductTypeDto>
+}
+
+class ProductTypeRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ProductTypeRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, productTypeQuery: ProductTypeQuery): Page<ProductTypeDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), ProductTypeDto::class.java)
+
+        return query.resultList as Page<ProductTypeDto>
+    }
 }

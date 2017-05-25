@@ -29,8 +29,6 @@ public class ShopDepositService {
     @Autowired
     private ShopDepositRepository shopDepositRepository;
     @Autowired
-    private ShopDepositRepository shopDepositRepository;
-    @Autowired
     private DepotRepository depotRepository;
     @Autowired
     private BankRepository bankRepository;
@@ -56,7 +54,7 @@ public class ShopDepositService {
         return null;
     }
 
-    public int save(ShopDeposit shopDeposit){
+    public ShopDeposit save(ShopDeposit shopDeposit){
 	    //TODO 調用金蝶
 	    return shopDepositRepository.save(shopDeposit);
     }

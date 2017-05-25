@@ -8,10 +8,8 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
-import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
 import net.myspring.future.modules.layout.domain.ShopAd;
 import net.myspring.future.modules.layout.dto.ShopAdDto;
-import net.myspring.future.modules.layout.repository.ShopAdRepository;
 import net.myspring.future.modules.layout.repository.ShopAdRepository;
 import net.myspring.future.modules.layout.web.form.ShopAdForm;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
@@ -36,11 +34,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -49,10 +45,6 @@ public class ShopAdService {
 
     @Autowired
     private ShopAdRepository shopAdRepository;
-    @Autowired
-    private ShopAdRepository shopAdRepository;
-    @Autowired
-    private ShopAdTypeRepository shopAdTypeRepository;
     @Autowired
     private ShopAdTypeRepository shopAdTypeRepository;
     @Autowired

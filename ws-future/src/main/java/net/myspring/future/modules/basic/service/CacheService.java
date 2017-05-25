@@ -1,10 +1,6 @@
 package net.myspring.future.modules.basic.service;
 
-import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.domain.ExpressCompany;
-import net.myspring.future.modules.basic.domain.Pricesystem;
-import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.slf4j.Logger;
@@ -14,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 /**
  * Created by liuj on 2017/4/22.
@@ -25,21 +20,11 @@ public class CacheService {
     @Autowired
     private ChainRepository chainRepository;
     @Autowired
-    private ChainRepository chainRepository;
-    @Autowired
-    private PricesystemRepository pricesystemRepository;
-    @Autowired
     private PricesystemRepository pricesystemRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
     private ExpressCompanyRepository expressCompanyRepository;
-    @Autowired
-    private ExpressCompanyRepository expressCompanyRepository;
-    @Autowired
-    private AdPricesystemRepository adPricesystemRepository;
     @Autowired
     private AdpricesystemRepository adpricesystemRepository;
     @Autowired

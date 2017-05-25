@@ -3,18 +3,23 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.AdPricesystem
+import net.myspring.future.modules.basic.dto.AdPricesystemDto
 import net.myspring.future.modules.basic.web.query.AdPricesystemQuery
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("adPricesystems"))
-interface AdpricesystemRepository : BaseRepository<AdPricesystem,String> {
+interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,AdpricesystemRepositoryCustom {
 
     @Cacheable
     override fun findOne(id: String): AdPricesystem
@@ -54,3 +59,19 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String> {
     """, nativeQuery = true)
     fun findOfficeById(id: String): List<String>
 }
+
+interface AdpricesystemRepositoryCustom{
+    fun findPage(pageable: Pageable, adPricesystemQuery: AdPricesystemQuery): Page<AdPricesystemDto>
+}
+
+class AdpricesystemRepositoryImpl @Autowired constructor(val entityManager: EntityManager):AdpricesystemRepositoryCustom{
+
+    override fun findPage(pageable: Pageable, adPricesystemQuery: AdPricesystemQuery): Page<AdPricesystemDto> {
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), AdPricesystemDto::class.java)
+
+        return query.resultList as Page<AdPricesystemDto>
+    }
+}
+

@@ -1,42 +1,29 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.dto.BankDto;
 import net.myspring.future.modules.basic.repository.BankRepository;
-import net.myspring.future.modules.basic.repository.BankRepository;
 import net.myspring.future.modules.basic.web.form.BankForm;
 import net.myspring.future.modules.basic.web.query.BankQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.reflect.ReflectionUtil;
-import net.myspring.util.time.LocalDateTimeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
 public class BankService {
 
-    @Autowired
-    private BankRepository bankRepository;
     @Autowired
     private BankRepository bankRepository;
     @Autowired

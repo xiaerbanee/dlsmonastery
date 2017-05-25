@@ -13,11 +13,9 @@ import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.layout.domain.ShopAttribute;
 import net.myspring.future.modules.layout.dto.ShopAttributeDetailDto;
-import net.myspring.future.modules.layout.repository.ShopAttributeRepository;
 import net.myspring.future.modules.layout.repository.ShopAttributeRepository;
 import net.myspring.future.modules.layout.web.form.ShopAttributeForm;
 import net.myspring.future.modules.layout.web.query.ShopAttributeQuery;
@@ -37,10 +35,6 @@ public class ShopAttributeService {
 
     @Autowired
     private ShopAttributeRepository shopAttributeRepository;
-    @Autowired
-    private ShopAttributeRepository shopAttributeRepository;
-    @Autowired
-    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired

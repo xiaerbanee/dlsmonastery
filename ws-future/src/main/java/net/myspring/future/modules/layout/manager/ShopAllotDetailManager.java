@@ -3,7 +3,6 @@ package net.myspring.future.modules.layout.manager;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDetailDto;
-import net.myspring.future.modules.layout.mapper.ShopAllotDetailMapper;
 import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
 import net.myspring.util.mapper.BeanUtil;

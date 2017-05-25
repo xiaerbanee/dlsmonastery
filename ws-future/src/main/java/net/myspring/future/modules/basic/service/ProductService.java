@@ -45,10 +45,6 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
     private DepotRepository depotRepository;
     @Autowired
     private CloudClient cloudClient;

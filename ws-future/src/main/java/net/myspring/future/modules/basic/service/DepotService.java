@@ -12,7 +12,6 @@ import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -42,8 +41,6 @@ import java.util.Set;
 @Service
 @Transactional
 public class DepotService {
-    @Autowired
-    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired

@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query
 /**
  * Created by zhangyf on 2017/5/24.
  */
-interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String> {
+interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>{
 
     fun findByShopAllotId(shopAllotId: String): List<ShopAllotDetail>
 
