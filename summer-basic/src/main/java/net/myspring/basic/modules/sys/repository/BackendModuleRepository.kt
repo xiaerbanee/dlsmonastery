@@ -3,8 +3,11 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Backend
 import net.myspring.basic.modules.sys.domain.BackendModule
+import net.myspring.basic.modules.sys.dto.BackendDto
 import net.myspring.basic.modules.sys.dto.BackendModuleDto
 import net.myspring.basic.modules.sys.web.query.BackendModuleQuery
+import net.myspring.basic.modules.sys.web.query.BackendQuery
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
@@ -12,12 +15,13 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import javax.persistence.EntityManager
 
 /**
  * Created by haos on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("backendModules"))
-interface  BackendModuleRepository:BaseRepository<BackendModule,String>{
+interface  BackendModuleRepository:BaseRepository<BackendModule,String>,BackendModuleRepositoryCustom{
     @Cacheable
     override fun findOne(id: String): BackendModule
 
@@ -42,7 +46,26 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>{
      """, nativeQuery = true)
     fun findByRoleId(@Param("roleId")roleId:String):List<BackendModule>
 
-    fun findPage(pageable: Pageable,backendModuleQuery: BackendModuleQuery): Page<BackendModuleDto>
 
-    fun findAllEnabled():List<BackendModule>
+}
+
+
+interface BackendModuleRepositoryCustom{
+
+    fun findPage(pageable: Pageable,backendModuleQuery: BackendModuleQuery): Page<BackendModuleDto>?
+
+    fun findAllEnabled():List<BackendModule>?
+
+}
+
+class BackendModuleRepositoryImpl @Autowired constructor(val entityManager: EntityManager): BackendModuleRepositoryCustom{
+    override fun findPage(pageable: Pageable, backendModuleQuery: BackendModuleQuery): Page<BackendModuleDto>? {
+        return null
+    }
+
+    override fun findAllEnabled(): List<BackendModule>? {
+       return null
+    }
+
+
 }

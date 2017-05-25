@@ -18,7 +18,7 @@ import javax.persistence.EntityManager
 /**
  * Created by haos on 2017/5/24.
  */
-interface  DictMapRepository :BaseRepository<DictMap,String>{
+interface  DictMapRepository :BaseRepository<DictMap,String>, DictMapRepositoryCustom{
     @CachePut(key="#id")
     fun save(dictMap: DictMap): DictMap
 
