@@ -51,7 +51,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
         and t1.status=?4
         and t1.employee_id=?1
         and t1.duty_date>=?2
-        and t1.duty_date &lt;=?3
+        and t1.duty_date <=?3
     """, nativeQuery = true)
     fun findByDutyDateAndStatus(employeeId: String, dutyDateStart: LocalDate, dutyDateEnd: LocalDate, status: String): MutableList<DutyOvertime>
 
@@ -64,7 +64,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
           t1.enabled=1
           and t1.status=?4
           and t1.duty_date>=?2
-          and t1.duty_date &lt;=?3
+          and t1.duty_date <=?3
           and t1.employee_id=?1
     """, nativeQuery = true)
     fun findByIdAndDate(employeeId: String, dateStart: LocalDateTime, dateEnd: LocalDateTime, status: String): MutableList<DutyOvertime>
@@ -76,7 +76,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
         hr_duty_overtime t1
         WHERE
         t1.enabled=1
-        AND t1.duty_date >= ?1 and t1.duty_date &lt;= ?2
+        AND t1.duty_date >= ?1 and t1.duty_date <= ?2
         and t1.status in ?3
     """, nativeQuery = true)
     fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyOvertime>
@@ -90,7 +90,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
         t1.enabled=1
         and t1.employee_id=?1
         and t1.duty_date >= ?2
-        and t1.duty_date &lt;= ?3
+        and t1.duty_date <= ?3
     """, nativeQuery = true)
     fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyOvertime>
 

@@ -76,7 +76,7 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
             t1.enabled=1
             and t1.employee_id=?1
             and t1.free_date >=?2
-            and t1.free_date &lt;=?3
+            and t1.free_date <=?3
     """, nativeQuery = true)
     fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyFree>
 }

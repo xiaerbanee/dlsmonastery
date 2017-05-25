@@ -37,7 +37,7 @@ interface DutyRestRepository : BaseRepository<DutyRest, String>,DutyRestReposito
         WHERE
         t1.enabled=1
         AND t1.duty_date >= ?2
-        and t1.duty_date &lt;= ?3
+        and t1.duty_date <= ?3
         and t1.type = ?1
         and t1.status in ?4
     """, nativeQuery = true)
@@ -52,7 +52,7 @@ interface DutyRestRepository : BaseRepository<DutyRest, String>,DutyRestReposito
         t1.enabled=1
         and t1.employee_id=?1
         and t1.duty_date >= ?2
-        and t1.duty_date &lt;= ?3
+        and t1.duty_date <= ?3
     """, nativeQuery = true)
     fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyRest>
 }

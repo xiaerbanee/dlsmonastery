@@ -51,9 +51,9 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
         t1.enabled=1
         and t1.employee_id=#{employeeId}
         and ((t1.date_start >= :dateStart
-        and t1.date_start &lt;= :dateEnd)
+        and t1.date_start <= :dateEnd)
         or  (t1.date_end >= :dateStart
-        and t1.date_end &lt;= :dateEnd))
+        and t1.date_end <= :dateEnd))
     """, nativeQuery = true)
     fun findByEmployeeAndDate(@Param("employeeId") employeeId: String, @Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<DutyTrip>
 
@@ -65,7 +65,7 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
         WHERE
         t1.enabled=1
         AND t1.date_start >= :dateStart
-        and t1.date_end &lt;= :dateEnd
+        and t1.date_end <= :dateEnd
         and t1.status in :statusList
     """, nativeQuery = true)
     fun findByDateAndStatusList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("statusList") statusList: MutableList<String>): MutableList<DutyTrip>
@@ -91,11 +91,11 @@ class DutyTripRepositoryImpl @Autowired constructor(val entityManager: EntityMan
             hr_duty_trip
             WHERE
             (
-            date_end &gt;= :dateStart
-            and date_end &lt;= :dateEnd
+            date_end >= :dateStart
+            and date_end <= :dateEnd
             )
-            or (date_start &gt;= :dateStart and date_start &lt;= :dateEnd)
-            or (date_start &lt; :dateStart and date_end &gt; :dateStart)
+            or (date_start >= :dateStart and date_start <= :dateEnd)
+            or (date_start < :dateStart and date_end > :dateStart)
             FROM
             hr_duty_trip tr
             WHERE

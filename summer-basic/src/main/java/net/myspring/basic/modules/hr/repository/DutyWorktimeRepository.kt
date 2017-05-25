@@ -26,7 +26,7 @@ interface DutyWorktimeRepository : BaseRepository<DutyWorktime,String>,DutyWorkt
         WHERE
         t1.enabled=1
         AND t1.duty_date >= :dateStart
-        and t1.duty_date &lt;= :dateEnd
+        and t1.duty_date <= :dateEnd
     """, nativeQuery = true)
     fun findByDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<DutyWorktime>
 
@@ -39,7 +39,7 @@ interface DutyWorktimeRepository : BaseRepository<DutyWorktime,String>,DutyWorkt
         t1.enabled=1
         and t1.employee_id=:employeeId
         AND t1.duty_date >= :dateStart
-        and t1.duty_date &lt;= :dateEnd
+        and t1.duty_date <= :dateEnd
     """, nativeQuery = true)
     fun findByEmployeeAndDate(@Param("employeeId") employeeId: String, @Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<DutyWorktime>
 
@@ -61,13 +61,13 @@ class DutyWorktimeRepositoryImpl  @Autowired constructor(val entityManager: Enti
             SELECT
             w.employee_id,
             w.duty_date,
-            if(min(w.duty_time) &lt;= '12:00:00',min(w.duty_time),'') as dutyTimeStart,
-            if(max(w.duty_time) &gt;='12:00:00',max(w.duty_time),'') as dutyTimeEnd
+            if(min(w.duty_time) <= '12:00:00',min(w.duty_time),'') as dutyTimeStart,
+            if(max(w.duty_time) >='12:00:00',max(w.duty_time),'') as dutyTimeEnd
             FROM
             hr_duty_worktime w
             WHERE
-            w.duty_date &gt;= :dateStart
-            and  w.duty_date &lt;= :dateEnd
+            w.duty_date >= :dateStart
+            and  w.duty_date <= :dateEnd
         """)
         if (CollectionUtil.isNotEmpty(accountIds)) {
             sb.append(" and w.employee_id in :accountIds")

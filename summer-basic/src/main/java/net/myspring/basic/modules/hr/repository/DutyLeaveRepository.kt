@@ -71,7 +71,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
             hr_duty_leave t1
             WHERE
             t1.enabled=1
-            AND t1.duty_date >= ?1 and t1.duty_date &lt;= ?2
+            AND t1.duty_date >= ?1 and t1.duty_date <= ?2
             and t1.status in ?3
     """, nativeQuery = true)
     fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyLeave>
@@ -85,7 +85,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
             t1.enabled=1
             AND t1.employee_id=?1
             AND t1.duty_date >=?2
-            and t1.duty_date &lt;=?3
+            and t1.duty_date <=?3
     """, nativeQuery = true)
     fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyLeave>
 
