@@ -5,8 +5,10 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.DepotStoreMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotStoreRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -19,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springside.modules.utils.mapper.BeanMapper;
+import org.springside.modules.utils.repository.BeanRepository;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -28,25 +30,29 @@ import org.springside.modules.utils.mapper.BeanMapper;
 @Transactional
 public class DepotStoreService {
     @Autowired
-    private DepotStoreMapper depotStoreMapper;
+    private DepotStoreRepository depotStoreRepository;
+    @Autowired
+    private DepotStoreRepository depotStoreRepository;
     @Autowired
     private DepotManager depotManager;
     @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
 
     public Page<DepotStoreDto> findPage(Pageable pageable, DepotStoreQuery depotStoreQuery){
-        Page<DepotStoreDto> page=depotStoreMapper.findPage(pageable,depotStoreQuery);
+        Page<DepotStoreDto> page=depotStoreRepository.findPage(pageable,depotStoreQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public DepotStoreForm getForm(DepotStoreForm depotStoreForm) {
         if(!depotStoreForm.isCreate()) {
-            DepotStore depotStore =depotStoreMapper.findOne(depotStoreForm.getId());
+            DepotStore depotStore =depotStoreRepository.findOne(depotStoreForm.getId());
             depotStoreForm= BeanUtil.map(depotStore,DepotStoreForm.class);
-            Depot depot=depotMapper.findOne(depotStoreForm.getDepotId());
+            Depot depot=depotRepository.findOne(depotStoreForm.getDepotId());
             depotStoreForm.setDepotForm(BeanUtil.map(depot,DepotForm.class));
             cacheUtils.initCacheInput(depotStoreForm);
         }
@@ -59,24 +65,24 @@ public class DepotStoreService {
         //保存depot
         Depot depot = BeanUtil.map(depotForm, Depot.class);
         depot.setNamePinyin(StringUtils.getFirstSpell(depotStoreForm.getDepotForm().getName()));
-        depotManager.save(depot);
+        depotRepository.save(depot);
         //保存depotStore
         if(depotStoreForm.isCreate()) {
             depotStoreForm.setDepotId(depot.getId());
             depotStore = BeanUtil.map(depotStoreForm,DepotStore.class);
-            depotStoreMapper.save(depotStore);
+            depotStoreRepository.save(depotStore);
         } else {
-            depotStore = depotStoreMapper.findOne(depotStoreForm.getId());
+            depotStore = depotStoreRepository.findOne(depotStoreForm.getId());
             ReflectionUtil.copyProperties(depotStoreForm,depotStore);
             depotStore.setDepotId(depot.getId());
-            depotStoreMapper.update(depotStore);
+            depotStoreRepository.save(depotStore);
         }
         return depotStore;
     }
 
 
     public void logicDeleteOne(String id) {
-        depotStoreMapper.logicDeleteOne(id);
+        depotStoreRepository.logicDeleteOne(id);
     }
 
 

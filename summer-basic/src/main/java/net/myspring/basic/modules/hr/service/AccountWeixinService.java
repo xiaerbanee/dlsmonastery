@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.modules.hr.domain.AccountWeixin;
 import net.myspring.basic.modules.hr.dto.AccountWeixinDto;
-import net.myspring.basic.modules.hr.mapper.AccountWeixinMapper;
+import net.myspring.basic.modules.hr.repository.AccountWeixinRepository;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,25 +14,20 @@ import java.util.List;
 public class AccountWeixinService {
 
     @Autowired
-    private AccountWeixinMapper accountWeixinMapper;
+    private AccountWeixinRepository accountWeixinRepository;
 
 
     public AccountWeixinDto findOne(String id){
-        return BeanUtil.map(accountWeixinMapper.findOne(id),AccountWeixinDto.class);
+        return BeanUtil.map(accountWeixinRepository.findOne(id),AccountWeixinDto.class);
     }
 
     public AccountWeixinDto findByAccountId(String accountId) {
-        AccountWeixin accountWeixinList =  accountWeixinMapper.findByAccountId(accountId);
+        AccountWeixin accountWeixinList =  accountWeixinRepository.findByAccountId(accountId);
         return BeanUtil.map(accountWeixinList,AccountWeixinDto.class);
     }
 
     public AccountWeixin save(AccountWeixin accountWeixin){
-        boolean isCreate= StringUtils.isBlank(accountWeixin.getId());
-        if(isCreate){
-            accountWeixinMapper.save(accountWeixin);
-        }else {
-            accountWeixinMapper.update(accountWeixin);
-        }
+        accountWeixinRepository.save(accountWeixin);
         return accountWeixin;
     }
 }

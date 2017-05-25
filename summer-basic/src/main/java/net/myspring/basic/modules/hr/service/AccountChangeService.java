@@ -1,23 +1,26 @@
 package net.myspring.basic.modules.hr.service;
 
-import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.AccountChangeTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.hr.domain.*;
+import net.myspring.basic.modules.hr.domain.Account;
+import net.myspring.basic.modules.hr.domain.AccountChange;
+import net.myspring.basic.modules.hr.domain.Employee;
+import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
-import net.myspring.basic.modules.hr.mapper.*;
+import net.myspring.basic.modules.hr.repository.AccountChangeRepository;
+import net.myspring.basic.modules.hr.repository.AccountRepository;
+import net.myspring.basic.modules.hr.repository.EmployeeRepository;
+import net.myspring.basic.modules.hr.repository.PositionRepository;
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
-import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.domain.Office;
-import net.myspring.basic.modules.sys.mapper.OfficeMapper;
+import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
-import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +30,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 @Service
 @Transactional(readOnly = false)
 public class AccountChangeService {
 
     @Autowired
-    private AccountChangeMapper accountChangeMapper;
+    private AccountChangeRepository accountChangeRepository;
     @Autowired
-    private PositionMapper positionMapper;
+    private PositionRepository positionRepository;
     @Autowired
-    private OfficeMapper officeMapper;
+    private OfficeRepository officeRepository;
     @Autowired
-    private EmployeeMapper employeeMapper;
+    private EmployeeRepository employeeRepository;
     @Autowired
-    private AccountMapper accountMapper;
+    private AccountRepository accountRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -50,16 +52,16 @@ public class AccountChangeService {
 
 
     public AccountChange findOne(String id){
-        AccountChange accountChange=accountChangeMapper.findOne(id);
+        AccountChange accountChange=accountChangeRepository.findOne(id);
         return accountChange;
     }
 
     public AccountChangeForm getForm(AccountChangeQuery accountChangeQuery){
         AccountChangeForm accountChangeForm =new AccountChangeForm();
         if(StringUtils.isNotBlank(accountChangeQuery.getId())||StringUtils.isNotBlank(accountChangeQuery.getAccountId())){
-            accountChangeForm = accountChangeMapper.getForm(accountChangeQuery);
+            accountChangeForm = accountChangeRepository.getForm(accountChangeQuery);
             if(StringUtils.isNotBlank(accountChangeQuery.getId())){
-                AccountChange accountChange=accountChangeMapper.findOne(accountChangeQuery.getId());
+                AccountChange accountChange=accountChangeRepository.findOne(accountChangeQuery.getId());
                 accountChangeForm.setType(accountChange.getType());
             }
             cacheUtils.initCacheInput(accountChangeForm);
@@ -68,16 +70,16 @@ public class AccountChangeService {
     }
 
     public void audit(String id,boolean pass,String comment) {
-        AccountChange accountChange = accountChangeMapper.findOne(id);
+        AccountChange accountChange = accountChangeRepository.findOne(id);
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(accountChange.getProcessInstanceId(), accountChange.getProcessTypeId(), comment, pass));
         accountChange.setLocked(true);
         accountChange.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
         accountChange.setProcessStatus(activitiCompleteDto.getProcessStatus());
         accountChange.setPositionId(activitiCompleteDto.getPositionId());
-        accountChangeMapper.update(accountChange);
+        accountChangeRepository.save(accountChange);
         if (AuditTypeEnum.PASSED.name().equals(accountChange.getProcessStatus())) {
-            Account account = accountMapper.findOne(accountChange.getAccountId());
-            Employee employee=employeeMapper.findOne(account.getEmployeeId());
+            Account account = accountRepository.findOne(accountChange.getAccountId());
+            Employee employee=employeeRepository.findOne(account.getEmployeeId());
             if (accountChange.getType().equals(AccountChangeTypeEnum.OFFICE.toString())) {
                 account.setOfficeId(accountChange.getNewValue());
             } else if (accountChange.getType().equals(AccountChangeTypeEnum.POSITION.toString())) {
@@ -99,38 +101,38 @@ public class AccountChangeService {
             }else if(accountChange.getType().equals(AccountChangeTypeEnum.BASE_SALARY.name())){
                 employee.setSalary(new BigDecimal(accountChange.getNewValue()));
             }
-            accountMapper.update(account);
-            employeeMapper.update(employee);
+            accountRepository.save(account);
+            employeeRepository.save(employee);
         }
     }
 
     public AccountChange save(AccountChangeForm accountChangeForm) {
-        Account account=accountMapper.findOne(accountChangeForm.getAccountId());
-        Employee employee=employeeMapper.findOne(account.getEmployeeId());
+        Account account=accountRepository.findOne(accountChangeForm.getAccountId());
+        Employee employee=employeeRepository.findOne(account.getEmployeeId());
         AccountChange accountChange=new AccountChange();
         accountChange.setAccountId(accountChange.getAccountId());
         accountChange.setNewValue(accountChange.getNewValue());
         if (accountChangeForm.getType().equals(AccountChangeTypeEnum.OFFICE.toString())) {
             if (StringUtils.isNotBlank(account.getOfficeId())) {
-                Office office=officeMapper.findOne(account.getOfficeId());
+                Office office=officeRepository.findOne(account.getOfficeId());
                 accountChange.setOldValue(office.getId());
                 accountChange.setOldLabel(office.getName());
             }
-            accountChange.setNewLabel(officeMapper.findOne(accountChange.getNewValue()).getName());
+            accountChange.setNewLabel(officeRepository.findOne(accountChange.getNewValue()).getName());
         } else if (accountChange.getType().equals(AccountChangeTypeEnum.POSITION.toString())) {
             if (StringUtils.isNotBlank(account.getPositionId())) {
-                Position position=positionMapper.findOne(account.getPositionId());
+                Position position=positionRepository.findOne(account.getPositionId());
                 accountChange.setOldValue(position.getId());
                 accountChange.setOldLabel(position.getName());
             }
-            accountChange.setNewLabel(positionMapper.findOne(accountChange.getNewValue()).getName());
+            accountChange.setNewLabel(positionRepository.findOne(accountChange.getNewValue()).getName());
         } else if (accountChange.getType().equals(AccountChangeTypeEnum.LEADER.toString())) {
             if (StringUtils.isNotBlank(account.getLeaderId())) {
-                Account leader=accountMapper.findOne(account.getLeaderId());
+                Account leader=accountRepository.findOne(account.getLeaderId());
                 accountChange.setOldValue(leader.getId());
                 accountChange.setOldLabel(leader.getLoginName());
             }
-            accountChange.setNewLabel(accountMapper.findOne(accountChange.getNewValue()).getLoginName());
+            accountChange.setNewLabel(accountRepository.findOne(accountChange.getNewValue()).getLoginName());
         } else if (accountChange.getType().equals(AccountChangeTypeEnum.MOBILE_PHONE.toString())) {
             accountChange.setOldLabel(employee.getMobilePhone());
             accountChange.setOldValue(employee.getMobilePhone());
@@ -166,7 +168,7 @@ public class AccountChangeService {
             }
             accountChange.setNewLabel(accountChangeForm.getNewValue());
         }
-        accountChangeMapper.save(accountChange);
+        accountChangeRepository.save(accountChange);
         String businessKey = accountChange.getId();
         ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("员工调整", businessKey,AccountChange.class.getSimpleName(),account.getLoginName()));
         accountChange.setProcessStatus(activitiStartDto.getProcessStatus());
@@ -174,13 +176,13 @@ public class AccountChangeService {
         accountChange.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
         accountChange.setPositionId(activitiStartDto.getPositionId());
         accountChange.setProcessTypeId(activitiStartDto.getProcessTypeId());
-        accountChangeMapper.update(accountChange);
+        accountChangeRepository.save(accountChange);
         return accountChange;
     }
 
 
     public Page<AccountChangeDto> findPage(Pageable pageable, AccountChangeQuery accountChangeQuery){
-        Page<AccountChangeDto> page=accountChangeMapper.findPage(pageable,accountChangeQuery);
+        Page<AccountChangeDto> page=accountChangeRepository.findPage(pageable,accountChangeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

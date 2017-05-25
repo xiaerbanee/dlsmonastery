@@ -1,13 +1,15 @@
 package net.myspring.tool.modules.imoo.repository;
-import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+
+import net.myspring.tool.common.repository.BaseRepository
+import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver
+import org.apache.ibatis.annotations.Param
 import org.springframework.data.jpa.repository.Query
+import org.springframework.stereotype.Repository
+import java.time.LocalDate
+import java.util.List
 
-import java.time.LocalDate;
-import java.util.List;
-
-public interface ImooPrdocutImeiDeliverRepository {
+@Repository
+public interface ImooPrdocutImeiDeliverRepository:BaseRepository<ImooPrdocutImeiDeliver,String> {
 
     @Query("select t.imei from imoo_prdocut_imei_deliver t where t.imei in ?1",nativeQuery = true)
     fun findImeis(imeis: List<String>): List<String>

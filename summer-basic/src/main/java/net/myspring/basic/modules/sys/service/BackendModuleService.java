@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import net.myspring.basic.modules.sys.mapper.BackendModuleMapper;
+import net.myspring.basic.modules.sys.repository.BackendModuleRepository;
 
 import java.util.List;
 
@@ -20,14 +20,14 @@ import java.util.List;
 public class BackendModuleService {
 
     @Autowired
-    private BackendModuleMapper backendModuleMapper;
+    private BackendModuleRepository backendModuleRepository;
 
     @Autowired
     private CacheUtils cacheUtils;
 
     public BackendModuleDto findOne(BackendModuleDto backendModuleDto) {
         if(!backendModuleDto.isCreate()) {
-            BackendModule backendModule =backendModuleMapper.findOne(backendModuleDto.getId());
+            BackendModule backendModule =backendModuleRepository.findOne(backendModuleDto.getId());
             backendModuleDto= BeanUtil.map(backendModule,BackendModuleDto.class);
             cacheUtils.initCacheInput(backendModuleDto);
         }
@@ -38,33 +38,33 @@ public class BackendModuleService {
         BackendModule backendModule;
         if(backendModuleForm.isCreate()) {
             backendModule = BeanUtil.map(backendModuleForm, BackendModule.class);
-            backendModuleMapper.save(backendModule);
+            backendModuleRepository.save(backendModule);
         } else {
-            backendModule = backendModuleMapper.findOne(backendModuleForm.getId());
+            backendModule = backendModuleRepository.findOne(backendModuleForm.getId());
             ReflectionUtil.copyProperties(backendModuleForm,backendModule);
-            backendModuleMapper.update(backendModule);
+            backendModuleRepository.save(backendModule);
         }
         return backendModule;
     }
 
     public List<String> findBackendModuleIdByRoleId(String roleId){
-        List<BackendModule> backendModuleList=backendModuleMapper.findByRoleId(roleId);
+        List<BackendModule> backendModuleList=backendModuleRepository.findByRoleId(roleId);
         List<String> backendModuleIds= CollectionUtil.extractToList(backendModuleList,"id");
         return backendModuleIds;
     }
 
     public void logicDeleteOne(String id) {
-        backendModuleMapper.logicDeleteOne(id);
+        backendModuleRepository.logicDeleteOne(id);
     }
 
     public Page<BackendModuleDto> findPage(Pageable pageable, BackendModuleQuery backendModuleQuery) {
-        Page<BackendModuleDto> backendModuleDtoPage= backendModuleMapper.findPage(pageable, backendModuleQuery);
+        Page<BackendModuleDto> backendModuleDtoPage= backendModuleRepository.findPage(pageable, backendModuleQuery);
         cacheUtils.initCacheInput(backendModuleDtoPage.getContent());
         return backendModuleDtoPage;
     }
 
     public List<BackendModuleDto> findAll(){
-        List<BackendModule> backendModuleList = backendModuleMapper.findAllEnabled();
+        List<BackendModule> backendModuleList = backendModuleRepository.findAllEnabled();
         List<BackendModuleDto> backendModuleDtoList=BeanUtil.map(backendModuleList,BackendModuleDto.class);
         return backendModuleDtoList;
     }

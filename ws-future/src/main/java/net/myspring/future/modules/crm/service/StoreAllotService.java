@@ -13,9 +13,8 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.basic.repository.*;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.StoreAllot;
@@ -24,6 +23,7 @@ import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto;
+import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.web.form.StoreAllotDetailForm;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
@@ -65,31 +65,22 @@ public class StoreAllotService {
 
     @Autowired
     private StoreAllotRepository storeAllotRepository;
-
-
     @Autowired
     private StoreAllotDetailRepository storeAllotDetailRepository;
     @Autowired
     private StoreAllotImeRepository storeAllotImeRepository;
-
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
-    private ProductMapper productMapper;
-
-
+    private ProductRepository productRepository;
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
-
     @Autowired
     private CacheUtils cacheUtils;
-
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
-
     @Autowired
     private ProductImeRepository productImeRepository;
-
 
     public StoreAllotDto findDto(String id) {
         StoreAllotDto storeAllotDto = storeAllotRepository.findStoreAllotDtoById(id);
@@ -346,7 +337,7 @@ public class StoreAllotService {
         expressOrder.setPrintDate(storeAllot.getBillDate());
         expressOrder.setOutCode(storeAllot.getOutCode());
 
-        Depot toStore = depotMapper.findOne(storeAllot.getToStoreId());
+        Depot toStore = depotRepository.findOne(storeAllot.getToStoreId());
         expressOrder.setAddress(toStore.getAddress());
         expressOrder.setMobilePhone(toStore.getMobilePhone());
         expressOrder.setContator(toStore.getContator());
@@ -357,7 +348,7 @@ public class StoreAllotService {
             StoreAllotDetailForm storeAllotDetailForm = storeAllotForm.getStoreAllotDetailList().get(i);
             if(storeAllotDetailForm.getBillQty()!=null && storeAllotDetailForm.getBillQty()>0) {
                 totalBillQty = totalBillQty + storeAllotDetailForm.getBillQty();
-                Product product = productMapper.findOne(storeAllotDetailForm.getProductId());
+                Product product = productRepository.findOne(storeAllotDetailForm.getProductId());
                 if(product!=null && product.getHasIme()) {
                     mobileQty = mobileQty + storeAllotDetailForm.getBillQty();
                 }
@@ -378,7 +369,7 @@ public class StoreAllotService {
     }
 
 
-    public static Integer getExpressPrintQty(Integer totalBillQty) {
+    private Integer getExpressPrintQty(Integer totalBillQty) {
         //TODO 需要完善该方法，
         //String companyName= RequestUtils.getCompanyName();
         Integer expressPrintQty = 1;

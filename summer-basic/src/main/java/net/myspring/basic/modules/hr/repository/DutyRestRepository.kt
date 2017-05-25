@@ -21,7 +21,7 @@ interface DutyRestRepository : BaseRepository<DutyRest, String>,DutyRestReposito
         hr_duty_rest t1 , hr_account t2 ,hr_employee t3
         WHERE
         t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
-        AND t2.leader_id=?1 AND t1.status=?2 AND t1.created_date>=?3}
+        AND t2.leader_id=?1 AND t1.status=?2 AND t1.created_date>=?3
     """, nativeQuery = true)
     fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): List<DutyDto>
 
@@ -60,18 +60,18 @@ class DutyRestRepositoryImpl  @Autowired constructor(val entityManager: EntityMa
         var sb = StringBuilder();
         sb.append("""
             SELECT
-        dr.employee_id,
-        dr.duty_date,
-        dr.type,
-        ov.time_start,
-        ov.time_end,
-        dr.status
-        FROM
-        hr_duty_rest dr
-        WHERE
-        dr.duty_date gt;= :dateStart
-        AND dr.duty_date lt;= :dateEnd
-        and dr.enabled=1
+            dr.employee_id,
+            dr.duty_date,
+            dr.type,
+            ov.time_start,
+            ov.time_end,
+            dr.status
+            FROM
+            hr_duty_rest dr
+            WHERE
+            dr.duty_date gt;= :dateStart
+            AND dr.duty_date lt;= :dateEnd
+            and dr.enabled=1
         """)
         if (CollectionUtil.isNotEmpty(accountIds)) {
             sb.append("""

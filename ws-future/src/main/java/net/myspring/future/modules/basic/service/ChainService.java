@@ -4,8 +4,10 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ChainDto;
-import net.myspring.future.modules.basic.mapper.ChainMapper;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.ChainRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.ChainRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.form.ChainForm;
 import net.myspring.future.modules.basic.web.query.ChainQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -25,14 +27,18 @@ import java.util.List;
 public class ChainService {
 
     @Autowired
-    private ChainMapper chainMapper;
+    private ChainRepository chainRepository;
+    @Autowired
+    private ChainRepository chainRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
+    @Autowired
+    private DepotRepository depotRepository;
 
     public List<ChainDto> findAllEnabled() {
-        List<Chain> chainList = chainMapper.findAllEnabled();
+        List<Chain> chainList = chainRepository.findAllEnabled();
         List<ChainDto> chainDtoList = BeanUtil.map(chainList, ChainDto.class);
         return chainDtoList;
     }
@@ -42,45 +48,45 @@ public class ChainService {
         if (StringUtils.isBlank(id)) {
             return new ChainDto();
         } else {
-            Chain chain = chainMapper.findOne(id);
+            Chain chain = chainRepository.findOne(id);
             chainDto = BeanUtil.map(chain, ChainDto.class);
-            chainDto.setDepotIdList(chainMapper.findDepotIds(chainDto.getId()));
+            chainDto.setDepotIdList(chainRepository.findDepotIds(chainDto.getId()));
             cacheUtils.initCacheInput(chainDto);
         }
         return chainDto;
     }
 
     public Page<ChainDto> findPage(Pageable pageable, ChainQuery chainQuery) {
-        Page<ChainDto> page = chainMapper.findPage(pageable, chainQuery);
+        Page<ChainDto> page = chainRepository.findPage(pageable, chainQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public void logicDeleteOne(String id) {
-        chainMapper.logicDeleteOne(id);
+        chainRepository.logicDeleteOne(id);
     }
 
     public Chain save(ChainForm chainForm) {
         Chain chain;
         if (chainForm.isCreate()) {
             chain = BeanUtil.map(chainForm, Chain.class);
-            chainMapper.save(chain);
+            chainRepository.save(chain);
         } else {
-            chain = chainMapper.findOne(chainForm.getId());
+            chain = chainRepository.findOne(chainForm.getId());
             ReflectionUtil.copyProperties(chainForm, chain);
-            chainMapper.update(chain);
-            List<Depot> depotList = depotMapper.findByChainId(chainForm.getId());
+            chainRepository.save(chain);
+            List<Depot> depotList = depotRepository.findByChainId(chainForm.getId());
             for (Depot depot : depotList) {
                 depot.setChainId(null);
-                depotMapper.update(depot);
+                depotRepository.save(depot);
             }
         }
         //保存门店
         if (CollectionUtil.isNotEmpty(chainForm.getDepotIdList())) {
-            List<Depot> depotList = depotMapper.findByIds(chainForm.getDepotIdList());
+            List<Depot> depotList = depotRepository.findByIds(chainForm.getDepotIdList());
             for (Depot depot : depotList) {
                 depot.setChainId(chain.getId());
-                depotMapper.update(depot);
+                depotRepository.save(depot);
             }
         }
         return chain;

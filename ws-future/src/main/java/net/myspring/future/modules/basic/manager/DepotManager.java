@@ -1,7 +1,7 @@
 package net.myspring.future.modules.basic.manager;
 
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,22 +13,18 @@ import org.springframework.stereotype.Component;
 public class DepotManager {
 
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
 
     public Depot save(Depot depot) {
         if(StringUtils.isNotBlank(depot.getClientId())) {
             depot.setAdShop(true);
         }
-        if(StringUtils.isBlank(depot.getId())) {
-            depotMapper.save(depot);
-        } else {
-            depotMapper.update(depot);
-        }
+        depotRepository.save(depot);
         if(StringUtils.isNotBlank(depot.getDelegateDepotId())) {
-            Depot delegateDepot = depotMapper.findOne(depot.getDelegateDepotId());
+            Depot delegateDepot = depotRepository.findOne(depot.getDelegateDepotId());
             if(!depot.getId().equals(delegateDepot.getDelegateDepotId())) {
                 delegateDepot.setDelegateDepotId(depot.getId());
-                depotMapper.update(delegateDepot);
+                depotRepository.save(delegateDepot);
             }
         }
         return depot;

@@ -4,7 +4,8 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.domain.Pricesystem;
-import net.myspring.future.modules.basic.mapper.*;
+import net.myspring.future.modules.basic.repository.*;
+import net.myspring.future.modules.basic.repository.*;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,26 +23,36 @@ import java.util.List;
 public class CacheService {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
-    private ChainMapper chainMapper;
+    private ChainRepository chainRepository;
     @Autowired
-    private PricesystemMapper pricesystemMapper;
+    private ChainRepository chainRepository;
     @Autowired
-    private DepotMapper depotMapper;
+    private PricesystemRepository pricesystemRepository;
     @Autowired
-    private ExpressCompanyMapper expressCompanyMapper;
+    private PricesystemRepository pricesystemRepository;
     @Autowired
-    private AdPricesystemMapper adPricesystemMapper;
+    private DepotRepository depotRepository;
+    @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private ExpressCompanyRepository expressCompanyRepository;
+    @Autowired
+    private ExpressCompanyRepository expressCompanyRepository;
+    @Autowired
+    private AdPricesystemRepository adPricesystemRepository;
+    @Autowired
+    private AdpricesystemRepository adpricesystemRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public void init() {
         LocalDateTime start = LocalDateTime.now();
         logger.info("init cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
-        cacheUtils.initCache("chains",chainMapper.findAll());
-        cacheUtils.initCache("pricesystems",pricesystemMapper.findAll());
-        cacheUtils.initCache("depots",depotMapper.findAll());
-        cacheUtils.initCache("expressCompanys",expressCompanyMapper.findAll());
-        cacheUtils.initCache("adPricesystem",adPricesystemMapper.findAll());
+        cacheUtils.initCache("chains",chainRepository.findAll());
+        cacheUtils.initCache("pricesystems",pricesystemRepository.findAll());
+        cacheUtils.initCache("depots",depotRepository.findAll());
+        cacheUtils.initCache("expressCompanys",expressCompanyRepository.findAll());
+        cacheUtils.initCache("adPricesystem",adpricesystemRepository.findAll());
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");

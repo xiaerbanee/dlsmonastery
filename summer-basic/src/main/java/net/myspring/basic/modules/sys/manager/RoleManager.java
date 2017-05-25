@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.sys.manager;
 
 import net.myspring.basic.modules.sys.domain.Role;
-import net.myspring.basic.modules.sys.mapper.RoleMapper;
+import net.myspring.basic.modules.sys.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 public class RoleManager {
 
     @Autowired
-    private RoleMapper roleMapper;
+    private RoleRepository roleRepository;
 
     public String findIdByAccountId(String accountId){
-        Role role=roleMapper.findByAccountId(accountId);
+        Role role=roleRepository.findByAccountId(accountId);
         if(role!=null){
             return role.getId();
         }

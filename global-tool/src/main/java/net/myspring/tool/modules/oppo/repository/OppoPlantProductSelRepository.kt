@@ -8,7 +8,7 @@ import java.util.List
 /**
  * Created by admin on 2016/10/11.
  */
-interface OppoPlantProductSelMapper:BaseRepository<OppoPlantProductSel,String>{
+interface OppoPlantProductSelRepository:BaseRepository<OppoPlantProductSel,String>{
 
     @Query("  select t.color_id from oppo_plant_product_sel t where t.color_id in ?1",nativeQuery = true)
     fun findColorIds(colorIds: List<String>): List<String>

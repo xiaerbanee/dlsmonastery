@@ -4,16 +4,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
-import net.myspring.basic.modules.hr.mapper.AccountMapper;
-import net.myspring.basic.modules.hr.mapper.AccountPermissionMapper;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.manager.RoleManager;
-import net.myspring.basic.modules.sys.mapper.BackendMapper;
-import net.myspring.basic.modules.sys.mapper.MenuMapper;
-import net.myspring.basic.modules.sys.mapper.PermissionMapper;
+import net.myspring.basic.modules.sys.repository.BackendRepository;
+import net.myspring.basic.modules.sys.repository.MenuRepository;
+import net.myspring.basic.modules.sys.repository.PermissionRepository;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
 import net.myspring.basic.modules.sys.web.query.MenuQuery;
 import net.myspring.common.constant.CharConstant;
@@ -35,29 +33,29 @@ import java.util.Set;
 @Transactional
 public class MenuService {
     @Autowired
-    private MenuMapper menuMapper;
+    private MenuRepository menuRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private PermissionMapper permissionMapper;
+    private PermissionRepository permissionRepository;
     @Autowired
     private RoleManager roleManager;
     @Autowired
-    private BackendMapper backendMapper;
+    private BackendRepository backendRepository;
     @Autowired
-    private AccountPermissionMapper accountPermissionMapper;
+    private AccountPermissionRepository accountPermissionRepository;
     @Value("${setting.adminIdList}")
     private String adminIdList;
 
     public List<MenuDto> findAll() {
-        List<Menu> menuList = menuMapper.findAll();
+        List<Menu> menuList = menuRepository.findAll();
         List<MenuDto> menuDtoList = BeanUtil.map(menuList, MenuDto.class);
         cacheUtils.initCacheInput(menuDtoList);
         return menuDtoList;
     }
 
     public Menu findOne(String id) {
-        Menu menu = menuMapper.findOne(id);
+        Menu menu = menuRepository.findOne(id);
         return menu;
     }
 
@@ -66,7 +64,7 @@ public class MenuService {
             Menu menu = findOne(menuDto.getId());
             if (menu != null) {
                 menuDto = BeanUtil.map(menu, MenuDto.class);
-                List<Permission> permissionList = permissionMapper.findByMenuId(menuDto.getId());
+                List<Permission> permissionList = permissionRepository.findByMenuId(menuDto.getId());
                 String permissionStr = "";
                 for (Permission permission : permissionList) {
                     permissionStr = permissionStr + permission.getName() + CharConstant.SPACE+ permission.getPermission() + CharConstant.ENTER;
@@ -78,13 +76,13 @@ public class MenuService {
     }
 
     public Page<MenuDto> findPage(Pageable pageable, MenuQuery menuQuery) {
-        Page<MenuDto> menuDtoPage = menuMapper.findPage(pageable, menuQuery);
+        Page<MenuDto> menuDtoPage = menuRepository.findPage(pageable, menuQuery);
         cacheUtils.initCacheInput(menuDtoPage.getContent());
         return menuDtoPage;
     }
 
     public void delete(String id) {
-        menuMapper.logicDeleteOne(id);
+        menuRepository.logicDeleteOne(id);
     }
 
     public Menu save(MenuForm menuForm) {
@@ -93,12 +91,12 @@ public class MenuService {
         Menu menu;
         if (menuForm.isCreate()) {
             menu = BeanUtil.map(menuForm, Menu.class);
-            menuMapper.save(menu);
+            menuRepository.save(menu);
         } else {
-            menu = menuMapper.findOne(menuForm.getId());
+            menu = menuRepository.findOne(menuForm.getId());
             ReflectionUtil.copyProperties(menuForm,menu);
-            menuMapper.update(menu);
-            oldPermissions = Sets.newHashSet(permissionMapper.findByMenuId(menuForm.getId()));
+            menuRepository.update(menu);
+            oldPermissions = Sets.newHashSet(permissionRepository.findByMenuId(menuForm.getId()));
         }
         if (StringUtils.isNotBlank(menuForm.getPermissionStr())) {
             String[] permissionRows = menuForm.getPermissionStr().split(CharConstant.ENTER);
@@ -108,17 +106,17 @@ public class MenuService {
                     if (detail.length >= 2) {
                         String name = detail[0];
                         String permissionStr = detail[detail.length - 1];
-                        Permission permission = permissionMapper.findByPermission(permissionStr);
+                        Permission permission = permissionRepository.findByPermission(permissionStr);
                         if (permission != null) {
                             permission.setName(name);
                             permission.setMenuId(menuForm.getId());
-                            permissionMapper.update(permission);
+                            permissionRepository.update(permission);
                         } else {
                             permission = new Permission();
                             permission.setName(name);
                             permission.setPermission(permissionStr);
                             permission.setMenuId(menuForm.getId());
-                            permissionMapper.save(permission);
+                            permissionRepository.save(permission);
                         }
                         permissions.add(permission);
                     }
@@ -127,7 +125,7 @@ public class MenuService {
         }
         List<String> removePermissionIds = CollectionUtil.subtract(CollectionUtil.extractToList(oldPermissions,"id"),CollectionUtil.extractToList(permissions,"id"));
         if(CollectionUtil.isNotEmpty(removePermissionIds)){
-            permissionMapper.logicDeleteByIds(removePermissionIds);
+            permissionRepository.logicDeleteByIds(removePermissionIds);
         }
         return menu;
     }
@@ -140,24 +138,24 @@ public class MenuService {
         List<BackendMenuDto> backendList = Lists.newLinkedList();
         List<String> menuIdList;
         if (StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())) {
-            List<Menu> menuList = menuMapper.findAllEnabled();
+            List<Menu> menuList = menuRepository.findAllEnabled();
             menuIdList=CollectionUtil.extractToList(menuList,"id");
         } else {
             String roleId=roleManager.findIdByAccountId(RequestUtils.getAccountId());
             List<Permission> permissionList;
-            List<String> accountPermissions=accountPermissionMapper.findPermissionIdByAccount(RequestUtils.getAccountId());
+            List<String> accountPermissions=accountPermissionRepository.findPermissionIdByAccount(RequestUtils.getAccountId());
             if(CollectionUtil.isNotEmpty(accountPermissions)){
-                permissionList=permissionMapper.findByRoleAndAccount(roleId, RequestUtils.getAccountId());
+                permissionList=permissionRepository.findByRoleAndAccount(roleId, RequestUtils.getAccountId());
             }else {
-                permissionList=permissionMapper.findByRoleId(roleId);
+                permissionList=permissionRepository.findByRoleId(roleId);
             }
             menuIdList = CollectionUtil.extractToList(permissionList, "menuId");
-            List<Menu> permissionIsEmptyMenus = menuMapper.findByPermissionIsEmpty();
+            List<Menu> permissionIsEmptyMenus = menuRepository.findByPermissionIsEmpty();
             menuIdList = CollectionUtil.union(menuIdList, CollectionUtil.extractToList(permissionIsEmptyMenus,"id"));
             menuIdList = Lists.newArrayList(Sets.newHashSet(menuIdList));
         }
         if(CollectionUtil.isNotEmpty(menuIdList)){
-            backendList = backendMapper.findByMenuList(menuIdList);
+            backendList = backendRepository.findByMenuList(menuIdList);
         }
         return backendList;
     }

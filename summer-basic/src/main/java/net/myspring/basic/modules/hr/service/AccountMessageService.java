@@ -2,7 +2,7 @@ package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.modules.hr.domain.AccountMessage;
 import net.myspring.basic.modules.hr.dto.AccountMessageDto;
-import net.myspring.basic.modules.hr.mapper.AccountMessageMapper;
+import net.myspring.basic.modules.hr.repository.AccountMessageRepository;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +14,10 @@ import java.util.List;
 public class AccountMessageService {
 
     @Autowired
-    private AccountMessageMapper accountMessageMapper;
+    private AccountMessageRepository accountMessageRepository;
 
     public List<AccountMessageDto> findByAccount(String accountId, LocalDateTime localDateTime){
-        List<AccountMessage> accountMessages=accountMessageMapper.findByAccountId(accountId,localDateTime);
+        List<AccountMessage> accountMessages=accountMessageRepository.findByAccountId(accountId,localDateTime);
         List<AccountMessageDto> accountMessageDtoList= BeanUtil.map(accountMessages, AccountMessageDto.class);
         return accountMessageDtoList;
     }

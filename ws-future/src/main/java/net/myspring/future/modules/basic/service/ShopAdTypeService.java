@@ -4,7 +4,8 @@ import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
-import net.myspring.future.modules.basic.mapper.ShopAdTypeMapper;
+import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
+import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
 import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -20,23 +21,25 @@ import java.util.List;
 public class ShopAdTypeService {
 
     @Autowired
-    private ShopAdTypeMapper shopAdTypeMapper;
+    private ShopAdTypeRepository shopAdTypeRepository;
+    @Autowired
+    private ShopAdTypeRepository shopAdTypeRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public List<ShopAdTypeDto> findAllByEnabled() {
-        List<ShopAdTypeDto> shopAdTypes = shopAdTypeMapper.findAllByEnabled();
+        List<ShopAdTypeDto> shopAdTypes = shopAdTypeRepository.findAllByEnabled();
         return shopAdTypes;
     }
 
     public ShopAdType findOne(String id) {
-        ShopAdType shopAdType = shopAdTypeMapper.findOne(id);
+        ShopAdType shopAdType = shopAdTypeRepository.findOne(id);
         return shopAdType;
     }
 
     public ShopAdTypeForm getForm(ShopAdTypeForm shopAdTypeForm){
         if(!shopAdTypeForm.isCreate()){
-            ShopAdType shopAdType=shopAdTypeMapper.findOne(shopAdTypeForm.getId());
+            ShopAdType shopAdType=shopAdTypeRepository.findOne(shopAdTypeForm.getId());
             shopAdTypeForm=BeanUtil.map(shopAdType,ShopAdTypeForm.class);
             cacheUtils.initCacheInput(shopAdTypeForm);
         }
@@ -44,7 +47,7 @@ public class ShopAdTypeService {
     }
 
     public Page<ShopAdTypeDto> findPage(Pageable pageable, ShopAdTypeQuery shopAdTypeQuery) {
-        Page<ShopAdTypeDto> page = shopAdTypeMapper.findPage(pageable, shopAdTypeQuery);
+        Page<ShopAdTypeDto> page = shopAdTypeRepository.findPage(pageable, shopAdTypeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -53,17 +56,17 @@ public class ShopAdTypeService {
         ShopAdType shopAdType;
         if (shopAdTypeForm.isCreate()) {
             shopAdType= BeanUtil.map(shopAdTypeForm,ShopAdType.class);
-            shopAdTypeMapper.save(shopAdType);
+            shopAdTypeRepository.save(shopAdType);
         } else {
-            shopAdType= shopAdTypeMapper.findOne(shopAdTypeForm.getId());
+            shopAdType= shopAdTypeRepository.findOne(shopAdTypeForm.getId());
             ReflectionUtil.copyProperties(shopAdTypeForm,shopAdType);
-            shopAdTypeMapper.update(shopAdType);
+            shopAdTypeRepository.save(shopAdType);
         }
         return shopAdType;
     }
 
     public void delete(ShopAdTypeForm shopAdTypeForm) {
-        shopAdTypeMapper.logicDeleteOne(shopAdTypeForm.getId());
+        shopAdTypeRepository.logicDeleteOne(shopAdTypeForm.getId());
     }
 
     public List<String> findTotalPriceTypeList() {

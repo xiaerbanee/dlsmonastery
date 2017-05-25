@@ -3,10 +3,10 @@ package net.myspring.basic.modules.sys.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.hr.mapper.AccountPermissionMapper;
+import net.myspring.basic.modules.hr.repository.AccountPermissionRepository;
 import net.myspring.basic.modules.sys.domain.*;
 import net.myspring.basic.modules.sys.dto.*;
-import net.myspring.basic.modules.sys.mapper.*;
+import net.myspring.basic.modules.sys.repository.*;
 import net.myspring.basic.modules.sys.web.form.PermissionForm;
 import net.myspring.basic.modules.sys.web.query.PermissionQuery;
 import net.myspring.common.tree.TreeNode;
@@ -26,53 +26,53 @@ import java.util.Set;
 public class PermissionService {
     
     @Autowired
-    private PermissionMapper permissionMapper;
+    private PermissionRepository permissionRepository;
     @Autowired
-    private RolePermissionMapper rolePermissionMapper;
+    private RolePermissionRepository rolePermissionRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private BackendMapper backendMapper;
+    private BackendRepository backendRepository;
     @Autowired
-    private BackendModuleMapper backendModuleMapper;
+    private BackendModuleRepository backendModuleRepository;
     @Autowired
-    private AccountPermissionMapper accountPermissionMapper;
+    private AccountPermissionRepository accountPermissionRepository;
 
     public List<PermissionDto> findByMenuId(String menuId) {
-        List<Permission> permissionList = permissionMapper.findByMenuId(menuId);
+        List<Permission> permissionList = permissionRepository.findByMenuId(menuId);
         List<PermissionDto> permissionDtoList = BeanUtil.map(permissionList, PermissionDto.class);
         return permissionDtoList;
     }
 
     public List<Permission> findByRoleId(String roleId) {
-        return permissionMapper.findByRoleId(roleId);
+        return permissionRepository.findByRoleId(roleId);
     }
 
     public Permission findOne(String id) {
-        Permission permission = permissionMapper.findOne(id);
+        Permission permission = permissionRepository.findOne(id);
         return permission;
     }
 
     public PermissionDto findOne(PermissionDto permissionDto) {
         if (!permissionDto.isCreate()) {
-            Permission permission = permissionMapper.findOne(permissionDto.getId());
+            Permission permission = permissionRepository.findOne(permissionDto.getId());
             permissionDto = BeanUtil.map(permission, PermissionDto.class);
-            permissionDto.setRoleIdList(CollectionUtil.extractToList(rolePermissionMapper.findAllByPermissionId(permission.getId()),"roleId"));
+            permissionDto.setRoleIdList(CollectionUtil.extractToList(rolePermissionRepository.findAllByPermissionId(permission.getId()),"roleId"));
             cacheUtils.initCacheInput(permissionDto);
         }
         return permissionDto;
     }
 
     public List<Permission> findAll() {
-        return permissionMapper.findAll();
+        return permissionRepository.findAll();
     }
 
     public List<Permission> findByPermissionLike(String permissionStr) {
-        return permissionMapper.findByPermissionLike(permissionStr);
+        return permissionRepository.findByPermissionLike(permissionStr);
     }
 
     public Page<PermissionDto> findPage(Pageable pageable, PermissionQuery permissionQuery) {
-        Page<PermissionDto> permissionDtoPage = permissionMapper.findPage(pageable, permissionQuery);
+        Page<PermissionDto> permissionDtoPage = permissionRepository.findPage(pageable, permissionQuery);
         cacheUtils.initCacheInput(permissionDtoPage.getContent());
         return permissionDtoPage;
     }
@@ -81,13 +81,13 @@ public class PermissionService {
         Permission permission;
         if (permissionForm.isCreate()) {
             permission = BeanUtil.map(permissionForm, Permission.class);
-            permissionMapper.save(permission);
+            permissionRepository.save(permission);
         } else {
-            permission = permissionMapper.findOne(permissionForm.getId());
+            permission = permissionRepository.findOne(permissionForm.getId());
             ReflectionUtil.copyProperties(permissionForm,permission);
-            permissionMapper.update(permission);
+            permissionRepository.update(permission);
         }
-        List<RolePermission> rolePermissionList=rolePermissionMapper.findAllByPermissionId(permission.getId());
+        List<RolePermission> rolePermissionList=rolePermissionRepository.findAllByPermissionId(permission.getId());
         if (CollectionUtil.isNotEmpty(permissionForm.getRoleIdList())) {
             List<String> roleIdList = CollectionUtil.extractToList(rolePermissionList, "roleId");
             List<String> removeIdList = CollectionUtil.subtract(roleIdList, permissionForm.getRoleIdList());
@@ -96,23 +96,23 @@ public class PermissionService {
             for(String roleId:addIdList){
                 rolePermissions.add(new RolePermission(roleId,permission.getId()));
             }
-            rolePermissionMapper.setEnabledByPermissionId(true, permission.getId());
+            rolePermissionRepository.setEnabledByPermissionId(true, permission.getId());
             if (CollectionUtil.isNotEmpty(removeIdList)) {
-                rolePermissionMapper.setEnabledByRoleIdList(false,removeIdList);
+                rolePermissionRepository.setEnabledByRoleIdList(false,removeIdList);
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
-                rolePermissionMapper.batchSave(rolePermissions);
+                rolePermissionRepository.batchSave(rolePermissions);
             }
         } else if (CollectionUtil.isNotEmpty(rolePermissionList)) {
-            rolePermissionMapper.setEnabledByPermissionId(false, permission.getId());
+            rolePermissionRepository.setEnabledByPermissionId(false, permission.getId());
         }
         return permission;
     }
 
     public TreeNode findBackendTree() {
         TreeNode treeNode = new TreeNode("0", "项目列表");
-        List<Backend> backendList = backendMapper.findAllEnabled();
-        List<BackendModule> backendModuleList = backendModuleMapper.findAllEnabled();
+        List<Backend> backendList = backendRepository.findAllEnabled();
+        List<BackendModule> backendModuleList = backendModuleRepository.findAllEnabled();
         Map<String, List<BackendModule>> backendModuleMap = CollectionUtil.extractToMapList(backendModuleList, "backendId");
         for (Backend backend : backendList) {
             TreeNode backendTree = new TreeNode("p" + backend.getId(), backend.getName());
@@ -126,15 +126,15 @@ public class PermissionService {
     }
 
     public TreeNode findRoleTree(String roleId) {
-        List<BackendMenuDto> backendMenuDtoList = backendMapper.findByRoleId(roleId);
-        List<Permission> permissionList=permissionMapper.findAll();
+        List<BackendMenuDto> backendMenuDtoList = backendRepository.findByRoleId(roleId);
+        List<Permission> permissionList=permissionRepository.findAll();
         TreeNode treeNode=getTreeNode(backendMenuDtoList,permissionList);
         return treeNode;
     }
 
     public TreeNode findRolePermissionTree(String roleId) {
-        List<BackendMenuDto> backendMenuDtoList = backendMapper.findRolePermissionByRoleId(roleId);
-        List<Permission> permissionList=permissionMapper.findByRoleId(roleId);
+        List<BackendMenuDto> backendMenuDtoList = backendRepository.findRolePermissionByRoleId(roleId);
+        List<Permission> permissionList=permissionRepository.findByRoleId(roleId);
         TreeNode treeNode=getTreeNode(backendMenuDtoList,permissionList);
         return treeNode;
     }
@@ -172,12 +172,12 @@ public class PermissionService {
     }
 
     public List<String> getAccountPermissionCheckData(String accountId){
-        List<String> accountPermissionList=accountPermissionMapper.findPermissionIdByAccount(accountId);
+        List<String> accountPermissionList=accountPermissionRepository.findPermissionIdByAccount(accountId);
         return accountPermissionList;
     }
 
     public void logicDeleteOne(String id) {
-        permissionMapper.logicDeleteOne(id);
+        permissionRepository.logicDeleteOne(id);
     }
 
 }

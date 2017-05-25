@@ -5,7 +5,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
-import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
+import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
@@ -25,7 +25,7 @@ import java.util.List;
 public class EmployeeService {
     
     @Autowired
-    private EmployeeMapper employeeMapper;
+    private EmployeeRepository employeeRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -33,14 +33,14 @@ public class EmployeeService {
 
 
     public EmployeeDto findOne(String id){
-        Employee employee = employeeMapper.findOne(id);
+        Employee employee = employeeRepository.findOne(id);
         EmployeeDto employeeDto = BeanUtil.map(employee,EmployeeDto.class);
         return employeeDto;
     }
 
     public EmployeeDto findOne(EmployeeDto employeeDto){
         if(!employeeDto.isCreate()){
-            Employee employee=employeeMapper.findOne(employeeDto.getId());
+            Employee employee=employeeRepository.findOne(employeeDto.getId());
             employeeDto= BeanUtil.map(employee,EmployeeDto.class);
             cacheUtils.initCacheInput(employeeDto);
         }
@@ -49,13 +49,13 @@ public class EmployeeService {
 
     public Page<EmployeeDto> findPage(Pageable pageable, EmployeeQuery employeeQuery){
         employeeQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getAccountId()));
-        Page<EmployeeDto> page=employeeMapper.findPage(pageable,employeeQuery);
+        Page<EmployeeDto> page=employeeRepository.findPage(pageable,employeeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public List<EmployeeDto> findByNameLike(String name){
-        List<Employee> employeeList=employeeMapper.findByNameLike(name);
+        List<Employee> employeeList=employeeRepository.findByNameLike(name);
         List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
         cacheUtils.initCacheInput(employeeDtoList);
         return employeeDtoList;
@@ -65,17 +65,17 @@ public class EmployeeService {
         Employee employee;
         if(employeeForm.isCreate()) {
             employee=BeanUtil.map(employeeForm,Employee.class);
-            employeeMapper.save(employee);
+            employeeRepository.save(employee);
         } else {
-            employee = employeeMapper.findOne(employeeForm.getId());
+            employee = employeeRepository.findOne(employeeForm.getId());
             ReflectionUtil.copyProperties(employeeForm,employee);
-            employeeMapper.update(employee);
+            employeeRepository.update(employee);
         }
         return employee;
     }
 
     public void logicDeleteOne(String id) {
-        employeeMapper.logicDeleteOne(id);
+        employeeRepository.logicDeleteOne(id);
     }
 
     @Transactional(readOnly = true)
@@ -83,7 +83,7 @@ public class EmployeeService {
         if(CollectionUtil.isEmpty(ids)) {
             return Lists.newArrayList();
         }
-        List<Employee> employees = employeeMapper.findByIds(ids);
+        List<Employee> employees = employeeRepository.findByIds(ids);
         List<EmployeeDto> employeeDto= BeanUtil.map(employees,EmployeeDto.class);
         return employeeDto;
     }

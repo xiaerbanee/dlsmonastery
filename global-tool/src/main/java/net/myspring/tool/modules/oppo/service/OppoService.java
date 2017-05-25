@@ -9,7 +9,6 @@ import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
 import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
 import net.myspring.tool.modules.oppo.mapper.*;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -139,6 +138,8 @@ public class OppoService {
         }
         return "电子保卡同步成功，共"+list.size()+"条";
     }
+
+
 
     @Transactional
     public  List<OppoPlantSendImeiPpsel>  synIme(String date) {

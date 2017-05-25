@@ -7,11 +7,11 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
-import net.myspring.future.modules.crm.mapper.*;
+import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -40,11 +40,11 @@ import java.util.UUID;
 @Service
 @Transactional
 public class ProductImeService {
-    @Autowired
-    private ProductImeMapper productImeMapper;
-    @Autowired
-    private ProductMapper productMapper;
 
+    @Autowired
+    private ProductImeRepository productImeRepository;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -53,16 +53,15 @@ public class ProductImeService {
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable,ProductImeQuery productImeQuery) {
         productImeQuery.setPageable(pageable);
-        List<ProductImeDto> productImeDtoList = productImeMapper.findList(productImeQuery);
+        List<ProductImeDto> productImeDtoList = productImeRepository.findList(productImeQuery);
 
         cacheUtils.initCacheInput(productImeDtoList);
         Page<ProductImeDto> page = new PageImpl(productImeDtoList,pageable,(pageable.getPageNumber()+100)*pageable.getPageSize());
         return page;
     }
 
-
     public List<ProductImeDto> findByImeList(List<String> imeList){
-        List<ProductIme> productImeList=productImeMapper.findByImeList(imeList);
+        List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
         List<ProductImeDto> productImeDtoList= BeanUtil.map(productImeList,ProductImeDto.class);
         cacheUtils.initCacheInput(productImeDtoList);
         return productImeDtoList;
@@ -70,9 +69,9 @@ public class ProductImeService {
 
     public Map<String,Integer> findQtyMap(List<String> imeList){
         Map<String,Integer> map= Maps.newHashMap();
-        List<ProductIme> productImeList=productImeMapper.findByImeList(imeList);
+        List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
         if(CollectionUtil.isNotEmpty(productImeList)){
-            List<Product> productList=productMapper.findByIds(CollectionUtil.extractToList(productImeList,"productId"));
+            List<Product> productList=productRepository.findAll(CollectionUtil.extractToList(productImeList,"productId"));
             Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"id");
             Map<String,List<ProductIme>> productImeMap=CollectionUtil.extractToMapList(productImeList,"productId");
             for(Map.Entry<String,List<ProductIme>> entry:productImeMap.entrySet()){
@@ -83,13 +82,12 @@ public class ProductImeService {
     }
 
     public ProductImeDto getProductImeDetail(String id) {
-        return productImeMapper.getProductImeDetail(id);
-
+        return productImeRepository.findProductImeDto(id);
     }
 
     public List<ProductImeHistoryDto> getProductImeHistoryList(String productImeId) {
 
-        List<ProductImeHistoryDto> list = productImeMapper.getProductImeHistoryList(productImeId);
+        List<ProductImeHistoryDto> list = productImeRepository.findProductImeHistoryList(productImeId);
         cacheUtils.initCacheInput(list);
 
         return list;
@@ -100,7 +98,7 @@ public class ProductImeService {
             return new ArrayList<>();
         }
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-        List<ProductImeDto> productImeDtoList  = productImeMapper.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
+        List<ProductImeDto> productImeDtoList  = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
         cacheUtils.initCacheInput(productImeDtoList);
         return productImeDtoList;
     }
@@ -138,7 +136,7 @@ public class ProductImeService {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
 
             productImeQuery.setPageable(new PageRequest(0, 10000));
-            List<ProductImeDto> productImeDtoList = productImeMapper.findList(productImeQuery);
+            List<ProductImeDto> productImeDtoList = productImeRepository.findList(productImeQuery);
             cacheUtils.initCacheInput(productImeDtoList);
 
             SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);
@@ -150,7 +148,8 @@ public class ProductImeService {
 
 
     public List<ProductIme> findByImeLike(String imeReverse,String shopId){
-        List<ProductIme> productImeList = productImeMapper.findByImeLike(imeReverse,shopId);
+        List<ProductIme> productImeList = productImeRepository.findByImeReverseLike(imeReverse,shopId);
         return productImeList;
     }
+
 }

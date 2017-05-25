@@ -1,15 +1,23 @@
-package net.myspring.future.modules.basic.repository
+package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ExpressOrder
 
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail
 import net.myspring.future.modules.crm.dto.ExpressOrderDto
+import net.myspring.future.modules.crm.dto.PriceChangeDto
+import net.myspring.future.modules.crm.web.query.ExpressOrderQuery
+import net.myspring.future.modules.crm.web.query.PriceChangeQuery
+import net.myspring.util.text.StringUtils
 import org.apache.ibatis.annotations.Param
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import javax.persistence.EntityManager
 
 
-interface ExpressOrderRepository : BaseRepository<ExpressOrder, String> {
+interface ExpressOrderRepository : BaseRepository<ExpressOrder, String>, ExpressOrderRepositoryCustom {
 
 
     fun findByExtendIdAndExtendType(extendId: String, extendType: String): ExpressOrder
@@ -35,8 +43,18 @@ interface ExpressOrderRepository : BaseRepository<ExpressOrder, String> {
         """, nativeQuery = true)
     fun findDtoByGoodsOrderId(goodsOrderId: String): ExpressOrderDto
 
+}
 
+interface ExpressOrderRepositoryCustom{
+    fun findPage(pageable : Pageable, expressOrderQuery : ExpressOrderQuery): Page<ExpressOrderDto>?
+}
 
+class ExpressOrderRepositoryImpl @Autowired constructor(val entityManager: EntityManager): ExpressOrderRepositoryCustom {
+    override fun findPage(pageable : Pageable,expressOrderQuery: ExpressOrderQuery): Page<ExpressOrderDto>? {
+
+        return null
+
+    }
 
 
 }

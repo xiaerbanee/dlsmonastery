@@ -1,17 +1,19 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.service.ExpressCompanyService;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.dto.ExpressDto;
-import net.myspring.future.modules.crm.mapper.ExpressMapper;
+import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
+import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.future.modules.crm.web.form.ExpressForm;
 import net.myspring.future.modules.crm.web.query.ExpressQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
@@ -33,26 +35,16 @@ import java.util.Optional;
 public class ExpressService {
 
     @Autowired
-    private ExpressMapper expressMapper;
+    private ExpressRepository expressRepository;
     @Autowired
-    private DepotMapper depotMapper;
-
+    private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
-
     @Autowired
-    private ExpressCompanyService expressCompanyService;
-
-    @Autowired
-    private ExpressOrderService expressOrderService;
-
-    public Express findOne(String id){
-        Express express=expressMapper.findOne(id);
-        return express;
-    }
+    private ExpressOrderRepository expressOrderRepository;
 
     public Page<ExpressDto> findPage(Pageable pageable, ExpressQuery expressQuery) {
-        Page<ExpressDto> page = expressMapper.findPage(pageable, expressQuery);
+        Page<ExpressDto> page = expressRepository.findPage(pageable, expressQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -62,7 +54,7 @@ public class ExpressService {
             return  new ExpressForm();
         }
 
-        ExpressDto expressDto = expressMapper.findDto(expressForm.getId());
+        ExpressDto expressDto = expressRepository.findDto(expressForm.getId());
         cacheUtils.initCacheInput(expressDto);
         ExpressForm result = BeanUtil.map(expressDto, ExpressForm.class);
 
@@ -70,7 +62,7 @@ public class ExpressService {
     }
 
     public void logicDeleteOne(String expressId) {
-        expressMapper.logicDeleteOne(expressId);
+        expressRepository.logicDeleteOne(expressId);
     }
 
 
@@ -82,31 +74,30 @@ public class ExpressService {
         if(expressForm.isCreate()){
             express = new Express();
         }else{
-            express = expressMapper.findOne(expressForm.getId());
+            express = expressRepository.findOne(expressForm.getId());
         }
         ReflectionUtil.copyProperties(expressForm, express);
         express.setExpressOrderId(eo.getId());
         express.setShouldPay(caculateShouldPay(express));
 
-        saveOrUpdate(express);
+        expressRepository.save(express);
+
 
         if(express.getExpressOrderId() !=null) {
-            expressOrderService.reCalcAndUpdateExpressCodes(express.getExpressOrderId());
+            reCalcAndUpdateExpressCodes(express.getExpressOrderId());
         }
 
         return express;
     }
 
-    private Express saveOrUpdate(Express express) {
-        if(express ==null){
-            return null;
-        }
-        if(StringUtils.isBlank(express.getId())){
-            expressMapper.save(express);
-        }else{
-            expressMapper.update(express);
-        }
-        return express;
+
+    private ExpressOrder reCalcAndUpdateExpressCodes(String expressOrderId) {
+
+        ExpressOrder eo = expressOrderRepository.findOne(expressOrderId);
+        List<Express> expressList = expressRepository.findByExpressOrderId(expressOrderId);
+        eo.setExpressCodes(StringUtils.join(CollectionUtil.extractToList(expressList, "code"), CharConstant.COMMA));
+        expressOrderRepository.save(eo);
+        return eo;
     }
 
     private BigDecimal caculateShouldPay(Express express) {
@@ -158,7 +149,7 @@ public class ExpressService {
 
         ExpressOrder expressOrder = null;
         if (expressForm.getExpressOrderId() == null) {
-            Depot toDepot = depotMapper.findOne(expressForm.getExpressOrderToDepotId());
+            Depot toDepot = depotRepository.findOne(expressForm.getExpressOrderToDepotId());
             expressOrder = new ExpressOrder();
             expressOrder.setToDepotId(expressForm.getExpressOrderToDepotId());
             expressOrder.setContator(toDepot.getContator());
@@ -166,13 +157,23 @@ public class ExpressService {
             expressOrder.setAddress(toDepot.getAddress());
             expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
             expressOrder.setPrintDate(LocalDate.now());
-            expressOrder.setExpressCompanyId(expressCompanyService.getDefaultExpressCompanyId());
+            expressOrder.setExpressCompanyId(getDefaultExpressCompanyId());
         } else {
-            expressOrder = expressOrderService.findOne(expressForm.getExpressOrderId());
+            expressOrder = expressOrderRepository.findOne(expressForm.getExpressOrderId());
         }
 
+        return expressOrderRepository.save(expressOrder);
+    }
 
-        return expressOrderService.saveOrUpdate(expressOrder);
+    private String getDefaultExpressCompanyId() {
+        //TODO default expressCompanyID
+//        String code = Global.getCompanyConfig(AccountUtils.getCompany().getId(), CompanyConfig.CompanyConfigCode.DEFAULT_EXPRESS_COMPANY_ID.getCode());
+//        if (StringUtils.isNotBlank(code)) {
+//            ExpressCompany expressCompany = expressCompanyDao.findOne(Long.valueOf(code));
+//            storeAllotForm.setExpressCompanyId( expressCompanyService.getDefaultExpressCompanyId());
+//        }
+
+        return null;
     }
 
 }

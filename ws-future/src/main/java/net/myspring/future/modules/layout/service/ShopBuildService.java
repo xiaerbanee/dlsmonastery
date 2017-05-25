@@ -7,11 +7,12 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopBuild;
 import net.myspring.future.modules.layout.dto.ShopBuildDto;
-import net.myspring.future.modules.layout.mapper.ShopBuildMapper;
-import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
+import net.myspring.future.modules.layout.repository.ShopBuildRepository;
+import net.myspring.future.modules.layout.repository.ShopDepositRepository;
+import net.myspring.future.modules.layout.repository.ShopBuildRepository;
 import net.myspring.future.modules.layout.web.form.ShopBuildDetailOrAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopBuildForm;
 import net.myspring.future.modules.layout.web.query.ShopBuildQuery;
@@ -43,11 +44,13 @@ import java.util.UUID;
 public class ShopBuildService {
 
     @Autowired
-    private ShopBuildMapper shopBuildMapper;
+    private ShopBuildRepository shopBuildRepository;
+    @Autowired
+    private ShopBuildRepository shopBuildRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
     private ActivitiClient activitiClient;
     @Autowired
@@ -55,7 +58,7 @@ public class ShopBuildService {
 
 
     public Page<ShopBuildDto> findPage(Pageable pageable, ShopBuildQuery shopBuildQuery) {
-        Page<ShopBuildDto> page = shopBuildMapper.findPage(pageable, shopBuildQuery);
+        Page<ShopBuildDto> page = shopBuildRepository.findPage(pageable, shopBuildQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -63,7 +66,7 @@ public class ShopBuildService {
     public ShopBuildDto findOne(String id){
         ShopBuildDto shopBuildDto = new ShopBuildDto();
         if(StringUtils.isNotBlank(id)){
-            ShopBuild shopBuild = shopBuildMapper.findOne(id);
+            ShopBuild shopBuild = shopBuildRepository.findOne(id);
             shopBuildDto = BeanUtil.map(shopBuild,ShopBuildDto.class);
             cacheUtils.initCacheInput(shopBuildDto);
         }
@@ -73,7 +76,7 @@ public class ShopBuildService {
     public ShopBuildDto detail(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm){
         ShopBuildDto shopBuildDto = new ShopBuildDto();
         if(!shopBuildDetailOrAuditForm.isCreate()){
-            ShopBuild shopBuild = shopBuildMapper.findOne(shopBuildDetailOrAuditForm.getId());
+            ShopBuild shopBuild = shopBuildRepository.findOne(shopBuildDetailOrAuditForm.getId());
             shopBuildDto = BeanUtil.map(shopBuild,ShopBuildDto.class);
             cacheUtils.initCacheInput(shopBuildDto);
         }
@@ -84,7 +87,7 @@ public class ShopBuildService {
         ShopBuild shopBuild;
         if(shopBuildForm.isCreate()){
             shopBuild = BeanUtil.map(shopBuildForm,ShopBuild.class);
-            shopBuildMapper.save(shopBuild);
+            shopBuildRepository.save(shopBuild);
             //Start Process
             ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("门店建设",shopBuild.getId(),ShopBuild.class.getSimpleName(),shopBuildForm.getContent()));
             if(activitiStartDto!=null){
@@ -93,12 +96,12 @@ public class ShopBuildService {
                 shopBuild.setProcessFlowId(activitiStartDto.getProcessFlowId());
                 shopBuild.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
                 shopBuild.setProcessTypeId(activitiStartDto.getProcessTypeId());
-                shopBuildMapper.update(shopBuild);
+                shopBuildRepository.save(shopBuild);
             }
         }else{
-            shopBuild = shopBuildMapper.findOne(shopBuildForm.getId());
+            shopBuild = shopBuildRepository.findOne(shopBuildForm.getId());
             ReflectionUtil.copyProperties(shopBuildForm,shopBuild);
-            shopBuildMapper.update(shopBuild);
+            shopBuildRepository.save(shopBuild);
         }
         return shopBuild;
     }
@@ -110,7 +113,7 @@ public class ShopBuildService {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         ShopBuild shopBuild;
         if(!shopBuildDetailOrAuditForm.isCreate()){
-            shopBuild = shopBuildMapper.findOne(shopBuildDetailOrAuditForm.getId());
+            shopBuild = shopBuildRepository.findOne(shopBuildDetailOrAuditForm.getId());
             activitiCompleteForm.setProcessInstanceId(shopBuild.getProcessInstanceId());
             activitiCompleteForm.setProcessTypeId(shopBuild.getProcessTypeId());
             activitiCompleteForm.setPass(shopBuildDetailOrAuditForm.getPass());
@@ -122,7 +125,7 @@ public class ShopBuildService {
                 shopBuild.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
                 shopBuild.setProcessPositionId(activitiCompleteDto.getPositionId());
                 shopBuild.setProcessStatus(activitiCompleteDto.getProcessStatus());
-                shopBuildMapper.update(shopBuild);
+                shopBuildRepository.save(shopBuild);
             }
         }
     }
@@ -143,7 +146,7 @@ public class ShopBuildService {
     }
 
     public void logicDeleteOne(String id) {
-        shopBuildMapper.logicDeleteOne(id);
+        shopBuildRepository.logicDeleteOne(id);
     }
 
     public String findSimpleExcelSheets(Workbook workbook, ShopBuildQuery shopBuildQuery) {
@@ -160,7 +163,7 @@ public class ShopBuildService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "最后修改人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "最后修改时间"));
 
-        List<ShopBuildDto> shopBuildList = shopBuildMapper.findByFilter(shopBuildQuery);
+        List<ShopBuildDto> shopBuildList = shopBuildRepository.findByFilter(shopBuildQuery);
         cacheUtils.initCacheInput(shopBuildList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("门店建设", shopBuildList, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"门店建设"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);

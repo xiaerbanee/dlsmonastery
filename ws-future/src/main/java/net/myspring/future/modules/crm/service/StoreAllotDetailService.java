@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.repository.StoreAllotDetailRepository;
+import net.myspring.future.modules.crm.repository.StoreAllotDetailRepository;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

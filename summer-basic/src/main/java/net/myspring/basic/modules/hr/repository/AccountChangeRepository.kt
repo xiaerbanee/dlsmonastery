@@ -2,11 +2,14 @@ package net.myspring.basic.modules.hr.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.AccountChange
+import net.myspring.basic.modules.hr.dto.AccountChangeDto
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery
+import net.myspring.util.repository.QueryUtils
 import net.myspring.util.text.StringUtils
-import org.apache.ibatis.annotations.Param
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import javax.persistence.EntityManager
 
 interface AccountChangeRepository : BaseRepository<AccountChange, String>,AccountChangeRepositoryCustom {
@@ -14,11 +17,17 @@ interface AccountChangeRepository : BaseRepository<AccountChange, String>,Accoun
 }
 
 interface AccountChangeRepositoryCustom {
-    fun getForm(@Param("p") accountChangeQuery: AccountChangeQuery): AccountChangeForm
+    fun getForm(accountChangeQuery: AccountChangeQuery): AccountChangeForm
+
+    fun findPage(pageable:Pageable,accountChangeQuery:AccountChangeQuery): Page<AccountChangeDto>
 }
 
 
 class AccountChangeRepositoryImpl @Autowired constructor(val entityManager: EntityManager):AccountChangeRepositoryCustom {
+    override fun findPage(pageable: Pageable, accountChangeQuery: AccountChangeQuery): Page<AccountChangeDto> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getForm(accountChangeQuery: AccountChangeQuery): AccountChangeForm {
         var sb = StringBuilder();
         sb.append( """
@@ -41,19 +50,14 @@ class AccountChangeRepositoryImpl @Autowired constructor(val entityManager: Enti
                 t2.employee_id = t3.id
        """);
         if(StringUtils.isNotBlank(accountChangeQuery.id)) {
-            sb.append("""
-                and t2.id=(
-                    SELECT account_id FROM hr_account_change where id=#{p.id}
-                )
-            """);
+            sb.append(" and t2.id=(SELECT account_id FROM hr_account_change where id=:id)");
         }
         if(StringUtils.isNotBlank(accountChangeQuery.accountId)) {
-            sb.append("""
-                and t2.id=#{p.accountId}
-            """);
+            sb.append(" and t2.id=:accountId");
         }
 
         var query = entityManager.createNativeQuery(sb.toString(),AccountChangeForm::class.java);
+        QueryUtils.setParameter(query,accountChangeQuery);
         return query.firstResult as AccountChangeForm
 
     }

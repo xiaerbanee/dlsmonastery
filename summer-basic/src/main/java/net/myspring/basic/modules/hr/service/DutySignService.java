@@ -6,7 +6,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutySign;
 import net.myspring.basic.modules.hr.dto.DutySignDto;
-import net.myspring.basic.modules.hr.mapper.DutySignMapper;
+import net.myspring.basic.modules.hr.repository.DutySignRepository;
 import net.myspring.basic.modules.hr.web.form.DutySignForm;
 import net.myspring.basic.modules.hr.web.query.DutySignQuery;
 import net.myspring.util.excel.SimpleExcelColumn;
@@ -31,7 +31,7 @@ import java.util.List;
 public class DutySignService {
 
     @Autowired
-    private DutySignMapper dutySignMapper;
+    private DutySignRepository dutySignRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -42,29 +42,29 @@ public class DutySignService {
         dutySignForm.setStatus(AuditTypeEnum.APPLYING.toString());
         dutySignForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
         DutySign dutySign=BeanUtil.map(dutySignForm,DutySign.class);
-        dutySignMapper.save(dutySign);
+        dutySignRepository.save(dutySign);
         return dutySign;
     }
 
     public Page<DutySignDto> findPage(Pageable pageable, DutySignQuery dutySignQuery) {
-        Page<DutySignDto> page = dutySignMapper.findPage(pageable,dutySignQuery);
+        Page<DutySignDto> page = dutySignRepository.findPage(pageable,dutySignQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public List<DutySignDto> findByFilter(DutySignQuery dutySignQuery) {
-        List<DutySign> dutySignList =  dutySignMapper.findByFilter(dutySignQuery);
+        List<DutySign> dutySignList =  dutySignRepository.findByFilter(dutySignQuery);
         List<DutySignDto> dutySignDtoList= BeanUtil.map(dutySignList,DutySignDto.class);
         cacheUtils.initCacheInput(dutySignDtoList);
         return  dutySignDtoList;
     }
 
     public void logicDeleteOne(String id) {
-        dutySignMapper.logicDeleteOne(id);
+        dutySignRepository.logicDeleteOne(id);
     }
 
     public DutySign findOne(String id) {
-        DutySign dutySign = dutySignMapper.findOne(id);
+        DutySign dutySign = dutySignRepository.findOne(id);
         return dutySign;
     }
 
@@ -78,7 +78,7 @@ public class DutySignService {
     }
 
     public SimpleExcelSheet findSimpleExcelSheet(Workbook workbook, DutySignQuery dutySignQuery){
-        List<DutySign> dutySignList = dutySignMapper.findByFilter(dutySignQuery);
+        List<DutySign> dutySignList = dutySignRepository.findByFilter(dutySignQuery);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"employee.name","姓名"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"dutyDate","日期"));

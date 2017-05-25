@@ -6,7 +6,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.*;
 import net.myspring.basic.modules.hr.dto.CalendarEventDto;
-import net.myspring.basic.modules.hr.mapper.*;
+import net.myspring.basic.modules.hr.repository.*;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
@@ -29,39 +29,37 @@ import java.util.Map;
 public class DutyService {
 
     @Autowired
-    private DutyWorktimeMapper dutyWorktimeMapper;
+    private DutyWorktimeRepository dutyWorktimeRepository;
     @Autowired
-    private DutyLeaveMapper dutyLeaveMapper;
+    private DutyLeaveRepository dutyLeaveRepository;
     @Autowired
-    private DutyOvertimeMapper dutyOvertimeMapper;
+    private DutyOvertimeRepository dutyOvertimeRepository;
     @Autowired
-    private DutyRestMapper dutyRestMapper;
+    private DutyRestRepository dutyRestRepository;
     @Autowired
-    private DutySignMapper dutySignMapper;
+    private DutySignRepository dutySignRepository;
     @Autowired
-    private DutyRestOvertimeMapper dutyRestOvertimeMapper;
+    private DutyAnnualRepository dutyAnnualRepository;
     @Autowired
-    private DutyAnnualMapper dutyAnnualMapper;
+    private DutyFreeRepository dutyFreeRepository;
     @Autowired
-    private DutyFreeMapper dutyFreeMapper;
+    private DutyPublicFreeRepository dutyPublicFreeRepository;
     @Autowired
-    private DutyPublicFreeMapper dutyPublicFreeMapper;
+    private DutyTripRepository dutyTripRepository;
     @Autowired
-    private DutyTripMapper dutyTripMapper;
-    @Autowired
-    private AccountMapper accountMapper;
+    private AccountRepository accountRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public List<DutyDto> findByAuditable(String leaderId, String status, LocalDateTime dateStart) {
-        List<DutyDto> leaveList = dutyLeaveMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyDto> overtimeList = dutyOvertimeMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyDto> restList = dutyRestMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyDto> signList = dutySignMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyDto> freeList = dutyFreeMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyDto> publicFreeList = dutyPublicFreeMapper.findByAuditable(leaderId, status, dateStart);
-        List<DutyDto> tripList = dutyTripMapper.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> leaveList = dutyLeaveRepository.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> overtimeList = dutyOvertimeRepository.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> restList = dutyRestRepository.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> signList = dutySignRepository.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> freeList = dutyFreeRepository.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> publicFreeList = dutyPublicFreeRepository.findByAuditable(leaderId, status, dateStart);
+        List<DutyDto> tripList = dutyTripRepository.findByAuditable(leaderId, status, dateStart);
         List<DutyDto> dutyDtoList = Lists.newArrayList();
         dutyDtoList.addAll(leaveList);
         dutyDtoList.addAll(overtimeList);
@@ -76,19 +74,19 @@ public class DutyService {
     public Object findDutyItem(String id, String dutyType) {
         Object item;
         if (DutyTypeEnum.LEAVE.name().equals(dutyType)) {
-            item = dutyLeaveMapper.findOne(id);
+            item = dutyLeaveRepository.findOne(id);
         } else if (DutyTypeEnum.FEE.name().equals(dutyType)) {
-            item = dutyFreeMapper.findOne(id);
+            item = dutyFreeRepository.findOne(id);
         } else if (DutyTypeEnum.OVER_TIME.name().equals(dutyType)) {
-            item = dutyOvertimeMapper.findOne(id);
+            item = dutyOvertimeRepository.findOne(id);
         } else if (DutyTypeEnum.PUBLIC_OFF.name().equals(dutyType)) {
-            item = dutyPublicFreeMapper.findOne(id);
+            item = dutyPublicFreeRepository.findOne(id);
         } else if (DutyTypeEnum.TRIP.name().equals(dutyType)) {
-            item = dutyTripMapper.findOne(id);
+            item = dutyTripRepository.findOne(id);
         } else if (DutyTypeEnum.SIGN.name().equals(dutyType)) {
-            item = dutySignMapper.findOne(id);
+            item = dutySignRepository.findOne(id);
         } else {
-            item = dutyRestMapper.findOne(id);
+            item = dutyRestRepository.findOne(id);
         }
         return item;
     }
@@ -102,62 +100,62 @@ public class DutyService {
     public void audit(String id, String dutyType, Boolean pass, String auditRemarks) {
         String auditBy = RequestUtils.getAccountId();
         if (DutyTypeEnum.LEAVE.toString().equals(dutyType)) {
-            DutyLeave dutyLeave = dutyLeaveMapper.findOne(id);
+            DutyLeave dutyLeave = dutyLeaveRepository.findOne(id);
             if (AuditTypeEnum.APPLYING.toString().equals(dutyLeave.getStatus())) {
                 dutyLeave.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutyLeave.setAuditBy(auditBy);
                 dutyLeave.setAuditDate(LocalDateTime.now());
                 dutyLeave.setAuditRemarks(auditRemarks);
                 dutyLeave.setLocked(true);
-                dutyLeaveMapper.update(dutyLeave);
+                dutyLeaveRepository.save(dutyLeave);
             }
         } else if (DutyTypeEnum.FEE.toString().equals(dutyType)) {
-            DutyFree dutyFree = dutyFreeMapper.findOne(id);
+            DutyFree dutyFree = dutyFreeRepository.findOne(id);
             if (AuditTypeEnum.APPLYING.toString().equals(dutyFree.getStatus())) {
                 dutyFree.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutyFree.setAuditBy(auditBy);
                 dutyFree.setAuditDate(LocalDateTime.now());
                 dutyFree.setLocked(true);
                 dutyFree.setAuditRemarks(auditRemarks);
-                dutyFreeMapper.update(dutyFree);
+                dutyFreeRepository.save(dutyFree);
             }
         } else if (DutyTypeEnum.PUBLIC_OFF.toString().equals(dutyType)) {
-            DutyPublicFree dutyPublicFree = dutyPublicFreeMapper.findOne(id);
+            DutyPublicFree dutyPublicFree = dutyPublicFreeRepository.findOne(id);
             if (AuditTypeEnum.APPLYING.toString().equals(dutyPublicFree.getStatus())) {
                 dutyPublicFree.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutyPublicFree.setAuditBy(auditBy);
                 dutyPublicFree.setAuditDate(LocalDateTime.now());
                 dutyPublicFree.setLocked(true);
                 dutyPublicFree.setAuditRemarks(auditRemarks);
-                dutyPublicFreeMapper.update(dutyPublicFree);
+                dutyPublicFreeRepository.save(dutyPublicFree);
             }
         } else if (DutyTypeEnum.TRIP.toString().equals(dutyType)) {
-            DutyTrip dutyTrip = dutyTripMapper.findOne(id);
+            DutyTrip dutyTrip = dutyTripRepository.findOne(id);
             if (AuditTypeEnum.APPLYING.toString().equals(dutyTrip.getStatus())) {
                 dutyTrip.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutyTrip.setAuditBy(auditBy);
                 dutyTrip.setAuditDate(LocalDateTime.now());
                 dutyTrip.setLocked(true);
                 dutyTrip.setAuditRemarks(auditRemarks);
-                dutyTripMapper.update(dutyTrip);
+                dutyTripRepository.save(dutyTrip);
             }
         } else if (DutyTypeEnum.OVER_TIME.toString().equals(dutyType)) {
-            DutyOvertime dutyOvertime = dutyOvertimeMapper.findOne(id);
+            DutyOvertime dutyOvertime = dutyOvertimeRepository.findOne(id);
             if (AuditTypeEnum.APPLYING.toString().equals(dutyOvertime.getStatus())) {
                 dutyOvertime.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutyOvertime.setAuditBy(auditBy);
                 dutyOvertime.setAuditDate(LocalDateTime.now());
                 dutyOvertime.setAuditRemarks(auditRemarks);
                 dutyOvertime.setLocked(true);
-                dutyOvertimeMapper.update(dutyOvertime);
+                dutyOvertimeRepository.save(dutyOvertime);
             }
         } else if (DutyTypeEnum.OFF.toString().equals(dutyType)) {
-            DutyRest dutyRest = dutyRestMapper.findOne(id);
+            DutyRest dutyRest = dutyRestRepository.findOne(id);
             if (AuditTypeEnum.APPLYING.toString().equals(dutyRest.getStatus())) {
                 restAudit(dutyRest, auditBy, pass, auditRemarks);
             }
         } else if (DutyTypeEnum.SIGN.toString().equals(dutyType)) {
-            DutySign dutySign = dutySignMapper.findOne(id);
+            DutySign dutySign = dutySignRepository.findOne(id);
             if (AuditTypeEnum.APPLYING.toString().equals(dutySign.getStatus())) {
                 dutySign.setStatus(pass ? AuditTypeEnum.PASSED.toString() : AuditTypeEnum.NOT_PASS.toString());
                 dutySign.setAuditBy(auditBy);
@@ -165,15 +163,15 @@ public class DutyService {
                 dutySign.setLocked(true);
                 if (pass) {
                     DutyWorktime dutyWorktime = new DutyWorktime();
-                    Account account = accountMapper.findOne(dutySign.getCreatedBy());
+                    Account account = accountRepository.findOne(dutySign.getCreatedBy());
                     dutyWorktime.setEmployeeId(account.getEmployeeId());
                     dutyWorktime.setDutyDate(dutySign.getCreatedDate().toLocalDate());
                     dutyWorktime.setDutyTime(dutySign.getCreatedDate().toLocalTime());
                     dutyWorktime.setType(WorkTimeTypeEnum.WORK_DONE_OUTSIDE.toString());
-                    dutyWorktimeMapper.save(dutyWorktime);
+                    dutyWorktimeRepository.save(dutyWorktime);
                     dutySign.setDutyWorktimeId(dutyWorktime.getId());
                 }
-                dutySignMapper.update(dutySign);
+                dutySignRepository.save(dutySign);
             }
         }
     }
@@ -184,7 +182,7 @@ public class DutyService {
             if (DutyRestTypeEnum.OVER_TIME_OFF.toString().equals(dutyRest.getType())) {
                 LocalDate dateStart = LocalDate.now().minusMonths(3);
                 LocalDate dateEnd = dutyRest.getDutyDate();
-                List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByDutyDateAndStatus(dutyRest.getEmployeeId(), dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
+                List<DutyOvertime> overtimeList = dutyOvertimeRepository.findByDutyDateAndStatus(dutyRest.getEmployeeId(), dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
                 List<DutyRestOvertime> dutyRestOvertimes = Lists.newArrayList();
                 restHour = dutyRest.getHour().doubleValue();
                 Double overTime = 0.0;
@@ -204,7 +202,7 @@ public class DutyService {
                             dutyRestOvertimes.add(dutyRestOvertime);
                             dutyOvertime.setLeftHour(dutyOvertime.getLeftHour() - restHour);
                             dutyOvertime.setLocked(true);
-                            dutyOvertimeMapper.update(dutyOvertime);
+                            dutyOvertimeRepository.save(dutyOvertime);
                             break;
                         } else if (dutyOvertime.getLeftHour() < restHour) {
                             DutyRestOvertime dutyRestOvertime = new DutyRestOvertime();
@@ -215,21 +213,21 @@ public class DutyService {
                             dutyRestOvertimes.add(dutyRestOvertime);
                             dutyOvertime.setLeftHour(0.0);
                             dutyOvertime.setLocked(true);
-                            dutyOvertimeMapper.update(dutyOvertime);
+                            dutyOvertimeRepository.save(dutyOvertime);
                         }
                     }
                 }
                if(CollectionUtil.isNotEmpty(dutyRestOvertimes)){
-                   dutyRestOvertimeMapper.batchSave(dutyRestOvertimes);
+                   dutyRestOvertimeRepository.batchSave(dutyRestOvertimes);
                }
             } else {
                 restHour = DutyDateTypeEnum.DAY.toString().equals(dutyRest.getDateType()) ? 8.0 : 4.0;
-                DutyAnnual dutyAnnual = dutyAnnualMapper.findByEmployee(dutyRest.getEmployeeId());
+                DutyAnnual dutyAnnual = dutyAnnualRepository.findByEmployee(dutyRest.getEmployeeId());
                 if(dutyAnnual==null||dutyAnnual.getLeftHour()<restHour){
                     return false;
                 }
                 dutyAnnual.setLeftHour(dutyAnnual.getLeftHour() - restHour);
-                dutyAnnualMapper.save(dutyAnnual);
+                dutyAnnualRepository.save(dutyAnnual);
                 dutyRest.setDutyAnnualId(dutyAnnual.getId());
             }
         }
@@ -238,20 +236,20 @@ public class DutyService {
         dutyRest.setAuditDate(LocalDateTime.now());
         dutyRest.setAuditRemarks(auditRemarks);
         dutyRest.setLocked(true);
-        dutyRestMapper.update(dutyRest);
+        dutyRestRepository.update(dutyRest);
         return true;
     }
 
     public List<CalendarEventDto> findEvent(String employeeId, LocalDate start, LocalDate end) {
         List<CalendarEventDto> list = Lists.newArrayList();
-        List<DutyWorktime> worktimeList = dutyWorktimeMapper.findByEmployeeAndDate(employeeId, start, end);
-        List<DutyLeave> leaveList = dutyLeaveMapper.findByEmployeeAndDate(employeeId, start, end);
-        List<DutyOvertime> overtimeList = dutyOvertimeMapper.findByEmployeeAndDate(employeeId, start, end);
-        List<DutyRest> restList = dutyRestMapper.findByEmployeeAndDate(employeeId, start, end);
-        List<DutyFree> freeList = dutyFreeMapper.findByEmployeeAndDate(employeeId, start, end);
-        List<DutyPublicFree> publicFreeList = dutyPublicFreeMapper.findByEmployeeAndDate(employeeId, start, end);
-        List<DutyTrip> tripList = dutyTripMapper.findByEmployeeAndDate(employeeId, start, end);
-        List<DutySign>signList=dutySignMapper.findByEmployeeAndDate(employeeId, start, end);
+        List<DutyWorktime> worktimeList = dutyWorktimeRepository.findByEmployeeAndDate(employeeId, start, end);
+        List<DutyLeave> leaveList = dutyLeaveRepository.findByEmployeeAndDate(employeeId, start, end);
+        List<DutyOvertime> overtimeList = dutyOvertimeRepository.findByEmployeeAndDate(employeeId, start, end);
+        List<DutyRest> restList = dutyRestRepository.findByEmployeeAndDate(employeeId, start, end);
+        List<DutyFree> freeList = dutyFreeRepository.findByEmployeeAndDate(employeeId, start, end);
+        List<DutyPublicFree> publicFreeList = dutyPublicFreeRepository.findByEmployeeAndDate(employeeId, start, end);
+        List<DutyTrip> tripList = dutyTripRepository.findByEmployeeAndDate(employeeId, start, end);
+        List<DutySign>signList=dutySignRepository.findByEmployeeAndDate(employeeId, start, end);
         for (DutyWorktime dutyWorktime : worktimeList) {
             CalendarEventDto calendarEventDto = new CalendarEventDto();
             calendarEventDto.setId(dutyWorktime.getId());

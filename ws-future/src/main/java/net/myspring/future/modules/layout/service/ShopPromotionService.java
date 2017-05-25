@@ -1,10 +1,11 @@
 package net.myspring.future.modules.layout.service;
 
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopPromotion;
 import net.myspring.future.modules.layout.dto.ShopPromotionDto;
-import net.myspring.future.modules.layout.mapper.ShopPromotionMapper;
+import net.myspring.future.modules.layout.repository.ShopPromotionRepository;
+import net.myspring.future.modules.layout.repository.ShopPromotionRepository;
 import net.myspring.future.modules.layout.web.form.ShopPromotionForm;
 import net.myspring.future.modules.layout.web.query.ShopPromotionQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -25,12 +26,14 @@ import java.util.Map;
 public class ShopPromotionService {
 
     @Autowired
-    private ShopPromotionMapper shopPromotionMapper;
+    private ShopPromotionRepository shopPromotionRepository;
+    @Autowired
+    private ShopPromotionRepository shopPromotionRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public Page<ShopPromotionDto> findPage(Pageable pageable, ShopPromotionQuery shopPromotionQuery){
-        Page<ShopPromotionDto> page = shopPromotionMapper.findPage(pageable,shopPromotionQuery);
+        Page<ShopPromotionDto> page = shopPromotionRepository.findPage(pageable,shopPromotionQuery);
         cacheUtils.initCacheInput(page.getContent());
         return  page;
     }
@@ -39,20 +42,20 @@ public class ShopPromotionService {
         ShopPromotion shopPromotion;
         if(shopPromotionForm.isCreate()){
             shopPromotion = BeanUtil.map(shopPromotionForm,ShopPromotion.class);
-            String maxBusinessId = shopPromotionMapper.findMaxBusinessId(LocalDate.now());
+            String maxBusinessId = shopPromotionRepository.findMaxBusinessId(LocalDate.now());
             shopPromotion.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
-            shopPromotionMapper.save(shopPromotion);
+            shopPromotionRepository.save(shopPromotion);
         }else{
-            shopPromotion = shopPromotionMapper.findOne(shopPromotionForm.getId());
+            shopPromotion = shopPromotionRepository.findOne(shopPromotionForm.getId());
             ReflectionUtil.copyProperties(shopPromotionForm,shopPromotion);
-            shopPromotionMapper.update(shopPromotion);
+            shopPromotionRepository.save(shopPromotion);
         }
         return shopPromotion;
     }
 
     public ShopPromotionForm getForm(ShopPromotionForm shopPromotionForm){
         if(!shopPromotionForm.isCreate()){
-            ShopPromotion shopPromotion = shopPromotionMapper.findOne(shopPromotionForm.getId());
+            ShopPromotion shopPromotion = shopPromotionRepository.findOne(shopPromotionForm.getId());
             shopPromotionForm = BeanUtil.map(shopPromotion,ShopPromotionForm.class);
             cacheUtils.initCacheInput(shopPromotionForm);
         }
@@ -60,6 +63,6 @@ public class ShopPromotionService {
     }
 
     public void logicDeleteOne(String id){
-        shopPromotionMapper.logicDeleteOne(id);
+        shopPromotionRepository.logicDeleteOne(id);
     }
 }

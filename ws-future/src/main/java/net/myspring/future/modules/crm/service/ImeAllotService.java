@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
-import net.myspring.future.modules.basic.repository.ImeAllotRepository;
-import net.myspring.future.modules.basic.repository.ProductImeRepository;
+import net.myspring.future.modules.crm.repository.ImeAllotRepository;
+import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.domain.ImeAllot;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.util.text.StringUtils;

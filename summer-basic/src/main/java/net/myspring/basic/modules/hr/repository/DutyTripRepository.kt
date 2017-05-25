@@ -77,25 +77,23 @@ class DutyTripRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         var sb = StringBuilder()
         sb.append("""
             SELECT
-        tr.employee_id,tr.date_start,tr.date_end,tr.status
-        FROM
-        hr_duty_trip
-        WHERE
-        (
-        date_end &gt;= :dateStart
-        and date_end &lt;= :dateEnd
-        )
-        or (date_start &gt;= :dateStart and date_start &lt;= :dateEnd)
-        or (date_start &lt; :dateStart and date_end &gt; :dateStart)
-        FROM
-        hr_duty_trip tr
-        WHERE
-        tr.enabled=1
+            tr.employee_id,tr.date_start,tr.date_end,tr.status
+            FROM
+            hr_duty_trip
+            WHERE
+            (
+            date_end &gt;= :dateStart
+            and date_end &lt;= :dateEnd
+            )
+            or (date_start &gt;= :dateStart and date_start &lt;= :dateEnd)
+            or (date_start &lt; :dateStart and date_end &gt; :dateStart)
+            FROM
+            hr_duty_trip tr
+            WHERE
+            tr.enabled=1
         """)
         if (CollectionUtil.isNotEmpty(accountIds)) {
-            sb.append("""
-                 and tr.employee_id in :accountIds
-            """)
+            sb.append(" and tr.employee_id in :accountIds")
         }
         var query = entityManager.createNativeQuery(sb.toString(), DutyTrip::class.java)
         query.setParameter("dateStart", dateStart)

@@ -5,9 +5,9 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -34,7 +34,7 @@ public class GoodsOrderShipService {
     private GoodsOrderImeRepository goodsOrderImeRepository;
 
     @Autowired
-    private ProductMapper productMapper;
+    private ProductRepository productRepository;
 
     @Autowired
     private ProductImeRepository productImeRepository;
@@ -87,7 +87,7 @@ public class GoodsOrderShipService {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getGoodsOrderId());
         Map<String, GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
         List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderShipForm.getGoodsOrderId());
-        List<Product> productList  = productMapper.findByIds(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
+        List<Product> productList  = productRepository.findAll(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
         Map<String,Product> productMap = CollectionUtil.extractToMap(productList,"id");
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
             if (goodsOrderDetail.getRealBillQty() > 0 && goodsOrderDetail.getRealBillQty() != goodsOrderDetail.getShippedQty()) {

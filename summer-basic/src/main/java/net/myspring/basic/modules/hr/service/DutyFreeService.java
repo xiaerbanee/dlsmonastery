@@ -5,7 +5,7 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyFree;
 import net.myspring.basic.modules.hr.dto.DutyFreeDto;
-import net.myspring.basic.modules.hr.mapper.DutyFreeMapper;
+import net.myspring.basic.modules.hr.repository.DutyFreeRepository;
 import net.myspring.basic.modules.hr.web.form.DutyFreeForm;
 import net.myspring.basic.modules.hr.web.query.DutyFreeQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -23,12 +23,12 @@ import java.util.List;
 public class DutyFreeService {
 
     @Autowired
-    private DutyFreeMapper dutyFreeMapper;
+    private DutyFreeRepository dutyFreeRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public Page<DutyFreeDto> findPage(Pageable pageable, DutyFreeQuery dutyFreeQuery) {
-        Page<DutyFreeDto> page = dutyFreeMapper.findPage(pageable, dutyFreeQuery);
+        Page<DutyFreeDto> page = dutyFreeRepository.findPage(pageable, dutyFreeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -37,18 +37,18 @@ public class DutyFreeService {
         dutyFreeForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
         dutyFreeForm.setStatus(AuditTypeEnum.APPLYING.toString());
         DutyFree dutyFree = BeanUtil.map(dutyFreeForm, DutyFree.class);
-        dutyFreeMapper.save(dutyFree);
+        dutyFreeRepository.save(dutyFree);
         return dutyFree;
     }
 
     public DutyFree findOne(String id) {
-        DutyFree dutyFree = dutyFreeMapper.findOne(id);
+        DutyFree dutyFree = dutyFreeRepository.findOne(id);
         return dutyFree;
     }
 
     public DutyFreeForm getForm(DutyFreeForm dutyFreeForm) {
         if(!dutyFreeForm.isCreate()){
-            DutyFree dutyFree =dutyFreeMapper.findOne(dutyFreeForm.getId());
+            DutyFree dutyFree =dutyFreeRepository.findOne(dutyFreeForm.getId());
             dutyFreeForm = BeanUtil.map(dutyFree,DutyFreeForm.class);
             cacheUtils.initCacheInput(dutyFreeForm);
         }
@@ -56,10 +56,10 @@ public class DutyFreeService {
     }
 
     public void logicDeleteOne(String id) {
-        dutyFreeMapper.logicDeleteOne(id);
+        dutyFreeRepository.logicDeleteOne(id);
     }
 
     public List<DutyFree> findByDate(LocalDate freeDate, String employeeId) {
-        return dutyFreeMapper.findByDate(freeDate, employeeId);
+        return dutyFreeRepository.findByDate(freeDate, employeeId);
     }
 }

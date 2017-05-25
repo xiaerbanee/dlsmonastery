@@ -6,8 +6,10 @@ import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
-import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
+import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.repository.ProductTypeRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
 import net.myspring.future.modules.basic.web.form.ProductTypeForm;
@@ -30,31 +32,34 @@ import java.util.Map;
 public class ProductTypeService {
 
     @Autowired
-    private ProductTypeMapper productTypeMapper;
-
+    private ProductTypeRepository productTypeRepository;
     @Autowired
-    private ProductMapper productMapper;
+    private ProductTypeRepository productTypeRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public ProductType findOne(String id) {
-        ProductType productType = productTypeMapper.findOne(id);
+        ProductType productType = productTypeRepository.findOne(id);
         return productType;
     }
 
     public ProductTypeForm getForm(ProductTypeForm productTypeForm){
         if(!productTypeForm.isCreate()){
-            ProductType productType = productTypeMapper.findOne(productTypeForm.getId());
+            ProductType productType = productTypeRepository.findOne(productTypeForm.getId());
             productTypeForm = BeanUtil.map(productType,productTypeForm.getClass());
-            List<Product> productList = productMapper.findByProductTypeId(productTypeForm.getId());
+            List<Product> productList = productRepository.findByProductTypeId(productTypeForm.getId());
             productTypeForm.setProductList(BeanUtil.map(productList,ProductDto.class));
         }
         return productTypeForm;
     }
 
     public List<ProductType> findAllScoreType(){
-        List<ProductType> productTypeList = productTypeMapper.findAllScoreType();
+        List<ProductType> productTypeList = productTypeRepository.findAllScoreType();
         return productTypeList;
     }
 
@@ -62,31 +67,31 @@ public class ProductTypeService {
         ProductType productType;
         if (productTypeForm.isCreate()) {
             productType= BeanUtil.map(productTypeForm,ProductType.class);
-            productTypeMapper.save(productType);
+            productTypeRepository.save(productType);
         } else {
-            productMapper.updateProductTypeToNull(productTypeForm.getId());
-            productType= productTypeMapper.findOne(productTypeForm.getId());
+            productRepository.updateProductTypeToNull(productTypeForm.getId());
+            productType= productTypeRepository.findOne(productTypeForm.getId());
             ReflectionUtil.copyProperties(productTypeForm,productType);
-            productTypeMapper.update(productType);
+            productTypeRepository.save(productType);
         }
         if (CollectionUtil.isNotEmpty(productTypeForm.getProductIdList())) {
-            productMapper.updateProductTypeId(productType.getId(), productTypeForm.getProductIdList());
+            productRepository.updateProductTypeId(productType.getId(), productTypeForm.getProductIdList());
         }
         return productType;
     }
 
     public void logicDeleteOne(ProductTypeForm productTypeForm) {
-        productTypeMapper.logicDeleteOne(productTypeForm.getId());
+        productTypeRepository.logicDeleteOne(productTypeForm.getId());
     }
 
     public Page<ProductTypeDto> findPage(Pageable pageable, ProductTypeQuery productTypeQuery) {
-        Page<ProductTypeDto> page = productTypeMapper.findPage(pageable, productTypeQuery);
+        Page<ProductTypeDto> page = productTypeRepository.findPage(pageable, productTypeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public List<ProductType> findAll(){
-        List<ProductType> productTypeList=productTypeMapper.findAll();
+        List<ProductType> productTypeList=productTypeRepository.findAll();
         return productTypeList;
     }
 
@@ -98,14 +103,14 @@ public class ProductTypeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "scoreType", "是否打分"));
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-        List<ProductType> productTypeList = productTypeMapper.findList(map);
+        List<ProductType> productTypeList = productTypeRepository.findList(map);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("货品类型", productTypeList, simpleExcelColumnList);
         simpleExcelSheetList.add(simpleExcelSheet);
         return simpleExcelSheetList;
     }
 
     public List<ProductType> findByNameLike(String name){
-        List<ProductType> productTypeList = productTypeMapper.findByNameLike(name);
+        List<ProductType> productTypeList = productTypeRepository.findByNameLike(name);
         return productTypeList;
     }
 

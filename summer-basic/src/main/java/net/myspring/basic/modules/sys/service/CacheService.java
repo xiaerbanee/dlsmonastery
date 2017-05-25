@@ -1,11 +1,11 @@
 package net.myspring.basic.modules.sys.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.modules.hr.mapper.*;
+import net.myspring.basic.modules.hr.repository.*;
 import net.myspring.basic.modules.sys.domain.CompanyConfig;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.CompanyConfigDto;
-import net.myspring.basic.modules.sys.mapper.*;
+import net.myspring.basic.modules.sys.repository.*;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.slf4j.Logger;
@@ -24,53 +24,53 @@ import java.util.List;
 public class CacheService {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
-    private AccountMapper accountMapper;
+    private AccountRepository accountRepository;
     @Autowired
-    private DictMapMapper dictMapMapper;
+    private DictMapRepository dictMapRepository;
     @Autowired
-    private EmployeeMapper employeeMapper;
+    private EmployeeRepository employeeRepository;
     @Autowired
-    private PositionMapper positionMapper;
+    private PositionRepository positionRepository;
     @Autowired
-    private OfficeMapper officeMapper;
+    private OfficeRepository officeRepository;
     @Autowired
-    private OfficeRuleMapper officeRuleMapper;
+    private OfficeRuleRepository officeRuleRepository;
     @Autowired
-    private DictEnumMapper dictEnumMapper;
+    private DictEnumRepository dictEnumRepository;
     @Autowired
-    private MenuMapper menuMapper;
+    private MenuRepository menuRepository;
     @Autowired
-    private MenuCategoryMapper menuCategoryMapper;
+    private MenuCategoryRepository menuCategoryRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private CompanyMapper companyMapper;
+    private CompanyRepository companyRepository;
     @Autowired
-    private BackendMapper backendMapper;
+    private BackendRepository backendRepository;
     @Autowired
-    private BackendModuleMapper backendModuleMapper;
+    private BackendModuleRepository backendModuleRepository;
     @Autowired
-    private RoleModuleMapper positionBackendMapper;
+    private RoleModuleRepository positionBackendRepository;
     @Autowired
-    private CompanyConfigMapper companyConfigMapper;
+    private CompanyConfigRepository companyConfigRepository;
 
     public void init() {
         LocalDateTime start = LocalDateTime.now();
         logger.info("init cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
-        cacheUtils.initCache("accounts",accountMapper.findAll());
-        cacheUtils.initCache("dictMaps",dictMapMapper.findAll());
-        cacheUtils.initCache("employees",employeeMapper.findAll());
-        cacheUtils.initCache("offices",officeMapper.findAll());
-        cacheUtils.initCache("dictEnums",dictEnumMapper.findAll());
-        cacheUtils.initCache("positions",positionMapper.findAll());
-        cacheUtils.initCache("menus",menuMapper.findAll());
-        cacheUtils.initCache("companys",companyMapper.findAll());
-        cacheUtils.initCache("menuCategorys",menuCategoryMapper.findAll());
-        cacheUtils.initCache("backends",backendMapper.findAll());
-        cacheUtils.initCache("backendModules",backendModuleMapper.findAll());
-        cacheUtils.initCache("positionModules",positionBackendMapper.findAll());
-        cacheUtils.initCache("officeRules",officeRuleMapper.findAll());
-        List<CompanyConfigCacheDto> companyConfigs=companyConfigMapper.findAllCache();
+        cacheUtils.initCache("accounts",accountRepository.findAll());
+        cacheUtils.initCache("dictMaps",dictMapRepository.findAll());
+        cacheUtils.initCache("employees",employeeRepository.findAll());
+        cacheUtils.initCache("offices",officeRepository.findAll());
+        cacheUtils.initCache("dictEnums",dictEnumRepository.findAll());
+        cacheUtils.initCache("positions",positionRepository.findAll());
+        cacheUtils.initCache("menus",menuRepository.findAll());
+        cacheUtils.initCache("companys",companyRepository.findAll());
+        cacheUtils.initCache("menuCategorys",menuCategoryRepository.findAll());
+        cacheUtils.initCache("backends",backendRepository.findAll());
+        cacheUtils.initCache("backendModules",backendModuleRepository.findAll());
+        cacheUtils.initCache("positionModules",positionBackendRepository.findAll());
+        cacheUtils.initCache("officeRules",officeRuleRepository.findAll());
+        List<CompanyConfigCacheDto> companyConfigs=companyConfigRepository.findAllCache();
         for(CompanyConfigCacheDto companyConfigCacheDto:companyConfigs) {
             companyConfigCacheDto.setKey(companyConfigCacheDto.getCompanyId() + CharConstant.ENTER + companyConfigCacheDto.getCode());
         }

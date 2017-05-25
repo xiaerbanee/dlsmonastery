@@ -5,6 +5,9 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
+import net.myspring.future.modules.basic.repository.PricesystemRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.util.text.IdUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.Pricesystem;
@@ -12,9 +15,9 @@ import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.dto.PricesystemDto;
-import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
-import net.myspring.future.modules.basic.mapper.PricesystemMapper;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
+import net.myspring.future.modules.basic.repository.PricesystemRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.query.PricesystemQuery;
 import net.myspring.future.modules.basic.web.form.PricesystemDetailForm;
 import net.myspring.future.modules.basic.web.form.PricesystemForm;
@@ -36,39 +39,45 @@ import java.util.*;
 public class PricesystemService {
 
     @Autowired
-    private PricesystemMapper pricesystemMapper;
+    private PricesystemRepository pricesystemRepository;
     @Autowired
-    private PricesystemDetailMapper pricesystemDetailMapper;
+    private PricesystemRepository pricesystemRepository;
     @Autowired
-    private ProductMapper productMapper;
+    private PricesystemDetailRepository pricesystemDetailRepository;
+    @Autowired
+    private PricesystemDetailRepository pricesystemDetailRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private RedisTemplate redisTemplate;
 
     public List<PricesystemDto> findAllEnabled(){
-        List<Pricesystem> pricesystemList=pricesystemMapper.findAllEnabled();
+        List<Pricesystem> pricesystemList=pricesystemRepository.findAllEnabled();
         List<PricesystemDto> pricesystemDtoList= BeanUtil.map(pricesystemList,PricesystemDto.class);
         return pricesystemDtoList;
     }
 
     public Page<PricesystemDto> findPage(Pageable pageable, PricesystemQuery pricesystemQuery) {
-        Page<PricesystemDto> page = pricesystemMapper.findPage(pageable, pricesystemQuery);
+        Page<PricesystemDto> page = pricesystemRepository.findPage(pageable, pricesystemQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public List<Pricesystem> findAll(){
-        return pricesystemMapper.findAll();
+        return pricesystemRepository.findAll();
     }
 
     public void logicDeleteOne(PricesystemForm pricesystemForm) {
-        Pricesystem pricesystem = pricesystemMapper.findOne(pricesystemForm.getId());
+        Pricesystem pricesystem = pricesystemRepository.findOne(pricesystemForm.getId());
         pricesystemForm  = BeanUtil.map(pricesystem,PricesystemForm.class);
         pricesystemForm.setName(pricesystemForm.getName()+"(废弃时间"+new Date()+")");
         pricesystemForm.setEnabled(false);
         ReflectionUtil.copyProperties(pricesystemForm,pricesystem);
-        pricesystemMapper.update(pricesystem);
+        pricesystemRepository.save(pricesystem);
     }
 
     public Pricesystem save(PricesystemForm pricesystemForm) {
@@ -76,7 +85,7 @@ public class PricesystemService {
         if(pricesystemForm.isCreate()) {
             List<PricesystemDetailForm> pricesystemDetails = Lists.newArrayList();
             pricesystem= BeanUtil.map(pricesystemForm,Pricesystem.class);
-            pricesystemMapper.save(pricesystem);
+            pricesystemRepository.save(pricesystem);
             for (int i = 0; i < pricesystemForm.getPricesystemDetailList().size(); i++) {
                 PricesystemDetailForm pricesystemDetailForm = pricesystemForm.getPricesystemDetailList().get(i);
                 if (pricesystemDetailForm.getPrice() != null && pricesystemDetailForm.getPrice().compareTo(BigDecimal.ZERO) > 0) {
@@ -100,20 +109,20 @@ public class PricesystemService {
                     }
                 }
                 if(CollectionUtil.isNotEmpty(pricesystemDetails)){
-                    pricesystemDetailMapper.batchSave(BeanUtil.map(pricesystemDetails,PricesystemDetail.class));
+                    pricesystemDetailRepository.save(BeanUtil.map(pricesystemDetails,PricesystemDetail.class));
                 }
             }
         }else {
-            pricesystem=pricesystemMapper.findOne(pricesystemForm.getId());
+            pricesystem=pricesystemRepository.findOne(pricesystemForm.getId());
             ReflectionUtil.copyProperties(pricesystemForm,pricesystem);
-            pricesystemMapper.update(pricesystem);
+            pricesystemRepository.save(pricesystem);
         }
         return pricesystem;
     }
 
     public PricesystemForm getForm(PricesystemForm pricesystemForm) {
         if(!pricesystemForm.isCreate()){
-            Pricesystem pricesystem = pricesystemMapper.findOne(pricesystemForm.getId());
+            Pricesystem pricesystem = pricesystemRepository.findOne(pricesystemForm.getId());
             pricesystemForm=BeanUtil.map(pricesystem, PricesystemForm.class);
         }
         initPricesystemDetail(pricesystemForm);
@@ -125,14 +134,14 @@ public class PricesystemService {
         if(pricesystemForm.isCreate()){
             String value =CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
             List<String> outGroupIds = IdUtils.getIdList(value);
-            List<Product> productList = productMapper.findByOutGroupIds(outGroupIds);
+            List<Product> productList = productRepository.findByOutGroupIds(outGroupIds);
             for(Product product:productList){
                 PricesystemDetailForm pricesystemDetailForm=new PricesystemDetailForm();
                 pricesystemDetailForm.setProductId(product.getId());
                 pricesystemDetailForm.setProductName(product.getName());
             }
         }else {
-            List<PricesystemDetail> pricesystemDetailList=pricesystemDetailMapper.findByPricesystemId(pricesystemForm.getId());
+            List<PricesystemDetail> pricesystemDetailList=pricesystemDetailRepository.findByPricesystemId(pricesystemForm.getId());
             pricesystemDetailFormList=BeanUtil.map(pricesystemDetailList,PricesystemDetailForm.class);
         }
         cacheUtils.initCacheInput(pricesystemDetailFormList);
@@ -140,6 +149,6 @@ public class PricesystemService {
     }
 
     public List<Pricesystem> findPricesystem(){
-        return pricesystemMapper.findPricesystem();
+        return pricesystemRepository.findPricesystem();
     }
 }

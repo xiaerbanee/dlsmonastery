@@ -12,11 +12,13 @@ import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.layout.domain.ShopAttribute;
 import net.myspring.future.modules.layout.dto.ShopAttributeDetailDto;
-import net.myspring.future.modules.layout.mapper.ShopAttributeMapper;
+import net.myspring.future.modules.layout.repository.ShopAttributeRepository;
+import net.myspring.future.modules.layout.repository.ShopAttributeRepository;
 import net.myspring.future.modules.layout.web.form.ShopAttributeForm;
 import net.myspring.future.modules.layout.web.query.ShopAttributeQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -34,17 +36,22 @@ import java.util.*;
 public class ShopAttributeService {
 
     @Autowired
-    private ShopAttributeMapper shopAttributeMapper;
+    private ShopAttributeRepository shopAttributeRepository;
     @Autowired
-    private DepotMapper depotMapper;
+    private ShopAttributeRepository shopAttributeRepository;
+    @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private DepotRepository depotRepository;
     @Autowired
     private DictEnumClient dictEnumClient;
     @Autowired
     private DictMapClient dictMapClient;
     @Autowired
     private CacheUtils cacheUtils;
+
     public ShopAttribute findOne(String id) {
-        return shopAttributeMapper.findOne(id);
+        return shopAttributeRepository.findOne(id);
     }
 
     public  List<ShopAttribute>  findByShopId(String shopId) {
@@ -55,7 +62,7 @@ public class ShopAttributeService {
     public Page<DepotDto> findPage(Pageable pageable, ShopAttributeQuery shopAttributeQuery){
         DepotQuery depotQuery=new DepotQuery();
         ReflectionUtil.copyProperties(shopAttributeQuery,depotQuery);
-        Page<DepotDto> page = depotMapper.findPage(pageable, depotQuery);
+        Page<DepotDto> page = depotRepository.findPage(pageable, depotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -63,8 +70,8 @@ public class ShopAttributeService {
 
     public ShopAttributeForm getForm(ShopAttributeForm shopAttributeForm){
         if(StringUtils.isNotBlank(shopAttributeForm.getShopId())){
-            shopAttributeForm.setShop(depotMapper.findOne(shopAttributeForm.getShopId()));
-            List<ShopAttribute> shopAttributeList=shopAttributeMapper.findByShopId(shopAttributeForm.getShopId());
+            shopAttributeForm.setShop(depotRepository.findOne(shopAttributeForm.getShopId()));
+            List<ShopAttribute> shopAttributeList=shopAttributeRepository.findByShopId(shopAttributeForm.getShopId());
             Map<String,ShopAttribute> shopAttributeMap= CollectionUtil.extractToMap(shopAttributeList,"typeName");
             List<DictEnumDto> dictEnumList=dictEnumClient.findByCategory(DictEnumCategoryEnum.SHOP_ATTRIBUTE_TYPE.name());
             List<ShopAttribute> shopAttributes=Lists.newArrayList();
@@ -83,9 +90,9 @@ public class ShopAttributeService {
     }
 
     public ShopAttributeForm save(ShopAttributeForm shopAttributeForm) {
-        Depot shop = depotMapper.findOne(shopAttributeForm.getShop().getId());
-        depotMapper.update(shop);
-        List<ShopAttribute> shopAttributes=shopAttributeMapper.findByShopId(shopAttributeForm.getShop().getId());
+        Depot shop = depotRepository.findOne(shopAttributeForm.getShop().getId());
+        depotRepository.save(shop);
+        List<ShopAttribute> shopAttributes=shopAttributeRepository.findByShopId(shopAttributeForm.getShop().getId());
         Map<String,ShopAttribute> shopAttributeMap=CollectionUtil.extractToMap(shopAttributes,"typeName");
         List<ShopAttribute> shopAttributeList=Lists.newArrayList();
         for(ShopAttributeDetailDto shopAttributeDetailDto:shopAttributeForm.getShopAttributeDetailList()){
@@ -93,7 +100,7 @@ public class ShopAttributeService {
             if(shopAttribute!=null){
                 if(!shopAttribute.getTypeValue().equals(shopAttributeDetailDto.getTypeValue())){
                     shopAttribute.setEnabled(false);
-                    shopAttributeMapper.update(shopAttribute);
+                    shopAttributeRepository.save(shopAttribute);
                 }
             }
             if((shopAttribute==null||!shopAttribute.getTypeValue().equals(shopAttributeDetailDto.getTypeValue()))&&shopAttributeDetailDto.getTypeValue()>0){
@@ -103,7 +110,7 @@ public class ShopAttributeService {
             }
         }
         if(CollectionUtil.isNotEmpty(shopAttributeList)){
-            shopAttributeMapper.batchSave(shopAttributeList);
+            shopAttributeRepository.save(shopAttributeList);
         }
 
         return shopAttributeForm;

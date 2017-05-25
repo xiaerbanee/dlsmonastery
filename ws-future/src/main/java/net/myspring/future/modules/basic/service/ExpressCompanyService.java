@@ -5,7 +5,8 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
-import net.myspring.future.modules.basic.mapper.ExpressCompanyMapper;
+import net.myspring.future.modules.basic.repository.ExpressCompanyRepository;
+import net.myspring.future.modules.basic.repository.ExpressCompanyRepository;
 import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -23,19 +24,21 @@ import java.util.List;
 public class ExpressCompanyService {
 
     @Autowired
-    private ExpressCompanyMapper expressCompanyMapper;
+    private ExpressCompanyRepository expressCompanyRepository;
+    @Autowired
+    private ExpressCompanyRepository expressCompanyRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
 
     public ExpressCompany findOne(String id){
-        ExpressCompany expressCompany=expressCompanyMapper.findOne(id);
+        ExpressCompany expressCompany=expressCompanyRepository.findOne(id);
         return expressCompany;
     }
 
     public ExpressCompanyForm getForm(ExpressCompanyForm expressCompanyForm){
         if(!expressCompanyForm.isCreate()){
-            ExpressCompany expressCompany=expressCompanyMapper.findOne(expressCompanyForm.getId());
+            ExpressCompany expressCompany=expressCompanyRepository.findOne(expressCompanyForm.getId());
             expressCompanyForm=BeanUtil.map(expressCompany,ExpressCompanyForm.class);
             cacheUtils.initCacheInput(expressCompanyForm);
         }
@@ -43,34 +46,34 @@ public class ExpressCompanyService {
     }
 
     public List<ExpressCompany> findByExpressType(String type){
-        List<ExpressCompany> expressCompanyList=expressCompanyMapper.findByExpressType(type);
+        List<ExpressCompany> expressCompanyList=expressCompanyRepository.findByExpressType(type);
         return expressCompanyList;
     }
 
     public List<ExpressCompany> findAll(){
-        return expressCompanyMapper.findAll();
+        return expressCompanyRepository.findAll();
 
     }
 
     public Page<ExpressCompanyDto> findPage(Pageable pageable, ExpressCompanyQuery expressCompanyQuery) {
-        Page<ExpressCompanyDto> page = expressCompanyMapper.findPage(pageable, expressCompanyQuery);
+        Page<ExpressCompanyDto> page = expressCompanyRepository.findPage(pageable, expressCompanyQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public void delete(ExpressCompanyForm expressCompanyForm) {
-        expressCompanyMapper.logicDeleteOne(expressCompanyForm.getId());
+        expressCompanyRepository.logicDeleteOne(expressCompanyForm.getId());
     }
 
     public ExpressCompany save(ExpressCompanyForm expressCompanyForm){
         ExpressCompany expressCompany;
         if(expressCompanyForm.isCreate()){
             expressCompany= BeanUtil.map(expressCompanyForm,ExpressCompany.class);
-            expressCompanyMapper.save(expressCompany);
+            expressCompanyRepository.save(expressCompany);
         }else{
-            expressCompany=expressCompanyMapper.findOne(expressCompanyForm.getId());
+            expressCompany=expressCompanyRepository.findOne(expressCompanyForm.getId());
             ReflectionUtil.copyProperties(expressCompanyForm,expressCompany);
-            expressCompanyMapper.update(expressCompany);
+            expressCompanyRepository.save(expressCompany);
         }
         return expressCompany;
     }
@@ -80,7 +83,7 @@ public class ExpressCompanyService {
     }
 
     public List<ExpressCompanyDto> findByNameLike(String name) {
-        return expressCompanyMapper.findByNameLike(RequestUtils.getCompanyId(), name);
+        return expressCompanyRepository.findByNameLike(RequestUtils.getCompanyId(), name);
     }
 
     public String getDefaultExpressCompanyId() {
@@ -95,6 +98,6 @@ public class ExpressCompanyService {
     }
 
     public List<ExpressCompanyDto> findDtoListByCompanyIdAndExpressType(String companyId, String expressType) {
-        return expressCompanyMapper.findByCompanyIdAndExpressType(companyId, expressType);
+        return expressCompanyRepository.findByCompanyIdAndExpressType(companyId, expressType);
     }
 }

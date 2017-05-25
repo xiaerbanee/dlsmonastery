@@ -3,8 +3,8 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.domain.ProductType;
-import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
-import net.myspring.future.modules.basic.repository.ProductMonthPriceRepository;
+import net.myspring.future.modules.crm.repository.ProductMonthPriceRepository;
+import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.crm.domain.ProductMonthPrice;
 import net.myspring.future.modules.crm.domain.ProductMonthPriceDetail;
 import net.myspring.util.collection.CollectionUtil;
@@ -22,11 +22,11 @@ public class ProductMonthPriceService {
     private ProductMonthPriceRepository productMonthPriceRepository;
 
     @Autowired
-    private ProductTypeMapper productTypeMapper;
+    private ProductTypeRepository productTypeRepository;
 
     public ProductMonthPrice findOne(String id) {
         ProductMonthPrice productMonthPrice=productMonthPriceRepository.findOne(id);
-        List<ProductType> productTypeList = productTypeMapper.findAllScoreType();
+        List<ProductType> productTypeList = productTypeRepository.findAllScoreType();
         List<ProductMonthPriceDetail> productMonthPriceDetailList = productMonthPrice.getProductMonthPriceDetailList();
         List<String> productMonthPriceDetailProductTypeIdList = CollectionUtil.extractToList(CollectionUtil.extractToList(productMonthPriceDetailList,"productType"),"id");
         for(ProductType productType:productTypeList){
@@ -47,7 +47,7 @@ public class ProductMonthPriceService {
 
 
     public List<ProductMonthPriceDetail> getProductTypeList(){
-        List<ProductType> productTypeList = productTypeMapper.findAllScoreType();
+        List<ProductType> productTypeList = productTypeRepository.findAllScoreType();
         List<ProductMonthPriceDetail> list = Lists.newArrayList();
         for(ProductType productType:productTypeList){
             ProductMonthPriceDetail productMonthPriceDetail = new ProductMonthPriceDetail();

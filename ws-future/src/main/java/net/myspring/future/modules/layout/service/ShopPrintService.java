@@ -5,7 +5,8 @@ import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.layout.domain.ShopPrint;
 import net.myspring.future.modules.layout.dto.ShopPrintDto;
-import net.myspring.future.modules.layout.mapper.ShopPrintMapper;
+import net.myspring.future.modules.layout.repository.ShopPrintRepository;
+import net.myspring.future.modules.layout.repository.ShopPrintRepository;
 import net.myspring.future.modules.layout.web.form.ShopPrintForm;
 import net.myspring.future.modules.layout.web.query.ShopPrintQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -26,7 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ShopPrintService {
 
     @Autowired
-    private ShopPrintMapper shopPrintMapper;
+    private ShopPrintRepository shopPrintRepository;
+    @Autowired
+    private ShopPrintRepository shopPrintRepository;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
@@ -36,14 +39,14 @@ public class ShopPrintService {
 
 
     public Page<ShopPrintDto> findPage(Pageable pageable, ShopPrintQuery shopPrintQuery) {
-        Page<ShopPrintDto> page = shopPrintMapper.findPage(pageable, shopPrintQuery);
+        Page<ShopPrintDto> page = shopPrintRepository.findPage(pageable, shopPrintQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public ShopPrintForm getForm(ShopPrintForm  shopPrintForm){
         if(!shopPrintForm.isCreate()){
-            ShopPrint shopPrint = shopPrintMapper.findOne(shopPrintForm.getId());
+            ShopPrint shopPrint = shopPrintRepository.findOne(shopPrintForm.getId());
             shopPrintForm = BeanUtil.map(shopPrint,ShopPrintForm.class);
             cacheUtils.initCacheInput(shopPrintForm);
         }
@@ -53,7 +56,7 @@ public class ShopPrintService {
     public ShopPrintDto findOne(String id){
         ShopPrintDto shopPrintDto = new ShopPrintDto();
         if(StringUtils.isNotBlank(id)){
-            ShopPrint shopPrint = shopPrintMapper.findOne(id);
+            ShopPrint shopPrint = shopPrintRepository.findOne(id);
             shopPrintDto = BeanUtil.map(shopPrint,ShopPrintDto.class);
             cacheUtils.initCacheInput(shopPrintDto);
         }
@@ -64,7 +67,7 @@ public class ShopPrintService {
         ShopPrint shopPrint;
         if(shopPrintForm.isCreate()){
             shopPrint = BeanUtil.map(shopPrintForm,ShopPrint.class);
-            shopPrintMapper.save(shopPrint);
+            shopPrintRepository.save(shopPrint);
 
             //开始流程
             ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("广告印刷",shopPrint.getId(),ShopPrint.class.getSimpleName(),shopPrint.getPrintType()));
@@ -74,18 +77,18 @@ public class ShopPrintService {
                 shopPrint.setProcessPositionId(activitiStartDto.getPositionId());
                 shopPrint.setProcessStatus(activitiStartDto.getProcessStatus());
                 shopPrint.setProcessTypeId(activitiStartDto.getProcessTypeId());
-                shopPrintMapper.update(shopPrint);
+                shopPrintRepository.save(shopPrint);
             }
         }else{
-            shopPrint = shopPrintMapper.findOne(shopPrintForm.getId());
+            shopPrint = shopPrintRepository.findOne(shopPrintForm.getId());
             ReflectionUtil.copyProperties(shopPrintForm,shopPrint);
-            shopPrintMapper.update(shopPrint);
+            shopPrintRepository.save(shopPrint);
         }
         return shopPrint;
     }
 
     public void logicDelete(String id){
-        shopPrintMapper.logicDeleteOne(id);
+        shopPrintRepository.logicDeleteOne(id);
     }
 
     public void audit(ShopPrintForm shopPrintForm) {
@@ -94,7 +97,7 @@ public class ShopPrintService {
         activitiCompleteForm.setPass(shopPrintForm.getPass()=="1"?true:false);
         activitiCompleteForm.setComment(shopPrintForm.getPassRemarks());
 
-        ShopPrint shopPrint = shopPrintMapper.findOne(shopPrintForm.getId());
+        ShopPrint shopPrint = shopPrintRepository.findOne(shopPrintForm.getId());
         activitiCompleteForm.setProcessInstanceId(shopPrint.getProcessInstanceId());
         activitiCompleteForm.setProcessTypeId(shopPrint.getProcessTypeId());
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
@@ -102,7 +105,7 @@ public class ShopPrintService {
             shopPrint.setProcessStatus(activitiCompleteDto.getProcessStatus());
             shopPrint.setProcessPositionId(activitiCompleteDto.getPositionId());
             shopPrint.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
-            shopPrintMapper.update(shopPrint);
+            shopPrintRepository.save(shopPrint);
         }
     }
 

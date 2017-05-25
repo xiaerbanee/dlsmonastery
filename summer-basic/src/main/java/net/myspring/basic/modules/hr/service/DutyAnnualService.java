@@ -9,9 +9,9 @@ import net.myspring.basic.modules.hr.domain.DutyAnnual;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.DutyAnnualDto;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
-import net.myspring.basic.modules.hr.mapper.AccountMapper;
-import net.myspring.basic.modules.hr.mapper.DutyAnnualMapper;
-import net.myspring.basic.modules.hr.mapper.EmployeeMapper;
+import net.myspring.basic.modules.hr.repository.AccountRepository;
+import net.myspring.basic.modules.hr.repository.DutyAnnualRepository;
+import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.web.form.DutyAnnualForm;
 import net.myspring.basic.modules.hr.web.query.DutyAnnualQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -42,11 +42,11 @@ import static net.myspring.util.excel.ExcelUtils.*;
 public class DutyAnnualService {
 
     @Autowired
-    private DutyAnnualMapper dutyAnnualMapper;
+    private DutyAnnualRepository dutyAnnualRepository;
     @Autowired
-    private EmployeeMapper employeeMapper;
+    private EmployeeRepository employeeRepository;
     @Autowired
-    private AccountMapper accountMapper;
+    private AccountRepository accountRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -55,23 +55,23 @@ public class DutyAnnualService {
     private GridFsTemplate storageGridFsTemplate;
 
     public Double getAvailableHour(String  employeeId) {
-        DutyAnnual dutyAnnual = dutyAnnualMapper.findByEmployee(employeeId);
+        DutyAnnual dutyAnnual = dutyAnnualRepository.findByEmployee(employeeId);
         return dutyAnnual==null ? 0.0 : dutyAnnual.getLeftHour();
     }
 
     public DutyAnnual findOne(String id){
-        DutyAnnual dutyAnnual=dutyAnnualMapper.findOne(id);
+        DutyAnnual dutyAnnual=dutyAnnualRepository.findOne(id);
         return dutyAnnual;
     }
 
     public Page<DutyAnnualDto> findPage(Pageable pageable, DutyAnnualQuery dutyAnnualQuery){
-        Page<DutyAnnualDto> dutyAnnualDtoPage= dutyAnnualMapper.findPage(pageable,dutyAnnualQuery);
+        Page<DutyAnnualDto> dutyAnnualDtoPage= dutyAnnualRepository.findPage(pageable,dutyAnnualQuery);
         cacheUtils.initCacheInput(dutyAnnualDtoPage.getContent());
         return dutyAnnualDtoPage;
     }
 
     public String findSimpleExcelSheet(Workbook workbook) throws IOException {
-        List<Employee> employeeList = employeeMapper.findByStatusAndregularDate("在职", LocalDateTime.now().minusYears(1));
+        List<Employee> employeeList = employeeRepository.findByStatusAndregularDate("在职", LocalDateTime.now().minusYears(1));
         List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"name","用户名"));
@@ -95,7 +95,7 @@ public class DutyAnnualService {
         simpleExcelColumnList.add(new SimpleExcelColumn("leftHour","剩余时间"));
         if(workbook!=null){
             List<DutyAnnualForm> list = doRead(workbook.getSheetAt(0), simpleExcelColumnList, DutyAnnualForm.class);
-            List<Employee> employeeList=employeeMapper.findByNameList(CollectionUtil.extractToList(list,"employeeName"));
+            List<Employee> employeeList=employeeRepository.findByNameList(CollectionUtil.extractToList(list,"employeeName"));
             Map<String,Employee> employeeMap=CollectionUtil.extractToMap(employeeList,"name");
             List<DutyAnnual> dutyAnnualList=Lists.newArrayList();
             for(DutyAnnualForm dutyAnnualForm:list){
@@ -106,7 +106,7 @@ public class DutyAnnualService {
                     dutyAnnualList.add(BeanUtil.map(dutyAnnualForm,DutyAnnual.class));
                 }
             }
-            dutyAnnualMapper.batchSave(dutyAnnualList);
+            dutyAnnualRepository.save(dutyAnnualList);
         }
     }
 }

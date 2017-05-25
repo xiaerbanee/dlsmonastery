@@ -9,9 +9,9 @@ import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.imoo.domain.ImooPlantBasicProduct;
 import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver;
-import net.myspring.tool.modules.imoo.mapper.ImooMapper;
-import net.myspring.tool.modules.imoo.mapper.ImooPlantBasicProductMapper;
-import net.myspring.tool.modules.imoo.mapper.ImooPrdocutImeiDeliverMapper;
+import net.myspring.tool.modules.imoo.repository.ImooRepository;
+import net.myspring.tool.modules.imoo.repository.ImooPlantBasicProductRepository;
+import net.myspring.tool.modules.imoo.repository.ImooPrdocutImeiDeliverRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +30,18 @@ import java.util.List;
 @LocalDataSource
 public class ImooService {
     @Autowired
-    private ImooMapper imooMapper;
+    private ImooRepository imooRepository;
     @Autowired
-    private ImooPlantBasicProductMapper imooPlantBasicProductMapper;
+    private ImooPlantBasicProductRepository imooPlantBasicProductRepository;
     @Autowired
-    private ImooPrdocutImeiDeliverMapper imooPrdocutImeiDeliverMapper;
+    private ImooPrdocutImeiDeliverRepository imooPrdocutImeiDeliverRepository;
     @Autowired
     private RedisTemplate redisTemplate;
 
     @FactoryDataSource
     @Transactional(readOnly = true)
     public List<ImooPlantBasicProduct> imooPlantBasicProducts() {
-        return imooMapper.plantBasicProducts();
+        return imooRepository.plantBasicProducts();
     }
 
     @FactoryDataSource
@@ -50,7 +50,7 @@ public class ImooService {
         String agentCodes = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         LocalDate dateStart = date.minusDays(2);
         LocalDate dateEnd = date.plusDays(1);
-        return imooMapper.plantPrdocutImeiDeliverByDate(dateStart, dateEnd, StringUtils.getSplitList(agentCodes, CharConstant.COMMA));
+        return imooRepository.plantPrdocutImeiDeliverByDate(dateStart, dateEnd, StringUtils.getSplitList(agentCodes, CharConstant.COMMA));
     }
 
     @LocalDataSource
@@ -58,14 +58,14 @@ public class ImooService {
         if (CollectionUtil.isNotEmpty(imooPlantBasicProducts)) {
             List<ImooPlantBasicProduct> list = Lists.newArrayList();
             List<String> segment1s = CollectionUtil.extractToList(imooPlantBasicProducts, "segment1");
-            List<String> localSegment1s = imooPlantBasicProductMapper.findSegment1s(segment1s);
+            List<String> localSegment1s = imooPlantBasicProductRepository.findSegment1s(segment1s);
             for (ImooPlantBasicProduct item : imooPlantBasicProducts) {
                 if (!localSegment1s.contains(item.getSegment1())) {
                     list.add(item);
                 }
             }
             if (CollectionUtil.isNotEmpty(list)) {
-                imooPlantBasicProductMapper.save(list);
+                imooPlantBasicProductRepository.save(list);
             }
         }
     }
@@ -81,7 +81,7 @@ public class ImooService {
             if (CollectionUtil.isNotEmpty(imooPrdocutImeiDelivers)) {
                 List<String> imeis = CollectionUtil.extractToList(imooPrdocutImeiDelivers, "imei");
                 if (CollectionUtil.isNotEmpty(imeis)) {
-                    List<String> localImeis = imooPrdocutImeiDeliverMapper.findImeis(imeis);
+                    List<String> localImeis = imooPrdocutImeiDeliverRepository.findImeis(imeis);
                     for (ImooPrdocutImeiDeliver item : imooPrdocutImeiDelivers) {
                         if (!localImeis.contains(item.getImei())) {
                             item.setCompanyId(agentCode);
@@ -92,7 +92,7 @@ public class ImooService {
             }
         }
         if (CollectionUtil.isNotEmpty(list)) {
-            imooPrdocutImeiDeliverMapper.save(list);
+            imooPrdocutImeiDeliverRepository.save(list);
         }
         return "发货串码同步成功，共同步" + list.size() + "条数据";
     }

@@ -76,7 +76,6 @@
         util.copyValue(this.formData,this.submitData);
         util.setQuery("demoPhoneTypeList",this.submitData);
         axios.get('/api/ws/future/crm/demoPhoneType',{params:this.submitData}).then((response) => {
-          console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -97,17 +96,22 @@
         if(action=="edit") {
           this.$router.push({ name: 'demoPhoneTypeForm', query: { id: id }})
         } else if(action=="delete") {
-          axios.get('/api/ws/future/crm/demoPhoneType/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/crm/demoPhoneType/delete', {params: {id: id}}).then((response) => {
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
           })
         }
       }
     },created () {
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      util.copyValue(that.$route.query,that.formData);
-      that.pageRequest();
+      axios.get('/api/ws/future/crm/demoPhoneType/getQuery').then((response) => {
+        that.formData = response.data;
+        util.copyValue(that.$route.query, that.formData);
+        that.pageRequest();
+      })
     }
   };
 </script>

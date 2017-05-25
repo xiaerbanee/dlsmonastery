@@ -1,7 +1,9 @@
 package net.myspring.basic.modules.sys.repository
 
+import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Backend
 import net.myspring.basic.modules.sys.domain.BackendModule
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.Query
@@ -10,9 +12,10 @@ import org.springframework.data.repository.query.Param
 /**
  * Created by haos on 2017/5/24.
  */
-interface  BackendModuleRepository{
+@CacheConfig(cacheNames = arrayOf("backendModules"))
+interface  BackendModuleRepository:BaseRepository<BackendModule,String>{
     @Cacheable
-    fun findOne(id: String): BackendModule
+    override fun findOne(id: String): BackendModule
 
     @CachePut(key="#id")
     fun save(backendModule: BackendModule): BackendModule

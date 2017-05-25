@@ -4,10 +4,11 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopImage;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
-import net.myspring.future.modules.layout.mapper.ShopImageMapper;
+import net.myspring.future.modules.layout.repository.ShopImageRepository;
+import net.myspring.future.modules.layout.repository.ShopImageRepository;
 import net.myspring.future.modules.layout.web.form.ShopImageForm;
 import net.myspring.future.modules.layout.web.query.ShopImageQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -29,16 +30,18 @@ import java.util.List;
 public class ShopImageService {
 
     @Autowired
-    private ShopImageMapper shopImageMapper;
+    private ShopImageRepository shopImageRepository;
     @Autowired
-    private DepotMapper depotMapper;
+    private ShopImageRepository shopImageRepository;
+    @Autowired
+    private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private RedisTemplate redisTemplate;
 
     public Page findPage(Pageable pageable, ShopImageQuery shopImageQuery){
-        Page<ShopImageDto> page=shopImageMapper.findPage(pageable,shopImageQuery);
+        Page<ShopImageDto> page=shopImageRepository.findPage(pageable,shopImageQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -46,7 +49,7 @@ public class ShopImageService {
     public ShopImageDto findOne(String id){
         ShopImageDto shopImageDto = new ShopImageDto();
         if(StringUtils.isNotBlank(id)){
-            ShopImage shopImage=shopImageMapper.findOne(id);
+            ShopImage shopImage=shopImageRepository.findOne(id);
             shopImageDto = BeanUtil.map(shopImage,ShopImageDto.class);
             cacheUtils.initCacheInput(shopImageDto);
         }
@@ -67,17 +70,17 @@ public class ShopImageService {
         ShopImage shopImage;
         if(shopImageForm.isCreate()){
             shopImage =  BeanUtil.map(shopImageForm,ShopImage.class);
-            shopImageMapper.save(shopImage);
+            shopImageRepository.save(shopImage);
         }else{
-            shopImage = shopImageMapper.findOne(shopImageForm.getId());
+            shopImage = shopImageRepository.findOne(shopImageForm.getId());
             ReflectionUtil.copyProperties(shopImageForm,shopImage);
-            shopImageMapper.update(shopImage);
+            shopImageRepository.save(shopImage);
         }
         return shopImage;
     }
 
     public void logicDelete(String id){
-         shopImageMapper.logicDeleteOne(id);
+        shopImageRepository.logicDeleteOne(id);
     }
 
 }

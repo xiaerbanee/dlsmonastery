@@ -4,11 +4,12 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.mapper.BankMapper;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.BankRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
-import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
+import net.myspring.future.modules.layout.repository.ShopDepositRepository;
+import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.future.modules.layout.web.form.ShopDepositForm;
 import net.myspring.future.modules.layout.web.query.ShopDepositQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -26,26 +27,28 @@ import java.util.List;
 public class ShopDepositService {
 
     @Autowired
-    private ShopDepositMapper shopDepositMapper;
+    private ShopDepositRepository shopDepositRepository;
     @Autowired
-    private DepotMapper depotMapper;
+    private ShopDepositRepository shopDepositRepository;
     @Autowired
-    private BankMapper bankMapper;
+    private DepotRepository depotRepository;
+    @Autowired
+    private BankRepository bankRepository;
 
     @Transactional(readOnly = true)
     public ShopDeposit findOne(String id){
-        ShopDeposit shopDeposit = shopDepositMapper.findOne(id);
+        ShopDeposit shopDeposit = shopDepositRepository.findOne(id);
         return shopDeposit;
     }
 
     public Page<ShopDepositDto> findPage(Pageable pageable, ShopDepositQuery shopDepositQuery) {
-        Page<ShopDepositDto> page = shopDepositMapper.findPage(pageable, shopDepositQuery);
+        Page<ShopDepositDto> page = shopDepositRepository.findPage(pageable, shopDepositQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
 	public ShopDeposit findLatest(String shopId, String type) {
-	    List<ShopDeposit> shopDeposits= shopDepositMapper.findByTypeAndShopId(type,shopId,1);
+	    List<ShopDeposit> shopDeposits= shopDepositRepository.findByTypeAndShopId(type,shopId,1);
 		return null;
 	}
 
@@ -55,17 +58,17 @@ public class ShopDepositService {
 
     public int save(ShopDeposit shopDeposit){
 	    //TODO 調用金蝶
-	    return shopDepositMapper.save(shopDeposit);
+	    return shopDepositRepository.save(shopDeposit);
     }
 
     public void delete(ShopDeposit shopDeposit){
-        List<ShopDeposit> shopDeposits = shopDepositMapper.findByTypeAndShopId(shopDeposit.getShopId(), shopDeposit.getType(), 2);
+        List<ShopDeposit> shopDeposits = shopDepositRepository.findByTypeAndShopId(shopDeposit.getShopId(), shopDeposit.getType(), 2);
         shopDeposit.setEnabled(false);
-        shopDepositMapper.update(shopDeposit);
+        shopDepositRepository.save(shopDeposit);
         if(shopDeposits.size()==2) {
             ShopDeposit latest = shopDeposits.get(1);
             latest.setLocked(false);
-            shopDepositMapper.update(shopDeposit);
+            shopDepositRepository.save(shopDeposit);
         }
     }
 
@@ -78,7 +81,7 @@ public class ShopDepositService {
 
     public ShopDepositForm getForm(ShopDepositForm shopDepositForm) {
         if(!shopDepositForm.isCreate()){
-            ShopDeposit shopDeposit=shopDepositMapper.findOne(shopDepositForm.getId());
+            ShopDeposit shopDeposit=shopDepositRepository.findOne(shopDepositForm.getId());
             shopDepositForm= BeanUtil.map(shopDeposit, ShopDepositForm.class);
             cacheUtils.initCacheInput(shopDepositForm);
         }
@@ -124,7 +127,7 @@ public class ShopDepositService {
     }
 
     private BigDecimal getLeftAmout(String shopId, String type) {
-        List<ShopDeposit> sdList = shopDepositMapper.findByTypeAndShopId(shopId, type, 1);
+        List<ShopDeposit> sdList = shopDepositRepository.findByTypeAndShopId(shopId, type, 1);
         BigDecimal result = null;
         if(sdList!=null && sdList.size()>0){
             result = sdList.get(0).getLeftAmount();
@@ -136,6 +139,6 @@ public class ShopDepositService {
     }
 
     public void logicDelete(ShopDepositForm shopDepositForm) {
-        shopDepositMapper.logicDeleteOne(shopDepositForm.getId());
+        shopDepositRepository.logicDeleteOne(shopDepositForm.getId());
     }
 }

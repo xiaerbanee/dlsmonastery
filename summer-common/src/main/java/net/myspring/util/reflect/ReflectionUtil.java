@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import net.myspring.util.collection.CollectionUtil;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class ReflectionUtil  extends org.springside.modules.utils.reflect.ReflectionUtil{
@@ -21,6 +22,16 @@ public class ReflectionUtil  extends org.springside.modules.utils.reflect.Reflec
 		clazz = clazz.getSuperclass();
 		if (!clazz.getName().equals(Object.class.getName())) {
 			getFields(fields,clazz);
+		}
+	}
+
+	public static void getMethods(List<Method> methods, Class clazz) {
+		for(Method method:clazz.getDeclaredMethods()) {
+			methods.add(method);
+		}
+		clazz = clazz.getSuperclass();
+		if (!clazz.getName().equals(Object.class.getName())) {
+			getMethods(methods,clazz);
 		}
 	}
 
