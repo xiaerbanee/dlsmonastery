@@ -133,8 +133,8 @@ public class AccountService {
         accountMapper.logicDeleteOne(id);
     }
 
-    public List<AccountDto> findByLoginNameLikeAndType(Map<String, Object> map) {
-        List<Account> accountList = accountMapper.findByLoginNameLikeAndType(map);
+    public List<AccountDto> findByLoginNameLikeAndType(String type,String key) {
+        List<Account> accountList = accountMapper.findByLoginNameLikeAndType(type,key);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         return accountDtoList;
     }
