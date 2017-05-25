@@ -46,15 +46,18 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>,BackendM
      """, nativeQuery = true)
     fun findByRoleId(@Param("roleId")roleId:String):List<BackendModule>
 
-
+    @Query("""
+    SELECT t1.*
+    FROM  sys_backend_module
+    WHERE t1.enabled=1
+     """, nativeQuery = true)
+    fun findAllEnabled():List<BackendModule>
 }
 
 
 interface BackendModuleRepositoryCustom{
 
     fun findPage(pageable: Pageable,backendModuleQuery: BackendModuleQuery): Page<BackendModuleDto>?
-
-    fun findAllEnabled():List<BackendModule>?
 
 }
 
@@ -63,9 +66,6 @@ class BackendModuleRepositoryImpl @Autowired constructor(val entityManager: Enti
         return null
     }
 
-    override fun findAllEnabled(): List<BackendModule>? {
-       return null
-    }
 
 
 }
