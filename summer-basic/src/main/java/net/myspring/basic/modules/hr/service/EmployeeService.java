@@ -69,7 +69,7 @@ public class EmployeeService {
         } else {
             employee = employeeRepository.findOne(employeeForm.getId());
             ReflectionUtil.copyProperties(employeeForm,employee);
-            employeeRepository.update(employee);
+            employeeRepository.save(employee);
         }
         return employee;
     }

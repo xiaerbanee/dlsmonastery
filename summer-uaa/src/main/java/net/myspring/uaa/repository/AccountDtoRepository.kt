@@ -1,39 +1,43 @@
 package net.myspring.uaa.repository
 
 import net.myspring.uaa.dto.AccountDto
-import org.springframework.data.jpa.repository.Query
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+import javax.persistence.EntityManager
 
-interface AccountDtoRepository {
+@Component
+class AccountDtoRepository @Autowired constructor(val entityManager: EntityManager) {
+    fun findByLoginName(loginName: String): AccountDto {
+        return entityManager.createNativeQuery("""
+                    SELECT
+                    t1.*,
+                    t2.leave_date as 'leaveDate',
+                    t3.role_id as 'roleId'
+                    FROM
+                    hr_account t1,
+                    hr_employee t2,
+                    hr_position t3
+                    WHERE
+                    t1.employee_id = t2.id
+                    and t1.position_id=t3.id
+                    and t1.login_name= :loginName
+                """).setParameter("loginName",loginName).resultList as AccountDto;
+    }
 
-    @Query("""
-        SELECT
-        t1.*,
-        t2.leave_date as 'leaveDate',
-        t3.role_id as 'roleId'
-        FROM
-        hr_account t1,
-        hr_employee t2,
-        hr_position t3
-        WHERE
-        t1.employee_id = t2.id
-        and t1.position_id=t3.id
-        and t1.login_name= ?1
-        """, nativeQuery = true)
-    fun findByLoginName(loginName: String): AccountDto
-
-    @Query("""
-        SELECT
-        t1.*,
-        t2.leave_date as 'leaveDate',
-        t3.role_id as 'roleId'
-        FROM
-        hr_account t1,
-        hr_employee t2,
-        hr_position t3
-        WHERE
-        t1.employee_id = t2.id
-        and t1.position_id=t3.id
-        and t1.id= ?1
-        """, nativeQuery = true)
-    fun findById(id: String): AccountDto
+    fun findById(id: String): AccountDto {
+        return entityManager.createNativeQuery("""
+                    SELECT
+                    t1.*,
+                    t2.leave_date as 'leaveDate',
+                    t3.role_id as 'roleId'
+                    FROM
+                    hr_account t1,
+                    hr_employee t2,
+                    hr_position t3
+                    WHERE
+                    t1.employee_id = t2.id
+                    and t1.position_id=t3.id
+                    and t1.id= :id
+                """).setParameter("id",id).resultList as AccountDto;
+    }
 }

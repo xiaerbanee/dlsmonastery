@@ -1,7 +1,6 @@
 package net.myspring.tool.modules.oppo.repository;
 import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.jpa.repository.Query
 
 import java.util.List;

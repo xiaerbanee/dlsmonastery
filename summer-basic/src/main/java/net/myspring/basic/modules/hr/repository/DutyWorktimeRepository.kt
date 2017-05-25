@@ -2,9 +2,13 @@ package net.myspring.basic.modules.hr.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.DutyWorktime
+import net.myspring.basic.modules.hr.dto.DutyWorktimeDto
+import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery
 import net.myspring.util.collection.CollectionUtil
 import org.apache.ibatis.annotations.Param
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
 import javax.persistence.EntityManager
@@ -43,8 +47,14 @@ interface DutyWorktimeRepository : BaseRepository<DutyWorktime,String>,DutyWorkt
 }
 interface DutyWorktimeRepositoryCustom{
     fun findByAccountIdAndDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("accountIds") accountIds: List<Long>): List<DutyWorktime>
+
+    fun findPage(pageable: Pageable, dutyWorktimeQuery: DutyWorktimeQuery): Page<DutyWorktimeDto>
 }
 class DutyWorktimeRepositoryImpl  @Autowired constructor(val entityManager: EntityManager): DutyWorktimeRepositoryCustom{
+    override fun findPage(pageable: Pageable, dutyWorktimeQuery: DutyWorktimeQuery): Page<DutyWorktimeDto> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyWorktime> {
         var sb = StringBuilder()
         sb.append("""

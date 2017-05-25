@@ -1,17 +1,21 @@
 package net.myspring.uaa.repository
 
-import org.springframework.data.jpa.repository.Query
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+import javax.persistence.EntityManager
 
-interface CompanyRepository {
-    @Query("""
-      SELECT
-        t1.name
-        FROM
-        sys_company t1
-        WHERE
-        t1.enabled=1
-        and t1.id= ?1
-        """, nativeQuery = true)
-    fun findNameById(id: String): String
+@Component
+class CompanyRepository @Autowired constructor(val entityManager: EntityManager) {
+    fun findNameById(id: String): String {
+        return entityManager.createNativeQuery("""
+              SELECT
+                t1.name
+                FROM
+                sys_company t1
+                WHERE
+                t1.enabled=1
+                and t1.id= ?1
+                """).setParameter("id",id).resultList as String;
+    }
 
 }

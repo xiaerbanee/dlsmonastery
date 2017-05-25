@@ -3,8 +3,12 @@ package net.myspring.basic.modules.hr.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.DutyOvertime
 import net.myspring.basic.modules.hr.dto.DutyDto
+import net.myspring.basic.modules.hr.dto.DutyOvertimeDto
+import net.myspring.basic.modules.hr.web.query.DutyOvertimeQuery
 import net.myspring.util.collection.CollectionUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -94,8 +98,14 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
 }
 interface DutyOvertimeRepositoryCustom{
     fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyOvertime>
+
+    fun findPage(pageable: Pageable, dutyOvertimeQuery: DutyOvertimeQuery): Page<DutyOvertimeDto>
 }
 class DutyOvertimeRepositoryImpl @Autowired constructor(val entityManager: EntityManager):DutyOvertimeRepositoryCustom{
+    override fun findPage(pageable: Pageable, dutyOvertimeQuery: DutyOvertimeQuery): Page<DutyOvertimeDto> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyOvertime> {
         var sb = StringBuffer()
         sb.append("""

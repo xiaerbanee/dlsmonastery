@@ -7,9 +7,18 @@ import javax.persistence.Table;
  * Created by liuj on 2017/4/11.
  */
 public class AccountWeixinDto {
+    private String id;
     private String accountId;
     private String companyId;
     private String openId;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getAccountId() {
         return accountId;

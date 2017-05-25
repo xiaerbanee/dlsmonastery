@@ -34,7 +34,7 @@ public class AccountWeixinService {
                     accountWeixin.setOpenId(weixinSessionDto.getOpenid());
                     accountWeixin.setAccountId(account.getId());
                     accountWeixin.setCompanyId(account.getCompanyId());
-                    accountWeixinDtoRepository.update(accountWeixin);
+                    accountWeixinDtoRepository.save(accountWeixin);
                     return new RestResponse("账号绑定成功",null);
                 }else {
                     if (accountWeixin.getOpenId().equals(weixinSessionDto.getOpenid())) {

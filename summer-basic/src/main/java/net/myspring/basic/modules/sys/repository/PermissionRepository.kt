@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
-import net.myspring.basic.modules.sys.domain.Menu
 import net.myspring.basic.modules.sys.domain.Permission
 import net.myspring.basic.modules.sys.dto.PermissionDto
 import net.myspring.basic.modules.sys.web.query.PermissionQuery
@@ -95,6 +94,13 @@ interface  PermissionRepository: BaseRepository<Permission, String> {
         t1.permission LIKE %?1%
      """, nativeQuery = true)
     fun findByPermissionLike(permissionStr: String): List<Permission>
+
+    @Query("""
+        SELECT t1.*
+        FROM sys_permission t1
+        where t1.enabled=1
+    """, nativeQuery = true)
+    fun findAllEnabled(): List<Permission>
 
     fun logicDeleteByIds(removePermissionIds:List<String>)
 
