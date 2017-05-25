@@ -21,7 +21,7 @@ interface DutyRestRepository : BaseRepository<DutyRest, String>,DutyRestReposito
         hr_duty_rest t1 , hr_account t2 ,hr_employee t3
         WHERE
         t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
-        AND t2.leader_id=?1 AND t1.status=?2 AND t1.created_date>=?3}
+        AND t2.leader_id=?1 AND t1.status=?2 AND t1.created_date>=?3
     """, nativeQuery = true)
     fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): List<DutyDto>
 
