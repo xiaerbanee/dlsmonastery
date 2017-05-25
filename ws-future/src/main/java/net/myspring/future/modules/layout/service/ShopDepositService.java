@@ -4,11 +4,11 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.mapper.BankMapper;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.BankRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
-import net.myspring.future.modules.layout.mapper.ShopDepositMapper;
+import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.future.modules.layout.web.form.ShopDepositForm;
 import net.myspring.future.modules.layout.web.query.ShopDepositQuery;
@@ -27,13 +27,13 @@ import java.util.List;
 public class ShopDepositService {
 
     @Autowired
-    private ShopDepositMapper shopDepositMapper;
+    private ShopDepositRepository shopDepositRepository;
     @Autowired
     private ShopDepositRepository shopDepositRepository;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
-    private BankMapper bankMapper;
+    private BankRepository bankRepository;
 
     @Transactional(readOnly = true)
     public ShopDeposit findOne(String id){
@@ -42,7 +42,7 @@ public class ShopDepositService {
     }
 
     public Page<ShopDepositDto> findPage(Pageable pageable, ShopDepositQuery shopDepositQuery) {
-        Page<ShopDepositDto> page = shopDepositMapper.findPage(pageable, shopDepositQuery);
+        Page<ShopDepositDto> page = shopDepositRepository.findPage(pageable, shopDepositQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -58,7 +58,7 @@ public class ShopDepositService {
 
     public int save(ShopDeposit shopDeposit){
 	    //TODO 調用金蝶
-	    return shopDepositMapper.save(shopDeposit);
+	    return shopDepositRepository.save(shopDeposit);
     }
 
     public void delete(ShopDeposit shopDeposit){

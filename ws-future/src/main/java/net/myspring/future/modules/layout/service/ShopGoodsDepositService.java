@@ -4,7 +4,7 @@ import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
-import net.myspring.future.modules.layout.mapper.ShopGoodsDepositMapper;
+import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
 import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
 import net.myspring.future.modules.layout.web.form.ShopGoodsDepositForm;
 import net.myspring.future.modules.layout.web.query.ShopGoodsDepositQuery;
@@ -26,7 +26,7 @@ import java.util.List;
 public class ShopGoodsDepositService {
 
     @Autowired
-    private ShopGoodsDepositMapper shopGoodsDepositMapper;
+    private ShopGoodsDepositRepository shopGoodsDepositRepository;
     @Autowired
     private ShopGoodsDepositRepository shopGoodsDepositRepository;
     @Autowired
@@ -37,7 +37,7 @@ public class ShopGoodsDepositService {
     }
 
     public List<ShopGoodsDeposit> findByIds(List<String> ids){
-        List<ShopGoodsDeposit> shopGoodsDepositList = shopGoodsDepositMapper.findByIds(ids);
+        List<ShopGoodsDeposit> shopGoodsDepositList = shopGoodsDepositRepository.findByIds(ids);
         return shopGoodsDepositList;
     }
 
@@ -48,7 +48,7 @@ public class ShopGoodsDepositService {
 
     public Page<ShopGoodsDepositDto> findPage(Pageable pageable, ShopGoodsDepositQuery shopGoodsDepositQuery) {
 
-        Page<ShopGoodsDepositDto> page = shopGoodsDepositMapper.findPage(pageable, shopGoodsDepositQuery);
+        Page<ShopGoodsDepositDto> page = shopGoodsDepositRepository.findPage(pageable, shopGoodsDepositQuery);
 
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -113,7 +113,7 @@ public class ShopGoodsDepositService {
                 if(eachId == null){
                     continue;
                 }
-                ShopGoodsDeposit shopGoodsDeposit=shopGoodsDepositMapper.findOne(eachId);
+                ShopGoodsDeposit shopGoodsDeposit=shopGoodsDepositRepository.findOne(eachId);
                 if(shopGoodsDeposit == null || !"省公司审核".equals(shopGoodsDeposit.getStatus()) || StringUtils.isNotBlank(shopGoodsDeposit.getOutCode())){
                     continue;
                 }

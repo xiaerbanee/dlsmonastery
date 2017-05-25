@@ -1,6 +1,6 @@
 package net.myspring.future.modules.basic.service;
 
-import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
+import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 public class PricesystemDetailService {
 
     @Autowired
-    private PricesystemDetailMapper pricesystemDetailMapper;
+    private PricesystemDetailRepository pricesystemDetailRepository;
 
 }

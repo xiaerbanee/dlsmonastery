@@ -7,8 +7,8 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
-import net.myspring.future.modules.basic.mapper.ClientMapper;
-import net.myspring.future.modules.basic.mapper.DepotShopMapper;
+import net.myspring.future.modules.basic.repository.ClientRepository;
+import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
@@ -30,7 +30,7 @@ import java.util.List;
 public class ClientService {
 
     @Autowired
-    private DepotShopMapper depotShopMapper;
+    private DepotShopRepository depotShopRepository;
     @Autowired
     private DepotShopRepository depotShopRepository;
     @Autowired
@@ -38,7 +38,7 @@ public class ClientService {
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
-    private ClientMapper clientMapper;
+    private ClientRepository clientRepository;
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
@@ -50,7 +50,7 @@ public class ClientService {
     }
 
     public Page<ClientDto> findPage(Pageable pageable, ClientQuery clientQuery) {
-        Page<ClientDto> page = clientMapper.findPage(pageable, clientQuery);
+        Page<ClientDto> page = clientRepository.findPage(pageable, clientQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

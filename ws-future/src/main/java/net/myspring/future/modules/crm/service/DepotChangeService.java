@@ -32,7 +32,7 @@ public class DepotChangeService {
 //        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "修改时间"));
 //
 //        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-//        List<DepotChange> depotChangeList = depotChangeMapper.findByFilter(map);
+//        List<DepotChange> depotChangeList = depotChangeRepository.findByFilter(map);
 //        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("仓库调整", depotChangeList, simpleExcelColumnList);
 //        simpleExcelSheetList.add(simpleExcelSheet);
 //        return simpleExcelSheetList;

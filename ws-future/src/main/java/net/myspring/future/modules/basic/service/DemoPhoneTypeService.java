@@ -8,9 +8,9 @@ import net.myspring.future.modules.basic.domain.DemoPhoneType;
 import net.myspring.future.modules.basic.domain.DemoPhoneTypeOffice;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeDto;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeOfficeDto;
-import net.myspring.future.modules.basic.mapper.DemoPhoneTypeMapper;
-import net.myspring.future.modules.basic.mapper.DemoPhoneTypeOfficeMapper;
-import net.myspring.future.modules.basic.mapper.ProductTypeMapper;
+import net.myspring.future.modules.basic.repository.DemoPhoneTypeRepository;
+import net.myspring.future.modules.basic.repository.DemoPhoneTypeOfficeRepository;
+import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.basic.repository.DemoPhoneTypeOfficeRepository;
 import net.myspring.future.modules.basic.repository.DemoPhoneTypeRepository;
 import net.myspring.future.modules.basic.repository.ProductTypeRepository;
@@ -35,17 +35,17 @@ import java.util.Map;
 public class DemoPhoneTypeService {
 
     @Autowired
-    private DemoPhoneTypeMapper demoPhoneTypeMapper;
+    private DemoPhoneTypeRepository demoPhoneTypeRepository;
     @Autowired
     private DemoPhoneTypeRepository demoPhoneTypeRepository;
     @Autowired
-    private DemoPhoneTypeOfficeMapper demoPhoneTypeOfficeMapper;
+    private DemoPhoneTypeOfficeRepository demoPhoneTypeOfficeRepository;
     @Autowired
     private DemoPhoneTypeOfficeRepository demoPhoneTypeOfficeRepository;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
-    private ProductTypeMapper productTypeMapper;
+    private ProductTypeRepository productTypeRepository;
     @Autowired
     private ProductTypeRepository productTypeRepository;
     @Autowired
@@ -98,7 +98,7 @@ public class DemoPhoneTypeService {
     }
 
     public Page<DemoPhoneTypeDto> findPage(Pageable pageable, DemoPhoneTypeQuery demoPhoneTypeQuery) {
-        Page<DemoPhoneTypeDto> page = demoPhoneTypeMapper.findPage(pageable, demoPhoneTypeQuery);
+        Page<DemoPhoneTypeDto> page = demoPhoneTypeRepository.findPage(pageable, demoPhoneTypeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

@@ -4,8 +4,8 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ChainDto;
-import net.myspring.future.modules.basic.mapper.ChainMapper;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.ChainRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ChainRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.form.ChainForm;
@@ -27,13 +27,13 @@ import java.util.List;
 public class ChainService {
 
     @Autowired
-    private ChainMapper chainMapper;
+    private ChainRepository chainRepository;
     @Autowired
     private ChainRepository chainRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
 
@@ -57,7 +57,7 @@ public class ChainService {
     }
 
     public Page<ChainDto> findPage(Pageable pageable, ChainQuery chainQuery) {
-        Page<ChainDto> page = chainMapper.findPage(pageable, chainQuery);
+        Page<ChainDto> page = chainRepository.findPage(pageable, chainQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

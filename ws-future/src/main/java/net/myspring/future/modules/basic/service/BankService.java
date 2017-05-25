@@ -9,7 +9,7 @@ import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.dto.BankDto;
-import net.myspring.future.modules.basic.mapper.BankMapper;
+import net.myspring.future.modules.basic.repository.BankRepository;
 import net.myspring.future.modules.basic.repository.BankRepository;
 import net.myspring.future.modules.basic.web.form.BankForm;
 import net.myspring.future.modules.basic.web.query.BankQuery;
@@ -36,7 +36,7 @@ import java.util.Map;
 public class BankService {
 
     @Autowired
-    private BankMapper bankMapper;
+    private BankRepository bankRepository;
     @Autowired
     private BankRepository bankRepository;
     @Autowired
@@ -52,7 +52,7 @@ public class BankService {
 
     public Page<BankDto> findPage(Pageable pageable,BankQuery bankQuery) {
         bankQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
-        Page<BankDto> page = bankMapper.findPage(pageable, bankQuery);
+        Page<BankDto> page = bankRepository.findPage(pageable, bankQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

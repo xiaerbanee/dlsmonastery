@@ -1,10 +1,10 @@
 package net.myspring.future.modules.layout.service;
 
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopPromotion;
 import net.myspring.future.modules.layout.dto.ShopPromotionDto;
-import net.myspring.future.modules.layout.mapper.ShopPromotionMapper;
+import net.myspring.future.modules.layout.repository.ShopPromotionRepository;
 import net.myspring.future.modules.layout.repository.ShopPromotionRepository;
 import net.myspring.future.modules.layout.web.form.ShopPromotionForm;
 import net.myspring.future.modules.layout.web.query.ShopPromotionQuery;
@@ -26,14 +26,14 @@ import java.util.Map;
 public class ShopPromotionService {
 
     @Autowired
-    private ShopPromotionMapper shopPromotionMapper;
+    private ShopPromotionRepository shopPromotionRepository;
     @Autowired
     private ShopPromotionRepository shopPromotionRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public Page<ShopPromotionDto> findPage(Pageable pageable, ShopPromotionQuery shopPromotionQuery){
-        Page<ShopPromotionDto> page = shopPromotionMapper.findPage(pageable,shopPromotionQuery);
+        Page<ShopPromotionDto> page = shopPromotionRepository.findPage(pageable,shopPromotionQuery);
         cacheUtils.initCacheInput(page.getContent());
         return  page;
     }

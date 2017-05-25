@@ -34,21 +34,21 @@ public class PricesystemChangeService {
 
 
     public void save(PricesystemChangeForm pricesystemChangeForm){
-//        PricesystemChange pricesystemChange=pricesystemChangeMapper.findOne(pricesystemChangeForm.getProductId());
+//        PricesystemChange pricesystemChange=pricesystemChangeRepository.findOne(pricesystemChangeForm.getProductId());
 //        ReflectionUtil.copyProperties(pricesystemChangeForm,pricesystemChange);
 //        TODO 需要修改该方法，不要在sql里写update
-//        pricesystemChangeMapper.updateRemark(pricesystemChangeForm);
+//        pricesystemChangeRepository.updateRemark(pricesystemChangeForm);
     }
 
 
     public void audit(String[] ids,Boolean pass){
 //        TODO 需要修改该方法，不要在sql里写update
-//        pricesystemChangeMapper.audit(ids,pass);
+//        pricesystemChangeRepository.audit(ids,pass);
     }
 
     public void auditOperation(String id,Boolean pass){
         //        TODO 需要修改该方法，不要在sql里写update
-//        pricesystemChangeMapper.auditOperation(id, pass);
+//        pricesystemChangeRepository.auditOperation(id, pass);
     }
 
     public List<List<Object>> getPricesystemDetail(List<String> productIdList){

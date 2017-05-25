@@ -16,8 +16,8 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductDto;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
@@ -43,11 +43,11 @@ import java.util.Map;
 public class ProductService {
 
     @Autowired
-    private ProductMapper productMapper;
+    private ProductRepository productRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
@@ -59,7 +59,7 @@ public class ProductService {
     
 
     public Page<ProductDto> findPage(Pageable pageable, ProductQuery productQuery) {
-        Page<ProductDto> page = productMapper.findPage(pageable, productQuery);
+        Page<ProductDto> page = productRepository.findPage(pageable, productQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -200,10 +200,10 @@ public class ProductService {
 
 
     public void delete(ProductDto productDto) {
-        productMapper.logicDeleteOne(productDto.getId());
+        productRepository.logicDeleteOne(productDto.getId());
     }
 
     public List<ProductDto> findIntersectionOfBothPricesystem(String pricesystemId1, String pricesystemId2) {
-        return  productMapper.findIntersectionOfBothPricesystem(pricesystemId1, pricesystemId2);
+        return  productRepository.findIntersectionOfBothPricesystem(pricesystemId1, pricesystemId2);
     }
 }

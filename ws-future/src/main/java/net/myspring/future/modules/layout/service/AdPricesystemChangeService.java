@@ -6,15 +6,15 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.mapper.AdPricesystemDetailMapper;
-import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
+import net.myspring.future.modules.basic.repository.AdPricesystemRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
 import net.myspring.future.modules.basic.repository.AdpricesystemRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
-import net.myspring.future.modules.layout.mapper.AdPricesystemChangeMapper;
+import net.myspring.future.modules.layout.repository.AdPricesystemChangeRepository;
 import net.myspring.future.modules.layout.repository.AdPricesystemChangeRepository;
 import net.myspring.future.modules.layout.web.form.AdPricesystemChangeForm;
 import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery;
@@ -35,19 +35,19 @@ import java.util.Map;
 public class AdPricesystemChangeService {
 
     @Autowired
-    private AdPricesystemChangeMapper adPricesystemChangeMapper;
+    private AdPricesystemChangeRepository adPricesystemChangeRepository;
     @Autowired
     private AdPricesystemChangeRepository adPricesystemChangeRepository;
     @Autowired
-    private AdPricesystemMapper adPricesystemMapper;
+    private AdPricesystemRepository adPricesystemRepository;
     @Autowired
     private AdpricesystemRepository adpricesystemRepository;
     @Autowired
-    private ProductMapper productMapper;
+    private ProductRepository productRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private AdPricesystemDetailMapper adPricesystemDetailMapper;
+    private AdPricesystemDetailRepository adPricesystemDetailRepository;
     @Autowired
     private AdPricesystemDetailRepository adPricesystemDetailRepository;
     @Autowired
@@ -59,13 +59,13 @@ public class AdPricesystemChangeService {
     }
 
     public Page<AdPricesystemChangeDto> findPage(Pageable pageable, AdPricesystemChangeQuery adPricesystemChangeQuery) {
-        Page<AdPricesystemChangeDto> page = adPricesystemChangeMapper.findPage(pageable, adPricesystemChangeQuery);
+        Page<AdPricesystemChangeDto> page = adPricesystemChangeRepository.findPage(pageable, adPricesystemChangeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public List<AdPricesystemChangeDto> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
-        List<AdPricesystemChangeDto> adPricesystemChangeDtos = adPricesystemChangeMapper.findFilter(adPricesystemChangeQuery);
+        List<AdPricesystemChangeDto> adPricesystemChangeDtos = adPricesystemChangeRepository.findFilter(adPricesystemChangeQuery);
         cacheUtils.initCacheInput(adPricesystemChangeDtos);
         return adPricesystemChangeDtos;
     }

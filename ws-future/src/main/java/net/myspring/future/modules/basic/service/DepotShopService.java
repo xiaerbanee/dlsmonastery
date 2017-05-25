@@ -5,8 +5,8 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
-import net.myspring.future.modules.basic.mapper.DepotMapper;
-import net.myspring.future.modules.basic.mapper.DepotShopMapper;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.form.DepotForm;
@@ -26,20 +26,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class DepotShopService {
     @Autowired
-    private DepotShopMapper depotShopMapper;
+    private DepotShopRepository depotShopRepository;
     @Autowired
     private DepotShopRepository depotShopRepository;
     @Autowired
     private DepotManager depotManager;
     @Autowired
-    private DepotMapper depotMapper;
+    private DepotRepository depotRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotQuery){
-        Page<DepotShopDto> page=depotShopMapper.findPage(pageable,depotQuery);
+        Page<DepotShopDto> page=depotShopRepository.findPage(pageable,depotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

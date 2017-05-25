@@ -3,7 +3,7 @@ package net.myspring.future.modules.basic.service;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
-import net.myspring.future.modules.basic.mapper.AdPricesystemMapper;
+import net.myspring.future.modules.basic.repository.AdPricesystemRepository;
 import net.myspring.future.modules.basic.repository.AdpricesystemRepository;
 import net.myspring.future.modules.basic.web.form.AdPricesystemForm;
 import net.myspring.future.modules.basic.web.query.AdPricesystemQuery;
@@ -22,7 +22,7 @@ import java.util.List;
 public class AdPricesystemService {
 
     @Autowired
-    private AdPricesystemMapper adPricesystemMapper;
+    private AdPricesystemRepository adPricesystemRepository;
     @Autowired
     private AdpricesystemRepository adpricesystemRepository;
     @Autowired
@@ -42,7 +42,7 @@ public class AdPricesystemService {
     }
 
     public Page<AdPricesystemDto> findPage(Pageable pageable, AdPricesystemQuery adPricesystemQuery) {
-        Page<AdPricesystemDto> page = adPricesystemMapper.findPage(pageable, adPricesystemQuery);
+        Page<AdPricesystemDto> page = adPricesystemRepository.findPage(pageable, adPricesystemQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

@@ -15,9 +15,9 @@ import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.dto.PricesystemDto;
-import net.myspring.future.modules.basic.mapper.PricesystemDetailMapper;
-import net.myspring.future.modules.basic.mapper.PricesystemMapper;
-import net.myspring.future.modules.basic.mapper.ProductMapper;
+import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
+import net.myspring.future.modules.basic.repository.PricesystemRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.query.PricesystemQuery;
 import net.myspring.future.modules.basic.web.form.PricesystemDetailForm;
 import net.myspring.future.modules.basic.web.form.PricesystemForm;
@@ -39,15 +39,15 @@ import java.util.*;
 public class PricesystemService {
 
     @Autowired
-    private PricesystemMapper pricesystemMapper;
+    private PricesystemRepository pricesystemRepository;
     @Autowired
     private PricesystemRepository pricesystemRepository;
     @Autowired
-    private PricesystemDetailMapper pricesystemDetailMapper;
+    private PricesystemDetailRepository pricesystemDetailRepository;
     @Autowired
     private PricesystemDetailRepository pricesystemDetailRepository;
     @Autowired
-    private ProductMapper productMapper;
+    private ProductRepository productRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -62,7 +62,7 @@ public class PricesystemService {
     }
 
     public Page<PricesystemDto> findPage(Pageable pageable, PricesystemQuery pricesystemQuery) {
-        Page<PricesystemDto> page = pricesystemMapper.findPage(pageable, pricesystemQuery);
+        Page<PricesystemDto> page = pricesystemRepository.findPage(pageable, pricesystemQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

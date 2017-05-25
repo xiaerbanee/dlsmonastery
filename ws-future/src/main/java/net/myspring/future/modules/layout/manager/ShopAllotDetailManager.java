@@ -4,6 +4,7 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDetailDto;
 import net.myspring.future.modules.layout.mapper.ShopAllotDetailMapper;
+import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,13 @@ import java.util.List;
 public class ShopAllotDetailManager {
 
     @Autowired
-    private ShopAllotDetailMapper shopAllotDetailMapper;
+    private ShopAllotDetailRepository shopAllotDetailRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
     public List<ShopAllotDetailForm> getShopAllotDetailListForNewOrEdit(String shopAllotId, String fromDepotId, String toDepotId) {
 
-        List<ShopAllotDetailDto> result = shopAllotDetailMapper.getShopAllotDetailListForNewOrEdit(shopAllotId, fromDepotId, toDepotId);
+        List<ShopAllotDetailDto> result = shopAllotDetailRepository.getShopAllotDetailListForNewOrEdit(shopAllotId, fromDepotId, toDepotId);
         cacheUtils.initCacheInput(result);
 
         return BeanUtil.map(result, ShopAllotDetailForm.class);
@@ -34,11 +35,11 @@ public class ShopAllotDetailManager {
         if(shopAllotDetails==null || shopAllotDetails.isEmpty()){
             return;
         }
-        shopAllotDetailMapper.batchSave(shopAllotDetails);
+        shopAllotDetailRepository.save(shopAllotDetails);
     }
 
     public List<ShopAllotDetailForm> getShopAllotDetailListForViewOrAudit(String shopAllotId) {
-        List<ShopAllotDetailDto> result = shopAllotDetailMapper.getShopAllotDetailListForViewOrAudit(shopAllotId);
+        List<ShopAllotDetailDto> result = shopAllotDetailRepository.getShopAllotDetailListForViewOrAudit(shopAllotId);
         cacheUtils.initCacheInput(result);
 
         return BeanUtil.map(result, ShopAllotDetailForm.class);
