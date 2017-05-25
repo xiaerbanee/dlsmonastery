@@ -31,7 +31,6 @@ repositories {
 
 dependencies {
 	compile project(':summer-common')
-	compile group: 'net.myspring', name: 'mybatis-smart', version: '1.2.7.RELEASE'
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.security.oauth:spring-security-oauth2')
 	compile('org.springframework.security:spring-security-jwt')
@@ -42,7 +41,6 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-data-redis'
 	compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
-    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.2.0'
 	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.5.0'
 	compile('org.springframework.cloud:spring-cloud-starter-feign')
 
