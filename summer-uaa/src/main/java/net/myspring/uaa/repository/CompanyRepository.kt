@@ -15,7 +15,7 @@ class CompanyRepository @Autowired constructor(val entityManager: EntityManager)
                 WHERE
                 t1.enabled=1
                 and t1.id= ?1
-                """).setParameter("id",id).firstResult as String;
+                """,String::class.java).setParameter("id",id).firstResult as String;
     }
 
 }

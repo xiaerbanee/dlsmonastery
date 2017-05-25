@@ -35,7 +35,7 @@ class AccountWeixinDtoRepository @Autowired constructor(val entityManager: Entit
                     WHERE
                     t1.account_id = :accountId
                     and t1.enabled=1
-                """).setParameter("accountId",accountId).resultList as AccountWeixinDto;
+                """,AccountWeixinDto::class.java).setParameter("accountId",accountId).firstResult as AccountWeixinDto;
     }
 
     fun save(accountWeixinDto: AccountWeixinDto) {
