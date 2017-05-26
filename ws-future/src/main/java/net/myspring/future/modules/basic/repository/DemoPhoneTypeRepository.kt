@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.DemoPhoneType
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeDto
 import net.myspring.future.modules.basic.web.query.DemoPhoneTypeQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -63,7 +64,19 @@ class DemoPhoneTypeRepositoryImpl @Autowired constructor(val entityManager: Enti
 
     override fun findPage(pageable: Pageable, demoPhoneTypeQuery: DemoPhoneTypeQuery): Page<DemoPhoneTypeDto> {
         val sb = StringBuffer()
-
+        sb.append("""
+            SELECT
+                t1.*, GROUP_CONCAT(DISTINCT t2. NAME) AS productTypeNames
+            FROM
+                crm_demo_phone_type t1
+            LEFT JOIN crm_product_type t2 ON t1.id = t2.demo_phone_type_id
+            WHERE
+                t1.enabled = 1
+        """)
+        if (StringUtils.isNotEmpty(demoPhoneTypeQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        sb.append(""" GROUP BY t1.id """)
         var query = entityManager.createNativeQuery(sb.toString(), DemoPhoneTypeDto::class.java)
 
         return query.resultList as Page<DemoPhoneTypeDto>

@@ -19,11 +19,18 @@ import javax.persistence.EntityManager
 interface AdApplyRepository : BaseRepository<AdApply,String>,AdApplyRepositoryCustom {
 
     @Query("""
-        select t.id
-        from crm_ad_apply t
-        where t.enabled = 1
+        SELECT
+            t1.*
+        FROM
+            crm_ad_apply t1,
+            crm_product product
+        WHERE
+            t1.enabled = 1
+        AND t1.product_id = product.id
+        AND t.confirm_qty > t.billed_qty
+        AND t1.created_date > :dateStart
+        AND product.out_group_id IN :outGroupIds
     """, nativeQuery = true)
-    //TODO 修改该query
     fun findByOutGroupIdAndDate(@Param("dateStart") dateStart: LocalDate, @Param("outGroupIds") outGroupIds: MutableList<String>): MutableList<AdApplyDto>
 
     @Query("""

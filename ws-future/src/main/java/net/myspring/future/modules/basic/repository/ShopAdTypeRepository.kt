@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ShopAdType
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto
 import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -46,7 +47,20 @@ class ShopAdTypeRepositoryImpl @Autowired constructor(val entityManager: EntityM
 
     override fun findPage(pageable: Pageable, shopAdTypeQuery: ShopAdTypeQuery): Page<ShopAdTypeDto> {
         val sb = StringBuffer()
-
+        sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_shop_ad_type t1
+            WHERE
+                t1.enabled=1
+        """)
+        if (StringUtils.isNotEmpty(shopAdTypeQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if (StringUtils.isNotEmpty(shopAdTypeQuery.totalPriceType)) {
+            sb.append("""  and t1.total_price_type = :totalPriceType """)
+        }
         var query = entityManager.createNativeQuery(sb.toString(), ShopAdTypeDto::class.java)
 
         return query.resultList as Page<ShopAdTypeDto>

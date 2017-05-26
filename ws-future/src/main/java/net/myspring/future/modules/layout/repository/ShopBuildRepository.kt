@@ -6,6 +6,7 @@ import net.myspring.future.modules.layout.dto.ShopAllotDto
 import net.myspring.future.modules.layout.dto.ShopBuildDto
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery
 import net.myspring.future.modules.layout.web.query.ShopBuildQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -29,6 +30,38 @@ class ShopBuildRepositoryImpl @Autowired constructor(val entityManager: EntityMa
 
     override fun findPage(pageable: Pageable, shopBuildQuery: ShopBuildQuery): Page<ShopBuildDto> {
         val sb = StringBuffer()
+        sb.append("""
+            SELECT
+                depot.office_id officeId,
+                t1.*
+            FROM
+                crm_shop_build t1,
+                crm_depot depot
+            WHERE
+                t1.enabled = 1
+            AND t1.shop_id = depot.id
+        """)
+        if (StringUtils.isNotEmpty(shopBuildQuery.fixtureType)) {
+            sb.append("""  and t1.fixture_type = :fixtureType """)
+        }
+        if (StringUtils.isNotEmpty(shopBuildQuery.shopId)) {
+            sb.append("""  and t1.shop_id = :shopId """)
+        }
+        if (StringUtils.isNotEmpty(shopBuildQuery.positionId)) {
+            sb.append("""  and t1.process_position_id = :positionId """)
+        }
+        if (StringUtils.isNotEmpty(shopBuildQuery.createdBy)) {
+            sb.append("""  and t1.created_by = :createdBy """)
+        }
+        if (StringUtils.isNotEmpty(shopBuildQuery.officeId)) {
+            sb.append("""  and depot.office_id = :officeId """)
+        }
+        if (shopBuildQuery.createdDateStart != null) {
+            sb.append("""  and t1.created_date >= :createdDateStart """)
+        }
+        if (shopBuildQuery.createdDateEnd != null) {
+            sb.append("""  and t1.created_date < :createdDateEnd """)
+        }
         var query = entityManager.createNativeQuery(sb.toString(), ShopBuildDto::class.java)
 
         return query.resultList as Page<ShopBuildDto>
@@ -36,6 +69,38 @@ class ShopBuildRepositoryImpl @Autowired constructor(val entityManager: EntityMa
 
     override fun findByFilter(shopBuildQuery: ShopBuildQuery): MutableList<ShopBuildDto> {
         val sb = StringBuffer()
+        sb.append("""
+            SELECT
+                depot.office_id officeId,
+                t1.*
+            FROM
+                crm_shop_build t1,
+                crm_depot depot
+            WHERE
+                t1.enabled = 1
+            AND t1.shop_id = depot.id
+        """)
+        if (StringUtils.isNotEmpty(shopBuildQuery.fixtureType)) {
+            sb.append("""  and t1.fixture_type = :fixtureType """)
+        }
+        if (StringUtils.isNotEmpty(shopBuildQuery.shopId)) {
+            sb.append("""  and t1.shop_id = :shopId """)
+        }
+        if (StringUtils.isNotEmpty(shopBuildQuery.positionId)) {
+            sb.append("""  and t1.process_position_id = :positionId """)
+        }
+        if (StringUtils.isNotEmpty(shopBuildQuery.createdBy)) {
+            sb.append("""  and t1.created_by = :createdBy """)
+        }
+        if (StringUtils.isNotEmpty(shopBuildQuery.officeId)) {
+            sb.append("""  and depot.office_id = :officeId """)
+        }
+        if (shopBuildQuery.createdDateStart != null) {
+            sb.append("""  and t1.created_date >= :createdDateStart """)
+        }
+        if (shopBuildQuery.createdDateEnd != null) {
+            sb.append("""  and t1.created_date < :createdDateEnd """)
+        }
         var query = entityManager.createNativeQuery(sb.toString(), ShopBuildDto::class.java)
 
         return query.resultList as MutableList<ShopBuildDto>

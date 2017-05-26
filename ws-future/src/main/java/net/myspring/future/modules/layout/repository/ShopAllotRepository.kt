@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopAllot
 import net.myspring.future.modules.layout.dto.ShopAllotDto
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -20,7 +21,8 @@ interface ShopAllotRepository : BaseRepository<ShopAllot,String>,ShopAllotReposi
     select
         max(t.business_id)
     from
-        crm_shop_allot t where  t.created_date >= ?1
+        crm_shop_allot t
+    where  t.created_date >= ?1
     """, nativeQuery = true)
     fun findMaxBusinessId(localDate: LocalDate): String
 
@@ -50,6 +52,39 @@ class ShopAllotRepositoryImpl @Autowired constructor(val entityManager: EntityMa
 
     override fun findPage(pageable: Pageable, shopAllotQuery: ShopAllotQuery): Page<ShopAllotDto> {
         val sb = StringBuffer()
+        sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_shop_allot t1
+            WHERE
+                t1.enabled = 1
+        """)
+        if (StringUtils.isNotEmpty(shopAllotQuery.fromShopId)) {
+            sb.append("""  and t1.from_shop_id = :fromShopId """)
+        }
+        if (StringUtils.isNotEmpty(shopAllotQuery.toShopId)) {
+            sb.append("""  and t1.to_shop_id = :toShopId """)
+        }
+        if (StringUtils.isNotEmpty(shopAllotQuery.status)) {
+            sb.append("""  and t1.status = :status """)
+        }
+        if (StringUtils.isNotEmpty(shopAllotQuery.businessId)) {
+            sb.append("""  and t1.business_id like concat('%',:businessId,'%') """)
+        }
+        if (shopAllotQuery.createdDateStart != null) {
+            sb.append("""  and t1.created_data >= :createdDateStart """)
+        }
+        if (shopAllotQuery.createdDateEnd != null) {
+            sb.append("""  and t1.created_data < :createdDateEnd """)
+        }
+        if (shopAllotQuery.auditDateStart != null) {
+            sb.append("""  and t1.audit_date >= :auditDateStart """)
+        }
+        if (shopAllotQuery.auditDateEnd != null) {
+            sb.append("""  and t1.audit_date < :auditDateEnd """)
+        }
+
         var query = entityManager.createNativeQuery(sb.toString(), ShopAllotDto::class.java)
 
         return query.resultList as Page<ShopAllotDto>

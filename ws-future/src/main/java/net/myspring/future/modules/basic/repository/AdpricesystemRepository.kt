@@ -5,6 +5,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.AdPricesystem
 import net.myspring.future.modules.basic.dto.AdPricesystemDto
 import net.myspring.future.modules.basic.web.query.AdPricesystemQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -68,7 +69,17 @@ class AdpricesystemRepositoryImpl @Autowired constructor(val entityManager: Enti
 
     override fun findPage(pageable: Pageable, adPricesystemQuery: AdPricesystemQuery): Page<AdPricesystemDto> {
         val sb = StringBuffer()
-
+        sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_ad_pricesystem t1
+            WHERE
+                t1.enabled=1
+        """)
+        if (StringUtils.isNotEmpty(adPricesystemQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
         var query = entityManager.createNativeQuery(sb.toString(), AdPricesystemDto::class.java)
 
         return query.resultList as Page<AdPricesystemDto>

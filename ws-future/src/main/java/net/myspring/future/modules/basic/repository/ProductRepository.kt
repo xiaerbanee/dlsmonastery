@@ -5,6 +5,7 @@ import net.myspring.future.modules.basic.domain.Product
 import net.myspring.future.modules.basic.domain.ProductType
 import net.myspring.future.modules.basic.dto.ProductDto
 import net.myspring.future.modules.basic.web.query.ProductQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
@@ -160,6 +161,36 @@ class ProductRepositoryImpl @Autowired constructor(val entityManager: EntityMana
 
     override fun findFilter(productQuery: ProductQuery): MutableList<Product>{
         val sb = StringBuffer()
+        sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_product t1
+            WHERE
+                t1.enabled=1
+        """)
+        if (StringUtils.isNotEmpty(productQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.code)) {
+            sb.append("""  and t1.code LIKE CONCAT('%',:code,'%') """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.hasIme)) {
+            sb.append("""  and t1.has_ime = :hasIme """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.allowOrder)) {
+            sb.append("""  and t1.allow_order =:allowOrder """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.allowBill)) {
+            sb.append("""  and t1.allow_bill =:allowBill """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.productTypeId)) {
+            sb.append("""  and t1.product_type_id =:productTypeId """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.outGroupName)) {
+            sb.append("""  and t1.out_group_name =:outGroupName """)
+        }
+
 
         var query = entityManager.createNativeQuery(sb.toString(), Product::class.java)
 
@@ -168,7 +199,35 @@ class ProductRepositoryImpl @Autowired constructor(val entityManager: EntityMana
 
     override fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto> {
         val sb = StringBuffer()
-
+        sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_product t1
+            WHERE
+                t1.enabled=1
+        """)
+        if (StringUtils.isNotEmpty(productQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.code)) {
+            sb.append("""  and t1.code LIKE CONCAT('%',:code,'%') """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.hasIme)) {
+            sb.append("""  and t1.has_ime = :hasIme """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.allowOrder)) {
+            sb.append("""  and t1.allow_order =:allowOrder """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.allowBill)) {
+            sb.append("""  and t1.allow_bill =:allowBill """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.productTypeId)) {
+            sb.append("""  and t1.product_type_id =:productTypeId """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.outGroupName)) {
+            sb.append("""  and t1.out_group_name =:outGroupName """)
+        }
         var query = entityManager.createNativeQuery(sb.toString(), ProductDto::class.java)
 
         return query.resultList as Page<ProductDto>

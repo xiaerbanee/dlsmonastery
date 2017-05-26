@@ -65,6 +65,17 @@ class ShopDepositRepositoryImpl @Autowired constructor(val entityManager: Entity
 
     override fun findPage(pageable: Pageable, shopDepositQuery: ShopDepositQuery): Page<ShopDepositDto> {
         val sb = StringBuffer()
+        sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_shop_deposit t1,
+                crm_depot depot
+            WHERE
+                t1.enabled = 1
+            AND t1.shop_id = depot.id
+            AND depot.enabled = 1
+        """)
         var query = entityManager.createNativeQuery(sb.toString(), ShopDepositDto::class.java)
 
         return query.resultList as Page<ShopDepositDto>
