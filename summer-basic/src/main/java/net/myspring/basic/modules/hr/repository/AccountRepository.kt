@@ -39,7 +39,7 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
 
     @Query("""
         SELECT t.password
-        #{#entityName} t
+        FROM #{#entityName} t
         WHERE t.id=?1
     """)
     fun findAccountPassword(id: String): String
