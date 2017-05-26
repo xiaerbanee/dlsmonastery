@@ -32,6 +32,9 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     fun findByEnabledIsTrueAndNameLike(name: String): MutableList<Employee>
 
 
+    fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Employee>
+
+
     @Query("""
         SELECT t1
         FROM #{#entityName} t1
