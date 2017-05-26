@@ -62,7 +62,7 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
     fun findByPosition(positionId: String): MutableList<Account>
 
     @Query("""
-        SELECT t.*
+        SELECT t
         FROM  #{#entityName} t
         WHERE t.enabled=1
         and t.loginName in ?1

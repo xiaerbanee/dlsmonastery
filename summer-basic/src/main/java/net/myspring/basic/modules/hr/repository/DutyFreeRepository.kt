@@ -35,7 +35,7 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
 
     @Query("""
         SELECT
-            t1.*
+            t1
             FROM  #{#entityName} t1
             WHERE
             t1.enabled=1
@@ -47,7 +47,7 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
 
     @Query("""
         SELECT
-            t1.*
+            t1
             FROM  #{#entityName} t1
             WHERE
             t1.enabled=1
