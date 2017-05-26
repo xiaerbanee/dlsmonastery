@@ -28,6 +28,10 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     @CachePut(key="#id")
     fun save(position: Employee): Int
 
+
+    fun findByEnabledIsTrueAndNameLike(name: String): MutableList<Employee>
+
+
     @Query("""
         SELECT t1
         FROM #{#entityName} t1
