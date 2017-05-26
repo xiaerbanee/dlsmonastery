@@ -23,7 +23,7 @@ import javax.persistence.EntityManager
 interface DutyRestRepository : BaseRepository<DutyRest, String>,DutyRestRepositoryCustom{
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1
@@ -36,7 +36,7 @@ interface DutyRestRepository : BaseRepository<DutyRest, String>,DutyRestReposito
 
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1

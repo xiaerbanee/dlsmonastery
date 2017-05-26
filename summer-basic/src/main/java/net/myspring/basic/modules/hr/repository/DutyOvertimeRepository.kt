@@ -23,7 +23,7 @@ import javax.persistence.EntityManager
 interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvertimeRepositoryCustom{
     @Query("""
         SELECT
-            t1.*
+            t1
         FROM  #{#entityName} t1
         WHERE
         t1.enabled=1
@@ -34,7 +34,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
 
     @Query("""
         SELECT
-            t1.*
+            t1
         FROM  #{#entityName} t1
         WHERE
         t1.enabled=1
@@ -47,7 +47,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
 
     @Query("""
         SELECT
-          t1.*
+          t1
           FROM  #{#entityName} t1
           WHERE
           t1.enabled=1
@@ -60,7 +60,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
 
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1
@@ -71,7 +71,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
 
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1

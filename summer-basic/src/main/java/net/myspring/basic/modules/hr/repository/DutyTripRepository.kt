@@ -27,7 +27,7 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
 
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1
@@ -41,7 +41,7 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
 
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1

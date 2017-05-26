@@ -23,7 +23,7 @@ interface DutyWorktimeRepository : BaseRepository<DutyWorktime,String>,DutyWorkt
 
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1
@@ -34,7 +34,7 @@ interface DutyWorktimeRepository : BaseRepository<DutyWorktime,String>,DutyWorkt
 
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1

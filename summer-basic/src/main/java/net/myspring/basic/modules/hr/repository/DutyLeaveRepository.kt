@@ -23,7 +23,7 @@ import javax.persistence.EntityManager
 interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepositoryCustom{
     @Query("""
         SELECT
-              t1.*
+              t1
             FROM  #{#entityName} t1
             WHERE
             t1.enabled=1
@@ -33,7 +33,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
 
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM  #{#entityName} t1
         WHERE
         t1.enabled=1
@@ -44,7 +44,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
 
     @Query("""
         SELECT
-            t1.*
+            t1
             FROM  #{#entityName} t1
             WHERE
             t1.enabled=1
@@ -55,7 +55,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
 
     @Query("""
         SELECT
-            t1.*
+            t1
             FROM #{#entityName} t1
             WHERE
             t1.enabled=1
@@ -66,7 +66,7 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
 
     @Query("""
         SELECT
-            t1.*
+            t1
             FROM #{#entityName} t1
             WHERE
             t1.enabled=1

@@ -20,7 +20,7 @@ interface OfficeLeaderRepository : BaseRepository<OfficeLeader,String>{
     fun setEnabledByLeaderIds(@Param("enabled") enabled: Boolean, @Param("leaderList") leaderList: MutableList<String>): Int
 
     @Query("""
-        SELECT t1.*
+        SELECT t1
         FROM #{#entityName} t1
         where t1.enabled=1
         and t1.officeId=:officeId
@@ -28,7 +28,7 @@ interface OfficeLeaderRepository : BaseRepository<OfficeLeader,String>{
     fun findByOfficeId(officeId: String): MutableList<OfficeLeader>
 
     @Query("""
-        SELECT t1.*
+        SELECT t1
         FROM #{#entityName} t1
         where t1.enabled=1
         and t1.officeId=:officeId

@@ -23,7 +23,7 @@ import javax.persistence.EntityManager
 interface DutySignRepository : BaseRepository<DutySign,String>,DutySignRepositoryCustom{
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1

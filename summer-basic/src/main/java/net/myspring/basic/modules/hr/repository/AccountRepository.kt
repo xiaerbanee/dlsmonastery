@@ -39,7 +39,7 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
 
     @Query("""
         SELECT t.password
-        #{#entityName} t
+        from #{#entityName} t
         WHERE t.id=?1
     """)
     fun findAccountPassword(id: String): String
@@ -62,7 +62,7 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
     fun findByPosition(positionId: String): MutableList<Account>
 
     @Query("""
-        SELECT t.*
+        SELECT t
         FROM  #{#entityName} t
         WHERE t.enabled=1
         and t.loginName in ?1
@@ -98,7 +98,7 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         var sb = StringBuilder()
         sb.append("""
             SELECT
-            t1.*
+            t1
             FROM
             hr_account t1
             where t1.enabled=1

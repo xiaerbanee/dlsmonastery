@@ -22,7 +22,7 @@ import javax.persistence.EntityManager
 interface DutyPublicFreeRepository : BaseRepository<DutyPublicFree,String>,DutyPublicFreeRepositoryCustom{
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM
         #{#entityName} t1
         WHERE
@@ -35,12 +35,12 @@ interface DutyPublicFreeRepository : BaseRepository<DutyPublicFree,String>,DutyP
 
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM
         #{#entityName} t1
         WHERE
         t1.enabled=1
-        and t1.employee_id=?1
+        and t1.employeeId=?1
         and t1.freeDate >= ?2
         and t1.freeDate <= ?3
     """)
