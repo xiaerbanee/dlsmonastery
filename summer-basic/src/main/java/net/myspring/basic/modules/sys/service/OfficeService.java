@@ -167,7 +167,7 @@ public class OfficeService {
                 officeBusinessRepository.setEnabledByBusinessOfficeIds(removeIdList);
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
-                officeBusinessRepository.batchSave(officeBusinessList);
+                officeBusinessRepository.save(officeBusinessList);
             }
         } else if (CollectionUtil.isNotEmpty(businessOfficeList)) {
             officeBusinessRepository.setEnabledByOfficeId(false, office.getId());

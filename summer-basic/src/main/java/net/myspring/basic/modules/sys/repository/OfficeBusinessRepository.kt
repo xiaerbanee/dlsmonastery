@@ -18,37 +18,27 @@ interface  OfficeBusinessRepository: BaseRepository<OfficeBusiness, String> {
     override  fun findOne(id: String): OfficeBusiness
 
     @Query("""
-        SELECT  t1.*
-        FROM sys_office_business t1
-        where t1.enabled=1
-        and t1.office_id=?1
-     """, nativeQuery = true)
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+        and t.officeId=?1
+     """)
     fun findBusinessIdById(id:String):MutableList<OfficeBusiness>
 
     @Query("""
-         SELECT  t1.*
-        FROM sys_office_business t1
-        where  t1.office_id=?1
-     """, nativeQuery = true)
+        SELECT t
+        FROM  #{#entityName} t
+        where  t.officeId=?1
+     """)
     fun findAllBusinessIdById(id:String):MutableList<OfficeBusiness>
 
     @Query("""
-             UPDATE  sys_office_business set enabled=0 where business_office_id IN ?1
-     """, nativeQuery = true)
+             UPDATE  #{#entityName} t set t.enabled=0 where t.businessOfficeId IN ?1
+     """)
     fun setEnabledByBusinessOfficeIds(businessOfficeIds:MutableList<String>):Int
 
     @Query("""
-            UPDATE  sys_office_business
-            set enabled=?1
-            where office_id=?2
+           UPDATE  #{#entityName} t set t.enabled=?1 where t.officeId IN ?2
      """, nativeQuery = true)
     fun setEnabledByOfficeId(enabled:Boolean,officeId:String ):Int
-
-    @Query("""
-            UPDATE  sys_office_business
-            set enabled=?1
-            where office_id=?2
-     """, nativeQuery = true)
-    //TODO 修改
-    fun batchSave(officeBusinessList:MutableList<OfficeBusiness>)
 }
