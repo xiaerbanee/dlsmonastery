@@ -37,30 +37,30 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRule
     fun findByName(name: String): OfficeRule
 
     @Query("""
-            SELECT t1.*
-        FROM sys_office_rule t1
-        where t1.enabled=1
-        order BY  t1.level asc
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+        order BY  t.level asc
         limit 0,1
-     """, nativeQuery = true)
+     """)
     fun findTopOfficeRule(): OfficeRule
 
     @Query("""
-            SELECT t1.*
-        FROM sys_office_rule t1
-        where t1.enabled=1
-        and t1.level > (
-          SELECT level FROM sys_office_rule where id=?1
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+        and t.level > (
+          SELECT level FROM OfficeRule where id=?1
         )
         limit 0,1
-     """, nativeQuery = true)
+     """)
     fun findNextOfficeRule(id: String): OfficeRule
 
     @Query("""
-    SELECT t1.*
-        FROM sys_office_rule t1
-        where t1.enabled=1
-     """, nativeQuery = true)
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+     """)
     fun findAllEnabled():MutableList<OfficeRule>
 }
 
