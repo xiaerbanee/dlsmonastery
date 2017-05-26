@@ -25,44 +25,35 @@ interface  MenuCategoryRepository :BaseRepository<MenuCategory,String>,MenuCateg
     override fun findOne(id: String): MenuCategory
 
     @Query("""
-       SELECT
-        t1.*
-        FROM
-        sys_menu_category t1
+        SELECT t
+        FROM  #{#entityName} t
         WHERE
-        t1.enabled=1
-        AND t1.name =?1
-     """, nativeQuery = true)
+        t.enabled=1
+        AND t.name =?1
+     """)
     fun findByName(name:String):MenuCategory
 
     @Query("""
-        SELECT
-        t1.*
-        FROM
-        sys_menu_category t1
+        SELECT t
+        FROM  #{#entityName} t
         WHERE
-        t1.enabled=1
-        and t1.backend_module_id IN ?1
-     """, nativeQuery = true)
+        t.enabled=1
+        and t.backendModuleId IN ?1
+     """)
     fun findByBackendModuleIds(backendModuleIds:MutableList<String>):MutableList<MenuCategory>
 
     @Query("""
-        SELECT
-        t1.*
-        FROM
-        sys_menu_category t1
+        SELECT t
+        FROM  #{#entityName} t
         WHERE
-        t1.enabled=1
-     """, nativeQuery = true)
+        t.enabled=1
+     """)
     fun findAllEnabled():MutableList<MenuCategory>
 }
 
 
 interface MenuCategoryRepositoryCustom{
-
     fun findPage(pageable: Pageable, menuCategoryQuery: MenuCategoryQuery): Page<MenuCategoryDto>?
-
-
 }
 
 class MenuCategoryRepositoryImpl @Autowired constructor(val entityManager: EntityManager): MenuCategoryRepositoryCustom{

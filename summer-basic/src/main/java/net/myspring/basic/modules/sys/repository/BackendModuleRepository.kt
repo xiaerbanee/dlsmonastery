@@ -29,7 +29,7 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>,BackendM
     fun save(backendModule: BackendModule): BackendModule
 
     @Query("""
-         SELECT t
+        SELECT t
         FROM  #{#entityName} t
         where t.enabled=1
         and t.backendId IN ?1
@@ -47,9 +47,9 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>,BackendM
     fun findByRoleId(@Param("roleId")roleId:String):MutableList<BackendModule>
 
     @Query("""
-    SELECT t
-    FROM  #{#entityName} t
-    WHERE t1.enabled=1
+        SELECT t
+        FROM  #{#entityName} t
+        WHERE t1.enabled=1
      """)
     fun findAllEnabled():MutableList<BackendModule>
 }

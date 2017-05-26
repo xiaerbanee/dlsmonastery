@@ -26,33 +26,28 @@ interface  DictMapRepository :BaseRepository<DictMap,String>, DictMapRepositoryC
     override fun findOne(id: String): DictMap
 
     @Query("""
-         SELECT DISTINCT
-        t1.category
-        FROM
-        sys_dict_map t1
-     """, nativeQuery = true)
+        SELECT DISTINCT
+        t.category
+        FROM  #{#entityName} t
+     """)
     fun findDistinctCategory():MutableList<String>
 
     @Query("""
-        SELECT
-        t1.*
-        FROM
-        sys_dict_map t1
+        SELECT t
+        FROM  #{#entityName} t
         WHERE
-        t1.category=?1
-        and t1.enabled=1
+        t.category=?1
+        and t.enabled=1
      """, nativeQuery = true)
     fun findByCategory(category:String):MutableList<DictMap>
 
     @Query("""
-         SELECT
-        t1.*
-        FROM
-        sys_dict_map t1
+        SELECT t
+        FROM  #{#entityName} t
         WHERE
-        t1.name=?1
-        and t1.enabled=1
-     """, nativeQuery = true)
+        t.name=?1
+        and t.enabled=1
+     """)
     fun findByName(name:String): DictMapDto
 
 
