@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
-import net.myspring.basic.modules.hr.domain.OfficeLeader
 import net.myspring.basic.modules.sys.domain.OfficeBusiness
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut

@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
+import net.myspring.basic.modules.sys.domain.Office
 import net.myspring.basic.modules.sys.domain.OfficeRule
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto
 import net.myspring.basic.modules.sys.dto.PermissionDto
@@ -41,9 +42,8 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRule
         FROM  #{#entityName} t
         where t.enabled=1
         order BY  t.level asc
-        limit 0,1
      """)
-    fun findTopOfficeRule(): OfficeRule
+    fun findTopOfficeRule(pageable: Pageable): Page<OfficeRule>
 
     @Query("""
         SELECT t
@@ -52,9 +52,8 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRule
         and t.level > (
           SELECT level FROM OfficeRule where id=?1
         )
-        limit 0,1
      """)
-    fun findNextOfficeRule(id: String): OfficeRule
+    fun findNextOfficeRule(id: String): List<OfficeRule>
 
     @Query("""
         SELECT t

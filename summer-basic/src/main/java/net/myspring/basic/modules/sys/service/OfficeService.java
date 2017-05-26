@@ -26,6 +26,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -108,7 +109,7 @@ public class OfficeService {
     public RestResponse check(OfficeForm officeForm) {
         Office parent = officeRepository.findOne(officeForm.getParentId());
         if (OfficeTypeEnum.BUSINESS.name().equals(officeForm.getType())) {
-            OfficeRule topOfficeRule = officeRuleRepository.findTopOfficeRule();
+            OfficeRule topOfficeRule = officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
             OfficeRule officeRule = officeRuleRepository.findOne(officeForm.getOfficeRuleId());
             if (parent != null && topOfficeRule.getId().equals(officeForm.getOfficeRuleId())) {
                 return new RestResponse("顶级业务部门不能设置上级", null,false);
@@ -127,7 +128,7 @@ public class OfficeService {
     public Office save(OfficeForm officeForm) {
         Office office;
         if(officeForm.getParent()!=null){
-            OfficeRule officeRule=officeRuleRepository.findTopOfficeRule();
+            OfficeRule officeRule=officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
             officeForm.setAreaId(officeManager.getOfficeIdByOfficeRule(officeForm.getParent().getId(),officeRule.getId()));
         }
         if (officeForm.isCreate()) {

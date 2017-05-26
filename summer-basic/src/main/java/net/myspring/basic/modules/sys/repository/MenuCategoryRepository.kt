@@ -3,9 +3,7 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.MenuCategory
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto
-import net.myspring.basic.modules.sys.dto.MenuDto
 import net.myspring.basic.modules.sys.web.query.MenuCategoryQuery
-import net.myspring.basic.modules.sys.web.query.MenuQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut

@@ -4,9 +4,7 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.DictMap
 import net.myspring.basic.modules.sys.dto.DictMapDto
-import net.myspring.basic.modules.sys.dto.MenuCategoryDto
 import net.myspring.basic.modules.sys.web.query.DictMapQuery
-import net.myspring.basic.modules.sys.web.query.MenuCategoryQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut

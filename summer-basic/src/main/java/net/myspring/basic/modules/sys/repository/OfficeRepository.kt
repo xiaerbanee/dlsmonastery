@@ -4,7 +4,6 @@ import com.google.common.collect.Maps
 import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Office
-import net.myspring.basic.modules.sys.dto.BackendMenuDto
 import net.myspring.basic.modules.sys.dto.OfficeDto
 import net.myspring.basic.modules.sys.web.query.OfficeQuery
 import net.myspring.util.repository.QueryUtils
@@ -16,9 +15,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import javax.persistence.EntityManager
 
 
 /**
@@ -113,8 +110,8 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     @Query("""
         SELECT t
         FROM  #{#entityName} t
-        WHERE t1.enabled=1
-     """, nativeQuery = true)
+        WHERE t.enabled=1
+     """)
     fun findAllEnabled():MutableList<Office>
 }
 

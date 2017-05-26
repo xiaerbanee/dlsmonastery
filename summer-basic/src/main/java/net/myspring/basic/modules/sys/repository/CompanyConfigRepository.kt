@@ -3,12 +3,9 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.CompanyConfig
-import net.myspring.basic.modules.sys.dto.BackendMenuDto
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto
 import net.myspring.basic.modules.sys.dto.CompanyConfigDto
-import net.myspring.basic.modules.sys.dto.DictEnumDto
 import net.myspring.basic.modules.sys.web.query.CompanyConfigQuery
-import net.myspring.basic.modules.sys.web.query.DictEnumQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -18,8 +15,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.util.*
-import javax.persistence.EntityManager
 
 /**
  * Created by haos on 2017/5/24.

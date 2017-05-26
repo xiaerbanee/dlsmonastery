@@ -1,12 +1,9 @@
 package net.myspring.basic.modules.sys.repository
 
 import net.myspring.basic.common.repository.BaseRepository
-import net.myspring.basic.modules.sys.domain.Backend
 import net.myspring.basic.modules.sys.domain.BackendModule
-import net.myspring.basic.modules.sys.dto.BackendDto
 import net.myspring.basic.modules.sys.dto.BackendModuleDto
 import net.myspring.basic.modules.sys.web.query.BackendModuleQuery
-import net.myspring.basic.modules.sys.web.query.BackendQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
