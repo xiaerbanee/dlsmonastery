@@ -93,7 +93,7 @@ public class RoleService {
                 rolePermissionRepository.setEnabledByPermissionIdList(false,removeIdList);
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
-                rolePermissionRepository.batchSave(rolePermissions);
+                rolePermissionRepository.save(rolePermissions);
             }
         } else if (CollectionUtil.isNotEmpty(rolePermissionList)) {
             rolePermissionRepository.setEnabledByRoleId(false, roleForm.getId());
