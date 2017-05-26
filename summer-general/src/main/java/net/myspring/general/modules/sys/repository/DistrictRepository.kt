@@ -11,11 +11,7 @@ interface DistrictRepository : BaseRepository<District, String> {
 
     fun findByName(name: String): District
 
-    @Query("""
-        SELECT t1.*
-        FROM sys_district t1
-        WHERE t1.province like %?1%  or t1.city like %?1% or t1.county like %?1%
-        """, nativeQuery = true)
+    @Query("select t from #{#entityName} t where t.province like %?1%  or t.city like %?1% or t.county like %?1%")
     fun findByNameLike(name: String): MutableList<District>
 
     fun findByProvinceAndCityAndCounty(province: String,city: String,county: String): District
