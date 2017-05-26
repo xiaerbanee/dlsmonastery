@@ -5,7 +5,7 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.PriceChangeRepository;
+import net.myspring.future.modules.crm.repository.PriceChangeRepository;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
 import net.myspring.future.modules.crm.domain.ProductIme;
@@ -73,7 +73,7 @@ public class PriceChangeImeService {
                 priceChangeImeForm.setIme(productImeRepository.findOne(priceChangeImeForm.getProductImeId()).getIme());
             }
         }else {
-            List<PriceChange> priceChange = priceChangeRepository.findAllEnabled();
+            List<PriceChange> priceChange = priceChangeRepository.findByEnabledIsTrueOrderByIdDesc();
             priceChangeImeForm.setPriceChangeDtos(BeanUtil.map(priceChange, PriceChangeDto.class));
         }
         return priceChangeImeForm;

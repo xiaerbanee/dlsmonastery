@@ -95,7 +95,7 @@ public class DutyAnnualService {
         simpleExcelColumnList.add(new SimpleExcelColumn("leftHour","剩余时间"));
         if(workbook!=null){
             List<DutyAnnualForm> list = doRead(workbook.getSheetAt(0), simpleExcelColumnList, DutyAnnualForm.class);
-            List<Employee> employeeList=employeeRepository.findByNameList(CollectionUtil.extractToList(list,"employeeName"));
+            List<Employee> employeeList=employeeRepository.findByEnabledIsTrueAndNameIn(CollectionUtil.extractToList(list,"employeeName"));
             Map<String,Employee> employeeMap=CollectionUtil.extractToMap(employeeList,"name");
             List<DutyAnnual> dutyAnnualList=Lists.newArrayList();
             for(DutyAnnualForm dutyAnnualForm:list){

@@ -25,13 +25,7 @@ import javax.persistence.EntityManager
 interface AfterSaleFleeRepository : BaseRepository<AfterSaleFlee, String> {
 
 
-    @Query("""
-    SELECT t1.*
-    FROM crm_after_sale_flee t1
-    WHERE t1.enabled=1
-        and t2.ime in :imeList
-        """, nativeQuery = true)
-    fun findByImeList(imeList: MutableList<String>): MutableList<AfterSaleFlee>
+    fun findByEnabledIsTrueAndImeIn(imeList: MutableList<String>): MutableList<AfterSaleFlee>
 }
 
 

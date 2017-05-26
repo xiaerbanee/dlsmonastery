@@ -30,14 +30,14 @@ interface ProductImeSaleRepository : BaseRepository<ProductImeSale, String> {
 
     @Query("""
     SELECT
-        t1.*
+        t1
     FROM
-        crm_product_ime_sale t1
+        #{#entityName} t1
     WHERE
-        t1.employee_id = :employeeId
-    AND t1.created_date >= :createdDateStart
-    AND t1.created_date <= :createdDateEnd
-        """, nativeQuery = true)
+        t1.employeeId = :employeeId
+    AND t1.createdDate >= :createdDateStart
+    AND t1.createdDate <= :createdDateEnd
+        """ )
     fun findByEmployeeId(@Param("employeeId") employeeId: String, @Param("createdDateStart") createdDateStart: LocalDateTime, @Param("createdDateEnd") createdDateEnd: LocalDateTime): MutableList<ProductImeSale>
 
 
