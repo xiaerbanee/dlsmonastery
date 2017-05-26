@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 @Component
 class AccountWeixinDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate,val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
     fun findByOpenId(openId: String): MutableList<AccountWeixinDto> {
-        return jdbcTemplate.queryForList("""
+        return jdbcTemplate.query("""
                     SELECT
                     t1.company_id,
                     t1.account_id,
@@ -22,7 +22,7 @@ class AccountWeixinDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     WHERE
                     t1.open_id = ?
                     and t1.enabled=1
-                """, AccountWeixinDto::class.java,openId);
+                """, MyBeanPropertyRowMapper<AccountWeixinDto>(AccountWeixinDto::class.java),openId);
     }
 
     fun findByAccountId(accountId: String): AccountWeixinDto {
