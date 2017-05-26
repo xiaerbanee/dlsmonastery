@@ -7,6 +7,7 @@ import net.myspring.basic.modules.sys.dto.PermissionDto
 import net.myspring.basic.modules.sys.web.query.OfficeRuleQuery
 import net.myspring.basic.modules.sys.web.query.PermissionQuery
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -18,6 +19,7 @@ import javax.persistence.EntityManager
  * Created by haos on 2017/5/24.
  */
 
+@CacheConfig(cacheNames = arrayOf("officeRules"))
 interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRuleRepositoryCustom{
 
     @Cacheable
@@ -27,20 +29,12 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRule
     fun save(officeRule: OfficeRule): Int
 
     @Query("""
-        SELECT t1.*
-        FROM sys_office_rule t1
-        where t1.enabled=1
-        and t1.name=?1
-     """, nativeQuery = true)
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+        and t.name=?1
+     """)
     fun findByName(name: String): OfficeRule
-
-    @Query("""
-            SELECT t1.*
-        FROM sys_office_rule t1
-        where t1.enabled=1
-        and t1.type=?1
-     """, nativeQuery = true)
-    fun findByType(type: String): MutableList<OfficeRule>
 
     @Query("""
             SELECT t1.*

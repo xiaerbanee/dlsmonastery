@@ -7,6 +7,7 @@ import net.myspring.basic.modules.sys.dto.MenuDto
 import net.myspring.basic.modules.sys.web.query.MenuCategoryQuery
 import net.myspring.basic.modules.sys.web.query.MenuQuery
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -17,6 +18,7 @@ import javax.persistence.EntityManager
 /**
  * Created by haos on 2017/5/24.
  */
+@CacheConfig(cacheNames = arrayOf("menuCategorys"))
 interface  MenuCategoryRepository :BaseRepository<MenuCategory,String>,MenuCategoryRepositoryCustom{
     @CachePut(key="#id")
     fun save(menuCategory: MenuCategory): MenuCategory

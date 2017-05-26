@@ -7,6 +7,7 @@ import net.myspring.basic.modules.sys.dto.RoleDto
 import net.myspring.basic.modules.sys.web.query.PermissionQuery
 import net.myspring.basic.modules.sys.web.query.RoleQuery
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -17,6 +18,7 @@ import javax.persistence.EntityManager
 /**
  * Created by haos on 2017/5/24.
  */
+@CacheConfig(cacheNames = arrayOf("roles"))
 interface RoleRepository: BaseRepository<Role, String>,RoleRepositoryCustom {
     @Cacheable
     override fun findOne(id: String): Role

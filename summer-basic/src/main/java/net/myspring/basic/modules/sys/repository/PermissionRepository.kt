@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.Permission
 import net.myspring.basic.modules.sys.dto.PermissionDto
 import net.myspring.basic.modules.sys.web.query.PermissionQuery
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -16,6 +17,7 @@ import javax.persistence.EntityManager
 /**
  * Created by haos on 2017/5/24.
  */
+@CacheConfig(cacheNames = arrayOf("permissions"))
 interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRepositoryCustom {
 
     @Cacheable

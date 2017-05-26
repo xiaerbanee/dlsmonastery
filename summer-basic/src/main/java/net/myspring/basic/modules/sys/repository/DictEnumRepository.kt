@@ -7,6 +7,7 @@ import net.myspring.basic.modules.sys.dto.DictMapDto
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery
 import net.myspring.basic.modules.sys.web.query.DictMapQuery
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -18,6 +19,7 @@ import javax.persistence.EntityManager
 /**
  * Created by haos on 2017/5/24.
  */
+@CacheConfig(cacheNames = arrayOf("dictEnums"))
 interface DictEnumRepository :BaseRepository<DictEnum,String>,DictEnumRepositoryCustom{
     @CachePut(key="#id")
     fun save(dictEnum: DictEnum): DictEnum

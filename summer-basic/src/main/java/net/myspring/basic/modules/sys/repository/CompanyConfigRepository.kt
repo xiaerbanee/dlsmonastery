@@ -10,6 +10,7 @@ import net.myspring.basic.modules.sys.dto.DictEnumDto
 import net.myspring.basic.modules.sys.web.query.CompanyConfigQuery
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -23,6 +24,7 @@ import javax.persistence.EntityManager
 /**
  * Created by haos on 2017/5/24.
  */
+@CacheConfig(cacheNames = arrayOf("companyConfigs"))
 interface CompanyConfigRepository :BaseRepository<CompanyConfig,String>, CompanyConfigRepositoryCustom{
     @CachePut(key="#id")
     fun save(companyConfig: CompanyConfig): CompanyConfig
