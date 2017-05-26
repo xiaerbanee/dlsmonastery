@@ -20,7 +20,7 @@ interface  BdDepartmentRepository{
             t1.FDEPTID = t2.FDEPTID
         and t1.FDEPTID in ?1
      """, nativeQuery = true)
-    fun findByIdList(idList:List<String>):List<BdDepartment>
+    fun findByIdList(idList:MutableList<String>):MutableList<BdDepartment>
 
     @Query("""
      select
@@ -34,5 +34,5 @@ interface  BdDepartmentRepository{
         t1.FDEPTID = t2.FDEPTID
         and t2.FFULLNAME like %?1%
      """, nativeQuery = true)
-    fun findByNameLike(name:String):List<BdDepartment>
+    fun findByNameLike(name:String):MutableList<BdDepartment>
 }

@@ -27,7 +27,7 @@ interface DutyRestRepository : BaseRepository<DutyRest, String>,DutyRestReposito
         t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
         AND t2.leader_id=?1 AND t1.status=?2 AND t1.created_date>=?3
     """, nativeQuery = true)
-    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): List<DutyDto>
+    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto>
 
     @Query("""
         SELECT
@@ -37,11 +37,11 @@ interface DutyRestRepository : BaseRepository<DutyRest, String>,DutyRestReposito
         WHERE
         t1.enabled=1
         AND t1.duty_date >= ?2
-        and t1.duty_date &lt;= ?3
+        and t1.duty_date <= ?3
         and t1.type = ?1
         and t1.status in ?4
     """, nativeQuery = true)
-    fun findByTypeAndDutyDate(type: String, dateStart: LocalDate, dateEnd: LocalDate, statusList: List<String>): List<DutyRest>
+    fun findByTypeAndDutyDate(type: String, dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyRest>
 
     @Query("""
         SELECT
@@ -52,12 +52,12 @@ interface DutyRestRepository : BaseRepository<DutyRest, String>,DutyRestReposito
         t1.enabled=1
         and t1.employee_id=?1
         and t1.duty_date >= ?2
-        and t1.duty_date &lt;= ?3
+        and t1.duty_date <= ?3
     """, nativeQuery = true)
-    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): List<DutyRest>
+    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyRest>
 }
 interface DutyRestRepositoryCustom{
-    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyRest>
+    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyRest>
 
     fun findPage(pageable: Pageable, dutyRestQuery: DutyRestQuery): Page<DutyRestDto>
 }
@@ -66,7 +66,7 @@ class DutyRestRepositoryImpl  @Autowired constructor(val entityManager: EntityMa
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyRest> {
+    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyRest> {
         var sb = StringBuilder();
         sb.append("""
             SELECT
@@ -92,7 +92,7 @@ class DutyRestRepositoryImpl  @Autowired constructor(val entityManager: EntityMa
         query.setParameter("dateStart", dateStart)
         query.setParameter("dateEnd", dateEnd)
         query.setParameter("accountIds", accountIds)
-        return query.resultList as List<DutyRest>
+        return query.resultList as MutableList<DutyRest>
     }
 
 }

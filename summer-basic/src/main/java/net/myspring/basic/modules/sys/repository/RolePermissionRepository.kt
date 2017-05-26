@@ -23,14 +23,14 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
         where t1.enabled=1
         and t1.role_id=?1
      """, nativeQuery = true)
-    fun findByRoleId(roleId: String): List<RolePermission>
+    fun findByRoleId(roleId: String): MutableList<RolePermission>
 
     @Query("""
         SELECT t1.*
         FROM  sys_role_permission t1
         where  t1.role_id=?1
      """, nativeQuery = true)
-    fun findAllByRoleId(roleId: String): List<RolePermission>
+    fun findAllByRoleId(roleId: String): MutableList<RolePermission>
 
     @Query("""
      UPDATE  sys_role_permission
@@ -44,14 +44,14 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
          SET enabled=?1
          where permission_id in ?2
      """, nativeQuery = true)
-    fun setEnabledByPermissionIdList(enabled: Boolean,  permissionIdList: List<String>): Int
+    fun setEnabledByPermissionIdList(enabled: Boolean,  permissionIdList: MutableList<String>): Int
 
     @Query("""
         SELECT t1.*
         FROM  sys_role_permission t1
         where  t1.permission_id=?1
      """, nativeQuery = true)
-    fun findAllByPermissionId(permissionId: String): List<RolePermission>
+    fun findAllByPermissionId(permissionId: String): MutableList<RolePermission>
 
     @Query("""
        UPDATE  sys_role_permission
@@ -65,7 +65,13 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
         SET enabled=?1
         where role_id in ?2
      """, nativeQuery = true)
-    fun setEnabledByRoleIdList( enabled: Boolean,  roleIdList: List<String>): Int
+    fun setEnabledByRoleIdList( enabled: Boolean,  roleIdList: MutableList<String>): Int
 
-    fun batchSave(rolePermissions:List<RolePermission>)
+    @Query("""
+        UPDATE  sys_role_permission
+        SET enabled=?1
+        where role_id in ?2
+     """, nativeQuery = true)
+    //TODO 修改sql
+    fun batchSave(rolePermissions:MutableList<RolePermission>)
 }

@@ -5,7 +5,7 @@ import net.myspring.future.modules.crm.domain.*
 
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery
-import org.apache.ibatis.annotations.Param
+import org.springframework.data.repository.query.Param
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
@@ -16,6 +16,6 @@ import java.time.LocalDateTime
 
 interface ImeAllotRepository : BaseRepository<ImeAllot, String> {
 
-    fun findByProductImeId(productImeId: String): List<ImeAllot>
+    fun findByProductImeId(productImeId: String): MutableList<ImeAllot>
 
 }

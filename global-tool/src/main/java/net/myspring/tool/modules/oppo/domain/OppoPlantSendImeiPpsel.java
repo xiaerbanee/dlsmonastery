@@ -5,6 +5,7 @@ import net.myspring.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,6 +20,9 @@ public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
     private String remark;
     private String imei2;
     private String companyId;
+
+    private String lxProductId;
+    private String productId;
 
     public String getBillId() {
         return billId;
@@ -90,5 +94,25 @@ public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    @Transient
+    public String getLxProductId() {
+        return lxProductId;
+    }
+
+    @Transient
+    public void setLxProductId(String lxProductId) {
+        this.lxProductId = lxProductId;
+    }
+
+    @Transient
+    public String getProductId() {
+        return productId;
+    }
+
+    @Transient
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 }

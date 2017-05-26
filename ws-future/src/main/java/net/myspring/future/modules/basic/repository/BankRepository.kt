@@ -27,7 +27,7 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
         FROM crm_bank t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<Bank>
+    fun findAllEnabled(): MutableList<Bank>
 
     fun findByName(name: String): Bank
 
@@ -40,7 +40,7 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
     """, nativeQuery = true)
     fun deleteBankAccount(bankId: String): Int
 
-    fun saveAccount(bankId: String,accountIds: List<String>): Int
+//    fun saveAccount(bankId: String,accountIds: MutableList<String>): Int
 
     @Query("""
         select
@@ -53,7 +53,7 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
         and t1.id=t2.bank_id
         and t2.account_id=?1
     """, nativeQuery = true)
-    fun findByAccountId(accountId: String): List<Bank>
+    fun findByAccountId(accountId: String): MutableList<Bank>
 
     @Query("""
         select
@@ -65,12 +65,12 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
     """, nativeQuery = true)
     fun getMaxOutDate(): LocalDateTime
 
-    fun findByNameLike(name: String): List<Bank>
+    fun findByNameLike(name: String): MutableList<Bank>
 
     @Query("""
         select account_id from crm_account_bank where bank_id=?1
     """, nativeQuery = true)
-    fun findAccountIdList(id: String): List<String>
+    fun findAccountIdList(id: String): MutableList<String>
 }
 
 interface BankRepositoryCustom{

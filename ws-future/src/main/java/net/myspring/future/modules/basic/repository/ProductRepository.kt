@@ -1,15 +1,11 @@
 package net.myspring.future.modules.basic.repository
 
-import net.myspring.common.cache.IdCacheKeyGenerator
-import net.myspring.future.common.mybatis.MyProvider
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Product
 import net.myspring.future.modules.basic.domain.ProductType
-import net.myspring.future.modules.basic.dto.PricesystemDto
 import net.myspring.future.modules.basic.dto.ProductDto
-import net.myspring.future.modules.basic.web.query.PricesystemQuery
 import net.myspring.future.modules.basic.web.query.ProductQuery
-import org.apache.ibatis.annotations.*
+import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -28,7 +24,7 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     @Cacheable
     override fun findOne(id: String): Product
 
-    override fun findAll(): List<Product>
+    override fun findAll(): MutableList<Product>
 
     @CachePut(key = "#id")
     fun save(product: Product): Int
@@ -38,26 +34,61 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
         FROM crm_product t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<Product>
+    fun findAllEnabled(): MutableList<Product>
 
+    @Query("""
+        SELECT
+            t1.*
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.has_ime = 1
+    """, nativeQuery = true)
+    fun findHasImeProduct(): MutableList<Product>
 
-    fun findHasImeProduct(): List<Product>
+    fun findByNameLike(name: String): MutableList<Product>
 
-    fun findByNameLike(name: String): List<Product>
+    fun findByCodeLike(code: String): MutableList<Product>
 
-    fun findByCodeLike(code: String): List<Product>
+    @Query("""
+        SELECT
+            t1.*
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.has_ime = 1
+        AND t1.name LIKE concat( '%', ?1,'%')
+    """, nativeQuery = true)
+    fun findByNameLikeHasIme(name: String): MutableList<Product>
 
-    fun findByNameLikeHasIme(name: String): List<Product>
-
-    fun findByCodeLikeHasIme(code: String): List<Product>
+    @Query("""
+        SELECT
+            t1.*
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.has_ime = 1
+        AND t1.code LIKE concat( '%', ?1,'%')
+    """, nativeQuery = true)
+    fun findByCodeLikeHasIme(code: String): MutableList<Product>
 
     fun findByName(name: String): Product
 
     fun findByOutId(outId: String): Product
 
-    fun findFilter(@Param("p") productQuery: ProductQuery): List<Product>
-
-    fun findByOutName(): List<ProductDto>
+    @Query("""
+        SELECT DISTINCT
+            t1.out_group_name
+        FROM
+            crm_product t1
+        WHERE
+            t1.enabled = 1
+        AND t1.out_group_id IS NOT NULL
+    """, nativeQuery = true)
+    fun findByOutName(): MutableList<ProductDto>
 
     @Query("""
         SELECT t1.*
@@ -65,15 +96,15 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
         where t1.enabled=1
         and t1.out_group_id in ?1
     """, nativeQuery = true)
-    fun findByOutGroupIds(outGroupIds: List<String>): List<Product>
+    fun findByOutGroupIds(outGroupIds: MutableList<String>): MutableList<Product>
 
-    fun findByProductTypeId(productTypeId: String): List<Product>
+    fun findByProductTypeId(productTypeId: String): MutableList<Product>
 
-    fun updateProductTypeId(@Param("productTypeId") id: String, @Param("list") ids: List<String>): Int
+//    fun updateProductTypeId(@Param("productTypeId") id: String, @Param("list") ids: MutableList<String>): Int
 
-    fun updateProductTypeToNull(productTypeId: String): Int
+//    fun updateProductTypeToNull(productTypeId: String): Int
 
-    fun findByOutGroupIdsAndAllowOrder(@Param("outGroupIds") outGroupIds: List<String>, @Param("allowOrder") allowOrder: Boolean): List<ProductDto>
+    fun findByOutGroupIdInAndAllowOrder(outGroupIds: MutableList<String>, allowOrder: Boolean): MutableList<ProductDto>
 
     @Query("""
         select
@@ -89,18 +120,51 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
         SELECT  t1.*  from crm_product_type t1 where
         t1.enabled=1
     """, nativeQuery = true)
-    fun findProductTypeList(): List<ProductType>
+    fun findProductTypeList(): MutableList<ProductType>
 
-    fun findIntersectionOfBothPricesystem(@Param("pricesystemId1") pricesystemId1: String, @Param("pricesystemId2") pricesystemId2: String): List<ProductDto>
+    @Query("""
+        SELECT
+	t1.*
+FROM
+	crm_product t1
+WHERE
+	t1.product_id IN (
+		SELECT
+			product_id
+		FROM
+			crm_pricesystem_detail t2
+		WHERE
+			t2.pricesystem_id = :pricesystemId1)
+		AND t1.product_id IN (
+			SELECT
+				product_id
+			FROM
+				crm_pricesystem_detail t3
+			WHERE
+				t3.pricesystem_id = :pricesystemId2)
+			AND t1.enabled = 1
+    """, nativeQuery = true)
+    fun findIntersectionOfBothPricesystem(@Param("pricesystemId1") pricesystemId1: String, @Param("pricesystemId2") pricesystemId2: String): MutableList<ProductDto>
 
-    fun findByNameList(nameList: List<String>): List<Product>
+    fun findByNameIn(nameList: MutableList<String>): MutableList<Product>
 }
 
 interface ProductRepositoryCustom{
+
+    fun findFilter(productQuery: ProductQuery): MutableList<Product>
+
     fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto>
 }
 
 class ProductRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ProductRepositoryCustom{
+
+    override fun findFilter(productQuery: ProductQuery): MutableList<Product>{
+        val sb = StringBuffer()
+
+        var query = entityManager.createNativeQuery(sb.toString(), Product::class.java)
+
+        return query.resultList as MutableList<Product>
+    }
 
     override fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto> {
         val sb = StringBuffer()

@@ -23,7 +23,7 @@ interface DemoPhoneTypeRepository : BaseRepository<DemoPhoneType,String>,DemoPho
     @Cacheable
     override fun findOne(id: String): DemoPhoneType
 
-    override fun findAll(): List<DemoPhoneType>
+    override fun findAll(): MutableList<DemoPhoneType>
 
     @CachePut(key = "#id")
     fun save(demoPhoneType: DemoPhoneType): Int
@@ -33,7 +33,7 @@ interface DemoPhoneTypeRepository : BaseRepository<DemoPhoneType,String>,DemoPho
         FROM crm_demo_phone_type t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<DemoPhoneType>
+    fun findAllEnabled(): MutableList<DemoPhoneType>
 
     @Query("""
         SELECT t1.*
@@ -41,7 +41,7 @@ interface DemoPhoneTypeRepository : BaseRepository<DemoPhoneType,String>,DemoPho
         where t1.enabled=1
         and t1.id in ?1
     """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<DemoPhoneType>
+    fun findByIds(ids: MutableList<String>): MutableList<DemoPhoneType>
 
     @Query("""
         SELECT
@@ -52,7 +52,7 @@ interface DemoPhoneTypeRepository : BaseRepository<DemoPhoneType,String>,DemoPho
             t1.enabled = 1
         AND t1.apply_end_date > ?1
     """, nativeQuery = true)
-    fun findAllByApplyEndDate(applyEndDate: LocalDate): List<DemoPhoneType>
+    fun findAllByApplyEndDate(applyEndDate: LocalDate): MutableList<DemoPhoneType>
 }
 
 interface DemoPhoneTypeRepositoryCustom{

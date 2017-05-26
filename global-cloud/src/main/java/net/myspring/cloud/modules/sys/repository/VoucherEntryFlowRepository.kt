@@ -16,5 +16,5 @@ interface  VoucherEntryFlowRepository{
         WHERE
         t1.gl_voucher_entry_id = :voucherEntryId
      """, nativeQuery = true)
-    fun findByVoucherEntryId(@Param("voucherEntryId")voucherEntryId:String):List<VoucherEntryFlow>
+    fun findByVoucherEntryId(@Param("voucherEntryId")voucherEntryId:String):MutableList<VoucherEntryFlow>
 }

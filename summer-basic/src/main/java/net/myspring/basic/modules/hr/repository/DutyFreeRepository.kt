@@ -29,7 +29,7 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
             AND  t1.free_date=?1
             and t1.employee_id=?2
     """, nativeQuery = true)
-    fun findByDate(freeDate: LocalDate, employeeId: String): List<DutyFree>
+    fun findByDate(freeDate: LocalDate, employeeId: String): MutableList<DutyFree>
 
     @Query("""
         SELECT
@@ -52,7 +52,7 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
             AND t1.status=?2
             AND t1.created_date>=?3
     """, nativeQuery = true)
-    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): List<DutyDto>
+    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto>
 
     @Query("""
         SELECT
@@ -65,7 +65,7 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
             and t1.free_date <= ?2
             and t1.status in ?3
         """, nativeQuery = true)
-    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: List<String>): List<DutyFree>
+    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyFree>
 
     @Query("""
         SELECT
@@ -76,13 +76,13 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
             t1.enabled=1
             and t1.employee_id=?1
             and t1.free_date >=?2
-            and t1.free_date &lt;=?3
+            and t1.free_date <=?3
     """, nativeQuery = true)
-    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): List<DutyFree>
+    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyFree>
 }
 
 interface DutyFreeRepositoryCustom {
-    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyFree>
+    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyFree>
 
     fun findPage(pageable: Pageable, dutyFreeQuery: DutyFreeQuery): Page<DutyFreeDto>
 }
@@ -92,7 +92,7 @@ class DutyFreeRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyFree> {
+    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyFree> {
         var sb = StringBuilder()
         sb.append("""
             SELECT
@@ -113,7 +113,7 @@ class DutyFreeRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         query.setParameter("dateStart", dateStart);
         query.setParameter("dateEnd", dateEnd);
         query.setParameter("accountIds", accountIds);
-        return query.resultList as List<DutyFree>
+        return query.resultList as MutableList<DutyFree>
 
     }
 

@@ -27,7 +27,7 @@ interface DutySignRepository : BaseRepository<DutySign,String>,DutySignRepositor
         t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
         AND t2.leader_id=?1 AND t1.status=?2 AND t1.created_date>=?3
     """, nativeQuery = true)
-    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): List<DutyDto>
+    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto>
 
     @Query("""
         SELECT
@@ -40,17 +40,17 @@ interface DutySignRepository : BaseRepository<DutySign,String>,DutySignRepositor
         AND t1.duty_date >= ?2
         and t1.duty_date <=?3
     """, nativeQuery = true)
-    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): List<DutySign>
+    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutySign>
 }
 interface DutySignRepositoryCustom{
-    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutySign>
+    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutySign>
 
     fun findPage(pageable: Pageable, dutySignQuery: DutySignQuery): Page<DutySignDto>
 
-    fun findByFilter(dutySignQuery: DutySignQuery): List<DutySign>
+    fun findByFilter(dutySignQuery: DutySignQuery): MutableList<DutySign>
 }
 class DutySignRepositoryImpl @Autowired constructor(val entityManager: EntityManager): DutySignRepositoryCustom{
-    override fun findByFilter(dutySignQuery: DutySignQuery): List<DutySign> {
+    override fun findByFilter(dutySignQuery: DutySignQuery): MutableList<DutySign> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -58,7 +58,7 @@ class DutySignRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutySign> {
+    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutySign> {
         var sb = StringBuilder()
         sb.append("""
             SELECT
@@ -79,7 +79,7 @@ class DutySignRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         query.setParameter("dateStart", dateStart)
         query.setParameter("dateEnd", dateEnd)
         query.setParameter("accountIds", accountIds)
-        return query.resultList as List<DutySign>
+        return query.resultList as MutableList<DutySign>
     }
 
 }

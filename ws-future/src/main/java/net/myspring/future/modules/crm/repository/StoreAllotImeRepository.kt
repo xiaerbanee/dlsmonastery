@@ -24,7 +24,7 @@ import java.time.LocalDate
 
 interface StoreAllotImeRepository : BaseRepository<StoreAllotIme, String> {
 
-    fun findByProductImeId(productImeId: String): List<StoreAllotIme>
+    fun findByProductImeId(productImeId: String): MutableList<StoreAllotIme>
 
     @Query("""
     SELECT
@@ -42,7 +42,7 @@ interface StoreAllotImeRepository : BaseRepository<StoreAllotIme, String> {
         AND t1.product_id = product.id
         AND t1.product_ime_id = ime.id
         """, nativeQuery = true)
-    fun findByStoreAllotId(storeAllotId: String): List<StoreAllotImeDto>
+    fun findByStoreAllotId(storeAllotId: String): MutableList<StoreAllotImeDto>
 
 
     @Query("""
@@ -61,6 +61,6 @@ interface StoreAllotImeRepository : BaseRepository<StoreAllotIme, String> {
         ORDER BY t1.id, t2.created_date
         limit 0, :limit
         """, nativeQuery = true)
-     fun findDtoListByStoreAllotIdList(@Param("idList") idList: List<String>, @Param("limit") limit: Int): List<StoreAllotImeDto>
+     fun findDtoListByStoreAllotIdList(@Param("idList") idList: MutableList<String>, @Param("limit") limit: Int): MutableList<StoreAllotImeDto>
 
 }

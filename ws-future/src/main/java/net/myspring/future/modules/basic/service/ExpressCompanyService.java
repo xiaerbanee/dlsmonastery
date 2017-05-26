@@ -2,7 +2,6 @@ package net.myspring.future.modules.basic.service;
 
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.repository.ExpressCompanyRepository;
@@ -80,7 +79,9 @@ public class ExpressCompanyService {
     }
 
     public List<ExpressCompanyDto> findByNameLike(String name) {
-        return expressCompanyRepository.findByNameLike(RequestUtils.getCompanyId(), name);
+        //TODO 需要重写该方法
+        return null;
+        //return expressCompanyRepository.findByNameLike(RequestUtils.getCompanyId(), name);
     }
 
     public String getDefaultExpressCompanyId() {
@@ -94,7 +95,4 @@ public class ExpressCompanyService {
         return null;
     }
 
-    public List<ExpressCompanyDto> findDtoListByCompanyIdAndExpressType(String companyId, String expressType) {
-        return expressCompanyRepository.findByCompanyIdAndExpressType(companyId, expressType);
-    }
 }

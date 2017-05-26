@@ -27,7 +27,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
         t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
         AND t2.leader_id=?1 AND t1.status=?2 AND t1.created_date>=?3
     """, nativeQuery = true)
-    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): List<DutyDto>
+    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto>
 
     @Query("""
         SELECT
@@ -39,7 +39,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
         and t1.employee_id=?1
         and t1.duty_date=?2
     """, nativeQuery = true)
-    fun findByDutyDate(employeeId: String, dutyDate: LocalDate): List<DutyOvertime>
+    fun findByDutyDate(employeeId: String, dutyDate: LocalDate): MutableList<DutyOvertime>
 
     @Query("""
         SELECT
@@ -51,9 +51,9 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
         and t1.status=?4
         and t1.employee_id=?1
         and t1.duty_date>=?2
-        and t1.duty_date &lt;=?3
+        and t1.duty_date <=?3
     """, nativeQuery = true)
-    fun findByDutyDateAndStatus(employeeId: String, dutyDateStart: LocalDate, dutyDateEnd: LocalDate, status: String): List<DutyOvertime>
+    fun findByDutyDateAndStatus(employeeId: String, dutyDateStart: LocalDate, dutyDateEnd: LocalDate, status: String): MutableList<DutyOvertime>
 
     @Query("""
         SELECT
@@ -64,10 +64,10 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
           t1.enabled=1
           and t1.status=?4
           and t1.duty_date>=?2
-          and t1.duty_date &lt;=?3
+          and t1.duty_date <=?3
           and t1.employee_id=?1
     """, nativeQuery = true)
-    fun findByIdAndDate(employeeId: String, dateStart: LocalDateTime, dateEnd: LocalDateTime, status: String): List<DutyOvertime>
+    fun findByIdAndDate(employeeId: String, dateStart: LocalDateTime, dateEnd: LocalDateTime, status: String): MutableList<DutyOvertime>
 
     @Query("""
         SELECT
@@ -76,10 +76,10 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
         hr_duty_overtime t1
         WHERE
         t1.enabled=1
-        AND t1.duty_date >= ?1 and t1.duty_date &lt;= ?2
+        AND t1.duty_date >= ?1 and t1.duty_date <= ?2
         and t1.status in ?3
     """, nativeQuery = true)
-    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: List<String>): List<DutyOvertime>
+    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyOvertime>
 
     @Query("""
         SELECT
@@ -90,14 +90,14 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
         t1.enabled=1
         and t1.employee_id=?1
         and t1.duty_date >= ?2
-        and t1.duty_date &lt;= ?3
+        and t1.duty_date <= ?3
     """, nativeQuery = true)
-    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): List<DutyOvertime>
+    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyOvertime>
 
 
 }
 interface DutyOvertimeRepositoryCustom{
-    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyOvertime>
+    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyOvertime>
 
     fun findPage(pageable: Pageable, dutyOvertimeQuery: DutyOvertimeQuery): Page<DutyOvertimeDto>
 }
@@ -106,7 +106,7 @@ class DutyOvertimeRepositoryImpl @Autowired constructor(val entityManager: Entit
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyOvertime> {
+    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyOvertime> {
         var sb = StringBuffer()
         sb.append("""
             SELECT
@@ -128,7 +128,7 @@ class DutyOvertimeRepositoryImpl @Autowired constructor(val entityManager: Entit
         query.setParameter("dateStart", dateStart)
         query.setParameter("dateEnd", dateEnd)
         query.setParameter("accountIds", accountIds)
-        return query.resultList as List<DutyOvertime>
+        return query.resultList as MutableList<DutyOvertime>
     }
 
 }

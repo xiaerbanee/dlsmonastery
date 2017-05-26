@@ -7,7 +7,7 @@ import net.myspring.future.modules.crm.domain.ExpressOrder
 
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail
 import net.myspring.future.modules.crm.dto.ExpressOrderDto
-import org.apache.ibatis.annotations.Param
+import org.springframework.data.repository.query.Param
 import org.springframework.data.jpa.repository.Query
 
 

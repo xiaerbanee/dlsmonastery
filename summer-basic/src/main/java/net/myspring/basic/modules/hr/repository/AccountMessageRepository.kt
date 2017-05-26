@@ -19,7 +19,7 @@ interface AccountMessageRepository : BaseRepository<AccountMessage, String> {
          and t1.created_date >=?2
          and t1.readed = 0
         """, nativeQuery = true)
-    fun findByAccountId(accountId: String,createdDateStart: LocalDateTime): List<AccountMessage>
+    fun findByAccountId(accountId: String,createdDateStart: LocalDateTime): MutableList<AccountMessage>
 
 
 }

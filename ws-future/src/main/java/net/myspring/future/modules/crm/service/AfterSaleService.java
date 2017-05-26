@@ -87,7 +87,7 @@ public class AfterSaleService {
             depotNameList.add( StringUtils.toString(row.get(2)).trim());
         }
         List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
-        List<Product> productList=productRepository.findByNameList(productNameList);
+        List<Product> productList=productRepository.findByNameIn(productNameList);
         List<Depot> depotList=depotRepository.findByNameList(depotNameList);
         Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
         Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"name");
@@ -198,7 +198,7 @@ public class AfterSaleService {
         List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
         List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByImeList(imeList);
         List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
-        List<Product> productList=productRepository.findByNameList(productNameList);
+        List<Product> productList=productRepository.findByNameIn(productNameList);
         List<Depot> depotList=depotRepository.findByNameList(depotNameList);
         Map<String,AfterSale> afterSaleMap=CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
         Map<String,AfterSaleFlee> afterSaleFleeMap=CollectionUtil.extractToMap(afterSaleFleeList,"ime");
@@ -344,7 +344,7 @@ public class AfterSaleService {
         List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
         List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
         List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList,"id"),"工厂录入");
-        List<Product> productList=productRepository.findByNameList(productNameList);
+        List<Product> productList=productRepository.findByNameIn(productNameList);
         Map<String,AfterSale> afterSaleMap=CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
         Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
         Map<String,AfterSaleDetail> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");

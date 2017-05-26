@@ -21,7 +21,7 @@ interface AdGoodsOrderDetailRepository : BaseRepository<AdGoodsOrderDetail,Strin
     WHERE
         t1.ad_goods_order_id IN ?1
     """, nativeQuery = true)
-    fun findByAdGoodsOrderIds(adGoodsOrderIds: List<String>): List<AdGoodsOrderDetailDto>
+    fun findByAdGoodsOrderIds(adGoodsOrderIds: MutableList<String>): MutableList<AdGoodsOrderDetailDto>
 
     @Query("""
     SELECT
@@ -52,7 +52,7 @@ interface AdGoodsOrderDetailRepository : BaseRepository<AdGoodsOrderDetail,Strin
             ORDER BY
                 detail.qty DESC
     """, nativeQuery = true)
-    fun findByAdGoodsOrderForEdit(@Param("outGroupIdList") outGroupIdList: List<String>, @Param("adGoodsOrderId") adGoodsOrderId: String): List<AdGoodsOrderDetailDto>
+    fun findByAdGoodsOrderForEdit(@Param("outGroupIdList") outGroupIdList: MutableList<String>, @Param("adGoodsOrderId") adGoodsOrderId: String): MutableList<AdGoodsOrderDetailDto>
 
     @Query("""
     SELECT
@@ -67,5 +67,5 @@ interface AdGoodsOrderDetailRepository : BaseRepository<AdGoodsOrderDetail,Strin
         t1.out_group_id IN :outGroupIdList
     AND t1.enabled = 1
     """, nativeQuery = true)
-    fun findByAdGoodsOrderForNew(@Param("outGroupIdList") outGroupIdList: List<String>): List<AdGoodsOrderDetailDto>
+    fun findByAdGoodsOrderForNew(@Param("outGroupIdList") outGroupIdList: MutableList<String>): MutableList<AdGoodsOrderDetailDto>
 }

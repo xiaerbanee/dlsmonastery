@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
-import java.util.List
 import javax.persistence.EntityManager
 
 
@@ -22,12 +21,12 @@ interface VivoRepository:VivoRepositoryCustom {
    @Query("""
         select *  from VR_Products
         """, nativeQuery = true)
-   fun products(): List<VivoProducts>
+   fun products(): MutableList<VivoProducts>
 
    @Query("""
         select *  from vr_products_m13e00
         """, nativeQuery = true)
-   fun plantProducts(): List<VivoPlantProducts>
+   fun plantProducts(): MutableList<VivoPlantProducts>
 
    @Query("""
         select *  from vr_plant_sendimei_m13e00 t1
@@ -35,7 +34,7 @@ interface VivoRepository:VivoRepositoryCustom {
         and t1.createdTime <= :dateEnd
         and t1.companyId in :agentCodes
         """, nativeQuery = true)
-   fun plantSendimei(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: List<String>): List<VivoPlantSendimei>
+   fun plantSendimei(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>): MutableList<VivoPlantSendimei>
 
    @Query("""
         select snImei,companyId,productId,retailDate,createTime
@@ -43,7 +42,7 @@ interface VivoRepository:VivoRepositoryCustom {
         where t1.retailDate >= :dateStart
         and t1.retailDate <= :dateEnd
         """, nativeQuery = true)
-   fun plantElectronicsn(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): List<VivoPlantElectronicsn>
+   fun plantElectronicsn(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<VivoPlantElectronicsn>
 
    @Query("""
         delete from S_ZONES_M13E00 where ZoneId = ?1
@@ -54,7 +53,7 @@ interface VivoRepository:VivoRepositoryCustom {
    @Query("""
     select distinct CustomerID from S_Customers_M13e00 where CompanyID=  :mainCode
         """, nativeQuery = true)
-   fun findCustomerIDs(mainCode: String): List<String>
+   fun findCustomerIDs(mainCode: String): MutableList<String>
 
    @Query("""
         SELECT
@@ -77,14 +76,14 @@ interface VivoRepository:VivoRepositoryCustom {
         FROM
         S_Customers_R2500823
         """, nativeQuery = true)
-   fun findIdvivoCustomerIDs(): List<String>
+   fun findIdvivoCustomerIDs(): MutableList<String>
 
    @Query("""
         select *  from S_PlantStockSupply_M13e00
         where CompanyID= :mainCode
         and AccountDate= :date
         """, nativeQuery = true)
-   fun getSPlantStockSupply(@Param("date") date: String, @Param("mainCode") mainCode: String): List<SPlantStockSupplyM13e00>
+   fun getSPlantStockSupply(@Param("date") date: String, @Param("mainCode") mainCode: String): MutableList<SPlantStockSupplyM13e00>
 
    @Query("""
         select * from S_PlantStockSupply_R2500821
@@ -93,14 +92,14 @@ interface VivoRepository:VivoRepositoryCustom {
         union
         select * from S_PlantStockSupply_R2500823
         """, nativeQuery = true)
-   fun getIdvivoSPlantStockSupply(@Param("date") date: String): List<SPlantStockSupplyM13e00>
+   fun getIdvivoSPlantStockSupply(@Param("date") date: String): MutableList<SPlantStockSupplyM13e00>
 
    @Query("""
         select *  from S_PlantStockDealer_M13e00
         where CompanyID= :mainCode
         and AccountDate= :date
         """, nativeQuery = true)
-   fun getSPlantStockDealer(@Param("date") date: String, @Param("mainCode") mainCode: String): List<SPlantStockDealerM13e00>
+   fun getSPlantStockDealer(@Param("date") date: String, @Param("mainCode") mainCode: String): MutableList<SPlantStockDealerM13e00>
 
    @Query("""
         select * from S_PlantStockDealer_R2500821
@@ -109,25 +108,25 @@ interface VivoRepository:VivoRepositoryCustom {
         union
         select * from S_PlantStockDealer_R2500823
         """, nativeQuery = true)
-   fun getIdvivoSPlantStockDealer(@Param("date") date: String): List<SPlantStockDealerM13e00>
+   fun getIdvivoSPlantStockDealer(@Param("date") date: String): MutableList<SPlantStockDealerM13e00>
 
    @Query("""
         select *  from s_PlantStockStores_m13e00
         where CompanyID= :mainCode
         and AccountDate= :date
         """, nativeQuery = true)
-   fun getSPlantStockStores(@Param("date") date: String, @Param("mainCode") mainCode: String): List<SPlantStockStoresM13e00>
+   fun getSPlantStockStores(@Param("date") date: String, @Param("mainCode") mainCode: String): MutableList<SPlantStockStoresM13e00>
 
    @Query("""
         select *  from S_PlantStockStores_R250082
         where AccountDate=:date
         """, nativeQuery = true)
-   fun getIdvivoSPlantStockStores(@Param("date") date: String): List<SPlantStockStoresM13e00>
+   fun getIdvivoSPlantStockStores(@Param("date") date: String): MutableList<SPlantStockStoresM13e00>
 
    @Query("""
         select ProductNo  from S_ProductItem000_M13e00
         """, nativeQuery = true)
-  fun sProductItem(): List<String>
+  fun sProductItem(): MutableList<String>
 
    @Query("""
         select ProductNo  from S_ProductItem000_R2500821
@@ -136,7 +135,7 @@ interface VivoRepository:VivoRepositoryCustom {
         union
         select ProductNo  from S_ProductItem000_R2500823
         """, nativeQuery = true)
-   fun idvivoSProductItem(): List<String>
+   fun idvivoSProductItem(): MutableList<String>
 
 
    @Query("""
@@ -148,31 +147,31 @@ interface VivoRepository:VivoRepositoryCustom {
 
 interface VivoRepositoryCustom {
    fun idvivoDeleteZones()
-   fun insertZones(@Param("list") sZonesM13e00s: List<SZonesM13e00>)
-   fun insertZonesR250082(@Param("list") sZonesM13e00s: List<SZonesM13e00>, @Param("name") name: String)
-   fun insertCustomers(sCustomersM13e00s: List<SCustomersM13e00>)
-   fun insertCustomersR250082(@Param("list") sCustomersM13e00s: List<SCustomersM13e00>, @Param("name") name: String)
-   fun insertPlantStockSupply(sPlantStockSupplyM13e00s: List<SPlantStockSupplyM13e00>)
-   fun insertPlantStockSupplyR250082(@Param("list") sPlantStockSupplyM13e00s: List<SPlantStockSupplyM13e00>, @Param("name") name: String)
-   fun insertPlantStockDealer(sPlantStockDealerM13e00s: List<SPlantStockDealerM13e00>)
-   fun insertPlantStockDealerR250082(@Param("list") sPlantStockDealerM13e00s: List<SPlantStockDealerM13e00>, @Param("name") name: String)
-   fun insertPlantStockStores(sPlantStockStoresM13e00s: List<SPlantStockStoresM13e00>)
-   fun insertPlantStockStoresR250082(@Param("list") sPlantStockStoresM13e00s: List<SPlantStockStoresM13e00>, @Param("name") name: String)
-   fun insertProductItemLend(sProductItemLendM13e00s: List<SProductItemLendM13e00>)
-   fun insertProductItem000(sProductItem000M13e00s: List<SProductItem000M13e00>)
+   fun insertZones(@Param("list") sZonesM13e00s: MutableList<SZonesM13e00>)
+   fun insertZonesR250082(@Param("list") sZonesM13e00s: MutableList<SZonesM13e00>, @Param("name") name: String)
+   fun insertCustomers(sCustomersM13e00s: MutableList<SCustomersM13e00>)
+   fun insertCustomersR250082(@Param("list") sCustomersM13e00s: MutableList<SCustomersM13e00>, @Param("name") name: String)
+   fun insertPlantStockSupply(sPlantStockSupplyM13e00s: MutableList<SPlantStockSupplyM13e00>)
+   fun insertPlantStockSupplyR250082(@Param("list") sPlantStockSupplyM13e00s: MutableList<SPlantStockSupplyM13e00>, @Param("name") name: String)
+   fun insertPlantStockDealer(sPlantStockDealerM13e00s: MutableList<SPlantStockDealerM13e00>)
+   fun insertPlantStockDealerR250082(@Param("list") sPlantStockDealerM13e00s: MutableList<SPlantStockDealerM13e00>, @Param("name") name: String)
+   fun insertPlantStockStores(sPlantStockStoresM13e00s: MutableList<SPlantStockStoresM13e00>)
+   fun insertPlantStockStoresR250082(@Param("list") sPlantStockStoresM13e00s: MutableList<SPlantStockStoresM13e00>, @Param("name") name: String)
+   fun insertProductItemLend(sProductItemLendM13e00s: MutableList<SProductItemLendM13e00>)
+   fun insertProductItem000(sProductItem000M13e00s: MutableList<SProductItem000M13e00>)
    fun deleteProductItem000()
    fun deleteProductItem000R250082()
    fun deleteSStores()
    fun deleteSStoresR250082()
-   fun insertSStores(@Param("list") sStoresM13e00s: List<SStoresM13e00>)
-   fun insertSStoresR250082(@Param("list") sStoresM13e00s: List<SStoresM13e00>, @Param("name") name: String)
-   fun insertProductItem000R250082(@Param("list") sProductItem000M13e00s: List<SProductItem000M13e00>, @Param("name") name: String)
+   fun insertSStores(@Param("list") sStoresM13e00s: MutableList<SStoresM13e00>)
+   fun insertSStoresR250082(@Param("list") sStoresM13e00s: MutableList<SStoresM13e00>, @Param("name") name: String)
+   fun insertProductItem000R250082(@Param("list") sProductItem000M13e00s: MutableList<SProductItem000M13e00>, @Param("name") name: String)
    fun deleteProductItemStocks()
    fun deleteProductItemStocksR250082()
-   fun insertProductItemStocks(@Param("list") sProductItemStocksM13e00s: List<SProductItemStocksM13e00>)
-   fun insertProductItemStocksR250082(@Param("list") sProductItemStocksM13e00s: List<SProductItemStocksM13e00>, @Param("name") name: String)
-   fun insertSPlantendproductsaleM13e00(sPlantEndProductSaleM13e00s: List<SPlantEndProductSaleM13e00>)
-   fun insertSPlantendproductsaleR250082(@Param("list") sPlantEndProductSaleM13e00s: List<SPlantEndProductSaleM13e00>, @Param("name") name: String)
+   fun insertProductItemStocks(@Param("list") sProductItemStocksM13e00s: MutableList<SProductItemStocksM13e00>)
+   fun insertProductItemStocksR250082(@Param("list") sProductItemStocksM13e00s: MutableList<SProductItemStocksM13e00>, @Param("name") name: String)
+   fun insertSPlantendproductsaleM13e00(sPlantEndProductSaleM13e00s: MutableList<SPlantEndProductSaleM13e00>)
+   fun insertSPlantendproductsaleR250082(@Param("list") sPlantEndProductSaleM13e00s: MutableList<SPlantEndProductSaleM13e00>, @Param("name") name: String)
 }
 
 
@@ -185,7 +184,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       entityManager.createNativeQuery("delete from S_ZONES_R2500823").executeUpdate();
    }
 
-   override fun insertZones(sZonesM13e00s: List<SZonesM13e00>) {
+   override fun insertZones(sZonesM13e00s: MutableList<SZonesM13e00>) {
       for(sZonesM13e00 in sZonesM13e00s) {
          var query = entityManager.createNativeQuery("""
            insert into S_ZONES_M13E00
@@ -205,7 +204,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertZonesR250082(sZonesM13e00s: List<SZonesM13e00>, name: String) {
+   override fun insertZonesR250082(sZonesM13e00s: MutableList<SZonesM13e00>, name: String) {
       for (sZonesM13e00 in sZonesM13e00s){
          var query=entityManager.createNativeQuery("""
         insert into S_ZONES_?2
@@ -227,7 +226,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertCustomers(sCustomersM13e00s: List<SCustomersM13e00>) {
+   override fun insertCustomers(sCustomersM13e00s: MutableList<SCustomersM13e00>) {
       for (sCustomersM13e00 in sCustomersM13e00s){
          var query=entityManager.createNativeQuery("""
         insert into S_Customers_M13e00
@@ -300,7 +299,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertCustomersR250082(sCustomersM13e00s: List<SCustomersM13e00>, name: String) {
+   override fun insertCustomersR250082(sCustomersM13e00s: MutableList<SCustomersM13e00>, name: String) {
       for (sCustomersM13e00 in sCustomersM13e00s){
          var query=entityManager.createNativeQuery("""
         insert into  S_Customers_?2
@@ -349,7 +348,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertPlantStockSupply(sPlantStockSupplyM13e00s: List<SPlantStockSupplyM13e00>) {
+   override fun insertPlantStockSupply(sPlantStockSupplyM13e00s: MutableList<SPlantStockSupplyM13e00>) {
       for (sPlantStockSupplyM13e00 in sPlantStockSupplyM13e00s){
          var query=entityManager.createNativeQuery("""
          insert into S_PlantStockSupply_M13e00
@@ -369,7 +368,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertPlantStockSupplyR250082(sPlantStockSupplyM13e00s: List<SPlantStockSupplyM13e00>, name: String) {
+   override fun insertPlantStockSupplyR250082(sPlantStockSupplyM13e00s: MutableList<SPlantStockSupplyM13e00>, name: String) {
       for (sPlantStockSupplyM13e00 in sPlantStockSupplyM13e00s){
          var query=entityManager.createNativeQuery("""
          insert into S_PlantStockSupply_?2
@@ -391,7 +390,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertPlantStockDealer(sPlantStockDealerM13e00s: List<SPlantStockDealerM13e00>) {
+   override fun insertPlantStockDealer(sPlantStockDealerM13e00s: MutableList<SPlantStockDealerM13e00>) {
       for (sPlantStockDealerM13e00 in sPlantStockDealerM13e00s){
          var query=entityManager.createNativeQuery("""
        insert into S_PlantStockDealer_M13e00 (companyID,dealerID,productID,createdTime,sumstock,useablestock,bad,accountDate) values
@@ -411,7 +410,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertPlantStockDealerR250082(sPlantStockDealerM13e00s: List<SPlantStockDealerM13e00>, name: String) {
+   override fun insertPlantStockDealerR250082(sPlantStockDealerM13e00s: MutableList<SPlantStockDealerM13e00>, name: String) {
       for (sPlantStockDealerM13e00 in sPlantStockDealerM13e00s){
          var query=entityManager.createNativeQuery("""
          insert into S_PlantStockDealer_?2
@@ -432,7 +431,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertPlantStockStores(sPlantStockStoresM13e00s: List<SPlantStockStoresM13e00>) {
+   override fun insertPlantStockStores(sPlantStockStoresM13e00s: MutableList<SPlantStockStoresM13e00>) {
       for (sPlantStockStoresM13e00 in sPlantStockStoresM13e00s){
          var query=entityManager.createNativeQuery("""
         insert into S_PlantStockStores_M13e00(companyID,storeID,productID,createdTime,sumstock,useablestock,bad,accountDate) values
@@ -452,7 +451,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertPlantStockStoresR250082(sPlantStockStoresM13e00s: List<SPlantStockStoresM13e00>, name: String) {
+   override fun insertPlantStockStoresR250082(sPlantStockStoresM13e00s: MutableList<SPlantStockStoresM13e00>, name: String) {
       for (sPlantStockStoresM13e00 in sPlantStockStoresM13e00s){
          var query=entityManager.createNativeQuery("""
         insert into S_PlantStockStores_?2 (companyID,storeID,productID,createdTime,sumstock,useablestock,bad,accountDate)
@@ -473,7 +472,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertProductItemLend(sProductItemLendM13e00s: List<SProductItemLendM13e00>) {
+   override fun insertProductItemLend(sProductItemLendM13e00s: MutableList<SProductItemLendM13e00>) {
       for (sProductItemLendM13e00 in sProductItemLendM13e00s){
          var query=entityManager.createNativeQuery("""
           insert into S_ProductItemLend_M13e00
@@ -509,7 +508,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertProductItem000(sProductItem000M13e00s: List<SProductItem000M13e00>) {
+   override fun insertProductItem000(sProductItem000M13e00s: MutableList<SProductItem000M13e00>) {
       for (sProductItem000M13e00 in sProductItem000M13e00s){
          var query=entityManager.createNativeQuery("""
           insert into S_ProductItem000_M13e00 (companyID,productID,productNo,storeID,customerID,subCustomerID,status,statusInfo,isReturnProfit,isLock,remark) values
@@ -554,7 +553,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       entityManager.createNativeQuery(" delete from  S_Stores_R2500823").executeUpdate();
    }
 
-   override fun insertSStores(sStoresM13e00s: List<SStoresM13e00>) {
+   override fun insertSStores(sStoresM13e00s: MutableList<SStoresM13e00>) {
       for ( sStoresM13e00 in sStoresM13e00s){
          var query=entityManager.createNativeQuery("""
           insert into S_Stores_M13E00
@@ -571,7 +570,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertSStoresR250082(sStoresM13e00s: List<SStoresM13e00>, name: String) {
+   override fun insertSStoresR250082(sStoresM13e00s: MutableList<SStoresM13e00>, name: String) {
       for (sStoresM13e00 in sStoresM13e00s ){
          var query=entityManager.createNativeQuery("""
           insert into S_Stores_?2
@@ -589,7 +588,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertProductItem000R250082(sProductItem000M13e00s: List<SProductItem000M13e00>, name: String) {
+   override fun insertProductItem000R250082(sProductItem000M13e00s: MutableList<SProductItem000M13e00>, name: String) {
       for (sProductItem000M13e00 in sProductItem000M13e00s){
          var query=entityManager.createNativeQuery("""
          insert into S_ProductItem000_?2
@@ -624,7 +623,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       entityManager.createNativeQuery(" delete from  S_ProductItemStocks_R2500823").executeUpdate();
    }
 
-   override fun insertProductItemStocks(sProductItemStocksM13e00s: List<SProductItemStocksM13e00>) {
+   override fun insertProductItemStocks(sProductItemStocksM13e00s: MutableList<SProductItemStocksM13e00>) {
       for (sProductItemStocksM13e00 in sProductItemStocksM13e00s){
          var query=entityManager.createNativeQuery("""
            insert into S_ProductItemStocks_M13E00 (companyID,productID,productNo,storeID,customerID,subCustomerID,status,statusInfo,isReturnProfit,isLock,remark) 
@@ -649,7 +648,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertProductItemStocksR250082(sProductItemStocksM13e00s: List<SProductItemStocksM13e00>, name: String) {
+   override fun insertProductItemStocksR250082(sProductItemStocksM13e00s: MutableList<SProductItemStocksM13e00>, name: String) {
       for (sProductItemStocksM13e00 in sProductItemStocksM13e00s){
          var query=entityManager.createNativeQuery("""
           insert into S_ProductItemStocks_?2 (companyID,productID,productNo,storeID,customerID,subCustomerID,status,statusInfo,isReturnProfit,isLock,remark)
@@ -674,7 +673,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertSPlantendproductsaleM13e00(sPlantEndProductSaleM13e00s: List<SPlantEndProductSaleM13e00>) {
+   override fun insertSPlantendproductsaleM13e00(sPlantEndProductSaleM13e00s: MutableList<SPlantEndProductSaleM13e00>) {
       for (sPlantEndProductSaleM13e00 in sPlantEndProductSaleM13e00s){
          var query=entityManager.createNativeQuery("""
           insert into S_PlantEndProductSale_M13e00(companyID,endBillID,productID,saleCount,imei,billDate,dealerID,salePrice,createdTime) 
@@ -697,7 +696,7 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
       }
    }
 
-   override fun insertSPlantendproductsaleR250082(sPlantEndProductSaleM13e00s: List<SPlantEndProductSaleM13e00>, name: String) {
+   override fun insertSPlantendproductsaleR250082(sPlantEndProductSaleM13e00s: MutableList<SPlantEndProductSaleM13e00>, name: String) {
       for (sPlantEndProductSaleM13e00 in sPlantEndProductSaleM13e00s){
          var query=entityManager.createNativeQuery("""
          insert into S_PlantEndProductSale_?2 (companyID,endBillID,productID,saleCount,imei,billDate,dealerID,salePrice,createdTime)

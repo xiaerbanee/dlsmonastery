@@ -20,7 +20,7 @@ interface AdPricesystemChangeRepository : BaseRepository<AdPricesystemChange,Str
 interface AdPricesystemChangeRepositoryCustom{
     fun findPage(pageable: Pageable,adPricesystemChangeQuery: AdPricesystemChangeQuery): Page<AdPricesystemChangeDto>
 
-    fun findFilter(adPricesystemChangeQuery: AdPricesystemChangeQuery): List<AdPricesystemChangeDto>
+    fun findFilter(adPricesystemChangeQuery: AdPricesystemChangeQuery): MutableList<AdPricesystemChangeDto>
 }
 
 class AdPricesystemChangeRepositoryImpl @Autowired constructor(val entityManager: EntityManager):AdPricesystemChangeRepositoryCustom{
@@ -44,7 +44,7 @@ class AdPricesystemChangeRepositoryImpl @Autowired constructor(val entityManager
         return query.resultList as Page<AdPricesystemChangeDto>
     }
 
-    override fun findFilter(adPricesystemChangeQuery: AdPricesystemChangeQuery): List<AdPricesystemChangeDto>{
+    override fun findFilter(adPricesystemChangeQuery: AdPricesystemChangeQuery): MutableList<AdPricesystemChangeDto>{
         val sb = StringBuffer()
         sb.append("""
             SELECT
@@ -60,6 +60,6 @@ class AdPricesystemChangeRepositoryImpl @Autowired constructor(val entityManager
 
         var query = entityManager.createNativeQuery(sb.toString(),AdPricesystemChangeDto::class.java)
 
-        return query.resultList as List<AdPricesystemChangeDto>
+        return query.resultList as MutableList<AdPricesystemChangeDto>
     }
 }

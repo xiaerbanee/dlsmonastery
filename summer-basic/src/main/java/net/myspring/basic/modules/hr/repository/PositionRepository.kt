@@ -28,7 +28,7 @@ interface PositionRepository : BaseRepository<Position,String>,PositionRepositor
 
 }
 interface PositionRepositoryCustom{
-    fun findByNameLike(@Param("name") name: String): List<Position>
+    fun findByNameLike(@Param("name") name: String): MutableList<Position>
 
     fun findPage(pageable: Pageable, positionQuery: PositionQuery): Page<PositionDto>
 }
@@ -37,7 +37,7 @@ class PositionRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findByNameLike(name: String): List<Position> {
+    override fun findByNameLike(name: String): MutableList<Position> {
         var sb = StringBuilder()
         sb.append("""
             select
@@ -54,7 +54,7 @@ class PositionRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         }
         var query = entityManager.createNativeQuery(sb.toString(), Position::class.java)
         query.setParameter("name", name)
-        return query.resultList as List<Position>
+        return query.resultList as MutableList<Position>
     }
 
 

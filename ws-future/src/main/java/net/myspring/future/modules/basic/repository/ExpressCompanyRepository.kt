@@ -2,11 +2,8 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ExpressCompany
-import net.myspring.future.modules.basic.dto.DepotStoreDto
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto
-import net.myspring.future.modules.basic.web.query.DepotStoreQuery
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery
-import org.apache.ibatis.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -25,7 +22,7 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
     @Cacheable
     override fun findOne(id: String): ExpressCompany
 
-    override fun findAll(): List<ExpressCompany>
+    override fun findAll(): MutableList<ExpressCompany>
 
     @CachePut(key = "#id")
     fun save(expressCompany: ExpressCompany): Int
@@ -35,7 +32,7 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
         FROM crm_express_company t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<ExpressCompany>
+    fun findAllEnabled(): MutableList<ExpressCompany>
 
     @Query("""
         SELECT t1.*
@@ -43,13 +40,12 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
         where t1.enabled=1
         and t1.id in ?1
     """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<ExpressCompany>
+    fun findByIds(ids: MutableList<String>): MutableList<ExpressCompany>
 
-    fun findByExpressType(expressType: String): List<ExpressCompany>
+    fun findByExpressType(expressType: String): MutableList<ExpressCompany>
 
-    fun findByNameLike(@Param("companyId") companyId: String, @Param("name") name: String): List<ExpressCompanyDto>
+//    fun findByNameLike(@Param("companyId") companyId: String, @Param("name") name: String): MutableList<ExpressCompanyDto>
 
-    fun findByCompanyIdAndExpressType(@Param("companyId") companyId: String, @Param("expressType") expressType: String): List<ExpressCompanyDto>
 }
 
 interface ExpressCompanyRepositoryCustom{

@@ -22,7 +22,7 @@ interface ShopBuildRepository : BaseRepository<ShopBuild,String>,ShopBuildReposi
 interface ShopBuildRepositoryCustom{
     fun findPage(pageable: Pageable, shopBuildQuery: ShopBuildQuery): Page<ShopBuildDto>
 
-    fun findByFilter(shopBuildQuery: ShopBuildQuery): List<ShopBuildDto>
+    fun findByFilter(shopBuildQuery: ShopBuildQuery): MutableList<ShopBuildDto>
 }
 
 class ShopBuildRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopBuildRepositoryCustom{
@@ -34,10 +34,10 @@ class ShopBuildRepositoryImpl @Autowired constructor(val entityManager: EntityMa
         return query.resultList as Page<ShopBuildDto>
     }
 
-    override fun findByFilter(shopBuildQuery: ShopBuildQuery): List<ShopBuildDto> {
+    override fun findByFilter(shopBuildQuery: ShopBuildQuery): MutableList<ShopBuildDto> {
         val sb = StringBuffer()
         var query = entityManager.createNativeQuery(sb.toString(), ShopBuildDto::class.java)
 
-        return query.resultList as List<ShopBuildDto>
+        return query.resultList as MutableList<ShopBuildDto>
     }
 }

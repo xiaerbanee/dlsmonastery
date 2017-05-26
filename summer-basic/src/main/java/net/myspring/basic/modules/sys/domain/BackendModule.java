@@ -1,11 +1,9 @@
 package net.myspring.basic.modules.sys.domain;
 
-import com.google.common.collect.Lists;
 import net.myspring.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.List;
 
 @Entity
 @Table(name="sys_backend_module")
@@ -15,8 +13,7 @@ public class BackendModule extends DataEntity<BackendModule> {
     private String backendId;
     private String code;
     private String icon;
-    private List<String> positionModuleIdList = Lists.newArrayList();
-    private List<String> menuCategoryIdList = Lists.newArrayList();
+
 
     public String getCode() {
         return code;
@@ -58,19 +55,4 @@ public class BackendModule extends DataEntity<BackendModule> {
         this.backendId = backendId;
     }
 
-    public List<String> getPositionModuleIdList() {
-        return positionModuleIdList;
-    }
-
-    public void setPositionModuleIdList(List<String> positionModuleIdList) {
-        this.positionModuleIdList = positionModuleIdList;
-    }
-
-    public List<String> getMenuCategoryIdList() {
-        return menuCategoryIdList;
-    }
-
-    public void setMenuCategoryIdList(List<String> menuCategoryIdList) {
-        this.menuCategoryIdList = menuCategoryIdList;
-    }
 }

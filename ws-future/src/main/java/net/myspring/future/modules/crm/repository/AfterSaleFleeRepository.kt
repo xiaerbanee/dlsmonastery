@@ -31,7 +31,7 @@ interface AfterSaleFleeRepository : BaseRepository<AfterSaleFlee, String> {
     WHERE t1.enabled=1
         and t2.ime in :imeList
         """, nativeQuery = true)
-    fun findByImeList(imeList: List<String>): List<AfterSaleFlee>
+    fun findByImeList(imeList: MutableList<String>): MutableList<AfterSaleFlee>
 }
 
 

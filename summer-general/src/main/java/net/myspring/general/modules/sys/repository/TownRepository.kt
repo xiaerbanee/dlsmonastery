@@ -12,7 +12,7 @@ interface TownRepository : BaseRepository<Town, String> {
             WHERE t1.town_name like %?1%
             limit 0,20
         """, nativeQuery = true)
-    fun findByNameLike(name: String): List<Town>
+    fun findByNameLike(name: String): MutableList<Town>
 
 
 }

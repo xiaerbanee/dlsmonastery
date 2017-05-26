@@ -7,8 +7,9 @@ import javax.persistence.EntityManager
 
 @Component
 class AccountDtoRepository @Autowired constructor(val entityManager: EntityManager) {
+
     fun findByLoginName(loginName: String): AccountDto {
-        return entityManager.createNativeQuery("""
+        var obj = entityManager.createNativeQuery("""
                     SELECT
                     t1.*,
                     t2.leave_date as 'leaveDate',
@@ -21,7 +22,8 @@ class AccountDtoRepository @Autowired constructor(val entityManager: EntityManag
                     t1.employee_id = t2.id
                     and t1.position_id=t3.id
                     and t1.login_name= :loginName
-                """).setParameter("loginName",loginName).resultList as AccountDto;
+                """,AccountDto::class.java).setParameter("loginName",loginName).singleResult
+                return obj as AccountDto;
     }
 
     fun findById(id: String): AccountDto {
@@ -38,6 +40,6 @@ class AccountDtoRepository @Autowired constructor(val entityManager: EntityManag
                     t1.employee_id = t2.id
                     and t1.position_id=t3.id
                     and t1.id= :id
-                """).setParameter("id",id).resultList as AccountDto;
+                """,AccountDto::class.java).setParameter("id",id).singleResult as AccountDto;
     }
 }

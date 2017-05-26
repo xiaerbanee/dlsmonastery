@@ -32,7 +32,7 @@ interface AfterSaleRepository : BaseRepository<AfterSale, String>,AfterSaleRepos
     WHERE t1.bad_product_ime_id=t2.id
         AND t2.ime in ?1
         """, nativeQuery = true)
-    fun findByBadProductImeIn(imeList: List<String>): List<AfterSale>
+    fun findByBadProductImeIn(imeList: MutableList<String>): MutableList<AfterSale>
 
     @Query("""
     SELECT MAX(t1.business_id)

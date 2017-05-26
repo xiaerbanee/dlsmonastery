@@ -22,7 +22,7 @@ interface ChainRepository : BaseRepository<Chain,String>,ChainRepositoryCustom {
     @Cacheable
     override fun findOne(id: String): Chain
 
-    override fun findAll(): List<Chain>
+    override fun findAll(): MutableList<Chain>
 
     @CachePut(key = "#id")
     fun save(chain: Chain): Int
@@ -32,19 +32,19 @@ interface ChainRepository : BaseRepository<Chain,String>,ChainRepositoryCustom {
         FROM crm_chain t1
         where t1.enabled=1
     """, nativeQuery = true)
-    fun findAllEnabled(): List<Chain>
+    fun findAllEnabled(): MutableList<Chain>
 
     @Query("""
         SELECT t1.*
         FROM crm_chain t1
         WHERE t1.id IN ?1
     """, nativeQuery = true)
-    fun findByIds(ids: List<String>): List<Chain>
+    fun findByIds(ids: MutableList<String>): MutableList<Chain>
 
     @Query("""
         select id from crm_depot where chain_id=?1
     """, nativeQuery = true)
-    fun findDepotIds(id: String): List<String>
+    fun findDepotIds(id: String): MutableList<String>
 }
 
 interface ChainRepositoryCustom{

@@ -10,7 +10,7 @@ import net.myspring.future.modules.crm.dto.PriceChangeDto
 import net.myspring.future.modules.crm.web.query.DemoPhoneQuery
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery
 import net.myspring.util.text.StringUtils
-import org.apache.ibatis.annotations.Param
+import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl

@@ -26,7 +26,7 @@ interface DutyPublicFreeRepository : BaseRepository<DutyPublicFree,String>,DutyP
         t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
         AND t2.leader_id=?1 AND t1.status=?2 AND t1.created_date>=?3
     """, nativeQuery = true)
-    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): List<DutyDto>
+    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto>
 
     @Query("""
         SELECT
@@ -39,7 +39,7 @@ interface DutyPublicFreeRepository : BaseRepository<DutyPublicFree,String>,DutyP
         and t1.free_date <= ?2
         and t1.status in ?3
     """, nativeQuery = true)
-    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: List<String>): List<DutyPublicFree>
+    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyPublicFree>
 
     @Query("""
         SELECT
@@ -52,7 +52,7 @@ interface DutyPublicFreeRepository : BaseRepository<DutyPublicFree,String>,DutyP
         and t1.free_date >= ?2
         and t1.free_date <= ?3
     """, nativeQuery = true)
-    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): List<DutyPublicFree>
+    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyPublicFree>
 }
 interface DutyPublicFreeRepositoryCustom{
     fun findPage(pageable: Pageable, dutyPublicFreeQuery: DutyPublicFreeQuery): Page<DutyPublicFreeDto>

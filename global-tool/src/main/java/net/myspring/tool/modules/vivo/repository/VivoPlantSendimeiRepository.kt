@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by admin on 2016/10/17.
@@ -21,13 +19,13 @@ interface VivoPlantSendimeiRepository: BaseRepository<VivoPlantSendimei, String>
         and t.company_id in :agentCodes
         and t.imei not in (select p.ime from crm_product_ime p where p.company_id= :companyId)
         """, nativeQuery = true)
-    fun findSynList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: List<String>, @Param("companyId") companyId: Long?): List<VivoPlantSendimei>
+    fun findSynList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>, @Param("companyId") companyId: Long?): MutableList<VivoPlantSendimei>
 
     @Query("""
         select t.imei
         from vivo_plant_sendimei t where t.imei in :imeiList
         """, nativeQuery = true)
-    fun findImeis(@Param("imeiList") imeiList: List<String>): Set<String>
+    fun findImeis(@Param("imeiList") imeiList: MutableList<String>): MutableSet<String>
 
     @Query("""
         select distinct t.productId
@@ -36,5 +34,5 @@ interface VivoPlantSendimeiRepository: BaseRepository<VivoPlantSendimei, String>
         and t.imei not in (select p.ime from ProductIme p where p.company.id= :companyId )
         and t.companyId in :agentCodes
         """, nativeQuery = true)
-    fun findErrorItemNumbers(@Param("dateStart") dateStart: LocalDate, @Param("agentCodes") agentCodes: List<String>, @Param("companyId") companyId: Long?): List<String>
+    fun findErrorItemNumbers(@Param("dateStart") dateStart: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>, @Param("companyId") companyId: Long?): MutableList<String>
 }

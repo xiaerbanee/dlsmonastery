@@ -23,19 +23,19 @@ interface  OfficeBusinessRepository: BaseRepository<OfficeBusiness, String> {
         where t1.enabled=1
         and t1.office_id=?1
      """, nativeQuery = true)
-    fun findBusinessIdById(id:String):List<OfficeBusiness>
+    fun findBusinessIdById(id:String):MutableList<OfficeBusiness>
 
     @Query("""
          SELECT  t1.*
         FROM sys_office_business t1
         where  t1.office_id=?1
      """, nativeQuery = true)
-    fun findAllBusinessIdById(id:String):List<OfficeBusiness>
+    fun findAllBusinessIdById(id:String):MutableList<OfficeBusiness>
 
     @Query("""
              UPDATE  sys_office_business set enabled=0 where business_office_id IN ?1
      """, nativeQuery = true)
-    fun setEnabledByBusinessOfficeIds(businessOfficeIds:List<String>):Int
+    fun setEnabledByBusinessOfficeIds(businessOfficeIds:MutableList<String>):Int
 
     @Query("""
             UPDATE  sys_office_business
@@ -44,5 +44,11 @@ interface  OfficeBusinessRepository: BaseRepository<OfficeBusiness, String> {
      """, nativeQuery = true)
     fun setEnabledByOfficeId(enabled:Boolean,officeId:String ):Int
 
-    fun batchSave(officeBusinessList:List<OfficeBusiness>)
+    @Query("""
+            UPDATE  sys_office_business
+            set enabled=?1
+            where office_id=?2
+     """, nativeQuery = true)
+    //TODO 修改
+    fun batchSave(officeBusinessList:MutableList<OfficeBusiness>)
 }

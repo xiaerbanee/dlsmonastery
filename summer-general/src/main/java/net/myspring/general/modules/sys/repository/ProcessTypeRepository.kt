@@ -15,7 +15,7 @@ interface ProcessTypeRepository : BaseRepository<ProcessType, String> {
         WHERE t1.audit_file_type=1
         AND t1.enabled=1
         """, nativeQuery = true)
-    fun findEnabledAuditFileType(): List<ProcessType>
+    fun findEnabledAuditFileType(): MutableList<ProcessType>
 
 
     @Query("""
@@ -28,6 +28,6 @@ interface ProcessTypeRepository : BaseRepository<ProcessType, String> {
         t.permission_id = ?1
         and t.position_id = t1.id
         """, nativeQuery = true)
-    fun findPositionNames(permissionId: String): List<String>
+    fun findPositionNames(permissionId: String): MutableList<String>
 
 }

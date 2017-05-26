@@ -26,7 +26,7 @@ import net.myspring.future.modules.crm.domain.ProductImeSale
 
 interface ProductImeSaleRepository : BaseRepository<ProductImeSale, String> {
 
-    fun findByProductImeId(productImeId: String): List<ProductImeSale>
+    fun findByProductImeId(productImeId: String): MutableList<ProductImeSale>
 
     @Query("""
     SELECT
@@ -38,7 +38,7 @@ interface ProductImeSaleRepository : BaseRepository<ProductImeSale, String> {
     AND t1.created_date >= :createdDateStart
     AND t1.created_date <= :createdDateEnd
         """, nativeQuery = true)
-    fun findByEmployeeId(@Param("employeeId") employeeId: String, @Param("createdDateStart") createdDateStart: LocalDateTime, @Param("createdDateEnd") createdDateEnd: LocalDateTime): List<ProductImeSale>
+    fun findByEmployeeId(@Param("employeeId") employeeId: String, @Param("createdDateStart") createdDateStart: LocalDateTime, @Param("createdDateEnd") createdDateEnd: LocalDateTime): MutableList<ProductImeSale>
 
 
 }

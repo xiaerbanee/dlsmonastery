@@ -10,7 +10,7 @@ import javax.persistence.Query
 
 @Component
 class AccountWeixinDtoRepository @Autowired constructor(val entityManager: EntityManager) {
-    fun findByOpenId(openId: String): List<AccountWeixinDto> {
+    fun findByOpenId(openId: String): MutableList<AccountWeixinDto> {
         return entityManager.createNativeQuery("""
                     SELECT
                     t1.company_id,
@@ -21,7 +21,7 @@ class AccountWeixinDtoRepository @Autowired constructor(val entityManager: Entit
                     WHERE
                     t1.open_id = :openId
                     and t1.enabled=1
-                """).setParameter("openId",openId).resultList as List<AccountWeixinDto>;
+                """,AccountWeixinDto::class.java).setParameter("openId",openId).resultList as MutableList<AccountWeixinDto>;
     }
 
     fun findByAccountId(accountId: String): AccountWeixinDto {
@@ -35,7 +35,7 @@ class AccountWeixinDtoRepository @Autowired constructor(val entityManager: Entit
                     WHERE
                     t1.account_id = :accountId
                     and t1.enabled=1
-                """).setParameter("accountId",accountId).resultList as AccountWeixinDto;
+                """,AccountWeixinDto::class.java).setParameter("accountId",accountId).firstResult as AccountWeixinDto;
     }
 
     fun save(accountWeixinDto: AccountWeixinDto) {

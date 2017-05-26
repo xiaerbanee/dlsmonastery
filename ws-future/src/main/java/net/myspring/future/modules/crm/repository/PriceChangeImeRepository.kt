@@ -7,7 +7,7 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery
-import org.apache.ibatis.annotations.Param
+import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -20,7 +20,7 @@ import javax.persistence.EntityManager
 
 interface PriceChangeImeRepository : BaseRepository<PriceChangeIme, String>,PriceChangeImeRepositoryCustom {
 
-    fun findByPriceChangeId(priceChangeId: String): List<PriceChangeIme>
+    fun findByPriceChangeId(priceChangeId: String): MutableList<PriceChangeIme>
 
 
     @Query("""
@@ -32,7 +32,7 @@ interface PriceChangeImeRepository : BaseRepository<PriceChangeIme, String>,Pric
         t1.enabled = 1
         AND t1.price_change_id = ?1 and  t1.uploadDate is not null
         """, nativeQuery = true)
-    fun findByPriceChangeIdAndUploadDateIsNotNull(priceChangeId: String): List<PriceChangeIme>
+    fun findByPriceChangeIdAndUploadDateIsNotNull(priceChangeId: String): MutableList<PriceChangeIme>
 
 
 

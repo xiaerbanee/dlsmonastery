@@ -8,10 +8,10 @@ import net.myspring.basic.modules.hr.dto.DutyDto
 import net.myspring.basic.modules.hr.dto.DutyTripDto
 import net.myspring.basic.modules.hr.web.query.DutyTripQuery
 import net.myspring.util.collection.CollectionUtil
-import org.apache.ibatis.annotations.Param
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -36,11 +36,11 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
           t1.enabled=1
           AND t1.employee_id=t3.id
           and t3.account_id=t2.id
-          AND t2.leader_id=:leader
+          AND t2.leader_id=:leaderId
           AND t1.status=:status
           AND t1.created_date>=:createdDateStart
     """, nativeQuery = true)
-    fun findByAuditable(@Param("leaderId") leaderId: String, @Param("status") status: String, @Param("createdDateStart") createdDateStart: LocalDateTime): List<DutyDto>
+    fun findByAuditable(@Param("leaderId") leaderId: String, @Param("status") status: String, @Param("createdDateStart") createdDateStart: LocalDateTime): MutableList<DutyDto>
 
     @Query("""
         SELECT
@@ -49,13 +49,13 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
         hr_duty_trip t1
         WHERE
         t1.enabled=1
-        and t1.employee_id=#{employeeId}
+        and t1.employee_id= :employeeId
         and ((t1.date_start >= :dateStart
-        and t1.date_start &lt;= :dateEnd)
+        and t1.date_start <= :dateEnd)
         or  (t1.date_end >= :dateStart
-        and t1.date_end &lt;= :dateEnd))
+        and t1.date_end <= :dateEnd))
     """, nativeQuery = true)
-    fun findByEmployeeAndDate(@Param("employeeId") employeeId: String, @Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): List<DutyTrip>
+    fun findByEmployeeAndDate(@Param("employeeId") employeeId: String, @Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<DutyTrip>
 
     @Query("""
         SELECT
@@ -65,15 +65,15 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
         WHERE
         t1.enabled=1
         AND t1.date_start >= :dateStart
-        and t1.date_end &lt;= :dateEnd
+        and t1.date_end <= :dateEnd
         and t1.status in :statusList
     """, nativeQuery = true)
-    fun findByDateAndStatusList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("statusList") statusList: List<String>): List<DutyTrip>
+    fun findByDateAndStatusList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("statusList") statusList: MutableList<String>): MutableList<DutyTrip>
 
 
 }
 interface DutyTripRepositoryCustom{
-    fun findByAccountIdAndDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("accountIds") accountIds: List<Long>): List<DutyTrip>
+    fun findByAccountIdAndDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("accountIds") accountIds: MutableList<Long>): MutableList<DutyTrip>
 
     fun findPage(pageable: Pageable, dutyTripQuery: DutyTripQuery): Page<DutyTripDto>
 }
@@ -82,7 +82,7 @@ class DutyTripRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: List<Long>): List<DutyTrip> {
+    override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyTrip> {
         var sb = StringBuilder()
         sb.append("""
             SELECT
@@ -91,11 +91,11 @@ class DutyTripRepositoryImpl @Autowired constructor(val entityManager: EntityMan
             hr_duty_trip
             WHERE
             (
-            date_end &gt;= :dateStart
-            and date_end &lt;= :dateEnd
+            date_end >= :dateStart
+            and date_end <= :dateEnd
             )
-            or (date_start &gt;= :dateStart and date_start &lt;= :dateEnd)
-            or (date_start &lt; :dateStart and date_end &gt; :dateStart)
+            or (date_start >= :dateStart and date_start <= :dateEnd)
+            or (date_start < :dateStart and date_end > :dateStart)
             FROM
             hr_duty_trip tr
             WHERE
@@ -108,7 +108,7 @@ class DutyTripRepositoryImpl @Autowired constructor(val entityManager: EntityMan
         query.setParameter("dateStart", dateStart)
         query.setParameter("dateEnd", dateEnd)
         query.setParameter("accountIds", accountIds)
-        return query.resultList as List<DutyTrip>
+        return query.resultList as MutableList<DutyTrip>
     }
 
 }

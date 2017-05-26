@@ -37,7 +37,7 @@
                         WHERE
                             t1.enabled = 1
                             AND t1.id IN ( SELECT t2.product_id FROM crm_pricesystem_detail t2 WHERE  t2.pricesystem_id = (SELECT depot1.pricesystem_id from crm_depot depot1 where depot1.id = #{fromDepotId})  )
-                            AND t1.id IN ( SELECT t3.product_id FROM crm_pricesystem_detail t3 WHERE  t3.pricesystem_id = (SELECT depot2.pricesystem_id from crm_depot depot2 where depot2.id = #{fromDepotId}) )
+                            AND t1.id IN ( SELECT t3.product_id FROM crm_pricesystem_detail t3 WHERE  t3.pricesystem_id = (SELECT depot2.pricesystem_id from crm_depot depot2 where depot2.id = #{toDepotId}) )
                             AND NOT EXISTS (
                                 SELECT  *
                                 FROM crm_shop_allot_detail detail
