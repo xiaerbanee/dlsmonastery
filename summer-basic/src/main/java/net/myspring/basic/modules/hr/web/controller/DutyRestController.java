@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -42,10 +43,10 @@ public class DutyRestController {
     @RequestMapping(value = "getForm")
     public Map<String, Object> getForm(DutyRestForm dutyRestForm) {
         Map<String, Object> map = Maps.newHashMap();
-        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(RequestUtils.getRequestEntity().getEmployeeId(), LocalDateTime.now()));
+        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(RequestUtils.getRequestEntity().getEmployeeId(), LocalDate.now()));
         dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(RequestUtils.getRequestEntity().getEmployeeId()));
         map.put("dutyRestForm", dutyRestForm);
-        map.put("expiredHour", dutyOvertimeService.getExpiredHour(RequestUtils.getRequestEntity().getEmployeeId(), LocalDateTime.now()));
+        map.put("expiredHour", dutyOvertimeService.getExpiredHour(RequestUtils.getRequestEntity().getEmployeeId(), LocalDate.now()));
         map.put("restList", DutyRestTypeEnum.values());
         map.put("dateList", DutyDateTypeEnum.values());
         return map;

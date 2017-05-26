@@ -56,7 +56,7 @@ interface DutyOvertimeRepository : BaseRepository<DutyOvertime,String>,DutyOvert
           and t1.dutyDate <=?3
           and t1.employeeId=?1
     """)
-    fun findByIdAndDate(employeeId: String, dateStart: LocalDateTime, dateEnd: LocalDateTime, status: String): MutableList<DutyOvertime>
+    fun findByIdAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate, status: String): MutableList<DutyOvertime>
 
     @Query("""
         SELECT

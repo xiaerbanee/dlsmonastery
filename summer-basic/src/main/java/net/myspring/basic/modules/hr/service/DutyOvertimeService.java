@@ -76,13 +76,13 @@ public class DutyOvertimeService {
         return dutyOvertimeForm;
     }
 
-    public Double getAvailableHour(String employeeId, LocalDateTime currentDate) {
+    public Double getAvailableHour(String employeeId, LocalDate currentDate) {
         Double overtimeHour = 0.0;
         if (currentDate == null) {
             return overtimeHour;
         }
-        LocalDateTime dateStart = LocalDateTimeUtils.getFirstDayOfMonth(currentDate.minusMonths(3));
-        LocalDateTime dateEnd = currentDate;
+        LocalDate dateStart = currentDate.minusMonths(3);
+        LocalDate dateEnd = currentDate;
         List<DutyOvertime> overtimeList = dutyOvertimeRepository.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
         if (CollectionUtil.isNotEmpty(overtimeList)) {
             for (DutyOvertime dutyOvertime : overtimeList) {
@@ -92,13 +92,13 @@ public class DutyOvertimeService {
         return overtimeHour;
     }
 
-    public Double getExpiredHour(String employeeId, LocalDateTime currentDate){
+    public Double getExpiredHour(String employeeId, LocalDate currentDate){
         Double overtimeHour = 0.0;
         if (currentDate == null) {
             return overtimeHour;
         }
-        LocalDateTime dateStart = LocalDateTimeUtils.getFirstDayOfMonth(currentDate.minusMonths(3));
-        LocalDateTime dateEnd =  LocalDateTimeUtils.getLastDayOfMonth(currentDate.minusMonths(3));
+        LocalDate dateStart = currentDate.minusMonths(3);
+        LocalDate dateEnd =  currentDate.minusMonths(3);
         List<DutyOvertime> overtimeList = dutyOvertimeRepository.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASSED.toString());
         if (CollectionUtil.isNotEmpty(overtimeList)) {
             for (DutyOvertime dutyOvertime : overtimeList) {
