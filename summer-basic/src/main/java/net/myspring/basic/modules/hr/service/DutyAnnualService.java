@@ -55,7 +55,7 @@ public class DutyAnnualService {
     private GridFsTemplate storageGridFsTemplate;
 
     public Double getAvailableHour(String  employeeId) {
-        DutyAnnual dutyAnnual = dutyAnnualRepository.findByEmployee(employeeId);
+        DutyAnnual dutyAnnual = dutyAnnualRepository.findByEmployee(employeeId).get(0);
         return dutyAnnual==null ? 0.0 : dutyAnnual.getLeftHour();
     }
 

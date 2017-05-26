@@ -87,7 +87,7 @@ interface DutyLeaveRepositoryCustom{
     fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto>
 }
 
-class DutyLeaveRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DutyLeaveRepositoryCustom{
+class DutyLeaveRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DutyLeaveRepositoryCustom{
     override fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto> {
         var paramMap = HashMap<String, Any>()
         paramMap.put("leaderId", leaderId)

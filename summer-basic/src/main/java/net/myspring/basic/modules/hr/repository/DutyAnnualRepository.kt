@@ -17,13 +17,12 @@ import javax.persistence.EntityManager
  */
 interface DutyAnnualRepository : BaseRepository<DutyAnnual,String>,DutyAnnualRepositoryCustom{
     @Query("""
-        select t1.*
-        FROM  #{#entityName} t1
-        where t1.employeeId=?1
+        select t
+        FROM  #{#entityName} t
+        where t.employeeId=?1
         order by annualYear desc
-        limit 0,1
     """)
-    fun findByEmployee(employeeId: String): DutyAnnual
+    fun findByEmployee(employeeId: String): List<DutyAnnual>
 }
 interface DutyAnnualRepositoryCustom{
     fun findPage(pageable: Pageable, dutyAnnualQuery: DutyAnnualQuery): Page<DutyAnnualDto>

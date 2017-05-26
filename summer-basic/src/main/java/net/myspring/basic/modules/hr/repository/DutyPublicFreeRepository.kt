@@ -24,26 +24,26 @@ interface DutyPublicFreeRepository : BaseRepository<DutyPublicFree,String>,DutyP
         SELECT
         t1.*
         FROM
-        hr_duty_public_free t1
+        #{#entityName} t1
         WHERE
         t1.enabled=1
-        AND t1.free_date >= ?1
-        and t1.free_date <= ?2
+        AND t1.freeDate >= ?1
+        and t1.freeDate <= ?2
         and t1.status in ?3
-    """, nativeQuery = true)
+    """)
     fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyPublicFree>
 
     @Query("""
         SELECT
         t1.*
         FROM
-        hr_duty_public_free t1
+        #{#entityName} t1
         WHERE
         t1.enabled=1
         and t1.employee_id=?1
-        and t1.free_date >= ?2
-        and t1.free_date <= ?3
-    """, nativeQuery = true)
+        and t1.freeDate >= ?2
+        and t1.freeDate <= ?3
+    """)
     fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyPublicFree>
 }
 

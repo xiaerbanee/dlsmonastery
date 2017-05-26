@@ -15,7 +15,7 @@ interface AccountMessageRepository : BaseRepository<AccountMessage, String> {
        SELECT t
         FROM  #{#entityName} t
          where t.enabled=1
-         and t.to_accountId=?1
+         and t.toAccountId=?1
          and t.createdDate >=?2
          and t.readed = 0
         """)

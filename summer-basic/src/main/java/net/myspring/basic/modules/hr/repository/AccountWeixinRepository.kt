@@ -10,10 +10,10 @@ import org.springframework.data.jpa.repository.Query
 interface AccountWeixinRepository : BaseRepository<AccountWeixin,String>{
 
     @Query("""
-        SELECT t1.*
-        FROM  #{#entityName} t1
-        where t1.enabled=1
-        and t1.accountId=?1
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+        and t.accountId=?1
     """)
     fun findByAccountId(accountId: String): AccountWeixin
 

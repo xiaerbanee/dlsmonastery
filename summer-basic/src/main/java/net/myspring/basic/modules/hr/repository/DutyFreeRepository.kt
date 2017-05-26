@@ -24,12 +24,12 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
 
     @Query("""
         SELECT
-            t1.*
-            FROM #{#entityName} t1
+            t
+            FROM #{#entityName} t
             WHERE
-             t1.enabled=1
-            AND  t1.freeDate=?1
-            and t1.employeeId=?2
+             t.enabled=1
+            AND  t.freeDate=?1
+            and t.employeeId=?2
     """)
     fun findByDate(freeDate: LocalDate, employeeId: String): MutableList<DutyFree>
 

@@ -45,16 +45,16 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
     fun findAccountPassword(id: String): String
 
     @Query("""
-        SELECT t1.id
-        FROM  #{#entityName} t1
-        where t1.enabled=1
-        and t1.officeId IN ?1
+        SELECT t.id
+        FROM  #{#entityName} t
+        where t.enabled=1
+        and t.officeId IN ?1
     """)
     fun findByOfficeIds(officeIds: MutableList<String>): MutableList<Account>
 
     @Query("""
         SELECT
-        t1.*
+        t1
         FROM  #{#entityName} t1,Position t2
         where t1.positionId=t2.id
         and t2.id=?1
@@ -62,22 +62,15 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
     fun findByPosition(positionId: String): MutableList<Account>
 
     @Query("""
-        SELECT t1.*
-        FROM  #{#entityName}
-        WHERE t1.enabled=1
-        and t1.loginName in ?1
+        SELECT t.*
+        FROM  #{#entityName} t
+        WHERE t.enabled=1
+        and t.loginName in ?1
     """)
     fun findByLoginNameList(loginNames: MutableList<String>): MutableList<Account>
 
     @Query("""
-        SELECT t1.*
-        FROM  #{#entityName} t1
-        WHERE t1.id=?1
-    """)
-    fun findById(id: String): MutableList<Account>
-
-    @Query("""
-        SELECT t1.*
+        SELECT t1
         FROM  #{#entityName} t1
         WHERE t1.id IN ?1
     """)
@@ -92,7 +85,7 @@ interface AccountRepositoryCustom{
     fun findByFilter(accountQuery: AccountQuery): MutableList<Account>
 }
 
-class AccountRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AccountRepositoryCustom{
+class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AccountRepositoryCustom{
     override fun findByFilter(accountQuery: AccountQuery): MutableList<Account> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
