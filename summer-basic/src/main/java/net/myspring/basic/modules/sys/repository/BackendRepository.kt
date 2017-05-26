@@ -1,12 +1,11 @@
 package net.myspring.basic.modules.sys.repository
 
+import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Backend
 import net.myspring.basic.modules.sys.dto.BackendDto
 import net.myspring.basic.modules.sys.dto.BackendMenuDto
-import net.myspring.basic.modules.sys.dto.CompanyConfigDto
 import net.myspring.basic.modules.sys.web.query.BackendQuery
-import net.myspring.basic.modules.sys.web.query.CompanyConfigQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -15,7 +14,9 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import javax.persistence.EntityManager
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 /**
  * Created by haos on 2017/5/24.
@@ -35,35 +36,6 @@ interface BackendRepository:BaseRepository<Backend,String>,BackendRepositoryCust
         and t1.name like %?1%
      """, nativeQuery = true)
     fun findByNameLike(name:String):MutableList<Backend>
-
-    @Query("""
-        SELECT
-            t1.id,
-            t1.name,
-            t1.code,
-            t2.id as 'moduleId',
-            t2.name as 'moduleName',
-            t2.code as 'moduleCode',
-            t2.icon as 'moduleIcon',
-            t3.id as 'categoryId',
-            t3.name as 'categoryName',
-            t3.code as 'categoryCode',
-            t4.id as 'menuId',
-            t4.name as 'menuName',
-            t4.code as 'menuCode'
-        FROM
-            sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4
-        where
-        t4.menu_category_id=t3.id
-        and t3.backend_module_id=t2.id
-        and t2.backend_id=t1.id
-        and t1.enabled=1
-        and t2.enabled=1
-        and t3.enabled=1
-        and t4.enabled=1
-        and t4.id IN ?1
-     """, nativeQuery = true)
-    fun findByMenuList(menuList:MutableList<String>):MutableList<BackendMenuDto>
 
     @Query("""
         SELECT
@@ -136,13 +108,46 @@ interface BackendRepository:BaseRepository<Backend,String>,BackendRepositoryCust
 
 
 interface BackendRepositoryCustom{
+
+    fun findByMenuList(menuList:MutableList<String>):MutableList<BackendMenuDto>
+
     fun findAllEnabled():MutableList<Backend>?
 
     fun findPage(pageable: Pageable,backendQuery: BackendQuery): Page<BackendDto>?
 
 }
 
-class BackendRepositoryImpl @Autowired constructor(val entityManager: EntityManager): BackendRepositoryCustom{
+class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate,val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): BackendRepositoryCustom{
+    override fun findByMenuList(menuList: MutableList<String>): MutableList<BackendMenuDto> {
+        return namedParameterJdbcTemplate.query("""
+                    SELECT
+                        t1.id,
+                        t1.name,
+                        t1.code,
+                        t2.id as 'moduleId',
+                        t2.name as 'moduleName',
+                        t2.code as 'moduleCode',
+                        t2.icon as 'moduleIcon',
+                        t3.id as 'categoryId',
+                        t3.name as 'categoryName',
+                        t3.code as 'categoryCode',
+                        t4.id as 'menuId',
+                        t4.name as 'menuName',
+                        t4.code as 'menuCode'
+                    FROM
+                        sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4
+                    where
+                    t4.menu_category_id=t3.id
+                    and t3.backend_module_id=t2.id
+                    and t2.backend_id=t1.id
+                    and t1.enabled=1
+                    and t2.enabled=1
+                    and t3.enabled=1
+                    and t4.enabled=1
+                    and t4.id IN (:menuList)
+                """, Collections.singletonMap("menuList",menuList), MyBeanPropertyRowMapper(BackendMenuDto::class.java));
+    }
+
     override fun findAllEnabled(): MutableList<Backend>? {
         return null
     }

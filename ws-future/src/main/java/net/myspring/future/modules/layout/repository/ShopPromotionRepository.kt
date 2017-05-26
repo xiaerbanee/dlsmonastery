@@ -50,13 +50,10 @@ class ShopPromotionRepositoryImpl @Autowired constructor(val entityManager: Enti
             sb.append("""  and t1.shop_id = :shopId """)
         }
         if (StringUtils.isNotEmpty(shopPromotionQuery.businessId)) {
-            sb.append("""  and t1.business_id LIKE CONCAT('%',#{p.businessId},'%') """)
+            sb.append("""  and t1.business_id LIKE CONCAT('%',:businessId,'%') """)
         }
-        if (StringUtils.isNotEmpty(shopPromotionQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
-        }
-        if (StringUtils.isNotEmpty(shopPromotionQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
+        if (StringUtils.isNotEmpty(shopPromotionQuery.activityType)) {
+            sb.append("""  and t1.activity_type = :activityType """)
         }
 
         var query = entityManager.createNativeQuery(sb.toString(), ShopPromotionDto::class.java)

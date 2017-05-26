@@ -1,19 +1,20 @@
 package net.myspring.uaa.repository
 
+import net.myspring.uaa.config.MyBeanPropertyRowMapper
 import net.myspring.uaa.dto.AccountDto
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
-import javax.persistence.EntityManager
 
 @Component
-class AccountDtoRepository @Autowired constructor(val entityManager: EntityManager) {
+class AccountDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate) {
 
     fun findByLoginName(loginName: String): AccountDto {
-        var obj = entityManager.createNativeQuery("""
+        var accountDto = jdbcTemplate.queryForObject("""
                     SELECT
                     t1.*,
-                    t2.leave_date as 'leaveDate',
-                    t3.role_id as 'roleId'
+                    t2.leave_date,
+                    t3.role_id
                     FROM
                     hr_account t1,
                     hr_employee t2,
@@ -21,17 +22,17 @@ class AccountDtoRepository @Autowired constructor(val entityManager: EntityManag
                     WHERE
                     t1.employee_id = t2.id
                     and t1.position_id=t3.id
-                    and t1.login_name= :loginName
-                """,AccountDto::class.java).setParameter("loginName",loginName).singleResult
-                return obj as AccountDto;
+                    and t1.login_name= ?
+                """, MyBeanPropertyRowMapper(AccountDto::class.java),loginName)
+                return accountDto;
     }
 
     fun findById(id: String): AccountDto {
-        return entityManager.createNativeQuery("""
+        return jdbcTemplate.queryForObject("""
                     SELECT
                     t1.*,
-                    t2.leave_date as 'leaveDate',
-                    t3.role_id as 'roleId'
+                    t2.leave_date ,
+                    t3.role_id
                     FROM
                     hr_account t1,
                     hr_employee t2,
@@ -39,7 +40,7 @@ class AccountDtoRepository @Autowired constructor(val entityManager: EntityManag
                     WHERE
                     t1.employee_id = t2.id
                     and t1.position_id=t3.id
-                    and t1.id= :id
-                """,AccountDto::class.java).setParameter("id",id).singleResult as AccountDto;
+                    and t1.id= ?
+                """,MyBeanPropertyRowMapper(AccountDto::class.java),id);
     }
 }

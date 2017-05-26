@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.DepotStore
 import net.myspring.future.modules.basic.dto.DepotStoreDto
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -52,7 +53,24 @@ class DepotStoreRepositoryImpl @Autowired constructor(val entityManager: EntityM
 
     override fun findPage(pageable: Pageable, depotStoreQuery: DepotStoreQuery): Page<DepotStoreDto> {
         val sb = StringBuffer()
-
+        sb.append("""
+            SELECT
+                t2.*, t1.id AS 'depotId',
+                t1.office_id AS 'officeId',
+                t1.tax_name AS 'taxName',
+                t1.delegate_depot_id AS 'delegateDepotId',
+                t1.pop_shop AS 'popShop'
+            FROM
+                crm_depot t1,
+                crm_depot_store t2
+            WHERE
+                t1.enabled = 1
+            AND t2.enabled = 1
+            AND t2.depot_id = t1.id
+        """)
+        if (StringUtils.isNotEmpty(depotStoreQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
         var query = entityManager.createNativeQuery(sb.toString(), DepotStoreDto::class.java)
 
         return query.resultList as Page<DepotStoreDto>
