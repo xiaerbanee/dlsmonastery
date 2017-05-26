@@ -196,7 +196,7 @@ public class AfterSaleService {
             depotNameList.add( StringUtils.toString(row.get(2)).trim());
         }
         List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
-        List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByImeList(imeList);
+        List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByEnabledIsTrueAndImeIn(imeList);
         List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
         List<Product> productList=productRepository.findByNameIn(productNameList);
         List<Depot> depotList=depotRepository.findByNameList(depotNameList);

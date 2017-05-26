@@ -35,6 +35,13 @@ interface BackendRepository:BaseRepository<Backend,String>,BackendRepositoryCust
         and t.name like %?1%
      """)
     fun findByNameLike(name:String):MutableList<Backend>
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+     """)
+    fun findAllEnabled():MutableList<Backend>
 }
 
 
@@ -42,7 +49,7 @@ interface BackendRepositoryCustom{
 
     fun findByMenuList(menuList:MutableList<String>):MutableList<BackendMenuDto>
 
-    fun findAllEnabled():MutableList<Backend>?
+
 
     fun findPage(pageable: Pageable,backendQuery: BackendQuery): Page<BackendDto>?
 
@@ -149,10 +156,6 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                     and t4.enabled=1
                     and t4.id IN (:menuList)
                 """, Collections.singletonMap("menuList",menuList), MyBeanPropertyRowMapper(BackendMenuDto::class.java));
-    }
-
-    override fun findAllEnabled(): MutableList<Backend>? {
-        return null
     }
 
     override fun findPage(pageable: Pageable, backendQuery: BackendQuery): Page<BackendDto>? {

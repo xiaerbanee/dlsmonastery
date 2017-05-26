@@ -3,7 +3,7 @@ package net.myspring.future.modules.crm.service;
 import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.repository.PriceChangeRepository;
+import net.myspring.future.modules.crm.repository.PriceChangeRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.domain.PriceChangeProduct;
@@ -42,7 +42,7 @@ public class PriceChangeService {
     }
 
     public List<PriceChange> findAllByEnabledAndDate(LocalDateTime uploadEndDate) {
-        return priceChangeRepository.finAllByEnabled(uploadEndDate);
+        return priceChangeRepository.findByEnabledIsTrueAndUploadEndDateGreaterThanEqualOrderByIdDesc(uploadEndDate);
     }
 
     public PriceChangeDto findOne(String id){

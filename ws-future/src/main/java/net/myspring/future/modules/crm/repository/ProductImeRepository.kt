@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
 import net.myspring.common.dto.NameValueDto
 import net.myspring.future.common.config.MyBeanPropertyRowMapper
-import net.myspring.future.modules.basic.repository.PriceChangeRepositoryCustom
+import net.myspring.future.modules.crm.repository.PriceChangeRepositoryCustom
 import net.myspring.future.modules.crm.domain.ProductImeSale
 import net.myspring.future.modules.crm.domain.ProductIme
 import net.myspring.future.modules.crm.dto.*
@@ -36,56 +36,21 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
 
     @Query("""
     SELECT
-        t1.*
+        t1
     FROM
-        crm_product_ime t1
+        #{#entityName} t1
     WHERE
         t1.enabled = 1
         AND (
-            t1.ime IN ? 1
-            OR t1.ime2 IN ? 1
-            OR t1.meid IN ? 1
+            t1.ime IN ?1
+            OR t1.ime2 IN ?1
+            OR t1.meid IN ?1
         )
-        """, nativeQuery = true)
+        """)
     fun findByImeList(imeList: MutableList<String>): MutableList<ProductIme>
 
-    @Query("""
-    SELECT
-        t1.*
-    FROM
-        crm_product_ime t1
-    WHERE
-        t1.enabled = 1
-        AND t1.depot_id = : #{#p.depotId}
-        AND t1.box_ime IN : #{#p.boxImeList}
-    UNION
-        SELECT
-            t1.*
-        FROM
-            crm_product_ime t1
-        WHERE
-            t1.enabled = 1
-            AND t1.depot_id =: #{#p.depotId}
-            AND (
-                t1.ime IN : #{#p.imeList}
-                OR t1.ime2 IN : #{#p.imeList}
-                OR t1.meid IN : #{#p.imeList}
-            )
-        """, nativeQuery = true)
-    //TODO 调用时，要确保传入的参数里的list不为null
-    fun findShipList(@Param("p") productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme>
 
-    @Query("""
-    SELECT
-        t1.*
-    FROM
-        crm_product_ime t1
-    where t1.enabled=1
-        AND t1.depot_id = :depotId
-        AND t1.ime_reverse LIKE CONCAT( :imeReverse,'%')
-    Limit 20
-        """, nativeQuery = true)
-    fun findByImeReverseLike(@Param("imeReverse") ime: String, @Param("depotId") depotId: String): MutableList<ProductIme>
+    fun findTop20ByDepotIdAndImeReverseStartingWithAndEnabledIsTrue(depotId: String,  ime: String): MutableList<ProductIme>
 
 }
 
@@ -98,9 +63,40 @@ interface ProductImeRepositoryCustom{
     fun findProductImeDto(productImeId: String): ProductImeDto
 
     fun findDtoListByImeList(imeList: MutableList<String>, companyId: String): MutableList<ProductImeDto>
+
+    fun findShipList(@Param("p") productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme>
+
 }
 
 class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
+    override fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme> {
+
+        return namedParameterJdbcTemplate.query("""
+        SELECT
+            t1
+        FROM
+            crm_product_ime t1
+        WHERE
+            t1.enabled = 1
+            AND t1.depot_id = :depotId
+            AND t1.box_ime IN :boxImeList
+        UNION
+            SELECT
+                t1
+            FROM
+                crm_product_ime t1
+            WHERE
+                t1.enabled = 1
+                AND t1.depot_id = :depotId
+                AND (
+                    t1.ime IN :imeList
+                    OR t1.ime2 IN :imeList
+                    OR t1.meid IN :imeList
+                )
+                """, QueryUtils.getParamMap(productImeShipQuery), MyBeanPropertyRowMapper(ProductIme::class.java))
+    }
+
+
     override fun findDtoListByImeList(imeList: MutableList<String>, companyId: String): MutableList<ProductImeDto> {
         val params = HashMap<String, Any>()
         params.put("imeList", imeList)

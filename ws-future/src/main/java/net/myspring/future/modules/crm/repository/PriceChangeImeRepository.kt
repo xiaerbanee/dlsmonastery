@@ -23,16 +23,8 @@ interface PriceChangeImeRepository : BaseRepository<PriceChangeIme, String>,Pric
     fun findByPriceChangeId(priceChangeId: String): MutableList<PriceChangeIme>
 
 
-    @Query("""
-    SELECT
-        t1.*
-    FROM
-        crm_price_change_ime t1
-    WHERE
-        t1.enabled = 1
-        AND t1.price_change_id = ?1 and  t1.uploadDate is not null
-        """, nativeQuery = true)
-    fun findByPriceChangeIdAndUploadDateIsNotNull(priceChangeId: String): MutableList<PriceChangeIme>
+
+    fun findByPriceChangeIdAndUploadDateIsNotNullAndEnabledIsTrue(priceChangeId: String): MutableList<PriceChangeIme>
 
 
 

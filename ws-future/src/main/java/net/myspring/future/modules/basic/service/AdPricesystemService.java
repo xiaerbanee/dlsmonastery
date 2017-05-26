@@ -63,7 +63,7 @@ public class AdPricesystemService {
     }
 
     public List<AdPricesystemDto> findAllEnabled(){
-        List<AdPricesystem> adPricesystemList=adpricesystemRepository.findAllEnabled();
+        List<AdPricesystem> adPricesystemList=adpricesystemRepository.findByEnabledIsTrue();
         List<AdPricesystemDto> adPricesystemDtoList= BeanUtil.map(adPricesystemList,AdPricesystemDto.class);
         return adPricesystemDtoList;
     }

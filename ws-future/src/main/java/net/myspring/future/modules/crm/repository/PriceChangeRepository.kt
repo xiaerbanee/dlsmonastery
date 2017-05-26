@@ -1,11 +1,13 @@
-package net.myspring.future.modules.basic.repository
+package net.myspring.future.modules.crm.repository
 
+import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.PriceChange
 import net.myspring.future.modules.crm.domain.PriceChangeProduct
 
 import net.myspring.future.modules.crm.domain.PricesystemChange
 import net.myspring.future.modules.crm.dto.PriceChangeDto
+import net.myspring.future.modules.crm.dto.ProductImeDto
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.text.StringUtils
@@ -13,51 +15,46 @@ import net.myspring.util.text.StringUtils
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
 import org.apache.poi.ss.formula.functions.T
+import org.bouncycastle.asn1.x500.style.RFC4519Style.name
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
+import java.util.*
 import javax.persistence.EntityManager
 
 
-interface PriceChangeRepository : BaseRepository<PriceChange, String>,PriceChangeRepositoryCustom {
-
-    @Query("""
-    SELECT t1.*
-    FROM crm_price_change t1
-    WHERE
-        t1.upload_end_date>=?1
-        and t1.enabled=1
-        ORDER BY  t1.id DESC
-        """, nativeQuery = true)
-    fun finAllByEnabled(uploadEndDate: LocalDateTime): MutableList<PriceChange>
+interface PriceChangeRepository : BaseRepository<PriceChange, String>, PriceChangeRepositoryCustom {
 
 
-    @Query("""
-    SELECT t1.*
-    FROM crm_price_change t1
-    ORDER BY  t1.price_change_date DESC ,t1.upload_end_date DESC
-    limit 0,1
-        """, nativeQuery = true)
-    fun findNearPriceChange(): PriceChange
+    fun findByEnabledIsTrueAndUploadEndDateGreaterThanEqualOrderByIdDesc(uploadEndDate: LocalDateTime): MutableList<PriceChange>
 
-    @Query("""
-    SELECT t1.*
-    FROM crm_price_change t1
-    WHERE
-        and t1.enabled=1
-    ORDER BY  t1.id DESC
-        """, nativeQuery = true)
-    fun findAllEnabled(): MutableList<PriceChange>
+
+
+
+    fun findByEnabledIsTrueOrderByIdDesc(): MutableList<PriceChange>
 
 }
 
 interface PriceChangeRepositoryCustom{
     fun findPage(pageable: Pageable, priceChangeQuery : PriceChangeQuery): Page<PriceChangeDto>
+
+    fun findNearPriceChange(): PriceChange
 }
 
-class PriceChangeRepositoryImpl @Autowired constructor(val entityManager: EntityManager):PriceChangeRepositoryCustom{
+class PriceChangeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): PriceChangeRepositoryCustom {
+    override fun findNearPriceChange(): PriceChange {
+        return namedParameterJdbcTemplate.queryForObject("""
+        SELECT t1
+        FROM crm_price_change t1
+        ORDER BY  t1.price_change_date DESC ,t1.upload_end_date DESC
+        limit 0,1
+                """, HashMap<String, Object>(), MyBeanPropertyRowMapper(PriceChange::class.java))
+    }
+
     override fun findPage(pageable: Pageable, priceChangeQuery: PriceChangeQuery): Page<PriceChangeDto> {
         val sb = StringBuffer()
         sb.append("""
@@ -71,17 +68,11 @@ class PriceChangeRepositoryImpl @Autowired constructor(val entityManager: Entity
             AND product.price_change_id = t1.id
         """)
         if (StringUtils.isNotEmpty(priceChangeQuery.name)) {
-            sb.append("""
-                AND t1.name LIKE CONCAT('%', :name, '%')
-            """)
+            sb.append("""  AND t1.name LIKE CONCAT('%', :name, '%')  """)
         }
-        sb.append("""
-                GROUP BY product.price_change_id
-            """)
-        val query = entityManager.createNativeQuery(sb.toString(), PriceChangeDto::class.java)
-        query.setParameter("name", priceChangeQuery.name)
+        sb.append("""  GROUP BY product.price_change_id  """)
 
-        return query.resultList as Page<PriceChangeDto>
+        return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("name", priceChangeQuery.name), MyBeanPropertyRowMapper(PriceChangeDto::class.java)) as Page<PriceChangeDto>
 
     }
 

@@ -30,12 +30,12 @@ interface StoreAllotRepository : BaseRepository<StoreAllot, String>, StoreAllotR
 
     @Query("""
     SELECT
-        MAX(t1.business_id)
+        MAX(t1.businessId)
     FROM
-        crm_store_allot t1
+        #{#entityName} t1
     WHERE
-        t1.created_date >= ?1
-        """, nativeQuery = true)
+        t1.createdDate >= ?1
+        """)
     fun findMaxBusinessId(localDate: LocalDate): String
 
 

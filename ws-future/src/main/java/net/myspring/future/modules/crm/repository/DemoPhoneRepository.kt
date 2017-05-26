@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.basic.repository.PriceChangeRepositoryCustom
+import net.myspring.future.modules.crm.repository.PriceChangeRepositoryCustom
 import net.myspring.future.modules.crm.domain.*
 import net.myspring.future.modules.crm.dto.DemoPhoneDto
 

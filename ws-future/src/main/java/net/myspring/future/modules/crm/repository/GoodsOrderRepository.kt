@@ -20,11 +20,11 @@ interface GoodsOrderRepository : BaseRepository<GoodsOrder, String> , GoodsOrder
 
     @Query("""
     SELECT
-        MAX(t1.business_id)
-    FROM  crm_goods_order t1
+        MAX(t1.businessId)
+    FROM  #{#entityName} t1
     WHERE
-        t1.bill_date >= ?1
-        """, nativeQuery = true)
+        t1.billDate >= ?1
+        """)
     fun findMaxBusinessId(date: LocalDate): String
 
 }

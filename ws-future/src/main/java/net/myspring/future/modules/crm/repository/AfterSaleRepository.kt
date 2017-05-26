@@ -27,18 +27,18 @@ import javax.persistence.EntityManager
 interface AfterSaleRepository : BaseRepository<AfterSale, String>,AfterSaleRepositoryCustom {
 
     @Query("""
-    SELECT t1.*
-    FROM crm_after_sale t1,crm_product_ime t2
-    WHERE t1.bad_product_ime_id=t2.id
+    SELECT t1
+    FROM #{#entityName} t1, ProductIme t2
+    WHERE t1.badProductImeId=t2.id
         AND t2.ime in ?1
-        """, nativeQuery = true)
+        """)
     fun findByBadProductImeIn(imeList: MutableList<String>): MutableList<AfterSale>
 
     @Query("""
-    SELECT MAX(t1.business_id)
-    FROM crm_after_sale t1
-    WHERE t1.created_date >= ?1
-        """, nativeQuery = true)
+    SELECT MAX(t1.businessId)
+    FROM #{#entityName} t1
+    WHERE t1.createdDate >= ?1
+        """)
     fun findMaxBusinessId(dateStart: LocalDate): String
 
 }

@@ -29,7 +29,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     fun save(position: Employee): Int
 
     @Query("""
-        SELECT t1.*
+        SELECT t1
         FROM #{#entityName} t1
         where t1.enabled=1
         and t1.name like %?1%
@@ -37,7 +37,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     fun findByNameLike(name: String): MutableList<Employee>
 
     @Query("""
-        SELECT t1.*
+        SELECT t1
         FROM #{#entityName}
         where t1.enabled=1
         and t1.name IN ?1
@@ -45,7 +45,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     fun findByNameList(employeeNameList: MutableList<String>): MutableList<Employee>
 
     @Query("""
-        SELECT t1.*
+        SELECT t1
         FROM #{#entityName} t1
         where t1.enabled=1
         and t1.status=:status
@@ -54,7 +54,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     fun findByStatusAndregularDate(@Param("status") status: String, @Param("regularDate") regularDate: LocalDateTime): MutableList<Employee>
 
     @Query("""
-        SELECT t1.*
+        SELECT t1
         FROM #{#entityName} t1
         where t1.id in ?1
     """)

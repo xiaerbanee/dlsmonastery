@@ -30,12 +30,8 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
     @CachePut(key = "#id")
     fun save(adPricesystem: AdPricesystem): Int
 
-    @Query("""
-        SELECT t1.*
-        FROM crm_ad_price_system t1
-        WHERE t1.enabled = 1
-    """, nativeQuery = true)
-    fun findAllEnabled(): MutableList<AdPricesystem>
+
+    fun findByEnabledIsTrue(): MutableList<AdPricesystem>
 
     @Query("""
         SELECT t1.*
