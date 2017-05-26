@@ -22,7 +22,7 @@ class AccountWeixinDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     WHERE
                     t1.open_id = ?
                     and t1.enabled=1
-                """, MyBeanPropertyRowMapper<AccountWeixinDto>(AccountWeixinDto::class.java),openId);
+                """, MyBeanPropertyRowMapper(AccountWeixinDto::class.java),openId);
     }
 
     fun findByAccountId(accountId: String): AccountWeixinDto {
@@ -36,7 +36,7 @@ class AccountWeixinDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     WHERE
                     t1.account_id = :accountId
                     and t1.enabled=1
-                """, MyBeanPropertyRowMapper<AccountWeixinDto>(AccountWeixinDto::class.java),accountId);
+                """, MyBeanPropertyRowMapper(AccountWeixinDto::class.java),accountId);
     }
 
     fun save(accountWeixinDto: AccountWeixinDto) {

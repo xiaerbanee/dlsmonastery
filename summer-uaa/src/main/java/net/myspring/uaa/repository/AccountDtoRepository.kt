@@ -23,7 +23,7 @@ class AccountDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate
                     t1.employee_id = t2.id
                     and t1.position_id=t3.id
                     and t1.login_name= ?
-                """, MyBeanPropertyRowMapper<AccountDto>(AccountDto::class.java),loginName)
+                """, MyBeanPropertyRowMapper(AccountDto::class.java),loginName)
                 return accountDto;
     }
 
@@ -41,6 +41,6 @@ class AccountDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate
                     t1.employee_id = t2.id
                     and t1.position_id=t3.id
                     and t1.id= ?
-                """,MyBeanPropertyRowMapper<AccountDto>(AccountDto::class.java),id);
+                """,MyBeanPropertyRowMapper(AccountDto::class.java),id);
     }
 }
