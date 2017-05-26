@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ProductType
 import net.myspring.future.modules.basic.dto.ProductTypeDto
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
@@ -78,7 +79,23 @@ class ProductTypeRepositoryImpl @Autowired constructor(val entityManager: Entity
 
     override fun findPage(pageable: Pageable, productTypeQuery: ProductTypeQuery): Page<ProductTypeDto> {
         val sb = StringBuffer()
-
+        sb.append("""
+            SELECT
+                t1.*, group_concat(t2.name) AS productNames
+            FROM
+                crm_product_type t1
+            LEFT JOIN crm_product t2 ON t1.id = t2.product_type_id
+            WHERE
+                t1.enabled = 1
+            AND t2.enabled = 1
+        """)
+        if (StringUtils.isNotEmpty(productTypeQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if (StringUtils.isNotEmpty(productTypeQuery.code)) {
+            sb.append("""  and t1.code LIKE CONCAT('%',:code,'%') """)
+        }
+        sb.append(""" group by t1.id """)
         var query = entityManager.createNativeQuery(sb.toString(), ProductTypeDto::class.java)
 
         return query.resultList as Page<ProductTypeDto>

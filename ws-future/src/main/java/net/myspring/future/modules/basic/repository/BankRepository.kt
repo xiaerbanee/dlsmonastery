@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Bank
 import net.myspring.future.modules.basic.dto.BankDto
 import net.myspring.future.modules.basic.web.query.BankQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -81,7 +82,19 @@ class BankRepositoryImpl @Autowired constructor(val entityManager: EntityManager
 
     override fun findPage(pageable: Pageable, bankQuery: BankQuery): Page<BankDto> {
         val sb = StringBuffer()
-
+        sb.append("""
+            SELECT
+                t1.*, GROUP_CONCAT(DISTINCT t2.account_id) AS 'accountIdStr'
+            FROM
+                crm_bank t1
+            LEFT JOIN crm_account_bank t2 ON t2.bank_id = t1.id
+            WHERE
+                t1.enabled = 1
+        """)
+        if (StringUtils.isNotEmpty(bankQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        sb.append(""" GROUP by t1.name """)
         var query = entityManager.createNativeQuery(sb.toString(), BankDto::class.java)
 
         return query.resultList as Page<BankDto>

@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Client
 import net.myspring.future.modules.basic.dto.ClientDto
 import net.myspring.future.modules.basic.web.query.ClientQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -56,7 +57,17 @@ class ClientRepositoryImpl @Autowired constructor(val entityManager: EntityManag
 
     override fun findPage(pageable: Pageable, clientQuery: ClientQuery): Page<ClientDto> {
         val sb = StringBuffer()
-
+        sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_client t1
+            WHERE
+                t1.enabled=1
+        """)
+        if (StringUtils.isNotEmpty(clientQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
         var query = entityManager.createNativeQuery(sb.toString(), ClientDto::class.java)
 
         return query.resultList as Page<ClientDto>

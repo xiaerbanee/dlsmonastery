@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopImage
 import net.myspring.future.modules.layout.dto.ShopImageDto
 import net.myspring.future.modules.layout.web.query.ShopImageQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -23,6 +24,23 @@ class ShopImageRepositoryImpl @Autowired constructor(val entityManager: EntityMa
 
     override fun findPage(pageable: Pageable, shopImageQuery: ShopImageQuery): Page<ShopImageDto> {
         val sb = StringBuffer()
+        sb.append("""
+            SELECT
+                depot.office_Id officeId,
+                t1.*
+            FROM
+                crm_shop_image t1,
+                crm_depot depot
+            WHERE
+                t1.enabled = 1
+            AND t1.shop_id = depot.id
+        """)
+        if (StringUtils.isNotEmpty(shopImageQuery.shopId)) {
+            sb.append("""  and t1.shop_id = :shopId """)
+        }
+        if (StringUtils.isNotEmpty(shopImageQuery.officeId)) {
+            sb.append("""  and depot.office_id = :officeId """)
+        }
         var query = entityManager.createNativeQuery(sb.toString(), ShopImageDto::class.java)
 
         return query.resultList as Page<ShopImageDto>

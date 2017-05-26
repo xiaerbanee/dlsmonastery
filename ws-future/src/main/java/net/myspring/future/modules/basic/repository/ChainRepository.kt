@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Chain
 import net.myspring.future.modules.basic.dto.ChainDto
 import net.myspring.future.modules.basic.web.query.ChainQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -55,7 +56,17 @@ class ChainRepositoryImpl @Autowired constructor(val entityManager: EntityManage
 
     override fun findPage(pageable: Pageable, chainQuery: ChainQuery): Page<ChainDto> {
         val sb = StringBuffer()
-
+        sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_chain t1
+            WHERE
+                t1.enabled=1
+        """)
+        if (StringUtils.isNotEmpty(chainQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
         var query = entityManager.createNativeQuery(sb.toString(), ChainDto::class.java)
 
         return query.resultList as Page<ChainDto>

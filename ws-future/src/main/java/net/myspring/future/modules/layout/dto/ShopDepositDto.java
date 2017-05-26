@@ -12,8 +12,9 @@ import java.math.BigDecimal;
 public class ShopDepositDto extends DataDto<ShopDeposit> {
 
     private String shopId;
-
+    @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
+    @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "officeId")
     private String shopOfficeId;
 
    //TODO areaName如何获取 @CacheInput(inputKey = "offices",inputInstance = "shopOfficeId",outputInstance = "areaName")

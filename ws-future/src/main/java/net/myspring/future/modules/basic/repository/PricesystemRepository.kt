@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Pricesystem
 import net.myspring.future.modules.basic.dto.PricesystemDto
 import net.myspring.future.modules.basic.web.query.PricesystemQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -57,7 +58,17 @@ class PricesystemRepositoryImpl @Autowired constructor(val entityManager: Entity
 
     override fun findPage(pageable: Pageable, pricesystemQuery: PricesystemQuery): Page<PricesystemDto> {
         val sb = StringBuffer()
-
+        sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_pricesystem t1
+            WHERE
+                t1.enabled=1
+        """)
+        if (StringUtils.isNotEmpty(pricesystemQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
         var query = entityManager.createNativeQuery(sb.toString(), PricesystemDto::class.java)
 
         return query.resultList as Page<PricesystemDto>
