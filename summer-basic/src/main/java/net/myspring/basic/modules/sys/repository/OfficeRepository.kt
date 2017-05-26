@@ -4,25 +4,24 @@ import com.google.common.collect.Maps
 import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Office
-import net.myspring.basic.modules.sys.dto.BackendMenuDto
 import net.myspring.basic.modules.sys.dto.OfficeDto
 import net.myspring.basic.modules.sys.web.query.OfficeQuery
 import net.myspring.util.repository.QueryUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import javax.persistence.EntityManager
 
 
 /**
  * Created by haos on 2017/5/24.
  */
+@CacheConfig(cacheNames = arrayOf("offices"))
 interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom{
     @CachePut(key="#id")
     fun save(office: Office): Office
@@ -53,7 +52,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         FROM  #{#entityName} t1,Account t2
         where t1.enabled=1
         and t1.id=t2.officeId
-        and t2.accountId in ?1
+        and t2.id in ?1
      """)
     fun findByAccountIds(accountIds:MutableList<String>):MutableList<Office>
 
@@ -67,7 +66,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     @Query("""
         SELECT t
         FROM  #{#entityName} t
-        where t.parent_ids like %?1%
+        where t.parentIds like %?1%
         and t.enabled =1
      """)
     fun findByParentIdsLike(parentId: String): MutableList<Office>
@@ -86,7 +85,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         where t1.enabled=1
         and t2.enabled=1
         and t1.officeRuleId=t2.id
-        and (t1.parent_ids like %?1% or t1.id=?2)
+        and (t1.parentIds like %?1% or t1.id=?2)
         and t1.officeRuleId=?2
      """)
     fun findByOfficeIdAndRuleId( officeId: String, officeRuleId: String): Office
@@ -111,8 +110,8 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     @Query("""
         SELECT t
         FROM  #{#entityName} t
-        WHERE t1.enabled=1
-     """, nativeQuery = true)
+        WHERE t.enabled=1
+     """)
     fun findAllEnabled():MutableList<Office>
 }
 

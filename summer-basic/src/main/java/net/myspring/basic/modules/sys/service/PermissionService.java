@@ -101,7 +101,7 @@ public class PermissionService {
                 rolePermissionRepository.setEnabledByRoleIdList(false,removeIdList);
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
-                rolePermissionRepository.batchSave(rolePermissions);
+                rolePermissionRepository.save(rolePermissions);
             }
         } else if (CollectionUtil.isNotEmpty(rolePermissionList)) {
             rolePermissionRepository.setEnabledByPermissionId(false, permission.getId());

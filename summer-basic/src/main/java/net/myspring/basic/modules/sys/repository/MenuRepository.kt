@@ -4,10 +4,9 @@ import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Menu
 import net.myspring.basic.modules.sys.dto.MenuDto
-import net.myspring.basic.modules.sys.dto.OfficeRuleDto
 import net.myspring.basic.modules.sys.web.query.MenuQuery
-import net.myspring.basic.modules.sys.web.query.OfficeRuleQuery
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -15,11 +14,11 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
-import javax.persistence.EntityManager
 
 /**
  * Created by haos on 2017/5/24.
  */
+@CacheConfig(cacheNames = arrayOf("menuRepositorys"))
 interface  MenuRepository :BaseRepository<Menu,String>,MenuRepositoryCustom{
     @CachePut(key="#id")
     fun save(menu: Menu): Menu

@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.Permission
 import net.myspring.basic.modules.sys.dto.PermissionDto
 import net.myspring.basic.modules.sys.web.query.PermissionQuery
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -16,6 +17,7 @@ import javax.persistence.EntityManager
 /**
  * Created by haos on 2017/5/24.
  */
+@CacheConfig(cacheNames = arrayOf("permissions"))
 interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRepositoryCustom {
 
     @Cacheable
@@ -25,83 +27,73 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
     fun save(permission: Permission): Int
 
     @Query("""
-      SELECT
-            t1.*
+        SELECT t1
         FROM
-            sys_permission t1,
-            sys_role_permission t2
+            #{#entityName} t1,
+            RolePermission t2
         WHERE
-            t1.id = t2.permission_id
-        AND t2.role_id = ?1
+            t1.id = t2.permissionId
+        AND t2.roleId = ?1
         AND t1.enabled = 1
         AND t2.enabled = 1
-     """, nativeQuery = true)
+     """)
     fun findByRoleId(roleId: String): MutableList<Permission>
 
     @Query("""
-             SELECT
-            t1.*
+        SELECT t1
         FROM
-            sys_permission t1,
-            sys_role_permission t2,
-            hr_account_permission t3
+            #{#entityName} t1,
+            RolePermission t2,
+            AccountPermission t3
         WHERE
-            t1.id = t2.permission_id
-        and t2.permission_id=t3.permission_id
-        AND t2.role_id = ?1
-        and t3.account_id=?2
+            t1.id = t2.permissionId
+        and t2.permissionId=t3.permissionId
+        AND t2.roleId = ?1
+        and t3.accountId=?2
         AND t1.enabled = 1
         AND t3.enabled = 1
         AND t2.enabled = 1
-     """, nativeQuery = true)
+     """)
     fun findByRoleAndAccount(roleId: String, accountId: String): MutableList<Permission>
 
     @Query("""
-             SELECT
-        t1.*
-        FROM
-        sys_permission t1
+        SELECT t
+        FROM  #{#entityName} t
         where
-        t1.menu_id = ?1
-     """, nativeQuery = true)
+        t.menuId = ?1
+     """)
     fun findByMenuId(menuId: String): MutableList<Permission>
 
     @Query("""
-            SELECT
-        t1.*
-        FROM
-        sys_permission t1
+        SELECT t
+        FROM  #{#entityName} t
         where
-        t1.enabled=1
-        and t1.menu_id IN ?1
-     """, nativeQuery = true)
+        t.enabled=1
+        and t.menuId IN ?1
+     """)
     fun findByMenuIds(menuIds: MutableList<String>): MutableList<Permission>
 
     @Query("""
-        SELECT
-        t1.*
-        FROM
-        sys_permission t1
+        SELECT t
+        FROM  #{#entityName} t
         where
-        t1.permission = ?1
-     """, nativeQuery = true)
+        t.permission = ?1
+     """)
     fun findByPermission(permissionStr: String): Permission
 
     @Query("""
-         SELECT
-        t1.*
-        FROM
-        sys_permission t1
+        SELECT t
+        FROM  #{#entityName} t
         where
-        t1.permission LIKE %?1%
-     """, nativeQuery = true)
+        t.permission LIKE %?1%
+     """)
     fun findByPermissionLike(permissionStr: String): MutableList<Permission>
 
     @Query("""
-        SELECT t1.*
-        FROM sys_permission t1
-        where t1.enabled=1
-    """, nativeQuery = true)
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+    """)
     fun findAllEnabled(): MutableList<Permission>
 
 
