@@ -55,7 +55,7 @@ public class EmployeeService {
     }
 
     public List<EmployeeDto> findByNameLike(String name){
-        List<Employee> employeeList=employeeRepository.findByNameLike(name);
+        List<Employee> employeeList=employeeRepository.findByEnabledIsTrueAndNameLike(name);
         List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
         cacheUtils.initCacheInput(employeeDtoList);
         return employeeDtoList;
@@ -83,7 +83,7 @@ public class EmployeeService {
         if(CollectionUtil.isEmpty(ids)) {
             return Lists.newArrayList();
         }
-        List<Employee> employees = employeeRepository.findByIds(ids);
+        List<Employee> employees = employeeRepository.findAll(ids);
         List<EmployeeDto> employeeDto= BeanUtil.map(employees,EmployeeDto.class);
         return employeeDto;
     }

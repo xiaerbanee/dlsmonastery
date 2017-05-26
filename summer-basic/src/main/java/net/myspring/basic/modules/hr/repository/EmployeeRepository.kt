@@ -28,21 +28,10 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     @CachePut(key="#id")
     fun save(position: Employee): Int
 
-    @Query("""
-        SELECT t1
-        FROM #{#entityName} t1
-        where t1.enabled=1
-        and t1.name like %?1%
-    """)
-    fun findByNameLike(name: String): MutableList<Employee>
+    fun findByEnabledIsTrueAndNameLike(name: String): MutableList<Employee>
 
-    @Query("""
-        SELECT t1
-        FROM #{#entityName}
-        where t1.enabled=1
-        and t1.name IN ?1
-    """)
-    fun findByNameList(employeeNameList: MutableList<String>): MutableList<Employee>
+
+    fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Employee>
 
     @Query("""
         SELECT t1
@@ -53,12 +42,6 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     """)
     fun findByStatusAndregularDate(@Param("status") status: String, @Param("regularDate") regularDate: LocalDateTime): MutableList<Employee>
 
-    @Query("""
-        SELECT t1
-        FROM #{#entityName} t1
-        where t1.id in ?1
-    """)
-    fun findByIds(ids: MutableList<String>): MutableList<Employee>
 
 }
 interface EmployeeRepositoryCustom{
