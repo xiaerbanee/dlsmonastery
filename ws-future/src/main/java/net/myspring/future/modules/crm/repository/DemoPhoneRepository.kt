@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 
@@ -31,7 +33,7 @@ interface DemoPhoneRepositoryCustom{
     fun findPage(pageable: Pageable, demoPhoneQuery : DemoPhoneQuery): Page<DemoPhoneDto>?
 }
 
-class DemoPhoneRepositoryImpl @Autowired constructor(val entityManager: EntityManager): DemoPhoneRepositoryCustom {
+class DemoPhoneRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): DemoPhoneRepositoryCustom {
     override fun findPage(pageable: Pageable, demoPhoneQuery: DemoPhoneQuery): Page<DemoPhoneDto>? {
         return null
 
