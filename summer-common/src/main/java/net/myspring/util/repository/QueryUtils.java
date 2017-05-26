@@ -46,7 +46,7 @@ public class QueryUtils {
                 if(method.getName().startsWith("get") && method.getParameterCount()==0) {
                     try {
                         String fieldName = method.getName().replaceFirst("get","");
-                        fieldName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL,fieldName);
+                        fieldName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL,fieldName);
                         map.put(fieldName,method.invoke(object));
                     } catch (Exception e) {
                     }
