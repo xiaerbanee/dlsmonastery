@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.repository
 
+import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.Account
 import net.myspring.basic.modules.hr.dto.AccountDto
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 
@@ -27,60 +30,57 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
     fun save(account: Account): Int
 
     @Query("""
-        SELECT
-        t1.*
-        FROM
-        hr_account t1
-        where t1.enabled=1
-        and t1.login_name=?1
-    """, nativeQuery = true)
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+        and t.loginName=?1
+    """)
     fun findByLoginName(loginName: String): Account
 
     @Query("""
-        SELECT t1.password
-        FROM hr_account t1
-        WHERE t1.id=?1
-    """, nativeQuery = true)
+        SELECT t.password
+        #{#entityName} t
+        WHERE t.id=?1
+    """)
     fun findAccountPassword(id: String): String
 
     @Query("""
         SELECT t1.id
-        FROM hr_account t1
+        FROM  #{#entityName} t1
         where t1.enabled=1
-        and t1.office_id IN ?1
-    """, nativeQuery = true)
+        and t1.officeId IN ?1
+    """)
     fun findByOfficeIds(officeIds: MutableList<String>): MutableList<Account>
 
     @Query("""
         SELECT
         t1.*
-        FROM
-        hr_account t1,hr_position t2
-        where t1.position_id=t2.id
+        FROM  #{#entityName} t1,Position t2
+        where t1.positionId=t2.id
         and t2.id=?1
-    """, nativeQuery = true)
+    """)
     fun findByPosition(positionId: String): MutableList<Account>
 
     @Query("""
         SELECT t1.*
-        FROM hr_account t1
+        FROM  #{#entityName}
         WHERE t1.enabled=1
-        and t1.login_name in ?1
-    """, nativeQuery = true)
+        and t1.loginName in ?1
+    """)
     fun findByLoginNameList(loginNames: MutableList<String>): MutableList<Account>
 
     @Query("""
         SELECT t1.*
-        FROM hr_account t1
+        FROM  #{#entityName} t1
         WHERE t1.id=?1
-    """, nativeQuery = true)
+    """)
     fun findById(id: String): MutableList<Account>
 
     @Query("""
         SELECT t1.*
-        FROM hr_account t1
+        FROM  #{#entityName} t1
         WHERE t1.id IN ?1
-    """, nativeQuery = true)
+    """)
     fun findByIds(ids: MutableList<String>): MutableList<Account>
 }
 
@@ -92,7 +92,7 @@ interface AccountRepositoryCustom{
     fun findByFilter(accountQuery: AccountQuery): MutableList<Account>
 }
 
-class AccountRepositoryImpl @Autowired constructor(val entityManager: EntityManager): AccountRepositoryCustom{
+class AccountRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AccountRepositoryCustom{
     override fun findByFilter(accountQuery: AccountQuery): MutableList<Account> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -115,10 +115,11 @@ class AccountRepositoryImpl @Autowired constructor(val entityManager: EntityMana
             sb.append(" and t1.type=:type")
         }
         sb.append(" limit 0, 100")
-        var query = entityManager.createNativeQuery(sb.toString(), Account::class.java)
-        query.setParameter("name", name)
-        query.setParameter("type", type)
-        return query.resultList as MutableList<Account>
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("type", type)
+        paramMap.put("name", name)
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, MyBeanPropertyRowMapper(Account::class.java))
+
 
     }
 

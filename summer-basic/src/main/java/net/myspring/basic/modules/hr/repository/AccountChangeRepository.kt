@@ -1,15 +1,18 @@
 package net.myspring.basic.modules.hr.repository
 
+import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.AccountChange
 import net.myspring.basic.modules.hr.dto.AccountChangeDto
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery
+import net.myspring.basic.modules.sys.dto.BackendMenuDto
 import net.myspring.util.repository.QueryUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 interface AccountChangeRepository : BaseRepository<AccountChange, String>,AccountChangeRepositoryCustom {
@@ -23,13 +26,14 @@ interface AccountChangeRepositoryCustom {
 }
 
 
-class AccountChangeRepositoryImpl @Autowired constructor(val entityManager: EntityManager):AccountChangeRepositoryCustom {
+class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AccountChangeRepositoryCustom {
     override fun findPage(pageable: Pageable, accountChangeQuery: AccountChangeQuery): Page<AccountChangeDto> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getForm(accountChangeQuery: AccountChangeQuery): AccountChangeForm {
         var sb = StringBuilder();
+        var queryMap = QueryUtils.getParamMap(accountChangeQuery)
         sb.append( """
             SELECT
                 t2.id AS 'accountId',
@@ -55,10 +59,7 @@ class AccountChangeRepositoryImpl @Autowired constructor(val entityManager: Enti
         if(StringUtils.isNotBlank(accountChangeQuery.accountId)) {
             sb.append(" and t2.id=:accountId");
         }
-
-        var query = entityManager.createNativeQuery(sb.toString(),AccountChangeForm::class.java);
-        QueryUtils.setParameter(query,accountChangeQuery);
-        return query.firstResult as AccountChangeForm
+        return namedParameterJdbcTemplate.queryForObject(sb.toString(), queryMap, MyBeanPropertyRowMapper(AccountChangeForm::class.java))
 
     }
 }

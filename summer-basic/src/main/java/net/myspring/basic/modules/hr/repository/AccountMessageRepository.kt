@@ -12,13 +12,13 @@ import java.time.LocalDateTime
 interface AccountMessageRepository : BaseRepository<AccountMessage, String> {
 
     @Query("""
-       SELECT t1.*
-         FROM hr_account_message t1
-         where t1.enabled=1
-         and t1.to_account_id=?1
-         and t1.created_date >=?2
-         and t1.readed = 0
-        """, nativeQuery = true)
+       SELECT t
+        FROM  #{#entityName} t
+         where t.enabled=1
+         and t.to_accountId=?1
+         and t.createdDate >=?2
+         and t.readed = 0
+        """)
     fun findByAccountId(accountId: String,createdDateStart: LocalDateTime): MutableList<AccountMessage>
 
 

@@ -10,29 +10,29 @@ import org.springframework.data.repository.query.Param
  */
 interface OfficeLeaderRepository : BaseRepository<OfficeLeader,String>{
     @Query("""
-        UPDATE  hr_office_leader set enabled=:enabled where office_id=:officeId
-    """, nativeQuery = true)
+        UPDATE #{#entityName} set enabled=:enabled where officeId=:officeId
+    """)
     fun setEnabledByOfficeId(@Param("enabled") enabled: Boolean, @Param("officeId") officeId: String): Int
 
     @Query("""
-        UPDATE  hr_office_leader set enabled=:enabled where leader_id in :leaderList
-    """, nativeQuery = true)
+        UPDATE  #{#entityName} set enabled=:enabled where leaderId in :leaderList
+    """)
     fun setEnabledByLeaderIds(@Param("enabled") enabled: Boolean, @Param("leaderList") leaderList: MutableList<String>): Int
 
     @Query("""
         SELECT t1.*
-        FROM hr_office_leader t1
+        FROM #{#entityName} t1
         where t1.enabled=1
-        and t1.office_id=:officeId
-    """, nativeQuery = true)
+        and t1.officeId=:officeId
+    """)
     fun findByOfficeId(officeId: String): MutableList<OfficeLeader>
 
     @Query("""
         SELECT t1.*
-        FROM hr_office_leader t1
+        FROM #{#entityName} t1
         where t1.enabled=1
-        and t1.office_id=:officeId
-    """, nativeQuery = true)
+        and t1.officeId=:officeId
+    """)
     fun findAllByOfficeId(officeId: String): MutableList<OfficeLeader>
 
 }

@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.repository
 
+import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.Position
 import net.myspring.basic.modules.hr.dto.PositionDto
@@ -12,6 +13,9 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 import javax.persistence.EntityManager
 
 /**
@@ -32,7 +36,7 @@ interface PositionRepositoryCustom{
 
     fun findPage(pageable: Pageable, positionQuery: PositionQuery): Page<PositionDto>
 }
-class PositionRepositoryImpl @Autowired constructor(val entityManager: EntityManager): PositionRepositoryCustom{
+class PositionRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): PositionRepositoryCustom{
     override fun findPage(pageable: Pageable, positionQuery: PositionQuery): Page<PositionDto> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -52,9 +56,7 @@ class PositionRepositoryImpl @Autowired constructor(val entityManager: EntityMan
                 and (t1.name like %:name%)
             """)
         }
-        var query = entityManager.createNativeQuery(sb.toString(), Position::class.java)
-        query.setParameter("name", name)
-        return query.resultList as MutableList<Position>
+        return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("name", name), MyBeanPropertyRowMapper(Position::class.java))
     }
 
 

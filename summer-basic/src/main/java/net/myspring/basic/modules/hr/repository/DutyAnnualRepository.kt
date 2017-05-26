@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -16,17 +18,17 @@ import javax.persistence.EntityManager
 interface DutyAnnualRepository : BaseRepository<DutyAnnual,String>,DutyAnnualRepositoryCustom{
     @Query("""
         select t1.*
-        from hr_duty_annual t1
-        where t1.employee_id=?1
-        order by annual_year desc
+        FROM  #{#entityName} t1
+        where t1.employeeId=?1
+        order by annualYear desc
         limit 0,1
-    """, nativeQuery = true)
+    """)
     fun findByEmployee(employeeId: String): DutyAnnual
 }
 interface DutyAnnualRepositoryCustom{
     fun findPage(pageable: Pageable, dutyAnnualQuery: DutyAnnualQuery): Page<DutyAnnualDto>
 }
-class DutyAnnualRepositoryImpl @Autowired constructor(val entityManager: EntityManager): DutyAnnualRepositoryCustom{
+class DutyAnnualRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): DutyAnnualRepositoryCustom{
     override fun findPage(pageable: Pageable, dutyAnnualQuery: DutyAnnualQuery): Page<DutyAnnualDto> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

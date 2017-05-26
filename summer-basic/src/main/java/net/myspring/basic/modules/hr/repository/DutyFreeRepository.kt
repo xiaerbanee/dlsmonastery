@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.repository
 
+import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.DutyFree
 import net.myspring.basic.modules.hr.dto.DutyDto
@@ -12,6 +13,8 @@ import java.time.LocalDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -22,17 +25,55 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
     @Query("""
         SELECT
             t1.*
-            FROM
-            hr_duty_free t1
+            FROM #{#entityName} t1
             WHERE
              t1.enabled=1
-            AND  t1.free_date=?1
-            and t1.employee_id=?2
-    """, nativeQuery = true)
+            AND  t1.freeDate=?1
+            and t1.employeeId=?2
+    """)
     fun findByDate(freeDate: LocalDate, employeeId: String): MutableList<DutyFree>
 
     @Query("""
         SELECT
+            t1.*
+            FROM  #{#entityName} t1
+            WHERE
+            t1.enabled=1
+            AND t1.freeDate >= ?1
+            and t1.freeDate <= ?2
+            and t1.status in ?3
+        """)
+    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyFree>
+
+    @Query("""
+        SELECT
+            t1.*
+            FROM  #{#entityName} t1
+            WHERE
+            t1.enabled=1
+            and t1.employeeId=?1
+            and t1.freeDate >=?2
+            and t1.freeDate <=?3
+    """)
+    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyFree>
+}
+
+interface DutyFreeRepositoryCustom {
+    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto>
+
+    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyFree>
+
+    fun findPage(pageable: Pageable, dutyFreeQuery: DutyFreeQuery): Page<DutyFreeDto>
+}
+
+class DutyFreeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : DutyFreeRepositoryCustom {
+    override fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto> {
+        var paramMap = HashMap<String,Any>()
+        paramMap.put("leaderId", leaderId)
+        paramMap.put("status", status)
+        paramMap.put("dateStart", dateStart)
+        return namedParameterJdbcTemplate.query("""
+            SELECT
             '免打卡' as dutyType,
             t1.free_date AS dutyDate,
             t1.remarks,
@@ -48,46 +89,12 @@ interface DutyFreeRepository : BaseRepository<DutyFree, String>, DutyFreeReposit
             t1.enabled=1
             AND t1.employee_id=t3.id
             and t3.account_id=t2.id
-            AND t2.leader_id=?1
-            AND t1.status=?2
-            AND t1.created_date>=?3
-    """, nativeQuery = true)
-    fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto>
+            AND t2.leader_id= :leaderId
+            AND t1.status= :status
+            AND t1.created_date>= :dateStart
+        """, paramMap, MyBeanPropertyRowMapper(DutyDto::class.java))
+    }
 
-    @Query("""
-        SELECT
-            t1.*
-            FROM
-            hr_duty_free t1
-            WHERE
-            t1.enabled=1
-            AND t1.free_date >= ?1
-            and t1.free_date <= ?2
-            and t1.status in ?3
-        """, nativeQuery = true)
-    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyFree>
-
-    @Query("""
-        SELECT
-            t1.*
-            FROM
-            hr_duty_free t1
-            WHERE
-            t1.enabled=1
-            and t1.employee_id=?1
-            and t1.free_date >=?2
-            and t1.free_date <=?3
-    """, nativeQuery = true)
-    fun findByEmployeeAndDate(employeeId: String, dateStart: LocalDate, dateEnd: LocalDate): MutableList<DutyFree>
-}
-
-interface DutyFreeRepositoryCustom {
-    fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyFree>
-
-    fun findPage(pageable: Pageable, dutyFreeQuery: DutyFreeQuery): Page<DutyFreeDto>
-}
-
-class DutyFreeRepositoryImpl @Autowired constructor(val entityManager: EntityManager) : DutyFreeRepositoryCustom {
     override fun findPage(pageable: Pageable, dutyFreeQuery: DutyFreeQuery): Page<DutyFreeDto> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -106,15 +113,13 @@ class DutyFreeRepositoryImpl @Autowired constructor(val entityManager: EntityMan
             AND fr.free_date <= :dateEnd
         """);
         if (CollectionUtil.isNotEmpty(accountIds)) {
-            sb.append(" and fr.employee_id in :accountIds")
+            sb.append(" and fr.employee_id in (:accountIds)")
         }
-
-        var query = entityManager.createNativeQuery(sb.toString(), DutyFree::class.java);
-        query.setParameter("dateStart", dateStart);
-        query.setParameter("dateEnd", dateEnd);
-        query.setParameter("accountIds", accountIds);
-        return query.resultList as MutableList<DutyFree>
-
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart", dateStart)
+        paramMap.put("dateEnd", dateEnd)
+        paramMap.put("accountIds", accountIds)
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, MyBeanPropertyRowMapper(DutyFree::class.java))
     }
 
 }

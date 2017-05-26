@@ -11,10 +11,10 @@ interface AccountWeixinRepository : BaseRepository<AccountWeixin,String>{
 
     @Query("""
         SELECT t1.*
-        FROM hr_account_weixin t1
+        FROM  #{#entityName} t1
         where t1.enabled=1
-        and t1.account_id=?1
-    """, nativeQuery = true)
+        and t1.accountId=?1
+    """)
     fun findByAccountId(accountId: String): AccountWeixin
 
 }
