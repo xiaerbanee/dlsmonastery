@@ -13,8 +13,8 @@ class AccountDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate
         var accountDto = jdbcTemplate.queryForObject("""
                     SELECT
                     t1.*,
-                    t2.leave_date as 'leaveDate',
-                    t3.role_id as 'roleId'
+                    t2.leave_date,
+                    t3.role_id
                     FROM
                     hr_account t1,
                     hr_employee t2,
@@ -31,8 +31,8 @@ class AccountDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate
         return jdbcTemplate.queryForObject("""
                     SELECT
                     t1.*,
-                    t2.leave_date as 'leaveDate',
-                    t3.role_id as 'roleId'
+                    t2.leave_date ,
+                    t3.role_id
                     FROM
                     hr_account t1,
                     hr_employee t2,
