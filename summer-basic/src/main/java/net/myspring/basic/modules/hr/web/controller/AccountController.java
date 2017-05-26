@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -167,9 +168,9 @@ public class AccountController {
         //显示剩余的加班调休时间和年假时间
         String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
         map.put("annualHour", dutyAnnualService.getAvailableHour(employeeId));
-        map.put("overtimeHour", dutyOvertimeService.getAvailableHour(employeeId, LocalDateTime.now()));
+        map.put("overtimeHour", dutyOvertimeService.getAvailableHour(employeeId, LocalDate.now()));
         //显示快到期时间
-        map.put("expiredHour", dutyOvertimeService.getExpiredHour(employeeId, LocalDateTime.now()));
+        map.put("expiredHour", dutyOvertimeService.getExpiredHour(employeeId, LocalDate.now()));
         map.put("account", accountDto);
         return map;
     }
