@@ -10,15 +10,6 @@ interface ProcessFlowRepository : BaseRepository<ProcessFlow, String> {
 
     fun findByProcessTypeId(processTypeId: String): MutableList<ProcessFlow>
 
-
-    @Query("""
-        SELECT t1.*
-        FROM  sys_process_flow t1,sys_process_type t2
-        where t1.process_type_id=t2.id
-        and t2.enabled=1
-        and t2.name=?1
-        """, nativeQuery = true)
+    @Query("select t from #{#entityName} t1,sys_process_type t2 where t1.processTypeId=t2.id and t2.enabled=1 and t2.name=?1")
     fun findByProcessTypeName(processTypeName: String): MutableList<ProcessFlow>
-
-
 }

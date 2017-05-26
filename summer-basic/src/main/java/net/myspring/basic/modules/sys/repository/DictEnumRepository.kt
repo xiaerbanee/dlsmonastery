@@ -26,33 +26,28 @@ interface DictEnumRepository :BaseRepository<DictEnum,String>,DictEnumRepository
     override  fun findOne(id: String): DictEnum
 
     @Query("""
-        SELECT
-        t1.*
-        FROM
-        sys_dict_enum t1
+        SELECT t
+        FROM  #{#entityName} t
         WHERE
-        t1.enabled=1
-        and t1.category=:category order by sort asc
-     """, nativeQuery = true)
+        t.enabled=1
+        and t.category=:category order by sort asc
+     """)
     fun findByCategory(@Param("category")category:String):MutableList<DictEnum>
 
     @Query("""
          SELECT DISTINCT
-        t1.category
-        FROM
-        sys_dict_enum t1
-     """, nativeQuery = true)
+        t.category
+        FROM  #{#entityName} t
+     """)
     fun findDistinctCategory():MutableList<String>
 
     @Query("""
-        SELECT
-        t1.*
-        FROM
-        sys_dict_enum t1
+        SELECT t
+        FROM  #{#entityName} t
         WHERE
-        t1.enabled=1
-        and t1.value=:value
-     """, nativeQuery = true)
+        t.enabled=1
+        and t.value=:value
+     """)
     fun findByValue(@Param("value")value:String): DictEnumDto
 
 

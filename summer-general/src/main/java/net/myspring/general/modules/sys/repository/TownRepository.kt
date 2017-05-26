@@ -6,12 +6,7 @@ import org.springframework.data.jpa.repository.Query
 
 interface TownRepository : BaseRepository<Town, String> {
 
-    @Query("""
-            SELECT t1.*
-            FROM sys_town t1
-            WHERE t1.town_name like %?1%
-            limit 0,20
-        """, nativeQuery = true)
+    @Query("select t from #{#entityName} t where t.townName like %?1% limit 0,20")
     fun findByNameLike(name: String): MutableList<Town>
 
 

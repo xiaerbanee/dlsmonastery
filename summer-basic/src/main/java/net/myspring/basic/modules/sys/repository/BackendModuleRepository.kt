@@ -29,36 +29,34 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>,BackendM
     fun save(backendModule: BackendModule): BackendModule
 
     @Query("""
-         SELECT t1.*
-        FROM  sys_backend_module  t1
-        where t1.enabled=1
-        and t1.backend_id IN ?1
-     """, nativeQuery = true)
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+        and t.backendId IN ?1
+     """)
     fun findByBackendIds( backendIds:MutableList<String>):MutableList<BackendModule>
 
     @Query("""
-         SELECT t1.*
-         FROM  sys_backend_module  t1,sys_role_module t2
+         SELECT t
+         FROM  #{#entityName} t1,RoleModule t2
           where t1.enabled=1
           and t2.enabled=1
-          and t2.backend_module_id=t1.id
-          and t2.role_id=:roleId
-     """, nativeQuery = true)
+          and t2.backendModuleId=t1.id
+          and t2.roleId=:roleId
+     """)
     fun findByRoleId(@Param("roleId")roleId:String):MutableList<BackendModule>
 
     @Query("""
-    SELECT t1.*
-    FROM  sys_backend_module
-    WHERE t1.enabled=1
-     """, nativeQuery = true)
+        SELECT t
+        FROM  #{#entityName} t
+        WHERE t1.enabled=1
+     """)
     fun findAllEnabled():MutableList<BackendModule>
 }
 
 
 interface BackendModuleRepositoryCustom{
-
     fun findPage(pageable: Pageable,backendModuleQuery: BackendModuleQuery): Page<BackendModuleDto>?
-
 }
 
 class BackendModuleRepositoryImpl @Autowired constructor(val entityManager: EntityManager): BackendModuleRepositoryCustom{
