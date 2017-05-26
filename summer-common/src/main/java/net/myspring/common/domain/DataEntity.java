@@ -5,12 +5,15 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.repository.NoRepositoryBean;
 
+import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 /**
  * Created by liuj on 2016-07-25.
  */
+@MappedSuperclass
 public class DataEntity<T> extends IdEntity<T> {
     @CreatedBy
     protected String createdBy;
