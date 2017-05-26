@@ -83,7 +83,7 @@ public class StoreAllotService {
     private ProductImeRepository productImeRepository;
 
     public StoreAllotDto findDto(String id) {
-        StoreAllotDto storeAllotDto = storeAllotRepository.findStoreAllotDtoById(id);
+        StoreAllotDto storeAllotDto = storeAllotRepository.findDto(id);
         cacheUtils.initCacheInput(storeAllotDto);
         return storeAllotDto;
     }
@@ -93,7 +93,7 @@ public class StoreAllotService {
         StringBuffer stringBuffer = new StringBuffer();
         Integer totalShouldShipQty = 0;
         Integer totalShippedQty=0;
-        StoreAllotDto storeAllotDto = storeAllotRepository.findStoreAllotDtoById(storeAllotId);
+        StoreAllotDto storeAllotDto = storeAllotRepository.findDto(storeAllotId);
         cacheUtils.initCacheInput(storeAllotDto);
         final List<String> boxImeList = StringUtils.getSplitList(boxImeStr, CharConstant.ENTER);
         final List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
@@ -392,7 +392,7 @@ public class StoreAllotService {
 
 
     public StoreAllotDto findStoreAllotDtoById(String id) {
-        StoreAllotDto result = storeAllotRepository.findStoreAllotDtoById(id);
+        StoreAllotDto result = storeAllotRepository.findDto(id);
         cacheUtils.initCacheInput(result);
         return result;
 

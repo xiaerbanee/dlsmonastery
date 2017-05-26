@@ -1,15 +1,42 @@
 package net.myspring.general.modules.sys.repository
 
+import net.myspring.general.common.config.MyBeanPropertyRowMapper
 import net.myspring.general.common.repository.BaseRepository
 import net.myspring.general.modules.sys.domain.ProcessFlow
-import org.springframework.data.jpa.repository.Query
+import org.springframework.beans.factory.annotation.Autowired
 
-interface ProcessFlowRepository : BaseRepository<ProcessFlow, String> {
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
+
+
+interface ProcessFlowRepository : BaseRepository<ProcessFlow, String>, ProcessFlowRepositoryCustom {
 
     fun findByProcessTypeIdAndName(processTypeId: String, name: String): ProcessFlow
 
     fun findByProcessTypeId(processTypeId: String): MutableList<ProcessFlow>
 
-    @Query("select t from #{#entityName} t1,ProcessType t2 where t1.processTypeId=t2.id and t2.enabled=1 and t2.name=?1")
+}
+
+
+interface ProcessFlowRepositoryCustom{
     fun findByProcessTypeName(processTypeName: String): MutableList<ProcessFlow>
+}
+
+class ProcessFlowRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProcessFlowRepositoryCustom {
+    override fun findByProcessTypeName(processTypeName: String): MutableList<ProcessFlow> {
+        return namedParameterJdbcTemplate.query("""
+        SELECT
+            t1.*
+        FROM
+            process_flow t1,
+            Process_type t2
+        WHERE
+            t1.process_type_id = t2.id
+        AND t2.enabled = 1
+        AND t2.name =:processTypeName
+          """, Collections.singletonMap("processTypeName", processTypeName), MyBeanPropertyRowMapper(ProcessFlow::class.java))
+    }
+
+
 }
