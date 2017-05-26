@@ -27,12 +27,12 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     override fun findOne(id: String): Office
 
     @Query("""
-     SELECT t1.*
-        FROM sys_office t1,sys_office_rule t2
-        where t1.office_rule_id=t2.id
+        SELECT t1
+        FROM  #{#entityName} t1,OfficeRule t2
+        where t1.officeRuleId=t2.id
         and t2.name=?1
         and t1.enabled =1
-     """, nativeQuery = true)
+     """)
     fun findByOfficeRuleName(officeRuleName:String):MutableList<Office>
 
     @Query("""
@@ -109,7 +109,6 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         FROM sys_office t1
         WHERE t1.enabled=1
      """, nativeQuery = true)
-            //TODO 修改
     fun findAllEnabled():MutableList<Office>
 }
 
@@ -197,7 +196,6 @@ class OfficeRepositoryImpl@Autowired constructor(val entityManager: EntityManage
             and (
             t1.id IN :areaIds or
         """)
-
         for((index,value) in areaIds.withIndex()) {
             sb.append(" t1.parent_ids like :parentId").append(index);
             if(index < areaIds.size-1) {

@@ -37,7 +37,7 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>,BackendM
     fun findByBackendIds( backendIds:MutableList<String>):MutableList<BackendModule>
 
     @Query("""
-         SELECT t
+         SELECT t1
          FROM  #{#entityName} t1,RoleModule t2
           where t1.enabled=1
           and t2.enabled=1
@@ -49,7 +49,7 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>,BackendM
     @Query("""
         SELECT t
         FROM  #{#entityName} t
-        WHERE t1.enabled=1
+        WHERE t.enabled=1
      """)
     fun findAllEnabled():MutableList<BackendModule>
 }

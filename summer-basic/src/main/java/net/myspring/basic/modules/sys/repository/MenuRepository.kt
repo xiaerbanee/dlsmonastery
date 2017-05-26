@@ -53,7 +53,7 @@ interface  MenuRepository :BaseRepository<Menu,String>,MenuRepositoryCustom{
     @Query("""
         SELECT t
         FROM  #{#entityName} t
-        where t1.enabled=1
+        where t.enabled=1
      """)
     fun findAllEnabled():MutableList<Menu>
 
