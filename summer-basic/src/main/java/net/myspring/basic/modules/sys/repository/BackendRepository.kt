@@ -1,11 +1,13 @@
 package net.myspring.basic.modules.sys.repository
 
+import com.google.common.collect.Lists
+import com.google.common.collect.Maps
 import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Backend
-import net.myspring.basic.modules.sys.dto.BackendDto
-import net.myspring.basic.modules.sys.dto.BackendMenuDto
+import net.myspring.basic.modules.sys.dto.*
 import net.myspring.basic.modules.sys.web.query.BackendQuery
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -48,8 +50,6 @@ interface BackendRepository:BaseRepository<Backend,String>,BackendRepositoryCust
 interface BackendRepositoryCustom{
 
     fun findByMenuList(menuList:MutableList<String>):MutableList<BackendMenuDto>
-
-
 
     fun findPage(pageable: Pageable,backendQuery: BackendQuery): Page<BackendDto>?
 
@@ -129,38 +129,80 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
     }
 
     override fun findByMenuList(menuList: MutableList<String>): MutableList<BackendMenuDto> {
-        return namedParameterJdbcTemplate.query("""
-                    SELECT
-                        t1.id,
-                        t1.name,
-                        t1.code,
-                        t2.id as 'moduleId',
-                        t2.name as 'moduleName',
-                        t2.code as 'moduleCode',
-                        t2.icon as 'moduleIcon',
-                        t3.id as 'categoryId',
-                        t3.name as 'categoryName',
-                        t3.code as 'categoryCode',
-                        t4.id as 'menuId',
-                        t4.name as 'menuName',
-                        t4.code as 'menuCode'
-                    FROM
-                        sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4
-                    where
-                    t4.menu_category_id=t3.id
-                    and t3.backend_module_id=t2.id
-                    and t2.backend_id=t1.id
-                    and t1.enabled=1
-                    and t2.enabled=1
-                    and t3.enabled=1
-                    and t4.enabled=1
-                    and t4.id IN (:menuList)
-                """, Collections.singletonMap("menuList",menuList), MyBeanPropertyRowMapper(BackendMenuDto::class.java));
+        var list =  namedParameterJdbcTemplate.queryForList("""
+                SELECT
+                    t1.id,
+                    t1.name,
+                    t1.code,
+                    t2.id as 'moduleId',
+                    t2.name as 'moduleName',
+                    t2.code as 'moduleCode',
+                    t2.icon as 'moduleIcon',
+                    t3.id as 'categoryId',
+                    t3.name as 'categoryName',
+                    t3.code as 'categoryCode',
+                    t4.id as 'menuId',
+                    t4.name as 'menuName',
+                    t4.code as 'menuCode'
+                FROM
+                    sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4
+                where
+                t4.menu_category_id=t3.id
+                and t3.backend_module_id=t2.id
+                and t2.backend_id=t1.id
+                and t1.enabled=1
+                and t2.enabled=1
+                and t3.enabled=1
+                and t4.enabled=1
+                and t4.id IN (:menuList)
+            """, Collections.singletonMap("menuList",menuList));
+        var backendMenuDtoMap = Maps.newLinkedHashMap<String,BackendMenuDto>();
+        for(item in list) {
+            var id = StringUtils.toString(item["id"]);
+            var name = item["name"] as String;
+            var code = item["code"] as String;
+            var moduleId = StringUtils.toString(item["moduleId"]);
+            var moduleName = item["moduleName"] as String;
+            var moduleCode = item["moduleCode"] as String;
+            var moduleIcon = item["moduleIcon"] as String;
+            var categoryId = StringUtils.toString(item["categoryId"]);
+            var categoryName = item["categoryName"] as String;
+            var categoryCode = item["categoryCode"] as String;
+            var menuId = StringUtils.toString(item["menuId"]);
+            var menuName = item["menuName"] as String;
+            var menuCode = item["menuCode"] as String;
+            if(!backendMenuDtoMap.containsKey(id)) {
+                var backendMenuDto = BackendMenuDto();
+                backendMenuDto.id = id;
+                backendMenuDto.name=name;
+                backendMenuDto.code = code;
+                backendMenuDtoMap.put(id,backendMenuDto);
+            }
+            if(!backendMenuDtoMap[id]!!.backendModuleMenuDtoMap!!.containsKey(moduleId)) {
+                var backendModuleMenuDto = BackendModuleMenuDto();
+                backendModuleMenuDto.id = moduleId;
+                backendModuleMenuDto.name = moduleName;
+                backendModuleMenuDto.code = moduleCode;
+                backendModuleMenuDto.icon = moduleIcon;
+                backendMenuDtoMap[id]!!.backendModuleMenuDtoMap!!.put(moduleId,backendModuleMenuDto);
+            }
+            if(!backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap.containsKey(categoryId)) {
+                var menuCategoryMenuDto = MenuCategoryMenuDto();
+                menuCategoryMenuDto.id = categoryId;
+                menuCategoryMenuDto.name = categoryName;
+                menuCategoryMenuDto.code = categoryCode;
+                backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap.put(categoryId,menuCategoryMenuDto);
+            }
+            var frontendMenuDto = FrontendMenuDto();
+            frontendMenuDto.id = menuId;
+            frontendMenuDto.name = menuName;
+            frontendMenuDto.code = menuCode;
+            backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap[categoryId]!!.frontendMenuDtoMap.put(menuId,frontendMenuDto);
+        }
+        return Lists.newArrayList(backendMenuDtoMap.values);
     }
 
     override fun findPage(pageable: Pageable, backendQuery: BackendQuery): Page<BackendDto>? {
         return null
     }
-
-
 }

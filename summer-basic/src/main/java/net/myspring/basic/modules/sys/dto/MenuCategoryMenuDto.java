@@ -1,10 +1,11 @@
 package net.myspring.basic.modules.sys.dto;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.modules.sys.domain.Menu;
+import com.google.common.collect.Maps;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/4/26.
@@ -15,6 +16,8 @@ public class MenuCategoryMenuDto {
     private String code;
     private String name;
     private List<FrontendMenuDto> menuList= Lists.newArrayList();
+    @JsonIgnore
+    private Map<String,FrontendMenuDto> frontendMenuDtoMap = Maps.newTreeMap();
 
     public String getCode() {
         return code;
@@ -41,10 +44,21 @@ public class MenuCategoryMenuDto {
     }
 
     public List<FrontendMenuDto> getMenuList() {
+        if(frontendMenuDtoMap.size()>0) {
+            menuList =  Lists.newArrayList(frontendMenuDtoMap.values());
+        }
         return menuList;
     }
 
     public void setMenuList(List<FrontendMenuDto> menuList) {
         this.menuList = menuList;
+    }
+
+    public Map<String, FrontendMenuDto> getFrontendMenuDtoMap() {
+        return frontendMenuDtoMap;
+    }
+
+    public void setFrontendMenuDtoMap(Map<String, FrontendMenuDto> frontendMenuDtoMap) {
+        this.frontendMenuDtoMap = frontendMenuDtoMap;
     }
 }

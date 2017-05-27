@@ -1,11 +1,11 @@
 package net.myspring.basic.modules.sys.dto;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.modules.sys.domain.Backend;
-import net.myspring.basic.modules.sys.domain.MenuCategory;
+import com.google.common.collect.Maps;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/4/26.
@@ -17,6 +17,8 @@ public class BackendModuleMenuDto {
     private String code;
     private String icon;
     private List<MenuCategoryMenuDto> menuCategoryList= Lists.newArrayList();
+    @JsonIgnore
+    private Map<String,MenuCategoryMenuDto> menuCategoryMenuDtoMap = Maps.newTreeMap();
 
     public String getIcon() {
         return icon;
@@ -51,10 +53,21 @@ public class BackendModuleMenuDto {
     }
 
     public List<MenuCategoryMenuDto> getMenuCategoryList() {
+        if(menuCategoryMenuDtoMap.size()>0) {
+            menuCategoryList =  Lists.newArrayList(menuCategoryMenuDtoMap.values());
+        }
         return menuCategoryList;
     }
 
     public void setMenuCategoryList(List<MenuCategoryMenuDto> menuCategoryList) {
         this.menuCategoryList = menuCategoryList;
+    }
+
+    public Map<String, MenuCategoryMenuDto> getMenuCategoryMenuDtoMap() {
+        return menuCategoryMenuDtoMap;
+    }
+
+    public void setMenuCategoryMenuDtoMap(Map<String, MenuCategoryMenuDto> menuCategoryMenuDtoMap) {
+        this.menuCategoryMenuDtoMap = menuCategoryMenuDtoMap;
     }
 }

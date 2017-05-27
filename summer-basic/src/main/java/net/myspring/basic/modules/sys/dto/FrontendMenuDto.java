@@ -1,12 +1,5 @@
 package net.myspring.basic.modules.sys.dto;
 
-import com.google.common.collect.Maps;
-import net.myspring.basic.modules.sys.domain.Backend;
-import net.myspring.basic.modules.sys.domain.BackendModule;
-
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by wangzm on 2017/4/26.
  */

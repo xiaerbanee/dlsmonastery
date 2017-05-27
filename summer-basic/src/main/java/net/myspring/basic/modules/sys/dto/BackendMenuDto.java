@@ -2,9 +2,7 @@ package net.myspring.basic.modules.sys.dto;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.basic.modules.sys.domain.Backend;
-import net.myspring.basic.modules.sys.domain.BackendModule;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +16,8 @@ public class BackendMenuDto {
     private String name;
     private String code;
     private List<BackendModuleMenuDto> backendModuleList = Lists.newArrayList();
+    @JsonIgnore
+    private Map<String,BackendModuleMenuDto> backendModuleMenuDtoMap = Maps.newTreeMap();
 
     public String getName() {
         return name;
@@ -44,10 +44,21 @@ public class BackendMenuDto {
     }
 
     public List<BackendModuleMenuDto> getBackendModuleList() {
+        if(backendModuleMenuDtoMap.size()>0) {
+            backendModuleList =  Lists.newArrayList(backendModuleMenuDtoMap.values());
+        }
         return backendModuleList;
     }
 
     public void setBackendModuleList(List<BackendModuleMenuDto> backendModuleList) {
         this.backendModuleList = backendModuleList;
+    }
+
+    public Map<String, BackendModuleMenuDto> getBackendModuleMenuDtoMap() {
+        return backendModuleMenuDtoMap;
+    }
+
+    public void setBackendModuleMenuDtoMap(Map<String, BackendModuleMenuDto> backendModuleMenuDtoMap) {
+        this.backendModuleMenuDtoMap = backendModuleMenuDtoMap;
     }
 }
