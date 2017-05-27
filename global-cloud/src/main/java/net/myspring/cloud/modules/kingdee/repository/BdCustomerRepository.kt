@@ -1,38 +1,21 @@
 package net.myspring.cloud.modules.kingdee.repository
 
+import net.myspring.cloud.common.config.MyBeanPropertyRowMapper
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer
 import net.myspring.common.dto.NameValueDto
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 /**
  * Created by haos on 2017/5/24.
  */
 
-interface BdCustomerRepository {
-    @Query("""
-   SELECT
-        t1.FCUSTID,
-        t1.FNUMBER,
-        t1.FSALDEPTID,
-        t2.FNAME,
-        t1.FPRIMARYGROUP,
-        t4.FNAME AS fprimaryGroupName,
-        t1.FMODIFYDATE
-      FROM
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
-      WHERE
-        t1.FCUSTID = t2.FCUSTID
-        AND t1.FPRIMARYGROUP = t3.FID
-        AND t3.FID = t4.FID
-     """, nativeQuery = true)
-    fun findAll(): MutableList<BdCustomer>
-
-    @Query("""
-     SELECT
+class BdCustomerRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+    fun findAll(): MutableList<BdCustomer> {
+        return jdbcTemplate.query("""
+            SELECT
             t1.FCUSTID,
             t1.FNUMBER,
             t1.FSALDEPTID,
@@ -40,103 +23,131 @@ interface BdCustomerRepository {
             t1.FPRIMARYGROUP,
             t4.FNAME AS fprimaryGroupName,
             t1.FMODIFYDATE
-        FROM
+            FROM
             T_BD_CUSTOMER t1,
             T_BD_CUSTOMER_L t2,
             T_BD_CUSTOMERGROUP t3,
             T_BD_CUSTOMERGROUP_L t4
-        WHERE
+            WHERE
             t1.FCUSTID = t2.FCUSTID
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
-            and t2.FNAME in ?1
-    """, nativeQuery = true)
-    fun findByNameList(nameList: MutableList<String>): MutableList<BdCustomer>
+        """,MyBeanPropertyRowMapper(BdCustomer::class.java))
 
-    @Query("""
-  SELECT
-        t1.FCUSTID,
-        t1.FNUMBER,
-        t1.FSALDEPTID,
-        t2.FNAME,
-        t1.FPRIMARYGROUP,
-        t4.FNAME AS fprimaryGroupName,
-        t1.FMODIFYDATE
-    FROM
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
-    WHERE
-        t1.FCUSTID = t2.FCUSTID
-        AND t1.FPRIMARYGROUP = t3.FID
-        AND t3.FID = t4.FID
-        and t1.FCUSTID in ?1
-    """, nativeQuery = true)
-    fun findByIdList(idList: MutableList<String>): MutableList<BdCustomer>
+    }
 
-    @Query("""
-    SELECT
-        t1.FCUSTID,
-        t1.FNUMBER,
-        t1.FSALDEPTID,
-        t2.FNAME,
-        t1.FPRIMARYGROUP,
-        t4.FNAME AS fprimaryGroupName,
-        t1.FMODIFYDATE
-    FROM
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
-    WHERE
-        t1.FCUSTID = t2.FCUSTID
-        AND t1.FPRIMARYGROUP = t3.FID
-        AND t3.FID = t4.FID
-        and t1.FCUSTID = :id
-     """, nativeQuery = true)
-    fun findById(@Param("id") id: String): BdCustomer
+    fun findByNameList(nameList: MutableList<String>): MutableList<BdCustomer> {
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+            t1.FCUSTID,
+            t1.FNUMBER,
+            t1.FSALDEPTID,
+            t2.FNAME,
+            t1.FPRIMARYGROUP,
+            t4.FNAME AS fprimaryGroupName,
+            t1.FMODIFYDATE
+            FROM
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2,
+            T_BD_CUSTOMERGROUP t3,
+            T_BD_CUSTOMERGROUP_L t4
+            WHERE
+            t1.FCUSTID = t2.FCUSTID
+            AND t1.FPRIMARYGROUP = t3.FID
+            AND t3.FID = t4.FID
+            and t2.FNAME in (:nameLists)
+        """, Collections.singletonMap("nameLists",nameList), MyBeanPropertyRowMapper(BdCustomer::class.java))
 
-    @Query("""
-     SELECT
-        t1.FCUSTID,
-        t1.FNUMBER,
-        t1.FSALDEPTID,
-        t2.FNAME,
-        t1.FPRIMARYGROUP,
-        t4.FNAME AS fprimaryGroupName,
-        t1.FMODIFYDATE
-     FROM
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
-     where
-        t1.FCUSTID = t2.FCUSTID
-        AND t1.FPRIMARYGROUP = t3.FID
-        AND t3.FID = t4.FID
-        AND t2.FNAME like %?1%
-     """, nativeQuery = true)
-    fun findByNameLike(name: String): MutableList<BdCustomer>
+    }
 
-    @Query("""
-    SELECT
-        t1.FPRIMARYGROUP as value,
-        t4.FNAME AS name
-    FROM
-        T_BD_CUSTOMER t1,
-        T_BD_CUSTOMER_L t2,
-        T_BD_CUSTOMERGROUP t3,
-        T_BD_CUSTOMERGROUP_L t4
-    WHERE
-        t1.FCUSTID = t2.FCUSTID
-        AND t1.FPRIMARYGROUP = t3.FID
-        AND t3.FID = t4.FID
-        group by
-        t1.FPRIMARYGROUP,
-        t4.FNAME
-     """, nativeQuery = true)
-    fun findPrimaryGroupAndPrimaryGroupName():MutableList<NameValueDto>
+    fun findByIdList(idList: MutableList<String>): MutableList<BdCustomer> {
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+            t1.FCUSTID,
+            t1.FNUMBER,
+            t1.FSALDEPTID,
+            t2.FNAME,
+            t1.FPRIMARYGROUP,
+            t4.FNAME AS fprimaryGroupName,
+            t1.FMODIFYDATE
+            FROM
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2,
+            T_BD_CUSTOMERGROUP t3,
+            T_BD_CUSTOMERGROUP_L t4
+            WHERE
+            t1.FCUSTID = t2.FCUSTID
+            AND t1.FPRIMARYGROUP = t3.FID
+            AND t3.FID = t4.FID
+            and t1.FCUSTID in (:idList)
+        """, Collections.singletonMap("idList",idList),  MyBeanPropertyRowMapper(BdCustomer::class.java))
+    }
+
+    fun findById(id: String): BdCustomer {
+        return jdbcTemplate.queryForObject("""
+            SELECT
+            t1.FCUSTID,
+            t1.FNUMBER,
+            t1.FSALDEPTID,
+            t2.FNAME,
+            t1.FPRIMARYGROUP,
+            t4.FNAME AS fprimaryGroupName,
+            t1.FMODIFYDATE
+            FROM
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2,
+            T_BD_CUSTOMERGROUP t3,
+            T_BD_CUSTOMERGROUP_L t4
+            WHERE
+            t1.FCUSTID = t2.FCUSTID
+            AND t1.FPRIMARYGROUP = t3.FID
+            AND t3.FID = t4.FID
+            and t1.FCUSTID = ?
+        """, MyBeanPropertyRowMapper(BdCustomer::class.java), id)
+    }
+
+    fun findByNameLike(name: String): MutableList<BdCustomer> {
+        return jdbcTemplate.query("""
+            SELECT
+            t1.FCUSTID,
+            t1.FNUMBER,
+            t1.FSALDEPTID,
+            t2.FNAME,
+            t1.FPRIMARYGROUP,
+            t4.FNAME AS fprimaryGroupName,
+            t1.FMODIFYDATE
+             FROM
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2,
+            T_BD_CUSTOMERGROUP t3,
+            T_BD_CUSTOMERGROUP_L t4
+            where
+            t1.FCUSTID = t2.FCUSTID
+            AND t1.FPRIMARYGROUP = t3.FID
+            AND t3.FID = t4.FID
+            AND t2.FNAME like %?%
+        """, MyBeanPropertyRowMapper(BdCustomer::class.java), name)
+    }
+
+    fun findPrimaryGroupAndPrimaryGroupName(): MutableList<NameValueDto> {
+        return jdbcTemplate.query("""
+            SELECT
+            t1.FPRIMARYGROUP as value,
+            t4.FNAME AS name
+            FROM
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2,
+            T_BD_CUSTOMERGROUP t3,
+            T_BD_CUSTOMERGROUP_L t4
+            WHERE
+            t1.FCUSTID = t2.FCUSTID
+            AND t1.FPRIMARYGROUP = t3.FID
+            AND t3.FID = t4.FID
+            group by
+            t1.FPRIMARYGROUP,
+            t4.FNAME
+        """, MyBeanPropertyRowMapper(NameValueDto::class.java))
+    }
 
 }
 

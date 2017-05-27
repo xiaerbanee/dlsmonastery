@@ -16,7 +16,7 @@ public class TownService {
     private TownRepository townRepository;
 
     public List<TownDto> findByNameLike(String name){
-        List<Town> townList=townRepository.findByNameLike(name);
+        List<Town> townList=townRepository.findTop20ByTownNameLike(name);
         List<TownDto> townDtoList= BeanUtil.map(townList,TownDto.class);
         return townDtoList;
     }

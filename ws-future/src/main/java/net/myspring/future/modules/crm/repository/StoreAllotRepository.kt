@@ -46,12 +46,12 @@ interface StoreAllotRepositoryCustom{
 
     fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto>
 
-    fun findStoreAllotDtoById(id: String): StoreAllotDto
+    fun findDto(id: String): StoreAllotDto
 
 }
 
 class StoreAllotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): StoreAllotRepositoryCustom{
-    override fun findStoreAllotDtoById(id: String): StoreAllotDto {
+    override fun findDto(id: String): StoreAllotDto {
         return namedParameterJdbcTemplate.queryForObject("""
             SELECT
                 t2.express_codes expressOrderExpressCodes,
