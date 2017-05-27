@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param
 /**
  * Created by haos on 2017/5/24.
  */
-interface  KingdeeBookRepository:BaseRepository<KingdeeBook,String>{
+interface  KingdeeBookRepository : BaseRepository<KingdeeBook,String>{
     @Query("""
         select t1
         FROM  #{#entityName} t1,AccountKingdeeBook t2

@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 /**
  * Created by haos on 2017/5/24.
  */
-interface ProductRepository:BaseRepository<Product,String>{
+interface ProductRepository : BaseRepository<Product,String>{
     @Query("""
         SELECT
         t1

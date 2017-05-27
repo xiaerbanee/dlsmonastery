@@ -22,7 +22,7 @@ public class MyBeanPropertyRowMapper<T>  extends BeanPropertyRowMapper<T> {
         if (LocalDateTime.class.equals(requiredType) || LocalDate.class.equals(requiredType) || LocalTime.class.equals(requiredType)) {
             if(rs.getObject(index) != null) {
                 if (LocalDateTime.class.equals(requiredType)) {
-                    value = rs.getTimestamp(index).toLocalDateTime();;
+                    value = rs.getTimestamp(index).toLocalDateTime();
                 } else if (LocalDate.class.equals(requiredType)) {
                     value = rs.getDate(index).toLocalDate();
                 } else if (LocalTime.class.equals(requiredType)) {
