@@ -18,7 +18,7 @@ interface ShopGoodsDepositRepository : BaseRepository<ShopGoodsDeposit,String>,S
 
     @Query("""
     SELECT
-        t1.*
+        t1
     FROM
         #{#entityName} t1
     WHERE
@@ -28,7 +28,7 @@ interface ShopGoodsDepositRepository : BaseRepository<ShopGoodsDeposit,String>,S
     ORDER BY
         created_date DESC
     """)
-    fun findByShopId(@Param("shopId") shopId: String, @Param("status") status: String): MutableList<ShopGoodsDeposit>
+    fun findByShopId(shopId: String,status: String): MutableList<ShopGoodsDeposit>
 }
 
 interface ShopGoodsDepositRepositoryCustom{
