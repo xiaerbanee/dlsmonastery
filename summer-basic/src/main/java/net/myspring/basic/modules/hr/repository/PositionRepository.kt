@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.hr.repository
 
-import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.Position
 import net.myspring.basic.modules.hr.dto.PositionDto
@@ -13,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
@@ -56,7 +56,7 @@ class PositionRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
                 and (t1.name like %:name%)
             """)
         }
-        return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("name", name), MyBeanPropertyRowMapper(Position::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("name", name), BeanPropertyRowMapper(Position::class.java))
     }
 
 

@@ -1,21 +1,19 @@
 package net.myspring.basic.modules.hr.repository
 
-import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.Account
 import net.myspring.basic.modules.hr.dto.AccountDto
 import net.myspring.basic.modules.hr.web.query.AccountQuery
+import net.myspring.util.text.StringUtils
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
-import net.myspring.util.text.StringUtils
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import javax.persistence.EntityManager
 
 
 /**
@@ -111,7 +109,7 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         var paramMap = HashMap<String, Any>()
         paramMap.put("type", type)
         paramMap.put("name", name)
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, MyBeanPropertyRowMapper(Account::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(Account::class.java))
 
 
     }

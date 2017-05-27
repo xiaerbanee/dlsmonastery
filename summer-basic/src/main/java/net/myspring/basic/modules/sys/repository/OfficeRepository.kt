@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.sys.repository
 
 import com.google.common.collect.Maps
-import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Office
 import net.myspring.basic.modules.sys.dto.OfficeDto
@@ -15,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 
@@ -150,7 +150,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
         for((index,value) in parentIdList.withIndex()) {
             paramMap.put("parentId" + index ,"%$value%");
         }
-        return namedParameterJdbcTemplate.query(sb.toString(),paramMap, MyBeanPropertyRowMapper(Office::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(),paramMap, BeanPropertyRowMapper(Office::class.java))
     }
 
     override fun findByFilter(officeQuery: OfficeQuery): MutableList<Office> {
@@ -172,7 +172,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
             order by office.name
             limit 0,20
         """)
-        return namedParameterJdbcTemplate.query(sb.toString(),QueryUtils.getParamMap(officeQuery), MyBeanPropertyRowMapper(Office::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(),QueryUtils.getParamMap(officeQuery), BeanPropertyRowMapper(Office::class.java))
     }
 
     override fun findByFilterAll(map: Map<String, Any>): MutableList<Office> {
@@ -184,7 +184,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
             where
             office.enabled=1
         """)
-        return namedParameterJdbcTemplate.query(sb.toString(),MyBeanPropertyRowMapper(Office::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertyRowMapper(Office::class.java))
     }
 
     override fun findByAreaIds(areaIds: MutableList<String>): MutableList<Office> {
@@ -207,7 +207,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
         for((index,value) in areaIds.withIndex()) {
             paramMap.put("parentId" + index ,"%$value%");
         }
-        return namedParameterJdbcTemplate.query(sb.toString(),paramMap, MyBeanPropertyRowMapper(Office::class.java));
+        return namedParameterJdbcTemplate.query(sb.toString(),paramMap, BeanPropertyRowMapper(Office::class.java));
     }
 
 }

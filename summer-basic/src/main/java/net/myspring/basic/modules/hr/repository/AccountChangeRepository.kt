@@ -1,19 +1,17 @@
 package net.myspring.basic.modules.hr.repository
 
-import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.AccountChange
 import net.myspring.basic.modules.hr.dto.AccountChangeDto
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery
-import net.myspring.basic.modules.sys.dto.BackendMenuDto
 import net.myspring.util.repository.QueryUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import javax.persistence.EntityManager
 
 interface AccountChangeRepository : BaseRepository<AccountChange, String>,AccountChangeRepositoryCustom {
 
@@ -59,7 +57,7 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         if(StringUtils.isNotBlank(accountChangeQuery.accountId)) {
             sb.append(" and t2.id=:accountId");
         }
-        return namedParameterJdbcTemplate.queryForObject(sb.toString(), queryMap, MyBeanPropertyRowMapper(AccountChangeForm::class.java))
+        return namedParameterJdbcTemplate.queryForObject(sb.toString(), queryMap, BeanPropertyRowMapper(AccountChangeForm::class.java))
 
     }
 }
