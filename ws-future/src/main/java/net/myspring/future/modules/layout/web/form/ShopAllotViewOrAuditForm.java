@@ -13,23 +13,14 @@ import java.util.List;
  */
 public class ShopAllotViewOrAuditForm extends DataForm<ShopAllot> {
 
-    private ShopAllotDto shopAllotDto;
 
-    private String syn="1";
-    private String pass="0";
+    private String syn;
+    private String pass;
     private String auditRemarks;
-    private BigDecimal toShopShouldGet;
-    private BigDecimal fromShopShouldGet;
+
 
     private List<ShopAllotDetailForm> shopAllotDetailList = Lists.newArrayList();
 
-    public ShopAllotDto getShopAllotDto() {
-        return shopAllotDto;
-    }
-
-    public void setShopAllotDto(ShopAllotDto shopAllotDto) {
-        this.shopAllotDto = shopAllotDto;
-    }
 
     public String getSyn() {
         return syn;
@@ -53,22 +44,6 @@ public class ShopAllotViewOrAuditForm extends DataForm<ShopAllot> {
 
     public void setAuditRemarks(String auditRemarks) {
         this.auditRemarks = auditRemarks;
-    }
-
-    public BigDecimal getToShopShouldGet() {
-        return toShopShouldGet;
-    }
-
-    public void setToShopShouldGet(BigDecimal toShopShouldGet) {
-        this.toShopShouldGet = toShopShouldGet;
-    }
-
-    public BigDecimal getFromShopShouldGet() {
-        return fromShopShouldGet;
-    }
-
-    public void setFromShopShouldGet(BigDecimal fromShopShouldGet) {
-        this.fromShopShouldGet = fromShopShouldGet;
     }
 
     public List<ShopAllotDetailForm> getShopAllotDetailList() {

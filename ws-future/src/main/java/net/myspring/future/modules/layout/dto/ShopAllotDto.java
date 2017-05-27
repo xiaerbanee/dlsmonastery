@@ -30,6 +30,26 @@ public class ShopAllotDto extends DataDto<ShopAllot> {
     private BigDecimal saleTotalPrice;
     private BigDecimal returnTotalPrice;
 
+    private BigDecimal fromShopShouldGet;
+    private BigDecimal toShopShouldGet;
+
+
+    public BigDecimal getFromShopShouldGet() {
+        return fromShopShouldGet;
+    }
+
+    public void setFromShopShouldGet(BigDecimal fromShopShouldGet) {
+        this.fromShopShouldGet = fromShopShouldGet;
+    }
+
+    public BigDecimal getToShopShouldGet() {
+        return toShopShouldGet;
+    }
+
+    public void setToShopShouldGet(BigDecimal toShopShouldGet) {
+        this.toShopShouldGet = toShopShouldGet;
+    }
+
     public BigDecimal getReturnTotalPrice() {
         return returnTotalPrice;
     }

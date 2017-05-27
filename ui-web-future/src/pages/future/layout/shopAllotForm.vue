@@ -2,21 +2,21 @@
   <div>
     <head-tab active="shopAllotForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="shopAllot" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <template>
           <el-alert :title="message" type="error" show-icon v-if="message !==''"></el-alert>
         </template>
         <el-form-item :label="$t('shopAllotForm.fromShop')" prop="fromShopId">
-            <depot-select :disabled="!isCreate" category="directShop" v-model="inputForm.fromShopId"  @input="refreshProductListIfNeeded" ></depot-select>
+            <depot-select :disabled="!isCreate" category="directShop" v-model="shopAllot.fromShopId"  @input="refreshProductListIfNeeded" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('shopAllotForm.toShop')" prop="toShopId">
-          <depot-select :disabled="!isCreate"  category="directShop" v-model="inputForm.toShopId"   @input="refreshProductListIfNeeded"></depot-select>
+          <depot-select :disabled="!isCreate"  category="directShop" v-model="shopAllot.toShopId"   @input="refreshProductListIfNeeded"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('shopAllotForm.remarks')" prop="remarks">
-          <el-input type="textarea" v-model="inputForm.remarks"></el-input>
+          <el-input type="textarea" v-model="shopAllot.remarks"></el-input>
         </el-form-item>
 
-        <div v-if="inputForm.fromShopId && inputForm.toShopId ">
+        <div v-if="shopAllot.fromShopId && shopAllot.toShopId ">
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('shopAllotForm.save')}}</el-button>
         </el-form-item>
@@ -48,15 +48,16 @@
             isCreate:(this.$route.query.id==null || this.$route.query.id==''),
             submitDisabled:false,
             productName:'',
+            shopAllot:{},
+            shopAllotDetailList:[],
             filterShopAllotDetailList:[],
             message:'',
-            inputForm:{},
             submitData:{
               id:'',
               fromShopId:'',
               toShopId:'',
               remarks:'',
-              shopAllotDetailFormList:[]
+              shopAllotDetailList:[]
             },
             rules: {
               fromShopId: [{ required: true, message: this.$t('shopAllotForm.prerequisiteMessage')}],
@@ -88,52 +89,63 @@
           }
         })
       }, initSubmitDataBeforeSubmit(){
-        util.copyValue(this.inputForm,this.submitData);
+          this.submitData.id = this.$route.query.id;
+          this.submitData.fromShopId = this.shopAllot.fromShopId;
+          this.submitData.toShopId = this.shopAllot.toShopId;
+          this.submitData.remarks = this.shopAllot.remarks;
 
-        let tempList=new Array();
-        for(let each of this.inputForm.shopAllotDetailFormList){
+          let tempList=new Array();
+        for(let shopAllotDetail of this.shopAllotDetailList){
 
-          if(util.isNotBlank(each.qty)){
-            tempList.push(each);
+          if(util.isNotBlank(shopAllotDetail.id) || util.isNotBlank(shopAllotDetail.qty)){
+            tempList.push(shopAllotDetail);
           }
         }
-        this.submitData.shopAllotDetailFormList = tempList;
+        this.submitData.shopAllotDetailList = tempList;
       }
       ,refreshProductListIfNeeded(){
           //只有新增的时候才会刷新产品列表，修改的时候不能修改fromShop和toShop，所以也就不需要再次加载产品列表
-        if(this.inputForm.fromShopId && this.inputForm.toShopId && !this.inputForm.id){
+        if(this.shopAllot.fromShopId && this.shopAllot.toShopId && !this.$route.query.id){
           this.message='';
-          axios.get('/api/ws/future/crm/shopAllot/getShopAllotDetailFormListForNew',{params:{fromShopId:this.inputForm.fromShopId,toShopId:this.inputForm.toShopId}}).then((response)=>{
+          axios.get('/api/ws/future/crm/shopAllot/findDetailListForNew',{params:{fromShopId:this.shopAllot.fromShopId,toShopId:this.shopAllot.toShopId}}).then((response)=>{
             if(!response.data.success){
               this.message=response.data.message;
-
             }else{
-              this.inputForm.shopAllotDetailFormList=response.data.shopAllotDetailFormList;
-              this.searchDetail();
+              this.setShopAllotDetailList(response.data.shopAllotDetailList);
             }
           })
         }
         return true;
+      },setShopAllotDetailList(list){
+          this.shopAllotDetailList = list;
+          this.searchDetail();
       },searchDetail(){
         let val=this.productName;
         let tempList=new Array();
-        for(let each of this.inputForm.shopAllotDetailFormList){
-          if(util.isNotBlank(each.qty)){
-            tempList.push(each);
+        for(let shopAllotDetail of this.shopAllotDetailList){
+          if(util.isNotBlank(shopAllotDetail.qty)){
+            tempList.push(shopAllotDetail);
           }
         }
-        for(let each of this.inputForm.shopAllotDetailFormList){
-          if(util.contains(each.productName, val) && util.isBlank(each.qty)){
-            tempList.push(each);
+        for(let shopAllotDetail of this.shopAllotDetailList){
+          if(util.contains(shopAllotDetail.productName, val) && util.isBlank(shopAllotDetail.qty)){
+            tempList.push(shopAllotDetail);
           }
         }
         this.filterShopAllotDetailList = tempList;
       }
     },created(){
-      axios.get('/api/ws/future/crm/shopAllot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm=response.data;
-        this.searchDetail();
-      })
+
+      if(this.$route.query.id){
+        axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.setShopAllotDetailList(response.data);
+        });
+      }
+      axios.get('/api/ws/future/crm/shopAllot/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.shopAllot = response.data;
+      });
+
+
     }
   }
 </script>
