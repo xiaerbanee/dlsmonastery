@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.sys.domain;
 
 
-import net.myspring.common.domain.IdEntity;
+import net.myspring.cloud.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

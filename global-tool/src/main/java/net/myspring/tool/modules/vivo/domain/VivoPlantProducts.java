@@ -1,9 +1,9 @@
 package net.myspring.tool.modules.vivo.domain;
 
 
-import net.myspring.common.domain.IdEntity;
+import net.myspring.tool.common.domain.IdEntity;
 import net.myspring.tool.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
+import net.myspring.tool.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

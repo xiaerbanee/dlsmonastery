@@ -8,16 +8,20 @@ import net.myspring.future.modules.basic.dto.DepotDto
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery
 import net.myspring.future.modules.basic.web.query.DepotQuery
 import net.myspring.future.modules.crm.dto.BankInDto
+import net.myspring.future.modules.layout.dto.ShopDepositDto
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 import javax.persistence.EntityManager
@@ -75,7 +79,7 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
         AND t1.is_hidden = 0
         AND t1.id = t2.depot_id
         AND t2.account_id = :accountId
-          """, Collections.singletonMap("accountId", accountId), MyBeanPropertyRowMapper(Depot::class.java))
+          """, Collections.singletonMap("accountId", accountId), BeanPropertyRowMapper(Depot::class.java))
     }
 
     override fun findShopList(depotShopQuery: DepotQuery): MutableList<DepotDto> {
@@ -115,9 +119,10 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
         if (StringUtils.isNotEmpty(depotShopQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
-        var query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
 
-        return query.resultList as MutableList<DepotDto>
+
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotShopQuery), BeanPropertyRowMapper(DepotDto::class.java))
+
     }
 
     override fun findStoreList(depotStoreQuery: DepotQuery): MutableList<DepotDto>{
@@ -143,9 +148,10 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
         if (StringUtils.isNotEmpty(depotStoreQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
-        var query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
 
-        return query.resultList as MutableList<DepotDto>
+
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotStoreQuery), BeanPropertyRowMapper(DepotDto::class.java))
+
     }
 
     override fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto> {

@@ -1,6 +1,5 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.BankIn
 import net.myspring.future.modules.crm.dto.BankInDto
@@ -25,6 +24,7 @@ interface BankInRepository : BaseRepository<BankIn, String>, BankInRepositoryCus
 }
 
 interface BankInRepositoryCustom{
+
     fun findPage(pageable: Pageable, bankInQuery : BankInQuery): Page<BankInDto>
 
     fun findDto(id: String): BankInDto
@@ -49,7 +49,7 @@ class BankInRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate
             AND t1.bank_id = bank.id
             AND bank.enabled = 1
             AND t1.id = :id
-          """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(BankInDto::class.java))
+          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(BankInDto::class.java))
     }
 
     override fun findPage(pageable: Pageable, bankInQuery: BankInQuery): Page<BankInDto> {
@@ -93,13 +93,13 @@ class BankInRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate
             sb.append("""  and t1.input_date < :inputDateEnd  """)
         }
         if(bankInQuery.createdDateStart!=null){
-            sb.append("""   and t1.created_date >= :createdDateStart """)
+            sb.append("""  and t1.created_date >= :createdDateStart """)
         }
         if(bankInQuery.createdDateEnd!=null){
             sb.append("""  and t1.created_date < :createdDateEnd  """)
         }
         if(StringUtils.isNotBlank(bankInQuery.outCode)){
-            sb.append("""   and t1.out_code like concat('%',:outCode},'%'  """)
+            sb.append("""  and t1.out_code like concat('%',:outCode,'%')  """)
         }
         if(StringUtils.isNotBlank(bankInQuery.bankName)){
             sb.append("""  and bank.name like concat('%',:bankName,'%')  """)
@@ -114,13 +114,12 @@ class BankInRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate
             sb.append("""  and t1.serial_number like concat('%',:serialNumber,'%')  """)
         }
 
-
-        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)
-        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-
-        return PageImpl<BankInDto>(namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(bankInQuery), BeanPropertyRowMapper(BankInDto::class.java)), pageable,  namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(bankInQuery), Long::class.java))
-
-
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        var paramMap = BeanPropertySqlParameterSource(bankInQuery)
+        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(BankInDto::class.java))
+        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        return PageImpl(list,pageable,count)
 
     }
 
