@@ -6,6 +6,13 @@ import org.springframework.data.domain.Sort;
 import java.util.Iterator;
 
 public class MySQLDialect extends Dialect {
+	private static MySQLDialect mySQLDialect = new MySQLDialect();
+	public MySQLDialect() {}
+
+	public static MySQLDialect getInstance() {
+		return mySQLDialect;
+	}
+
 	@Override
 	public  String getPageableSql(String sql, Pageable pageable) {
 		StringBuilder sb = new StringBuilder(sql);

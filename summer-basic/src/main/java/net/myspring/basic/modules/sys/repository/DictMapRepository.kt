@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -38,7 +39,7 @@ interface  DictMapRepository :BaseRepository<DictMap,String>, DictMapRepositoryC
         WHERE
         t.category=?1
         and t.enabled=1
-     """, nativeQuery = true)
+     """)
     fun findByCategory(category:String):MutableList<DictMap>
 
     @Query("""
@@ -60,9 +61,9 @@ interface DictMapRepositoryCustom{
 
 }
 
-class DictMapRepositoryImpl @Autowired constructor(val entityManager: EntityManager): DictMapRepositoryCustom{
+class DictMapRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): DictMapRepositoryCustom{
     override fun findPage(pageable: Pageable, dictMapQuery: DictMapQuery): Page<DictMapDto>? {
-        return null
+        return null;
     }
 
 

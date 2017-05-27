@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.sys.repository
 
-import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.CompanyConfig
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto
@@ -14,6 +13,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 /**
@@ -50,7 +50,7 @@ class CompanyConfigRepositoryImpl @Autowired constructor(val namedParameterJdbcT
                  SELECT t1.*
                 FROM sys_company_config t1
                 where t1.enabled=1
-                """, MyBeanPropertyRowMapper(CompanyConfigCacheDto::class.java));
+                """, BeanPropertyRowMapper(CompanyConfigCacheDto::class.java));
     }
 
     override fun findPage(pageable: Pageable, companyConfigQuery: CompanyConfigQuery): Page<CompanyConfigDto>? {

@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.hr.repository
 
-import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.DutySign
 import net.myspring.basic.modules.hr.dto.DutyDto
@@ -11,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import java.time.LocalDateTime
-import javax.persistence.EntityManager
 
 /**
  * Created by lihx on 2017/5/24.
@@ -56,7 +55,7 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             WHERE
             t1.enabled=1 AND t1.employee_id=t3.id and t3.account_id=t2.id
             AND t2.leader_id=:leaderId AND t1.status=:status AND t1.created_date>=:dateStart
-        """, paramMap, MyBeanPropertyRowMapper(DutyDto::class.java))
+        """, paramMap, BeanPropertyRowMapper(DutyDto::class.java))
     }
 
     override fun findByFilter(dutySignQuery: DutySignQuery): MutableList<DutySign> {
@@ -88,7 +87,7 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         if (CollectionUtil.isNotEmpty(accountIds)) {
             sb.append(" and ds.employee_id in (:accountIds)")
         }
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, MyBeanPropertyRowMapper(DutySign::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap,BeanPropertyRowMapper(DutySign::class.java))
     }
 
 }

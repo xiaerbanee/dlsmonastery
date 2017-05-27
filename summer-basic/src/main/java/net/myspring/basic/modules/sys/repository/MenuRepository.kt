@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.sys.repository
 
-import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Menu
 import net.myspring.basic.modules.sys.dto.MenuDto
@@ -12,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 
@@ -82,7 +82,7 @@ class MenuRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: 
                 """);
             }
         sb.append("  and t1.id in (:menuIds)");
-        return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("menuIds",menuIds), MyBeanPropertyRowMapper(Menu::class.java));
+        return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("menuIds",menuIds), BeanPropertyRowMapper(Menu::class.java));
     }
 
     override fun findPage(pageable: Pageable, menuQuery: MenuQuery): Page<MenuDto>? {

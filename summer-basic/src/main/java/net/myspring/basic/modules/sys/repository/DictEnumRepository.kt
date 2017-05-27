@@ -4,14 +4,20 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.DictEnum
 import net.myspring.basic.modules.sys.dto.DictEnumDto
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery
+import net.myspring.util.repository.MySQLDialect
+import net.myspring.util.repository.QueryUtils
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -60,9 +66,24 @@ interface DictEnumRepositoryCustom{
 
 }
 
-class DictEnumRepositoryImpl @Autowired constructor(val entityManager: EntityManager): DictEnumRepositoryCustom{
+class DictEnumRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): DictEnumRepositoryCustom{
     override fun findPage(pageable: Pageable, dictEnumQuery: DictEnumQuery): Page<DictEnumDto>? {
-        return null
+       var sb = StringBuilder("select * from sys_dict_enum where enabled=1 ");
+        if(StringUtils.isNotBlank(dictEnumQuery.category)) {
+            sb.append(" and category like :%category%");
+        }
+        if(dictEnumQuery.createdDateStart != null) {
+            sb.append(" and created_date > :createdDateStart ");
+        }
+        if(dictEnumQuery.createdDateEnd != null) {
+            sb.append(" and created_date < :createdDateEnd ");
+        }
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
+        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
+        var paramMap = QueryUtils.getParamMap(dictEnumQuery,pageable);
+        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap,BeanPropertyRowMapper(DictEnumDto::class.java));
+        var count = namedParameterJdbcTemplate.queryForObject(countSql,paramMap,Long::class.java);
+        return PageImpl(list,pageable,count);
     }
 
 

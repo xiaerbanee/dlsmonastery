@@ -2,7 +2,6 @@ package net.myspring.basic.modules.sys.repository
 
 import com.google.common.collect.Lists
 import com.google.common.collect.Maps
-import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Backend
 import net.myspring.basic.modules.sys.dto.*
@@ -15,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
@@ -89,7 +89,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                     and t4.enabled=1
                     and t5.enabled=1
                     and t5.role_id=:roleId
-                """, Collections.singletonMap("roleId",roleId), MyBeanPropertyRowMapper(BackendMenuDto::class.java));
+                """, Collections.singletonMap("roleId",roleId), BeanPropertyRowMapper(BackendMenuDto::class.java));
     }
 
     override fun findRolePermissionByRoleId(roleId: String): MutableList<BackendMenuDto> {
@@ -125,7 +125,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                         and t5.enabled=1
                         and t6.enabled=1
                         and t6.role_id=:roleId
-                """, Collections.singletonMap("roleId",roleId), MyBeanPropertyRowMapper(BackendMenuDto::class.java));
+                """, Collections.singletonMap("roleId",roleId), BeanPropertyRowMapper(BackendMenuDto::class.java));
     }
 
     override fun findByMenuList(menuList: MutableList<String>): MutableList<BackendMenuDto> {

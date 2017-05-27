@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.hr.repository
 
-import net.myspring.basic.common.config.MyBeanPropertyRowMapper
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.DutyFree
 import net.myspring.basic.modules.hr.dto.DutyDto
@@ -13,6 +12,7 @@ import java.time.LocalDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
@@ -92,7 +92,7 @@ class DutyFreeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             AND t2.leader_id= :leaderId
             AND t1.status= :status
             AND t1.created_date>= :dateStart
-        """, paramMap, MyBeanPropertyRowMapper(DutyDto::class.java))
+        """, paramMap, BeanPropertyRowMapper(DutyDto::class.java))
     }
 
     override fun findPage(pageable: Pageable, dutyFreeQuery: DutyFreeQuery): Page<DutyFreeDto> {
@@ -119,7 +119,7 @@ class DutyFreeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         paramMap.put("dateStart", dateStart)
         paramMap.put("dateEnd", dateEnd)
         paramMap.put("accountIds", accountIds)
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, MyBeanPropertyRowMapper(DutyFree::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(DutyFree::class.java))
     }
 
 }
