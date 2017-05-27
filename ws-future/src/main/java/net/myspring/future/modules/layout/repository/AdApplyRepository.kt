@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.repository
 
+import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdApply
 import net.myspring.future.modules.layout.dto.AdApplyDto
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.query.Param
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import javax.persistence.EntityManager
 
@@ -20,41 +23,54 @@ interface AdApplyRepository : BaseRepository<AdApply,String>,AdApplyRepositoryCu
 
     @Query("""
         SELECT
-            t1.*
+            t.id
         FROM
-            crm_ad_apply t1,
-            crm_product product
+            #{#entityName} t
         WHERE
-            t1.enabled = 1
-        AND t1.product_id = product.id
-        AND t.confirm_qty > t.billed_qty
-        AND t1.created_date > :dateStart
-        AND product.out_group_id IN :outGroupIds
-    """, nativeQuery = true)
-    fun findByOutGroupIdAndDate(@Param("dateStart") dateStart: LocalDate, @Param("outGroupIds") outGroupIds: MutableList<String>): MutableList<AdApplyDto>
-
-    @Query("""
-        select t.id
-        from crm_ad_apply t
-        where t.enabled = 1
-    """, nativeQuery = true)
+            t.enabled = 1
+    """)
     fun findAllId(): MutableList<String>
 
     @Query("""
-        select t.id
-        from crm_ad_apply t
-        where t.enabled = 1
-    """, nativeQuery = true)
+        SELECT
+            t.id
+        FROM
+            #{#entityName} t
+        WHERE
+            t.enabled = 1
+    """)
             //TODO 修改该query
-    fun findByFilter(@Param("p") map: Map<String, Any>): MutableList<AdApply>
+    fun findByFilter(map: Map<String, Any>): MutableList<AdApply>
 
 }
 
 interface AdApplyRepositoryCustom{
+
+    fun findByOutGroupIdAndDate(@Param("dateStart") dateStart: LocalDate, @Param("outGroupIds") outGroupIds: MutableList<String>): MutableList<AdApplyDto>
+
     fun findPage(pageable: Pageable,adApplyQuery: AdApplyQuery): Page<AdApplyDto>
 }
 
-class AdApplyRepositoryImpl @Autowired constructor(val entityManager: EntityManager):AdApplyRepositoryCustom{
+class AdApplyRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdApplyRepositoryCustom{
+
+    override fun findByOutGroupIdAndDate(dateStart: LocalDate,outGroupIds: MutableList<String>): MutableList<AdApplyDto>{
+        var params = HashMap<String,Any>()
+        params.put("dateStart",dateStart)
+        params.put("outGroupIds",outGroupIds)
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t.*
+            FROM
+                crm_ad_apply t,
+                crm_product product
+            WHERE
+                t.enabled = 1
+            AND t.product_id = product.id
+            AND t.confirm_qty > t.billed_qty
+            AND t.created_date > :dateStart
+            AND product.out_group_id IN (:outGroupIds)
+        """,params,MyBeanPropertyRowMapper(AdApplyDto::class.java))
+    }
 
     override fun findPage(pageable: Pageable,adApplyQuery: AdApplyQuery): Page<AdApplyDto>{
         val sb = StringBuffer()
@@ -88,8 +104,8 @@ class AdApplyRepositoryImpl @Autowired constructor(val entityManager: EntityMana
                 and t1.billed_qty
             """)
         }*/
-        var query = entityManager.createNativeQuery(sb.toString(),AdApplyDto::class.java)
+        var query = jdbcTemplate.queryForObject(sb.toString(),AdApplyDto::class.java)
 
-        return query.resultList as Page<AdApplyDto>
+        return query.toString() as Page<AdApplyDto>
     }
 }

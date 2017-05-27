@@ -19,11 +19,11 @@ interface ShopAllotRepository : BaseRepository<ShopAllot,String>,ShopAllotReposi
 
     @Query("""
     select
-        max(t.business_id)
+        max(t.businessId)
     from
-        crm_shop_allot t
-    where  t.created_date >= ?1
-    """, nativeQuery = true)
+        #{#entityName} t
+    where  t.createdDate >= ?1
+    """)
     fun findMaxBusinessId(localDate: LocalDate): String
 
     @Query("""
