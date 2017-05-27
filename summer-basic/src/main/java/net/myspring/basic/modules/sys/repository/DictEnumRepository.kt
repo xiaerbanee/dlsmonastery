@@ -18,14 +18,13 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import javax.persistence.EntityManager
 
 /**
  * Created by haos on 2017/5/24.
  */
 @CacheConfig(cacheNames = arrayOf("dictEnums"))
 interface DictEnumRepository :BaseRepository<DictEnum,String>,DictEnumRepositoryCustom{
-    @CachePut(key="#dictEnum.id")
+    @CachePut(key="#p0.id")
     fun save(dictEnum: DictEnum): DictEnum
 
     @Cacheable
@@ -70,7 +69,7 @@ class DictEnumRepositoryImpl @Autowired constructor(val namedParameterJdbcTempla
     override fun findPage(pageable: Pageable, dictEnumQuery: DictEnumQuery): Page<DictEnumDto>? {
        var sb = StringBuilder("select * from sys_dict_enum where enabled=1 ");
         if(StringUtils.isNotBlank(dictEnumQuery.category)) {
-            sb.append(" and category like :%category%");
+            sb.append(" and category like concat('%',:category,'%')");
         }
         if(dictEnumQuery.createdDateStart != null) {
             sb.append(" and created_date > :createdDateStart ");
