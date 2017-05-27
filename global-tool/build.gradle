@@ -49,7 +49,7 @@ dependencies {
 	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
 	compile 'org.springframework.cloud:spring-cloud-stream'
 	compile 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
-	runtime('mysql:mysql-connector-java')
+	runtime('mysql:mysql-connector-java:5.1.42')
 	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
