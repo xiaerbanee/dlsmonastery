@@ -1,7 +1,7 @@
 package net.myspring.tool.common.utils;
 
 import com.google.common.collect.Maps;
-import net.myspring.common.domain.IdEntity;
+import net.myspring.tool.common.domain.IdEntity;
 import net.myspring.util.cahe.CacheReadUtils;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.reflect.ReflectionUtil;

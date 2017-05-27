@@ -5,8 +5,10 @@
  *******************************************************************************/
 package net.myspring.future.common.domain;
 
+import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
+@MappedSuperclass
 public class AuditEntity<T> extends CompanyEntity<T> {
 	protected String auditBy;
 	protected LocalDateTime auditDate;

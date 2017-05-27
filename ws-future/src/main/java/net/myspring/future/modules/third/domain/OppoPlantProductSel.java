@@ -1,6 +1,6 @@
 package net.myspring.future.modules.third.domain;
 
-import net.myspring.common.domain.IdEntity;
+import net.myspring.future.common.domain.IdEntity;
 
 
 public class OppoPlantProductSel extends IdEntity<OppoPlantProductSel> {

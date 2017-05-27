@@ -3,7 +3,7 @@ package net.myspring.basic.modules.sys.domain;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import net.myspring.common.domain.DataEntity;
+import net.myspring.basic.common.domain.DataEntity;
 
 @Entity
 @Table(name="sys_role_module")
