@@ -1,11 +1,9 @@
 package net.myspring.general.modules.sys.repository
 
-import net.myspring.general.common.config.MyBeanPropertyRowMapper
 import net.myspring.general.common.repository.BaseRepository
 import net.myspring.general.modules.sys.domain.ProcessFlow
 import org.springframework.beans.factory.annotation.Autowired
-
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 
@@ -23,7 +21,7 @@ interface ProcessFlowRepositoryCustom{
     fun findByProcessTypeName(processTypeName: String): MutableList<ProcessFlow>
 }
 
-class ProcessFlowRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProcessFlowRepositoryCustom {
+class ProcessFlowRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProcessFlowRepositoryCustom {
     override fun findByProcessTypeName(processTypeName: String): MutableList<ProcessFlow> {
         return namedParameterJdbcTemplate.query("""
         SELECT
@@ -35,7 +33,7 @@ class ProcessFlowRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTem
             t1.process_type_id = t2.id
         AND t2.enabled = 1
         AND t2.name =:processTypeName
-          """, Collections.singletonMap("processTypeName", processTypeName), MyBeanPropertyRowMapper(ProcessFlow::class.java))
+          """, Collections.singletonMap("processTypeName", processTypeName), BeanPropertyRowMapper(ProcessFlow::class.java))
     }
 
 
