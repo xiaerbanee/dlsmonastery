@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 /**
@@ -79,9 +80,8 @@ class DictEnumRepositoryImpl @Autowired constructor(val namedParameterJdbcTempla
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
-        var paramMap = QueryUtils.getParamMap(dictEnumQuery,pageable);
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap,BeanPropertyRowMapper(DictEnumDto::class.java));
-        var count = namedParameterJdbcTemplate.queryForObject(countSql,paramMap,Long::class.java);
+        var list = namedParameterJdbcTemplate.query(pageableSql,BeanPropertySqlParameterSource(dictEnumQuery),BeanPropertyRowMapper(DictEnumDto::class.java));
+        var count = namedParameterJdbcTemplate.queryForObject(countSql,BeanPropertySqlParameterSource(dictEnumQuery),Long::class.java);
         return PageImpl(list,pageable,count);
     }
 
