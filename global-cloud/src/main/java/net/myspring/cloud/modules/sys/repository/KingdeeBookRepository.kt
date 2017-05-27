@@ -10,26 +10,26 @@ import org.springframework.data.repository.query.Param
  */
 interface  KingdeeBookRepository:BaseRepository<KingdeeBook,String>{
     @Query("""
-        select t1.*
-        from sys_kingdee_book t1,sys_account_kingdee_book t2
+        select t1
+        FROM  #{#entityName} t1,AccountKingdeeBook t2
         where t1.enabled = 1
         and t2.enabled=1
-        and t1.id = t2.kingdee_book_id
-        and t2.account_id = :accountId
-     """, nativeQuery = true)
+        and t1.id = t2.kingdeeBookId
+        and t2.accountId = :accountId
+     """)
     fun findByAccountId(@Param("accountId")accountId:String): KingdeeBook
 
     @Query("""
-        select t1.name
-        from sys_kingdee_book t1
+        SELECT t1.name
+         FROM  #{#entityName} t1
         where t1.enabled = 1
-     """, nativeQuery = true)
+     """)
     fun findNames():MutableList<String>
 
     @Query("""
-        select distinct t1.type
-        from sys_kingdee_book t1
+        SELECT distinct t1.type
+        FROM  #{#entityName} t1
         where t1.enabled = 1
-     """, nativeQuery = true)
+     """)
     fun findTypes():MutableList<String>
 }

@@ -12,26 +12,25 @@ import java.time.LocalDateTime
 interface ProductRepository:BaseRepository<Product,String>{
     @Query("""
         SELECT
-        t1.*
-        FROM
-        sys_product t1
+        t1
+        FROM  #{#entityName} t1
         WHERE
         t1.enabled=1
-        AND  t1.company_id = :companyId
-     """, nativeQuery = true)
+        AND  t1.companyId = :companyId
+     """)
     fun findByCompanyId(@Param("companyId")companyId:String):MutableList<Product>
 
     @Query("""
-        SELECT max(t1.out_date)
-        from sys_product t1
-        WHERE t1.company_id = :companyId
-     """, nativeQuery = true)
+        SELECT max(t1.outDate)
+        FROM  #{#entityName} t1
+        WHERE t1.companyId = :companyId
+     """)
     fun findMaxOutDate(@Param("companyId")companyId:String): LocalDateTime
 
     @Query("""
-        SELECT DISTINCT(t1.return_out_id)
-        FROM sys_product t1
-        WHERE  t1.company_id = :companyId
-     """, nativeQuery = true)
+        SELECT DISTINCT(t1.returnOutId)
+        FROM  #{#entityName} t1
+        WHERE  t1.companyId = :companyId
+     """)
     fun findReturnOutId(@Param("companyId")companyId:String):String
 }

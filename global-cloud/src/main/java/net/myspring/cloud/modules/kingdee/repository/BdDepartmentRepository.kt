@@ -1,38 +1,44 @@
 package net.myspring.cloud.modules.kingdee.repository
 
+import net.myspring.cloud.common.config.MyBeanPropertyRowMapper
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 /**
  * Created by haos on 2017/5/24.
  */
-interface  BdDepartmentRepository{
-    @Query("""
-        select
+class  BdDepartmentRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+
+    fun findByIdList(idList: MutableList<String>): MutableList<BdDepartment> {
+        return namedParameterJdbcTemplate.query("""
+            select
             t1.FDEPTID,
             t1.FNUMBER,
             t2.FFULLNAME as FNAME
-        from
+            from
             T_BD_DEPARTMENT t1,
             T_BD_DEPARTMENT_L t2
-        where
+            where
             t1.FDEPTID = t2.FDEPTID
-        and t1.FDEPTID in ?1
-     """, nativeQuery = true)
-    fun findByIdList(idList:MutableList<String>):MutableList<BdDepartment>
+            and t1.FDEPTID in (:idList)
+        """, Collections.singletonMap("idList", idList), MyBeanPropertyRowMapper(BdDepartment::class.java))
+    }
 
-    @Query("""
-     select
-        t1.FDEPTID,
-        t1.FNUMBER,
-        t2.FFULLNAME as FNAME
-     from
-        T_BD_DEPARTMENT t1,
-        T_BD_DEPARTMENT_L t2
-     where
-        t1.FDEPTID = t2.FDEPTID
-        and t2.FFULLNAME like %?1%
-     """, nativeQuery = true)
-    fun findByNameLike(name:String):MutableList<BdDepartment>
+    fun findByNameLike(name: String): MutableList<BdDepartment> {
+        return jdbcTemplate.query("""
+            select
+            t1.FDEPTID,
+            t1.FNUMBER,
+            t2.FFULLNAME as FNAME
+            from
+            T_BD_DEPARTMENT t1,
+            T_BD_DEPARTMENT_L t2
+            where
+            t1.FDEPTID = t2.FDEPTID
+            and t2.FFULLNAME like %?%
+        """, MyBeanPropertyRowMapper(BdDepartment::class.java), name)
+    }
 }
