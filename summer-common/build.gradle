@@ -33,6 +33,7 @@ dependencies {
 	compile group: 'ma.glasnost.orika', name: 'orika-core', version: '1.5.0'
 	compile group: 'io.springside', name: 'springside-utils', version: '5.0.0-RC1'
 	compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	compile 'com.fasterxml.jackson.core:jackson-databind'
 	compile('org.springframework.boot:spring-boot-starter')
 	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
 	compile 'javax.cache:cache-api'
