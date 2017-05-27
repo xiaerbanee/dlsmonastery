@@ -18,12 +18,12 @@ import javax.persistence.EntityManager
 interface AdGoodsOrderRepository : BaseRepository<AdGoodsOrder,String>,AdGoodsOrderRepositoryCustom{
     @Query("""
     SELECT
-        MAX(t1.business_id)
+        MAX(t1.businessId)
     FROM
-        crm_ad_goods_order t1
+        #{#entityName} t1
     WHERE
-        t1.created_date >= ?1
-    """, nativeQuery = true)
+        t1.createdDate >= ?1
+    """)
     fun findMaxBusinessId(localDate: LocalDate): String
 }
 

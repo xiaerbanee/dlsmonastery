@@ -20,14 +20,14 @@ interface ShopGoodsDepositRepository : BaseRepository<ShopGoodsDeposit,String>,S
     SELECT
         t1.*
     FROM
-        crm_shop_goods_deposit t1
+        #{#entityName} t1
     WHERE
         t1.enabled = 1
-    AND t1.shop_id = :shopId
+    AND t1.shopId = :shopId
     AND t1.status = :status
     ORDER BY
         created_date DESC
-    """, nativeQuery = true)
+    """)
     fun findByShopId(@Param("shopId") shopId: String, @Param("status") status: String): MutableList<ShopGoodsDeposit>
 }
 
