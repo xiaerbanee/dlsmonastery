@@ -2,10 +2,10 @@ package net.myspring.uaa.repository
 
 import net.myspring.uaa.config.MyBeanPropertyRowMapper
 import net.myspring.uaa.dto.AccountWeixinDto
-import net.myspring.util.repository.QueryUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 
@@ -40,11 +40,10 @@ class AccountWeixinDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTe
     }
 
     fun save(accountWeixinDto: AccountWeixinDto) {
-        var paramMap = QueryUtils.getParamMap(accountWeixinDto);
         if(StringUtils.isBlank(accountWeixinDto.id)) {
-            namedParameterJdbcTemplate.update("INSERT  INTO hr_account_weixin(account_id,company_id,open_id) VALUE (:accountId,:companyId,:openId)",paramMap);
+            namedParameterJdbcTemplate.update("INSERT  INTO hr_account_weixin(account_id,company_id,open_id) VALUE (:accountId,:companyId,:openId)",BeanPropertySqlParameterSource(accountWeixinDto));
         } else {
-            namedParameterJdbcTemplate.update("UPDATE  hr_account_weixin SET acount_id=:accountId,company_id=:companyId,openId=:openId where id=:id",paramMap);
+            namedParameterJdbcTemplate.update("UPDATE  hr_account_weixin SET acount_id=:accountId,company_id=:companyId,openId=:openId where id=:id",BeanPropertySqlParameterSource(accountWeixinDto));
         }
     }
 }

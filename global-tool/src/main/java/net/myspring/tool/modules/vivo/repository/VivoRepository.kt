@@ -3,7 +3,6 @@ package net.myspring.tool.modules.vivo.repository;
 import net.myspring.tool.modules.vivo.domain.*
 import net.myspring.tool.modules.vivo.model.SCustomersM13e00
 import net.myspring.tool.modules.vivo.model.SZonesM13e00
-import net.myspring.util.repository.QueryUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -199,8 +198,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :subCount,
             :zoneTypes
         """)
-         QueryUtils.setParameter(query,sZonesM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -221,8 +218,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :zoneTypes
             )
          """)
-         QueryUtils.setParameter(query,sZonesM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -294,8 +289,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :latentCustomers
             )
          """)
-         QueryUtils.setParameter(query,sCustomersM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -343,8 +336,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :latentCustomers
             )
          """)
-         QueryUtils.setParameter(query,sCustomersM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -363,8 +354,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :bad,
             :accountDate
          """)
-         QueryUtils.setParameter(query,sPlantStockSupplyM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -385,8 +374,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :accountDate
             )
          """)
-         QueryUtils.setParameter(query,sPlantStockSupplyM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -405,8 +392,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :accountDate
             )
          """)
-         QueryUtils.setParameter(query,sPlantStockDealerM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -426,8 +411,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :accountDate
             )
          """)
-         QueryUtils.setParameter(query,sPlantStockDealerM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -446,8 +429,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :accountDate
             )
          """)
-         QueryUtils.setParameter(query,sPlantStockStoresM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -467,8 +448,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :accountDate
             )
          """)
-         QueryUtils.setParameter(query,sPlantStockStoresM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -503,8 +482,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :remark
             )
          """)
-         QueryUtils.setParameter(query,sProductItemLendM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -526,8 +503,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :remark
             )
          """)
-         QueryUtils.setParameter(query,sProductItem000M13e00);
-         query.executeUpdate();
       }
    }
 
@@ -565,8 +540,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :shortCut
             )
          """)
-         QueryUtils.setParameter(query,sStoresM13e00);
-         query.executeUpdate();
       }
    }
 
@@ -582,8 +555,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :shortCut
             )
          """)
-         QueryUtils.setParameter(query,sStoresM13e00);
-         query.executeUpdate();
 
       }
    }
@@ -607,8 +578,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :remark
             )
          """)
-         QueryUtils.setParameter(query,sProductItem000M13e00);
-         query.executeUpdate();
       }
    }
 
@@ -642,8 +611,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :remark
             )
          """)
-         QueryUtils.setParameter(query,sProductItemStocksM13e00);
-         query.executeUpdate();
 
       }
    }
@@ -667,8 +634,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :remark
             )
          """)
-         QueryUtils.setParameter(query,sProductItemStocksM13e00);
-         query.executeUpdate();
 
       }
    }
@@ -690,8 +655,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :createdTime
             )
          """)
-         QueryUtils.setParameter(query,sPlantEndProductSaleM13e00);
-         query.executeUpdate();
 
       }
    }
@@ -713,8 +676,6 @@ class VivoRepositoryImpl @Autowired constructor(val entityManager: EntityManager
             :createdTime
             )
          """)
-         QueryUtils.setParameter(query,sPlantEndProductSaleM13e00);
-         query.executeUpdate();
 
       }
    }

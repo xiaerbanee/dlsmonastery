@@ -1,33 +1,22 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.basic.domain.Bank
-import net.myspring.future.modules.crm.domain.*
-import org.springframework.cache.annotation.CacheConfig
-import org.springframework.cache.annotation.CachePut
-import org.springframework.cache.annotation.Cacheable
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.query.Param
-import java.time.LocalDateTime
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
-import org.springframework.data.jpa.repository.Query
-import java.time.LocalDate
-import net.myspring.common.dto.NameValueDto
 import net.myspring.future.common.config.MyBeanPropertyRowMapper
-import net.myspring.future.modules.crm.repository.PriceChangeRepositoryCustom
-import net.myspring.future.modules.crm.domain.ProductImeSale
+import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductIme
-import net.myspring.future.modules.crm.dto.*
-import net.myspring.future.modules.crm.web.query.*
-import net.myspring.util.repository.QueryUtils
+import net.myspring.future.modules.crm.dto.ProductImeDto
+import net.myspring.future.modules.crm.dto.ProductImeHistoryDto
+import net.myspring.future.modules.crm.web.query.ProductImeQuery
+import net.myspring.future.modules.crm.web.query.ProductImeShipQuery
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
-import javax.persistence.EntityManager
 
 
 interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeRepositoryCustom{
@@ -93,7 +82,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
                     OR t1.ime2 IN :imeList
                     OR t1.meid IN :imeList
                 )
-                """, QueryUtils.getParamMap(productImeShipQuery), MyBeanPropertyRowMapper(ProductIme::class.java))
+                """, BeanPropertySqlParameterSource(productImeShipQuery), MyBeanPropertyRowMapper(ProductIme::class.java))
     }
 
 

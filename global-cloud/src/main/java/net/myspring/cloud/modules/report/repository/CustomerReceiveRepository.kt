@@ -5,9 +5,9 @@ import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery
 import net.myspring.common.dto.NameValueDto
-import net.myspring.util.repository.QueryUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import java.util.*
@@ -89,7 +89,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
     }
 
     fun findMainList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto> {
-        var paramMap = QueryUtils.getParamMap(customerReceiveDetailQuery)
+        var paramMap = BeanPropertySqlParameterSource(customerReceiveDetailQuery)
         return namedParameterJdbcTemplate.query("""
             SELECT
             t.id,
@@ -265,7 +265,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
     }
 
     fun findDetailList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto> {
-        var paramMap = QueryUtils.getParamMap(customerReceiveDetailQuery)
+        var paramMap = BeanPropertySqlParameterSource(customerReceiveDetailQuery)
         return namedParameterJdbcTemplate.query("""
             SELECT
             t11.FID AS id,
@@ -315,7 +315,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
     }
 
     fun findRemarks(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<NameValueDto> {
-        var paramMap = QueryUtils.getParamMap(customerReceiveDetailQuery)
+        var paramMap = BeanPropertySqlParameterSource(customerReceiveDetailQuery)
         return namedParameterJdbcTemplate.query("""
             SELECT
             t1.FBILLNO AS name,

@@ -1,20 +1,15 @@
 package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.crm.domain.*
-import net.myspring.future.modules.crm.dto.PriceChangeDto
-import net.myspring.future.modules.crm.dto.ProductImeDto
+import net.myspring.future.modules.crm.domain.ProductImeUpload
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
-import net.myspring.future.modules.crm.web.query.PriceChangeQuery
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery
-import net.myspring.util.repository.QueryUtils
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.PageImpl
-
-import javax.persistence.EntityManager
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 
 interface ProductImeUploadRepository : BaseRepository<ProductImeUpload, String>,  ProductImeUploadRepositoryCustom{
@@ -27,7 +22,7 @@ interface ProductImeUploadRepositoryCustom{
     fun findPage(pageable: Pageable, productImeUploadQuery : ProductImeUploadQuery): Page<ProductImeUploadDto>
 }
 
-class ProductImeUploadRepositoryImpl @Autowired constructor(val entityManager: EntityManager): ProductImeUploadRepositoryCustom {
+class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeUploadRepositoryCustom {
     override fun findPage(pageable: Pageable, productImeUploadQuery: ProductImeUploadQuery): Page<ProductImeUploadDto> {
 
         val sb = StringBuffer()
@@ -74,14 +69,9 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val entityManager: E
             """)
         }
 
-        val queryStr = QueryUtils.getMySQLDialect().getPageableSql(sb.toString(), pageable)
+        val queryStr = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)
 
-        val query = entityManager.createNativeQuery(queryStr, ProductImeUploadDto::class.java)
-        QueryUtils.setParameter(query, pageable, productImeUploadQuery)
-
-        val result = query.resultList
-
-        return PageImpl<ProductImeUploadDto>(result as MutableList<ProductImeUploadDto>, pageable, ((pageable.pageNumber + 100) * pageable.pageSize).toLong())
+        return null!!;
 
     }
 

@@ -5,7 +5,6 @@ import net.myspring.basic.modules.sys.domain.DictEnum
 import net.myspring.basic.modules.sys.dto.DictEnumDto
 import net.myspring.basic.modules.sys.web.query.DictEnumQuery
 import net.myspring.util.repository.MySQLDialect
-import net.myspring.util.repository.QueryUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig

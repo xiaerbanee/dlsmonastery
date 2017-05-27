@@ -5,12 +5,12 @@ import net.myspring.basic.modules.hr.domain.AccountChange
 import net.myspring.basic.modules.hr.dto.AccountChangeDto
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery
-import net.myspring.util.repository.QueryUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 interface AccountChangeRepository : BaseRepository<AccountChange, String>,AccountChangeRepositoryCustom {
@@ -31,7 +31,6 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
 
     override fun getForm(accountChangeQuery: AccountChangeQuery): AccountChangeForm {
         var sb = StringBuilder();
-        var queryMap = QueryUtils.getParamMap(accountChangeQuery)
         sb.append( """
             SELECT
                 t2.id AS 'accountId',
@@ -57,7 +56,7 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         if(StringUtils.isNotBlank(accountChangeQuery.accountId)) {
             sb.append(" and t2.id=:accountId");
         }
-        return namedParameterJdbcTemplate.queryForObject(sb.toString(), queryMap, BeanPropertyRowMapper(AccountChangeForm::class.java))
+        return namedParameterJdbcTemplate.queryForObject(sb.toString(), BeanPropertySqlParameterSource(accountChangeQuery), BeanPropertyRowMapper(AccountChangeForm::class.java))
 
     }
 }

@@ -2,31 +2,20 @@ package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.basic.domain.Bank
 import net.myspring.future.modules.crm.domain.BankIn
 import net.myspring.future.modules.crm.dto.BankInDto
-import net.myspring.future.modules.crm.dto.DemoPhoneDto
-import net.myspring.future.modules.crm.dto.ExpressOrderDto
 import net.myspring.future.modules.crm.web.query.BankInQuery
-import net.myspring.future.modules.crm.web.query.DemoPhoneQuery
-import net.myspring.util.repository.QueryUtils
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
-import org.elasticsearch.common.collect.HppcMaps
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cache.annotation.CacheConfig
-import org.springframework.cache.annotation.CachePut
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.EntityManager
 
 
 interface BankInRepository : BaseRepository<BankIn, String>, BankInRepositoryCustom {
@@ -126,11 +115,10 @@ class BankInRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate
         }
 
 
-        val pageableSql = QueryUtils.getMySQLDialect().getPageableSql(sb.toString(), pageable)
-        val countSql = QueryUtils.getMySQLDialect().getCountSql(sb.toString())
-        val paramMap = QueryUtils.getParamMap(bankInQuery)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
 
-        return PageImpl<BankInDto>(namedParameterJdbcTemplate.query(pageableSql, paramMap, MyBeanPropertyRowMapper(BankInDto::class.java)), pageable,  namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java))
+        return PageImpl<BankInDto>(namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(bankInQuery), BeanPropertyRowMapper(BankInDto::class.java)), pageable,  namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(bankInQuery), Long::class.java))
 
 
 

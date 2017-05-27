@@ -5,7 +5,6 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Office
 import net.myspring.basic.modules.sys.dto.OfficeDto
 import net.myspring.basic.modules.sys.web.query.OfficeQuery
-import net.myspring.util.repository.QueryUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
@@ -15,6 +14,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 
@@ -172,7 +172,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
             order by office.name
             limit 0,20
         """)
-        return namedParameterJdbcTemplate.query(sb.toString(),QueryUtils.getParamMap(officeQuery), BeanPropertyRowMapper(Office::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(officeQuery), BeanPropertyRowMapper(Office::class.java))
     }
 
     override fun findByFilterAll(map: Map<String, Any>): MutableList<Office> {
