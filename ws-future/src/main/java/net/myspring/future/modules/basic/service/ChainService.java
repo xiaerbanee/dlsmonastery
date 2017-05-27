@@ -77,7 +77,7 @@ public class ChainService {
         }
         //保存门店
         if (CollectionUtil.isNotEmpty(chainForm.getDepotIdList())) {
-            List<Depot> depotList = depotRepository.findByIds(chainForm.getDepotIdList());
+            List<Depot> depotList = depotRepository.findByEnabledIsTrueAndIdIn(chainForm.getDepotIdList());
             for (Depot depot : depotList) {
                 depot.setChainId(chain.getId());
                 depotRepository.save(depot);

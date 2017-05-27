@@ -88,7 +88,7 @@ public class AfterSaleService {
         }
         List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
         List<Product> productList=productRepository.findByNameIn(productNameList);
-        List<Depot> depotList=depotRepository.findByNameList(depotNameList);
+        List<Depot> depotList=depotRepository.findByEnabledIsTrueAndNameIn(depotNameList);
         Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
         Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"name");
         Map<String,Depot> depotMap=CollectionUtil.extractToMap(depotList,"name");
@@ -199,7 +199,7 @@ public class AfterSaleService {
         List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByEnabledIsTrueAndImeIn(imeList);
         List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
         List<Product> productList=productRepository.findByNameIn(productNameList);
-        List<Depot> depotList=depotRepository.findByNameList(depotNameList);
+        List<Depot> depotList=depotRepository.findByEnabledIsTrueAndNameIn(depotNameList);
         Map<String,AfterSale> afterSaleMap=CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
         Map<String,AfterSaleFlee> afterSaleFleeMap=CollectionUtil.extractToMap(afterSaleFleeList,"ime");
         Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");

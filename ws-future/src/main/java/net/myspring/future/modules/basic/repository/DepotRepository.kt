@@ -1,11 +1,13 @@
 package net.myspring.future.modules.basic.repository
 
+import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Depot
 import net.myspring.future.modules.basic.dto.DepotAccountDto
 import net.myspring.future.modules.basic.dto.DepotDto
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery
 import net.myspring.future.modules.basic.web.query.DepotQuery
+import net.myspring.future.modules.crm.dto.BankInDto
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
@@ -13,7 +15,11 @@ import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 import javax.persistence.EntityManager
 
 /**
@@ -30,47 +36,13 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
     @CachePut(key = "#id")
     fun save(depot: Depot): Int
 
-    @Query("""
-        SELECT t1.*
-        FROM crm_depot t1
-        where t1.enabled=1
-    """, nativeQuery = true)
-    fun findAllEnabled(): MutableList<Depot>
 
-    @Query("""
-        SELECT t1.*
-        FROM crm_depot t1
-        where t1.enabled=1
-        and t1.id in ?1
-    """, nativeQuery = true)
-    fun findByIds(ids: MutableList<String>): MutableList<Depot>
+
+    fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Depot>
 
     fun findByChainId(chainId: String): MutableList<Depot>
 
-    @Query("""
-        SELECT
-            t1.*
-        FROM
-            crm_depot t1,
-            crm_account_depot t2
-        WHERE
-            t1.enabled = 1
-        AND t1.is_hidden = 0
-        AND t1.id = t2.depot_id
-        AND t2.account_id = ?1
-    """, nativeQuery = true)
-    fun findByAccountId(accountId: String): MutableList<Depot>
-
-    @Query("""
-        SELECT
-            t1.*
-        FROM
-            crm_depot t1
-        WHERE
-            t1.enabled = 1
-        AND t1.name IN ?1
-    """, nativeQuery = true)
-    fun findByNameList(nameList: MutableList<String>): MutableList<Depot>
+    fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Depot>
 
     fun findByName(name: String): Depot
 
@@ -85,10 +57,26 @@ interface DepotRepositoryCustom{
     fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto>
 
     fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,boolean: Boolean):Page<DepotAccountDto>
+
+    fun findByAccountId(accountId: String): MutableList<Depot>
 }
 
 @Suppress("UNCHECKED_CAST")
-class DepotRepositoryImpl @Autowired constructor(val entityManager: EntityManager):DepotRepositoryCustom{
+class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+    override fun findByAccountId(accountId: String): MutableList<Depot> {
+        return namedParameterJdbcTemplate.query("""
+        SELECT
+            t1.*
+        FROM
+            crm_depot t1,
+            crm_account_depot t2
+        WHERE
+            t1.enabled = 1
+        AND t1.is_hidden = 0
+        AND t1.id = t2.depot_id
+        AND t2.account_id = :accountId
+          """, Collections.singletonMap("accountId", accountId), MyBeanPropertyRowMapper(Depot::class.java))
+    }
 
     override fun findShopList(depotShopQuery: DepotQuery): MutableList<DepotDto> {
         val sb = StringBuffer()
