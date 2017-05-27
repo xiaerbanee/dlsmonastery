@@ -25,7 +25,7 @@ import javax.persistence.EntityManager
  */
 @CacheConfig(cacheNames = arrayOf("dictEnums"))
 interface DictEnumRepository :BaseRepository<DictEnum,String>,DictEnumRepositoryCustom{
-    @CachePut(key="#id")
+    @CachePut(key="#dictEnum.id")
     fun save(dictEnum: DictEnum): DictEnum
 
     @Cacheable
