@@ -1,8 +1,8 @@
 package net.myspring.basic.modules.sys.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.List;
 import java.util.Map;
