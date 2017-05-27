@@ -48,8 +48,13 @@ public class DictEnumService {
         return dictEnumDtoList;
     }
 
-    public DictEnumDto findByValue(String value){
-        return dictEnumRepository.findByValue(value);
+    public String findByValue(String value){
+        DictEnum dictEnum = dictEnumRepository.findByValue(value);
+        if(dictEnum!=null){
+            return dictEnum.getRemarks();
+        }else{
+            return null;
+        }
     }
 
     public DictEnum save(DictEnumForm dictEnumForm) {

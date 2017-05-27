@@ -4,7 +4,9 @@ import net.myspring.cloud.common.config.MyBeanPropertyRowMapper
 import net.myspring.cloud.modules.kingdee.domain.ArReceivable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.stereotype.Component
 
+@Component
 class ArReceivableRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate){
 
     fun findBySourceBillNo(sourceBillNo: String): MutableList<ArReceivable> {

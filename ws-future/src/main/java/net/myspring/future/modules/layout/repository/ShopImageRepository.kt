@@ -4,10 +4,16 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopImage
 import net.myspring.future.modules.layout.dto.ShopImageDto
 import net.myspring.future.modules.layout.web.query.ShopImageQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -20,11 +26,10 @@ interface ShopImageRepositoryCustom{
     fun findPage(pageable: Pageable, shopImageQuery: ShopImageQuery): Page<ShopImageDto>
 }
 
-class ShopImageRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopImageRepositoryCustom{
+class ShopImageRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopImageRepositoryCustom{
 
     override fun findPage(pageable: Pageable, shopImageQuery: ShopImageQuery): Page<ShopImageDto> {
-        val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
             SELECT
                 depot.office_Id officeId,
                 t1.*
@@ -41,8 +46,11 @@ class ShopImageRepositoryImpl @Autowired constructor(val entityManager: EntityMa
         if (StringUtils.isNotEmpty(shopImageQuery.officeId)) {
             sb.append("""  and depot.office_id = :officeId """)
         }
-        var query = entityManager.createNativeQuery(sb.toString(), ShopImageDto::class.java)
 
-        return query.resultList as Page<ShopImageDto>
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(shopImageQuery), BeanPropertyRowMapper(ShopImageDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(shopImageQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 }

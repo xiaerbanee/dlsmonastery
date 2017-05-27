@@ -6,12 +6,13 @@ import net.myspring.common.dto.NameValueDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Component
 import java.util.*
 
 /**
  * Created by haos on 2017/5/24.
  */
-
+@Component
 class BdCustomerRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
     fun findAll(): MutableList<BdCustomer> {
         return jdbcTemplate.query("""

@@ -76,8 +76,13 @@ public class DictMapService {
         return dictMapList;
     }
 
-    public DictMapDto findByName(String name) {
-        DictMapDto dictMapDto = dictMapRepository.findByName(name);
-        return dictMapDto;
+    public String findByName(String name) {
+        DictMap dictMap = dictMapRepository.findByName(name);
+        if(dictMap!=null){
+            return dictMap.getRemarks();
+        }else {
+            return null;
+        }
+
     }
 }

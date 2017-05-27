@@ -14,11 +14,6 @@ public class JdbcConfig {
     private DataSource dataSource;
 
     @Bean
-    public JdbcTemplate JdbcTemplate() {
-        return new JdbcTemplate(dataSource);
-    }
-
-    @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
         return new NamedParameterJdbcTemplate(dataSource);
     }

@@ -20,7 +20,7 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
     @Cacheable
     override fun findOne(id: String): Bank
 
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(bank: Bank): Bank
 
     @Query("""

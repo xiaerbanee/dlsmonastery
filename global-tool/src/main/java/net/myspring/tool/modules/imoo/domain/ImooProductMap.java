@@ -2,7 +2,7 @@ package net.myspring.tool.modules.imoo.domain;
 
 
 import net.myspring.tool.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
+import net.myspring.tool.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

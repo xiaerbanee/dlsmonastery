@@ -2,7 +2,7 @@ package net.myspring.future.modules.crm.domain;
 
 
 import net.myspring.future.common.domain.CompanyEntity;
-import net.myspring.common.domain.DataEntity;
+import net.myspring.future.common.domain.DataEntity;
 import net.myspring.future.modules.basic.domain.Product;
 
 import javax.persistence.Entity;

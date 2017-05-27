@@ -119,7 +119,7 @@
         })
       },shopChange(){
         axios.get('/api/basic/sys/dictEnum/findByValue?value=' + this.inputForm.fixtureType).then((response)=>{
-          this.fixtureContent=response.data.remarks;
+          this.fixtureContent=response.data;
         })
       },
       handlePreview(file) {

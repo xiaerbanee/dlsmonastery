@@ -2,7 +2,7 @@ package net.myspring.tool.modules.imoo.domain;
 
 
 import com.google.common.collect.Lists;
-import net.myspring.common.domain.IdEntity;
+import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
