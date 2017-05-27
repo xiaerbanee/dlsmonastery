@@ -22,7 +22,6 @@ public class ShopAllotQuery extends BaseQuery {
 
     private String businessId;
     private String businessIds;
-    private String businessIdInStr;
 
     private String auditDateRange;
     private LocalDateTime auditDateStart;
@@ -30,8 +29,12 @@ public class ShopAllotQuery extends BaseQuery {
 
     private List<String> statusList = new ArrayList<String>();
 
-    public String getBusinessIdInStr() {
-        return businessIdInStr;
+    public List<String> getBusinessIdList() {
+        if(StringUtils.isNotBlank(businessIds)) {
+            return StringUtils.getSplitList(businessIds, CharConstant.ENTER);
+        } else {
+            return null;
+        }
     }
 
     public String getAuditDateRange() {
@@ -80,14 +83,7 @@ public class ShopAllotQuery extends BaseQuery {
     }
 
     public void setBusinessIds(String businessIds) {
-//        TODO 需要修改该写法
-        businessIdInStr = null;
-        if(businessIds != null){
-            List<String> tmp= Stream.of(StringUtils.getReplaced(businessIds).split(",", -1)).map(each -> StringUtils.trimToEmpty(each)).filter(each -> StringUtils.isNotBlank(each)).collect(Collectors.toList());
-             if(tmp != null || tmp.size()>0){
-                 businessIdInStr = "('"+StringUtils.join(tmp, "'"+CharConstant.COMMA+"'")+"')";
-             }
-        }
+
         this.businessIds = businessIds;
     }
 

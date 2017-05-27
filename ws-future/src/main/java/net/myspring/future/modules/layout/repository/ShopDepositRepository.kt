@@ -4,14 +4,17 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopDeposit
 import net.myspring.future.modules.layout.dto.ShopDepositDto
 import net.myspring.future.modules.layout.web.query.ShopDepositQuery
+import net.myspring.util.repository.MySQLDialect
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.query.Param
 import org.springframework.data.jpa.repository.Query
-import org.springframework.stereotype.Component
-import org.springframework.stereotype.Repository
-import javax.persistence.EntityManager
+import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -61,23 +64,52 @@ interface ShopDepositRepositoryCustom{
     fun findPage(pageable: Pageable, shopDepositQuery: ShopDepositQuery): Page<ShopDepositDto>
 }
 
-class ShopDepositRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopDepositRepositoryCustom{
+class ShopDepositRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopDepositRepositoryCustom{
 
     override fun findPage(pageable: Pageable, shopDepositQuery: ShopDepositQuery): Page<ShopDepositDto> {
+
+
         val sb = StringBuffer()
         sb.append("""
-            SELECT
-                t1.*
-            FROM
-                crm_shop_deposit t1,
-                crm_depot depot
-            WHERE
-                t1.enabled = 1
+        SELECT
+            depot.office_id shopOfficeId,
+            depot.name shopName,
+            t1.*
+        FROM
+            crm_shop_deposit t1,
+            crm_depot depot
+        WHERE
+            t1.enabled = 1
             AND t1.shop_id = depot.id
             AND depot.enabled = 1
         """)
-        var query = entityManager.createNativeQuery(sb.toString(), ShopDepositDto::class.java)
+        if(StringUtils.isNotBlank(shopDepositQuery.shopName)){
+            sb.append("""  AND depot.name LIKE CONCAT('%',:shopName,'%')  """)
+        }
+        if(StringUtils.isNotBlank(shopDepositQuery.type)){
+            sb.append("""  AND t1.type =:type  """)
+        }
+        if(StringUtils.isNotBlank(shopDepositQuery.remarks)){
+            sb.append("""  AND t1.remarks LIKE CONCAT('%', :remarks,'%')  """)
+        }
+        if(shopDepositQuery.createdDateStart != null){
+            sb.append("""  AND t1.created_date >= :createdDateStart """)
+        }
+        if(shopDepositQuery.createdDateEnd != null){
+            sb.append("""  AND t1.created_date < :createdDateEnd  """)
+        }
+        if(StringUtils.isNotBlank(shopDepositQuery.createdBy)){
+            sb.append("""  AND t1.created_by = :createdBy """)
+        }
 
-        return query.resultList as Page<ShopDepositDto>
+
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        var paramMap = BeanPropertySqlParameterSource(shopDepositQuery)
+        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ShopDepositDto::class.java))
+        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        return PageImpl(list,pageable,count)
+
+
     }
 }
