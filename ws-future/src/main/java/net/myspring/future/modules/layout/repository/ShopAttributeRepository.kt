@@ -11,12 +11,12 @@ interface ShopAttributeRepository : BaseRepository<ShopAttribute,String> {
 
     @Query("""
     SELECT
-        t1.*
+        t1
     FROM
-        crm_shop_attribute t1
+        #{#entityName} t1
     WHERE
-        t1.shop_id = ?1
+        t1.shopId = ?1
     AND t1.enabled = 1
-    """, nativeQuery = true)
+    """)
     fun findByShopId(shopId: String): MutableList<ShopAttribute>
 }

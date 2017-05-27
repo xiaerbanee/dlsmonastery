@@ -17,10 +17,10 @@ interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>{
     @Query("""
     DELETE
     FROM
-        crm_shop_allot_detail
+        #{#entityName}
     WHERE
-        shop_allot_id = ?1
-    """, nativeQuery = true)
+        shopAllotId = ?1
+    """)
     fun deleteByShopAllotId(shopAllotId: String): Int
 
     @Query("""

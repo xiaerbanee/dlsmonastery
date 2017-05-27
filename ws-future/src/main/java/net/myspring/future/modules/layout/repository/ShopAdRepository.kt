@@ -4,11 +4,15 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopAd
 import net.myspring.future.modules.layout.dto.ShopAdDto
 import net.myspring.future.modules.layout.web.query.ShopAdQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -24,11 +28,10 @@ interface ShopAdRepositoryCustom{
     fun findByFilter(shopAdQuery: ShopAdQuery): MutableList<ShopAdDto>
 }
 
-class ShopAdRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopAdRepositoryCustom{
+class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopAdRepositoryCustom{
 
     override fun findPage(pageable: Pageable,shopAdQuery: ShopAdQuery): Page<ShopAdDto>{
-        val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
             SELECT
                 depot.office_id officeId,t1.*
             FROM
@@ -65,9 +68,11 @@ class ShopAdRepositoryImpl @Autowired constructor(val entityManager: EntityManag
             sb.append("""  and t1.created_date  < :createdDateStart """)
         }
 
-        var query = entityManager.createNativeQuery(sb.toString(),ShopAdDto::class.java)
-
-        return query.resultList as Page<ShopAdDto>
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(shopAdQuery), BeanPropertyRowMapper(ShopAdDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(shopAdQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
 
     }
 
@@ -110,8 +115,6 @@ class ShopAdRepositoryImpl @Autowired constructor(val entityManager: EntityManag
             sb.append("""  and t1.created_date  < :createdDateStart """)
         }
 
-        var query = entityManager.createNativeQuery(sb.toString(),ShopAdDto::class.java)
-
-        return query.resultList as MutableList<ShopAdDto>
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(shopAdQuery), BeanPropertyRowMapper(ShopAdDto::class.java))
     }
 }
