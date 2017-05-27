@@ -127,7 +127,7 @@ public class PriceChangeImeService {
         }
 
         //检查门店，串码在系统中是否存在
-        List<Depot> depots = depotRepository.findByNameList(shopNameList);
+        List<Depot> depots = depotRepository.findByEnabledIsTrueAndNameIn(shopNameList);
         List<ProductIme> productImes = productImeRepository.findByImeList(imeList);
         return null;
     }

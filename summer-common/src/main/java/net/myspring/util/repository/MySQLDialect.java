@@ -21,9 +21,9 @@ public class MySQLDialect extends Dialect {
 			}
 		}
 		if (pageable.getOffset() == 0) {
-			sb.append(" LIMIT :pageSize");
+			sb.append(" LIMIT  "+pageable.getPageSize());
 		} else {
-			sb.append(" LIMIT :offset,:pageSize");
+			sb.append(" LIMIT  "+ pageable.getOffset()+",  "+pageable.getPageSize());
 		}
 		return sb.toString();
 	}
