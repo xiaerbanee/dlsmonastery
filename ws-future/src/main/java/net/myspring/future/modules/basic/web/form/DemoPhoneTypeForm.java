@@ -1,9 +1,8 @@
 package net.myspring.future.modules.basic.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.domain.DemoPhoneType;
-import net.myspring.future.modules.basic.domain.DemoPhoneTypeOffice;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeOfficeDto;
 
@@ -13,7 +12,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/18.
  */
-public class DemoPhoneTypeForm extends DataForm<DemoPhoneType> {
+public class DemoPhoneTypeForm extends BaseForm<DemoPhoneType> {
     private String name;
     private List<String> productTypeIdList= Lists.newArrayList();
     private Integer limitQty;

@@ -1,6 +1,6 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopPromotion;
 
 import java.math.BigDecimal;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by zhangyf on 2017/5/4.
  */
-public class ShopPromotionForm extends DataForm<ShopPromotion>{
+public class ShopPromotionForm extends BaseForm<ShopPromotion> {
 
     private String shopId;
     private String shopName;

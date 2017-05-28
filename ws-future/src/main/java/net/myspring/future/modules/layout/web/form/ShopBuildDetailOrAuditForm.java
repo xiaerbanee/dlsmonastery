@@ -1,15 +1,14 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopBuild;
-import net.myspring.future.modules.layout.dto.ShopBuildDto;
 
 import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/18.
  */
-public class ShopBuildDetailOrAuditForm extends DataForm<ShopBuild>{
+public class ShopBuildDetailOrAuditForm extends BaseForm<ShopBuild> {
 
     private Boolean pass;
 

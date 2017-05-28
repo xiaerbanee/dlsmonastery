@@ -2,7 +2,7 @@ package net.myspring.basic.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.DictMap;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by admin on 2017/4/1.
  */
 
-public class DictMapForm extends DataForm<DictMap>{
+public class DictMapForm extends BaseForm<DictMap> {
     private String category;
     private String name;
     private String value;

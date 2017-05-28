@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.web.form;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.hr.domain.Account;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by liuj on 2017/3/19.
  */
 
-public class AccountForm extends DataForm<Account>{
+public class AccountForm extends BaseForm<Account> {
     private String password;
     private List<String> officeIdList=Lists.newArrayList();
     @CacheInput(inputKey = "offices",inputInstance = "officeIdList",outputInstance = "name")

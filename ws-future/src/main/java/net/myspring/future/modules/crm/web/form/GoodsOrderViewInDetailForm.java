@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
@@ -11,7 +11,7 @@ import net.myspring.future.modules.crm.dto.GoodsOrderImeDto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GoodsOrderViewInDetailForm extends DataForm<GoodsOrder> {
+public class GoodsOrderViewInDetailForm extends BaseForm<GoodsOrder> {
 
     private DepotDto shopDto;
     private DepotDto storeDto;

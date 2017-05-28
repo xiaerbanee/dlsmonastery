@@ -1,19 +1,16 @@
 package net.myspring.general.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.general.modules.sys.domain.ProcessType;
-import net.myspring.general.modules.sys.dto.ProcessFlowDto;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by admin on 2017/4/6.
  */
 
-public class ProcessTypeForm extends DataForm<ProcessType> {
+public class ProcessTypeForm extends BaseForm<ProcessType> {
     private String type;
     private String name;
     private String viewPositionIds;

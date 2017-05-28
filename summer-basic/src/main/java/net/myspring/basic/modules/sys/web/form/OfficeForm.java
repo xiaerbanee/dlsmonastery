@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.constant.TreeConstant;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.common.tree.TreeNode;
@@ -19,7 +19,7 @@ import java.util.List;
  * Created by admin on 2017/4/6.
  */
 
-public class OfficeForm extends DataForm<Office> {
+public class OfficeForm extends BaseForm<Office> {
 
     private String parentId;
     private String name;

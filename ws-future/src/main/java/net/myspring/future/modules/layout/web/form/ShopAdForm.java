@@ -1,11 +1,9 @@
 package net.myspring.future.modules.layout.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
-import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import net.myspring.future.modules.layout.domain.ShopAd;
-import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.List;
 /**
  * Created by zhangyf on 2017/5/10.
  */
-public class ShopAdForm extends DataForm<ShopAd>{
+public class ShopAdForm extends BaseForm<ShopAd> {
     private String shopId;
     private String shopAdTypeId;
     private BigDecimal length;

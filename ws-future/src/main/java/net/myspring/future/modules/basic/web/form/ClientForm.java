@@ -1,12 +1,12 @@
 package net.myspring.future.modules.basic.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.domain.Client;
 
 /**
  * Created by lihx on 2017/4/18.
  */
-public class ClientForm extends DataForm<Client> {
+public class ClientForm extends BaseForm<Client> {
     private String name;
     private String mobilePhone;
 

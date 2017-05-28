@@ -1,6 +1,6 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopImage;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by zhangyf on 2017/5/3.
  */
-public class ShopImageForm extends DataForm<ShopImage>{
+public class ShopImageForm extends BaseForm<ShopImage> {
 
     private String shopId;
     private String shopName;

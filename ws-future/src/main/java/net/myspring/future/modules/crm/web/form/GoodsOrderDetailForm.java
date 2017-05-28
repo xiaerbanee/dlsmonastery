@@ -1,12 +1,12 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 
 /**
  * Created by wangzm on 2017/4/21.
  */
-public class GoodsOrderDetailForm extends DataForm<GoodsOrderDetail> {
+public class GoodsOrderDetailForm extends BaseForm<GoodsOrderDetail> {
 
     private String productId;
     private Integer qty;

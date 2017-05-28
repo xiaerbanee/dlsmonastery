@@ -1,12 +1,12 @@
 package net.myspring.basic.modules.sys.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.basic.modules.sys.domain.CompanyConfig;
 
 /**
  * Created by zhucc on 2017/4/17.
  */
-public class CompanyConfigForm extends DataForm<CompanyConfig>{
+public class CompanyConfigForm extends BaseForm<CompanyConfig> {
     private String name;
     private String code;
     private String value;

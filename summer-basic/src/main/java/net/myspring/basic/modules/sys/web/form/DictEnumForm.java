@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.basic.modules.sys.domain.DictEnum;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by admin on 2017/4/5.
  */
 
-public class DictEnumForm extends DataForm<DictEnum> {
+public class DictEnumForm extends BaseForm<DictEnum> {
     private Integer sort;
     private String category;
     private String value;

@@ -1,9 +1,9 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 
-public class ExpressOrderForm extends DataForm<ExpressOrder> {
+public class ExpressOrderForm extends BaseForm<ExpressOrder> {
 
     private String fromDepotId;
     private String toDepotId;

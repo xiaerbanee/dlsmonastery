@@ -4,9 +4,8 @@ package net.myspring.basic.modules.sys.web.form;
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.RoleDto;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.basic.modules.sys.dto.MenuDto;
-import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
  * Created by admin on 2017/4/5.
  */
 
-public class PermissionForm extends DataForm<Permission> {
+public class PermissionForm extends BaseForm<Permission> {
 
     private String menuId;
     private String name;

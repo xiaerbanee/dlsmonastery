@@ -1,17 +1,12 @@
 package net.myspring.future.modules.crm.web.form;
 
-import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
-import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.dto.ProductDto;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.PricesystemChange;
-
-import java.util.List;
 
 /**
  * Created by haos on 2017/5/17.
  */
-public class PricesystemChangeForm extends DataForm<PricesystemChange>{
+public class PricesystemChangeForm extends BaseForm<PricesystemChange> {
     private String productId;
     private String remarks;
 

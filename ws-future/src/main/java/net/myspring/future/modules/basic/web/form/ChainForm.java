@@ -1,7 +1,7 @@
 package net.myspring.future.modules.basic.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.domain.Chain;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/18.
  */
-public class ChainForm extends DataForm<Chain> {
+public class ChainForm extends BaseForm<Chain> {
     private String name;
     private List<String> depotIdList=Lists.newArrayList();
 

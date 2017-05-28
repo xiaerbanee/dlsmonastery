@@ -1,13 +1,12 @@
 package net.myspring.general.modules.sys.web.form;
 
-import net.myspring.common.dto.IdDto;
-import net.myspring.common.form.IdForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
 
 /**
  * Created by admin on 2017/4/5.
  */
-public class ProcessFlowForm extends IdForm<ProcessFlow> {
+public class ProcessFlowForm extends BaseForm<ProcessFlow> {
     private String name;
     private Integer sort;
     private String positionId;

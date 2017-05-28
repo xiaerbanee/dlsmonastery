@@ -1,18 +1,16 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.common.enums.BillTypeEnum;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.layout.domain.AdApply;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * Created by wangzm on 2017/4/21.
  */
-public class AdApplyForm extends DataForm<AdApply> {
+public class AdApplyForm extends BaseForm<AdApply> {
     private String shopId;
     private String billType = BillTypeEnum.POP.name();
 

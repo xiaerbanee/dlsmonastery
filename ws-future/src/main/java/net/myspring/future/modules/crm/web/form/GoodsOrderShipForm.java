@@ -1,19 +1,13 @@
 package net.myspring.future.modules.crm.web.form;
 
-import com.ctc.wstx.util.StringUtil;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.form.DataForm;
-import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
-import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.util.text.StringUtils;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-public class GoodsOrderShipForm extends DataForm<GoodsOrder> {
+public class GoodsOrderShipForm extends BaseForm<GoodsOrder> {
     private String goodsOrderId;
     private String boxImeStr;
     private String imeStr;

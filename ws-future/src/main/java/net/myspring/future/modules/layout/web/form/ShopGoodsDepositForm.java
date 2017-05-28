@@ -1,6 +1,6 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 
 import java.math.BigDecimal;
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 /**
  * Created by wangzm on 2017/4/21.
  */
-public class ShopGoodsDepositForm extends DataForm<ShopGoodsDeposit> {
+public class ShopGoodsDepositForm extends BaseForm<ShopGoodsDeposit> {
 
     private Boolean success;
     private String message;

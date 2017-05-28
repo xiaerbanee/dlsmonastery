@@ -1,15 +1,14 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopPrint;
-import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDateTime;
 
 /**
  * Created by zhangyf on 2017/5/5.
  */
-public class ShopPrintForm extends DataForm<ShopPrint>{
+public class ShopPrintForm extends BaseForm<ShopPrint> {
 
     private String officeId;
     private String printType;

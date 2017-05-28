@@ -1,12 +1,12 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StoreAllotForm extends DataForm<StoreAllot> {
+public class StoreAllotForm extends BaseForm<StoreAllot> {
 
     private String allotType;
 

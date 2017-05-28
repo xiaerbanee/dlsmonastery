@@ -1,13 +1,9 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
-import net.myspring.future.modules.basic.dto.ProductDto;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
-import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
-import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
-import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,7 +12,7 @@ import java.util.List;
 /**
  * Created by zhangyf on 2017/5/11.
  */
-public class AdGoodsOrderForm extends DataForm<AdGoodsOrder> {
+public class AdGoodsOrderForm extends BaseForm<AdGoodsOrder> {
 
     private String storeId;
     private String outShopId;

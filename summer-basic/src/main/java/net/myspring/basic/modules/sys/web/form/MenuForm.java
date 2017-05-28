@@ -4,7 +4,7 @@ package net.myspring.basic.modules.sys.web.form;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.domain.Menu;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.basic.modules.sys.dto.MenuCategoryDto;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by admin on 2017/4/5.
  */
 
-public class MenuForm extends DataForm<Menu>{
+public class MenuForm extends BaseForm<Menu> {
     private String menuCategoryId;
     private String permissionStr;
     private String remarks;

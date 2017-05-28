@@ -1,12 +1,12 @@
 package net.myspring.future.modules.crm.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 
 import java.util.List;
 
-public class GoodsOrderForm extends DataForm<GoodsOrder> {
+public class GoodsOrderForm extends BaseForm<GoodsOrder> {
     private String expressOrderId;
     private String shopId;
     private String netType;

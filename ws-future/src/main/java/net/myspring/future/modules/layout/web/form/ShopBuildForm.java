@@ -1,17 +1,12 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
-import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopBuild;
-import net.myspring.util.cahe.annotation.CacheInput;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/6.
  */
-public class ShopBuildForm extends DataForm<ShopBuild>{
+public class ShopBuildForm extends BaseForm<ShopBuild> {
 
     private String shopId;
     private String shopType;

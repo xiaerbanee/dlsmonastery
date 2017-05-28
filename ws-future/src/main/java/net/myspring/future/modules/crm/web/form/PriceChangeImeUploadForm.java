@@ -1,16 +1,14 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
-import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.dto.ProductImeDto;
 
 import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/23.
  */
-public class PriceChangeImeUploadForm extends DataForm<PriceChangeIme>{
+public class PriceChangeImeUploadForm extends BaseForm<PriceChangeIme> {
 
     private String priceChangeId;
 

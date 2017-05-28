@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by zhangyf on 2017/5/15.
  */
-public class PriceChangeImeForm extends DataForm<PriceChangeIme> {
+public class PriceChangeImeForm extends BaseForm<PriceChangeIme> {
 
     private String priceChangeId;
     private String priceChangeName;

@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeDto;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by sungm on 2017/5/22.
  */
-public class DemoPhoneForm extends DataForm<DataForm>{
+public class DemoPhoneForm extends BaseForm<BaseForm> {
     private String demoPhoneTypeId;
     private String shopId;
     private String employeeId;

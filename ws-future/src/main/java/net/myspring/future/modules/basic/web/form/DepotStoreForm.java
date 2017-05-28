@@ -1,17 +1,15 @@
 package net.myspring.future.modules.basic.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
-import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.domain.DepotStore;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * Created by lihx on 2017/4/18.
  */
-public class DepotStoreForm extends DataForm<DepotStore>{
+public class DepotStoreForm extends BaseForm<DepotStore> {
 
     private String depotId;
     private DepotForm depotForm;

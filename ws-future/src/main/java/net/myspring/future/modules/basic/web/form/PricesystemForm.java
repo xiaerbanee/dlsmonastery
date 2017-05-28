@@ -1,17 +1,15 @@
 package net.myspring.future.modules.basic.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.domain.Pricesystem;
-import net.myspring.future.modules.basic.domain.PricesystemDetail;
-import net.myspring.future.modules.basic.dto.PricesystemDetailDto;
 
 import java.util.List;
 
 /**
  * Created by lihx on 2017/4/18.
  */
-public class PricesystemForm extends DataForm<Pricesystem> {
+public class PricesystemForm extends BaseForm<Pricesystem> {
     private String name;
     private Integer sort;
     private boolean enabled;

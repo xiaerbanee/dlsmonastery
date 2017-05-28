@@ -4,7 +4,7 @@ package net.myspring.basic.modules.hr.web.form;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.hr.domain.AuditFile;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.general.modules.sys.dto.ActivitiDetailDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by admin on 2017/4/6.
  */
 
-public class AuditFileForm extends DataForm<AuditFile> {
+public class AuditFileForm extends BaseForm<AuditFile> {
     private String processTypeName;
     private Map<String, String> boolMap= Maps.newHashMap();
     private String title;

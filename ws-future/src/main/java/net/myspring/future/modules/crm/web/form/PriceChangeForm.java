@@ -1,7 +1,6 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
-import net.myspring.future.modules.basic.dto.ProductTypeDto;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.PriceChange;
 
 import java.time.LocalDate;
@@ -10,7 +9,7 @@ import java.util.List;
 /**
  * Created by zhangyf on 2017/5/12.
  */
-public class PriceChangeForm extends DataForm<PriceChange>{
+public class PriceChangeForm extends BaseForm<PriceChange> {
 
     private String name;
     private LocalDate priceChangeDate;

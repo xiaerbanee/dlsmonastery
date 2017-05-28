@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.sys.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/14.
  */
-public class KingdeeBookForm extends DataForm<KingdeeBook> {
+public class KingdeeBookForm extends BaseForm<KingdeeBook> {
     private String companyId;
     private String name;
     private String type;

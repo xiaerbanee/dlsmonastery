@@ -1,12 +1,12 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 
 import java.util.List;
 
 
-public class ShopAllotForm extends DataForm<ShopAllot> {
+public class ShopAllotForm extends BaseForm<ShopAllot> {
 
     private String fromShopId;
     private String toShopId;

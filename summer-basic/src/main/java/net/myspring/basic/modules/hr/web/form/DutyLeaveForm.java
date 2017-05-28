@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.web.form;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.modules.hr.domain.DutyLeave;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * Created by admin on 2017/4/6.
  */
 
-public class DutyLeaveForm extends DataForm<DutyLeave>{
+public class DutyLeaveForm extends BaseForm<DutyLeave> {
     private String dutyDateStart;
     private String dutyDateEnd;
     private String employeeId;

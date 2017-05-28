@@ -1,9 +1,7 @@
 package net.myspring.future.modules.basic.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
-import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
@@ -11,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * Created by wangzm on 2017/4/21.
  */
-public class PricesystemDetailForm extends DataForm<PricesystemDetail> {
+public class PricesystemDetailForm extends BaseForm<PricesystemDetail> {
 
     private Integer sort;
     private String productId;

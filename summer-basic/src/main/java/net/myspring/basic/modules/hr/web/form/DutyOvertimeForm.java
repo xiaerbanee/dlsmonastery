@@ -1,13 +1,13 @@
 package net.myspring.basic.modules.hr.web.form;
 
 import net.myspring.basic.modules.hr.domain.DutyOvertime;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 
 /**
  * Created by admin on 2017/4/6.
  */
 
-public class DutyOvertimeForm extends DataForm<DutyOvertime> {
+public class DutyOvertimeForm extends BaseForm<DutyOvertime> {
     private Integer hour;
     private Integer leftHour;
     private String status;

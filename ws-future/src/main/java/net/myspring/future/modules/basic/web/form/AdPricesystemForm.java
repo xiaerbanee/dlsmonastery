@@ -1,7 +1,6 @@
 package net.myspring.future.modules.basic.web.form;
 
-import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.List;
 /**
  * Created by lihx on 2017/4/17.
  */
-public class AdPricesystemForm extends DataForm<AdPricesystem> {
+public class AdPricesystemForm extends BaseForm<AdPricesystem> {
     private String name;
 
     private List<String> officeIdList;

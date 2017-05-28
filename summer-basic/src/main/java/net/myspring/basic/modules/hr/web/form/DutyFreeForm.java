@@ -3,7 +3,7 @@ package net.myspring.basic.modules.hr.web.form;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.DutyFree;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by admin on 2017/4/6.
  */
 
-public class DutyFreeForm extends DataForm<DutyFree> {
+public class DutyFreeForm extends BaseForm<DutyFree> {
     private String employeeId;
     private String Status;
     private List<String> dateList= Lists.newArrayList();

@@ -2,7 +2,7 @@ package net.myspring.basic.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by wangzm on 2017/4/22.
  */
-public class OfficeRuleForm extends DataForm<OfficeRule> {
+public class OfficeRuleForm extends BaseForm<OfficeRule> {
     private String parentIds;
     private String parentId;
     @CacheInput(inputKey = "officeRules",inputInstance = "parentId",outputInstance = "name")

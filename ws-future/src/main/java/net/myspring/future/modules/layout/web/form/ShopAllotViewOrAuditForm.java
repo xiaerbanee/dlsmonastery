@@ -1,17 +1,15 @@
 package net.myspring.future.modules.layout.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopAllot;
-import net.myspring.future.modules.layout.dto.ShopAllotDto;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * Created by wangzm on 2017/4/21.
  */
-public class ShopAllotViewOrAuditForm extends DataForm<ShopAllot> {
+public class ShopAllotViewOrAuditForm extends BaseForm<ShopAllot> {
 
 
     private String syn;

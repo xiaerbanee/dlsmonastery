@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GoodsOrderBillForm extends DataForm<GoodsOrder> {
+public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
     private String storeId;
     private LocalDate billDate;
     private String expressCompanyId;

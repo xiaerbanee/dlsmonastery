@@ -1,6 +1,6 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by zhangyf on 2017/5/22.
  */
-public class AdApplyBillForm extends DataForm<AdApply> {
+public class AdApplyBillForm extends BaseForm<AdApply> {
 
     private String billType = BillTypeEnum.POP.name();
     private LocalDate billDate = LocalDate.now();

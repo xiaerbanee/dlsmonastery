@@ -1,12 +1,12 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 
 import java.time.LocalDate;
 
-public class BankInDetailForm extends DataForm<BankIn> {
+public class BankInDetailForm extends BaseForm<BankIn> {
 
     private BankInDto bankInDto;
     private String syn = "1";

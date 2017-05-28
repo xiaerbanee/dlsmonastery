@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.dto.BankDto;
 import net.myspring.future.modules.crm.domain.BankIn;
 
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-public class BankInForm extends DataForm<BankIn> {
+public class BankInForm extends BaseForm<BankIn> {
 
     private String shopId;
     private String type;

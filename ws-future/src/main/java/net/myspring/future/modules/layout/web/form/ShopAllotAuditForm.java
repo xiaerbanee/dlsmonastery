@@ -1,7 +1,7 @@
 package net.myspring.future.modules.layout.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by wangzm on 2017/4/21.
  */
-public class ShopAllotAuditForm extends DataForm<ShopAllot> {
+public class ShopAllotAuditForm extends BaseForm<ShopAllot> {
 
     private Boolean syn;
     private Boolean pass;

@@ -1,6 +1,6 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 
 import java.math.BigDecimal;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by wangzm on 2017/4/21.
  */
-public class ShopDepositForm extends DataForm<ShopDeposit> {
+public class ShopDepositForm extends BaseForm<ShopDeposit> {
 
     private BigDecimal imageAmount = BigDecimal.ZERO;
     private BigDecimal demoPhoneAmount= BigDecimal.ZERO;

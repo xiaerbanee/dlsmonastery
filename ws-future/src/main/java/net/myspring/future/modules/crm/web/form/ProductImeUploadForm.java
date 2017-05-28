@@ -1,12 +1,12 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 
 /**
  * Created by wangzm on 2017/4/21.
  */
-public class ProductImeUploadForm extends DataForm<ProductImeUpload> {
+public class ProductImeUploadForm extends BaseForm<ProductImeUpload> {
 
     private String imeStr;
     private String month;

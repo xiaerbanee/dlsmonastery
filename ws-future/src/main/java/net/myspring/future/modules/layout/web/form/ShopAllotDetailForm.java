@@ -1,12 +1,12 @@
 package net.myspring.future.modules.layout.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 
 import java.math.BigDecimal;
 
 
-public class ShopAllotDetailForm extends DataForm<ShopAllotDetail> {
+public class ShopAllotDetailForm extends BaseForm<ShopAllotDetail> {
 
     private String productId;
     private BigDecimal returnPrice;

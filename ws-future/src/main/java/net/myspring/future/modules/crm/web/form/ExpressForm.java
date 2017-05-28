@@ -1,11 +1,11 @@
 package net.myspring.future.modules.crm.web.form;
 
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.Express;
 
 import java.math.BigDecimal;
 
-public class ExpressForm extends DataForm<Express> {
+public class ExpressForm extends BaseForm<Express> {
 
 
     private String expressOrderExtendType;

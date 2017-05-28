@@ -2,7 +2,7 @@ package net.myspring.basic.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.domain.Role;
-import net.myspring.common.form.DataForm;
+import net.myspring.common.form.BaseForm;
 import net.myspring.common.tree.TreeNode;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by wangzm on 2017/5/2.
  */
-public class RoleForm extends DataForm<Role> {
+public class RoleForm extends BaseForm<Role> {
     private String name;
     private String permission;
     private String remarks;
