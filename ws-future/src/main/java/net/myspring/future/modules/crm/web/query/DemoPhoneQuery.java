@@ -13,15 +13,15 @@ import java.time.LocalDate;
 public class DemoPhoneQuery extends BaseQuery {
     private String ime;
     private String shopId;
-    private String demoPhoneType;
+    private String demoPhoneTypeId;
     private String createdDate;
 
-    public String getDemoPhoneType() {
-        return demoPhoneType;
+    public String getDemoPhoneTypeId() {
+        return demoPhoneTypeId;
     }
 
-    public void setDemoPhoneType(String demoPhoneType) {
-        this.demoPhoneType = demoPhoneType;
+    public void setDemoPhoneTypeId(String demoPhoneTypeId) {
+        this.demoPhoneTypeId = demoPhoneTypeId;
     }
 
     public String getShopId() {

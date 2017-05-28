@@ -18,8 +18,8 @@
                 <depot-select v-model="formData.shopId" category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.demoPhoneType.label" :label-width="formLabelWidth">
-              <el-input v-model="formData.demoPhoneType" auto-complete="off" :placeholder="$t('demoPhoneList.likeSearch')"></el-input>
-            </el-form-item>
+                <demo-phone-type v-model = "formData.demoPhoneTypeId"></demo-phone-type>
+              </el-form-item>
               <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
@@ -27,6 +27,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
+          <el-button @click="exportData" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('demoPhoneList.sure')}}</el-button>
         </div>
       </el-dialog>
@@ -60,9 +61,9 @@
 </template>
 <script>
   import depotSelect from 'components/future/depot-select'
-
+  import demoPhoneType from 'components/future/demo-phone-type-select'
   export default {
-    components:{depotSelect},
+    components:{depotSelect,demoPhoneType},
     data() {
       return {
         pageLoading: false,
@@ -74,7 +75,7 @@
           size:25,
           ime:'',
           shopId:'',
-          demoPhoneType:'',
+          demoPhoneTypeId:'',
           createdDate:'',
         },formLabel:{
           ime:{label: this.$t('demoPhoneList.ime')},
@@ -117,6 +118,11 @@
             this.pageRequest();
           })
         }
+      },exportData(){
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/ws/future/crm/demoPhone/export?'+qs.stringify(this.submitData)).then((response)=> {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

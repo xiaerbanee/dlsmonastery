@@ -70,12 +70,8 @@ public class ProductTypeController {
     }
 
     @RequestMapping(value = "search")
-    public List<ProductType> search(String name){
-        List<ProductType> productTypeList = Lists.newArrayList();
-        if(StringUtils.isNotBlank(name)){
-            productTypeList = productTypeService.findByNameLike(name);
-        }
-        return productTypeList;
+    public List<ProductTypeDto> search(String name){
+        return productTypeService.findByNameLike(name);
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)

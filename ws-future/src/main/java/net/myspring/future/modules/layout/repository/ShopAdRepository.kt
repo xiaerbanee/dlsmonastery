@@ -55,8 +55,8 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if (StringUtils.isNotEmpty(shopAdQuery.specialArea)) {
             sb.append("""  and t1.special_area = :specialArea """)
         }
-        if (StringUtils.isNotEmpty(shopAdQuery.ids)) {
-            sb.append("""  and t1.id in :ids """)
+        if (shopAdQuery.ids != null) {
+            sb.append("""  and t1.id in (:ids) """)
         }
         if (StringUtils.isNotEmpty(shopAdQuery.officeId)) {
             sb.append("""  and depot.office_id = :officeId """)
@@ -102,7 +102,7 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if (StringUtils.isNotEmpty(shopAdQuery.specialArea)) {
             sb.append("""  and t1.special_area = :specialArea """)
         }
-        if (StringUtils.isNotEmpty(shopAdQuery.ids)) {
+        if (shopAdQuery.ids != null) {
             sb.append("""  and t1.id in :ids """)
         }
         if (StringUtils.isNotEmpty(shopAdQuery.officeId)) {

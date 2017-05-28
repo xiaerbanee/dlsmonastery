@@ -4,14 +4,19 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.DemoPhoneType
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeDto
 import net.myspring.future.modules.basic.web.query.DemoPhoneTypeQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import javax.persistence.EntityManager
 
@@ -30,29 +35,40 @@ interface DemoPhoneTypeRepository : BaseRepository<DemoPhoneType,String>,DemoPho
     fun save(demoPhoneType: DemoPhoneType): Int
 
     @Query("""
-        SELECT t1.*
-        FROM crm_demo_phone_type t1
+        SELECT t1
+        FROM #{#entityName} t1
         where t1.enabled=1
-    """, nativeQuery = true)
+    """)
     fun findAllEnabled(): MutableList<DemoPhoneType>
 
     @Query("""
-        SELECT t1.*
-        FROM crm_demo_phone_type t1
+        SELECT t1
+        FROM #{#entityName} t1
         where t1.enabled=1
         and t1.id in ?1
-    """, nativeQuery = true)
+    """)
     fun findByIds(ids: MutableList<String>): MutableList<DemoPhoneType>
 
     @Query("""
         SELECT
-            t1.*
+            t1
         FROM
-            crm_demo_phone_type t1
+            #{#entityName} t1
         WHERE
             t1.enabled = 1
-        AND t1.apply_end_date > ?1
-    """, nativeQuery = true)
+        AND t1.name LIKE CONCAT('%' ,?1, '%')
+    """)
+    fun findByNameLike(name: String):MutableList<DemoPhoneType>
+
+    @Query("""
+        SELECT
+            t1
+        FROM
+            #{#entityName} t1
+        WHERE
+            t1.enabled = 1
+    """)
+    /*AND t1.apply_end_date > ?1*/
     fun findAllByApplyEndDate(applyEndDate: LocalDate): MutableList<DemoPhoneType>
 }
 
@@ -60,11 +76,10 @@ interface DemoPhoneTypeRepositoryCustom{
     fun findPage(pageable: Pageable, demoPhoneTypeQuery: DemoPhoneTypeQuery): Page<DemoPhoneTypeDto>
 }
 
-class DemoPhoneTypeRepositoryImpl @Autowired constructor(val entityManager: EntityManager):DemoPhoneTypeRepositoryCustom{
+class DemoPhoneTypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DemoPhoneTypeRepositoryCustom{
 
     override fun findPage(pageable: Pageable, demoPhoneTypeQuery: DemoPhoneTypeQuery): Page<DemoPhoneTypeDto> {
-        val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
             SELECT
                 t1.*, GROUP_CONCAT(DISTINCT t2. NAME) AS productTypeNames
             FROM
@@ -77,8 +92,11 @@ class DemoPhoneTypeRepositoryImpl @Autowired constructor(val entityManager: Enti
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
         sb.append(""" GROUP BY t1.id """)
-        var query = entityManager.createNativeQuery(sb.toString(), DemoPhoneTypeDto::class.java)
 
-        return query.resultList as Page<DemoPhoneTypeDto>
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(demoPhoneTypeQuery), BeanPropertyRowMapper(DemoPhoneTypeDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(demoPhoneTypeQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 }

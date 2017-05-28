@@ -68,13 +68,15 @@ public class DemoPhoneTypeController {
     }
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
-    public List<ProductTypeDto> search(String name){
-        List<ProductType> productTypeList = Lists.newArrayList();
-        if(StringUtils.isNotBlank(name)){
-            productTypeList = productTypeService.findByNameLike(name);
-        }
-        List<ProductTypeDto> productTypeDtoList = BeanUtil.map(productTypeList,ProductTypeDto.class);
-        return productTypeDtoList;
+    public List<DemoPhoneTypeDto> search(String name){
+        return demoPhoneTypeService.findNameLike(name);
+    }
+
+    @RequestMapping(value = "searchById")
+    public List<DemoPhoneTypeDto> searchById(String id){
+        List<DemoPhoneTypeDto> demoPhoneTypeDtos = Lists.newArrayList();
+        demoPhoneTypeDtos.add(demoPhoneTypeService.findOne(id));
+        return demoPhoneTypeDtos;
     }
 
 }

@@ -97,21 +97,17 @@
             this.remoteLoading = false;
           });
         }
-      },findOne(){
-        axios.get('/api/ws/future/crm/demoPhoneType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-          this.inputForm.demoPhoneTypeOfficeList=response.data.demoPhoneTypeOfficeList;
-          this.inputForm.productTypeIdList=util.getIdList(response.data.productTypeList)
-          if(response.data.productTypeList!=null && response.data.productTypeList.length >0){
-              this.productTypes = response.data.productTypeList;
-              this.inputForm.productIdList = util.getIdList(this.products);
-          }
-        })
       }
     },created(){
-      if(!this.isCreate){
-        this.findOne()
-      }
+      axios.get('/api/ws/future/crm/demoPhoneType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
+        this.inputForm.demoPhoneTypeOfficeList=response.data.demoPhoneTypeOfficeList;
+        this.inputForm.productTypeIdList=util.getIdList(response.data.productTypeList)
+        if(response.data.productTypeList!=null && response.data.productTypeList.length >0){
+          this.productTypes = response.data.productTypeList;
+          this.inputForm.productIdList = util.getIdList(this.products);
+        }
+      })
     }
   }
 </script>

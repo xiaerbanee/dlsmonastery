@@ -44,9 +44,12 @@ public class DemoPhoneTypeService {
 
     private static BigDecimal MIN_POINT = new BigDecimal("0.01");
 
-    public DemoPhoneType findOne(String id) {
-        DemoPhoneType demoPhoneType = demoPhoneTypeRepository.findOne(id);
-        return demoPhoneType;
+    public DemoPhoneTypeDto findOne(String id) {
+        DemoPhoneTypeDto demoPhoneTypeDto = new DemoPhoneTypeDto();
+        if(StringUtils.isNotBlank(id)){
+            demoPhoneTypeDto = BeanUtil.map(demoPhoneTypeRepository.findOne(id),DemoPhoneTypeDto.class);
+        }
+        return demoPhoneTypeDto;
     }
 
     public DemoPhoneTypeForm getForm(DemoPhoneTypeForm demoPhoneTypeForm){
@@ -129,5 +132,13 @@ public class DemoPhoneTypeService {
             demoPhoneTypeOfficeRepository.save(demoPhoneTypeOfficeList);
         }
         return demoPhoneType;
+    }
+
+    public List<DemoPhoneTypeDto> findNameLike(String name){
+        List<DemoPhoneTypeDto> demoPhoneTypeDtos  = Lists.newArrayList();
+        if(StringUtils.isNotBlank(name)){
+            demoPhoneTypeDtos = BeanUtil.map(demoPhoneTypeRepository.findByNameLike(name),DemoPhoneTypeDto.class);
+        }
+        return demoPhoneTypeDtos;
     }
 }
