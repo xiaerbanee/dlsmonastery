@@ -1,9 +1,8 @@
 package net.myspring.cloud.modules.kingdee.repository
 
-import net.myspring.cloud.common.config.MyBeanPropertyRowMapper
 import net.myspring.cloud.modules.kingdee.domain.BdStock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.util.*
@@ -12,10 +11,10 @@ import java.util.*
  * Created by haos on 2017/5/24.
  */
 @Component
-class  BdStockRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+class  BdStockRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
     fun findByNameLike(name: String): MutableList<BdStock> {
-        return jdbcTemplate.query("""
+        return namedParameterJdbcTemplate.query("""
             SELECT
             t1.FSTOCKID,
             t1.FNUMBER,
@@ -33,7 +32,7 @@ class  BdStockRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, 
             AND t1.FGROUP = t3.FID
             AND t3.FID = t4.FID
             and t2.FNAME like %?%
-        """, MyBeanPropertyRowMapper(BdStock::class.java), name)
+        """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdStock::class.java))
     }
 
     fun findByNameList(nameList: MutableList<String>): MutableList<BdStock> {
@@ -55,11 +54,11 @@ class  BdStockRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, 
             AND t1.FGROUP = t3.FID
             AND t3.FID = t4.FID
             and t2.FNAME in (:nameList)
-        """, Collections.singletonMap("nameList",nameList), MyBeanPropertyRowMapper(BdStock::class.java))
+        """, Collections.singletonMap("nameList",nameList), BeanPropertyRowMapper(BdStock::class.java))
     }
 
     fun findAll(): MutableList<BdStock> {
-        return jdbcTemplate.query("""
+        return namedParameterJdbcTemplate.query("""
             SELECT
             t1.FSTOCKID,
             t1.FNUMBER,
@@ -76,7 +75,7 @@ class  BdStockRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, 
             t1.FSTOCKID = t2.FSTOCKID
             AND t1.FGROUP = t3.FID
             AND t3.FID = t4.FID
-        """, MyBeanPropertyRowMapper(BdStock::class.java))
+        """, BeanPropertyRowMapper(BdStock::class.java))
 
     }
 }
