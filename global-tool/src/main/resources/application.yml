@@ -26,8 +26,6 @@ spring:
     username: alan
     password: alan
 
-mybatis:
-  config-location: classpath:/mybatis-config.xml
 server:
   port: 2100
 eureka:

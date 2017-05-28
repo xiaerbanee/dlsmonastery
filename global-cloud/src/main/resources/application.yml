@@ -17,8 +17,6 @@ spring:
     mongodb:
       uri: mongodb://168.192.1.20:1600/file
 
-mybatis:
-  config-location: classpath:/mybatis-config.xml
 server:
   port: 2000
 eureka:

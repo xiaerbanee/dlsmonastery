@@ -13,8 +13,6 @@ spring:
     database: 0
     max-idle: 25
     max-total: 50
-mybatis:
-  config-location: classpath:/mybatis-config.xml
 server:
   port: 1100
   # Use different context-path to avoid session cookie overlapping
