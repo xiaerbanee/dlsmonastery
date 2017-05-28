@@ -24,7 +24,7 @@ class AccountDtoRepository @Autowired constructor(val namedParameterJdbcTemplate
                     t1.employee_id = t2.id
                     and t1.position_id=t3.id
                     and t1.login_name= :loginName
-                """, Collections.singletonMap("longName",loginName), BeanPropertyRowMapper(AccountDto::class.java))
+                """, Collections.singletonMap("loginName",loginName), BeanPropertyRowMapper(AccountDto::class.java))
                 return accountDto;
     }
 
