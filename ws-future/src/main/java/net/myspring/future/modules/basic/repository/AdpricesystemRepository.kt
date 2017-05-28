@@ -14,6 +14,9 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 import javax.persistence.EntityManager
 
 /**
@@ -34,18 +37,14 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
     fun findByEnabledIsTrue(): MutableList<AdPricesystem>
 
     @Query("""
-        SELECT t1.*
-        FROM crm_ad_price_system t1
+        SELECT t1
+        FROM #{#entityName} t1
         WHERE t1.enabled = 1
-    """, nativeQuery = true)
+    """)
     fun findList(adPricesystemQuery: AdPricesystemQuery): MutableList<AdPricesystem>
 
     fun findByName(name: String): AdPricesystem
 
-    @Query("""
-       DELETE FROM crm_ad_pricesystem_office where ad_pricesystem_id = ?1
-    """, nativeQuery = true)
-    fun deleteOfficeIds(id: String): Int
 
 //    fun saveOfficeIds(@Param("adPricesystemId")adPricesystemId: String,@Param("officeIds")officeIds: MutableList<String>): Int
 
@@ -58,13 +57,23 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
 }
 
 interface AdpricesystemRepositoryCustom{
+
+    fun deleteOfficeIds(id: String):Int
+
     fun findPage(pageable: Pageable, adPricesystemQuery: AdPricesystemQuery): Page<AdPricesystemDto>
 }
 
-class AdpricesystemRepositoryImpl @Autowired constructor(val entityManager: EntityManager):AdpricesystemRepositoryCustom{
+class AdpricesystemRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdpricesystemRepositoryCustom{
+
+    override fun deleteOfficeIds(id: String):Int{
+        return namedParameterJdbcTemplate.queryForObject("""
+             DELETE FROM crm_ad_pricesystem_office where ad_pricesystem_id = :id
+        """,Collections.singletonMap("id",id),Int::class.java)
+    }
 
     override fun findPage(pageable: Pageable, adPricesystemQuery: AdPricesystemQuery): Page<AdPricesystemDto> {
-        val sb = StringBuffer()
+        TODO("findPage")
+        /*val sb = StringBuffer()
         sb.append("""
             SELECT
                 t1.*
@@ -78,7 +87,7 @@ class AdpricesystemRepositoryImpl @Autowired constructor(val entityManager: Enti
         }
         var query = entityManager.createNativeQuery(sb.toString(), AdPricesystemDto::class.java)
 
-        return query.resultList as Page<AdPricesystemDto>
+        return query.resultList as Page<AdPricesystemDto>*/
     }
 }
 

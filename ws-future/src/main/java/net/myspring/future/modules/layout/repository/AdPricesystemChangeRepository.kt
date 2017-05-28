@@ -4,10 +4,15 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdPricesystemChange
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto
 import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -23,11 +28,10 @@ interface AdPricesystemChangeRepositoryCustom{
     fun findFilter(adPricesystemChangeQuery: AdPricesystemChangeQuery): MutableList<AdPricesystemChangeDto>
 }
 
-class AdPricesystemChangeRepositoryImpl @Autowired constructor(val entityManager: EntityManager):AdPricesystemChangeRepositoryCustom{
+class AdPricesystemChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdPricesystemChangeRepositoryCustom{
 
     override fun findPage(pageable: Pageable,adPricesystemChangeQuery: AdPricesystemChangeQuery): Page<AdPricesystemChangeDto>{
-        val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
             SELECT
                 t1.*
             FROM
@@ -39,14 +43,15 @@ class AdPricesystemChangeRepositoryImpl @Autowired constructor(val entityManager
             sb.append("""  and t1.product_id = :productId """)
         }
 
-        var query = entityManager.createNativeQuery(sb.toString(),AdPricesystemChangeDto::class.java)
-
-        return query.resultList as Page<AdPricesystemChangeDto>
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(adPricesystemChangeQuery), BeanPropertyRowMapper(AdPricesystemChangeDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(adPricesystemChangeQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 
     override fun findFilter(adPricesystemChangeQuery: AdPricesystemChangeQuery): MutableList<AdPricesystemChangeDto>{
-        val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
             SELECT
                 t1.*
             FROM
@@ -58,8 +63,7 @@ class AdPricesystemChangeRepositoryImpl @Autowired constructor(val entityManager
             sb.append("""  and t1.product_id = :productId """)
         }
 
-        var query = entityManager.createNativeQuery(sb.toString(),AdPricesystemChangeDto::class.java)
 
-        return query.resultList as MutableList<AdPricesystemChangeDto>
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(adPricesystemChangeQuery), BeanPropertyRowMapper(AdPricesystemChangeDto::class.java))
     }
 }

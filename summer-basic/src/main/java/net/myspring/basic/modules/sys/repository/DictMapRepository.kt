@@ -49,7 +49,7 @@ interface  DictMapRepository :BaseRepository<DictMap,String>, DictMapRepositoryC
         t.name=?1
         and t.enabled=1
      """)
-    fun findByName(name:String): DictMapDto
+    fun findByName(name:String): DictMap
 
 
 }

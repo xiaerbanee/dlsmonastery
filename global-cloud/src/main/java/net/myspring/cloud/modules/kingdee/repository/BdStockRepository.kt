@@ -5,11 +5,13 @@ import net.myspring.cloud.modules.kingdee.domain.BdStock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Component
 import java.util.*
 
 /**
  * Created by haos on 2017/5/24.
  */
+@Component
 class  BdStockRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
     fun findByNameLike(name: String): MutableList<BdStock> {

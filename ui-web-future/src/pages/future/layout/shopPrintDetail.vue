@@ -68,7 +68,6 @@
         isCreate:this.$route.query.id==null,
         action:this.$route.query.action,
         shopPrint:{
-            pass:'1',
         },
         submitData:{
             id:'',

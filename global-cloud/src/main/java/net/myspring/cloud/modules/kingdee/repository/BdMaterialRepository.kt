@@ -5,11 +5,13 @@ import net.myspring.cloud.modules.kingdee.domain.BdMaterial
 import org.springframework.beans.factory.annotation.Autowired
 
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.stereotype.Component
 
 
 /**
  * Created by haos on 2017/5/24.
  */
+@Component
 class  BdMaterialRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate){
     fun findAll(): MutableList<BdMaterial> {
         return jdbcTemplate.query("""

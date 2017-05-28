@@ -2,17 +2,19 @@ package net.myspring.future.modules.layout.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopPromotion
-import net.myspring.future.modules.layout.dto.ShopPrintDto
 import net.myspring.future.modules.layout.dto.ShopPromotionDto
-import net.myspring.future.modules.layout.web.query.ShopPrintQuery
 import net.myspring.future.modules.layout.web.query.ShopPromotionQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
-import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -34,11 +36,11 @@ interface ShopPromotionRepositoryCustom{
     fun findPage(pageable: Pageable, shopPromotionQuery: ShopPromotionQuery): Page<ShopPromotionDto>
 }
 
-class ShopPromotionRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ShopPromotionRepositoryCustom{
+class ShopPromotionRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopPromotionRepositoryCustom{
 
     override fun findPage(pageable: Pageable, shopPromotionQuery: ShopPromotionQuery): Page<ShopPromotionDto> {
-        val sb = StringBuffer()
-        sb.append("""
+
+        val sb = StringBuilder("""
             SELECT
                 t1.*
             FROM
@@ -56,8 +58,10 @@ class ShopPromotionRepositoryImpl @Autowired constructor(val entityManager: Enti
             sb.append("""  and t1.activity_type = :activityType """)
         }
 
-        var query = entityManager.createNativeQuery(sb.toString(), ShopPromotionDto::class.java)
-
-        return query.resultList as Page<ShopPromotionDto>
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql =MySQLDialect.getInstance().getCountSql(sb.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql,BeanPropertySqlParameterSource(shopPromotionQuery),BeanPropertyRowMapper(ShopPromotionDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql,BeanPropertySqlParameterSource(shopPromotionQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 }
