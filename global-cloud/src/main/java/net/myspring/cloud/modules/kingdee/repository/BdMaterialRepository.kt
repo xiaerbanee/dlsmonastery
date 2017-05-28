@@ -1,20 +1,21 @@
 package net.myspring.cloud.modules.kingdee.repository
 
-import net.myspring.cloud.common.config.MyBeanPropertyRowMapper
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
+import java.util.*
 
 
 /**
  * Created by haos on 2017/5/24.
  */
 @Component
-class  BdMaterialRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate){
+class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
     fun findAll(): MutableList<BdMaterial> {
-        return jdbcTemplate.query("""
+        return namedParameterJdbcTemplate.query("""
             SELECT
             t1.FMASTERID,
             t1.FNUMBER,
@@ -31,11 +32,11 @@ class  BdMaterialRepository @Autowired constructor(val jdbcTemplate: JdbcTemplat
             t1.FMATERIALID = t2.FMATERIALID
             AND t1.FMATERIALGROUP = t3.FID
             AND t3.FID = t4.FID
-        """, MyBeanPropertyRowMapper(BdMaterial::class.java))
+        """, BeanPropertyRowMapper(BdMaterial::class.java))
     }
 
     fun findByName(name: String): BdMaterial {
-        return jdbcTemplate.queryForObject("""
+        return namedParameterJdbcTemplate.queryForObject("""
             SELECT
             t1.FMASTERID,
             t1.FNUMBER,
@@ -53,6 +54,6 @@ class  BdMaterialRepository @Autowired constructor(val jdbcTemplate: JdbcTemplat
             AND t1.FMATERIALGROUP = t3.FID
             AND t3.FID = t4.FID
             and t2.FNAME = ?
-        """,MyBeanPropertyRowMapper(BdMaterial::class.java), name)
+        """,Collections.singletonMap("name",name),BeanPropertyRowMapper(BdMaterial::class.java))
     }
 }
