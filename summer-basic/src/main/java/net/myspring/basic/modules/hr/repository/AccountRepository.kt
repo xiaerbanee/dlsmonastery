@@ -70,12 +70,6 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
     """)
     fun findByLoginNameList(loginNames: MutableList<String>): MutableList<Account>
 
-    @Query("""
-        SELECT t1
-        FROM  #{#entityName} t1
-        WHERE t1.id IN ?1
-    """)
-    fun findByIds(ids: MutableList<String>): MutableList<Account>
 }
 
 interface AccountRepositoryCustom{

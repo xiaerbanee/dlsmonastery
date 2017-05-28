@@ -65,10 +65,7 @@ public class DemoPhoneController {
     }
 
     @RequestMapping(value = "getForm")
-    public DemoPhoneForm findOne(DemoPhoneForm demoPhoneForm){
-        List<DemoPhoneType> demoPhoneTypeList = demoPhoneTypeService.findAllByApplyEndDate(LocalDate.now());
-        List<DemoPhoneTypeDto> DemoPhoneTypeDtoList = BeanUtil.map(demoPhoneTypeList,DemoPhoneTypeDto.class);
-        demoPhoneForm.setDemoPhoneTypeList(DemoPhoneTypeDtoList);
+    public DemoPhoneForm getForm(DemoPhoneForm demoPhoneForm){
         return demoPhoneForm;
     }
 

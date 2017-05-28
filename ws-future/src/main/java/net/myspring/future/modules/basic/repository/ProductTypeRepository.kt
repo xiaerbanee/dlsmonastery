@@ -26,7 +26,7 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
 
     override fun findAll(): MutableList<ProductType>
 
-    @CachePut(key = "#id")
+    @CachePut(key = "#p0.id")
     fun save(productType: ProductType): Int
 
     @Query("""

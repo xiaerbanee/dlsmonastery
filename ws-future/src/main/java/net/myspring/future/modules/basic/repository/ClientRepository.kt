@@ -26,7 +26,7 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
 
     override fun findAll(): MutableList<Client>
 
-    @CachePut(key = "#id")
+    @CachePut(key = "#p0.id")
     fun save(client: Client): Int
 
     @Query("""

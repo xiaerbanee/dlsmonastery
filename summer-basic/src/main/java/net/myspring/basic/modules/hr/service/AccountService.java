@@ -201,7 +201,7 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public List<AccountDto> findByIds(List<String> ids){
-        List<Account> districts = accountRepository.findByIds(ids);
+        List<Account> districts = accountRepository.findAll(ids);
         List<AccountDto> districtDtos= BeanUtil.map(districts,AccountDto.class);
         return districtDtos;
     }

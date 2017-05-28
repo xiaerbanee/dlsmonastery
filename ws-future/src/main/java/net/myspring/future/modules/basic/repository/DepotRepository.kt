@@ -37,7 +37,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     override fun findAll(): MutableList<Depot>
 
-    @CachePut(key = "#id")
+    @CachePut(key = "#p0.id")
     fun save(depot: Depot): Int
 
 

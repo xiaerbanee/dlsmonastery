@@ -24,7 +24,7 @@ interface PricesystemRepository : BaseRepository<Pricesystem,String>,Pricesystem
 
     override fun findAll(): MutableList<Pricesystem>
 
-    @CachePut(key = "#id")
+    @CachePut(key = "#p0.id")
     fun save(pricesystem: Pricesystem): Int
 
     @Query("""

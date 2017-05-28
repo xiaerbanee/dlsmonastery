@@ -25,7 +25,7 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
 
     override fun findAll(): MutableList<ExpressCompany>
 
-    @CachePut(key = "#id")
+    @CachePut(key = "#p0.id")
     fun save(expressCompany: ExpressCompany): Int
 
     @Query("""

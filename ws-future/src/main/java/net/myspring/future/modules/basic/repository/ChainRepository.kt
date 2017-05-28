@@ -25,7 +25,7 @@ interface ChainRepository : BaseRepository<Chain,String>,ChainRepositoryCustom {
 
     override fun findAll(): MutableList<Chain>
 
-    @CachePut(key = "#id")
+    @CachePut(key = "#p0.id")
     fun save(chain: Chain): Int
 
     @Query("""

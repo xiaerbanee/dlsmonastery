@@ -14,8 +14,7 @@ public class DemoPhoneForm extends BaseForm<BaseForm> {
     private String shopId;
     private String employeeId;
     private String productImeId;
-    private List<DemoPhoneTypeDto> demoPhoneTypeList;
-    private List<ProductImeDto> productImeDtoList;
+    /*private List<ProductImeDto> productImeDtoList;*/
 
     public String getProductImeId() {
         return productImeId;
@@ -23,14 +22,6 @@ public class DemoPhoneForm extends BaseForm<BaseForm> {
 
     public void setProductImeId(String productImeId) {
         this.productImeId = productImeId;
-    }
-
-    public List<ProductImeDto> getProductImeDtoList() {
-        return productImeDtoList;
-    }
-
-    public void setProductImeDtoList(List<ProductImeDto> productImeDtoList) {
-        this.productImeDtoList = productImeDtoList;
     }
 
     public String getDemoPhoneTypeId() {
@@ -57,11 +48,4 @@ public class DemoPhoneForm extends BaseForm<BaseForm> {
         this.employeeId = employeeId;
     }
 
-    public List<DemoPhoneTypeDto> getDemoPhoneTypeList() {
-        return demoPhoneTypeList;
-    }
-
-    public void setDemoPhoneTypeList(List<DemoPhoneTypeDto> demoPhoneTypeList) {
-        this.demoPhoneTypeList = demoPhoneTypeList;
-    }
 }

@@ -4,9 +4,7 @@
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('demoPhoneForm.productType')" prop="productType">
-          <el-select v-model="inputForm.demoPhoneTypeId" filterable :placeholder="$t('demoPhoneForm.inputWord')">
-            <el-option v-for="demoPhoneType in inputProperty.demoPhoneTypeList" :key="demoPhoneType.id" :label="demoPhoneType.name" :value="demoPhoneType.id"></el-option>
-          </el-select>
+          <demo-phone-type v-model = "inputForm.demoPhoneTypeId"></demo-phone-type>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneForm.shopName')" prop="shop">
           <depot-select v-model="inputForm.shopId" category="shop"></depot-select>
@@ -32,16 +30,17 @@
 <script>
   import depotSelect from 'components/future/depot-select'
   import employeeSelect from 'components/basic/employee-select'
+  import demoPhoneType from 'components/future/demo-phone-type-select'
   export default{
     components:{
         depotSelect,
-        employeeSelect
+        employeeSelect,
+        demoPhoneType
     },
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        inputProperty:{},
         inputForm:{},
         submitData:{
           id:'',
@@ -90,16 +89,12 @@
             this.remoteLoading = false;
           })
         } else {
-          this.$message("请先选择门店");
           this.productImes = [];
         }
       },
     },created(){
       axios.get('/api/ws/future/crm/demoPhone/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
-      })
-      axios.get('/api/ws/future/crm/demoPhone/getForm').then((response)=>{
-        this.inputProperty = response.data;
       })
     }
   }

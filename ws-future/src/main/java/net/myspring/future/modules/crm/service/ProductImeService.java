@@ -144,7 +144,7 @@ public class ProductImeService {
 
 
     public List<ProductIme> findByImeLike(String imeReverse,String shopId){
-        List<ProductIme> productImeList = productImeRepository.findTop20ByDepotIdAndImeReverseStartingWithAndEnabledIsTrue(imeReverse,shopId);
+        List<ProductIme> productImeList = productImeRepository.findTop20ByDepotIdAndImeReverseStartingWithAndEnabledIsTrue(shopId,imeReverse);
         return productImeList;
     }
 

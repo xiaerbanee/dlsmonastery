@@ -25,7 +25,7 @@ interface DepotStoreRepository : BaseRepository<DepotStore,String>,DepotStoreRep
 
     override fun findAll(): MutableList<DepotStore>
 
-    @CachePut(key = "#id")
+    @CachePut(key = "#p0.id")
     fun save(depotStore: DepotStore): Int
 
     @Query("""

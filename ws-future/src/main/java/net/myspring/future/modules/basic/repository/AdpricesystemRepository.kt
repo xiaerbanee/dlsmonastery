@@ -30,7 +30,7 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
 
     override fun findAll(): MutableList<AdPricesystem>
 
-    @CachePut(key = "#id")
+    @CachePut(key = "#p0.id")
     fun save(adPricesystem: AdPricesystem): Int
 
 
