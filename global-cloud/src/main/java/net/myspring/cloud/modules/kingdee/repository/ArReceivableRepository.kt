@@ -3,14 +3,17 @@ package net.myspring.cloud.modules.kingdee.repository
 import net.myspring.cloud.common.config.MyBeanPropertyRowMapper
 import net.myspring.cloud.modules.kingdee.domain.ArReceivable
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
-class ArReceivableRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate){
+class ArReceivableRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
     fun findBySourceBillNo(sourceBillNo: String): MutableList<ArReceivable> {
-        return jdbcTemplate.query("""
+        return namedParameterJdbcTemplate.query("""
             select
             t1.FBILLNO,
             t2.FSOURCEBILLNO
@@ -21,6 +24,6 @@ class ArReceivableRepository @Autowired constructor(val jdbcTemplate: JdbcTempla
             t1.fid=t2.FID
             and t2.FSOURCEBILLNO = :sourceBillNo
             order by t1.fid DESC
-        """, MyBeanPropertyRowMapper(ArReceivable::class.java), sourceBillNo)
+        """,Collections.singletonMap("sourceBillNo",sourceBillNo), BeanPropertyRowMapper(ArReceivable::class.java))
     }
 }

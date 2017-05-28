@@ -4,6 +4,7 @@ import net.myspring.cloud.common.config.MyBeanPropertyRowMapper
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer
 import net.myspring.common.dto.NameValueDto
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
@@ -13,9 +14,9 @@ import java.util.*
  * Created by haos on 2017/5/24.
  */
 @Component
-class BdCustomerRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+class BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
     fun findAll(): MutableList<BdCustomer> {
-        return jdbcTemplate.query("""
+        return namedParameterJdbcTemplate.query("""
             SELECT
             t1.FCUSTID,
             t1.FNUMBER,
@@ -33,7 +34,7 @@ class BdCustomerRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate
             t1.FCUSTID = t2.FCUSTID
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
-        """,MyBeanPropertyRowMapper(BdCustomer::class.java))
+        """, BeanPropertyRowMapper(BdCustomer::class.java))
 
     }
 
@@ -85,7 +86,7 @@ class BdCustomerRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate
     }
 
     fun findById(id: String): BdCustomer {
-        return jdbcTemplate.queryForObject("""
+        return namedParameterJdbcTemplate.queryForObject("""
             SELECT
             t1.FCUSTID,
             t1.FNUMBER,
@@ -104,11 +105,11 @@ class BdCustomerRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
             and t1.FCUSTID = ?
-        """, MyBeanPropertyRowMapper(BdCustomer::class.java), id)
+        """,Collections.singletonMap("id",id),BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
     fun findByNameLike(name: String): MutableList<BdCustomer> {
-        return jdbcTemplate.query("""
+        return namedParameterJdbcTemplate.query("""
             SELECT
             t1.FCUSTID,
             t1.FNUMBER,
@@ -127,11 +128,11 @@ class BdCustomerRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
             AND t2.FNAME like %?%
-        """, MyBeanPropertyRowMapper(BdCustomer::class.java), name)
+        """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
     fun findPrimaryGroupAndPrimaryGroupName(): MutableList<NameValueDto> {
-        return jdbcTemplate.query("""
+        return namedParameterJdbcTemplate.query("""
             SELECT
             t1.FPRIMARYGROUP as value,
             t4.FNAME AS name
@@ -147,7 +148,7 @@ class BdCustomerRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate
             group by
             t1.FPRIMARYGROUP,
             t4.FNAME
-        """, MyBeanPropertyRowMapper(NameValueDto::class.java))
+        """, BeanPropertyRowMapper(NameValueDto::class.java))
     }
 
 }
