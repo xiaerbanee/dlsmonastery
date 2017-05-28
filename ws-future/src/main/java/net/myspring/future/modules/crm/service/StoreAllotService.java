@@ -181,7 +181,7 @@ public class StoreAllotService {
     }
 
     public Page<StoreAllotDto> findPage(Pageable pageable, StoreAllotQuery storeAllotQuery) {
-        Page<StoreAllotDto> page = BeanUtil.map(storeAllotRepository.findAll(pageable,storeAllotQuery), StoreAllotDto.class);
+        Page<StoreAllotDto> page = storeAllotRepository.findPage(pageable,storeAllotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
 

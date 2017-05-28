@@ -75,9 +75,7 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     }
 
     override fun findByFilter(shopBuildQuery: ShopBuildQuery): MutableList<ShopBuildDto> {
-        TODO("findList")
-        /*val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
             SELECT
                 depot.office_id officeId,
                 t1.*
@@ -109,8 +107,7 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (shopBuildQuery.createdDateEnd != null) {
             sb.append("""  and t1.created_date < :createdDateEnd """)
         }
-        var query = entityManager.createNativeQuery(sb.toString(), ShopBuildDto::class.java)
 
-        return query.resultList as MutableList<ShopBuildDto>*/
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(shopBuildQuery), BeanPropertyRowMapper(ShopBuildDto::class.java))
     }
 }

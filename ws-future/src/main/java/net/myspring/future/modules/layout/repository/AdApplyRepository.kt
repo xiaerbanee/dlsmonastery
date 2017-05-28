@@ -5,16 +5,18 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdApply
 import net.myspring.future.modules.layout.dto.AdApplyDto
 import net.myspring.future.modules.layout.web.query.AdApplyQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.query.Param
 import org.springframework.data.jpa.repository.Query
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
-import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -51,7 +53,7 @@ interface AdApplyRepositoryCustom{
     fun findPage(pageable: Pageable,adApplyQuery: AdApplyQuery): Page<AdApplyDto>
 }
 
-class AdApplyRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdApplyRepositoryCustom{
+class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdApplyRepositoryCustom{
 
     override fun findByOutGroupIdAndDate(dateStart: LocalDate,outGroupIds: MutableList<String>): MutableList<AdApplyDto>{
         var params = HashMap<String,Any>()
@@ -73,8 +75,7 @@ class AdApplyRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
     }
 
     override fun findPage(pageable: Pageable,adApplyQuery: AdApplyQuery): Page<AdApplyDto>{
-        val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
             SELECT
                 t1.*
             FROM
@@ -94,7 +95,7 @@ class AdApplyRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
             sb.append("""  and t1.created_date  >= :createdDateStart """)
         }
         if (adApplyQuery.createdDateEnd != null) {
-            sb.append("""  and t1.created_date  < :createdDateStart """)
+            sb.append("""  and t1.created_date  < :createdDateEnd """)
         }
         if (StringUtils.isNotEmpty(adApplyQuery.productName)) {
             sb.append(""" and product.name like CONCAT('%', :productName,'%') """)
@@ -104,8 +105,10 @@ class AdApplyRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                 and t1.billed_qty
             """)
         }*/
-        var query = jdbcTemplate.queryForObject(sb.toString(),AdApplyDto::class.java)
-
-        return query.toString() as Page<AdApplyDto>
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(adApplyQuery), BeanPropertyRowMapper(AdApplyDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(adApplyQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 }

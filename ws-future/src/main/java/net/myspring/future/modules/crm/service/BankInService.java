@@ -8,7 +8,7 @@ import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.repository.BankInRepository;
-import net.myspring.future.modules.crm.web.form.BankInDetailForm;
+import net.myspring.future.modules.crm.web.form.BankInAuditForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -36,9 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -61,15 +59,10 @@ public class BankInService {
         return page;
     }
 
-    public BankIn findOne(String id){
-        BankIn bankIn=bankInRepository.findOne(id);
-        return bankIn;
-    }
-
-    public void audit(BankInDetailForm bankInDetailForm){
+    public void audit(BankInAuditForm bankInAuditForm){
         //TODO 需要同步金蝶
-        BankIn bankIn = bankInRepository.findOne(bankInDetailForm.getId());
-        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInDetailForm.getAuditRemarks(), "1".equals(bankInDetailForm.getPass())));
+        BankIn bankIn = bankInRepository.findOne(bankInAuditForm.getId());
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInAuditForm.getAuditRemarks(), "1".equals(bankInAuditForm.getPass())));
         if("已通过".equals(activitiCompleteDto.getProcessStatus())){
             bankIn.setLocked(true);
         }
@@ -77,20 +70,8 @@ public class BankInService {
         bankIn.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
         bankIn.setProcessStatus(activitiCompleteDto.getProcessStatus());
         bankIn.setPositionId(activitiCompleteDto.getPositionId());
-        bankIn.setBillDate(bankInDetailForm.getBillDate() == null ? LocalDate.now() : bankInDetailForm.getBillDate());
+        bankIn.setBillDate(bankInAuditForm.getBillDate() == null ? LocalDate.now() : bankInAuditForm.getBillDate());
         bankInRepository.save(bankIn);
-
-    }
-
-    public BankInForm getForm(BankInForm bankInForm) {
-        BankIn bankIn=bankInRepository.findOne(bankInForm.getId());
-        BankInForm result = BeanUtil.map(bankIn, BankInForm.class);
-
-        if(result == null){
-            result = new BankInForm();
-        }
-
-        return result;
 
     }
 
@@ -119,35 +100,20 @@ public class BankInService {
         bankInRepository.logicDelete(id);
     }
 
-    public BankInDetailForm findDetail(String id, String action) {
-
-        BankInDetailForm result = new BankInDetailForm();
-        result.setId(id);
-        BankInDto bankInDto = bankInRepository.findDto(id);
-        result.setBankInDto(bankInDto);
-
-        if("audit".equals(action)){
-            result.setBillDate(LocalDate.now());
-        }
-
-        cacheUtils.initCacheInput(result);
-        return result;
-    }
-
     public void batchAudit(String[] ids, String pass) {
         if(ids == null){
             return;
         }
         List<String> idList = Arrays.asList(ids);
         for(String id : idList){
-            BankInDetailForm bankInDetailForm = new BankInDetailForm();
-            bankInDetailForm.setAuditRemarks("批量通过");
-            bankInDetailForm.setId(id);
-            bankInDetailForm.setPass(pass);
-            bankInDetailForm.setSyn("1");
-            bankInDetailForm.setBillDate(LocalDate.now());
+            BankInAuditForm bankInAuditForm = new BankInAuditForm();
+            bankInAuditForm.setAuditRemarks("批量通过");
+            bankInAuditForm.setId(id);
+            bankInAuditForm.setPass(pass);
+            bankInAuditForm.setSyn("1");
+            bankInAuditForm.setBillDate(LocalDate.now());
 
-            audit(bankInDetailForm);
+            audit(bankInAuditForm);
 
         }
 
@@ -180,5 +146,16 @@ public class BankInService {
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
         GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());
+    }
+
+    public BankInDto findDto(String id) {
+        if(StringUtils.isBlank(id)){
+            return null;
+        }
+
+        BankInDto result = bankInRepository.findDto(id);
+        cacheUtils.initCacheInput(result);
+
+        return result;
     }
 }

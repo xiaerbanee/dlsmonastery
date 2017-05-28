@@ -8,7 +8,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.service.BankService;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.service.BankInService;
-import net.myspring.future.modules.crm.web.form.BankInDetailForm;
+import net.myspring.future.modules.crm.web.form.BankInAuditForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,15 +63,10 @@ public class BankInController {
 
 
     @RequestMapping(value = "audit")
-    public RestResponse audit(BankInDetailForm bankInDetailForm) {
+    public RestResponse audit(BankInAuditForm bankInAuditForm) {
 
-        bankInService.audit(bankInDetailForm);
+        bankInService.audit(bankInAuditForm);
         return new RestResponse("审核成功",ResponseCodeEnum.audited.name());
-    }
-
-    @RequestMapping(value = "findDetail")
-    public BankInDetailForm findDetail(String id, String action){
-        return bankInService.findDetail(id, action);
     }
 
     @RequestMapping(value = "batchAudit")
@@ -83,11 +78,21 @@ public class BankInController {
 
     @RequestMapping(value = "getForm")
     public BankInForm getForm(BankInForm bankInForm ){
-        BankInForm  result =bankInService.getForm(bankInForm);
 
-        result.setTypeList(BankInTypeEnum.getList());
-        result.setBankDtoList(bankService.findByAccountId(RequestUtils.getAccountId()));
+        bankInForm.setTypeList(BankInTypeEnum.getList());
+        bankInForm.setBankDtoList(bankService.findByAccountId(RequestUtils.getAccountId()));
+        return bankInForm;
+    }
+
+
+    @RequestMapping(value = "findDto")
+    public BankInDto findDto(String id ){
+        BankInDto result = bankInService.findDto(id);
+        if(result == null){
+            result = new BankInDto();
+        }
         return result;
+
     }
 
 

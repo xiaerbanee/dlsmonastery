@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
@@ -12,6 +13,7 @@ import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -99,9 +101,13 @@ public class ProductTypeService {
 //        return simpleExcelSheetList;
 //    }
 
-    public List<ProductType> findByNameLike(String name){
-        List<ProductType> productTypeList = productTypeRepository.findByNameLike(name);
-        return productTypeList;
+    public List<ProductTypeDto> findByNameLike(String name){
+        List<ProductTypeDto> productTypeDtos = Lists.newArrayList();
+        if(StringUtils.isNotBlank(name)){
+           productTypeDtos = BeanUtil.map(productTypeRepository.findByNameLike(name),ProductTypeDto.class);
+        }
+
+        return productTypeDtos;
     }
 
 }

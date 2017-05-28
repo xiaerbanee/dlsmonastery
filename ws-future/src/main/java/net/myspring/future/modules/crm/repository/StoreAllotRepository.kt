@@ -17,10 +17,16 @@ import java.time.LocalDateTime
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto
 import net.myspring.future.modules.crm.dto.StoreAllotDto
+import net.myspring.future.modules.layout.dto.ShopAllotDto
+import net.myspring.util.repository.MySQLDialect
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import java.util.*
@@ -44,13 +50,13 @@ interface StoreAllotRepository : BaseRepository<StoreAllot, String>, StoreAllotR
 
 interface StoreAllotRepositoryCustom{
 
-    fun findAll(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto>
+    fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto>
 
     fun findDto(id: String): StoreAllotDto
 
 }
 
-class StoreAllotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): StoreAllotRepositoryCustom{
+class StoreAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): StoreAllotRepositoryCustom{
     override fun findDto(id: String): StoreAllotDto {
         return namedParameterJdbcTemplate.queryForObject("""
             SELECT
@@ -66,8 +72,48 @@ class StoreAllotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
                 """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(StoreAllotDto::class.java))
     }
 
-    override fun findAll(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto> {
+
+        val sb = StringBuffer()
+        sb.append("""
+        SELECT  t1.*
+        FROM  crm_store_allot t1
+        where t1.enabled=1
+        """)
+        if(StringUtils.isNotBlank(storeAllotQuery.remarks)){
+            sb.append("""   and t1.remarks like concat('%', :remarks,'%')  """)
+        }
+        if(StringUtils.isNotBlank(storeAllotQuery.status)){
+            sb.append("""   and t1.status= :status  """)
+        }
+        if(StringUtils.isNotBlank(storeAllotQuery.createdBy)){
+            sb.append("""  and t1.created_by = :createdBy """)
+        }
+        if(StringUtils.isNotBlank(storeAllotQuery.fromStoreId)){
+            sb.append("""  and t1.from_store_id= :fromStoreId  """)
+        }
+        if(StringUtils.isNotBlank(storeAllotQuery.toStoreId)){
+            sb.append("""  and t1.to_store_id= :toStoreId  """)
+        }
+        if(storeAllotQuery.businessIdList != null){
+            sb.append("""  and t1.business_id  in  (:businessIdList)  """)
+        }
+        if(StringUtils.isNotBlank(storeAllotQuery.outCode)){
+            sb.append("""  and t1.out_code like concat('%', :outCode, '%')  """)
+        }
+        if(storeAllotQuery.createdDateStart != null){
+            sb.append("""  and t1.created_date >= :createdDateStart """)
+        }
+        if(storeAllotQuery.createdDateEnd != null){
+            sb.append("""  and t1.created_date <  :createdDateEnd """)
+        }
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        var paramMap = BeanPropertySqlParameterSource(storeAllotQuery)
+        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(StoreAllotDto::class.java))
+        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        return PageImpl(list,pageable,count)
+
     }
 
 

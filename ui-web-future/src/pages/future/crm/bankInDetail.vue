@@ -2,20 +2,20 @@
   <div>
     <head-tab active="bankInDetail"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" label-width="120px" class="form input-form">
+      <el-form :model="bankIn" ref="inputForm" label-width="120px" class="form input-form">
         <el-row :gutter="4">
           <el-col :span="12">
             <el-form-item :label="$t('bankInDetail.shopName')" >
-              {{inputForm.bankInDto.shopName}}
+              {{bankIn.shopName}}
             </el-form-item>
             <el-form-item :label="$t('bankInDetail.bankName')">
-              {{inputForm.bankInDto.bankName}}
+              {{bankIn.bankName}}
             </el-form-item>
             <el-form-item :label="$t('bankInDetail.amount')" >
-              {{inputForm.bankInDto.amount}}
+              {{bankIn.amount}}
             </el-form-item>
             <el-form-item :label="$t('bankInDetail.serialNumber')">
-              {{inputForm.bankInDto.serialNumber}}
+              {{bankIn.serialNumber}}
             </el-form-item>
             <el-form-item :label="$t('bankInDetail.synInfo')">
               金蝶同步
@@ -23,19 +23,19 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('bankInDetail.outCode')">
-              {{inputForm.bankInDto.outCode}}
+              {{bankIn.outCode}}
             </el-form-item>
             <el-form-item :label="$t('bankInDetail.processStatus')">
-              {{inputForm.bankInDto.processStatus}}
+              {{bankIn.processStatus}}
             </el-form-item>
             <el-form-item :label="$t('bankInDetail.inputDate')">
-              {{inputForm.bankInDto.inputDate}}
+              {{bankIn.inputDate}}
             </el-form-item>
             <el-form-item :label="$t('bankInDetail.createdByName')">
-              {{inputForm.bankInDto.createdByName}}
+              {{bankIn.createdByName}}
             </el-form-item>
             <el-form-item :label="$t('bankInDetail.remarks')">
-              {{inputForm.bankInDto.remarks}}
+              {{bankIn.remarks}}
             </el-form-item>
           </el-col>
         </el-row>
@@ -43,16 +43,16 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('bankInDetail.synToCloud')" prop="syn" >
-                <bool-radio-group v-model="inputForm.syn"></bool-radio-group>
+                <bool-radio-group v-model="syn"></bool-radio-group>
               </el-form-item>
               <el-form-item :label="$t('bankInDetail.billDate')" prop="billDate"  >
-                <date-picker v-model="inputForm.billDate"></date-picker>
+                <date-picker v-model="bankIn.billDate"></date-picker>
               </el-form-item>
               <el-form-item :label="$t('bankInDetail.pass')" prop="pass" >
-                <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
+                <bool-radio-group v-model="audit.pass"></bool-radio-group>
               </el-form-item>
               <el-form-item :label="$t('bankInDetail.auditRemarks')" prop="auditRemarks"  >
-                <el-input type="textarea" v-model="inputForm.auditRemarks"></el-input>
+                <el-input type="textarea" v-model="audit.auditRemarks"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()"  >{{$t('bankInDetail.save')}}</el-button>
@@ -60,9 +60,9 @@
             </el-col>
           </el-row>
         </div>
-        <el-row v-if="inputForm.bankInDto.processInstanceId"   :gutter="4">
+        <el-row v-if="bankIn.processInstanceId"   :gutter="4">
           <el-col :span="24">
-            <process-details v-model="inputForm.bankInDto.processInstanceId"></process-details>
+            <process-details v-model="bankIn.processInstanceId"></process-details>
           </el-col>
         </el-row>
       </el-form>
@@ -81,10 +81,12 @@
     },
       data(){
           return{
-            inputForm:{
-                bankInDto:{},
-
+            bankIn:{},
+            audit:{
+                pass:false,
+                auditRemarks:'',
             },
+            syn:true,
             submitData:{
               id:'',
               syn:'',
@@ -101,7 +103,7 @@
             var form = this.$refs["inputForm"];
             form.validate((valid) => {
               if (valid) {
-                util.copyValue(this.inputForm, this.submitData);
+                this.initSubmitDataBeforeSubmit();
                 axios.post('/api/ws/future/crm/bankIn/audit', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
                   this.$message(response.data.message);
                   this.$router.push({name:'bankInList',query:util.getQuery("bankInList")})
@@ -112,11 +114,22 @@
                 this.submitDisabled = false;
               }
             })
-          }
-    },created(){
-          axios.get('/api/ws/future/crm/bankIn/findDetail',{params: {id:this.$route.query.id, action:this.$route.query.action}}).then((response)=>{
-              this.inputForm = response.data;
+          }, initSubmitDataBeforeSubmit(){
 
+        this.submitData.id = this.$route.query.id;
+        this.submitData.syn = this.syn;
+        this.submitData.billDate = this.bankIn.billDate;
+        this.submitData.pass = this.audit.pass;
+        this.submitData.auditRemarks = this.audit.auditRemarks;
+
+      }
+    },created(){
+          axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+              this.bankIn = response.data;
+
+              if(!this.bankIn.billDate){
+//TODO 默认设置为今天
+              }
           })
       }
     }
