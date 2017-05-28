@@ -5,6 +5,7 @@ import net.myspring.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,6 +24,10 @@ public class VivoPlantSendimei extends IdEntity<VivoPlantSendimei> {
     private String meid;
     private String imei2;
     private String productId;
+
+    private String defaultProductId;
+    private String lxProductId;
+    private String colorId;
 
     public String getCompanyId() {
         return companyId;
@@ -126,5 +131,32 @@ public class VivoPlantSendimei extends IdEntity<VivoPlantSendimei> {
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    @Transient
+    public String getDefaultProductId() {
+        return defaultProductId;
+    }
+
+    public void setDefaultProductId(String defaultProductId) {
+        this.defaultProductId = defaultProductId;
+    }
+
+    @Transient
+    public String getLxProductId() {
+        return lxProductId;
+    }
+
+    public void setLxProductId(String lxProductId) {
+        this.lxProductId = lxProductId;
+    }
+
+    @Transient
+    public String getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(String colorId) {
+        this.colorId = colorId;
     }
 }

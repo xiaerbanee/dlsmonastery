@@ -23,6 +23,7 @@ public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
 
     private String lxProductId;
     private String productId;
+    private String colorId;
 
     public String getBillId() {
         return billId;
@@ -114,5 +115,14 @@ public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
     @Transient
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    @Transient
+    public String getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(String colorId) {
+        this.colorId = colorId;
     }
 }
