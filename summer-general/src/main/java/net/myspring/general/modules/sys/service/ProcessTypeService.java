@@ -150,16 +150,7 @@ public class ProcessTypeService {
     }
 
     public Page<ProcessTypeDto> findPage(Pageable pageable, ProcessTypeQuery processTypeQuery) {
-        Specification<ProcessType> specification = (root, query, cb) -> {
-            List<Predicate> predicates  = Lists.newArrayList();
-            predicates.add(cb.equal(root.get("companyId").as(String.class), RequestUtils.getCompanyId()));
-            if(StringUtils.isNotBlank(processTypeQuery.getName())) {
-                predicates.add(cb.like(root.get("name").as(String.class),"%" + processTypeQuery.getName() + "%"));
-            }
-            return cb.and(predicates.toArray(new Predicate[predicates.size()]));
-        };
-
-        Page<ProcessType> page = processTypeRepository.findAll(specification,pageable);
+        Page<ProcessType> page = processTypeRepository.findAll(pageable,processTypeQuery);
         return BeanUtil.map(page,ProcessTypeDto.class);
     }
 

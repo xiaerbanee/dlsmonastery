@@ -44,7 +44,7 @@ interface StoreAllotRepository : BaseRepository<StoreAllot, String>, StoreAllotR
 
 interface StoreAllotRepositoryCustom{
 
-    fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto>
+    fun findAll(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto>
 
     fun findDto(id: String): StoreAllotDto
 
@@ -66,7 +66,7 @@ class StoreAllotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
                 """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(StoreAllotDto::class.java))
     }
 
-    override fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto> {
+    override fun findAll(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

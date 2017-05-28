@@ -116,20 +116,8 @@ public class FolderFileService {
     }
 
     @Transactional(readOnly = true)
-    public Page<FolderFileDto> findPage(Pageable pageable, FolderFileQuery folderFileQuery) {
-        Specification<FolderFile> specification = (root, query, cb) -> {
-           List<Predicate> predicates  = Lists.newArrayList();
-            predicates.add(cb.equal(root.get("companyId").as(String.class), RequestUtils.getCompanyId()));
-            if(folderFileQuery.getCreatedDateStart() != null) {
-                predicates.add(cb.greaterThan(root.get("createdDate").as(LocalDate.class),folderFileQuery.getCreatedDateStart()));
-            }
-            if(folderFileQuery.getCreatedDateEnd() != null) {
-                predicates.add(cb.lessThan(root.get("createdDate").as(LocalDate.class),folderFileQuery.getCreatedDateEnd()));
-            }
-            return cb.and(predicates.toArray(new Predicate[predicates.size()]));
-        };
-
-        Page<FolderFile> folderFilePage= folderFileRepository.findAll(specification,pageable);
+    public Page<FolderFileDto> findAll(Pageable pageable, FolderFileQuery folderFileQuery) {
+        Page<FolderFile> folderFilePage= folderFileRepository.findAll(pageable,folderFileQuery);
         Page<FolderFileDto> page = BeanUtil.map(folderFilePage,FolderFileDto.class);
         return page;
     }

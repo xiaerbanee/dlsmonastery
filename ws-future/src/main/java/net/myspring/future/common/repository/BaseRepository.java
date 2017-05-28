@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @NoRepositoryBean
-public interface BaseRepository<T, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T>,CrudRepository<T,ID> {
+public interface BaseRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 
    Map<ID,T> findMap(Collection<ID> ids);
 

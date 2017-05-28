@@ -40,7 +40,7 @@ public class FolderFileController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<FolderFileDto>  list(Pageable pageable, FolderFileQuery folderFileQuery){
-        Page<FolderFileDto> page = folderFileService.findPage(pageable,folderFileQuery);
+        Page<FolderFileDto> page = folderFileService.findAll(pageable,folderFileQuery);
         return page;
     }
 

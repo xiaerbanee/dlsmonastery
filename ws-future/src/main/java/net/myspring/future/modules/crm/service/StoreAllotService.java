@@ -181,42 +181,7 @@ public class StoreAllotService {
     }
 
     public Page<StoreAllotDto> findPage(Pageable pageable, StoreAllotQuery storeAllotQuery) {
-
-
-        Specification<StoreAllot> specification = (root, query, cb) -> {
-            List<Predicate> predicates  = Lists.newArrayList();
-            predicates.add(cb.equal(root.get("companyId").as(String.class), RequestUtils.getCompanyId()));
-            if(storeAllotQuery.getCreatedDateStart() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("createdDate").as(LocalDateTime.class),storeAllotQuery.getCreatedDateStart()));
-            }
-            if(storeAllotQuery.getCreatedDateEnd() != null) {
-                predicates.add(cb.lessThan(root.get("createdDate").as(LocalDateTime.class),storeAllotQuery.getCreatedDateEnd()));
-            }
-            if(storeAllotQuery.getOutCode() != null) {
-                predicates.add(cb.like(root.get("outCode").as(String.class), storeAllotQuery.getOutCode()));
-            }
-            if(storeAllotQuery.getToStoreId() != null) {
-                predicates.add(cb.equal(root.get("toStoreId").as(String.class), storeAllotQuery.getToStoreId()));
-            }
-            if(storeAllotQuery.getFromStoreId() != null) {
-                predicates.add(cb.equal(root.get("fromStoreId").as(String.class), storeAllotQuery.getFromStoreId()));
-            }
-            if(storeAllotQuery.getCreatedBy() != null) {
-                predicates.add(cb.equal(root.get("createdBy").as(String.class), storeAllotQuery.getCreatedBy()));
-            }
-            if(storeAllotQuery.getStatus() != null) {
-                predicates.add(cb.equal(root.get("status").as(String.class), storeAllotQuery.getStatus()));
-            }
-            if(storeAllotQuery.getRemarks() != null) {
-                predicates.add(cb.like(root.get("remarks").as(String.class), storeAllotQuery.getRemarks()));
-            }
-            if(storeAllotQuery.getBusinessIdList() != null) {
-                predicates.add(cb.isTrue(root.get("businessId").as(String.class).in(storeAllotQuery.getBusinessIdList())));
-            }
-            return cb.and(predicates.toArray(new Predicate[predicates.size()]));
-        };
-
-        Page<StoreAllotDto> page = BeanUtil.map(storeAllotRepository.findAll(specification, pageable), StoreAllotDto.class);
+        Page<StoreAllotDto> page = BeanUtil.map(storeAllotRepository.findAll(pageable,storeAllotQuery), StoreAllotDto.class);
         cacheUtils.initCacheInput(page.getContent());
         return page;
 
