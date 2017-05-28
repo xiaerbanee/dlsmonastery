@@ -21,6 +21,7 @@ public class BankInDto extends DataDto<BankIn> {
     @CacheInput(inputKey = "banks",inputInstance = "bankId",outputInstance = "name")
     private String bankName;
     private String bankId;
+    private String type;
 
     private BigDecimal amount;
     private String serialNumber;
@@ -30,6 +31,14 @@ public class BankInDto extends DataDto<BankIn> {
     private String processStatus;
     private Boolean locked;
     private String processInstanceId;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getProcessInstanceId() {
         return processInstanceId;
@@ -155,6 +164,9 @@ public class BankInDto extends DataDto<BankIn> {
 
     public Boolean getEditable(){
         //TODO 判斷editable要修改
+        if(locked == null || processStatus ==null){
+            return Boolean.TRUE;
+        }
         if ((!getLocked() && !getFinished()) && RequestUtils.getAccountId() != null && (RequestUtils.getAccountId().equals(getCreatedBy()) )) {
             return Boolean.TRUE;
         } else {

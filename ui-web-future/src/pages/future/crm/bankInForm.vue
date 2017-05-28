@@ -2,32 +2,32 @@
   <div>
     <head-tab active="bankInForm"></head-tab>
     <div >
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="bankIn" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('bankInForm.shopName')" prop="shopId">
-          <depot-select category="directShop" v-model="inputForm.shopId" ></depot-select>
+          <depot-select category="directShop" v-model="bankIn.shopId" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.type')" prop="type">
-          <el-select v-model="inputForm.type"  clearable :placeholder="$t('bankInForm.selectType')">
-            <el-option v-for="item in inputForm.typeList" :key="item" :label="item" :value="item"></el-option>
+          <el-select v-model="bankIn.type"  clearable :placeholder="$t('bankInForm.selectType')">
+            <el-option v-for="item in inputProperty.typeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.bankName')" prop="bankId">
-          <el-select v-model="inputForm.bankId" filterable clearable :placeholder="$t('bankInForm.selectBank')">
+          <el-select v-model="bankIn.bankId" filterable clearable :placeholder="$t('bankInForm.selectBank')">
             <el-option key="0" :label="$t('bankInForm.cashIn')" value="0"></el-option>
-            <el-option v-for="item in inputForm.bankDtoList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputProperty.bankDtoList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.cash')" prop="inputDate">
-          <date-picker  v-model="inputForm.inputDate"></date-picker>
+          <date-picker  v-model="bankIn.inputDate"></date-picker>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.amount')" prop="amount">
-          <el-input v-model="inputForm.amount"></el-input>
+          <el-input v-model="bankIn.amount"></el-input>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.serialNumber')" prop="serialNumber">
-          <el-input v-model="inputForm.serialNumber"></el-input>
+          <el-input v-model="bankIn.serialNumber"></el-input>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.remarks')" prop="remarks">
-          <el-input type="textarea" v-model="inputForm.remarks"></el-input>
+          <el-input type="textarea" v-model="bankIn.remarks"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('bankInForm.save')}}</el-button>
@@ -47,7 +47,8 @@
     data(){
           return{
             submitDisabled:false,
-            inputForm:{},
+            inputProperty:{},
+            bankIn:{},
             submitData:{
               id:'',
               shopId:'',
@@ -73,7 +74,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
+              this.initSubmitDataBeforeSubmit();
               axios.post('/api/ws/future/crm/bankIn/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.inputForm.create){
@@ -89,12 +90,26 @@
               this.submitDisabled = false;
             }
           })
+        }, initSubmitDataBeforeSubmit(){
+          this.submitData.id = this.$route.query.id;
+          this.submitData.shopId = this.bankIn.shopId;
+          this.submitData.type = this.bankIn.type;
+          this.submitData.bankId = this.bankIn.bankId;
+          this.submitData.inputDate = this.bankIn.inputDate;
+          this.submitData.amount = this.bankIn.amount;
+          this.submitData.serialNumber = this.bankIn.serialNumber;
+          this.submitData.remarks = this.bankIn.remarks;
         }
       },created(){
 
-        axios.get('/api/ws/future/crm/bankIn/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
+        axios.get('/api/ws/future/crm/bankIn/getForm').then((response)=>{
+          this.inputProperty = response.data;
         })
-      }
+
+      axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.bankIn = response.data;
+      });
+
+    }
     }
 </script>

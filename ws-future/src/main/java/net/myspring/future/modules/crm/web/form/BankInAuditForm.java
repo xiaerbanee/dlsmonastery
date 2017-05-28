@@ -6,11 +6,11 @@ import net.myspring.future.modules.crm.dto.BankInDto;
 
 import java.time.LocalDate;
 
-public class BankInDetailForm extends BaseForm<BankIn> {
+public class BankInAuditForm extends BaseForm<BankIn> {
 
-    private BankInDto bankInDto;
-    private String syn = "1";
-    private String pass = "0";
+
+    private String syn;
+    private String pass;
     private String auditRemarks;
     private LocalDate billDate;
 
@@ -30,15 +30,6 @@ public class BankInDetailForm extends BaseForm<BankIn> {
     public void setPass(String pass) {
         this.pass = pass;
     }
-
-    public BankInDto getBankInDto() {
-        return bankInDto;
-    }
-
-    public void setBankInDto(BankInDto bankInDto) {
-        this.bankInDto = bankInDto;
-    }
-
 
     public String getAuditRemarks() {
         return auditRemarks;
