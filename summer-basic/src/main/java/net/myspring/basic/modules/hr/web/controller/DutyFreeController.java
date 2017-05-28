@@ -37,7 +37,7 @@ public class DutyFreeController {
 
     @RequestMapping(value = "delete", method = RequestMethod.GET)
     public RestResponse delete(String id) {
-        dutyFreeService.logicDeleteOne(id);
+        dutyFreeService.logicDelete(id);
         RestResponse restResponse = new RestResponse("免打卡删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

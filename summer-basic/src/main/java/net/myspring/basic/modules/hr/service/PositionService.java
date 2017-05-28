@@ -73,7 +73,7 @@ public class PositionService {
     }
 
     public void delete(String id){
-        positionRepository.logicDeleteOne(id);
+        positionRepository.logicDelete(id);
     }
 
 }

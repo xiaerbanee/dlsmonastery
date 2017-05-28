@@ -62,7 +62,7 @@ public class DictMapController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
-        dictMapService.logicDeleteOne(id);
+        dictMapService.logicDelete(id);
         RestResponse restResponse = new RestResponse("刪除成功",ResponseCodeEnum.removed.name());
         return restResponse;
     }

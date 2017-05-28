@@ -38,7 +38,7 @@ public class ProductTypeController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(ProductTypeForm productTypeForm) {
-        productTypeService.logicDeleteOne(productTypeForm);
+        productTypeService.logicDelete(productTypeForm);
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 

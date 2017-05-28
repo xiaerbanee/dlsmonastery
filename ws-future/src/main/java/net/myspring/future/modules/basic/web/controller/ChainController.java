@@ -29,7 +29,7 @@ public class ChainController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
-        chainService.logicDeleteOne(id);
+        chainService.logicDelete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 

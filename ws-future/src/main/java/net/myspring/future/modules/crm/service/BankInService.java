@@ -115,8 +115,8 @@ public class BankInService {
         return bankIn;
     }
 
-    public void logicDeleteOne(String id) {
-        bankInRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        bankInRepository.logicDelete(id);
     }
 
     public BankInDetailForm findDetail(String id, String action) {

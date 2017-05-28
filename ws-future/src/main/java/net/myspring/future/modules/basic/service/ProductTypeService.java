@@ -70,8 +70,8 @@ public class ProductTypeService {
         return productType;
     }
 
-    public void logicDeleteOne(ProductTypeForm productTypeForm) {
-        productTypeRepository.logicDeleteOne(productTypeForm.getId());
+    public void logicDelete(ProductTypeForm productTypeForm) {
+        productTypeRepository.logicDelete(productTypeForm.getId());
     }
 
     public Page<ProductTypeDto> findPage(Pageable pageable, ProductTypeQuery productTypeQuery) {

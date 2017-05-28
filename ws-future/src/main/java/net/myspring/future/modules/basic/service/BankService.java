@@ -44,8 +44,8 @@ public class BankService {
         return page;
     }
 
-    public void logicDeleteOne(String id) {
-        bankRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        bankRepository.logicDelete(id);
     }
 
     public void save(BankForm bankForm){

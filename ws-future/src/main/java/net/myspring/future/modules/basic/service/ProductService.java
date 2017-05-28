@@ -196,7 +196,7 @@ public class ProductService {
 
 
     public void delete(ProductDto productDto) {
-        productRepository.logicDeleteOne(productDto.getId());
+        productRepository.logicDelete(productDto.getId());
     }
 
     public List<ProductDto> findIntersectionOfBothPricesystem(String pricesystemId1, String pricesystemId2) {

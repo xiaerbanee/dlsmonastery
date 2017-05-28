@@ -55,8 +55,8 @@ public class DutyFreeService {
         return dutyFreeForm;
     }
 
-    public void logicDeleteOne(String id) {
-        dutyFreeRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        dutyFreeRepository.logicDelete(id);
     }
 
     public List<DutyFree> findByDate(LocalDate freeDate, String employeeId) {

@@ -58,7 +58,7 @@ public class ExpressCompanyService {
     }
 
     public void delete(ExpressCompanyForm expressCompanyForm) {
-        expressCompanyRepository.logicDeleteOne(expressCompanyForm.getId());
+        expressCompanyRepository.logicDelete(expressCompanyForm.getId());
     }
 
     public ExpressCompany save(ExpressCompanyForm expressCompanyForm){

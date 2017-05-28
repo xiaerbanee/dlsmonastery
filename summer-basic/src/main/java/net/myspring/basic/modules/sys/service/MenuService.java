@@ -83,7 +83,7 @@ public class MenuService {
     }
 
     public void delete(String id) {
-        menuRepository.logicDeleteOne(id);
+        menuRepository.logicDelete(id);
     }
 
     public Menu save(MenuForm menuForm) {

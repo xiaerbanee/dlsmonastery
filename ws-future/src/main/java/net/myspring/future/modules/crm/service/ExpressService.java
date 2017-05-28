@@ -61,8 +61,8 @@ public class ExpressService {
         return result;
     }
 
-    public void logicDeleteOne(String expressId) {
-        expressRepository.logicDeleteOne(expressId);
+    public void logicDelete(String expressId) {
+        expressRepository.logicDelete(expressId);
     }
 
 

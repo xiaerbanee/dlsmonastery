@@ -76,7 +76,7 @@ public class ShopImageService {
     }
 
     public void logicDelete(String id){
-        shopImageRepository.logicDeleteOne(id);
+        shopImageRepository.logicDelete(id);
     }
 
 }

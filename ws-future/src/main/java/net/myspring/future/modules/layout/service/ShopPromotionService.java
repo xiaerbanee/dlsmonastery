@@ -56,7 +56,7 @@ public class ShopPromotionService {
         return shopPromotionForm;
     }
 
-    public void logicDeleteOne(String id){
-        shopPromotionRepository.logicDeleteOne(id);
+    public void logicDelete(String id){
+        shopPromotionRepository.logicDelete(id);
     }
 }

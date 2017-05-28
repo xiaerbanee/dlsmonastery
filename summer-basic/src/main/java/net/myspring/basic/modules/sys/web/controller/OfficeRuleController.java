@@ -51,7 +51,7 @@ public class OfficeRuleController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(OfficeRuleForm officeRuleForm) {
-        officeRuleService.logicDeleteOne(officeRuleForm);
+        officeRuleService.logicDelete(officeRuleForm);
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 }

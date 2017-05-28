@@ -29,7 +29,7 @@ public class FolderController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(Folder folder) {
-        folderService.logicDeleteOne(folder.getId());
+        folderService.logicDelete(folder.getId());
         RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

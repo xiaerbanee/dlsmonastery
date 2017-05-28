@@ -56,8 +56,8 @@ public class ChainService {
         return page;
     }
 
-    public void logicDeleteOne(String id) {
-        chainRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        chainRepository.logicDelete(id);
     }
 
     public Chain save(ChainForm chainForm) {

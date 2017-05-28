@@ -28,7 +28,7 @@ public class PricesystemController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(PricesystemForm pricesystemForm) {
-        pricesystemService.logicDeleteOne(pricesystemForm);
+        pricesystemService.logicDelete(pricesystemForm);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

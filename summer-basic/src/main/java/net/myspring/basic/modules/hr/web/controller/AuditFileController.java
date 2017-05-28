@@ -56,7 +56,7 @@ public class AuditFileController {
 
     @RequestMapping(value = "delete", method = RequestMethod.GET)
     public RestResponse delete(String id) {
-        auditFileService.logicDeleteOne(id);
+        auditFileService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功",ResponseCodeEnum.removed.name());
         return restResponse;
     }

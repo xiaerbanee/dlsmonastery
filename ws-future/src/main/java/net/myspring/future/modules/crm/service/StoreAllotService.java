@@ -364,7 +364,7 @@ public class StoreAllotService {
     }
 
     public void delete(String id) {
-        storeAllotRepository.logicDeleteOne(id);
+        storeAllotRepository.logicDelete(id);
     }
 
     public List<SimpleStoreAllotDetailDto> findDetailListForCommonAllot(String fromStoreId) {

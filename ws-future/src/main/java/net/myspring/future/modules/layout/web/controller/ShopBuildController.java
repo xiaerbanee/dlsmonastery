@@ -62,7 +62,7 @@ public class ShopBuildController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(ShopBuildForm shopBuildForm) {
-        shopBuildService.logicDeleteOne(shopBuildForm.getId());
+        shopBuildService.logicDelete(shopBuildForm.getId());
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

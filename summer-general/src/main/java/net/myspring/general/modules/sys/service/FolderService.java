@@ -36,8 +36,8 @@ public class FolderService {
         return folderDto;
     }
 
-    public void logicDeleteOne(String id) {
-        folderRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        folderRepository.logicDelete(id);
     }
 
     public Folder getRoot(String accountId) {

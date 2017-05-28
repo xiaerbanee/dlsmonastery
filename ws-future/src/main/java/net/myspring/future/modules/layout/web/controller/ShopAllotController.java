@@ -44,7 +44,7 @@ public class ShopAllotController {
 
     @RequestMapping(value = "logicDelete")
     public RestResponse logicDelete(String id) {
-        shopAllotService.logicDeleteOne(id);
+        shopAllotService.logicDelete(id);
         RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
 

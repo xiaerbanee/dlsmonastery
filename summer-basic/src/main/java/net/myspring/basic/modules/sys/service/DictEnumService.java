@@ -71,8 +71,8 @@ public class DictEnumService {
     }
 
 
-    public void logicDeleteOne(String id) {
-        dictEnumRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        dictEnumRepository.logicDelete(id);
     }
 
     public Page<DictEnumDto> findPage(Pageable pageable, DictEnumQuery dictEnumQuery) {

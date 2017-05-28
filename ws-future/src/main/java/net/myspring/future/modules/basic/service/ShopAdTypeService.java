@@ -63,7 +63,7 @@ public class ShopAdTypeService {
     }
 
     public void delete(ShopAdTypeForm shopAdTypeForm) {
-        shopAdTypeRepository.logicDeleteOne(shopAdTypeForm.getId());
+        shopAdTypeRepository.logicDelete(shopAdTypeForm.getId());
     }
 
     public List<String> findTotalPriceTypeList() {

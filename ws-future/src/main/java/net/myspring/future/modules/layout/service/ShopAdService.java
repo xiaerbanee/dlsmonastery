@@ -149,7 +149,7 @@ public class ShopAdService {
     }
 
     public void logicDelete(String id) {
-        shopAdRepository.logicDeleteOne(id);
+        shopAdRepository.logicDelete(id);
     }
 
     public String findSimpleExcelSheets(Workbook workbook, ShopAdQuery shopAdQuery) throws IOException{

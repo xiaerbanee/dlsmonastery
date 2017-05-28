@@ -39,8 +39,8 @@ public class DutyRestService {
         return dutyRest;
     }
 
-    public void logicDeleteOne(String id) {
-        dutyRestRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        dutyRestRepository.logicDelete(id);
     }
 
     public DutyRest findOne(String id) {

@@ -100,8 +100,8 @@ public class RoleService {
         }
     }
 
-    public void logicDeleteOne(String id) {
-        roleRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        roleRepository.logicDelete(id);
     }
 
     public Page<RoleDto> findPage(Pageable pageable, RoleQuery roleQuery) {

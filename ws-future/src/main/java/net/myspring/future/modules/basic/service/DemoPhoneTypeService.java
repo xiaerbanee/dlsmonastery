@@ -95,7 +95,7 @@ public class DemoPhoneTypeService {
     }
 
     public void delete(DemoPhoneTypeForm demoPhoneTypeForm) {
-        demoPhoneTypeRepository.logicDeleteOne(demoPhoneTypeForm.getId());
+        demoPhoneTypeRepository.logicDelete(demoPhoneTypeForm.getId());
     }
 
     public DemoPhoneType save(DemoPhoneTypeForm demoPhoneTypeForm) {

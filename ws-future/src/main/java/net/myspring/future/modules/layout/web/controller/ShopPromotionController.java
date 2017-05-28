@@ -48,7 +48,7 @@ public class ShopPromotionController {
 
     @RequestMapping(value="delete")
     public RestResponse delete(ShopPromotionForm shopPromotionForm) {
-        shopPromotionService.logicDeleteOne(shopPromotionForm.getId());
+        shopPromotionService.logicDelete(shopPromotionForm.getId());
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 

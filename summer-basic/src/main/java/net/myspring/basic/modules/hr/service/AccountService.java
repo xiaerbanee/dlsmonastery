@@ -125,8 +125,8 @@ public class AccountService {
     }
 
 
-    public void logicDeleteOne(String id) {
-        accountRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        accountRepository.logicDelete(id);
     }
 
     public List<AccountDto> findByLoginNameLikeAndType(String type,String key) {

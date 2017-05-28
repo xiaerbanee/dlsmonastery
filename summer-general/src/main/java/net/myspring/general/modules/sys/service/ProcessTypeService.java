@@ -58,7 +58,7 @@ public class ProcessTypeService {
         return BeanUtil.map(processType,ProcessTypeForm.class);
     }
 
-    public void logicDeleteOne(String id) {
+    public void logicDelete(String id) {
         ProcessType processType = processTypeRepository.findOne(id);
         processType.setEnabled(false);
         processType.setName(processType.getName() +"removed("+System.currentTimeMillis()+")");

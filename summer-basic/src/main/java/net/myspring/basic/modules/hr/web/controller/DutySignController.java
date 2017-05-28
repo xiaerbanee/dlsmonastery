@@ -58,7 +58,7 @@ public class DutySignController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
-        dutySignService.logicDeleteOne(id);
+        dutySignService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

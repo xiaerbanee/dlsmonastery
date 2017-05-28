@@ -15,5 +15,5 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
 
    Map<ID,T> findMap(Collection<ID> ids);
 
-   T logicDeleteOne(ID id);
+   T logicDelete(ID id);
 }

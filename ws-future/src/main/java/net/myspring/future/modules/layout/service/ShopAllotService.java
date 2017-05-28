@@ -70,8 +70,8 @@ public class ShopAllotService {
         return sb.toString();
     }
 
-    public void logicDeleteOne(String id) {
-        shopAllotRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        shopAllotRepository.logicDelete(id);
     }
 
     public ShopAllotDto findDto(String id) {

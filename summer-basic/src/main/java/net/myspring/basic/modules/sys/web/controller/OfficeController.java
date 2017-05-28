@@ -103,7 +103,7 @@ public class OfficeController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(Office office, BindingResult bindingResult) {
-        officeService.logicDeleteOne(office);
+        officeService.logicDelete(office);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 

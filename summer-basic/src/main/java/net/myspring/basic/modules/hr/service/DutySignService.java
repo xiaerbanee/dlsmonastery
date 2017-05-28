@@ -59,8 +59,8 @@ public class DutySignService {
         return  dutySignDtoList;
     }
 
-    public void logicDeleteOne(String id) {
-        dutySignRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        dutySignRepository.logicDelete(id);
     }
 
     public DutySign findOne(String id) {

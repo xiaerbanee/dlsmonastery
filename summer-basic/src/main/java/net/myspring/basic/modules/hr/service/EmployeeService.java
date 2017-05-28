@@ -74,8 +74,8 @@ public class EmployeeService {
         return employee;
     }
 
-    public void logicDeleteOne(String id) {
-        employeeRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        employeeRepository.logicDelete(id);
     }
 
     @Transactional(readOnly = true)

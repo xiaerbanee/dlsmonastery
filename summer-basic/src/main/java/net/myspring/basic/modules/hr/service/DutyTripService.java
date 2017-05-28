@@ -39,8 +39,8 @@ public class DutyTripService {
         return dutyTrip;
     }
 
-    public void logicDeleteOne(String id) {
-        dutyTripRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        dutyTripRepository.logicDelete(id);
     }
 
     public DutyTrip findOne(String id) {

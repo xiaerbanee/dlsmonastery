@@ -38,8 +38,8 @@ public class DutyPublicFreeService {
         return page;
     }
 
-    public void logicDeleteOne(String id) {
-        dutyPublicFreeRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        dutyPublicFreeRepository.logicDelete(id);
     }
 
     public DutyPublicFree findOne(String id) {

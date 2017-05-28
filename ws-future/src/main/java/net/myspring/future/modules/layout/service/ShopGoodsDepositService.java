@@ -137,7 +137,7 @@ public class ShopGoodsDepositService {
     }
 
     public void delete(ShopGoodsDepositForm shopGoodsDepositForm) {
-        shopGoodsDepositRepository.logicDeleteOne(shopGoodsDepositForm.getId());
+        shopGoodsDepositRepository.logicDelete(shopGoodsDepositForm.getId());
     }
 
 }

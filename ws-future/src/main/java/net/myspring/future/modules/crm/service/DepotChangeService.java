@@ -14,8 +14,8 @@ public class DepotChangeService {
     private DepotChangeRepository depotChangeRepository;
 
 
-    public void logicDeleteOne(String id) {
-        depotChangeRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        depotChangeRepository.logicDelete(id);
     }
 
 

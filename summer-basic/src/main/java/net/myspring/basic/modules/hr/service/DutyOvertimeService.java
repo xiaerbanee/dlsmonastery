@@ -57,8 +57,8 @@ public class DutyOvertimeService {
         return dutyOvertimes;
     }
 
-    public void logicDeleteOne(String id) {
-        dutyOvertimeRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        dutyOvertimeRepository.logicDelete(id);
     }
 
 

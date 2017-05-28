@@ -138,8 +138,8 @@ public class ShopBuildService {
 
     }
 
-    public void logicDeleteOne(String id) {
-        shopBuildRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        shopBuildRepository.logicDelete(id);
     }
 
     public String findSimpleExcelSheets(Workbook workbook, ShopBuildQuery shopBuildQuery) {

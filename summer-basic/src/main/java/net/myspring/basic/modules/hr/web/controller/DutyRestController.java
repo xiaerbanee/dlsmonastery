@@ -68,7 +68,7 @@ public class DutyRestController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
-        dutyRestService.logicDeleteOne(id);
+        dutyRestService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功",ResponseCodeEnum.removed.name());
         return restResponse;
     }

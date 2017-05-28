@@ -68,7 +68,7 @@ public class AdPricesystemService {
         return adPricesystemDtoList;
     }
 
-    public void logicDeleteOne(String id){
-        adpricesystemRepository.logicDeleteOne(id);
+    public void logicDelete(String id){
+        adpricesystemRepository.logicDelete(id);
     }
 }

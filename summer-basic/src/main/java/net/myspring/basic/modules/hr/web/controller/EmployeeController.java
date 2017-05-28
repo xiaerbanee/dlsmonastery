@@ -41,7 +41,7 @@ public class EmployeeController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
-        employeeService.logicDeleteOne(id);
+        employeeService.logicDelete(id);
         RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
         return restResponse;
     }

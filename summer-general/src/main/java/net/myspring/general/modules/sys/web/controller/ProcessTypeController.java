@@ -34,7 +34,7 @@ public class ProcessTypeController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
-        processTypeService.logicDeleteOne(id);
+        processTypeService.logicDelete(id);
         RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

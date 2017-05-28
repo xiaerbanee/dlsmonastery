@@ -65,7 +65,7 @@ public class PricesystemService {
         return pricesystemRepository.findAll();
     }
 
-    public void logicDeleteOne(PricesystemForm pricesystemForm) {
+    public void logicDelete(PricesystemForm pricesystemForm) {
         Pricesystem pricesystem = pricesystemRepository.findOne(pricesystemForm.getId());
         pricesystemForm  = BeanUtil.map(pricesystem,PricesystemForm.class);
         pricesystemForm.setName(pricesystemForm.getName()+"(废弃时间"+new Date()+")");

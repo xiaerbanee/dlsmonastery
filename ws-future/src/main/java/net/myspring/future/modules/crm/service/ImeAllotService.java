@@ -39,8 +39,8 @@ public class ImeAllotService {
 //        }
 //    }
 
-    public void logicDeleteOne(String id) {
-        imeAllotRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        imeAllotRepository.logicDelete(id);
     }
 
     public ImeAllot findOne(String id) {

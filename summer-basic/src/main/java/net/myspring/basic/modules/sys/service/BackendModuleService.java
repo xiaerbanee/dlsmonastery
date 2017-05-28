@@ -53,8 +53,8 @@ public class BackendModuleService {
         return backendModuleIds;
     }
 
-    public void logicDeleteOne(String id) {
-        backendModuleRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        backendModuleRepository.logicDelete(id);
     }
 
     public Page<BackendModuleDto> findPage(Pageable pageable, BackendModuleQuery backendModuleQuery) {

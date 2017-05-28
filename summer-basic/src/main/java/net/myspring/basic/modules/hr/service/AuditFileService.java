@@ -89,7 +89,7 @@ public class AuditFileService {
 
     }
 
-    public void logicDeleteOne(String id) {
-        auditFileRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        auditFileRepository.logicDelete(id);
     }
 }

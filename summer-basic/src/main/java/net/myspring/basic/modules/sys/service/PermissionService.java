@@ -176,8 +176,8 @@ public class PermissionService {
         return accountPermissionList;
     }
 
-    public void logicDeleteOne(String id) {
-        permissionRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        permissionRepository.logicDelete(id);
     }
 
 }

@@ -38,8 +38,8 @@ public class MenuCategoryService {
         return menuCategoryDtoPage;
     }
 
-    public void logicDeleteOne(String id) {
-        menuCategoryRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        menuCategoryRepository.logicDelete(id);
     }
 
     public MenuCategory save(MenuCategoryForm menuCategoryForm){

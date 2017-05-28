@@ -71,8 +71,8 @@ public class OfficeRuleService {
         return officeRule;
     }
 
-    public void logicDeleteOne(OfficeRuleForm officeRuleForm) {
-        officeRuleRepository.logicDeleteOne(officeRuleForm.getId());
+    public void logicDelete(OfficeRuleForm officeRuleForm) {
+        officeRuleRepository.logicDelete(officeRuleForm.getId());
     }
 
     private void setParentIdsAndLevel(OfficeRuleForm officeRuleForm){

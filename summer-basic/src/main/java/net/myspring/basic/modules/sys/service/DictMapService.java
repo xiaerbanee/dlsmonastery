@@ -67,8 +67,8 @@ public class DictMapService {
         return map;
     }
 
-    public void logicDeleteOne(String id) {
-        dictMapRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        dictMapRepository.logicDelete(id);
     }
 
     public List<DictMap> findByCategory(String category) {

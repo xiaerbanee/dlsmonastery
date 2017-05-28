@@ -73,8 +73,8 @@ public class DutyLeaveService {
         return dutyLeaveList;
     }
 
-    public void logicDeleteOne(String id) {
-        dutyLeaveRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        dutyLeaveRepository.logicDelete(id);
     }
 
     public DutyLeave findOne(String id) {

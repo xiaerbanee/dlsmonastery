@@ -36,7 +36,7 @@ public class MenuCategoryController {
         if(CollectionUtil.isNotEmpty(menuCategoryDto.getMenuList())){
             return new RestResponse("菜单分类删除失败，请先删除下属菜单",null);
         }
-        menuCategoryService.logicDeleteOne(menuCategoryDto.getId());
+        menuCategoryService.logicDelete(menuCategoryDto.getId());
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

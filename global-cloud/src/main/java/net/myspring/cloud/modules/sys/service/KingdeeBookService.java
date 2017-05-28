@@ -53,8 +53,8 @@ public class KingdeeBookService {
         return kingdeeBookForm;
     }
 
-    public void logicDeleteOne(String id) {
-        kingdeeBookRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        kingdeeBookRepository.logicDelete(id);
     }
 
     public void save(KingdeeBookForm kingdeeBookForm){

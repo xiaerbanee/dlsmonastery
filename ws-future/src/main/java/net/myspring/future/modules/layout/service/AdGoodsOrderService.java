@@ -322,7 +322,7 @@ public class AdGoodsOrderService {
     }
 
     public void logicDelete(String id) {
-        adGoodsOrderRepository.logicDeleteOne(id);
+        adGoodsOrderRepository.logicDelete(id);
     }
 
 

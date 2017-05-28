@@ -39,7 +39,7 @@ public class BackendModuleController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
-        backendModuleService.logicDeleteOne(id);
+        backendModuleService.logicDelete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 

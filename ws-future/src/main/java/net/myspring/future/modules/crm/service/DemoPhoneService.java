@@ -41,7 +41,7 @@ public class DemoPhoneService {
     }
 
     public void delete(String id) {
-        demoPhoneRepository.logicDeleteOne(id);
+        demoPhoneRepository.logicDelete(id);
     }
 
     public DemoPhone save(DemoPhoneForm demoPhoneForm) {

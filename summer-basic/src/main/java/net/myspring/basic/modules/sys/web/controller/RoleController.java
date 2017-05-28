@@ -46,7 +46,7 @@ public class RoleController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
-        roleService.logicDeleteOne(id);
+        roleService.logicDelete(id);
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

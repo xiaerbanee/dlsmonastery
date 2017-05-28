@@ -43,7 +43,7 @@ public class ExpressController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(ExpressForm expressForm) {
-        expressService.logicDeleteOne(expressForm.getId());
+        expressService.logicDelete(expressForm.getId());
         RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
 

@@ -85,7 +85,7 @@ public class ShopPrintService {
     }
 
     public void logicDelete(String id){
-        shopPrintRepository.logicDeleteOne(id);
+        shopPrintRepository.logicDelete(id);
     }
 
     public void audit(ShopPrintForm shopPrintForm) {

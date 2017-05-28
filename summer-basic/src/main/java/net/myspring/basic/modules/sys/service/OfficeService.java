@@ -196,8 +196,8 @@ public class OfficeService {
         return office;
     }
 
-    public void logicDeleteOne(Office office) {
-        officeRepository.logicDeleteOne(office.getId());
+    public void logicDelete(Office office) {
+        officeRepository.logicDelete(office.getId());
     }
 
     public List<OfficeDto> findByFilter(OfficeQuery officeQuery) {

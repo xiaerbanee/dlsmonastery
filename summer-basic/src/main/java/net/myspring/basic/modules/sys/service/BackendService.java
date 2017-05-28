@@ -64,8 +64,8 @@ public class BackendService {
     }
 
 
-    public void logicDeleteOne(String id) {
-        backendRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        backendRepository.logicDelete(id);
     }
 
     public Page<BackendDto> findPage(Pageable pageable, BackendQuery backendQuery) {

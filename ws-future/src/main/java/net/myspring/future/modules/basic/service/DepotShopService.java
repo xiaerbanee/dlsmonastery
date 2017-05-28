@@ -96,8 +96,8 @@ public class DepotShopService {
     }
 
 
-    public void logicDeleteOne(String id) {
-        depotShopRepository.logicDeleteOne(id);
+    public void logicDelete(String id) {
+        depotShopRepository.logicDelete(id);
     }
 
 }

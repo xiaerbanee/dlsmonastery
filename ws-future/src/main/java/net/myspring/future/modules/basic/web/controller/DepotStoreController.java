@@ -48,7 +48,7 @@ public class DepotStoreController {
 
     @RequestMapping(value = "delete")
     public RestResponse delete(DepotStoreForm depotStoreForm){
-        depotStoreService.logicDeleteOne(depotStoreForm.getId());
+        depotStoreService.logicDelete(depotStoreForm.getId());
         return new RestResponse("删除成功",null);
     }
 

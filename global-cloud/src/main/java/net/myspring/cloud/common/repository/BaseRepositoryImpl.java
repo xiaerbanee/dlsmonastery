@@ -40,7 +40,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
     }
 
     @Override
-    public T logicDeleteOne(ID id) {
+    public T logicDelete(ID id) {
         T t = null;
         if(id != null) {
             t = findOne(id);
