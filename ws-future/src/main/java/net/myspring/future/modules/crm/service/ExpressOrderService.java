@@ -21,6 +21,7 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
 
 @Service
@@ -193,7 +192,7 @@ public class ExpressOrderService {
         List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,10000), expressOrderQuery).getContent();
         cacheUtils.initCacheInput(expressOrderDtoList);
 
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("快递打印列表", expressOrderDtoList, simpleExcelColumnList, (data)->{
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("邮政快递打印列表", expressOrderDtoList, simpleExcelColumnList, (data)->{
             List<ExpressOrderDto> result = new ArrayList<>();
             ExpressOrderDto  expressOrderDto = (ExpressOrderDto) data;
             if(expressOrderDto.getExpressPrintQty()!=null && expressOrderDto.getExpressPrintQty()>=1){
@@ -203,7 +202,8 @@ public class ExpressOrderService {
             }
             return result;
         });
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"快递打印列表"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
+
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"邮政快递打印列表"+ StringUtils.trimToEmpty(expressOrderQuery.getExtendBusinessIdStart())+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
 
         GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
@@ -236,7 +236,7 @@ public class ExpressOrderService {
         cacheUtils.initCacheInput(expressOrderDtoList);
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("快递打印列表", expressOrderDtoList, simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"快递打印列表"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"快递打印列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
         GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());

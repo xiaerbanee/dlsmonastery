@@ -1,4 +1,4 @@
-package net.myspring.common.domain;
+package net.myspring.tool.common.domain;
 
 
 import net.myspring.util.text.StringUtils;

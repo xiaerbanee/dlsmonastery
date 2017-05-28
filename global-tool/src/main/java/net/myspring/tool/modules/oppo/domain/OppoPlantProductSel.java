@@ -1,7 +1,7 @@
 package net.myspring.tool.modules.oppo.domain;
 
 
-import net.myspring.common.domain.IdEntity;
+import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

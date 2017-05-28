@@ -12,12 +12,6 @@ import javax.sql.DataSource;
 public class JdbcConfig {
     @Autowired
     private DataSource dataSource;
-
-    @Bean
-    public JdbcTemplate JdbcTemplate() {
-        return new JdbcTemplate(dataSource);
-    }
-
     @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
         return new NamedParameterJdbcTemplate(dataSource);

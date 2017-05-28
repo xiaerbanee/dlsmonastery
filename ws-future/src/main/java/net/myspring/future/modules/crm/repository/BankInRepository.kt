@@ -30,7 +30,7 @@ interface BankInRepositoryCustom{
     fun findDto(id: String): BankInDto
 }
 
-class BankInRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): BankInRepositoryCustom {
+class BankInRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): BankInRepositoryCustom {
     override fun findDto(id: String): BankInDto {
         return namedParameterJdbcTemplate.queryForObject("""
         SELECT

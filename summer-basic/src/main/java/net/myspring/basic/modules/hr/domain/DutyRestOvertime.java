@@ -1,7 +1,7 @@
 package net.myspring.basic.modules.hr.domain;
 
 
-import net.myspring.common.domain.IdEntity;
+import net.myspring.basic.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

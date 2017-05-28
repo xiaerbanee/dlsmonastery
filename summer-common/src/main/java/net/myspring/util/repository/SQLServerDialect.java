@@ -22,15 +22,7 @@ public class SQLServerDialect extends Dialect {
     public String getPageableSql(String sql, Pageable pageable) {
         StringBuilder sb = new StringBuilder(sql);
         if(pageable.getSort() != null) {
-            sb.append(" ORDER BY ");
-            Iterator<Sort.Order> iterator = pageable.getSort().iterator();
-            while (iterator.hasNext()) {
-                Sort.Order order = iterator.next();
-                sb.append(order.getProperty()).append(" ").append(order.getDirection());
-                if(iterator.hasNext()) {
-                    sb.append(", ");
-                }
-            }
+            sb.append(getOrder(pageable.getSort()));
         }
         sb.append(" OFFSET ").append(":offset").append(" ROWS FETCH NEXT ").append(":pageSize").append(" ROWS ONLY");
         return sb.toString();

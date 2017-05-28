@@ -35,13 +35,13 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.outPrint.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.outPrint"   >
+                <el-select v-model="formData.outPrint"  clearable >
                   <el-option :label="$t('expressOrderList.true')" value="true">{{$t('expressOrderList.true')}}</el-option>
                   <el-option :label="$t('expressOrderList.false')" value="false">{{$t('expressOrderList.false')}}</el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.expressPrint.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.expressPrint"   >
+                <el-select v-model="formData.expressPrint"   clearable>
                   <el-option :label="$t('expressOrderList.true')" value="true">{{$t('expressOrderList.true')}}</el-option>
                   <el-option :label="$t('expressOrderList.false')" value="false">{{$t('expressOrderList.false')}}</el-option>
                 </el-select>

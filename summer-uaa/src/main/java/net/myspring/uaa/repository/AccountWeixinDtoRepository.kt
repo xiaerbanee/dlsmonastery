@@ -1,18 +1,19 @@
 package net.myspring.uaa.repository
 
-import net.myspring.uaa.config.MyBeanPropertyRowMapper
 import net.myspring.uaa.dto.AccountWeixinDto
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
-class AccountWeixinDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate,val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
+class AccountWeixinDtoRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
     fun findByOpenId(openId: String): MutableList<AccountWeixinDto> {
-        return jdbcTemplate.query("""
+        return namedParameterJdbcTemplate.query("""
                     SELECT
                     t1.company_id,
                     t1.account_id,
@@ -20,13 +21,13 @@ class AccountWeixinDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     FROM
                     hr_account_weixin t1
                     WHERE
-                    t1.open_id = ?
+                    t1.open_id = :openId
                     and t1.enabled=1
-                """, MyBeanPropertyRowMapper(AccountWeixinDto::class.java),openId);
+                """, Collections.singletonMap("openId",openId),BeanPropertyRowMapper(AccountWeixinDto::class.java));
     }
 
     fun findByAccountId(accountId: String): AccountWeixinDto {
-        return jdbcTemplate.queryForObject("""
+        return namedParameterJdbcTemplate.queryForObject("""
                     SELECT
                     t1.company_id,
                     t1.account_id,
@@ -36,7 +37,7 @@ class AccountWeixinDtoRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     WHERE
                     t1.account_id = :accountId
                     and t1.enabled=1
-                """, MyBeanPropertyRowMapper(AccountWeixinDto::class.java),accountId);
+                """, Collections.singletonMap("accountId",accountId), BeanPropertyRowMapper(AccountWeixinDto::class.java));
     }
 
     fun save(accountWeixinDto: AccountWeixinDto) {

@@ -6,16 +6,17 @@ import net.myspring.basic.modules.hr.dto.DutyDto
 import net.myspring.basic.modules.hr.dto.DutyLeaveDto
 import net.myspring.basic.modules.hr.web.query.DutyLeaveQuery
 import net.myspring.util.collection.CollectionUtil
+import net.myspring.util.repository.MySQLDialect
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import java.time.LocalDateTime
-import javax.persistence.EntityManager
 
 /**
  * Created by lihx on 2017/5/24.
@@ -106,7 +107,38 @@ class DutyLeaveRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     }
 
     override fun findPage(pageable: Pageable, dutyLeaveQuery: DutyLeaveQuery): Page<DutyLeaveDto> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var sb = StringBuilder()
+        sb.append("""
+            SELECT
+            t1.*
+            FROM
+            hr_duty_leave t1,
+            hr_account account
+            WHERE
+            t1.created_by=account.id
+            and t1.enabled=1
+        """)
+        if (dutyLeaveQuery.createdBy != null) {
+            sb.append(" AND t1.created_by=:createdBy ")
+        }
+        if (dutyLeaveQuery.dutyDateStart != null) {
+            sb.append(" AND t1.duty_date > :dutyDateStart ")
+        }
+        if (dutyLeaveQuery.dutyDateEnd != null) {
+            sb.append(" AND t1.duty_date  < :dutyDateEnd ")
+        }
+        if (dutyLeaveQuery.dateType != null) {
+            sb.append(" AND t1.date_type=:dateType ")
+        }
+        if (dutyLeaveQuery.leaveType != null) {
+            sb.append(" AND t1.leave_type=:leaveType ")
+        }
+
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
+        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
+        var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(dutyLeaveQuery),BeanPropertyRowMapper(DutyLeaveDto::class.java));
+        var count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(dutyLeaveQuery),Long::class.java);
+        return PageImpl(list,pageable,count);
     }
 
     override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyLeave> {

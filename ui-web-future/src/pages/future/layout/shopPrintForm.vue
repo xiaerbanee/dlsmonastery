@@ -112,7 +112,7 @@
         })
       },typeChange(){
         axios.get('/api/basic/sys/dictMap/findByName?name=' + this.inputForm.printType).then((response)=>{
-          this.printTypeContent=response.data.remarks;
+          this.printTypeContent=response.data;
         })
       },
       handlePreview(file) {

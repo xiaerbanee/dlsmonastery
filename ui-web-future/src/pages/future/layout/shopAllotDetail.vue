@@ -2,55 +2,55 @@
   <div>
     <head-tab active="shopAllotDetail"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm"  label-width="120px" class="form input-form">
+      <el-form :model="shopAllot" ref="inputForm"  label-width="120px" class="form input-form">
         <el-row :gutter="4">
           <el-col :span="12">
             <el-form-item :label="$t('shopAllotDetail.billCode')">
-              {{inputForm.shopAllotDto.formatId}}
+              {{shopAllot.formatId}}
             </el-form-item>
             <el-form-item :label="$t('shopAllotDetail.status')">
-              {{inputForm.shopAllotDto.status}}
+              {{shopAllot.status}}
             </el-form-item>
-            <el-form-item :label="$t('shopAllotDetail.outSaleCode')" v-if="inputForm.shopAllotDto.outSaleCode !=''">
-              {{inputForm.shopAllotDto.outSaleCode}}
+            <el-form-item :label="$t('shopAllotDetail.outSaleCode')" v-if="shopAllot.outSaleCode !=''">
+              {{shopAllot.outSaleCode}}
             </el-form-item>
-            <el-form-item :label="$t('shopAllotDetail.outReturnCode')" v-if="inputForm.shopAllotDto.outReturnCode !=''">
-              {{inputForm.shopAllotDto.outReturnCode}}
+            <el-form-item :label="$t('shopAllotDetail.outReturnCode')" v-if="shopAllot.outReturnCode !=''">
+              {{shopAllot.outReturnCode}}
             </el-form-item>
 
             <el-form-item :label="$t('shopAllotDetail.saleTotalPrice')">
-              {{inputForm.shopAllotDto.saleTotalPrice}}
+              {{shopAllot.saleTotalPrice}}
             </el-form-item>
             <el-form-item :label="$t('shopAllotDetail.remarks')" >
-              {{inputForm.shopAllotDto.remarks}}
+              {{shopAllot.remarks}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('shopAllotDetail.fromShop')"  >
-              {{inputForm.shopAllotDto.fromShopName}}
-              <div v-if="inputForm.status== '申请中'">
-                {{$t('shopAllotDetail.shouldGet')}} {{inputForm.fromShopShouldGet}}
+              {{shopAllot.fromShopName}}
+              <div v-if="shopAllot.status== '申请中'">
+                {{$t('shopAllotDetail.shouldGet')}} {{shopAllot.fromShopShouldGet}}
               </div>
             </el-form-item>
             <el-form-item :label="$t('shopAllotDetail.toShop')">
 
-              {{inputForm.shopAllotDto.toShopName}}
-              <div v-if="inputForm.status== '申请中'">
-                {{$t('shopAllotDetail.shouldGet')}} {{inputForm.toShopShouldGet}}
+              {{shopAllot.toShopName}}
+              <div v-if="shopAllot.status== '申请中'">
+                {{$t('shopAllotDetail.shouldGet')}} {{shopAllot.toShopShouldGet}}
               </div>
 
             </el-form-item>
 
             <div v-if="action == 'audit'">
               <el-form-item :label="$t('shopAllotDetail.syn')">
-                <bool-radio-group v-model="inputForm.syn"></bool-radio-group>
+                <bool-radio-group v-model="syn"></bool-radio-group>
               </el-form-item>
 
               <el-form-item :label="$t('shopAllotDetail.pass')">
-                <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
+                <bool-radio-group v-model="audit.pass"></bool-radio-group>
               </el-form-item>
               <el-form-item :label="$t('shopAllotDetail.auditRemarks')">
-                <el-input type="textarea" v-model="inputForm.auditRemarks"></el-input>
+                <el-input type="textarea" v-model="audit.auditRemarks"></el-input>
               </el-form-item>
               <el-form-item >
                 <el-button size="small"  @click.native="auditSubmit">{{$t('shopAllotDetail.save')}}</el-button>
@@ -58,7 +58,7 @@
             </div>
           </el-col>
         </el-row>
-        <el-table :data="inputForm.shopAllotDetailList"  style="margin-top:5px;"   stripe border >
+        <el-table :data="shopAllotDetailList"  style="margin-top:5px;"   stripe border >
           <el-table-column prop="productName" :label="$t('shopAllotDetail.productName')"></el-table-column>
           <el-table-column prop="qty" :label="$t('shopAllotDetail.qty')"></el-table-column>
           <el-table-column prop="returnPrice" :label="$t('shopAllotDetail.returnPrice')">
@@ -86,9 +86,13 @@
     },
     data(){
       return {
-        inputForm: {
-          shopAllotDto:{},
+        shopAllot: {},
+        syn:true,
+        audit:{
+          pass:false,
+          auditRemarks:'',
         },
+        shopAllotDetailList:[],
         submitData:{
           id:'',
           syn:'',
@@ -97,6 +101,7 @@
           shopAllotDetailList:[],
         },
         isView:(this.$route.query.action == 'view'),
+        shopAllotDetailLoading:false,
         submitDisabled:false,
         action:this.$route.query.action,
       }
@@ -107,7 +112,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm, this.submitData);
+            this.initSubmitDataBeforeSubmit();
             axios.post('/api/ws/future/crm/shopAllot/audit', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
@@ -120,11 +125,26 @@
             this.submitDisabled = false;
           }
         })
+      }, initSubmitDataBeforeSubmit(){
+        this.submitData.id = this.$route.query.id;
+        this.submitData.syn = this.syn;
+        this.submitData.pass = this.audit.pass;
+        this.submitData.auditRemarks = this.audit.auditRemarks;
+        this.submitData.shopAllotDetailList = this.shopAllotDetailList;
+
       }
     },created(){
-      axios.get('/api/ws/future/crm/shopAllot/getViewOrAuditForm', {params: {id: this.$route.query.id, action:this.$route.query.action}}).then((response) => {
-        this.inputForm = response.data;
+
+      axios.get('/api/ws/future/crm/shopAllot/findDtoForViewOrAudit', {params: {id: this.$route.query.id}}).then((response) => {
+        this.shopAllot = response.data;
       });
+
+      this.shopAllotDetailLoading=true;
+      axios.get('/api/ws/future/crm/shopAllot/findDetailListForViewOrAudit',{params:{id:this.$route.query.id}} ).then((response)=>{
+        this.shopAllotDetailList=response.data;
+        this.shopAllotDetailLoading=false;
+      });
+
     }
   }
 </script>

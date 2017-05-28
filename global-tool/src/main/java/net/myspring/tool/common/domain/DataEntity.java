@@ -1,4 +1,4 @@
-package net.myspring.cloud.common.domain;
+package net.myspring.tool.common.domain;
 
 
 import org.springframework.data.annotation.CreatedBy;

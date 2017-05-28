@@ -1,7 +1,6 @@
 package net.myspring.general.common.domain;
 
 
-import net.myspring.common.domain.IdEntity;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;

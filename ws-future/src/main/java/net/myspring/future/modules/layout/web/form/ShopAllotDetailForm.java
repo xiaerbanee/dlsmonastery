@@ -5,16 +5,12 @@ import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 
 import java.math.BigDecimal;
 
-/**
- * Created by wangzm on 2017/4/21.
- */
+
 public class ShopAllotDetailForm extends DataForm<ShopAllotDetail> {
 
-    private String shopAllotId;
     private String productId;
     private BigDecimal returnPrice;
     private BigDecimal salePrice;
-    private String productName;
     private Integer qty;
 
     public BigDecimal getReturnPrice() {
@@ -33,28 +29,12 @@ public class ShopAllotDetailForm extends DataForm<ShopAllotDetail> {
         this.salePrice = salePrice;
     }
 
-    public String getShopAllotId() {
-        return shopAllotId;
-    }
-
-    public void setShopAllotId(String shopAllotId) {
-        this.shopAllotId = shopAllotId;
-    }
-
     public String getProductId() {
         return productId;
     }
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
     }
 
     public Integer getQty() {

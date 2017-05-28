@@ -53,7 +53,7 @@ interface DictEnumRepository :BaseRepository<DictEnum,String>,DictEnumRepository
         t.enabled=1
         and t.value=:value
      """)
-    fun findByValue(@Param("value")value:String): DictEnumDto
+    fun findByValue(@Param("value")value:String): DictEnum
 
 
 }
