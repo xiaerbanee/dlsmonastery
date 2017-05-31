@@ -4,16 +4,21 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.DutyWorktime
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery
+import net.myspring.basic.modules.sys.dto.BackendDto
 import net.myspring.util.collection.CollectionUtil
+import net.myspring.util.repository.MySQLDialect
 import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
+import java.util.*
 import javax.persistence.EntityManager
 
 /**
@@ -53,7 +58,34 @@ interface DutyWorktimeRepositoryCustom{
 }
 class DutyWorktimeRepositoryImpl  @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): DutyWorktimeRepositoryCustom{
     override fun findPage(pageable: Pageable, dutyWorktimeQuery: DutyWorktimeQuery): Page<DutyWorktimeDto> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var sql = StringBuilder("""
+                select *
+                from hr_duty_worktime t1
+                where t1.enabled = 1
+            """);
+        if(dutyWorktimeQuery.dutyDateStart!=null){
+            sql.append("""
+                   AND t1.duty_date > :dutyDateStart
+                """);
+        }
+        if(dutyWorktimeQuery.dutyDateEnd!=null){
+            sql.append("""
+                   AND t1.duty_date &lt; :dutyDateEnd
+                """);
+        }
+        if(dutyWorktimeQuery.accountId!=null){
+            sql.append("""
+                    and t1.employee_id in (
+                    select t2.id
+                    from hr_employee t2
+                    where t2.account_id = :accountId
+                """);
+        }
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sql.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sql.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(dutyWorktimeQuery), BeanPropertyRowMapper(DutyWorktimeDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(dutyWorktimeQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 
     override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyWorktime> {

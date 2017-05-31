@@ -35,7 +35,7 @@ interface DictEnumRepository :BaseRepository<DictEnum,String>,DictEnumRepository
         FROM  #{#entityName} t
         WHERE
         t.enabled=1
-        and t.category=:category order by sort asc
+        and t.category=:category order by t.sort asc
      """)
     fun findByCategory(@Param("category")category:String):MutableList<DictEnum>
 

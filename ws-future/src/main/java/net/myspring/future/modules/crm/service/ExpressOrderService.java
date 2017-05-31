@@ -47,8 +47,6 @@ public class ExpressOrderService {
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
-    private ExpressRepository expressRepository;
-    @Autowired
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private CacheUtils cacheUtils;
@@ -71,35 +69,6 @@ public class ExpressOrderService {
     }
 
     public void save(ExpressOrder expressOrder){
-        expressOrderRepository.save(expressOrder);
-    }
-
-    public void save(String extendType,String extendId,String expressCodes,String expressCompanyId) {
-        ExpressOrder expressOrder = expressOrderRepository.findByExtendIdAndExtendType(extendId, extendType);
-        expressOrder.setExpressCompanyId(expressCompanyId);
-        expressOrder.setExpressCodes(expressCodes);
-
-        List<String> expressCodeList = StringUtils.getSplitList(expressCodes, "");
-        List<Express> expresses = expressRepository.findByExpressOrderId(expressOrder.getId());
-        if(CollectionUtil.isNotEmpty(expresses)) {
-            for(int i = expresses.size()-1;i>=0;i--) {
-                Express express = expresses.get(i);
-                if(!expressCodeList.contains(express.getCode())) {
-                    express.setEnabled(false);
-                    expressRepository.save(express);
-                    expresses.remove(i);
-                }
-            }
-        }
-        Map<String,Express> expressMap = CollectionUtil.extractToMap(expresses, "code");
-        for(String code:expressCodeList) {
-            if(!expressMap.containsKey(code)){
-                Express express = new Express();
-                express.setExpressOrderId(expressOrder.getId());
-                express.setCode(code);
-                expressRepository.save(express);
-            }
-        }
         expressOrderRepository.save(expressOrder);
     }
 

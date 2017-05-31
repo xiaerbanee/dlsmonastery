@@ -62,7 +62,13 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
     """, nativeQuery = true)
     fun findByDemoPhoneTypeIds(dempProductTypeIds: MutableList<String>): MutableList<ProductType>
 
-    fun findByNameLike(@Param("name") name: String): MutableList<ProductType>
+    @Query("""
+    SELECT t
+    FROM #{#entityName} t
+    WHERE t.enabled = 1
+    AND t.name LIKE CONCAT('%',?1,'%')
+    """)
+    fun findByNameLike(name: String): MutableList<ProductType>
 
 //    fun updateDemoPhoneType(@Param("demoPhoneTypeId") demoPhoneTypeId: String, @Param("list") ids: MutableList<String>): Int
 //

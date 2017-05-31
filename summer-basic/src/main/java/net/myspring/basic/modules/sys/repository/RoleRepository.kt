@@ -6,13 +6,19 @@ import net.myspring.basic.modules.sys.dto.PermissionDto
 import net.myspring.basic.modules.sys.dto.RoleDto
 import net.myspring.basic.modules.sys.web.query.PermissionQuery
 import net.myspring.basic.modules.sys.web.query.RoleQuery
+import net.myspring.util.repository.MySQLDialect
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -56,9 +62,18 @@ interface RoleRepositoryCustom{
     fun findPage(pageable: Pageable, roleQuery: RoleQuery): Page<RoleDto>?
 }
 
-class RoleRepositoryImpl @Autowired constructor(val entityManager: EntityManager):RoleRepositoryCustom{
+class RoleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):RoleRepositoryCustom{
     override fun findPage(pageable: Pageable, roleQuery: RoleQuery): Page<RoleDto>? {
-        return null
+        var sb = StringBuilder("select t1.* from sys_role t1 where t1.enabled=1 ");
+        if(StringUtils.isNotBlank(roleQuery.name)) {
+            sb.append(" and t1.name like concat('%',:name,'%')");
+        }
+
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
+        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
+        var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(roleQuery), BeanPropertyRowMapper(RoleDto::class.java));
+        var count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(roleQuery),Long::class.java);
+        return PageImpl(list,pageable,count);
     }
 
 

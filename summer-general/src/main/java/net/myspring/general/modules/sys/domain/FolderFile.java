@@ -1,12 +1,14 @@
 package net.myspring.general.modules.sys.domain;
 
 import net.myspring.general.common.domain.CompanyEntity;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_folder_file")
+@Where(clause = "enabled=true")
 public class FolderFile extends CompanyEntity<FolderFile> {
     private String name;
     private String contentType;

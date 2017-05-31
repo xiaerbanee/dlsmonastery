@@ -63,7 +63,7 @@ interface AdpricesystemRepositoryCustom{
     fun findPage(pageable: Pageable, adPricesystemQuery: AdPricesystemQuery): Page<AdPricesystemDto>
 }
 
-class AdpricesystemRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdpricesystemRepositoryCustom{
+class AdpricesystemRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdpricesystemRepositoryCustom{
 
     override fun deleteOfficeIds(id: String):Int{
         return namedParameterJdbcTemplate.queryForObject("""
@@ -73,8 +73,7 @@ class AdpricesystemRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcT
 
     override fun findPage(pageable: Pageable, adPricesystemQuery: AdPricesystemQuery): Page<AdPricesystemDto> {
         TODO("findPage")
-        /*val sb = StringBuffer()
-        sb.append("""
+        /*val sb = StringBuilder("""
             SELECT
                 t1.*
             FROM

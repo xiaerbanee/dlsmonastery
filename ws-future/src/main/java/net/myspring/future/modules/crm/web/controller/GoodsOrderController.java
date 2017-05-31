@@ -64,7 +64,7 @@ public class GoodsOrderController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<GoodsOrderDto> list(Pageable pageable, GoodsOrderQuery goodsOrderQuery){
-        Page<GoodsOrderDto> page = goodsOrderService.findPage(pageable, goodsOrderQuery);
+        Page<GoodsOrderDto> page = goodsOrderService.findAll(pageable, goodsOrderQuery);
         return page;
     }
 
@@ -76,6 +76,15 @@ public class GoodsOrderController {
         goodsOrderQuery.setStatusList(GoodsOrderStatusEnum.getList());
         return goodsOrderQuery;
     }
+
+
+    @RequestMapping(value = "getForm")
+    public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
+        return goodsOrderForm;
+    }
+
+
+
 
 
     @RequestMapping(value = "findOne")

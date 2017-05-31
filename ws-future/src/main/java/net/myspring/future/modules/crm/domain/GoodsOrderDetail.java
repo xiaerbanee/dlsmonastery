@@ -5,6 +5,7 @@ import net.myspring.future.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 
 
@@ -18,6 +19,8 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     private Integer returnQty;
     private String productId;
     private String goodsOrderId;
+    @Transient
+    private Integer shipQty;
 
     public BigDecimal getPrice() {
         return price;
@@ -76,6 +79,13 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
         this.goodsOrderId = goodsOrderId;
     }
 
+    public Integer getShipQty() {
+        return shipQty;
+    }
+
+    public void setShipQty(Integer shipQty) {
+        this.shipQty = shipQty;
+    }
 
     public Integer getRealBillQty() {
         if (getReturnQty() == null || getReturnQty() == 0) {

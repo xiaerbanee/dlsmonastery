@@ -5,6 +5,7 @@ import net.myspring.future.modules.basic.domain.Product
 import net.myspring.future.modules.basic.domain.ProductType
 import net.myspring.future.modules.basic.dto.ProductDto
 import net.myspring.future.modules.basic.web.query.ProductQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,10 +13,14 @@ import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDateTime
-import javax.persistence.EntityManager
+import kotlin.collections.HashMap
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -48,48 +53,57 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     """, nativeQuery = true)
     fun findHasImeProduct(): MutableList<Product>
 
+    @Query("""
+        SELECT
+            t
+        FROM
+            #{#entityName} t
+        WHERE
+            t.enabled = 1
+        AND
+            t.name LIKE concat( '%', ?1,'%')
+    """)
     fun findByNameLike(name: String): MutableList<Product>
 
+    @Query("""
+        SELECT
+            t
+        FROM
+            #{#entityName} t
+        WHERE
+            t.enabled = 1
+        AND
+            t.code LIKE concat( '%', ?1,'%')
+    """)
     fun findByCodeLike(code: String): MutableList<Product>
 
     @Query("""
         SELECT
-            t1.*
+            t1
         FROM
-            crm_product t1
+            #{#entityName} t1
         WHERE
             t1.enabled = 1
-        AND t1.has_ime = 1
+        AND t1.hasIme = 1
         AND t1.name LIKE concat( '%', ?1,'%')
-    """, nativeQuery = true)
+    """)
     fun findByNameLikeHasIme(name: String): MutableList<Product>
 
     @Query("""
         SELECT
-            t1.*
+            t1
         FROM
-            crm_product t1
+            #{#entityName} t1
         WHERE
             t1.enabled = 1
-        AND t1.has_ime = 1
+        AND t1.hasIme = 1
         AND t1.code LIKE concat( '%', ?1,'%')
-    """, nativeQuery = true)
+    """)
     fun findByCodeLikeHasIme(code: String): MutableList<Product>
 
     fun findByName(name: String): Product
 
     fun findByOutId(outId: String): Product
-
-    @Query("""
-        SELECT DISTINCT
-            t1.out_group_name
-        FROM
-            crm_product t1
-        WHERE
-            t1.enabled = 1
-        AND t1.out_group_id IS NOT NULL
-    """, nativeQuery = true)
-    fun findByOutName(): MutableList<ProductDto>
 
     @Query("""
         SELECT t1.*
@@ -152,16 +166,29 @@ WHERE
 
 interface ProductRepositoryCustom{
 
-    fun findFilter(productQuery: ProductQuery): MutableList<Product>
+    fun findByOutName(): MutableList<String>
+
+    fun findFilter(productQuery: ProductQuery): MutableList<ProductDto>
 
     fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto>
 }
 
-class ProductRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ProductRepositoryCustom{
+class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ProductRepositoryCustom{
 
-    override fun findFilter(productQuery: ProductQuery): MutableList<Product>{
-        val sb = StringBuffer()
-        sb.append("""
+    override fun findByOutName(): MutableList<String>{
+        return namedParameterJdbcTemplate.queryForList("""
+        SELECT DISTINCT
+            t.out_group_name
+        FROM
+            crm_product t
+        WHERE
+            t.enabled = 1
+        AND t.out_group_id IS NOT NULL
+        """, HashMap<String, Any>(),String::class.java)
+    }
+
+    override fun findFilter(productQuery: ProductQuery): MutableList<ProductDto>{
+        val sb = StringBuilder("""
             SELECT
                 t1.*
             FROM
@@ -192,14 +219,11 @@ class ProductRepositoryImpl @Autowired constructor(val entityManager: EntityMana
         }
 
 
-        var query = entityManager.createNativeQuery(sb.toString(), Product::class.java)
-
-        return query.resultList as MutableList<Product>
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productQuery), BeanPropertyRowMapper(ProductDto::class.java))
     }
 
     override fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto> {
-        val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
             SELECT
                 t1.*
             FROM
@@ -228,8 +252,10 @@ class ProductRepositoryImpl @Autowired constructor(val entityManager: EntityMana
         if (StringUtils.isNotEmpty(productQuery.outGroupName)) {
             sb.append("""  and t1.out_group_name =:outGroupName """)
         }
-        var query = entityManager.createNativeQuery(sb.toString(), ProductDto::class.java)
-
-        return query.resultList as Page<ProductDto>
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(productQuery), BeanPropertyRowMapper(ProductDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(productQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 }

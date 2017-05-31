@@ -4,18 +4,23 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.DutyTrip
 import net.myspring.basic.modules.hr.dto.DutyDto
 import net.myspring.basic.modules.hr.dto.DutyTripDto
+import net.myspring.basic.modules.hr.dto.DutyWorktimeDto
 import net.myspring.basic.modules.hr.web.query.DutyTripQuery
 import net.myspring.util.collection.CollectionUtil
+import net.myspring.util.repository.MySQLDialect
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 
 
 /**
@@ -87,7 +92,38 @@ class DutyTripRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
     }
 
     override fun findPage(pageable: Pageable, dutyTripQuery: DutyTripQuery): Page<DutyTripDto> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var sql = StringBuilder("""
+                SELECT
+                t1.*
+                FROM
+                hr_duty_trip t1,
+                hr_account account,
+                sys_office office
+                WHERE
+                t1.created_by=account.id
+                and account.office_id=office.id
+                and t1.enabled=1
+            """);
+        if(dutyTripQuery.dutyDateStart!=null){
+            sql.append("""
+                   AND t1.duty_date > :dutyDateStart
+                """);
+        }
+        if(dutyTripQuery.dutyDateEnd!=null){
+            sql.append("""
+                   AND t1.duty_date &lt; :dutyDateEnd
+                """);
+        }
+        if(dutyTripQuery.createdBy!=null){
+            sql.append("""
+                AND t1.created_by=:createdBy
+                """);
+        }
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sql.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sql.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(dutyTripQuery), BeanPropertyRowMapper(DutyTripDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(dutyTripQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 
     override fun findByAccountIdAndDutyDate(dateStart: LocalDate, dateEnd: LocalDate, accountIds: MutableList<Long>): MutableList<DutyTrip> {

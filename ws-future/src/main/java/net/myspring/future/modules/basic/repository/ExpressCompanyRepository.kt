@@ -4,14 +4,19 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ExpressCompany
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -53,11 +58,10 @@ interface ExpressCompanyRepositoryCustom{
     fun findPage(pageable: Pageable, expressCompanyQuery: ExpressCompanyQuery): Page<ExpressCompanyDto>
 }
 
-class ExpressCompanyRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ExpressCompanyRepositoryCustom{
+class ExpressCompanyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ExpressCompanyRepositoryCustom{
 
     override fun findPage(pageable: Pageable, expressCompanyQuery: ExpressCompanyQuery): Page<ExpressCompanyDto> {
-        val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
             SELECT
                 t1.*
             FROM
@@ -80,8 +84,11 @@ class ExpressCompanyRepositoryImpl @Autowired constructor(val entityManager: Ent
         if (StringUtils.isNotEmpty(expressCompanyQuery.contator)) {
             sb.append("""  and t1.contator LIKE CONCAT('%',:contator,'%') OR t1.contator IS NULL """)
         }
-        var query = entityManager.createNativeQuery(sb.toString(), ExpressCompanyDto::class.java)
 
-        return query.resultList as Page<ExpressCompanyDto>
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(expressCompanyQuery), BeanPropertyRowMapper(ExpressCompanyDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(expressCompanyQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 }

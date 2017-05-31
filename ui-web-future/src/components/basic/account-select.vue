@@ -20,7 +20,7 @@
           return;
         }
         this.remoteLoading = true;
-        axios.get('/api/basic/hr/account/search',{params:{key:query}}).then((response)=>{
+        axios.get('/api/basic/hr/account/search',{params:{type:"主账号",key:query}}).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })
