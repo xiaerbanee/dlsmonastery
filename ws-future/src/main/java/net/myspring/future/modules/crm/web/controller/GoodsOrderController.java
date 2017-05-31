@@ -64,7 +64,7 @@ public class GoodsOrderController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<GoodsOrderDto> list(Pageable pageable, GoodsOrderQuery goodsOrderQuery){
-        Page<GoodsOrderDto> page = goodsOrderService.findPage(pageable, goodsOrderQuery);
+        Page<GoodsOrderDto> page = goodsOrderService.findAll(pageable, goodsOrderQuery);
         return page;
     }
 

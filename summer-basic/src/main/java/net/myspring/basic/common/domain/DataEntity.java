@@ -1,6 +1,7 @@
 package net.myspring.basic.common.domain;
 
 
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
