@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -56,7 +57,7 @@ interface BackendModuleRepositoryCustom{
     fun findPage(pageable: Pageable,backendModuleQuery: BackendModuleQuery): Page<BackendModuleDto>?
 }
 
-class BackendModuleRepositoryImpl @Autowired constructor(val entityManager: EntityManager): BackendModuleRepositoryCustom{
+class BackendModuleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): BackendModuleRepositoryCustom{
     override fun findPage(pageable: Pageable, backendModuleQuery: BackendModuleQuery): Page<BackendModuleDto>? {
         return null
     }

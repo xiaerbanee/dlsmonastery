@@ -20,7 +20,7 @@ import javax.persistence.EntityManager
  */
 @CacheConfig(cacheNames = arrayOf("dictMaps"))
 interface  DictMapRepository :BaseRepository<DictMap,String>, DictMapRepositoryCustom{
-    @CachePut(key="#id")
+    @CachePut(key="p0.#id")
     fun save(dictMap: DictMap): DictMap
 
     @Cacheable
