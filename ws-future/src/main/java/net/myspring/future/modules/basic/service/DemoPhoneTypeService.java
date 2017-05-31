@@ -6,6 +6,7 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.DemoPhoneType;
 import net.myspring.future.modules.basic.domain.DemoPhoneTypeOffice;
+import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeDto;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeOfficeDto;
 import net.myspring.future.modules.basic.repository.DemoPhoneTypeRepository;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 public class DemoPhoneTypeService {
 
     @Autowired
@@ -70,10 +73,12 @@ public class DemoPhoneTypeService {
             }
             cacheUtils.initCacheInput(demoPhoneTypeOfficeDtos);
         }
-        DemoPhoneType demoPhoneType = demoPhoneTypeRepository.findOne(demoPhoneTypeForm.getId());
-        demoPhoneTypeForm = BeanUtil.map(demoPhoneType,DemoPhoneTypeForm.class);
+        if(!demoPhoneTypeForm.isCreate()){
+            DemoPhoneType demoPhoneType = demoPhoneTypeRepository.findOne(demoPhoneTypeForm.getId());
+            demoPhoneTypeForm = BeanUtil.map(demoPhoneType,DemoPhoneTypeForm.class);
+            demoPhoneTypeForm.setProductTypeList(productTypeRepository.findByDemoPhoneTypeId(demoPhoneTypeForm.getId()));
+        }
         demoPhoneTypeForm.setDemoPhoneTypeOfficeList(demoPhoneTypeOfficeDtos);
-        demoPhoneTypeForm.setProductTypeList(productTypeRepository.findByDemoPhoneTypeId(demoPhoneTypeForm.getId()));
         return demoPhoneTypeForm;
     }
 
@@ -107,16 +112,27 @@ public class DemoPhoneTypeService {
             demoPhoneType= BeanUtil.map(demoPhoneTypeForm, DemoPhoneType.class);
             demoPhoneTypeRepository.save(demoPhoneType);
         } else {
-            //TODO 不这样写update
-//            productTypeRepository.updateDemoPhoneTypeToNull(demoPhoneTypeForm.getId());
             demoPhoneType= demoPhoneTypeRepository.findOne(demoPhoneTypeForm.getId());
             ReflectionUtil.copyProperties(demoPhoneTypeForm,demoPhoneType);
             demoPhoneTypeRepository.save(demoPhoneType);
+            //edit>>清空原有的demotypeId
+            List<ProductType> productTypes = productTypeRepository.findByDemoPhoneTypeId(demoPhoneTypeForm.getId());
+            if(CollectionUtil.isNotEmpty(productTypes)){
+                for(ProductType productType:productTypes){
+                    productType.setDemoPhoneTypeId(null);
+                    productTypeRepository.save(productType);
+                }
+            }
         }
+        //添加productTypeId
         if (CollectionUtil.isNotEmpty(demoPhoneTypeForm.getProductTypeIdList())) {
-            //TODO 不这样写update
-//            productTypeRepository.updateDemoPhoneType(demoPhoneType.getId(), demoPhoneTypeForm.getProductTypeIdList());
+            for(String productTypeId:demoPhoneTypeForm.getProductTypeIdList()){
+                ProductType productType = productTypeRepository.findOne(productTypeId);
+                productType.setDemoPhoneTypeId(demoPhoneType.getId());
+                productTypeRepository.save(productType);
+            }
         }
+
         List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtoList = Lists.newArrayList();
         for (DemoPhoneTypeOfficeDto demoPhoneTypeOfficeDto : demoPhoneTypeForm.getDemoPhoneTypeOfficeList()) {
             if (StringUtils.isBlank(demoPhoneTypeOfficeDto.getId())) {

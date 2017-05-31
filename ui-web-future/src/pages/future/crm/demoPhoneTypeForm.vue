@@ -26,7 +26,7 @@
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('demoPhoneTypeForm.save')}}</el-button>
         </el-form-item>
-        <el-table :data="inputForm.demoPhoneTypeOfficeList"  style="margin-top:5px;"   stripe border  v-if="!isCreate">
+        <el-table :data="inputForm.demoPhoneTypeOfficeList"  style="margin-top:5px;"   stripe border>
           <el-table-column prop="officeName" :label="$t('demoPhoneTypeForm.officeName')"></el-table-column>
           <el-table-column prop="officeTaskPoint" :label="$t('demoPhoneTypeForm.taskPoint')"></el-table-column>
           <el-table-column prop="qty" :label="$t('demoPhoneTypeForm.qty')">

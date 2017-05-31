@@ -217,6 +217,9 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (StringUtils.isNotEmpty(productQuery.outGroupName)) {
             sb.append("""  and t1.out_group_name =:outGroupName """)
         }
+        if (StringUtils.isNotEmpty(productQuery.netType)) {
+            sb.append("""  and t1.net_type =:netType """)
+        }
 
 
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productQuery), BeanPropertyRowMapper(ProductDto::class.java))
@@ -251,6 +254,9 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         }
         if (StringUtils.isNotEmpty(productQuery.outGroupName)) {
             sb.append("""  and t1.out_group_name =:outGroupName """)
+        }
+        if (StringUtils.isNotEmpty(productQuery.netType)) {
+            sb.append("""  and t1.net_type =:netType """)
         }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
