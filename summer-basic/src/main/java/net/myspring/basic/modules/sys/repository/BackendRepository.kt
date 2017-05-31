@@ -6,16 +6,19 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Backend
 import net.myspring.basic.modules.sys.dto.*
 import net.myspring.basic.modules.sys.web.query.BackendQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 
@@ -203,6 +206,20 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
     }
 
     override fun findPage(pageable: Pageable, backendQuery: BackendQuery): Page<BackendDto>? {
-        return null
+        var sql = StringBuilder("""
+                SELECT  t1.*
+                FROM sys_backend t1
+                where t1.enabled=1
+            """);
+        if(backendQuery.name!=null){
+            sql.append("""
+                    AND t1.name LIKE CONCAT('%',:name,'%')
+                """);
+        }
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sql.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sql.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(backendQuery), BeanPropertyRowMapper(BackendDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(backendQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 }
