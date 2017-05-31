@@ -32,6 +32,8 @@ interface ExpressRepository : BaseRepository<Express, String>,ExpressRepositoryC
 
     fun findByExpressOrderId(expressOrderId: String): MutableList<Express>
 
+    fun deleteByExpressOrderId(expressOrderId: String);
+
 }
 
 interface ExpressRepositoryCustom{

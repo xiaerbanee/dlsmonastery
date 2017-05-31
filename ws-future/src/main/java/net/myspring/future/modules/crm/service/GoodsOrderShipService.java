@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.service;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.common.constant.CharConstant;
@@ -8,20 +9,26 @@ import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.*;
+import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
+import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +53,10 @@ public class GoodsOrderShipService {
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
     private ExpressOrderManager expressOrderManager;
+    @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private ExpressRepository expressRepository;
 
 
     public Map<String,Object> shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
@@ -124,8 +135,6 @@ public class GoodsOrderShipService {
         return result;
     }
 
-
-
     public void print(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
@@ -168,7 +177,6 @@ public class GoodsOrderShipService {
         }
         //搜索串码
         if (StringUtils.isNotBlank(goodsOrderShipForm.getBoxImeStr()) || StringUtils.isNotBlank(goodsOrderShipForm.getImeStr())) {
-            //如果串码是以86开头，有可能扫描的结果带有字母，此时需要将串码中的字符串去除，只取出数字部分与数据库匹配
             ProductImeShipQuery productImeShipQuery = new ProductImeShipQuery();
             productImeShipQuery.setBoxImeList(goodsOrderShipForm.getBoxImeList());
             productImeShipQuery.setImeList(goodsOrderShipForm.getImeList());
@@ -217,6 +225,60 @@ public class GoodsOrderShipService {
         //设置快递单
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
         expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(),goodsOrder.getId(),goodsOrderShipForm.getExpressStr(),expressOrder.getExpressCompanyId());
+    }
+
+
+    public GoodsOrder sreturn(GoodsOrderForm goodsOrderForm) {
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap = goodsOrderDetailRepository.findMap(CollectionUtil.extractToList(goodsOrderForm.getGoodsOrderDetailList(),"goodsOrderDetailId"));
+        BigDecimal amount = BigDecimal.ZERO;
+        for (GoodsOrderDetailForm goodsOrderDetailForm:goodsOrderForm.getGoodsOrderDetailList()) {
+            GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderDetailForm.getGoodsOrderDetailId());
+            if (goodsOrderDetailForm.getReturnQty() != null && goodsOrderDetailForm.getReturnQty() > 0) {
+                goodsOrderDetail.setReturnQty(goodsOrderDetail.getReturnQty());
+                goodsOrderDetailRepository.save(goodsOrderDetail);
+            }
+            amount  = amount.add(new BigDecimal( goodsOrderDetail.getRealBillQty()).multiply(goodsOrderDetail.getPrice()));
+        }
+        goodsOrder.setAmount(amount);
+        goodsOrderRepository.save(goodsOrder);
+        goodsOrderRepository.save(goodsOrder);
+        return goodsOrder;
+    }
+
+    public void sign(String goodsOrderId) {
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
+        goodsOrder.setStatus(GoodsOrderStatusEnum.已完成.name());
+        goodsOrderRepository.save(goodsOrder);
+    }
+
+
+    public void shipBack(String goodsOrderId) {
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
+        Depot store = depotRepository.findOne(goodsOrder.getStoreId());
+        List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByGoodsOrderId(goodsOrderId);
+        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderId);
+        Map<String,ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"productImeId"));
+        //串码调拨
+        if (CollectionUtil.isNotEmpty(goodsOrderImeList)) {
+            List<ProductIme> productImes = Lists.newArrayList();
+            for (GoodsOrderIme goodsOrderIme : goodsOrderImeList) {
+                ProductIme productIme = productImeMap.get(goodsOrderIme.getProductImeId());
+                productIme.setDepotId(goodsOrder.getStoreId());
+                productIme.setRetailShopId(goodsOrder.getStoreId());
+                productImeRepository.save(productIme);
+                productImes.add(productIme);
+            }
+        }
+        goodsOrderImeRepository.delete(goodsOrderImeList);
+        for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
+            goodsOrderDetail.setShippedQty(0);
+        }
+        goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
+        goodsOrder.setShipDate(null);
+        //删除快递单
+        expressRepository.deleteByExpressOrderId(goodsOrder.getExpressOrderId());
+        goodsOrderRepository.save(goodsOrder);
     }
 
 }
