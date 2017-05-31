@@ -27,6 +27,33 @@ public class ProductDto extends DataDto<Product> {
 
     private String expiryDateRemarks;
     private BigDecimal price2;
+    private BigDecimal retailPrice;
+    private BigDecimal depositPrice;
+    private String mappingName;
+
+    public BigDecimal getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(BigDecimal retailPrice) {
+        this.retailPrice = retailPrice;
+    }
+
+    public BigDecimal getDepositPrice() {
+        return depositPrice;
+    }
+
+    public void setDepositPrice(BigDecimal depositPrice) {
+        this.depositPrice = depositPrice;
+    }
+
+    public String getMappingName() {
+        return mappingName;
+    }
+
+    public void setMappingName(String mappingName) {
+        this.mappingName = mappingName;
+    }
 
     public String getExpiryDateRemarks() {
         return expiryDateRemarks;

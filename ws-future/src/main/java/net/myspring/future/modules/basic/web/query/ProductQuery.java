@@ -13,6 +13,7 @@ import java.util.Map;
  * Created by lihx on 2017/4/19.
  */
 public class ProductQuery extends BaseQuery {
+    private String id;
     private String name;  //名称
     private String code;  //编码
     private String type;
@@ -23,8 +24,15 @@ public class ProductQuery extends BaseQuery {
     private String outGroupName;  //产品类型
     private String netType;  //网络制式
     private List<String> netTypeList = Lists.newArrayList();
-    private List<ProductDto> outGroupNameList = Lists.newArrayList();
+    private List<String> outGroupNameList = Lists.newArrayList();
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public List<String> getNetTypeList() {
         return netTypeList;
@@ -34,11 +42,11 @@ public class ProductQuery extends BaseQuery {
         this.netTypeList = netTypeList;
     }
 
-    public List<ProductDto> getOutGroupNameList() {
+    public List<String> getOutGroupNameList() {
         return outGroupNameList;
     }
 
-    public void setOutGroupNameList(List<ProductDto> outGroupNameList) {
+    public void setOutGroupNameList(List<String> outGroupNameList) {
         this.outGroupNameList = outGroupNameList;
     }
 

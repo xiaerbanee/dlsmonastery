@@ -29,7 +29,7 @@ interface ShopAdTypeRepository : BaseRepository<ShopAdType,String>,ShopAdTypeRep
     override fun findAll(): MutableList<ShopAdType>
 
     @CachePut(key = "#p0.id")
-    fun save(shopAdType: ShopAdType): Int
+    fun save(shopAdType: ShopAdType): ShopAdType
 
     /*@Query("""
         SELECT t1.*

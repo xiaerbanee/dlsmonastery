@@ -9,6 +9,7 @@ import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.repository.AdpricesystemRepository;
+import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.repository.AdPricesystemChangeRepository;
@@ -19,12 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 public class AdPricesystemChangeService {
 
     @Autowired
@@ -50,6 +53,9 @@ public class AdPricesystemChangeService {
     }
 
     public List<AdPricesystemChangeDto> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
+        ProductQuery productQuery = new ProductQuery();
+        productQuery.setId(adPricesystemChangeQuery.getProductId());
+
         List<AdPricesystemChangeDto> adPricesystemChangeDtos = adPricesystemChangeRepository.findFilter(adPricesystemChangeQuery);
         cacheUtils.initCacheInput(adPricesystemChangeDtos);
         return adPricesystemChangeDtos;
