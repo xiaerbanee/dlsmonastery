@@ -107,7 +107,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             AND t1.box_ime IN :boxImeList
         UNION
             SELECT
-                t1
+                t1.*
             FROM
                 crm_product_ime t1
             WHERE
