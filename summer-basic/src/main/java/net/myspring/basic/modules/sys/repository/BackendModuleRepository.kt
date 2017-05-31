@@ -3,7 +3,6 @@ package net.myspring.basic.modules.sys.repository
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.BackendModule
 import net.myspring.basic.modules.sys.dto.BackendModuleDto
-import net.myspring.basic.modules.sys.dto.MenuCategoryDto
 import net.myspring.basic.modules.sys.web.query.BackendModuleQuery
 import net.myspring.util.repository.MySQLDialect
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +17,6 @@ import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import javax.persistence.EntityManager
 
 /**
  * Created by haos on 2017/5/24.

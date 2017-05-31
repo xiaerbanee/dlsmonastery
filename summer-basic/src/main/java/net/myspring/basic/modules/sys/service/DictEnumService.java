@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class DictEnumService {
     @Autowired
     private DictEnumRepository dictEnumRepository;
@@ -56,7 +58,7 @@ public class DictEnumService {
             return null;
         }
     }
-
+    @Transactional
     public DictEnum save(DictEnumForm dictEnumForm) {
         DictEnum dictEnum;
         if(dictEnumForm.isCreate()) {
@@ -70,7 +72,7 @@ public class DictEnumService {
         return dictEnum;
     }
 
-
+    @Transactional
     public void logicDelete(String id) {
         dictEnumRepository.logicDelete(id);
     }

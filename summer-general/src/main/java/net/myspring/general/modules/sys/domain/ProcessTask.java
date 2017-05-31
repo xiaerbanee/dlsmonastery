@@ -1,16 +1,17 @@
 package net.myspring.general.modules.sys.domain;
 
 import net.myspring.general.common.domain.CompanyEntity;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * Created by liuj on 2017/4/22.
  */
 @Entity
 @Table(name="sys_process_task")
+@Where(clause = "enabled=true")
 public class ProcessTask  extends CompanyEntity<ProcessTask>{
     private String name;
     private String processInstanceId;
