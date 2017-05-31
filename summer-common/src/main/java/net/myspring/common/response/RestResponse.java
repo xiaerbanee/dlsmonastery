@@ -2,6 +2,7 @@ package net.myspring.common.response;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.util.collection.CollectionUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,9 @@ public class RestResponse {
 
 
     public Boolean getSuccess() {
+        if(CollectionUtil.isNotEmpty(errors)) {
+            success = false;
+        }
         return success;
     }
 

@@ -1,7 +1,10 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.modules.basic.domain.Product;
@@ -20,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -42,12 +48,88 @@ public class GoodsOrderShipService {
     private RedisTemplate redisTemplate;
 
 
-    public RestResponse shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
-        RestResponse restResponse = new RestResponse("发货串码正确", ResponseCodeEnum.valid.name(),true);
+    public Map<String,Object> shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
+       RestResponse restResponse =  new RestResponse("valid",ResponseCodeEnum.valid.name());
         Integer totalShouldShipQty = 0;
         Integer totalShippedQty = 0;
-        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getId());
-        return null;
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getGoodsOrderId());
+        final List<String> boxImeList = StringUtils.getSplitList(goodsOrderShipForm.getBoxImeStr(), CharConstant.ENTER);
+        final List<String> imeList = StringUtils.getSplitList(goodsOrderShipForm.getImeStr(), CharConstant.ENTER);
+        for(int i=0;i<imeList.size();i++){
+            String ime=imeList.get(i);
+            if(ime.startsWith("86")){
+                imeList.set(i,StringUtils.getNumberStr(ime));
+            }
+        }
+        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
+        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
+        for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
+            if (goodsOrderDetail.getBillQty() > 0 && productMap.get(goodsOrderDetail.getProductId()).getHasIme()) {
+                goodsOrderDetail.setShipQty(0);
+            }
+        }
+        ProductImeShipQuery productImeShipQuery = new ProductImeShipQuery();
+        productImeShipQuery.setDepotId(goodsOrder.getStoreId());
+        productImeShipQuery.setImeList(imeList);
+        productImeShipQuery.setBoxImeList(boxImeList);
+        List<ProductIme> productImeList = productImeRepository.findShipList(productImeShipQuery);
+        Set<String> boxImeSet = Sets.newHashSet();
+        Set<String> imeSet = Sets.newHashSet();
+        for (ProductIme productIme : productImeList) {
+            boxImeSet.add(productIme.getBoxIme());
+            imeSet.add(productIme.getIme());
+            if (StringUtils.isNotBlank(productIme.getMeid())) {
+                imeSet.add(productIme.getMeid());
+            }
+            if (StringUtils.isNotBlank(productIme.getIme2())) {
+                imeSet.add(productIme.getIme2());
+            }
+            Product product = productMap.get(productIme.getProductId());
+            if (!goodsOrderDetailMap.containsKey(product.getId())) {
+                restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "，货品为：" + product.getName() + "，不在订货范围内","ime_error","imeStr"));
+            } else {
+                goodsOrderDetailMap.get(product.getId()).setShipQty(goodsOrderDetailMap.get(product.getId()).getShipQty() + 1);
+            }
+        }
+        for (String boxIme : boxImeList) {
+            if (!boxImeSet.contains(boxIme)) {
+                restResponse.getErrors().add(new RestErrorField("箱号：" + boxIme  + "，在仓库不存在","box_ime_error","boxIme"));
+            }
+        }
+        for (String ime : imeList) {
+            if (!imeSet.contains(ime)) {
+                restResponse.getErrors().add(new RestErrorField("串码：" + ime + "，在仓库不存在","ime_error","ime"));
+            }
+        }
+        for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
+            totalShouldShipQty = totalShouldShipQty +goodsOrderDetail.getRealBillQty();
+            totalShippedQty = totalShippedQty + goodsOrderDetail.getShippedQty() + goodsOrderDetail.getShipQty();
+            Integer qty = goodsOrderDetail.getShippedQty() + goodsOrderDetail.getShipQty();
+            Integer realBillQty=goodsOrderDetail.getRealBillQty();
+            if (qty > realBillQty) {
+                StringBuilder errorMessage = new StringBuilder("货品:"+ productMap.get(goodsOrderDetail.getProductId()).getName() +"总发货数："+ qty+ "大于实际开单数："  + realBillQty + "串码：");
+                //显示发货不对的串码
+                for (ProductIme productIme : productImeList) {
+                    if (productIme.getProductId().equals(goodsOrderDetail.getProductId())) {
+                        errorMessage.append(productIme.getIme()).append(CharConstant.TAB);
+                    }
+                }
+                restResponse.getErrors().add(new RestErrorField(errorMessage.toString(),"qty_error","ime"));
+            }
+        }
+        Map<String, Object> result = Maps.newHashMap();
+        if (!totalShouldShipQty.equals(totalShippedQty)) {
+            result.put("warnMsg", "货品总开单数和实际发货数不一致");
+        }
+        Map<String, Integer> shipQtyMap = Maps.newHashMap();
+        for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailMap.values()) {
+            shipQtyMap.put(goodsOrderDetail.getProductId(), goodsOrderDetail.getShipQty());
+        }
+        result.put("restResponse", restResponse);
+        result.put("shipQtyMap", shipQtyMap);
+        result.put("totalQty", productImeList.size());
+        return result;
     }
 
 

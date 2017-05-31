@@ -53,16 +53,15 @@ interface ProductImeRepositoryCustom{
 
     fun findDtoListByImeList(imeList: MutableList<String>, companyId: String): MutableList<ProductImeDto>
 
-    fun findShipList(@Param("p") productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme>
+    fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme>
 
 }
 
 class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
     override fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme> {
-
         return namedParameterJdbcTemplate.query("""
         SELECT
-            t1
+            t1.*
         FROM
             crm_product_ime t1
         WHERE
@@ -71,7 +70,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
             AND t1.box_ime IN :boxImeList
         UNION
             SELECT
-                t1
+                t1.*
             FROM
                 crm_product_ime t1
             WHERE
@@ -274,13 +273,6 @@ class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
         }
         sb.append("""  limit ${pageable.offset}, ${pageable.pageSize} """)
         return null
-//        val query = entityManager.createNativeQuery(sb.toString(), ProductImeDto::class.java)
-//        QueryUtils.setParameter(query, productImeQuery)
-//
-//        val result = query.resultList
-//        return PageImpl<ProductImeDto>(result as MutableList<ProductImeDto>, pageable, ((pageable.pageNumber + 100) * pageable.pageSize).toLong())
-
-
 
     }
 
