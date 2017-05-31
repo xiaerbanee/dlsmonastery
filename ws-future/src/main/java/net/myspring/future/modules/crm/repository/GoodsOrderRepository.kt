@@ -31,12 +31,12 @@ interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderR
 }
 
 interface GoodsOrderRepositoryCustom {
-    fun findPage(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>?
+    fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>?
 
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
-    override fun findPage(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
+    override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
         var sb = StringBuilder("select * from crm_goods_order where 1=1 ");
         if(StringUtils.isNotBlank(goodsOrderQuery.remarks)) {
             sb.append(" and remarks like concat('%',:remarks,'%')");

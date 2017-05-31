@@ -73,8 +73,8 @@ public class GoodsOrderService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public Page<GoodsOrderDto> findPage(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
-        Page<GoodsOrderDto> page = goodsOrderRepository.findPage(pageable, goodsOrderQuery);
+    public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
+        Page<GoodsOrderDto> page = goodsOrderRepository.findAll(pageable, goodsOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -92,7 +92,7 @@ public class GoodsOrderService {
         GoodsOrderQuery goodsOrderQuery = new GoodsOrderQuery();
         goodsOrderQuery.setShopId(shop.getId());
         goodsOrderQuery.setStatus(GoodsOrderStatusEnum.待开单.name());
-        List<GoodsOrderDto> goodsOrderDtoList = goodsOrderRepository.findPage(new PageRequest(0, 1), goodsOrderQuery).getContent();
+        List<GoodsOrderDto> goodsOrderDtoList = goodsOrderRepository.findAll(new PageRequest(0, 1), goodsOrderQuery).getContent();
         if (CollectionUtil.isNotEmpty(goodsOrderDtoList)) {
             restResponse.getErrors().add(new RestErrorField("门店有未处理的单据","exist_order_for_bill","shopId"));
         }
