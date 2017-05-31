@@ -4,14 +4,17 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Menu
 import net.myspring.basic.modules.sys.dto.MenuDto
 import net.myspring.basic.modules.sys.web.query.MenuQuery
+import net.myspring.util.repository.MySQLDialect
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 
@@ -86,7 +89,39 @@ class MenuRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: 
     }
 
     override fun findPage(pageable: Pageable, menuQuery: MenuQuery): Page<MenuDto>? {
-        return null
+        var sql = StringBuilder("""
+                SELECT
+                t1.*
+                FROM
+                sys_menu t1
+                WHERE
+                t1.enabled=1
+            """);
+        if(menuQuery.name!=null){
+            sql.append("""
+                    AND t1.name LIKE CONCAT('%',:name,'%')
+                """);
+        }
+        if(menuQuery.sort!=null){
+            sql.append("""
+                    AND t1.sort =:sort
+                """);
+        }
+        if(menuQuery.category!=null){
+            sql.append("""
+                    AND t1.category =:category
+                """);
+        }
+        if(menuQuery.menuCategoryId!=null){
+            sql.append("""
+                    AND t1.menu_category_id =:menuCategoryId
+                """);
+        }
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sql.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sql.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(menuQuery), BeanPropertyRowMapper(MenuDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(menuQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 
 
