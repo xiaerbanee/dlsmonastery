@@ -232,6 +232,7 @@ export default {
       productImeList: "串码列表",
       productImeDetail: "串码详情",
       productImeSaleForm: "串码核销编辑",
+      productImeSaleBackForm: "串码核销退回编辑",
       productImeSaleList: "串码核销",
       productImeUploadForm: "串码上报编辑",
       productImeUploadList: "串码上报",

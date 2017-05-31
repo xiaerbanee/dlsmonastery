@@ -178,9 +178,9 @@
         return row.processStatus !== '已通过' && row.processStatus !== '未通过'
       },selectionChange(selection){
 
-        this.selects=new Array();
-        for(var key in selection){
-          this.selects.push(selection[key].id);
+        this.selects=[];
+        for(let each of selection){
+          this.selects.push(each.id);
         }
 
       },batchPass(){

@@ -4,6 +4,9 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ProductType
 import net.myspring.future.modules.basic.dto.ProductTypeDto
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery
+import net.myspring.future.modules.crm.dto.ProductImeSaleDto
+import net.myspring.future.modules.crm.dto.ReportScoreDto
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,8 +14,13 @@ import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 import javax.persistence.EntityManager
 
 /**
@@ -27,7 +35,7 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
     override fun findAll(): MutableList<ProductType>
 
     @CachePut(key = "#p0.id")
-    fun save(productType: ProductType): Int
+    fun save(productType: ProductType): ProductType
 
     @Query("""
         SELECT t1.*
@@ -67,11 +75,12 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
 //    fun updateDemoPhoneTypeToNull(demoPhoneTypeId: String): Int
 
     @Query("""
-        SELECT t1.* from crm_product_type t1
-        where t1.score_type=1
+        SELECT t1
+        from #{#entityName}  t1
+        where t1.scoreType=1
         and t1.enabled = 1
         and t1.price1 is not null order by t1.name
-    """, nativeQuery = true)
+    """)
     fun findAllScoreType(): MutableList<ProductType>
 
     fun findByDemoPhoneTypeId(demoPhoneTypeId: String): MutableList<ProductType>
@@ -79,15 +88,40 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
 
 interface ProductTypeRepositoryCustom{
     fun findPage(pageable: Pageable, productTypeQuery: ProductTypeQuery): Page<ProductTypeDto>
+
+     fun findDto(id: String?): ProductTypeDto?
 }
 
-class ProductTypeRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ProductTypeRepositoryCustom{
+class ProductTypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ProductTypeRepositoryCustom{
+    override fun findDto(id: String?): ProductTypeDto? {
+        if(id == null){
+            return null
+        }
+        val  result = namedParameterJdbcTemplate.query("""
+        SELECT
+                group_concat(t2.name) AS productNames, group_concat(t2.id) AS productIds, t1.*
+            FROM
+                crm_product_type t1
+            LEFT JOIN crm_product t2 ON t1.id = t2.product_type_id
+            WHERE
+                t1.enabled = 1
+            AND t2.enabled = 1
+            AND t1.id = :id
+
+                """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ProductTypeDto::class.java));
+        if(result!=null && result.size > 0){
+            return result[0]
+        }else {
+            return null
+        }
+
+    }
 
     override fun findPage(pageable: Pageable, productTypeQuery: ProductTypeQuery): Page<ProductTypeDto> {
         val sb = StringBuffer()
         sb.append("""
             SELECT
-                t1.*, group_concat(t2.name) AS productNames
+                group_concat(t2.name) AS productNames, t1.*
             FROM
                 crm_product_type t1
             LEFT JOIN crm_product t2 ON t1.id = t2.product_type_id
@@ -102,8 +136,13 @@ class ProductTypeRepositoryImpl @Autowired constructor(val entityManager: Entity
             sb.append("""  and t1.code LIKE CONCAT('%',:code,'%') """)
         }
         sb.append(""" group by t1.id """)
-        var query = entityManager.createNativeQuery(sb.toString(), ProductTypeDto::class.java)
 
-        return query.resultList as Page<ProductTypeDto>
+
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        var paramMap = BeanPropertySqlParameterSource(productTypeQuery)
+        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductTypeDto::class.java))
+        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 }
