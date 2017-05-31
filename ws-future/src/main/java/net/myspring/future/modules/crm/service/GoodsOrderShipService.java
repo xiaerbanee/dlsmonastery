@@ -53,14 +53,6 @@ public class GoodsOrderShipService {
         Integer totalShouldShipQty = 0;
         Integer totalShippedQty = 0;
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getGoodsOrderId());
-        final List<String> boxImeList = StringUtils.getSplitList(goodsOrderShipForm.getBoxImeStr(), CharConstant.ENTER);
-        final List<String> imeList = StringUtils.getSplitList(goodsOrderShipForm.getImeStr(), CharConstant.ENTER);
-        for(int i=0;i<imeList.size();i++){
-            String ime=imeList.get(i);
-            if(ime.startsWith("86")){
-                imeList.set(i,StringUtils.getNumberStr(ime));
-            }
-        }
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
@@ -71,8 +63,8 @@ public class GoodsOrderShipService {
         }
         ProductImeShipQuery productImeShipQuery = new ProductImeShipQuery();
         productImeShipQuery.setDepotId(goodsOrder.getStoreId());
-        productImeShipQuery.setImeList(imeList);
-        productImeShipQuery.setBoxImeList(boxImeList);
+        productImeShipQuery.setImeList(goodsOrderShipForm.getImeList());
+        productImeShipQuery.setBoxImeList(goodsOrderShipForm.getBoxImeList());
         List<ProductIme> productImeList = productImeRepository.findShipList(productImeShipQuery);
         Set<String> boxImeSet = Sets.newHashSet();
         Set<String> imeSet = Sets.newHashSet();
@@ -92,12 +84,12 @@ public class GoodsOrderShipService {
                 goodsOrderDetailMap.get(product.getId()).setShipQty(goodsOrderDetailMap.get(product.getId()).getShipQty() + 1);
             }
         }
-        for (String boxIme : boxImeList) {
+        for (String boxIme : goodsOrderShipForm.getBoxImeList()) {
             if (!boxImeSet.contains(boxIme)) {
                 restResponse.getErrors().add(new RestErrorField("箱号：" + boxIme  + "，在仓库不存在","box_ime_error","boxIme"));
             }
         }
-        for (String ime : imeList) {
+        for (String ime : goodsOrderShipForm.getImeList()) {
             if (!imeSet.contains(ime)) {
                 restResponse.getErrors().add(new RestErrorField("串码：" + ime + "，在仓库不存在","ime_error","ime"));
             }
@@ -162,8 +154,7 @@ public class GoodsOrderShipService {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getGoodsOrderId());
         Map<String, GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
         List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderShipForm.getGoodsOrderId());
-        List<Product> productList  = productRepository.findAll(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
-        Map<String,Product> productMap = CollectionUtil.extractToMap(productList,"id");
+        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
             if (goodsOrderDetail.getRealBillQty() > 0 && goodsOrderDetail.getRealBillQty() != goodsOrderDetail.getShippedQty()) {
                 goodsOrderDetailMap.put(goodsOrderDetail.getProductId(), goodsOrderDetail);
@@ -178,14 +169,6 @@ public class GoodsOrderShipService {
         //搜索串码
         if (StringUtils.isNotBlank(goodsOrderShipForm.getBoxImeStr()) || StringUtils.isNotBlank(goodsOrderShipForm.getImeStr())) {
             //如果串码是以86开头，有可能扫描的结果带有字母，此时需要将串码中的字符串去除，只取出数字部分与数据库匹配
-            List<String> imeList = goodsOrderShipForm.getImeList();
-            List<String> boxImeList = goodsOrderShipForm.getBoxImeList();
-            for (int i = 0; i < imeList.size(); i++) {
-                String ime = imeList.get(i);
-                if (ime.startsWith("86")) {
-                    imeList.set(i, StringUtils.getNumberStr(ime));
-                }
-            }
             ProductImeShipQuery productImeShipQuery = new ProductImeShipQuery();
             productImeShipQuery.setBoxImeList(goodsOrderShipForm.getBoxImeList());
             productImeShipQuery.setImeList(goodsOrderShipForm.getImeList());

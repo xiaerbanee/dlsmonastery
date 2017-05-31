@@ -1,5 +1,7 @@
 package net.myspring.future.modules.crm.web.form;
 
+import com.ctc.wstx.util.StringUtil;
+import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
@@ -55,7 +57,16 @@ public class GoodsOrderShipForm extends BaseForm<GoodsOrder> {
     }
 
     public List<String> getImeList() {
-        return StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+        List<String> list =  StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+        List<String> imeList = Lists.newArrayList();
+        for(String ime:list) {
+            if (ime.startsWith("86")) {
+                imeList.add(StringUtils.getNumberStr(ime));
+            } else {
+                imeList.add(ime);
+            }
+        }
+        return imeList;
     }
 
     public List<String> getBoxImeList() {
