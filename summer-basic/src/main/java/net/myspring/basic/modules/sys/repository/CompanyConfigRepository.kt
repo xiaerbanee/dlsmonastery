@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
  */
 @CacheConfig(cacheNames = arrayOf("companyConfigs"))
 interface CompanyConfigRepository :BaseRepository<CompanyConfig,String>, CompanyConfigRepositoryCustom{
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(companyConfig: CompanyConfig): CompanyConfig
 
     @Cacheable
