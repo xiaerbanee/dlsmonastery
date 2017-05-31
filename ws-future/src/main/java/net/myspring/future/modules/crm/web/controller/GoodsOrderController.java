@@ -78,6 +78,15 @@ public class GoodsOrderController {
     }
 
 
+    @RequestMapping(value = "getForm")
+    public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
+        return goodsOrderForm;
+    }
+
+
+
+
+
     @RequestMapping(value = "findOne")
     public GoodsOrderDto findOne(String id) {
         return goodsOrderService.findOne(id);

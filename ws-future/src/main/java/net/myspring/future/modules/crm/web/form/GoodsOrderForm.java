@@ -15,7 +15,7 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
     private List<String> netTypeList;
     private List<String> shipTypeList;
 
-    private List<GoodsOrderDetailForm> goodsOrderDetailList = Lists.newArrayList();
+    private List<GoodsOrderDetailForm> goodsOrderDetailFormList = Lists.newArrayList();
 
 
     public String getExpressOrderId() {
@@ -34,12 +34,12 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
         isUseTicket = useTicket;
     }
 
-    public List<GoodsOrderDetailForm> getGoodsOrderDetailList() {
-        return goodsOrderDetailList;
+    public List<GoodsOrderDetailForm> getGoodsOrderDetailFormList() {
+        return goodsOrderDetailFormList;
     }
 
-    public void setGoodsOrderDetailList(List<GoodsOrderDetailForm> goodsOrderDetailList) {
-        this.goodsOrderDetailList = goodsOrderDetailList;
+    public void setGoodsOrderDetailFormList(List<GoodsOrderDetailForm> goodsOrderDetailFormList) {
+        this.goodsOrderDetailFormList = goodsOrderDetailFormList;
     }
 
     public Boolean getIsUseTicket() {
