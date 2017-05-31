@@ -207,7 +207,7 @@
         this.inputProperty = response.data;
       });
       if(!this.isCreate){
-        axios.get('/api/ws/future/crm/goodsOrder/findDetailListForEdit',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList',{params: {id:this.$route.query.id}}).then((response)=>{
           this.setGoodsOrderDetailList(response.data);
         });
       }
