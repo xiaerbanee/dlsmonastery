@@ -21,26 +21,25 @@
             </el-form-item>
             <div v-show="inputForm.shopId">
               <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
-                <el-select  :disabled="!isCreate" v-model="goodsOrder.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
+                <el-select  :disabled="!isCreate" v-model="inputForm.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
                   <el-option v-for="item in inputProperty.netTypeList" :key="item":label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType" >
-                <el-select   v-model="goodsOrder.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
+                <el-select   v-model="inputForm.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
                   <el-option v-for="item in inputProperty.shipTypeList" :key="item":label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="12">
-            <div v-show="goodsOrder.shopId">
+            <div v-show="inputForm.shopId">
               <el-form-item :label="$t('goodsOrderForm.shopType')" prop="type">
                 {{shop.depotType}}
               </el-form-item>
               <el-form-item :label="$t('goodsOrderForm.priceSystem')" prop="pricesystem">
                 {{shop.pricesystemName}}
               </el-form-item>
-
               <el-form-item :label="$t('goodsOrderForm.summary')" prop="summary">
                 {{summary}}
               </el-form-item>
@@ -51,9 +50,9 @@
           </el-col>
         </el-row>
       </el-form>
-      <div v-show="goodsOrder.shopId">
+      <div v-show="inputForm.shopId">
         <el-input v-model="productName" @input="filterProducts" :placeholder="$t('shopAllotForm.selectTowKey')" style="width:200px;"></el-input>
-        <el-table :data="filterDetailList" border stripe v-loading="pageLoading" >
+        <el-table :data="filterDetailList" border stripe v-loading="pageLoading" style="margin-top:10px;">
           <el-table-column  prop = "productName" :label="$t('goodsOrderForm.productName')" ></el-table-column>
           <el-table-column prop="productHasIme" :label="$t('goodsOrderForm.hasIme')" width="70">
             <template scope="scope">
