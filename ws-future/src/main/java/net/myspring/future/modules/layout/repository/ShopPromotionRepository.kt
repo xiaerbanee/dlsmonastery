@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -29,7 +30,7 @@ interface ShopPromotionRepository : BaseRepository<ShopPromotion,String>,ShopPro
     WHERE
         t1.createdDate >= ?1
     """)
-    fun findMaxBusinessId(localDate: LocalDate): String
+    fun findMaxBusinessId(localDateTime: LocalDateTime): String
 }
 
 interface ShopPromotionRepositoryCustom{

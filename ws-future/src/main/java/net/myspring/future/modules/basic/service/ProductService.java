@@ -61,8 +61,7 @@ public class ProductService {
     }
 
     public List<ProductDto> findFilter(ProductQuery productQuery){
-        List<Product> productList = productRepository.findFilter(productQuery);
-        List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
+        List<ProductDto> productDtoList = productRepository.findFilter(productQuery);
         return productDtoList;
     }
 
@@ -75,7 +74,7 @@ public class ProductService {
     }
 
     public List<ProductDto> findByOutName(){
-        return productRepository.findByOutName();
+        return BeanUtil.map(productRepository.findByOutName(),ProductDto.class);
     }
 
     public List<ProductDto> findByNameLikeHasIme(String name){
@@ -142,9 +141,15 @@ public class ProductService {
     }
 
     public void save(ProductForm productForm) {
-            Product product= productRepository.findOne(productForm.getId());
-            ReflectionUtil.copyProperties(productForm,product);
-            productRepository.save(product);
+        Product product;
+            if(productForm.isCreate()){
+                product = BeanUtil.map(productForm,Product.class);
+                productRepository.save(product);
+            }else{
+                product = productRepository.findOne(productForm.getId());
+                ReflectionUtil.copyProperties(productForm,product);
+                productRepository.save(product);
+            }
     }
 
     public ProductQuery getQuery(ProductQuery productQuery){

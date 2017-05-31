@@ -221,13 +221,13 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         var sb = StringBuilder()
         sb.append("""
             SELECT
-            t1
+            t1.*
             FROM
             hr_account t1
             where t1.enabled=1
-            and t1.login_name LIKE %:name%)
+            and t1.login_name LIKE CONCAT('%',:name,'%')
         """)
-        if (StringUtils.isNotBlank(name)) {
+        if (StringUtils.isNotBlank(type)) {
             sb.append(" and t1.type=:type")
         }
         sb.append(" limit 0, 100")
