@@ -1,14 +1,8 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.basic.modules.sys.dto.DictEnumDto
 import net.myspring.future.common.repository.BaseRepository
-
-import java.time.LocalDate
-
 import net.myspring.future.modules.crm.domain.GoodsOrder
-import net.myspring.future.modules.crm.dto.ExpressDto
 import net.myspring.future.modules.crm.dto.GoodsOrderDto
-import net.myspring.future.modules.crm.web.query.ExpressQuery
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -20,7 +14,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import javax.persistence.EntityManager
+import java.time.LocalDate
 
 
 interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderRepositoryCustom {
