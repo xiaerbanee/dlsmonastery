@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.DepotStore
+import net.myspring.future.modules.basic.domain.ProductType
 import net.myspring.future.modules.basic.dto.DepotStoreDto
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery
 import net.myspring.util.text.StringUtils
@@ -26,7 +27,7 @@ interface DepotStoreRepository : BaseRepository<DepotStore,String>,DepotStoreRep
     override fun findAll(): MutableList<DepotStore>
 
     @CachePut(key = "#p0.id")
-    fun save(depotStore: DepotStore): Int
+    fun save(depotStore: DepotStore): DepotStore
 
     @Query("""
         SELECT t1.*

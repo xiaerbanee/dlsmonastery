@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:productType:edit'">{{$t('productTypeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productType:view'">{{$t('productTypeList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData"  v-permit="'crm:productType:view'">{{$t('productTypeList.export')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('productTypeList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -74,8 +75,7 @@
           code:{label:this.$t('productTypeList.code')},
           name:{label:this.$t('productTypeList.name')},
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
+
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -86,16 +86,18 @@
         this.pageLoading = true;
         util.copyValue(this.formData,this.submitData);
         util.setQuery("productTypeList",this.submitData);
-        axios.get('/api/ws/future/basic/productType',{params:this.submitData}).then((response) => {
+        axios.get('/api/ws/future/basic/productType?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
+
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
         this.pageRequest();
+
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -104,20 +106,33 @@
       },itemAdd(){
         this.$router.push({ name: 'productTypeForm'})
       },itemAction:function(id,action){
-        if(action=="edit") {
+        if(action==="edit") {
           this.$router.push({ name: 'productTypeForm', query: { id: id }})
-        } else if(action=="delete") {
-          axios.get('/api/ws/future/basic/productType/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          })
+        } else if(action==="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/basic/productType/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          }).catch(()=>{});
         }
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/crm/productType/export',{params:this.submitData}).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});
+
       }
     },created () {
+
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,that.formData);
-      that.pageRequest();
+      axios.get('/api/basic/sys/productType/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+      });
     }
   };
 </script>

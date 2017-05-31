@@ -117,9 +117,9 @@
 
       },selectionChange(selection){
         console.log(selection);
-        this.selects=new Array();
-        for(var key in selection){
-          this.selects.push(selection[key].id)
+        this.selects=[];
+        for(let each of selection){
+          this.selects.push(each.id)
         }
       },batchPass(){
 

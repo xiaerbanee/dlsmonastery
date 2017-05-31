@@ -17,7 +17,7 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
     override fun findOne(id: String): RolePermission
 
     @CachePut(key="#id")
-    fun save(RolePermission: RolePermission): Int
+    fun save(RolePermission: RolePermission): RolePermission
 
     @Query("""
         SELECT t

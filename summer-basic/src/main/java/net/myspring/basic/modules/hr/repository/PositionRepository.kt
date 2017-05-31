@@ -28,7 +28,7 @@ interface PositionRepository : BaseRepository<Position,String>,PositionRepositor
     override fun findOne(id: String): Position
 
     @CachePut(key="#id")
-    fun save(position: Position): Int
+    fun save(position: Position): Position
 
 }
 interface PositionRepositoryCustom{

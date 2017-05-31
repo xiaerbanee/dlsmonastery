@@ -99,6 +99,14 @@ util.confirmBeforeBatchPass = function(vueObj){
     type: 'warning'
   });
 }
+util.confirmBeforeAction = function(vueObj, action){
+  return vueObj.$confirm(action, vueObj.$t('util.notify'), {
+    confirmButtonText: vueObj.$t('util.confirmButton'),
+    cancelButtonText:  vueObj.$t('util.cancelButton'),
+
+    type: 'warning'
+  });
+}
 
 util.confirmBeforeExportData = function(vueObj){
   return vueObj.$confirm(vueObj.$t('util.waringMsgBeforeExportData'), vueObj.$t('util.typeOfWarningBeforeExportData'), {

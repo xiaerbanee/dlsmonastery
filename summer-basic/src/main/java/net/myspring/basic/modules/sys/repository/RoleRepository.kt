@@ -24,7 +24,7 @@ interface RoleRepository: BaseRepository<Role, String>,RoleRepositoryCustom {
     override fun findOne(id: String): Role
 
     @CachePut(key="#id")
-    fun save(role: Role): Int
+    fun save(role: Role): Role
 
     @Query("""
         SELECT t

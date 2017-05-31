@@ -26,7 +26,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     override fun findOne(id: String): Employee
 
     @CachePut(key="#id")
-    fun save(position: Employee): Int
+    fun save(position: Employee): Employee
 
 
     fun findByEnabledIsTrueAndNameLike(name: String): MutableList<Employee>

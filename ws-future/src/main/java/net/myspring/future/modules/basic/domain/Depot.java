@@ -236,12 +236,12 @@ public class Depot extends CompanyEntity<Depot> {
         this.adShop = adShop;
     }
 
-    public Boolean getHidden() {
+    public Boolean getIsHidden() {
         return isHidden;
     }
 
-    public void setHidden(Boolean hidden) {
-        isHidden = hidden;
+    public void setIsHidden(Boolean isHidden) {
+        this.isHidden = isHidden;
     }
 
     public Boolean getPopShop() {

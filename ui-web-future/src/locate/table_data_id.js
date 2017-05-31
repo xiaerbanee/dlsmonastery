@@ -232,6 +232,7 @@ export default {
       productImeList: "daftar string kdoe",
       productImeDetail: "串码详情",
       productImeSaleForm: "verifikasi string kode",
+      productImeSaleBackForm: "串码核销退回编辑",
       productImeSaleList: "verfikasi string kode",
       productImeUploadForm: "laporan string kode",
       productImeUploadList: "laporan string kode",

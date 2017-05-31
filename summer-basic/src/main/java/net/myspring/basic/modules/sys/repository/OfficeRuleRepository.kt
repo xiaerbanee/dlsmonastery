@@ -27,7 +27,7 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRule
     override fun findOne(id: String): OfficeRule
 
     @CachePut(key="#id")
-    fun save(officeRule: OfficeRule): Int
+    fun save(officeRule: OfficeRule): OfficeRule
 
     @Query("""
         SELECT t

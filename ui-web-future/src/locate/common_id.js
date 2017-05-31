@@ -12,6 +12,7 @@ export default {
     typeOfWarningBeforeDelRecord:"提示",
     typeOfWarningBeforeBatchPass:"提示",
     typeOfWarningBeforeExportData:"提示",
+    notify:"提示",
     confirmButton:"确定",
     cancelButton:"取消",
 

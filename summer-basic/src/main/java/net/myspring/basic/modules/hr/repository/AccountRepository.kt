@@ -28,7 +28,7 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
     override fun findOne(id: String): Account
 
     @CachePut(key = "#p0.id")
-    fun save(account: Account): Int
+    fun save(account: Account): Account
 
     @Query("""
         SELECT t

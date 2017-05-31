@@ -3,24 +3,25 @@
     <head-tab active="productImeSaleList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:productImeSale:edit'">{{$t('productImeSaleList.add')}}</el-button>
+        <el-button type="primary" @click="sale" icon="plus" v-permit="'crm:productImeSale:edit'">{{$t('productImeSaleList.sale')}}</el-button>
+        <el-button type="primary" @click="saleBack" icon="minus"  v-permit="'crm:productImeSale:back'">{{$t('productImeSaleList.saleBack')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productImeSale:view'">{{$t('productImeSaleList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData"  v-permit="'crm:productImeSale:view'">{{$t('productImeSaleList.export')}}</el-button>
+
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('productImeSaleList.filter')" v-model="formVisible" size="small" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="8">
-              <el-form-item :label="formLabel.name" :label-width="formLabelWidth">
-                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productImeSaleList.likeSearch')"></el-input>
+              <el-form-item :label="formLabel.employeeId.label" :label-width="formLabelWidth">
+                <employee-select v-model="formData.employeeId"></employee-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right"  :placeholder="$t('productImeSaleList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.isBack.label" :label-width="formLabelWidth">
-                <el-radio-group v-model="formData.isBack">
-                  <el-radio v-for="(value,key) in formProperty.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
-                </el-radio-group>
+                <bool-select v-model="formData.isBack"></bool-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -38,21 +39,14 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeSaleList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column  prop="shop.name" :label="$t('productImeSaleList.saleShopName')" width="180" ></el-table-column>
-        <el-table-column prop="productIme.ime"  :label="$t('productImeSaleList.ime')" ></el-table-column>
-        <el-table-column prop="productIme.product.name" :label="$t('productImeSaleList.productName')"></el-table-column>
+        <el-table-column  prop="shopName" :label="$t('productImeSaleList.saleShopName')" width="180" ></el-table-column>
+        <el-table-column prop="productImeIme"  :label="$t('productImeSaleList.ime')" ></el-table-column>
+        <el-table-column prop="productImeProductName" :label="$t('productImeSaleList.productName')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('productImeSaleList.saleDate')"></el-table-column>
-        <el-table-column prop="employee.name" :label="$t('productImeSaleList.employeeName')"></el-table-column>
-        <el-table-column prop="isBack" :label="$t('productImeSaleList.isBack')" width="120">
+        <el-table-column prop="employeeName" :label="$t('productImeSaleList.employeeName')"></el-table-column>
+        <el-table-column prop="isBack" :label="$t('productImeSaleList.isBack')" width="70">
           <template scope="scope">
             <el-tag :type="scope.row.isBack ? 'primary' : 'danger'">{{scope.row.isBack | bool2str}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" :label="$t('productImeSaleList.operation')" width="140">
-          <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -61,78 +55,92 @@
   </div>
 </template>
 <script>
-  export default {
+
+  import boolSelect from 'components/common/bool-select'
+  import employeeSelect from 'components/basic/employee-select'
+  export default{
+    components:{
+
+      boolSelect,
+      employeeSelect,
+    },
     data() {
       return {
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
-          name:'',
-          createdDate:"",
-          createdDateBTW:'',
+          employeeId:'',
+          createdDateRange:"",
           shopName:"",
           ime:"",
-          isBack:"FALSE"
+          isBack:'',
         },formLabel:{
-          name:{label:this.$t('productImeSaleList.name')},
-          createdDateBTW:{label: this.$t('productImeSaleList.createdDate')},
+          employeeId:{label:this.$t('productImeSaleList.employeeName')},
+          createdDateRange:{label: this.$t('productImeSaleList.createdDate')},
           shopName:{label:this.$t('productImeSaleList.shopName')},
           ime:{label:this.$t('productImeSaleList.ime')},
-          isBack:{label:this.$t('productImeSaleList.isBack'),value:""},
+          isBack:{label:this.$t('productImeSaleList.isBack')},
         },
-        formProperty:{},
-        pickerDateOption:util.pickerDateOption,
-        selects:new Array(),
         formLabelWidth: '120px',
         formVisible: false,
-        isPageChange:false,
         loading:false
       };
     },
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW=util.formatDateRange(this.formData.createdDate);
-        this.formLabel.isBack.value = util.bool2str(this.formData.isBack);
-        util.setQuery("productImeSaleList",this.formData);
-        axios.get('/api/crm/productImeSale',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("productImeSaleList",this.submitData);
+        axios.get('/api/ws/future/crm/productImeSale?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
       },pageChange(pageNumber,pageSize) {
-        if(this.isPageChange){
-          this.formData.page = pageNumber;
-          this.formData.size = pageSize;
-          this.pageRequest();
-        }
-        this.isPageChange = true;
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
         this.formVisible = false;
         this.pageRequest();
-      },itemAdd(){
-        this.$router.push({ name: 'productImeSaleForm'})
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/crm/productImeSale/export',{params:this.submitData}).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});
+
+      },sale(){
+        this.$router.push({ name: 'productImeSaleForm'});
+      },saleBack(){
+        this.$router.push({ name: 'productImeSaleBackForm'});
       },itemAction:function(id,action){
-        if(action=="删除") {
-          axios.get('/api/crm/productImeSale/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          })
+        if(action==="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/crm/productImeSale/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          }).catch(()=>{});
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/crm/productImeSale/getQuery').then((response) =>{
-        this.formProperty=response.data;
-        this.pageRequest();
+
+      const that = this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/crm/productImeSale/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
+
     }
   };
 </script>

@@ -5,6 +5,8 @@ import net.myspring.future.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -27,6 +29,24 @@ public class ProductImeSale extends CompanyEntity<ProductImeSale> {
     private String employeeId;
 
     private String productImeId;
+    private String hongbao;
+    private LocalDate lotteryDate;
+
+    public String getHongbao() {
+        return hongbao;
+    }
+
+    public void setHongbao(String hongbao) {
+        this.hongbao = hongbao;
+    }
+
+    public LocalDate getLotteryDate() {
+        return lotteryDate;
+    }
+
+    public void setLotteryDate(LocalDate lotteryDate) {
+        this.lotteryDate = lotteryDate;
+    }
 
     public String getShopId() {
         return shopId;
@@ -36,12 +56,12 @@ public class ProductImeSale extends CompanyEntity<ProductImeSale> {
         this.shopId = shopId;
     }
 
-    public Boolean getBack() {
+    public Boolean getIsBack() {
         return isBack;
     }
 
-    public void setBack(Boolean back) {
-        isBack = back;
+    public void setIsBack(Boolean isBack) {
+        this.isBack = isBack;
     }
 
     public Integer getCredit() {

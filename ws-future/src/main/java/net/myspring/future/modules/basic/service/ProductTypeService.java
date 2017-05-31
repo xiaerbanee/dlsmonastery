@@ -1,7 +1,9 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import com.mongodb.gridfs.GridFSFile;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductDto;
@@ -10,15 +12,27 @@ import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.basic.web.form.ProductTypeForm;
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
+import net.myspring.future.modules.crm.dto.ImeAllotDto;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.excel.SimpleExcelColumn;
+import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -31,20 +45,13 @@ public class ProductTypeService {
     @Autowired
     private CacheUtils cacheUtils;
 
+    @Autowired
+    private GridFsTemplate tempGridFsTemplate;
+
 
     public ProductType findOne(String id) {
         ProductType productType = productTypeRepository.findOne(id);
         return productType;
-    }
-
-    public ProductTypeForm getForm(ProductTypeForm productTypeForm){
-        if(!productTypeForm.isCreate()){
-            ProductType productType = productTypeRepository.findOne(productTypeForm.getId());
-            productTypeForm = BeanUtil.map(productType,productTypeForm.getClass());
-            List<Product> productList = productRepository.findByProductTypeId(productTypeForm.getId());
-            productTypeForm.setProductList(BeanUtil.map(productList,ProductDto.class));
-        }
-        return productTypeForm;
     }
 
     public List<ProductType> findAllScoreType(){
@@ -72,8 +79,8 @@ public class ProductTypeService {
         return productType;
     }
 
-    public void logicDelete(ProductTypeForm productTypeForm) {
-        productTypeRepository.logicDelete(productTypeForm.getId());
+    public void logicDelete(String id) {
+        productTypeRepository.logicDelete(id);
     }
 
     public Page<ProductTypeDto> findPage(Pageable pageable, ProductTypeQuery productTypeQuery) {
@@ -110,4 +117,36 @@ public class ProductTypeService {
         return productTypeDtos;
     }
 
+    public ProductTypeDto findDto(String id) {
+
+        ProductTypeDto result = productTypeRepository.findDto(id);
+        if(result !=null){
+            cacheUtils.initCacheInput(result);
+        }
+        return result;
+
+    }
+
+    public String export(ProductTypeQuery productTypeQuery) {
+
+
+        Workbook workbook = new SXSSFWorkbook(10000);
+
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+        List<SimpleExcelColumn> productTypeColumnList = Lists.newArrayList();
+        productTypeColumnList.add(new SimpleExcelColumn(workbook, "name", "产品型号"));
+        productTypeColumnList.add(new SimpleExcelColumn(workbook, "code", "型号编码"));
+        productTypeColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
+        productTypeColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
+        productTypeColumnList.add(new SimpleExcelColumn(workbook, "scoreTypeName", "是否打分"));
+
+        List<ProductTypeDto> productTypeDtoList = findPage(new PageRequest(0,10000), productTypeQuery).getContent();
+        simpleExcelSheetList.add(new SimpleExcelSheet("统计型号列表", productTypeDtoList, productTypeColumnList));
+
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"统计型号列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
+        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        return StringUtils.toString(gridFSFile.getId());
+
+    }
 }
