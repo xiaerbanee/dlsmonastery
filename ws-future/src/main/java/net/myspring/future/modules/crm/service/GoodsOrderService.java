@@ -79,7 +79,7 @@ public class GoodsOrderService {
 
     //检测门店
     @Transactional(readOnly = true)
-    public RestResponse validateShop(String goodsOrderId,String shopId) {
+    public RestResponse validateShop(String shopId) {
         Depot shop = depotRepository.findOne(shopId);
         RestResponse restResponse = new RestResponse("有效门店", ResponseCodeEnum.valid.name(),true);
         if(StringUtils.isBlank(shop.getPricesystemId())) {
