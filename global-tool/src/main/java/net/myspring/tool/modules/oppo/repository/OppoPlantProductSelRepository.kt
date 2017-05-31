@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query
  */
 interface OppoPlantProductSelRepository:BaseRepository<OppoPlantProductSel,String>{
 
-    @Query("  select t.color_id from oppo_plant_product_sel t where t.color_id in ?1",nativeQuery = true)
+    @Query("  select t.color_id from #{#entityName} t where t.color_id in ?1")
     fun findColorIds(colorIds: MutableList<String>): MutableList<String>
 
 }

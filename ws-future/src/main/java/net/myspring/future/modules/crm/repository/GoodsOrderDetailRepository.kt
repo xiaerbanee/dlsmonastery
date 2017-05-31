@@ -10,8 +10,4 @@ interface GoodsOrderDetailRepository : BaseRepository<GoodsOrderDetail, String> 
 
     fun findByGoodsOrderId(goodsOrderId: String): MutableList<GoodsOrderDetail>
 
-    fun deleteById(id: String)
-
-
-
 }
