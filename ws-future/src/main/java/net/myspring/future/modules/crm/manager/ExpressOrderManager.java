@@ -1,8 +1,6 @@
 package net.myspring.future.modules.crm.manager;
 
 import net.myspring.common.constant.CharConstant;
-import net.myspring.future.modules.basic.domain.ExpressCompany;
-import net.myspring.future.modules.basic.repository.ExpressCompanyRepository;
 import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
@@ -10,11 +8,9 @@ import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Map;
 
