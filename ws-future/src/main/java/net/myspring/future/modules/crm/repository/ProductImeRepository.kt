@@ -60,14 +60,14 @@ interface ProductImeRepositoryCustom{
 class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
     override fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme> {
         return namedParameterJdbcTemplate.query("""
-        SELECT
-            t1.*
-        FROM
-            crm_product_ime t1
-        WHERE
-            t1.enabled = 1
-            AND t1.depot_id = :depotId
-            AND t1.box_ime IN :boxImeList
+            SELECT
+                t1.*
+            FROM
+                crm_product_ime t1
+            WHERE
+                t1.enabled = 1
+                AND t1.depot_id = :depotId
+                AND t1.box_ime IN :boxImeList
         UNION
             SELECT
                 t1.*
