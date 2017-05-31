@@ -127,14 +127,9 @@ public class DepotController {
     }
 
 
-
-
-    @RequestMapping(value = "findById")
-    public DepotDto findById(String id) {
-        if(StringUtils.isBlank(id)){
-            return new DepotDto();
-        }
-        return depotService.findById(id);
+    @RequestMapping(value = "findOne")
+    public DepotDto findOne(String id) {
+        return depotService.findOne(id);
     }
 
 

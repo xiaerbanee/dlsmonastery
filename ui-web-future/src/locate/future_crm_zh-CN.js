@@ -707,7 +707,7 @@ export default {
   },
   goodsOrderForm: {
     goodsOrderForm: "货品订货编辑",
-    clientName: "总店",
+    clientName: "客户",
 
     shop: "门店",
     selectWord: "请输入关键词,显示前20条",

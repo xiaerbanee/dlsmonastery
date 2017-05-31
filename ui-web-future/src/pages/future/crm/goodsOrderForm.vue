@@ -6,20 +6,20 @@
         <el-alert v-html="error" title="" type="error" :closable="true"></el-alert>
       </el-col>
     </el-row>
-    <div >
-      <el-form :model="submitData" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+    <div>
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row>
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderForm.shop')" prop="shopId">
-              <depot-select :disabled="!isCreate" v-model="goodsOrder.shopId" category="directShop" @input="shopChanged"></depot-select>
+              <depot-select :disabled="!isCreate" v-model="inputForm.shopId" category="shop" @input="shopChanged"></depot-select>
             </el-form-item>
             <el-form-item  :label="$t('goodsOrderForm.clientName')"  prop="clientName">
               {{shop.clientName}}
             </el-form-item>
-            <el-form-item  :label="$t('goodsOrderForm.isUseTicket')" prop="isUseTicket">
-              <bool-radio-group v-model="goodsOrder.isUseTicket"></bool-radio-group>
+            <el-form-item :label="$t('goodsOrderForm.remarks')" prop="remarks">
+              <el-input type="textarea" v-model="inputForm.remarks"></el-input>
             </el-form-item>
-            <div v-show="goodsOrder.shopId">
+            <div v-show="inputForm.shopId">
               <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
                 <el-select  :disabled="!isCreate" v-model="goodsOrder.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
                   <el-option v-for="item in inputProperty.netTypeList" :key="item":label="item" :value="item"></el-option>
@@ -29,10 +29,6 @@
                 <el-select   v-model="goodsOrder.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
                   <el-option v-for="item in inputProperty.shipTypeList" :key="item":label="item" :value="item"></el-option>
                 </el-select>
-
-              </el-form-item>
-              <el-form-item :label="$t('goodsOrderForm.remarks')" prop="remarks">
-                <el-input type="textarea" v-model="goodsOrder.remarks"></el-input>
               </el-form-item>
             </div>
           </el-col>
@@ -104,12 +100,12 @@
         shop:{},
         summary:'',
         inputProperty:{},
+        inputForm:{},
         submitData:{
           id:'',
           shopId:'',
           netType:'',
           shipType:'',
-          isUseTicket:'',
           remarks:'',
           goodsOrderDetailList:[],
         },
@@ -177,7 +173,7 @@
         }
 
       },shopChanged(){
-        axios.get('/api/ws/future/basic/depot/findById',{params: {id:this.goodsOrder.shopId}}).then((response)=>{
+        axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
           this.shop = response.data;
         });
         this.refreshDetailList();
@@ -200,25 +196,22 @@
         this.filterProducts();
       }
     }, created(){
-
+      axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
+        if(!this.isCreate) {
+          axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
+            this.shop = response.data;
+          });
+        }
+      });
       axios.get('/api/ws/future/crm/goodsOrder/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputProperty = response.data;
       });
-
       if(!this.isCreate){
         axios.get('/api/ws/future/crm/goodsOrder/findDetailListForEdit',{params: {id:this.$route.query.id}}).then((response)=>{
           this.setGoodsOrderDetailList(response.data);
         });
-      }else{
-        this.setGoodsOrderDetailList([]);
       }
-
-      axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.goodsOrder = response.data;
-      });
-      axios.get('/api/ws/future/basic/depot/findShopByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
-        this.shop = response.data;
-      });
     }
   }
 </script>

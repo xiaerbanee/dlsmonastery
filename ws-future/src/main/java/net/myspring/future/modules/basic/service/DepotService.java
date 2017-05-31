@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.service;
 
+import com.ctc.wstx.util.StringUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
@@ -87,15 +88,16 @@ public class DepotService {
         return depotDtoList;
     }
 
-    public DepotDto findById(String id) {
-        List<String> ids = new ArrayList<>();
-        ids.add(id);
-        List<DepotDto> depotList=findByIds(ids);
-        if(depotList!=null && depotList.size() >=1){
-            return depotList.get(0);
-        }else{
-            return null;
+    public DepotDto findOne(String id) {
+        DepotDto depotDto;
+        if(StringUtils.isBlank(id)) {
+            depotDto = new DepotDto();
+        } else {
+            Depot depot = depotRepository.findOne(id);
+            depotDto = BeanUtil.map(depot,DepotDto.class);
+            cacheUtils.initCacheInput(depotDto);
         }
+        return depotDto;
     }
 
     public Page<DepotAccountDto> findDepotAccountList(Pageable pageable, DepotAccountQuery depotAccountQuery) {

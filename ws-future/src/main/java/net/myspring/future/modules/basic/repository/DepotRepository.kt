@@ -31,16 +31,12 @@ import javax.persistence.EntityManager
  */
 @CacheConfig(cacheNames = arrayOf("depots"))
 interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
-
     @Cacheable
     override fun findOne(id: String): Depot
+    @CachePut(key = "#p0.id")
+    fun save(depot: Depot): Depot
 
     override fun findAll(): MutableList<Depot>
-
-    @CachePut(key = "#p0.id")
-    fun save(depot: Depot): Int
-
-
 
     fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Depot>
 
@@ -97,30 +93,29 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
         """)
         if (depotShopQuery.clientIsNull != null) {
             if(depotShopQuery.clientIsNull){
-                sb.append("""  and t1.client_id is NULL """)
+                sb.append("  and t1.client_id is NULL ")
             }else{
-                sb.append("""  and t1.client_id is NOT NULL """)
+                sb.append("  and t1.client_id is NOT NULL ");
             }
         }
         if (depotShopQuery.adShop != null) {
             if(depotShopQuery.adShop){
-                sb.append("""  and t1.ad_shop is NULL """)
+                sb.append("  and t1.ad_shop is NULL ")
             }else{
-                sb.append("""  and t1.ad_shop is NOT NULL """)
+                sb.append("  and t1.ad_shop is NOT NULL ")
             }
         }
         if (depotShopQuery.popShop != null) {
             if(depotShopQuery.popShop){
-                sb.append("""  and t1.pop_shop is NULL """)
+                sb.append("  and t1.pop_shop is NULL ")
             }else{
-                sb.append("""  and t1.pop_shop is NOT NULL """)
+                sb.append("  and t1.pop_shop is NOT NULL ")
             }
         }
         if (StringUtils.isNotEmpty(depotShopQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
-
-
+        sb.append(" limit 0,20")
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotShopQuery), BeanPropertyRowMapper(DepotDto::class.java))
 
     }
