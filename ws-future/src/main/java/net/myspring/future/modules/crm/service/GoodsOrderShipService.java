@@ -6,10 +6,12 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
@@ -43,9 +45,7 @@ public class GoodsOrderShipService {
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
-    private ExpressRepository expressRepository;
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private ExpressOrderManager expressOrderManager;
 
 
     public Map<String,Object> shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
@@ -215,9 +215,8 @@ public class GoodsOrderShipService {
         goodsOrder.setShipDate(LocalDateTime.now());
         goodsOrderRepository.save(goodsOrder);
         //设置快递单
-        if(CollectionUtil.isNotEmpty(goodsOrderShipForm.getExpressList())) {
-
-        }
+        ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+        expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(),goodsOrder.getId(),goodsOrderShipForm.getExpressStr(),expressOrder.getExpressCompanyId());
     }
 
 }
