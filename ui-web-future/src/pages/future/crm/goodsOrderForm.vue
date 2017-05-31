@@ -177,15 +177,15 @@
         });
         this.refreshDetailList();
       },refreshDetailList(){
-          if(!this.isCreate){
-              return ;  //修改时不能改变detail列表，只能修改detail里每条记录的数量
-          }
+        if(!this.isCreate){
+          return ;  //修改时不能改变detail列表，只能修改detail里每条记录的数量
+        }
         if(this.goodsOrder.shopId&&this.goodsOrder.netType) {
-            this.pageLoading = true;
-            axios.get('/api/ws/future/crm/goodsOrder/findDetailListForNew', {params: {shopId:this.goodsOrder.shopId, netType: this.goodsOrder.netType}}).then((response)=>{
-              this.setGoodsOrderDetailList(response.data);
-              this.pageLoading = false;
-            });
+          this.pageLoading = true;
+          axios.get('/api/ws/future/crm/goodsOrder/findDetailListForNew', {params: {shopId:this.goodsOrder.shopId, netType: this.goodsOrder.netType}}).then((response)=>{
+            this.setGoodsOrderDetailList(response.data);
+            this.pageLoading = false;
+          });
         }else{
           this.setGoodsOrderDetailList([]);
         }
