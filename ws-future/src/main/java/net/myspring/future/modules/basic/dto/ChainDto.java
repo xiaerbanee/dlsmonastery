@@ -15,7 +15,6 @@ public class ChainDto extends DataDto<Chain>{
 
     private List<String> depotIdList;
 
-    private List<String> depotNameList;
 
     public String getName() {
         return name;
@@ -31,13 +30,5 @@ public class ChainDto extends DataDto<Chain>{
 
     public void setDepotIdList(List<String> depotIdList) {
         this.depotIdList = depotIdList;
-    }
-
-    public List<String> getDepotNameList() {
-        return depotNameList;
-    }
-
-    public void setDepotNameList(List<String> depotNameList) {
-        this.depotNameList = depotNameList;
     }
 }
