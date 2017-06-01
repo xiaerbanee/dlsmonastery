@@ -173,35 +173,6 @@ class VivoRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate,val n
       delete from S_ProductItemLend_M13e00 where CompanyID =:mainCode
       """,Collections.singletonMap("mainCode",mainCode));
    }
-//interface VivoRepositoryCustom {
-//   fun idvivoDeleteZones()
-//   fun insertZones(@Param("list") sZonesM13e00s: MutableList<SZonesM13e00>)
-//   fun insertZonesR250082(@Param("list") sZonesM13e00s: MutableList<SZonesM13e00>, @Param("name") name: String)
-//   fun insertCustomers(sCustomersM13e00s: MutableList<SCustomersM13e00>)
-//   fun insertCustomersR250082(@Param("list") sCustomersM13e00s: MutableList<SCustomersM13e00>, @Param("name") name: String)
-//   fun insertPlantStockSupply(sPlantStockSupplyM13e00s: MutableList<SPlantStockSupplyM13e00>)
-//   fun insertPlantStockSupplyR250082(@Param("list") sPlantStockSupplyM13e00s: MutableList<SPlantStockSupplyM13e00>, @Param("name") name: String)
-//   fun insertPlantStockDealer(sPlantStockDealerM13e00s: MutableList<SPlantStockDealerM13e00>)
-//   fun insertPlantStockDealerR250082(@Param("list") sPlantStockDealerM13e00s: MutableList<SPlantStockDealerM13e00>, @Param("name") name: String)
-//   fun insertPlantStockStores(sPlantStockStoresM13e00s: MutableList<SPlantStockStoresM13e00>)
-//   fun insertPlantStockStoresR250082(@Param("list") sPlantStockStoresM13e00s: MutableList<SPlantStockStoresM13e00>, @Param("name") name: String)
-//   fun insertProductItemLend(sProductItemLendM13e00s: MutableList<SProductItemLendM13e00>)
-//   fun insertProductItem000(sProductItem000M13e00s: MutableList<SProductItem000M13e00>)
-//   fun deleteProductItem000()
-//   fun deleteProductItem000R250082()
-//   fun deleteSStores()
-//   fun deleteSStoresR250082()
-//   fun insertSStores(@Param("list") sStoresM13e00s: MutableList<SStoresM13e00>)
-//   fun insertSStoresR250082(@Param("list") sStoresM13e00s: MutableList<SStoresM13e00>, @Param("name") name: String)
-//   fun insertProductItem000R250082(@Param("list") sProductItem000M13e00s: MutableList<SProductItem000M13e00>, @Param("name") name: String)
-//   fun deleteProductItemStocks()
-//   fun deleteProductItemStocksR250082()
-//   fun insertProductItemStocks(@Param("list") sProductItemStocksM13e00s: MutableList<SProductItemStocksM13e00>)
-//   fun insertProductItemStocksR250082(@Param("list") sProductItemStocksM13e00s: MutableList<SProductItemStocksM13e00>, @Param("name") name: String)
-//   fun insertSPlantendproductsaleM13e00(sPlantEndProductSaleM13e00s: MutableList<SPlantEndProductSaleM13e00>)
-//   fun insertSPlantendproductsaleR250082(@Param("list") sPlantEndProductSaleM13e00s: MutableList<SPlantEndProductSaleM13e00>, @Param("name") name: String)
-//}
-
 
     fun idvivoDeleteZones() {
       jdbcTemplate.update("delete from S_ZONES_R250082");
