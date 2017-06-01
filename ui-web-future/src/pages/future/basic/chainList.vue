@@ -47,6 +47,7 @@
   export default {
     data() {
       return {
+        pageLoading: false,
         page:{},
         formData:{},
         submitData:{
@@ -98,8 +99,12 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      axios.get('/api/ws/future/basic/chain/getQuery').then((response) => {
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
+      });
+
     }
   };
 </script>

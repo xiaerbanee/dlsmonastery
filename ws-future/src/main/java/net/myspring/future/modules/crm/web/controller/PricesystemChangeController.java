@@ -47,8 +47,9 @@ public class PricesystemChangeController {
         return null;
     }
 
+
     @RequestMapping(value = "save")
-    public RestResponse save(PricesystemChangeForm pricesystemChangeForm, BindingResult bindingResult) {
+    public RestResponse save(PricesystemChangeForm pricesystemChangeForm) {
          pricesystemChangeService.save(pricesystemChangeForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }

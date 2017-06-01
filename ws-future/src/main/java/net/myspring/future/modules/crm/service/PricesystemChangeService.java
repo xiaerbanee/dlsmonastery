@@ -9,13 +9,16 @@ import net.myspring.future.modules.crm.dto.PricesystemChangeDto;
 import net.myspring.future.modules.crm.repository.PricesystemChangeRepository;
 import net.myspring.future.modules.crm.web.form.PricesystemChangeForm;
 import net.myspring.future.modules.crm.web.query.PricesystemChangeQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -48,21 +51,29 @@ public class PricesystemChangeService {
     }
 
     public void save(PricesystemChangeForm pricesystemChangeForm){
-//        PricesystemChange pricesystemChange=pricesystemChangeRepository.findOne(pricesystemChangeForm.getProductId());
-//        ReflectionUtil.copyProperties(pricesystemChangeForm,pricesystemChange);
-//        TODO 需要修改该方法，不要在sql里写update
-//        pricesystemChangeRepository.updateRemark(pricesystemChangeForm);
+
     }
 
 
     public void batchAudit(String[] ids,Boolean pass){
-//        TODO 需要修改该方法，不要在sql里写update
-//        pricesystemChangeRepository.audit(ids,pass);
+        List<String> idList = Arrays.asList(ids);
+        if(CollectionUtil.isNotEmpty(idList)){
+            for(String id:idList){
+                audit(id,pass);
+            }
+        }
     }
 
     public void audit(String id,Boolean pass){
-        //        TODO 需要修改该方法，不要在sql里写update
-//        pricesystemChangeRepository.auditOperation(id, pass);
+        if(StringUtils.isNotBlank(id)){
+            PricesystemChange pricesystemChange = pricesystemChangeRepository.findOne(id);
+            if(pass){
+                pricesystemChange.setStatus(AuditStatusEnum.已通过.name());
+            }else{
+                pricesystemChange.setStatus(AuditStatusEnum.未通过.name());
+            }
+            pricesystemChangeRepository.save(pricesystemChange);
+        }
     }
 
     public List<List<Object>> getPricesystemDetail(List<String> productIdList){

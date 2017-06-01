@@ -16,7 +16,7 @@
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('pricesystemForm.save')}}</el-button>
         </el-form-item>
         <el-input v-model="productName" @change="searchDetail" :placeholder="$t('pricesystemForm.input2Key')" style="width:200px;"></el-input>
-          <el-table :data="filterPricesystemDetailList"  style="margin-top:5px;"   stripe border >
+          <el-table :data="pricesystemDetailList"  style="margin-top:5px;"   stripe border >
             <el-table-column prop="productName" :label="$t('pricesystemForm.productName')"></el-table-column>
             <el-table-column prop="price":label="$t('pricesystemForm.price')" v-if="isCreate">
               <template scope="scope">
@@ -38,7 +38,7 @@
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         productName:'',
-        filterPricesystemDetailList:[],
+        pricesystemDetailList:[],
         inputForm:{},
         submitData:{
           id:'',
@@ -70,7 +70,7 @@
             this.inputForm.pricesystemDetailList=tempList;
             util.copyValue(this.inputForm,this.submitData);
             this.submitData.enabled = true;
-            axios.post('/api/ws/future/crm/pricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/basic/pricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 form.resetFields();
@@ -103,10 +103,13 @@
         this.filterPricesystemDetailList = tempList;
       }
     },created(){
-        axios.get('/api/ws/future/crm/pricesystem/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           console.log(this.inputForm)
           this.searchDetail();
+        })
+        axios.get('/api/ws/future/basic/pricesystem/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.pricesystemDetailList = response.data.pricesystemDetailList;
         })
     }
   }
