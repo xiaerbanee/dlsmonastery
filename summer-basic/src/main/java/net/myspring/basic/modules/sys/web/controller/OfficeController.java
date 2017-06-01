@@ -6,6 +6,7 @@ import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
+import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.basic.modules.sys.service.OfficeRuleService;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.sys.web.form.OfficeForm;
@@ -67,6 +68,9 @@ public class OfficeController {
         List<OfficeDto> officeList = Lists.newArrayList();
         if (StringUtils.isNotBlank(officeRuleName)) {
             officeList = BeanUtil.map(officeService.findByOfficeRuleName(officeRuleName), OfficeDto.class);
+        }else {
+            OfficeRuleDto officeRuleDto=officeService.findTopOfficeRule();
+            officeList = BeanUtil.map(officeService.findByOfficeRuleName(officeRuleDto.getName()), OfficeDto.class);
         }
         return officeList;
     }
