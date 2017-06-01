@@ -163,20 +163,23 @@
         });
         this.refreshDetailList();
       },refreshDetailList(){
-        if(this.inputForm.shopId && this.inputForm.netType && this.inputForm.shipType) {
-          this.pageLoading = true;
-          axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
-            this.setGoodsOrderDetailList(response.data);
-            this.pageLoading = false;
-          });
-        }else{
-          this.setGoodsOrderDetailList([]);
+        if(this.isCreate ) {
+          if(this.inputForm.shopId && this.inputForm.netType && this.inputForm.shipType) {
+            this.pageLoading = true;
+            axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
+              this.setGoodsOrderDetailList(response.data);
+              this.pageLoading = false;
+            });
+          }else{
+            this.setGoodsOrderDetailList([]);
+          }
         }
       },setGoodsOrderDetailList(list){
         this.goodsOrderDetailList = list;
         this.filterProducts();
       }
     }, created(){
+
       axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         if(!this.isCreate) {
