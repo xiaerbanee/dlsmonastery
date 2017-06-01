@@ -20,6 +20,15 @@ public class Office extends TreeEntity<Office> {
     private String officeRuleId;
     private String type;
     private String areaId;
+    private String joinLevel;
+
+    public String getJoinLevel() {
+        return joinLevel;
+    }
+
+    public void setJoinLevel(String joinLevel) {
+        this.joinLevel = joinLevel;
+    }
 
     public String getAreaId() {
         return areaId;
