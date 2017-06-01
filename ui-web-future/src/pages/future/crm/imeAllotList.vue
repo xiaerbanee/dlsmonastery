@@ -59,10 +59,10 @@
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column  :label="$t('imeAllotList.operation')" width="140">
+        <el-table-column  :label="$t('imeAllotList.operation')" >
           <template scope="scope">
-            <el-button v-show="scope.row.status === '申请中'" size="small" type="text" @click="itemAction(scope.row.id, 'auditPass')"  v-permit="'crm:imeAllot:batchSave'">{{$t('imeAllotList.auditPass')}}</el-button>
-            <el-button v-show="scope.row.status === '申请中'" size="small" type="text" @click="itemAction(scope.row.id, 'auditNotPass')"   v-permit="'crm:imeAllot:batchSave'">{{$t('imeAllotList.auditNotPass')}}</el-button>
+            <div class="action" v-if="scope.row.status === '申请中'" v-permit="'crm:imeAllot:batchSave'"><el-button size="small" @click="itemAction(scope.row.id, 'auditPass')">{{$t('imeAllotList.auditPass')}}</el-button></div>
+            <div class="action" v-if="scope.row.status === '申请中'" v-permit="'crm:imeAllot:batchSave'"><el-button size="small" @click="itemAction(scope.row.id, 'auditNotPass')">{{$t('imeAllotList.auditNotPass')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

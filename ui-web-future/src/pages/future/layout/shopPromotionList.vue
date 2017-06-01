@@ -45,10 +45,10 @@
         <el-table-column prop="created.loginName" :label="$t('shopPromotionList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopPromotionList.createdDate')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopPromotionList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('shopPromotionList.operation')" width="160">
+        <el-table-column fixed="right" :label="$t('shopPromotionList.operation')">
           <template scope="scope">
-            <el-button type="text" size="small" v-permit="'crm:shopPromotion:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPromotionList.edit')}}</el-button>
-            <el-button type="text" size="small" v-permit="'crm:shopPromotion:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPromotionList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:shopPromotion:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPromotionList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:shopPromotion:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPromotionList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

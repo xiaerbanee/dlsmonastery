@@ -81,13 +81,12 @@
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('shopAllotList.operation')" width="120">
+        <el-table-column fixed="right" :label="$t('shopAllotList.operation')">
           <template scope="scope">
-            <el-button size="small" type="text" v-permit="'crm:shopAllot:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('shopAllotList.detail')}}</el-button>
-            <el-button v-if="scope.row.auditable" size="small" type="text" v-permit="'crm:shopAllot:audit'" @click.native="itemAction(scope.row.id, 'audit')">{{$t('shopAllotList.audit')}}</el-button>
-            <el-button v-if="scope.row.editable" size="small" type="text" v-permit="'crm:shopAllot:edit'" @click.native="itemAction(scope.row.id, 'edit')">{{$t('shopAllotList.edit')}}</el-button>
-            <el-button  v-if="scope.row.editable" size="small" type="text" v-permit="'crm:shopAllot:delete'" @click.native="itemAction(scope.row.id, 'delete')">{{$t('shopAllotList.delete')}}</el-button>
-
+            <div class="action" v-permit="'crm:shopAllot:view'"><el-button size="small" @click.native="itemAction(scope.row.id, 'detail')">{{$t('shopAllotList.detail')}}</el-button></div>
+            <div class="action" v-if="scope.row.auditable" v-permit="'crm:shopAllot:audit'" ><el-button  size="small"  @click.native="itemAction(scope.row.id, 'audit')">{{$t('shopAllotList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.editable" v-permit="'crm:shopAllot:edit'"><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('shopAllotList.edit')}}</el-button></div>
+            <div class="action" v-if="scope.row.editable" v-permit="'crm:shopAllot:delete'"><el-button   size="small"  @click.native="itemAction(scope.row.id, 'delete')">{{$t('shopAllotList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

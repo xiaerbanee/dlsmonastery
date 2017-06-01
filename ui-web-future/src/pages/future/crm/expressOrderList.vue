@@ -91,10 +91,10 @@
         <el-table-column prop="createdDate" :label="$t('expressOrderList.createdDate')"></el-table-column>
         <el-table-column prop="printDate" :label="$t('expressOrderList.printDate')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('expressOrderList.remarks')"></el-table-column>
-        <el-table-column  :label="$t('expressOrderList.operation')" width="140">
+        <el-table-column  :label="$t('expressOrderList.operation')" >
           <template scope="scope">
-            <el-button type="text" size="small" v-permit="'crm:expressOrder:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('expressOrderList.edit')}}</el-button>
-            <el-button type="text" size="small" v-permit="'crm:expressOrder:edit'" @click.native="itemAction(scope.row.id,'reset')">{{$t('expressOrderList.reset')}}</el-button>
+            <div class="action" v-permit="'crm:expressOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('expressOrderList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:expressOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'reset')">{{$t('expressOrderList.reset')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
