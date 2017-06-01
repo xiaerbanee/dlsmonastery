@@ -67,10 +67,10 @@
         <el-table-column prop="remarks" :label="$t('shopBuildList.remarks')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('shopBuildList.operation')" width="140">
           <template scope="scope">
-            <el-button type="text" size="small" v-permit="'crm:shopBuild:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopBuildList.detail')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:shopBuild:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopBuildList.detail')}}</el-button></div>
+            <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopBuild:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button></div>
+            <div class="action" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
