@@ -21,38 +21,11 @@ public class ProductTypeForm extends BaseForm<ProductType> {
     private Boolean scoreType;
     private String code;
     private BigDecimal baokaPrice;
-    private List<String> productIdList= Lists.newArrayList();
-    @CacheInput(inputKey = "products",inputInstance = "productIdList",outputInstance = "name")
-    private List<String> productNameList = new ArrayList<>();
+    private List<String> productIdList;
+
     private BigDecimal price1;
     private BigDecimal price2;
     private BigDecimal price3;
-    private Map<String,String> boolMap= Maps.newHashMap();
-    private List<ProductDto> productList=Lists.newArrayList();
-
-    public List<ProductDto> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<ProductDto> productList) {
-        this.productList = productList;
-    }
-
-    public List<String> getProductNameList(){
-        return productNameList;
-    }
-
-    public void setProductNameList(List<String> productIdList){
-        this.productIdList = productIdList;
-    }
-
-    public Map<String, String> getBoolMap() {
-        return boolMap;
-    }
-
-    public void setBoolMap(Map<String, String> boolMap) {
-        this.boolMap = boolMap;
-    }
 
     public String getName() {
         return name;

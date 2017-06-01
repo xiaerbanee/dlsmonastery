@@ -73,7 +73,7 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
     """, nativeQuery = true)
     fun getMaxOutDate(): LocalDateTime
 
-    fun findByNameLike(name: String): MutableList<Bank>
+    fun findByNameContaining(name: String): MutableList<Bank>
 
     /*@Query("""
         select account_id from crm_account_bank where bank_id=?1

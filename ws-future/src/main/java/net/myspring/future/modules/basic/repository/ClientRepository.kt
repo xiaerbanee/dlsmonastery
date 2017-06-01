@@ -23,11 +23,10 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
     @Cacheable
     override fun findOne(id: String): Client
 
-
     override fun findAll(): MutableList<Client>
 
     @CachePut(key = "#p0.id")
-    fun save(client: Client): Int
+    fun save(client: Client): Client
 
     @Query("""
         SELECT t1.*
@@ -46,7 +45,7 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
     """, nativeQuery = true)
     fun findByDepotId(depotId: String): Client
 
-    fun findByNameLike(name: String): MutableList<Client>
+    fun findByNameContaining(name: String): MutableList<Client>
 }
 
 interface ClientRepositoryCustom{

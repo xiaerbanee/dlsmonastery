@@ -4,6 +4,7 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.util.cahe.annotation.CacheInput;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -31,6 +32,7 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String depotOfficeId;
     @CacheInput(inputKey = "offices",inputInstance = "depotOfficeId",outputInstance = "name")
     private String depotOfficeName;
+
     private String depotAreaName;
     private String depotAreaType;
 
@@ -42,12 +44,10 @@ public class ProductImeDto extends DataDto<ProductIme> {
     @CacheInput(inputKey = "employees",inputInstance = "productImeUploadEmployeeId",outputInstance = "name")
     private String productImeUploadEmployeeName;
 
-
-
-
     private String productTypeId;
     @CacheInput(inputKey = "productTypes",inputInstance = "productTypeId",outputInstance = "name")
     private String productTypeName;
+
 
     private LocalDateTime createdTime;
     private Boolean locked;
@@ -66,7 +66,6 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String productImeUploadCreatedBy;
     @CacheInput(inputKey = "accounts",inputInstance = "productImeUploadCreatedBy",outputInstance = "loginName")
     private String productImeUploadCreatedByName;
-
 
     public String getDepotOfficeId() {
         return depotOfficeId;

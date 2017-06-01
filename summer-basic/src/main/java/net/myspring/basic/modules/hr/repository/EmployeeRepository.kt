@@ -32,22 +32,14 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     override fun findOne(id: String): Employee
 
     @CachePut(key="#id")
-    fun save(position: Employee): Int
+    fun save(position: Employee): Employee
 
 
-    fun findByEnabledIsTrueAndNameLike(name: String): MutableList<Employee>
+    fun findByEnabledIsTrueAndNameContaining(name: String): MutableList<Employee>
 
 
     fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Employee>
 
-
-    @Query("""
-        SELECT t1
-        FROM #{#entityName} t1
-        where t1.enabled=1
-        and t1.name like %?1%
-    """)
-    fun findByNameLike(name: String): MutableList<Employee>
 
     @Query("""
         SELECT t1

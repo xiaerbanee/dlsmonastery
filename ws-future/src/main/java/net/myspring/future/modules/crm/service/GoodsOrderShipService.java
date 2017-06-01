@@ -230,9 +230,9 @@ public class GoodsOrderShipService {
 
     public GoodsOrder sreturn(GoodsOrderForm goodsOrderForm) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap = goodsOrderDetailRepository.findMap(CollectionUtil.extractToList(goodsOrderForm.getGoodsOrderDetailList(),"goodsOrderDetailId"));
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap = goodsOrderDetailRepository.findMap(CollectionUtil.extractToList(goodsOrderForm.getGoodsOrderDetailFormList(),"goodsOrderDetailId"));
         BigDecimal amount = BigDecimal.ZERO;
-        for (GoodsOrderDetailForm goodsOrderDetailForm:goodsOrderForm.getGoodsOrderDetailList()) {
+        for (GoodsOrderDetailForm goodsOrderDetailForm:goodsOrderForm.getGoodsOrderDetailFormList()) {
             GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderDetailForm.getGoodsOrderDetailId());
             if (goodsOrderDetailForm.getReturnQty() != null && goodsOrderDetailForm.getReturnQty() > 0) {
                 goodsOrderDetail.setReturnQty(goodsOrderDetail.getReturnQty());

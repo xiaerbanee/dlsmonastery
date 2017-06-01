@@ -9,17 +9,9 @@ import java.util.Map;
  * Created by lihx on 2017/4/19.
  */
 public class ProductTypeQuery extends BaseQuery {
+
     private String code;
     private String name;
-    private Map<String, String> boolMap = Maps.newHashMap();
-
-    public Map<String, String> getBoolMap() {
-        return boolMap;
-    }
-
-    public void setBoolMap(Map<String, String> boolMap) {
-        this.boolMap = boolMap;
-    }
 
     public String getCode() {
         return code;

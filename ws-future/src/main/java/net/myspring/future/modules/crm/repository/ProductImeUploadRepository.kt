@@ -8,7 +8,10 @@ import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 
@@ -25,8 +28,7 @@ interface ProductImeUploadRepositoryCustom{
 class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeUploadRepositoryCustom {
     override fun findPage(pageable: Pageable, productImeUploadQuery: ProductImeUploadQuery): Page<ProductImeUploadDto> {
 
-        val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
         select
          ime.ime productImeIme, t1.*
         from
@@ -48,9 +50,9 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
                 and t1.created_date < :createdDateEnd
             """)
         }
-        if (StringUtils.isNotBlank(productImeUploadQuery.shopName)) {
+        if (StringUtils.isNotBlank(productImeUploadQuery.shopId)) {
             sb.append("""
-                and depot.name LIKE CONCAT('%', :shopName, '%')
+                and t1.shop_id = :shopId
             """)
         }
         if (StringUtils.isNotBlank(productImeUploadQuery.officeId)) {
@@ -68,10 +70,12 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
                 and (ime.ime in :imeOrMeidList or ime.ime2 in :imeOrMeidList or ime.meid in :imeOrMeidList)
             """)
         }
-
-        val queryStr = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)
-
-        return null!!;
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        //var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        var paramMap = BeanPropertySqlParameterSource(productImeUploadQuery)
+        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductImeUploadDto::class.java))
+       // var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
 
     }
 

@@ -122,8 +122,8 @@ public class GoodsOrderService {
         List<PricesystemDetail> pricesystemDetailList = pricesystemDetailRepository.findByPricesystemId(shop.getPricesystemId());
         Map<String,PricesystemDetail> pricesystemDetailMap = CollectionUtil.extractToMap(pricesystemDetailList,"productId");
 
-        for (int i = goodsOrderForm.getGoodsOrderDetailList().size() - 1; i >= 0; i--) {
-            GoodsOrderDetailForm goodsOrderDetailForm = goodsOrderForm.getGoodsOrderDetailList().get(i);
+        for (int i = goodsOrderForm.getGoodsOrderDetailFormList().size() - 1; i >= 0; i--) {
+            GoodsOrderDetailForm goodsOrderDetailForm = goodsOrderForm.getGoodsOrderDetailFormList().get(i);
             if(goodsOrderDetailForm.getQty()==null) {
                 goodsOrderDetailForm.setQty(0);
             }

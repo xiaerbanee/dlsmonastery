@@ -31,7 +31,7 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
     override fun findOne(id: String): Permission
 
     @CachePut(key="#id")
-    fun save(permission: Permission): Int
+    fun save(permission: Permission): Permission
 
     @Query("""
         SELECT t1

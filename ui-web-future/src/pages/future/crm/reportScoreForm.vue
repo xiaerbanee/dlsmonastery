@@ -2,29 +2,29 @@
   <div>
     <head-tab active="reportScoreForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="reportScore" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item :label="$t('reportScoreForm.scoreDate')" prop="scoreDate">
-              <el-date-picker v-model="inputForm.scoreDate" align="right" :placeholder="$t('reportScoreForm.selectScoreDate')" :picker-options="pickerDateOption"></el-date-picker>
+              <date-picker v-model="reportScore.scoreDate" ></date-picker>
             </el-form-item>
             <el-form-item :label="$t('reportScoreForm.companyScore')" prop="companyScore">
-              <el-input v-model="inputForm.companyScore"></el-input>
+              <el-input v-model="reportScore.companyScore"></el-input>
             </el-form-item>
             <el-form-item :label="$t('reportScoreForm.companyMonthScore')" prop="companyMonthScore">
-              <el-input v-model="inputForm.companyMonthScore"></el-input>
+              <el-input v-model="reportScore.companyMonthScore"></el-input>
             </el-form-item>
             <el-form-item :label="$t('reportScoreForm.cardQty')" prop="cardQty">
-              <el-input v-model="inputForm.cardQty"></el-input>
+              <el-input v-model="reportScore.cardQty"></el-input>
             </el-form-item>
             <el-form-item :label="$t('reportScoreForm.monthCardQty')" prop="monthCardQty">
-              <el-input v-model="inputForm.monthCardQty"></el-input>
+              <el-input v-model="reportScore.monthCardQty"></el-input>
             </el-form-item>
             <el-form-item :label="$t('reportScoreForm.rank')" prop="rank">
-              <el-input v-model="inputForm.rank"></el-input>
+              <el-input v-model="reportScore.rank"></el-input>
             </el-form-item>
             <el-form-item :label="$t('reportScoreForm.remarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks"></el-input>
+              <el-input v-model="reportScore.remarks"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('reportScoreForm.save')}}</el-button>
@@ -32,7 +32,7 @@
           </el-col>
           <el-col :span="12">
             <el-card class="box-card">
-              {{$t('reportScoreForm.productNames')}}： {{productNames}}
+              {{$t('reportScoreForm.productNames')}}： {{productTypeNames}}
             </el-card>
           </el-col>
         </el-row>
@@ -44,14 +44,12 @@
     export default{
       data(){
           return{
-            isCreate:this.$route.query.id==null,
+            isCreate:this.$route.query.id===null,
             submitDisabled:false,
-            formProperty:{},
-            remoteLoading:false,
-            productNames:'',
-            pickerDateOption:util.pickerDateOption,
-            inputForm:{
-              id:this.$route.query.id,
+            productTypeNames:'',
+            notScores:'',
+            reportScore:{},
+            submitData:{
               scoreDate:'',
               companyScore:"",
               companyMonthScore:"",
@@ -76,14 +74,16 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              this.inputForm.scoreDate=util.formatLocalDate(this.inputForm.scoreDate);
-              axios.post('/api/crm/reportScore/save',qs.stringify(this.inputForm)).then((response)=> {
+              util.copyValue(this.reportScore, this.submitData);
+              axios.post('/api/ws/future/crm/reportScore/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                if(this.isCreate){
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
-                  this.$router.push({name:'reportScoreList',query:util.getQuery("reportScoreList")})
+                this.submitDisabled = false;
+                if(response.data.success){
+                  if(this.isCreate){
+                    form.resetFields();
+                  } else {
+                    this.$router.push({name:'reportScoreList',query:util.getQuery("reportScoreList")})
+                  }
                 }
               }).catch(function () {
                 this.submitDisabled = false;
@@ -94,8 +94,15 @@
           })
         }
       },created(){
-        axios.get('/api/crm/reportScore/getForm').then((response)=>{
-          this.productNames=response.data.productNames;
+
+        axios.get('/api/ws/future/crm/reportScore/getProductTypeNamesAndNotScores').then((response)=>{
+          this.productTypeNames = response.data.productTypeNames;
+          this.notScores = response.data.notScores;
+        });
+
+        //每日打分，只能新增和删除，不能修改
+        axios.get('/api/ws/future/crm/reportScore/findDto').then((response)=>{
+          this.reportScore=response.data;
         })
       }
     }

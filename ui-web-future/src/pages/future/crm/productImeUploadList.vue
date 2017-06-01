@@ -3,7 +3,8 @@
     <head-tab active="productImeUploadList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:productImeUpload:edit'">{{$t('productImeUploadList.add')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:productImeUpload:edit'">{{$t('productImeUploadList.upload')}}</el-button>
+        <el-button type="primary" @click="itemBack" icon="minus" v-permit="'crm:productImeUpload:edit'">{{$t('productImeUploadList.back')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productImeUpload:view'">{{$t('productImeUploadList.filter')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:productImeUpload:edit'">{{$t('productImeUploadList.batchPass')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
@@ -16,7 +17,7 @@
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item :label="formLabel.month.label" :label-width="formLabelWidth">
-                <month-picker  v-model="inputForm.month" ></month-picker>
+                <month-picker  v-model="formData.month" ></month-picker>
               </el-form-item>
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
@@ -31,6 +32,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="exportData()" v-permit="'crm:productImeUpload:view'">{{$t('productImeUploadList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('productImeUploadList.sure')}}</el-button>
         </div>
       </el-dialog>
@@ -97,7 +99,7 @@
         this.pageLoading = true;
         util.copyValue(this.formData,this.submitData);
         util.setQuery("productImeUploadList",this.submitData);
-        axios.get('/api/ws/future/crm/productImeUpload?'+qs.stringify(this.submitData)).then((response) => {
+        axios.get('/api/ws/future/crm/productImeUpload',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -115,11 +117,13 @@
       },itemAdd(){
         this.$router.push({ name: 'productImeUploadForm'})
 
+      },exportData(){
+
       },selectionChange(selection){
         console.log(selection);
-        this.selects=new Array();
-        for(var key in selection){
-          this.selects.push(selection[key].id)
+        this.selects=[];
+        for(let each of selection){
+          this.selects.push(each.id)
         }
       },batchPass(){
 
@@ -144,7 +148,12 @@
         return row.status === '申请中';
       }
     },created () {
-      this.pageRequest();
+      this.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/crm/productImeUpload/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
+      });
     }
   };
 </script>

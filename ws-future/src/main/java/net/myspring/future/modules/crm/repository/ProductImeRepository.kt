@@ -1,21 +1,24 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductIme
 import net.myspring.future.modules.crm.dto.ProductImeDto
+import net.myspring.future.modules.crm.dto.ProductImeForReportScoreDto
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto
 import net.myspring.future.modules.crm.web.query.ProductImeQuery
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.time.LocalDate
 import java.util.*
 
 
@@ -45,7 +48,7 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
 
 
 interface ProductImeRepositoryCustom{
-    fun findPage(pageable: Pageable, productImeQuery : ProductImeQuery): Page<ProductImeDto>?
+    fun findPage(pageable: Pageable, productImeQuery : ProductImeQuery): Page<ProductImeDto>
 
     fun findProductImeHistoryList(productImeId: String): MutableList<ProductImeHistoryDto>
 
@@ -55,10 +58,44 @@ interface ProductImeRepositoryCustom{
 
     fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme>
 
+
+    fun findForReportScore( dateStart :LocalDate,  dateEnd : LocalDate,   companyId :String) : MutableList<ProductImeForReportScoreDto>
+
+
 }
 
-class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
+class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
+    override fun findForReportScore(dateStart: LocalDate, dateEnd: LocalDate, companyId: String): MutableList<ProductImeForReportScoreDto> {
+
+        val params = HashMap<String, Any>()
+        params.put("dateStart", dateStart)
+        params.put("dateEnd", dateEnd)
+        params.put("companyId", companyId)
+
+        return namedParameterJdbcTemplate.query("""
+
+            SELECT
+            product.product_type_id, depot.office_id depotOfficeId, type.price1 productTypePrice1, t1.*
+            FROM
+            crm_product_ime t1,
+            crm_depot depot,
+            crm_product product,
+            crm_product_type type
+            WHERE
+                t1.enabled = 1
+                AND t1.depot_id = depot.id
+                AND t1.company_id =  :companyId
+                AND t1.product_id =  product.id
+                AND product.product_type_id = type.id
+                AND t1.retailDate IS NOT NULL
+                AND t1.retailDate >= :dateStart
+                AND t1.retailDate < :dateEnd
+
+                """, params, BeanPropertyRowMapper(ProductImeForReportScoreDto::class.java))
+    }
+
     override fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme> {
+
         return namedParameterJdbcTemplate.query("""
         SELECT
             t1.*
@@ -81,7 +118,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
                     OR t1.ime2 IN :imeList
                     OR t1.meid IN :imeList
                 )
-                """, BeanPropertySqlParameterSource(productImeShipQuery), MyBeanPropertyRowMapper(ProductIme::class.java))
+                """, BeanPropertySqlParameterSource(productImeShipQuery), BeanPropertyRowMapper(ProductIme::class.java))
     }
 
 
@@ -114,11 +151,11 @@ class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
                 AND depot.enabled = 1
                 AND t1.company_id =  :companyId
                 AND t1.product_id =  product.id
-                AND t1.ime in :imeList
+                AND t1.ime in (:imeList)
             ) validProductIme
             LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id
             LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id
-                """, params, MyBeanPropertyRowMapper(ProductImeDto::class.java))
+                """, params, BeanPropertyRowMapper(ProductImeDto::class.java))
     }
 
     override fun findProductImeDto(productImeId: String): ProductImeDto {
@@ -134,7 +171,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
         WHERE
             ime.enabled = 1
             AND ime.id = :productImeId
-                """, Collections.singletonMap("productImeId", productImeId), MyBeanPropertyRowMapper(ProductImeDto::class.java))
+                """, Collections.singletonMap("productImeId", productImeId), BeanPropertyRowMapper(ProductImeDto::class.java))
     }
 
     override fun findProductImeHistoryList(productImeId: String): MutableList<ProductImeHistoryDto> {
@@ -187,33 +224,37 @@ class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
                 ) result
         ORDER BY
             result.created_date DESC
-                """, Collections.singletonMap("productImeId", productImeId), MyBeanPropertyRowMapper(ProductImeHistoryDto::class.java))
+                """, Collections.singletonMap("productImeId", productImeId), BeanPropertyRowMapper(ProductImeHistoryDto::class.java))
     }
 
-    override fun findPage(pageable: Pageable, productImeQuery: ProductImeQuery): Page<ProductImeDto>? {
+    override fun findPage(pageable: Pageable, productImeQuery: ProductImeQuery): Page<ProductImeDto> {
 
         val sb = StringBuffer()
         sb.append("""
-        SELECT
-            sale.created_date productImeSaleCreatedDate,
-            sale.employee_id productImeSaleEmployeeId,
-            upload.created_date productImeUploadCreatedDate,
-            upload.employee_id productImeUploadEmployeeId,
-            validProductIme.*
+
+        SELECT *
         FROM
         (
-                SELECT
-                        product.product_type_id, depot.office_id depotOfficeId, t1.*
-                FROM
-                    crm_product_ime t1,
-                    crm_depot depot,
-                    crm_product product
-                WHERE
-                    t1.enabled = 1
-                    AND t1.depot_id = depot.id
-                            AND depot.enabled = 1
-                    AND t1.company_id =  #{p.companyId}
-                    AND t1.product_id = product.id
+            SELECT
+                sale.created_date productImeSaleCreatedDate,
+                sale.employee_id productImeSaleEmployeeId,
+                upload.created_date productImeUploadCreatedDate,
+                upload.employee_id productImeUploadEmployeeId,
+                validProductIme.*
+            FROM
+            (
+                    SELECT
+                            product.product_type_id, depot.office_id depotOfficeId, t1.*
+                    FROM
+                        crm_product_ime t1,
+                        crm_depot depot,
+                        crm_product product
+                    WHERE
+                        t1.enabled = 1
+                        AND t1.depot_id = depot.id
+                                AND depot.enabled = 1
+                        AND t1.company_id =  :companyId
+                        AND t1.product_id = product.id
         """)
         if (StringUtils.isNotEmpty(productImeQuery.boxIme)) {
             sb.append("""  and t1.box_ime like CONCAT('%', :boxIme,'%') """)
@@ -228,7 +269,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
             sb.append("""  and t1.meid like CONCAT('%', :meid,'%')    """)
         }
         if (productImeQuery.imeOrMeidList != null) {
-            sb.append("""  and (t1.ime in :imeOrMeidList or t1.ime2 in :imeOrMeidList or t1.meid in :imeOrMeidList ) """)
+            sb.append("""  and (t1.ime in (:imeOrMeidList) or t1.ime2 in (:imeOrMeidList) or t1.meid in (:imeOrMeidList) ) """)
         }
         if (productImeQuery.createdDateStart != null) {
             sb.append("""  AND t1.created_date>= :createdDateStart """)
@@ -257,22 +298,18 @@ class ProductImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemp
         if (StringUtils.isNotBlank(productImeQuery.inputType )) {
             sb.append("""  and t1.input_type = :inputType  """)
         }
-        if (StringUtils.isNotBlank(productImeQuery.depotId )) {
-            sb.append("""  and t1.depot_id = :depotId  """)
-        }
-        if (StringUtils.isNotBlank(productImeQuery.depotId )) {
-            sb.append("""  and t1.depot_id = :depotId  """)
-        }
         sb.append("""
-          ) validProductIme
-                LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id
-                LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id
+              ) validProductIme
+                    LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id
+                    LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id
+        ) result
         """)
-        if (pageable.sort != null) {
-            sb.append("""  order by validProductIme.${pageable.sort}  """)
-        }
-        sb.append("""  limit ${pageable.offset}, ${pageable.pageSize} """)
-        return null
+
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        var paramMap = BeanPropertySqlParameterSource(productImeQuery)
+        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductImeDto::class.java))
+
+        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
 
     }
 

@@ -30,26 +30,8 @@ interface GoodsOrderImeRepository : BaseRepository<GoodsOrderIme, String>, Goods
 
 interface GoodsOrderImeRepositoryCustom{
 
-    fun findDtoListByGoodsOrderId(goodsOrderId: String): MutableList<GoodsOrderImeDto>
-
 }
 
-class GoodsOrderImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): GoodsOrderImeRepositoryCustom{
-    override fun findDtoListByGoodsOrderId(goodsOrderId: String): MutableList<GoodsOrderImeDto> {
-        return namedParameterJdbcTemplate.query("""
-        SELECT
-            t2.ime productImeIme,
-            t2.meid productImeMeid,
-            t1.*
-        FROM
-            crm_goods_order_ime t1,
-            crm_product_ime t2
-        WHERE
-            t1.goods_order_id = :goodsOrderId
-        AND t1.enabled = 1
-        AND t1.product_ime_id = t2.id
-          """, Collections.singletonMap("goodsOrderId", goodsOrderId), MyBeanPropertyRowMapper(GoodsOrderImeDto::class.java))
-    }
-
+class GoodsOrderImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): GoodsOrderImeRepositoryCustom{
 
 }

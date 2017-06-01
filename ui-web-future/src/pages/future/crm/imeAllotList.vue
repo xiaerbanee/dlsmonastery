@@ -4,8 +4,9 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:imeAllot:edit'">{{$t('imeAllotList.imeAllotList')}}</el-button>
-        <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:imeAllot:edit'">{{$t('imeAllotList.batchPass')}}</el-button>
+        <el-button type="primary" @click="batchAudit(true)" icon="check" v-permit="'crm:imeAllot:batchSave'">{{$t('imeAllotList.batchPass')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:imeAllot:view'">{{$t('imeAllotList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData"  v-permit="'crm:imeAllot:view'">{{$t('imeAllotList.export')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('imeAllotList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -19,20 +20,18 @@
                 <el-input v-model="formData.toDepotName" auto-complete="off" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.crossArea.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.crossArea" filterable clearable :placeholder="$t('imeAllotList.inputKey')">
-                  <el-option v-for="(value,key) in formProperty.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
-                </el-select>
+                <bool-select v-model="formData.crossArea"   ></bool-select>
               </el-form-item>
               <el-form-item :label="formLabel.ime.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('imeAllotList.inputKey')">
-                  <el-option v-for="item in formProperty.status" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('imeAllotList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -43,17 +42,18 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('imeAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column  prop="fromDepot.name" :label="$t('imeAllotForm.fromDepot')" width="150" ></el-table-column>
-        <el-table-column prop="toDepot.name" :label="$t('imeAllotForm.toDepot')"></el-table-column>
-        <el-table-column prop="productIme.ime" :label="$t('imeAllotForm.ime')"  ></el-table-column>
-        <el-table-column prop="productIme.product.name" :label="$t('imeAllotForm.productName')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('imeAllotForm.allotDate')"></el-table-column>
-        <el-table-column prop="created.fullName" :label="$t('imeAllotForm.allotEmployee')"></el-table-column>
-        <el-table-column prop="status":label="$t('imeAllotForm.status')" width="120">
+        <el-table-column  prop="fromDepotName" :label="$t('imeAllotList.fromDepot')" width="150" ></el-table-column>
+        <el-table-column prop="toDepotName" :label="$t('imeAllotList.toDepot')"></el-table-column>
+        <el-table-column prop="productImeIme" :label="$t('imeAllotList.ime')"  ></el-table-column>
+        <el-table-column prop="productImeProductName" :label="$t('imeAllotList.productName')"></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('imeAllotList.allotDate')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('imeAllotList.allotEmployee')"></el-table-column>
+        <el-table-column prop="status":label="$t('imeAllotList.status')" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.status==='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="lastModifiedByName" :label="$t('imeAllotList.lastModifiedBy')"></el-table-column>
         <el-table-column prop="enabled" :label="$t('imeAllotList.enabled')" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
@@ -61,9 +61,8 @@
         </el-table-column>
         <el-table-column  :label="$t('imeAllotList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button v-show="scope.row.status === '申请中'" size="small" type="text" @click="itemAction(scope.row.id, 'auditPass')"  v-permit="'crm:imeAllot:batchSave'">{{$t('imeAllotList.auditPass')}}</el-button>
+            <el-button v-show="scope.row.status === '申请中'" size="small" type="text" @click="itemAction(scope.row.id, 'auditNotPass')"   v-permit="'crm:imeAllot:batchSave'">{{$t('imeAllotList.auditNotPass')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,13 +71,20 @@
   </div>
 </template>
 <script>
-  export default {
+
+  import boolSelect from 'components/common/bool-select'
+
+  export default{
+    components:{
+      boolSelect,
+    },
     data() {
       return {
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           fromDepotName:'',
@@ -86,19 +92,17 @@
           crossArea:'',
           ime:'',
           status:'',
-          createdDateBTW:'',
-          createdDate:''
+          createdDateRange:'',
         },formLabel:{
           fromDepotName:{label: this.$t('imeAllotList.fromDepot')},
           toDepotName:{label:this.$t('imeAllotList.toDepot')},
           crossArea:{label:this.$t('imeAllotList.crossArea'),value:''},
           ime:{label:this.$t('imeAllotList.ime')},
           status:{label:this.$t('imeAllotList.status')},
-          createdDateBTW:{label: this.$t('imeAllotList.createdDate')},
+          createdDateRange:{label: this.$t('imeAllotList.createdDate')},
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
-        selects:new Array(),
+
+        selects:[],
         formLabelWidth: '120px',
         formVisible: false,
       };
@@ -106,20 +110,19 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        this.formLabel.crossArea.value = util.bool2str(this.formData.crossArea);
-        this.formData.createdDateBTW = util.formatDateRange(this.formData.createdDate);
-
-        util.setQuery("imeAllotList",this.formData);
-        axios.get('/api/crm/imeAllot',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("imeAllotList",this.submitData);
+        axios.get('/api/ws/future/crm/imeAllot?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        })
+        });
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
         this.pageRequest();
+
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -128,34 +131,65 @@
       },itemAdd(){
         this.$router.push({ name: 'imeAllotForm'})
       },itemAction:function(id,action){
-        this.selects.push(id);
-        axios.get('/api/crm/imeAllot/audit',{params:{ids:this.selects,pass:action==='通过'?true:false}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        });
+
+        if(action==="auditPass") {
+          util.confirmBeforeAction(this,  this.$t('imeAllotList.confirmBeforeAuditPass')).then(() => {
+            let ids = [id];
+            axios.get('/api/ws/future/crm/imeAllot/audit',{params:{ids:ids,pass:true}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          }).catch(()=>{});
+        }else if(action==="auditNotPass"){
+
+          util.confirmBeforeAction(this,  this.$t('imeAllotList.confirmBeforeAuditNotPass')).then(() => {
+            let ids = [id];
+            axios.get('/api/ws/future/crm/imeAllot/audit',{params:{ids:ids,pass:false}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          }).catch(()=>{});
+        }
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/crm/imeAllot/export',{params:this.submitData}).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});
+
       },selectionChange(selection){
         console.log(selection);
-        this.selects=new Array();
-        for(var key in selection){
-          this.selects.push(selection[key].id)
+        this.selects=[];
+        for(let each of selection){
+          this.selects.push(each.id);
         }
-      },batchPass(){
-        axios.get('/api/crm/imeAllot/audit',{params:{ids:this.selects,pass:true}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        });
+      },batchAudit(pass){
+
+        if(!this.selects || this.selects.length < 1){
+          this.$message(this.$t('imeAllotList.noSelectionFound'));
+          return ;
+        }
+
+        util.confirmBeforeBatchPass(this).then(() => {
+          axios.get('/api/ws/future/crm/imeAllot/audit',{params:{ids:this.selects,pass:pass}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        }).catch(()=>{});
       },checkSelectable(row) {
         return row.status !== '已通过'
-      },getQuery(){
-        axios.get('/api/crm/imeAllot/getQuery').then((response) =>{
-          this.formProperty=response.data;
-          this.pageRequest();
-      });
       }
+
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.getQuery();
+
+      const that = this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/crm/imeAllot/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+      });
+
     }
   };
 </script>

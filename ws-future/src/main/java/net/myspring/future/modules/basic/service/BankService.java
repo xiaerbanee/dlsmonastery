@@ -64,9 +64,10 @@ public class BankService {
     }
 
     @Transactional(readOnly = true)
-    public List<BankDto> findByNameLike(String name){
-        List<Bank> banks = bankRepository.findByNameLike(name);
+    public List<BankDto> findByNameContaining(String name){
+        List<Bank> banks = bankRepository.findByNameContaining(name);
         List<BankDto> bankDtos= BeanUtil.map(banks, BankDto.class);
+        cacheUtils.initCacheInput(bankDtos);
         return bankDtos;
     }
 

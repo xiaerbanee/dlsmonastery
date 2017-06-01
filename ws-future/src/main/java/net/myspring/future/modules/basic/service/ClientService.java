@@ -92,10 +92,10 @@ public class ClientService {
         return c.getName();
     }
 
-    public List<ClientDto> findByNameLike(String name){
+    public List<ClientDto> findByNameContaining(String name){
         List<ClientDto> clientDtoList= Lists.newArrayList();
         if(StringUtils.isNotBlank(name)){
-            List<Client> clientList=clientRepository.findByNameLike(name);
+            List<Client> clientList=clientRepository.findByNameContaining(name);
             clientDtoList=BeanUtil.map(clientList,ClientDto.class);
         }
         return clientDtoList;

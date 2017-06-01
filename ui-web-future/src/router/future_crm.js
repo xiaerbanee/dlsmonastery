@@ -44,6 +44,7 @@ const productImeList = r => require.ensure([], () => r(require('pages/future/crm
 const productImeDetail = r => require.ensure([], () => r(require('pages/future/crm/productImeDetail.vue')));
 const productImeSaleList= r => require.ensure([], () => r(require('pages/future/crm/productImeSaleList.vue')));
 const productImeSaleForm= r => require.ensure([], () => r(require('pages/future/crm/productImeSaleForm.vue')));
+const productImeSaleBackForm= r => require.ensure([], () => r(require('pages/future/crm/productImeSaleBackForm.vue')));
 const productImeUploadList  = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadList.vue')));
 const productImeUploadForm = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadForm.vue')));
 const productMonthPriceList = r => require.ensure([], () => r(require('pages/future/crm/productMonthPriceList.vue')));
@@ -108,6 +109,7 @@ let routes = [
   {path:'/future/crm/productImeDetail',component:productImeDetail,name:'productImeDetail'},
   {path:'/future/crm/productImeSaleList',component:productImeSaleList,name:'productImeSaleList'},
   {path:'/future/crm/productImeSaleForm',component:productImeSaleForm,name:'productImeSaleForm',meta: {menu:"productImeSaleList"}},
+  {path:'/future/crm/productImeSaleBackForm',component:productImeSaleBackForm,name:'productImeSaleBackForm',meta: {menu:"productImeSaleList"}},
   {path:'/future/crm/productImeUploadList',component:productImeUploadList,name:'productImeUploadList'},
   {path:'/future/crm/productImeUploadForm',component:productImeUploadForm,name:'productImeUploadForm',meta: {menu:"productImeUploadList"}},
   {path:'/future/crm/productMonthPriceList',component:productMonthPriceList,name:'productMonthPriceList' },

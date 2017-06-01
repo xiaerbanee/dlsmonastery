@@ -18,7 +18,7 @@ interface RoleModuleRepository : BaseRepository<RoleModule, String> {
     override fun findOne(id: String): RoleModule
 
     @CachePut(key = "#id")
-    fun save(roleModule: RoleModule): Int
+    fun save(roleModule: RoleModule): RoleModule
 
     @Query("""
         SELECT t

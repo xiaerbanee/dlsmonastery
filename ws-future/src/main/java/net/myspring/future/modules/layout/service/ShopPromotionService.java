@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -36,7 +37,7 @@ public class ShopPromotionService {
         ShopPromotion shopPromotion;
         if(shopPromotionForm.isCreate()){
             shopPromotion = BeanUtil.map(shopPromotionForm,ShopPromotion.class);
-            String maxBusinessId = shopPromotionRepository.findMaxBusinessId(LocalDate.now());
+            String maxBusinessId = shopPromotionRepository.findMaxBusinessId(LocalDateTime.now());
             shopPromotion.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
             shopPromotionRepository.save(shopPromotion);
         }else{

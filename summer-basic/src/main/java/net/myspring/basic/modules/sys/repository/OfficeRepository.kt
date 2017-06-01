@@ -19,6 +19,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 
 /**
@@ -31,15 +32,6 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
 
     @Cacheable
     override fun findOne(id: String): Office
-
-    @Query("""
-        SELECT t1
-        FROM  #{#entityName} t1,OfficeRule t2
-        where t1.officeRuleId=t2.id
-        and t2.name=?1
-        and t1.enabled =1
-     """)
-    fun findByOfficeRuleName(officeRuleName:String):MutableList<Office>
 
     @Query("""
         SELECT t1
@@ -119,6 +111,8 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
 }
 
 interface OfficeRepositoryCustom {
+    fun findByOfficeRuleName(officeRuleName:String):MutableList<Office>
+
     fun findByParentIdsListLike(parentIdList: MutableList<String>): MutableList<Office>
 
     fun findByFilter(officeQuery: OfficeQuery): MutableList<Office>
@@ -131,6 +125,15 @@ interface OfficeRepositoryCustom {
 }
 
 class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): OfficeRepositoryCustom {
+    override fun findByOfficeRuleName(officeRuleName:String):MutableList<Office>{
+        return namedParameterJdbcTemplate.query("""
+          SELECT t1.*
+          FROM  sys_office t1,sys_office_rule t2
+          where t1.office_rule_id=t2.id
+          and t2.name = :officeRuleName
+          and t1.enabled =1
+        """,Collections.singletonMap("officeRuleName",officeRuleName),BeanPropertyRowMapper(Office::class.java))
+    }
     override fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>? {
         var sb = StringBuilder("select * from sys_office where enabled=1 ");
         if(StringUtils.isNotBlank(officeQuery.name)) {

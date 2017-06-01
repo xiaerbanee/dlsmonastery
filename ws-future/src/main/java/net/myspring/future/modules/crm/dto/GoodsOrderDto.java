@@ -10,12 +10,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class GoodsOrderDto extends DataDto<GoodsOrder> {
-
-
-    private String shipRemarks;
-    private BigDecimal shopGoodsDeposit;
-    private Boolean isUseTicket;
+    //门店额度
+    private BigDecimal shopCredit;
+    //金蝶单号
     private String outCode;
+    //门店所在区域
     private String shopAreaName;
     private String businessId;
     private LocalDateTime billDate;
@@ -28,10 +27,11 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     @CacheInput(inputKey = "depots",inputInstance = "storeId",outputInstance = "name")
     private String storeName;
     private String shipType;
+    //总金额
     private BigDecimal amount;
+    //门店应收
     private BigDecimal shopShouldGet;
     private String netType;
-    private String expressOrderExpressCodes;
 
     private String clientId;
     @CacheInput(inputKey = "clients",inputInstance = "clientId",outputInstance = "name")
@@ -43,171 +43,14 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private String shopType;
     private Boolean enabled;
 
-    private LocalDateTime expressOutPrintDate;
-    private LocalDateTime expressExpressPrintDate;
+    private String  rebateRuleRemarks;
 
-    private String  goodsOrderRebateRuleRemarks;
-    private String expressOrderId;
-
-
-    public String getExpressOrderId() {
-        return expressOrderId;
+    public BigDecimal getShopCredit() {
+        return shopCredit;
     }
 
-    public void setExpressOrderId(String expressOrderId) {
-        this.expressOrderId = expressOrderId;
-    }
-
-    public String getFormatId(){
-        return IdUtils.getFormatId(businessId, FormatterConstant.GOODS_ORDER);
-    }
-
-    public String getGoodsOrderRebateRuleRemarks() {
-        return goodsOrderRebateRuleRemarks;
-    }
-
-    public void setGoodsOrderRebateRuleRemarks(String goodsOrderRebateRuleRemarks) {
-        this.goodsOrderRebateRuleRemarks = goodsOrderRebateRuleRemarks;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public LocalDateTime getExpressOutPrintDate() {
-        return expressOutPrintDate;
-    }
-
-    public void setExpressOutPrintDate(LocalDateTime expressOutPrintDate) {
-        this.expressOutPrintDate = expressOutPrintDate;
-    }
-
-    public LocalDateTime getExpressExpressPrintDate() {
-        return expressExpressPrintDate;
-    }
-
-    public void setExpressExpressPrintDate(LocalDateTime expressExpressPrintDate) {
-        this.expressExpressPrintDate = expressExpressPrintDate;
-    }
-
-    public Boolean getIsUseTicket() {
-        return isUseTicket;
-    }
-
-    public void setIsUseTicket(Boolean isUseTicket) {
-        this.isUseTicket = isUseTicket;
-    }
-
-    public Boolean getIsPrint() {
-        if(expressOutPrintDate != null){
-            return Boolean.TRUE;
-        }else{
-            return Boolean.FALSE;
-        }
-    }
-
-    public Boolean getIsShipPrint() {
-        if(expressExpressPrintDate != null){
-            return Boolean.TRUE;
-        }else{
-            return Boolean.FALSE;
-        }
-    }
-
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getPricesystemId() {
-        return pricesystemId;
-    }
-
-    public void setPricesystemId(String pricesystemId) {
-        this.pricesystemId = pricesystemId;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getPricesystemName() {
-        return pricesystemName;
-    }
-
-    public void setPricesystemName(String pricesystemName) {
-        this.pricesystemName = pricesystemName;
-    }
-
-    public String getShopType() {
-        return shopType;
-    }
-
-    public void setShopType(String shopType) {
-        this.shopType = shopType;
-    }
-
-    private BigDecimal totalShopGoodsDepositAmount;
-
-    public BigDecimal getTotalShopGoodsDepositAmount() {
-        return totalShopGoodsDepositAmount;
-    }
-
-    public void setTotalShopGoodsDepositAmount(BigDecimal totalShopGoodsDepositAmount) {
-        this.totalShopGoodsDepositAmount = totalShopGoodsDepositAmount;
-    }
-
-
-    public String getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
-    }
-
-    public String getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getShipRemarks() {
-        return shipRemarks;
-    }
-
-    public void setShipRemarks(String shipRemarks) {
-        this.shipRemarks = shipRemarks;
-    }
-
-    public BigDecimal getShopGoodsDeposit() {
-        return shopGoodsDeposit;
-    }
-
-    public void setShopGoodsDeposit(BigDecimal shopGoodsDeposit) {
-        this.shopGoodsDeposit = shopGoodsDeposit;
-    }
-
-    public Boolean getUseTicket() {
-        return isUseTicket;
-    }
-
-    public void setUseTicket(Boolean useTicket) {
-        isUseTicket = useTicket;
+    public void setShopCredit(BigDecimal shopCredit) {
+        this.shopCredit = shopCredit;
     }
 
     public String getOutCode() {
@@ -216,6 +59,22 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
 
     public void setOutCode(String outCode) {
         this.outCode = outCode;
+    }
+
+    public String getShopAreaName() {
+        return shopAreaName;
+    }
+
+    public void setShopAreaName(String shopAreaName) {
+        this.shopAreaName = shopAreaName;
+    }
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public LocalDateTime getBillDate() {
@@ -234,25 +93,6 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
         this.shipDate = shipDate;
     }
 
-    private String pullStatus;
-
-    public String getShopAreaName() {
-        return shopAreaName;
-    }
-
-    public void setShopAreaName(String shopAreaName) {
-        this.shopAreaName = shopAreaName;
-    }
-
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
-    }
-
-
     public String getStatus() {
         return status;
     }
@@ -261,12 +101,28 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
         this.status = status;
     }
 
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
     public String getShopName() {
         return shopName;
     }
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
     }
 
     public String getStoreName() {
@@ -284,7 +140,6 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     public void setShipType(String shipType) {
         this.shipType = shipType;
     }
-
 
     public BigDecimal getAmount() {
         return amount;
@@ -310,19 +165,58 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
         this.netType = netType;
     }
 
-    public String getExpressOrderExpressCodes() {
-        return expressOrderExpressCodes;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setExpressOrderExpressCodes(String expressOrderExpressCodes) {
-        this.expressOrderExpressCodes = expressOrderExpressCodes;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public String getPullStatus() {
-        return pullStatus;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setPullStatus(String pullStatus) {
-        this.pullStatus = pullStatus;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public String getPricesystemId() {
+        return pricesystemId;
+    }
+
+    public void setPricesystemId(String pricesystemId) {
+        this.pricesystemId = pricesystemId;
+    }
+
+    public String getPricesystemName() {
+        return pricesystemName;
+    }
+
+    public void setPricesystemName(String pricesystemName) {
+        this.pricesystemName = pricesystemName;
+    }
+
+    public String getShopType() {
+        return shopType;
+    }
+
+    public void setShopType(String shopType) {
+        this.shopType = shopType;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+    public String getRebateRuleRemarks() {
+        return rebateRuleRemarks;
+    }
+
+    public void setRebateRuleRemarks(String rebateRuleRemarks) {
+        this.rebateRuleRemarks = rebateRuleRemarks;
     }
 }
