@@ -123,13 +123,11 @@
       },
       methods:{
         formSubmit(){
-
-
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-                this.initSubmitDataBeforeSubmit();
+              this.submitDisabled = true;
+              this.initSubmitDataBeforeSubmit();
               axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
@@ -140,7 +138,7 @@
                     this.$router.push({name:'productImeSaleList',query:util.getQuery("productImeSaleList")})
                   }
                 }
-              }).catch(function () {
+              }).catch( () => {
                 this.submitDisabled = false;
               });
             }

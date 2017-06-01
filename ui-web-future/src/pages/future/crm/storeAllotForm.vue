@@ -63,7 +63,7 @@
     },
     data(){
       return{
-        isCreate:this.$route.query.id===null,
+        isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{},
         inputProperty:{},
@@ -94,26 +94,25 @@
     },
     methods: {
       formSubmit(){
-        this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-              this.initSubmitDataBeforeSubmit();
+            this.submitDisabled = true;
+            this.initSubmitDataBeforeSubmit();
             axios.post('/api/ws/future/crm/storeAllot/save', qs.stringify(this.submitData, {allowDots: true})).then((response) => {
-              if (response.data.message) {
-                this.$message(response.data.message);
+              this.$message(response.data.message);
+              this.submitDisabled = false;
+              if(response.data.success) {
+                if (this.isCreate) {
+                  form.resetFields();
+                } else {
+                  this.$router.push({name: 'storeAllotList', query: util.getQuery("storeAllotList")});
+                }
               }
-              if (this.isCreate) {
-                form.resetFields();
-                this.submitDisabled = false;
-              } else {
-                this.$router.push({name: 'storeAllotList', query: util.getQuery("storeAllotList")});
-              }
-            }).catch(function () {
+            }).catch( () => {
               this.submitDisabled = false;
             });
-          } else {
-            this.submitDisabled = false;
           }
         })
       }, initSubmitDataBeforeSubmit(){

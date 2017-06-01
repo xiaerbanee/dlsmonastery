@@ -27,7 +27,7 @@
           <el-col :span="18" v-if="inputForm.imeStr !==''">
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
-                <el-table-column prop="productName":label="$t('productImeUploadForm.productName')"></el-table-column>
+                <el-table-column prop="productName" :label="$t('productImeUploadForm.productName')"></el-table-column>
                 <el-table-column prop="qty" :label="$t('productImeUploadForm.qty')"></el-table-column>
               </el-table>
             </template>
@@ -51,9 +51,6 @@
     </div>
   </div>
 </template>
-<style>
-  .el-table { margin-bottom: 100px;}
-</style>
 <script>
 
   import depotSelect from 'components/future/depot-select'
@@ -65,7 +62,6 @@
       depotSelect,
       employeeSelect,
       monthPicker,
-
     },
       data(){
           return{
@@ -91,11 +87,11 @@
       },
       methods:{
         formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-
+              this.submitDisabled = true;
               axios.post('/api/crm/productImeUpload/save',qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
@@ -106,11 +102,11 @@
                     this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList")})
                   }
                 }
-              }).catch(function () {
+              }).catch( () => {
                 this.submitDisabled = false;
               });
             }
-          })
+          });
         },onchange(){
 
             axios.get('/api/ws/future/crm/productIme/search',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{

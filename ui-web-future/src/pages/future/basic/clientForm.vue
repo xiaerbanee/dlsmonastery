@@ -10,7 +10,7 @@
           <el-input v-model="inputForm.mobilePhone"></el-input>
         </el-form-item>
         <el-form-item :label="$t('clientForm.remarks')" prop="remarks">
-        <el-input v-model="inputForm.remarks"></el-input>
+        <el-input type="textarea" v-model="inputForm.remarks"></el-input>
       </el-form-item>
         <el-form-item>
           <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{$t('clientForm.save')}}</el-button>
