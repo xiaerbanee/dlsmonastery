@@ -22,6 +22,8 @@ public class Depot extends CompanyEntity<Depot> {
     private String name;
     // 拼音
     private String namePinyin;
+    //区域/办事处
+    private String areaId;
     // 部门
     private String officeId;
     // 负责人【货品收货人】
@@ -114,6 +116,14 @@ public class Depot extends CompanyEntity<Depot> {
 
     public void setNamePinyin(String namePinyin) {
         this.namePinyin = namePinyin;
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
     }
 
     public String getOfficeId() {

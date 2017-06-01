@@ -3,12 +3,12 @@
 <mapper namespace="net.myspring.future.modules.crm.mapper.PricesystemChangeMapper">
     <select id="findPage" resultType="PricesystemChangeDto">
         SELECT
-        t1.*,t2.name as productName,t3.name as pricesystemName
+        t1.*
         FROM
-        crm_pricesystem_change t1,crm_product t2 , crm_pricesystem t3
+        crm_pricesystem_change t1
         WHERE
-        t1.enabled=1 and t1.product_id=t2.id and t1.pricesystem_id=t3.id
-        <if test="p.productName != null">
+        t1.enabled=1
+        <if test="p.productId != null">
             and t1.product_id in(
             select t2.id
             from crm_product t2

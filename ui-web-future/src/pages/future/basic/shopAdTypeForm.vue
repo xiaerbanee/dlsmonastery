@@ -9,7 +9,7 @@
 
         <el-form-item :label="$t('shopAdTypeForm.totalPriceType')" prop="totalPriceType" >
             <el-select v-model="formData.totalPriceType" filterable clearable :placeholder="$t('shopAdTypeList.inputKey')">
-              <el-option v-for="item in formData.totalPriceTypeList" :key="item" :label="item" :value="item"></el-option>
+              <el-option v-for="item in formProperty.totalPriceTypeList" :key="item" :label="item" :value="item"></el-option>
             </el-select>
         </el-form-item>
 
@@ -32,6 +32,7 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
+            formProperty:{},
             formData:{},
             submitData:{
               id:'',
@@ -70,10 +71,11 @@
           })
         }
       },created(){
-
-
-          axios.get('/api/ws/future/basic/shopAdType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.formData = response.data;
+          })
+          axios.get('/api/ws/future/basic/shopAdType/getForm').then((response)=>{
+            this.formProperty = response.data;
           })
 
       }

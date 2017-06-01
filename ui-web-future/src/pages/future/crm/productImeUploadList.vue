@@ -116,6 +116,7 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'productImeUploadForm'})
+      },itemBack(){
 
       },exportData(){
 

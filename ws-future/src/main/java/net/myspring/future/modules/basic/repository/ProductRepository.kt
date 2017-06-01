@@ -20,7 +20,9 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDateTime
-import kotlin.collections.HashMap
+import java.util.*
+
+//import kotlin.collections.HashMap
 
 /**
  * Created by zhangyf on 2017/5/24.

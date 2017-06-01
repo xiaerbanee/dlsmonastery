@@ -4,14 +4,19 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Client
 import net.myspring.future.modules.basic.dto.ClientDto
 import net.myspring.future.modules.basic.web.query.ClientQuery
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import javax.persistence.EntityManager
 
 /**
@@ -52,7 +57,7 @@ interface ClientRepositoryCustom{
     fun findPage(pageable: Pageable, clientQuery: ClientQuery): Page<ClientDto>
 }
 
-class ClientRepositoryImpl @Autowired constructor(val entityManager: EntityManager):ClientRepositoryCustom{
+class ClientRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ClientRepositoryCustom{
 
     override fun findPage(pageable: Pageable, clientQuery: ClientQuery): Page<ClientDto> {
         val sb = StringBuffer()
@@ -67,8 +72,10 @@ class ClientRepositoryImpl @Autowired constructor(val entityManager: EntityManag
         if (StringUtils.isNotEmpty(clientQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
-        var query = entityManager.createNativeQuery(sb.toString(), ClientDto::class.java)
-
-        return query.resultList as Page<ClientDto>
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(clientQuery), BeanPropertyRowMapper(ClientDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(clientQuery),Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 }

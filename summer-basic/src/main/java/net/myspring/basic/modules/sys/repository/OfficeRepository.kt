@@ -27,7 +27,7 @@ import java.util.*
  */
 @CacheConfig(cacheNames = arrayOf("offices"))
 interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom{
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(office: Office): Office
 
     @Cacheable
@@ -66,13 +66,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
      """)
     fun findByParentIdsLike(parentId: String): MutableList<Office>
 
-    @Query("""
-        SELECT t.id,t.name
-        FROM  #{#entityName} t
-        WHERE t.enabled = 1
-        and t.id in ?1
-     """)
-    fun findByIds(ids: MutableList<String>): MutableList<Office>
+    fun findByEnabledIsTrueAndIdIn(ids: MutableList<String>): MutableList<Office>
 
     @Query("""
         SELECT t1

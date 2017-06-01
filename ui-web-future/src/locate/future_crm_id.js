@@ -1464,6 +1464,8 @@ export default {
     pleaseInputImes:'请输入串码',
   },
   productImeUploadList: {
+    upload:"上报",
+    back:"退回",
     productImeUploadList: "laporan string kode",
     imeOrMeidsMultiLine:'可输入多行',
     imeOrMeids:'ime或meid(多行)',

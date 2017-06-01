@@ -43,8 +43,6 @@ public class ShopBuildService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
     private ActivitiClient activitiClient;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;

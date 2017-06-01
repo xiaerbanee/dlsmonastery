@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -75,9 +76,17 @@ public class OfficeController {
         if(!restResponse.getSuccess()){
             return restResponse;
         }
-        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
-        officeService.save(officeForm);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        String areaId="";
+        if(!officeForm.isCreate()){
+            Office office=officeService.findOne(officeForm.getId());
+            areaId=office.getAreaId();
+        }
+        Office office=officeService.save(officeForm);
+        restResponse=new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        if(StringUtils.isNotBlank(areaId)&&!areaId.equals(office.getAreaId())){
+            restResponse=new RestResponse("保存成功,请到门店管理页面进行部门同步", ResponseCodeEnum.saved.name());
+        }
+        return restResponse;
     }
 
 
@@ -108,9 +117,8 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "findByIds")
-    public List<OfficeDto> findByIds(String idStr){
-        List<String> idList = StringUtils.getSplitList(idStr,CharConstant.COMMA);
-        List<OfficeDto> officeDtoList = officeService.findByIds(idList);
+    public List<OfficeDto> findByIds(@RequestParam("idStr") List<String> ids){
+        List<OfficeDto> officeDtoList = officeService.findByIds(ids);
         return officeDtoList;
     }
 

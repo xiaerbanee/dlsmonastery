@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "crm/pricesystem")
+@RequestMapping(value = "basic/pricesystem")
 public class PricesystemController {
 
     @Autowired
@@ -29,8 +29,7 @@ public class PricesystemController {
     @RequestMapping(value = "delete")
     public RestResponse delete(PricesystemForm pricesystemForm) {
         pricesystemService.logicDelete(pricesystemForm);
-        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return restResponse;
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "save")
@@ -40,9 +39,18 @@ public class PricesystemController {
     }
 
     @RequestMapping(value = "getForm")
-    public PricesystemForm findOne(PricesystemForm pricesystemForm) {
+    public PricesystemForm getForm(PricesystemForm pricesystemForm) {
         pricesystemForm=pricesystemService.getForm(pricesystemForm);
         return pricesystemForm;
     }
 
+    @RequestMapping(value = "findOne")
+    public PricesystemDto findOne(String id){
+        return pricesystemService.findOne(id);
+    }
+
+    @RequestMapping(value = "getQuery")
+    public PricesystemQuery getQuery(PricesystemQuery pricesystemQuery){
+        return pricesystemQuery;
+    }
 }

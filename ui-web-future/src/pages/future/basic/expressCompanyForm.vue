@@ -8,7 +8,7 @@
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.expressType')" prop="expressType">
           <el-select v-model="inputForm.expressType" filterable :placeholder="$t('expressCompanyForm.selectType')">
-            <el-option v-for="item in inputForm.expressTypeList" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in formProperty.expressTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.district')" prop="districtId">
@@ -54,6 +54,7 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
+            formProperty:{},
             inputForm:{},
             submitData:{
               id:'',
@@ -97,8 +98,11 @@
           })
         }
       },created(){
-          axios.get('/api/ws/future/basic/expressCompany/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/expressCompany/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
+          });
+          axios.get('/api/ws/future/basic/expressCompany/getForm').then((response)=>{
+            this.formProperty = response.data;
           });
       }
     }
