@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -108,9 +109,8 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "findByIds")
-    public List<OfficeDto> findByIds(String idStr){
-        List<String> idList = StringUtils.getSplitList(idStr,CharConstant.COMMA);
-        List<OfficeDto> officeDtoList = officeService.findByIds(idList);
+    public List<OfficeDto> findByIds(@RequestParam("idStr") List<String> ids){
+        List<OfficeDto> officeDtoList = officeService.findByIds(ids);
         return officeDtoList;
     }
 

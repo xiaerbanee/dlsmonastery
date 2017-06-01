@@ -49,7 +49,8 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           name:'',
@@ -75,8 +76,9 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("pricesystemList",this.formData);
-        axios.get('/api/ws/future/crm/pricesystem',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData)
+        util.setQuery("pricesystemList",this.submitData);
+        axios.get('/api/ws/future/basic/pricesystem',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -100,7 +102,7 @@
             this.$router.push({ name: 'pricesystemForm', query: { id: id }})
           }else if(action == "delete"){
             util.confirmBeforeDelRecord(this).then(() => {
-              axios.get('/api/ws/future/crm/pricesystem/delete', {params: {id: id}}).then((response) => {
+              axios.get('/api/ws/future/basic/pricesystem/delete', {params: {id: id}}).then((response) => {
                 this.$message(response.data.message);
                 this.pageRequest();
               })
@@ -109,8 +111,11 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      axios.get('/api/ws/future/basic/pricesystem/getQuery').then((response) => {
+          this.formData = response.data;
+          util.copyValue(this.$route.query, this.formData);
+          this.pageRequest();
+      });
     }
   };
 </script>

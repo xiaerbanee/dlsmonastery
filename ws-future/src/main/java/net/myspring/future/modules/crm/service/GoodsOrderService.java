@@ -3,8 +3,11 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.basic.common.util.OfficeUtil;
+import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.JointLevelEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
@@ -38,6 +41,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -48,6 +52,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -276,7 +282,7 @@ public class GoodsOrderService {
         return goodsOrderDto;
     }
 
-    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType) {
+    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType,String shipType) {
         List<GoodsOrderDetailForm> goodsOrderDetailFormList  = Lists.newArrayList();
         Map<String,GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
         Map<String,Product> productMap = Maps.newHashMap();
@@ -284,6 +290,7 @@ public class GoodsOrderService {
             GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
             shopId = goodsOrder.getShopId();
             netType = goodsOrder.getNetType();
+            shipType = goodsOrder.getShipType();
 
             List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(id);
             if(CollectionUtil.isNotEmpty(goodsOrderDetailList)) {
@@ -299,14 +306,27 @@ public class GoodsOrderService {
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
             if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && netType.equals(product.getNetType())) {
-                GoodsOrderDetailForm goodsOrderDetailForm = new GoodsOrderDetailForm();
-                goodsOrderDetailForm.setProductId(pricesystemDetail.getProductId());
-                goodsOrderDetailForm.setPrice(pricesystemDetail.getPrice());
-                goodsOrderDetailFormList.add(goodsOrderDetailForm);
+                //是否允许下单
+                Boolean showNotAllow = true;
+                //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
+                if(ShipTypeEnum.总部发货.name().equals(shipType) || ShipTypeEnum.总部自提.name().equals(shipType)) {
+                    OfficeDto officeDto = OfficeUtil.findOne(redisTemplate,RequestUtils.getRequestEntity().getOfficeId());
+                    if(JointLevelEnum.二级.name().equals(officeDto.getJointLevel())) {
+                        showNotAllow = false;
+                    }
+                }
+                Boolean allowOrder = product.getAllowOrder() && product.getAllowBill();
+                if(showNotAllow || allowOrder) {
+                    GoodsOrderDetailForm goodsOrderDetailForm = new GoodsOrderDetailForm();
+                    goodsOrderDetailForm.setProductId(pricesystemDetail.getProductId());
+                    goodsOrderDetailForm.setPrice(pricesystemDetail.getPrice());
+                    goodsOrderDetailForm.setAllowOrder(allowOrder);
+                    goodsOrderDetailFormList.add(goodsOrderDetailForm);
+                }
             }
         }
         //办事处已订货数
-        List<GoodsOrderDetail> areaDetailList = goodsOrderDetailRepository.findByAreaIdAndCreatedDate(shop.getAreaId(), LocalDate.now(),LocalDate.now().plusDays(1));
+        List<GoodsOrderDetail> areaDetailList = goodsOrderDetailRepository.findByAreaIdAndCreatedDate(shop.getAreaId(), LocalDateTime.of(LocalDate.now(), LocalTime.MIN),LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MIN));
         Map<String,Integer>  areaDetailMap = Maps.newHashMap();
         for(GoodsOrderDetail goodsOrderDetail:areaDetailList) {
             if(!goodsOrderDetail.getGoodsOrderId().equals(id)) {

@@ -43,7 +43,7 @@
         <el-table-column prop="address" :label="$t('expressCompanyList.address')" sortable></el-table-column>
         <el-table-column prop="phone" :label="$t('expressCompanyList.phone')"sortable></el-table-column>
         <el-table-column prop="mobilePhone" :label="$t('expressCompanyList.mobilePhone')" sortable></el-table-column>
-        <el-table-column prop="contact" :label="$t('expressCompanyList.contact')" sortable></el-table-column>
+        <el-table-column prop="contator" :label="$t('expressCompanyList.contact')" sortable></el-table-column>
         <el-table-column prop="shouldGetRule" :label="$t('expressCompanyList.shouldGetRule')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('expressCompanyList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressCompanyList.operation')" width="140">

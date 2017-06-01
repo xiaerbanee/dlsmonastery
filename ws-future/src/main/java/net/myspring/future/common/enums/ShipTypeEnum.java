@@ -6,8 +6,8 @@ import net.myspring.util.collection.CollectionUtil;
 import java.util.List;
 
 public enum ShipTypeEnum {
-        总部发货, 总部自提, 地区发货,地区自提,代理发货,代理自提;
-        /*HEADER_SHIPPING,HEADER_FETCH,AREA_SHIPPING,AREA_FETCH,AGENCY_SHIPPING,AGENCY_FETCH*/
+        总部发货, 总部自提, 地区发货,地区自提;
+        /*HEADER_SHIPPING,HEADER_FETCH,AREA_SHIPPING,AREA_FETCH*/
 
         private static List<String> list= Lists.newArrayList();
 

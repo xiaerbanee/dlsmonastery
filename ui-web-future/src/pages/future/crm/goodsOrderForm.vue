@@ -54,9 +54,9 @@
         <el-input v-model="filterValue" @input="filterProducts" :placeholder="$t('shopAllotForm.selectTowKey')" style="width:200px;"></el-input>
         <el-table :data="filterDetailList" border stripe v-loading="pageLoading" style="margin-top:10px;">
           <el-table-column  prop = "productName" :label="$t('goodsOrderForm.productName')" ></el-table-column>
-          <el-table-column prop="productHasIme" :label="$t('goodsOrderForm.hasIme')" width="70">
+          <el-table-column prop="hasIme" :label="$t('goodsOrderForm.hasIme')" width="70">
             <template scope="scope">
-              <el-tag   :type="scope.row.productHasIme ? 'primary' : 'danger'">{{scope.row.productHasIme | bool2str}}</el-tag>
+              <el-tag   :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="price" :label="$t('goodsOrderForm.price')" width="100"></el-table-column>
@@ -65,9 +65,9 @@
               <input   type="text" v-model="scope.row.qty" class="el-input__inner"/>
             </template>
           </el-table-column>
-          <el-table-column prop="productAllowOrderAndBill" :label="$t('goodsOrderForm.allowOrderAndBill')">
+          <el-table-column prop="allowOrder" :label="$t('goodsOrderForm.allowOrder')">
             <template scope="scope">
-              <el-tag  :type="scope.row.productAllowOrderAndBill? 'primary' : 'danger'">{{scope.row.productAllowOrderAndBill | bool2str}}</el-tag>
+              <el-tag  :type="scope.row.allowOrder? 'primary' : 'danger'">{{scope.row.allowOrder | bool2str}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="areaQty" :label="$t('goodsOrderForm.areaQty')" ></el-table-column>
@@ -102,7 +102,7 @@
           netType:'',
           shipType:'',
           remarks:'',
-          goodsOrderDetailList:[],
+          goodsOrderDetailFormList:[],
         },
         rules: {
         }
@@ -116,7 +116,14 @@
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm,this.submitData);
-            this.submitData.goodsOrderDetailList = this.filterDetailList;
+            var  goodsOrderDetailFormList = new Array();
+            for(var index in this.filterDetailList) {
+              var filterDetail = this.filterDetailList[index];
+              if(util.isNotBlank(filterDetail.goodsOrderDetailId) || util.isNotBlank(filterDetail.qty)) {
+                goodsOrderDetailFormList.push(filterDetail);
+              }
+            }
+            this.submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
             axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
@@ -156,9 +163,9 @@
         });
         this.refreshDetailList();
       },refreshDetailList(){
-        if(this.inputForm.shopId && this.inputForm.netType) {
+        if(this.inputForm.shopId && this.inputForm.netType && this.inputForm.shipType) {
           this.pageLoading = true;
-          axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType}}).then((response)=>{
+          axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
             this.setGoodsOrderDetailList(response.data);
             this.pageLoading = false;
           });

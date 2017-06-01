@@ -727,7 +727,7 @@ export default {
     hasIme: "串码",
     price: "单价",
     qty: "订货数",
-    allowOrderAndBill: "允许向总公司订货",
+    allowOrder: "允许订货",
     areaQty: "办事处已订货",
     inputKey: "请输入关键字",
     inputWord: "请输入关键词",

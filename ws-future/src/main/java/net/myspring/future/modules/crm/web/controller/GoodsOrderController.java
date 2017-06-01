@@ -1,11 +1,14 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
+import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderImeService;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
@@ -71,7 +74,13 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "findGoodsOrderDetailFormList")
-    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType) {
-        return null;
+    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType,String shipType) {
+        return goodsOrderService.findGoodsOrderDetailFormList(id,shopId,netType,shipType);
+    }
+
+    @RequestMapping(value = "save")
+    public RestResponse save(GoodsOrderForm goodsOrderForm) {
+        goodsOrderService.save(goodsOrderForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 }

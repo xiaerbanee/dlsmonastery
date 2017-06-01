@@ -33,8 +33,8 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="scoreDate" :label="$t('reportScoreOfficeList.scoreDate')" sortable></el-table-column>
-        <el-table-column prop="office.name" :label="$t('reportScoreOfficeList.officeName')"  width="200"></el-table-column>
-        <el-table-column prop="area.name" :label="$t('reportScoreOfficeList.areaName')"  width="180"></el-table-column>
+        <el-table-column prop="officeName" :label="$t('reportScoreOfficeList.officeName')"  width="200"></el-table-column>
+        <el-table-column prop="areaName" :label="$t('reportScoreOfficeList.areaName')"  width="180"></el-table-column>
         <el-table-column prop="score" :label="$t('reportScoreOfficeList.score')"></el-table-column>
         <el-table-column prop="monthScore" :label="$t('reportScoreOfficeList.monthScore')"></el-table-column>
         <el-table-column prop="dateRank" :label="$t('reportScoreOfficeList.dateRank')"></el-table-column>
@@ -42,7 +42,7 @@
         <el-table-column prop="saleQty" :label="$t('reportScoreOfficeList.saleQty')"></el-table-column>
         <el-table-column prop="monthSaleQty" :label="$t('reportScoreOfficeList.monthSaleQty')"></el-table-column>
         <el-table-column prop="recentMonthSaleQty" :label="$t('reportScoreOfficeList.recentMonthSaleQty')"></el-table-column>
-        <el-table-column prop="office.point" :label="$t('reportScoreOfficeList.point')"></el-table-column>
+        <el-table-column prop="officePoint" :label="$t('reportScoreOfficeList.point')"></el-table-column>
         <el-table-column prop="monthSaleMoney"  :label="$t('reportScoreOfficeList.monthSaleMoney')"></el-table-column>
         <el-table-column prop="pointMonthSaleMoney" :label="$t('reportScoreOfficeList.pointMonthSaleMoney')" width="180"></el-table-column>
       </el-table>
@@ -55,10 +55,11 @@
     data() {
       return {
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
-          scoreDate:new Date(),
+          scoreDate:'',
           officeId:'',
           areaId:''
         },formLabel:{
@@ -78,9 +79,10 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("reportScoreOfficeList",this.formData);
-        this.formData.scoreDate = util.formatLocalDate(this.formData.scoreDate);
-        axios.get('/api/crm/reportScoreOffice',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("reportScoreOfficeList",this.submitData);
+        this.formData.scoreDate = util.formatLocalDate(this.submitData.scoreDate);
+        axios.get('/api/ws/future/crm/reportScoreOffice',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -100,9 +102,9 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -325;
-      axios.get('/api/crm/reportScoreOffice/getQuery').then((response)=>{
-        this.formProperty = response.data;
-      });
+     // axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response)=>{
+    //    this.formProperty = response.data;
+     // });
       this.pageRequest();
     }
   };
