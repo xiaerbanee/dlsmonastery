@@ -37,6 +37,7 @@ import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -193,5 +194,16 @@ public class DepotService {
 
     public List<DepotAccountDetailDto> depotAccountDetailList(DepotAccountQuery depotAccountQuery) {
         return null;
+    }
+
+    public void synArea(){
+        List<Depot> depotList=depotRepository.findAll();
+        List<DepotDto> depotDtoList=BeanUtil.map(depotList,DepotDto.class);
+        cacheUtils.initCacheInput(depotDtoList);
+        Map<String,DepotDto> depotDtoMap=CollectionUtil.extractToMap(depotDtoList,"id");
+        for(Depot depot:depotList){
+            depot.setAreaId(depotDtoMap.get(depot.getId()).getAreaId());
+            depotRepository.save(depot);
+        }
     }
 }
