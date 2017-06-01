@@ -52,10 +52,14 @@ util.getSort = function (column) {
   if (column.prop == null) {
     sort = "id,DESC";
   } else {
+    var order = "DESC";
+    if(column.order == "ascending") {
+      order = "ASC"
+    }
     if (column.sort != null) {
-      sort = column.sort + "," + column.order;
+      sort = column.sort + "," + order;
     } else {
-      sort = column.prop + "," + column.order;
+      sort = column.prop + "," + order;
     }
   }
   return sort

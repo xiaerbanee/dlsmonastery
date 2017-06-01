@@ -64,6 +64,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           createdDate:'',
           category:'',
           value:''

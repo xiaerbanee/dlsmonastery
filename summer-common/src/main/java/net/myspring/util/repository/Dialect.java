@@ -35,6 +35,6 @@ public abstract class Dialect {
 				}
 			}
 		}
-		return sort.toString();
+		return sb.toString();
 	}
 }
