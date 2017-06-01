@@ -9,14 +9,17 @@ import net.myspring.future.modules.basic.web.form.ShopAdTypeForm;
 import net.myspring.future.modules.basic.web.query.ShopAdTypeQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class ShopAdTypeService {
 
     @Autowired
@@ -29,17 +32,18 @@ public class ShopAdTypeService {
         return shopAdTypes;
     }
 
-    public ShopAdType findOne(String id) {
-        ShopAdType shopAdType = shopAdTypeRepository.findOne(id);
-        return shopAdType;
+    public ShopAdTypeDto findOne(String id) {
+        ShopAdTypeDto shopAdTypeDto = new ShopAdTypeDto();
+        if(StringUtils.isNotBlank(id)){
+            ShopAdType shopAdType = shopAdTypeRepository.findOne(id);
+            shopAdTypeDto = BeanUtil.map(shopAdType,ShopAdTypeDto.class);
+            cacheUtils.initCacheInput(shopAdTypeDto);
+        }
+        return shopAdTypeDto;
     }
 
     public ShopAdTypeForm getForm(ShopAdTypeForm shopAdTypeForm){
-        if(!shopAdTypeForm.isCreate()){
-            ShopAdType shopAdType=shopAdTypeRepository.findOne(shopAdTypeForm.getId());
-            shopAdTypeForm=BeanUtil.map(shopAdType,ShopAdTypeForm.class);
-            cacheUtils.initCacheInput(shopAdTypeForm);
-        }
+        shopAdTypeForm.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
         return shopAdTypeForm;
     }
 
@@ -66,7 +70,8 @@ public class ShopAdTypeService {
         shopAdTypeRepository.logicDelete(shopAdTypeForm.getId());
     }
 
-    public List<String> findTotalPriceTypeList() {
-        return TotalPriceTypeEnum.getValues();
+    public ShopAdTypeQuery getQuery(ShopAdTypeQuery shopAdTypeQuery) {
+        shopAdTypeQuery.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
+        return shopAdTypeQuery;
     }
 }
