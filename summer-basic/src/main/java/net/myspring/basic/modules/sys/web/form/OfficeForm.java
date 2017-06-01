@@ -73,16 +73,7 @@ public class OfficeForm extends BaseForm<Office> {
     private List<String> leaderNameList=Lists.newArrayList();
 
     public Integer getLevel() {
-        if (level == null && (parent!=null||StringUtils.isNotBlank(parentIds))) {
-            if(StringUtils.isNotBlank(parentIds)){
-                level=parentIds.length();
-            }else {
-                level=parent.getLevel()+1;
-            }
-        }else {
-            this.level=1;
-        }
-        return level;
+        return (getParentIds().split(CharConstant.COMMA)).length+1;
     }
 
     public void setLevel(Integer level) {

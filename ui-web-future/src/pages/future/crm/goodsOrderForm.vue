@@ -40,7 +40,7 @@
               <el-form-item :label="$t('goodsOrderForm.priceSystem')" prop="pricesystem">
                 {{shop.pricesystemName}}
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderForm.summary')" prop="summary">
+              <el-form-item :label="$t('goodsOrderForm.summary')" prop="summary" style="color:red;">
                 {{summary}}
               </el-form-item>
               <el-form-item>
@@ -62,7 +62,7 @@
           <el-table-column prop="price" :label="$t('goodsOrderForm.price')" width="100"></el-table-column>
           <el-table-column prop="qty" :label="$t('goodsOrderForm.qty')">
             <template scope="scope">
-              <input   type="text" v-model="scope.row.qty" class="el-input__inner"/>
+              <input  v-model="scope.row.qty" class="el-input__inner" @change="initSummary"/>
             </template>
           </el-table-column>
           <el-table-column prop="allowOrder" :label="$t('goodsOrderForm.allowOrder')">
@@ -163,18 +163,31 @@
         });
         this.refreshDetailList();
       },refreshDetailList(){
-        if(this.inputForm.shopId && this.inputForm.netType && this.inputForm.shipType) {
-          this.pageLoading = true;
-          axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
-            this.setGoodsOrderDetailList(response.data);
-            this.pageLoading = false;
-          });
-        }else{
-          this.setGoodsOrderDetailList([]);
+        if(this.isCreate ) {
+          if(this.inputForm.shopId && this.inputForm.netType && this.inputForm.shipType) {
+            this.pageLoading = true;
+            axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
+              this.setGoodsOrderDetailList(response.data);
+              this.pageLoading = false;
+            });
+          }else{
+            this.setGoodsOrderDetailList([]);
+          }
         }
       },setGoodsOrderDetailList(list){
         this.goodsOrderDetailList = list;
         this.filterProducts();
+      },initSummary() {
+        var totalQty = 0;
+        var totalAmount = 0;
+        for(var index in this.filterDetailList) {
+          var filterDetail = this.filterDetailList[index];
+          if(util.isNotBlank(filterDetail.qty)) {
+            totalQty  = totalQty + filterDetail.qty*1;
+            totalAmount = totalAmount + (filterDetail.qty*1)*(filterDetail.price*1);
+          }
+        }
+        this.summary = "总订货数为：" + totalQty + "，总价格为：" + totalAmount;
       }
     }, created(){
       axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -191,6 +204,7 @@
       if(!this.isCreate){
         axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList',{params: {id:this.$route.query.id}}).then((response)=>{
           this.setGoodsOrderDetailList(response.data);
+          this.initSummary();
         });
       }
     }
