@@ -36,10 +36,28 @@ public class OfficeForm extends BaseForm<Office> {
     private String officeRuleId;
     private List<String> leaderIdList=Lists.newArrayList();
     private List<String> officeTypeList=Lists.newArrayList();
+    private List<String> joinLevelList=Lists.newArrayList();
     private Integer level;
     private String parentIds;
     private Office parent;
     private String areaId;
+    private String jointLevel;
+
+    public List<String> getJoinLevelList() {
+        return joinLevelList;
+    }
+
+    public void setJoinLevelList(List<String> joinLevelList) {
+        this.joinLevelList = joinLevelList;
+    }
+
+    public String getJointLevel() {
+        return jointLevel;
+    }
+
+    public void setJointLevel(String jointLevel) {
+        this.jointLevel = jointLevel;
+    }
 
     public String getAreaId() {
         return areaId;

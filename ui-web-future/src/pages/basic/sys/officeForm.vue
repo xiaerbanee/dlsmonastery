@@ -29,6 +29,11 @@
                 <el-option v-for="item in inputProperty.jointTypeList" :key="item" :label="$t('JointTypeEnum.'+item)" :value="item"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="机构级别" prop="jointLevel">
+              <el-select v-model="inputForm.jointLevel" filterable>
+                <el-option v-for="item in inputProperty.jointLevelList" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('officeForm.point')" prop="point">
               <el-input v-model="inputForm.point"></el-input>
             </el-form-item>
@@ -93,6 +98,7 @@
           sort: '',
           officeIdStr:"",
           leaderIdList:"",
+          jointLevel:"",
         },
         rules: {
           name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
