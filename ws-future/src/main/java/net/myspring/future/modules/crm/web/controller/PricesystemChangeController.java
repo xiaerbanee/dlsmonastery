@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
@@ -30,9 +31,6 @@ public class PricesystemChangeController {
     @Autowired
     private PricesystemChangeService pricesystemChangeService;
 
-    @Autowired
-    private PricesystemService pricesystemService;
-
     @RequestMapping(method = RequestMethod.GET)
     public Page<PricesystemChangeDto> list(Pageable pageable,PricesystemChangeQuery pricesystemChangeQuery) {
         Page<PricesystemChangeDto> page=pricesystemChangeService.findPage(pageable,pricesystemChangeQuery);
@@ -41,9 +39,7 @@ public class PricesystemChangeController {
 
     @RequestMapping(value="getQuery")
     public PricesystemChangeQuery getQuery(PricesystemChangeQuery pricesystemChangeQuery){
-        pricesystemChangeQuery.setStatusList(pricesystemChangeService.findStatus());
-        pricesystemChangeQuery.setPricesystems(pricesystemService.findPricesystem());
-        return pricesystemChangeQuery;
+        return pricesystemChangeService.getQuery(pricesystemChangeQuery);
     }
 
     @RequestMapping(value="getForm")
@@ -54,19 +50,19 @@ public class PricesystemChangeController {
     @RequestMapping(value = "save")
     public RestResponse save(PricesystemChangeForm pricesystemChangeForm, BindingResult bindingResult) {
          pricesystemChangeService.save(pricesystemChangeForm);
-        return new RestResponse("保存成功",null );
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "audit")
-    public RestResponse audit(@RequestParam(value = "ids[]") String[] ids, Boolean pass){
-        pricesystemChangeService.audit(ids, pass);
-        return new RestResponse("通过成功",null);
+    @RequestMapping(value = "batchAudit")
+    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids, Boolean pass){
+        pricesystemChangeService.batchAudit(ids,pass);
+        return new RestResponse("批量审核成功",ResponseCodeEnum.audited.name());
     }
 
-    @RequestMapping(value="auditOperation")
-    public RestResponse auditOperation(String id,Boolean pass){
-        pricesystemChangeService.auditOperation(id, pass);
-        return new RestResponse("设置成功",null);
+    @RequestMapping(value="audit")
+    public RestResponse audit(String id,Boolean pass){
+        pricesystemChangeService.audit(id, pass);
+        return new RestResponse("审核成功",ResponseCodeEnum.audited.name());
     }
 
     @RequestMapping(value = "getPricesystemDetail")

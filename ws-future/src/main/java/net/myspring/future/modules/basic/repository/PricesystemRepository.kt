@@ -28,10 +28,10 @@ interface PricesystemRepository : BaseRepository<Pricesystem,String>,Pricesystem
     fun save(pricesystem: Pricesystem): Pricesystem
 
     @Query("""
-        SELECT t1.*
-        FROM crm_pricesystem t1
+        SELECT t1
+        FROM #{#entityName} t1
         where t1.enabled=1
-    """, nativeQuery = true)
+    """)
     fun findAllEnabled(): MutableList<Pricesystem>
 
     @Query("""
@@ -41,13 +41,6 @@ interface PricesystemRepository : BaseRepository<Pricesystem,String>,Pricesystem
         and t1.id in ?1
     """, nativeQuery = true)
     fun findByIds(ids: MutableList<String>): MutableList<Pricesystem>
-
-    @Query("""
-        SELECT t1.*
-        FROM crm_pricesystem t1
-        where t1.enabled=1
-    """, nativeQuery = true)
-    fun findPricesystem(): MutableList<Pricesystem>
 }
 
 interface PricesystemRepositoryCustom{
