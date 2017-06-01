@@ -8,7 +8,6 @@ import net.myspring.future.modules.basic.dto.DepotDto
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery
 import net.myspring.future.modules.basic.web.query.DepotQuery
 import net.myspring.future.modules.crm.dto.BankInDto
-import net.myspring.future.modules.crm.dto.StoreAllotDto
 import net.myspring.future.modules.layout.dto.ShopDepositDto
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -33,16 +32,12 @@ import javax.persistence.EntityManager
  */
 @CacheConfig(cacheNames = arrayOf("depots"))
 interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
-
     @Cacheable
     override fun findOne(id: String): Depot
-
-    override fun findAll(): MutableList<Depot>
-
     @CachePut(key = "#p0.id")
     fun save(depot: Depot): Depot
 
-
+    override fun findAll(): MutableList<Depot>
 
     fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Depot>
 
@@ -62,13 +57,13 @@ interface DepotRepositoryCustom{
 
     fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto>
 
-    fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,accountTaxPermitted: Boolean):Page<DepotAccountDto>
+    fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,boolean: Boolean):Page<DepotAccountDto>
 
     fun findByAccountId(accountId: String): MutableList<Depot>
 }
 
 @Suppress("UNCHECKED_CAST")
-class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
     override fun findByAccountId(accountId: String): MutableList<Depot> {
         return namedParameterJdbcTemplate.query("""
         SELECT
@@ -99,30 +94,29 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         """)
         if (depotShopQuery.clientIsNull != null) {
             if(depotShopQuery.clientIsNull){
-                sb.append("""  and t1.client_id is NULL """)
+                sb.append("  and t1.client_id is NULL ")
             }else{
-                sb.append("""  and t1.client_id is NOT NULL """)
+                sb.append("  and t1.client_id is NOT NULL ");
             }
         }
         if (depotShopQuery.adShop != null) {
             if(depotShopQuery.adShop){
-                sb.append("""  and t1.ad_shop is NULL """)
+                sb.append("  and t1.ad_shop is NULL ")
             }else{
-                sb.append("""  and t1.ad_shop is NOT NULL """)
+                sb.append("  and t1.ad_shop is NOT NULL ")
             }
         }
         if (depotShopQuery.popShop != null) {
             if(depotShopQuery.popShop){
-                sb.append("""  and t1.pop_shop is NULL """)
+                sb.append("  and t1.pop_shop is NULL ")
             }else{
-                sb.append("""  and t1.pop_shop is NOT NULL """)
+                sb.append("  and t1.pop_shop is NOT NULL ")
             }
         }
         if (StringUtils.isNotEmpty(depotShopQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
-
-
+        sb.append(" limit 0,20")
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotShopQuery), BeanPropertyRowMapper(DepotDto::class.java))
 
     }
@@ -173,7 +167,6 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
     }
 
     override fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,accountTaxPermitted: Boolean):Page<DepotAccountDto>{
-
         val sb = StringBuffer()
         sb.append("""
         select

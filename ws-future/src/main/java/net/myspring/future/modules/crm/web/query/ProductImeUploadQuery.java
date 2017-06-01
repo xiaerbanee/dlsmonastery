@@ -14,7 +14,7 @@ public class ProductImeUploadQuery extends BaseQuery{
 
     private String month;
     private String imeOrMeids;
-    private String shopName;
+    private String shopId;
     private String officeId;
     private String createdDateRange;
 
@@ -46,12 +46,12 @@ public class ProductImeUploadQuery extends BaseQuery{
         this.imeOrMeids = imeOrMeids;
     }
 
-    public String getShopName() {
-        return shopName;
+    public String getShopId() {
+        return shopId;
     }
 
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
     }
 
     public String getOfficeId() {
