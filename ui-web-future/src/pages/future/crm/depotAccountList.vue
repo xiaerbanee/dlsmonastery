@@ -41,9 +41,9 @@
         <el-table-column prop="xxbzj" :label="$t('depotAccountList.xxbzj')"></el-table-column>
         <el-table-column prop="scbzj" :label="$t('depotAccountList.scbzj')"></el-table-column>
         <el-table-column prop="ysjyj" :label="$t('depotAccountList.ysjyj')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('depotAccountList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('depotAccountList.operation')" >
           <template scope="scope">
-            <el-button size="small"  type="text"  v-permit="'crm:depot:depotAccountData'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('depotAccountList.detail')}}</el-button>
+            <div class="action" v-permit="'crm:depot:depotAccountData'"><el-button size="small"  @click.native="itemAction(scope.row.id, 'detail')">{{$t('depotAccountList.detail')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

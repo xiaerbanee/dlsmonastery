@@ -95,10 +95,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="remarks" :label="$t('productImeList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('productImeList.operation')" width="70">
+        <el-table-column fixed="right" :label="$t('productImeList.operation')" >
           <template scope="scope">
-            <el-button size="small" type="text" v-permit="'crm:productIme:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('productImeList.detail')}}</el-button>
-
+            <div class="action" v-permit="'crm:productIme:view'"><el-button size="small"  @click.native="itemAction(scope.row.id, 'detail')">{{$t('productImeList.detail')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
