@@ -128,7 +128,7 @@
         },
         formLabelWidth: '120px',
         formVisible: false,
-        selects:new Array(),
+        selects:[],
         submitDisabled:false,
 
       };
@@ -159,13 +159,13 @@
       },itemAdd(){
         this.$router.push({ name: 'bankInForm'})
       },itemAction:function(id, action){
-        if(action=="edit") {
+        if(action==="edit") {
           this.$router.push({ name: 'bankInForm', query: { id: id }})
-        }else if(action=="detail"){
+        }else if(action==="detail"){
           this.$router.push({ name: 'bankInDetail', query: { id: id, action:action}})
-        }else if(action=="audit"){
+        }else if(action==="audit"){
           this.$router.push({ name: 'bankInDetail', query: { id: id, action:action}})
-        }else if(action=="delete"){
+        }else if(action==="delete"){
 
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get("/api/ws/future/crm/bankIn/delete",{params:{id:id}}).then((response)=>{
@@ -209,7 +209,7 @@
         }).catch(()=>{});
       }
     },created () {
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/bankIn/getQuery').then((response) =>{
         that.formData=response.data;

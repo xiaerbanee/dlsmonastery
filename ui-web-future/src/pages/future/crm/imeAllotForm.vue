@@ -29,10 +29,10 @@
             <template>
               <el-table :data="productImeList" style="width: 100%" border>
                 <el-table-column prop="ime" :label="$t('imeAllotForm.imeStr')"></el-table-column>
-                <el-table-column prop="depotName":label="$t('imeAllotForm.depotName')"></el-table-column>
+                <el-table-column prop="depotName" :label="$t('imeAllotForm.depotName')"></el-table-column>
                 <el-table-column prop="productName" :label="$t('imeAllotForm.productName')"></el-table-column>
                 <el-table-column prop="retailDate" :label="$t('imeAllotForm.retailDate')"></el-table-column>
-                <el-table-column prop="productImeSaleEmployeeName":label="$t('imeAllotForm.saleCreatedFullName')"></el-table-column>
+                <el-table-column prop="productImeSaleEmployeeName" :label="$t('imeAllotForm.saleCreatedFullName')"></el-table-column>
                 <el-table-column prop="productImeSaleCreatedDate" :label="$t('imeAllotForm.saleCreatedDate')"></el-table-column>
                 <el-table-column prop="productImeSaleShopName" :label="$t('imeAllotForm.uploadShopName')"></el-table-column>
               </el-table>
@@ -44,14 +44,11 @@
   </div>
 </template>
 <script>
+
   import depotSelect from 'components/future/depot-select'
-
-
   export default{
     components:{
       depotSelect,
-
-
     },
       data(){
           return{
@@ -75,12 +72,11 @@
       },
       methods:{
         formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-                this.initSubmitDataBeforeSubmit();
+              this.submitDisabled = true;
+              this.initSubmitDataBeforeSubmit();
               axios.post('/api/ws/future/crm/imeAllot/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
@@ -91,11 +87,11 @@
                     this.$router.push({name: 'imeAllotList', query: util.getQuery("imeAllotList")})
                   }
                 }
-              }).catch(function () {
+              }).catch(()=>{
                 this.submitDisabled = false;
               });
             }
-          })
+          });
         }, initSubmitDataBeforeSubmit(){
           this.submitData.imeStr = this.imeStr;
           this.submitData.toDepotId = this.imeAllot.toDepotId;
@@ -124,9 +120,9 @@
           });
         }
       },created(){
-      axios.get('/api/ws/future/crm/imeAllot/findDto').then((response)=>{
-        this.imeAllot=response.data;
-      });
-    }
+        axios.get('/api/ws/future/crm/imeAllot/findDto').then((response)=>{
+          this.imeAllot=response.data;
+        });
+      }
   }
 </script>

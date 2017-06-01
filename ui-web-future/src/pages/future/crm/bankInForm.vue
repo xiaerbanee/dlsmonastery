@@ -46,6 +46,7 @@
     },
     data(){
           return{
+            isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputProperty:{},
             bankIn:{},
@@ -70,46 +71,35 @@
       methods:{
         formSubmit(){
 
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              this.initSubmitDataBeforeSubmit();
+              this.submitDisabled = true;
+
+              util.copyValue(this.bankIn, this.submitData);
               axios.post('/api/ws/future/crm/bankIn/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                if(this.inputForm.create){
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
-                  this.$router.push({name:'bankInList',query:util.getQuery("bankInList")})
+                this.submitDisabled = false;
+                if(response.data.success) {
+                  if (this.isCreate) {
+                    form.resetFields();
+                  } else {
+                    this.$router.push({name: 'bankInList', query: util.getQuery("bankInList")})
+                  }
                 }
-              }).catch(function () {
+              }).catch( () => {
                 this.submitDisabled = false;
               });
-            }else{
-              this.submitDisabled = false;
             }
           })
-        }, initSubmitDataBeforeSubmit(){
-          this.submitData.id = this.$route.query.id;
-          this.submitData.shopId = this.bankIn.shopId;
-          this.submitData.type = this.bankIn.type;
-          this.submitData.bankId = this.bankIn.bankId;
-          this.submitData.inputDate = this.bankIn.inputDate;
-          this.submitData.amount = this.bankIn.amount;
-          this.submitData.serialNumber = this.bankIn.serialNumber;
-          this.submitData.remarks = this.bankIn.remarks;
         }
       },created(){
-
         axios.get('/api/ws/future/crm/bankIn/getForm').then((response)=>{
           this.inputProperty = response.data;
-        })
-
-      axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.bankIn = response.data;
-      });
-
+        });
+        axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.bankIn = response.data;
+        });
     }
-    }
+  }
 </script>
