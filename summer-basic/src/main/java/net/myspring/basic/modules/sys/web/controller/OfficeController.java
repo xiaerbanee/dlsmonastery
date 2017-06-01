@@ -11,6 +11,7 @@ import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.enums.JointLevelEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
@@ -101,6 +102,7 @@ public class OfficeController {
         officeForm.setOfficeRuleList(officeService.findOfficeRuleList());
         officeForm.setJointTypeList(JointTypeEnum.getList());
         officeForm.setOfficeTypeList(OfficeTypeEnum.getList());
+        officeForm.setJoinLevelList(JointLevelEnum.getList());
         return officeForm;
     }
 
