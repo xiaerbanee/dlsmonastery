@@ -56,8 +56,8 @@ util.getSort = function (column) {
     if(column.order == "ascending") {
       order = "ASC"
     }
-    if (column.sort != null) {
-      sort = column.sort + "," + order;
+    if (column.column.columnKey != null) {
+      sort = column.column.columnKey + "," + order;
     } else {
       sort = column.prop + "," + order;
     }
