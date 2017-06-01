@@ -17,14 +17,12 @@ import java.util.List;
  */
 public class PricesystemChangeQuery extends BaseQuery {
 
-    private String productName;
+    private String productId;
     private String createdDate;
     private String status;
     private String pricesystemId;
     private List<String> statusList= Lists.newArrayList();
-//    private LocalDate createdDateStart;
-//    private LocalDate createdDateEnd;
-    private List<Pricesystem> pricesystems=Lists.newArrayList();
+    private List<PricesystemDto> pricesystems=Lists.newArrayList();
 
     public String getPricesystemId() {
         return pricesystemId;
@@ -34,12 +32,12 @@ public class PricesystemChangeQuery extends BaseQuery {
         this.pricesystemId = pricesystemId;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getCreatedDate() {
@@ -82,11 +80,11 @@ public class PricesystemChangeQuery extends BaseQuery {
         }
     }
 
-    public List<Pricesystem> getPricesystems() {
+    public List<PricesystemDto> getPricesystems() {
         return pricesystems;
     }
 
-    public void setPricesystems(List<Pricesystem> pricesystems) {
+    public void setPricesystems(List<PricesystemDto> pricesystems) {
         this.pricesystems = pricesystems;
     }
 }

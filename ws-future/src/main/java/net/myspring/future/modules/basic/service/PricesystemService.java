@@ -142,7 +142,4 @@ public class PricesystemService {
         pricesystemForm.setPricesystemDetailList(pricesystemDetailFormList);
     }
 
-    public List<Pricesystem> findPricesystem(){
-        return pricesystemRepository.findPricesystem();
-    }
 }

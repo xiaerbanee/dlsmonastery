@@ -1367,6 +1367,8 @@ export default {
     pleaseInputImes:'请输入串码',
   },
   productImeUploadList: {
+    upload:"上报",
+    back:"退回",
     productImeUploadList: "串码上报",
     imeOrMeidsMultiLine:'可输入多行',
     imeOrMeids:'ime或meid(多行)',

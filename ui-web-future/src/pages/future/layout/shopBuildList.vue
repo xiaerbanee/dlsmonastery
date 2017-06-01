@@ -42,7 +42,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="exportData" v-permit="'crm:shopBuild:view'" icon="upload">{{$t('shopBuildList.export')}}</el-button>
+          <el-button type="primary" @click="exportData()" v-permit="'crm:shopBuild:view'" icon="upload">{{$t('shopBuildList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('shopBuildList.sure')}}</el-button>
         </div>
       </el-dialog>
@@ -89,7 +89,9 @@
       return {
         pageLoading: false,
         page:{},
-        formData:{},
+        formData:{
+          auditType:1,
+        },
         submitData:{
           page:0,
           size:25,
@@ -186,7 +188,7 @@
         that.pageHeight = window.outerHeight -320;
         axios.get('/api/ws/future/layout/shopBuild/getQuery',{params:this.formData}).then((response) =>{
            that.formData = response.data;
-           util.copyValue(this.$route.query,that.formData);
+           util.copyValue(that.$route.query,that.formData);
            that.pageRequest();
         });
     }
