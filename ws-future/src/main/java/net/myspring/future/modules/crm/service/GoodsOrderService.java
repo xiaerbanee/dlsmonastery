@@ -307,21 +307,20 @@ public class GoodsOrderService {
             Product product = productMap.get(pricesystemDetail.getProductId());
             if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && netType.equals(product.getNetType())) {
                 //是否允许下单
-                Boolean allowOrder = true;
-                if(!product.getEnabled()) {
-                    allowOrder = false;
-                }
+                Boolean showNotAllow = true;
                 //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
                 if(ShipTypeEnum.总部发货.name().equals(shipType) || ShipTypeEnum.总部自提.name().equals(shipType)) {
                     OfficeDto officeDto = OfficeUtil.findOne(redisTemplate,RequestUtils.getRequestEntity().getOfficeId());
                     if(JointLevelEnum.二级.name().equals(officeDto.getJointLevel())) {
-                        allowOrder = product.getAllowOrder() && product.getAllowBill();
+                        showNotAllow = false;
                     }
                 }
-                if(allowOrder) {
+                Boolean allowOrder = product.getAllowOrder() && product.getAllowBill();
+                if(showNotAllow || allowOrder) {
                     GoodsOrderDetailForm goodsOrderDetailForm = new GoodsOrderDetailForm();
                     goodsOrderDetailForm.setProductId(pricesystemDetail.getProductId());
                     goodsOrderDetailForm.setPrice(pricesystemDetail.getPrice());
+                    goodsOrderDetailForm.setAllowOrder(allowOrder);
                     goodsOrderDetailFormList.add(goodsOrderDetailForm);
                 }
             }
