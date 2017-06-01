@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
+import net.myspring.future.modules.basic.domain.Depot
 import net.myspring.future.modules.basic.domain.ExpressCompany
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery
@@ -17,7 +18,9 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 import javax.persistence.EntityManager
+import kotlin.collections.HashMap
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -50,15 +53,32 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
 
     fun findByExpressType(expressType: String): MutableList<ExpressCompany>
 
-//    fun findByNameLike(@Param("companyId") companyId: String, @Param("name") name: String): MutableList<ExpressCompanyDto>
 
 }
 
 interface ExpressCompanyRepositoryCustom{
     fun findPage(pageable: Pageable, expressCompanyQuery: ExpressCompanyQuery): Page<ExpressCompanyDto>
+
+
+    fun findByNameLike(companyId: String, name: String): MutableList<ExpressCompanyDto>
 }
 
 class ExpressCompanyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ExpressCompanyRepositoryCustom{
+    override fun findByNameLike(companyId: String, name: String): MutableList<ExpressCompanyDto> {
+        val params = HashMap<String, Any>()
+        params.put("companyId", companyId)
+        params.put("name", name)
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t1.*
+            FROM
+                crm_express_company t1
+            WHERE
+                t1.enabled=1
+                AND t1.company_id = :companyId
+                AND t1.name LIKE CONCAT('%',:name,'%')
+          """, params, BeanPropertyRowMapper(ExpressCompanyDto::class.java))
+    }
 
     override fun findPage(pageable: Pageable, expressCompanyQuery: ExpressCompanyQuery): Page<ExpressCompanyDto> {
         val sb = StringBuilder("""

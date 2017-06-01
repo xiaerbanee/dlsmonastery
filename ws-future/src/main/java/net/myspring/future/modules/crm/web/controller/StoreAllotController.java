@@ -11,7 +11,8 @@ import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
-import net.myspring.future.modules.crm.service.*;
+import net.myspring.future.modules.crm.service.StoreAllotDetailService;
+import net.myspring.future.modules.crm.service.StoreAllotService;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.util.text.StringUtils;
@@ -31,20 +32,10 @@ public class StoreAllotController {
 
     @Autowired
     private StoreAllotService storeAllotService;
-
     @Autowired
     private ExpressCompanyService expressCompanyService;
-
     @Autowired
     private StoreAllotDetailService storeAllotDetailService;
-
-    @Autowired
-    private StoreAllotImeService storeAllotImeService;
-    @Autowired
-    private ExpressOrderService expressOrderService;
-
-    @Autowired
-    private GoodsOrderService goodsOrderService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<StoreAllotDto> list(Pageable pageable, StoreAllotQuery storeAllotQuery){

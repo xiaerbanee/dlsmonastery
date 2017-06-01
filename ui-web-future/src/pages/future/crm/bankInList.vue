@@ -72,12 +72,12 @@
         <el-table-column prop="outCode" :label="$t('bankInList.outCode')"></el-table-column>
         <el-table-column prop="processStatus" :label="$t('bankInList.processStatus')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('bankInList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('bankInList.operation')" width="100">
+        <el-table-column fixed="right" :label="$t('bankInList.operation')" width="150">
           <template scope="scope">
-            <el-button size="small"  type="text"  v-permit="'crm:bankIn:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('bankInList.detail')}}</el-button>
-            <el-button size="small"  type="text" v-if="scope.row.auditable"   v-permit="'crm:bankIn:audit'" @click.native="itemAction(scope.row.id, 'audit')">{{$t('bankInList.audit')}}</el-button>
-            <el-button size="small"   type="text"  v-if="scope.row.editable"   v-permit="'crm:bankIn:edit'" @click.native="itemAction(scope.row.id, 'edit')">{{$t('bankInList.edit')}}</el-button>
-             <el-button size="small"  type="text"   v-if="scope.row.editable" v-permit="'crm:bankIn:delete'" @click.native="itemAction(scope.row.id, 'delete')">{{$t('bankInList.delete')}}</el-button>
+            <div class="action"><el-button size="small"  v-permit="'crm:bankIn:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('bankInList.detail')}}</el-button></div>
+            <div class="action"><el-button size="small"  v-if="scope.row.auditable"   v-permit="'crm:bankIn:audit'" @click.native="itemAction(scope.row.id, 'audit')">{{$t('bankInList.audit')}}</el-button></div>
+            <div class="action"><el-button size="small"  v-if="scope.row.editable"   v-permit="'crm:bankIn:edit'" @click.native="itemAction(scope.row.id, 'edit')">{{$t('bankInList.edit')}}</el-button></div>
+            <div class="action"><el-button size="small"  v-if="scope.row.editable" v-permit="'crm:bankIn:delete'" @click.native="itemAction(scope.row.id, 'delete')">{{$t('bankInList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

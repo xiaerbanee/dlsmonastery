@@ -55,15 +55,12 @@ interface ProductImeSaleRepository : BaseRepository<ProductImeSale, String>, Pro
 interface ProductImeSaleRepositoryCustom{
     fun findPage(pageable: Pageable, productImeSaleQuery: ProductImeSaleQuery): Page<ProductImeSaleDto>
 
-    fun findDto(id: String?): ProductImeSaleDto?
+    fun findDto(id: String): ProductImeSaleDto
 }
 
 class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeSaleRepositoryCustom {
-    override fun findDto(id: String?): ProductImeSaleDto? {
-        if(id == null){
-            return null
-        }
-        val  result = namedParameterJdbcTemplate.query("""
+    override fun findDto(id: String): ProductImeSaleDto {
+        return namedParameterJdbcTemplate.queryForObject("""
         SELECT
             ime.ime productImeIme,
             ime.meid productImeMeid,
@@ -79,11 +76,7 @@ class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbc
         AND t1.product_ime_id = ime.id
         AND t1.shop_id = depot.id
                 """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ProductImeSaleDto::class.java));
-        if(result!=null && result.size > 0){
-            return result[0]
-        }else {
-            return null
-        }
+
     }
 
     override fun findPage(pageable: Pageable, productImeSaleQuery: ProductImeSaleQuery): Page<ProductImeSaleDto> {

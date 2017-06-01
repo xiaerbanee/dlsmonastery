@@ -62,12 +62,11 @@ public class ProductTypeController {
 
     @RequestMapping(value = "findDto")
     public ProductTypeDto findDto(String id){
-        ProductTypeDto result = productTypeService.findDto(id);
-        if(result == null){
-            result = new ProductTypeDto();
+        if(StringUtils.isBlank(id)){
+            return new ProductTypeDto();
         }
+        return productTypeService.findDto(id);
 
-        return result;
     }
 
 

@@ -11,6 +11,7 @@ import net.myspring.future.modules.crm.service.BankInService;
 import net.myspring.future.modules.crm.web.form.BankInAuditForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +36,7 @@ public class BankInController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<BankInDto> list(Pageable pageable, BankInQuery bankInQuery){
-        Page<BankInDto> page = bankInService.findPage(pageable, bankInQuery);
-        return page;
+        return bankInService.findPage(pageable, bankInQuery);
     }
 
     @RequestMapping(value = "getQuery")
@@ -87,12 +88,10 @@ public class BankInController {
 
     @RequestMapping(value = "findDto")
     public BankInDto findDto(String id ){
-        BankInDto result = bankInService.findDto(id);
-        if(result == null){
-            result = new BankInDto();
+        if(StringUtils.isBlank(id)){
+            return new BankInDto();
         }
-        return result;
-
+        return bankInService.findDto(id);
     }
 
 

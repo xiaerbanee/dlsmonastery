@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:express:edit'">{{$t('expressList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:express:view'">{{$t('expressList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData"  v-permit="'crm:express:view'">{{$t('expressList.export')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('expressList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -136,6 +137,13 @@
             this.pageRequest();
           })
         }
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/crm/express/export',{params:this.submitData}).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});
+
       }
     },created () {
       var that = this;

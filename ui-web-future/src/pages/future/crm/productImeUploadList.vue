@@ -88,7 +88,7 @@
           month:{label:this.$t('productImeUploadList.month')},
         },
 
-        selects:new Array(),
+        selects:[],
         formLabelWidth: '120px',
         formVisible: false,
 
@@ -135,7 +135,7 @@
         util.confirmBeforeBatchPass(this).then(() => {
           this.submitDisabled = true;
           this.pageLoading = true;
-          axios.get('/api/ws/future/crm/productImeUpload/audit',{params:{ids:this.selects, pass:'1'}}).then((response) =>{
+          axios.get('/api/ws/future/crm/productImeUpload/batchAudit',{params:{ids:this.selects, pass:true}}).then((response) =>{
             this.$message(response.data.message);
             this.pageLoading = false;
             this.submitDisabled = false;

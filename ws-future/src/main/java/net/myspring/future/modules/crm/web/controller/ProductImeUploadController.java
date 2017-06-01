@@ -26,10 +26,8 @@ public class ProductImeUploadController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProductImeUploadDto> list(Pageable pageable, ProductImeUploadQuery productImeUploadQuery){
-        Page<ProductImeUploadDto> page = productImeUploadService.findPage(pageable, productImeUploadQuery);
-        return page;
+        return productImeUploadService.findPage(pageable, productImeUploadQuery);
     }
-
 
     @RequestMapping(value = "save")
     public String save(ProductImeUpload productImeUpload, BindingResult bindingResult) {
@@ -46,8 +44,8 @@ public class ProductImeUploadController {
         return null;
     }
 
-    @RequestMapping(value = "audit")
-    public RestResponse audit(@RequestParam(value = "ids[]") String[] ids,String pass){
+    @RequestMapping(value = "batchAudit")
+    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids,boolean pass){
 
         productImeUploadService.batchAudit(ids, pass);
         return new RestResponse("批量审核成功", ResponseCodeEnum.audited.name());

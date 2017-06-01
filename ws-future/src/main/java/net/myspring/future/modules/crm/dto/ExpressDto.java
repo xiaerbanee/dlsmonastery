@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 public class ExpressDto extends DataDto<Express> {
 
 
-    private String code;
 
     private String expressOrderExpressCompanyId;
     @CacheInput(inputKey = "expressCompanies",inputInstance = "expressOrderExpressCompanyId",outputInstance = "name")
@@ -25,9 +24,17 @@ public class ExpressDto extends DataDto<Express> {
     private String expressOrderToDepotId;
     @CacheInput(inputKey = "depots",inputInstance = "expressOrderToDepotId",outputInstance = "name")
     private String expressOrderToDepotName;
+    private String expressOrderToDepotAreaId;
+    @CacheInput(inputKey = "offices",inputInstance = "expressOrderToDepotAreaId",outputInstance = "name")
+    private String expressOrderToDepotAreaName;
+
     private String expressOrderContator;
     private String expressOrderMobilePhone;
     private String expressOrderAddress;
+    private Integer expressOrderTotalQty;
+
+
+    private String code;
     private BigDecimal weight;
     private Integer qty;
     private BigDecimal shouldPay;
@@ -35,6 +42,30 @@ public class ExpressDto extends DataDto<Express> {
 
     private String tracking;
     private String expressOrderId;
+
+    public String getExpressOrderToDepotAreaId() {
+        return expressOrderToDepotAreaId;
+    }
+
+    public void setExpressOrderToDepotAreaId(String expressOrderToDepotAreaId) {
+        this.expressOrderToDepotAreaId = expressOrderToDepotAreaId;
+    }
+
+    public String getExpressOrderToDepotAreaName() {
+        return expressOrderToDepotAreaName;
+    }
+
+    public void setExpressOrderToDepotAreaName(String expressOrderToDepotAreaName) {
+        this.expressOrderToDepotAreaName = expressOrderToDepotAreaName;
+    }
+
+    public Integer getExpressOrderTotalQty() {
+        return expressOrderTotalQty;
+    }
+
+    public void setExpressOrderTotalQty(Integer expressOrderTotalQty) {
+        this.expressOrderTotalQty = expressOrderTotalQty;
+    }
 
     public String getTracking() {
         return tracking;

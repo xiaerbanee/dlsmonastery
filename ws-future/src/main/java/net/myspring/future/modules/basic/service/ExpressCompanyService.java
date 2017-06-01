@@ -1,7 +1,10 @@
 package net.myspring.future.modules.basic.service;
 
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.repository.ExpressCompanyRepository;
@@ -9,9 +12,11 @@ import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +30,13 @@ public class ExpressCompanyService {
     private ExpressCompanyRepository expressCompanyRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
-
-    public ExpressCompany findOne(String id){
-        ExpressCompany expressCompany=expressCompanyRepository.findOne(id);
-        return expressCompany;
+    public ExpressCompanyDto findDto(String id){
+        ExpressCompanyDto expressCompanyDto = BeanUtil.map(expressCompanyRepository.findOne(id), ExpressCompanyDto.class);
+        cacheUtils.initCacheInput(expressCompanyDto);
+        return expressCompanyDto;
     }
 
     public ExpressCompanyForm getForm(ExpressCompanyForm expressCompanyForm){
@@ -39,11 +46,6 @@ public class ExpressCompanyService {
             cacheUtils.initCacheInput(expressCompanyForm);
         }
         return expressCompanyForm;
-    }
-
-    public List<ExpressCompany> findByExpressType(String type){
-        List<ExpressCompany> expressCompanyList=expressCompanyRepository.findByExpressType(type);
-        return expressCompanyList;
     }
 
     public List<ExpressCompany> findAll(){
@@ -57,8 +59,8 @@ public class ExpressCompanyService {
         return page;
     }
 
-    public void delete(ExpressCompanyForm expressCompanyForm) {
-        expressCompanyRepository.logicDelete(expressCompanyForm.getId());
+    public void delete(String id) {
+        expressCompanyRepository.logicDelete(id);
     }
 
     public ExpressCompany save(ExpressCompanyForm expressCompanyForm){
@@ -74,25 +76,16 @@ public class ExpressCompanyService {
         return expressCompany;
     }
 
-    public List<String> findExpressTypeList() {
-        return ExpressCompanyTypeEnum.getList();
-    }
-
     public List<ExpressCompanyDto> findByNameLike(String name) {
-        //TODO 需要重写该方法
-        return null;
-        //return expressCompanyRepository.findByNameLike(RequestUtils.getCompanyId(), name);
+        List<ExpressCompanyDto> result = expressCompanyRepository.findByNameLike(RequestUtils.getCompanyId(), name);
+        cacheUtils.initCacheInput(result);
+        return result;
     }
 
     public String getDefaultExpressCompanyId() {
-        //TODO default expressCompanyID
-//        String code = Global.getCompanyConfig(AccountUtils.getCompany().getId(), CompanyConfig.CompanyConfigCode.DEFAULT_EXPRESS_COMPANY_ID.getCode());
-//        if (StringUtils.isNotBlank(code)) {
-//            ExpressCompany expressCompany = expressCompanyDao.findOne(Long.valueOf(code));
-//            storeAllotForm.setExpressCompanyId( expressCompanyService.getDefaultExpressCompanyId());
-//        }
+        String defaultExpressCompanyId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue();
+        return StringUtils.trimToNull(defaultExpressCompanyId);
 
-        return null;
     }
 
 }

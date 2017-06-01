@@ -120,11 +120,8 @@ public class ProductTypeService {
     public ProductTypeDto findDto(String id) {
 
         ProductTypeDto result = productTypeRepository.findDto(id);
-        if(result !=null){
-            cacheUtils.initCacheInput(result);
-        }
+        cacheUtils.initCacheInput(result);
         return result;
-
     }
 
     public String export(ProductTypeQuery productTypeQuery) {

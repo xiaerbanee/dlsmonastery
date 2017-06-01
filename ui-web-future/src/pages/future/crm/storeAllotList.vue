@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:storeAllot:edit'">{{$t('storeAllotList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.filter')}}</el-button>
-        <el-button type="primary" @click="exportData" icon="search" v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.export')}}</el-button>
+        <el-button type="primary" @click="exportData"  v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.export')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('storeAllotList.filter')" v-model="formVisible" size="small" class="search-form">
@@ -59,16 +59,13 @@
         <el-table-column prop="lastModifiedByName" :label="$t('storeAllotList.lastModifiedBy')" width=120></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('storeAllotList.lastModifiedDate')" sortable width=140></el-table-column>
         <el-table-column prop="remarks" :label="$t('storeAllotList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('storeAllotList.operation')" width="120">
+        <el-table-column fixed="right" :label="$t('storeAllotList.operation')" width="180">
           <template scope="scope">
-            <el-button  type="text"  size="small" v-permit="'crm:storeAllot:view'" @click.native="itemAction(scope.row.id, 'view')">{{$t('storeAllotList.detail')}}</el-button>
-            <el-button v-if="scope.row.status === '待发货' || scope.row.status === '发货中'"   type="text"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'ship')">{{$t('storeAllotList.ship')}}</el-button>
-            <el-button v-if="scope.row.status === '待发货'"   type="text"   size="small"  v-permit="'crm:storeAllot:delete'" @click.native="itemAction(scope.row.id,'delete')"> {{$t('storeAllotList.delete')}}</el-button>
-            <el-button v-if="scope.row.isPrint"   type="text"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'print')">{{$t('storeAllotList.print')}}</el-button>
-            <el-button v-if="!scope.row.isPrint"  style="color:red;"   type="text"  size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'print')">{{$t('storeAllotList.print')}}</el-button>
-            <el-button v-if="scope.row.isShipPrint"    type="text"  size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('storeAllotList.shipPrint')}}</el-button>
-            <el-button v-if="!scope.row.isShipPrint"   style="color:#ff0000;"  type="text"  size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('storeAllotList.shipPrint')}}</el-button>
-
+            <div class="action"><el-button   size="small" v-permit="'crm:storeAllot:view'" @click.native="itemAction(scope.row.id, 'view')">{{$t('storeAllotList.detail')}}</el-button></div>
+            <div class="action"><el-button v-if="scope.row.status === '待发货' || scope.row.status === '发货中'"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'ship')">{{$t('storeAllotList.ship')}}</el-button></div>
+            <div class="action"><el-button v-if="scope.row.status === '待发货'"    size="small"  v-permit="'crm:storeAllot:delete'" @click.native="itemAction(scope.row.id,'delete')"> {{$t('storeAllotList.delete')}}</el-button></div>
+            <div class="action"><el-button :style="stypeOfPrintBtn(scope.row.isPrint)"     size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id,'print')">{{$t('storeAllotList.print')}}</el-button></div>
+            <div class="action"><el-button :style="stypeOfShipPrintBtn(scope.row.isShipPrint)"   size="small"  v-permit="'crm:storeAllot:ship'" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('storeAllotList.shipPrint')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -144,16 +141,15 @@
         }).catch(()=>{});
 
       },itemAction:function(id,action){
-        if(action=="edit") {
+        if(action==="edit") {
           this.$router.push({ name: 'storeAllotForm', query: { id: id }});
-        }else if(action=="view"){
+        }else if(action==="view"){
           this.$router.push({ name: 'storeAllotDetail', query: { id: id }})
-        }else if(action=="ship"){
+        }else if(action==="ship"){
           this.$router.push({ name: 'storeAllotShip', query: { id: id }});
-
-        }else if(action=="print"){
-        }else if(action=="shipPrint"){
-        }else if(action=="delete") {
+        }else if(action==="print"){
+        }else if(action==="shipPrint"){
+        }else if(action==="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/crm/storeAllot/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
@@ -162,15 +158,27 @@
           }).catch(()=>{});
         }
       },handleSelectionChange(val) {
-        var arrs=[];
-        for(var i in val){
-          arrs.push(val[i].id)
-        };
+        let arrs = [];
+        for(let each of val){
+          arrs.push(each.id)
+        }
         this.multipleSelection=arrs;
+      },stypeOfPrintBtn(isPrint){
+          if(!isPrint){
+              return "color:#ff0000;";
+          }else {
+              return "";
+          }
+      },stypeOfShipPrintBtn(isShipPrint){
+        if(!isShipPrint){
+          return "color:#ff0000;";
+        }else {
+          return "";
+        }
       }
     },created () {
 
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/storeAllot/getQuery').then((response) =>{
         that.formData=response.data;

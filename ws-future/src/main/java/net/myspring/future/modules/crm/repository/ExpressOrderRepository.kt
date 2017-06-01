@@ -37,13 +37,14 @@ interface ExpressOrderRepository : BaseRepository<ExpressOrder, String>, Express
 interface ExpressOrderRepositoryCustom{
     fun findPage(pageable : Pageable, expressOrderQuery : ExpressOrderQuery): Page<ExpressOrderDto>
 
-    fun findDtoByGoodsOrderId(goodsOrderId: String): ExpressOrderDto
+    fun findDtoByGoodsOrderId(goodsOrderId: String): ExpressOrderDto?
 
     fun findDto(id: String): ExpressOrderDto
 }
 
 class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ExpressOrderRepositoryCustom {
     override fun findDto(id: String): ExpressOrderDto {
+
         return namedParameterJdbcTemplate.queryForObject("""
        SELECT
             t1.*
@@ -54,8 +55,9 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
           """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(ExpressOrderDto::class.java))
     }
 
-    override fun findDtoByGoodsOrderId(goodsOrderId: String): ExpressOrderDto {
-        return namedParameterJdbcTemplate.queryForObject("""
+    override fun findDtoByGoodsOrderId(goodsOrderId: String): ExpressOrderDto? {
+
+        val result =  namedParameterJdbcTemplate.query("""
         SELECT
             t1.*
         FROM
@@ -64,6 +66,12 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
             t1.enabled=1  and t1.id = t2.express_order_id
             and t2.id = :goodsOrderId
           """, Collections.singletonMap("goodsOrderId", goodsOrderId), MyBeanPropertyRowMapper(ExpressOrderDto::class.java))
+
+        if(result.size >= 1){
+            return result[0]
+        }else {
+            return null
+        }
     }
 
     override fun findPage(pageable : Pageable,expressOrderQuery: ExpressOrderQuery): Page<ExpressOrderDto> {
@@ -135,11 +143,11 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
             """)
         }
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap = BeanPropertySqlParameterSource(expressOrderQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ExpressOrderDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val paramMap = BeanPropertySqlParameterSource(expressOrderQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ExpressOrderDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
 
     }
