@@ -5,6 +5,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 interface GoodsOrderDetailRepository : BaseRepository<GoodsOrderDetail, String> {
@@ -26,5 +27,5 @@ interface GoodsOrderDetailRepository : BaseRepository<GoodsOrderDetail, String> 
         and t2.createdDate < ?3
         and t2.enabled=1
     """)
-    fun findByAreaIdAndCreatedDate(areaId:String,createdDateStart:LocalDate,createdDateEnd: LocalDate):List<GoodsOrderDetail>
+    fun findByAreaIdAndCreatedDate(areaId:String, createdDateStart: LocalDateTime, createdDateEnd: LocalDateTime):List<GoodsOrderDetail>
 }

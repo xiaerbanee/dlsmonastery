@@ -52,6 +52,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -288,6 +290,7 @@ public class GoodsOrderService {
             GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
             shopId = goodsOrder.getShopId();
             netType = goodsOrder.getNetType();
+            shipType = goodsOrder.getShipType();
 
             List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(id);
             if(CollectionUtil.isNotEmpty(goodsOrderDetailList)) {
@@ -324,7 +327,7 @@ public class GoodsOrderService {
             }
         }
         //办事处已订货数
-        List<GoodsOrderDetail> areaDetailList = goodsOrderDetailRepository.findByAreaIdAndCreatedDate(shop.getAreaId(), LocalDate.now(),LocalDate.now().plusDays(1));
+        List<GoodsOrderDetail> areaDetailList = goodsOrderDetailRepository.findByAreaIdAndCreatedDate(shop.getAreaId(), LocalDateTime.of(LocalDate.now(), LocalTime.MIN),LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MIN));
         Map<String,Integer>  areaDetailMap = Maps.newHashMap();
         for(GoodsOrderDetail goodsOrderDetail:areaDetailList) {
             if(!goodsOrderDetail.getGoodsOrderId().equals(id)) {
