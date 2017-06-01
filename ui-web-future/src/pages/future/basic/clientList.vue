@@ -67,7 +67,7 @@
         this.pageLoading = true;
         util.copyValue(this.formData,this.submitData);
         util.setQuery("clientList",this.submitData);
-        axios.get('/api/ws/future/basic/client',{params:this.formData}).then((response) => {
+        axios.get('/api/ws/future/basic/client?'+qs.stringify(this.submitData)).then((response) =>  {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -97,9 +97,13 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/basic/client/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+      });
     }
   };
 </script>

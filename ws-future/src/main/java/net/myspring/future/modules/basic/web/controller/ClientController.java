@@ -28,6 +28,11 @@ public class ClientController {
         return page;
     }
 
+    @RequestMapping(value = "getQuery")
+    public ClientQuery getQuery(ClientQuery clientQuery){
+        return clientQuery;
+    }
+
     @RequestMapping(value = "save")
     public RestResponse save(ClientForm clientForm) {
         clientService.save(clientForm);
@@ -41,8 +46,8 @@ public class ClientController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(ClientDto clientDto) {
-        clientService.delete(clientDto);
+    public RestResponse delete(String id) {
+        clientService.delete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
