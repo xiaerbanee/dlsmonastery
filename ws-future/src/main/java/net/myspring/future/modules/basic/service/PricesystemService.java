@@ -31,11 +31,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 @Service
+@Transactional
 public class PricesystemService {
 
     @Autowired
@@ -63,6 +65,16 @@ public class PricesystemService {
 
     public List<Pricesystem> findAll(){
         return pricesystemRepository.findAll();
+    }
+
+    public PricesystemDto findOne(String id){
+        PricesystemDto pricesystemDto  = new PricesystemDto();
+        if(StringUtils.isNotBlank(id)){
+            Pricesystem pricesystem = pricesystemRepository.findOne(id);
+            pricesystemDto = BeanUtil.map(pricesystem,PricesystemDto.class);
+            cacheUtils.initCacheInput(pricesystemDto);
+        }
+        return pricesystemDto;
     }
 
     public void logicDelete(PricesystemForm pricesystemForm) {
@@ -115,10 +127,6 @@ public class PricesystemService {
     }
 
     public PricesystemForm getForm(PricesystemForm pricesystemForm) {
-        if(!pricesystemForm.isCreate()){
-            Pricesystem pricesystem = pricesystemRepository.findOne(pricesystemForm.getId());
-            pricesystemForm=BeanUtil.map(pricesystem, PricesystemForm.class);
-        }
         initPricesystemDetail(pricesystemForm);
         return pricesystemForm;
     }
@@ -133,6 +141,7 @@ public class PricesystemService {
                 PricesystemDetailForm pricesystemDetailForm=new PricesystemDetailForm();
                 pricesystemDetailForm.setProductId(product.getId());
                 pricesystemDetailForm.setProductName(product.getName());
+                pricesystemDetailFormList.add(pricesystemDetailForm);
             }
         }else {
             List<PricesystemDetail> pricesystemDetailList=pricesystemDetailRepository.findByPricesystemId(pricesystemForm.getId());

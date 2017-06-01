@@ -52,16 +52,18 @@ public class ExpressCompanyController {
     }
 
     @RequestMapping(value = "getForm")
-    public ExpressCompanyForm findOne(ExpressCompanyForm expressCompanyForm){
-        expressCompanyForm=expressCompanyService.getForm(expressCompanyForm);
-        expressCompanyForm.setExpressTypeList(ExpressCompanyTypeEnum.getList());
-        return expressCompanyForm;
+    public ExpressCompanyForm getForm(ExpressCompanyForm expressCompanyForm){
+        return expressCompanyService.getForm(expressCompanyForm);
     }
 
     @RequestMapping(value="getQuery")
     public  ExpressCompanyQuery getQuery(ExpressCompanyQuery expressCompanyQuery){
-        expressCompanyQuery.setExpressTypeList(expressCompanyService.findExpressTypeList());
-        return expressCompanyQuery;
+        return expressCompanyService.getQuery(expressCompanyQuery);
+    }
+
+    @RequestMapping(value = "findOne")
+    public ExpressCompanyDto findOne(String id){
+        return expressCompanyService.findOne(id);
     }
 
 
@@ -72,11 +74,8 @@ public class ExpressCompanyController {
 
     @RequestMapping(value = "searchById")
     public  List<ExpressCompanyDto> searchById(String id){
-        ExpressCompany expressCompany =  expressCompanyService.findOne(id);
         List<ExpressCompanyDto> expressCompanyDtoList = Lists.newArrayList();
-        if(expressCompany != null){
-            expressCompanyDtoList.add(BeanUtil.map(expressCompany, ExpressCompanyDto.class));
-        }
+        expressCompanyDtoList.add(expressCompanyService.findOne(id));
         return expressCompanyDtoList;
     }
 

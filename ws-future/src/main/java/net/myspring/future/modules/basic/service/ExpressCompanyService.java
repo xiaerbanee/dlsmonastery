@@ -9,6 +9,7 @@ import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,17 +28,18 @@ public class ExpressCompanyService {
     private CacheUtils cacheUtils;
 
 
-    public ExpressCompany findOne(String id){
-        ExpressCompany expressCompany=expressCompanyRepository.findOne(id);
-        return expressCompany;
+    public ExpressCompanyDto findOne(String id){
+        ExpressCompanyDto expressCompanyDto = new ExpressCompanyDto();
+        if(StringUtils.isNotBlank(id)){
+            ExpressCompany expressCompany=expressCompanyRepository.findOne(id);
+            expressCompanyDto = BeanUtil.map(expressCompany,ExpressCompanyDto.class);
+            cacheUtils.initCacheInput(expressCompanyDto);
+        }
+        return expressCompanyDto;
     }
 
     public ExpressCompanyForm getForm(ExpressCompanyForm expressCompanyForm){
-        if(!expressCompanyForm.isCreate()){
-            ExpressCompany expressCompany=expressCompanyRepository.findOne(expressCompanyForm.getId());
-            expressCompanyForm=BeanUtil.map(expressCompany,ExpressCompanyForm.class);
-            cacheUtils.initCacheInput(expressCompanyForm);
-        }
+        expressCompanyForm.setExpressTypeList(ExpressCompanyTypeEnum.getList());
         return expressCompanyForm;
     }
 
@@ -74,14 +76,14 @@ public class ExpressCompanyService {
         return expressCompany;
     }
 
-    public List<String> findExpressTypeList() {
-        return ExpressCompanyTypeEnum.getList();
+    public ExpressCompanyQuery getQuery(ExpressCompanyQuery expressCompanyQuery) {
+        expressCompanyQuery.setExpressTypeList(ExpressCompanyTypeEnum.getList());
+        return expressCompanyQuery;
     }
 
     public List<ExpressCompanyDto> findByNameLike(String name) {
-        //TODO 需要重写该方法
-        return null;
-        //return expressCompanyRepository.findByNameLike(RequestUtils.getCompanyId(), name);
+        List<ExpressCompany> expressCompanies = expressCompanyRepository.findByNameContaining(name);
+        return BeanUtil.map(expressCompanies,ExpressCompanyDto.class);
     }
 
     public String getDefaultExpressCompanyId() {

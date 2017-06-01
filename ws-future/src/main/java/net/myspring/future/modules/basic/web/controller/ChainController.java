@@ -39,6 +39,11 @@ public class ChainController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "getQuery")
+    public ChainQuery getQuery(ChainQuery chainQuery){
+        return chainQuery;
+    }
+
     @RequestMapping(value = "findOne")
     public ChainDto findOne(String id){
         return chainService.findOne(id);
