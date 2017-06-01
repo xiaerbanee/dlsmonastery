@@ -19,6 +19,7 @@ public class GoodsOrderDetailForm extends BaseForm<GoodsOrderDetail> {
     private String productName;
     private Boolean hasIme;
     private BigDecimal price;
+
     private Boolean allowOrder;
     //办事处已下单数
     private Integer areaQty;
