@@ -112,6 +112,7 @@
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
+
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm,this.submitData);
