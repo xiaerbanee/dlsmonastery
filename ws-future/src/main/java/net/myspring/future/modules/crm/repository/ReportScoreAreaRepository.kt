@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
 
-
+@CacheConfig(cacheNames = arrayOf("area"))
 interface ReportScoreAreaRepository : BaseRepository<ReportScoreArea, String> {
 
 
