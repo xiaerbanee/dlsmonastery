@@ -4,14 +4,15 @@ import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import org.springframework.data.jpa.repository.Query
 
 ;
+import org.springframework.stereotype.Repository
 
 /**
  * Created by admin on 2016/10/11.
  */
-
+@Repository
 interface OppoPlantAgentProductSelRepository:BaseRepository<OppoPlantAgentProductSel,String> {
 
-    @Query("select t.item_number from oppo_plant_agent_product_sel t where t.item_number in ?1",nativeQuery = true)
+    @Query("select t.item_number from #{#entityName} t where t.item_number in ?1")
     fun findItemNumbers(itemNumbers: MutableList<String>): MutableList<String>
 
 }

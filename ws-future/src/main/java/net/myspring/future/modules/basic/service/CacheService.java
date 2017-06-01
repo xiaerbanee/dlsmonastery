@@ -28,6 +28,8 @@ public class CacheService {
     @Autowired
     private AdpricesystemRepository adpricesystemRepository;
     @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
     private CacheUtils cacheUtils;
 
     public void init() {
@@ -38,6 +40,7 @@ public class CacheService {
         cacheUtils.initCache("depots",depotRepository.findAll());
         cacheUtils.initCache("expressCompanys",expressCompanyRepository.findAll());
         cacheUtils.initCache("adPricesystem",adpricesystemRepository.findAll());
+        cacheUtils.initCache("clients",clientRepository.findAll());
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");

@@ -39,23 +39,19 @@ public class ShopAdTypeController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "getForm")
-    public ShopAdTypeForm getForm(ShopAdTypeForm shopAdTypeForm){
-        shopAdTypeForm=shopAdTypeService.getForm(shopAdTypeForm);
-        shopAdTypeForm.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
-       return shopAdTypeForm;
+    @RequestMapping(value = "findOne")
+    public ShopAdTypeDto findOne(String id){
+        return shopAdTypeService.findOne(id);
     }
 
-    @RequestMapping(value="getListProperty")
-    public ShopAdTypeQuery getListProperty(ShopAdTypeQuery shopAdTypeQuery){
-        shopAdTypeQuery.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
-        return shopAdTypeQuery;
+    @RequestMapping(value = "getForm")
+    public ShopAdTypeForm getForm(ShopAdTypeForm shopAdTypeForm){
+       return shopAdTypeService.getForm(shopAdTypeForm);
     }
 
     @RequestMapping(value="getQuery")
     public ShopAdTypeQuery getQuery(ShopAdTypeQuery shopAdTypeQuery){
-        shopAdTypeQuery.setTotalPriceTypeList(shopAdTypeService.findTotalPriceTypeList());
-        return shopAdTypeQuery;
+        return shopAdTypeService.getQuery(shopAdTypeQuery);
     }
 
 }

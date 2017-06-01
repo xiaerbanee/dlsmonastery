@@ -32,13 +32,12 @@ public class ProductTypeController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProductTypeDto> list(Pageable pageable, ProductTypeQuery productTypeQuery){
-        Page<ProductTypeDto> page = productTypeService.findPage(pageable,productTypeQuery);
-        return page;
+        return productTypeService.findPage(pageable,productTypeQuery);
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(ProductTypeForm productTypeForm) {
-        productTypeService.logicDelete(productTypeForm);
+    public RestResponse delete(String id) {
+        productTypeService.logicDelete(id);
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 
@@ -48,16 +47,8 @@ public class ProductTypeController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "getForm")
-    public ProductTypeForm getForm(ProductTypeForm productTypeForm){
-        productTypeForm = productTypeService.getForm(productTypeForm);
-        return productTypeForm;
-    }
-
-
-    @RequestMapping(value="getListProperty")
-    public ProductTypeQuery getListProperty(ProductTypeQuery productTypeQuery){
-        productTypeQuery.setBoolMap(BoolEnum.getMap());
+    @RequestMapping(value="getQuery")
+    public ProductTypeQuery getQuery(ProductTypeQuery productTypeQuery){
         return productTypeQuery;
     }
 
@@ -69,14 +60,27 @@ public class ProductTypeController {
         return productTypeList;
     }
 
+    @RequestMapping(value = "findDto")
+    public ProductTypeDto findDto(String id){
+        ProductTypeDto result = productTypeService.findDto(id);
+        if(result == null){
+            result = new ProductTypeDto();
+        }
+
+        return result;
+    }
+
+
+
     @RequestMapping(value = "search")
     public List<ProductTypeDto> search(String name){
         return productTypeService.findByNameLike(name);
     }
 
-    @RequestMapping(value = "export", method = RequestMethod.GET)
-    public ModelAndView export(HttpServletRequest request) {
-        return null;
+    @RequestMapping(value = "export")
+    public String export(ProductTypeQuery productTypeQuery) {
+
+        return productTypeService.export(productTypeQuery);
     }
 
 }

@@ -32,7 +32,7 @@ interface DemoPhoneTypeRepository : BaseRepository<DemoPhoneType,String>,DemoPho
     override fun findAll(): MutableList<DemoPhoneType>
 
     @CachePut(key = "#p0.id")
-    fun save(demoPhoneType: DemoPhoneType): Int
+    fun save(demoPhoneType: DemoPhoneType): DemoPhoneType
 
     @Query("""
         SELECT t1

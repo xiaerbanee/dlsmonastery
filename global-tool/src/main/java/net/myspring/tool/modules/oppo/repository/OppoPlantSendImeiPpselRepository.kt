@@ -14,7 +14,7 @@ import java.time.LocalDate;
 interface OppoPlantSendImeiPpselRepository:BaseRepository<OppoPlantSendImeiPpsel,String> {
 
 
-    @Query("select t.imei from oppo_plant_send_imei_ppsel t where t.imei in ?1",nativeQuery = true)
+    @Query("select t.imei from #{#entityName} t where t.imei in ?1")
     fun findImeis(imeis: MutableList<String>): MutableList<String>
 
     @Query("""
@@ -22,7 +22,7 @@ interface OppoPlantSendImeiPpselRepository:BaseRepository<OppoPlantSendImeiPpsel
         where t.created_time >= #{dateStart}
         and t.created_time <= #{dateEnd}
         and t.company_id in :agentCodes
-        """, nativeQuery = true)
+        """)
     fun findSynList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>): MutableList<OppoPlantSendImeiPpsel>
 
 }

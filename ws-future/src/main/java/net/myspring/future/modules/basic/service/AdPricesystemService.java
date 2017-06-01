@@ -8,6 +8,7 @@ import net.myspring.future.modules.basic.web.form.AdPricesystemForm;
 import net.myspring.future.modules.basic.web.query.AdPricesystemQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,10 +26,8 @@ public class AdPricesystemService {
     private CacheUtils cacheUtils;
 
     public AdPricesystemDto findOne(String id){
-        AdPricesystemDto adPricesystemDto;
-        if(StringUtils.isBlank(id)){
-            adPricesystemDto = new AdPricesystemDto();
-        } else {
+        AdPricesystemDto adPricesystemDto = new AdPricesystemDto();
+        if(StringUtils.isNotBlank(id)){
             AdPricesystem adPricesystem = adpricesystemRepository.findOne(id);
             adPricesystemDto = BeanUtil.map(adPricesystem,AdPricesystemDto.class);
             adPricesystemDto.setOfficeIdList(adpricesystemRepository.findOfficeById(adPricesystemDto.getId()));
@@ -51,13 +50,22 @@ public class AdPricesystemService {
     }
 
     public AdPricesystem save(AdPricesystemForm adPricesystemForm){
-        AdPricesystem adPricesystem = BeanUtil.map(adPricesystemForm,AdPricesystem.class);
-        adpricesystemRepository.save(adPricesystem);
-        adpricesystemRepository.deleteOfficeIds(adPricesystem.getId());
-        //修改机构绑定
+        AdPricesystem adPricesystem;
+        if(adPricesystemForm.isCreate()){
+            adPricesystem = BeanUtil.map(adPricesystemForm,AdPricesystem.class);
+            adpricesystemRepository.save(adPricesystem);
+        }else{
+            adPricesystem = adpricesystemRepository.findOne(adPricesystemForm.getId());
+            ReflectionUtil.copyProperties(adPricesystemForm,adPricesystem);
+            adpricesystemRepository.save(adPricesystem);
+            //清空adpricesystemOffice
+            adpricesystemRepository.deleteOfficeId(adPricesystemForm.getId());
+
+        }
         if(CollectionUtil.isNotEmpty(adPricesystemForm.getOfficeIdList())){
-            //TODO 需要重新写该方法
-//            adpricesystemRepository.saveOfficeIds(adPricesystem.getId(),adPricesystemForm.getOfficeIdList());
+            for(String officeId:adPricesystemForm.getOfficeIdList()){
+                adpricesystemRepository.saveAdpricesystemOffice(adPricesystem.getId(),officeId);
+            }
         }
         return adPricesystem;
     }

@@ -88,9 +88,10 @@
         isCreate:this.$route.query.id==null,
         action:this.$route.query.action,
         inputForm:{},
-        formProperty:{},
+        formProperty:{
+        },
         submitData:{
-            id:'',
+            id:this.$route.query.id,
           pass:'',
           passRemarks:"",
         },
@@ -104,7 +105,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
+            util.copyValue(this.formProperty,this.submitData);
             axios.post('/api/ws/future/layout/shopBuild/audit', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);

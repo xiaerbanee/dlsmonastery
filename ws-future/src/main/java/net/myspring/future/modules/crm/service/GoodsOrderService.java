@@ -1,8 +1,13 @@
 package net.myspring.future.modules.crm.service;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.basic.common.util.OfficeUtil;
+import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.JointLevelEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
@@ -36,6 +41,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +51,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -69,8 +78,6 @@ public class GoodsOrderService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private OfficeClient officeClient;
-    @Autowired
     private CacheUtils cacheUtils;
 
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
@@ -81,12 +88,11 @@ public class GoodsOrderService {
 
     //检测门店
     @Transactional(readOnly = true)
-    public RestResponse validateShop(String goodsOrderId,String shopId) {
+    public RestResponse validateShop(String shopId) {
         Depot shop = depotRepository.findOne(shopId);
         RestResponse restResponse = new RestResponse("有效门店", ResponseCodeEnum.valid.name(),true);
         if(StringUtils.isBlank(shop.getPricesystemId())) {
             restResponse.getErrors().add(new RestErrorField("没有价格体系","no_pricesystem","shopId"));
-            restResponse.setSuccess(false);
         }
         //检查当前客户是否有未处理订单
         GoodsOrderQuery goodsOrderQuery = new GoodsOrderQuery();
@@ -120,36 +126,32 @@ public class GoodsOrderService {
         //保存订单明细
         BigDecimal amount = BigDecimal.ZERO;
         Depot shop = depotRepository.findOne(goodsOrder.getShopId());
-        for (int i = goodsOrderForm.getGoodsOrderDetailList().size() - 1; i >= 0; i--) {
-            GoodsOrderDetailForm goodsOrderDetailForm = goodsOrderForm.getGoodsOrderDetailList().get(i);
+        //价格体系
+        List<PricesystemDetail> pricesystemDetailList = pricesystemDetailRepository.findByPricesystemId(shop.getPricesystemId());
+        Map<String,PricesystemDetail> pricesystemDetailMap = CollectionUtil.extractToMap(pricesystemDetailList,"productId");
+
+        for (int i = goodsOrderForm.getGoodsOrderDetailFormList().size() - 1; i >= 0; i--) {
+            GoodsOrderDetailForm goodsOrderDetailForm = goodsOrderForm.getGoodsOrderDetailFormList().get(i);
             if(goodsOrderDetailForm.getQty()==null) {
                 goodsOrderDetailForm.setQty(0);
             }
-
             if(goodsOrderDetailForm.isCreate()) {
                 if (goodsOrderDetailForm.getQty() > 0) {
                     GoodsOrderDetail goodsOrderDetail = BeanUtil.map(goodsOrderDetailForm,GoodsOrderDetail.class);
-
                     goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
                     goodsOrderDetail.setBillQty(goodsOrderDetail.getQty());
-                    PricesystemDetail pricesystemDetail = pricesystemDetailRepository.findByPricesystemIdAndProductId(shop.getPricesystemId(), goodsOrderDetailForm.getProductId());
+                    PricesystemDetail pricesystemDetail = pricesystemDetailMap.get(goodsOrderDetail.getProductId());
                     goodsOrderDetail.setPrice(pricesystemDetail.getPrice());
                     goodsOrderDetailRepository.save(goodsOrderDetail);
                     amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
                 }
             } else {
-                //防止前台篡改
                 if(goodsOrderDetailMap.containsKey(goodsOrderDetailForm.getId())) {
-
-                    if (goodsOrderDetailForm.getQty() <= 0) {
-                        goodsOrderDetailRepository.deleteById(goodsOrderDetailForm.getId());
-                    }else{
-                        GoodsOrderDetail goodsOrderDetail = goodsOrderDetailRepository.findOne(goodsOrderDetailForm.getId());
-                        goodsOrderDetail.setQty(goodsOrderDetailForm.getQty());
-                        goodsOrderDetail.setBillQty(goodsOrderDetailForm.getQty());
-                        goodsOrderDetailRepository.save(goodsOrderDetail);
-                        amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
-                    }
+                    GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderDetailForm.getId());
+                    goodsOrderDetail.setQty(goodsOrderDetailForm.getQty());
+                    goodsOrderDetail.setBillQty(goodsOrderDetailForm.getQty());
+                    goodsOrderDetailRepository.save(goodsOrderDetail);
+                    amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
                 }
             }
         }
@@ -157,11 +159,7 @@ public class GoodsOrderService {
         goodsOrder.setAmount(amount);
         //更新快递单信息
         ExpressOrder expressOrder = getExpressOrder(goodsOrderForm);
-        if(expressOrder.isCreate()) {
-            expressOrderRepository.save(expressOrder);
-        } else {
-            expressOrderRepository.save(expressOrder);
-        }
+        expressOrderRepository.save(expressOrder);
         goodsOrder.setExpressOrderId(expressOrder.getId());
         goodsOrderRepository.save(goodsOrder);
         return goodsOrder;
@@ -175,30 +173,29 @@ public class GoodsOrderService {
         BigDecimal amount = BigDecimal.ZERO;
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
+        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
+
         for (int i = goodsOrderBillForm.getGoodsOrderDetailList().size() - 1; i >= 0; i--) {
             GoodsOrderBillDetailForm goodsOrderBillDetailForm=goodsOrderBillForm.getGoodsOrderDetailList().get(i);
-
             if (goodsOrderBillDetailForm.getBillQty() == null) {
                 goodsOrderBillDetailForm.setBillQty(0);
             }
             totalBillQty = totalBillQty + goodsOrderBillDetailForm.getBillQty();
-            Product product = productRepository.findOne(goodsOrderBillDetailForm.getProductId());
+            Product product = productMap.get(goodsOrderBillDetailForm.getProductId());
             if(product.getHasIme()) {
                 mobileBillQty = mobileBillQty + goodsOrderBillDetailForm.getBillQty();
             }
             if(goodsOrderBillDetailForm.isCreate()) {
                 if (goodsOrderBillDetailForm.getBillQty() > 0) {
                     GoodsOrderDetail goodsOrderDetail = BeanUtil.map(goodsOrderBillDetailForm,GoodsOrderDetail.class);
-
                     goodsOrderDetail.setQty(0);
                     goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
-
                     goodsOrderDetailRepository.save(goodsOrderDetail);
                     amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
                 }
             } else {
                 if(goodsOrderDetailMap.containsKey(goodsOrderBillDetailForm.getId())) {
-                    GoodsOrderDetail goodsOrderDetail = goodsOrderDetailRepository.findOne(goodsOrderBillDetailForm.getId());
+                    GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderBillDetailForm.getId());
                     goodsOrderDetail.setBillQty(goodsOrderBillDetailForm.getBillQty());
                     goodsOrderDetail.setPrice(goodsOrderBillDetailForm.getPrice());
                     goodsOrderDetailRepository.save(goodsOrderDetail);
@@ -285,4 +282,67 @@ public class GoodsOrderService {
         return goodsOrderDto;
     }
 
+    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType,String shipType) {
+        List<GoodsOrderDetailForm> goodsOrderDetailFormList  = Lists.newArrayList();
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
+        Map<String,Product> productMap = Maps.newHashMap();
+        if(StringUtils.isNotBlank(id)) {
+            GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
+            shopId = goodsOrder.getShopId();
+            netType = goodsOrder.getNetType();
+            shipType = goodsOrder.getShipType();
+
+            List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(id);
+            if(CollectionUtil.isNotEmpty(goodsOrderDetailList)) {
+                goodsOrderDetailMap = CollectionUtil.extractToMap(goodsOrderDetailList,"productId");
+                List<GoodsOrderDetailForm> list = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailForm.class);
+                goodsOrderDetailFormList.addAll(list);
+                productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
+            }
+        }
+        Depot shop = depotRepository.findOne(shopId);
+        List<PricesystemDetail> pricesystemDetailList = pricesystemDetailRepository.findByPricesystemId(shop.getPricesystemId());
+        productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
+        for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
+            Product product = productMap.get(pricesystemDetail.getProductId());
+            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && netType.equals(product.getNetType())) {
+                //是否允许下单
+                Boolean showNotAllow = true;
+                //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
+                if(ShipTypeEnum.总部发货.name().equals(shipType) || ShipTypeEnum.总部自提.name().equals(shipType)) {
+                    OfficeDto officeDto = OfficeUtil.findOne(redisTemplate,RequestUtils.getRequestEntity().getOfficeId());
+                    if(JointLevelEnum.二级.name().equals(officeDto.getJointLevel())) {
+                        showNotAllow = false;
+                    }
+                }
+                Boolean allowOrder = product.getAllowOrder() && product.getAllowBill();
+                if(showNotAllow || allowOrder) {
+                    GoodsOrderDetailForm goodsOrderDetailForm = new GoodsOrderDetailForm();
+                    goodsOrderDetailForm.setProductId(pricesystemDetail.getProductId());
+                    goodsOrderDetailForm.setPrice(pricesystemDetail.getPrice());
+                    goodsOrderDetailForm.setAllowOrder(allowOrder);
+                    goodsOrderDetailFormList.add(goodsOrderDetailForm);
+                }
+            }
+        }
+        //办事处已订货数
+        List<GoodsOrderDetail> areaDetailList = goodsOrderDetailRepository.findByAreaIdAndCreatedDate(shop.getAreaId(), LocalDateTime.of(LocalDate.now(), LocalTime.MIN),LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MIN));
+        Map<String,Integer>  areaDetailMap = Maps.newHashMap();
+        for(GoodsOrderDetail goodsOrderDetail:areaDetailList) {
+            if(!goodsOrderDetail.getGoodsOrderId().equals(id)) {
+                    if(!areaDetailMap.containsKey(goodsOrderDetail.getProductId())) {
+                        areaDetailMap.put(goodsOrderDetail.getProductId(),0);
+                    }
+                    areaDetailMap.put(goodsOrderDetail.getProductId(),areaDetailMap.get(goodsOrderDetail.getProductId())+ goodsOrderDetail.getQty());
+            }
+        }
+        //设置其他数据
+        for(GoodsOrderDetailForm goodsOrderDetailForm:goodsOrderDetailFormList) {
+            Product product= productMap.get(goodsOrderDetailForm.getProductId());
+            goodsOrderDetailForm.setProductName(product.getName());
+            goodsOrderDetailForm.setHasIme(product.getHasIme());
+            goodsOrderDetailForm.setAreaQty(areaDetailMap.get(product.getId()));
+        }
+        return goodsOrderDetailFormList;
+    }
 }

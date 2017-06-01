@@ -35,8 +35,12 @@ public class AdPricesystemController {
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
         adPricesystemService.logicDelete(id);
-        RestResponse restResponse=new RestResponse("删除成功",ResponseCodeEnum.removed.name());
-        return restResponse;
+        return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
+    }
+
+    @RequestMapping(value = "getQuery")
+    public AdPricesystemQuery getQuery(AdPricesystemQuery adPricesystemQuery){
+        return adPricesystemQuery;
     }
 
     @RequestMapping(value = "findOne")

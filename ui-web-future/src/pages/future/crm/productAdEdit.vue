@@ -18,38 +18,30 @@
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productAdEdit.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.hasIme.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.hasIme" filterable clearable :placeholder="$t('productAdEdit.inputKey')">
-                  <el-option v-for="(item,key) in formProperty.isHasIme" :key="key" :label="item | bool2str" :value="key"></el-option>
-                </el-select>
+                <bool-select v-model="formData.hasIme"></bool-select>
               </el-form-item>
               <el-form-item :label="formLabel.code.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('productAdEdit.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.allowBill.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.allowBill" filterable clearable :placeholder="$t('productAdEdit.inputKey')">
-                  <el-option v-for="(item,key) in formProperty.isAllowBill" :key="key" :label="item | bool2str" :value="key"></el-option>
-                </el-select>
+                <bool-select v-model="formData.allowBill"></bool-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="formLabel.productType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.productType" filterable clearable :placeholder="$t('productAdEdit.inputKey')">
-                  <el-option v-for="type in formProperty.productTypes" :key="type.id" :label="type.name" :value="type.id"></el-option>
-                </el-select>
+                <product-type-select v-model="formData.productTypeId"></product-type-select>
               </el-form-item>
               <el-form-item :label="formLabel.allowOrder.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.allowOrder" filterable clearable :placeholder="$t('productAdEdit.inputKey')">
-                  <el-option v-for="(item,key) in formProperty.isAllowOrder"  :key="key"  :label="item | bool2str" :value="key"></el-option>
-                </el-select>
+                <bool-select v-model="formData.allowOrder"></bool-select>
               </el-form-item>
               <el-form-item :label="formLabel.outGroupName.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.outGroupName" filterable clearable :placeholder="$t('productAdEdit.inputWord')">
-                  <el-option v-for="item in formProperty.outGroupNames"  :key="item.outGroupName"   :label="item.outGroupName" :value="item.outGroupName"></el-option>
+                  <el-option v-for="item in formData.outGroupNameList"  :key="item"   :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.netType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.netType" filterable clearable :placeholder="$t('productAdEdit.inputKey')">
-                  <el-option v-for="netType in formProperty.netTypes" :key="netType" :label="netType" :value="netType"></el-option>
+                  <el-option v-for="netType in formData.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -65,7 +57,13 @@
 </template>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
+  import boolSelect from 'components/common/bool-select'
+  import productTypeSelect from 'components/future/product-type-select'
   export default {
+    components:{
+      boolSelect,
+      productTypeSelect
+    },
     data() {
       return {
         submitDisabled:false,
@@ -83,21 +81,23 @@
             {data:"visible", type: "autocomplete",  strict: true, source:["true","false"]},
             {data:"allowOrder", type: "autocomplete", strict: true, source:["true","false"]},
             {data:"price2", type: "numeric"},
-            {data:"expiryDateRemarks", type: "autocomplete", width:150},
+            {data:"expiryDateRemarks", width:150},
             {data:"volume", type: "numeric", format: '0.00'},
-            {data:"remarks", type: "autocomplete", width:150},
+            {data:"remarks", width:150},
           ]
         },
-        formData:{
+        formData:{},
+        submitData:{
           name:'',
           type:'',
           hasIme:'',
           allowBill:'',
-          productType:'',
+          productTypeId:'',
           allowOrder:'',
           outGroupName:'',
           netType:'',
-        },formLabel:{
+        },
+        formLabel:{
           name:{label:this.$t('productAdEdit.name')},
           hasIme:{label:this.$t('productAdEdit.hasIme'),value:""},
           code:{label:this.$t('productAdEdit.code')},
@@ -122,18 +122,21 @@
         this.formLabel.allowBill.value = util.bool2str(this.formData.allowBill);
         this.formLabel.allowOrder.value =  util.bool2str(this.formData.allowOrder);
         this.formLabel.productType.value = util.getLabel(this.formProperty.productTypes, this.formData.productType);
-        util.setQuery("productList",this.formData);
-        axios.get('/api/crm/product/filter',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("productList",this.submitData);
+        axios.get('/api/ws/future/basic/product/filter',{params:this.submitData}).then((response) => {
           this.settings.data  = response.data;
           this.table.loadData(this.settings.data);
         });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/crm/product/getQuery').then((response) =>{
-        this.formProperty = response.data;
+      axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
+        this.formData = response.data;
+        console.log(this.formData);
+        util.copyValue(this.$route.query,this.formData);
+        this.search();
       });
-      this.search();
     }
   };
 </script>

@@ -13,7 +13,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('pricesystemChangeList.likeSearch')"></el-input>
+                <product-select v-model="formData.productId"></product-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate" ></date-range-picker>
@@ -41,17 +41,17 @@
         <el-table-column prop="pricesystemName" :label="$t('pricesystemChangeList.pricesystemName')" ></el-table-column>
         <el-table-column prop="oldPrice" :label="$t('pricesystemChangeList.oldPrice')"  ></el-table-column>
         <el-table-column prop="newPrice" :label="$t('pricesystemChangeList.newPrice')"></el-table-column>
-        <el-table-column prop="createdBy" :label="$t('pricesystemChangeList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('pricesystemChangeList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('pricesystemChangeList.createdDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('pricesystemChangeList.status')" width="120">
           <template scope="scope">
-            <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
+            <el-tag :type="scope.row.status=='未通过' ? 'danger' : 'primary'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column  :label="$t('pricesystemChangeList.operation')" width="160">
           <template scope="scope">
-              <el-button size="small" @click.native="itemAction(scope.row.id,'通过')">通过</el-button>
-              <el-button size="small" @click.native="itemAction(scope.row.id,'不通过')">不通过</el-button>
+              <el-button size="small" v-if="scope.row.status.indexOf('通过')<0" v-permit="'crm:pricesystemChange:edit'" @click.native="itemAction(scope.row.id,'pass')">{{$t('pricesystemChangeList.pass')}}</el-button>
+              <el-button size="small" v-if="scope.row.status.indexOf('通过')<0" v-permit="'crm:pricesystemChange:edit'" @click.native="itemAction(scope.row.id,'notPass')">{{$t('pricesystemChangeList.noPass')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -59,22 +59,22 @@
     </div>
   </div>
 </template>
+
 <script>
+  import productSelect from 'components/future/product-select'
   export default {
+    components:{
+      productSelect
+    },
     data() {
       return {
         pageHeight:600,
         page:{},
-        formData:{
-          productName:'',
-          createdDate:'',
-          status:'',
-          pricesystemId:'',
-        },
+        formData:{},
         submitData:{
           page:0,
           size:25,
-          productName:'',
+          productId:'',
           createdDate:'',
           status:'',
           pricesystemId:'',
@@ -85,7 +85,7 @@
           status:{label: this.$t('pricesystemChangeList.status')},
           pricesystemId:{label: this.$t('pricesystemChangeList.pricesystemName'),value:""},
         },
-        selects:new Array(),
+        selects:[],
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -97,7 +97,7 @@
         util.copyValue(this.formData,this.submitData);
         util.setQuery("pricesystemChangeList",this.submitData);
         this.formLabel.pricesystemId.value = util.getLabel(this.formData.pricesystems, this.formData.pricesystemId);
-        axios.get('/api/ws/future/crm/pricesystemChange?'+qs.stringify(this.submitData)).then((response) => {
+        axios.get('/api/ws/future/crm/pricesystemChange',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -115,23 +115,22 @@
       },itemAdd(){
         this.$router.push({ name: 'pricesystemChangeForm'})
       },itemAction:function(id,action){
-         axios.get('/api/ws/future/crm/pricesystemChange/auditOperation',{params:{id:id,pass:action=='通过'?true:false}}).then((response) =>{
+         axios.get('/api/ws/future/crm/pricesystemChange/audit',{params:{id:id,pass:action=='pass'?true:false}}).then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         });
       },selectionChange(selection){
-        console.log(selection);
         this.selects=new Array();
         for(var key in selection){
           this.selects.push(selection[key].id)
         }
       },batchPass(){
-        axios.get('/api/ws/future/crm/pricesystemChange/audit',{params:{ids:this.selects,pass:true}}).then((response) =>{
+        axios.get('/api/ws/future/crm/pricesystemChange/batchAudit',{params:{ids:this.selects,pass:true}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
         });
       },checkSelectable(row) {
-        return row.status !== '已通过'
+        return row.status.indexOf('通过')<0;
       },
     },created () {
       var that = this;

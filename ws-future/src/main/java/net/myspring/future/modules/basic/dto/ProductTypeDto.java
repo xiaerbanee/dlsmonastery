@@ -4,11 +4,13 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.ProductType;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by lihx on 2017/4/17.
  */
 public class ProductTypeDto extends DataDto<ProductType> {
+
     private String name;
     private String reportName;
     private String code;
@@ -19,6 +21,25 @@ public class ProductTypeDto extends DataDto<ProductType> {
     private Boolean enabled;
     private BigDecimal baokaPrice;
     private BigDecimal price3;
+    private String productIds;
+
+    public String getScoreTypeName(){
+        if(scoreType==null){
+            return "";
+        }else if(scoreType){
+            return "是";
+        }else{
+            return "否";
+        }
+
+    }
+    public String getProductIds() {
+        return productIds;
+    }
+
+    public void setProductIds(String productIds) {
+        this.productIds = productIds;
+    }
 
     public BigDecimal getBaokaPrice() {
         return baokaPrice;

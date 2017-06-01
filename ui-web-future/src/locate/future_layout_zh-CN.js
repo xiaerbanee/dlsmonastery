@@ -279,7 +279,7 @@ export default {
   },
   adPricesystemChangeList: {
     adPricesystemChangeList: "运费修改",
-    productName: "名称",
+    productName: "货品名称",
     productCode: "货品编码",
     adPricesystem: "价格体系",
     oldPrice: "调价前",

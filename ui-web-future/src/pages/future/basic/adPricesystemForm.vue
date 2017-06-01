@@ -3,40 +3,30 @@
     <head-tab active="adPricesystemForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-row :gutter="20">
-          <el-col :span="10">
-            <el-form-item label="名称" prop="name">
+            <el-form-item :label="$t('adPricesystemForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="remarks">
+            <el-form-item :label="$t('adPricesystemForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
+            <el-form-item :label="$t('adPricesystemForm.officeName')" prop="officeName">
+              <office-select v-model="inputForm.officeIdList" multiple="multiple"></office-select>
+            </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('officeForm.save')}}
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('adPricesystemForm.save')}}
               </el-button>
             </el-form-item>
-          </el-col>
-          <el-col :span = "10" v-show="treeData.length>0">
-            <el-form-item  label="授权" prop="businessOfficeStr">
-              <el-tree
-                :data="treeData"
-                show-checkbox
-                node-key="id"
-                ref="tree"
-                :default-checked-keys="checked"
-                :default-expanded-keys="checked"
-                @check-change="handleCheckChange"
-                :props="defaultProps">
-              </el-tree>
-            </el-form-item>
-          </el-col>
-        </el-row>
+
       </el-form>
     </div>
   </div>
 </template>
 <script>
+  import officeSelect from 'components/basic/office-select'
   export default{
+    components:{
+      officeSelect
+    },
     data(){
       return {
         isCreate: this.$route.query.id == null,
@@ -52,8 +42,6 @@
           name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
         },
         remoteLoading: false,
-        treeData:[],
-        checked:[],
         defaultProps: {
           label: 'label',
           children: 'children'
@@ -90,24 +78,10 @@
             this.submitDisabled = false;
           }
         })
-      },
-      handleCheckChange(data, checked, indeterminate) {
-        var officeIdList=new Array()
-        var check=this.$refs.tree.getCheckedKeys();
-        for(var index in check){
-          if(check[index].match("\^(0|[1-9][0-9]*)$")&& check[index]!=0){
-            officeIdList.push(check[index])
-          }
-        }
-        this.inputForm.officeIdList=officeIdList;
       }
     }, created(){
       axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
         this.inputForm = response.data;
-        this.checked = response.data.officeIdList;
-      })
-      axios.get('/api/basic/sys/office/getOfficeTree').then((response) => {
-        this.treeData =new Array(response.data);
       })
     }
   }

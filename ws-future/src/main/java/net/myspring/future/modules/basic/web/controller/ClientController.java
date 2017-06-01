@@ -54,7 +54,7 @@ public class ClientController {
 
     @RequestMapping(value = "search")
     public List<ClientDto> search(String name){
-        List<ClientDto> clientDtoList=clientService.findByNameLike(name);
+        List<ClientDto> clientDtoList=clientService.findByNameContaining(name);
         return clientDtoList;
     }
 

@@ -32,7 +32,7 @@
               </el-table>
             </template>
             <template>
-              <el-table :data="productImeDtoList" style="width: 100%" border>
+              <el-table :data="productImeList" style="width: 100%" border>
                 <el-table-column prop="ime" :label="$t('productImeUploadForm.ime')"></el-table-column>
                 <el-table-column prop="depotName" :label="$t('productImeUploadForm.depotName')"></el-table-column>
                 <el-table-column prop="productName" :label="$t('productImeUploadForm.productName')"></el-table-column>
@@ -71,7 +71,7 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            productImeDtoList:[],
+            productImeList:[],
             productQtyList:[],
             inputForm:{
               imeStr:'',
@@ -112,25 +112,25 @@
             }
           })
         },onchange(){
-            this.message = '';
-//            axios.get('/api/ws/future/crm/productIme/search',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
-//              this.message=response.data;
-//            });
+
+            axios.get('/api/ws/future/crm/productIme/search',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+              this.message=response.data;
+            });
           axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
-            this.productImeDtoList=response.data;
+            this.productImeList=response.data;
 
             let tmpMap = new Map();
-            if(this.productImeDtoList){
-                for(let each of this.productImeDtoList ){
-                    if(!tmpMap.has(each.productId)){
-                        tmpMap.set(each.productId, {productName:each.productName, qty:0});
+            if(this.productImeList){
+                for(let productIme of this.productImeList ){
+                    if(!tmpMap.has(productIme.productId)){
+                        tmpMap.set(productIme.productId, {productName:productIme.productName, qty:0});
                     }
-                    tmpMap.get(each.productId).qty+=1;
+                    tmpMap.get(productIme.productId).qty+=1;
                 }
             }
             let tmpList = [];
-            for(let each of tmpMap.keys()){
-              tmpList.push(tmpMap.get(each));
+            for(let key of tmpMap.keys()){
+              tmpList.push(tmpMap.get(key));
             }
             this.productQtyList = tmpList;
           });

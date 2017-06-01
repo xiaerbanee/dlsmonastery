@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto;
 import net.myspring.future.modules.crm.service.ProductImeUploadService;
@@ -25,7 +26,6 @@ public class ProductImeUploadController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProductImeUploadDto> list(Pageable pageable, ProductImeUploadQuery productImeUploadQuery){
-
         Page<ProductImeUploadDto> page = productImeUploadService.findPage(pageable, productImeUploadQuery);
         return page;
     }
@@ -34,6 +34,11 @@ public class ProductImeUploadController {
     @RequestMapping(value = "save")
     public String save(ProductImeUpload productImeUpload, BindingResult bindingResult) {
         return null;
+    }
+
+    @RequestMapping(value = "getQuery")
+    public ProductImeUploadQuery getQuery(ProductImeUploadQuery productImeUploadQuery){
+        return productImeUploadQuery;
     }
 
     @RequestMapping(value = "delete")

@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.repository
 
+import net.myspring.future.common.enums.ExpressCompanyTypeEnum
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ExpressCompany
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto
@@ -14,10 +15,10 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -31,7 +32,7 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
     override fun findAll(): MutableList<ExpressCompany>
 
     @CachePut(key = "#p0.id")
-    fun save(expressCompany: ExpressCompany): Int
+    fun save(expressCompany: ExpressCompany): ExpressCompany
 
     @Query("""
         SELECT t1.*
@@ -50,7 +51,7 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
 
     fun findByExpressType(expressType: String): MutableList<ExpressCompany>
 
-//    fun findByNameLike(@Param("companyId") companyId: String, @Param("name") name: String): MutableList<ExpressCompanyDto>
+    fun findByNameContaining(name: String): MutableList<ExpressCompany>
 
 }
 
@@ -72,17 +73,17 @@ class ExpressCompanyRepositoryImpl @Autowired constructor(val namedParameterJdbc
         if (StringUtils.isNotEmpty(expressCompanyQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
-        if (StringUtils.isNotEmpty(expressCompanyQuery.expressType)) {
-            sb.append("""  and t1.express_type LIKE CONCAT('%',:expressType,'%') OR t1.express_type IS NULL """)
+        if (StringUtils.isNotEmpty(expressCompanyQuery.expressType)&&expressCompanyQuery.expressType!=ExpressCompanyTypeEnum.所有.name) {
+            sb.append("""  and t1.express_type LIKE CONCAT('%',:expressType,'%') """)
         }
         if (StringUtils.isNotEmpty(expressCompanyQuery.reachPlace)) {
-            sb.append("""  and t1.reach_place LIKE CONCAT('%',:reachPlace,'%') OR t1.reach_place IS NULL """)
+            sb.append("""  and t1.reach_place LIKE CONCAT('%',:reachPlace,'%') """)
         }
         if (StringUtils.isNotEmpty(expressCompanyQuery.mobilePhone)) {
-            sb.append("""  and t1.mobile_phone LIKE CONCAT('%',:mobilePhone,'%') OR t1.mobile_phone IS NULL """)
+            sb.append("""  and t1.mobile_phone LIKE CONCAT('%',:mobilePhone,'%') """)
         }
         if (StringUtils.isNotEmpty(expressCompanyQuery.contator)) {
-            sb.append("""  and t1.contator LIKE CONCAT('%',:contator,'%') OR t1.contator IS NULL """)
+            sb.append("""  and t1.contator LIKE CONCAT('%',:contator,'%') """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

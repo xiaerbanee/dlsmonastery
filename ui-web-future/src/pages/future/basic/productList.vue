@@ -34,7 +34,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.outGroupName.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.outGroupName" filterable clearable :placeholder="$t('productList.inputWord')">
-                  <el-option v-for="product  in formData.outGroupNameList" :key="product.outGroupName" :label="product.outGroupName" :value="product.outGroupName"></el-option>
+                  <el-option v-for="outGroupNames  in formData.outGroupNameList" :key="outGroupNames" :label="outGroupNames" :value="outGroupNames"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.netType.label" :label-width="formLabelWidth">

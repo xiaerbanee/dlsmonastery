@@ -11,12 +11,10 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
     private String shopId;
     private String netType;
     private String shipType;
-    private Boolean isUseTicket;
     private List<String> netTypeList;
     private List<String> shipTypeList;
 
-    private List<GoodsOrderDetailForm> goodsOrderDetailList = Lists.newArrayList();
-
+    private List<GoodsOrderDetailForm> goodsOrderDetailFormList = Lists.newArrayList();
 
     public String getExpressOrderId() {
         return expressOrderId;
@@ -24,30 +22,6 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
 
     public void setExpressOrderId(String expressOrderId) {
         this.expressOrderId = expressOrderId;
-    }
-
-    public Boolean getUseTicket() {
-        return isUseTicket;
-    }
-
-    public void setUseTicket(Boolean useTicket) {
-        isUseTicket = useTicket;
-    }
-
-    public List<GoodsOrderDetailForm> getGoodsOrderDetailList() {
-        return goodsOrderDetailList;
-    }
-
-    public void setGoodsOrderDetailList(List<GoodsOrderDetailForm> goodsOrderDetailList) {
-        this.goodsOrderDetailList = goodsOrderDetailList;
-    }
-
-    public Boolean getIsUseTicket() {
-        return isUseTicket;
-    }
-
-    public void setIsUseTicket(Boolean isUseTicket) {
-        this.isUseTicket = isUseTicket;
     }
 
     public String getShopId() {
@@ -90,4 +64,11 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
         this.shipTypeList = shipTypeList;
     }
 
+    public List<GoodsOrderDetailForm> getGoodsOrderDetailFormList() {
+        return goodsOrderDetailFormList;
+    }
+
+    public void setGoodsOrderDetailFormList(List<GoodsOrderDetailForm> goodsOrderDetailFormList) {
+        this.goodsOrderDetailFormList = goodsOrderDetailFormList;
+    }
 }
