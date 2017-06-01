@@ -9,6 +9,7 @@ import net.myspring.future.modules.basic.web.query.DepotAccountQuery
 import net.myspring.future.modules.basic.web.query.DepotQuery
 import net.myspring.future.modules.crm.dto.BankInDto
 import net.myspring.future.modules.layout.dto.ShopDepositDto
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -60,10 +61,37 @@ interface DepotRepositoryCustom{
     fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery):Page<DepotAccountDto>
 
     fun findByAccountId(accountId: String): MutableList<Depot>
+
+    fun findByFilter(depotQuery: DepotQuery):MutableList<Depot>
 }
 
 @Suppress("UNCHECKED_CAST")
 class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+    override fun findByFilter(depotQuery: DepotQuery): MutableList<Depot> {
+        val sb = StringBuffer("""
+            SELECT
+                t1.*
+            FROM
+                crm_depot t1
+            WHERE
+             t1.enabled = 1
+
+        """)
+        if(StringUtils.isNotBlank(depotQuery.name)){
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if(StringUtils.isNotBlank(depotQuery.areaId)){
+            sb.append("""  and t1.area_id=:areaId """)
+        }
+        if(CollectionUtil.isNotEmpty(depotQuery.depotIdList)){
+            sb.append("""  and t1.id in (:depotIdList) """)
+        }
+        if(CollectionUtil.isNotEmpty(depotQuery.officeIdList)){
+            sb.append("""  and t1.office_id in (:officeIdList) """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(depotQuery), BeanPropertyRowMapper(Depot::class.java))
+    }
+
     override fun findByAccountId(accountId: String): MutableList<Depot> {
         return namedParameterJdbcTemplate.query("""
         SELECT

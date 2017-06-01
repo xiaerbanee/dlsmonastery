@@ -6,6 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus" >添加门店属性</el-button>
         <el-button type="primary" @click="itemAddDepot" icon="plus" >添加门店</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+        <el-button type="primary" @click="synArea = true" icon="search">机构同步</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog title="过滤" v-model="formVisible"  size="tiny" class="search-form">
@@ -16,6 +17,21 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">过滤</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog title="过滤" v-model="synArea"  size="tiny" class="search-form">
+        <el-form :model="formData">
+          <el-form-item label="门店名称" :label-width="formLabelWidth">
+            <el-input v-model="synData.depotName" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="门店名称" :label-width="formLabelWidth">
+            <el-select v-model="synData.areaId" clearable filterable>
+              <el-option v-for="item in areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="synArea()">同步</el-button>
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
@@ -51,7 +67,12 @@
         },formLabel:{
           name:{label:"名称"},
         },
+        synData:{
+          depotName:"",
+          areaId:""
+        },
         formProperty:{},
+        areaList:[],
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -82,6 +103,11 @@
         this.$router.push({ name: 'depotShopForm'})
       },itemAddDepot(){
         this.$router.push({ name: 'shopForm'})
+      },synArea(){
+        axios.get('/api/ws/future/basic/depot/synArea',{params:this.synData}).then((response) =>{
+          this.$message(response.data.message);
+          this.pageRequest();
+        });
       },itemAction:function(id,action){
         if(action=="edit") {
           this.$router.push({ name: 'depotShopForm', query: { id: id }})
@@ -96,8 +122,10 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
+      axios.get('/api/basic/office/findByOfficeRuleName').then((response) =>{
+        this.areaList=response.data;
+      });
       util.copyValue(this.$route.query,this.formData);
-      console.log(this.formData)
       this.pageRequest();
     }
   };

@@ -134,10 +134,19 @@ public class DepotController {
         return depotService.findOne(id);
     }
 
-    @RequestMapping(value = "synArea")
-    public RestResponse synArea(String accountId) {
+    @RequestMapping(value = "scheduleSynArea")
+    public RestResponse scheduleSynArea(String accountId) {
         RequestUtils.getRequestEntity().setAccountId(accountId);
-        depotService.synArea();
+        depotService.scheduleSynArea();
+        return new RestResponse("同步成功",null);
+    }
+
+    @RequestMapping(value = "synArea")
+    public RestResponse synArea(DepotQuery depotQuery) {
+        if(StringUtils.isBlank(depotQuery.getName())&&StringUtils.isBlank(depotQuery.getAreaId())){
+            return new RestResponse("请设置过滤条件",null);
+        }
+        depotService.synArea(depotQuery);
         return new RestResponse("同步成功",null);
     }
 

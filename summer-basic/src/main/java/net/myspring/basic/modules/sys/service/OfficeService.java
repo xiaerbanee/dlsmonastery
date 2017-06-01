@@ -111,6 +111,11 @@ public class OfficeService {
         return officeDto;
     }
 
+    public OfficeRuleDto findTopOfficeRule(){
+        OfficeRule topOfficeRule = officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
+        return BeanUtil.map(topOfficeRule,OfficeRuleDto.class);
+    }
+
     public RestResponse check(OfficeForm officeForm) {
         Office parent = officeRepository.findOne(officeForm.getParentId());
         if (OfficeTypeEnum.BUSINESS.name().equals(officeForm.getType())) {

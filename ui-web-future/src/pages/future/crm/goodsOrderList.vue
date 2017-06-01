@@ -80,7 +80,7 @@
       </el-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
-        <el-table-column  prop="businessId" :label="$t('goodsOrderList.businessId')" sortable width="150"></el-table-column>
+        <el-table-column column-key="id" prop="businessId" :label="$t('goodsOrderList.businessId')" sortable width="150"></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderList.createdDate')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('goodsOrderList.billDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('goodsOrderList.status')"></el-table-column>
@@ -131,6 +131,7 @@
       submitData:{
         page:0,
         size:25,
+        sort:"id,DESC",
         netType:"",
         businessId:"",
         billDateRange:'',
@@ -186,6 +187,7 @@
       this.formData.size = pageSize;
       this.pageRequest();
     },sortChange(column) {
+      console.log(column);
       this.formData.sort=util.getSort(column);
       this.formData.page=0;
       this.pageRequest();

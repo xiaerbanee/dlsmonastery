@@ -1,6 +1,5 @@
 package net.myspring.future.modules.basic.service;
 
-import com.ctc.wstx.util.StringUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
@@ -12,6 +11,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -50,7 +50,8 @@ public class DepotService {
 
     @Autowired
     private CacheUtils cacheUtils;
-
+    @Autowired
+    private DepotManager depotManager;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
 
@@ -197,8 +198,21 @@ public class DepotService {
         return null;
     }
 
-    public void synArea(){
+    public void scheduleSynArea(){
         List<Depot> depotList=depotRepository.findAll();
+        List<DepotDto> depotDtoList=BeanUtil.map(depotList,DepotDto.class);
+        cacheUtils.initCacheInput(depotDtoList);
+        Map<String,DepotDto> depotDtoMap=CollectionUtil.extractToMap(depotDtoList,"id");
+        for(Depot depot:depotList){
+            depot.setAreaId(depotDtoMap.get(depot.getId()).getAreaId());
+            depotRepository.save(depot);
+        }
+    }
+
+    public void synArea(DepotQuery depotQuery){
+      depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+      depotQuery.setDepotIdList(depotManager.filterDepotIds());
+      List<Depot> depotList=depotRepository.findByFilter(depotQuery);
         List<DepotDto> depotDtoList=BeanUtil.map(depotList,DepotDto.class);
         cacheUtils.initCacheInput(depotDtoList);
         Map<String,DepotDto> depotDtoMap=CollectionUtil.extractToMap(depotDtoList,"id");
