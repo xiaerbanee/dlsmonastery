@@ -9,6 +9,7 @@ import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderImeService;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
+import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "crm/goodsOrder")
@@ -62,10 +65,13 @@ public class GoodsOrderController {
     }
 
 
-
-
     @RequestMapping(value = "findOne")
     public GoodsOrderDto findOne(String id) {
         return goodsOrderService.findOne(id);
+    }
+
+    @RequestMapping(value = "findGoodsOrderDetailFormList")
+    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType) {
+        return null;
     }
 }

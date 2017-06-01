@@ -11,7 +11,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderForm.shop')" prop="shopId">
-              <depot-select :disabled="!isCreate" v-model="inputForm.shopId" category="shop" @input="shopChanged"></depot-select>
+              <depot-select :disabled="!isCreate" v-model="inputForm.shopId" category="shop" @input="shopChange"></depot-select>
             </el-form-item>
             <el-form-item  :label="$t('goodsOrderForm.clientName')"  prop="clientName">
               {{shop.clientName}}
@@ -51,7 +51,7 @@
         </el-row>
       </el-form>
       <div v-show="inputForm.shopId">
-        <el-input v-model="productName" @input="filterProducts" :placeholder="$t('shopAllotForm.selectTowKey')" style="width:200px;"></el-input>
+        <el-input v-model="filterValue" @input="filterProducts" :placeholder="$t('shopAllotForm.selectTowKey')" style="width:200px;"></el-input>
         <el-table :data="filterDetailList" border stripe v-loading="pageLoading" style="margin-top:10px;">
           <el-table-column  prop = "productName" :label="$t('goodsOrderForm.productName')" ></el-table-column>
           <el-table-column prop="productHasIme" :label="$t('goodsOrderForm.hasIme')" width="70">
@@ -78,13 +78,9 @@
 </template>
 <script>
   import depotSelect from 'components/future/depot-select'
-  import productSelect from 'components/future/product-select'
-  import boolRadioGroup from 'components/common/bool-radio-group'
   export default{
     components:{
-      depotSelect,
-      productSelect,
-      boolRadioGroup
+      depotSelect
     },
     data(){
       return{
@@ -92,7 +88,7 @@
         submitDisabled:false,
         pageLoading:false,
         alertError:false,
-        productName:'',
+        filterValue:'',
         goodsOrder:{},
         filterDetailList:[],
         goodsOrderDetailList:[],
@@ -116,9 +112,11 @@
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
+
         form.validate((valid) => {
           if (valid) {
-            this.initSubmitDataBeforeSubmit();
+            util.copyValue(this.inputForm,this.submitData);
+            this.submitData.goodsOrderDetailList = this.filterDetailList;
             axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
@@ -139,7 +137,7 @@
           this.filterDetailList = [];
           return;
         }
-        let val=this.productName;
+        let val=this.filterValue;
         let tempList=[];
         for(let goodsOrderDetail of this.goodsOrderDetailList){
           if(util.isNotBlank(goodsOrderDetail.qty)){
@@ -152,44 +150,21 @@
           }
         }
         this.filterDetailList = tempList;
-      }, initSubmitDataBeforeSubmit(){
-        this.submitData.id = this.goodsOrder.id;
-        this.submitData.shopId = this.goodsOrder.shopId;
-        this.submitData.netType = this.goodsOrder.netType;
-        this.submitData.shipType = this.goodsOrder.shipType;
-        this.submitData.remarks = this.goodsOrder.remarks;
-        this.submitData.isUseTicket = this.goodsOrder.isUseTicket;
-        if(this.goodsOrderDetailList){
-          let tempList=[];
-          for(let goodsOrderDetail of this.goodsOrderDetailList){
-            if(util.isNotBlank(goodsOrderDetail.id) || util.isNotBlank(goodsOrderDetail.qty)){
-              tempList.push(goodsOrderDetail);
-            }
-          }
-          this.submitData.goodsOrderDetailList = tempList;
-        }else{
-          this.submitData.goodsOrderDetailList = [];
-        }
-
-      },shopChanged(){
+      },shopChange(){
         axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
           this.shop = response.data;
         });
         this.refreshDetailList();
       },refreshDetailList(){
-        if(!this.isCreate){
-          return ;  //修改时不能改变detail列表，只能修改detail里每条记录的数量
-        }
-        if(this.goodsOrder.shopId&&this.goodsOrder.netType) {
+        if(this.inputForm.shopId && this.inputForm.netType) {
           this.pageLoading = true;
-          axios.get('/api/ws/future/crm/goodsOrder/findDetailListForNew', {params: {shopId:this.goodsOrder.shopId, netType: this.goodsOrder.netType}}).then((response)=>{
+          axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType}}).then((response)=>{
             this.setGoodsOrderDetailList(response.data);
             this.pageLoading = false;
           });
         }else{
           this.setGoodsOrderDetailList([]);
         }
-
       },setGoodsOrderDetailList(list){
         this.goodsOrderDetailList = list;
         this.filterProducts();
