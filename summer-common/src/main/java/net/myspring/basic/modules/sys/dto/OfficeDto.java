@@ -18,6 +18,7 @@ public class OfficeDto extends DataDto{
     private String name;
     private String type;
     private String parentId;
+    private String parentIds;
     private boolean locked;
     private boolean enabled;
     private String officeRuleId;
@@ -27,6 +28,7 @@ public class OfficeDto extends DataDto{
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
     private String jointType;
+    private String jointLevel;
     private BigDecimal point;
     private BigDecimal taskPoint;
     private String sort;
@@ -47,6 +49,14 @@ public class OfficeDto extends DataDto{
 
     public void setJointType(String jointType) {
         this.jointType = jointType;
+    }
+
+    public String getJointLevel() {
+        return jointLevel;
+    }
+
+    public void setJointLevel(String jointLevel) {
+        this.jointLevel = jointLevel;
     }
 
     public String getSort() {
@@ -119,6 +129,14 @@ public class OfficeDto extends DataDto{
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public String getParentIds() {
+        return parentIds;
+    }
+
+    public void setParentIds(String parentIds) {
+        this.parentIds = parentIds;
     }
 
     public boolean isLocked() {

@@ -71,7 +71,7 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "findGoodsOrderDetailFormList")
-    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType) {
+    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType,String shipType) {
         return null;
     }
 }

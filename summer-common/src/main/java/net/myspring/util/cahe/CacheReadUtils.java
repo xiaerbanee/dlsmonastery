@@ -123,6 +123,43 @@ public class CacheReadUtils {
         }
     }
 
+    public static Map<String,Object> getCache(RedisTemplate redisTemplate,String key) {
+        List<String> keyList = Lists.newArrayList(key);
+        Map<String,Object> cacheMap = getCacheMap(redisTemplate,keyList);
+        if(cacheMap.size()>0) {
+            return (Map<String, Object>) ((List)cacheMap.get(key)).get(1);
+        } else {
+            return null;
+        }
+    }
+
+
+    public static Map<String,Object> getCacheMap(RedisTemplate redisTemplate, List<String> keyList) {
+        RedisCallback<List<Object>> pipelineCallback = connection -> {
+            connection.openPipeline();
+            for (String key : keyList) {
+                connection.get(key.getBytes());
+            }
+            return connection.closePipeline();
+        };
+        List<byte[]> cacheList = (List<byte[]>) redisTemplate.execute(pipelineCallback);
+        Map<String,Object> cacheMap = Maps.newHashMap();
+        for (int i = 0; i < keyList.size(); i++) {
+            byte[] cache = cacheList.get(i);
+            Object object = null;
+
+            if (cache != null) {
+                String json = new String(cache);
+                object = ObjectMapperUtils.readValue(json,Object.class);
+            }
+            if (object != null) {
+                cacheMap.put(keyList.get(i),object);
+            }
+        }
+        return cacheMap;
+    }
+
+
     private static Object getConvertObject(Object input,Class clazz) {
         Object result;
         String inputStr = StringUtils.toString(input);
@@ -152,35 +189,6 @@ public class CacheReadUtils {
             result =inputStr;
         }
         return result;
-    }
-
-    private static Map<String,Object> getCacheMap(RedisTemplate redisTemplate, List<String> keyList) {
-        RedisCallback<List<Object>> pipelineCallback = connection -> {
-            connection.openPipeline();
-            for (String key : keyList) {
-                connection.get(key.getBytes());
-            }
-            return connection.closePipeline();
-        };
-        List<byte[]> cacheList = (List<byte[]>) redisTemplate.execute(pipelineCallback);
-        Map<String,Object> cacheMap = Maps.newHashMap();
-        for (int i = 0; i < keyList.size(); i++) {
-            byte[] cache = cacheList.get(i);
-            Object object = deSerialize(cache);
-            if (object != null) {
-                cacheMap.put(keyList.get(i),object);
-            }
-        }
-        return cacheMap;
-    }
-
-    private static Object deSerialize(byte[] bytes) {
-        Object object = null;
-        if (bytes != null) {
-            String json = new String(bytes);
-            object = ObjectMapperUtils.readValue(json,Object.class);
-        }
-        return object;
     }
 
     private static List<CacheInputField> getCacheFieldList(Class clazz) {
