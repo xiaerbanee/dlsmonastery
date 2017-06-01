@@ -76,9 +76,17 @@ public class OfficeController {
         if(!restResponse.getSuccess()){
             return restResponse;
         }
-        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
-        officeService.save(officeForm);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        String areaId="";
+        if(!officeForm.isCreate()){
+            Office office=officeService.findOne(officeForm.getId());
+            areaId=office.getAreaId();
+        }
+        Office office=officeService.save(officeForm);
+        restResponse=new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        if(StringUtils.isNotBlank(areaId)&&!areaId.equals(office.getAreaId())){
+            restResponse=new RestResponse("保存成功,请到门店管理页面进行部门同步", ResponseCodeEnum.saved.name());
+        }
+        return restResponse;
     }
 
 
