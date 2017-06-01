@@ -13,7 +13,7 @@ public class AdPricesystemDto extends DataDto<AdPricesystem> {
     private String name;
     protected Boolean enabled;
     protected Boolean locked;
-    private List<String> officeIdList= Lists.newArrayList();
+    private List<String> officeIdList;
 
     public List<String> getOfficeIdList() {
         return officeIdList;

@@ -233,7 +233,7 @@ public class OfficeService {
     }
 
     public List<OfficeDto> findByIds(List<String> ids){
-        List<Office> officeList=officeRepository.findByIds(ids);
+        List<Office> officeList=officeRepository.findByEnabledIsTrueAndIdIn(ids);
         List<OfficeDto> officeDtoList= BeanUtil.map(officeList,OfficeDto.class);
         return officeDtoList;
     }
