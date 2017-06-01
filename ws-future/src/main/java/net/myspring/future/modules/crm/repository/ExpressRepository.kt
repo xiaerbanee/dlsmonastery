@@ -44,6 +44,7 @@ interface ExpressRepositoryCustom{
 
 class ExpressRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ExpressRepositoryCustom {
     override fun findDto(id: String): ExpressDto {
+
         return namedParameterJdbcTemplate.queryForObject("""
         SELECT
             ord.extend_type expressOrderExtendType,
@@ -54,14 +55,18 @@ class ExpressRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplat
             ord.from_depot_id expressOrderFromDepotId,
             ord.to_depot_id expressOrderToDepotId,
             ord.express_company_id expressOrderExpressCompanyId,
+            ord.total_qty expressOrderTotalQty,
+            toDepot.area_id expressOrderToDepotAreaId,
             t1.*
         FROM
            crm_express t1
            LEFT JOIN crm_express_order ord ON t1.express_order_id = ord.id
+           LEFT JOIN crm_depot toDepot ON ord.to_depot_id = toDepot.id
         WHERE
             t1.enabled = 1
             AND t1.id = :id
           """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(ExpressDto::class.java))
+
     }
 
     override fun findPage(pageable : Pageable, expressrQuery: ExpressQuery): Page<ExpressDto> {
@@ -76,10 +81,13 @@ class ExpressRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplat
             ord.from_depot_id expressOrderFromDepotId,
             ord.to_depot_id expressOrderToDepotId,
             ord.express_company_id expressOrderExpressCompanyId,
+            ord.total_qty expressOrderTotalQty,
+            toDepot.area_id expressOrderToDepotAreaId,
             t1.*
         FROM
             crm_express t1
             LEFT JOIN crm_express_order ord ON t1.express_order_id = ord.id
+            LEFT JOIN crm_depot toDepot ON ord.to_depot_id = toDepot.id
         WHERE
             t1.enabled = 1
         """)

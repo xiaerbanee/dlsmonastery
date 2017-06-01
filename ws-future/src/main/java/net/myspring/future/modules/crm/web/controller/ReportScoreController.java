@@ -10,6 +10,7 @@ import net.myspring.future.modules.crm.service.ReportScoreService;
 import net.myspring.future.modules.crm.web.form.ReportScoreForm;
 import net.myspring.future.modules.crm.web.query.ImeAllotQuery;
 import net.myspring.future.modules.crm.web.query.ReportScoreQuery;
+import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -62,11 +63,11 @@ public class ReportScoreController {
 
     @RequestMapping(value = "findDto")
     public ReportScoreDto findDto(String id) {
-        ReportScoreDto result = reportScoreService.findDto(id);
-        if(result == null){
-            result = new ReportScoreDto();
+        if(StringUtils.isBlank(id)){
+            return new ReportScoreDto();
         }
-        return result;
+
+        return reportScoreService.findDto(id);
 
     }
 

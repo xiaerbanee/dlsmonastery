@@ -10,6 +10,7 @@ import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -31,15 +35,13 @@ public class ExpressCompanyController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ExpressCompanyDto> list(Pageable pageable, ExpressCompanyQuery expressCompanyQuery){
-        Page<ExpressCompanyDto> page = expressCompanyService.findPage(pageable,expressCompanyQuery);
-        return page;
+        return expressCompanyService.findPage(pageable,expressCompanyQuery);
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(ExpressCompanyForm expressCompanyForm) {
-        expressCompanyService.delete(expressCompanyForm);
-        RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return restResponse;
+    public RestResponse delete(String id) {
+        expressCompanyService.delete(id);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "save")
@@ -52,20 +54,17 @@ public class ExpressCompanyController {
     }
 
     @RequestMapping(value = "getForm")
-    public ExpressCompanyForm getForm(ExpressCompanyForm expressCompanyForm){
-        return expressCompanyService.getForm(expressCompanyForm);
+    public ExpressCompanyForm findOne(ExpressCompanyForm expressCompanyForm){
+        expressCompanyForm=expressCompanyService.getForm(expressCompanyForm);
+        expressCompanyForm.setExpressTypeList(ExpressCompanyTypeEnum.getList());
+        return expressCompanyForm;
     }
 
     @RequestMapping(value="getQuery")
     public  ExpressCompanyQuery getQuery(ExpressCompanyQuery expressCompanyQuery){
-        return expressCompanyService.getQuery(expressCompanyQuery);
+        expressCompanyQuery.setExpressTypeList(ExpressCompanyTypeEnum.getList());
+        return expressCompanyQuery;
     }
-
-    @RequestMapping(value = "findOne")
-    public ExpressCompanyDto findOne(String id){
-        return expressCompanyService.findOne(id);
-    }
-
 
     @RequestMapping(value = "search")
     public List<ExpressCompanyDto> search(String key){
@@ -74,9 +73,11 @@ public class ExpressCompanyController {
 
     @RequestMapping(value = "searchById")
     public  List<ExpressCompanyDto> searchById(String id){
-        List<ExpressCompanyDto> expressCompanyDtoList = Lists.newArrayList();
-        expressCompanyDtoList.add(expressCompanyService.findOne(id));
-        return expressCompanyDtoList;
+        if(StringUtils.isBlank(id)){
+            return new ArrayList<>();
+        }
+
+        return Collections.singletonList(expressCompanyService.findDto(id));
     }
 
 }

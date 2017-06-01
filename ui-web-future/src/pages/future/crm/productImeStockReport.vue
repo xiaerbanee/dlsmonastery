@@ -2,70 +2,95 @@
   <div>
     <head-tab active="productImeStockReport"></head-tab>
     <div>
-      <el-form :model="reportScore" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item :label="$t('reportScoreForm.scoreDate')" prop="scoreDate">
-              <date-picker v-model="reportScore.scoreDate" ></date-picker>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.companyScore')" prop="companyScore">
-              <el-input v-model="reportScore.companyScore"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.companyMonthScore')" prop="companyMonthScore">
-              <el-input v-model="reportScore.companyMonthScore"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.cardQty')" prop="cardQty">
-              <el-input v-model="reportScore.cardQty"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.monthCardQty')" prop="monthCardQty">
-              <el-input v-model="reportScore.monthCardQty"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.rank')" prop="rank">
-              <el-input v-model="reportScore.rank"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.remarks')" prop="remarks">
-              <el-input v-model="reportScore.remarks"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('reportScoreForm.save')}}</el-button>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-card class="box-card">
-              {{$t('reportScoreForm.productNames')}}： {{productTypeNames}}
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-form>
+      <el-row>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productIme:stockReport'">{{$t('productImeStockReport.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" icon="check" v-permit="'crm:productIme:stockReport'">{{$t('productImeStockReport.export')}}</el-button>
+        <el-button type="primary" @click="viewDetail" icon="check" v-permit="'crm:productIme:stockReport'">{{$t('productImeStockReport.viewDetail')}}</el-button>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+      </el-row>
+      <el-dialog :title="$t('productImeStockReport.filter')" v-model="formVisible" size="tiny" class="search-form">
+        <el-form :model="formData">
+          <el-row :gutter="4">
+            <el-col :span="24">
+              <el-form-item :label="formLabel.sumType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.sumType" clearable>
+                  <el-option v-for="item in formData.sumTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.outType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.outType" clearable>
+                  <el-option v-for="item in formData.outTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.areaType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.areaType" clearable>
+                  <el-option v-for="item in formData.areaTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.townType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.townType" clearable>
+                  <el-option v-for="item in formData.townTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.date.label"  :label-width="formLabelWidth">
+                <date-picker  v-model="formData.date"  ></date-picker>
+              </el-form-item>
+              <el-form-item :label="formLabel.scoreType.label"  :label-width="formLabelWidth">
+                <bool-select  v-model="formData.scoreType"  ></bool-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.productIds.label"  :label-width="formLabelWidth">
+                <product-select  v-model="formData.productIds"  multiple ></product-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="search()">{{$t('productImeStockReport.sure')}}</el-button>
+        </div>
+      </el-dialog>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading"    :element-loading-text="$t('productImeStockReport.loading')" @sort-change="sortChange" stripe border>
+        <el-table-column  prop="depotName" :label="$t('productImeStockReport.depotName')" width="180" ></el-table-column>
+        <el-table-column prop="qty" :label="$t('productImeStockReport.qty')"  ></el-table-column>
+        <el-table-column prop="percent" :label="$t('productImeStockReport.percent')"></el-table-column>
+      </el-table>
+      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
 <script>
-    export default{
+
+  import productSelect from 'components/future/product-select'
+
+  export default{
+    components:{
+      productSelect,
+
+    },
       data(){
           return{
             isCreate:this.$route.query.id===null,
             submitDisabled:false,
-            productTypeNames:'',
-            notScores:'',
-            reportScore:{},
+
+            formData:{},
             submitData:{
-              scoreDate:'',
-              companyScore:"",
-              companyMonthScore:"",
-              cardQty:"",
-              monthCardQty:"",
-              rank:"",
-              remarks:''
+              sumType:'',
+              outType:"",
+              areaType:"",
+              townType:"",
+              date:"",
+              scoreType:"",
+              productIds:''
+            },formLabel:{
+              sumType:{label:this.$t('productImeStockReport.sumType')},
+              outType:{label:this.$t('productImeStockReport.outType')},
+              areaType:{label:this.$t('productImeStockReport.areaType')},
+              townType:{label:this.$t('productImeStockReport.townType')},
+              date:{label:this.$t('productImeStockReport.date')},
+              scoreType:{label:this.$t('productImeStockReport.scoreType')},
+              productIds:{label:this.$t('productImeStockReport.productIds')},
+
             },
-            rules: {
-              scoreDate: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              companyScore: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              companyMonthScore: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              cardQty: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              monthCardQty: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              rank: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}]
-            }
+
           }
       },
       methods:{
@@ -94,16 +119,9 @@
           })
         }
       },created(){
-
-        axios.get('/api/ws/future/crm/reportScore/getProductTypeNamesAndNotScores').then((response)=>{
-          this.productTypeNames = response.data.productTypeNames;
-          this.notScores = response.data.notScores;
+        axios.get('/api/ws/future/crm/productIme/getStockReportQuery').then((response)=>{
+          this.formData=response.data;
         });
-
-        //每日打分，只能新增和删除，不能修改
-        axios.get('/api/ws/future/crm/reportScore/findDto').then((response)=>{
-          this.reportScore=response.data;
-        })
       }
     }
 </script>

@@ -16,6 +16,15 @@ public class DepotAccountQuery extends BaseQuery {
     private String dutyDateRange;
     private String officeId;
     private Boolean specialityStore;
+    private Boolean accountTaxPermitted;
+
+    public Boolean getAccountTaxPermitted() {
+        return accountTaxPermitted;
+    }
+
+    public void setAccountTaxPermitted(Boolean accountTaxPermitted) {
+        this.accountTaxPermitted = accountTaxPermitted;
+    }
 
     public LocalDate getDutyDateStart() {
         if(StringUtils.isNotBlank(dutyDateRange)) {

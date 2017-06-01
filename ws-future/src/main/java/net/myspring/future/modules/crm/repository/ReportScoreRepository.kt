@@ -28,24 +28,17 @@ interface ReportScoreRepositoryCustom{
 
     fun findPage(pageable: Pageable, reportScoreQuery: ReportScoreQuery): Page<ReportScoreDto>
 
-    fun findDto(id: String?): ReportScoreDto?
+    fun findDto(id: String): ReportScoreDto
 }
 
 class ReportScoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ReportScoreRepositoryCustom{
-    override fun findDto(id: String?): ReportScoreDto? {
-        if(StringUtils.isBlank(id)){
-            return null
-        }
-        val resultList = namedParameterJdbcTemplate.query("""
+    override fun findDto(id: String): ReportScoreDto {
+        return namedParameterJdbcTemplate.queryForObject("""
         select t1.*
         from crm_report_score t1
         where t1.enabled = 1 and t1.id = :id
                 """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ReportScoreDto::class.java))
-        if(resultList !=null && resultList.size >0){
-            return resultList[0]
-        }else {
-            return null;
-        }
+
     }
 
     override fun findPage(pageable: Pageable, reportScoreQuery: ReportScoreQuery): Page<ReportScoreDto> {

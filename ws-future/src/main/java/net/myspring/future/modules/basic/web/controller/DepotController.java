@@ -1,5 +1,7 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
@@ -132,5 +134,11 @@ public class DepotController {
         return depotService.findOne(id);
     }
 
+    @RequestMapping(value = "synArea")
+    public RestResponse synArea(String accountId) {
+        RequestUtils.getRequestEntity().setAccountId(accountId);
+        depotService.synArea();
+        return new RestResponse("同步成功",null);
+    }
 
 }

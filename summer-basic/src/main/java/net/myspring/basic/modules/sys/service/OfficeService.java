@@ -92,6 +92,10 @@ public class OfficeService {
         return CollectionUtil.extractToList(sameAreaByOfficeId,"id");
     }
 
+    public Office findOne(String id) {
+        return officeRepository.findOne(id);
+    }
+
     public OfficeDto findOne(OfficeDto officeDto) {
         if (!officeDto.isCreate()) {
             Office office = officeRepository.findOne(officeDto.getId());
@@ -128,6 +132,7 @@ public class OfficeService {
 
     public Office save(OfficeForm officeForm) {
         Office office;
+        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
         if(StringUtils.isNotBlank(officeForm.getParentId())){
             OfficeRule officeRule=officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
             officeForm.setAreaId(officeManager.getOfficeIdByOfficeRule(officeForm.getParentId(),officeRule.getId()));

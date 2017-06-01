@@ -42,11 +42,7 @@ public class ProductImeUploadService {
     public void save(ProductImeUpload productImeUpload){
     }
 
-
-    public void audit(String[] ids,Boolean pass){
-    }
-
-    public void batchAudit(String[] ids, String pass) {
+    public void batchAudit(String[] ids, boolean pass) {
 
         if(ids == null || ids.length == 0){
             return;
@@ -58,8 +54,9 @@ public class ProductImeUploadService {
         }
 
         for (ProductImeUpload each : productImeUploads) {
-            each.setStatus("1".equals(pass) ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());
-            productImeUploadRepository.save(each);
+            each.setStatus(pass ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());
+
         }
+        productImeUploadRepository.save(productImeUploads);
     }
 }

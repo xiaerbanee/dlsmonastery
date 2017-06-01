@@ -2,30 +2,22 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.domain.ProductImeSale;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.service.ProductImeSaleService;
-import net.myspring.future.modules.crm.service.StoreAllotDetailService;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleBackForm;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleForm;
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
-import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -47,11 +39,11 @@ public class ProductImeSaleController {
 
     @RequestMapping(value = "findDto")
     public ProductImeSaleDto findDto(String id) {
-        ProductImeSaleDto result = productImeSaleService.findDto(id);
-        if(result == null){
-            result = new ProductImeSaleDto();
+        if(StringUtils.isBlank(id)){
+            return new ProductImeSaleDto();
         }
-        return result;
+        return productImeSaleService.findDto(id);
+
     }
 
     @RequestMapping(value = "checkForSale")
@@ -72,11 +64,6 @@ public class ProductImeSaleController {
         return productImeSaleService.checkForSaleBack(imeList);
     }
 
-
-    @RequestMapping(value = "getForm")
-    public String getForm(ProductImeSale productImeSale) {
-        return null;
-    }
 
     @RequestMapping(value = "sale")
     public RestResponse sale(ProductImeSaleForm productImeSaleForm) {

@@ -11,8 +11,8 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.reportDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.reportDate" type="daterange" align="right" :placeholder="$t('dataReportList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="formLabel.reportDateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.reportDateRange" ></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -60,20 +60,18 @@
         },
         formData:{
           parentOfficeId:"",
-          reportDateStart: util.formatLocalDate(util.getFirstDayOfMonth(new Date())),
-          reportDateEnd:util.formatLocalDate(new Date()),
           productName: "",
-          reportDateBTW:"",
-          reportDate:""
+          reportDateRange:"",
+
         },formLabel:{
-          reportDateBTW:{label:this.$t('dataReportList.dateRange')},
+          reportDateRange:{label:this.$t('dataReportList.dateRange')},
         },actionButton:{
           hasEdit:false
         },
         formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
-        pickerDateOption:util.pickerDateOption,
+
 
       };
     },

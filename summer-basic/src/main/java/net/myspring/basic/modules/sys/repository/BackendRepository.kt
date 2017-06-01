@@ -64,7 +64,7 @@ interface BackendRepositoryCustom{
 
 class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate,val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): BackendRepositoryCustom{
     override fun findByRoleId(roleId: String): MutableList<BackendMenuDto> {
-        return namedParameterJdbcTemplate.query("""
+        var list= namedParameterJdbcTemplate.queryForList("""
                     SELECT
                     t1.id,
                     t1.name,
@@ -72,7 +72,6 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                     t2.id as 'moduleId',
                     t2.name as 'moduleName',
                     t2.code as 'moduleCode',
-                    t2.icon as 'moduleIcon',
                     t3.id as 'categoryId',
                     t3.name as 'categoryName',
                     t3.code as 'categoryCode',
@@ -92,11 +91,53 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                     and t4.enabled=1
                     and t5.enabled=1
                     and t5.role_id=:roleId
-                """, Collections.singletonMap("roleId",roleId), BeanPropertyRowMapper(BackendMenuDto::class.java));
+                """, Collections.singletonMap("roleId",roleId));
+        var backendMenuDtoMap = Maps.newLinkedHashMap<String,BackendMenuDto>();
+        for(item in list) {
+            var id = StringUtils.toString(item["id"]);
+            var name = item["name"] as String;
+            var code = item["code"] as String;
+            var moduleId = StringUtils.toString(item["moduleId"]);
+            var moduleName = item["moduleName"] as String;
+            var moduleCode = item["moduleCode"] as String;
+            var categoryId = StringUtils.toString(item["categoryId"]);
+            var categoryName = item["categoryName"] as String;
+            var categoryCode = item["categoryCode"] as String;
+            var menuId = StringUtils.toString(item["menuId"]);
+            var menuName = item["menuName"] as String;
+            var menuCode = item["menuCode"] as String;
+            if(!backendMenuDtoMap.containsKey(id)) {
+                var backendMenuDto = BackendMenuDto();
+                backendMenuDto.id = id;
+                backendMenuDto.name=name;
+                backendMenuDto.code = code;
+                backendMenuDtoMap.put(id,backendMenuDto);
+            }
+            if(!backendMenuDtoMap[id]!!.backendModuleMenuDtoMap!!.containsKey(moduleId)) {
+                var backendModuleMenuDto = BackendModuleMenuDto();
+                backendModuleMenuDto.id = moduleId;
+                backendModuleMenuDto.name = moduleName;
+                backendModuleMenuDto.code = moduleCode;
+                backendMenuDtoMap[id]!!.backendModuleMenuDtoMap!!.put(moduleId,backendModuleMenuDto);
+            }
+            if(!backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap.containsKey(categoryId)) {
+                var menuCategoryMenuDto = MenuCategoryMenuDto();
+                menuCategoryMenuDto.id = categoryId;
+                menuCategoryMenuDto.name = categoryName;
+                menuCategoryMenuDto.code = categoryCode;
+                backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap.put(categoryId,menuCategoryMenuDto);
+            }
+            var frontendMenuDto = FrontendMenuDto();
+            frontendMenuDto.id = menuId;
+            frontendMenuDto.name = menuName;
+            frontendMenuDto.code = menuCode;
+            backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap[categoryId]!!.frontendMenuDtoMap.put(menuId,frontendMenuDto);
+        }
+        return Lists.newArrayList(backendMenuDtoMap.values);
     }
 
     override fun findRolePermissionByRoleId(roleId: String): MutableList<BackendMenuDto> {
-        return namedParameterJdbcTemplate.query("""
+        var list= namedParameterJdbcTemplate.queryForList("""
                         SELECT
                         t1.id,
                         t1.name,
@@ -104,7 +145,6 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                         t2.id as 'moduleId',
                         t2.name as 'moduleName',
                         t2.code as 'moduleCode',
-                        t2.icon as 'moduleIcon',
                         t3.id as 'categoryId',
                         t3.name as 'categoryName',
                         t3.code as 'categoryCode',
@@ -128,7 +168,50 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                         and t5.enabled=1
                         and t6.enabled=1
                         and t6.role_id=:roleId
-                """, Collections.singletonMap("roleId",roleId), BeanPropertyRowMapper(BackendMenuDto::class.java));
+                """, Collections.singletonMap("roleId",roleId));
+        var backendMenuDtoMap = Maps.newLinkedHashMap<String,BackendMenuDto>();
+        for(item in list) {
+            var id = StringUtils.toString(item["id"]);
+            var name = item["name"] as String;
+            var code = item["code"] as String;
+            var moduleId = StringUtils.toString(item["moduleId"]);
+            var moduleName = item["moduleName"] as String;
+            var moduleCode = item["moduleCode"] as String;
+            var categoryId = StringUtils.toString(item["categoryId"]);
+            var categoryName = item["categoryName"] as String;
+            var categoryCode = item["categoryCode"] as String;
+            var menuId = StringUtils.toString(item["menuId"]);
+            var menuName = item["menuName"] as String;
+            var menuCode = item["menuCode"] as String;
+            if(!backendMenuDtoMap.containsKey(id)) {
+                var backendMenuDto = BackendMenuDto();
+                backendMenuDto.id = id;
+                backendMenuDto.name=name;
+                backendMenuDto.code = code;
+                backendMenuDtoMap.put(id,backendMenuDto);
+            }
+            if(!backendMenuDtoMap[id]!!.backendModuleMenuDtoMap!!.containsKey(moduleId)) {
+                var backendModuleMenuDto = BackendModuleMenuDto();
+                backendModuleMenuDto.id = moduleId;
+                backendModuleMenuDto.name = moduleName;
+                backendModuleMenuDto.code = moduleCode;
+                backendMenuDtoMap[id]!!.backendModuleMenuDtoMap!!.put(moduleId,backendModuleMenuDto);
+            }
+            if(!backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap.containsKey(categoryId)) {
+                var menuCategoryMenuDto = MenuCategoryMenuDto();
+                menuCategoryMenuDto.id = categoryId;
+                menuCategoryMenuDto.name = categoryName;
+                menuCategoryMenuDto.code = categoryCode;
+                backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap.put(categoryId,menuCategoryMenuDto);
+            }
+            var frontendMenuDto = FrontendMenuDto();
+            frontendMenuDto.id = menuId;
+            frontendMenuDto.name = menuName;
+            frontendMenuDto.code = menuCode;
+            backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap[categoryId]!!.frontendMenuDtoMap.put(menuId,frontendMenuDto);
+        }
+        return Lists.newArrayList(backendMenuDtoMap.values);
+
     }
 
     override fun findByMenuList(menuList: MutableList<String>): MutableList<BackendMenuDto> {

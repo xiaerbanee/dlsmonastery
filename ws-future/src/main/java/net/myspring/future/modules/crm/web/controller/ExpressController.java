@@ -8,6 +8,7 @@ import net.myspring.future.modules.crm.dto.ExpressDto;
 import net.myspring.future.modules.crm.service.ExpressService;
 import net.myspring.future.modules.crm.web.form.ExpressForm;
 import net.myspring.future.modules.crm.web.query.ExpressQuery;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +25,7 @@ public class ExpressController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ExpressDto> list(Pageable pageable, ExpressQuery expressQuery){
-        Page<ExpressDto> page = expressService.findPage(pageable, expressQuery);
-        return page;
+        return expressService.findPage(pageable, expressQuery);
     }
 
     @RequestMapping(value = "getQuery")
@@ -37,23 +37,34 @@ public class ExpressController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ExpressForm expressForm) {
-        expressService.saveOrUpdate(expressForm);
+        expressService.save(expressForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(ExpressForm expressForm) {
-        expressService.logicDelete(expressForm.getId());
-        RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return restResponse;
+    public RestResponse delete(String id) {
+        expressService.logicDelete(id);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
 
     }
 
-    @RequestMapping(value = "getForm")
-    public ExpressForm getForm(ExpressForm expressForm){
-        ExpressForm result = expressService.getForm(expressForm);
+    @RequestMapping(value = "findDto")
+    public ExpressDto findDto(String id){
 
-        return result;
+        if(StringUtils.isBlank(id)){
+            return new ExpressDto();
+        }
+
+        return expressService.findDto(id);
+
+    }
+
+
+
+    @RequestMapping(value="export")
+    public String export(ExpressQuery expressQuery) {
+
+        return expressService.export(expressQuery);
     }
 
 

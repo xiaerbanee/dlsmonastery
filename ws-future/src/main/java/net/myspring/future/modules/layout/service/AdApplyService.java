@@ -147,23 +147,23 @@ public class AdApplyService {
         return null;
     }
 
-    public List<SimpleExcelSheet> findSimpleExcelSheets(Workbook workbook, Map<String, Object> map) {
-        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-        List<AdApply> adApplyList = adApplyRepository.findByFilter(map);
-        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "id", "编码"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shop.name", "门店"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "product.code", "物料编码"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "product.name", "物料名称"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "applyQty", "申请数"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "confirmQty", "确认数"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "leftQty", "待开单数"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "created.loginName", "创建人"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "expiryDateRemarks", "截止日期"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("征订明细", adApplyList, simpleExcelColumnList);
-        simpleExcelSheetList.add(simpleExcelSheet);
-        return simpleExcelSheetList;
-    }
+//    public List<SimpleExcelSheet> findSimpleExcelSheets(Workbook workbook, Map<String, Object> map) {
+//        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+//        List<AdApply> adApplyList = adApplyRepository.findByFilter(map);
+//        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "id", "编码"));
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shop.name", "门店"));
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "product.code", "物料编码"));
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "product.name", "物料名称"));
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "applyQty", "申请数"));
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "confirmQty", "确认数"));
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "leftQty", "待开单数"));
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "created.loginName", "创建人"));
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "expiryDateRemarks", "截止日期"));
+//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
+//        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("征订明细", adApplyList, simpleExcelColumnList);
+//        simpleExcelSheetList.add(simpleExcelSheet);
+//        return simpleExcelSheetList;
+//    }
 }

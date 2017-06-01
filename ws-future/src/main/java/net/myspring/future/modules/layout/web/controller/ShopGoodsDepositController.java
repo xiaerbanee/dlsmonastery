@@ -3,6 +3,7 @@ package net.myspring.future.modules.layout.web.controller;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.OutBillTypeEnum;
+import net.myspring.future.common.enums.ShopGoodsDepositStatusEnum;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.future.modules.layout.service.ShopGoodsDepositService;
 import net.myspring.future.modules.layout.web.form.ShopGoodsDepositForm;
@@ -32,7 +33,7 @@ public class ShopGoodsDepositController {
     @RequestMapping(value="getQuery")
     public ShopGoodsDepositQuery getQuery(ShopGoodsDepositQuery shopGoodsDepositQuery) {
         shopGoodsDepositQuery.setOutBillTypeList(OutBillTypeEnum.getList());
-        shopGoodsDepositQuery.setStatusList(null);//TODO 审批状态
+       shopGoodsDepositQuery.setStatusList(ShopGoodsDepositStatusEnum.getList());
 
         return shopGoodsDepositQuery;
     }

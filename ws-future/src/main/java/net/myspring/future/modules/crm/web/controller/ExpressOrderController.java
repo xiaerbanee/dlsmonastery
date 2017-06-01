@@ -27,8 +27,7 @@ public class ExpressOrderController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ExpressOrderDto> list(Pageable pageable, ExpressOrderQuery expressOrderQuery){
-        Page<ExpressOrderDto> page = expressOrderService.findPage(pageable, expressOrderQuery);
-        return page;
+        return expressOrderService.findPage(pageable, expressOrderQuery);
     }
 
     @RequestMapping(value = "getQuery")
@@ -52,12 +51,6 @@ public class ExpressOrderController {
 
     }
 
-    @RequestMapping(value = "getForm")
-    public ExpressOrderForm getForm(ExpressOrderForm expressOrderForm){
-        ExpressOrderForm result = expressOrderService.getForm(expressOrderForm);
-        return result;
-    }
-
     @RequestMapping(value = "exportEMS", method = RequestMethod.GET)
     public String exportEMS(ExpressOrderQuery expressOrderQuery) throws IOException {
         return expressOrderService.exportEMS(expressOrderQuery);
@@ -68,8 +61,8 @@ public class ExpressOrderController {
         return expressOrderService.export(expressOrderQuery);
     }
 
-    @RequestMapping(value = "findOne")
-    public ExpressOrderDto findOne(String id) throws IOException {
+    @RequestMapping(value = "findDto")
+    public ExpressOrderDto findDto(String id) throws IOException {
         if(StringUtils.isBlank(id)){
             return new ExpressOrderDto();
         }
@@ -83,7 +76,11 @@ public class ExpressOrderController {
         if(StringUtils.isBlank(goodsOrderId)){
             return new ExpressOrderDto();
         }
-        return expressOrderService.findByGoodsOrderId(goodsOrderId);
+        ExpressOrderDto expressOrderDto = expressOrderService.findByGoodsOrderId(goodsOrderId);
+        if(expressOrderDto == null){
+            expressOrderDto = new ExpressOrderDto();
+        }
+        return expressOrderDto;
     }
 
 

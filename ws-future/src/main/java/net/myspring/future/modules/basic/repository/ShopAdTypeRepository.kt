@@ -34,14 +34,6 @@ interface ShopAdTypeRepository : BaseRepository<ShopAdType,String>,ShopAdTypeRep
     @CachePut(key = "#p0.id")
     fun save(shopAdType: ShopAdType): ShopAdType
 
-    /*@Query("""
-        SELECT t1.*
-        FROM crm_shop_ad_type t1
-        where t1.enabled=1
-    """, nativeQuery = true)
-    //TODO 需要修改
-    fun findAllByEnabled(): MutableList<ShopAdTypeDto>*/
-
 
 }
 
