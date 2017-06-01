@@ -24,6 +24,7 @@ import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -127,9 +128,9 @@ public class OfficeService {
 
     public Office save(OfficeForm officeForm) {
         Office office;
-        if(officeForm.getParent()!=null){
+        if(StringUtils.isNotBlank(officeForm.getParentId())){
             OfficeRule officeRule=officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
-            officeForm.setAreaId(officeManager.getOfficeIdByOfficeRule(officeForm.getParent().getId(),officeRule.getId()));
+            officeForm.setAreaId(officeManager.getOfficeIdByOfficeRule(officeForm.getParentId(),officeRule.getId()));
         }
         if (officeForm.isCreate()) {
             office = BeanUtil.map(officeForm, Office.class);
@@ -142,18 +143,17 @@ public class OfficeService {
             if(officeForm.getParent()==null){
                 officeForm.setAreaId(officeForm.getId());
             }
-            officeManager.officeFilter(officeForm.getId());
             office = officeRepository.findOne(officeForm.getId());
             String oldParentIds=office.getParentIds();
             ReflectionUtil.copyProperties(officeForm, office);
             officeRepository.save(office);
-            List<Office> list = officeRepository.findByParentIdsLike("%," + office.getId() + ",%");
+            List<Office> list = officeRepository.findByParentIdsLike("," + office.getId() + ",");
             for (Office item : list) {
                 item.setParentIds(item.getParentIds().replace(oldParentIds, office.getParentIds()));
+                item.setAreaId(office.getAreaId());
                 officeRepository.save(item);
             }
         }
-
         List<OfficeBusiness> businessOfficeList = officeBusinessRepository.findAllBusinessIdById(office.getId());
         if (OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())&&CollectionUtil.isNotEmpty(officeForm.getOfficeIdList())) {
             List<String> businessOfficeIdList = CollectionUtil.extractToList(businessOfficeList, "businessOfficeId");
