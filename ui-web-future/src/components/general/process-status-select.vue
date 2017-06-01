@@ -7,7 +7,7 @@
 </template>
 <script>
   export default {
-    props: ['value','multiple','disabled'],
+    props: ['value','type','multiple','disabled'],
     data() {
       return {
         status : this.value,
@@ -18,7 +18,7 @@
         this.$emit('input', newVal);
      }
     },created () {
-      axios.get('/api/general/sys/processFlow',{params:{processTypeName:this.value}}).then((response)=>{
+      axios.get('/api/general/sys/processFlow',{params:{processTypeName:this.type}}).then((response)=>{
         this.itemList=response.data;
       });
     },watch: {
