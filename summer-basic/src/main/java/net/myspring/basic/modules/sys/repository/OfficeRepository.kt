@@ -27,7 +27,7 @@ import java.util.*
  */
 @CacheConfig(cacheNames = arrayOf("offices"))
 interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom{
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(office: Office): Office
 
     @Cacheable
