@@ -104,7 +104,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         WHERE
             t1.enabled = 1
             AND t1.depot_id = :depotId
-            AND t1.box_ime IN :boxImeList
+            AND t1.box_ime IN (:boxImeList)
         UNION
             SELECT
                 t1.*
@@ -114,9 +114,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 t1.enabled = 1
                 AND t1.depot_id = :depotId
                 AND (
-                    t1.ime IN :imeList
-                    OR t1.ime2 IN :imeList
-                    OR t1.meid IN :imeList
+                    t1.ime IN (:imeList)
+                    OR t1.ime2 IN (:imeList)
+                    OR t1.meid IN (:imeList)
                 )
                 """, BeanPropertySqlParameterSource(productImeShipQuery), BeanPropertyRowMapper(ProductIme::class.java))
     }

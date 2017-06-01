@@ -74,11 +74,9 @@ public class ReportScoreService {
     }
 
     public ReportScoreDto findDto(String id) {
-        ReportScoreDto result = reportScoreRepository.findDto(id);
-        if(result !=null){
-            cacheUtils.initCacheInput(result);
-        }
-        return result;
+        ReportScoreDto reportScoreDto = reportScoreRepository.findDto(id);
+        cacheUtils.initCacheInput(reportScoreDto);
+        return reportScoreDto;
     }
 
     public String getProductTypeNames() {

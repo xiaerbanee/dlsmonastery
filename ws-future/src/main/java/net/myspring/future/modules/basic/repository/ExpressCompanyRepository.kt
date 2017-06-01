@@ -57,9 +57,27 @@ interface ExpressCompanyRepository : BaseRepository<ExpressCompany,String>,Expre
 
 interface ExpressCompanyRepositoryCustom{
     fun findPage(pageable: Pageable, expressCompanyQuery: ExpressCompanyQuery): Page<ExpressCompanyDto>
+
+
+    fun findByNameLike(companyId: String, name: String): MutableList<ExpressCompanyDto>
 }
 
 class ExpressCompanyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ExpressCompanyRepositoryCustom{
+    override fun findByNameLike(companyId: String, name: String): MutableList<ExpressCompanyDto> {
+        val params = HashMap<String, Any>()
+        params.put("companyId", companyId)
+        params.put("name", name)
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t1.*
+            FROM
+                crm_express_company t1
+            WHERE
+                t1.enabled=1
+                AND t1.company_id = :companyId
+                AND t1.name LIKE CONCAT('%',:name,'%')
+          """, params, BeanPropertyRowMapper(ExpressCompanyDto::class.java))
+    }
 
     override fun findPage(pageable: Pageable, expressCompanyQuery: ExpressCompanyQuery): Page<ExpressCompanyDto> {
         val sb = StringBuilder("""

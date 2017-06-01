@@ -37,6 +37,7 @@ interface ShopAllotRepository : BaseRepository<ShopAllot,String>,ShopAllotReposi
 
 interface ShopAllotRepositoryCustom{
     fun findPage(pageable: Pageable, shopAllotQuery: ShopAllotQuery): Page<ShopAllotDto>
+
     fun findShopAllotDto(id: String): ShopAllotDto
 }
 

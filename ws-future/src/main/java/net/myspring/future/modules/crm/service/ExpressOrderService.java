@@ -52,7 +52,9 @@ public class ExpressOrderService {
     private CacheUtils cacheUtils;
 
     public ExpressOrderDto findDto(String id){
-        return expressOrderRepository.findDto(id);
+        ExpressOrderDto expressOrderDto = expressOrderRepository.findDto(id);
+        cacheUtils.initCacheInput(expressOrderDto);
+        return expressOrderDto;
     }
 
     public Page<ExpressOrderDto> findPage(Pageable pageable, ExpressOrderQuery expressOrderQuery) {
@@ -61,28 +63,6 @@ public class ExpressOrderService {
 
         cacheUtils.initCacheInput(page.getContent());
         return page;
-    }
-
-
-    public void update(ExpressOrder expressOrder){
-        expressOrderRepository.save(expressOrder);
-    }
-
-    public void save(ExpressOrder expressOrder){
-        expressOrderRepository.save(expressOrder);
-    }
-
-    public ExpressOrderForm getForm(ExpressOrderForm expressOrderForm) {
-
-        if(expressOrderForm.isCreate()){
-            throw new ServiceException("expressOrderCantNew");
-        }
-
-        ExpressOrderDto expressOrderDto = expressOrderRepository.findDto(expressOrderForm.getId());
-        cacheUtils.initCacheInput(expressOrderDto);
-        return BeanUtil.map(expressOrderDto, ExpressOrderForm.class);
-
-
     }
 
     public void save(ExpressOrderForm expressOrderForm) {

@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.service;
 
 import net.myspring.future.common.enums.OutBillTypeEnum;
+import net.myspring.future.common.enums.ShopGoodsDepositStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
@@ -81,7 +82,7 @@ public class ShopGoodsDepositService {
         if(shopGoodsDepositForm.isCreate()){
             ShopGoodsDeposit shopGoodsDeposit = new ShopGoodsDeposit();
             ReflectionUtil.copyProperties(shopGoodsDepositForm, shopGoodsDeposit);
-            shopGoodsDeposit.setStatus("省公司审核");
+            shopGoodsDeposit.setStatus(ShopGoodsDepositStatusEnum.省公司审核.name());
             shopGoodsDeposit.setOutBillType(OutBillTypeEnum.手工日记账.name());
             shopGoodsDepositRepository.save(shopGoodsDeposit);
 
@@ -111,7 +112,7 @@ public class ShopGoodsDepositService {
                     continue;
                 }
                 ShopGoodsDeposit shopGoodsDeposit=shopGoodsDepositRepository.findOne(eachId);
-                if(shopGoodsDeposit == null || !"省公司审核".equals(shopGoodsDeposit.getStatus()) || StringUtils.isNotBlank(shopGoodsDeposit.getOutCode())){
+                if(shopGoodsDeposit == null || !ShopGoodsDepositStatusEnum.省公司审核.name().equals(shopGoodsDeposit.getStatus()) || StringUtils.isNotBlank(shopGoodsDeposit.getOutCode())){
                     continue;
                 }
 
@@ -128,7 +129,7 @@ public class ShopGoodsDepositService {
 //                        k3cloudSynDao.save(k3CloudSynEntity);
 //                        shopGoodsDeposit.setK3CloudSynEntity(k3CloudSynEntity);
                 }
-                shopGoodsDeposit.setStatus("已通过");
+                shopGoodsDeposit.setStatus(ShopGoodsDepositStatusEnum.已通过.name());
                 shopGoodsDeposit.setLocked(true);
                 shopGoodsDeposit.setBillDate(LocalDateTime.now());
                 shopGoodsDepositRepository.save(shopGoodsDeposit);

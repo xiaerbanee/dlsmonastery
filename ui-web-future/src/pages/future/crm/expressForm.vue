@@ -2,30 +2,30 @@
   <div>
     <head-tab active="expressForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="express" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('expressForm.expressOrderExtendType')" prop="expressOrderExtendType" v-if="!isCreate">
-          {{inputForm.expressOrderExtendType}}
+          {{express.expressOrderExtendType}}
         </el-form-item>
         <el-form-item :label="$t('expressForm.expressOrderId')" prop="expressOrderId"  v-if="!isCreate">
-          {{inputForm.expressOrderId}}
+          {{express.expressOrderId}}
         </el-form-item>
         <el-form-item :label="$t('expressForm.expressOrderToDepotId')" prop="expressOrderToDepotId">
-          <depot-select :disabled="!isCreate" v-model="inputForm.expressOrderToDepotId" category="shop" ></depot-select>
+          <depot-select :disabled="!isCreate" v-model="express.expressOrderToDepotId" category="shop" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('expressForm.code')" prop="code">
-          <el-input v-model="inputForm.code"></el-input>
+          <el-input v-model="express.code"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressForm.weight')" prop="weight">
-          <el-input v-model="inputForm.weight"></el-input>
+          <el-input v-model="express.weight"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressForm.qty')" prop="qty">
-          <el-input v-model="inputForm.qty"></el-input>
+          <el-input v-model="express.qty"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressForm.tracking')" prop="tracking">
-          <el-input v-model="inputForm.tracking"></el-input>
+          <el-input v-model="express.tracking"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressForm.remarks')" prop="remarks">
-          <el-input type="textarea"  v-model="inputForm.remarks"></el-input>
+          <el-input type="textarea"  v-model="express.remarks"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('expressForm.save')}}</el-button>
@@ -44,7 +44,8 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            inputForm:{},
+
+            express:{},
             submitData:{
               id:'',
               code:'',
@@ -68,7 +69,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
+              util.copyValue(this.express,this.submitData);
               axios.post('/api/ws/future/crm/express/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 if(this.inputForm.create){
@@ -86,9 +87,10 @@
           })
         }
       },created(){
-        axios.get('/api/ws/future/crm/express/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-        })
+
+      axios.get('/api/ws/future/crm/express/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.express = response.data;
+      });
 
       }
     }

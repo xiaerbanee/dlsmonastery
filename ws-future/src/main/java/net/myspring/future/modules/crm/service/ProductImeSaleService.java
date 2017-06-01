@@ -76,7 +76,9 @@ public class ProductImeSaleService {
     }
 
     public ProductImeSaleDto findDto(String id) {
-        return productImeSaleRepository.findDto(id);
+        ProductImeSaleDto productImeSaleDto = productImeSaleRepository.findDto(id);
+        cacheUtils.initCacheInput(productImeSaleDto);
+        return productImeSaleDto;
     }
 
     public String checkForSale(List<String> imeList) {

@@ -34,16 +34,6 @@ interface AdApplyRepository : BaseRepository<AdApply,String>,AdApplyRepositoryCu
     """)
     fun findAllId(): MutableList<String>
 
-    @Query("""
-        SELECT
-            t.id
-        FROM
-            #{#entityName} t
-        WHERE
-            t.enabled = 1
-    """)
-            //TODO 修改该query
-    fun findByFilter(map: Map<String, Any>): MutableList<AdApply>
 
 }
 

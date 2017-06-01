@@ -89,15 +89,12 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
 interface ProductTypeRepositoryCustom{
     fun findPage(pageable: Pageable, productTypeQuery: ProductTypeQuery): Page<ProductTypeDto>
 
-     fun findDto(id: String?): ProductTypeDto?
+     fun findDto(id: String): ProductTypeDto
 }
 
 class ProductTypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ProductTypeRepositoryCustom{
-    override fun findDto(id: String?): ProductTypeDto? {
-        if(id == null){
-            return null
-        }
-        val  result = namedParameterJdbcTemplate.query("""
+    override fun findDto(id: String): ProductTypeDto {
+        return namedParameterJdbcTemplate.queryForObject("""
         SELECT
                 group_concat(t2.name) AS productNames, group_concat(t2.id) AS productIds, t1.*
             FROM
@@ -109,11 +106,6 @@ class ProductTypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
             AND t1.id = :id
 
                 """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ProductTypeDto::class.java));
-        if(result!=null && result.size > 0){
-            return result[0]
-        }else {
-            return null
-        }
 
     }
 

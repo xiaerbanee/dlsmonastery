@@ -57,7 +57,7 @@ interface DepotRepositoryCustom{
 
     fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto>
 
-    fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,boolean: Boolean):Page<DepotAccountDto>
+    fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery):Page<DepotAccountDto>
 
     fun findByAccountId(accountId: String): MutableList<Depot>
 }
@@ -166,7 +166,7 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
         return query.resultList as Page<DepotDto>
     }
 
-    override fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery,accountTaxPermitted: Boolean):Page<DepotAccountDto>{
+    override fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery):Page<DepotAccountDto>{
         val sb = StringBuffer()
         sb.append("""
         select
@@ -182,7 +182,7 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
         if(depotAccountQuery.specialityStore != null && depotAccountQuery.specialityStore ){
             sb.append("""   and t2.speciality_store_type in ("总公司自营", "总公司经销商联营", "综合卖场") """)
         }
-        if((depotAccountQuery.specialityStore == null || !depotAccountQuery.specialityStore) && accountTaxPermitted){
+        if((depotAccountQuery.specialityStore == null || !depotAccountQuery.specialityStore) && depotAccountQuery.accountTaxPermitted != null && depotAccountQuery.accountTaxPermitted){
             sb.append("""
                 and t1.tax_name IS NOT NULL
                 and t1.tax_name != ''

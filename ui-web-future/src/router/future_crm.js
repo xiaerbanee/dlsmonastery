@@ -58,6 +58,7 @@ const productImeSaleReportGrid = r => require.ensure([], () => r(require('pages/
 const productImeStockReport = r => require.ensure([], () => r(require('pages/future/crm/productImeStockReport.vue')));
 const productImeStockReportGrid = r => require.ensure([], () => r(require('pages/future/crm/productImeStockReportGrid.vue')));
 const productMonthPriceSum = r => require.ensure([], () => r(require('pages/future/crm/productMonthPriceSum.vue')));
+const dataReportList = r => require.ensure([], () => r(require('pages/future/crm/dataReportList.vue')));
 const storeAllotList = r => require.ensure([], () => r(require('pages/future/crm/storeAllotList.vue')));
 const storeAllotForm = r => require.ensure([], () => r(require('pages/future/crm/storeAllotForm.vue')));
 const storeAllotShip= r => require.ensure([], () => r(require('pages/future/crm/storeAllotShip.vue')));
@@ -128,6 +129,7 @@ let routes = [
   {path:'/future/crm/productImeStockReport',component:productImeStockReport,name:'productImeStockReport'},
   {path:'/future/crm/productImeStockReportGrid',component:productImeStockReportGrid,name:'productImeStockReportGrid',meta: {menu:"productImeStockReport"}},
   {path:'/future/crm/productMonthPriceSum',component:productMonthPriceSum,name:'productMonthPriceSum'},
+  {path:'/future/crm/dataReportList',component:dataReportList,name:'dataReportList'},
   {path:'/future/crm/storeAllotList',component:storeAllotList,name:'storeAllotList'},
   {path:'/future/crm/storeAllotForm',component:storeAllotForm,name:'storeAllotForm',meta: {menu:"storeAllotList"}},
   {path:'/future/crm/storeAllotShip',component:storeAllotShip,name:'storeAllotShip',meta: {menu:"storeAllotList"}},

@@ -4,7 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
+import com.sun.xml.internal.bind.v2.TODO;
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
@@ -45,6 +49,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +57,7 @@ import javax.persistence.criteria.Predicate;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,6 +87,9 @@ public class StoreAllotService {
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private ProductImeRepository productImeRepository;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public StoreAllotDto findDto(String id) {
         StoreAllotDto storeAllotDto = storeAllotRepository.findDto(id);
@@ -383,14 +392,24 @@ public class StoreAllotService {
     }
 
     public List<String> getMergeStoreIds(){
-        String mergeStoreIds ="3489,9873";//TODO 需要调用配置参数
-        return StringUtils.getSplitList(mergeStoreIds, ",");
+
+        CompanyConfigCacheDto companyConfigCacheDto =  CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
+        if(companyConfigCacheDto == null || StringUtils.isBlank(companyConfigCacheDto.getValue())){
+            return null;
+        }
+
+        return StringUtils.getSplitList(companyConfigCacheDto.getValue(), ",");
     }
 
     public List<SimpleStoreAllotDetailDto> findDetailListForFastAllot() {
 
         LocalDate billDate = LocalDateUtils.parse(LocalDateUtils.format(LocalDate.now()));
-        String toStoreId =getMergeStoreIds().get(1);
+        List<String> mergeIdList = getMergeStoreIds();
+        if(mergeIdList == null || mergeIdList.size() <=1){
+
+            throw  new ServiceException("没有正确配置该公司的MERGE_STORE_IDS");
+        }
+        String toStoreId =mergeIdList.get(1);
 
         List<SimpleStoreAllotDetailDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(billDate, toStoreId, "待发货", RequestUtils.getCompanyId());
         if(result!=null){

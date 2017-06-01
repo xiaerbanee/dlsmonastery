@@ -149,13 +149,8 @@ public class BankInService {
     }
 
     public BankInDto findDto(String id) {
-        if(StringUtils.isBlank(id)){
-            return null;
-        }
-
-        BankInDto result = bankInRepository.findDto(id);
-        cacheUtils.initCacheInput(result);
-
-        return result;
+        BankInDto bankInDto = bankInRepository.findDto(id);
+        cacheUtils.initCacheInput(bankInDto);
+        return bankInDto;
     }
 }

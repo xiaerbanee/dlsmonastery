@@ -107,8 +107,9 @@ public class DepotService {
             throw new ServiceException("查询条件请选择为70天以内");
         }
 
+        depotAccountQuery.setAccountTaxPermitted(true);
         //TODO  判断是否有tax权限
-        Page<DepotAccountDto> depotAccountDtoList = depotRepository.findDepotAccountList(pageable, depotAccountQuery, true);
+        Page<DepotAccountDto> depotAccountDtoList = depotRepository.findDepotAccountList(pageable, depotAccountQuery);
         //TODO 设置应收项
         cacheUtils.initCacheInput(depotAccountDtoList.getContent());
 

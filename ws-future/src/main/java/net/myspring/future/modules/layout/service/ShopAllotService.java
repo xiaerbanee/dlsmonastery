@@ -76,9 +76,9 @@ public class ShopAllotService {
 
     public ShopAllotDto findDto(String id) {
 
-        ShopAllotDto result = shopAllotRepository.findShopAllotDto(id);
-        cacheUtils.initCacheInput(result);
-        return result;
+        ShopAllotDto shopAllotDto = shopAllotRepository.findShopAllotDto(id);
+        cacheUtils.initCacheInput(shopAllotDto);
+        return shopAllotDto;
     }
 
     public ShopAllot save(ShopAllotForm shopAllotForm) {
@@ -212,7 +212,7 @@ public class ShopAllotService {
     }
 
     public ShopAllotDto findDtoForViewOrAudit(String id) {
-        ShopAllotDto result = findDto(id);
+        ShopAllotDto shopAllotDto = findDto(id);
         //TODO 如果是申请状态，需要看到两个门店的应收
 //        if(AuditType.APPLY.toString().equals(shopAllot.getStatus())) {
 //        result.setFromShopShouldGet();
@@ -220,6 +220,6 @@ public class ShopAllotService {
 //            shopAllot.getFromShop().setShouldGet(k3cloudService.findShouldGet(company.getOutDbname(),shopAllot.getFromShop().getOutId()));
 //            shopAllot.getToShop().setShouldGet(k3cloudService.findShouldGet(company.getOutDbname(),shopAllot.getToShop().getOutId()));
 //        }
-        return result;
+        return shopAllotDto;
     }
 }
