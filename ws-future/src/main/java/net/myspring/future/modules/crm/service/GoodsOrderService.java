@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -84,7 +85,6 @@ public class GoodsOrderService {
         RestResponse restResponse = new RestResponse("有效门店", ResponseCodeEnum.valid.name(),true);
         if(StringUtils.isBlank(shop.getPricesystemId())) {
             restResponse.getErrors().add(new RestErrorField("没有价格体系","no_pricesystem","shopId"));
-            restResponse.setSuccess(false);
         }
         //检查当前客户是否有未处理订单
         GoodsOrderQuery goodsOrderQuery = new GoodsOrderQuery();
@@ -274,4 +274,20 @@ public class GoodsOrderService {
         return goodsOrderDto;
     }
 
+    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType) {
+        //修改订单的时候
+        List<GoodsOrderDetailForm> goodsOrderDetailFormList  = Lists.newArrayList();
+        if(StringUtils.isNotBlank(id)) {
+            GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
+            shopId = goodsOrder.getShopId();
+            netType = goodsOrder.getNetType();
+
+            List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(id);
+            for(GoodsOrderDetail goodsOrderDetail:goodsOrderDetailList) {
+
+            }
+
+        }
+        return null;
+    }
 }
