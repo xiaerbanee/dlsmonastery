@@ -53,6 +53,11 @@ const reportScoreList = r => require.ensure([], () => r(require('pages/future/cr
 const reportScoreForm = r => require.ensure([], () => r(require('pages/future/crm/reportScoreForm.vue')));
 const reportScoreOfficeList = r => require.ensure([], () => r(require('pages/future/crm/reportScoreOfficeList.vue')));
 const reportScoreAreaList = r => require.ensure([], () => r(require('pages/future/crm/reportScoreAreaList.vue')));
+const productImeSaleReport = r => require.ensure([], () => r(require('pages/future/crm/productImeSaleReport.vue')));
+const productImeSaleReportGrid = r => require.ensure([], () => r(require('pages/future/crm/productImeSaleReportGrid.vue')));
+const productImeStockReport = r => require.ensure([], () => r(require('pages/future/crm/productImeStockReport.vue')));
+const productImeStockReportGrid = r => require.ensure([], () => r(require('pages/future/crm/productImeStockReportGrid.vue')));
+const productMonthPriceSum = r => require.ensure([], () => r(require('pages/future/crm/productMonthPriceSum.vue')));
 const storeAllotList = r => require.ensure([], () => r(require('pages/future/crm/storeAllotList.vue')));
 const storeAllotForm = r => require.ensure([], () => r(require('pages/future/crm/storeAllotForm.vue')));
 const storeAllotShip= r => require.ensure([], () => r(require('pages/future/crm/storeAllotShip.vue')));
@@ -118,6 +123,11 @@ let routes = [
   {path:'/future/crm/reportScoreForm',component:reportScoreForm,name:'reportScoreForm',meta: {menu:"reportScoreList"}},
   {path:'/future/crm/reportScoreOfficeList',component:reportScoreOfficeList,name:'reportScoreOfficeList' },
   {path:'/future/crm/reportScoreAreaList',component:reportScoreAreaList,name:'reportScoreAreaList',meta: {menu:"reportScoreOfficeList"}},
+  {path:'/future/crm/productImeSaleReport',component:productImeSaleReport,name:'productImeSaleReport'},
+  {path:'/future/crm/productImeSaleReportGrid',component:productImeSaleReportGrid,name:'productImeSaleReportGrid',meta: {menu:"productImeSaleReport"}},
+  {path:'/future/crm/productImeStockReport',component:productImeStockReport,name:'productImeStockReport'},
+  {path:'/future/crm/productImeStockReportGrid',component:productImeStockReportGrid,name:'productImeStockReportGrid',meta: {menu:"productImeStockReport"}},
+  {path:'/future/crm/productMonthPriceSum',component:productMonthPriceSum,name:'productMonthPriceSum'},
   {path:'/future/crm/storeAllotList',component:storeAllotList,name:'storeAllotList'},
   {path:'/future/crm/storeAllotForm',component:storeAllotForm,name:'storeAllotForm',meta: {menu:"storeAllotList"}},
   {path:'/future/crm/storeAllotShip',component:storeAllotShip,name:'storeAllotShip',meta: {menu:"storeAllotList"}},
