@@ -68,7 +68,7 @@
     },
       data(){
           return{
-            isCreate:this.$route.query.id===null,
+            isCreate:this.$route.query.id==null,
             submitDisabled:false,
 
             formData:{},

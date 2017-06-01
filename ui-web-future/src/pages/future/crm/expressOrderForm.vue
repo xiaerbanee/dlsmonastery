@@ -56,10 +56,11 @@
       },
       methods:{
         formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
+              this.submitDisabled = true;
               util.copyValue(this.expressOrder,this.submitData);
               axios.post('/api/ws/future/crm/expressOrder/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
@@ -69,11 +70,9 @@
                 } else {
                   this.$router.push({name:'expressOrderList',query:util.getQuery("expressOrderList")})
                 }
-              }).catch(function () {
+              }).catch( () => {
                 this.submitDisabled = false;
               });
-            }else{
-              this.submitDisabled = false;
             }
           })
         }

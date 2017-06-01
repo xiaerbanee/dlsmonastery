@@ -65,33 +65,32 @@
       },
       methods:{
         formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
+              this.submitDisabled = true;
               util.copyValue(this.express,this.submitData);
               axios.post('/api/ws/future/crm/express/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                if(this.inputForm.create){
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
-                  this.$router.push({name:'expressList',query:util.getQuery("expressList")});
+                this.submitDisabled = false;
+                if(response.data.success) {
+                  if (this.isCreate) {
+                    form.resetFields();
+                  } else {
+                    this.$router.push({name: 'expressList', query: util.getQuery("expressList")});
+                  }
                 }
-              }).catch(function () {
+              }).catch( () => {
                 this.submitDisabled = false;
               });
-            }else{
-              this.submitDisabled = false;
             }
           })
         }
       },created(){
-
-      axios.get('/api/ws/future/crm/express/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.express = response.data;
-      });
-
+        axios.get('/api/ws/future/crm/express/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.express = response.data;
+        });
       }
     }
 </script>

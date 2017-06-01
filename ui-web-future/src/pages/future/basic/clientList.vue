@@ -85,9 +85,9 @@
       },itemAdd(){
         this.$router.push({ name: 'clientForm'})
       },itemAction:function(id,action){
-        if(action=="edit") {
+        if(action==="edit") {
           this.$router.push({ name: 'clientForm', query: { id: id }})
-        }else if(action=="delete"){
+        }else if(action==="delete"){
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/basic/client/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
