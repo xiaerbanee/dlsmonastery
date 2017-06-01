@@ -83,8 +83,8 @@ public class ClientService {
        return clientDto;
     }
 
-    public void delete(ClientDto clientDto){
-        clientRepository.logicDelete(clientDto.getId());
+    public void delete(String id){
+        clientRepository.logicDelete(id);
     }
 
     public String getClientName(String depotId) {
