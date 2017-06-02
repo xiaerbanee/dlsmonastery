@@ -9,9 +9,26 @@ import java.math.BigDecimal;
  * Created by wangzm on 2017/4/21.
  */
 public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
+    //表单信息
+    private String goodsOrderDetailId;
     private String productId;
     private Integer billQty;
-    private BigDecimal price;
+    private Integer price;
+    //显示信息
+    private String productName;
+    private Boolean hasIme;
+    private Boolean allowBill;
+    //办事处已开单数
+    private Integer areaQty;
+    private Integer stockQty;
+
+    public String getGoodsOrderDetailId() {
+        return goodsOrderDetailId;
+    }
+
+    public void setGoodsOrderDetailId(String goodsOrderDetailId) {
+        this.goodsOrderDetailId = goodsOrderDetailId;
+    }
 
     public String getProductId() {
         return productId;
@@ -29,12 +46,51 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
         this.billQty = billQty;
     }
 
-    public BigDecimal getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public Boolean getHasIme() {
+        return hasIme;
+    }
+
+    public void setHasIme(Boolean hasIme) {
+        this.hasIme = hasIme;
+    }
+
+    public Boolean getAllowBill() {
+        return allowBill;
+    }
+
+    public void setAllowBill(Boolean allowBill) {
+        this.allowBill = allowBill;
+    }
+
+    public Integer getAreaQty() {
+        return areaQty;
+    }
+
+    public void setAreaQty(Integer areaQty) {
+        this.areaQty = areaQty;
+    }
+
+    public Integer getStockQty() {
+        return stockQty;
+    }
+
+    public void setStockQty(Integer stockQty) {
+        this.stockQty = stockQty;
+    }
 }
