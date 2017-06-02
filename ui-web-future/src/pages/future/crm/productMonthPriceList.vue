@@ -11,7 +11,9 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-
+              <el-form-item :label="formLabel.month.label" :label-width="formLabelWidth">
+                <month-picker  v-model="formData.month" ></month-picker>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -22,14 +24,12 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productMonthPriceList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('productMonthPriceList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="month" :label="$t('productMonthPriceList.month')" sortable></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('productMonthPriceList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('productMonthPriceList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('productMonthPriceList.createdDate')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('productMonthPriceList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('productMonthPriceList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('productMonthPriceList.edit')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -38,7 +38,11 @@
   </div>
 </template>
 <script>
+  import monthPicker from 'components/common/month-picker'
   export default {
+    components:{
+      monthPicker,
+    },
     data() {
       return {
         pageLoading: false,
@@ -52,8 +56,10 @@
         },formLabel:{
           month:{label:this.$t('productMonthPriceList.month')}
         },
+        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
+        pickerDateOption:util.pickerDateOption,
         loading:false
       };
     },
@@ -62,16 +68,16 @@
         this.pageLoading = true;
         util.copyValue(this.formData,this.submitData);
         util.setQuery("productMonthPriceList",this.submitData);
-        axios.get('/api/ws/future/crm/productMonthPrice',{params:this.submitData}).then((response) => {
+        axios.get('/api/ws/future/crm/productMonthPrice?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        });
+        })
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.sort=util.getSort(column);
+        this.formData.order=util.getOrder(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -80,12 +86,12 @@
       },itemAdd(){
         this.$router.push({ name: 'productMonthPriceForm'})
       },itemAction:function(id,action){
-        if(action==="edit") {
-          this.$router.push({ name: 'productMonthPriceForm', query: { id: id }})
+        if(action=="edit") {
+          //this.$router.push({ name: 'productMonthPriceForm', query: { id: id }})
         }
       }
     },created () {
-      let that = this;
+      var that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/productMonthPrice/getQuery').then((response) =>{
         that.formData=response.data;

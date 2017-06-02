@@ -34,7 +34,7 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('bankList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" v-permit="'crm:bank:edit'" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
+            <div class="action" v-permit="'crm:bank:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button></div>
           </template>
         </el-table-column>
       </el-table>

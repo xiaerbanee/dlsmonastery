@@ -18,7 +18,7 @@
         this.$emit('input', newVal);
      }
     },created () {
-      axios.get('/api/general/sys/processFlow',{params:{processTypeName:this.type}}).then((response)=>{
+      axios.get('/api/general/sys/processFlow/findByProcessTypeName',{params:{processTypeName:this.type}}).then((response)=>{
         this.itemList=response.data;
       });
     },watch: {

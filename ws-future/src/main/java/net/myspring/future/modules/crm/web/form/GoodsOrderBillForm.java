@@ -1,6 +1,9 @@
 package net.myspring.future.modules.crm.web.form;
 
+import com.google.common.collect.Lists;
+import net.myspring.common.dto.NameValueDto;
 import net.myspring.common.form.BaseForm;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
@@ -15,56 +18,17 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
     private String expressCompanyId;
     private Boolean syn;
 
-    private String expressContator;
-    private String expressAddress;
-    private String expressMobilePhone;
+    private String contator;
+    private String address;
+    private String mobilePhone;
+    private String shipType;
 
-    private List<DepotDto> storeList;
-    private List<ExpressCompanyDto> expressCompanyList;
-    private List<String> notDepotStoreIdList;
+    private List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList = Lists.newArrayList();
 
-    private List<GoodsOrderBillDetailForm> goodsOrderDetailList = new ArrayList<>();
+    private List<DepotDto> storeList = Lists.newArrayList();
 
+    private List<ExpressCompanyDto> expressCompanyList = Lists.newArrayList();
 
-    public List<GoodsOrderBillDetailForm> getGoodsOrderDetailList() {
-        return goodsOrderDetailList;
-    }
-
-    public void setGoodsOrderDetailList(List<GoodsOrderBillDetailForm> goodsOrderDetailList) {
-        this.goodsOrderDetailList = goodsOrderDetailList;
-    }
-
-    public List<String> getNotDepotStoreIdList() {
-        return notDepotStoreIdList;
-    }
-
-    public void setNotDepotStoreIdList(List<String> notDepotStoreIdList) {
-        this.notDepotStoreIdList = notDepotStoreIdList;
-    }
-
-    public String getExpressContator() {
-        return expressContator;
-    }
-
-    public void setExpressContator(String expressContator) {
-        this.expressContator = expressContator;
-    }
-
-    public String getExpressAddress() {
-        return expressAddress;
-    }
-
-    public void setExpressAddress(String expressAddress) {
-        this.expressAddress = expressAddress;
-    }
-
-    public String getExpressMobilePhone() {
-        return expressMobilePhone;
-    }
-
-    public void setExpressMobilePhone(String expressMobilePhone) {
-        this.expressMobilePhone = expressMobilePhone;
-    }
 
     public String getStoreId() {
         return storeId;
@@ -72,14 +36,6 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
 
     public void setStoreId(String storeId) {
         this.storeId = storeId;
-    }
-
-    public List<DepotDto> getStoreList() {
-        return storeList;
-    }
-
-    public void setStoreList(List<DepotDto> storeList) {
-        this.storeList = storeList;
     }
 
     public LocalDate getBillDate() {
@@ -98,14 +54,6 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
         this.expressCompanyId = expressCompanyId;
     }
 
-    public List<ExpressCompanyDto> getExpressCompanyList() {
-        return expressCompanyList;
-    }
-
-    public void setExpressCompanyList(List<ExpressCompanyDto> expressCompanyList) {
-        this.expressCompanyList = expressCompanyList;
-    }
-
     public Boolean getSyn() {
         return syn;
     }
@@ -114,8 +62,59 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
         this.syn = syn;
     }
 
+    public String getContator() {
+        return contator;
+    }
 
+    public void setContator(String contator) {
+        this.contator = contator;
+    }
 
+    public String getAddress() {
+        return address;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getShipType() {
+        return shipType;
+    }
+
+    public void setShipType(String shipType) {
+        this.shipType = shipType;
+    }
+
+    public List<GoodsOrderBillDetailForm> getGoodsOrderBillDetailFormList() {
+        return goodsOrderBillDetailFormList;
+    }
+
+    public void setGoodsOrderBillDetailFormList(List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList) {
+        this.goodsOrderBillDetailFormList = goodsOrderBillDetailFormList;
+    }
+
+    public List<DepotDto> getStoreList() {
+        return storeList;
+    }
+
+    public void setStoreList(List<DepotDto> storeList) {
+        this.storeList = storeList;
+    }
+
+    public List<ExpressCompanyDto> getExpressCompanyList() {
+        return expressCompanyList;
+    }
+
+    public void setExpressCompanyList(List<ExpressCompanyDto> expressCompanyList) {
+        this.expressCompanyList = expressCompanyList;
+    }
 }

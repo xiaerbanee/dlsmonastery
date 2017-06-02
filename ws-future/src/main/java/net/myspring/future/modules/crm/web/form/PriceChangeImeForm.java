@@ -15,13 +15,9 @@ public class PriceChangeImeForm extends BaseForm<PriceChangeIme> {
     private String priceChangeId;
     private String priceChangeName;
     private String productId;
-    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
-    private String productName;
     private String productImeId;
     private String ime;
     private String shopId;
-    @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
-    private String shopName;
 
     private String pass;
     private String auditRemarks;
@@ -62,14 +58,6 @@ public class PriceChangeImeForm extends BaseForm<PriceChangeIme> {
         this.productId = productId;
     }
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
     public String getProductImeId() {
         return productImeId;
     }
@@ -92,14 +80,6 @@ public class PriceChangeImeForm extends BaseForm<PriceChangeIme> {
 
     public void setShopId(String shopId) {
         this.shopId = shopId;
-    }
-
-    public String getShopName() {
-        return shopName;
-    }
-
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
     }
 
     public String getPass() {

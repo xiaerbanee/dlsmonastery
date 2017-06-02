@@ -51,7 +51,7 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('demoPhoneList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('demoPhoneList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:demoPhone:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('demoPhoneList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

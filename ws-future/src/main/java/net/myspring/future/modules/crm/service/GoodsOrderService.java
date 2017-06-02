@@ -19,9 +19,11 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
@@ -77,6 +79,8 @@ public class GoodsOrderService {
     private PricesystemDetailRepository pricesystemDetailRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ClientRepository clientRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -175,8 +179,8 @@ public class GoodsOrderService {
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
 
-        for (int i = goodsOrderBillForm.getGoodsOrderDetailList().size() - 1; i >= 0; i--) {
-            GoodsOrderBillDetailForm goodsOrderBillDetailForm=goodsOrderBillForm.getGoodsOrderDetailList().get(i);
+        for (int i = goodsOrderBillForm.getGoodsOrderBillDetailFormList().size() - 1; i >= 0; i--) {
+            GoodsOrderBillDetailForm goodsOrderBillDetailForm=goodsOrderBillForm.getGoodsOrderBillDetailFormList().get(i);
             if (goodsOrderBillDetailForm.getBillQty() == null) {
                 goodsOrderBillDetailForm.setBillQty(0);
             }
@@ -243,9 +247,9 @@ public class GoodsOrderService {
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
         expressOrder.setExtendId(goodsOrder.getId());
         expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
-        expressOrder.setContator(goodsOrderBillForm.getExpressContator());
-        expressOrder.setAddress(goodsOrderBillForm.getExpressAddress());
-        expressOrder.setMobilePhone(goodsOrderBillForm.getExpressMobilePhone());
+        expressOrder.setContator(goodsOrderBillForm.getContator());
+        expressOrder.setAddress(goodsOrderBillForm.getAddress());
+        expressOrder.setMobilePhone(goodsOrderBillForm.getMobilePhone());
         expressOrder.setToDepotId(shop.getId());
         expressOrder.setShipType(goodsOrder.getShipType());
         return expressOrder;
@@ -344,5 +348,71 @@ public class GoodsOrderService {
             goodsOrderDetailForm.setAreaQty(areaDetailMap.get(product.getId()));
         }
         return goodsOrderDetailFormList;
+    }
+
+    public GoodsOrderBillForm getGoodsOrderBillForm(String id) {
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
+        ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+
+        GoodsOrderBillForm goodsOrderBillForm = new GoodsOrderBillForm();
+        goodsOrderBillForm.setBillDate(LocalDate.now());
+        goodsOrderBillForm.setStoreId(goodsOrder.getStoreId());
+        goodsOrderBillForm.setExpressCompanyId(expressOrder.getExpressCompanyId());
+
+        //是否自动同步，根据门店是否包含client
+        goodsOrderBillForm.setSyn(false);
+        Depot shop = depotRepository.findOne(goodsOrder.getShopId());
+        if(StringUtils.isNotBlank(shop.getClientId())) {
+            Client client = clientRepository.findOne(shop.getClientId());
+            goodsOrderBillForm.setSyn(client != null);
+        }
+        goodsOrderBillForm.setRemarks(goodsOrder.getRemarks());
+        goodsOrderBillForm.setShipType(expressOrder.getShipType());
+        goodsOrderBillForm.setAddress(expressOrder.getAddress());
+        goodsOrderBillForm.setContator(expressOrder.getContator());
+        goodsOrderBillForm.setMobilePhone(expressOrder.getMobilePhone());
+
+        //开单明细
+        List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList = Lists.newArrayList();
+        List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap = CollectionUtil.extractToMap(goodsOrderDetailList,"productId");
+        List<PricesystemDetail> pricesystemDetailList = pricesystemDetailRepository.findByPricesystemId(shop.getPricesystemId());
+        Map<String,PricesystemDetail> pricesystemDetailMap =  CollectionUtil.extractToMap(pricesystemDetailList,"productId");
+        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
+        for(GoodsOrderDetail goodsOrderDetail:goodsOrderDetailList) {
+            Product product = productMap.get(goodsOrderDetail.getProductId());
+            GoodsOrderBillDetailForm goodsOrderBillDetailForm = new GoodsOrderBillDetailForm();
+            goodsOrderBillDetailForm.setGoodsOrderDetailId(goodsOrderDetail.getId());
+            goodsOrderBillDetailForm.setProductId(product.getId());
+            goodsOrderBillDetailForm.setQty(goodsOrderDetail.getQty());
+            goodsOrderBillDetailForm.setBillQty(goodsOrderDetail.getBillQty());
+            goodsOrderBillDetailForm.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
+
+            goodsOrderBillDetailForm.setProductName(product.getName());
+            goodsOrderBillDetailForm.setAllowBill(product.getAllowOrder() && product.getAllowBill());
+            goodsOrderBillDetailForm.setHasIme(product.getHasIme());
+            goodsOrderBillDetailFormList.add(goodsOrderBillDetailForm);
+        }
+        //价格体系
+        productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
+        for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
+            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId())) {
+                Product product = productMap.get(pricesystemDetail.getProductId());
+                GoodsOrderBillDetailForm goodsOrderBillDetailForm = new GoodsOrderBillDetailForm();
+                goodsOrderBillDetailForm.setProductId(product.getId());
+                goodsOrderBillDetailForm.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
+
+                goodsOrderBillDetailForm.setProductName(product.getName());
+                goodsOrderBillDetailForm.setAllowBill(product.getAllowOrder() && product.getAllowBill());
+                goodsOrderBillDetailForm.setHasIme(product.getHasIme());
+                goodsOrderBillDetailFormList.add(goodsOrderBillDetailForm);
+            }
+        }
+        //设置areaQty及stockQty
+        for(GoodsOrderBillDetailForm goodsOrderBillDetailForm:goodsOrderBillDetailFormList) {
+            goodsOrderBillDetailForm.setAreaQty(0);
+        }
+        goodsOrderBillForm.setGoodsOrderBillDetailFormList(goodsOrderBillDetailFormList);
+        return goodsOrderBillForm;
     }
 }

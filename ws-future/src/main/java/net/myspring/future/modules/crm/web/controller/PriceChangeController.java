@@ -26,8 +26,6 @@ public class PriceChangeController {
 
     @Autowired
     private PriceChangeService priceChangeService;
-    @Autowired
-    private ProductTypeService productTypeService;
 
 
     @ModelAttribute

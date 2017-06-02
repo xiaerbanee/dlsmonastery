@@ -14,11 +14,8 @@ import java.math.BigDecimal;
 public class PriceChangeProduct extends IdEntity<PriceChangeProduct> {
     private BigDecimal amount;
     private BigDecimal price3;
-    private Product product;
     private String productId;
-    private PriceChange priceChange;
     private String priceChangeId;
-    private ProductType productType;
     private String productTypeId;
 
     public BigDecimal getAmount() {
@@ -37,14 +34,6 @@ public class PriceChangeProduct extends IdEntity<PriceChangeProduct> {
         this.price3 = price3;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public String getProductId() {
         return productId;
     }
@@ -53,28 +42,12 @@ public class PriceChangeProduct extends IdEntity<PriceChangeProduct> {
         this.productId = productId;
     }
 
-    public PriceChange getPriceChange() {
-        return priceChange;
-    }
-
-    public void setPriceChange(PriceChange priceChange) {
-        this.priceChange = priceChange;
-    }
-
     public String getPriceChangeId() {
         return priceChangeId;
     }
 
     public void setPriceChangeId(String priceChangeId) {
         this.priceChangeId = priceChangeId;
-    }
-
-    public ProductType getProductType() {
-        return productType;
-    }
-
-    public void setProductType(ProductType productType) {
-        this.productType = productType;
     }
 
     public String getProductTypeId() {

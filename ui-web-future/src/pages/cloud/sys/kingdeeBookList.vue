@@ -11,9 +11,10 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-form-item :label="formLabel.companyId.label" :label-width="formLabelWidth">
-              <el-input v-model="formData.companyId" auto-complete="off" placeholder="待修改"></el-input>
+              <el-input v-model="formData.companyId" auto-complete="off" placeholder="请输入"></el-input>
             </el-form-item>
             <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-input v-model="formData.companyId" auto-complete="off" placeholder="请输入"></el-input>
               <el-select v-model="formData.name" filterable clearable placeholder="请选择">
                 <el-option v-for="name in formData.nameList" :key="name" :label="name" :value="name"></el-option>
               </el-select>
@@ -37,8 +38,6 @@
         <el-table-column prop="type" label="账套类型"></el-table-column>
         <el-table-column prop="kingdeeUrl" label="URL"></el-table-column>
         <el-table-column prop="kingdeePostUrl" label="POST-URL"></el-table-column>
-        <el-table-column prop="kingdeeUsername" label="用户名"></el-table-column>
-        <el-table-column prop="kingdeePassword" label="密码"></el-table-column>
         <el-table-column prop="kingdeeDbid" label="DBID"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template scope="scope">

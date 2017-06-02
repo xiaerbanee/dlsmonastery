@@ -34,8 +34,8 @@
         <el-table-column prop="remarks" :label="$t('shopImageList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('shopImageList.operation')" width="160">
           <template scope="scope">
-            <el-button type="text" size="small" v-permit="'crm:shopImage:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopImageList.edit')}}</el-button>
-            <el-button type="text" size="small" v-permit="'crm:shopImage:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopImageList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:shopImage:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopImageList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:shopImage:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopImageList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

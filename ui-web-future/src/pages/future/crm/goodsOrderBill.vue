@@ -6,47 +6,40 @@
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.store')" prop="storeId">
-              <el-select v-model="goodsOrder.storeId" clearable filterable @change="storeChanged">
-                <el-option v-for="item in inputProperty.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-select v-model="inputForm.storeId" clearable filterable @change="storeChange">
+                <el-option v-for="item in inputForm.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.billDate')" prop="billDate">
-              <date-picker v-model="goodsOrder.billDate"  ></date-picker>
+              <date-picker v-model="inputForm.billDate"  ></date-picker>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.expressCompany')" prop="expressCompanyId">
-              <el-select v-model="expressOrder.expressCompanyId" clearable  >
-                <el-option v-for="item in inputProperty.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-select v-model="inputForm.expressCompanyId" clearable  >
+                <el-option v-for="item in inputForm.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.synToCloud')" prop="syn">
-              <bool-radio-group v-model="syn"  ></bool-radio-group>
+              <bool-radio-group v-model="inputForm.syn"  ></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shipType')" >
-              {{goodsOrder.shipType}}
+              {{inputForm.shipType}}
             </el-form-item>
-
             <el-form-item :label="$t('goodsOrderBill.goodsOrderRemarks')" prop="remarks">
-              <el-input type="textarea" v-model="goodsOrder.remarks"></el-input>
-            </el-form-item>
-
-            <el-form-item :label="$t('goodsOrderBill.formatId')" >
-              {{goodsOrder.formatId}}
+              <el-input type="textarea" v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.contact')" prop="contator">
-              <el-input v-model="expressOrder.contator"></el-input>
+              <el-input v-model="inputForm.contator"></el-input>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.address')" prop="address">
-              <el-input type="textarea" v-model="expressOrder.address"></el-input>
+              <el-input type="textarea" v-model="inputForm.address"></el-input>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.mobilePhone')" prop="mobilePhone">
-              <el-input v-model="expressOrder.mobilePhone"></el-input>
+              <el-input v-model="inputForm.mobilePhone"></el-input>
             </el-form-item>
-
           </el-col>
           <el-col :span="12">
-
             <el-form-item :label="$t('goodsOrderBill.areaName')" >
-              {{goodsOrder.shopAreaName}}
+              {{shop.areaName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shopName')" >
               {{shop.name}} <div style="color:red;font-size:16px">{{shop.areaType}}</div>
@@ -58,7 +51,7 @@
               {{shop.credit}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shouldGet')" prop="remarks" >
-              {{goodsOrder.shopShouldGet}}
+              {{shouldGet}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shopRemarks')" prop="remarks">
               {{shop.remarks}}
@@ -66,22 +59,8 @@
             <el-form-item :label="$t('goodsOrderBill.credit')" prop="title">
               {{shop.credit}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.goodsDeposit')" prop="title">
-              {{goodsOrder.shopGoodsDeposit}}
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.costGoodsDeposit')" prop="remarks">
-              {{summary.totalProductDeposit}}
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.leftGoodsDeposit')" prop="title">
-              {{summary.leftDeposit}}
-            </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.summary')" prop="summary">
-              {{$t('goodsOrderBill.totalQty')}}:{{summary.totalQty}},{{$t('goodsOrderBill.totalPrice')}}:{{summary.totalPrice}},{{$t('goodsOrderBill.totalProduct')}}:{{summary.totalProduct}}
-              ,{{$t('goodsOrderBill.totalProductPrice')}}:{{summary.totalProductPrice}},{{$t('goodsOrderBill.totalProductDeposit')}}:{{summary.totalProductDeposit}}
-              ,{{$t('goodsOrderBill.shopShouldGetAfterBill')}}:{{summary.shopShouldGetAfterBill}}
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.goodsOrderRebateRule')" >
-              {{goodsOrder.goodsOrderRebateRuleRemarks}}
+                {{summary}}
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderBill.save')}}</el-button>
@@ -89,10 +68,10 @@
           </el-col>
         </el-row>
       </el-form>
-      <el-input v-model="productName" @change="searchDetail" :placeholder="$t('goodsOrderBill.selectTowKey')" style="width:200px;"></el-input>
-      <el-table :data="filterGoodsOrderDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" stripe border>
+      <el-input v-model="filterValue" @change="filterProducts" :placeholder="$t('goodsOrderBill.selectTowKey')" style="width:200px;"></el-input>
+      <el-table :data="filterDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" stripe border>
         <el-table-column  prop="productName" :label="$t('goodsOrderBill.productName')" sortable width="200"></el-table-column>
-        <el-table-column prop="areaBillQty" sortable :label="$t('goodsOrderBill.areaBillQty')"></el-table-column>
+        <el-table-column prop="areaQty" sortable :label="$t('goodsOrderBill.areaBillQty')"></el-table-column>
         <el-table-column prop="storeQty" :label="$t('goodsOrderBill.stock')"></el-table-column>
         <el-table-column prop="allowBill" :label="$t('goodsOrderBill.allowBill')">
           <template scope="scope">
@@ -107,13 +86,12 @@
         </el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderBill.price')">
           <template scope="scope">
-            <input type="text" v-model="scope.row.price" @change="refreshSummary()" class="el-input__inner"/>
+            <input type="text" v-model="scope.row.price" @change="initSummary()" class="el-input__inner"/>
           </template>
-
         </el-table-column>
-        <el-table-column prop="productHasIme" :label="$t('goodsOrderBill.hasIme')" >
+        <el-table-column prop="hasIme" :label="$t('goodsOrderBill.hasIme')" >
           <template scope="scope">
-            <el-tag :type="scope.row.productHasIme ? 'primary' : 'danger'">{{scope.row.productHasIme | bool2str}}</el-tag>
+            <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -121,29 +99,20 @@
   </div>
 </template>
 <script>
-  import depotSelect from 'components/future/depot-select'
-  import productSelect from 'components/future/product-select'
   import boolRadioGroup from 'components/common/bool-radio-group'
-
   export default{
     components:{
-      depotSelect,
-      productSelect,
-      boolRadioGroup,
-
+      boolRadioGroup
     },
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        productName:"",
-        filterGoodsOrderDetailList:[],
-        inputProperty:{},
-        goodsOrder:{},
+        filterValue:"",
+        filterDetailList:[],
+        inputForm:{},
         shop:{},
-        expressOrder:{},
-        goodsOrderDetailList:[],
-        syn:true,
+        shouldGet:null,
         submitData:{
           id:'',
           storeId:"",
@@ -156,147 +125,44 @@
           remarks:"",
           goodsOrderDetailList:[],
         },
-        summary:{},
+        summary:"",
         rules: {},
-        initForm:false,
-        pageLoading:false,
-        totalQty:'',
-        totalPrice:''
+        pageLoading:false
       }
     },
     methods:{
       formSubmit(){
-        this.submitDisabled = true;
-        let form = this.$refs["inputForm"];
-        form.validate((valid) => {
-          if (valid) {
-            this.initSubmitDataBeforeSubmit();
-            axios.post('/api/ws/future/crm/goodsOrder/bill',qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
-              this.$message(response.data.message);
-              if(response.data.success){
-                if(this.isCreate){
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
-                  this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
-                }
-              }else{
-                this.submitDisabled = false;
-              }
-            }).catch(function () {
-              this.submitDisabled = false;
-            });
-          }else{
-            this.submitDisabled = false;
-          }
-        })
-      },searchDetail(){
-        let val=this.productName;
+
+      },filterProducts(){
+        let val=this.filterValue;
+        if(util.isBlank(val)) {
+          this.filterDetailList = this.inputForm.goodsOrderBillDetailFormList;
+          return;
+        }
         let tempList=[];
         for(let goodsOrderDetail of this.goodsOrderDetailList){
-
-          if(util.isNotBlank(goodsOrderDetail.billQty) || util.isNotBlank(goodsOrderDetail.qty)){
-            tempList.push(goodsOrderDetail)
-          }
-        }
-        for(let goodsOrderDetail of this.goodsOrderDetailList){
-          if(util.contains(goodsOrderDetail.productName,val) && util.isBlank(goodsOrderDetail.billQty) && util.isBlank(goodsOrderDetail.qty)){
+          if(util.isNotBlank(goodsOrderDetail.qty)){
             tempList.push(goodsOrderDetail);
           }
         }
-        this.filterGoodsOrderDetailList = tempList;
-      },refreshSummary(){
-
-        let isDepotStore = true;
-        if(this.inputProperty.notDepotStoreIdList && this.submitData.storeId){
-          for(let notDepotStoreId of this.inputProperty.notDepotStoreIdList){
-            if(notDepotStoreId === this.submitData.storeId){
-              isDepotStore = false;
-              break;
-            }
+        for(let goodsOrderDetail of this.goodsOrderDetailList){
+          if(util.contains(goodsOrderDetail.productName, val) && util.isBlank(goodsOrderDetail.qty)){
+            tempList.push(goodsOrderDetail);
           }
         }
+        this.filterDetailList = tempList;
+      },initSummary(){
 
-        let totalQty=0;
-        let totalPrice = 0;
-        let totalProductQty = 0;
-        let totalProductPrice = 0;
-        let totalProductDeposit=0;
+      },storeChange(){
 
-        for(let goodsOrderDetail of this.filterGoodsOrderDetailList){
-          if(goodsOrderDetail.billQty){
-            let goodsOrderDetailBillQty = parseInt(goodsOrderDetail.billQty);
-            let goodsOrderDetailPrice = parseFloat(goodsOrderDetail.price);
-
-            totalQty += goodsOrderDetailBillQty;
-            totalPrice += goodsOrderDetailBillQty * goodsOrderDetailPrice;
-            if(goodsOrderDetail.hasIme){
-              totalProductQty += goodsOrderDetailBillQty;
-              totalProductPrice +=goodsOrderDetailBillQty * goodsOrderDetailPrice;
-              if(isDepotStore){
-                totalProductDeposit += goodsOrderDetailBillQty*parseFloat(goodsOrderDetail.productDepositPrice);
-              }
-            }
-          }
-        }
-        if(totalProductDeposit>this.goodsOrder.shopGoodsDeposit){
-          totalProductDeposit=this.goodsOrder.shopGoodsDeposit;
-        }
-
-        this.summary={
-            totalQty :totalQty,
-            shopShouldGetAfterBill:this.goodsOrder.shopShouldGet +  (totalPrice-totalProductDeposit),
-            totalProductQty:totalProductQty,
-            totalPrice:totalPrice.toFixed(2),
-            totalProductPrice:totalProductPrice.toFixed(2),
-            totalProductDeposit: totalProductDeposit.toFixed(2),
-            leftDeposit : (this.goodsOrder.shopGoodsDeposit - totalProductDeposit).toFixed(2),
-        };
-
-      },
-      storeChanged(){
-        axios.get('/api/ws/future/crm/goodsOrder/findDetailListForBill',{params: {id:this.$route.query.id, storeId:this.submitData.storeId}}).then((response)=>{
-          this.goodsOrderDetailList = response.data;
-          this.searchDetail();
-          this.refreshSummary();
-        });
-
-
-      },initSubmitDataBeforeSubmit(){
-          this.submitData.id = this.goodsOrder.id;
-          this.submitData.storeId = this.goodsOrder.storeId;
-          this.submitData.expressCompanyId = this.expressOrder.expressCompanyId;
-          this.submitData.expressContator = this.expressOrder.contator;
-          this.submitData.expressAddress = this.expressOrder.address;
-          this.submitData.expressMobilePhone = this.expressOrder.mobilePhone;
-          this.submitData.syn = this.syn;
-          this.submitData.remarks = this.goodsOrder.remarks;
-
-          let tempList=[];
-          for(let goodsOrderDetail of this.goodsOrderDetailList){
-
-            if(util.isNotBlank(goodsOrderDetail.id) || util.isNotBlank(goodsOrderDetail.qty) || util.isNotBlank(goodsOrderDetail.billQty)){
-              tempList.push(goodsOrderDetail);
-            }
-          }
-          this.submitData.goodsOrderDetailList = tempList;
       }
     },created(){
       axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputProperty = response.data;
-      });
-      axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.goodsOrder = response.data;
-      });
-      axios.get('/api/ws/future/basic/depot/findShopByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
-        this.shop = response.data;
-      });
-      axios.get('/api/ws/future/crm/expressOrder/findByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
-        this.expressOrder = response.data;
-      });
-      axios.get('/api/ws/future/crm/goodsOrder/findDetailListForBill',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.goodsOrderDetailList = response.data;
-        this.searchDetail();
+        this.inputForm = response.data;
+        this.filterProducts()
+        axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
+          this.shop = response.data;
+        });
       });
     }
   }

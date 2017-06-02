@@ -52,10 +52,13 @@
             isCreate:this.$route.query.id==null,
             action:this.$route.query.action,
             submitDisabled:false,
-            formProperty:{bools:''},
+            formProperty:{},
             fileList:[],
             url:'',
-            inputForm:{},
+            inputForm:{
+              pass:'',
+              auditRemarks:'',
+            },
             submitData:{
                 id:'',
               image:'',
@@ -73,6 +76,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
+                this.inputForm.image = util.getFolderFileIdStr(this.fileList)
                 util.copyValue(this.inputForm,this.submitData);
                 console.log(this.submitData);
               this.inputForm.image = util.getFolderFileIdStr(this.fileList);
@@ -106,7 +110,7 @@
           this.fileList = fileList;
         }
       },created(){
-          axios.get('/api/ws/future/crm/priceChangeIme/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/crm/priceChangeIme/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
             if(this.inputForm.image != null) {
               axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((res)=>{
@@ -114,6 +118,9 @@
               });
             }
           })
+        axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response)=>{
+          this.formProperty=response.data;
+        });
       }
     }
 </script>
