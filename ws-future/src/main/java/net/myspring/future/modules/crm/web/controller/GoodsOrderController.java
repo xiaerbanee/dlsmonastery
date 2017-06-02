@@ -80,7 +80,7 @@ public class GoodsOrderController {
         DepotQuery depotQuery = new DepotQuery();
         depotQuery.setShipType(goodsOrderBillForm.getShipType());
         goodsOrderBillForm.setStoreList(depotService.findStoreList(depotQuery));
-        goodsOrderBillForm.setExpressCompanyDtoList(expressCompanyService.findAll());
+        goodsOrderBillForm.setExpressCompanyList(expressCompanyService.findAll());
         return goodsOrderBillForm;
     }
 

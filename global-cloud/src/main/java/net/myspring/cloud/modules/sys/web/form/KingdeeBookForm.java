@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.sys.web.form;
 
+import net.myspring.cloud.common.enums.KingdeeBookTypeEnum;
 import net.myspring.common.form.BaseForm;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 
@@ -18,8 +19,7 @@ public class KingdeeBookForm extends BaseForm<KingdeeBook> {
     private String kingdeePassword;
     private String kingdeeDbid;
 
-    private List<String> nameList;
-    private List<String> typeList;
+    private KingdeeBookTypeEnum[] typeList;
 
     public String getCompanyId() {
         return companyId;
@@ -85,19 +85,11 @@ public class KingdeeBookForm extends BaseForm<KingdeeBook> {
         this.kingdeeDbid = kingdeeDbid;
     }
 
-    public List<String> getNameList() {
-        return nameList;
-    }
-
-    public void setNameList(List<String> nameList) {
-        this.nameList = nameList;
-    }
-
-    public List<String> getTypeList() {
+    public KingdeeBookTypeEnum[] getTypeList() {
         return typeList;
     }
 
-    public void setTypeList(List<String> typeList) {
+    public void setTypeList(KingdeeBookTypeEnum[] typeList) {
         this.typeList = typeList;
     }
 }

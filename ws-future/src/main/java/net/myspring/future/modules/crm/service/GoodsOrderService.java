@@ -357,7 +357,6 @@ public class GoodsOrderService {
         GoodsOrderBillForm goodsOrderBillForm = new GoodsOrderBillForm();
         goodsOrderBillForm.setBillDate(LocalDate.now());
         goodsOrderBillForm.setStoreId(goodsOrder.getStoreId());
-        goodsOrderBillForm.setExpressCompanyId(goodsOrder.getExpressOrderId());
         goodsOrderBillForm.setExpressCompanyId(expressOrder.getExpressCompanyId());
 
         //是否自动同步，根据门店是否包含client
@@ -368,9 +367,10 @@ public class GoodsOrderService {
             goodsOrderBillForm.setSyn(client != null);
         }
         goodsOrderBillForm.setRemarks(goodsOrder.getRemarks());
+        goodsOrderBillForm.setShipType(expressOrder.getShipType());
         goodsOrderBillForm.setAddress(expressOrder.getAddress());
         goodsOrderBillForm.setContator(expressOrder.getContator());
-        goodsOrderBillForm.setAddress(expressOrder.getAddress());
+        goodsOrderBillForm.setMobilePhone(expressOrder.getMobilePhone());
 
         //开单明细
         List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList = Lists.newArrayList();
@@ -384,6 +384,7 @@ public class GoodsOrderService {
             GoodsOrderBillDetailForm goodsOrderBillDetailForm = new GoodsOrderBillDetailForm();
             goodsOrderBillDetailForm.setGoodsOrderDetailId(goodsOrderDetail.getId());
             goodsOrderBillDetailForm.setProductId(product.getId());
+            goodsOrderBillDetailForm.setQty(goodsOrderDetail.getQty());
             goodsOrderBillDetailForm.setBillQty(goodsOrderDetail.getBillQty());
             goodsOrderBillDetailForm.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
 
@@ -410,7 +411,6 @@ public class GoodsOrderService {
         //设置areaQty及stockQty
         for(GoodsOrderBillDetailForm goodsOrderBillDetailForm:goodsOrderBillDetailFormList) {
             goodsOrderBillDetailForm.setAreaQty(0);
-            goodsOrderBillDetailForm.setStockQty(0);
         }
         goodsOrderBillForm.setGoodsOrderBillDetailFormList(goodsOrderBillDetailFormList);
         return goodsOrderBillForm;

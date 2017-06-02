@@ -58,6 +58,7 @@ public class DictEnumService {
             return null;
         }
     }
+
     @Transactional
     public DictEnum save(DictEnumForm dictEnumForm) {
         DictEnum dictEnum;

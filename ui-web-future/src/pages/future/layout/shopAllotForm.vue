@@ -4,7 +4,7 @@
     <div>
       <el-form :model="shopAllot" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <template>
-          <el-alert :title="message" type="error" show-icon v-if="message !==''"></el-alert>
+          <el-alert :title="errMsg" type="error"  v-if="errMsg !==''"></el-alert>
         </template>
         <el-form-item :label="$t('shopAllotForm.fromShop')" prop="fromShopId">
             <depot-select :disabled="!isCreate" category="directShop" v-model="shopAllot.fromShopId"  @input="refreshProductListIfNeeded" ></depot-select>
@@ -51,7 +51,7 @@
             shopAllot:{},
             shopAllotDetailList:[],
             filterShopAllotDetailList:[],
-            message:'',
+            errMsg:'',
             submitData:{
               id:'',
               fromShopId:'',
@@ -67,34 +67,34 @@
       },
       methods:{
         formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
+              this.submitDisabled = true;
               this.initSubmitDataBeforeSubmit();
-
-            axios.post('/api/ws/future/crm/shopAllot/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
-              this.$message(response.data.message);
-              if(this.isCreate){
-                form.resetFields();
+              axios.post('/api/ws/future/crm/shopAllot/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+                this.$message(response.data.message);
                 this.submitDisabled = false;
-              } else {
-                this.$router.push({name:'shopAllotList',query:util.getQuery("shopAllotList")})
-              }
-            }).catch(function () {
-                this.submitDisabled = false;
+                if(response.data.success) {
+                  if (this.isCreate) {
+                    form.resetFields();
+                  } else {
+                    this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList")});
+                  }
+                }
+              }).catch(() => {
+                  this.submitDisabled = false;
               });
-          }else{
-            this.submitDisabled = false;
-          }
-        })
-      }, initSubmitDataBeforeSubmit(){
+            }
+          })
+        }, initSubmitDataBeforeSubmit(){
           this.submitData.id = this.$route.query.id;
           this.submitData.fromShopId = this.shopAllot.fromShopId;
           this.submitData.toShopId = this.shopAllot.toShopId;
           this.submitData.remarks = this.shopAllot.remarks;
 
-          let tempList=new Array();
+          let tempList=[];
         for(let shopAllotDetail of this.shopAllotDetailList){
 
           if(util.isNotBlank(shopAllotDetail.id) || util.isNotBlank(shopAllotDetail.qty)){
@@ -106,11 +106,11 @@
       ,refreshProductListIfNeeded(){
           //只有新增的时候才会刷新产品列表，修改的时候不能修改fromShop和toShop，所以也就不需要再次加载产品列表
         if(this.shopAllot.fromShopId && this.shopAllot.toShopId && !this.$route.query.id){
-          this.message='';
           axios.get('/api/ws/future/crm/shopAllot/findDetailListForNew',{params:{fromShopId:this.shopAllot.fromShopId,toShopId:this.shopAllot.toShopId}}).then((response)=>{
             if(!response.data.success){
-              this.message=response.data.message;
+              this.errMsg=response.data.errMsg;
             }else{
+              this.errMsg='';
               this.setShopAllotDetailList(response.data.shopAllotDetailList);
             }
           })
@@ -121,7 +121,7 @@
           this.searchDetail();
       },searchDetail(){
         let val=this.productName;
-        let tempList=new Array();
+        let tempList=[];
         for(let shopAllotDetail of this.shopAllotDetailList){
           if(util.isNotBlank(shopAllotDetail.qty)){
             tempList.push(shopAllotDetail);
@@ -144,8 +144,6 @@
       axios.get('/api/ws/future/crm/shopAllot/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
         this.shopAllot = response.data;
       });
-
-
     }
   }
 </script>

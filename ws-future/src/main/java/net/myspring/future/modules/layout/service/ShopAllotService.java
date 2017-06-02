@@ -93,14 +93,14 @@ public class ShopAllotService {
 
             shopAllotRepository.save(shopAllot);
 
-            batchSaveShopAllotDetails(shopAllotForm.getShopAllotDetailFormList(), shopAllot);
+            batchSaveShopAllotDetails(shopAllotForm.getShopAllotDetailList(), shopAllot);
         }else{
             shopAllot = shopAllotRepository.findOne(shopAllotForm.getId());
             shopAllot.setRemarks( shopAllotForm.getRemarks());
             shopAllotRepository.save(shopAllot);
 
 
-            batchSaveShopAllotDetails(shopAllotForm.getShopAllotDetailFormList(), shopAllot);
+            batchSaveShopAllotDetails(shopAllotForm.getShopAllotDetailList(), shopAllot);
         }
 
         return shopAllot;

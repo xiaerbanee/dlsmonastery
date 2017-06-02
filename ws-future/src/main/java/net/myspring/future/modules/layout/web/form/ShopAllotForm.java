@@ -10,7 +10,7 @@ public class ShopAllotForm extends BaseForm<ShopAllot> {
 
     private String fromShopId;
     private String toShopId;
-    private List<ShopAllotDetailForm> shopAllotDetailFormList;
+    private List<ShopAllotDetailForm> shopAllotDetailList;
 
     public String getFromShopId() {
         return fromShopId;
@@ -28,11 +28,11 @@ public class ShopAllotForm extends BaseForm<ShopAllot> {
         this.toShopId = toShopId;
     }
 
-    public List<ShopAllotDetailForm> getShopAllotDetailFormList() {
-        return shopAllotDetailFormList;
+    public List<ShopAllotDetailForm> getShopAllotDetailList() {
+        return shopAllotDetailList;
     }
 
-    public void setShopAllotDetailFormList(List<ShopAllotDetailForm> shopAllotDetailFormList) {
-        this.shopAllotDetailFormList = shopAllotDetailFormList;
+    public void setShopAllotDetailList(List<ShopAllotDetailForm> shopAllotDetailList) {
+        this.shopAllotDetailList = shopAllotDetailList;
     }
 }

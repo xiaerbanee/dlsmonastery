@@ -1,7 +1,12 @@
 package net.myspring.future.modules.crm.web.form;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
+import net.myspring.util.text.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wangzm on 2017/4/21.
@@ -12,6 +17,14 @@ public class ProductImeUploadForm extends BaseForm<ProductImeUpload> {
     private String month;
     private String employeeId;
     private String shopId;
+
+
+    public List<String> getImeList(){
+        if(imeStr == null){
+            return new ArrayList<>();
+        }
+        return  StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+    }
 
     public String getImeStr() {
         return imeStr;

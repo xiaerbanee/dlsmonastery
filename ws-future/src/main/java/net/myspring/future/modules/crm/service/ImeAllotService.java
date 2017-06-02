@@ -10,6 +10,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.ImeAllot;
 import net.myspring.future.modules.crm.domain.ProductIme;
+import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.dto.ImeAllotDto;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
@@ -228,5 +229,11 @@ public class ImeAllotService {
         GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());
 
+    }
+
+    public ImeAllotDto findDto(String id) {
+        ImeAllotDto imeAllotDto = imeAllotRepository.findDto(id);
+        cacheUtils.initCacheInput(imeAllotDto);
+        return imeAllotDto;
     }
 }

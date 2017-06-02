@@ -12,6 +12,7 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
     //表单信息
     private String goodsOrderDetailId;
     private String productId;
+    private Integer qty;
     private Integer billQty;
     private BigDecimal price;
     //显示信息
@@ -20,7 +21,6 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
     private Boolean allowBill;
     //办事处已开单数
     private Integer areaQty;
-    private Integer stockQty;
 
     public String getGoodsOrderDetailId() {
         return goodsOrderDetailId;
@@ -36,6 +36,14 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
     }
 
     public Integer getBillQty() {
@@ -84,13 +92,5 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
 
     public void setAreaQty(Integer areaQty) {
         this.areaQty = areaQty;
-    }
-
-    public Integer getStockQty() {
-        return stockQty;
-    }
-
-    public void setStockQty(Integer stockQty) {
-        this.stockQty = stockQty;
     }
 }
