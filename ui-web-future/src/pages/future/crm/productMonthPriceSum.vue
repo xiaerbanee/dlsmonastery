@@ -2,41 +2,47 @@
   <div>
     <head-tab active="productMonthPriceSum"></head-tab>
     <div>
-      <el-form :model="reportScore" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item :label="$t('reportScoreForm.scoreDate')" prop="scoreDate">
-              <date-picker v-model="reportScore.scoreDate" ></date-picker>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.companyScore')" prop="companyScore">
-              <el-input v-model="reportScore.companyScore"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.companyMonthScore')" prop="companyMonthScore">
-              <el-input v-model="reportScore.companyMonthScore"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.cardQty')" prop="cardQty">
-              <el-input v-model="reportScore.cardQty"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.monthCardQty')" prop="monthCardQty">
-              <el-input v-model="reportScore.monthCardQty"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.rank')" prop="rank">
-              <el-input v-model="reportScore.rank"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.remarks')" prop="remarks">
-              <el-input v-model="reportScore.remarks"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('reportScoreForm.save')}}</el-button>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-card class="box-card">
-              {{$t('reportScoreForm.productNames')}}： {{productTypeNames}}
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-form>
+      <el-row>
+        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+        <el-button type="primary" @click="  " icon="upload" >导出</el-button>
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+      </el-row>
+
+     <el-dialog :title="$t('productMonthPriceSum.filter')"  v-model="formVisible" size="tiny" class="search-form">
+        <el-form :model="formData" method="get" >
+          <el-row :gutter="4">
+            <el-col :span="24">
+              <el-form-item :label="month" :label-width="formLabelWidth">
+                <el-date-picker v-model="formData.month" type="date" align="right"  :picker-options="pickerDateOption"></el-date-picker>
+              </el-form-item>
+              <el-form-item :label="baokaStatus" :label-width="formLabelWidth">
+                <el-select v-model="formData.statue" clearable filterable >
+                  <!--el-option v-for="item in formProperty.statues" :key="item.id" :label="item.name" :value="item.id"></el-option-->
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="area" :label-width="formLabelWidth">
+                <el-select v-model="formData.officeId" clearable filterable >
+                  <!--el-option v-for="item in formProperty.offices" key="item.id" :label="item.name" :value="item.id"></el-option-->
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="search()">搜索</el-button>
+        </div>
+      </el-dialog>
+
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')" @sort-change="sortChange" stripe border>
+        <el-table-column prop="" :label="办事处" ></el-table-column>
+        <el-table-column prop="" :label="考核区域" ></el-table-column>
+        <el-table-column prop="" :label="门店" ></el-table-column>
+        <el-table-column prop="" :label="促销"></el-table-column>
+        <el-table-column prop="" :label="数量合计"></el-table-column>
+        <el-table-column prop="" :label="保卡合计"></el-table-column>
+        <el-table-column prop="" :label="销售合计"></el-table-column>
+        <el-table-column prop="" :label="销售总合计"></el-table-column></el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -44,66 +50,38 @@
     export default{
       data(){
           return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            productTypeNames:'',
-            notScores:'',
-            reportScore:{},
+            page:{},
+            formData:{},
             submitData:{
-              scoreDate:'',
-              companyScore:"",
-              companyMonthScore:"",
-              cardQty:"",
-              monthCardQty:"",
-              rank:"",
-              remarks:''
+              page:0,
+              size:25,
             },
-            rules: {
-              scoreDate: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              companyScore: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              companyMonthScore: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              cardQty: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              monthCardQty: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              rank: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}]
-            }
+            formLabel:{
+              month:{label:this.$t('productMonthPriceSum.month')},
+              baokaStatus:{label:this.$t('productMonthPriceSum.baokaStatus')},
+              area:{label:this.$t('productMonthPriceSum.area')},
+            },
+            formVisible: false
           }
       },
       methods:{
-        formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-              util.copyValue(this.reportScore, this.submitData);
-              axios.post('/api/ws/future/crm/reportScore/save',qs.stringify(this.submitData)).then((response)=> {
-                this.$message(response.data.message);
-                this.submitDisabled = false;
-                if(response.data.success){
-                  if(this.isCreate){
-                    form.resetFields();
-                  } else {
-                    this.$router.push({name:'reportScoreList',query:util.getQuery("reportScoreList")})
-                  }
-                }
-              }).catch(function () {
-                this.submitDisabled = false;
-              });
-            }else{
-              this.submitDisabled = false;
-            }
+        pageRequest() {
+          this.pageLoading = true;
+          util.copyValue(this.formData,this.submitData);
+          util.setQuery("productMonthPriceSum",this.submitData);
+          axios.get('/api/ws/future/crm/productMonthPriceSum',{params:this.submitData}).then((response) => {
+            this.page = response.data;
+            this.pageLoading = false;
           })
         }
-      },created(){
-
-        axios.get('/api/ws/future/crm/reportScore/getProductTypeNamesAndNotScores').then((response)=>{
-          this.productTypeNames = response.data.productTypeNames;
-          this.notScores = response.data.notScores;
-        });
-
-        //每日打分，只能新增和删除，不能修改
-        axios.get('/api/ws/future/crm/reportScore/findDto').then((response)=>{
-          this.reportScore=response.data;
-        })
+      },
+      search() {
+        this.formVisible = false;
+        this.pageRequest();
+      },
+      created(){
+        this.pageHeight = window.outerHeight -325;
+        this.pageRequest();
       }
     }
 </script>
