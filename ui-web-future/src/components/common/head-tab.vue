@@ -47,7 +47,7 @@
           if(this.currentActive == tabItem.name) {
             this.tabList = this.getTabList();
           } else {
-            this.$router.push({ name: tabItem.name})
+            this.$router.push({ name: tabItem.name, query: this.tabs.get(tabItem.name)})
           }
         }
       },

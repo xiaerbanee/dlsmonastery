@@ -134,7 +134,23 @@
       formSubmit(){
 
       },filterProducts(){
-
+        let val=this.filterValue;
+        if(util.isBlank(val)) {
+          this.filterDetailList = this.inputForm.goodsOrderBillDetailFormList;
+          return;
+        }
+        let tempList=[];
+        for(let goodsOrderDetail of this.goodsOrderDetailList){
+          if(util.isNotBlank(goodsOrderDetail.qty)){
+            tempList.push(goodsOrderDetail);
+          }
+        }
+        for(let goodsOrderDetail of this.goodsOrderDetailList){
+          if(util.contains(goodsOrderDetail.productName, val) && util.isBlank(goodsOrderDetail.qty)){
+            tempList.push(goodsOrderDetail);
+          }
+        }
+        this.filterDetailList = tempList;
       },initSummary(){
 
       },storeChange(){
@@ -143,6 +159,7 @@
     },created(){
       axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
+        this.filterProducts()
         axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
           this.shop = response.data;
         });
