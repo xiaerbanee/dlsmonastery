@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.web.query;
 
 import net.myspring.future.common.query.BaseQuery;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
 
