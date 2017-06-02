@@ -171,7 +171,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
             office.enabled=1
         """)
         if(StringUtils.isNotBlank(officeQuery.name)) {
-            sb.append("  and office.name like %:name%")
+            sb.append("  and office.name like concat('%',:name,'%')")
         }
         if(StringUtils.isNotBlank(officeQuery.id)) {
             sb.append(" and office.name = :id")

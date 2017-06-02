@@ -12,12 +12,10 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.scoreDate.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.scoreDate" type="date" align="right"  :picker-options="pickerDateOption"></el-date-picker>
+                <date-picker v-model="formData.scoreDate"></date-picker>
               </el-form-item>
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.officeId" clearable filterable >
-                  <el-option v-for="item in formProperty.offices" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
+                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item :label="formLabel.areaId.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.areaId" clearable filterable >
@@ -51,7 +49,13 @@
   </div>
 </template>
 <script>
+  import datePicker from 'components/common/date-picker'
+  import officeSelect from 'components/basic/office-select'
   export default {
+    components:{
+      datePicker,
+      officeSelect
+      },
     data() {
       return {
         page:{},
@@ -102,9 +106,9 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -325;
-     // axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response)=>{
-    //    this.formProperty = response.data;
-     // });
+      axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response)=>{
+        this.formProperty = response.data;
+      });
       this.pageRequest();
     }
   };
