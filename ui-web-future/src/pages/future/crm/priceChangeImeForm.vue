@@ -6,8 +6,8 @@
         <el-row :gutter="20">
           <el-col :span="10">
         <el-form-item :label="$t('priceChangeImeForm.priceChangeId')" prop="priceChangeId">
-          <el-select v-model="inputForm.priceChangeId" filterable   :placeholder="$t('priceChangeImeForm.selectPriceChangeId')" >
-            <el-option v-for="item in formData.priceChangeDtos" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select v-model="formData.priceChangeId" filterable   :placeholder="$t('priceChangeImeForm.selectPriceChangeId')" >
+            <el-option v-for="item in formProperty.priceChangeDtos" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -79,6 +79,7 @@
               priceChangeId:''
             },
             formData:{},
+            formProperty:{},
             remoteLoading:false,
             rules: {
               name: [{ required: true, message: '名称不能为空'}]
@@ -115,8 +116,11 @@
           })
         }
       },created() {
-        axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response)=>{
+        axios.get('/api/ws/future/crm/priceChangeIme/findOne',{params:{id:this.$route.query.id}}).then((response)=>{
           this.formData=response.data;
+        });
+        axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response)=>{
+          this.formProperty=response.data;
         });
       }
     }
