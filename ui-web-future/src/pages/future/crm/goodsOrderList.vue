@@ -97,7 +97,7 @@
           <template scope="scope">
             <div class="action"><el-button size="small"v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderList.detail')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'"  size="small"v-permit="'crm:goodsOrder:edit'" ><el-button @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'"  v-permit="'crm:goodsOrder:edit'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
             <div class="action" v-if="scope.row.enabled && scope.row.status=='待发货' " v-permit="'crm:goodsOrder:ship'"  ><el-button  size="small"@click.native="itemAction(scope.row.id, 'ship')">{{$t('goodsOrderList.ship')}}</el-button></div>
             <div class="action" v-if="scope.row.enabled && scope.row.status=='待发货' && scope.row.isSreturn" > <el-button size="small"v-permit="'crm:goodsOrder:edit'" @click.native="itemAction(scope.row.id, 'sreturn')">{{$t('goodsOrderList.sreturn')}}</el-button></div>
