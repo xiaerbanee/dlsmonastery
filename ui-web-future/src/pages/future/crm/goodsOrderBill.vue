@@ -140,14 +140,14 @@
           return;
         }
         let tempList=[];
-        for(let goodsOrderDetail of this.goodsOrderDetailList){
-          if(util.isNotBlank(goodsOrderDetail.qty)){
-            tempList.push(goodsOrderDetail);
+        for(let detail of this.inputForm.goodsOrderBillDetailFormList){
+          if(util.isNotBlank(detail.billQty)){
+            tempList.push(detail);
           }
         }
-        for(let goodsOrderDetail of this.goodsOrderDetailList){
-          if(util.contains(goodsOrderDetail.productName, val) && util.isBlank(goodsOrderDetail.qty)){
-            tempList.push(goodsOrderDetail);
+        for(let detail of this.inputForm.goodsOrderBillDetailFormList){
+          if(util.contains(detail.productName, val) && util.isBlank(detail.billQty)){
+            tempList.push(detail);
           }
         }
         this.filterDetailList = tempList;

@@ -47,7 +47,10 @@
         <!-- content start -->
         <div class="db-content-wrapper">
           <section class="db-content">
-            <router-view></router-view>
+            <keep-alive >
+              <router-view  v-if="$route.meta.keepAlive"></router-view>
+            </keep-alive>
+            <router-view  v-if="!$route.meta.keepAlive"></router-view>
           </section>
         </div>
         <!-- content end -->
