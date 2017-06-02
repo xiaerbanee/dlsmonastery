@@ -390,9 +390,6 @@ public class GoodsOrderService {
             goodsOrderBillDetailForm.setProductName(product.getName());
             goodsOrderBillDetailForm.setAllowBill(product.getAllowOrder() && product.getAllowBill());
             goodsOrderBillDetailForm.setHasIme(product.getHasIme());
-            //TODO
-            goodsOrderBillDetailForm.setAreaQty(0);
-            goodsOrderBillDetailForm.setStockQty(0);
             goodsOrderBillDetailFormList.add(goodsOrderBillDetailForm);
         }
         //价格体系
@@ -407,14 +404,15 @@ public class GoodsOrderService {
                 goodsOrderBillDetailForm.setProductName(product.getName());
                 goodsOrderBillDetailForm.setAllowBill(product.getAllowOrder() && product.getAllowBill());
                 goodsOrderBillDetailForm.setHasIme(product.getHasIme());
-                //TODO
-                goodsOrderBillDetailForm.setAreaQty(0);
-                goodsOrderBillDetailForm.setStockQty(0);
                 goodsOrderBillDetailFormList.add(goodsOrderBillDetailForm);
             }
         }
+        //设置areaQty及stockQty
+        for(GoodsOrderBillDetailForm goodsOrderBillDetailForm:goodsOrderBillDetailFormList) {
+            goodsOrderBillDetailForm.setAreaQty(0);
+            goodsOrderBillDetailForm.setStockQty(0);
+        }
         goodsOrderBillForm.setGoodsOrderBillDetailFormList(goodsOrderBillDetailFormList);
-
         return goodsOrderBillForm;
     }
 }
