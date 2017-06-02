@@ -32,9 +32,9 @@
         <el-table-column prop="status" :label="$t('priceChangeList.status')"></el-table-column>
         <el-table-column  :label="$t('priceChangeList.operation')" width="140">
           <template scope="scope">
-            <el-button v-if="scope.row.status === '上报中'" size="small" v-permit="'crm:priceChange:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeList.audit')}}</el-button>
-            <el-button v-if="scope.row.status === '上报中'" size="small" v-permit="'crm:priceChange:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('priceChangeList.edit')}}</el-button>
-            <el-button v-if="scope.row.status === '上报中'" size="small" v-permit="'crm:priceChange:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopImageList.delete')}}</el-button>
+            <div class="action" v-if="scope.row.status === '上报中'" v-permit="'crm:priceChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.status === '上报中'" v-permit="'crm:priceChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('priceChangeList.edit')}}</el-button></div>
+            <div class="action" v-if="scope.row.status === '上报中'" v-permit="'crm:priceChange:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopImageList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

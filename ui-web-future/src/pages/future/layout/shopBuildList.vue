@@ -25,9 +25,8 @@
                 <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.processFlow.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.processFlow" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
-                  <el-option v-for="processFlow in formData.processFlows" :key="processFlow.id" :label="processFlow.name" :value="processFlow.id"></el-option>
-                </el-select>
+                <process-status-select v-model="formData.processFlow" type="门店建设申请">
+                </process-status-select>
               </el-form-item>
               <el-form-item :label="formLabel.fixtureType.label" :label-width="formLabelWidth">
                 <dict-enum-select v-model="formData.fixtureType" category="装修类别"></dict-enum-select>
@@ -83,8 +82,9 @@
   import dictEnumSelect from 'components/basic/dict-enum-select';
   import accountSelect from 'components/basic/account-select';
   import depotSelect from 'components/future/depot-select';
+  import processStatusSelect from 'components/general/process-status-select';
   export default {
-    components:{officeSelect,dictEnumSelect,accountSelect,depotSelect},
+    components:{officeSelect,dictEnumSelect,accountSelect,depotSelect,processStatusSelect},
     data() {
       return {
         pageLoading: false,

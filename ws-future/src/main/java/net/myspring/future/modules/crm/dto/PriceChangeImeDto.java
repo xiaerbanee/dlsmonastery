@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.dto;
 
+import net.myspring.common.dto.AuditDto;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by zhangyf on 2017/5/15.
  */
-public class PriceChangeImeDto extends DataDto<PriceChangeIme> {
+public class PriceChangeImeDto extends AuditDto<PriceChangeIme> {
     private String image;
     private LocalDateTime saleDate;
     private LocalDateTime auditDate;
@@ -127,12 +128,12 @@ public class PriceChangeImeDto extends DataDto<PriceChangeIme> {
         this.shopId = shopId;
     }
 
-    public Boolean getCheck() {
+    public Boolean getIsCheck() {
         return isCheck;
     }
 
-    public void setCheck(Boolean check) {
-        isCheck = check;
+    public void setIsCheck(Boolean isCheck) {
+        this.isCheck = isCheck;
     }
 
     public String getProductImeId() {

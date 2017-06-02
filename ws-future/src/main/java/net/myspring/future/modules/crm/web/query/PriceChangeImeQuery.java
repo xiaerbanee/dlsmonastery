@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class PriceChangeImeQuery {
     private String status;
-    private String isCheck;
+    private Boolean isCheck;
     private Boolean image;
     private String shopId;
     private String ime;
@@ -41,11 +41,11 @@ public class PriceChangeImeQuery {
         this.status = status;
     }
 
-    public String getIsCheck() {
+    public Boolean getIsCheck() {
         return isCheck;
     }
 
-    public void setIsCheck(String isCheck) {
+    public void setIsCheck(Boolean isCheck) {
         this.isCheck = isCheck;
     }
 
