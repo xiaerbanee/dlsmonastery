@@ -16,7 +16,7 @@ public class KingdeeBook extends CompanyEntity<KingdeeBook> {
     private String kingdeeUsername;
     private String kingdeePassword;
     private String kingdeeDbid;
-    private Integer version;
+    private Integer version = 0;
 
     public String getName() {
         return name;

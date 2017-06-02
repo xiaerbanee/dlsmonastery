@@ -7,9 +7,7 @@
           <el-input v-model="inputForm.companyId"></el-input>
         </el-form-item>
         <el-form-item label="账套" prop="name">
-          <el-select v-model="inputForm.name" filterable placeholder="请选择" :clearable=true>
-            <el-option v-for="name in inputForm.nameList" :key="name" :label="name" :value="name"></el-option>
-          </el-select>
+          <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item label="账套类型" prop="type">
           <el-select v-model="inputForm.type" filterable placeholder="请选择" :clearable=true>
@@ -80,7 +78,7 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/global/cloud/sys/kingdeeBook/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                if(this.inputForm.id){
+                if(!this.inputForm.id){
                   form.resetFields();
                   this.submitDisabled = false;
                 } else {
