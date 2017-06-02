@@ -19,11 +19,8 @@ public class PriceChangeIme extends AuditEntity<PriceChangeIme> {
     private String shopId;
     private Integer version = 0;
     private Boolean isCheck;
-    private ProductIme productIme;
     private String productImeId;
-    private PriceChange priceChange;
     private String priceChangeId;
-    private Depot shop;
     @Transient
     private List<List<String>> data = Lists.newArrayList();
 
@@ -51,14 +48,6 @@ public class PriceChangeIme extends AuditEntity<PriceChangeIme> {
         this.uploadDate = uploadDate;
     }
 
-    public Depot getShop() {
-        return shop;
-    }
-
-    public void setShop(Depot shop) {
-        this.shop = shop;
-    }
-
     public String getShopId() {
         return shopId;
     }
@@ -83,28 +72,12 @@ public class PriceChangeIme extends AuditEntity<PriceChangeIme> {
         this.isCheck = isCheck;
     }
 
-    public ProductIme getProductIme() {
-        return productIme;
-    }
-
-    public void setProductIme(ProductIme productIme) {
-        this.productIme = productIme;
-    }
-
     public String getProductImeId() {
         return productImeId;
     }
 
     public void setProductImeId(String productImeId) {
         this.productImeId = productImeId;
-    }
-
-    public PriceChange getPriceChange() {
-        return priceChange;
-    }
-
-    public void setPriceChange(PriceChange priceChange) {
-        this.priceChange = priceChange;
     }
 
     public String getPriceChangeId() {

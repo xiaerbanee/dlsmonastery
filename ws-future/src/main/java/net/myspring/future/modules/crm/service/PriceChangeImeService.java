@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -49,6 +50,14 @@ public class PriceChangeImeService {
         if(StringUtils.isNotBlank(id)){
             PriceChangeIme priceChangeIme=priceChangeImeRepository.findOne(id);
             priceChangeImeDto = BeanUtil.map(priceChangeIme,PriceChangeImeDto.class);
+            if(priceChangeIme.getPriceChangeId()!=null){
+                priceChangeImeDto.setPriceChangeName(priceChangeRepository.findOne(priceChangeIme.getPriceChangeId()).getName());
+            }
+            if(priceChangeIme.getProductImeId()!=null){
+                priceChangeImeDto.setProductId(productImeRepository.findOne(priceChangeIme.getProductImeId()).getProductId());
+                priceChangeImeDto.setIme(productImeRepository.findOne(priceChangeIme.getProductImeId()).getIme());
+            }
+
             cacheUtils.initCacheInput(priceChangeImeDto);
         }
 
@@ -62,20 +71,8 @@ public class PriceChangeImeService {
     }
 
     public PriceChangeImeForm getForm(PriceChangeImeForm priceChangeImeForm){
-        if(!priceChangeImeForm.isCreate()){
-            PriceChangeIme priceChangeIme = priceChangeImeRepository.findOne(priceChangeImeForm.getId());
-            priceChangeImeForm = BeanUtil.map(priceChangeIme,PriceChangeImeForm.class);
-            if(priceChangeImeForm.getPriceChangeId()!=null){
-                priceChangeImeForm.setPriceChangeName(priceChangeRepository.findOne(priceChangeImeForm.getPriceChangeId()).getName());
-            }
-            if(priceChangeImeForm.getProductImeId()!=null){
-                priceChangeImeForm.setProductId(productImeRepository.findOne(priceChangeImeForm.getProductImeId()).getProductId());
-                priceChangeImeForm.setIme(productImeRepository.findOne(priceChangeImeForm.getProductImeId()).getIme());
-            }
-        }else {
-            List<PriceChange> priceChange = priceChangeRepository.findByEnabledIsTrueOrderByIdDesc();
-            priceChangeImeForm.setPriceChangeDtos(BeanUtil.map(priceChange, PriceChangeDto.class));
-        }
+        List<PriceChange> priceChange = priceChangeRepository.findByEnabledIsTrueOrderByIdDesc();
+        priceChangeImeForm.setPriceChangeDtos(BeanUtil.map(priceChange, PriceChangeDto.class));
         return priceChangeImeForm;
     }
 
@@ -88,7 +85,7 @@ public class PriceChangeImeService {
     public void imageUpload(PriceChangeImeForm priceChangeImeForm){
         PriceChangeIme priceChangeIme = priceChangeImeRepository.findOne(priceChangeImeForm.getId());
         priceChangeIme.setImage(priceChangeImeForm.getImage());
-        priceChangeIme.setStatus(PriceChangeStatusEnum.上报中.name());
+        priceChangeIme.setStatus(AuditStatusEnum.申请中.name());
         priceChangeImeRepository.save(priceChangeIme);
     }
 
@@ -96,9 +93,9 @@ public class PriceChangeImeService {
         if(priceChangeImeForm.getPass()!=null) {
             PriceChangeIme priceChangeIme = priceChangeImeRepository.findOne(priceChangeImeForm.getId());
             if (priceChangeImeForm.getPass().equalsIgnoreCase("1")) {
-                priceChangeIme.setStatus(PriceChangeStatusEnum.已通过.name());
+                priceChangeIme.setStatus(AuditStatusEnum.已通过.name());
             } else {
-                priceChangeIme.setStatus(PriceChangeStatusEnum.未通过.name());
+                priceChangeIme.setStatus(AuditStatusEnum.未通过.name());
             }
             priceChangeIme.setAuditRemarks(priceChangeImeForm.getAuditRemarks());
             priceChangeIme.setAuditDate(LocalDateTime.now());

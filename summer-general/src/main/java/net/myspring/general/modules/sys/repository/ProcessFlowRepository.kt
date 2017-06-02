@@ -27,8 +27,8 @@ class ProcessFlowRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         SELECT
             t1.*
         FROM
-            process_flow t1,
-            Process_type t2
+            sys_process_flow t1,
+            sys_process_type t2
         WHERE
             t1.process_type_id = t2.id
         AND t2.enabled = 1

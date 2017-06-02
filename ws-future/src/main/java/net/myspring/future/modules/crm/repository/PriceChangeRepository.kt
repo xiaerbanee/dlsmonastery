@@ -10,6 +10,7 @@ import net.myspring.future.modules.crm.dto.PriceChangeDto
 import net.myspring.future.modules.crm.dto.ProductImeDto
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery
 import net.myspring.util.collection.CollectionUtil
+import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 
 import org.springframework.data.jpa.repository.Query
@@ -18,9 +19,12 @@ import org.apache.poi.ss.formula.functions.T
 import org.bouncycastle.asn1.x500.style.RFC4519Style.name
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.query.Param
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import java.util.*
@@ -56,8 +60,7 @@ class PriceChangeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTem
     }
 
     override fun findPage(pageable: Pageable, priceChangeQuery: PriceChangeQuery): Page<PriceChangeDto> {
-        val sb = StringBuffer()
-        sb.append("""
+        val sb = StringBuilder("""
          SELECT
             group_concat(DISTINCT productType.name) productTypeName, t1.*
         FROM
@@ -72,7 +75,12 @@ class PriceChangeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTem
         }
         sb.append("""  GROUP BY product.price_change_id  """)
 
-        return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("name", priceChangeQuery.name), MyBeanPropertyRowMapper(PriceChangeDto::class.java)) as Page<PriceChangeDto>
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        var paramMap = BeanPropertySqlParameterSource(priceChangeQuery)
+        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(PriceChangeDto::class.java))
+        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        return PageImpl(list,pageable,count)
 
     }
 
