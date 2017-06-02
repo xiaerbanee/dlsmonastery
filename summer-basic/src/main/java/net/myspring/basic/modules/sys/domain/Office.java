@@ -20,14 +20,14 @@ public class Office extends TreeEntity<Office> {
     private String officeRuleId;
     private String type;
     private String areaId;
-    private String joinLevel;
+    private String jointLevel;
 
-    public String getJoinLevel() {
-        return joinLevel;
+    public String getJointLevel() {
+        return jointLevel;
     }
 
-    public void setJoinLevel(String joinLevel) {
-        this.joinLevel = joinLevel;
+    public void setJointLevel(String jointLevel) {
+        this.jointLevel = jointLevel;
     }
 
     public String getAreaId() {

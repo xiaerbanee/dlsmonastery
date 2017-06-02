@@ -106,7 +106,7 @@ public class OfficeController {
         officeForm.setOfficeRuleList(officeService.findOfficeRuleList());
         officeForm.setJointTypeList(JointTypeEnum.getList());
         officeForm.setOfficeTypeList(OfficeTypeEnum.getList());
-        officeForm.setJoinLevelList(JointLevelEnum.getList());
+        officeForm.setJointLevelList(JointLevelEnum.getList());
         return officeForm;
     }
 
