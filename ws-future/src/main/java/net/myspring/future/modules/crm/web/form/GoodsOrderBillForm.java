@@ -1,6 +1,9 @@
 package net.myspring.future.modules.crm.web.form;
 
+import com.google.common.collect.Lists;
+import net.myspring.common.dto.NameValueDto;
 import net.myspring.common.form.BaseForm;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
@@ -18,6 +21,13 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
     private String contator;
     private String address;
     private String mobilePhone;
+    private String shipType;
+
+    private List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList = Lists.newArrayList();
+
+    private List<DepotDto> storeList = Lists.newArrayList();
+
+    private List<ExpressCompanyDto> expressCompanyDtoList = Lists.newArrayList();
 
 
     public String getStoreId() {
@@ -52,9 +62,8 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
         this.syn = syn;
     }
 
-    @Override
-    public String getRemarks() {
-        return remarks;
+    public String getContator() {
+        return contator;
     }
 
     public void setContator(String contator) {
@@ -75,5 +84,37 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
+    }
+
+    public String getShipType() {
+        return shipType;
+    }
+
+    public void setShipType(String shipType) {
+        this.shipType = shipType;
+    }
+
+    public List<GoodsOrderBillDetailForm> getGoodsOrderBillDetailFormList() {
+        return goodsOrderBillDetailFormList;
+    }
+
+    public void setGoodsOrderBillDetailFormList(List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList) {
+        this.goodsOrderBillDetailFormList = goodsOrderBillDetailFormList;
+    }
+
+    public List<DepotDto> getStoreList() {
+        return storeList;
+    }
+
+    public void setStoreList(List<DepotDto> storeList) {
+        this.storeList = storeList;
+    }
+
+    public List<ExpressCompanyDto> getExpressCompanyDtoList() {
+        return expressCompanyDtoList;
+    }
+
+    public void setExpressCompanyDtoList(List<ExpressCompanyDto> expressCompanyDtoList) {
+        this.expressCompanyDtoList = expressCompanyDtoList;
     }
 }

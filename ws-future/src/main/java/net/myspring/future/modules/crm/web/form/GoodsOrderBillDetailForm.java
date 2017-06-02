@@ -13,7 +13,7 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
     private String goodsOrderDetailId;
     private String productId;
     private Integer billQty;
-    private Integer price;
+    private BigDecimal price;
     //显示信息
     private String productName;
     private Boolean hasIme;
@@ -46,11 +46,11 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
         this.billQty = billQty;
     }
 
-    public Integer getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
