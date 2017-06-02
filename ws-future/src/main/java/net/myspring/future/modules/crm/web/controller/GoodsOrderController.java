@@ -8,10 +8,12 @@ import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderImeService;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
+import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
@@ -33,15 +35,9 @@ public class GoodsOrderController {
     private GoodsOrderService goodsOrderService;
 
     @Autowired
-    private GoodsOrderImeService goodsOrderImeService;
-
-    @Autowired
     private ExpressCompanyService expressCompanyService;
     @Autowired
     private DepotService depotService;
-
-    @Autowired
-    private RedisTemplate redisTemplate;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -49,7 +45,6 @@ public class GoodsOrderController {
         Page<GoodsOrderDto> page = goodsOrderService.findAll(pageable, goodsOrderQuery);
         return page;
     }
-
 
     @RequestMapping(value = "getQuery")
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
@@ -67,12 +62,6 @@ public class GoodsOrderController {
         return goodsOrderForm;
     }
 
-
-    @RequestMapping(value = "findOne")
-    public GoodsOrderDto findOne(String id) {
-        return goodsOrderService.findOne(id);
-    }
-
     @RequestMapping(value = "findGoodsOrderDetailFormList")
     public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType,String shipType) {
         return goodsOrderService.findGoodsOrderDetailFormList(id,shopId,netType,shipType);
@@ -82,5 +71,23 @@ public class GoodsOrderController {
     public RestResponse save(GoodsOrderForm goodsOrderForm) {
         goodsOrderService.save(goodsOrderForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "getBillForm")
+    public GoodsOrderBillForm getBillForm(String id){
+        GoodsOrderBillForm goodsOrderBillForm = goodsOrderService.getGoodsOrderBillForm(id);
+        //设置仓库
+        DepotQuery depotQuery = new DepotQuery();
+        depotQuery.setShipType(goodsOrderBillForm.getShipType());
+        goodsOrderBillForm.setStoreList(depotService.findStoreList(depotQuery));
+        goodsOrderBillForm.setExpressCompanyList(expressCompanyService.findAll());
+        return goodsOrderBillForm;
+    }
+
+
+
+    @RequestMapping(value = "findOne")
+    public GoodsOrderDto findOne(String id) {
+        return goodsOrderService.findOne(id);
     }
 }
