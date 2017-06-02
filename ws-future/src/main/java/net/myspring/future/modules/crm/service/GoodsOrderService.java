@@ -410,7 +410,6 @@ public class GoodsOrderService {
         //设置areaQty及stockQty
         for(GoodsOrderBillDetailForm goodsOrderBillDetailForm:goodsOrderBillDetailFormList) {
             goodsOrderBillDetailForm.setAreaQty(0);
-            goodsOrderBillDetailForm.setStockQty(0);
         }
         goodsOrderBillForm.setGoodsOrderBillDetailFormList(goodsOrderBillDetailFormList);
         return goodsOrderBillForm;

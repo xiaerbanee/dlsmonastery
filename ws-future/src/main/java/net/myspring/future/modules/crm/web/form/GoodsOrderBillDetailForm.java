@@ -20,7 +20,6 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
     private Boolean allowBill;
     //办事处已开单数
     private Integer areaQty;
-    private Integer stockQty;
 
     public String getGoodsOrderDetailId() {
         return goodsOrderDetailId;
@@ -84,13 +83,5 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
 
     public void setAreaQty(Integer areaQty) {
         this.areaQty = areaQty;
-    }
-
-    public Integer getStockQty() {
-        return stockQty;
-    }
-
-    public void setStockQty(Integer stockQty) {
-        this.stockQty = stockQty;
     }
 }
