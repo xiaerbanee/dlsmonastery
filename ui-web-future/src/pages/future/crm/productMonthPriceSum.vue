@@ -62,6 +62,7 @@
               area:{label:this.$t('productMonthPriceSum.area')},
             },
             formVisible: false
+
           }
       },
       methods:{
