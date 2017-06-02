@@ -33,18 +33,18 @@ class ProductMonthPriceRepositoryImpl @Autowired constructor(val namedParameterJ
 
 
     override fun findPage(pageable: Pageable, productMonthPriceQuery: ProductMonthPriceQuery): Page<ProductMonthPriceDto> {
-        var sql = StringBuilder("""
+        val sql = StringBuilder("""
                 SELECT
                 t1.*
                 FROM
                 crm_product_month_price t1
                 WHERE
                 t1.enabled=1
-            """);
+            """)
         if(productMonthPriceQuery.month!=null){
             sql.append("""
                     AND t1.month LIKE CONCAT('%',:month,'%')
-                """);
+                """)
         }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sql.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sql.toString())

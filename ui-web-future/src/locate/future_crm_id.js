@@ -998,7 +998,10 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    saleCreatedFullName: "核销人",
+    saleCreatedDate: "核销时间",
+    saleShopName: "核销门店",
   },
   imeAllotList: {
     imeAllotList: "alokasi string kode",
@@ -1462,6 +1465,7 @@ export default {
     reset:'重置',
     search:'搜索',
     pleaseInputImes:'请输入串码',
+    productImeUploadStatus:'上报状态',
   },
   productImeUploadList: {
     upload:"上报",

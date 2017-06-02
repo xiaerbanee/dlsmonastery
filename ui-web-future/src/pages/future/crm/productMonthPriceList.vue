@@ -44,34 +44,34 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{
+        formData:{},
+        submitData:{
           page:0,
           size:25,
           month:''
         },formLabel:{
           month:{label:this.$t('productMonthPriceList.month')}
         },
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
-        pickerDateOption:util.pickerDateOption,
         loading:false
       };
     },
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("productMonthPriceList",this.formData);
-        axios.get('/api/crm/productMonthPrice',{params:this.formData}).then((response) => {
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("productMonthPriceList",this.submitData);
+        axios.get('/api/ws/future/crm/productMonthPrice',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        })
+        });
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -80,14 +80,18 @@
       },itemAdd(){
         this.$router.push({ name: 'productMonthPriceForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action==="edit") {
           this.$router.push({ name: 'productMonthPriceForm', query: { id: id }})
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      let that = this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/crm/productMonthPrice/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+      });
     }
   };
 </script>

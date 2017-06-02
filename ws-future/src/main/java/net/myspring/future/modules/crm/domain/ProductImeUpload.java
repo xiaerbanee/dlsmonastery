@@ -23,7 +23,15 @@ public class ProductImeUpload extends CompanyEntity<ProductImeUpload> {
     private String productImeId;
 
     private String productTypeId;
+    private String saleShopId;
 
+    public String getSaleShopId() {
+        return saleShopId;
+    }
+
+    public void setSaleShopId(String saleShopId) {
+        this.saleShopId = saleShopId;
+    }
 
     public String getMonth() {
         return month;

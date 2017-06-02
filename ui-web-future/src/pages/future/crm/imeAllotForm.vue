@@ -2,25 +2,34 @@
   <div>
     <head-tab active="imeAllotForm"></head-tab>
     <div>
-      <el-form :model="imeAllot" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="imeAllot" ref="inputForm" label-width="120px" class="form input-form">
+        <el-row >
+          <el-col :span="21">
+            <el-form-item >
+              <el-alert  v-show="errMsg"  :closable=false  title=""  :description="errMsg" type="error"> </el-alert>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item  :label="$t('imeAllotForm.imeStr')" prop="imeStr">
               <el-input type="textarea" :rows="6" v-model="imeStr" :placeholder="$t('imeAllotForm.inputIme')" @change="imeStrChanged"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('imeAllotForm.toDepotId')" prop="toDepotId" v-if="imeStr !==''">
-              <depot-select v-model="imeAllot.toDepotId"  category="shop" ></depot-select>
-            </el-form-item>
-            <el-form-item :label="$t('imeAllotForm.remarks')" prop="remarks" v-if="imeStr !==''">
-              <el-input type="textarea" :rows="2" v-model="imeAllot.remarks"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" v-if="imeStr !==''">{{$t('imeAllotForm.save')}}</el-button>
-            </el-form-item>
+            <div v-if="imeStr !==''" >
+              <el-form-item :label="$t('imeAllotForm.toDepotId')" prop="toDepotId" >
+                <depot-select v-model="imeAllot.toDepotId"  category="shop" ></depot-select>
+              </el-form-item>
+              <el-form-item :label="$t('imeAllotForm.remarks')" prop="remarks" >
+                <el-input type="textarea" :rows="2" v-model="imeAllot.remarks"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('imeAllotForm.save')}}</el-button>
+              </el-form-item>
+            </div>
+
           </el-col>
           <el-col :span="16" v-if="imeStr !==''">
             <template>
-              <el-alert :title="errMsg" type="error"  v-if="errMsg !==''"> </el-alert>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('imeAllotForm.productName')"></el-table-column>
                 <el-table-column prop="qty" :label="$t('imeAllotForm.qty')"></el-table-column>
@@ -34,7 +43,7 @@
                 <el-table-column prop="retailDate" :label="$t('imeAllotForm.retailDate')"></el-table-column>
                 <el-table-column prop="productImeSaleEmployeeName" :label="$t('imeAllotForm.saleCreatedFullName')"></el-table-column>
                 <el-table-column prop="productImeSaleCreatedDate" :label="$t('imeAllotForm.saleCreatedDate')"></el-table-column>
-                <el-table-column prop="productImeSaleShopName" :label="$t('imeAllotForm.uploadShopName')"></el-table-column>
+                <el-table-column prop="productImeSaleShopName" :label="$t('imeAllotForm.saleShopName')"></el-table-column>
               </el-table>
             </template>
           </el-col>

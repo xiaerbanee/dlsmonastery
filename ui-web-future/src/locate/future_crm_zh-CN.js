@@ -901,6 +901,9 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    saleCreatedFullName: "核销人",
+    saleCreatedDate: "核销时间",
+    saleShopName: "核销门店",
   },
   imeAllotList: {
     imeAllotList: "串码调拨",
@@ -1365,6 +1368,7 @@ export default {
     reset:'重置',
     search:'搜索',
     pleaseInputImes:'请输入串码',
+    productImeUploadStatus:'上报状态',
   },
   productImeUploadList: {
     upload:"上报",

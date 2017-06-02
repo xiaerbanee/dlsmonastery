@@ -53,7 +53,7 @@
                 <el-input type="textarea" v-model="audit.auditRemarks"></el-input>
               </el-form-item>
               <el-form-item >
-                <el-button size="small"  @click.native="auditSubmit">{{$t('shopAllotDetail.save')}}</el-button>
+                <el-button type="primary" @click.native="auditSubmit">{{$t('shopAllotDetail.save')}}</el-button>
               </el-form-item>
             </div>
           </el-col>
@@ -100,31 +100,29 @@
           auditRemarks:'',
           shopAllotDetailList:[],
         },
-        isView:(this.$route.query.action == 'view'),
+        isView:(this.$route.query.action === 'view'),
         shopAllotDetailLoading:false,
         submitDisabled:false,
         action:this.$route.query.action,
       }
     }, methods:{
       auditSubmit(){
-        console.log("auditSubmit");
-        this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
+            this.submitDisabled = true;
             this.initSubmitDataBeforeSubmit();
             axios.post('/api/ws/future/crm/shopAllot/audit', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
-              if(response.data.message){
-                this.$message(response.data.message);
+              this.$message(response.data.message);
+              this.submitDisabled = false;
+              if(response.data.success) {
+                this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList")});
               }
-              this.$router.push({name:'shopAllotList',query:util.getQuery("shopAllotList")});
-            }).catch(function () {
+            }).catch( () => {
               this.submitDisabled = false;
             });
-          }else{
-            this.submitDisabled = false;
           }
-        })
+        });
       }, initSubmitDataBeforeSubmit(){
         this.submitData.id = this.$route.query.id;
         this.submitData.syn = this.syn;
