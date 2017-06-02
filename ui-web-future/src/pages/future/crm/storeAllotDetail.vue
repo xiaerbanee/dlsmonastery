@@ -33,13 +33,12 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="storeAllotDetailList" style="margin-top:5px;" border v-loading="storeAllotDetailLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
+        <el-table :data="storeAllotDetailList" style="margin-top:5px;" v-loading="storeAllotDetailLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('storeAllotDetail.productName')" ></el-table-column>
           <el-table-column prop="billQty" :label="$t('storeAllotDetail.billQty')" ></el-table-column>
           <el-table-column prop="shippedQty" :label="$t('storeAllotDetail.shippedQty')" ></el-table-column>
         </el-table>
-        <el-table :data="storeAllotImeList" style="margin-top:5px;" border v-loading="storeAllotImeLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
-
+        <el-table :data="storeAllotImeList" style="margin-top:5px;" v-loading="storeAllotImeLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('storeAllotDetail.productName')" ></el-table-column>
           <el-table-column  prop="productImeIme" :label="$t('storeAllotDetail.productIme')" ></el-table-column>
           <el-table-column  prop="productImeMeid" :label="$t('storeAllotDetail.productMeid')" ></el-table-column>
@@ -59,7 +58,6 @@
         storeAllot:{},
         storeAllotDetailList:[],
         storeAllotImeList:[],
-
       }
     },created(){
       axios.get('/api/ws/future/crm/storeAllot/findForView',{params:{id:this.$route.query.id}} ).then((response)=>{

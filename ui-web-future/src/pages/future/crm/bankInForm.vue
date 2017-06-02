@@ -84,7 +84,7 @@
                   if (this.isCreate) {
                     form.resetFields();
                   } else {
-                    this.$router.push({name: 'bankInList', query: util.getQuery("bankInList")})
+                    this.$router.push({name: 'bankInList', query: util.getQuery("bankInList")});
                   }
                 }
               }).catch( () => {

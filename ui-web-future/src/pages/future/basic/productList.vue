@@ -81,7 +81,7 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('productList.operation')">
           <template scope="scope">
-              <el-button type="text" size="small"  v-permit="'crm:shopAdType:edit'" @click.native="itemEdit(scope.row.id)">{{$t('shopAdTypeList.edit')}}</el-button>
+            <div class="action" v-permit="'crm:shopAdType:edit'"><el-button size="small" @click.native="itemEdit(scope.row.id)">{{$t('shopAdTypeList.edit')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

@@ -53,9 +53,9 @@
         <el-table-column prop="shopName" :label="$t('priceChangeImeList.shopName')" ></el-table-column>
         <el-table-column prop="priceChangeName"  :label="$t('priceChangeImeList.priceChangeName')"></el-table-column>
         <el-table-column prop="auditDate" :label="$t('priceChangeImeList.auditDate')"></el-table-column>
-        <el-table-column prop="check"  :label="$t('priceChangeImeList.isCheck')"width="120">
+        <el-table-column prop="isCheck"  :label="$t('priceChangeImeList.isCheck')"width="120">
           <template scope="scope">
-            <el-tag :type="scope.row.check ? 'primary' : 'danger'">{{scope.row.check | bool2str}}</el-tag>
+            <el-tag :type="scope.row.isCheck ? 'primary' : 'danger'">{{scope.row.isCheck | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="image" :label="$t('priceChangeImeList.image')"></el-table-column>
@@ -68,9 +68,9 @@
         <el-table-column prop="createdByName" :label="$t('priceChangeImeList.createdBy')"></el-table-column>
         <el-table-column  :label="$t('priceChangeImeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" v-if="scope.row.status =='申请中'" v-permit="'crm:priceChangeIme:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeImeList.audit')}}</el-button>
-            <el-button size="small" v-if="scope.row.status !='已通过'" v-permit="'crm:priceChangeIme:edit'" @click.native="itemAction(scope.row.id,'upload')">{{$t('priceChangeImeList.upload')}}</el-button>
-            <el-button size="small" v-permit="'crm:priceChangeIme:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('priceChangeImeList.detail')}}</el-button>
+            <div class="action" v-if="scope.row.status =='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeImeList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.status !='已通过'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'upload')">{{$t('priceChangeImeList.upload')}}</el-button></div>
+            <div class="action" v-permit="'crm:priceChangeIme:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('priceChangeImeList.detail')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -126,6 +126,9 @@
         if(this.formData.image!=null){
           this.formData.image = this.formData.image ==1?true:false;
         }
+        if(this.formData.isCheck!=null){
+          this.formData.isCheck = this.formData.isCheck ==1?true:false;
+        }
         util.copyValue(this.formData,this.submitData);
         console.log(this.submitData);
         util.setQuery("priceChangeImeList",this.submitData);
@@ -148,11 +151,6 @@
         this.$router.push({ name: 'priceChangeImeForm'})
       },itemAction:function(id,action){
           this.$router.push({ name: 'priceChangeImeDetail', query: { id: id ,action:action }})
-      },getQuery(){
-        axios.get('/api/crm/priceChangeIme/getQuery').then((response) =>{
-          this.formProperty=response.data;
-          this.pageRequest();
-        });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

@@ -18,10 +18,8 @@
                 <dict-map-select v-model="formData.printType" category="门店_广告印刷"></dict-map-select>
               </el-form-item>
               <el-form-item :label="formLabel.processStatus.label" :label-width="formLabelWidth">
-              <el-select v-model="formData.processStatus" filterable clearable :placeholder="$t('shopPrintList.inputKey')">
-                <el-option v-for="item in formData.processStatusList" :key="item" :label="item" :value="item"></el-option>
-              </el-select>
-            </el-form-item>
+                <process-status-select v-model="formData.processStatus" type="广告物料及制作申请"></process-status-select>
+              </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
                 <account-select  v-model="formData.createdBy"></account-select>
             </el-form-item>
@@ -50,10 +48,10 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('shopPrintList.operation')" width="140">
           <template scope="scope">
-            <el-button type="text" size="small" v-permit="'crm:shopPrint:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus!='已通过'&&scope.row.processStatus!='未通过'" v-permit="'crm:shopPrint:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopPrintList.audit')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopPrint:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPrintList.edit')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopPrint:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPrintList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:shopPrint:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button></div>
+            <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus!='已通过'&&scope.row.processStatus!='未通过'" v-permit="'crm:shopPrint:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopPrintList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.isEditable" v-permit="'crm:shopPrint:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPrintList.edit')}}</el-button></div>
+            <div class="action" v-if="scope.row.isEditable" v-permit="'crm:shopPrint:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPrintList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -65,8 +63,9 @@
   import officeSelect from 'components/basic/office-select';
   import dictMapSelect from 'components/basic/dict-map-select';
   import accountSelect from 'components/basic/account-select'
+  import processStatusSelect from 'components/general/process-status-select'
   export default {
-    components:{officeSelect,dictMapSelect,accountSelect},
+    components:{officeSelect,dictMapSelect,accountSelect,processStatusSelect},
     data() {
       return {
         page:{},

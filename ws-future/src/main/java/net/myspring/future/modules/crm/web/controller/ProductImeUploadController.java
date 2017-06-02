@@ -1,13 +1,18 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
+import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto;
 import net.myspring.future.modules.crm.service.ProductImeUploadService;
+import net.myspring.future.modules.crm.web.form.ProductImeUploadForm;
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "crm/productImeUpload")
@@ -29,9 +36,24 @@ public class ProductImeUploadController {
         return productImeUploadService.findPage(pageable, productImeUploadQuery);
     }
 
-    @RequestMapping(value = "save")
-    public String save(ProductImeUpload productImeUpload, BindingResult bindingResult) {
-        return null;
+    @RequestMapping(value = "upload")
+    public RestResponse upload(ProductImeUploadForm productImeUploadForm) {
+
+        List<String> imeList = productImeUploadForm.getImeList();
+        if(CollectionUtil.isEmpty(imeList)){
+            return new RestResponse("没有输入任何有效的IME", ResponseCodeEnum.invalid.name(), false);
+        }
+
+        String errMsg = productImeUploadService.checkForUpload(imeList);
+        if(StringUtils.isNotBlank(errMsg)){
+            return new RestResponse(errMsg, ResponseCodeEnum.invalid.name(), false);
+        }
+
+        productImeUploadService.upload(productImeUploadForm);
+
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+
+
     }
 
     @RequestMapping(value = "getQuery")
@@ -51,6 +73,21 @@ public class ProductImeUploadController {
         return new RestResponse("批量审核成功", ResponseCodeEnum.audited.name());
     }
 
+    @RequestMapping(value = "findDto")
+    public ProductImeUploadDto findDto(String id) {
+        if(StringUtils.isBlank(id)){
+            return new ProductImeUploadDto();
+        }
+        return productImeUploadService.findDto(id);
+    }
 
+    @RequestMapping(value = "checkForUpload")
+    public String checkForUpload(String imeStr) {
+        List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+        if(imeList.size() == 0){
+            return null;
+        }
+        return productImeUploadService.checkForUpload(imeList);
+    }
 
 }

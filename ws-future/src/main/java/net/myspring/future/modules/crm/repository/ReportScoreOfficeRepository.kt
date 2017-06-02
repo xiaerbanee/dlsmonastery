@@ -1,33 +1,17 @@
 package net.myspring.future.modules.crm.repository
 
-import com.ctc.wstx.util.StringUtil
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.basic.domain.Bank
-import net.myspring.future.modules.crm.domain.*
-import net.myspring.future.modules.crm.dto.BankInDto
+import net.myspring.future.modules.crm.domain.ReportScoreOffice
 import net.myspring.future.modules.crm.dto.ReportScoreOfficeDto
-import net.myspring.future.modules.crm.web.query.BankInQuery
-import org.springframework.cache.annotation.CacheConfig
-import org.springframework.cache.annotation.CachePut
-import org.springframework.cache.annotation.Cacheable
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.query.Param
-import java.time.LocalDateTime
-import net.myspring.future.modules.crm.web.query.StoreAllotQuery
-import net.myspring.future.modules.crm.dto.StoreAllotImeDto
-import net.myspring.future.modules.crm.dto.StoreAllotDto
 import net.myspring.future.modules.crm.web.query.ReportScoreOfficeQuery
 import net.myspring.util.repository.MySQLDialect
-import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
-import org.springframework.data.jpa.repository.Query
+import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.time.LocalDate
 
 
 interface ReportScoreOfficeRepository : BaseRepository<ReportScoreOffice, String>, ReportScoreOfficeRepositoryCustom{

@@ -29,11 +29,14 @@ interface ImeAllotRepositoryCustom{
 
     fun findPage(pageable: Pageable, imeAllotQuery: ImeAllotQuery): Page<ImeAllotDto>
 
-
+    fun findDto(id: String): ImeAllotDto
 
 }
 
 class ImeAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ImeAllotRepositoryCustom{
+    override fun findDto(id: String): ImeAllotDto {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun findPage(pageable: Pageable, imeAllotQuery: ImeAllotQuery): Page<ImeAllotDto> {
 

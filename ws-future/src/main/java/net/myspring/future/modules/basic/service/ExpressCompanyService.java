@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.service;
 
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -14,6 +15,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -33,9 +35,15 @@ public class ExpressCompanyService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public ExpressCompanyDto findDto(String id){
-        ExpressCompanyDto expressCompanyDto = BeanUtil.map(expressCompanyRepository.findOne(id), ExpressCompanyDto.class);
-        cacheUtils.initCacheInput(expressCompanyDto);
+    public ExpressCompanyDto findOne(String id){
+        ExpressCompanyDto expressCompanyDto;
+        if(org.apache.commons.lang.StringUtils.isBlank(id)){
+            expressCompanyDto = new ExpressCompanyDto();
+        } else {
+            ExpressCompany expressCompany= expressCompanyRepository.findOne(id);
+            expressCompanyDto = BeanUtil.map(expressCompany,ExpressCompanyDto.class);
+            cacheUtils.initCacheInput(expressCompanyDto);
+        }
         return expressCompanyDto;
     }
 
@@ -48,9 +56,9 @@ public class ExpressCompanyService {
         return expressCompanyForm;
     }
 
-    public List<ExpressCompany> findAll(){
-        return expressCompanyRepository.findAll();
-
+    public List<ExpressCompanyDto> findAll(){
+        List<ExpressCompany> expressCompanyList =  expressCompanyRepository.findAll();
+        return BeanUtil.map(expressCompanyList,ExpressCompanyDto.class);
     }
 
     public Page<ExpressCompanyDto> findPage(Pageable pageable, ExpressCompanyQuery expressCompanyQuery) {
@@ -85,7 +93,6 @@ public class ExpressCompanyService {
     public String getDefaultExpressCompanyId() {
         String defaultExpressCompanyId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue();
         return StringUtils.trimToNull(defaultExpressCompanyId);
-
     }
 
 }

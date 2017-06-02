@@ -26,9 +26,21 @@ public class CacheService {
     @Autowired
     private ExpressCompanyRepository expressCompanyRepository;
     @Autowired
-    private AdpricesystemRepository adpricesystemRepository;
-    @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private ProductTypeRepository productTypeRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private BankRepository bankRepository;
+    @Autowired
+    private ShopAdTypeRepository shopAdTypeRepository;
+    @Autowired
+    private DemoPhoneTypeRepository demoPhoneTypeRepository;
+    @Autowired
+    private DepotStoreRepository depotStoreRepository;
+    @Autowired
+    private AdpricesystemRepository adpricesystemRepository;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -36,11 +48,17 @@ public class CacheService {
         LocalDateTime start = LocalDateTime.now();
         logger.info("init cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         cacheUtils.initCache("chains",chainRepository.findAll());
+        cacheUtils.initCache("shopAdTypes",shopAdTypeRepository.findAll());
+        cacheUtils.initCache("demoPhoneTypes",demoPhoneTypeRepository.findAll());
+        cacheUtils.initCache("banks",bankRepository.findAll());
+        cacheUtils.initCache("products",productRepository.findAll());
         cacheUtils.initCache("pricesystems",pricesystemRepository.findAll());
+        cacheUtils.initCache("adPricesystems",adpricesystemRepository.findAll());
         cacheUtils.initCache("depots",depotRepository.findAll());
-        cacheUtils.initCache("expressCompanys",expressCompanyRepository.findAll());
-        cacheUtils.initCache("adPricesystem",adpricesystemRepository.findAll());
+        cacheUtils.initCache("depotStores",depotStoreRepository.findAll());
+        cacheUtils.initCache("expressCompanies",expressCompanyRepository.findAll());
         cacheUtils.initCache("clients",clientRepository.findAll());
+        cacheUtils.initCache("productTypes",productTypeRepository.findAll());
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         logger.info("init cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");

@@ -25,9 +25,8 @@
                 <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.processFlow.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.processFlow" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
-                  <el-option v-for="processFlow in formData.processFlows" :key="processFlow.id" :label="processFlow.name" :value="processFlow.id"></el-option>
-                </el-select>
+                <process-status-select v-model="formData.processFlow" type="门店建设申请">
+                </process-status-select>
               </el-form-item>
               <el-form-item :label="formLabel.fixtureType.label" :label-width="formLabelWidth">
                 <dict-enum-select v-model="formData.fixtureType" category="装修类别"></dict-enum-select>
@@ -67,10 +66,10 @@
         <el-table-column prop="remarks" :label="$t('shopBuildList.remarks')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('shopBuildList.operation')" width="140">
           <template scope="scope">
-            <el-button type="text" size="small" v-permit="'crm:shopBuild:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopBuildList.detail')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:shopBuild:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopBuildList.detail')}}</el-button></div>
+            <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopBuild:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button></div>
+            <div class="action" v-if="scope.row.isEditable" v-permit="'crm:shopBuild:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -83,8 +82,9 @@
   import dictEnumSelect from 'components/basic/dict-enum-select';
   import accountSelect from 'components/basic/account-select';
   import depotSelect from 'components/future/depot-select';
+  import processStatusSelect from 'components/general/process-status-select';
   export default {
-    components:{officeSelect,dictEnumSelect,accountSelect,depotSelect},
+    components:{officeSelect,dictEnumSelect,accountSelect,depotSelect,processStatusSelect},
     data() {
       return {
         pageLoading: false,

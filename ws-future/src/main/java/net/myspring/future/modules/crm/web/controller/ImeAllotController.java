@@ -6,6 +6,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.modules.crm.domain.ImeAllot;
+import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.dto.ImeAllotDto;
 import net.myspring.future.modules.crm.service.ImeAllotService;
 import net.myspring.future.modules.crm.web.form.ImeAllotForm;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -86,6 +88,14 @@ public class ImeAllotController {
 
     }
 
+    @RequestMapping(value = "findDto")
+    public ImeAllotDto findDto(String id) {
+        if(StringUtils.isBlank(id)){
+            return new ImeAllotDto();
+        }
+
+        return imeAllotService.findDto(id);
+    }
 
     @RequestMapping(value="export")
     public String export(ImeAllotQuery imeAllotQuery) {

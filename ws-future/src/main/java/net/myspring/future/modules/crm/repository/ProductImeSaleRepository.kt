@@ -1,30 +1,21 @@
 package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.basic.domain.Bank
-import net.myspring.future.modules.crm.domain.*
-import org.springframework.cache.annotation.CacheConfig
-import org.springframework.cache.annotation.CachePut
-import org.springframework.cache.annotation.Cacheable
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.query.Param
-import java.time.LocalDateTime
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
-import org.springframework.data.jpa.repository.Query
-import java.time.LocalDate
-import net.myspring.common.dto.NameValueDto
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.modules.crm.domain.ProductImeSale
-import net.myspring.future.modules.crm.dto.*
-import net.myspring.future.modules.crm.web.query.*
+import net.myspring.future.modules.crm.dto.ProductImeSaleDto
+import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -75,25 +66,28 @@ class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbc
             t1.id = :id
         AND t1.product_ime_id = ime.id
         AND t1.shop_id = depot.id
-                """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ProductImeSaleDto::class.java));
+                """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ProductImeSaleDto::class.java))
 
     }
 
     override fun findPage(pageable: Pageable, productImeSaleQuery: ProductImeSaleQuery): Page<ProductImeSaleDto> {
 
-        val sb = StringBuffer()
+        val sb = StringBuilder()
         sb.append("""
-        SELECT  *
+        SELECT
+            ime.ime productImeIme,
+            ime.meid productImeMeid,
+            ime.product_id productImeProductId,
+            depot.office_id shopOfficeId,
+            t1.*
         FROM
-        (
-            select
-              ime.ime productImeIme, ime.meid productImeMeid, ime.product_id productImeProductId, depot.office_id shopOfficeId,  t1.*
-            from
-              crm_product_ime_sale t1,crm_depot depot, crm_product_ime ime
-            where
-            t1.enabled=1
-            and t1.product_ime_id = ime.id
-            and t1.shop_id=depot.id
+            crm_product_ime_sale t1,
+            crm_depot depot,
+            crm_product_ime ime
+        WHERE
+            t1.enabled = 1
+            AND t1.shop_id = depot.id
+            AND t1.product_ime_id = ime.id
         """)
 
         if (productImeSaleQuery.createdDateStart != null) {
@@ -117,13 +111,10 @@ class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbc
         if (StringUtils.isNotBlank(productImeSaleQuery.employeeId )) {
             sb.append("""  and t1.employee_id = :employeeId  """)
         }
-        sb.append("""
-        ) result
-        """)
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var paramMap = BeanPropertySqlParameterSource(productImeSaleQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductImeSaleDto::class.java))
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val paramMap = BeanPropertySqlParameterSource(productImeSaleQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductImeSaleDto::class.java))
 
         return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
 

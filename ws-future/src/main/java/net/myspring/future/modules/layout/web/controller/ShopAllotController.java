@@ -81,10 +81,10 @@ public class ShopAllotController {
             return result;
         }
 
-        String message = shopAllotService.checkShop(fromShopId, toShopId);
-        if(!StringUtils.isBlank(message)){
+        String errMsg = shopAllotService.checkShop(fromShopId, toShopId);
+        if(!StringUtils.isBlank(errMsg)){
             result.put("success", false);
-            result.put("message", message);
+            result.put("errMsg", errMsg);
             return result;
         }
 

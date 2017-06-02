@@ -97,16 +97,8 @@
           <template scope="scope">
             <div class="action"><el-button size="small"v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderList.detail')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'"  size="small"v-permit="'crm:goodsOrder:edit'" ><el-button @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'"  v-permit="'crm:goodsOrder:edit'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
-            <div class="action" v-if="scope.row.enabled && scope.row.status=='待发货' " v-permit="'crm:goodsOrder:ship'"  ><el-button  size="small"@click.native="itemAction(scope.row.id, 'ship')">{{$t('goodsOrderList.ship')}}</el-button></div>
-            <div class="action" v-if="scope.row.enabled && scope.row.status=='待发货' && scope.row.isSreturn" > <el-button size="small"v-permit="'crm:goodsOrder:edit'" @click.native="itemAction(scope.row.id, 'sreturn')">{{$t('goodsOrderList.sreturn')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待签收'" v-permit="'crm:goodsOrder:edit'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'sign')">{{$t('goodsOrderList.sign')}}</el-button></div>
-            <div class="action" v-if="scope.row.enabled && scope.row.status=='待签收'" v-permit="'crm:goodsOrder:shipBack'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'shipBack')">{{$t('goodsOrderList.shipBack')}}</el-button></div>
-            <div class="action" v-if="scope.row.isPrint" v-permit="'crm:goodsOrder:print'" ><el-button    size="small" @click.native="itemAction(scope.row.id, 'print')">{{$t('goodsOrderList.print')}}</el-button></div>
-            <div class="action"  v-if="!scope.row.isPrint" v-permit="'crm:goodsOrder:print'"><el-button style="color:red;"  size="small" @click.native="itemAction(scope.row.id, 'print')">{{$t('goodsOrderList.print')}}</el-button></div>
-            <div class="action" v-if="scope.row.isShipPrint" v-permit="'crm:goodsOrder:print'"> <el-button size="small"  @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('goodsOrderList.shipPrint')}}</el-button></div>
-            <div class="action"  v-if="!scope.row.isShipPrint" v-permit="'crm:goodsOrder:print'"  ><el-button style="color:red;"  size="small" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('goodsOrderList.shipPrint')}}</el-button></div>
           </template>
 
         </el-table-column>
@@ -169,7 +161,6 @@
       },
       formLabelWidth: '120px',
       formVisible: false,
-      pullStatusList:['空值','已推送','待发货','待开单'],
       pageLoading: false
     };
   },
@@ -203,22 +194,8 @@
         this.$router.push({ name: 'goodsOrderDetail', query: { id: id }})
       }else if(action=="bill"){
         this.$router.push({name:'goodsOrderBill',query:{id:id}})
-      }else if(action =="ship"){
-        this.$router.push({name:'goodsOrderShip',query:{id:id}})
-      }else if(action =="shipPrint"){
-        let newWindow = window.open('/#/crm/goodsOrderShipPrint?id=' + id, '', '');
-        newWindow.print();
-      }else if(action =="print"){
-        let newWindow = window.open('/#/crm/goodsOrderPrint?id=' + id, '', '');
-        newWindow.print();
       }else if(action =="sign"){
         this.$router.push({name:'goodsOrderSign',query:{id:id}})
-      }else if(action =="shipBack"){
-        axios.get('/api/crm/goodsOrder/shipBack?id='+id).then((response)=> {
-         this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
-        });
-      }else if(action =="sreturn"){
-        this.$router.push({name:'goodsOrderReturn',query:{id:id}})
       }else if(action == "delete"){
         axios.get('/api/ws/future/crm/goodsOrder/delete',{params:{id:id}}).then((response) =>{
           this.$message(response.data.message);
