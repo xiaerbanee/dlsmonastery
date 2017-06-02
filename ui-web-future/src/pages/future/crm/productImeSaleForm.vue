@@ -5,8 +5,7 @@
       <el-form :model="productImeSale" ref="inputForm"   label-width="120px" class="form input-form">
         <el-row >
           <el-col :span="21">
-            <el-form-item >
-
+            <el-form-item>
               <el-alert  v-show="errMsg"  :closable=false  title=""  :description="errMsg" type="error"> </el-alert>
             </el-form-item>
           </el-col>

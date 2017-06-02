@@ -75,7 +75,7 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
     }
 
     override fun findPage(pageable : Pageable,expressOrderQuery: ExpressOrderQuery): Page<ExpressOrderDto> {
-        val sb = StringBuffer()
+        val sb = StringBuilder()
         sb.append("""
         SELECT
             t1.*
@@ -96,7 +96,6 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
         if(StringUtils.isNotBlank(expressOrderQuery.extendBusinessIdStart)){
             sb.append("""  and t1.extend_business_id >= :extendBusinessIdStart  """)
         }
-
         if(StringUtils.isNotBlank(expressOrderQuery.extendType)){
             sb.append("""  and t1.extend_type = :extendType  """)
         }

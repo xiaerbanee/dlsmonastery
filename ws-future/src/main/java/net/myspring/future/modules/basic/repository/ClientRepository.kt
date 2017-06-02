@@ -22,7 +22,7 @@ import javax.persistence.EntityManager
 /**
  * Created by zhangyf on 2017/5/24.
  */
-@CacheConfig(cacheNames = arrayOf("client"))
+@CacheConfig(cacheNames = arrayOf("clients"))
 interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom {
 
     @Cacheable

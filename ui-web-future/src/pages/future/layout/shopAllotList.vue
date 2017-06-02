@@ -152,15 +152,15 @@
       },itemAdd(){
         this.$router.push({ name: 'shopAllotForm'})
       },print(id, action){
-        if(action=="returnPrint") {
+        if(action==="returnPrint") {
           window.open('/api/ws/future/crm/shopAllot/print?id='+id+"&printType=returnPrint", '', '').print();
-        } else if(action=="salePrint") {
+        } else if(action==="salePrint") {
           window.open('/api/ws/future/crm/shopAllot/print?id='+id+"&printType=salePrint", '', '').print();
         }
       },itemAction:function(id, action){
-        if(action=="edit") {
+        if(action==="edit") {
           this.$router.push({ name: 'shopAllotForm', query: { id: id, action:'edit'}})
-        } else if(action=="delete") {
+        } else if(action==="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/crm/shopAllot/logicDelete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
@@ -168,13 +168,13 @@
             });
           }).catch(()=>{});
 
-        }else if(action=="detail"){
+        }else if(action==="detail"){
           this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'view'}})
-        }else if(action=="audit"){
+        }else if(action==="audit"){
           this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'audit'}})}
       }
     },created () {
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{
         that.formData=response.data;

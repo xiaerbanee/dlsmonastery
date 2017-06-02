@@ -17,8 +17,7 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String ime2;
     private String meid;
     private LocalDateTime retailDate;
-    private LocalDateTime productImeUploadCreatedDate;
-    private LocalDateTime productImeSaleCreatedDate;
+
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "netType")
     private String productNetType;
     private String depotId;
@@ -36,18 +35,11 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String depotAreaName;
     private String depotAreaType;
 
-    private String productImeSaleEmployeeId;
-    @CacheInput(inputKey = "employees",inputInstance = "productImeSaleEmployeeId",outputInstance = "name")
-    private String productImeSaleEmployeeName;
-
-    private String productImeUploadEmployeeId;
-    @CacheInput(inputKey = "employees",inputInstance = "productImeUploadEmployeeId",outputInstance = "name")
-    private String productImeUploadEmployeeName;
-
     private String productTypeId;
     @CacheInput(inputKey = "productTypes",inputInstance = "productTypeId",outputInstance = "name")
     private String productTypeName;
-
+    @CacheInput(inputKey = "productTypes",inputInstance = "productTypeId",outputInstance = "scoreType")
+    private Boolean productTypeScoreType;
 
     private LocalDateTime createdTime;
     private Boolean locked;
@@ -60,12 +52,47 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String productImeSaleCreatedBy;
     @CacheInput(inputKey = "accounts",inputInstance = "productImeSaleCreatedBy",outputInstance = "loginName")
     private String productImeSaleCreatedByName;
+    private String productImeSaleEmployeeId;
+    @CacheInput(inputKey = "employees",inputInstance = "productImeSaleEmployeeId",outputInstance = "name")
+    private String productImeSaleEmployeeName;
+    private LocalDateTime productImeSaleCreatedDate;
+
     private String productImeUploadShopId;
     @CacheInput(inputKey = "depots",inputInstance = "productImeUploadShopId",outputInstance = "name")
     private String productImeUploadShopName;
     private String productImeUploadCreatedBy;
+    private String productImeUploadStatus;
     @CacheInput(inputKey = "accounts",inputInstance = "productImeUploadCreatedBy",outputInstance = "loginName")
     private String productImeUploadCreatedByName;
+    private String productImeUploadEmployeeId;
+    @CacheInput(inputKey = "employees",inputInstance = "productImeUploadEmployeeId",outputInstance = "name")
+    private String productImeUploadEmployeeName;
+    private LocalDateTime productImeUploadCreatedDate;
+    private String productImeUploadId;
+
+    public Boolean getProductTypeScoreType() {
+        return productTypeScoreType;
+    }
+
+    public void setProductTypeScoreType(Boolean productTypeScoreType) {
+        this.productTypeScoreType = productTypeScoreType;
+    }
+
+    public String getProductImeUploadId() {
+        return productImeUploadId;
+    }
+
+    public void setProductImeUploadId(String productImeUploadId) {
+        this.productImeUploadId = productImeUploadId;
+    }
+
+    public String getProductImeUploadStatus() {
+        return productImeUploadStatus;
+    }
+
+    public void setProductImeUploadStatus(String productImeUploadStatus) {
+        this.productImeUploadStatus = productImeUploadStatus;
+    }
 
     public String getDepotOfficeId() {
         return depotOfficeId;

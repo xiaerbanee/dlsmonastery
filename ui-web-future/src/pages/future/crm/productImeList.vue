@@ -89,7 +89,7 @@
             <el-tag :type="scope.row.locked ? 'danger' : 'primary'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="enabled" :label="$t('productImeList.enabled')" >
+        <el-table-column prop="enabled" :label="$t('productImeList.enabled')" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
