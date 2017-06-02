@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import net.myspring.basic.modules.sys.repository.DictMapRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,7 +25,6 @@ public class DictMapService {
     private DictMapRepository dictMapRepository;
     @Autowired
     private CacheUtils cacheUtils;
-
 
     public DictMapDto findOne(DictMapDto dictMapDto) {
         if (!dictMapDto.isCreate()) {
@@ -45,6 +45,7 @@ public class DictMapService {
         return dictMapDtoPage;
     }
 
+    @Transactional
     public DictMap save(DictMapForm dictMapForm) {
         DictMap dictMap;
         if (StringUtils.isBlank(dictMapForm.getId())) {
@@ -67,6 +68,7 @@ public class DictMapService {
         return map;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         dictMapRepository.logicDelete(id);
     }
