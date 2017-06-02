@@ -43,7 +43,7 @@ class ProductMonthPriceRepositoryImpl @Autowired constructor(val namedParameterJ
             """);
         if(productMonthPriceQuery.month!=null){
             sql.append("""
-                    AND t1.month LIKE CONCAT('%',:month,'%')
+                    AND t1.month = :month
                 """);
         }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sql.toString(),pageable)

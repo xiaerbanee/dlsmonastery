@@ -12,7 +12,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.month.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.month" auto-complete="off" :placeholder="$t('productMonthPriceList.likeSearch')"></el-input>
+                <month-picker  v-model="formData.month" ></month-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -38,7 +38,11 @@
   </div>
 </template>
 <script>
+  import monthPicker from 'components/common/month-picker'
   export default {
+    components:{
+      monthPicker,
+    },
     data() {
       return {
         pageLoading: false,
