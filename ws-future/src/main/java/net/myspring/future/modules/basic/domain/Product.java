@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.domain;
 
 import net.myspring.future.common.domain.CompanyEntity;
 import net.myspring.future.common.domain.DataEntity;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="crm_product")
+@Where(clause = "enabled=1")
 public class Product extends CompanyEntity<Product> {
     private String name;
     private String code;

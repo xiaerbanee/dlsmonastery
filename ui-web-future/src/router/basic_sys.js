@@ -32,7 +32,7 @@ const roleAuthorityForm = r => require.ensure([],() => r(require('pages/basic/sy
 let routes = [
   {path:'/basic/sys/processList',component:processList,name:'processList'},
   {path:'/basic/sys/dictEnumList',component:dictEnumList,name:'dictEnumList',meta: {menu:"dictEnumList"}},
-  {path:'/basic/sys/dictEnumForm',component:dictEnumForm,name:'dictEnumForm',meta: {menu:"dictEnumList"}},
+  {path:'/basic/sys/dictEnumForm',component:dictEnumForm,name:'dictEnumForm',meta: {menu:"dictEnumList",keepAlive:true}},
   {path:'/basic/sys/dictMapList',component:dictMapList,name:'dictMapList'},
   {path:'/basic/sys/dictMapForm',component:dictMapForm,name:'dictMapForm',meta: {menu:"dictMapList"}},
   {path:'/basic/sys/companyConfigList',component:companyConfigList,name:'companyConfigList'},

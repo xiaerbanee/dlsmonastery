@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="10">
         <el-form-item :label="$t('priceChangeImeForm.priceChangeId')" prop="priceChangeId">
-          <el-select v-model="formData.priceChangeId" filterable   :placeholder="$t('priceChangeImeForm.selectPriceChangeId')" >
+          <el-select v-model="inputForm.priceChangeId" filterable   :placeholder="$t('priceChangeImeForm.selectPriceChangeId')" >
             <el-option v-for="item in formProperty.priceChangeDtos" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -75,10 +75,9 @@
               }]
             },
             inputForm:{
-              imeUploadList:'',
+              imeUploadList:[[]],
               priceChangeId:''
             },
-            formData:{},
             formProperty:{},
             remoteLoading:false,
             rules: {
@@ -96,13 +95,14 @@
           form.validate((valid) => {
             if (valid) {
                 this.inputForm.imeUploadList=new Array();
-                let list=this.table.getData();
+                let list=this.table.getData()
+                console.log(list);
                 for(var item in list){
                   if(!this.table.isEmptyRow(item)){
                     this.inputForm.imeUploadList.push(list[item]);
                   }
                 }
-                this.inputForm.imeUploadList = JSON.stringify(this.inputForm.imeUploadList);
+                /*this.inputForm.imeUploadList = JSON.stringify(this.inputForm.imeUploadList);*/
                 axios.post('/api/ws/future/crm/priceChangeIme/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
                   this.$message(response.data.message);
                   form.resetFields();
@@ -116,9 +116,6 @@
           })
         }
       },created() {
-        axios.get('/api/ws/future/crm/priceChangeIme/findOne',{params:{id:this.$route.query.id}}).then((response)=>{
-          this.formData=response.data;
-        });
         axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response)=>{
           this.formProperty=response.data;
         });

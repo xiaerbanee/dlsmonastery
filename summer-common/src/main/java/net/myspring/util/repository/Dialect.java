@@ -1,6 +1,7 @@
 package net.myspring.util.repository;
 
 
+import com.google.common.base.CaseFormat;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -29,7 +30,7 @@ public abstract class Dialect {
 			Iterator<Sort.Order> iterator = sort.iterator();
 			while (iterator.hasNext()) {
 				Sort.Order order = iterator.next();
-				sb.append(order.getProperty()).append(" ").append(order.getDirection());
+				sb.append(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, order.getProperty())).append(" ").append(order.getDirection());
 				if(iterator.hasNext()) {
 					sb.append(", ");
 				}
