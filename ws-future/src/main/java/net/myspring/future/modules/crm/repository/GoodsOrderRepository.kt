@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.repository
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.GoodsOrder
 import net.myspring.future.modules.crm.dto.GoodsOrderDto
+import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -15,6 +16,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
+import java.util.*
 
 
 interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderRepositoryCustom {
@@ -36,6 +38,7 @@ interface GoodsOrderRepositoryCustom {
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
+
     override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
         var sb = StringBuilder("select * from crm_goods_order where 1=1 ");
         if(StringUtils.isNotBlank(goodsOrderQuery.remarks)) {
