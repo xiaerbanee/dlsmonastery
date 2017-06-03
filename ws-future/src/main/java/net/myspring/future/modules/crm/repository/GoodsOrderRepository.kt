@@ -35,15 +35,16 @@ interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderR
 
 interface GoodsOrderRepositoryCustom {
     fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>?
-    fun findAllShip(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>?
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
-    override fun findAllShip(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
+    override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
         var sb = StringBuilder("select * from crm_goods_order where 1=1")
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.statusList)) {
-            System.out.println(goodsOrderQuery.statusList.toString());
             sb.append(" and status in (:statusList)")
+        }
+        if (StringUtils.isNotBlank(goodsOrderQuery.status)) {
+            sb.append(" and status = :status")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.netType)) {
             sb.append(" and net_type = :netType")
@@ -98,36 +99,6 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         }
         if (StringUtils.isNoneBlank(goodsOrderQuery.expressCode)) {
             sb.append(" and express_code like concat('%',:expressCode,'%')")
-        }
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
-        var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(goodsOrderQuery), BeanPropertyRowMapper(GoodsOrderDto::class.java));
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(goodsOrderQuery),Long::class.java);
-        return PageImpl(list,pageable,count);
-    }
-
-    override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
-        var sb = StringBuilder("select * from crm_goods_order where 1=1 ");
-        if(StringUtils.isNotBlank(goodsOrderQuery.remarks)) {
-            sb.append(" and remarks like concat('%',:remarks,'%')");
-        }
-        if(goodsOrderQuery.createdDateStart != null) {
-            sb.append(" and created_date > :createdDateStart ");
-        }
-        if(goodsOrderQuery.createdDateEnd != null) {
-            sb.append(" and created_date < :createdDateEnd ");
-        }
-        if (StringUtils.isNotBlank(goodsOrderQuery.netType)) {
-            sb.append(" and net_type = :netType")
-        }
-        if (StringUtils.isNotBlank(goodsOrderQuery.businessId)) {
-            sb.append(" and business_id like concat('%',:businessId,'%')");
-        }
-        if (StringUtils.isNotBlank(goodsOrderQuery.shipType)) {
-            sb.append(" and ship_type = :shipType ");
-        }
-        if (StringUtils.isNotBlank(goodsOrderQuery.status)) {
-            sb.append(" and status = :status")
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
