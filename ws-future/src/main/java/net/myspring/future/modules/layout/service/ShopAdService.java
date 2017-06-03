@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -100,7 +101,7 @@ public class ShopAdService {
     }
 
 
-    public void audit(ShopAdForm shopAdForm) {
+    public String audit(ShopAdForm shopAdForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         ShopAd shopAd;
         if(!shopAdForm.isCreate()){
@@ -109,28 +110,40 @@ public class ShopAdService {
             activitiCompleteForm.setProcessTypeId(shopAd.getProcessTypeId());
             activitiCompleteForm.setComment(shopAdForm.getPassRemarks());
             activitiCompleteForm.setPass(shopAdForm.getPass());
-            ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
-            if(activitiCompleteDto!=null){
-                shopAd.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
-                shopAd.setProcessStatus(activitiCompleteDto.getProcessStatus());
-                shopAd.setProcessPositionId(activitiCompleteDto.getPositionId());
-                shopAdRepository.save(shopAd);
+            try {
+                ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
+
+                if(activitiCompleteDto!=null){
+                    shopAd.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+                    shopAd.setProcessStatus(activitiCompleteDto.getProcessStatus());
+                    shopAd.setProcessPositionId(activitiCompleteDto.getPositionId());
+                    shopAdRepository.save(shopAd);
+                    return null;
+                }
+            }catch (Exception e){
+                return e.getMessage();
             }
         }
+        return null;
     }
 
-    public void batchAudit(String[] ids, Boolean pass){
+    public String batchAudit(String[] ids, Boolean pass){
         if(ids==null){
-            return;
+            return null;
         }
         List<String> idList = Arrays.asList(ids);
         ShopAdForm shopAdForm = new ShopAdForm();
         shopAdForm.setPass(pass);
         shopAdForm.setPassRemarks("批量操作");
+        String message = null;
         for (String id:idList){
             shopAdForm.setId(id);
-            audit(shopAdForm);
+            message = audit(shopAdForm);
+            if(message!=null){
+                message = StringUtils.join(message, CharConstant.COMMA);
+            }
         }
+        return message;
     }
 
     public ShopAdDto findOne(String id) {

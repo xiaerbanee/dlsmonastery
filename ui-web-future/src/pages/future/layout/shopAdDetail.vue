@@ -75,22 +75,20 @@
     },
     methods:{
       passSubmit(){
-        this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
+            this.submitDisabled = true;
             util.copyValue(this.inputForm,this.submitData);
-            console.log(this.submitData);
             axios.post('/api/ws/future/layout/shopAd/audit', qs.stringify(this.submitData)).then((response)=> {
-              if(response.data.message){
-                this.$message(response.data.message);
+              this.$message(response.data.message);
+              this.submitDisabled = false;
+              if(response.data.success){
                 this.$router.push({name:'shopAdList',query:util.getQuery("shopAdList")})
               }
             }).catch(function () {
               this.submitDisabled = false;
             });
-          }else{
-            this.submitDisabled = false;
           }
         })
       },

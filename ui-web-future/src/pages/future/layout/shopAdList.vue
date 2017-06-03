@@ -34,7 +34,7 @@
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <account-select  v-model="formData.createdBy" :multiple="multiple"></account-select>
+                <account-select  v-model="formData.createdBy"></account-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -68,7 +68,7 @@
         <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-permit="'crm:shopAd:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button></div>
-            <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopAd:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus !== '已通过'&&scope.row.processStatus !== '未通过'" v-permit="'crm:shopAd:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button></div>
             <div class="action" v-if="scope.row.isEditable" v-permit="'crm:shopAd:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button></div>
             <div class="action" v-if="scope.row.isEditable" v-permit="'crm:shopAd:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button></div>
           </template>
@@ -149,15 +149,37 @@
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       },batchPass(){
-      axios.get('/api/ws/future/layout/shopAd/batchAudit',{params:{pass:true,ids : this.multipleSelection}}).then((response) =>{
-        this.$message(response.data.message);
-        this.pageRequest();
-      })
+        if(!this.multipleSelection || this.multipleSelection.length < 1){
+          this.$message(this.$t('shopAdList.noSelectionFound'));
+          return ;
+        }
+        util.confirmBeforeBatchPass(this).then(() => {
+          axios.get('/api/ws/future/layout/shopAd/batchAudit', {
+            params: {
+              pass: true,
+              ids: this.multipleSelection
+            }
+          }).then((response) => {
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        }).catch(()=>{});
     },batchBack(){
-        axios.get('/api/ws/future/layout/shopAd/batchAudit',{params:{pass:false,ids : this.multipleSelection}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        })
+        if(!this.multipleSelection || this.multipleSelection.length < 1){
+          this.$message(this.$t('shopAdList.noSelectionFound'));
+          return ;
+        }
+        util.confirmBeforeBatchPass(this).then(() => {
+          axios.get('/api/ws/future/layout/shopAd/batchAudit', {
+            params: {
+              pass: false,
+              ids: this.multipleSelection
+            }
+          }).then((response) => {
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        }).catch(()=>{});
       },itemAdd(){
         this.$router.push({ name: 'shopAdForm'});
       },itemAction:function(id,action){
@@ -169,7 +191,7 @@
             this.$router.push({name:'shopAdDetail',query:{id:id,action:action}});
         }else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
-            axios.get('/ws/future/layout/shopAd/delete', {params: {id: id}}).then((response) => {
+            axios.get('/api/ws/future/layout/shopAd/delete', {params: {id: id}}).then((response) => {
               this.$message(response.data.message);
               this.pageRequest();
             });
@@ -179,7 +201,7 @@
         var arrs=[];
         for(var i in val){
           arrs.push(val[i].id);
-        };
+        }
         this.multipleSelection=arrs;
       },checkSelectable(row) {
         return row.processStatus !== '已通过';
@@ -190,7 +212,7 @@
           this.formData=response.data;
           util.copyValue(this.$route.query,this.formData);
           this.pageRequest();
-      });
+        });
     }
   };
 </script>
