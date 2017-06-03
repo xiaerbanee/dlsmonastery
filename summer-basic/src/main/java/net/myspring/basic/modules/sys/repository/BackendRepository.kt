@@ -30,7 +30,7 @@ interface BackendRepository:BaseRepository<Backend,String>,BackendRepositoryCust
     @Cacheable
     override fun findOne(id: String): Backend
 
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(backend: Backend): Backend
 
     @Query("""

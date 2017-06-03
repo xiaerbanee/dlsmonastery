@@ -11,7 +11,7 @@ import org.springframework.cache.annotation.Cacheable
  */
 @CacheConfig(cacheNames = arrayOf("companys"))
 interface CompanyRepository :BaseRepository<Company,String>{
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(company: Company): Company
 
     @Cacheable

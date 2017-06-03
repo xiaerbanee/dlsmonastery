@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.Query
  */
 @CacheConfig(cacheNames = arrayOf("officeBusinesses"))
 interface  OfficeBusinessRepository: BaseRepository<OfficeBusiness, String> {
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(officeBusiness: OfficeBusiness): OfficeBusiness
 
     @Cacheable
