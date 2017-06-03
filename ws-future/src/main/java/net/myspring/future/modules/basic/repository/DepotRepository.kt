@@ -48,6 +48,13 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByName(name: String): Depot
 
+    @Query("""
+        select t
+        from #{#entityName} t
+        where t.name in ?1
+    """)
+    fun findByNameList(nameList: MutableList<String>):MutableList<Depot>
+
 }
 
 interface DepotRepositoryCustom{

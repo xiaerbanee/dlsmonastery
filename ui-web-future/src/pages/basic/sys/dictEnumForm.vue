@@ -25,56 +25,62 @@
   </div>
 </template>
 <script>
-    export default{
-      data(){
-          return{
-            submitDisabled:false,
-            inputForm:{},
-            inputProperty:{},
-            submitData:{
-              id:'',
-              category:'',
-              sort:'',
-              value:'',
-              remarks:''
-            },
-            rules: {
-              category: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}],
-              sort: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')},{ type: 'number', message: this.$t('dictEnumForm.inputLegalValue')}],
-              value: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}]
-            }
-          }
-      },
-      methods:{
-        formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/basic/sys/dictEnum/save', qs.stringify(this.submitData)).then((response)=> {
-                this.$message(response.data.message);
-                if(this.inputForm.create){
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
-                  this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList")})
-                }
-              }).catch(function () {
-                this.submitDisabled = false;
-              });
-            }else{
-              this.submitDisabled = false;
-            }
-          })
+  export default{
+    data(){
+      return{
+        submitDisabled:false,
+        inputForm:{},
+        inputProperty:{},
+        submitData:{
+          id:'',
+          category:'',
+          sort:'',
+          value:'',
+          remarks:''
+        },
+        rules: {
+          category: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}],
+          sort: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')},{ type: 'number', message: this.$t('dictEnumForm.inputLegalValue')}],
+          value: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}]
         }
-      },created(){
-          axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
-          });
+      }
+    },
+    methods:{
+      formSubmit(){
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            util.copyValue(this.inputForm,this.submitData);
+            axios.post('/api/basic/sys/dictEnum/save', qs.stringify(this.submitData)).then((response)=> {
+              this.$message(response.data.message);
+              this.submitDisabled = false;
+              if(this.inputForm.create){
+                form.resetFields();
+              } else {
+                this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList")})
+              }
+            }).catch(function () {
+              this.submitDisabled = false;
+            });
+          }else{
+            this.submitDisabled = false;
+          }
+        })
+      },initPage() {
+        axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+        });
         axios.get('/api/basic/sys/dictEnum/getForm').then((response)=>{
           this.inputProperty = response.data;
         });
       }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
+  }
 </script>

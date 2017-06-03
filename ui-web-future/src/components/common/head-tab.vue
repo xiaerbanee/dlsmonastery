@@ -34,7 +34,9 @@
     },methods: {
       headTabClick (event) {
         let name=event.target.dataset.tabName;
-        this.$router.push({ name: name, query: this.tabs.get(name)})
+        var query = this.tabs.get(name);
+        query.headClick = true;
+        this.$router.push({ name: name, query: query})
       },
       headTabRemove(event) {
         this.tabs.delete(event.target.dataset.tabName);
@@ -47,7 +49,9 @@
           if(this.currentActive == tabItem.name) {
             this.tabList = this.getTabList();
           } else {
-            this.$router.push({ name: tabItem.name, query: this.tabs.get(tabItem.name)})
+            var query = this.tabs.get(tabItem.name);
+            query.headClick = true;
+            this.$router.push({ name: tabItem.name, query: query})
           }
         }
       },
@@ -63,10 +67,14 @@
           tabList.push(item);
         }
         return tabList;
+      },initPage() {
+        this.tabs= this.$store.state.global.tabs;
+        this.tabList = this.getTabList();
       }
     },created () {
-      this.tabs= this.$store.state.global.tabs;
-      this.tabList = this.getTabList();
+      this.initPage();
+    },activated () {
+      this.initPage();
     }
   };
 </script>
