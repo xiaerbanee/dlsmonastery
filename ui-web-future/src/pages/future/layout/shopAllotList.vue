@@ -13,7 +13,7 @@
             <el-col :span="24">
 
               <el-form-item :label="formLabel.fromShopId.label" :label-width="formLabelWidth">
-                <depot-select ref="autotext" category="directShop" v-model="formData.fromShopId"  ></depot-select>
+                <depot-select category="directShop" v-model="formData.fromShopId"  ></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.toShopId.label" :label-width="formLabelWidth">
                 <depot-select category="directShop" v-model="formData.toShopId"  ></depot-select>
@@ -150,7 +150,6 @@
         this.formData.page=0;
         this.pageRequest();
       },search() {
-        alert(this.$refs.autotext.itemList)
         this.formVisible = false;
         this.pageRequest();
       },itemAdd(){
