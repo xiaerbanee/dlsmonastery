@@ -30,9 +30,13 @@ import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
+import net.myspring.future.modules.crm.domain.GoodsOrderIme;
+import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
+import net.myspring.future.modules.crm.dto.GoodsOrderImeDto;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
+import net.myspring.future.modules.crm.repository.GoodsOrderImeRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
@@ -67,6 +71,8 @@ public class GoodsOrderService {
     private GoodsOrderRepository goodsOrderRepository;
     @Autowired
     private GoodsOrderDetailRepository goodsOrderDetailRepository;
+    @Autowired
+    private GoodsOrderImeRepository goodsOrderImeRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
@@ -417,5 +423,18 @@ public class GoodsOrderService {
         }
         goodsOrderBillForm.setGoodsOrderBillDetailFormList(goodsOrderBillDetailFormList);
         return goodsOrderBillForm;
+    }
+
+    public GoodsOrderDto findDetail(String id) {
+        GoodsOrderDto goodsOrderDto = findOne(id);
+        List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
+        List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
+        cacheUtils.initCacheInput(goodsOrderDetailDtoList);
+        List<GoodsOrderIme> goodsOrderImeList  = goodsOrderImeRepository.findByGoodsOrderId(id);
+        List<GoodsOrderImeDto> goodsOrderImeDtoList= BeanUtil.map(goodsOrderImeList,GoodsOrderImeDto.class);
+        cacheUtils.initCacheInput(goodsOrderImeDtoList);
+        goodsOrderDto.setGoodsOrderDetailDtoList(goodsOrderDetailDtoList);
+        goodsOrderDto.setGoodsOrderImeDtoList(goodsOrderImeDtoList);
+        return goodsOrderDto;
     }
 }

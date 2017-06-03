@@ -46,6 +46,11 @@ public class GoodsOrderController {
         return page;
     }
 
+    @RequestMapping(value = "detail")
+    public GoodsOrderDto detail(String id) {
+        return goodsOrderService.findDetail(id);
+    }
+
     @RequestMapping(value = "getQuery")
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.setNetTypeList(NetTypeEnum.getList());
