@@ -76,7 +76,8 @@ public class ExpressCompanyController {
         if(StringUtils.isBlank(id)){
             return new ArrayList<>();
         }
-        return Collections.singletonList(expressCompanyService.findOne(id));
+
+        return Collections.singletonList(expressCompanyService.findDto(id));
     }
 
 }
