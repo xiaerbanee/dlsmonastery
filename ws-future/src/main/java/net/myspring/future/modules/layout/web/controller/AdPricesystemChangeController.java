@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.web.controller;
 
+import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.service.AdPricesystemChangeService;
@@ -32,8 +33,13 @@ public class AdPricesystemChangeController {
     }
 
     @RequestMapping(value="findFilter", method = RequestMethod.GET)
-    public List<AdPricesystemChangeForm> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery){
+    public List<List<Object>> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery){
         return adPricesystemChangeService.findFilter(adPricesystemChangeQuery);
+    }
+
+    @RequestMapping(value = "findAdPricesystem")
+    public List<AdPricesystemDto> findAdPricesystem(){
+        return adPricesystemChangeService.findAdPricesystem();
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
