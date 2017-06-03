@@ -21,6 +21,7 @@ const depotAccountList = r => require.ensure([], () => r(require('pages/future/c
 const depotAccountDetail = r => require.ensure([], () => r(require('pages/future/crm/depotAccountDetail.vue')));
 
 const goodsOrderList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderList.vue')));
+const goodsOrderShipList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderShipList.vue')));
 const goodsOrderForm = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderForm.vue')));
 const goodsOrderDetail = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderDetail.vue')));
 const goodsOrderBill= r => require.ensure([], () => r(require('pages/future/crm/goodsOrderBill.vue')));
@@ -92,6 +93,7 @@ let routes = [
 
 
   {path: '/future/crm/goodsOrderList',component: goodsOrderList,name:"goodsOrderList"},
+  {path: '/future/crm/goodsOrderShipList',component: goodsOrderShipList,name:"goodsOrderShipList"},
   {path:'/future/crm/goodsOrderForm',component:goodsOrderForm,name:'goodsOrderForm',meta: {menu:"goodsOrderList"}},
   {path:'/future/crm/goodsOrderDetail',component:goodsOrderDetail,name:'goodsOrderDetail',meta: {menu:"goodsOrderList"}},
   {path:'/future/crm/goodsOrderBill',component:goodsOrderBill,name:'goodsOrderBill',meta: {menu:"goodsOrderList"}},
