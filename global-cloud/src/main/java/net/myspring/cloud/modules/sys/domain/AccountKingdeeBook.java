@@ -1,34 +1,17 @@
 package net.myspring.cloud.modules.sys.domain;
 
-import net.myspring.cloud.common.domain.CompanyEntity;
-import net.myspring.cloud.common.utils.RequestUtils;
+import net.myspring.cloud.common.domain.AccountEntity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_account_kingdee_book")
-public class AccountKingdeeBook extends CompanyEntity<AccountKingdeeBook> {
-    @Column(updatable = false)
-    private String accountId;
-    @PrePersist
-    public void prePersist() {
-        this.accountId = RequestUtils.getAccountId();
-    }
-
+public class AccountKingdeeBook extends AccountEntity<AccountKingdeeBook> {
     private String username;
     private String password;
     private String kingdeeBookId;
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
+    private Integer  version = 0;
 
     public String getUsername() {
         return username;
@@ -52,5 +35,13 @@ public class AccountKingdeeBook extends CompanyEntity<AccountKingdeeBook> {
 
     public void setKingdeeBookId(String kingdeeBookId) {
         this.kingdeeBookId = kingdeeBookId;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 }
