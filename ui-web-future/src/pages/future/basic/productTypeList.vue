@@ -119,7 +119,7 @@
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/productType/export',{params:this.submitData}).then((response)=> {
+          axios.get('/api/ws/future/basic/productType/export',{params:this.submitData}).then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
@@ -129,7 +129,7 @@
 
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/sys/productType/getQuery').then((response) =>{
+      axios.get('/api/ws/future/basic/productType/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
         that.pageRequest();
