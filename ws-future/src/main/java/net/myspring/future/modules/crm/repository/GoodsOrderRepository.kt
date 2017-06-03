@@ -50,6 +50,18 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if(goodsOrderQuery.createdDateEnd != null) {
             sb.append(" and created_date < :createdDateEnd ");
         }
+        if (StringUtils.isNotBlank(goodsOrderQuery.netType)) {
+            sb.append(" and net_type = :netType")
+        }
+        if (StringUtils.isNotBlank(goodsOrderQuery.businessId)) {
+            sb.append(" and business_id like concat('%',:businessId,'%')");
+        }
+        if (StringUtils.isNotBlank(goodsOrderQuery.shipType)) {
+            sb.append(" and ship_type = :shipType ");
+        }
+        if (StringUtils.isNotBlank(goodsOrderQuery.status)) {
+            sb.append(" and status = :status")
+        }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(goodsOrderQuery), BeanPropertyRowMapper(GoodsOrderDto::class.java));
