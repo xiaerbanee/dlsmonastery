@@ -2,7 +2,7 @@
   <div>
     <head-tab active="productTypeForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="productType" ref="productType" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('productTypeForm.name')" prop="name">
           <el-input v-model="productType.name"></el-input>
         </el-form-item>
@@ -44,19 +44,15 @@
   import productSelect from 'components/future/product-select'
   import boolSelect from 'components/common/bool-select'
 
-
   export default{
     components:{
       productSelect,
       boolSelect,
-
-
     },
       data(){
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-
             productType:{},
             submitData:{
               id:'',
@@ -82,7 +78,7 @@
       methods:{
         formSubmit(){
           this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+          var form = this.$refs["productType"];
           form.validate((valid) => {
             if (valid) {
                 util.copyValue(this.productType, this.submitData);
@@ -104,7 +100,7 @@
             }
           })
         },initPage(){
-          axios.get('/api/ws/future/crm/productType/findDto', {params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/productType/findDto', {params: {id:this.$route.query.id}}).then((response)=>{
             this.productType=response.data;
         });
         }

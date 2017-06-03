@@ -5,12 +5,10 @@ import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.service.AdPricesystemChangeService;
 import net.myspring.future.modules.layout.web.form.AdPricesystemChangeForm;
 import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +32,7 @@ public class AdPricesystemChangeController {
     }
 
     @RequestMapping(value="findFilter", method = RequestMethod.GET)
-    public List<AdPricesystemChangeDto> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery){
+    public List<AdPricesystemChangeForm> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery){
         return adPricesystemChangeService.findFilter(adPricesystemChangeQuery);
     }
 

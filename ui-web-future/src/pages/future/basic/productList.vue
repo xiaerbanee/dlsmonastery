@@ -26,7 +26,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="formLabel.productType.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.productTypeId.label" :label-width="formLabelWidth">
                 <product-type-select v-model="formData.productTypeId"></product-type-select>
               </el-form-item>
               <el-form-item :label="formLabel.allowOrder.label" :label-width="formLabelWidth">
@@ -117,7 +117,7 @@
           hasIme:{label:this.$t('productList.hasIme'),value:""},
           code:{label:this.$t('productList.code')},
           allowBill:{label:this.$t('productList.allowBill'),value:""},
-          productType:{label:this.$t('productList.productType'),value:""},
+          productTypeId:{label:this.$t('productList.productType'),value:""},
           allowOrder:{label:this.$t('productList.allowOrder'),value:""},
           outGroupName:{label:this.$t('productList.outGroupName')},
           netType:{label:this.$t('productList.netType')}
@@ -134,7 +134,7 @@
         this.formLabel.hasIme.value = util.bool2str(this.formData.hasIme);
         this.formLabel.allowBill.value = util.bool2str(this.formData.allowBill);
         this.formLabel.allowOrder.value =  util.bool2str(this.formData.allowOrder);
-        this.formLabel.productType.value = util.getLabel(this.formData.productType);
+        this.formLabel.productTypeId.value = util.getLabel(this.formData.productType);
         util.copyValue(this.formData,this.submitData);
         util.setQuery("productList",this.submitData);
         axios.get('/api/ws/future/basic/product',{params:this.submitData}).then((response) => {

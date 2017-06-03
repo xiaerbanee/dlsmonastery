@@ -24,8 +24,6 @@ interface AdPricesystemChangeRepository : BaseRepository<AdPricesystemChange,Str
 
 interface AdPricesystemChangeRepositoryCustom{
     fun findPage(pageable: Pageable,adPricesystemChangeQuery: AdPricesystemChangeQuery): Page<AdPricesystemChangeDto>
-
-    fun findFilter(adPricesystemChangeQuery: AdPricesystemChangeQuery): MutableList<AdPricesystemChangeDto>
 }
 
 class AdPricesystemChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdPricesystemChangeRepositoryCustom{
@@ -50,20 +48,4 @@ class AdPricesystemChangeRepositoryImpl @Autowired constructor(val namedParamete
         return PageImpl(list,pageable,count)
     }
 
-    override fun findFilter(adPricesystemChangeQuery: AdPricesystemChangeQuery): MutableList<AdPricesystemChangeDto>{
-        val sb = StringBuilder("""
-            SELECT
-                t1.*
-            FROM
-                crm_ad_pricesystem_change t1
-            WHERE
-                t1.enabled = 1
-        """)
-        if (StringUtils.isNotEmpty(adPricesystemChangeQuery.productId)) {
-            sb.append("""  and t1.product_id = :productId """)
-        }
-
-
-        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(adPricesystemChangeQuery), BeanPropertyRowMapper(AdPricesystemChangeDto::class.java))
-    }
 }
