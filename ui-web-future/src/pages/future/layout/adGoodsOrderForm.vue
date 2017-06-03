@@ -138,9 +138,9 @@
             axios.post('/api/ws/future/layout/adGoodsOrder/save',qs.stringify(this.submitData,{allowDots:true})).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
+                this.submitDisabled = false;
                 if(this.isCreate){
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")})
                 }
@@ -194,17 +194,24 @@
       }
       this.totalQty=totalQty;
       this.totalPrice=totalPrice;
-    }},created(){
-      axios.get('/api/ws/future/layout/adGoodsOrder/findOne',{params:{id:this.$route.query.id}}).then((response)=> {
-        this.inputForm =response.data;
+    },initPage(){
+        axios.get('/api/ws/future/layout/adGoodsOrder/findOne',{params:{id:this.$route.query.id}}).then((response)=> {
+          this.inputForm =response.data;
         this.shopChange();
         if(response.data.expressOrderDto!=null){
           this.expressOrderDto=response.data.expressOrderDto;
         }
       })
-      axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=>{
-        this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
+        axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=>{
+          this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
       })
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

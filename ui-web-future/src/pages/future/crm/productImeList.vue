@@ -26,7 +26,7 @@
               </el-form-item>
 
               <el-form-item :label="formLabel.depotId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.depotId" ></depot-select>
+                <depot-select v-model="formData.depotId" category="store" ></depot-select>
               </el-form-item>
 
               <el-form-item :label="formLabel.inputType.label" :label-width="formLabelWidth">
@@ -73,28 +73,27 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="ime" :label="$t('productImeList.ime')" sortable width="160"></el-table-column>
+        <el-table-column prop="ime" :label="$t('productImeList.ime')"  width="160" sortable></el-table-column>
         <el-table-column prop="ime2"  :label="$t('productImeList.ime2')" sortable ></el-table-column>
-        <el-table-column prop="meid" :label="$t('productImeList.meid')"></el-table-column>
+        <el-table-column prop="meid" :label="$t('productImeList.meid')" sortable></el-table-column>
         <el-table-column prop="retailDate" :label="$t('productImeList.retailDate')"></el-table-column>
         <el-table-column prop="productImeSaleCreateDate" :label="$t('productImeList.saleDate')"></el-table-column>
         <el-table-column prop="productImeUploadCreateDate" :label="$t('productImeList.uploadDate')"></el-table-column>
-        <el-table-column prop="depotName"  :label="$t('productImeList.depotName')"></el-table-column>
+        <el-table-column prop="depotName" column-key="depotId"   :label="$t('productImeList.depotName')" sortable></el-table-column>
         <el-table-column prop="productNetType"  :label="$t('productImeList.netType')" width="80"></el-table-column>
-        <el-table-column prop="productName"  :label="$t('productImeList.productType')"></el-table-column>
+        <el-table-column prop="productName" column-key="productId" :label="$t('productImeList.productType')" sortable></el-table-column>
         <el-table-column prop="inputType" :label="$t('productImeList.inputType')"></el-table-column>
-        <el-table-column prop="createdTime" :label="$t('productImeList.createdTime')"></el-table-column>
+        <el-table-column prop="createdTime" :label="$t('productImeList.createdTime')" sortable></el-table-column>
         <el-table-column prop="locked" :label="$t('productImeList.locked')" >
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'danger' : 'primary'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="enabled" :label="$t('productImeList.enabled')" sortable>
+        <el-table-column prop="enabled" :label="$t('productImeList.enabled')" >
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="remarks" :label="$t('productImeList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('productImeList.operation')" >
           <template scope="scope">
             <div class="action" v-permit="'crm:productIme:view'"><el-button size="small"  @click.native="itemAction(scope.row.id, 'detail')">{{$t('productImeList.detail')}}</el-button></div>
@@ -124,6 +123,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           imeReverse:'',
           ime2:'',
           boxIme:'',
@@ -182,7 +182,7 @@
         this.pageRequest();
 
       },itemAction:function(id,action){
-        if(action=="detail") {
+        if(action==="detail") {
           this.$router.push({ name: 'productImeDetail', query: { id: id }})
         }
       },exportData(){
@@ -196,7 +196,7 @@
       }
     },created () {
 
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/productIme/getQuery').then((response) =>{
         that.formData=response.data;

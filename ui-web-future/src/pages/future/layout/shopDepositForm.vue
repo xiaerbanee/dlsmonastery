@@ -77,36 +77,44 @@
       },
       methods:{
         formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
+              this.submitDisabled = true;
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/ws/future/crm/shopDeposit/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                form.resetFields();
                 this.submitDisabled = false;
-              }).catch(function () {
+                if(response.data.success) {
+                  form.resetFields();
+                }
+              }).catch( () => {
                 this.submitDisabled = false;
               });
-            }else{
-              this.submitDisabled = false;
             }
           })
         },shopChanged(){
-            if(!this.inputForm.shopId || this.inputForm.shopId == ''){
+            if(!this.inputForm.shopId || this.inputForm.shopId === ''){
                 return ;
             }
             axios.get('/api/ws/future/crm/shopDeposit/getDefaultDepartMent',{params:{shopId:this.inputForm.shopId}}).then((response)=>{
               this.inputForm.departMent=response.data;
 
             })
-        }
-      }, created(){
+        },initPage(){
           //押金列表只能增加，不能修改
-        axios.get('/api/ws/future/crm/shopDeposit/getForm').then((response)=>{
-              this.inputForm = response.data;
-          })
+          axios.get('/api/ws/future/crm/shopDeposit/getForm').then((response)=>{
+            this.inputForm = response.data;
+          });
+        }
+        }
+      , created(){
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
       }
     }
 </script>

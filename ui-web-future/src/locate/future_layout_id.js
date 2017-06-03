@@ -346,6 +346,7 @@ export default {
     processStatus: "status",
     adCode: "kode iklan",
     isSpecialArea: "area",
+    noSelectionFound:"没有选择任何记录",
     add: "tambah",
     filter: "saring",
     export: "ekspor / mengeluarkan",

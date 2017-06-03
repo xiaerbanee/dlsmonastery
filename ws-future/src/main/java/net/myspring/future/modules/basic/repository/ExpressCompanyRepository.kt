@@ -19,7 +19,6 @@ import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.util.*
 
 /**
  * Created by zhangyf on 2017/5/24.

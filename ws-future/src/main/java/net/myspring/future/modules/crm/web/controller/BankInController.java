@@ -12,6 +12,8 @@ import net.myspring.future.modules.crm.web.form.BankInAuditForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +49,10 @@ public class BankInController {
         processStatusList.add("已通过");
         processStatusList.add("未通过");
         bankInQuery.setProcessStatusList(processStatusList);
+
+        LocalDate today = LocalDate.now();
+        LocalDate firstDayOfMonth = LocalDateTimeUtils.getFirstDayOfMonth(today.atStartOfDay()).toLocalDate();
+        bankInQuery.setCreatedDateRange(firstDayOfMonth.toString() + " - " + today.toString()  );
 
         return bankInQuery;
     }

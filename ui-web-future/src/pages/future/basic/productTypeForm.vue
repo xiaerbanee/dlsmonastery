@@ -103,12 +103,17 @@
               this.submitDisabled = false;
             }
           })
+        },initPage(){
+          axios.get('/api/ws/future/crm/productType/findDto', {params: {id:this.$route.query.id}}).then((response)=>{
+            this.productType=response.data;
+        });
         }
       },created(){
-        axios.get('/api/ws/future/crm/productType/findDto', {params: {id:this.$route.query.id}}).then((response)=>{
-          this.productType=response.data;
-        });
-
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
     }
+  }
 </script>

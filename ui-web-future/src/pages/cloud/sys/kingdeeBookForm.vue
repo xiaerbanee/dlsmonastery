@@ -78,9 +78,9 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/global/cloud/sys/kingdeeBook/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
+              this.submitDisabled = false;
                 if(!this.inputForm.id){
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name:'kingdeeBookList',query:util.getQuery("kingdeeBookList")})
                 }
@@ -91,11 +91,17 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },created(){
+        },initPage(){
           axios.get('/api/global/cloud/sys/kingdeeBook/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
-          })
+          });
+        }
+      },created(){
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
       }
     }
 </script>

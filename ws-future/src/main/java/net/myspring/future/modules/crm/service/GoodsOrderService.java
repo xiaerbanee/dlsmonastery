@@ -334,10 +334,10 @@ public class GoodsOrderService {
         Map<String,Integer>  areaDetailMap = Maps.newHashMap();
         for(GoodsOrderDetail goodsOrderDetail:areaDetailList) {
             if(!goodsOrderDetail.getGoodsOrderId().equals(id)) {
-                    if(!areaDetailMap.containsKey(goodsOrderDetail.getProductId())) {
-                        areaDetailMap.put(goodsOrderDetail.getProductId(),0);
-                    }
-                    areaDetailMap.put(goodsOrderDetail.getProductId(),areaDetailMap.get(goodsOrderDetail.getProductId())+ goodsOrderDetail.getQty());
+                if(!areaDetailMap.containsKey(goodsOrderDetail.getProductId())) {
+                    areaDetailMap.put(goodsOrderDetail.getProductId(),0);
+                }
+                areaDetailMap.put(goodsOrderDetail.getProductId(),areaDetailMap.get(goodsOrderDetail.getProductId())+ goodsOrderDetail.getQty());
             }
         }
         //设置其他数据

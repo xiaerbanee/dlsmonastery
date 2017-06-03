@@ -33,9 +33,9 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotAccountList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="officeName" :label="$t('depotAccountList.officeName')"></el-table-column>
-        <el-table-column prop="areaName" :label="$t('depotAccountList.areaName')" ></el-table-column>
-        <el-table-column  prop="name" :label="$t('depotAccountList.name')" width="250px"></el-table-column>
+        <el-table-column fixed prop="officeName" column-key="officeId" :label="$t('depotAccountList.officeName')" sortable></el-table-column>
+        <el-table-column prop="areaName" column-key="areaId" :label="$t('depotAccountList.areaName')" sortable></el-table-column>
+        <el-table-column  prop="name" :label="$t('depotAccountList.name')" width="250px" sortable></el-table-column>
         <el-table-column prop="qcys" :label="$t('depotAccountList.qcys')"></el-table-column>
         <el-table-column prop="qmys" :label="$t('depotAccountList.qmys')" ></el-table-column>
         <el-table-column prop="xxbzj" :label="$t('depotAccountList.xxbzj')"></el-table-column>
@@ -67,8 +67,9 @@
         page: {},
         formData:{},
         submitData: {
-          page: 0,
-          size: 25,
+          page:0,
+          size:25,
+          sort:"id,DESC",
           name: '',
           dutyDateRange: '',
           officeId: '',

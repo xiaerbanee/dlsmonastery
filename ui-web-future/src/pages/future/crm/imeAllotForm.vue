@@ -127,11 +127,17 @@
             }
             this.productQtyList = tmpList;
           });
+        },initPage(){
+          axios.get('/api/ws/future/crm/imeAllot/findDto').then((response)=>{
+            this.imeAllot=response.data;
+          });
         }
       },created(){
-        axios.get('/api/ws/future/crm/imeAllot/findDto').then((response)=>{
-          this.imeAllot=response.data;
-        });
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
       }
   }
 </script>

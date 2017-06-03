@@ -45,11 +45,11 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAllotList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="formatId" :label="$t('shopAllotList.billCode')" sortable width="160"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('shopAllotList.createdBy')"></el-table-column>
+        <el-table-column fixed prop="formatId" column-key="id" :label="$t('shopAllotList.billCode')" width="160" sortable></el-table-column>
+        <el-table-column prop="createdByName" column-key="createdBy" :label="$t('shopAllotList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopAllotList.createdDate')" width="120" sortable></el-table-column>
-        <el-table-column prop="fromShopName" :label="$t('shopAllotList.fromShop')"  sortable></el-table-column>
-        <el-table-column prop="toShopName" :label="$t('shopAllotList.toShop')" sortable></el-table-column>
+        <el-table-column prop="fromShopName" column-key="fromShopId" :label="$t('shopAllotList.fromShop')"  sortable></el-table-column>
+        <el-table-column prop="toShopName" column-key="toShopId" :label="$t('shopAllotList.toShop')" sortable></el-table-column>
         <el-table-column prop="outReturnCode" :label="$t('shopAllotList.outReturnCode')" sortable>
           <template scope="scope">
             <el-button
@@ -70,12 +70,12 @@
         </el-table-column>
 
 
-        <el-table-column prop="status" :label="$t('shopAllotList.status')" width="120">
+        <el-table-column prop="status" :label="$t('shopAllotList.status')" width="120" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="remarks" :label="$t('shopAllotList.remarks')"></el-table-column>
+        <el-table-column prop="remarks" :label="$t('shopAllotList.remarks')" sortable></el-table-column>
         <el-table-column prop="enabled" :label="$t('shopAllotList.enabled')" width="70">
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
@@ -107,6 +107,9 @@
         page:{},
         formData:{},
         submitData:{
+          page:0,
+          size:25,
+          sort:"id,DESC",
           fromShopId:"",
           toShopId:"",
           businessId:"",

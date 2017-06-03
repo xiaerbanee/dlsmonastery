@@ -112,13 +112,19 @@
           this.settings.data = response.data;
           this.table.loadData(this.settings.data);
         })
+      },initPage(){
+        axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response)=>{
+          this.formData=response.data;
+          util.copyValue(this.$route.query,this.formData);
+          this.getData();
+        })
       }
     }, created(){
-      axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response)=>{
-        this.formData=response.data;
-        util.copyValue(this.$route.query,this.formData);
-        this.getData();
-      })
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

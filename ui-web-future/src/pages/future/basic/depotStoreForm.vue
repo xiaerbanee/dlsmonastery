@@ -113,9 +113,9 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/basic/depotStore/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
+            this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'depotStoreList',query:util.getQuery("depotStoreList")})
               }
@@ -126,17 +126,23 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },created(){
-      axios.get('/api/ws/future/basic/depotStore/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
+      },initPage(){
+        axios.get('/api/ws/future/basic/depotStore/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
         if(!response.data.depotForm){
-            this.inputForm.depotForm={};
-            this,inputForm.depotForm.popShop=0;
+          this.inputForm.depotForm={};
+          this,inputForm.depotForm.popShop=0;
         }else {
           this.inputForm.depotForm.popShop=this.inputForm.depotForm.popShop?1:0;
         }
-      })
+      });
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

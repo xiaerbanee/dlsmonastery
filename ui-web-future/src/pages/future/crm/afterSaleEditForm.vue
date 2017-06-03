@@ -165,9 +165,9 @@
           this.inputForm.data = JSON.stringify(this.inputForm.data);
           axios.post('/api/crm/afterSale/update',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
             this.$message(response.data.message);
+            this.submitDisabled = false;
           if(this.isCreate){
             this.table.loadData(null);
-            this.submitDisabled = false;
           } else {
              this.$router.push({name:'afterSaleList',query:util.getQuery("afterSaleList")})
           }
@@ -181,8 +181,15 @@
           this.settings.data=response.data.list;
           this.table.loadData(this.settings.data);
         })
+      },initPage(){
+
       }
     },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

@@ -86,11 +86,17 @@
               });
             }
           })
+        },initPage(){
+          axios.get('/api/ws/future/crm/express/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.express = response.data;
+        });
         }
       },created(){
-        axios.get('/api/ws/future/crm/express/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.express = response.data;
-        });
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
       }
     }
 </script>

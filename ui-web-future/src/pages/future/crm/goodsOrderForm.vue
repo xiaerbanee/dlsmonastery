@@ -126,9 +126,9 @@
             this.submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
             axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
+            this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
               }
@@ -188,24 +188,30 @@
           }
         }
         this.summary = "总订货数为：" + totalQty + "，总价格为：" + totalAmount;
-      }
-    }, created(){
-      axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
+      },initPage(){
+        axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
         if(!this.isCreate) {
           axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
             this.shop = response.data;
-          });
+        });
         }
       });
-      axios.get('/api/ws/future/crm/goodsOrder/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputProperty = response.data;
+        axios.get('/api/ws/future/crm/goodsOrder/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputProperty = response.data;
       });
-      if(!this.isCreate){
-        axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.setGoodsOrderDetailList(response.data);
+        if(!this.isCreate){
+          axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.setGoodsOrderDetailList(response.data);
           this.initSummary();
         });
+        }
+      }
+    }, created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
     }
   }

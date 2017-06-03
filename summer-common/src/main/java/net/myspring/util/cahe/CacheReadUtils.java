@@ -4,17 +4,16 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
-import net.myspring.util.text.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.ReflectionUtils;
-import net.myspring.util.collection.CollectionUtil;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -135,14 +134,11 @@ public class CacheReadUtils {
 
 
     public static Map<String,Object> getCacheMap(RedisTemplate redisTemplate, List<String> keyList) {
-        RedisCallback<List<Object>> pipelineCallback = connection -> {
-            connection.openPipeline();
-            for (String key : keyList) {
-                connection.get(key.getBytes());
-            }
-            return connection.closePipeline();
-        };
-        List<byte[]> cacheList = (List<byte[]>) redisTemplate.execute(pipelineCallback);
+        byte[][] bytes = new byte[keyList.size()][];
+        for(int i=0;i<keyList.size();i++) {
+            bytes[i] = keyList.get(i).getBytes();
+        }
+        List<byte[]> cacheList = redisTemplate.getConnectionFactory().getConnection().mGet(bytes);
         Map<String,Object> cacheMap = Maps.newHashMap();
         for (int i = 0; i < keyList.size(); i++) {
             byte[] cache = cacheList.get(i);

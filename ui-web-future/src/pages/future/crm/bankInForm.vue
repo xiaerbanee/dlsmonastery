@@ -92,14 +92,20 @@
               });
             }
           })
+        },initPage(){
+          axios.get('/api/ws/future/crm/bankIn/getForm').then((response)=>{
+            this.inputProperty = response.data;
+          });
+          axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.bankIn = response.data;
+          });
         }
       },created(){
-        axios.get('/api/ws/future/crm/bankIn/getForm').then((response)=>{
-          this.inputProperty = response.data;
-        });
-        axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.bankIn = response.data;
-        });
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

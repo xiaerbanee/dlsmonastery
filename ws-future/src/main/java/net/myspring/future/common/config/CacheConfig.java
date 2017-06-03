@@ -76,6 +76,7 @@ public class CacheConfig extends CachingConfigurerSupport {
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
         RedisCacheManager redisCacheManager = new RedisCacheManager(redisTemplate);
         redisCacheManager.setUsePrefix(true);
+        redisCacheManager.setTransactionAware(true);
         return redisCacheManager;
     }
 }

@@ -96,10 +96,10 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
+            this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
                 this.fileList=[];
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'shopPrintList',query:util.getQuery("shopPrintList")})
               }
@@ -121,21 +121,27 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      }
-    },created(){
-      axios.get('/api/ws/future/layout/shopPrint/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
+      },initPage(){
+        axios.get('/api/ws/future/layout/shopPrint/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
         if(this.inputForm.printType!=null){
-            this.typeChange();
+          this.typeChange();
         }
         if(this.inputForm.attachment !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
             this.fileList= response.data;
-          });
+        });
         }
       });
-      if(!this.isCreate){
-        this.officeDisabled = true;
+        if(!this.isCreate){
+          this.officeDisabled = true;
+        }
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
       }
   }

@@ -24,12 +24,12 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productMonthPriceList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('productMonthPriceList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="month" :label="$t('productMonthPriceList.month')" sortable></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('productMonthPriceList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('productMonthPriceList.createdDate')"></el-table-column>
-        <el-table-column prop="remarks" :label="$t('productMonthPriceList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('productMonthPriceList.operation')" width="140">
+        <el-table-column prop="createdByName" column-key="createdBy" :label="$t('productMonthPriceList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('productMonthPriceList.createdDate')" sortable></el-table-column>
+        <el-table-column prop="remarks" :label="$t('productMonthPriceList.remarks')" sortable></el-table-column>
+        <el-table-column fixed="right" :label="$t('productMonthPriceList.operation')">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('productMonthPriceList.edit')}}</el-button>
+            <div class="action" v-permit="'crm:productMonthPrice:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('productMonthPriceList.edit')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -52,6 +52,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           month:''
         },formLabel:{
           month:{label:this.$t('productMonthPriceList.month')}
@@ -86,12 +87,12 @@
       },itemAdd(){
         this.$router.push({ name: 'productMonthPriceForm'})
       },itemAction:function(id,action){
-        if(action=="edit") {
+        if(action==="edit") {
           //this.$router.push({ name: 'productMonthPriceForm', query: { id: id }})
         }
       }
     },created () {
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/productMonthPrice/getQuery').then((response) =>{
         that.formData=response.data;
