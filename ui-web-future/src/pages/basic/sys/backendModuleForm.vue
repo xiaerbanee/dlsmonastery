@@ -54,9 +54,9 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/backendModule/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
+                this.submitDisabled = false;
                 if(this.inputForm.create){
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name:'backendModuleList',query:util.getQuery("backendModuleList")})
                 }
@@ -67,14 +67,20 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },created(){
+        },initPage() {
           axios.get('/api/basic/sys/backendModule/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
-        axios.get('/api/basic/sys/backendModule/getForm').then((response)=>{
-          this.inputProperty = response.data;
-        })
+          axios.get('/api/basic/sys/backendModule/getForm').then((response)=>{
+            this.inputProperty = response.data;
+          })
+        }
+      },created(){
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
       }
     }
 </script>

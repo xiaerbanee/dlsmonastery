@@ -35,15 +35,9 @@ public class ExpressCompanyService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public ExpressCompanyDto findOne(String id){
-        ExpressCompanyDto expressCompanyDto;
-        if(org.apache.commons.lang.StringUtils.isBlank(id)){
-            expressCompanyDto = new ExpressCompanyDto();
-        } else {
-            ExpressCompany expressCompany= expressCompanyRepository.findOne(id);
-            expressCompanyDto = BeanUtil.map(expressCompany,ExpressCompanyDto.class);
-            cacheUtils.initCacheInput(expressCompanyDto);
-        }
+    public ExpressCompanyDto findDto(String id){
+        ExpressCompanyDto expressCompanyDto = BeanUtil.map(expressCompanyRepository.findOne(id), ExpressCompanyDto.class);
+        cacheUtils.initCacheInput(expressCompanyDto);
         return expressCompanyDto;
     }
 

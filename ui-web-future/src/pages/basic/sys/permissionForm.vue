@@ -73,9 +73,9 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/permission/save' ,qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
+                this.submitDisabled = false;
                 if(this.isCreate){
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name:'permissionList',query:util.getQuery("permissionList")})
                 }
@@ -86,16 +86,22 @@
               this.submitDisabled = false;
             }
           })
+        },initPage() {
+          axios.get('/api/basic/sys/permission/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm = response.data;
+
+          })
+          axios.get('/api/basic/sys/permission/getForm').then((response)=>{
+            this.inputProperty = response.data;
+            console.log(this.inputProperty)
+          })
         }
       },created(){
-        axios.get('/api/basic/sys/permission/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-
-        })
-        axios.get('/api/basic/sys/permission/getForm').then((response)=>{
-          this.inputProperty = response.data;
-          console.log(this.inputProperty)
-        })
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
       }
     }
 </script>

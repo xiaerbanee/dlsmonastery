@@ -146,20 +146,26 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
+      },initPage() {
+        this.getForm();
+        if(!this.isCreate){
+          axios.get('/api/basic/hr/employee/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.employeeForm);
+            util.copyValue(response.data.account,this.accountForm);
+            this.employeeForm.sexLabel=response.data.sex=="男"?1:0;
+            if(this.employeeForm.image !=null) {
+              axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.employeeForm.image}}).then((response)=>{
+                this.fileList= response.data;
+              });
+            }
+          })
+        }
       }
     },created(){
-       this.getForm();
-      if(!this.isCreate){
-        axios.get('/api/basic/hr/employee/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.employeeForm);
-          util.copyValue(response.data.account,this.accountForm);
-          this.employeeForm.sexLabel=response.data.sex=="男"?1:0;
-          if(this.employeeForm.image !=null) {
-            axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.employeeForm.image}}).then((response)=>{
-              this.fileList= response.data;
-            });
-          }
-        })
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
     }
   }

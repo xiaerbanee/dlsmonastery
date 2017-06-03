@@ -82,10 +82,10 @@
         },onChange(){
           if(this.isCreate){
             this.message='';
-            this.submitDisabled = false;
+            this.submitDisabled = true;
             this.inputForm.month=util.formatDate( this.inputForm.month,'yyyy-MM');
             axios.get('/api/crm/productMonthPrice/checkMonth',{params: {month:this.inputForm.month}}).then((response)=>{
-              this.submitDisabled = true;
+              this.submitDisabled = false;
               if(!response.data.success){
                 this.message=response.data.message;
               }

@@ -85,7 +85,7 @@ public class GoodsOrderShipService {
        RestResponse restResponse =  new RestResponse("valid",ResponseCodeEnum.valid.name());
         Integer totalShouldShipQty = 0;
         Integer totalShippedQty = 0;
-        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getGoodsOrderId());
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getId());
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
@@ -182,9 +182,9 @@ public class GoodsOrderShipService {
 
 
     public void ship(GoodsOrderShipForm goodsOrderShipForm) {
-        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getGoodsOrderId());
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getId());
         Map<String, GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
-        List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderShipForm.getGoodsOrderId());
+        List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderShipForm.getId());
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
             if (goodsOrderDetail.getRealBillQty() > 0 && goodsOrderDetail.getRealBillQty() != goodsOrderDetail.getShippedQty()) {

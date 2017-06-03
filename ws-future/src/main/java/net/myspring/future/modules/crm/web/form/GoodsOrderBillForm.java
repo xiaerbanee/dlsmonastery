@@ -1,19 +1,17 @@
 package net.myspring.future.modules.crm.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.dto.NameValueDto;
 import net.myspring.common.form.BaseForm;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
     private String storeId;
+    private String shopId;
     private LocalDate billDate;
     private String expressCompanyId;
     private Boolean syn;
@@ -22,6 +20,7 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
     private String address;
     private String mobilePhone;
     private String shipType;
+    private String netType;
 
     private List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList = Lists.newArrayList();
 
@@ -36,6 +35,14 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
 
     public void setStoreId(String storeId) {
         this.storeId = storeId;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
     }
 
     public LocalDate getBillDate() {
@@ -92,6 +99,14 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
 
     public void setShipType(String shipType) {
         this.shipType = shipType;
+    }
+
+    public String getNetType() {
+        return netType;
+    }
+
+    public void setNetType(String netType) {
+        this.netType = netType;
     }
 
     public List<GoodsOrderBillDetailForm> getGoodsOrderBillDetailFormList() {
