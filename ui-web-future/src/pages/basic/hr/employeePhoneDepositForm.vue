@@ -78,9 +78,9 @@
             if (valid) {
               axios.get('/api/basic/hr/employeePhoneDeposit/save',{params:this.inputForm}).then((response)=> {
                 this.$message(response.data.message);
+                this.submitDisabled = false;
                 if(this.isCreate){
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name:'employeePhoneDepositList',query:util.getQuery("employeePhoneDepositList")})
                 }
@@ -91,21 +91,27 @@
               this.submitDisabled = false;
             }
           })
+        },initPage() {
+          axios.get('/api/basic/hr/employeePhoneDeposit/getForm').then((response)=>{
+            this.formProperty=response.data;
+          });
+          if(!this.isCreate){
+            axios.get('/api/basic/hr/employeePhoneDeposit/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
+              if(response.data.depot!=null){
+                this.depots=new Array(response.data.depot)
+              }
+              if(response.data.product!=null){
+                this.products=new Array(response.data.product)
+              }
+            })
+          }
         }
       },created(){
-        axios.get('/api/basic/hr/employeePhoneDeposit/getForm').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate){
-          axios.get('/api/basic/hr/employeePhoneDeposit/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(response.data.depot!=null){
-                this.depots=new Array(response.data.depot)
-            }
-            if(response.data.product!=null){
-               this.products=new Array(response.data.product)
-            }
-          })
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
         }
       }
     }

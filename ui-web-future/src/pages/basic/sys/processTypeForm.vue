@@ -92,9 +92,9 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/processType/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
+                this.submitDisabled = false;
                 if(this.isCreate){
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")})
                 }
@@ -144,23 +144,29 @@
             sort = this.inputForm.processFlowDtoList[this.inputForm.processFlowDtoList.length-1].sort + 10;
           }
           this.inputForm.processFlowDtoList.push({name:"",sort:sort,positionId:""});
+        },initPage() {
+          if(this.isCreate){
+            for(var i = 0;i<3;i++) {
+              this.inputForm.processFlowDtoList.push({name:"",sort:(i+1)*10,positionId:""});
+            }
+          } else {
+            axios.get('/api/basic/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              this.inputForm = response.data;
+              this.inputForm.processFlowDtoList=response.data.processFlowDtoList;
+              if(response.data.createPermission!=null){
+                this.createPermissions=new Array(response.data.createPermission);
+              }
+              if(response.data.viewPermission!=null){
+                this.viewPermissions=new Array(response.data.viewPermission);
+              }
+            });
+          }
         }
       },created(){
-        if(this.isCreate){
-          for(var i = 0;i<3;i++) {
-            this.inputForm.processFlowDtoList.push({name:"",sort:(i+1)*10,positionId:""});
-          }
-        } else {
-          axios.get('/api/basic/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
-            this.inputForm.processFlowDtoList=response.data.processFlowDtoList;
-            if(response.data.createPermission!=null){
-              this.createPermissions=new Array(response.data.createPermission);
-            }
-            if(response.data.viewPermission!=null){
-              this.viewPermissions=new Array(response.data.viewPermission);
-            }
-          });
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
         }
       }
     }

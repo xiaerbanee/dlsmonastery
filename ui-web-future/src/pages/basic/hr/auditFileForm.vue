@@ -76,10 +76,10 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
+              this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
                 this.fileList = [];
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})
               }
@@ -97,14 +97,20 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
+      },initPage() {
+        axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+        })
+        axios.get('/api/general/sys/processType/findAll',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.processTypeList = response.data;
+        })
       }
     },created(){
-     axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-         this.inputForm = response.data;
-      })
-      axios.get('/api/general/sys/processType/findAll',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.processTypeList = response.data;
-      })
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

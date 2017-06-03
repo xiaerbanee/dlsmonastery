@@ -71,15 +71,21 @@
             this.submitDisabled = false;
           }
         })
+      },initPage() {
+        axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
+          this.formProperty=response.data;
+        });
+        console.log(this.inputForm.ids)
+        axios.get('/api/basic/hr/recruit/findNameByIds',{params:{ids:this.inputForm.ids}}).then((response)=>{
+          this.nameList=response.data;
+        });
       }
     },created(){
-      axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
-        this.formProperty=response.data;
-      });
-      console.log(this.inputForm.ids)
-      axios.get('/api/basic/hr/recruit/findNameByIds',{params:{ids:this.inputForm.ids}}).then((response)=>{
-        this.nameList=response.data;
-      });
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>
