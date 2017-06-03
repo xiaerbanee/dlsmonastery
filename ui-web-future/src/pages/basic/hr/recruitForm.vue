@@ -262,9 +262,9 @@
               this.inputForm.entryRealDate=util.formatLocalDateTime(this.inputForm.entryRealDate);
               axios.post('/api/basic/hr/recruit/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
+                this.submitDisabled = false;
                 if(this.isCreate){
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name:'recruitList',query:util.getQuery("recruitList")})
                 }
@@ -290,15 +290,21 @@
               }
             })
           }
+        },initPage() {
+          axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
+            this.formProperty=response.data;
+          });
+          if(!this.isCreate){
+            axios.get('/api/basic/hr/recruit/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
+            })
+          }
         }
       },created(){
-        axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
-          this.formProperty=response.data;
-        });
-        if(!this.isCreate){
-          axios.get('/api/basic/hr/recruit/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          })
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
         }
       }
     }

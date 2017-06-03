@@ -40,19 +40,19 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopDepositList.loading')" @sort-change="sortChange" stripe border>
 
         <el-table-column fixed prop="id" :label="$t('shopDepositList.billCode')" sortable width="100"></el-table-column>
-        <el-table-column prop="shopName" :label="$t('shopDepositList.shopName')" sortable></el-table-column>
+        <el-table-column prop="shopName" column-key="shopId"  :label="$t('shopDepositList.shopName')" sortable></el-table-column>
         <el-table-column prop="shopAreaName" :label="$t('shopDepositList.areaName')" ></el-table-column>
-        <el-table-column prop="shopOfficeName" :label="$t('shopDepositList.officeName')"></el-table-column>
-        <el-table-column prop="type" :label="$t('shopDepositList.type')"></el-table-column>
-        <el-table-column prop="amount" :label="$t('shopDepositList.amount')"></el-table-column>
-        <el-table-column prop="leftAmount" :label="$t('shopDepositList.leftAmount')"></el-table-column>
-        <el-table-column prop="outCode" :label="$t('shopDepositList.outCode')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('shopDepositList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('shopDepositList.createdDate')"></el-table-column>
-        <el-table-column prop="lastModifiedByName" :label="$t('shopDepositList.lastModifiedBy')"></el-table-column>
-        <el-table-column prop="lastModifiedDate" :label="$t('shopDepositList.lastModifiedDate')"></el-table-column>
-        <el-table-column prop="remarks" :label="$t('shopDepositList.remarks')"></el-table-column>
-        <el-table-column prop="locked" :label="$t('shopDepositList.locked')"width="100">
+        <el-table-column prop="shopOfficeName" :label="$t('shopDepositList.officeName')" ></el-table-column>
+        <el-table-column prop="type" :label="$t('shopDepositList.type')" sortable></el-table-column>
+        <el-table-column prop="amount" :label="$t('shopDepositList.amount')" sortable></el-table-column>
+        <el-table-column prop="leftAmount" :label="$t('shopDepositList.leftAmount')" sortable></el-table-column>
+        <el-table-column prop="outCode" :label="$t('shopDepositList.outCode')" sortable></el-table-column>
+        <el-table-column prop="createdByName" column-key="createdBy"  :label="$t('shopDepositList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('shopDepositList.createdDate')" sortable></el-table-column>
+        <el-table-column prop="lastModifiedByName" column-key="lastModifiedBy" :label="$t('shopDepositList.lastModifiedBy')" sortable></el-table-column>
+        <el-table-column prop="lastModifiedDate" :label="$t('shopDepositList.lastModifiedDate')" sortable></el-table-column>
+        <el-table-column prop="remarks" :label="$t('shopDepositList.remarks')" sortable></el-table-column>
+        <el-table-column prop="locked" :label="$t('shopDepositList.locked')" width="100">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
@@ -82,6 +82,9 @@
         pageLoading:false,
         formData:{},
         submitData:{
+          page:0,
+          size:25,
+          sort:"id,DESC",
           shopName:'',
           createdBy:'',
           createdDateRange:'',
@@ -125,7 +128,7 @@
       }
     },created () {
 
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/shopDeposit/getQuery').then((response) =>{
         that.formData=response.data;

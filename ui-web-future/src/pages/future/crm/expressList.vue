@@ -44,25 +44,24 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="code" :label="$t('expressList.code')" sortable width="150"></el-table-column>
-        <el-table-column prop="expressOrderExpressCompanyName" :label="$t('expressList.expressCompanyName')" sortable></el-table-column>
-        <el-table-column prop="expressOrderExtendType" :label="$t('expressList.extendType')"></el-table-column>
-        <el-table-column prop="expressOrderExtendBusinessId" :label="$t('expressList.extendBusinessId')"></el-table-column>
-        <el-table-column prop="expressOrderFromDepotName" :label="$t('expressList.fromDepotName')"></el-table-column>
-        <el-table-column prop="expressOrderToDepotName" :label="$t('expressList.toDepotName')"></el-table-column>
-        <el-table-column prop="expressOrderContator" :label="$t('expressList.contact')"></el-table-column>
-        <el-table-column prop="expressOrderMobilePhone" :label="$t('expressList.mobilePhone')"></el-table-column>
-        <el-table-column prop="expressOrderAddress" :label="$t('expressList.address')"></el-table-column>
-        <el-table-column prop="weight" :label="$t('expressList.weight')"></el-table-column>
-        <el-table-column prop="qty" :label="$t('expressList.qty')"></el-table-column>
-        <el-table-column prop="shouldPay" :label="$t('expressList.shouldPay')"></el-table-column>
-        <el-table-column prop="realPay" :label="$t('expressList.realPay')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('expressList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('expressList.createdDate')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('expressList.operation')" width="80">
+        <el-table-column prop="expressOrderExpressCompanyName"  :label="$t('expressList.expressCompanyName')" ></el-table-column>
+        <el-table-column prop="expressOrderExtendType" :label="$t('expressList.extendType')" ></el-table-column>
+        <el-table-column prop="expressOrderExtendBusinessId" :label="$t('expressList.extendBusinessId')" ></el-table-column>
+        <el-table-column prop="expressOrderFromDepotName" :label="$t('expressList.fromDepotName')" ></el-table-column>
+        <el-table-column prop="expressOrderToDepotName"  :label="$t('expressList.toDepotName')" ></el-table-column>
+        <el-table-column prop="expressOrderContator" :label="$t('expressList.contact')" ></el-table-column>
+        <el-table-column prop="expressOrderMobilePhone" :label="$t('expressList.mobilePhone')" ></el-table-column>
+        <el-table-column prop="expressOrderAddress" :label="$t('expressList.address')" ></el-table-column>
+        <el-table-column prop="weight" :label="$t('expressList.weight')" sortable></el-table-column>
+        <el-table-column prop="qty" :label="$t('expressList.qty')" sortable></el-table-column>
+        <el-table-column prop="shouldPay" :label="$t('expressList.shouldPay')" sortable></el-table-column>
+        <el-table-column prop="realPay" :label="$t('expressList.realPay')" sortable></el-table-column>
+        <el-table-column prop="createdByName" column-key="createdBy" :label="$t('expressList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('expressList.createdDate')" sortable></el-table-column>
+        <el-table-column fixed="right" :label="$t('expressList.operation')">
           <template scope="scope">
-            <el-button size="small" type="text" v-permit="'crm:express:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('expressList.edit')}}</el-button>
-            <el-button size="small"  type="text" v-permit="'crm:express:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('expressList.delete')}}</el-button>
-
+            <div class="action" v-permit="'crm:express:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('expressList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:express:delete'"><el-button size="small"  @click.native="itemAction(scope.row.id,'delete')">{{$t('expressList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -84,6 +83,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           code:'',
           expressOrderToDepotId:'',
           createdDateRange:'',
@@ -96,8 +96,8 @@
           expressOrderToDepotId:{label:this.$t('expressList.toDepotName')},
           createdDateRange:{label: this.$t('expressOrderList.createdDate')},
           expressOrderExtendBusinessId:{label:this.$t('expressList.extendBusinessId')},
-          expressOrderFromDepotId:{label:this.$t('expressList.fromDepotName'),value:''},
-          expressOrderExpressCompanyId:{label:this.$t('expressList.expressCompanyName'),value:''},
+          expressOrderFromDepotId:{label:this.$t('expressList.fromDepotName')},
+          expressOrderExpressCompanyId:{label:this.$t('expressList.expressCompanyName')},
           expressOrderExtendType:{label:this.$t('expressList.extendType')},
         },
         formLabelWidth: '120px',
@@ -129,13 +129,13 @@
       },itemAdd(){
         this.$router.push({ name: 'expressForm'})
       },itemAction:function(id,action){
-        if(action=="edit") {
+        if(action==="edit") {
           this.$router.push({ name: 'expressForm', query: { id: id }})
-        } else if(action=="delete") {
+        } else if(action==="delete") {
           axios.get('/api/ws/future/crm/express/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
+          });
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
@@ -146,7 +146,7 @@
 
       }
     },created () {
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/express/getQuery').then((response) =>{
         that.formData=response.data;

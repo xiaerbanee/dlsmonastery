@@ -35,10 +35,10 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('storeAllotShip.imeStr')" prop="imeStr">
-              <el-input type="textarea" :autosize="autosize"v-model="imeStr" @change="shipBoxAndIme()"></el-input>
+              <el-input type="textarea" :autosize="autosize" v-model="imeStr" @change="shipBoxAndIme()"></el-input>
             </el-form-item>
             <el-form-item :label="$t('storeAllotShip.expressCodes')" prop="expressCodes">
-              <el-input type="textarea" :autosize="autosize"v-model="storeAllot.expressOrderExpressCodes" ></el-input>
+              <el-input type="textarea" :autosize="autosize" v-model="storeAllot.expressOrderExpressCodes" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('storeAllotShip.remarks')" prop="remarks">
               <el-input  type="textarea" v-model="shipRemarks"></el-input>
@@ -48,7 +48,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="storeAllotDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('storeAllotShip.loading')" stripe border >
+        <el-table :data="storeAllotDetailList" style="margin-top:5px;"  v-loading="pageLoading" :element-loading-text="$t('storeAllotShip.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('storeAllotShip.productName')" sortable width="200"></el-table-column>
           <el-table-column prop="productHasIme" :label="$t('storeAllotShip.hasIme')" >
             <template scope="scope">
@@ -95,25 +95,33 @@
     },
     methods:{
       formSubmit(){
-        this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/crm/storeAllot/ship',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+            this.submitDisabled = true;
+            this.submitData.id = this.storeAllot.id;
+            this.submitData.expressOrderExpressCodes = this.storeAllot.expressOrderExpressCodes;
+            this.submitData.imeStr = this.imeStr;
+            this.submitData.boxImeStr = this.boxImeStr;
+            this.submitData.shipRemarks = this.shipRemarks;
+
+            axios.post('/api/ws/future/crm/storeAllot/ship',qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+
               this.$message({message:response.data.message,type:response.data.type});
+              this.submitDisabled = false;
               if(response.data.success){
                 if(this.isCreate){
                   form.resetFields();
-                  this.submitDisabled = false;
+
                 } else {
                   this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList")});
                 }
               }
-            }).catch(function () {
+            }).catch( () => {
               this.submitDisabled = false;
             });
-          }else{
-            this.submitDisabled = false;
+
           }
         })
       },shipBoxAndIme(){

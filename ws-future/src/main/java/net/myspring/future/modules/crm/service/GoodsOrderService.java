@@ -30,9 +30,13 @@ import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
+import net.myspring.future.modules.crm.domain.GoodsOrderIme;
+import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
+import net.myspring.future.modules.crm.dto.GoodsOrderImeDto;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
+import net.myspring.future.modules.crm.repository.GoodsOrderImeRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
@@ -67,6 +71,8 @@ public class GoodsOrderService {
     private GoodsOrderRepository goodsOrderRepository;
     @Autowired
     private GoodsOrderDetailRepository goodsOrderDetailRepository;
+    @Autowired
+    private GoodsOrderImeRepository goodsOrderImeRepository;
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
@@ -309,7 +315,7 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && product != null && netType.equals(product.getNetType())  && product.getVisible()) {
+            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && netType.equals(product.getNetType())) {
                 //是否允许下单
                 Boolean showNotAllow = true;
                 //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
@@ -355,9 +361,12 @@ public class GoodsOrderService {
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
 
         GoodsOrderBillForm goodsOrderBillForm = new GoodsOrderBillForm();
+        goodsOrderBillForm.setId(goodsOrder.getId());
         goodsOrderBillForm.setBillDate(LocalDate.now());
         goodsOrderBillForm.setStoreId(goodsOrder.getStoreId());
+        goodsOrderBillForm.setShopId(goodsOrder.getShopId());
         goodsOrderBillForm.setExpressCompanyId(expressOrder.getExpressCompanyId());
+        goodsOrderBillForm.setNetType(goodsOrder.getNetType());
 
         //是否自动同步，根据门店是否包含client
         goodsOrderBillForm.setSyn(false);
@@ -397,7 +406,7 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && product != null && product.getVisible()) {
+            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && product.getNetType().equals(goodsOrder.getNetType())) {
                 GoodsOrderBillDetailForm goodsOrderBillDetailForm = new GoodsOrderBillDetailForm();
                 goodsOrderBillDetailForm.setProductId(product.getId());
                 goodsOrderBillDetailForm.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
@@ -414,5 +423,18 @@ public class GoodsOrderService {
         }
         goodsOrderBillForm.setGoodsOrderBillDetailFormList(goodsOrderBillDetailFormList);
         return goodsOrderBillForm;
+    }
+
+    public GoodsOrderDto findDetail(String id) {
+        GoodsOrderDto goodsOrderDto = findOne(id);
+        List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
+        List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
+        cacheUtils.initCacheInput(goodsOrderDetailDtoList);
+        List<GoodsOrderIme> goodsOrderImeList  = goodsOrderImeRepository.findByGoodsOrderId(id);
+        List<GoodsOrderImeDto> goodsOrderImeDtoList= BeanUtil.map(goodsOrderImeList,GoodsOrderImeDto.class);
+        cacheUtils.initCacheInput(goodsOrderImeDtoList);
+        goodsOrderDto.setGoodsOrderDetailDtoList(goodsOrderDetailDtoList);
+        goodsOrderDto.setGoodsOrderImeDtoList(goodsOrderImeDtoList);
+        return goodsOrderDto;
     }
 }

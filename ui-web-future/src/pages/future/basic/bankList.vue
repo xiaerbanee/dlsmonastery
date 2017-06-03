@@ -88,7 +88,7 @@
           this.pageRequest();
         })
       },itemAction:function(id,action){
-        if(action=="edit") {
+        if(action==="edit") {
           this.$router.push({ name: 'bankForm', query: { id: id }})
         }
       }

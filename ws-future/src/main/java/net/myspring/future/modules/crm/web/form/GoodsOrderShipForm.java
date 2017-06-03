@@ -10,19 +10,11 @@ import net.myspring.util.text.StringUtils;
 import java.util.List;
 
 public class GoodsOrderShipForm extends BaseForm<GoodsOrder> {
-    private String goodsOrderId;
     private String boxImeStr;
     private String imeStr;
     private String expressStr;
     private String shipRemarks;
 
-    public String getGoodsOrderId() {
-        return goodsOrderId;
-    }
-
-    public void setGoodsOrderId(String goodsOrderId) {
-        this.goodsOrderId = goodsOrderId;
-    }
 
     public String getBoxImeStr() {
         return boxImeStr;

@@ -97,7 +97,7 @@
         }
       }
     },created () {
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/basic/client/getQuery').then((response) =>{
         that.formData=response.data;

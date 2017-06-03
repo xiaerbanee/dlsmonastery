@@ -55,9 +55,9 @@
                 util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/dictMap/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
+                this.submitDisabled = false;
                 if(this.isCreate){
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name:'dictMapList',query:util.getQuery("dictMapList")})
                 }
@@ -68,14 +68,20 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },created(){
+        },initPage() {
           axios.get('/api/basic/sys/dictMap/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
-        axios.get('/api/basic/sys/dictMap/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputProperty = response.data;
-        })
+          axios.get('/api/basic/sys/dictMap/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputProperty = response.data;
+          })
+        }
+      },created(){
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
       }
     }
 </script>

@@ -26,19 +26,19 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productTypeList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('productTypeList.name')" sortable width="150"></el-table-column>
-        <el-table-column prop="reportName" :label="$t('productTypeList.reportName')"></el-table-column>
-        <el-table-column prop="code" :label="$t('productTypeList.code')"></el-table-column>
+        <el-table-column fixed prop="name" :label="$t('productTypeList.name')"  width="150" sortable></el-table-column>
+        <el-table-column prop="reportName" :label="$t('productTypeList.reportName')" sortable></el-table-column>
+        <el-table-column prop="code" :label="$t('productTypeList.code')" sortable></el-table-column>
         <el-table-column prop="productNames" :label="$t('productTypeList.productNames')" width="300"></el-table-column>
-        <el-table-column prop="price1" :label="$t('productTypeList.price1')"></el-table-column>
-        <el-table-column prop="scoreType" :label="$t('productTypeList.scoreType')">
+        <el-table-column prop="price1" :label="$t('productTypeList.price1')" sortable></el-table-column>
+        <el-table-column prop="scoreType" :label="$t('productTypeList.scoreType')" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.scoreType? 'primary' : 'danger'">{{scope.row.scoreType | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="remarks" :label="$t('productTypeList.remarks')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('productTypeList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('productTypeList.createdDate')"></el-table-column>
+        <el-table-column prop="remarks" :label="$t('productTypeList.remarks')" sortable></el-table-column>
+        <el-table-column prop="createdByName" column-key="createdBy"   :label="$t('productTypeList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('productTypeList.createdDate')" sortable></el-table-column>
         <el-table-column prop="locked" :label="$t('productTypeList.locked')">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
@@ -49,10 +49,10 @@
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('productTypeList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('productTypeList.operation')" >
           <template scope="scope">
-            <el-button size="small" v-permit="'crm:productType:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('demoPhoneTypeList.edit')}}</el-button>
-            <el-button size="small" v-permit="'crm:productType:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('demoPhoneTypeList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:productType:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('demoPhoneTypeList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:productType:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('demoPhoneTypeList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -69,6 +69,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           code:'',
           name:'',
         },formLabel:{

@@ -7,6 +7,7 @@ import net.myspring.future.modules.crm.dto.ProductImeForReportScoreDto
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto
 import net.myspring.future.modules.crm.web.query.ProductImeQuery
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -96,17 +96,28 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
     }
 
     override fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme> {
+        if(CollectionUtil.isEmpty(productImeShipQuery.boxImeList) && CollectionUtil.isEmpty(productImeShipQuery.imeList)){
+            return ArrayList()
+        }
 
-        return namedParameterJdbcTemplate.query("""
-        SELECT
-            t1.*
-        FROM
-            crm_product_ime t1
-        WHERE
-            t1.enabled = 1
-            AND t1.depot_id = :depotId
-            AND t1.box_ime IN (:boxImeList)
-        UNION
+        val sb = StringBuilder()
+        if(CollectionUtil.isNotEmpty(productImeShipQuery.boxImeList)){
+            sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_product_ime t1
+            WHERE
+                t1.enabled = 1
+                AND t1.depot_id = :depotId
+                AND t1.box_ime IN (:boxImeList)
+        """)
+        }
+        if(productImeShipQuery.boxImeAndIme ){
+            sb.append("    UNION   ")
+        }
+        if(CollectionUtil.isNotEmpty(productImeShipQuery.imeList)){
+            sb.append("""
             SELECT
                 t1.*
             FROM
@@ -119,7 +130,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                     OR t1.ime2 IN (:imeList)
                     OR t1.meid IN (:imeList)
                 )
-                """, BeanPropertySqlParameterSource(productImeShipQuery), BeanPropertyRowMapper(ProductIme::class.java))
+        """)
+        }
+
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeShipQuery), BeanPropertyRowMapper(ProductIme::class.java))
     }
 
     override fun findDtoListByImeList(imeList: MutableList<String>, companyId: String): MutableList<ProductImeDto> {

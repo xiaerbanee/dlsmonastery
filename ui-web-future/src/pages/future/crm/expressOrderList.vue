@@ -61,6 +61,15 @@
         <el-table-column type="expand">
           <template scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item :label="$t('expressOrderList.expressCompanyName')">
+                <span>{{ props.row.expressCompanyName }}</span>
+              </el-form-item>
+              <el-form-item :label="$t('expressOrderList.shouldGet')">
+                <span>{{ props.row.shouldGet }}</span>
+              </el-form-item>
+              <el-form-item :label="$t('expressOrderList.shouldPay')">
+                <span>{{ props.row.shouldPay }}</span>
+              </el-form-item>
               <el-form-item :label="$t('expressOrderList.address')">
                 <span>{{ props.row.address }}</span>
               </el-form-item>
@@ -70,26 +79,19 @@
               <el-form-item :label="$t('expressOrderList.outPrintDate')">
                 <span>{{ props.row.outPrintDate }}</span>
               </el-form-item>
-              <el-form-item :label="$t('expressOrderList.shouldGet')">
-                <span>{{ props.row.shouldGet }}</span>
-              </el-form-item>
-              <el-form-item :label="$t('expressOrderList.shouldPay')">
-                <span>{{ props.row.shouldPay }}</span>
-              </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column prop="extendType" :label="$t('expressOrderList.extendType')"  width="150"></el-table-column>
-        <el-table-column prop="extendBusinessId" :label="$t('expressOrderList.extendBusinessId')"></el-table-column>
-        <el-table-column prop="expressCompanyName" :label="$t('expressOrderList.expressCompanyName')"></el-table-column>
-        <el-table-column prop="fromDepotName" :label="$t('expressOrderList.fromDepotName')"></el-table-column>
-        <el-table-column prop="toDepotName" :label="$t('expressOrderList.toDepotName')"></el-table-column>
-        <el-table-column prop="realPay" :label="$t('expressOrderList.realPay')"></el-table-column>
-        <el-table-column prop="contator" :label="$t('expressOrderList.contact')"></el-table-column>
-        <el-table-column prop="mobilePhone" :label="$t('expressOrderList.mobilePhone')"></el-table-column>
-        <el-table-column prop="expressPrintQty" :label="$t('expressOrderList.expressPrintQty')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('expressOrderList.createdDate')"></el-table-column>
-        <el-table-column prop="printDate" :label="$t('expressOrderList.printDate')"></el-table-column>
+        <el-table-column prop="extendBusinessId" :label="$t('expressOrderList.extendBusinessId')" sortable></el-table-column>
+        <el-table-column prop="fromDepotName" column-key="fromDepotId" :label="$t('expressOrderList.fromDepotName')" sortable></el-table-column>
+        <el-table-column prop="toDepotName" column-key="toDepotId" :label="$t('expressOrderList.toDepotName')" sortable></el-table-column>
+        <el-table-column prop="realPay" :label="$t('expressOrderList.realPay')" sortable></el-table-column>
+        <el-table-column prop="contator" :label="$t('expressOrderList.contact')" sortable></el-table-column>
+        <el-table-column prop="mobilePhone" :label="$t('expressOrderList.mobilePhone')" sortable></el-table-column>
+        <el-table-column prop="expressPrintQty" :label="$t('expressOrderList.expressPrintQty')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('expressOrderList.createdDate')" sortable></el-table-column>
+        <el-table-column prop="printDate" :label="$t('expressOrderList.printDate')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('expressOrderList.remarks')"></el-table-column>
         <el-table-column  :label="$t('expressOrderList.operation')" >
           <template scope="scope">
@@ -127,6 +129,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           fromDepotName:'',
           toDepotName:'',
           expressCompanyName:'',
@@ -174,9 +177,9 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAction:function(id,action){
-        if(action=="edit") {
+        if(action==="edit") {
           this.$router.push({ name: 'expressOrderForm', query: { id: id }})
-        } else if(action=="reset") {
+        } else if(action==="reset") {
           axios.get('/api/ws/future/crm/expressOrder/resetPrintStatus',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
@@ -194,11 +197,11 @@
           axios.get('/api/ws/future/crm/expressOrder/exportEMS?'+qs.stringify(this.submitData)).then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
-        }).catch(()=>{});;
+        }).catch(()=>{});
 
       }
     },created () {
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/expressOrder/getQuery').then((response) =>{
         that.formData=response.data;
