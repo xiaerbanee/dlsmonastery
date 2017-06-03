@@ -89,7 +89,7 @@
             }
           })
         },initPage(){
-          axios.get('/api/global/cloud/sys/kingdeeBook/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/global/cloud/sys/kingdeeBook/form',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           });
         }
