@@ -91,11 +91,17 @@
         } else {
           this.productImes = [];
         }
-      },
+      },initPage(){
+        axios.get('/api/ws/future/crm/demoPhone/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+        })
+      }
     },created(){
-      axios.get('/api/ws/future/crm/demoPhone/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
-      })
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

@@ -194,17 +194,24 @@
       }
       this.totalQty=totalQty;
       this.totalPrice=totalPrice;
-    }},created(){
-      axios.get('/api/ws/future/layout/adGoodsOrder/findOne',{params:{id:this.$route.query.id}}).then((response)=> {
-        this.inputForm =response.data;
+    },initPage(){
+        axios.get('/api/ws/future/layout/adGoodsOrder/findOne',{params:{id:this.$route.query.id}}).then((response)=> {
+          this.inputForm =response.data;
         this.shopChange();
         if(response.data.expressOrderDto!=null){
           this.expressOrderDto=response.data.expressOrderDto;
         }
       })
-      axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=>{
-        this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
+        axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=>{
+          this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
       })
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

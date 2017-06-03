@@ -92,18 +92,23 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },created(){
-
-        axios.get('/api/ws/future/crm/reportScore/getProductTypeNamesAndNotScores').then((response)=>{
-          this.productTypeNames = response.data.productTypeNames;
+        },initPage(){
+          axios.get('/api/ws/future/crm/reportScore/getProductTypeNamesAndNotScores').then((response)=>{
+            this.productTypeNames = response.data.productTypeNames;
           this.notScores = response.data.notScores;
         });
 
-        //每日打分，只能新增和删除，不能修改
-        axios.get('/api/ws/future/crm/reportScore/findDto').then((response)=>{
-          this.reportScore=response.data;
-        })
+          //每日打分，只能新增和删除，不能修改
+          axios.get('/api/ws/future/crm/reportScore/findDto').then((response)=>{
+            this.reportScore=response.data;
+        });
+        }
+      },created(){
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
       }
     }
 </script>

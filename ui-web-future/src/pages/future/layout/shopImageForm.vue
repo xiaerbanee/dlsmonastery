@@ -97,22 +97,28 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      }
-    },created(){
-      axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
+      },initPage(){
+        axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
         if(this.inputForm.id != null){
-            this.shopDisabled = true;
+          this.shopDisabled = true;
         }
         if(this.inputForm.image != null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
             this.fileList= response.data;
-          });
+        });
         }
-      })
-      axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
-        this.formProperty = response.data;
-      })
+      });
+        axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
+          this.formProperty = response.data;
+      });
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

@@ -175,8 +175,15 @@
           this.settings.data=response.data.list;
           this.table.loadData(this.settings.data);
         })
+      },initPage(){
+
       }
     },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

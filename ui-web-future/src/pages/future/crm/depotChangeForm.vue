@@ -123,16 +123,22 @@
         }else if(this.inputForm.type == "信用额度"){
           this.inputForm.oldValue = this.depot.credit;
         }
+      },initPage(){
+        axios.get('/api/crm/depotChange/getForm').then((response)=>{
+          this.formProperty = response.data;
+        });
+        if(!this.isCreate){
+          axios.get('/api/crm/depotChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+            this.depots = new Array(response.data.depot)
+          })
+        }
       }
     },created(){
-      axios.get('/api/crm/depotChange/getForm').then((response)=>{
-        this.formProperty = response.data;
-      });
-      if(!this.isCreate){
-        axios.get('/api/crm/depotChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-          this.depots = new Array(response.data.depot)
-        })
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
     }
   }

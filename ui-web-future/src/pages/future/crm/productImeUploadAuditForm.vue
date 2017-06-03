@@ -145,11 +145,17 @@
             }
             this.productQtyList = tmpList;
           });
+        },initPage(){
+          axios.get('/api/ws/future/crm/productImeUpload/findDto').then((response)=>{
+            this.productImeUpload=response.data;
+        });
         }
       },created(){
-      axios.get('/api/ws/future/crm/productImeUpload/findDto').then((response)=>{
-        this.productImeUpload=response.data;
-      });
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

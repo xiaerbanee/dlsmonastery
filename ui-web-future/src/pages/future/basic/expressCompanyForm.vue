@@ -96,14 +96,20 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },created(){
+        },initPage(){
           axios.get('/api/ws/future/basic/expressCompany/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
-          });
+        });
           axios.get('/api/ws/future/basic/expressCompany/getForm').then((response)=>{
             this.formProperty = response.data;
-          });
+        });
+        }
+      },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
       }
     }
 </script>

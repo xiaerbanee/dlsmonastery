@@ -117,27 +117,33 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      }
-    },created(){
-      axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
+      },initPage(){
+        axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
         if(this.isCreate){
-            this.shopDisabled = false;
+          this.shopDisabled = false;
         }
         if(response.data.specialArea == true){
-            this.inputForm.specialArea = 1;
+          this.inputForm.specialArea = 1;
         }else{
           this.inputForm.specialArea = 0;
         }
         if(this.inputForm.attachment !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
             this.fileList= response.data;
-          });
+        });
         }
       });
-      axios.get('/api/ws/future/layout/shopAd/getForm').then((response)=>{
-        this.formProperty = response.data;
-      })
+        axios.get('/api/ws/future/layout/shopAd/getForm').then((response)=>{
+          this.formProperty = response.data;
+      });
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

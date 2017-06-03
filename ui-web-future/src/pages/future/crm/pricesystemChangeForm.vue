@@ -90,12 +90,18 @@
               that.submitDisabled = false;
           }
         });
+      },initPage(){
+        axios.get('/api/ws/future/crm/pricesystemChange/getForm').then((response)=>{
+          this.formProperty=response.data;
+      });
       }
     },
       created(){
-      axios.get('/api/ws/future/crm/pricesystemChange/getForm').then((response)=>{
-        this.formProperty=response.data;
-      });
+        this.initPage();
+      },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

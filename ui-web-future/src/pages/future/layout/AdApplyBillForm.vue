@@ -123,12 +123,18 @@
             }
           }
         }
+      },initPage(){
+        this.pageHeight = window.outerHeight -320;
+        axios.get('api/ws/future/layout/adApply/getBillForm').then((response) =>{
+          this.inputForm = response.data;
+      });
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      axios.get('api/ws/future/layout/adApply/getBillForm').then((response) =>{
-        this.inputForm = response.data;
-      });
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

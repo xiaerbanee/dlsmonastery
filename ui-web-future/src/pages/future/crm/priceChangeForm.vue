@@ -82,12 +82,18 @@
             this.submitDisabled = false;
           }
         })
-      },
-    },created(){
-      axios.get('/api/ws/future/crm/priceChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
+      },initPage(){
+        axios.get('/api/ws/future/crm/priceChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
         console.log(this.inputForm);
-      })
+      });
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>
