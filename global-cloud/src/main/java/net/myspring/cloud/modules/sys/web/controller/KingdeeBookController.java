@@ -28,13 +28,13 @@ public class KingdeeBookController {
         return page;
     }
 
-    @RequestMapping(value = "getQuery")
-    public KingdeeBookQuery getQuery(){
-        KingdeeBookQuery kingdeeBookQuery = kingdeeBookService.getQuery();
+    @RequestMapping(value = "queryProperty")
+    public KingdeeBookQuery getQueryProperty(){
+        KingdeeBookQuery kingdeeBookQuery = kingdeeBookService.getQueryProperty();
         return kingdeeBookQuery;
     }
 
-    @RequestMapping(value = "getForm")
+    @RequestMapping(value = "form")
     public KingdeeBookForm getForm(KingdeeBookForm kingdeeBookForm){
          kingdeeBookForm = kingdeeBookService.getForm(kingdeeBookForm);
         return kingdeeBookForm;

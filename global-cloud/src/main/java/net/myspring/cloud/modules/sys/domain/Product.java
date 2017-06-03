@@ -20,7 +20,6 @@ public class Product extends CompanyEntity<Product> {
     private LocalDateTime outDate;
     private Integer version;
     private String kingdeeBookId;
-    private String companyId;
 
     public String getName() {
         return name;
@@ -86,11 +85,4 @@ public class Product extends CompanyEntity<Product> {
         this.kingdeeBookId = kingdeeBookId;
     }
 
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
 }

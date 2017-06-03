@@ -1,18 +1,23 @@
 package net.myspring.cloud.modules.sys.domain;
 
 import net.myspring.cloud.common.domain.CompanyEntity;
+import net.myspring.cloud.common.utils.RequestUtils;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
-
-/**
- * Created by liuj on 2017/5/8.
- */
 
 @Entity
 @Table(name="sys_account_kingdee_book")
 public class AccountKingdeeBook extends CompanyEntity<AccountKingdeeBook> {
+    @Column(updatable = false)
     private String accountId;
+    @PrePersist
+    public void prePersist() {
+        this.accountId = RequestUtils.getAccountId();
+    }
+
     private String username;
     private String password;
     private String kingdeeBookId;

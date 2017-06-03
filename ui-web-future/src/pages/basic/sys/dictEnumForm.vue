@@ -67,19 +67,15 @@
             this.submitDisabled = false;
           }
         })
-      },initPage() {
+      }
+    },activated () {
+      if(!this.$route.query.headClick) {
         axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         });
         axios.get('/api/basic/sys/dictEnum/getForm').then((response)=>{
           this.inputProperty = response.data;
         });
-      }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
       }
     }
   }

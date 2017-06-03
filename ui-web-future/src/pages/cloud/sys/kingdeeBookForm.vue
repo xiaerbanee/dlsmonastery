@@ -3,14 +3,11 @@
     <head-tab active="kingdeeBookForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item label="公司ID" prop="companyId">
-          <el-input v-model="inputForm.companyId"></el-input>
-        </el-form-item>
         <el-form-item label="账套" prop="name">
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item label="账套类型" prop="type">
-          <el-select v-model="inputForm.type" filterable placeholder="请选择" :clearable=true>
+          <el-select v-model="inputForm.type" filterable allow-create placeholder="请选择" :clearable=true>
             <el-option v-for="type in inputForm.typeList" :key="type" :label="type" :value="type"></el-option>
           </el-select>
         </el-form-item>
@@ -78,7 +75,7 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/global/cloud/sys/kingdeeBook/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-              this.submitDisabled = false;
+                this.submitDisabled = false;
                 if(!this.inputForm.id){
                   form.resetFields();
                 } else {
@@ -92,14 +89,14 @@
             }
           })
         },initPage(){
-          axios.get('/api/global/cloud/sys/kingdeeBook/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/global/cloud/sys/kingdeeBook/form',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           });
         }
       },created(){
         this.initPage();
       },activated () {
-        if(!this.$route.query.headClick) {
+        if (!this.$route.query.headClick) {
           this.initPage();
         }
       }
