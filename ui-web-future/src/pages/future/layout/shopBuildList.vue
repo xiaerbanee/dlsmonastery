@@ -48,21 +48,21 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopBuildList.loading')" @sort-change="sortChange" @selection-change="handleSelectionChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column fixed prop="id" :label="$t('shopBuildList.code')" sortable></el-table-column>
-        <el-table-column prop="officeName" :label="$t('shopBuildList.officeName')" ></el-table-column>
-        <el-table-column prop="shopName" :label="$t('shopBuildList.shopName')" ></el-table-column>
-        <el-table-column prop="fixtureType" :label="$t('shopBuildList.fixtureType')" ></el-table-column>
-        <el-table-column prop="content" :label="$t('shopBuildList.content')" width="150"></el-table-column>
-        <el-table-column prop="oldContents"  :label="$t('shopBuildList.oldContents')"   ></el-table-column>
-        <el-table-column prop="newContents" :label="$t('shopBuildList.newContents')" ></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('shopBuildList.processFlow')" width="150">
+        <el-table-column column-key="officeId" prop="officeName" :label="$t('shopBuildList.officeName')" sortable></el-table-column>
+        <el-table-column column-key="shopId" prop="shopName" :label="$t('shopBuildList.shopName')" sortable></el-table-column>
+        <el-table-column prop="fixtureType" :label="$t('shopBuildList.fixtureType')" sortable></el-table-column>
+        <el-table-column prop="content" :label="$t('shopBuildList.content')" width="150" sortable></el-table-column>
+        <el-table-column prop="oldContents"  :label="$t('shopBuildList.oldContents')" sortable></el-table-column>
+        <el-table-column prop="newContents" :label="$t('shopBuildList.newContents')" sortable></el-table-column>
+        <el-table-column prop="processStatus" :label="$t('shopBuildList.processFlow')" width="150" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.processStatus === '已通过' ? 'primary' : 'danger'"  close-transition>{{scope.row.processStatus}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createdByName" :label="$t('shopBuildList.createdBy')"  ></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('shopBuildList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopBuildList.createdDate')" sortable ></el-table-column>
-        <el-table-column prop="lastModifiedByName" :label="$t('shopBuildList.lastModifiedBy')"></el-table-column>
-        <el-table-column prop="lastModifiedDate" :label="$t('shopBuildList.lastModifiedDate')"></el-table-column>
+        <el-table-column column-key="lastModifiedBy" prop="lastModifiedByName" :label="$t('shopBuildList.lastModifiedBy')" sortable></el-table-column>
+        <el-table-column prop="lastModifiedDate" :label="$t('shopBuildList.lastModifiedDate')"  sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopBuildList.remarks')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('shopBuildList.operation')" width="140">
           <template scope="scope">
@@ -95,6 +95,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           officeId:'',
           auditType:'',
           shopId:'',
@@ -135,7 +136,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
