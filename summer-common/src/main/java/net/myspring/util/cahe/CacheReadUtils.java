@@ -12,6 +12,7 @@ import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.ReflectionUtils;
 
@@ -138,7 +139,9 @@ public class CacheReadUtils {
         for(int i=0;i<keyList.size();i++) {
             bytes[i] = keyList.get(i).getBytes();
         }
-        List<byte[]> cacheList = redisTemplate.getConnectionFactory().getConnection().mGet(bytes);
+        RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();
+        List<byte[]> cacheList = connection.mGet(bytes);
+        connection.close();
         Map<String,Object> cacheMap = Maps.newHashMap();
         for (int i = 0; i < keyList.size(); i++) {
             byte[] cache = cacheList.get(i);
