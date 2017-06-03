@@ -101,16 +101,22 @@
           }
         }
         this.filterPricesystemDetailList = tempList;
-      }
-    },created(){
+      },initPage(){
         axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           console.log(this.inputForm)
           this.searchDetail();
-        })
+        });
         axios.get('/api/ws/future/basic/pricesystem/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.pricesystemDetailList = response.data.pricesystemDetailList;
-        })
+        });
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

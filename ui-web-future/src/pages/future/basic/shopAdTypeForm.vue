@@ -69,15 +69,20 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },created(){
+        },initPage(){
           axios.get('/api/ws/future/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.formData = response.data;
-          })
+        });
           axios.get('/api/ws/future/basic/shopAdType/getForm').then((response)=>{
             this.formProperty = response.data;
-          })
-
+        });
+        }
+      },created(){
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
       }
     }
 </script>

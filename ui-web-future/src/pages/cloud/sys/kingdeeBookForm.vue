@@ -91,11 +91,17 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },created(){
+        },initPage(){
           axios.get('/api/global/cloud/sys/kingdeeBook/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
-          })
+          });
+        }
+      },created(){
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
       }
     }
 </script>

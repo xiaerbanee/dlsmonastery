@@ -346,6 +346,7 @@ export default {
     processStatus: "状态审核",
     adCode: "广告编号",
     isSpecialArea: "是否专区",
+    noSelectionFound:"没有选择任何记录",
     add: "添加",
     filter: "过滤",
     export: "导出",

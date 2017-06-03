@@ -184,11 +184,17 @@
           this.productImeList=[];
           this.productQtyList = [];
           this.$refs["inputForm"].resetFields();
+        },initPage(){
+          axios.get('/api/ws/future/crm/productImeSale/findDto').then((response)=>{
+            this.productImeSale=response.data;
+          });
         }
       },created(){
-        axios.get('/api/ws/future/crm/productImeSale/findDto').then((response)=>{
-          this.productImeSale=response.data;
-        });
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
       }
     }
 </script>

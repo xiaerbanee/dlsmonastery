@@ -64,11 +64,17 @@
             this.submitDisabled = false;
           }
         })
-      }
-      },created(){
+      },initPage(){
         axios.get('/api/ws/future/basic/chain/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-        })
+        });
+      }
+      },created(){
+        this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

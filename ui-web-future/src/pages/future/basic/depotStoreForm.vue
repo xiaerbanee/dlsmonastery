@@ -126,17 +126,23 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },created(){
-      axios.get('/api/ws/future/basic/depotStore/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
+      },initPage(){
+        axios.get('/api/ws/future/basic/depotStore/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
         if(!response.data.depotForm){
-            this.inputForm.depotForm={};
-            this,inputForm.depotForm.popShop=0;
+          this.inputForm.depotForm={};
+          this,inputForm.depotForm.popShop=0;
         }else {
           this.inputForm.depotForm.popShop=this.inputForm.depotForm.popShop?1:0;
         }
-      })
+      });
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

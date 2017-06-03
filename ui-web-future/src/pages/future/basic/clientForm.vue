@@ -61,12 +61,18 @@
             this.submitDisabled = false;
           }
         })
+      },initPage(){
+        if(!this.isCreate){
+          axios.get('/api/ws/future/basic/client/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm=response.data
+        });
+        }
       }
     },created(){
-      if(!this.isCreate){
-        axios.get('/api/ws/future/basic/client/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm=response.data
-        })
+     this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
     }
   }

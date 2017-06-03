@@ -162,10 +162,9 @@
         this.fileList3 = fileList;
       }, findOne(){
 
-      }
-    },created(){
-      axios.get('/api/ws/future/layout/shopPromotion/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
+      },initPage(){
+        axios.get('/api/ws/future/layout/shopPromotion/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
         if(response.data.shopId!=null){
           this.shops=new Array(response.data.shopId);
           this.shopDisabled = true;
@@ -173,19 +172,26 @@
         if(this.inputForm.activityImage1 !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
             this.fileList1= response.data;
-          });
+        });
         }
         if(this.inputForm.activityImage2 !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
             this.fileList2= response.data;
-          });
+        });
         }
         if(this.inputForm.activityImage3 !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
             this.fileList3= response.data;
-          });
+        });
         }
-      })
+      });
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

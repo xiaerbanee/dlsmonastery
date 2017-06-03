@@ -131,12 +131,18 @@
           this.inputForm.adApplyList = response.data;
           this.submitDisabled = false;
           });
-      }
-    },created () {
+      },initPage(){
         this.pageHeight = window.outerHeight -320;
         axios.get('api/ws/future/layout/adApply/getForm').then((response) =>{
-        this.inputForm = response.data;
-      });
+          this.inputForm = response.data;
+        });
+      }
+    },created () {
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

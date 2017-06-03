@@ -203,23 +203,26 @@
           }
         }
         this.filterStoreAllotDetailList = tempList;
+      },initPage(){
+        axios.get('/api/ws/future/crm/storeAllot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputProperty = response.data;
+      });
 
+        //大库调拨只能新增和删除，不能修改，所以不用传id
+        axios.get('/api/ws/future/crm/storeAllot/findDetailListForCommonAllot').then((response)=>{
+          this.setStoreAllotDetailList(response.data);
+      });
+        //大库调拨只能新增和删除，不能修改，所以不用传id
+        axios.get('/api/ws/future/crm/storeAllot/findDto').then((response)=>{
+          this.storeAllot = response.data;
+      });
       }
     },created(){
-
-      axios.get('/api/ws/future/crm/storeAllot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputProperty = response.data;
-      });
-
-      //大库调拨只能新增和删除，不能修改，所以不用传id
-      axios.get('/api/ws/future/crm/storeAllot/findDetailListForCommonAllot').then((response)=>{
-        this.setStoreAllotDetailList(response.data);
-      });
-      //大库调拨只能新增和删除，不能修改，所以不用传id
-      axios.get('/api/ws/future/crm/storeAllot/findDto').then((response)=>{
-        this.storeAllot = response.data;
-      });
-
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>
