@@ -37,13 +37,6 @@ interface PriceChangeRepository : BaseRepository<PriceChange, String>, PriceChan
     fun findByEnabledIsTrueAndUploadEndDateGreaterThanEqualOrderByIdDesc(uploadEndDate: LocalDateTime): MutableList<PriceChange>
 
 
-    @Query("""
-        select t
-        from #{#entityName} t
-        where t.enabled = 1
-        and t.status = :status
-    """)
-    fun findByPriceChangeIme(@Param("status")status:String):MutableList<PriceChange>
 
 
     fun findByEnabledIsTrueOrderByIdDesc(): MutableList<PriceChange>

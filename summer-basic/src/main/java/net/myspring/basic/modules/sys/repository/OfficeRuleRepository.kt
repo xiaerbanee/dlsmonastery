@@ -34,7 +34,7 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRule
     @Cacheable
     override fun findOne(id: String): OfficeRule
 
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(officeRule: OfficeRule): OfficeRule
 
     @Query("""

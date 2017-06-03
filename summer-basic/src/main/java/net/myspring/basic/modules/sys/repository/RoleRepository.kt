@@ -29,7 +29,7 @@ interface RoleRepository: BaseRepository<Role, String>,RoleRepositoryCustom {
     @Cacheable
     override fun findOne(id: String): Role
 
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(role: Role): Role
 
     @Query("""

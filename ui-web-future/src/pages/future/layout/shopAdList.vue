@@ -34,7 +34,7 @@
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <account-select  v-model="formData.createdBy" :multiple="multiple"></account-select>
+                <account-select  v-model="formData.createdBy"></account-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -46,31 +46,31 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')"  @selection-change="handleSelectionChange" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="50" :selectable="checkSelectable"></el-table-column>
-        <el-table-column fixed prop="formatId" :label="$t('shopAdList.code')" sortable width=120></el-table-column>
-        <el-table-column prop="officeName"  :label="$t('shopAdList.areaName')"></el-table-column>
-        <el-table-column prop="shopName"  :label="$t('shopAdList.shopName')"></el-table-column>
+        <el-table-column column-key="id" fixed prop="formatId" :label="$t('shopAdList.code')" sortable width=120></el-table-column>
+        <el-table-column column-key="officeId" prop="officeName"  :label="$t('shopAdList.areaName')" sortable></el-table-column>
+        <el-table-column column-key="shopId" prop="shopName"  :label="$t('shopAdList.shopName')" sortable></el-table-column>
         <el-table-column prop="specialArea" :label="$t('shopAdList.specialArea')">
           <template scope="scope">
             <el-tag :type="scope.row.specialArea ? 'primary' : 'danger'">{{scope.row.specialArea | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="shopAdTypeName" :label="$t('shopAdList.shopAdType')" width="120"></el-table-column>
+        <el-table-column column-key="shopAdTypeId" prop="shopAdTypeName" :label="$t('shopAdList.shopAdType')" sortable width="120"></el-table-column>
         <el-table-column prop="lengthWidthQty" :label="$t('shopAdList.lengthAndWidthAndQty')" width="120"></el-table-column>
         <el-table-column prop="area" :label="$t('shopAdList.totalArea')"></el-table-column>
-        <el-table-column prop="price" :label="$t('shopAdList.price')"></el-table-column>
+        <el-table-column prop="price" :label="$t('shopAdList.price')" sortable></el-table-column>
         <el-table-column prop="content" :label="$t('shopAdList.content')" width="120"></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('shopAdList.processStatus')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('expressOrderList.createdBy')"></el-table-column>
+        <el-table-column prop="processStatus" :label="$t('shopAdList.processStatus')" sortable></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('expressOrderList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('expressOrderList.createdDate')" width="120" sortable></el-table-column>
-        <el-table-column prop="lastModifiedByName" :label="$t('expressOrderList.lastModifiedBy')"></el-table-column>
+        <el-table-column column-key="lastModifiedBy" prop="lastModifiedByName" :label="$t('expressOrderList.lastModifiedBy' )" sortable></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('expressOrderList.lastModifiedDate')" sortable width=120></el-table-column>
         <el-table-column prop="remarks" :label="$t('expressOrderList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
           <template scope="scope">
-            <el-button type="text" size="small" v-permit="'crm:shopAd:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopAd:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopAd:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:shopAd:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:shopAd:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button></div>
+            <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus !== '已通过'&&scope.row.processStatus !== '未通过'" v-permit="'crm:shopAd:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.isEditable" v-permit="'crm:shopAd:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button></div>
+            <div class="action" v-if="scope.row.isEditable" v-permit="'crm:shopAd:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -84,7 +84,12 @@
   import depotSelect from 'components/future/depot-select';
   import boolSelect from 'components/common/bool-select';
   export default {
-    components:{officeSelect,accountSelect,depotSelect,boolSelect},
+    components:{
+      officeSelect,
+      accountSelect,
+      depotSelect,
+      boolSelect
+    },
     data() {
       return {
         multiple:true,
@@ -93,8 +98,9 @@
         submitData:{
           page:0,
           size:25,
-          officeId:"",
+          sort:"id,DESC",
           id:"",
+          officeId:"",
           shopId:"",
           specialArea:'',
           shopAdTypeId:'',
@@ -119,7 +125,7 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData)
+        util.copyValue(this.formData,this.submitData);
         util.setQuery("shopAdList",this.submitData);
         axios.get('/api/ws/future/layout/shopAd',{params:this.submitData}).then((response) => {
           this.page = response.data;
@@ -130,9 +136,10 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
+
       },search() {
         this.formVisible = false;
         this.pageRequest();
@@ -142,40 +149,62 @@
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       },batchPass(){
-      axios.get('/api/ws/future/layout/shopAd/batchAudit',{params:{pass:true,ids : this.multipleSelection}}).then((response) =>{
-        this.$message(response.data.message);
-        this.pageRequest();
-      })
+        if(!this.multipleSelection || this.multipleSelection.length < 1){
+          this.$message(this.$t('shopAdList.noSelectionFound'));
+          return ;
+        }
+        util.confirmBeforeBatchPass(this).then(() => {
+          axios.get('/api/ws/future/layout/shopAd/batchAudit', {
+            params: {
+              pass: true,
+              ids: this.multipleSelection
+            }
+          }).then((response) => {
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        }).catch(()=>{});
     },batchBack(){
-        axios.get('/api/ws/future/layout/shopAd/batchAudit',{params:{pass:false,ids : this.multipleSelection}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        })
+        if(!this.multipleSelection || this.multipleSelection.length < 1){
+          this.$message(this.$t('shopAdList.noSelectionFound'));
+          return ;
+        }
+        util.confirmBeforeBatchPass(this).then(() => {
+          axios.get('/api/ws/future/layout/shopAd/batchAudit', {
+            params: {
+              pass: false,
+              ids: this.multipleSelection
+            }
+          }).then((response) => {
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        }).catch(()=>{});
       },itemAdd(){
-        this.$router.push({ name: 'shopAdForm'})
+        this.$router.push({ name: 'shopAdForm'});
       },itemAction:function(id,action){
         if(action=="edit") {
-          this.$router.push({ name: 'shopAdForm', query: { id: id }})
+          this.$router.push({ name: 'shopAdForm', query: { id: id }});
         }else if(action=="detail"){
-          this.$router.push({ name: 'shopAdDetail', query: { id: id,action:action}})
+          this.$router.push({ name: 'shopAdDetail', query: { id: id,action:action}});
         }else if(action =="audit"){
-            this.$router.push({name:'shopAdDetail',query:{id:id,action:action}})
+            this.$router.push({name:'shopAdDetail',query:{id:id,action:action}});
         }else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
-            axios.get('/ws/future/layout/shopAd/delete', {params: {id: id}}).then((response) => {
+            axios.get('/api/ws/future/layout/shopAd/delete', {params: {id: id}}).then((response) => {
               this.$message(response.data.message);
               this.pageRequest();
-            })
+            });
           })
         }
       },handleSelectionChange(val) {
         var arrs=[];
         for(var i in val){
-          arrs.push(val[i].id)
-        };
+          arrs.push(val[i].id);
+        }
         this.multipleSelection=arrs;
       },checkSelectable(row) {
-        return row.processStatus !== '已通过'
+        return row.processStatus !== '已通过';
       }
     },created () {
         this.pageHeight = window.outerHeight -320;
@@ -183,7 +212,7 @@
           this.formData=response.data;
           util.copyValue(this.$route.query,this.formData);
           this.pageRequest();
-      })
+        });
     }
   };
 </script>

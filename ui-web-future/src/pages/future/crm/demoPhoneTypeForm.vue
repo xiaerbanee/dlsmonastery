@@ -76,9 +76,9 @@
           if (valid) {
             axios.post('/api/ws/future/crm/demoPhoneType/save', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
+            this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'demoPhoneTypeList',query:util.getQuery("demoPhoneTypeList")})
               }
@@ -97,17 +97,23 @@
             this.remoteLoading = false;
           });
         }
+      },initPage(){
+        axios.get('/api/ws/future/crm/demoPhoneType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+          this.inputForm.demoPhoneTypeOfficeList=response.data.demoPhoneTypeOfficeList;
+          this.inputForm.productTypeIdList=util.getIdList(response.data.productTypeList)
+          if(response.data.productTypeList!=null && response.data.productTypeList.length >0){
+            this.productTypes = response.data.productTypeList;
+            this.inputForm.productIdList = util.getIdList(this.products);
+          }
+        });
       }
     },created(){
-      axios.get('/api/ws/future/crm/demoPhoneType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
-        this.inputForm.demoPhoneTypeOfficeList=response.data.demoPhoneTypeOfficeList;
-        this.inputForm.productTypeIdList=util.getIdList(response.data.productTypeList)
-        if(response.data.productTypeList!=null && response.data.productTypeList.length >0){
-          this.productTypes = response.data.productTypeList;
-          this.inputForm.productIdList = util.getIdList(this.products);
-        }
-      })
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

@@ -59,17 +59,17 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('bankInList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column fixed prop="formatId" :label="$t('bankInList.id')" sortable width="160"></el-table-column>
-        <el-table-column prop="shopName" :label="$t('bankInList.shopName')" sortable></el-table-column>
-        <el-table-column prop="shopClientName" :label="$t('bankInList.shopClientName')" width="140" sortable></el-table-column>
-        <el-table-column prop="bankName" :label="$t('bankInList.bankName')" sortable></el-table-column>
-        <el-table-column prop="amount" :label="$t('bankInList.amount')" sortable></el-table-column>
-        <el-table-column prop="serialNumber" :label="$t('bankInList.serialNumber')"sortable></el-table-column>
+        <el-table-column fixed prop="formatId" column-key="id"  :label="$t('bankInList.id')" sortable width="160"></el-table-column>
+        <el-table-column prop="shopName" column-key="shopId"  :label="$t('bankInList.shopName')" sortable></el-table-column>
+        <el-table-column prop="shopClientName"  :label="$t('bankInList.shopClientName')" width="140" ></el-table-column>
+        <el-table-column prop="bankName" column-key="bankId"  :label="$t('bankInList.bankName')" sortable></el-table-column>
+        <el-table-column prop="amount" :label="$t('bankInList.amount')" ></el-table-column>
+        <el-table-column prop="serialNumber" :label="$t('bankInList.serialNumber')" sortable></el-table-column>
         <el-table-column prop="billDate" :label="$t('bankInList.billDate')" width="140" sortable></el-table-column>
         <el-table-column prop="inputDate" :label="$t('bankInList.inputDate')" width="140" sortable></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('bankInList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('bankInList.createdDate')"></el-table-column>
-        <el-table-column prop="outCode" :label="$t('bankInList.outCode')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('bankInList.createdBy')" ></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('bankInList.createdDate')" ></el-table-column>
+        <el-table-column prop="outCode" :label="$t('bankInList.outCode')" sortable></el-table-column>
         <el-table-column prop="processStatus" :label="$t('bankInList.processStatus')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('bankInList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('bankInList.operation')">
@@ -102,6 +102,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           id:'',
           shopName:"",
           billDateRange:"",

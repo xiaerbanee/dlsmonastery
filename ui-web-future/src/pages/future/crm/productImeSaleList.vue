@@ -39,11 +39,11 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeSaleList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column  prop="shopName" :label="$t('productImeSaleList.saleShopName')" width="180" ></el-table-column>
+        <el-table-column prop="shopName" column-key="shopId" :label="$t('productImeSaleList.saleShopName')" width="180" sortable></el-table-column>
         <el-table-column prop="productImeIme"  :label="$t('productImeSaleList.ime')" ></el-table-column>
         <el-table-column prop="productImeProductName" :label="$t('productImeSaleList.productName')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('productImeSaleList.saleDate')"></el-table-column>
-        <el-table-column prop="employeeName" :label="$t('productImeSaleList.employeeName')"></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('productImeSaleList.saleDate')" sortable></el-table-column>
+        <el-table-column prop="employeeName" column-key="employeeId" :label="$t('productImeSaleList.employeeName')" sortable></el-table-column>
         <el-table-column prop="isBack" :label="$t('productImeSaleList.isBack')" width="70">
           <template scope="scope">
             <el-tag :type="scope.row.isBack ? 'primary' : 'danger'">{{scope.row.isBack | bool2str}}</el-tag>
@@ -73,6 +73,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           employeeId:'',
           createdDateRange:"",
           shopName:"",

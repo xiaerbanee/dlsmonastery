@@ -1789,6 +1789,6 @@ export default {
     billQty: "jumlah nota",
     shippedQty: "jumlah pengiriman barang",
     leftQty: "待发货数",
-    sendQty: "发货数",
+    shipQty: "发货数",
   }
 }

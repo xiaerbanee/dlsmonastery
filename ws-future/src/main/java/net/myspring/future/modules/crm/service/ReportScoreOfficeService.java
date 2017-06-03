@@ -24,8 +24,4 @@ public class ReportScoreOfficeService {
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
-
-    public ReportScoreOfficeQuery getQuery(ReportScoreOfficeQuery reportScoreOfficeQuery){
-        return null;
-    }
 }

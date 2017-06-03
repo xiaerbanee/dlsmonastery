@@ -21,7 +21,6 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.*
 import javax.persistence.EntityManager
 
 
@@ -29,15 +28,7 @@ interface PriceChangeImeRepository : BaseRepository<PriceChangeIme, String>,Pric
 
     fun findByPriceChangeId(priceChangeId: String): MutableList<PriceChangeIme>
 
-    @Query("""
-      select t
-      from #{#entityName} t
-      where t.enabled = 1
-      and t.priceChangeId = :priceChangeId
-      and t.saleDate < :maxDateTime
-      and t.uploadDate is null
-    """)
-    fun findCheckList(@Param("priceChangeId")priceChangeId: String,@Param("maxDateTime")maxDateTime:LocalDate):MutableList<PriceChangeIme>
+
 
     fun findByPriceChangeIdAndUploadDateIsNotNullAndEnabledIsTrue(priceChangeId: String): MutableList<PriceChangeIme>
 
@@ -48,27 +39,11 @@ interface PriceChangeImeRepository : BaseRepository<PriceChangeIme, String>,Pric
 
 
 interface PriceChangeImeRepositoryCustom{
-
-    fun countByPriceChangeId(priceChangeId:String):Int
-
     fun findPage(pageable : Pageable, priceChangeImeQuery : PriceChangeImeQuery): Page<PriceChangeImeDto>
 
 }
 
 class PriceChangeImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): PriceChangeImeRepositoryCustom {
-
-    override fun countByPriceChangeId(priceChangeId:String):Int{
-        return namedParameterJdbcTemplate.queryForObject("""
-            SELECT
-	            COUNT(*)
-            FROM
-	            crm_price_change_ime t
-            WHERE
-	            t.enabled = 1
-            AND t.price_change_id = :priceChangeId
-        """,Collections.singletonMap("priceChangeId",priceChangeId),Int::class.java)
-    }
-
     override fun findPage(pageable : Pageable, priceChangeImeQuery: PriceChangeImeQuery): Page<PriceChangeImeDto> {
 
         val sb = StringBuilder("""

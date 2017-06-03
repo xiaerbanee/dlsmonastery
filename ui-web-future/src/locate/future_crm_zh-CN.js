@@ -1690,7 +1690,7 @@ export default {
     billQty: "开单数",
     shippedQty: "已发货数",
     leftQty: "待发货数",
-    sendQty: "发货数",
+    shipQty: "发货数",
   },
   dataReportList: {
     dataReportList: "合计报表",

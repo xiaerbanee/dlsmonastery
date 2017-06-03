@@ -24,7 +24,7 @@ import javax.persistence.EntityManager
  */
 @CacheConfig(cacheNames = arrayOf("menuCategorys"))
 interface  MenuCategoryRepository :BaseRepository<MenuCategory,String>,MenuCategoryRepositoryCustom{
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(menuCategory: MenuCategory): MenuCategory
 
     @Cacheable

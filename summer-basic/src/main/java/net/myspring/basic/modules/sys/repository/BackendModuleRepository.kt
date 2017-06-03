@@ -26,7 +26,7 @@ interface  BackendModuleRepository:BaseRepository<BackendModule,String>,BackendM
     @Cacheable
     override fun findOne(id: String): BackendModule
 
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(backendModule: BackendModule): BackendModule
 
     @Query("""

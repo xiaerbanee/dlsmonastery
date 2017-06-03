@@ -48,9 +48,9 @@
             util.copyValue(this.inputForm,this.submitData)
             axios.post('/api/ws/future/basic/client/save', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
+            this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'clientList',query:util.getQuery("clientList")})
               }
@@ -61,12 +61,18 @@
             this.submitDisabled = false;
           }
         })
+      },initPage(){
+        if(!this.isCreate){
+          axios.get('/api/ws/future/basic/client/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm=response.data
+        });
+        }
       }
     },created(){
-      if(!this.isCreate){
-        axios.get('/api/ws/future/basic/client/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm=response.data
-        })
+     this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
     }
   }

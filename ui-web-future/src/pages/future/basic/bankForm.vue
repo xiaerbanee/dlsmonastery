@@ -44,31 +44,39 @@
       },
       methods:{
         formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData)
+              this.submitDisabled = true;
+              util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/ws/future/basic/bank/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                if(this.isCreate){
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
-                  this.$router.push({name:'bankList',query:util.getQuery("bankList")})
+                this.submitDisabled = false;
+                if(response.data.success) {
+                  if (this.isCreate) {
+                    form.resetFields();
+                  } else {
+                    this.$router.push({name: 'bankList', query: util.getQuery("bankList")})
+                  }
                 }
-              }).catch(function () {
+              }).catch(() => {
                 this.submitDisabled = false;
               });
-            }else{
-              this.submitDisabled = false;
             }
-          })
-        }
-      },created(){
+          });
+        },
+        initPage(){
           axios.get('/api/ws/future/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm=response.data;
-          })
+        });
+        }
+      },created(){
+        this.initPage();
+      },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
+    }
     }
 </script>

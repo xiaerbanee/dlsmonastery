@@ -53,8 +53,8 @@ public class PriceChangeImeController {
 
     @RequestMapping(value = "save")
     public RestResponse save(PriceChangeImeUploadForm priceChangeImeUploadForm) {
-        String info = priceChangeImeService.save(priceChangeImeUploadForm);
-        return new RestResponse(info, ResponseCodeEnum.saved.name());
+        priceChangeImeService.save(priceChangeImeUploadForm);
+        return new RestResponse("上传成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "imageUpload")

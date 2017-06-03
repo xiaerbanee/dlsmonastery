@@ -133,17 +133,22 @@
           }
         }
         this.filterShopAllotDetailList = tempList;
-      }
+      },initPage(){
+          if(this.$route.query.id){
+            axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {id:this.$route.query.id}}).then((response)=>{
+              this.setShopAllotDetailList(response.data);
+            });
+          }
+          axios.get('/api/ws/future/crm/shopAllot/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.shopAllot = response.data;
+          });
+        }
     },created(){
-
-      if(this.$route.query.id){
-        axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.setShopAllotDetailList(response.data);
-        });
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
-      axios.get('/api/ws/future/crm/shopAllot/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.shopAllot = response.data;
-      });
     }
   }
 </script>
