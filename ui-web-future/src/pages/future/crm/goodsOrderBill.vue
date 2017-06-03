@@ -24,6 +24,9 @@
             <el-form-item :label="$t('goodsOrderBill.shipType')" >
               {{inputForm.shipType}}
             </el-form-item>
+            <el-form-item label="网络制式" >
+              {{inputForm.netType}}
+            </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.goodsOrderRemarks')" prop="remarks">
               <el-input type="textarea" v-model="inputForm.remarks"></el-input>
             </el-form-item>
@@ -81,7 +84,7 @@
         <el-table-column prop="qty" :label="$t('goodsOrderBill.qty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('goodsOrderBill.billQty')" >
           <template scope="scope">
-            <input type="text" v-model="scope.row.billQty" @change="refreshSummary()" class="el-input__inner"/>
+            <input type="text" v-model="scope.row.billQty" @change="initSummary()" class="el-input__inner"/>
           </template>
         </el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderBill.price')">
@@ -118,12 +121,12 @@
           storeId:"",
           billDate: '',
           expressCompanyId:"",
-          expressContator:"",
-          expressAddress:"",
-          expressMobilePhone:"",
           syn:'',
+          contator:"",
+          address:"",
+          mobilePhone:"",
           remarks:"",
-          goodsOrderDetailList:[],
+          goodsOrderBillDetailFormList:[]
         },
         summary:"",
         rules: {},
@@ -132,6 +135,35 @@
     },
     methods:{
       formSubmit(){
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+
+        form.validate((valid) => {
+          if (valid) {
+            util.copyValue(this.inputForm,this.submitData);
+            var  goodsOrderBillDetailFormList = new Array();
+            for(var index in this.filterDetailList) {
+              var filterDetail = this.filterDetailList[index];
+              if(util.isNotBlank(filterDetail.goodsOrderDetailId) || util.isNotBlank(filterDetail.billQty)) {
+                goodsOrderBillDetailFormList.push(filterDetail);
+              }
+            }
+            this.submitData.goodsOrderBillDetailFormList = goodsOrderBillDetailFormList;
+            axios.post('/api/ws/future/crm/goodsOrder/bill', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+              this.$message(response.data.message);
+              this.submitDisabled = false;
+              if(this.isCreate){
+                form.resetFields();
+              } else {
+                this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
+              }
+            }).catch(function () {
+              this.submitDisabled = false;
+            });
+          }else{
+            this.submitDisabled = false;
+          }
+        })
 
       },filterProducts(){
         let val=this.filterValue;
@@ -152,14 +184,30 @@
         }
         this.filterDetailList = tempList;
       },initSummary(){
-
+        var totalQty = 0;
+        var totalBillQty = 0;
+        var totalAmount = 0;
+        var totalBillAmount = 0;
+        for(var index in this.filterDetailList) {
+          var filterDetail = this.filterDetailList[index];
+          if(util.isNotBlank(filterDetail.qty)) {
+            totalQty  = totalQty + filterDetail.qty*1;
+            totalAmount = totalAmount + (filterDetail.qty*1)*(filterDetail.price*1);
+          }
+          if(util.isNotBlank(filterDetail.billQty)) {
+            totalBillQty  = totalBillQty + filterDetail.billQty*1;
+            totalBillAmount = totalBillAmount + (filterDetail.billQty*1)*(filterDetail.price*1);
+          }
+        }
+        this.summary = "总开单数为：" + totalBillQty + "，总开单金额为：" + totalBillAmount + ",总订货数为：" + totalQty + ",总订货金额为：" + totalAmount;
       },storeChange(){
-
+          //设置库存
       }
     },created(){
       axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
-        this.filterProducts()
+        this.filterProducts();
+        this.initSummary();
         axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
           this.shop = response.data;
         });

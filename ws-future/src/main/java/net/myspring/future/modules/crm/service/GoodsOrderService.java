@@ -355,9 +355,12 @@ public class GoodsOrderService {
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
 
         GoodsOrderBillForm goodsOrderBillForm = new GoodsOrderBillForm();
+        goodsOrderBillForm.setId(goodsOrder.getId());
         goodsOrderBillForm.setBillDate(LocalDate.now());
         goodsOrderBillForm.setStoreId(goodsOrder.getStoreId());
+        goodsOrderBillForm.setShopId(goodsOrder.getShopId());
         goodsOrderBillForm.setExpressCompanyId(expressOrder.getExpressCompanyId());
+        goodsOrderBillForm.setNetType(goodsOrder.getNetType());
 
         //是否自动同步，根据门店是否包含client
         goodsOrderBillForm.setSyn(false);
@@ -396,8 +399,8 @@ public class GoodsOrderService {
         //价格体系
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
-            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId())) {
-                Product product = productMap.get(pricesystemDetail.getProductId());
+            Product product = productMap.get(pricesystemDetail.getProductId());
+            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && product.getNetType().equals(goodsOrder.getNetType())) {
                 GoodsOrderBillDetailForm goodsOrderBillDetailForm = new GoodsOrderBillDetailForm();
                 goodsOrderBillDetailForm.setProductId(product.getId());
                 goodsOrderBillDetailForm.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
