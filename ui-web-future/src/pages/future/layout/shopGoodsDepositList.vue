@@ -6,6 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopGoodsDeposit:edit'">{{$t('shopGoodsDepositList.add')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopGoodsDeposit:audit'">{{$t('shopGoodsDepositList.batchPass')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopGoodsDeposit:view'">{{$t('shopGoodsDepositList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData"  v-permit="'crm:shopGoodsDeposit:view'">{{$t('shopGoodsDepositList.export')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('shopGoodsDepositList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -107,7 +108,7 @@
           amount:{label:this.$t('shopGoodsDepositList.Deposit')},
           outBillType:{label:this.$t('shopGoodsDepositList.outBillType')}
         },
-        selects:new Array(),
+        selects:[],
         formLabelWidth: '120px',
         formVisible: false,
       };
@@ -135,9 +136,9 @@
       },itemAdd(){
         this.$router.push({ name: 'shopGoodsDepositForm'})
       },itemAction:function(id,action){
-        if(action=="edit") {
+        if(action==="edit") {
           this.$router.push({ name: 'shopGoodsDepositForm', query: { id: id}});
-        } else if(action=="delete") {
+        } else if(action==="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/crm/shopGoodsDeposit/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
@@ -145,24 +146,44 @@
             });
           });
         }
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/crm/shopGoodsDeposit/export',{params:this.submitData}).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});
+
       } ,selectionChange(selection){
         console.log(selection);
-        this.selects=new Array();
-        for(var key in selection){
-          this.selects.push(selection[key].id)
+        this.selects=[];
+        for(let each of selection){
+          this.selects.push(each.id)
         }
       },batchPass(){
-        axios.get('/api/ws/future/crm/shopGoodsDeposit/batchAudit',{params:{ids:this.selects}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        });
+
+        if(!this.selects || this.selects.length < 1){
+          this.$message(this.$t('shopGoodsDepositList.noSelectionFound'));
+          return ;
+        }
+
+        util.confirmBeforeBatchPass(this).then(() => {
+          this.submitDisabled = true;
+          this.pageLoading = true;
+          axios.get('/api/ws/future/crm/shopGoodsDeposit/batchAudit',{params:{ids:this.selects}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageLoading = false;
+            this.submitDisabled = false;
+            this.pageRequest();
+          });
+        }).catch(()=>{});
+
       },checkSelectable(row) {
         return row.status !== '已通过'
       }
 
     },created () {
 
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/shopGoodsDeposit/getQuery').then((response) =>{
         that.formData=response.data;

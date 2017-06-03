@@ -3,7 +3,9 @@ package net.myspring.future.modules.layout.repository
 import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit
+import net.myspring.future.modules.layout.dto.ShopAllotDto
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto
+import net.myspring.future.modules.layout.dto.ShopGoodsDepositSumDto
 import net.myspring.future.modules.layout.web.query.ShopGoodsDepositQuery
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -11,10 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -38,19 +42,41 @@ interface ShopGoodsDepositRepository : BaseRepository<ShopGoodsDeposit,String>,S
 
 interface ShopGoodsDepositRepositoryCustom{
     fun findPage(pageable: Pageable, shopGoodsDepositQuery: ShopGoodsDepositQuery): Page<ShopGoodsDepositDto>
+
+
+    fun findShopGoodsDepositSumDtoList(companyId: String): List<ShopGoodsDepositSumDto>
 }
 
 class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopGoodsDepositRepositoryCustom{
+    override fun findShopGoodsDepositSumDtoList(companyId: String): List<ShopGoodsDepositSumDto> {
+
+        return namedParameterJdbcTemplate.query("""
+       SELECT
+            t2.id shopId,
+            t2.area_id shopAreaId,
+            sum(t1.amount) totalAmount
+        FROM
+            crm_shop_goods_deposit t1,
+            crm_depot t2
+        WHERE
+            t1.enabled = 1
+            AND t1.company_id = :companyId
+            AND t1.status='已通过'
+            AND t1.shop_id = t2.id
+        GROUP BY
+            t2.id,  t2.area_id
+          """, Collections.singletonMap("companyId", companyId), BeanPropertyRowMapper(ShopGoodsDepositSumDto::class.java))
+    }
 
     override fun findPage(pageable: Pageable, shopGoodsDepositQuery: ShopGoodsDepositQuery): Page<ShopGoodsDepositDto> {
 
 
         val sb = StringBuffer()
         sb.append("""
-        select  depot.office_id depotOfficeId, t1.*
-        from crm_shop_goods_deposit t1, crm_depot depot
+        select  shop.office_id shopOfficeId, shop.area_id shopAreaId, t1.*
+        from crm_shop_goods_deposit t1, crm_depot shop
         where t1.enabled = 1
-        and t1.shop_id = depot.id
+        and t1.shop_id = shop.id
         """)
         if(StringUtils.isNotBlank(shopGoodsDepositQuery.remarks)){
             sb.append("""  and t1.out_code like concat('%',:remarks,'%')  """)
@@ -71,7 +97,7 @@ class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJd
             sb.append("""  and t1.out_bill_type = :outBillType  """)
         }
         if(StringUtils.isNotBlank(shopGoodsDepositQuery.shopName)){
-            sb.append("""  and depot.name  like concat('%', :shopName,'%')  """)
+            sb.append("""  and shop.name  like concat('%', :shopName,'%')  """)
         }
         if(StringUtils.isNotBlank(shopGoodsDepositQuery.bankName)){
             sb.append("""
