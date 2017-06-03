@@ -60,9 +60,9 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/basic/hr/position/save',qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
+              this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'positionList',query:util.getQuery("positionList")})
               }
@@ -73,14 +73,20 @@
             this.submitDisabled = false;
           }
         })
+      },initPage() {
+        axios.get('/api/basic/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm=response.data;
+        })
+        axios.get('/api/basic/hr/position/getForm').then((response)=>{
+          this.inputProperty=response.data;
+        })
       }
     },created(){
-      axios.get('/api/basic/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm=response.data;
-      })
-      axios.get('/api/basic/hr/position/getForm').then((response)=>{
-        this.inputProperty=response.data;
-      })
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

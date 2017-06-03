@@ -1,19 +1,17 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.crm.repository.PriceChangeRepository;
-import net.myspring.future.modules.crm.domain.PriceChange;
-import net.myspring.future.modules.crm.domain.PriceChangeIme;
-import net.myspring.future.modules.crm.domain.ProductIme;
+import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.crm.dto.ProductImeDto;
+import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
-import net.myspring.future.modules.crm.repository.PriceChangeImeRepository;
-import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeUploadForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
@@ -38,6 +36,10 @@ public class PriceChangeImeService {
     private PriceChangeImeRepository priceChangeImeRepository;
     @Autowired
     private ProductImeRepository productImeRepository;
+    @Autowired
+    private ProductImeSaleRepository productImeSaleRepository;
+    @Autowired
+    private ProductImeUploadRepository productImeUploadRepository;
     @Autowired
     private PriceChangeRepository priceChangeRepository;
     @Autowired
@@ -71,16 +73,11 @@ public class PriceChangeImeService {
     }
 
     public PriceChangeImeForm getForm(PriceChangeImeForm priceChangeImeForm){
-        List<PriceChange> priceChange = priceChangeRepository.findByEnabledIsTrueOrderByIdDesc();
+        List<PriceChange> priceChange = priceChangeRepository.findByPriceChangeIme(PriceChangeStatusEnum.上报中.name());
         priceChangeImeForm.setPriceChangeDtos(BeanUtil.map(priceChange, PriceChangeDto.class));
         return priceChangeImeForm;
     }
 
-    public void save(PriceChangeImeUploadForm priceChangeImeUploadForm){
-        PriceChange priceChange = priceChangeRepository.findOne(priceChangeImeUploadForm.getPriceChangeId());
-        List<List<String>> imeUploadList = priceChangeImeUploadForm.getImeUploadList();
-        checkUploadIme(priceChange,imeUploadList);
-    }
 
     public void imageUpload(PriceChangeImeForm priceChangeImeForm){
         PriceChangeIme priceChangeIme = priceChangeImeRepository.findOne(priceChangeImeForm.getId());
@@ -104,17 +101,22 @@ public class PriceChangeImeService {
         }
     }
 
-    public String checkUploadIme(PriceChange priceChange,List<List<String>> imeUploadList){
+    public String save(PriceChangeImeUploadForm priceChangeImeUploadForm){
+        String priceChangeId = priceChangeImeUploadForm.getPriceChangeId();
+        List<List<String>> imeUploadList = priceChangeImeUploadForm.getImeUploadList();
         if(CollectionUtil.isEmpty(imeUploadList)){
             return null;
         }
         List<String> shopNameList = new ArrayList<>();
         List<String> imeList = new ArrayList<>();
+        List<String> remarksList = new ArrayList<>();
         for(List<String> row:imeUploadList){
             String shopName = StringUtils.toString(row.get(0)).trim();
             String ime = StringUtils.toString(row.get(1)).trim();
+            String remarks = StringUtils.toString(row.get(2)).trim();
             shopNameList.add(shopName);
             imeList.add(ime);
+            remarksList.add(remarks);
         }
         if(shopNameList == null||imeList == null){
             return null;
@@ -123,9 +125,45 @@ public class PriceChangeImeService {
             return null;
         }
 
-        //检查门店，串码在系统中是否存在
-        List<Depot> depots = depotRepository.findByEnabledIsTrueAndNameIn(shopNameList);
-        List<ProductIme> productImes = productImeRepository.findByImeList(imeList);
-        return null;
+        //检查门店、串码在系统中是否存在
+
+        List<String> existShops = CollectionUtil.extractToList(depotRepository.findByNameList(shopNameList),"name");
+        List<String> existImes = CollectionUtil.extractToList(productImeRepository.findByImeList(imeList),"ime");
+        if(existImes.size()!=imeList.size() || existShops.size()!=shopNameList.size()){
+            String notExist = "";
+            for(String ime:imeList){
+                if(!existImes.contains(ime)){
+                    StringUtils.join(ime,CharConstant.COMMA);
+                }
+            }
+            for (String shopName:shopNameList){
+                if(!existShops.contains(shopName)){
+                    StringUtils.join(shopName,CharConstant.COMMA);
+                }
+            }
+            return notExist+"不存在,保存失败";
+        }else{
+            List<PriceChangeIme> priceChangeImes = new ArrayList<>();
+            List<ProductImeDto> productImeDtos = productImeRepository.findDtoListByImeList(existImes,RequestUtils.getCompanyId());
+            if(productImeDtos == null){
+                return "保存失败";
+            }
+            List<Depot> depots = depotRepository.findByNameList(shopNameList);
+            for(Integer i = 0;i<imeList.size();i++){
+                PriceChangeIme priceChangeIme = new PriceChangeIme();
+                priceChangeIme.setPriceChangeId(priceChangeId);
+                priceChangeIme.setProductImeId(productImeDtos.get(i).getId());
+                priceChangeIme.setShopId(depots.get(i).getId());
+                priceChangeIme.setSaleDate(productImeDtos.get(i).getProductImeSaleCreatedDate());
+                priceChangeIme.setUploadDate(productImeDtos.get(i).getProductImeUploadCreatedDate());
+                priceChangeIme.setStatus(AuditStatusEnum.已通过.toString());
+                priceChangeIme.setRemarks(remarksList.get(i));
+                priceChangeIme.setIsCheck(false);
+                priceChangeImes.add(priceChangeIme);
+            }
+            priceChangeImeRepository.save(priceChangeImes);
+            return "保存成功";
+        }
+
     }
 }

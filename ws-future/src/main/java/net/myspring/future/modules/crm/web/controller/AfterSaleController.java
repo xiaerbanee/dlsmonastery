@@ -6,6 +6,8 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.crm.domain.AfterSale;
+import net.myspring.future.modules.crm.domain.AfterSaleDetail;
+import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.AfterSaleInputDto;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
 import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
@@ -15,6 +17,7 @@ import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +40,6 @@ public class AfterSaleController {
     private AfterSaleService afterSaleService;
     @Autowired
     private ProductImeService productImeService;
-    @Autowired
-    private ProductService productService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AfterSaleDto> list(Pageable pageable, AfterSaleQuery afterSaleQuery) {
@@ -59,6 +60,16 @@ public class AfterSaleController {
                 afterSaleInputDto.setDepotName(productIme.getDepotName());
                 afterSaleInputList.add(afterSaleInputDto);
             }
+        }
+        return afterSaleInputList;
+    }
+
+    @RequestMapping(value = "areaInputUpdateData", method = RequestMethod.GET)
+    public List<AfterSaleInputDto> areaInputUpdateData(String imeStr) {
+        List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
+        if(StringUtils.isNotBlank(imeStr)){
+            List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+            afterSaleInputList=afterSaleService.areaInputUpdateData(imeList);
         }
         return afterSaleInputList;
     }

@@ -182,9 +182,9 @@
                   axios.post('/api/basic/hr/account/save', qs.stringify(this.accountSubmitData)).then((response)=> {
                     this.$message("账户"+response.data.message);
                   });
+                  this.submitDisabled = false;
                   if(this.isCreate){
                     employeeForm.resetFields();
-                    this.submitDisabled = false;
                   } else {
                     this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
                   }
@@ -197,19 +197,25 @@
             this.submitDisabled = false;
           }
         })
+      },initPage() {
+        axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.employeeForm=response.data;
+          this.employeeForm.sex=response.data.sex=="男"?1:0;
+          axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
+            this.accountForm=response.data;
+          })
+        })
+        axios.get('/api/basic/hr/employee/getForm').then((response)=>{
+          this.inputProperty=response.data
+          console.log(this.inputProperty)
+        })
       }
     },created(){
-      axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.employeeForm=response.data;
-        this.employeeForm.sex=response.data.sex=="男"?1:0;
-        axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
-          this.accountForm=response.data;
-        })
-      })
-      axios.get('/api/basic/hr/employee/getForm').then((response)=>{
-          this.inputProperty=response.data
-        console.log(this.inputProperty)
-      })
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

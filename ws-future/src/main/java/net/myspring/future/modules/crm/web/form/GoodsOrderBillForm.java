@@ -1,15 +1,12 @@
 package net.myspring.future.modules.crm.web.form;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.dto.NameValueDto;
 import net.myspring.common.form.BaseForm;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {

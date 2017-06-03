@@ -167,20 +167,26 @@
             this.inputForm.officeIdStr = "";
             this.isBusiness=true;
           }
-      }
-    }, created(){
-      axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
-        this.inputForm = response.data;
-        if(response.data.type =="SUPPORT" ){
+      },initPage() {
+        axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+          this.inputForm = response.data;
+          if(response.data.type =="SUPPORT" ){
             this.isBusiness=false;
             this.checked=response.data.businessIdList
-        }else {
+          }else {
             this.isBusiness=true;
-        }
-      })
-      axios.get('/api/basic/sys/office/getForm').then((response) => {
-        this.inputProperty = response.data;
-      })
+          }
+        })
+        axios.get('/api/basic/sys/office/getForm').then((response) => {
+          this.inputProperty = response.data;
+        })
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>
