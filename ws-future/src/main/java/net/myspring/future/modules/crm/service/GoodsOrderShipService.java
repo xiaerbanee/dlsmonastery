@@ -9,19 +9,24 @@ import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
+import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -30,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.LockModeType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +63,23 @@ public class GoodsOrderShipService {
     private DepotRepository depotRepository;
     @Autowired
     private ExpressRepository expressRepository;
+    @Autowired
+    private CacheUtils cacheUtils;
 
+    /**
+     * 查找货品发货表格所有数据（待发货，带签收，已完成）
+     * @param pageable
+     * @param goodsOrderQuery
+     * @return
+     */
+    public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
+        if (!StringUtils.isNotBlank(goodsOrderQuery.getStatus())){
+            goodsOrderQuery.setStatusList(Arrays.asList("待发货", "待签收", "已完成"));
+        }
+        Page<GoodsOrderDto> page = goodsOrderRepository.findAllShip(pageable,  goodsOrderQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
+    }
 
     public Map<String,Object> shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
        RestResponse restResponse =  new RestResponse("valid",ResponseCodeEnum.valid.name());
