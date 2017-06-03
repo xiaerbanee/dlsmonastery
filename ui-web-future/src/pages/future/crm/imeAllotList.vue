@@ -42,18 +42,18 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('imeAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column  prop="fromDepotName" :label="$t('imeAllotList.fromDepot')" width="150" ></el-table-column>
-        <el-table-column prop="toDepotName" :label="$t('imeAllotList.toDepot')"></el-table-column>
+        <el-table-column  prop="fromDepotName" column-key="fromDepotId"  :label="$t('imeAllotList.fromDepot')" width="150" sortable></el-table-column>
+        <el-table-column prop="toDepotName" column-key="toDepotId" :label="$t('imeAllotList.toDepot')" sortable></el-table-column>
         <el-table-column prop="productImeIme" :label="$t('imeAllotList.ime')"  ></el-table-column>
         <el-table-column prop="productImeProductName" :label="$t('imeAllotList.productName')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('imeAllotList.allotDate')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('imeAllotList.allotEmployee')"></el-table-column>
-        <el-table-column prop="status":label="$t('imeAllotList.status')" width="120">
+        <el-table-column prop="createdDate" :label="$t('imeAllotList.allotDate')" sortable></el-table-column>
+        <el-table-column prop="createdByName" column-key="createdBy" :label="$t('imeAllotList.allotEmployee')" sortable></el-table-column>
+        <el-table-column prop="status" :label="$t('imeAllotList.status')" width="120" >
           <template scope="scope">
             <el-tag :type="scope.row.status==='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="lastModifiedByName" :label="$t('imeAllotList.lastModifiedBy')"></el-table-column>
+        <el-table-column prop="lastModifiedByName" column-key="lastModifiedBy" :label="$t('imeAllotList.lastModifiedBy')" sortable></el-table-column>
         <el-table-column prop="enabled" :label="$t('imeAllotList.enabled')" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
@@ -87,6 +87,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           fromDepotName:'',
           toDepotName:'',
           crossArea:'',
@@ -182,7 +183,7 @@
 
     },created () {
 
-      const that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/imeAllot/getQuery').then((response) =>{
         that.formData=response.data;

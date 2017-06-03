@@ -49,15 +49,15 @@
       </el-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('storeAllotList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="formatId" :label="$t('storeAllotList.businessId')" sortable ></el-table-column>
-        <el-table-column prop="fromStoreName" :label="$t('storeAllotList.fromStore')"></el-table-column>
-        <el-table-column prop="toStoreName" :label="$t('storeAllotList.toStore')"></el-table-column>
-        <el-table-column prop="outCode" :label="$t('storeAllotList.outCode')" width="120"></el-table-column>
-        <el-table-column prop="status" :label="$t('storeAllotList.status')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('storeAllotList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('storeAllotList.createdDate')" width="120" sortable></el-table-column>
-        <el-table-column prop="lastModifiedByName" :label="$t('storeAllotList.lastModifiedBy')" width=120></el-table-column>
-        <el-table-column prop="lastModifiedDate" :label="$t('storeAllotList.lastModifiedDate')" sortable width=140></el-table-column>
+        <el-table-column fixed prop="formatId" column-key="businessId"   :label="$t('storeAllotList.businessId')" sortable ></el-table-column>
+        <el-table-column prop="fromStoreName" column-key="fromStoreId"  :label="$t('storeAllotList.fromStore')" sortable ></el-table-column>
+        <el-table-column prop="toStoreName" column-key="toStoreId" :label="$t('storeAllotList.toStore')" sortable ></el-table-column>
+        <el-table-column prop="outCode" :label="$t('storeAllotList.outCode')" width="120" sortable></el-table-column>
+        <el-table-column prop="status" :label="$t('storeAllotList.status')" sortable></el-table-column>
+        <el-table-column prop="createdByName" column-key="createdBy"  :label="$t('storeAllotList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('storeAllotList.createdDate')"  sortable></el-table-column>
+        <el-table-column prop="lastModifiedByName" column-key="lastModifiedBy" :label="$t('storeAllotList.lastModifiedBy')"  sortable></el-table-column>
+        <el-table-column prop="lastModifiedDate" :label="$t('storeAllotList.lastModifiedDate')" sortable ></el-table-column>
         <el-table-column prop="remarks" :label="$t('storeAllotList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('storeAllotList.operation')">
           <template scope="scope">
@@ -86,6 +86,9 @@
         page:{},
         formData:{},
         submitData:{
+          page:0,
+          size:25,
+          sort:"id,DESC",
           outCode:"",
           businessIds:'',
           status:'',

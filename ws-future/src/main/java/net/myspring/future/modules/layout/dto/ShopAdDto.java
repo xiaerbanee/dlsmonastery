@@ -26,20 +26,11 @@ public class ShopAdDto extends DataDto<ShopAd>{
     private BigDecimal length;
     private BigDecimal width;
     private Integer qty;
-    private String attachment;
     private BigDecimal price;
     private String content;
     private String processStatus;
     private String processPositionId;
     private String processInstanceId;
-
-    public String getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(String attachment) {
-        this.attachment = attachment;
-    }
 
     public String getProcessInstanceId() {
         return processInstanceId;

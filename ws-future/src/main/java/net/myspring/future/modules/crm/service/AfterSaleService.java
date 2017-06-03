@@ -10,14 +10,13 @@ import net.myspring.future.modules.crm.domain.AfterSale;
 import net.myspring.future.modules.crm.domain.AfterSaleDetail;
 import net.myspring.future.modules.crm.domain.AfterSaleFlee;
 import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.dto.*;
+import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
 import net.myspring.future.modules.crm.repository.AfterSaleDetailRepository;
 import net.myspring.future.modules.crm.repository.AfterSaleFleeRepository;
 import net.myspring.future.modules.crm.repository.AfterSaleRepository;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -50,21 +49,6 @@ public class AfterSaleService {
     public List<AfterSale> findByImeList(List<String> imeList) {
         List<AfterSale> afterSales = afterSaleRepository.findByBadProductImeIn(imeList);
         return afterSales;
-    }
-
-    public List<AfterSaleInputDto> areaInputUpdateData(List<String> imeList){
-        List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
-        List<AfterSaleDto> afterSaleList=afterSaleRepository.findDtoByBadProductImeIn(imeList);
-        List<AfterSaleDetailDto> afterSaleDetailList=afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList,"id"),"地区录入");
-        Map<String,AfterSaleDetailDto> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
-        for(AfterSaleDto afterSale:afterSaleList){
-            AfterSaleDetailDto afterSaleDetailDto = afterSaleDetailMap.get(afterSale.getId());
-            AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
-            ReflectionUtil.copyProperties(afterSale,afterSaleInputDto);
-            ReflectionUtil.copyProperties(afterSaleDetailDto,afterSaleInputDto);
-            afterSaleInputList.add(afterSaleInputDto);
-        }
-        return afterSaleInputList;
     }
 
     public List<AfterSaleCompanyDto> getFromCompanyData(List<String> imeList){
@@ -120,14 +104,10 @@ public class AfterSaleService {
                 switch (i) {
                     case 0:
                         if(StringUtils.isNotBlank(value)){
-                            if(AfterSaleTypeEnum.窜货机.name().equals(type)){
-                                afterSaleFlee.setIme(value);
-                            }else {
-                                ProductIme productIme =productImeMap.get(value);
-                                afterSale.setBadProductImeId(productIme.getId());
-                                afterSale.setBadProductId(productIme.getProductId());
-                                afterSale.setBadDepotId(productIme.getDepotId());
-                            }
+                            ProductIme productIme =productImeMap.get(value);
+                            afterSale.setBadProductImeId(productIme.getId());
+                            afterSale.setBadProductId(productIme.getProductId());
+                            afterSale.setBadDepotId(productIme.getDepotId());
                         }
                         break;
                     case 1:
@@ -177,15 +157,18 @@ public class AfterSaleService {
                         }
                         break;
                     case 10:
-                        afterSaleFlee.setAddress(value);
+                        afterSaleFlee.setIme(value);
                         break;
                     case 11:
-                        afterSaleFlee.setBuyAmount(new BigDecimal(value));
+                        afterSaleFlee.setAddress(value);
                         break;
                     case 12:
-                        afterSaleFlee.setContact(value);
+                        afterSaleFlee.setBuyAmount(new BigDecimal(value));
                         break;
                     case 13:
+                        afterSaleFlee.setContact(value);
+                        break;
+                    case 14:
                         afterSaleFlee.setMobilePhone(value);
                         break;
                     default:
