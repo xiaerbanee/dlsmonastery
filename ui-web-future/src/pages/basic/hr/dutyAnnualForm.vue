@@ -65,10 +65,10 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
+              this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
                 this.fileList = [];
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'dutyAnnualList',query:util.getQuery("dutyAnnualList")})
               }
@@ -89,9 +89,15 @@
         axios.get('/api/basic/hr/dutyAnnual/import/template').then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
-        }
-    },created(){
+      },initPage() {
 
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

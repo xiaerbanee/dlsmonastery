@@ -46,9 +46,9 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/backend/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
+                this.submitDisabled = false;
                 if(this.inputForm.create){
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name:'backendList',query:util.getQuery("backendList")})
                 }
@@ -59,11 +59,17 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },created(){
+        },initPage() {
           axios.get('/api/basic/sys/backend/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
+        }
+      },created(){
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
       }
     }
 </script>

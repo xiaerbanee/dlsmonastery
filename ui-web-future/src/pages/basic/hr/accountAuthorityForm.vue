@@ -63,9 +63,9 @@
           if (valid) {
             axios.post('/api/basic/hr/account/saveAuthorityList', qs.stringify(this.inputForm, {allowDots:true})).then((response) => {
               this.$message(response.data.message);
+              this.submitDisabled = false;
               if (this.isCreate) {
                 form.resetFields();
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name: 'accountList', query: util.getQuery("accountList")})
               }
@@ -100,11 +100,17 @@
           this.$refs.tree.setCheckedKeys(response.data);
           this.checked=response.data
         })
+      },initPage() {
+        axios.get('/api/basic/hr/account/getTreeNode').then((response) => {
+          this.treeData = new Array(response.data);
+        })
       }
-    }, created(){
-      axios.get('/api/basic/hr/account/getTreeNode').then((response) => {
-        this.treeData = new Array(response.data);
-      })
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

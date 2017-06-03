@@ -95,9 +95,9 @@
               if(response.data.message){
               this.$message(response.data.message);
             }
+            this.submitDisabled = false;
             if(this.isCreate){
               form.resetFields();
-              this.submitDisabled = false;
             } else {
               this.$router.push({name:'accountChangeList',query:util.getQuery("accountChangeList")})
             }
@@ -155,15 +155,21 @@
         }else {
           this.inputForm.oldValue ="";
         }
+      },initPage() {
+        if(!this.type){
+          this.inputForm.type=this.$route.query.type;
+          this.getAccount(this.$route.query.accountId);
+        }
+        axios.get('/api/basic/hr/accountChange/findData',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm=response.data;
+        })
       }
     },created(){
-      if(!this.type){
-        this.inputForm.type=this.$route.query.type;
-        this.getAccount(this.$route.query.accountId);
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
-      axios.get('/api/basic/hr/accountChange/findData',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm=response.data;
-    })
     }
   }
 </script>
