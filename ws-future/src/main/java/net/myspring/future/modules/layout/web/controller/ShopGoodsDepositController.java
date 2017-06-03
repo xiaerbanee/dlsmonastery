@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,15 +26,14 @@ public class ShopGoodsDepositController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ShopGoodsDepositDto> list(Pageable pageable, ShopGoodsDepositQuery shopGoodsDepositQuery){
-        Page<ShopGoodsDepositDto> page = shopGoodsDepositService.findPage(pageable, shopGoodsDepositQuery);
-        return page;
+        return shopGoodsDepositService.findPage(pageable, shopGoodsDepositQuery);
     }
 
 
     @RequestMapping(value="getQuery")
     public ShopGoodsDepositQuery getQuery(ShopGoodsDepositQuery shopGoodsDepositQuery) {
         shopGoodsDepositQuery.setOutBillTypeList(OutBillTypeEnum.getList());
-       shopGoodsDepositQuery.setStatusList(ShopGoodsDepositStatusEnum.getList());
+        shopGoodsDepositQuery.setStatusList(ShopGoodsDepositStatusEnum.getList());
 
         return shopGoodsDepositQuery;
     }
@@ -55,7 +55,7 @@ public class ShopGoodsDepositController {
 
 
     @RequestMapping(value = "batchAudit")
-    public RestResponse batchAudit(String[] ids) {
+    public RestResponse batchAudit(@RequestParam(value = "ids[]")  String[] ids) {
         shopGoodsDepositService.batchAudit(ids);
 //        for(Long id:ids){
 //            k3cloudSynService.syn(id, K3CloudSynEntity.ExtendType.定金收款.name());
@@ -65,10 +65,9 @@ public class ShopGoodsDepositController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(ShopGoodsDepositForm shopGoodsDepositForm) {
-        shopGoodsDepositService.delete(shopGoodsDepositForm);
-        RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return restResponse;
+    public RestResponse delete(String id) {
+        shopGoodsDepositService.delete(id);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
 
     }
 
@@ -78,5 +77,12 @@ public class ShopGoodsDepositController {
         ShopGoodsDepositForm result = shopGoodsDepositService.getForm(shopGoodsDepositForm);
         return result;
     }
+
+
+    @RequestMapping(value="export")
+    public String export(ShopGoodsDepositQuery shopGoodsDepositQuery) {
+        return shopGoodsDepositService.export(shopGoodsDepositQuery);
+    }
+
 
 }

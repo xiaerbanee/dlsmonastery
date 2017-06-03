@@ -36,21 +36,21 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     fun save(product: Product): Product
 
     @Query("""
-        SELECT t1.*
-        FROM crm_product t1
-        where t1.enabled=1
-    """, nativeQuery = true)
+        SELECT t
+        FROM #{#entityName} t
+        where t.enabled=1
+    """)
     fun findAllEnabled(): MutableList<Product>
 
     @Query("""
         SELECT
-            t1.*
+            t1
         FROM
-            crm_product t1
+            #{#entityName} t1
         WHERE
             t1.enabled = 1
-        AND t1.has_ime = 1
-    """, nativeQuery = true)
+        AND t1.hasIme = 1
+    """)
     fun findHasImeProduct(): MutableList<Product>
 
     @Query("""

@@ -1,23 +1,36 @@
 package net.myspring.future.modules.layout.service;
 
+import com.google.common.collect.Lists;
+import com.mongodb.gridfs.GridFSFile;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopGoodsDepositStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
+import net.myspring.future.modules.layout.dto.ShopGoodsDepositSumDto;
 import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
 import net.myspring.future.modules.layout.web.form.ShopGoodsDepositForm;
 import net.myspring.future.modules.layout.web.query.ShopGoodsDepositQuery;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.excel.SimpleExcelColumn;
+import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
+import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,21 +41,9 @@ public class ShopGoodsDepositService {
     @Autowired
     private ShopGoodsDepositRepository shopGoodsDepositRepository;
     @Autowired
+    private GridFsTemplate tempGridFsTemplate;
+    @Autowired
     private CacheUtils cacheUtils;
-
-    public BigDecimal getTotalAmount(String shopId) {
-        return null;
-    }
-
-    public List<ShopGoodsDeposit> findByIds(List<String> ids){
-        List<ShopGoodsDeposit> shopGoodsDepositList = shopGoodsDepositRepository.findAll(ids);
-        return shopGoodsDepositList;
-    }
-
-    public ShopGoodsDeposit findOne(String id){
-        ShopGoodsDeposit shopGoodsDeposit=shopGoodsDepositRepository.findOne(id);
-        return shopGoodsDeposit;
-    }
 
     public Page<ShopGoodsDepositDto> findPage(Pageable pageable, ShopGoodsDepositQuery shopGoodsDepositQuery) {
 
@@ -50,11 +51,6 @@ public class ShopGoodsDepositService {
 
         cacheUtils.initCacheInput(page.getContent());
         return page;
-    }
-
-
-
-    public void audit(String[] ids){
     }
 
     public ShopGoodsDepositForm getForm(ShopGoodsDepositForm shopGoodsDepositForm) {
@@ -66,15 +62,11 @@ public class ShopGoodsDepositService {
                 result.setShopId(shopGoodsDepositForm.getShopId());
                 result.setDepartMent("");//TODO 需要设置department
             }
-
         }else{
             ShopGoodsDeposit sgd = shopGoodsDepositRepository.findOne(shopGoodsDepositForm.getId());
             result = BeanUtil.map(sgd, ShopGoodsDepositForm.class);
-
         }
-
         return result;
-
     }
 
     public void save(ShopGoodsDepositForm shopGoodsDepositForm) {
@@ -85,17 +77,13 @@ public class ShopGoodsDepositService {
             shopGoodsDeposit.setStatus(ShopGoodsDepositStatusEnum.省公司审核.name());
             shopGoodsDeposit.setOutBillType(OutBillTypeEnum.手工日记账.name());
             shopGoodsDepositRepository.save(shopGoodsDeposit);
-
         }else{
-
             ShopGoodsDeposit shopGoodsDeposit = shopGoodsDepositRepository.findOne(shopGoodsDepositForm.getId());
             shopGoodsDeposit.setBankId(shopGoodsDepositForm.getBankId());
             shopGoodsDeposit.setRemarks(shopGoodsDepositForm.getRemarks());
             shopGoodsDeposit.setAmount(shopGoodsDepositForm.getAmount());
             shopGoodsDepositRepository.save(shopGoodsDeposit);
         }
-
-
     }
 
     public void batchAudit(String[] ids) {
@@ -137,8 +125,50 @@ public class ShopGoodsDepositService {
 
     }
 
-    public void delete(ShopGoodsDepositForm shopGoodsDepositForm) {
-        shopGoodsDepositRepository.logicDelete(shopGoodsDepositForm.getId());
+    public void delete(String id) {
+        shopGoodsDepositRepository.logicDelete(id);
     }
 
+    public String export(ShopGoodsDepositQuery shopGoodsDepositQuery) {
+
+        Workbook workbook = new SXSSFWorkbook(10000);
+
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+        List<SimpleExcelColumn> shopGoodsDepositColumnList = Lists.newArrayList();
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "formatId", "编号"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "shopAreaName", "办事处"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "departMent", "部门"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "amount", "收款金额"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "outCode", "外部编号"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "outBillType", "单据类型"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedBy", "修改人"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "修改时间"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "status", "状态"));
+        shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
+
+        List<ShopGoodsDepositDto> shopGoodsDepositDtoList = findPage(new PageRequest(0,10000), shopGoodsDepositQuery).getContent();
+        simpleExcelSheetList.add(new SimpleExcelSheet("订金详细", shopGoodsDepositDtoList, shopGoodsDepositColumnList));
+
+        List<SimpleExcelColumn> shopGoodsDepositSumColumnList = Lists.newArrayList();
+        shopGoodsDepositSumColumnList.add(new SimpleExcelColumn(workbook, "shopAreaName", "办事处"));
+        shopGoodsDepositSumColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
+        shopGoodsDepositSumColumnList.add(new SimpleExcelColumn(workbook, "totalAmount", "剩余订金"));
+
+        List<ShopGoodsDepositSumDto> shopGoodsDepositSumDtoList = findShopGoodsDepositSumDtoList(RequestUtils.getCompanyId());
+        simpleExcelSheetList.add(new SimpleExcelSheet("订金汇总", shopGoodsDepositSumDtoList, shopGoodsDepositSumColumnList));
+
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"订金列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
+        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        return StringUtils.toString(gridFSFile.getId());
+    }
+
+    private List<ShopGoodsDepositSumDto> findShopGoodsDepositSumDtoList(String companyId) {
+        List<ShopGoodsDepositSumDto> result = shopGoodsDepositRepository.findShopGoodsDepositSumDtoList(companyId);
+        cacheUtils.initCacheInput(result);
+        return result;
+    }
 }

@@ -1,15 +1,15 @@
 package net.myspring.cloud.modules.sys.dto;
 
-import net.myspring.cloud.common.domain.CompanyEntity;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
-import net.myspring.common.dto.DataDto;
+import net.myspring.common.dto.IdDto;
 
 /**
  * Created by lihx on 2017/5/9.
  */
-public class AccountKingdeeBookDto extends CompanyEntity<AccountKingdeeBook> {
+public class AccountKingdeeBookDto extends IdDto<AccountKingdeeBook> {
     private String accountId;
-    private String kingdeeBookId;
+    private String username;
+    private String companyId;
     private String kingdeeBookName;
     private String kingdeeBookType;
 
@@ -37,11 +37,19 @@ public class AccountKingdeeBookDto extends CompanyEntity<AccountKingdeeBook> {
         this.accountId = accountId;
     }
 
-    public String getKingdeeBookId() {
-        return kingdeeBookId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setKingdeeBookId(String kingdeeBookId) {
-        this.kingdeeBookId = kingdeeBookId;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 }

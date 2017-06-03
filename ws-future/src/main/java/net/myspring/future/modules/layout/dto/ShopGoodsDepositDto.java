@@ -1,8 +1,10 @@
 package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.IdUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,8 +16,10 @@ public class ShopGoodsDepositDto extends DataDto<ShopGoodsDeposit> {
 
     @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
-    private String areaName;
-    private String depotOfficeId;
+    private String shopAreaId;
+    @CacheInput(inputKey = "offices",inputInstance = "shopAreaId",outputInstance = "name")
+    private String shopAreaName;
+    private String shopOfficeId;
 
     private String departMentName;
     private String departMent;
@@ -27,10 +31,14 @@ public class ShopGoodsDepositDto extends DataDto<ShopGoodsDeposit> {
     private String status;
     private Boolean locked;
 
-
     private String bankId;
     @CacheInput(inputKey = "banks",inputInstance = "bankId",outputInstance = "name")
     private String bankName;
+
+
+    public String getFormatId(){
+        return IdUtils.getFormatId(getId(), FormatterConstant.SHOP_AD);
+    }
 
     public String getBankId() {
         return bankId;
@@ -73,20 +81,28 @@ public class ShopGoodsDepositDto extends DataDto<ShopGoodsDeposit> {
         this.shopName = shopName;
     }
 
-    public String getAreaName() {
-        return areaName;
+    public String getShopAreaId() {
+        return shopAreaId;
     }
 
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
+    public void setShopAreaId(String shopAreaId) {
+        this.shopAreaId = shopAreaId;
     }
 
-    public String getDepotOfficeId() {
-        return depotOfficeId;
+    public String getShopAreaName() {
+        return shopAreaName;
     }
 
-    public void setDepotOfficeId(String depotOfficeId) {
-        this.depotOfficeId = depotOfficeId;
+    public void setShopAreaName(String shopAreaName) {
+        this.shopAreaName = shopAreaName;
+    }
+
+    public String getShopOfficeId() {
+        return shopOfficeId;
+    }
+
+    public void setShopOfficeId(String shopOfficeId) {
+        this.shopOfficeId = shopOfficeId;
     }
 
     public String getBankName() {

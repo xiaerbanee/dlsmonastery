@@ -263,4 +263,5 @@ public class GoodsOrderQuery extends BaseQuery {
 
 
 
+
 }

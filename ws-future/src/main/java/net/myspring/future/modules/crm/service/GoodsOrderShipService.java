@@ -73,10 +73,8 @@ public class GoodsOrderShipService {
      * @return
      */
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
-        if (!StringUtils.isNotBlank(goodsOrderQuery.getStatus())){
-            goodsOrderQuery.setStatusList(Arrays.asList("待发货", "待签收", "已完成"));
-        }
-        Page<GoodsOrderDto> page = goodsOrderRepository.findAllShip(pageable,  goodsOrderQuery);
+        goodsOrderQuery.setStatusList(Arrays.asList("待发货", "待签收", "已完成"));
+        Page<GoodsOrderDto> page = goodsOrderRepository.findAll(pageable,  goodsOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

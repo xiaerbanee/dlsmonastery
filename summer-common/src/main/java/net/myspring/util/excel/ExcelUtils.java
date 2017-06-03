@@ -215,7 +215,7 @@ public class ExcelUtils {
                     SimpleExcelColumn simpleExcelColumn = simpleExcelSheet.getSimpleExcelColumnList().get(i);
                     Object value=null;
                     if(StringUtils.isNotBlank(simpleExcelColumn.getFieldName())){
-                        value = ReflectionUtil.getFieldValue(rowValue,simpleExcelColumn.getFieldName());
+                        value = ReflectionUtil.getProperty(rowValue,simpleExcelColumn.getFieldName());
                     }
                     Cell cell = row.createCell(i);
                     cell.setCellStyle(simpleExcelColumn.getCellStyle());
