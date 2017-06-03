@@ -117,9 +117,9 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
+            this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'productList',query:util.getQuery("productList")})
               }
@@ -144,20 +144,26 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      }
-    },created(){
+      },initPage(){
         axios.get('/api/ws/future/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
-          this.inputForm.hasIme = response.data.hasIme?1:0;
-          this.inputForm.allowOrder = response.data.allowOrder?1:0;
-          this.inputForm.allowBill = response.data.allowBill?1:0;
-          if(response.data.productType != null){
-            this.productTypeList = new Array(response.data.productType)
-          }
-        })
-      axios.get('/api/ws/future/basic/product/getForm').then((response)=>{
-        this.formProperty = response.data;
-      })
+        this.inputForm.hasIme = response.data.hasIme?1:0;
+        this.inputForm.allowOrder = response.data.allowOrder?1:0;
+        this.inputForm.allowBill = response.data.allowBill?1:0;
+        if(response.data.productType != null){
+          this.productTypeList = new Array(response.data.productType)
+        }
+      });
+        axios.get('/api/ws/future/basic/product/getForm').then((response)=>{
+          this.formProperty = response.data;
+      });
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

@@ -108,7 +108,6 @@ public class ExpressOrderService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"remarks","备注"));
 
         List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,10000), expressOrderQuery).getContent();
-        cacheUtils.initCacheInput(expressOrderDtoList);
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("快递打印列表", expressOrderDtoList, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"快递打印列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);

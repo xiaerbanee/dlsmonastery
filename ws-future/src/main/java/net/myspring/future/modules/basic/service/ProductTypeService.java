@@ -29,6 +29,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
@@ -79,6 +80,7 @@ public class ProductTypeService {
         return productType;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         productTypeRepository.logicDelete(id);
     }

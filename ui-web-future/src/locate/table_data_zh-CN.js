@@ -215,6 +215,7 @@ export default {
       goodsOrderForm: "货品订货编辑",
       goodsOrderList: "货品订货",
       goodsOrderShip: "货品订货发货",
+      goodsOrderShipList: "货品发货",
       goodsOrderSign: "订单签收",
       goodsOrderSreturn: "销售退货",
       imeAllotForm: "串码调拨编辑",

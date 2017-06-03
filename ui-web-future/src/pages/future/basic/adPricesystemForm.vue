@@ -58,9 +58,9 @@
             axios.post('/api/ws/future/basic/adPricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
+              this.submitDisabled = false;
                 if (this.isCreate) {
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name: 'adPricesystemList', query: util.getQuery("adPricesystemList")})
                 }
@@ -78,11 +78,18 @@
             this.submitDisabled = false;
           }
         })
+      },
+      initPage(){
+        axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+          this.inputForm = response.data;
+      });
       }
     }, created(){
-      axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
-        this.inputForm = response.data;
-      })
+     this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

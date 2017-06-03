@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -29,7 +30,7 @@ interface StoreAllotRepository : BaseRepository<StoreAllot, String>, StoreAllotR
     WHERE
         t1.createdDate >= ?1
         """)
-    fun findMaxBusinessId(localDate: LocalDate): String
+    fun findMaxBusinessId(localDateTime: LocalDateTime): String
 
 
 }

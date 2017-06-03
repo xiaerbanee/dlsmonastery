@@ -23,7 +23,7 @@ import java.util.*
  */
 @CacheConfig(cacheNames = arrayOf("menuRepositorys"))
 interface  MenuRepository :BaseRepository<Menu,String>,MenuRepositoryCustom{
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(menu: Menu): Menu
 
     @Cacheable

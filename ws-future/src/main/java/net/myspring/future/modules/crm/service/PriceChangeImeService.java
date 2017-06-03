@@ -37,10 +37,6 @@ public class PriceChangeImeService {
     @Autowired
     private ProductImeRepository productImeRepository;
     @Autowired
-    private ProductImeSaleRepository productImeSaleRepository;
-    @Autowired
-    private ProductImeUploadRepository productImeUploadRepository;
-    @Autowired
     private PriceChangeRepository priceChangeRepository;
     @Autowired
     private DepotRepository depotRepository;
@@ -125,20 +121,25 @@ public class PriceChangeImeService {
             return null;
         }
 
-        //检查串码在系统中是否存在
-        String notExistIme = "";
+        //检查门店、串码在系统中是否存在
+
+        List<String> existShops = CollectionUtil.extractToList(depotRepository.findByNameList(shopNameList),"name");
         List<String> existImes = CollectionUtil.extractToList(productImeRepository.findByImeList(imeList),"ime");
-        if(existImes.size()!=imeList.size()){
+        if(existImes.size()!=imeList.size() || existShops.size()!=shopNameList.size()){
+            String notExist = "";
             for(String ime:imeList){
                 if(!existImes.contains(ime)){
-                    notExistIme +=ime+ CharConstant.COMMA;
+                    notExist += StringUtils.join(ime,CharConstant.COMMA);
                 }
             }
-            return notExistIme+"串码不存在,保存失败";
+            for (String shopName:shopNameList){
+                if(!existShops.contains(shopName)){
+                    notExist +=StringUtils.join(shopName,CharConstant.COMMA);
+                }
+            }
+            return notExist+"不存在,保存失败";
         }else{
             List<PriceChangeIme> priceChangeImes = new ArrayList<>();
-            String companyId  =RequestUtils.getCompanyId();
-            System.out.print(companyId);
             List<ProductImeDto> productImeDtos = productImeRepository.findDtoListByImeList(existImes,RequestUtils.getCompanyId());
             if(productImeDtos == null){
                 return "保存失败";

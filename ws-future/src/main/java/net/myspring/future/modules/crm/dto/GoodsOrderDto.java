@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.dto;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
@@ -8,6 +9,7 @@ import net.myspring.util.text.IdUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class GoodsOrderDto extends DataDto<GoodsOrder> {
     //门店额度
@@ -44,6 +46,10 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private Boolean enabled;
 
     private String  rebateRuleRemarks;
+
+    private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
+
+    private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
 
     public BigDecimal getShopCredit() {
         return shopCredit;
@@ -218,5 +224,21 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
 
     public void setRebateRuleRemarks(String rebateRuleRemarks) {
         this.rebateRuleRemarks = rebateRuleRemarks;
+    }
+
+    public List<GoodsOrderDetailDto> getGoodsOrderDetailDtoList() {
+        return goodsOrderDetailDtoList;
+    }
+
+    public void setGoodsOrderDetailDtoList(List<GoodsOrderDetailDto> goodsOrderDetailDtoList) {
+        this.goodsOrderDetailDtoList = goodsOrderDetailDtoList;
+    }
+
+    public List<GoodsOrderImeDto> getGoodsOrderImeDtoList() {
+        return goodsOrderImeDtoList;
+    }
+
+    public void setGoodsOrderImeDtoList(List<GoodsOrderImeDto> goodsOrderImeDtoList) {
+        this.goodsOrderImeDtoList = goodsOrderImeDtoList;
     }
 }

@@ -56,9 +56,9 @@
             if (valid) {
               axios.post('/api/ws/future/basic/shopAdType/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
+              this.submitDisabled = false;
                 if(this.isCreate){
                   form.resetFields();
-                  this.submitDisabled = false;
                 } else {
                   this.$router.push({name:'shopAdTypeList',query:util.getQuery("shopAdTypeList")})
                 }
@@ -69,15 +69,20 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },created(){
+        },initPage(){
           axios.get('/api/ws/future/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.formData = response.data;
-          })
+        });
           axios.get('/api/ws/future/basic/shopAdType/getForm').then((response)=>{
             this.formProperty = response.data;
-          })
-
+        });
+        }
+      },created(){
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
       }
     }
 </script>

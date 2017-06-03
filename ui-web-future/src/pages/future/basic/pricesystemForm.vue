@@ -72,9 +72,9 @@
             this.submitData.enabled = true;
             axios.post('/api/ws/future/basic/pricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
+            this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'pricesystemList',query:util.getQuery("pricesystemList")})
               }
@@ -101,16 +101,22 @@
           }
         }
         this.filterPricesystemDetailList = tempList;
-      }
-    },created(){
+      },initPage(){
         axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           console.log(this.inputForm)
           this.searchDetail();
-        })
+        });
         axios.get('/api/ws/future/basic/pricesystem/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.pricesystemDetailList = response.data.pricesystemDetailList;
-        })
+        });
+      }
+    },created(){
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
+      }
     }
   }
 </script>

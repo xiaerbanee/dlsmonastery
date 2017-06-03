@@ -31,7 +31,7 @@ class ShopImageRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempl
     override fun findPage(pageable: Pageable, shopImageQuery: ShopImageQuery): Page<ShopImageDto> {
         val sb = StringBuilder("""
             SELECT
-                depot.office_Id officeId,
+                depot.office_Id officeId,depot.area_id areaId,
                 t1.*
             FROM
                 crm_shop_image t1,

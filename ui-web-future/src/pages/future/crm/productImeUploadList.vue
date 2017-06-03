@@ -75,6 +75,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           officeId:'',
           createdDateRange:'',
           shopName:"",
