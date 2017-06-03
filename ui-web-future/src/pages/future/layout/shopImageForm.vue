@@ -77,10 +77,10 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
+              this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
                 this.fileList=[];
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'shopImageList',query:util.getQuery("shopImageList")})
               }

@@ -84,9 +84,9 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
+            this.submitDisabled = false;
               if(this.isCreate){
                 form.resetFields();
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList")})
               }
