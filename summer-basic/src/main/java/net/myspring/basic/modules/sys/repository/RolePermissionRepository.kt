@@ -16,7 +16,7 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
     @Cacheable
     override fun findOne(id: String): RolePermission
 
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(RolePermission: RolePermission): RolePermission
 
     @Query("""

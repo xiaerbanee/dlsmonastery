@@ -31,7 +31,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     @Cacheable
     override fun findOne(id: String): Employee
 
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(position: Employee): Employee
 
 

@@ -30,7 +30,7 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
     @Cacheable
     override fun findOne(id: String): Permission
 
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(permission: Permission): Permission
 
     @Query("""

@@ -31,7 +31,7 @@ interface PositionRepository : BaseRepository<Position,String>,PositionRepositor
     @Cacheable
     override fun findOne(id: String): Position
 
-    @CachePut(key="#id")
+    @CachePut(key="#p0.id")
     fun save(position: Position): Position
 
 }
