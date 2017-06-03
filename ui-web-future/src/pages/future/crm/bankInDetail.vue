@@ -99,19 +99,22 @@
           }
       },methods:{
           formSubmit(){
-            this.submitDisabled = true;
-            var form = this.$refs["inputForm"];
+
+            let form = this.$refs["inputForm"];
             form.validate((valid) => {
               if (valid) {
+                this.submitDisabled = true;
                 this.initSubmitDataBeforeSubmit();
                 axios.post('/api/ws/future/crm/bankIn/audit', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
                   this.$message(response.data.message);
-                  this.$router.push({name:'bankInList',query:util.getQuery("bankInList")})
-                }).catch(function () {
+                  this.submitDisabled = false;
+                  if(response.data.success) {
+                    this.$router.push({name:'bankInList',query:util.getQuery("bankInList")});
+                  }
+
+                }).catch( () => {
                   this.submitDisabled = false;
                 });
-              }else{
-                this.submitDisabled = false;
               }
             })
           }, initSubmitDataBeforeSubmit(){

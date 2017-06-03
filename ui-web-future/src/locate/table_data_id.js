@@ -100,6 +100,8 @@ export default {
       kingdeeBookList:"账套管理",
       kingdeeBookForm:"账套编辑",
       accountKingdeeBookList:"金蝶用户管理",
+      accountKingdeeBookForm:"金蝶用户管理编辑",
+      productManager:"货品管理",
       404:"404",
       companyConfigForm: "Preferensi Editor",
       companyConfigList: "Pengaturan parameter",

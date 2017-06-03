@@ -630,6 +630,7 @@ export default {
   shopGoodsDepositList: {
     shopGoodsDepositList: "订金收款",
     batchPass: "批量通过",
+    noSelectionFound:"没有选中任何记录",
     inputStatus: "请选择状态",
     preciseSearch: "精确搜索",
     code: "编号",

@@ -1,8 +1,6 @@
 package net.myspring.cloud.modules.sys.service;
 
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
-import net.myspring.cloud.common.enums.KingdeeBookTypeEnum;
-import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.dto.KingdeeBookDto;
 import net.myspring.cloud.modules.sys.repository.KingdeeBookRepository;
@@ -17,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by lihx on 2017/4/5.
@@ -26,17 +25,14 @@ import java.util.List;
 public class KingdeeBookService {
     @Autowired
     private KingdeeBookRepository kingdeeBookRepository;
-    @Autowired
-    private CacheUtils cacheUtils;
 
     public Page<KingdeeBookDto> findPage(Pageable pageable, KingdeeBookQuery kingdeeBookQuery){
         Page<KingdeeBook> page = kingdeeBookRepository.findPage(pageable,kingdeeBookQuery);
         Page<KingdeeBookDto> accountChangeDtoPage = BeanUtil.map(page,KingdeeBookDto.class);
-        cacheUtils.initCacheInput(accountChangeDtoPage.getContent());
         return accountChangeDtoPage;
     }
 
-    public KingdeeBookQuery getQuery(){
+    public KingdeeBookQuery getQueryProperty(){
         KingdeeBookQuery kingdeeBookQuery = new KingdeeBookQuery();
         List<String> nameList = kingdeeBookRepository.findNames();
         List<String> typeList = kingdeeBookRepository.findTypes();
@@ -51,8 +47,8 @@ public class KingdeeBookService {
             KingdeeBook kingdeeBook = kingdeeBookRepository.findOne(kingdeeBookForm.getId());
             kingdeeBookForm = BeanUtil.map(kingdeeBook,KingdeeBookForm.class);
         }
-        kingdeeBookForm.setTypeList(KingdeeBookTypeEnum.values());
-        cacheUtils.initCacheInput(kingdeeBookForm);
+        List<String> typeList = kingdeeBookRepository.findTypes();
+        kingdeeBookForm.setTypeList(typeList);
         return kingdeeBookForm;
     }
 

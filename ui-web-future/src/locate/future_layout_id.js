@@ -629,6 +629,7 @@ export default {
   shopGoodsDepositList: {
     shopGoodsDepositList: "piutang deposit",
     batchPass: "konfirmasi",
+    noSelectionFound:"没有选中任何记录",
     inputStatus: "pilih status",
     preciseSearch: "精确搜索",
     code: "kode",
