@@ -68,7 +68,6 @@ public class CacheConfig extends CachingConfigurerSupport {
         jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
-
         return redisTemplate;
     }
 
@@ -76,6 +75,7 @@ public class CacheConfig extends CachingConfigurerSupport {
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
         RedisCacheManager redisCacheManager = new RedisCacheManager(redisTemplate);
         redisCacheManager.setUsePrefix(true);
+        redisCacheManager.setTransactionAware(true);
         return redisCacheManager;
     }
 }

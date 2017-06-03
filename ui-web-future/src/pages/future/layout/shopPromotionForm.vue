@@ -126,12 +126,12 @@
               if (response.data.message) {
                 this.$message(response.data.message);
               }
+            this.submitDisabled = false;
               if (this.isCreate) {
                 form.resetFields();
                 this.fileList1 = [];
                 this.fileList2 = [];
                 this.fileList3 = [];
-                this.submitDisabled = false;
               } else {
                 this.$router.push({name: 'shopPromotionList', query: util.getQuery("shopPromotionList")})
               }
