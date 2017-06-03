@@ -20,6 +20,7 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
     private String address;
     private String mobilePhone;
     private String shipType;
+    private String netType;
 
     private List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList = Lists.newArrayList();
 
@@ -98,6 +99,14 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
 
     public void setShipType(String shipType) {
         this.shipType = shipType;
+    }
+
+    public String getNetType() {
+        return netType;
+    }
+
+    public void setNetType(String netType) {
+        this.netType = netType;
     }
 
     public List<GoodsOrderBillDetailForm> getGoodsOrderBillDetailFormList() {

@@ -46,24 +46,24 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('shopGoodsDepositList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column  prop="formatId" :label="$t('shopGoodsDepositList.code')" width="150" ></el-table-column>
-        <el-table-column prop="shopName" :label="$t('shopGoodsDepositList.shopName')" ></el-table-column>
-        <el-table-column prop="shopAreaName" :label="$t('shopGoodsDepositList.areaName')"  ></el-table-column>
-        <el-table-column prop="departMent" :label="$t('shopGoodsDepositList.department')"></el-table-column>
-        <el-table-column prop="bankName" :label="$t('shopGoodsDepositList.bank')"  ></el-table-column>
-        <el-table-column prop="amount" :label="$t('shopGoodsDepositList.amount')"></el-table-column>
-        <el-table-column prop="outCode" :label="$t('shopGoodsDepositList.outCode')"  ></el-table-column>
-        <el-table-column prop="outBillType" :label="$t('shopGoodsDepositList.outBillType')"></el-table-column>
-        <el-table-column prop="billDate"  :label="$t('shopGoodsDepositList.billDate')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('shopGoodsDepositList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('shopGoodsDepositList.createdDate')"></el-table-column>
-        <el-table-column prop="remarks" :label="$t('shopGoodsDepositList.remarks')"></el-table-column>
-        <el-table-column prop="status" :label="$t('shopGoodsDepositList.status')" width="120">
+        <el-table-column prop="formatId" column-key="id"  :label="$t('shopGoodsDepositList.code')" width="160" sortable></el-table-column>
+        <el-table-column prop="shopName" column-key="shopId"  :label="$t('shopGoodsDepositList.shopName')" sortable></el-table-column>
+        <el-table-column prop="shopAreaName"  :label="$t('shopGoodsDepositList.areaName')"  ></el-table-column>
+        <el-table-column prop="departMent" column-key="departMent" :label="$t('shopGoodsDepositList.department')" sortable></el-table-column>
+        <el-table-column prop="bankName" column-key="bankId" :label="$t('shopGoodsDepositList.bank')"  sortable></el-table-column>
+        <el-table-column prop="amount" :label="$t('shopGoodsDepositList.amount')" sortable></el-table-column>
+        <el-table-column prop="outCode" :label="$t('shopGoodsDepositList.outCode')"  sortable></el-table-column>
+        <el-table-column prop="outBillType" :label="$t('shopGoodsDepositList.outBillType')" sortable></el-table-column>
+        <el-table-column prop="billDate"  :label="$t('shopGoodsDepositList.billDate')" sortable></el-table-column>
+        <el-table-column prop="createdByName"  column-key="createdBy" :label="$t('shopGoodsDepositList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('shopGoodsDepositList.createdDate')" sortable></el-table-column>
+        <el-table-column prop="status" :label="$t('shopGoodsDepositList.status')" width="120" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.status==='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="locked" :label="$t('shopGoodsDepositList.locked')" width="120">
+        <el-table-column prop="remarks" :label="$t('shopGoodsDepositList.remarks')" sortable></el-table-column>
+        <el-table-column prop="locked" :label="$t('shopGoodsDepositList.locked')" >
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
@@ -90,6 +90,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           shopName:'',
           remarks:'',
           bankName:'',

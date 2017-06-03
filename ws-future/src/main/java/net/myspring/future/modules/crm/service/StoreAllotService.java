@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
-import com.sun.xml.internal.bind.v2.TODO;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.constant.CharConstant;
@@ -37,7 +36,6 @@ import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
-import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -47,17 +45,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Predicate;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -266,7 +260,7 @@ public class StoreAllotService {
         storeAllot.setToStoreId(storeAllotForm.getToStoreId());
         storeAllot.setShipType(storeAllotForm.getShipType());
         storeAllot.setRemarks(storeAllotForm.getRemarks());
-        String maxBusinessId = storeAllotRepository.findMaxBusinessId(LocalDate.now());
+        String maxBusinessId = storeAllotRepository.findMaxBusinessId(LocalDate.now().atStartOfDay());
         storeAllot.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
         storeAllot.setBillDate(LocalDate.now());
         storeAllot.setStatus(StoreAllotStatusEnum.待发货.name());
@@ -289,14 +283,13 @@ public class StoreAllotService {
             StoreAllotDetail storeAllotDetail = new StoreAllotDetail();
             storeAllotDetail.setStoreAllotId(storeAllotId);
             storeAllotDetail.setBillQty(storeAllotDetailForm.getBillQty());
+            storeAllotDetail.setQty(storeAllotDetailForm.getBillQty());
+            storeAllotDetail.setShippedQty(0);
             storeAllotDetail.setProductId(storeAllotDetailForm.getProductId());
 
             toBeSaved.add(storeAllotDetail);
         }
-        if(!toBeSaved.isEmpty()){
-            storeAllotDetailRepository.save(toBeSaved);
-        }
-
+        storeAllotDetailRepository.save(toBeSaved);
     }
 
     private ExpressOrder saveExpressOrder(StoreAllot storeAllot, StoreAllotForm storeAllotForm) {

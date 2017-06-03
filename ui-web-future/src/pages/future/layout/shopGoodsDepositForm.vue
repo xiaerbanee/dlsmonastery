@@ -64,24 +64,24 @@
       },
       methods:{
         formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/ws/future/crm/shopGoodsDeposit/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                if(this.isCreate){
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
-                  this.$router.push({name:'shopGoodsDepositList',query:util.getQuery("shopGoodsDepositList")})
+                this.submitDisabled = false;
+                if(response.data.success) {
+                  if (this.isCreate) {
+                    form.resetFields();
+                  } else {
+                    this.$router.push({name: 'shopGoodsDepositList', query: util.getQuery("shopGoodsDepositList")})
+                  }
                 }
-              }).catch(function () {
+              }).catch(() => {
                 this.submitDisabled = false;
               });
-            }else{
-              this.submitDisabled = false;
             }
           })
         },shopChanged(){

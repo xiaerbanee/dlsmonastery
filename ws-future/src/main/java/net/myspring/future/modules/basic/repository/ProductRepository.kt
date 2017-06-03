@@ -22,8 +22,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDateTime
 import java.util.*
 
-//import kotlin.collections.HashMap
-
 /**
  * Created by zhangyf on 2017/5/24.
  */

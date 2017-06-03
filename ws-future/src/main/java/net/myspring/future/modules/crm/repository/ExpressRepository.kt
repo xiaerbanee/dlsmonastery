@@ -103,11 +103,9 @@ class ExpressRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplat
         if(StringUtils.isNotBlank(expressrQuery.expressOrderExtendType)){
             sb.append("""  and ord.extend_type =  :expressOrderExtendType """)
         }
-
         if(StringUtils.isNotBlank(expressrQuery.expressOrderExtendBusinessId)){
             sb.append("""   and ord.extend_business_id like concat('%', :expressOrderExtendBusinessId,'%')  """)
         }
-
         if(StringUtils.isNotBlank(expressrQuery.expressOrderExpressCompanyId)){
             sb.append("""  and ord.express_company_id = :expressOrderExpressCompanyId  """)
         }

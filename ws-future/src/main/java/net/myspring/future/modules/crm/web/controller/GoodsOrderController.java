@@ -46,6 +46,11 @@ public class GoodsOrderController {
         return page;
     }
 
+    @RequestMapping(value = "detail")
+    public GoodsOrderDto detail(String id) {
+        return goodsOrderService.findDetail(id);
+    }
+
     @RequestMapping(value = "getQuery")
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.setNetTypeList(NetTypeEnum.getList());
@@ -85,6 +90,11 @@ public class GoodsOrderController {
     }
 
 
+    @RequestMapping(value = "bill")
+    public RestResponse bill(GoodsOrderBillForm goodsOrderBillForm) {
+        goodsOrderService.bill(goodsOrderBillForm);
+        return new RestResponse("开单成功", ResponseCodeEnum.saved.name());
+    }
 
     @RequestMapping(value = "findOne")
     public GoodsOrderDto findOne(String id) {

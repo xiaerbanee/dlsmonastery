@@ -59,35 +59,37 @@
       },
       methods:{
         formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
+              this.submitDisabled = true;
               axios.post('/api/crm/productMonthPrice/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
-                if(this.isCreate){
-                  form.resetFields();
-                } else {
-                  this.$router.push({name:'productMonthPriceList',query:util.getQuery("productMonthPriceList")})
+                if(response.data.success) {
+                  if (this.isCreate) {
+                    form.resetFields();
+                  } else {
+                    this.$router.push({name: 'productMonthPriceList', query: util.getQuery("productMonthPriceList")})
+                  }
                 }
-              }).catch(function () {
+              }).catch(() => {
                 this.submitDisabled = false;
               });
-            }else{
-              this.submitDisabled = false;
             }
           })
         },onChange(){
           if(this.isCreate){
             this.message='';
-            this.submitDisabled = false;
+            this.submitDisabled = true;
             this.inputForm.month=util.formatDate( this.inputForm.month,'yyyy-MM');
             axios.get('/api/crm/productMonthPrice/checkMonth',{params: {month:this.inputForm.month}}).then((response)=>{
+              this.submitDisabled = false;
               if(!response.data.success){
                 this.message=response.data.message;
-                this.submitDisabled = true;
               }
+
             })
           }
         },initPage(){

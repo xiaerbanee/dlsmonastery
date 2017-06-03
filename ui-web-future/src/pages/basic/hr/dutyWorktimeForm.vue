@@ -59,17 +59,25 @@
               }).catch(function () {
                 this.submitDisabled = false;
               });
-           }else{
+            }else{
               this.submitDisabled = false;
             }
-         })
-       }, handlePreview(file) {
+          })
+        }, handlePreview(file) {
           window.open(file.url);
         },handleChange(file, fileList) {
           this.fileList = fileList;
         },handleRemove(file, fileList) {
           this.fileList = fileList;
+        },initPage() {
+          
         }
-     }
+      },created(){
+        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick) {
+          this.initPage();
+        }
+      }
   }
 </script>
