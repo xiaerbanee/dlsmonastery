@@ -50,8 +50,8 @@
         </el-table-column>
         <el-table-column  :label="$t('pricesystemChangeList.operation')" width="160">
           <template scope="scope">
-              <el-button size="small" v-if="scope.row.status.indexOf('通过')<0" v-permit="'crm:pricesystemChange:edit'" @click.native="itemAction(scope.row.id,'pass')">{{$t('pricesystemChangeList.pass')}}</el-button>
-              <el-button size="small" v-if="scope.row.status.indexOf('通过')<0" v-permit="'crm:pricesystemChange:edit'" @click.native="itemAction(scope.row.id,'notPass')">{{$t('pricesystemChangeList.noPass')}}</el-button>
+              <el-button size="small" v-if="scope.row.status == '申请中'" v-permit="'crm:pricesystemChange:edit'" @click.native="itemAction(scope.row.id,'pass')">{{$t('pricesystemChangeList.pass')}}</el-button>
+              <el-button size="small" v-if="scope.row.status == '申请中'" v-permit="'crm:pricesystemChange:edit'" @click.native="itemAction(scope.row.id,'notPass')">{{$t('pricesystemChangeList.noPass')}}</el-button>
           </template>
         </el-table-column>
       </el-table>

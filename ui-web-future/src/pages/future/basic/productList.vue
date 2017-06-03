@@ -134,7 +134,7 @@
         this.formLabel.hasIme.value = util.bool2str(this.formData.hasIme);
         this.formLabel.allowBill.value = util.bool2str(this.formData.allowBill);
         this.formLabel.allowOrder.value =  util.bool2str(this.formData.allowOrder);
-        this.formLabel.productTypeId.value = util.getLabel(this.formData.productType);
+        this.formLabel.productTypeId.value = util.getLabel(this.formData.productTypeId);
         util.copyValue(this.formData,this.submitData);
         util.setQuery("productList",this.submitData);
         axios.get('/api/ws/future/basic/product',{params:this.submitData}).then((response) => {

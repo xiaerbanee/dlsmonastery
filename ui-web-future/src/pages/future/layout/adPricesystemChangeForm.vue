@@ -40,41 +40,31 @@
         },
         rules:{},
         productTypes:[],
+        adPricesystem:{},
         formVisible: false,
         submitDisabled:false,
         table:null,
         settings: {
-          colHeaders: [this.$t('adPricesystemChangeForm.id'),this.$t('adPricesystemChangeForm.productCode'),this.$t('adPricesystemChangeForm.productName'),this.$t('adPricesystemChangeForm.volume'),this.$t('adPricesystemChangeForm.shouldGet'),this.$t('adPricesystemChangeForm.materialA'),this.$t('adPricesystemChangeForm.materialB')],
+          colHeaders: [this.$t('adPricesystemChangeForm.id'),this.$t('adPricesystemChangeForm.productCode'),this.$t('adPricesystemChangeForm.productName'),this.$t('adPricesystemChangeForm.volume'),this.$t('adPricesystemChangeForm.shouldGet')],
           rowHeaders:true,
           autoColumnSize:true,
           allowInsertRow:false,
           maxRows:10000,
           columns: [{
-            data:"productId",
             readOnly: true,
             width:100
           },{
-            data:"productCode",
             readOnly: true,
             width:150
           },{
-            data:"productName",
             readOnly: true,
             width:300
           },{
-            data:"volume",
             type:"numeric",
             width:150
           },{
-            data:"shouldGet",
             type:"numeric",
             width:150
-          },{
-            width:150,
-            type:"numeric",
-          },{
-            width:150,
-            type:"numeric",
           }]
         },
       }
@@ -114,13 +104,24 @@
           this.formData=response.data;
           util.copyValue(this.$route.query,this.formData);
           this.getData();
-        })
+        });
+
       }
     }, created(){
-      this.initPage();
+      axios.get('/api/ws/future/layout/adPricesystemChange/findAdPricesystem').then((response)=>{
+        this.adPricesystem = response.data;
+        for(let key in this.adPricesystem){
+          this.settings.colHeaders.push(this.adPricesystem[key].name);
+          this.settings.columns.push({
+            type:"numeric",
+            width:300
+          })
+        }
+      })
     },activated () {
-      console.log(this.$route.query.headClick);
+
       if(!this.$route.query.headClick) {
+        console.log(this.$route.query.headClick);
         this.initPage();
       }
     }

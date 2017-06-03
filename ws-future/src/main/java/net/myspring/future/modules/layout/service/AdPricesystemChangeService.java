@@ -6,6 +6,7 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
@@ -57,7 +58,11 @@ public class AdPricesystemChangeService {
         return page;
     }
 
-    public List<AdPricesystemChangeForm> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
+    public List<AdPricesystemDto> findAdPricesystem(){
+        return BeanUtil.map(adpricesystemRepository.findByEnabledIsTrue(),AdPricesystemDto.class);
+    }
+
+    public List<List<Object>> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
         List<Product> productList = Lists.newArrayList();
         if(adPricesystemChangeQuery.getProductId()!=null){
             productList.add(productRepository.findOne(adPricesystemChangeQuery.getProductId()));
@@ -65,8 +70,8 @@ public class AdPricesystemChangeService {
             productList = productRepository.findAllEnabled();
         }
         List<AdPricesystem> adPricesystemList = adpricesystemRepository.findByEnabledIsTrue();
-        List<AdPricesystemChangeForm> adPricesystemChangeFormList = getFormData(productList,adPricesystemList);
-        return adPricesystemChangeFormList;
+        List<List<Object>> data = getFormData(productList,adPricesystemList);
+        return data;
     }
 
     public void save(List<List<String>> data){
@@ -133,8 +138,8 @@ public class AdPricesystemChangeService {
     }
 
     //拼接数据给界面
-    private List<AdPricesystemChangeForm> getFormData(List<Product> productList, List<AdPricesystem> adPricesystemList) {
-        List<AdPricesystemChangeForm> adPricesystemChangeFormList = Lists.newArrayList();
+    private List<List<Object>> getFormData(List<Product> productList, List<AdPricesystem> adPricesystemList) {
+        List<List<Object>> datas = Lists.newArrayList();
         List<Map<String, AdPricesystemDetail>> adPricesystemDetailList = Lists.newArrayList();
         for (AdPricesystem adPricesystem : adPricesystemList) {
             Map<String, AdPricesystemDetail> map = Maps.newHashMap();
@@ -147,21 +152,19 @@ public class AdPricesystemChangeService {
             adPricesystemDetailList.add(map);
         }
         for (Product product : productList) {
-            AdPricesystemChangeForm adPricesystemChangeForm = new AdPricesystemChangeForm();
-            adPricesystemChangeForm.setProductId(product.getId());
-            adPricesystemChangeForm.setProductName(product.getName());
-            adPricesystemChangeForm.setProductCode(product.getCode());
-            adPricesystemChangeForm.setVolume(product.getVolume());
-            adPricesystemChangeForm.setShouldGet(product.getShouldGet());
-            List<AdPricesystemDetailForm> adPricesystemDetailFormList = Lists.newArrayList();
+            List<Object> rows = Lists.newArrayList();
+            rows.add(product.getId());
+            rows.add(product.getCode());
+            rows.add(product.getName());
+            rows.add(product.getVolume());
+            rows.add(product.getShouldGet());
             for (int i = 0; i < adPricesystemList.size(); i++) {
                 AdPricesystemDetail adPricesystemDetail = adPricesystemDetailList.get(i).get(product.getId());
-                adPricesystemDetailFormList.add(BeanUtil.map(adPricesystemDetail,AdPricesystemDetailForm.class));
+                rows.add(adPricesystemDetail == null ? "" : adPricesystemDetail.getPrice());
             }
-            adPricesystemChangeForm.setAdPricesystemDetailFormList(adPricesystemDetailFormList);
-            adPricesystemChangeFormList.add(adPricesystemChangeForm);
+            datas.add(rows);
         }
-        return adPricesystemChangeFormList;
+        return datas;
     }
 
 }

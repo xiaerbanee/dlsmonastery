@@ -2,7 +2,10 @@ package net.myspring.cloud.modules.sys.web.controller;
 
 import net.myspring.cloud.modules.sys.dto.AccountKingdeeBookDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
+import net.myspring.cloud.modules.sys.web.form.AccountKingdeeBookForm;
 import net.myspring.cloud.modules.sys.web.query.AccountKingdeeBookQuery;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,5 +27,28 @@ public class AccountKingdeeBookController {
     public Page<AccountKingdeeBookDto> page(Pageable pageable, AccountKingdeeBookQuery accountKingdeeBookQuery){
         Page<AccountKingdeeBookDto> page = accountKingdeeBookService.findPage(pageable,accountKingdeeBookQuery);
         return page;
+    }
+
+    @RequestMapping(value = "queryProperty")
+    public AccountKingdeeBookQuery getQueryProperty(){
+        return accountKingdeeBookService.getQueryProperty();
+    }
+
+    @RequestMapping(value = "form")
+    public AccountKingdeeBookForm getForm(AccountKingdeeBookForm accountKingdeeBookForm){
+        return accountKingdeeBookService.getForm(accountKingdeeBookForm);
+    }
+
+    @RequestMapping(value = "save")
+    public RestResponse save(AccountKingdeeBookForm accountKingdeeBookForm){
+        accountKingdeeBookService.save(accountKingdeeBookForm);
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "delete")
+    public RestResponse delete(String id) {
+        accountKingdeeBookService.logicDelete(id);
+        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
     }
 }

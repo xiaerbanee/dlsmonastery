@@ -14,7 +14,6 @@
               <el-input v-model="formData.companyId" auto-complete="off" placeholder="请输入"></el-input>
             </el-form-item>
             <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
-              <el-input v-model="formData.companyId" auto-complete="off" placeholder="请输入"></el-input>
               <el-select v-model="formData.name" filterable clearable placeholder="请选择">
                 <el-option v-for="name in formData.nameList" :key="name" :label="name" :value="name"></el-option>
               </el-select>
@@ -110,7 +109,7 @@
       var that = this;
       that.formData = that.submitData;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/global/cloud/sys/kingdeeBook/getQuery').then((response) =>{
+      axios.get('/api/global/cloud/sys/kingdeeBook/queryProperty').then((response) =>{
         that.formData = response.data;
         that.pageRequest();
       });
