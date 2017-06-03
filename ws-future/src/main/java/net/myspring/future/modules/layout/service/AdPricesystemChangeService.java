@@ -6,15 +6,19 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.repository.AdpricesystemRepository;
+import net.myspring.future.modules.basic.web.form.AdPricesystemDetailForm;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.repository.AdPricesystemChangeRepository;
+import net.myspring.future.modules.layout.web.form.AdPricesystemChangeForm;
 import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -52,13 +57,16 @@ public class AdPricesystemChangeService {
         return page;
     }
 
-    public List<AdPricesystemChangeDto> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
-        ProductQuery productQuery = new ProductQuery();
-        productQuery.setId(adPricesystemChangeQuery.getProductId());
-
-        List<AdPricesystemChangeDto> adPricesystemChangeDtos = adPricesystemChangeRepository.findFilter(adPricesystemChangeQuery);
-        cacheUtils.initCacheInput(adPricesystemChangeDtos);
-        return adPricesystemChangeDtos;
+    public List<AdPricesystemChangeForm> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
+        List<Product> productList = Lists.newArrayList();
+        if(adPricesystemChangeQuery.getProductId()!=null){
+            productList.add(productRepository.findOne(adPricesystemChangeQuery.getProductId()));
+        }else{
+            productList = productRepository.findAllEnabled();
+        }
+        List<AdPricesystem> adPricesystemList = adpricesystemRepository.findByEnabledIsTrue();
+        List<AdPricesystemChangeForm> adPricesystemChangeFormList = getFormData(productList,adPricesystemList);
+        return adPricesystemChangeFormList;
     }
 
     public void save(List<List<String>> data){
@@ -124,5 +132,36 @@ public class AdPricesystemChangeService {
         }
     }
 
+    //拼接数据给界面
+    private List<AdPricesystemChangeForm> getFormData(List<Product> productList, List<AdPricesystem> adPricesystemList) {
+        List<AdPricesystemChangeForm> adPricesystemChangeFormList = Lists.newArrayList();
+        List<Map<String, AdPricesystemDetail>> adPricesystemDetailList = Lists.newArrayList();
+        for (AdPricesystem adPricesystem : adPricesystemList) {
+            Map<String, AdPricesystemDetail> map = Maps.newHashMap();
+            List<AdPricesystemDetail> adPricesystemDetails = adPricesystemDetailRepository.findByAdPricesystemId(adPricesystem.getId());
+            if(adPricesystemDetails!=null){
+                for (AdPricesystemDetail adPricesystemDetail : adPricesystemDetails) {
+                    map.put(adPricesystemDetail.getProductId(), adPricesystemDetail);
+                }
+            }
+            adPricesystemDetailList.add(map);
+        }
+        for (Product product : productList) {
+            AdPricesystemChangeForm adPricesystemChangeForm = new AdPricesystemChangeForm();
+            adPricesystemChangeForm.setProductId(product.getId());
+            adPricesystemChangeForm.setProductName(product.getName());
+            adPricesystemChangeForm.setProductCode(product.getCode());
+            adPricesystemChangeForm.setVolume(product.getVolume());
+            adPricesystemChangeForm.setShouldGet(product.getShouldGet());
+            List<AdPricesystemDetailForm> adPricesystemDetailFormList = Lists.newArrayList();
+            for (int i = 0; i < adPricesystemList.size(); i++) {
+                AdPricesystemDetail adPricesystemDetail = adPricesystemDetailList.get(i).get(product.getId());
+                adPricesystemDetailFormList.add(BeanUtil.map(adPricesystemDetail,AdPricesystemDetailForm.class));
+            }
+            adPricesystemChangeForm.setAdPricesystemDetailFormList(adPricesystemDetailFormList);
+            adPricesystemChangeFormList.add(adPricesystemChangeForm);
+        }
+        return adPricesystemChangeFormList;
+    }
 
 }

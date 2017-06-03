@@ -140,7 +140,7 @@ public class ShopAdService {
             shopAdForm.setId(id);
             message = audit(shopAdForm);
             if(message!=null){
-                message = StringUtils.join(message, CharConstant.COMMA);
+                message += StringUtils.join(message, CharConstant.COMMA);
             }
         }
         return message;

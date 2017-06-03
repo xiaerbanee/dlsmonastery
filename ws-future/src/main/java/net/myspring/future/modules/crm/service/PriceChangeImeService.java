@@ -37,10 +37,6 @@ public class PriceChangeImeService {
     @Autowired
     private ProductImeRepository productImeRepository;
     @Autowired
-    private ProductImeSaleRepository productImeSaleRepository;
-    @Autowired
-    private ProductImeUploadRepository productImeUploadRepository;
-    @Autowired
     private PriceChangeRepository priceChangeRepository;
     @Autowired
     private DepotRepository depotRepository;
@@ -133,12 +129,12 @@ public class PriceChangeImeService {
             String notExist = "";
             for(String ime:imeList){
                 if(!existImes.contains(ime)){
-                    StringUtils.join(ime,CharConstant.COMMA);
+                    notExist += StringUtils.join(ime,CharConstant.COMMA);
                 }
             }
             for (String shopName:shopNameList){
                 if(!existShops.contains(shopName)){
-                    StringUtils.join(shopName,CharConstant.COMMA);
+                    notExist +=StringUtils.join(shopName,CharConstant.COMMA);
                 }
             }
             return notExist+"不存在,保存失败";

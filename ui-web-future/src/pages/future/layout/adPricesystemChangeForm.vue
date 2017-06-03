@@ -11,9 +11,6 @@
         <el-form-item :label="formLabel.productName.label">
           <product-select v-model="formData.productId"></product-select>
         </el-form-item>
-        <!--<el-form-item :label="formLabel.productCode.label" :label-width="formLabelWidth">
-          <el-input v-model="formData.productCode" auto-complete="off" :placeholder="$t('adPricesystemChangeForm..likeSearch')"></el-input>
-        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="search()">{{$t('adPricesystemChangeForm.sure')}}</el-button>
@@ -32,7 +29,7 @@
       return{
         formData:{},
         submitData:{
-            id:'',
+          productId:'',
         },
         formLabel:{
           productName:{label:this.$t('adPricesystemChangeForm.productName')},
@@ -108,10 +105,10 @@
         this.getData();
       },getData(){
           util.copyValue(this.formData,this.submitData);
-        axios.get('/api/ws/future/layout/adPricesystemChange/filter',{params:this.submitData}).then((response)=>{
-          this.settings.data = response.data;
-          this.table.loadData(this.settings.data);
-        })
+          axios.get('/api/ws/future/layout/adPricesystemChange/findFilter',{params:this.submitData}).then((response)=>{
+            this.settings.data = response.data;
+            this.table.loadData(this.settings.data);
+          });
       },initPage(){
         axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response)=>{
           this.formData=response.data;
@@ -122,6 +119,7 @@
     }, created(){
       this.initPage();
     },activated () {
+      console.log(this.$route.query.headClick);
       if(!this.$route.query.headClick) {
         this.initPage();
       }
