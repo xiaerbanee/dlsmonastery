@@ -106,8 +106,6 @@
           this.checked = response.data.moduleIdList;
         })
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

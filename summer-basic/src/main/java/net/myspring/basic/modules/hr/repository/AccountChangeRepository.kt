@@ -5,6 +5,7 @@ import net.myspring.basic.modules.hr.domain.AccountChange
 import net.myspring.basic.modules.hr.dto.AccountChangeDto
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.util.CollectionUtils
 import java.util.*
 
 interface AccountChangeRepository : BaseRepository<AccountChange, String>,AccountChangeRepositoryCustom {
@@ -42,7 +42,7 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
             and t1.account_id=account.id
             and account.office_id=office.id
         """)
-        if (CollectionUtils.isEmpty(accountChangeQuery.officeIds)) {
+        if (CollectionUtil.isNotEmpty(accountChangeQuery.officeIds)) {
             sb.append(" and office.id IN :officeIds ")
         }
         if (accountChangeQuery.createdDate != null) {

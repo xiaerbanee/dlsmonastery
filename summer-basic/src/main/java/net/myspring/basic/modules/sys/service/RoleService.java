@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ import java.util.List;
  * Created by wangzm on 2017/5/2.
  */
 @Service
+@Transactional
 public class RoleService {
 
     @Autowired
@@ -70,7 +72,7 @@ public class RoleService {
                 roleModuleRepository.setEnabledByModuleIdList(false,removeIdList);
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
-                roleModuleRepository.batchSave(addRoleModules);
+                roleModuleRepository.save(addRoleModules);
             }
         } else if (CollectionUtil.isNotEmpty(roleModuleList)) {
             roleModuleRepository.setEnabledByRoleId(false, role.getId());
