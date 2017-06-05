@@ -22,6 +22,9 @@ public class RequestUtils {
     public static final String REQEUST_ENTITY = "requestEntity";
 
     public static RequestEntity getRequestEntity() {
+        if(RequestContextHolder.getRequestAttributes()==null) {
+            return null;
+        }
         HttpServletRequest request  = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         RequestEntity requestEntity;
         if(request.getAttribute(REQEUST_ENTITY) != null) {
