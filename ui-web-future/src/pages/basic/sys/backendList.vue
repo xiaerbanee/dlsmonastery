@@ -30,8 +30,8 @@
         <el-table-column prop="createdDate" :label="$t('backendList.createdDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('backendList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -81,13 +81,15 @@
       },itemAdd(){
         this.$router.push({ name: 'backendForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'backendForm', query: { id: id }})
-        } else if(action=="删除") {
+        } else if(action=="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/basic/sys/backend/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
+          });
+        }).catch(()=>{});
         }
       }
     },created () {

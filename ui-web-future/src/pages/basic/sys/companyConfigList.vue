@@ -36,8 +36,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('companyConfigList.operation')" width="140">
           <template scope="scope">
-              <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
-             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
+             <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -86,7 +86,7 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'companyConfigForm', query: { id: id }})
         }
       }

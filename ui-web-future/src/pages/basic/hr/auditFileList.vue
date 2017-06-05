@@ -72,9 +72,9 @@
         <el-table-column prop="memo":label="$t('auditFileList.memo')"></el-table-column>
         <el-table-column :label="$t('auditFileList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'审核')"  class="action">审核</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'详细')"  class="action">详细</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')"  class="action">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action">审核</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')"  class="action">详细</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -152,17 +152,19 @@
       },itemAdd(){
         this.$router.push({ name: 'auditFileForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'auditFileForm', query: { id: id }})
-        } else if(action=="详细"){
+        } else if(action=="detail"){
           this.$router.push({ name: 'auditFileDetail', query: { id: id,action:"detail" }})
-        }else if(action=="审核"){
+        }else if(action=="verify"){
           this.$router.push({ name: 'auditFileDetail', query: { id: id,action:"audit" }})
-        }else if(action=="删除") {
+        }else if(action=="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/basic/hr/auditFile/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
+          });
+        }).catch(()=>{});
         }
       }
     },created () {
