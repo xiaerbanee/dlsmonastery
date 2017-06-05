@@ -60,6 +60,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +92,12 @@ public class GoodsOrderService {
     private CacheUtils cacheUtils;
 
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
+        if (goodsOrderQuery.getExpressCodes() != null) {
+            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
+        }
+        if (goodsOrderQuery.getBusinessIds() != null) {
+            goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("\n|,")));
+        }
         Page<GoodsOrderDto> page = goodsOrderRepository.findAll(pageable, goodsOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
