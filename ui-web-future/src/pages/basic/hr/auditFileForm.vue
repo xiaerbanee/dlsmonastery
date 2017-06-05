@@ -76,9 +76,9 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
+              form.resetFields();
               this.submitDisabled = false;
               if(this.isCreate){
-                form.resetFields();
                 this.fileList = [];
               } else {
                 this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})
@@ -105,8 +105,6 @@
           this.processTypeList = response.data;
         })
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

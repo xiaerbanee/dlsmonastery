@@ -5,10 +5,12 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
+import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.service.ShopDepositService;
 import net.myspring.future.modules.layout.web.form.ShopDepositForm;
 import net.myspring.future.modules.layout.web.query.ShopDepositQuery;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,8 +27,7 @@ public class ShopDepositController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ShopDepositDto> list(Pageable pageable, ShopDepositQuery shopDepositQuery){
-        Page<ShopDepositDto> page = shopDepositService.findPage(pageable, shopDepositQuery);
-        return page;
+        return shopDepositService.findPage(pageable, shopDepositQuery);
     }
 
 
@@ -42,22 +43,20 @@ public class ShopDepositController {
         return "ceshi";
     }
 
-
-    @RequestMapping(value = "delete")
-    public RestResponse delete(ShopDepositForm shopDepositForm) {
-        shopDepositService.logicDelete(shopDepositForm);
-        RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return restResponse;
-    }
-
-    /**
-     * 押金列表只能够新增，不能修改和删除
-     */
     @RequestMapping(value = "getForm")
-    public ShopDepositForm getForm() {
-        ShopDepositForm shopDepositForm = new ShopDepositForm();
+    public ShopDepositForm getForm(ShopDepositForm shopDepositForm) {
         shopDepositForm.setOutBillTypeList(OutBillTypeEnum.getList());
         return shopDepositForm;
+
+    }
+
+    @RequestMapping(value = "findDto")
+    public ShopDepositDto findDto(String id) {
+
+        if(StringUtils.isBlank(id)){
+            return new ShopDepositDto();
+        }
+        return shopDepositService.findDto(id);
 
     }
 

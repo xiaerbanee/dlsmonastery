@@ -2,25 +2,25 @@
   <div>
     <head-tab active="shopGoodsDepositForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
+      <el-form :model="shopGoodsDeposit" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopGoodsDepositForm.shopName')" prop="shopId" >
-              <depot-select  :disabled="!isCreate" category="shop" v-model="inputForm.shopId"  @input="shopChanged"></depot-select>
+              <depot-select  :disabled="!isCreate" category="shop" v-model="shopGoodsDeposit.shopId"  @input="shopIdChanged"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopGoodsDepositForm.bank')" prop="bankId" >
-              <bank-select v-model="inputForm.bankId"></bank-select>
+              <bank-select v-model="shopGoodsDeposit.bankId"></bank-select>
             </el-form-item>
             <el-form-item :label="$t('shopGoodsDepositForm.amount')" prop="amount">
-              <el-input  v-model="inputForm.amount"></el-input>
+              <el-input  v-model="shopGoodsDeposit.amount"></el-input>
             </el-form-item>
             <el-form-item v-if="isCreate" :label="$t('shopGoodsDepositForm.department')" prop="departMent">
-              <el-select v-model="inputForm.departMent" >
-                <el-option v-for="item in inputForm.departMents" :key="item.fnumber"  :label="item.fname" :value="item.fnumber"></el-option>
+              <el-select v-model="shopGoodsDeposit.departMent" >
+                <el-option v-for="item in inputProperty.departMents" :key="item.fnumber"  :label="item.fname" :value="item.fnumber"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopGoodsDepositForm.remarks')" prop="remarks" >
-              <el-input type="textarea" v-model="inputForm.remarks"></el-input>
+              <el-input type="textarea" v-model="shopGoodsDeposit.remarks"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('shopGoodsDepositForm.save')}}</el-button>
@@ -47,8 +47,10 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            inputForm:{},
+            inputProperty:{},
+            shopGoodsDeposit:{},
             submitData:{
+              id:'',
               shopId:'',
               bankId:"",
               amount:"",
@@ -68,7 +70,7 @@
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
+              util.copyValue(this.shopGoodsDeposit,this.submitData);
               axios.post('/api/ws/future/crm/shopGoodsDeposit/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
@@ -84,16 +86,26 @@
               });
             }
           })
-        },shopChanged(){
-          axios.get('/api/ws/future/crm/shopGoodsDeposit/getForm',{params: {shopId:this.inputForm.shopId}}).then((response)=>{
-            this.inputForm = response.data;
-          })
+        },shopIdChanged(){
+            if(!this.isCreate){ //界面在修改的时候，不可以改变shopId
+                return ;
+            }
+          axios.get('/api/ws/future/crm/shopGoodsDeposit/findDefaultDepartMent',{params: {shopId:this.shopGoodsDeposit.shopId}}).then((response)=>{
+            this.shopGoodsDeposit.departMent  = response.data;
+          });
 
         }
       },created(){
-        axios.get('/api/ws/future/crm/shopGoodsDeposit/getForm',{params: {id: this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-        })
-      }
+        axios.get('/api/ws/future/crm/shopGoodsDeposit/getForm').then((response)=>{
+          this.inputProperty = response.data;
+        });
+    },activated () {
+        if(!this.$route.query.headClick) {
+
+          axios.get('/api/ws/future/crm/shopGoodsDeposit/findDto',{params: {id: this.$route.query.id}}).then((response)=>{
+            this.shopGoodsDeposit = response.data;
+          });
+        }
     }
+  }
 </script>

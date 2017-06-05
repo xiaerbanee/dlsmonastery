@@ -65,9 +65,9 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
+              form.resetFields();
               this.submitDisabled = false;
               if(this.isCreate){
-                form.resetFields();
                 this.fileList = [];
               } else {
                 this.$router.push({name:'dutyAnnualList',query:util.getQuery("dutyAnnualList")})
@@ -92,8 +92,6 @@
       },initPage() {
 
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

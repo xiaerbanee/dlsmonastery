@@ -73,22 +73,19 @@
           if (valid) {
             util.copyValue(this.inputForm,this.submitData)
             axios.post('/api/ws/future/layout/shopImage/save', qs.stringify(this.submitData)).then((response)=> {
-              console.log(response.data)
-              if(response.data.message){
-                this.$message(response.data.message);
-              }
+              this.$message(response.data.message);
               this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-                this.fileList=[];
-              } else {
-                this.$router.push({name:'shopImageList',query:util.getQuery("shopImageList")})
+              if(response.data.success) {
+                if (this.isCreate) {
+                  form.resetFields();
+                  this.fileList = [];
+                } else {
+                  this.$router.push({name: 'shopImageList', query: util.getQuery("shopImageList")})
+                }
               }
             }).catch(function () {
               this.submitDisabled = false;
             });
-          }else{
-            this.submitDisabled = false;
           }
         })
       },handlePreview(file) {
@@ -98,23 +95,25 @@
       },handleRemove(file, fileList) {
         this.fileList = fileList;
       },initPage(){
-        axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-        if(this.inputForm.id != null){
-          this.shopDisabled = true;
-        }
-        if(this.inputForm.image != null) {
-          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
-            this.fileList= response.data;
-        });
-        }
-      });
-        axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
-          this.formProperty = response.data;
-      });
+          axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm = response.data;
+            if(this.inputForm.id != null){
+              this.shopDisabled = true;
+            }else{
+              this.shopDisabled = false;
+            }
+            if(this.inputForm.image != null) {
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
+                this.fileList= response.data;
+              });
+            }else{
+              this.fileList = [];
+            }
+          });
+          axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
+            this.formProperty = response.data;
+          });
       }
-    },created(){
-      /*this.initPage();*/
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

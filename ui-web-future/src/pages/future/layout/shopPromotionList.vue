@@ -31,21 +31,21 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopPromotionList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="businessId" :label="$t('shopPromotionList.businessId')" sortable width="150"></el-table-column>
-        <el-table-column prop="shopName" :label="$t('shopPromotionList.shopName')" ></el-table-column>
-        <el-table-column prop="activityType" :label="$t('shopPromotionList.activityType')" ></el-table-column>
-        <el-table-column prop="amount" :label="$t('shopPromotionList.amount')" ></el-table-column>
-        <el-table-column prop="dayAmount" :label="$t('shopPromotionList.dayAmount')" ></el-table-column>
-        <el-table-column prop="salerComment" :label="$t('shopPromotionList.salerComment')" ></el-table-column>
-        <el-table-column prop="materialComment" :label="$t('shopPromotionList.materialComment')" ></el-table-column>
-        <el-table-column prop="activityImage1" :label="$t('shopPromotionList.activityImage1')" ></el-table-column>
-        <el-table-column prop="activityImage2":label="$t('shopPromotionList.activityImage2')" ></el-table-column>
-        <el-table-column prop="activityImage3" :label="$t('shopPromotionList.activityImage3')" ></el-table-column>
-        <el-table-column prop="comment" :label="$t('shopPromotionList.comment')" ></el-table-column>
-        <el-table-column prop="phone" :label="$t('shopPromotionList.phone')" ></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('shopPromotionList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('shopPromotionList.createdDate')"></el-table-column>
+        <el-table-column column-key="shopId" prop="shopName" :label="$t('shopPromotionList.shopName')" sortable></el-table-column>
+        <el-table-column prop="activityType" :label="$t('shopPromotionList.activityType')" sortable></el-table-column>
+        <el-table-column prop="amount" :label="$t('shopPromotionList.amount')" sortable></el-table-column>
+        <el-table-column prop="dayAmount" :label="$t('shopPromotionList.dayAmount')" sortable></el-table-column>
+        <el-table-column prop="salerComment" :label="$t('shopPromotionList.salerComment')" sortable></el-table-column>
+        <el-table-column prop="materialComment" :label="$t('shopPromotionList.materialComment')" sortable></el-table-column>
+        <el-table-column prop="activityImage1" :label="$t('shopPromotionList.activityImage1')" sortable></el-table-column>
+        <el-table-column prop="activityImage2":label="$t('shopPromotionList.activityImage2')" sortable></el-table-column>
+        <el-table-column prop="activityImage3" :label="$t('shopPromotionList.activityImage3')" sortable></el-table-column>
+        <el-table-column prop="comment" :label="$t('shopPromotionList.comment')" sortable></el-table-column>
+        <el-table-column prop="phone" :label="$t('shopPromotionList.phone')" sortable></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('shopPromotionList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('shopPromotionList.createdDate')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopPromotionList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('shopPromotionList.operation')">
+        <el-table-column fixed="right" :label="$t('shopPromotionList.operation')" sortable>
           <template scope="scope">
             <div class="action" v-permit="'crm:shopPromotion:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPromotionList.edit')}}</el-button></div>
             <div class="action" v-permit="'crm:shopPromotion:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPromotionList.delete')}}</el-button></div>
@@ -68,6 +68,7 @@
         },submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           businessId:'',
           activityType:'',
           shopId:''
@@ -96,7 +97,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

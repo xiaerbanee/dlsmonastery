@@ -2,11 +2,13 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopGoodsDepositStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
+import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositSumDto;
 import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
@@ -32,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -53,22 +57,6 @@ public class ShopGoodsDepositService {
         return page;
     }
 
-    public ShopGoodsDepositForm getForm(ShopGoodsDepositForm shopGoodsDepositForm) {
-        ShopGoodsDepositForm result;
-
-        if(shopGoodsDepositForm.isCreate()){
-            result = new ShopGoodsDepositForm();
-            if(shopGoodsDepositForm.getShopId()!=null){
-                result.setShopId(shopGoodsDepositForm.getShopId());
-                result.setDepartMent("");//TODO 需要设置department
-            }
-        }else{
-            ShopGoodsDeposit sgd = shopGoodsDepositRepository.findOne(shopGoodsDepositForm.getId());
-            result = BeanUtil.map(sgd, ShopGoodsDepositForm.class);
-        }
-        return result;
-    }
-
     public void save(ShopGoodsDepositForm shopGoodsDepositForm) {
 
         if(shopGoodsDepositForm.isCreate()){
@@ -84,45 +72,6 @@ public class ShopGoodsDepositService {
             shopGoodsDeposit.setAmount(shopGoodsDepositForm.getAmount());
             shopGoodsDepositRepository.save(shopGoodsDeposit);
         }
-    }
-
-    public void batchAudit(String[] ids) {
-        if(ids==null){
-            return;
-        }
-
-//                TODO 要檢查確認批量審核的所有記錄對應的門店都綁定了財務
-//                if(StringUtils.isBlank(shopGoodsDeposit.getShop().getRealOutId())){
-//                    throw new ServiceException("审核失败,"+shopGoodsDeposit.getShopName()+"没有绑定财务门店；");
-//                }
-            for(String eachId : ids){
-                if(eachId == null){
-                    continue;
-                }
-                ShopGoodsDeposit shopGoodsDeposit=shopGoodsDepositRepository.findOne(eachId);
-                if(shopGoodsDeposit == null || !ShopGoodsDepositStatusEnum.省公司审核.name().equals(shopGoodsDeposit.getStatus()) || StringUtils.isNotBlank(shopGoodsDeposit.getOutCode())){
-                    continue;
-                }
-
-//                    String otherTypes="其他应付款-订货会订金";
-                if(OutBillTypeEnum.手工日记账.name().equals(shopGoodsDeposit.getOutBillType())){
-                        //TODO 同步金蝶
-//                        K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.CN_JOURNAL.name(),shopGoodsDeposit.getBankJournal(otherTypes),shopGoodsDeposit.getId(),shopGoodsDeposit.getFormatId(), K3CloudSynEntity.ExtendType.定金收款.name());
-//                        k3cloudSynDao.save(k3CloudSynEntity);
-//                        shopGoodsDeposit.setK3CloudSynEntity(k3CloudSynEntity);
-                }
-                if(OutBillTypeEnum.其他应收单.name().equals(shopGoodsDeposit.getOutBillType())){
-                        //TODO 同步金蝶
-//                        K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.AR_OtherRecAble.name(),shopGoodsDeposit.getAROtherRecAbleImage(otherTypes),shopGoodsDeposit.getId(),shopGoodsDeposit.getFormatId(), K3CloudSynEntity.ExtendType.定金收款.name());
-//                        k3cloudSynDao.save(k3CloudSynEntity);
-//                        shopGoodsDeposit.setK3CloudSynEntity(k3CloudSynEntity);
-                }
-                shopGoodsDeposit.setStatus(ShopGoodsDepositStatusEnum.已通过.name());
-                shopGoodsDeposit.setLocked(true);
-                shopGoodsDeposit.setBillDate(LocalDateTime.now());
-                shopGoodsDepositRepository.save(shopGoodsDeposit);
-            }
-
     }
 
     public void delete(String id) {
@@ -171,4 +120,36 @@ public class ShopGoodsDepositService {
         cacheUtils.initCacheInput(result);
         return result;
     }
+
+    public ShopGoodsDepositDto findDto(String id) {
+
+        ShopGoodsDepositDto shopGoodsDepositDto = shopGoodsDepositRepository.findDto(id);
+        cacheUtils.initCacheInput(shopGoodsDepositDto);
+        return shopGoodsDepositDto;
+    }
+
+    public void audit(String id) {
+
+        ShopGoodsDepositDto  shopGoodsDepositDto = findDto(id);
+
+        if(StringUtils.isBlank(shopGoodsDepositDto.getShopClientOutId())){
+            throw new ServiceException(String.format("审核失败，%s 没有绑定财务门店；", shopGoodsDepositDto.getShopName()));
+        }
+        if(!ShopGoodsDepositStatusEnum.省公司审核.name().equals(shopGoodsDepositDto.getStatus())){
+            throw new ServiceException(String.format("订金（门店：%s，金额：%.2f）状态不为 %s ；", shopGoodsDepositDto.getShopName(), shopGoodsDepositDto.getAmount(), ShopGoodsDepositStatusEnum.省公司审核.name())) ;
+        }
+        if( StringUtils.isNotBlank(shopGoodsDepositDto.getOutCode())){
+            throw new ServiceException(String.format("订金（门店：%s，金额：%.2f）已经同步金蝶，outCode为 %s ；", shopGoodsDepositDto.getShopName(), shopGoodsDepositDto.getAmount(), shopGoodsDepositDto.getOutCode()) );
+        }
+
+
+        //TODO 同步金蝶
+        ShopGoodsDeposit  shopGoodsDeposit = shopGoodsDepositRepository.findOne(id);
+        shopGoodsDeposit.setStatus(ShopGoodsDepositStatusEnum.已通过.name());
+        shopGoodsDeposit.setLocked(true);
+        shopGoodsDeposit.setBillDate(LocalDateTime.now());
+        shopGoodsDepositRepository.save(shopGoodsDeposit);
+
+    }
+
 }

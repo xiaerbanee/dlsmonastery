@@ -32,16 +32,16 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopPrintList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('shopPrintList.code')" sortable width="150"></el-table-column>
-        <el-table-column prop="officeName" :label="$t('shopPrintList.officeId')"></el-table-column>
-        <el-table-column prop="printType" :label="$t('shopPrintList.printType')"></el-table-column>
-        <el-table-column prop="qty" :label="$t('shopPrintList.qty')"></el-table-column>
-        <el-table-column prop="content":label="$t('shopPrintList.content')" width="450"></el-table-column>
-        <el-table-column prop="address" :label="$t('shopPrintList.address')" width="150"></el-table-column>
-        <el-table-column prop="contator" :label="$t('shopPrintList.contact')"></el-table-column>
-        <el-table-column prop="mobilePhone" :label="$t('shopPrintList.mobilePhone')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('shopPrintList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('shopPrintList.createdDate')"></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('shopPrintList.processStatus')" width="150">
+        <el-table-column column-key="officeId" prop="officeName" :label="$t('shopPrintList.officeId')" sortable></el-table-column>
+        <el-table-column prop="printType" :label="$t('shopPrintList.printType')" sortable></el-table-column>
+        <el-table-column prop="qty" :label="$t('shopPrintList.qty')" sortable></el-table-column>
+        <el-table-column prop="content":label="$t('shopPrintList.content')" width="450" sortable></el-table-column>
+        <el-table-column prop="address" :label="$t('shopPrintList.address')" width="150" sortable></el-table-column>
+        <el-table-column prop="contator" :label="$t('shopPrintList.contact')" sortable></el-table-column>
+        <el-table-column prop="mobilePhone" :label="$t('shopPrintList.mobilePhone')" sortable></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('shopPrintList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('shopPrintList.createdDate')" sortable></el-table-column>
+        <el-table-column prop="processStatus" :label="$t('shopPrintList.processStatus')" width="150" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.processStatus=='已通过' ? 'primary' : 'danger'">{{scope.row.processStatus}}</el-tag>
           </template>
@@ -73,6 +73,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           officeId:'',
           printType:'',
           processStatus:'',
@@ -105,7 +106,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

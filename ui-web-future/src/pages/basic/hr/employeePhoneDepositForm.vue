@@ -78,10 +78,9 @@
             if (valid) {
               axios.get('/api/basic/hr/employeePhoneDeposit/save',{params:this.inputForm}).then((response)=> {
                 this.$message(response.data.message);
+                form.resetFields();
                 this.submitDisabled = false;
-                if(this.isCreate){
-                  form.resetFields();
-                } else {
+                if(!this.isCreate){
                   this.$router.push({name:'employeePhoneDepositList',query:util.getQuery("employeePhoneDepositList")})
                 }
               }).catch(function () {
@@ -107,8 +106,6 @@
             })
           }
         }
-      },created(){
-        this.initPage();
       },activated () {
         if(!this.$route.query.headClick) {
           this.initPage();

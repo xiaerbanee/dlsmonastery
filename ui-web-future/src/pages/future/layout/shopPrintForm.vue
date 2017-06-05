@@ -93,21 +93,19 @@
           if (valid) {
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/layout/shopPrint/save', qs.stringify(this.submitData)).then((response)=> {
-              if(response.data.message){
-                this.$message(response.data.message);
-              }
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-                this.fileList=[];
-              } else {
-                this.$router.push({name:'shopPrintList',query:util.getQuery("shopPrintList")})
+              this.$message(response.data.message);
+              this.submitDisabled = false;
+              if(response.data.success) {
+                if (this.isCreate) {
+                  form.resetFields();
+                  this.fileList = [];
+                } else {
+                  this.$router.push({name: 'shopPrintList', query: util.getQuery("shopPrintList")})
+                }
               }
             }).catch(function () {
               this.submitDisabled = false;
             });
-          }else{
-            this.submitDisabled = false;
           }
         })
       },typeChange(){

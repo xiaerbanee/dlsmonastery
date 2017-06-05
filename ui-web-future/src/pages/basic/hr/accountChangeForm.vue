@@ -95,10 +95,9 @@
               if(response.data.message){
               this.$message(response.data.message);
             }
+            form.resetFields();
             this.submitDisabled = false;
-            if(this.isCreate){
-              form.resetFields();
-            } else {
+            if(!this.isCreate){
               this.$router.push({name:'accountChangeList',query:util.getQuery("accountChangeList")})
             }
           }).catch(function () {
@@ -164,8 +163,6 @@
           this.inputForm=response.data;
         })
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

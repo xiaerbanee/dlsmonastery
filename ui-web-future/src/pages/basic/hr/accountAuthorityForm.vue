@@ -63,10 +63,9 @@
           if (valid) {
             axios.post('/api/basic/hr/account/saveAuthorityList', qs.stringify(this.inputForm, {allowDots:true})).then((response) => {
               this.$message(response.data.message);
+              form.resetFields();
               this.submitDisabled = false;
-              if (this.isCreate) {
-                form.resetFields();
-              } else {
+              if (!this.isCreate) {
                 this.$router.push({name: 'accountList', query: util.getQuery("accountList")})
               }
             }).catch(function () {
@@ -105,8 +104,6 @@
           this.treeData = new Array(response.data);
         })
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

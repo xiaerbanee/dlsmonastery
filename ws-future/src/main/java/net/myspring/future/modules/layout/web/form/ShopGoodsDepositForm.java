@@ -4,34 +4,17 @@ import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-/**
- * Created by wangzm on 2017/4/21.
- */
+
 public class ShopGoodsDepositForm extends BaseForm<ShopGoodsDeposit> {
 
-    private Boolean success;
-    private String message;
     private String shopId;
     private String bankId;
     private BigDecimal amount;
     private String departMent;
 
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    private List<String> departMentList;
 
     public String getShopId() {
         return shopId;
@@ -65,6 +48,11 @@ public class ShopGoodsDepositForm extends BaseForm<ShopGoodsDeposit> {
         this.departMent = departMent;
     }
 
+    public List<String> getDepartMentList() {
+        return departMentList;
+    }
 
-
+    public void setDepartMentList(List<String> departMentList) {
+        this.departMentList = departMentList;
+    }
 }

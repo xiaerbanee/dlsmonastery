@@ -70,10 +70,8 @@
         },handleRemove(file, fileList) {
           this.fileList = fileList;
         },initPage() {
-          
+
         }
-      },created(){
-        this.initPage();
       },activated () {
         if(!this.$route.query.headClick) {
           this.initPage();

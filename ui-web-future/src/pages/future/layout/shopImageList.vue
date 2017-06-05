@@ -25,12 +25,12 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopImageList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="areaName" :label="$t('shopImageList.areaName')" sortable width="150"></el-table-column>
+        <el-table-column fixed prop="areaName" :label="$t('shopImageList.areaName')" width="150"></el-table-column>
         <el-table-column prop="officeName" :label="$t('shopImageList.officeName')"></el-table-column>
-        <el-table-column prop="shopName"  :label="$t('shopImageList.shopName')"></el-table-column>
-        <el-table-column prop="imageType"  :label="$t('shopImageList.imageType')"></el-table-column>
-        <el-table-column prop="image"  :label="$t('shopImageList.image')"></el-table-column>
-        <el-table-column prop="imageSize"  :label="$t('shopImageList.imageSize')"></el-table-column>
+        <el-table-column column-key="shopId" prop="shopName"  :label="$t('shopImageList.shopName')" sortable></el-table-column>
+        <el-table-column prop="imageType"  :label="$t('shopImageList.imageType')" sortable></el-table-column>
+        <el-table-column prop="image"  :label="$t('shopImageList.image')" sortable></el-table-column>
+        <el-table-column prop="imageSize"  :label="$t('shopImageList.imageSize')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopImageList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('shopImageList.operation')" width="160">
           <template scope="scope">
@@ -55,6 +55,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           officeId:"",
           shopId:""
         },formLabel:{
@@ -80,7 +81,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

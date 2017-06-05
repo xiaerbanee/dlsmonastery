@@ -93,9 +93,12 @@ public class StkMisDeliveryService {
         }
         List<StkMisDeliveryDto> billList = Lists.newArrayList(misDeliveryMap.values());
         if (CollectionUtil.isNotEmpty(billList)) {
-            for (StkMisDeliveryDto misDelivery : billList) {
-                KingdeeSynDto kingdeeSynDto = save(misDelivery, kingdeeBook);
-                kingdeeSynDtoList.add(kingdeeSynDto);
+            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+            if(isLogin) {
+                for (StkMisDeliveryDto misDelivery : billList) {
+                    KingdeeSynDto kingdeeSynDto = save(misDelivery, kingdeeBook);
+                    kingdeeSynDtoList.add(kingdeeSynDto);
+                }
             }
         }
         return kingdeeSynDtoList;

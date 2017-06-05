@@ -6,22 +6,20 @@ import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 
-/**
- * Created by lihx on 2017/4/17.
- */
+
 public class ShopDepositDto extends DataDto<ShopDeposit> {
 
     private String shopId;
     @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
-    @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "officeId")
+
     private String shopOfficeId;
-
-   //TODO areaName如何获取 @CacheInput(inputKey = "offices",inputInstance = "shopOfficeId",outputInstance = "areaName")
-    private String shopAreaName;
-
     @CacheInput(inputKey = "offices",inputInstance = "shopOfficeId",outputInstance = "name")
     private String shopOfficeName;
+
+    private String shopAreaId;
+    @CacheInput(inputKey = "offices",inputInstance = "shopAreaId",outputInstance = "name")
+    private String shopAreaName;
 
     private String type;
     private String outCode;
@@ -29,6 +27,14 @@ public class ShopDepositDto extends DataDto<ShopDeposit> {
     private BigDecimal leftAmount;
     private Boolean locked;
     private Boolean enabled;
+
+    public String getShopAreaId() {
+        return shopAreaId;
+    }
+
+    public void setShopAreaId(String shopAreaId) {
+        this.shopAreaId = shopAreaId;
+    }
 
     public String getShopName() {
         return shopName;

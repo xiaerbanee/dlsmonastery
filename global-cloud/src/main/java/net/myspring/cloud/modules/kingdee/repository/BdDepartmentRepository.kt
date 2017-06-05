@@ -24,6 +24,8 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
             T_BD_DEPARTMENT_L t2
             where
             t1.FDEPTID = t2.FDEPTID
+            and t1.FFORBIDSTATUS = 'A'
+            and t1.FDOCUMENTSTATUS = 'C'
             and t1.FDEPTID in (:idList)
         """, Collections.singletonMap("idList", idList), BeanPropertyRowMapper(BdDepartment::class.java))
     }
@@ -39,7 +41,9 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
             T_BD_DEPARTMENT_L t2
             where
             t1.FDEPTID = t2.FDEPTID
-            and t2.FFULLNAME like %?%
+            and t1.FFORBIDSTATUS = 'A'
+            and t1.FDOCUMENTSTATUS = 'C'
+            and t2.FFULLNAME like concat('%',:name,'%')
         """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdDepartment::class.java))
     }
 }
