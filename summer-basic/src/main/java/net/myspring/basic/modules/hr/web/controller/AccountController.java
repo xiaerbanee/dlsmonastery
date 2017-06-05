@@ -130,7 +130,6 @@ public class AccountController {
 
     @RequestMapping(value = "searchFilter")
     public List<AccountDto> searchFilter(AccountQuery accountQuery) {
-        accountQuery.setOfficeId(RequestUtils.getRequestEntity().getOfficeId());
         List<AccountDto> accountDtoList = accountService.findByFilter(accountQuery);
         return accountDtoList;
     }

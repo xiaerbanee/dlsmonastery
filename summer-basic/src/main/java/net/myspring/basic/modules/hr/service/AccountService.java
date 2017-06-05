@@ -44,6 +44,7 @@ import java.util.UUID;
  * Created by liuj on 2017/3/19.
  */
 @Service
+@Transactional
 public class AccountService {
 
     @Autowired
@@ -94,6 +95,7 @@ public class AccountService {
     }
 
     public List<AccountDto> findByFilter(AccountQuery accountQuery) {
+        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getRequestEntity().getOfficeId()));
         List<Account> accountList = accountRepository.findByFilter(accountQuery);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         cacheUtils.initCacheInput(accountList);
@@ -188,17 +190,22 @@ public class AccountService {
 
     public void saveAccountAndPermission(AccountForm accountForm){
         List<String> permissionIdList=accountPermissionRepository.findPermissionIdByAccount(accountForm.getId());
-        List<String>removeIdList=CollectionUtil.subtract(permissionIdList,accountForm.getPermissionIdList());
-        List<String> addIdList=CollectionUtil.subtract(accountForm.getPermissionIdList(),permissionIdList);
-        List<AccountPermission> accountPermissions=Lists.newArrayList();
-        if(CollectionUtil.isNotEmpty(removeIdList)){
-            accountPermissionRepository.removeByPermissionList(removeIdList);
-        }
-        if(CollectionUtil.isNotEmpty(addIdList)){
-            for(String permissionId:addIdList){
-                accountPermissions.add(new AccountPermission(accountForm.getId(), permissionId));
+        if (CollectionUtil.isNotEmpty(accountForm.getPermissionIdList())) {
+            List<String> removeIdList = CollectionUtil.subtract(permissionIdList, accountForm.getPermissionIdList());
+            List<String> addIdList = CollectionUtil.subtract(accountForm.getPermissionIdList(), permissionIdList);
+            List<AccountPermission> addAccountPermissions = Lists.newArrayList();
+            for (String permissionId : addIdList) {
+                addAccountPermissions.add(new AccountPermission(accountForm.getId(), permissionId));
             }
-            accountPermissionRepository.save(accountPermissions);
+            accountPermissionRepository.setEnabledByAccountId(true, accountForm.getId());
+            if (CollectionUtil.isNotEmpty(removeIdList)) {
+                accountPermissionRepository.setEnabledByPermissionIdList(false,removeIdList);
+            }
+            if (CollectionUtil.isNotEmpty(addIdList)) {
+                accountPermissionRepository.save(addAccountPermissions);
+            }
+        } else if (CollectionUtil.isNotEmpty(permissionIdList)) {
+            accountPermissionRepository.setEnabledByAccountId(false, accountForm.getId());
         }
     }
 
