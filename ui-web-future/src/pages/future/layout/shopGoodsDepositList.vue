@@ -144,7 +144,7 @@
               this.$message(response.data.message);
               this.pageRequest();
             });
-          });
+          }).catch(()=>{});
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {

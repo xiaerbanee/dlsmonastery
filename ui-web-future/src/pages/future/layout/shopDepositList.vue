@@ -14,13 +14,11 @@
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopDepositList.likeSearch')"></el-input>
               </el-form-item>
-
               <el-form-item :label="formLabel.type.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.type" filterable clearable :placeholder="$t('shopDepositList.inputKey')">
                   <el-option v-for="item in formData.typeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
                 <account-select v-model="formData.createdBy"></account-select>
               </el-form-item>
@@ -70,10 +68,12 @@
 </template>
 <script>
   import accountSelect from 'components/basic/account-select'
+  import boolSelect from 'components/common/bool-select'
 
   export default{
     components:{
       accountSelect,
+      boolSelect,
 
     },
     data() {

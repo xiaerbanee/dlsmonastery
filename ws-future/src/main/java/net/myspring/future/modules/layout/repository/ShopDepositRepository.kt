@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopDeposit
+import net.myspring.future.modules.layout.dto.ShopAllotDto
 import net.myspring.future.modules.layout.dto.ShopDepositDto
 import net.myspring.future.modules.layout.web.query.ShopDepositQuery
 import net.myspring.util.repository.MySQLDialect
@@ -10,70 +11,79 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
-/**
- * Created by zhangyf on 2017/5/24.
- */
+
 interface ShopDepositRepository : BaseRepository<ShopDeposit,String>,ShopDepositRepositoryCustom {
 
-    @Query("""
-    SELECT
-        t1.*
-    FROM
-        crm_shop_deposit t1
-    WHERE
-        t1.id IN (
-            SELECT
-                Max(id)
-            FROM
-                crm_shop_deposit
-            WHERE
-                `type` = :type
-                AND shop_id IN :shopIds
-            GROUP BY
-                shop_id,
-                type
-        )
-    """, nativeQuery = true)
-    fun findByTypeAndShopIds(@Param("type") type: String, @Param("shopIds") shopIds: MutableList<String>): MutableList<ShopDeposit>
 
-    @Query("""
-    SELECT
-        t1.*
-    FROM
-        crm_shop_deposit t1
-    WHERE
-        t1.shop_id = :shopId
-    AND t1.type = :type
-    AND t1.enabled = 1
-    ORDER BY
-        t1.created_date DESC,
-        t1.id DESC
-    LIMIT 0,
-     :size
-    """, nativeQuery = true)
-    fun findByTypeAndShopId(@Param("shopId") shopId: String, @Param("type") type: String, @Param("size") size: Int?): MutableList<ShopDeposit>
 }
 
 interface ShopDepositRepositoryCustom{
     fun findPage(pageable: Pageable, shopDepositQuery: ShopDepositQuery): Page<ShopDepositDto>
+
+    fun findLatest(type: String, shopId: String): ShopDeposit?
+
+    fun findDto(id: String): ShopDepositDto
+
 }
 
 class ShopDepositRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopDepositRepositoryCustom{
+    override fun findDto(id: String): ShopDepositDto {
+        return namedParameterJdbcTemplate.queryForObject("""
+        SELECT
+            depot.office_id shopOfficeId,
+            depot.area_id shopAreaId,
+            t1.*
+        FROM
+            crm_shop_deposit t1,
+            crm_depot depot
+        WHERE
+            t1.id = :id
+            AND t1.shop_id = depot.id
+            AND depot.enabled = 1
+          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ShopDepositDto::class.java))
+
+    }
+
+    override fun findLatest(type: String, shopId: String): ShopDeposit? {
+
+        val params = HashMap<String, Any>()
+        params.put("type", type)
+        params.put("shopId", shopId)
+
+        val result = namedParameterJdbcTemplate.query("""
+        SELECT
+            t1.*
+        FROM
+            crm_shop_deposit t1
+        WHERE
+            t1.shop_id = :shopId
+        AND t1.type = :type
+        AND t1.enabled = 1
+        ORDER BY
+            t1.created_date DESC,
+            t1.id DESC
+        LIMIT  1
+          """, params, BeanPropertyRowMapper(ShopDeposit::class.java))
+
+        if(result !=null && result.size==1){
+            return result[0]
+        }else{
+            return null
+        }
+    }
 
     override fun findPage(pageable: Pageable, shopDepositQuery: ShopDepositQuery): Page<ShopDepositDto> {
-
 
         val sb = StringBuffer()
         sb.append("""
         SELECT
             depot.office_id shopOfficeId,
-            depot.name shopName,
+            depot.area_id shopAreaId,
             t1.*
         FROM
             crm_shop_deposit t1,
@@ -103,11 +113,11 @@ class ShopDepositRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         }
 
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap = BeanPropertySqlParameterSource(shopDepositQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ShopDepositDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val paramMap = BeanPropertySqlParameterSource(shopDepositQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ShopDepositDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
 
 
