@@ -186,4 +186,8 @@ public class AccountChangeService {
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
+
+    public void logicDelete(String id){
+        accountChangeRepository.logicDelete(id);
+    }
 }
