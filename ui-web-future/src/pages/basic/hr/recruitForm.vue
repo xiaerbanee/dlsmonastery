@@ -262,10 +262,9 @@
               this.inputForm.entryRealDate=util.formatLocalDateTime(this.inputForm.entryRealDate);
               axios.post('/api/basic/hr/recruit/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
+                form.resetFields();
                 this.submitDisabled = false;
-                if(this.isCreate){
-                  form.resetFields();
-                } else {
+                if(!this.isCreate){
                   this.$router.push({name:'recruitList',query:util.getQuery("recruitList")})
                 }
               }).catch(function () {
@@ -300,8 +299,6 @@
             })
           }
         }
-      },created(){
-        this.initPage();
       },activated () {
         if(!this.$route.query.headClick) {
           this.initPage();

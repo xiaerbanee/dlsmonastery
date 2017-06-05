@@ -33,6 +33,16 @@ interface ProductRepository : BaseRepository<Product,String>{
     fun findByNameAndCompanyId(@Param("companyId")companyId: String,@Param("name")name: String): Product?
 
     @Query("""
+        SELECT
+        t1
+        FROM  #{#entityName} t1
+        WHERE
+        t1.enabled=1
+        AND  t1.companyId = :companyId
+    """)
+    fun findByCompanyId(@Param("companyId")companyId: String): MutableList<Product>
+
+    @Query("""
         SELECT max(t1.outDate)
         FROM  #{#entityName} t1
         WHERE t1.companyId = :companyId

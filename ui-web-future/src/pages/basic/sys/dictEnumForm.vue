@@ -54,10 +54,9 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/basic/sys/dictEnum/save', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
+              form.resetFields();
               this.submitDisabled = false;
-              if(this.inputForm.create){
-                form.resetFields();
-              } else {
+              if(!this.inputForm.create){
                 this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList")})
               }
             }).catch(function () {
@@ -67,15 +66,17 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick) {
+      },initPage() {
         axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         });
         axios.get('/api/basic/sys/dictEnum/getForm').then((response)=>{
           this.inputProperty = response.data;
         });
+      }
+    },activated () {
+      if(!this.$route.query.headClick) {
+        this.initPage();
       }
     }
   }

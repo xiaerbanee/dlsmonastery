@@ -24,9 +24,8 @@
               <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.processFlow.label" :label-width="formLabelWidth">
-                <process-status-select v-model="formData.processFlow" type="门店建设申请">
-                </process-status-select>
+              <el-form-item :label="formLabel.processStatus.label" :label-width="formLabelWidth">
+                <process-status-select v-model="formData.processStatus" type="门店建设申请"></process-status-select>
               </el-form-item>
               <el-form-item :label="formLabel.fixtureType.label" :label-width="formLabelWidth">
                 <dict-enum-select v-model="formData.fixtureType" category="装修类别"></dict-enum-select>
@@ -99,7 +98,7 @@
           officeId:'',
           auditType:'',
           shopId:'',
-          processFlow:'',
+          processStatus:'',
           fixtureType:'',
           createdBy:'',
           createdDate:'',
@@ -108,7 +107,7 @@
           officeId:{label: this.$t('shopBuildList.officeName'),value:''},
           auditType:{label: this.$t('shopBuildList.auditType'),value:''},
           shopId:{label:this.$t('shopBuildList.shopName')},
-          processFlow:{label:this.$t('shopBuildList.processFlow'),value:''},
+          processStatus:{label:this.$t('shopBuildList.processFlow'),value:''},
           fixtureType:{label:this.$t('shopBuildList.fixtureType'),value:''},
           createdBy:{label: this.$t('shopBuildList.createdBy')},
           createdDate:{label: this.$t('shopBuildList.createdDate')},
@@ -170,12 +169,20 @@
            this.multipleSelection.push(val[key].id);
         }
     },batchPass(){
-      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:true}}).then((response) =>{
-        this.$message(response.data.message);
-        this.pageRequest();
-      })
+        if(!this.multipleSelection || this.multipleSelection.length < 1){
+          this.$message(this.$t('shopBuildList.noSelectionFound'));
+          return ;
+        }
+        axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:true}}).then((response) =>{
+          this.$message(response.data.message);
+          this.pageRequest();
+        })
     },batchBack(){
-      axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:false}}).then((response) =>{
+        if(!this.multipleSelection || this.multipleSelection.length < 1){
+          this.$message(this.$t('shopBuildList.noSelectionFound'));
+          return ;
+        }
+        axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:false}}).then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })

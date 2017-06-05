@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class MenuCategoryService {
 
     @Autowired
@@ -38,6 +40,7 @@ public class MenuCategoryService {
         return menuCategoryDtoPage;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         menuCategoryRepository.logicDelete(id);
     }

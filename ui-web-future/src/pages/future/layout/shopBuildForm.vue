@@ -100,21 +100,20 @@
           if (valid) {
               util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(this.submitData)).then((response)=> {
-              if(response.data.message){
-                this.$message(response.data.message);
-              }
-              if(this.isCreate){
-                form.resetFields();
-                this.fileList=[];
-                this.submitDisabled = false;
-              } else {
-                this.$router.push({name:'shopBuildList',query:util.getQuery("shopBuildList")})
+              this.$message(response.data.message);
+              this.submitDisabled = false;
+              if(response.data.success) {
+                if (this.isCreate) {
+                  form.resetFields();
+                  this.fileList = [];
+                  this.submitDisabled = false;
+                } else {
+                  this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList")})
+                }
               }
             }).catch(function () {
               this.submitDisabled = false;
             });
-          }else{
-            this.submitDisabled = false;
           }
         })
       },shopChange(){

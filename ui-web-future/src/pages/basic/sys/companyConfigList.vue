@@ -3,6 +3,7 @@
     <head-tab active="companyConfigList"></head-tab>
     <div>
       <el-row>
+         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:companyConfig:edit'">{{$t('companyConfigList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('companyConfigList.filter')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
@@ -36,8 +37,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('companyConfigList.operation')" width="140">
           <template scope="scope">
-              <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
-             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
+             <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -86,10 +87,19 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'companyConfigForm', query: { id: id }})
-        }
-      }
+        }else if(action=="delete"){
+           util.confirmBeforeDelRecord(this).then(()=> {
+               axios.get('/api/basic/sys/companyConfig/delete',{params: {id: id}}).then((response) => {
+                   this.$message(response.data.message);
+                   this.pageRequest();
+               });
+           });
+            }
+      },itemAdd(){
+         this.$router.push({ name: 'companyConfigForm'})
+       }
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);

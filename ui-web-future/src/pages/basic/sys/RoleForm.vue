@@ -74,10 +74,9 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/basic/sys/role/save',qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
+              form.resetFields();
               this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+              if(!this.isCreate){
                 this.$router.push({name:'roleList',query:util.getQuery("roleList")})
               }
             }).catch(function () {
@@ -106,8 +105,6 @@
           this.checked = response.data.moduleIdList;
         })
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

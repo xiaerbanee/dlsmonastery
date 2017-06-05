@@ -30,6 +30,9 @@
                   <el-option v-for="shopAdType in formData.shopAdTypes" :key="shopAdType.id" :label="shopAdType.name" :value="shopAdType.id"></el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item :label="formLabel.processStatus.label" :label-width="formLabelWidth">
+                <process-status-select v-model="formData.processStatus" type="广告申请"></process-status-select>
+              </el-form-item>
               <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
@@ -54,16 +57,20 @@
             <el-tag :type="scope.row.specialArea ? 'primary' : 'danger'">{{scope.row.specialArea | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column column-key="shopAdTypeId" prop="shopAdTypeName" :label="$t('shopAdList.shopAdType')" sortable width="120"></el-table-column>
+        <el-table-column column-key="shopAdTypeId" prop="shopAdTypeName" :label="$t('shopAdList.shopAdType')" sortable></el-table-column>
         <el-table-column prop="lengthWidthQty" :label="$t('shopAdList.lengthAndWidthAndQty')" width="120"></el-table-column>
         <el-table-column prop="area" :label="$t('shopAdList.totalArea')"></el-table-column>
         <el-table-column prop="price" :label="$t('shopAdList.price')" sortable></el-table-column>
         <el-table-column prop="content" :label="$t('shopAdList.content')" width="120"></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('shopAdList.processStatus')" sortable></el-table-column>
+        <el-table-column prop="processStatus" :label="$t('shopAdList.processStatus')" width="160" sortable>
+          <template scope="scope">
+            <el-tag :type="scope.row.processStatus === '已通过' ? 'primary' : 'danger'"  close-transition>{{scope.row.processStatus}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column column-key="createdBy" prop="createdByName" :label="$t('expressOrderList.createdBy')" sortable></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('expressOrderList.createdDate')" width="120" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('expressOrderList.createdDate')" width="100" sortable></el-table-column>
         <el-table-column column-key="lastModifiedBy" prop="lastModifiedByName" :label="$t('expressOrderList.lastModifiedBy' )" sortable></el-table-column>
-        <el-table-column prop="lastModifiedDate" :label="$t('expressOrderList.lastModifiedDate')" sortable width=120></el-table-column>
+        <el-table-column prop="lastModifiedDate" :label="$t('expressOrderList.lastModifiedDate')" sortable width=100></el-table-column>
         <el-table-column prop="remarks" :label="$t('expressOrderList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
           <template scope="scope">
@@ -83,12 +90,14 @@
   import accountSelect from 'components/basic/account-select';
   import depotSelect from 'components/future/depot-select';
   import boolSelect from 'components/common/bool-select';
+  import processStatusSelect from 'components/general/process-status-select';
   export default {
     components:{
       officeSelect,
       accountSelect,
       depotSelect,
-      boolSelect
+      boolSelect,
+      processStatusSelect
     },
     data() {
       return {
@@ -104,12 +113,14 @@
           shopId:"",
           specialArea:'',
           shopAdTypeId:'',
+          processStatus:'',
           createdBy:"",
           createdDate:""
         },formLabel:{
           officeId:{label:this.$t('shopAdList.areaName'),value:""},
           id:{label:this.$t('shopAdList.adCode'),value:""},
           shopName:{label:this.$t('shopAdList.shopName')},
+          processStatus:{label:this.$t('shopAdList.processStatus')},
           specialArea:{label:this.$t('shopAdList.specialArea'),value:''},
           shopAdTypeId:{label:this.$t('shopAdList.shopAdType'),value:''},
           createdBy:{label:this.$t('shopAdList.createdBy')},

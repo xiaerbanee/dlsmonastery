@@ -124,7 +124,7 @@ public class AccountService {
         return account;
     }
 
-
+    @Transactional
     public void logicDelete(String id) {
         accountRepository.logicDelete(id);
     }

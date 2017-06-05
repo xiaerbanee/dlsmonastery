@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.RolePermission
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 
 
@@ -39,6 +40,7 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
      SET t.enabled=?1
      where t.roleId=?2
      """)
+    @Modifying
     fun setEnabledByRoleId(enabled: Boolean, roleId: String): Int
 
     @Query("""
@@ -46,6 +48,7 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
          SET t.enabled=?1
          where t.permissionId in ?2
      """)
+    @Modifying
     fun setEnabledByPermissionIdList(enabled: Boolean,  permissionIdList: MutableList<String>): Int
 
     @Query("""
@@ -60,6 +63,7 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
        SET t.enabled=?1
        where t.roleId=?2
      """)
+    @Modifying
     fun setEnabledByPermissionId(enabled: Boolean, permissionId: String): Int
 
     @Query("""
@@ -67,6 +71,7 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
        SET t.enabled=?1
         where t.roleId in ?2
      """)
+    @Modifying
     fun setEnabledByRoleIdList( enabled: Boolean,  roleIdList: MutableList<String>): Int
 
 }

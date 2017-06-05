@@ -105,10 +105,12 @@
         if(action=="edit") {
           this.$router.push({ name: 'dictEnumForm', query: { id: id }})
         } else if(action=="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/basic/sys/dictEnum/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
+          });
+        }).catch(()=>{});
         }
       }
     },created () {

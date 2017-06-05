@@ -182,10 +182,9 @@
                   axios.post('/api/basic/hr/account/save', qs.stringify(this.accountSubmitData)).then((response)=> {
                     this.$message("账户"+response.data.message);
                   });
+                  employeeForm.resetFields();
                   this.submitDisabled = false;
-                  if(this.isCreate){
-                    employeeForm.resetFields();
-                  } else {
+                  if(!this.isCreate){
                     this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
                   }
                 }).catch(function () {
@@ -210,8 +209,6 @@
           console.log(this.inputProperty)
         })
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

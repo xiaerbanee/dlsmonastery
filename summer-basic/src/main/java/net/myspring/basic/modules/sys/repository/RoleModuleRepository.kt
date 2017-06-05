@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.RoleModule
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 
 
@@ -40,20 +41,14 @@ interface RoleModuleRepository : BaseRepository<RoleModule, String> {
                SET t.enabled=?1
                where t.roleId=?2
      """)
+    @Modifying
     fun setEnabledByRoleId(enabled: Boolean, roleId: String): Int
 
     @Query("""
             UPDATE  #{#entityName} t
             SET t.enabled=?1
-            where bankendModuleId in ?2
+            where t.backendModuleId in (?2)
      """)
+    @Modifying
     fun setEnabledByModuleIdList(enabled: Boolean, moduleIds: MutableList<String>): Int
-
-    @Query("""
-              UPDATE  #{#entityName} t
-               SET t.enabled=?1
-            where bankendModuleId in ?2
-     """)
-            //TODO 修改sql
-    fun batchSave(addRoleModules: MutableList<RoleModule>)
 }
