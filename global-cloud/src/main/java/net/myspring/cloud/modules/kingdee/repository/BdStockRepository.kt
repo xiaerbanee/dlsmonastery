@@ -31,7 +31,7 @@ class  BdStockRepository @Autowired constructor(val namedParameterJdbcTemplate: 
             t1.FSTOCKID = t2.FSTOCKID
             AND t1.FGROUP = t3.FID
             AND t3.FID = t4.FID
-            and t2.FNAME like %?%
+            and t2.FNAME like concat('%',:name,'%')
         """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdStock::class.java))
     }
 

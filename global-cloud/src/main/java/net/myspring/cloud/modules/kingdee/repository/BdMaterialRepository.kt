@@ -53,7 +53,7 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
             t1.FMATERIALID = t2.FMATERIALID
             AND t1.FMATERIALGROUP = t3.FID
             AND t3.FID = t4.FID
-            and t2.FNAME = ?
+            and t2.FNAME = :name
         """,Collections.singletonMap("name",name),BeanPropertyRowMapper(BdMaterial::class.java))
     }
 }

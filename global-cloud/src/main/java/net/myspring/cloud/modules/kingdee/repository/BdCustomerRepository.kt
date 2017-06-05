@@ -101,7 +101,7 @@ class BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate
             t1.FCUSTID = t2.FCUSTID
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
-            and t1.FCUSTID = ?
+            and t1.FCUSTID = :id
         """,Collections.singletonMap("id",id),BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
@@ -124,7 +124,7 @@ class BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate
             t1.FCUSTID = t2.FCUSTID
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
-            AND t2.FNAME like %?%
+            AND t2.FNAME like like concat('%',:name,'%')
         """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdCustomer::class.java))
     }
 

@@ -39,7 +39,7 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
             T_BD_DEPARTMENT_L t2
             where
             t1.FDEPTID = t2.FDEPTID
-            and t2.FFULLNAME like %?%
+            and t2.FFULLNAME like concat('%',:name,'%')
         """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdDepartment::class.java))
     }
 }
