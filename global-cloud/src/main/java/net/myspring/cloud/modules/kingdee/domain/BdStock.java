@@ -10,6 +10,7 @@ public class BdStock {
     //分组
     private Long FGroup;
     private String FGroupName;
+    //修改时间
     private LocalDate FModifyDate;
 
     public String getFStockId() {

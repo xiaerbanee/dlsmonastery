@@ -124,6 +124,7 @@ public class SalReturnStockDto {
                 detail.put("FMaterialId", CollectionUtil.getMap("FNumber", batchBillDetail.getMaterialNumber()));
                 detail.put("FStockId", CollectionUtil.getMap("FNumber", getStoreNumber()));
                 detail.put("FStockStatusID", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
+                detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
                 detail.put("FRealQty", batchBillDetail.getQty());
                 detail.put("FBaseunitQty", batchBillDetail.getQty());
                 detail.put("FTaxPrice", batchBillDetail.getPrice());

@@ -35,6 +35,15 @@ public class ShopGoodsDepositDto extends DataDto<ShopGoodsDeposit> {
     @CacheInput(inputKey = "banks",inputInstance = "bankId",outputInstance = "name")
     private String bankName;
 
+    private String shopClientOutId;
+
+    public String getShopClientOutId() {
+        return shopClientOutId;
+    }
+
+    public void setShopClientOutId(String shopClientOutId) {
+        this.shopClientOutId = shopClientOutId;
+    }
 
     public String getFormatId(){
         return IdUtils.getFormatId(getId(), FormatterConstant.SHOP_AD);

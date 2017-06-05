@@ -7,14 +7,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Created by wangzm on 2017/4/21.
- */
 public class ShopDepositForm extends BaseForm<ShopDeposit> {
 
-    private BigDecimal imageAmount = BigDecimal.ZERO;
-    private BigDecimal demoPhoneAmount= BigDecimal.ZERO;
-    private BigDecimal marketAmount= BigDecimal.ZERO;
+    private BigDecimal imageAmount;
+    private BigDecimal demoPhoneAmount ;
+    private BigDecimal marketAmount;
     private LocalDate billDate;
     private String bankId;
     private String departMent;
@@ -98,24 +95,24 @@ public class ShopDepositForm extends BaseForm<ShopDeposit> {
     }
 
 
-    public boolean isImageAmountPositive() {
-        if (imageAmount != null && imageAmount.compareTo(BigDecimal.ZERO) > 0) {
+    public boolean isImageAmountValid() {
+        if (imageAmount != null && ! imageAmount.equals(BigDecimal.ZERO) ) {
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean isDemoPhoneAmountPositive() {
-        if (demoPhoneAmount != null && demoPhoneAmount.compareTo(BigDecimal.ZERO) > 0) {
+    public boolean isDemoPhoneAmountValid() {
+        if (demoPhoneAmount != null && ! demoPhoneAmount.equals(BigDecimal.ZERO)) {
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean isMarketAmountPositive() {
-        if (marketAmount != null && marketAmount.compareTo(BigDecimal.ZERO) > 0) {
+    public boolean isMarketAmountValid() {
+        if (marketAmount != null && ! marketAmount.equals(BigDecimal.ZERO)) {
             return true;
         } else {
             return false;

@@ -23,7 +23,7 @@ interface OfficeLeaderRepository : BaseRepository<OfficeLeader,String>{
         SELECT t1
         FROM #{#entityName} t1
         where t1.enabled=1
-        and t1.officeId=:officeId
+        and t1.officeId=?1
     """)
     fun findByOfficeId(officeId: String): MutableList<OfficeLeader>
 
@@ -31,7 +31,7 @@ interface OfficeLeaderRepository : BaseRepository<OfficeLeader,String>{
         SELECT t1
         FROM #{#entityName} t1
         where t1.enabled=1
-        and t1.officeId=:officeId
+        and t1.officeId=?1
     """)
     fun findAllByOfficeId(officeId: String): MutableList<OfficeLeader>
 

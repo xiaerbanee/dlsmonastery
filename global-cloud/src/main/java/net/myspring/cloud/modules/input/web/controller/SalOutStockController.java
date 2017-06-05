@@ -45,7 +45,7 @@ public class SalOutStockController {
             if (kingdeeSynExtendDto.getSuccess()){
                 return new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);
             }else {
-                return new RestResponse("入库开单失败：" + kingdeeSynExtendDto.getResult(),null,true);
+                return new RestResponse("入库开单失败：" + kingdeeSynExtendDto.getResult(),null,false);
             }
         }
         return null;
