@@ -81,6 +81,8 @@
             this.formData.json = JSON.stringify(this.formData.json);
             axios.post('/api/global/cloud/sys/product/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
+              form.resetFields();
+              this.submitDisabled = false;
             }).catch(function () {
               this.submitDisabled = false;
             });
