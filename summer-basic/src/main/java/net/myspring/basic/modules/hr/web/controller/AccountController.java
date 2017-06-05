@@ -120,9 +120,9 @@ public class AccountController {
 
     @RequestMapping(value="checkLoginName")
         public RestResponse checkLoginName(AccountQuery accountQuery){
-        RestResponse restResponse=null;
+        RestResponse restResponse=new RestResponse("登录名可用", null);
         if(!accountService.checkLoginName(accountQuery)) {
-            restResponse = new RestResponse("登录名不能重复", ResponseCodeEnum.saved.name());
+            restResponse = new RestResponse("登录名不能重复", null,false);
         }
         return restResponse;
     }

@@ -27,6 +27,8 @@ export default {
       }
     }
  },created () {
+    console.log("this.page")
+    console.log(this.page)
     if(this.layout==null || this.layout=="") {
       this.innerLayout ="sizes, prev, pager, next, jumper, total";
     } else {

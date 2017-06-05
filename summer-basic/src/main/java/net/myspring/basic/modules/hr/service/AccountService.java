@@ -107,12 +107,15 @@ public class AccountService {
             account = BeanUtil.map(accountForm, Account.class);
             accountRepository.save(account);
         } else {
+            account = accountRepository.findOne(accountForm.getId());
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
                 accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
             } else {
                 accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
             }
-            account = accountRepository.findOne(accountForm.getId());
+            if(StringUtils.isBlank(accountForm.getOutPassword())&&StringUtils.isNotBlank(account.getOutPassword())){
+                accountForm.setOutPassword(account.getOutPassword());
+            }
             ReflectionUtil.copyProperties(accountForm,account);
             accountRepository.save(account);
         }
