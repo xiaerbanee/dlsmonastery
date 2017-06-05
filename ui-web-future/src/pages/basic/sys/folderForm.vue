@@ -36,7 +36,6 @@
               remarks:''
             },
             rules: {
-              parentId: [{ required: true, message: this.$t('folderForm.prerequisiteMessage')}],
               name: [{ required: true, message: this.$t('folderForm.prerequisiteMessage')}]
             }
           }
