@@ -32,6 +32,8 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
             t1.FMATERIALID = t2.FMATERIALID
             AND t1.FMATERIALGROUP = t3.FID
             AND t3.FID = t4.FID
+            and t1.FFORBIDSTATUS = 'A'
+            and t1.FDOCUMENTSTATUS = 'C'
         """, BeanPropertyRowMapper(BdMaterial::class.java))
     }
 
@@ -53,6 +55,8 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
             t1.FMATERIALID = t2.FMATERIALID
             AND t1.FMATERIALGROUP = t3.FID
             AND t3.FID = t4.FID
+            and t1.FFORBIDSTATUS = 'A'
+            and t1.FDOCUMENTSTATUS = 'C'
             and t2.FNAME = :name
         """,Collections.singletonMap("name",name),BeanPropertyRowMapper(BdMaterial::class.java))
     }

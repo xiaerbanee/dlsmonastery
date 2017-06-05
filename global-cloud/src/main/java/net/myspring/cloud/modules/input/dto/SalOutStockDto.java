@@ -121,9 +121,10 @@ public class SalOutStockDto {
         for (SalOutStockFEntityDto salOutStockFEntityDto: getSalOutStockFEntityDtoList()) {
             if (salOutStockFEntityDto.getQty() != null && salOutStockFEntityDto.getQty() > 0) {
                 Map<String, Object> detail = Maps.newLinkedHashMap();
-                detail.put("FMaterialId", CollectionUtil.getMap("FNumber", salOutStockFEntityDto.getMaterialNumber()));
                 detail.put("FStockID", CollectionUtil.getMap("FNumber", getStoreNumber()));
+                detail.put("FMaterialId", CollectionUtil.getMap("FNumber", salOutStockFEntityDto.getMaterialNumber()));
                 detail.put("FStockStatusID", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
+                detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
                 detail.put("FRealQty", salOutStockFEntityDto.getQty());
                 detail.put("FBaseUnitQty", salOutStockFEntityDto.getQty());
                 detail.put("FPriceUnitQty", salOutStockFEntityDto.getQty());
@@ -141,9 +142,10 @@ public class SalOutStockDto {
                 entity.add(detail);
             }
         }
-        model.put("SAL_OUTSTOCK__FEntity", entity);
+        model.put("FEntity", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
+        System.out.println(result);
         return result;
     }
 }

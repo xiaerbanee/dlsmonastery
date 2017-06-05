@@ -32,6 +32,8 @@ class BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate
             t1.FCUSTID = t2.FCUSTID
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
+            and t1.FFORBIDSTATUS = 'A'
+            and t1.FDOCUMENTSTATUS = 'C'
         """, BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
@@ -54,6 +56,8 @@ class BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate
             t1.FCUSTID = t2.FCUSTID
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
+            and t1.FFORBIDSTATUS = 'A'
+            and t1.FDOCUMENTSTATUS = 'C'
             and t2.FNAME in (:nameLists)
         """, Collections.singletonMap("nameLists",nameList), BeanPropertyRowMapper(BdCustomer::class.java))
 
@@ -78,6 +82,8 @@ class BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate
             t1.FCUSTID = t2.FCUSTID
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
+            and t1.FFORBIDSTATUS = 'A'
+            and t1.FDOCUMENTSTATUS = 'C'
             and t1.FCUSTID in (:idList)
         """, Collections.singletonMap("idList",idList),  BeanPropertyRowMapper(BdCustomer::class.java))
     }
@@ -101,6 +107,8 @@ class BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate
             t1.FCUSTID = t2.FCUSTID
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
+            and t1.FFORBIDSTATUS = 'A'
+            and t1.FDOCUMENTSTATUS = 'C'
             and t1.FCUSTID = :id
         """,Collections.singletonMap("id",id),BeanPropertyRowMapper(BdCustomer::class.java))
     }
