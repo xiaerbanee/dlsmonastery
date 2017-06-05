@@ -48,7 +48,6 @@ public class GoodsOrderShipController {
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.setNetTypeList(NetTypeEnum.getList());
         goodsOrderQuery.setShipTypeList(ShipTypeEnum.getList());
-        /*goodsOrderQuery.setStatusList(GoodsOrderStatusEnum.getList());*/
         goodsOrderQuery.setStatusList(Arrays.asList("待发货","待签收","已完成"));
         return goodsOrderQuery;
     }
