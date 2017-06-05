@@ -4,10 +4,10 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('companyConfigForm.name')" prop="name">
-          <el-input v-model="inputForm.name" readonly></el-input>
+          <el-input v-model="inputForm.name" :readonly="!isCreate"></el-input>
         </el-form-item>
          <el-form-item :label="$t('companyConfigForm.code')" prop="code">
-           <el-input v-model="inputForm.code" readonly></el-input>
+           <el-input v-model="inputForm.code" :readonly="!isCreate"></el-input>
          </el-form-item>
         <el-form-item :label="$t('companyConfigForm.value')" prop="value">
           <el-input v-model="inputForm.value"></el-input>
@@ -16,7 +16,7 @@
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{$t('companyConfigForm.save')}}</el-button>
+          <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{isCreate}}{{$t('companyConfigForm.save')}}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -27,6 +27,7 @@
       data(){
         return{
           submitDisabled:false,
+          isCreate:true,
           inputForm:{},
           submitData:{
             id:'',
@@ -63,6 +64,7 @@
             }
           })
         },initPage() {
+          this.isCreate=this.$route.query.id==null
           axios.get('/api/basic/sys/companyConfig/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })

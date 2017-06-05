@@ -3,6 +3,7 @@
     <head-tab active="companyConfigList"></head-tab>
     <div>
       <el-row>
+         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:companyConfig:edit'">{{$t('companyConfigList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('companyConfigList.filter')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
@@ -89,7 +90,9 @@
         if(action=="edit") {
           this.$router.push({ name: 'companyConfigForm', query: { id: id }})
         }
-      }
+      },itemAdd(){
+         this.$router.push({ name: 'companyConfigForm'})
+       }
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);

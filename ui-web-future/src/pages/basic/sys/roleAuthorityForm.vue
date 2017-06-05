@@ -67,11 +67,7 @@
             axios.post('/api/basic/sys/role/saveAuthorityList',qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
               this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
-                this.$router.push({name:'roleList',query:util.getQuery("roleList")})
-              }
+              form.resetFields();
             }).catch(function () {
                 this.submitDisabled = false;
               });
