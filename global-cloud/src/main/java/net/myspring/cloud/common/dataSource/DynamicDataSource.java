@@ -2,13 +2,7 @@ package net.myspring.cloud.common.dataSource;
 
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
 import net.myspring.cloud.common.utils.RequestUtils;
-import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-
 public class DynamicDataSource extends AbstractRoutingDataSource {
 
     @Override

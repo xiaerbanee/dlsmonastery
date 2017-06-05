@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.DynamicDataSource;
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
