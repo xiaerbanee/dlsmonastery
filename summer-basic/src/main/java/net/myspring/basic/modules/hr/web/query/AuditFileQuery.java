@@ -46,16 +46,19 @@ public class AuditFileQuery extends BaseQuery {
     }
 
     public String getPositionId() {
-        if(auditType == null || auditType.equals("1")) {
-            this.positionId = RequestUtils.getRequestEntity().getPositionId();
-        }else {
-            this.positionId="";
-        }
         return positionId;
     }
 
     public void setPositionId(String positionId) {
         this.positionId = positionId;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getAuditType() {

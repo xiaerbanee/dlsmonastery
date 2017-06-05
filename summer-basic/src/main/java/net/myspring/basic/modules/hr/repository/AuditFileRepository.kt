@@ -4,7 +4,9 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.AuditFile
 import net.myspring.basic.modules.hr.dto.AuditFileDto
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -36,8 +38,11 @@ class AuditFileRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempl
             and t3.office_id=office.id
             AND t1.enabled=1
         """)
-        if (auditFileQuery.officeIds != null && auditFileQuery.officeIds.size != 0) {
-            sb.append(" and office.id IN :officeIds ")
+        if (CollectionUtil.isNotEmpty(auditFileQuery.officeIds)) {
+            sb.append(" and t1.office_id IN :officeIds ")
+        }
+        if (StringUtils.isNotBlank(auditFileQuery.positionId)) {
+            sb.append(" and t1.position_id=:positionId")
         }
         if (auditFileQuery.createdDateStart != null) {
             sb.append(" and t1.created_date > :createdDateStart ")

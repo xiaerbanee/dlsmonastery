@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,8 +34,9 @@ public class AuditFileController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<AuditFileDto> data(Pageable pageable, AuditFileQuery auditFileQuery) {
-        if(auditFileQuery.getAuditType()==null||auditFileQuery.getAuditType().equals("1")){
+    public Page<AuditFileDto> list(Pageable pageable, AuditFileQuery auditFileQuery) {
+        if(StringUtils.isBlank(auditFileQuery.getAuditType())||!"全部".equals(auditFileQuery.getAuditType())) {
+            auditFileQuery.setAuditType("全部");
             auditFileQuery.setPositionId(RequestUtils.getRequestEntity().getPositionId());
         }
         Page<AuditFileDto> page = auditFileService.findPage(pageable,auditFileQuery);
