@@ -93,7 +93,9 @@
         axios.get('/api/ws/future/basic/depot/findDepotAccountList?' + qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        })
+        }).catch(()=>{
+          this.pageLoading = false;
+        });
       }, pageChange(pageNumber, pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
@@ -106,7 +108,7 @@
         this.formVisible = false;
         this.pageRequest();
       }, itemAction: function (id, action) {
-        if(action=="detail") {
+        if(action==="detail") {
           this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.submitData.dateRange}});
         }
       }, exportAllDepots() {
@@ -132,7 +134,7 @@
       }).catch(()=>{});
     }
   }, created (){
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/basic/depot/getDepotAccountQuery').then((response) =>{
         that.formData=response.data;

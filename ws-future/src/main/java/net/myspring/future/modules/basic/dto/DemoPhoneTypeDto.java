@@ -20,8 +20,17 @@ public class DemoPhoneTypeDto  extends DataDto<DemoPhoneType>{
     private String productTypeNames;
     private LocalDate applyEndDate;
     private LocalDate renewEndDate;
+    private List<String> productTypeIdList;
     private Boolean locked;
     private Boolean enabled;
+
+    public List<String> getProductTypeIdList() {
+        return productTypeIdList;
+    }
+
+    public void setProductTypeIdList(List<String> productTypeIdList) {
+        this.productTypeIdList = productTypeIdList;
+    }
 
     public String getName() {
         return name;

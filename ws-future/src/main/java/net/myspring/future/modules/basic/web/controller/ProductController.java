@@ -28,8 +28,6 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-    @Autowired
-    private ProductTypeService productTypeService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProductDto> list(Pageable pageable, ProductQuery productQuery){

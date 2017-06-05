@@ -31,7 +31,7 @@
         <el-table-column prop="lastModifiedDate" :label="$t('accountTaskList.lastModifiedDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountTaskList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,scope.row.name,'审核')">审核</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,scope.row.name,'audit')">审核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -64,7 +64,7 @@
         this.pageLoading = true;
         util.setQuery("accountTaskList",this.submitData);
         util.copyValue(this.formData,this.submitData)
-        axios.get('/api/basic/hr/accountTask?'+qs.stringify(this.submitData)).then((response) => {
+        axios.get('/api/general/sys/processTask?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -80,7 +80,7 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAction:function(id,name,action){
-        if(action=="审核") {
+        if(action=="audit") {
           if("仓库调整"==name){
             this.$router.push({ name: 'depotChangeForm', query: { id: id }})
           }else if("员工信息调整"==name){

@@ -33,7 +33,9 @@
           submitDisabled:false,
           fileList:[],
           inputForm:{
-
+            importFile:'',
+            yearMonth:'',
+            remarks:''
           },
           submitData:{
             importFile:'',
@@ -69,12 +71,6 @@
           this.fileList = fileList;
         },handleRemove(file, fileList) {
           this.fileList = fileList;
-        },initPage() {
-
-        }
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
         }
       }
   }

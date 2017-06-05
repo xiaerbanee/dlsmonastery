@@ -99,21 +99,20 @@
           this.inputForm.scenePhoto = util.getFolderFileIdStr(this.fileList);
           if (valid) {
               util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(this.submitData)).then((response)=> {
-              this.$message(response.data.message);
-              this.submitDisabled = false;
-              if(response.data.success) {
-                if (this.isCreate) {
-                  form.resetFields();
-                  this.fileList = [];
-                  this.submitDisabled = false;
-                } else {
-                  this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList")})
+              axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(this.submitData)).then((response)=> {
+                this.$message(response.data.message);
+                this.submitDisabled = false;
+                if(response.data.success) {
+                  if (this.isCreate) {
+                    form.resetFields();
+                    this.fileList = [];
+                  } else {
+                    this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList")})
+                  }
                 }
-              }
-            }).catch(function () {
-              this.submitDisabled = false;
-            });
+              }).catch(function () {
+                this.submitDisabled = false;
+              });
           }
         })
       },shopChange(){
@@ -143,9 +142,8 @@
         }
       });
       }
-    },created(){
-      this.initPage();
     },activated () {
+
       if(!this.$route.query.headClick) {
         this.initPage();
       }

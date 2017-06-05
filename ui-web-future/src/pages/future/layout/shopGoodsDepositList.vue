@@ -134,7 +134,7 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAdd(){
-        this.$router.push({ name: 'shopGoodsDepositForm'})
+        this.$router.push({ name: 'shopGoodsDepositForm'});
       },itemAction:function(id,action){
         if(action==="edit") {
           this.$router.push({ name: 'shopGoodsDepositForm', query: { id: id}});

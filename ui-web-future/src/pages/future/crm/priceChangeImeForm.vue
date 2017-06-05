@@ -96,7 +96,6 @@
             if (valid) {
                 this.inputForm.imeUploadList=new Array();
                 let list=this.table.getData()
-                console.log(list);
                 for(var item in list){
                   if(!this.table.isEmptyRow(item)){
                     this.inputForm.imeUploadList.push(list[item]);

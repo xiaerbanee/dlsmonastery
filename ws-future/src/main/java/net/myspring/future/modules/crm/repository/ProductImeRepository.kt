@@ -85,9 +85,12 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             WHERE
                 t1.enabled = 1
                 AND t1.depot_id = depot.id
+                AND depot.enabled = 1
                 AND t1.company_id =  :companyId
                 AND t1.product_id =  product.id
                 AND product.product_type_id = type.id
+                AND product.enabled = 1
+                AND type.enabled = 1
                 AND t1.retail_date IS NOT NULL
                 AND t1.retail_date >= :dateStart
                 AND t1.retail_date < :dateEnd
@@ -167,10 +170,11 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 AND depot.enabled = 1
                 AND t1.company_id =  :companyId
                 AND t1.product_id =  product.id
+                AND product.enabled =  1
                 AND t1.ime in (:imeList)
             ) validProductIme
-            LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id
-            LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id
+            LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id AND sale.enabled = 1
+            LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id AND upload.enabled = 1
                 """, params, BeanPropertyRowMapper(ProductImeDto::class.java))
     }
 
@@ -182,8 +186,8 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             ime.*
         FROM
             crm_product_ime ime
-            LEFT JOIN crm_product_ime_sale sale ON ime.product_ime_sale_id = sale.id
-            LEFT JOIN crm_product_ime_upload upload ON ime.product_ime_upload_id = upload.id
+            LEFT JOIN crm_product_ime_sale sale ON ime.product_ime_sale_id = sale.id AND sale.enabled = 1
+            LEFT JOIN crm_product_ime_upload upload ON ime.product_ime_upload_id = upload.id AND upload.enabled = 1
         WHERE
             ime.enabled = 1
             AND ime.id = :productImeId
@@ -257,10 +261,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 			t1.*
 		FROM
 			crm_product_ime t1
-            LEFT JOIN crm_depot depot ON t1.depot_id = depot.id
-            LEFT JOIN crm_product product ON t1.product_id = product.id
-            LEFT JOIN crm_product_ime_sale sale ON t1.product_ime_sale_id = sale.id
-            LEFT JOIN crm_product_ime_upload upload ON t1.product_ime_upload_id = upload.id
+            LEFT JOIN crm_depot depot ON t1.depot_id = depot.id AND depot.enabled = 1
+            LEFT JOIN crm_product product ON t1.product_id = product.id AND product.enabled = 1
+            LEFT JOIN crm_product_ime_sale sale ON t1.product_ime_sale_id = sale.id AND sale.enabled = 1
+            LEFT JOIN crm_product_ime_upload upload ON t1.product_ime_upload_id = upload.id AND upload.enabled = 1
 		WHERE
 			t1.enabled = 1
 		    AND t1.company_id = :companyId

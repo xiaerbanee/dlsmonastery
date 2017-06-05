@@ -2,10 +2,10 @@
   <div>
     <head-tab active="shopGoodsDepositForm"></head-tab>
     <div>
-      <el-form :model="shopGoodsDeposit" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
+      <el-form :model="shopGoodsDeposit" ref="inputForm"   label-width="120px"  class="form input-form">
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item :label="$t('shopGoodsDepositForm.shopName')" prop="shopId" >
+            <el-form-item :label="$t('shopGoodsDepositForm.shopName')" required >
               <depot-select  :disabled="!isCreate" category="shop" v-model="shopGoodsDeposit.shopId"  @input="shopIdChanged"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopGoodsDepositForm.bank')" prop="bankId" >

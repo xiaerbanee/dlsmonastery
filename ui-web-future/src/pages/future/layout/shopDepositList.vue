@@ -14,11 +14,14 @@
               <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopDepositList.likeSearch')"></el-input>
               </el-form-item>
+
               <el-form-item :label="formLabel.type.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.type" filterable clearable :placeholder="$t('shopDepositList.inputKey')">
                   <el-option v-for="item in formData.typeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
+
+
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
                 <account-select v-model="formData.createdBy"></account-select>
               </el-form-item>
@@ -106,7 +109,7 @@
       pageRequest() {
         this.pageLoading = true;
         util.copyValue(this.formData,this.submitData);
-        util.setQuery("dictEnumList",this.submitData);
+        util.setQuery("shopDepositList",this.submitData);
         axios.get('/api/ws/future/crm/shopDeposit?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;

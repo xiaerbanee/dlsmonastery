@@ -135,7 +135,7 @@
         this.filterShopAllotDetailList = tempList;
       },initPage(){
           if(this.$route.query.id){
-            axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {id:this.$route.query.id}}).then((response)=>{
+            axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {shopAllotId:this.$route.query.id}}).then((response)=>{
               this.setShopAllotDetailList(response.data);
             });
           }
