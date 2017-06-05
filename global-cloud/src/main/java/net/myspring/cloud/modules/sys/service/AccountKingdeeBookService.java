@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.sys.service;
 
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.dto.AccountKingdeeBookDto;
@@ -17,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by lihx on 2017/5/9.
@@ -60,6 +60,8 @@ public class AccountKingdeeBookService {
         AccountKingdeeBook accountKingdeeBook;
         if (accountKingdeeBookForm.isCreate()){
             accountKingdeeBook = BeanUtil.map(accountKingdeeBookForm,AccountKingdeeBook.class);
+            KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyId(RequestUtils.getCompanyId());
+            accountKingdeeBook.setKingdeeBookId(kingdeeBook.getId());
             accountKingdeeBookRepository.save(accountKingdeeBook);
         }else{
             accountKingdeeBook = accountKingdeeBookRepository.findOne(accountKingdeeBookForm.getId());
