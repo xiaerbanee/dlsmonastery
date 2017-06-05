@@ -55,4 +55,11 @@ public class CompanyConfigController {
         }
         return "";
     }
+
+    @RequestMapping(value="delete")
+    public RestResponse delete(String id){
+        companyConfigService.logicDelete(id);
+        RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
+        return restResponse;
+    }
 }

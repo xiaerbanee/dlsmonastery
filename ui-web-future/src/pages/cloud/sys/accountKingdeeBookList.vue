@@ -49,6 +49,7 @@
         <el-table-column prop="kingdeeBookName" label="账套名称"></el-table-column>
         <el-table-column prop="kingdeeBookType" label="账套类型"></el-table-column>
         <el-table-column prop="companyId" label="companyId"></el-table-column>
+        <el-table-column prop="remarks" label="备注"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>

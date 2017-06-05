@@ -93,7 +93,7 @@
               this.$message(response.data.message);
               this.pageRequest();
             });
-          });
+        }).catch(()=>{});
         }
       }
     },created () {

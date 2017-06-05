@@ -113,10 +113,12 @@
         this.$router.push({ name: 'demoPhoneForm'})
       },itemAction:function(id,action){
         if(action=="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/ws/future/crm/demoPhone/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
+          });
+        }).catch(()=>{});
         }
       },exportData(){
         util.copyValue(this.formData,this.submitData);

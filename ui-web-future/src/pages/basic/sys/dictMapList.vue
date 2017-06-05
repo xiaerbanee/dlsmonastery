@@ -41,8 +41,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('dictMapList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -96,13 +96,15 @@
       },itemAdd(){
         this.$router.push({ name: 'dictMapForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'dictMapForm', query: { id: id }})
-        } else if(action=="删除") {
-          axios.get('/api/basic/sys/dictMap/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          })
+        } else if(action=="delete") {
+            util.confirmBeforeDelRecord(this).then(()=> {
+              axios.get('/api/basic/sys/dictMap/delete', {params: {id: id}}).then((response) => {
+                this.$message(response.data.message);
+                this.pageRequest();
+              });
+            }).catch(()=>{});
         }
       }
     },created () {
