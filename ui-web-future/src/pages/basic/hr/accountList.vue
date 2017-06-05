@@ -125,10 +125,12 @@
         if(action=="edit") {
           this.$router.push({ name: 'accountForm', query: { id: id }})
         } else if(action=="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/basic/hr/account/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
+          });
+          }).catch(()=>{});
         }
       }
     },created () {
