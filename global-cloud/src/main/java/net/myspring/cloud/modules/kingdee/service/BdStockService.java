@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.kingdee.service;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.modules.kingdee.domain.BdStock;
 import net.myspring.cloud.modules.kingdee.repository.BdStockRepository;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ public class BdStockService {
     private BdStockRepository bdStockRepository;
 
     public List<BdStock> findByNameLike(String name){
-        return bdStockRepository.findByNameLike(name);
+        if(StringUtils.isNotBlank(name)){
+            return bdStockRepository.findByNameLike(name);
+        }
+        return null;
     }
 }

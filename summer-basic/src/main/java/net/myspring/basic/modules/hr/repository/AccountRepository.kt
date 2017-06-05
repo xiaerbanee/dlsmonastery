@@ -108,16 +108,8 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             )
             """)
         }
-        if (accountQuery.positionName != null) {
-            sb.append("  ")
-        }
-        if (accountQuery.loginName != null) {
-            sb.append("""
-                and t1.position_id in(
-                select t3.id
-                from hr_position t3
-                where t3.name=:positionName )
-            """)
+        if (accountQuery.positionId != null) {
+            sb.append(" and t1.position_id =:positionId ")
         }
         if (accountQuery.employeeName != null) {
             sb.append("""
@@ -178,15 +170,10 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             )
             """)
         }
-        if (accountQuery.positionName != null) {
-            sb.append("  ")
-        }
-        if (accountQuery.loginName != null) {
+        if (accountQuery.positionId != null) {
             sb.append("""
-                and t1.position_id in(
-                select t3.id
-                from hr_position t3
-                where t3.name=:positionName )
+                and t1.position_id =:positionId
+            )
             """)
         }
         if (accountQuery.employeeName != null) {

@@ -76,8 +76,11 @@ public class ExpressCompanyController {
         if(StringUtils.isBlank(id)){
             return new ArrayList<>();
         }
-
         return Collections.singletonList(expressCompanyService.findDto(id));
     }
 
+    @RequestMapping(value="findOne")
+    public ExpressCompanyDto findDto(String id){
+        return expressCompanyService.findDto(id);
+    }
 }

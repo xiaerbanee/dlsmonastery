@@ -123,6 +123,8 @@ public class StkMisDeliveryDto {
         Map<String, Object> detail = Maps.newLinkedHashMap();
         detail.put("FMaterialId", CollectionUtil.getMap("FNumber", getMaterialNumber()));
         detail.put("FStockId", CollectionUtil.getMap("FNumber", getStockNumber()));
+        detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
+        detail.put("FBaseUnitId", CollectionUtil.getMap("FNumber", "Pcs"));
         detail.put("FQty", getQty());
         detail.put("FEntryNote", getFEntryNote());
         entity.add(detail);

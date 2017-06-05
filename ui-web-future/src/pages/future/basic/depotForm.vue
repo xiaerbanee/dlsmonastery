@@ -11,9 +11,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('depotForm.officeName')" prop="officeId">
-              <el-select v-model="inputForm.officeId"  filterable remote :placeholder="$t('depotForm.inputWord')" :remote-method="remoteOffice" :loading="remoteLoading">
-                <el-option v-for="office in offices" :key="office.id" :label="office.name" :value="office.id"></el-option>
-              </el-select>
+              <office-select v-model="inputForm.officeName"></office-select>
             </el-form-item>
             <el-form-item :label="$t('depotForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
@@ -235,9 +233,11 @@
 </template>
 <script>
   import accountSelect from 'components/basic/account-select'
+  import officeSelect from 'components/basic/office-select'
   export default{
       components:{
-          accountSelect
+          accountSelect,
+          officeSelect
       },
     data(){
       return{

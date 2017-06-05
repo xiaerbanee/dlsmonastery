@@ -5,6 +5,7 @@ import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.repository.BdCustomerRepository;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
 import net.myspring.common.dto.NameValueDto;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,12 +23,15 @@ public class BdCustomerService {
     private BdCustomerRepository bdCustomerRepository;
 
     public Page<BdCustomer> findPage(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
-        Page<BdCustomer> bdCustomerPage= null;
+        Page<BdCustomer> bdCustomerPage= bdCustomerRepository.findPage(pageable,bdCustomerQuery);
         return bdCustomerPage;
     }
 
     public List<BdCustomer> findByNameLike(String name) {
-        return bdCustomerRepository.findByNameLike(name);
+        if (StringUtils.isNotBlank(name)){
+            return bdCustomerRepository.findByNameLike(name);
+        }
+        return null;
     }
 
     public List<NameValueDto> findCustomerGroupList(){
