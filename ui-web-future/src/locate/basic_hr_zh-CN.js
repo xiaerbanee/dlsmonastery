@@ -83,7 +83,7 @@ export default {
     accountList: "账户管理",
     id: "编号",
     type: "类型",
-    loginName: "登陆名",
+    loginName: "登录名",
     employeeName: "员工姓名",
     leader: "员工上级",
     officeName: "部门",
