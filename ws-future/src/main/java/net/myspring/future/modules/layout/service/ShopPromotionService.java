@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.service;
 
+import net.myspring.future.common.enums.ActivityTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.layout.domain.ShopPromotion;
 import net.myspring.future.modules.layout.dto.ShopPromotionDto;
@@ -9,7 +10,9 @@ import net.myspring.future.modules.layout.web.query.ShopPromotionQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.IdUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -49,12 +52,18 @@ public class ShopPromotionService {
     }
 
     public ShopPromotionForm getForm(ShopPromotionForm shopPromotionForm){
-        if(!shopPromotionForm.isCreate()){
-            ShopPromotion shopPromotion = shopPromotionRepository.findOne(shopPromotionForm.getId());
-            shopPromotionForm = BeanUtil.map(shopPromotion,ShopPromotionForm.class);
-            cacheUtils.initCacheInput(shopPromotionForm);
-        }
+        shopPromotionForm.setActivityTypeList(ActivityTypeEnum.getList());
         return shopPromotionForm;
+    }
+
+    public ShopPromotionDto findOne(String id){
+        ShopPromotionDto shopPromotionDto = new ShopPromotionDto();
+        if(StringUtils.isNotBlank(id)){
+            ShopPromotion shopPromotion = shopPromotionRepository.findOne(id);
+            shopPromotionDto  = BeanUtil.map(shopPromotion,ShopPromotionDto.class);
+            cacheUtils.initCacheInput(shopPromotionDto);
+        }
+        return shopPromotionDto;
     }
 
     public void logicDelete(String id){

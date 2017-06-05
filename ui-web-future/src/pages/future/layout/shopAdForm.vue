@@ -90,26 +90,24 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
-        if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/layout/shopAd/save', qs.stringify(this.submitData)).then((response)=> {
-              if(response.data.message){
-                this.$message(response.data.message);
-              }
+          if (valid) {
+            util.copyValue(this.inputForm, this.submitData);
+            axios.post('/api/ws/future/layout/shopAd/save', qs.stringify(this.submitData)).then((response) => {
+              this.$message(response.data.message);
               this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-                this.fileList=[];
-              } else {
-                this.$router.push({name:'shopAdList',query:util.getQuery("shopAdList")})
+              if (response.data.success) {
+                if (this.isCreate) {
+                  form.resetFields();
+                  this.fileList = [];
+                } else {
+                  this.$router.push({name: 'shopAdList', query: util.getQuery("shopAdList")})
+                }
               }
             }).catch(function () {
-            this.submitDisabled = false;
-          });
-          }else{
-            this.submitDisabled = false;
+              this.submitDisabled = false;
+            });
           }
-        })
+        });
       },
       handlePreview(file) {
         window.open(file.url);

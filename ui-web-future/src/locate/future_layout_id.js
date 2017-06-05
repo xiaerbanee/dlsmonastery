@@ -536,6 +536,7 @@ export default {
     selectDateRange: "pilih rentang tanggal",
     inputKey: "silahkan masukkan kata kunci",
     inputWord: "silahkan masukkan kata kunci",
+    noSelectionFound:"没有选择任何记录",
     likeSearch: "模糊搜索",
     sure: "yakin",
     loading: "memuat",

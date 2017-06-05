@@ -13,7 +13,7 @@
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityType')" prop="activityType">
               <el-select v-model="inputForm.activityType" filterable clearable :placeholder="$t('shopPromotionForm.inputType')">
-                <el-option v-for="(key,value) in inputForm.activityTypeList" :key="key" :label="key" :value="key"></el-option>
+                <el-option v-for="activityType in formProperty.activityTypeList" :key="activityType" :label="activityType" :value="activityType"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.dayAmount')" prop="dayAmount">
@@ -80,7 +80,6 @@
         fileList1:[],
         fileList2:[],
         fileList3:[],
-        shops:[],
         inputForm:{},
         submitData:{
           id:'',
@@ -119,27 +118,24 @@
           this.inputForm.activityImage1 = util.getFolderFileIdStr(this.fileList1);
           this.inputForm.activityImage2 = util.getFolderFileIdStr(this.fileList2);
           this.inputForm.activityImage3 = util.getFolderFileIdStr(this.fileList3);
-
           if (valid) {
               util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/layout/shopPromotion/save', qs.stringify(this.submitData)).then((response) => {
-              if (response.data.message) {
-                this.$message(response.data.message);
-              }
-            this.submitDisabled = false;
-              if (this.isCreate) {
-                form.resetFields();
-                this.fileList1 = [];
-                this.fileList2 = [];
-                this.fileList3 = [];
-              } else {
-                this.$router.push({name: 'shopPromotionList', query: util.getQuery("shopPromotionList")})
+              this.$message(response.data.message);
+              this.submitDisabled = false;
+              if(response.data.success) {
+                if (this.isCreate) {
+                  form.resetFields();
+                  this.fileList1 = [];
+                  this.fileList2 = [];
+                  this.fileList3 = [];
+                } else {
+                  this.$router.push({name: 'shopPromotionList', query: util.getQuery("shopPromotionList")})
+                }
               }
             }).catch(function () {
               this.submitDisabled = false;
             });
-          } else {
-            this.submitDisabled = false;
           }
         })
       }, handlePreview1(file) {
@@ -163,29 +159,41 @@
       }, findOne(){
 
       },initPage(){
-        axios.get('/api/ws/future/layout/shopPromotion/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-        if(response.data.shopId!=null){
-          this.shops=new Array(response.data.shopId);
-          this.shopDisabled = true;
+          axios.get('/api/ws/future/layout/shopPromotion/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm = response.data;
+            if(response.data.shopId!=null){
+              this.shopDisabled = true;
+            }else {
+              this.shopDisabled=false;
+            }
+
+            if(this.inputForm.activityImage1 !=null) {
+                console.log(this.fileList1);
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
+                this.fileList1= response.data;
+              });
+            }else {
+              this.fileList1=[];
+            }
+            if(this.inputForm.activityImage2 !=null) {
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
+                this.fileList2= response.data;
+              });
+            }else {
+              this.fileList2=[];
+            }
+            if(this.inputForm.activityImage3 !=null) {
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
+                this.fileList3= response.data;
+              });
+            }else {
+              this.fileList3=[];
+            }
+          });
+          axios.get('/api/ws/future/layout/shopPromotion/getForm').then((response)=>{
+            this.formProperty = response.data;
+          });
         }
-        if(this.inputForm.activityImage1 !=null) {
-          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
-            this.fileList1= response.data;
-        });
-        }
-        if(this.inputForm.activityImage2 !=null) {
-          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
-            this.fileList2= response.data;
-        });
-        }
-        if(this.inputForm.activityImage3 !=null) {
-          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
-            this.fileList3= response.data;
-        });
-        }
-      });
-      }
     },created(){
       this.initPage();
     },activated () {
