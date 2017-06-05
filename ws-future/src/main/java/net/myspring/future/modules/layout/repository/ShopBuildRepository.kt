@@ -55,6 +55,9 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(shopBuildQuery.positionId)) {
             sb.append("""  and t1.process_position_id = :positionId """)
         }
+        if (StringUtils.isNotEmpty(shopBuildQuery.processStatus)) {
+            sb.append("""  and t1.process_status = :processStatus """)
+        }
         if (StringUtils.isNotEmpty(shopBuildQuery.createdBy)) {
             sb.append("""  and t1.created_by = :createdBy """)
         }

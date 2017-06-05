@@ -65,7 +65,6 @@ public class BackendService {
         return backendDtoList;
     }
 
-
     public void logicDelete(String id) {
         backendRepository.logicDelete(id);
     }

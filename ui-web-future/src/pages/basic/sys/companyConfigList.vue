@@ -89,10 +89,19 @@
       },itemAction:function(id,action){
         if(action=="edit") {
           this.$router.push({ name: 'companyConfigForm', query: { id: id }})
-        }
+        }else if(action=="delete"){
+                   util.confirmBeforeDelRecord(this).then(()=> {
+                       axios.get('/api/basic/sys/companyConfig/delete',{params: {id: id}}).then((response) => {
+                           this.$message(response.data.message);
+                           this.pageRequest();
+                   });
+                   }).catch(()=>{});
+                 }
       },itemAdd(){
          this.$router.push({ name: 'companyConfigForm'})
        }
+
+      }
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
