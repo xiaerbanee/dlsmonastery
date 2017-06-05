@@ -98,10 +98,9 @@
             util.copyValue(this.inputForm, this.submitData);
             axios.post('/api/basic/hr/account/save',qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
+              form.resetFields();
               this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+              if(!this.isCreate){
                 this.$router.push({name:'accountList',query:util.getQuery("accountList")})
               }
             }).catch(function () {
@@ -119,8 +118,6 @@
           this.inputProperty=response.data;
         })
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

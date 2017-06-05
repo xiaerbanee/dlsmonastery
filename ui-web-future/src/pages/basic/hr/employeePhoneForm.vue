@@ -85,10 +85,9 @@
           this.inputForm.uploadTime=util.formatLocalDateTime(this.inputForm.uploadTime)
             axios.get('/api/basic/hr/employeePhone/save',{params:this.inputForm}).then((response)=> {
               this.$message(response.data.message);
+              form.resetFields();
               this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+              if(!this.isCreate){
                 this.$router.push({name:'employeePhoneList',query:util.getQuery("employeePhoneList")})
               }
             }).catch(function () {
@@ -109,8 +108,6 @@
           }
         })
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

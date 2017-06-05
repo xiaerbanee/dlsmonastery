@@ -49,12 +49,11 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/companyConfig/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
+                form.resetFields();
                 this.submitDisabled = false;
-                 if(this.isCreate){
-                    form.resetFields();
-                 } else {
-                    this.$router.push({name:'companyConfigList',query:util.getQuery("companyConfigList")})
-                }
+                 if(!this.isCreate){
+                   this.$router.push({name:'companyConfigList',query:util.getQuery("companyConfigList")})
+                 }
               }).catch(function () {
                 this.submitDisabled = false;
               });
@@ -67,8 +66,6 @@
             this.inputForm = response.data;
           })
         }
-      },created(){
-        this.initPage();
       },activated () {
         if(!this.$route.query.headClick) {
           this.initPage();

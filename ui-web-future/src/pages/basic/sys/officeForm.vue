@@ -124,10 +124,9 @@
             axios.post('/api/basic/sys/office/save', qs.stringify(this.submitData)).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
-                if (this.isCreate) {
-                  form.resetFields();
-                  this.submitDisabled = false;
-                } else {
+                form.resetFields();
+                this.submitDisabled = false;
+                if (!this.isCreate) {
                   this.$router.push({name: 'officeList', query: util.getQuery("officeList")})
                 }
               }else {
@@ -181,8 +180,6 @@
           this.inputProperty = response.data;
         })
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

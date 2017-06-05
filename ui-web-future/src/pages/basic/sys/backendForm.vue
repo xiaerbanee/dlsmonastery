@@ -46,10 +46,9 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/backend/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
+                form.resetFields();
                 this.submitDisabled = false;
-                if(this.inputForm.create){
-                  form.resetFields();
-                } else {
+                if(!this.inputForm.create){
                   this.$router.push({name:'backendList',query:util.getQuery("backendList")})
                 }
               }).catch(function () {
@@ -64,8 +63,6 @@
             this.inputForm = response.data;
           })
         }
-      },created(){
-        this.initPage();
       },activated () {
         if(!this.$route.query.headClick) {
           this.initPage();
