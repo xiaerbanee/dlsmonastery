@@ -103,7 +103,7 @@
         axios.get('/api/ws/future/crm/productImeUpload',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        })
+        });
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
@@ -116,9 +116,9 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAdd(){
-        this.$router.push({ name: 'productImeUploadForm'})
+        this.$router.push({ name: 'productImeUploadForm'});
       },itemBack(){
-
+        this.$router.push({ name: 'productImeUploadBackForm'});
       },exportData(){
 
       },selectionChange(selection){

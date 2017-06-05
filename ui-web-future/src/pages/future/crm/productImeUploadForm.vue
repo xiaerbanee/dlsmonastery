@@ -36,7 +36,7 @@
           </el-col>
           <el-col :span="18" v-if="imeStr !==''">
             <template>
-              <el-table :data="productQtyList" style="width: 100%" border>
+              <el-table :data="productQtyList" style="width: 100%" border show-summary>
                 <el-table-column prop="productName" :label="$t('productImeUploadForm.productName')"></el-table-column>
                 <el-table-column prop="qty" :label="$t('productImeUploadForm.qty')"></el-table-column>
               </el-table>
@@ -62,6 +62,9 @@
     </div>
   </div>
 </template>
+<style>
+  .el-table { margin-bottom: 50px;}
+</style>
 <script>
 
   import depotSelect from 'components/future/depot-select'

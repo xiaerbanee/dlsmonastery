@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -44,15 +45,30 @@ public class ProductImeUploadController {
             return new RestResponse("没有输入任何有效的IME", ResponseCodeEnum.invalid.name(), false);
         }
 
-        String errMsg = productImeUploadService.checkForUpload(imeList);
+        String errMsg = productImeUploadService.upload(productImeUploadForm);
         if(StringUtils.isNotBlank(errMsg)){
             return new RestResponse(errMsg, ResponseCodeEnum.invalid.name(), false);
+        }else{
+            return new RestResponse("上报成功", ResponseCodeEnum.saved.name());
         }
 
-        productImeUploadService.upload(productImeUploadForm);
+    }
 
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    @RequestMapping(value = "uploadBack")
+    public RestResponse uploadBack(String imeStr) {
 
+        List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+        if(imeList.size() == 0){
+            return new RestResponse("没有输入任何有效的IME", ResponseCodeEnum.invalid.name(), false);
+        }
+
+        String errMsg = productImeUploadService.uploadBack(imeList);
+        if(StringUtils.isNotBlank(errMsg)){
+            return new RestResponse(errMsg, ResponseCodeEnum.invalid.name(), false);
+        } else {
+
+            return new RestResponse("退回成功", ResponseCodeEnum.saved.name());
+        }
 
     }
 
@@ -88,6 +104,16 @@ public class ProductImeUploadController {
             return null;
         }
         return productImeUploadService.checkForUpload(imeList);
+    }
+
+
+    @RequestMapping(value = "checkForUploadBack")
+    public String checkForUploadBack(String imeStr) {
+        List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+        if(imeList.size() == 0){
+            return null;
+        }
+        return productImeUploadService.checkForUploadBack(imeList);
     }
 
 }
