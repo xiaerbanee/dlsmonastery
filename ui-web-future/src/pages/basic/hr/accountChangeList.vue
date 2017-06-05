@@ -42,7 +42,7 @@
         <el-table-column  prop="remarks" :label="$t('accountChangeList.remarks')" sortable ></el-table-column>
         <el-table-column :label="$t('accountChangeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">详细</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'audit')">审核</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
@@ -105,14 +105,17 @@
         if(action=="edit") {
           this.$router.push({ name: 'accountChangeForm', query: { id: id }})
         } else if(action="delete") {
+            util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/basic/hr/accountChange/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
-        }else if (action=="audit"){
+        }).catch(()=>{});
+        }else if(action=="audit"){
           his.$router.push({ name: 'accountChangeDetail', query: { id: id }})
         }
-      }},created () {
+      }
+    },created () {
         var that=this;
       this.pageHeight = window.outerHeight -120;
       axios.get('/api/basic/hr/accountChange/getQuery').then((response) =>{

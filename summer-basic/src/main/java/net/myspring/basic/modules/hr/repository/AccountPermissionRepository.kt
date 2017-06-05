@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.AccountPermission
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 
 /**
@@ -9,9 +10,16 @@ import org.springframework.data.jpa.repository.Query
  */
 interface AccountPermissionRepository : BaseRepository<AccountPermission,String>{
     @Query("""
-        DELETE  FROM  #{#entityName} t where t.permissionId IN ?1
+        update  #{#entityName} t set t.enabled=?1 where t.accountId=?2
         """)
-    fun removeByPermissionList(permissionIdList: MutableList<String>): Int
+    @Modifying
+    fun setEnabledByAccountId(enabled:Boolean,accountId: String): Int
+
+    @Query("""
+        update  #{#entityName} t set t.enabled=?1 where t.permissionId IN ?2
+        """)
+    @Modifying
+    fun setEnabledByPermissionIdList(enabled: Boolean,permissionIdList: MutableList<String>): Int
 
     @Query("""
         SELECT t.permissionId

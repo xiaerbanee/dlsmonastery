@@ -65,9 +65,6 @@
               this.$message(response.data.message);
               form.resetFields();
               this.submitDisabled = false;
-              if (!this.isCreate) {
-                this.$router.push({name: 'accountList', query: util.getQuery("accountList")})
-              }
             }).catch(function () {
               this.submitDisabled = false;
             });
