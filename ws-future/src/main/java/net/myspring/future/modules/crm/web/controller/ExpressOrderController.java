@@ -34,6 +34,8 @@ public class ExpressOrderController {
     public ExpressOrderQuery getQuery() {
         ExpressOrderQuery result = new ExpressOrderQuery();
         result.setExtendTypeList(ExpressOrderTypeEnum.getList());
+        result.setExtendType(ExpressOrderTypeEnum.手机订单.name());
+
         return result;
     }
 

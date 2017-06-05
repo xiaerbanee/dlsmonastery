@@ -14,20 +14,11 @@ import java.util.List;
  */
 public class DemoPhoneTypeForm extends BaseForm<DemoPhoneType> {
     private String name;
-    private List<String> productTypeIdList= Lists.newArrayList();
+    private List<String> productTypeIdList;
     private Integer limitQty;
     private LocalDate applyEndDate;
     private LocalDate renewEndDate;
-    private List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeList= Lists.newArrayList();
-    private List<ProductType> productTypeList=Lists.newArrayList();
-
-    public List<ProductType> getProductTypeList() {
-        return productTypeList;
-    }
-
-    public void setProductTypeList(List<ProductType> productTypeList) {
-        this.productTypeList = productTypeList;
-    }
+    private List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtos;
 
     public String getName() {
         return name;
@@ -69,11 +60,11 @@ public class DemoPhoneTypeForm extends BaseForm<DemoPhoneType> {
         this.renewEndDate = renewEndDate;
     }
 
-    public List<DemoPhoneTypeOfficeDto> getDemoPhoneTypeOfficeList() {
-        return demoPhoneTypeOfficeList;
+    public List<DemoPhoneTypeOfficeDto> getDemoPhoneTypeOfficeDtos() {
+        return demoPhoneTypeOfficeDtos;
     }
 
-    public void setDemoPhoneTypeOfficeList(List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeList) {
-        this.demoPhoneTypeOfficeList = demoPhoneTypeOfficeList;
+    public void setDemoPhoneTypeOfficeDtos(List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtos) {
+        this.demoPhoneTypeOfficeDtos = demoPhoneTypeOfficeDtos;
     }
 }

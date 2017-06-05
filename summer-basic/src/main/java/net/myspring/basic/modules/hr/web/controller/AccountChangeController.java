@@ -8,6 +8,7 @@ import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,5 +62,11 @@ public class AccountChangeController {
     public RestResponse save( AccountChangeForm accountChangeForm) {
         accountChangeService.save(accountChangeForm);
         return new RestResponse("员工信息调整成功",null);
+    }
+
+    @RequestMapping(value="delete")
+    public RestResponse delete(String id){
+        accountChangeService.logicDelete(id);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 }

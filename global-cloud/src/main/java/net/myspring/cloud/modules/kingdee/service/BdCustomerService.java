@@ -23,7 +23,7 @@ public class BdCustomerService {
     private BdCustomerRepository bdCustomerRepository;
 
     public Page<BdCustomer> findPage(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
-        Page<BdCustomer> bdCustomerPage= null;
+        Page<BdCustomer> bdCustomerPage= bdCustomerRepository.findPage(pageable,bdCustomerQuery);
         return bdCustomerPage;
     }
 

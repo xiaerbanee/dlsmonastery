@@ -1,9 +1,15 @@
 package net.myspring.cloud.modules.kingdee.repository
 
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer
+import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery
 import net.myspring.common.dto.NameValueDto
+import net.myspring.util.repository.SQLServerDialect
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.util.*
@@ -12,7 +18,7 @@ import java.util.*
  * Created by haos on 2017/5/24.
  */
 @Component
-class BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
     fun findAll(): MutableList<BdCustomer> {
         return namedParameterJdbcTemplate.query("""
             SELECT
@@ -156,5 +162,33 @@ class BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate
         """, BeanPropertyRowMapper(NameValueDto::class.java))
     }
 
-}
+    fun findPage(pageable: Pageable, bdCustomerQuery: BdCustomerQuery): Page<BdCustomer>? {
+        var sb = StringBuilder("""
+             SELECT
+            t1.FCUSTID,
+            t1.FNUMBER,
+            t1.FSALDEPTID,
+            t2.FNAME,
+            t1.FPRIMARYGROUP,
+            t4.FNAME AS fprimaryGroupName,
+            t1.FMODIFYDATE
+            FROM
+            T_BD_CUSTOMER t1,
+            T_BD_CUSTOMER_L t2,
+            T_BD_CUSTOMERGROUP t3,
+            T_BD_CUSTOMERGROUP_L t4
+            WHERE
+            t1.FCUSTID = t2.FCUSTID
+            AND t1.FPRIMARYGROUP = t3.FID
+            AND t3.FID = t4.FID
+            and t1.FFORBIDSTATUS = 'A'
+            and t1.FDOCUMENTSTATUS = 'C'
+        """);
+        var pageableSql = SQLServerDialect.getInstance().getPageableSql(sb.toString(),pageable);
+        var countSql = SQLServerDialect.getInstance().getCountSql(sb.toString());
+        var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(bdCustomerQuery), BeanPropertyRowMapper(BdCustomer::class.java));
+        var count = namedParameterJdbcTemplate.queryForObject(countSql,BeanPropertySqlParameterSource(bdCustomerQuery),Long::class.java);
+        return PageImpl(list,pageable,count);
+    }
 
+}

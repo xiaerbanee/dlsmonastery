@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
+import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.DemoPhoneType;
@@ -51,34 +52,28 @@ public class DemoPhoneTypeService {
         DemoPhoneTypeDto demoPhoneTypeDto = new DemoPhoneTypeDto();
         if(StringUtils.isNotBlank(id)){
             demoPhoneTypeDto = BeanUtil.map(demoPhoneTypeRepository.findOne(id),DemoPhoneTypeDto.class);
+            demoPhoneTypeDto.setProductTypeIdList(CollectionUtil.extractToList(productTypeRepository.findByDemoPhoneTypeId(id),"id"));
         }
         return demoPhoneTypeDto;
     }
 
     public DemoPhoneTypeForm getForm(DemoPhoneTypeForm demoPhoneTypeForm){
-        List<OfficeDto> areaList = officeClient.findByOfficeRuleName("办事处");
+        List<OfficeDto> areaList = officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name());
         List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = demoPhoneTypeOfficeRepository.findByDemoPhoneTypeId(demoPhoneTypeForm.getId());
-        List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtos= BeanUtil.map(demoPhoneTypeOfficeList,DemoPhoneTypeOfficeDto.class);
-        Map<String, DemoPhoneTypeOfficeDto> DemoPhoneTypeOfficeDtoMap = CollectionUtil.extractToMap(demoPhoneTypeOfficeDtos,"officeId");
+        Map<String, DemoPhoneTypeOffice> demoPhoneTypeOfficeMap = CollectionUtil.extractToMap(demoPhoneTypeOfficeList,"officeId");
         for (OfficeDto area : areaList) {
-            if (area.getTaskPoint()!=null&&MIN_POINT.compareTo(area.getTaskPoint()) < 0) {
-                DemoPhoneTypeOfficeDto demoPhoneTypeOfficeDto = DemoPhoneTypeOfficeDtoMap.get(area.getId());
-                if (demoPhoneTypeOfficeDto == null) {
-                    demoPhoneTypeOfficeDto = new DemoPhoneTypeOfficeDto();
-                    demoPhoneTypeOfficeDto.setOfficeId(area.getId());
-                    demoPhoneTypeOfficeDto.setQty(0);
-                    demoPhoneTypeOfficeDto.setDemoPhoneTypeId(demoPhoneTypeForm.getId());
-                    demoPhoneTypeOfficeDtos.add(demoPhoneTypeOfficeDto);
+                DemoPhoneTypeOffice demoPhoneTypeOffice = demoPhoneTypeOfficeMap.get(area.getId());
+                if (demoPhoneTypeOffice == null) {
+                    demoPhoneTypeOffice = new DemoPhoneTypeOffice();
+                    demoPhoneTypeOffice.setOfficeId(area.getId());
+                    demoPhoneTypeOffice.setQty(0);
+                    demoPhoneTypeOffice.setDemoPhoneTypeId(demoPhoneTypeForm.getId());
+                    demoPhoneTypeOfficeList.add(demoPhoneTypeOffice);
                 }
-            }
-            cacheUtils.initCacheInput(demoPhoneTypeOfficeDtos);
         }
-        if(!demoPhoneTypeForm.isCreate()){
-            DemoPhoneType demoPhoneType = demoPhoneTypeRepository.findOne(demoPhoneTypeForm.getId());
-            demoPhoneTypeForm = BeanUtil.map(demoPhoneType,DemoPhoneTypeForm.class);
-            demoPhoneTypeForm.setProductTypeList(productTypeRepository.findByDemoPhoneTypeId(demoPhoneTypeForm.getId()));
-        }
-        demoPhoneTypeForm.setDemoPhoneTypeOfficeList(demoPhoneTypeOfficeDtos);
+        List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtos = BeanUtil.map(demoPhoneTypeOfficeList,DemoPhoneTypeOfficeDto.class);
+        cacheUtils.initCacheInput(demoPhoneTypeOfficeDtos);
+        demoPhoneTypeForm.setDemoPhoneTypeOfficeDtos(demoPhoneTypeOfficeDtos);
         return demoPhoneTypeForm;
     }
 
@@ -123,6 +118,11 @@ public class DemoPhoneTypeService {
                     productTypeRepository.save(productType);
                 }
             }
+            //清空原有的demophoneTypeOffice
+            List<DemoPhoneTypeOffice> demoPhoneTypeOfficesBefore = demoPhoneTypeOfficeRepository.findByDemoPhoneTypeId(demoPhoneTypeForm.getId());
+            if(CollectionUtil.isNotEmpty(demoPhoneTypeOfficesBefore)){
+                demoPhoneTypeOfficeRepository.delete(demoPhoneTypeOfficesBefore);
+            }
         }
         //添加productTypeId
         if (CollectionUtil.isNotEmpty(demoPhoneTypeForm.getProductTypeIdList())) {
@@ -133,20 +133,20 @@ public class DemoPhoneTypeService {
             }
         }
 
-        List<DemoPhoneTypeOfficeDto> demoPhoneTypeOfficeDtoList = Lists.newArrayList();
-        for (DemoPhoneTypeOfficeDto demoPhoneTypeOfficeDto : demoPhoneTypeForm.getDemoPhoneTypeOfficeList()) {
-            if (StringUtils.isBlank(demoPhoneTypeOfficeDto.getId())) {
-                demoPhoneTypeOfficeDto.setDemoPhoneTypeId(demoPhoneType.getId());
-                demoPhoneTypeOfficeDtoList.add(demoPhoneTypeOfficeDto);
-            } else {
-                DemoPhoneTypeOffice demoPhoneTypeOffice = BeanUtil.map(demoPhoneTypeOfficeDto,DemoPhoneTypeOffice.class);
-                demoPhoneTypeOfficeRepository.save(demoPhoneTypeOffice);
-            }
+        //添加demoTypeOffice
+        List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = Lists.newArrayList();
+        if(demoPhoneTypeForm.getDemoPhoneTypeOfficeDtos().size()==0){
+            return null;
         }
-        if (CollectionUtil.isNotEmpty(demoPhoneTypeOfficeDtoList)) {
-            List<DemoPhoneTypeOffice> demoPhoneTypeOfficeList = BeanUtil.map(demoPhoneTypeOfficeDtoList,DemoPhoneTypeOffice.class);
-            demoPhoneTypeOfficeRepository.save(demoPhoneTypeOfficeList);
+        for (DemoPhoneTypeOfficeDto demoPhoneTypeOfficeDto : demoPhoneTypeForm.getDemoPhoneTypeOfficeDtos()) {
+            DemoPhoneTypeOffice demoPhoneTypeOffice = new DemoPhoneTypeOffice();
+            demoPhoneTypeOffice.setDemoPhoneTypeId(demoPhoneTypeOfficeDto.getDemoPhoneTypeId());
+            demoPhoneTypeOffice.setOfficeId(demoPhoneTypeOfficeDto.getOfficeId());
+            demoPhoneTypeOffice.setQty(demoPhoneTypeOfficeDto.getQty());
+            demoPhoneTypeOfficeList.add(demoPhoneTypeOffice);
         }
+        demoPhoneTypeOfficeRepository.save(demoPhoneTypeOfficeList);
+
         return demoPhoneType;
     }
 

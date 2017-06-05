@@ -32,7 +32,7 @@
         }
         this.innerId=val;
         this.remoteLoading = true;
-        axios.get('/api/ws/future/basic/productType/searchById?id=' + this.innerId).then((response)=>{
+        axios.get('/api/ws/future/basic/productType/searchByIds?id=' + this.innerId).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })
