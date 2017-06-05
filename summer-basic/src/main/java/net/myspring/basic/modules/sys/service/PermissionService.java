@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
+@Transactional
 public class PermissionService {
     
     @Autowired

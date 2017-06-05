@@ -22,6 +22,7 @@ import java.util.List;
  * Created by wangzm on 2017/4/22.
  */
 @Service
+@Transactional
 public class OfficeRuleService {
     
     @Autowired

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class DictEnumService {
     @Autowired
     private DictEnumRepository dictEnumRepository;

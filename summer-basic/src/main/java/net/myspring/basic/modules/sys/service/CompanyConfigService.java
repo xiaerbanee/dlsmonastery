@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by zhucc on 2017/4/17.
  */
 @Service
+@Transactional
 public class CompanyConfigService {
 
     @Autowired
