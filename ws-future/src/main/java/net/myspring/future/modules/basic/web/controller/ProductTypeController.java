@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.web.controller;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.enums.BoolEnum;
@@ -52,11 +53,10 @@ public class ProductTypeController {
         return productTypeQuery;
     }
 
-    @RequestMapping(value = "searchById")
+    @RequestMapping(value = "searchByIds")
     public List<ProductTypeDto> searchById(String id){
-        ProductType productType = productTypeService.findOne(id);
-        List<ProductTypeDto> productTypeList = Lists.newArrayList();
-        productTypeList.add(BeanUtil.map(productType, ProductTypeDto.class));
+        List<String> ids= StringUtils.getSplitList(id, CharConstant.COMMA);
+        List<ProductTypeDto> productTypeList = productTypeService.findByIds(ids);
         return productTypeList;
     }
 

@@ -126,6 +126,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
           where t1.office_rule_id=t2.id
           and t2.name = :officeRuleName
           and t1.enabled =1
+          ORDER BY t1.task_point DESC
         """,Collections.singletonMap("officeRuleName",officeRuleName),BeanPropertyRowMapper(Office::class.java))
     }
     override fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>? {
