@@ -1,12 +1,11 @@
 package net.myspring.future.modules.layout.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit
-import net.myspring.future.modules.layout.dto.ShopAllotDto
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositSumDto
 import net.myspring.future.modules.layout.web.query.ShopGoodsDepositQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,9 +19,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 
-/**
- * Created by zhangyf on 2017/5/24.
- */
+
 interface ShopGoodsDepositRepository : BaseRepository<ShopGoodsDeposit,String>,ShopGoodsDepositRepositoryCustom {
 
     @Query("""
@@ -45,9 +42,31 @@ interface ShopGoodsDepositRepositoryCustom{
 
 
     fun findShopGoodsDepositSumDtoList(companyId: String): List<ShopGoodsDepositSumDto>
+
+    fun findDto(id: String): ShopGoodsDepositDto
+
 }
 
 class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopGoodsDepositRepositoryCustom{
+
+
+    override fun findDto(id: String): ShopGoodsDepositDto {
+
+        return namedParameterJdbcTemplate.queryForObject("""
+        SELECT
+            shop.office_id shopOfficeId,
+            shop.area_id shopAreaId,
+            client.out_id shopClientOutId,
+            t1.*
+        FROM
+            crm_shop_goods_deposit t1
+            LEFT JOIN crm_depot shop ON t1.shop_id = shop.id
+            LEFT JOIN crm_client client ON shop.client_id = client.id
+        WHERE
+            t1.id = :id
+          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ShopGoodsDepositDto::class.java))
+    }
+
     override fun findShopGoodsDepositSumDtoList(companyId: String): List<ShopGoodsDepositSumDto> {
 
         return namedParameterJdbcTemplate.query("""
@@ -70,13 +89,21 @@ class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJd
 
     override fun findPage(pageable: Pageable, shopGoodsDepositQuery: ShopGoodsDepositQuery): Page<ShopGoodsDepositDto> {
 
-
         val sb = StringBuffer()
         sb.append("""
-        select  shop.office_id shopOfficeId, shop.area_id shopAreaId, t1.*
-        from crm_shop_goods_deposit t1, crm_depot shop
-        where t1.enabled = 1
-        and t1.shop_id = shop.id
+        SELECT
+            shop.office_id shopOfficeId,
+            shop.area_id shopAreaId,
+            client.out_id shopClientOutId,
+            t1.*
+        FROM
+            crm_shop_goods_deposit t1
+            LEFT JOIN crm_depot shop ON t1.shop_id = shop.id
+            LEFT JOIN crm_client client ON shop.client_id = client.id
+            LEFT JOIN crm_bank bank ON t1.bank_id = bank.id
+        WHERE
+            t1.enabled = 1
+            AND t1.company_id = :companyId
         """)
         if(StringUtils.isNotBlank(shopGoodsDepositQuery.remarks)){
             sb.append("""  and t1.out_code like concat('%',:remarks,'%')  """)
@@ -100,20 +127,14 @@ class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJd
             sb.append("""  and shop.name  like concat('%', :shopName,'%')  """)
         }
         if(StringUtils.isNotBlank(shopGoodsDepositQuery.bankName)){
-            sb.append("""
-                and t1.bank_id in(
-                    select bank.id
-                    from crm_bank bank
-                    where bank.name like concat('%',:bankName,'%')
-                )
-           """)
+            sb.append("""  and bank.name like concat('%',:bankName,'%')    """)
         }
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap =BeanPropertySqlParameterSource(shopGoodsDepositQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ShopGoodsDepositDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val paramMap =BeanPropertySqlParameterSource(shopGoodsDepositQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ShopGoodsDepositDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
 
 

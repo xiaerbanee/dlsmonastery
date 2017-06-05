@@ -533,6 +533,7 @@ export default {
     add: "添加",
     filter: "过滤",
     export: "导出",
+    noSelectionFound:"没有选择任何记录",
     filterOrExport: "过滤OR导出",
     selectDateRange: "选择日期范围",
     inputKey: "请输入关键字",

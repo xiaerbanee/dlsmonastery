@@ -15,10 +15,18 @@ public class ShopBuildQuery extends BaseQuery {
     private String officeId;
     private String auditType;
     private String shopId;
-    private String processFlow;
+    private String processStatus;
     private String fixtureType;
     private String createdBy;
     private String createdDate;
+
+    public String getProcessStatus() {
+        return processStatus;
+    }
+
+    public void setProcessStatus(String processStatus) {
+        this.processStatus = processStatus;
+    }
 
     public void setAuditType(String auditType){
         this.auditType = auditType;
@@ -52,14 +60,6 @@ public class ShopBuildQuery extends BaseQuery {
 
     public void setShopId(String shopId) {
         this.shopId = shopId;
-    }
-
-    public String getProcessFlow() {
-        return processFlow;
-    }
-
-    public void setProcessFlow(String processFlow) {
-        this.processFlow = processFlow;
     }
 
     public String getFixtureType() {

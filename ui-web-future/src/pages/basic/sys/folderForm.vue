@@ -50,10 +50,9 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/general/sys/folder/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
+                form.resetFields();
                 this.submitDisabled = false;
-                if(this.isCreate){
-                  form.resetFields();
-                } else {
+                if(!this.isCreate){
                   this.$router.push({name:'folderList',query:util.getQuery("folderList")})
                 }
               }).catch(function () {
@@ -71,8 +70,6 @@
             this.inputProperty = response.data;
           })
         }
-      },created(){
-        this.initPage();
       },activated () {
         if(!this.$route.query.headClick) {
           this.initPage();

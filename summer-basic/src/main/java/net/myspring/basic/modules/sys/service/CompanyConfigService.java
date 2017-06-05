@@ -13,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
  * Created by zhucc on 2017/4/17.
  */
 @Service
+@Transactional
 public class CompanyConfigService {
 
     @Autowired
@@ -60,5 +62,10 @@ public class CompanyConfigService {
             return companyConfig.getValue();
         }
         return "";
+    }
+
+    @Transactional
+    public void logicDelete(String id) {
+        companyConfigRepository.logicDelete(id);
     }
 }

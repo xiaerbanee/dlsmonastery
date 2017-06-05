@@ -1,14 +1,11 @@
 package net.myspring.future.modules.basic.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Depot
 import net.myspring.future.modules.basic.dto.DepotAccountDto
 import net.myspring.future.modules.basic.dto.DepotDto
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery
 import net.myspring.future.modules.basic.web.query.DepotQuery
-import net.myspring.future.modules.crm.dto.BankInDto
-import net.myspring.future.modules.layout.dto.ShopDepositDto
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -19,7 +16,6 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
@@ -28,9 +24,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 import javax.persistence.EntityManager
 
-/**
- * Created by zhangyf on 2017/5/24.
- */
+
 @CacheConfig(cacheNames = arrayOf("depots"))
 interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
     @Cacheable
@@ -131,7 +125,7 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
             if(depotShopQuery.clientIsNull){
                 sb.append("  and t1.client_id is NULL ")
             }else{
-                sb.append("  and t1.client_id is NOT NULL ");
+                sb.append("  and t1.client_id is NOT NULL ")
             }
         }
         if (depotShopQuery.adShop != null) {

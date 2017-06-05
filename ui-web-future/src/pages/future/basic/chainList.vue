@@ -93,8 +93,8 @@
             axios.get('/api/ws/future/basic/chain/delete', {params: {id: id}}).then((response) => {
               this.$message(response.data.message);
               this.pageRequest();
-            })
-          })
+            });
+        }).catch(()=>{});
         }
       }
     },created () {

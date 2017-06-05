@@ -74,6 +74,7 @@ public class EmployeeService {
         return employee;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         employeeRepository.logicDelete(id);
     }
