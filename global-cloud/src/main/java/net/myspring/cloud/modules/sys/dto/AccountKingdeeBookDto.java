@@ -12,6 +12,7 @@ public class AccountKingdeeBookDto extends IdDto<AccountKingdeeBook> {
     private String companyId;
     private String kingdeeBookName;
     private String kingdeeBookType;
+    private String remarks;
 
     public String getKingdeeBookType() {
         return kingdeeBookType;
@@ -51,5 +52,13 @@ public class AccountKingdeeBookDto extends IdDto<AccountKingdeeBook> {
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }

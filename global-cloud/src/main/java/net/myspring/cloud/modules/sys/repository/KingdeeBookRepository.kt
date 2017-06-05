@@ -31,10 +31,18 @@ interface  KingdeeBookRepository : BaseRepository<KingdeeBook,String>,KingdeeBoo
 
     @Query("""
         SELECT t1.name
-         FROM  #{#entityName} t1
+        FROM  #{#entityName} t1
         where t1.enabled = 1
      """)
     fun findNames():MutableList<String>
+
+    @Query("""
+        SELECT t1
+        FROM  #{#entityName} t1
+        where t1.enabled = 1
+        and t1.companyId = :companyId
+     """)
+    fun findByCompanyId(@Param("companyId")companyId:String): KingdeeBook
 
     @Query("""
         SELECT distinct t1.type
