@@ -58,8 +58,12 @@
           return callback(new Error('必填信息'));
         }else {
             axios.get('/api/basic/hr/account/checkLoginName?loginName='+value+"&id="+this.$route.query.id).then((response)=>{
-          return callback(new Error(response.data.message));
-        })
+              if(response.data.success){
+                return callback();
+              }else {
+                return callback(new Error(response.data.message));
+              }
+          })
         }
       };
       return{
@@ -77,7 +81,8 @@
           positionId:"",
           outId:'',
           outPassword:'',
-          remarks:''
+          remarks:'',
+          type:"",
         },
         rules: {
           employeeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],

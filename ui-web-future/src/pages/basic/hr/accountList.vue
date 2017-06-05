@@ -26,7 +26,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.positionName.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.positionName" clearable filterable :placeholder="$t('accountList.selectGroup')">
-                  <el-option v-for="position in formData.positionList" :key="position.name" :label="position.name" :value="position.name"></el-option>
+                  <el-option v-for="position in formData.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
