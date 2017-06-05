@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -71,6 +72,7 @@ public class OfficeRuleService {
         return officeRule;
     }
 
+    @Transactional
     public void logicDelete(OfficeRuleForm officeRuleForm) {
         officeRuleRepository.logicDelete(officeRuleForm.getId());
     }
