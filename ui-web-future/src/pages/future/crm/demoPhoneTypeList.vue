@@ -22,13 +22,13 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneTypeList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('demoPhoneTypeList.name')"></el-table-column>
-        <el-table-column prop="limitQty" :label="$t('demoPhoneTypeList.limitQty')"></el-table-column>
+        <el-table-column fixed prop="name" :label="$t('demoPhoneTypeList.name')" sortable></el-table-column>
+        <el-table-column prop="limitQty" :label="$t('demoPhoneTypeList.limitQty')" sortable></el-table-column>
         <el-table-column prop="productTypeNames" :label="$t('demoPhoneTypeList.productTypeNames')"></el-table-column>
-        <el-table-column prop="applyEndDate" :label="$t('demoPhoneTypeList.applyEndDate')"></el-table-column>
-        <el-table-column prop="renewEndDate" :label="$t('demoPhoneTypeList.renewEndDate')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('demoPhoneTypeList.createdBy')" sortable></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('demoPhoneTypeList.createdDate')"></el-table-column>
+        <el-table-column prop="applyEndDate" :label="$t('demoPhoneTypeList.applyEndDate')" sortable></el-table-column>
+        <el-table-column prop="renewEndDate" :label="$t('demoPhoneTypeList.renewEndDate')" sortable></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('demoPhoneTypeList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('demoPhoneTypeList.createdDate')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('demoPhoneTypeList.remarks')"></el-table-column>
         <el-table-column prop="locked" :label="$t('demoPhoneTypeList.locked')" width="120">
           <template scope="scope">
@@ -62,6 +62,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           name:"",
         },formLabel:{
           name:{label:this.$t('demoPhoneTypeList.name')},
@@ -84,7 +85,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

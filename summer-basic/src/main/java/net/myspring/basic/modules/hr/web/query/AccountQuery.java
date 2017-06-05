@@ -15,7 +15,7 @@ public class AccountQuery extends BaseQuery {
     private String id;
     private String loginName;
     private String officeName;
-    private String positionName;
+    private String positionId;
     private String employeeName;
     private String leaderName;
     private String officeId;
@@ -62,12 +62,12 @@ public class AccountQuery extends BaseQuery {
         this.officeName = officeName;
     }
 
-    public String getPositionName() {
-        return positionName;
+    public String getPositionId() {
+        return positionId;
     }
 
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
     }
 
     public String getEmployeeName() {

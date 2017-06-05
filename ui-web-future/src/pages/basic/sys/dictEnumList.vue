@@ -82,6 +82,8 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
+        util.copyValue(this.formData,this.submitData);
+        util.setQuery("dictEnumList",this.submitData);
         axios.get('/api/basic/sys/dictEnum?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           console.log(response);

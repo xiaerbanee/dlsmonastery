@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
@@ -100,7 +101,7 @@ public class ShopBuildService {
     public void notify(ShopBuild shopBuild) {
     }
 
-    public void audit(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm) {
+    public String audit(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         ShopBuild shopBuild;
         if(!shopBuildDetailOrAuditForm.isCreate()){
@@ -111,29 +112,39 @@ public class ShopBuildService {
             if(shopBuildDetailOrAuditForm.getPassRemarks()!=null){
                 activitiCompleteForm.setComment(shopBuildDetailOrAuditForm.getPassRemarks());
             }
-            ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
-            if(activitiCompleteDto!=null){
-                shopBuild.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
-                shopBuild.setProcessPositionId(activitiCompleteDto.getPositionId());
-                shopBuild.setProcessStatus(activitiCompleteDto.getProcessStatus());
-                shopBuildRepository.save(shopBuild);
+            try {
+                ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
+                if(activitiCompleteDto!=null){
+                    shopBuild.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+                    shopBuild.setProcessPositionId(activitiCompleteDto.getPositionId());
+                    shopBuild.setProcessStatus(activitiCompleteDto.getProcessStatus());
+                    shopBuildRepository.save(shopBuild);
+                }
+            } catch (Exception e) {
+                return e.getMessage();
             }
         }
+        return null;
+
     }
 
-    public void batchAudit(String[] ids,Boolean pass){
+    public String batchAudit(String[] ids,Boolean pass){
         if(ids ==null){
-            return;
+            return "未选中任何记录";
         }
         List<String> idList = Arrays.asList(ids);
         ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm = new ShopBuildDetailOrAuditForm();
         shopBuildDetailOrAuditForm.setPass(pass);
         shopBuildDetailOrAuditForm.setPassRemarks("批量操作");
+        String message = null;
         for(String id:idList){
             shopBuildDetailOrAuditForm.setId(id);
-            audit(shopBuildDetailOrAuditForm);
+            String messageDetail = audit(shopBuildDetailOrAuditForm);
+            if(messageDetail != null){
+                message += StringUtils.join(messageDetail, CharConstant.COMMA);
+            }
         }
-
+        return message;
     }
 
     public void logicDelete(String id) {

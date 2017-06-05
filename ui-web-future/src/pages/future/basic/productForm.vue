@@ -147,19 +147,17 @@
       },initPage(){
         axios.get('/api/ws/future/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
-        this.inputForm.hasIme = response.data.hasIme?1:0;
-        this.inputForm.allowOrder = response.data.allowOrder?1:0;
-        this.inputForm.allowBill = response.data.allowBill?1:0;
-        if(response.data.productType != null){
-          this.productTypeList = new Array(response.data.productType)
-        }
-      });
+          this.inputForm.hasIme = response.data.hasIme?1:0;
+          this.inputForm.allowOrder = response.data.allowOrder?1:0;
+          this.inputForm.allowBill = response.data.allowBill?1:0;
+          if(response.data.productType != null){
+            this.productTypeList = new Array(response.data.productType)
+          }
+        });
         axios.get('/api/ws/future/basic/product/getForm').then((response)=>{
           this.formProperty = response.data;
-      });
+        });
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

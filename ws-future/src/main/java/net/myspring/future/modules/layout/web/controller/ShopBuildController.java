@@ -47,16 +47,22 @@ public class ShopBuildController {
 
     @RequestMapping(value = "audit")
     public RestResponse audit(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm){
-        shopBuildService.audit(shopBuildDetailOrAuditForm);
-        RestResponse restResponse = new RestResponse("审核成功", ResponseCodeEnum.removed.name());
-        return restResponse;
+        String message = shopBuildService.audit(shopBuildDetailOrAuditForm);
+        if(message != null){
+            return  new RestResponse("审核失败，原因："+message, ResponseCodeEnum.removed.name(),false);
+        }else{
+            return new RestResponse("审核成功", ResponseCodeEnum.removed.name());
+        }
     }
 
     @RequestMapping(value = "batchAudit")
     public RestResponse batchAudit(@RequestParam(value = "ids[]")String[] ids, Boolean pass) {
-        shopBuildService.batchAudit(ids,pass);
-        RestResponse restResponse = new RestResponse("批量审批成功", ResponseCodeEnum.removed.name());
-        return restResponse;
+        String message  = shopBuildService.batchAudit(ids,pass);
+        if(message != null){
+            return  new RestResponse("批量审核部分失败，原因："+message, ResponseCodeEnum.removed.name(),false);
+        }else{
+            return new RestResponse("批量审核成功", ResponseCodeEnum.removed.name());
+        }
     }
 
 

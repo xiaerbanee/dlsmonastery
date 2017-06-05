@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.common.utils.RequestUtils;
 import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.dto.FolderFileDto;
@@ -48,6 +49,8 @@ public class FolderFileService {
     private GridFsTemplate previewGridFsTemplate;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
+    @Autowired
+    private CacheUtils cacheUtils;
 
     public List<FolderFileDto> save(String folderId, Map<String, MultipartFile> fileMap) {
         DBObject dbObject = RequestUtils.getDbObject();
@@ -116,9 +119,9 @@ public class FolderFileService {
     }
 
     @Transactional(readOnly = true)
-    public Page<FolderFileDto> findAll(Pageable pageable, FolderFileQuery folderFileQuery) {
-        Page<FolderFile> folderFilePage= folderFileRepository.findAll(pageable,folderFileQuery);
-        Page<FolderFileDto> page = BeanUtil.map(folderFilePage,FolderFileDto.class);
-        return page;
+    public Page<FolderFileDto> findPage(Pageable pageable, FolderFileQuery folderFileQuery) {
+        Page<FolderFileDto> folderFilePage= folderFileRepository.findPage(pageable,folderFileQuery);
+        cacheUtils.initCacheInput(folderFilePage.getContent());
+        return folderFilePage;
     }
 }

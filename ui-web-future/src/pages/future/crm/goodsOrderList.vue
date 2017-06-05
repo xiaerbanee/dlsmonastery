@@ -28,9 +28,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.areaId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.areaId" clearable  filterable :placeholder="$t('goodsOrderList.inputKey')">
+                <!--<el-select v-model="formData.areaId" clearable  filterable :placeholder="$t('goodsOrderList.inputKey')">
                   <el-option v-for="area in formData.areaList":key="area.id"  :label="area.name" :value="area.id"></el-option>
-                </el-select>
+                </el-select>-->
+                <office-select v-model="formData.areaId"></office-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -41,7 +42,7 @@
                 <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.storeId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.storeId"  type="store"></depot-select>
+                <depot-select v-model="formData.storeId"  type="store" category="store"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
                 <account-select v-model="formData.createdBy"  ></account-select>
@@ -109,10 +110,12 @@
 </template>
 
 <script>
+  import officeSelect from 'components/basic/office-select'
   import depotSelect from 'components/future/depot-select'
   import accountSelect from 'components/basic/account-select'
   export default{
     components:{
+      officeSelect,
       depotSelect,
       accountSelect,
     },
@@ -197,12 +200,10 @@
       }else if(action =="sign"){
         this.$router.push({name:'goodsOrderSign',query:{id:id}})
       }else if(action == "delete"){
-        util.confirmBeforeDelRecord(this).then(() => {
-        axios.get('/api/ws/future/crm/goodsOrder/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/ws/future/crm/goodsOrder/delete',{params:{id:id}}).then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
-        });
-      }).catch(()=>{});
+      })
       }
     }
  },created () {

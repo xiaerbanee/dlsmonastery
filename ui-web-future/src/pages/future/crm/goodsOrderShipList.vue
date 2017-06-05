@@ -27,9 +27,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.areaId.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.areaId" clearable  filterable :placeholder="$t('goodsOrderShipList.inputKey')">
+                <!--<el-select v-model="formData.areaId" clearable  filterable :placeholder="$t('goodsOrderShipList.inputKey')">
                   <el-option v-for="area in formData.areaList":key="area.id"  :label="area.name" :value="area.id"></el-option>
-                </el-select>
+                </el-select>-->
+                <office-select v-model="formData.areaId"></office-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -40,7 +41,7 @@
                 <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('goodsOrderShipList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.storeId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.storeId"  type="store"></depot-select>
+                <depot-select v-model="formData.storeId"  type="store" category="store"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
                 <account-select v-model="formData.createdBy"  ></account-select>
@@ -92,7 +93,7 @@
         <el-table-column prop="pullStatus" :label="$t('goodsOrderShipList.pullStatus')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('goodsOrderShipList.operate')" width="160">
           <template scope="scope">
-            <div class="action"><el-button size="small"v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderShipList.detail')}}</el-button></div>
+            <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderShipList.detail')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待发货'"><el-button size="small" @click.native="itemAction(scope.row.id, 'ship')">{{$t('goodsOrderShipList.ship')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'sign')">{{$t('goodsOrderShipList.sign')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'shipBack')">{{$t('goodsOrderShipList.shipBack')}}</el-button></div>
@@ -108,10 +109,12 @@
 </template>
 
 <script>
+  import officeSelect from 'components/basic/office-select'
   import depotSelect from 'components/future/depot-select'
   import accountSelect from 'components/basic/account-select'
   export default{
     components:{
+      officeSelect,
       depotSelect,
       accountSelect,
     },

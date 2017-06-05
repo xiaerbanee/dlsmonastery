@@ -2,14 +2,15 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 
 public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
 
-
-    private String productName;
     private String productId;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
+    private String productName;
     private Boolean productHasIme;
     private BigDecimal price;
     private Integer qty;
@@ -60,14 +61,6 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
         this.productHasIme = productHasIme;
     }
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
     public String getProductId() {
         return productId;
     }
@@ -76,6 +69,13 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
         this.productId = productId;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     public BigDecimal getPrice() {
         return price;

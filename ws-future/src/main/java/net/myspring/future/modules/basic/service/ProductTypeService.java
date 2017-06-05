@@ -119,6 +119,15 @@ public class ProductTypeService {
         return productTypeDtos;
     }
 
+    public List<ProductTypeDto> findByIds(List<String> ids){
+        if(CollectionUtil.isEmpty(ids)) {
+            return Lists.newArrayList();
+        }
+        List<ProductType> productTypes = productTypeRepository.findAll(ids);
+        List<ProductTypeDto> productTypeDtos = BeanUtil.map(productTypes,ProductTypeDto.class);
+        return productTypeDtos;
+    }
+
     public ProductTypeDto findDto(String id) {
 
         ProductTypeDto result = productTypeRepository.findDto(id);
