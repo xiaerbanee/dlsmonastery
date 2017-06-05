@@ -65,11 +65,11 @@
           if (valid) {
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/basic/sys/role/saveAuthorityList',qs.stringify(this.submitData)).then((response)=> {
-                console.log(response.data)
               this.$message(response.data.message);
-              form.resetFields();
               this.submitDisabled = false;
-              if(!this.isCreate){
+              if(this.isCreate){
+                form.resetFields();
+              } else {
                 this.$router.push({name:'roleList',query:util.getQuery("roleList")})
               }
             }).catch(function () {

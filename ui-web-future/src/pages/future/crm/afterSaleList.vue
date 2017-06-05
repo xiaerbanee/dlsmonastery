@@ -162,10 +162,12 @@
         if(action=="修改") {
           this.$router.push({ name: 'afterSaleEditForm', query: { id: id }})
         }else if(action=="刪除"){
+          util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/crm/afterSale/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
+          });
+        }).catch(()=>{});
         }else if(action=="同步"){
           axios.get('/api/crm/afterSale/synToFinance').then((response) =>{
             this.$message(response.data.message);

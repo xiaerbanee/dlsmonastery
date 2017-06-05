@@ -87,10 +87,12 @@
         if(action=="edit") {
           this.$router.push({ name: 'positionForm', query: { id: id }})
         } else if(action=="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/basic/hr/position/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          })
+          });
+        }).catch(()=>{});
         }
       }
     },created () {

@@ -79,11 +79,13 @@ public class RoleController {
 
     @RequestMapping(value = "getTreeNode")
     public RoleForm getTreeNode(RoleForm roleForm) {
-        TreeNode treeNode=permissionService.findRoleTree(roleForm.getId());
-        List<Permission> permissionList=permissionService.findByRoleId(roleForm.getId());
-        List<String> permissionIds = CollectionUtil.extractToList(permissionList, "id");
-        roleForm.setPermissionIdList(permissionIds);
-        roleForm.setTreeNode(treeNode);
+        if(!roleForm.isCreate()){
+            TreeNode treeNode=permissionService.findRoleTree(roleForm.getId());
+            List<Permission> permissionList=permissionService.findByRoleId(roleForm.getId());
+            List<String> permissionIds = CollectionUtil.extractToList(permissionList, "id");
+            roleForm.setPermissionIdList(permissionIds);
+            roleForm.setTreeNode(treeNode);
+        }
         return roleForm;
     }
 

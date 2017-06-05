@@ -197,10 +197,12 @@
       }else if(action =="sign"){
         this.$router.push({name:'goodsOrderSign',query:{id:id}})
       }else if(action == "delete"){
+        util.confirmBeforeDelRecord(this).then(() => {
         axios.get('/api/ws/future/crm/goodsOrder/delete',{params:{id:id}}).then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
-        })
+        });
+      }).catch(()=>{});
       }
     }
  },created () {

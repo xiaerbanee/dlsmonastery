@@ -30,6 +30,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -206,6 +207,7 @@ public class OfficeService {
         return office;
     }
 
+    @Transactional
     public void logicDelete(Office office) {
         officeRepository.logicDelete(office.getId());
     }

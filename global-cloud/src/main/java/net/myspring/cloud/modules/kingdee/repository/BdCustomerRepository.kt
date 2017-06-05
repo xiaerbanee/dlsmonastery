@@ -33,7 +33,6 @@ class BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
         """, BeanPropertyRowMapper(BdCustomer::class.java))
-
     }
 
     fun findByNameList(nameList: MutableList<String>): MutableList<BdCustomer> {
