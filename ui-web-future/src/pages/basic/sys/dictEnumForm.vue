@@ -35,6 +35,7 @@
           submitDisabled:false,
           inputForm:{},
           inputProperty:{},
+          isInit:false,
           submitData:{
             id:'',
             category:'',
@@ -71,7 +72,7 @@
         })
       }
     },activated () {
-      if(!this.$route.query.headClick) {
+      if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
         axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
@@ -80,6 +81,7 @@
           this.inputProperty = response.data;
         });
       }
+      this.isInit = true;
     }
   }
 </script>
