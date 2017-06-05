@@ -14,6 +14,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.*;
@@ -23,6 +24,8 @@ import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -307,4 +310,26 @@ public class GoodsOrderShipService {
         goodsOrderRepository.save(goodsOrder);
     }
 
+
+    public GoodsOrderShipForm getForm(GoodsOrderShipForm goodsOrderShipForm) {
+        String id = goodsOrderShipForm.getId();
+        GoodsOrder goodsOrder = null;
+        if(StringUtils.isNotBlank(id)) {
+            id = IdUtils.getId(id);
+            if(StringUtils.isNotBlank(id)) {
+                goodsOrder = goodsOrderRepository.findOne(id);
+            }
+        }
+        if(goodsOrder != null) {
+            GoodsOrderDto goodsOrderDto = BeanUtil.map(goodsOrder,GoodsOrderDto.class);
+            cacheUtils.initCacheInput(goodsOrderDto);
+            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
+            List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
+            cacheUtils.initCacheInput(goodsOrderDetailDtoList);
+            goodsOrderShipForm.setStoreName(goodsOrderDto.getStoreName());
+            goodsOrderShipForm.setShopName(goodsOrderDto.getShopName());
+            goodsOrderShipForm.setGoodsOrderDetailList(goodsOrderDetailDtoList);
+        }
+        return goodsOrderShipForm;
+    }
 }
