@@ -57,34 +57,39 @@
           officeSelect
       },
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        type:this.$route.query.type==null,
-        submitDisabled:false,
-        employee:{},
-        account:{},
-        accounts:[],
-        offices:[],
-        inputForm:{},
-        submitData:{
-          id:'',
-          accountId:"",
-          type:'',
-          oldValue:'',
-          newValue:'',
-          remarks:''
-        },
-        rules: {
-          accountId: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
-          type: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
-          remarks: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
-        },
-        remoteLoading:false,
-
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          isInit: false,
+          isCreate:this.$route.query.id==null,
+          type:this.$route.query.type==null,
+          submitDisabled:false,
+          employee:{},
+          account:{},
+          accounts:[],
+          offices:[],
+          inputForm:{},
+          submitData:{
+            id:'',
+            accountId:"",
+            type:'',
+            oldValue:'',
+            newValue:'',
+            remarks:''
+          },
+          rules: {
+            accountId: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
+            type: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
+            remarks: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
+          },
+          remoteLoading:false,
+
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         this.inputForm.expiryDate=util.formatLocalDate( this.inputForm.expiryDate)
@@ -95,13 +100,12 @@
               if(response.data.message){
               this.$message(response.data.message);
             }
-            form.resetFields();
-            this.submitDisabled = false;
+            Object.assign(this.$data, this.getData());
             if(!this.isCreate){
               this.$router.push({name:'accountChangeList',query:util.getQuery("accountChangeList")})
             }
           }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -154,7 +158,9 @@
         }else {
           this.inputForm.oldValue ="";
         }
-      },initPage() {
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         if(!this.type){
           this.inputForm.type=this.$route.query.type;
           this.getAccount(this.$route.query.accountId);
@@ -163,10 +169,7 @@
           this.inputForm=response.data;
         })
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

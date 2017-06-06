@@ -83,40 +83,45 @@
           callback();
         }
       };
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        formProperty:{},
-        employeeForm:{
-           id:"",
-          bankName:'',
-          bankItem:'',
-          remarks:'',
-          name:'',
-          sex:'',
-          sexLabel:'',
-          birthday:'',
-          school:'',
-          major:'',
-          education:'',
-          image:''
-        },
-        accountForm:{
+      return this.getData();
+    },
+    methods:{
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          formProperty:{},
+          employeeForm:{
+            id:"",
+            bankName:'',
+            bankItem:'',
+            remarks:'',
+            name:'',
+            sex:'',
+            sexLabel:'',
+            birthday:'',
+            school:'',
+            major:'',
+            education:'',
+            image:''
+          },
+          accountForm:{
             id:"",
             loginName:'',
             password:'',
             outId:'',
             outPassword:'',
-        },
-        rules: {
-          confirmPassword: [{ validator: validateConfigPass, trigger: 'blur' }],
-        },
-        confirmPassword:"",
-        fileList:[],
-      }
-    },
-    methods:{
+          },
+          rules: {
+            confirmPassword: [{ validator: validateConfigPass, trigger: 'blur' }],
+          },
+          confirmPassword:"",
+          fileList:[],
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["employeeForm"];
         form.validate((valid) => {
@@ -128,9 +133,10 @@
                   axios.post('/api/basic/hr/account/save', qs.stringify(this.accountForm)).then((response)=> {
                   this.$message("账户"+response.data.message);
                   });
+                Object.assign(this.$data, this.getData());
                this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
               }).catch(function () {
-              this.submitDisabled = false;
+                that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -146,7 +152,9 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      },initPage() {
+      }
+    },activated () {
+      if(!this.$route.query.headClick || this.isInit) {
         this.getForm();
         if(!this.isCreate){
           axios.get('/api/basic/hr/employee/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -161,10 +169,7 @@
           })
         }
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

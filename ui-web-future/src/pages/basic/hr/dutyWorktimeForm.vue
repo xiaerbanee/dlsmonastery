@@ -29,27 +29,32 @@
 <script>
     export default{
       data(){
-        return{
-          submitDisabled:false,
-          fileList:[],
-          inputForm:{
-            importFile:'',
-            yearMonth:'',
-            remarks:''
-          },
-          submitData:{
-            importFile:'',
-            yearMonth:'',
-            remarks:''
-          },
-          rules: {
-            importFile: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
-            yearMonth: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
-          },
-        };
+        return this.getData();
       },
       methods:{
+        getData(){
+          return{
+            isInit:false,
+            submitDisabled:false,
+            fileList:[],
+            inputForm:{
+              importFile:'',
+              yearMonth:'',
+              remarks:''
+            },
+            submitData:{
+              importFile:'',
+              yearMonth:'',
+              remarks:''
+            },
+            rules: {
+              importFile: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
+              yearMonth: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
+            },
+          }
+        },
         formSubmit(){
+          var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
@@ -57,9 +62,9 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.get('/api/basic/hr/dutyWorktime/import', {params: this.submitData}).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
+                Object.assign(this.$data, this.getData());
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
@@ -72,6 +77,11 @@
         },handleRemove(file, fileList) {
           this.fileList = fileList;
         }
+      },
+      activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
+        }
+        this.isInit = true;
       }
   }
 </script>
