@@ -72,87 +72,92 @@
   import monthPicker from 'components/common/month-picker'
 
   export default{
-    components:{
+    components: {
       depotSelect,
       employeeSelect,
       monthPicker,
     },
-      data(){
-          return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            productImeList:[],
-            productImeUpload:{},
-            imeStr:'',
-            errMsg:'',
-            productQtyList:[],
-            submitData:{
-              imeStr:'',
-              shopId:'',
-              month:"",
-              employeeId:"",
-              remarks:''
-            },
-            rules: {
-              imeStr: [{ required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
-              shopId: [{ required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
-              month: [{ required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
-              employeeId: [{ required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
-            },
-          }
-      },
-      methods:{
-        formSubmit(){
-
-          let form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-              this.submitDisabled = true;
-              util.copyValue(this.productImeUpload, this.submitData);
-              this.submitData.imeStr = this.imeStr;
-              axios.post('/api/ws/future/crm/productImeUpload/upload',qs.stringify(this.submitData)).then((response)=> {
-                this.$message(response.data.message);
-                this.submitDisabled = false;
-                if(response.data.success){
-                  if(this.isCreate){
-                    form.resetFields();
-                  } else {
-                    this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList")})
-                  }
-                }
-              }).catch( () => {
-                this.submitDisabled = false;
-              });
-            }
-          });
-        },imeStrChanged(){
-          axios.get('/api/ws/future/crm/productImeUpload/checkForUpload',{params:{imeStr:this.imeStr}}).then((response)=>{
-            this.errMsg=response.data;
-          });
-
-          axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.imeStr}}).then((response)=>{
-            this.productImeList=response.data;
-
-            let tmpMap = new Map();
-            if(this.productImeList){
-                for(let productIme of this.productImeList ){
-                    if(!tmpMap.has(productIme.productId)){
-                        tmpMap.set(productIme.productId, {productName:productIme.productName, qty:0});
-                    }
-                    tmpMap.get(productIme.productId).qty+=1;
-                }
-            }
-            let tmpList = [];
-            for(let key of tmpMap.keys()){
-              tmpList.push(tmpMap.get(key));
-            }
-            this.productQtyList = tmpList;
-          });
+    data(){
+      return this.getData()
+    },
+    methods: {
+      getData() {
+        return {
+          isInit: false,
+          isCreate: this.$route.query.id == null,
+          submitDisabled: false,
+          productImeList: [],
+          productImeUpload: {},
+          imeStr: '',
+          errMsg: '',
+          productQtyList: [],
+          submitData: {
+            imeStr: '',
+            shopId: '',
+            month: "",
+            employeeId: "",
+            remarks: ''
+          },
+          rules: {
+            imeStr: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
+            shopId: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
+            month: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
+            employeeId: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
+          },
         }
-      },created(){
-      axios.get('/api/ws/future/crm/productImeUpload/findDto').then((response)=>{
-        this.productImeUpload=response.data;
-      });
+      },
+      formSubmit(){
+        var that = this;
+        let form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            this.submitDisabled = true;
+            util.copyValue(this.productImeUpload, this.submitData);
+            this.submitData.imeStr = this.imeStr;
+            axios.post('/api/ws/future/crm/productImeUpload/upload', qs.stringify(this.submitData)).then((response) => {
+              this.$message(response.data.message);
+              Object.assign(this.$data, this.getData());
+              if (response.data.success) {
+                if (!this.isCreate) {
+                  this.$router.push({name: 'productImeUploadList', query: util.getQuery("productImeUploadList")})
+                }
+              }
+            }).catch(() => {
+              that.submitDisabled = false;
+            });
+          }
+        });
+      }, imeStrChanged(){
+        axios.get('/api/ws/future/crm/productImeUpload/checkForUpload', {params: {imeStr: this.imeStr}}).then((response) => {
+          this.errMsg = response.data;
+        });
+
+        axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr: this.imeStr}}).then((response) => {
+          this.productImeList = response.data;
+
+          let tmpMap = new Map();
+          if (this.productImeList) {
+            for (let productIme of this.productImeList) {
+              if (!tmpMap.has(productIme.productId)) {
+                tmpMap.set(productIme.productId, {productName: productIme.productName, qty: 0});
+              }
+              tmpMap.get(productIme.productId).qty += 1;
+            }
+          }
+          let tmpList = [];
+          for (let key of tmpMap.keys()) {
+            tmpList.push(tmpMap.get(key));
+          }
+          this.productQtyList = tmpList;
+        });
+      }
+    }, activated () {
+      if (!this.$route.query.headClick || !this.isInit) {
+        axios.get('/api/ws/future/crm/productImeUpload/findDto').then((response) => {
+          this.productImeUpload = response.data;
+        });
+      }
+      this.isInit = true;
     }
   }
 </script>

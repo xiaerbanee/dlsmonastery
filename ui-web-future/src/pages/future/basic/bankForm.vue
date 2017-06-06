@@ -26,13 +26,18 @@
       accountSelect
     },
       data(){
+        return this.getData()
+      },
+    methods:{
+      getData() {
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             remoteLoading:false,
             inputForm:{},
             submitData:{
-              id:'',
+              id:this.$route.query.id,
               name:'',
               accountIdList:"",
               remarks:''
@@ -42,9 +47,8 @@
             }
           }
       },
-      methods:{
         formSubmit(){
-
+          var that = this;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
@@ -52,29 +56,25 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/ws/future/basic/bank/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
+                Object.assign(this.$data, this.getData());
                 if(response.data.success) {
-                  if (this.isCreate) {
-                    form.resetFields();
-                  } else {
+                  if (!this.isCreate) {
                     this.$router.push({name: 'bankList', query: util.getQuery("bankList")})
                   }
                 }
               }).catch(() => {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }
           });
-        },
-        initPage(){
+        }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
           axios.get('/api/ws/future/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm=response.data;
-          });
+        });
         }
-      },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
+      this.isInit = true;
       }
-    }
     }
 </script>

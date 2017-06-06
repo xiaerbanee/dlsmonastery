@@ -22,59 +22,57 @@
 <script>
   export default{
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        formProperty:{},
-        inputForm:{},
-        submitData:{
-          id:'',
-          name:'',
-          mobilePhone:'',
-          remarks:'',
-        },
-        rules: {
-          name: [{ required: true, message: this.$t('clientForm.prerequisiteMessage')}],
-          mobilePhone: [{ required: true, message: this.$t('clientForm.prerequisiteMessage')}]
-        }
-      }
+      return this.getData()
     },
-    methods:{
+    methods: {
+      getData() {
+        return {
+          isInit: false,
+          isCreate: this.$route.query.id == null,
+          submitDisabled: false,
+          formProperty: {},
+          inputForm: {},
+          submitData: {
+            id: '',
+            name: '',
+            mobilePhone: '',
+            remarks: '',
+          },
+          rules: {
+            name: [{required: true, message: this.$t('clientForm.prerequisiteMessage')}],
+            mobilePhone: [{required: true, message: this.$t('clientForm.prerequisiteMessage')}]
+          }
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData)
-            axios.post('/api/ws/future/basic/client/save', qs.stringify(this.submitData)).then((response)=> {
+            util.copyValue(this.inputForm, this.submitData)
+            axios.post('/api/ws/future/basic/client/save', qs.stringify(this.submitData)).then((response) => {
               this.$message(response.data.message);
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
-                this.$router.push({name:'clientList',query:util.getQuery("clientList")})
+              Object.assign(this.$data, this.getData());
+              if (!this.isCreate) {
+                this.$router.push({name: 'clientList', query: util.getQuery("clientList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
-          }else{
+          } else {
             this.submitDisabled = false;
           }
         })
-      },initPage(){
-        if(!this.isCreate){
-          axios.get('/api/ws/future/basic/client/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm=response.data
-        });
+      }
+      }, activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+          axios.get('/api/ws/future/basic/client/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+            this.inputForm = response.data
+          });
         }
+      this.isInit = true;
       }
-    },created(){
-     this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
-    }
   }
 </script>
 

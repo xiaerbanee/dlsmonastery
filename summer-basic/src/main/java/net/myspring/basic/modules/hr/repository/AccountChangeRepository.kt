@@ -42,9 +42,6 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
             and t1.account_id=account.id
             and account.office_id=office.id
         """)
-        if (CollectionUtil.isNotEmpty(accountChangeQuery.officeIds)) {
-            sb.append(" and office.id IN :officeIds ")
-        }
         if (accountChangeQuery.createdDate != null) {
             sb.append(" AND t1.created_date> :createdDateStart ")
         }
@@ -61,20 +58,6 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
                 from hr_account t2
                 where t2.login_name like concat('%',:createdByName,'%')
                 and t2.enabled=1
-                )
-            """)
-        }
-        if (accountChangeQuery.officeId != null) {
-            sb.append("""
-                and t1.account_id  in(
-                select t2.id
-                from hr_account t2 ,sys_office office
-                where  t2.enabled=1
-                and t2.office_id=office.id
-                and (
-                    office.parent_ids like concat('%,',:officeId,',%')
-                  or office.id=:officeId
-                )
                 )
             """)
         }

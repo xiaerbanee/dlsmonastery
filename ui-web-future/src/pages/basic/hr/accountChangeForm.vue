@@ -19,21 +19,21 @@
               <el-form-item :label="$t('accountChangeForm.oldValue')" prop="oldValue">
                 {{inputForm.oldValue}}
               </el-form-item>
-              <el-form-item v-show="inputForm.type=='手机' ||inputForm.type=='身份证' || inputForm.type=='银行卡号' ||inputForm.type=='底薪'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
+              <el-form-item v-if="inputForm.type=='手机' ||inputForm.type=='身份证' || inputForm.type=='银行卡号' ||inputForm.type=='底薪'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
                 <el-input :disabled="isDetail" v-model="inputForm.newValue" ></el-input>
               </el-form-item>
-              <el-form-item v-show="inputForm.type=='部门'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
+              <el-form-item v-if="inputForm.type=='部门'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
                 <office-select :disabled="isDetail" v-model="inputForm.newValue"></office-select>
               </el-form-item>
-              <el-form-item v-show="inputForm.type=='岗位'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
+              <el-form-item v-if="inputForm.type=='岗位'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
                 <el-select :disabled="isDetail" v-model="inputForm.newValue" filterable :placeholder="$t('accountChangeForm.inputWord')" >
                   <el-option v-for="item in inputForm.positionList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item  v-show="inputForm.type=='上级'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
+              <el-form-item  v-if="inputForm.type=='上级'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
                 <account-select  :disabled="isDetail" v-model="inputForm.newValue"></account-select>
               </el-form-item>
-              <el-form-item v-show="inputForm.type=='转正'||inputForm.type=='入职'||inputForm.type=='离职'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
+              <el-form-item v-if="inputForm.type=='转正'||inputForm.type=='入职'||inputForm.type=='离职'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
                 <date-picker  :disabled="isDetail" v-model="inputForm.newValue"></date-picker>
               </el-form-item>
               <el-form-item :label="$t('accountChangeForm.remarks')"  prop="remarks">
@@ -62,7 +62,6 @@
       return{
         isDetail:this.$route.query.action=="detail",
         isCreate:this.$route.query.id==null,
-        type:this.$route.query.type==null,
         submitDisabled:false,
         accounts:[],
         offices:[],
@@ -120,7 +119,8 @@
           this.accounts = [];
         }
       },getAccount(accountId){
-        axios.get('/api/basic/hr/accountChange/findData',{params: {accountId:accountId,id:this.$route.query.id}}).then((response)=>{
+        var type=this.inputForm.type;
+        axios.get('/api/basic/hr/accountChange/findData',{params: {type:type,accountId:accountId,id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           if(response.data.accountId!=null){
             this.accounts=new Array({id:response.data.accountId,loginName:response.data.accountName})
@@ -131,6 +131,7 @@
         if (!this.isDetail) {
           this.inputForm.newValue = "";
         }
+        console.log(this.inputForm.newValue)
         if(this.inputForm.type == "手机"){
           this.inputForm.oldValue = this.inputForm.mobilePhone;
         }else if(this.inputForm.type == "身份证"){
@@ -155,11 +156,8 @@
           this.inputForm.oldValue ="";
         }
       },initPage() {
-        if(!this.type){
-          this.inputForm.type=this.$route.query.type;
-        }else {
-          this.inputForm.id=this.$route.query.id;
-        }
+        this.inputForm.type=this.$route.query.type;
+        this.inputForm.id=this.$route.query.id;
         this.getAccount(this.$route.query.accountId);
       }
     },created () {

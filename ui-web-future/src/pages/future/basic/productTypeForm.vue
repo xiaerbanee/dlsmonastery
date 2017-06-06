@@ -50,7 +50,12 @@
       boolSelect,
     },
       data(){
+        return this.getData()
+      },
+    methods:{
+      getData() {
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             productType:{},
@@ -75,8 +80,8 @@
             }
           }
       },
-      methods:{
         formSubmit(){
+          var that = this;
           this.submitDisabled = true;
           var form = this.$refs["productType"];
           form.validate((valid) => {
@@ -84,32 +89,27 @@
                 util.copyValue(this.productType, this.submitData);
               axios.post('/api/ws/future/basic/productType/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
+                Object.assign(this.$data, this.getData());
                 if(response.data.success) {
-                    if (this.isCreate) {
-                      form.resetFields();
-                    } else {
+                    if (!this.isCreate) {
                       this.$router.push({name: 'productTypeList', query: util.getQuery("productTypeList")})
                     }
                 }
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
             }
           })
-        },initPage(){
+        }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
           axios.get('/api/ws/future/basic/productType/findDto', {params: {id:this.$route.query.id}}).then((response)=>{
             this.productType=response.data;
         });
         }
-      },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
+      this.isInit = true;
       }
-    }
   }
 </script>

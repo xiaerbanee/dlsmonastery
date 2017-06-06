@@ -240,7 +240,12 @@
           officeSelect
       },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         multiple:true,
@@ -308,8 +313,8 @@
         remoteLoading:false
       }
     },
-    methods:{
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -319,14 +324,12 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+              Object.assign(this.$data, this.getData());
+              if(!this.isCreate){
                 this.$router.push({name:'depotList',query:util.getQuery("depotList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -402,7 +405,9 @@
         } else {
           this.districts = [];
         }
-      },initPage(){
+      }
+    },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/basic/depot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
         this.inputForm.doorHead = response.data.doorHead?1:0;
@@ -452,12 +457,7 @@
         }
       });
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

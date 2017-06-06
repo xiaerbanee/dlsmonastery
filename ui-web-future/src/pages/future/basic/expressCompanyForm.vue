@@ -51,7 +51,12 @@
       districtSelect,
     },
       data(){
+        return this.getData()
+      },
+    methods:{
+      getData() {
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             formProperty:{},
@@ -74,8 +79,8 @@
             }
           }
       },
-      methods:{
         formSubmit(){
+          var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
@@ -83,22 +88,20 @@
               util.copyValue(this.inputForm, this.submitData);
               axios.post('/api/ws/future/basic/expressCompany/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
-                if(response.data.success){
-                  if(this.isCreate){
-                    form.resetFields();
-                  } else {
-                    this.$router.push({name:'expressCompanyList',query:util.getQuery("expressCompanyList")})
-                  }
+              Object.assign(this.$data, this.getData());
+                if(!this.isCreate){
+                  this.$router.push({name:'expressCompanyList',query:util.getQuery("expressCompanyList")})
                 }
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
             }
           })
-        },initPage(){
+        }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
           axios.get('/api/ws/future/basic/expressCompany/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
         });
@@ -106,10 +109,7 @@
             this.formProperty = response.data;
         });
         }
-      },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
       }
     }
 </script>
