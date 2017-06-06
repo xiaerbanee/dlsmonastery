@@ -178,19 +178,15 @@
       },checkSelectable(row) {
         return row.processStatus !== '已通过' && row.processStatus !== '未通过'
       },selectionChange(selection){
-
         this.selects=[];
         for(let each of selection){
           this.selects.push(each.id);
         }
-
       },batchPass(){
-
           if(!this.selects || this.selects.length < 1){
             this.$message(this.$t('bankInList.noSelectionFound'));
             return ;
           }
-
         util.confirmBeforeBatchPass(this).then(() => {
           this.submitDisabled = true;
           this.pageLoading = true;
@@ -202,7 +198,6 @@
           });
         }).catch(()=>{});
       },exportData(){
-
         util.confirmBeforeExportData(this).then(() => {
           axios.get('/api/ws/future/crm/bankIn/export?'+qs.stringify(this.submitData)).then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;

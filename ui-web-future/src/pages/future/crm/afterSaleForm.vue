@@ -42,7 +42,12 @@
 
   export default{
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         submitDisabled:false,
         table:null,
         formData:{
@@ -139,8 +144,8 @@
         this.table = new Handsontable(this.$refs["handsontable"], this.settings)
       })
     },
-    methods:{
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -156,14 +161,12 @@
             this.inputForm.toStoreDate=util.formatLocalDate(this.inputForm.toStoreDate)
             axios.post('/api/crm/afterSale/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            this.submitDisabled = false;
-            if(this.isCreate){
-              this.table.loadData(null);
-            } else {
+            Object.assign(this.$data, this.getData());
+            if(!this.isCreate){
                this.$router.push({name:'afterSaleList',query:util.getQuery("afterSaleList")})
             }
           }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -175,14 +178,10 @@
           this.settings.data=response.data.list;
           this.table.loadData(this.settings.data);
         })
-      },initPage(){
-
       }
-    },created(){
-      this.initPage();
     },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
+      if(!this.$route.query.headClick || !this.isInit) {
+
       }
     }
   }

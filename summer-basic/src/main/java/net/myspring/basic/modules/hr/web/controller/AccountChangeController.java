@@ -51,10 +51,10 @@ public class AccountChangeController {
         return accountChangeForm;
     }
 
-    @RequestMapping(value = "audit", method = RequestMethod.GET)
-    public RestResponse audit(String id,boolean pass,String comment) {
-        RestResponse restResponse=new RestResponse("用户信息调整审核成功",null);
-        accountChangeService.audit(id,pass,comment);
+    @RequestMapping(value = "batchPass", method = RequestMethod.GET)
+    public RestResponse batchPass(@RequestParam(value = "ids[]") String[] ids, boolean pass) {
+        RestResponse restResponse=new RestResponse("审核成功",ResponseCodeEnum.audited.name());
+        accountChangeService.batchPass(ids,pass);
         return restResponse;
     }
 

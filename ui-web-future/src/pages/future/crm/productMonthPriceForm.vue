@@ -40,7 +40,12 @@
 <script>
     export default{
       data(){
+        return this.getData()
+      },
+      methods:{
+        getData() {
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             formProperty:{},
@@ -57,25 +62,22 @@
             message:''
           }
       },
-      methods:{
         formSubmit(){
-
+          var that = this;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
               this.submitDisabled = true;
               axios.post('/api/crm/productMonthPrice/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
                 if(response.data.success) {
-                  if (this.isCreate) {
-                    form.resetFields();
-                  } else {
+                  if (!this.isCreate) {
                     this.$router.push({name: 'productMonthPriceList', query: util.getQuery("productMonthPriceList")})
                   }
                 }
               }).catch(() => {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }
           })
@@ -92,7 +94,9 @@
 
             })
           }
-        },initPage(){
+        }
+      },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
           if(!this.isCreate){
             axios.get('/api/crm/productMonthPrice/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
               util.copyValue(response.data,this.inputForm);
@@ -104,12 +108,7 @@
             })
           }
         }
-      },created(){
-        this.initPage();
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
-        }
+        this.isInit = true;
       }
     }
 </script>

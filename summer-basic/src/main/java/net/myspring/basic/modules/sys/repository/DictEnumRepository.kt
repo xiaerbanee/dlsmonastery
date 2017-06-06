@@ -30,6 +30,8 @@ interface DictEnumRepository :BaseRepository<DictEnum,String>,DictEnumRepository
     @Cacheable
     override  fun findOne(id: String): DictEnum
 
+    fun findByCategoryIn(categoryList: MutableList<String>): MutableList<DictEnum>
+
     @Query("""
         SELECT t
         FROM  #{#entityName} t

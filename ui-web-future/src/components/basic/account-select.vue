@@ -36,7 +36,6 @@
         if(this.innerId instanceof Array){
             idStr=this.innerId.join();
         }
-        console.log(this.innerId);
         axios.get('/api/basic/hr/account/findByIds?idStr='+idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
@@ -46,9 +45,7 @@
       this.setValue(this.value);
     },watch: {
       value :function (newVal) {
-        if(newVal){
           this.setValue(newVal);
-        }
       }
     }
   };

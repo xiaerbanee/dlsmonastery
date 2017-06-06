@@ -153,25 +153,30 @@
 <script>
   export default {
     data() {
-      return {
-        submitDisabled:false,
-        dutyType:'',
-        inputForm:{
-        },
-        submitData:{
-          id: this.$route.query.id,
-          dutyType: this.$route.query.dutyType,
-          pass: '',
-          auditRemarks:''
-        },
-        showForm:{},
-        rules:{
-          pass: [{ required: true, message: this.$t('dutyTaskForm.isPass')}],
-        }
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return {
+          isInit:false,
+          submitDisabled:false,
+          dutyType:'',
+          inputForm:{
+          },
+          submitData:{
+            id: this.$route.query.id,
+            dutyType: this.$route.query.dutyType,
+            pass: '',
+            auditRemarks:''
+          },
+          showForm:{},
+          rules:{
+            pass: [{ required: true, message: this.$t('dutyTaskForm.isPass')}],
+          }
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -179,29 +184,27 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/basic/hr/duty/audit',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
-              form.resetFields();
-              this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
               if(!this.isCreate){
                 this.$router.push({name:'dutyTaskList',query:util.getQuery("dutyTaskList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
           }
         })
-      },initPage() {
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/basic/hr/duty/getForm',{params:{id:this.$route.query.id,dutyType:this.$route.query.dutyType}}).then((response)=>{
           this.dutyType = response.data.dutyType;
           this.showForm = response.data.item;
           this.inputForm.bools = response.data.boolMap;
         });
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   };
 </script>

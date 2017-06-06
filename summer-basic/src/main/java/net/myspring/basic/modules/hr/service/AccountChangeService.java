@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.domain.AccountChange;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
+import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.repository.AccountChangeRepository;
 import net.myspring.basic.modules.hr.repository.AccountRepository;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
@@ -15,12 +16,15 @@ import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = false)
@@ -49,6 +56,8 @@ public class AccountChangeService {
     private CacheUtils cacheUtils;
     @Autowired
     private ActivitiClient activitiClient;
+    @Autowired
+    private OfficeManager officeManager;
 
 
     public AccountChange findOne(String id){
@@ -79,7 +88,7 @@ public class AccountChangeService {
         accountChange.setProcessStatus(activitiCompleteDto.getProcessStatus());
         accountChange.setPositionId(activitiCompleteDto.getPositionId());
         accountChangeRepository.save(accountChange);
-        if (AuditTypeEnum.PASSED.name().equals(accountChange.getProcessStatus())) {
+        if (AuditTypeEnum.PASS.getValue().equals(accountChange.getProcessStatus())) {
             Account account = accountRepository.findOne(accountChange.getAccountId());
             Employee employee=employeeRepository.findOne(account.getEmployeeId());
             if (accountChange.getType().equals(AccountChangeTypeEnum.部门.toString())) {
@@ -114,7 +123,9 @@ public class AccountChangeService {
         AccountChange accountChange=new AccountChange();
         accountChange.setAccountId(accountChange.getAccountId());
         accountChange.setNewValue(accountChange.getNewValue());
-        if (accountChangeForm.getType().equals(AccountChangeTypeEnum.部门.toString())) {
+        accountChange.setType(accountChangeForm.getType());
+        accountChange.setRemarks(accountChangeForm.getRemarks());
+        if (accountChange.getType().equals(AccountChangeTypeEnum.部门.toString())) {
             if (StringUtils.isNotBlank(account.getOfficeId())) {
                 Office office=officeRepository.findOne(account.getOfficeId());
                 accountChange.setOldValue(office.getId());
@@ -185,8 +196,19 @@ public class AccountChangeService {
 
     public Page<AccountChangeDto> findPage(Pageable pageable, AccountChangeQuery accountChangeQuery){
         Page<AccountChangeDto> page=accountChangeRepository.findPage(pageable,accountChangeQuery);
+        Map<String, Office> officeMap = officeRepository.findMap(CollectionUtil.extractToList(page.getContent(), "officeId"));
+        for(AccountChangeDto accountChangeDto:page.getContent()){
+            accountChangeDto.setAreaId(officeMap.get(accountChangeDto.getOfficeId()).getAreaId());
+        }
         cacheUtils.initCacheInput(page.getContent());
         return page;
+    }
+
+    public void batchPass(String[] ids, boolean pass){
+        List<String> idList= Arrays.asList(ids);
+        for(String id:idList){
+            audit(id,pass,"批量审核");
+        }
     }
 
     public void logicDelete(String id){

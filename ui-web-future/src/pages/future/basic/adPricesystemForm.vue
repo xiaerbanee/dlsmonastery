@@ -16,6 +16,7 @@
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('adPricesystemForm.save')}}
               </el-button>
             </el-form-item>
+
       </el-form>
     </div>
   </div>
@@ -27,7 +28,12 @@
       officeSelect
     },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return {
+        isInit:false,
         isCreate: this.$route.query.id == null,
         submitDisabled: false,
         inputForm: {},
@@ -40,23 +46,25 @@
         rules: {
           name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
         },
-        remoteLoading: false
+        remoteLoading: false,
+        defaultProps: {
+          label: 'label',
+          children: 'children'
+        }
       };
     },
-    methods: {
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm, this.submitData);
             axios.post('/api/ws/future/basic/adPricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response) => {
-              this.$message(response.data.message);
-              this.submitDisabled = false;
-                if(response.data.success){
-                if (this.isCreate) {
-                  form.resetFields();
-                } else {
+              if(response.data.success){
+                this.$message(response.data.message);
+                Object.assign(this.$data, this.getData());
+                if (!this.isCreate) {
                   this.$router.push({name: 'adPricesystemList', query: util.getQuery("adPricesystemList")})
                 }
               }else {
@@ -67,20 +75,20 @@
                 });
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
+          } else {
+            this.submitDisabled = false;
           }
         })
-      },
-      initPage(){
+      }
+    },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
           this.inputForm = response.data;
       });
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>
