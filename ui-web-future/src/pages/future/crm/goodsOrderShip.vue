@@ -2,6 +2,8 @@
   <div>
     <head-tab active="goodsOrderShip"></head-tab>
     <div>
+      <el-alert  v-show="shipResult.warnMsg !=null"  :title="shipResult.warnMsg" type="warning" :closable="false">
+      </el-alert>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form">
         <el-row >
           <el-col :span="12">
@@ -78,6 +80,7 @@
         submitDisabled:false,
         inputForm:{},
         goodsOrder:{},
+        shipResult:{},
         submitData:{
           id:'',
           businessId:'',
@@ -120,7 +123,7 @@
         var imeStr=this.inputForm.imeStr;
         this.pageLoading = true;
         axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
-          console.log(response);
+          this.shipResult = response.data;
         });
       },showSummary(isSubmit,timeout) {
         if(timeout != null) {

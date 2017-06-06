@@ -152,7 +152,7 @@ public class GoodsOrderShipService {
         }
         Map<String, Object> result = Maps.newHashMap();
         if (!totalShouldShipQty.equals(totalShippedQty)) {
-            result.put("warnMsg", "货品总开单数和实际发货数不一致");
+            result.put("warnMsg", "货品总开单数"+totalShouldShipQty+ ",和实际发货数"+totalShippedQty + "不一致");
         }
         Map<String, Integer> shipQtyMap = Maps.newHashMap();
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailMap.values()) {
