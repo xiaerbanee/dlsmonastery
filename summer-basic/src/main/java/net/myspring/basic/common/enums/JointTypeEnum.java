@@ -9,7 +9,7 @@ import java.util.List;
  * Created by admin on 2017/2/25.
  */
 public enum JointTypeEnum {
-    DIRECT_SHOP,PROXY_SHOP;
+    直营,代理;
 
     private static List<String> list= Lists.newArrayList();
 

@@ -7,7 +7,7 @@ export default {
     latestWeek:"最近一周",
     latestMonth:"最近一个月",
     waringMsgBeforeDelRecord:"此操作将永久删除该记录, 是否继续?",
-    waringMsgBeforeBatchPass:"确认批量通过?",
+    waringMsgBeforeBatchPass:"确认批量操作?",
     waringMsgBeforeExportData:"最多导出10000行记录，确认导出?",
     typeOfWarningBeforeDelRecord:"提示",
     typeOfWarningBeforeBatchPass:"提示",

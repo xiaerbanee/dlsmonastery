@@ -16,7 +16,7 @@
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{isCreate}}{{$t('companyConfigForm.save')}}</el-button>
+          <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{$t('companyConfigForm.save')}}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -24,25 +24,30 @@
 </template>
 <script>
     export default{
-      data(){
-        return{
-          submitDisabled:false,
-          isCreate:true,
-          inputForm:{},
-          submitData:{
-            id:'',
-            name:'',
-            code:'',
-            value:'',
-            remarks:''
-          },
-          rules: {
-            value: [{ required: true, message: this.$t('companyConfigForm.prerequisiteMessage')}]
-          }
-        }
+      data:function(){
+        return this.getData();
       },
       methods:{
+        getData(){
+          return{
+            isInit:false,
+            submitDisabled:false,
+            isCreate:true,
+            inputForm:{},
+            submitData:{
+              id:'',
+              name:'',
+              code:'',
+              value:'',
+              remarks:''
+            },
+            rules: {
+              value: [{ required: true, message: this.$t('companyConfigForm.prerequisiteMessage')}]
+            }
+          }
+        },
         formSubmit(){
+          var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
@@ -50,28 +55,27 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/companyConfig/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                form.resetFields();
-                this.submitDisabled = false;
-                 if(!this.isCreate){
-                   this.$router.push({name:'companyConfigList',query:util.getQuery("companyConfigList")})
-                 }
+                Object.assign(this.$data,this.getData());
+                if(!this.isCreate){
+                  this.$router.push({name:'companyConfigList',query:util.getQuery("companyConfigList")})
+                }
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
             }
           })
-        },initPage() {
+        }
+      },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
+          Object.assign(this.$data,this.getData());
           this.isCreate=this.$route.query.id==null
           axios.get('/api/basic/sys/companyConfig/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
         }
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
-        }
+        this.isInit = true;
       }
     }
 </script>

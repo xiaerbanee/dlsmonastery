@@ -91,7 +91,12 @@
 
     },
       data(){
+        return this.getData()
+      },
+    methods:{
+      getData() {
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
 
@@ -120,8 +125,8 @@
 
           }
       },
-      methods:{
         formSubmit(){
+          var that = this;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
@@ -129,16 +134,14 @@
               this.initSubmitDataBeforeSubmit();
               axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
+                Object.assign(this.$data, this.getData());
                 if(response.data.success){
-                  if(this.isCreate){
-                    form.resetFields();
-                  } else {
+                  if(!this.isCreate){
                     this.$router.push({name:'productImeSaleList',query:util.getQuery("productImeSaleList")})
                   }
                 }
               }).catch( () => {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }
           })
@@ -184,17 +187,14 @@
           this.productImeList=[];
           this.productQtyList = [];
           this.$refs["inputForm"].resetFields();
-        },initPage(){
+        }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
           axios.get('/api/ws/future/crm/productImeSale/findDto').then((response)=>{
             this.productImeSale=response.data;
           });
         }
-      },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
       }
     }
 </script>

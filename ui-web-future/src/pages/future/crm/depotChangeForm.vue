@@ -50,7 +50,12 @@
 <script>
   export default{
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         formProperty:{},
@@ -73,8 +78,8 @@
         remoteLoading:false
       }
     },
-    methods:{
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         this.inputForm.expiryDate=util.formatLocalDate( this.inputForm.expiryDate)
@@ -84,14 +89,12 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
-            this.submitDisabled = false;
+            Object.assign(this.$data, this.getData());
               if(this.isCreate){
-                form.resetFields();
-              } else {
                 this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -123,7 +126,9 @@
         }else if(this.inputForm.type == "信用额度"){
           this.inputForm.oldValue = this.depot.credit;
         }
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/crm/depotChange/getForm').then((response)=>{
           this.formProperty = response.data;
         });
@@ -134,12 +139,7 @@
           })
         }
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

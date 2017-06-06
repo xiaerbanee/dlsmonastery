@@ -37,14 +37,14 @@ public class DutyLeaveController {
     @RequestMapping(value="findOne")
     public DutyLeaveForm getForm(DutyLeaveForm dutyLeaveForm){
         dutyLeaveForm.setDateList(DutyDateTypeEnum.values());
-        dutyLeaveForm.setLeaveList(dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.toString()));
+        dutyLeaveForm.setLeaveList(dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.getValue()));
         return dutyLeaveForm;
     }
 
     @RequestMapping(value="getQuery")
     public DutyLeaveQuery getQuery(DutyLeaveQuery dutyLeaveQuery){
         dutyLeaveQuery.setDateList( DutyDateTypeEnum.getList());
-        dutyLeaveQuery.setLeaveList(dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.toString()));
+        dutyLeaveQuery.setLeaveList(dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.getValue()));
         return dutyLeaveQuery;
     }
 

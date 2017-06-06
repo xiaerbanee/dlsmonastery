@@ -59,7 +59,12 @@
   export default{
 
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         productImeList:[],
@@ -71,9 +76,8 @@
         },
       }
     },
-    methods:{
       formSubmit(){
-
+        var that = this;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
@@ -81,16 +85,14 @@
             this.submitData.imeStr = this.imeStr;
             axios.post('/api/ws/future/crm/productImeUpload/uploadBack',qs.stringify(this.imeStr)).then((response)=> {
               this.$message(response.data.message);
-              this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
               if(response.data.success){
-                if(this.isCreate){
-                  form.resetFields();
-                } else {
+                if(!this.isCreate){
                   this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList")})
                 }
               }
             }).catch( () => {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }
         });

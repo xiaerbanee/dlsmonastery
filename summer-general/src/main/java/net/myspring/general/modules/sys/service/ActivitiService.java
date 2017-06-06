@@ -103,8 +103,8 @@ public class ActivitiService {
         ProcessTask processTask = processTaskRepository.findByProcessInstanceId(activitiCompleteForm.getProcessInstanceId());
         if(activitiCompleteForm.getPass()){
             String processStatus = getProcessStatus(processFlow, activitiCompleteForm.getPass());
-            if(AuditTypeEnum.PASSED.name().equals(processStatus)){
-                processTask.setStatus(AuditTypeEnum.PASSED.name());
+            if(AuditTypeEnum.PASS.getValue().equals(processStatus)){
+                processTask.setStatus(AuditTypeEnum.PASS.getValue());
                 processTask.setEnabled(false);
             }else{
                 processTask.setPositionId(processFlow.getPositionId());
@@ -141,7 +141,7 @@ public class ActivitiService {
         if (processFlow != null) {
             return processFlow.getName();
         } else {
-            return pass ? AuditTypeEnum.PASSED.name() : AuditTypeEnum.NOT_PASS.name();
+            return pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.name();
         }
     }
 }

@@ -29,7 +29,7 @@
             <el-col :span="12">
               <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" clearable filterable :placeholder="$t('employeeList.selectGroup')">
-                  <el-option v-for="item in formData.statusList"  :key="item" :label="$t('EmployeeStatusEnum.'+item)" :value="item"></el-option>
+                  <el-option v-for="item in formData.statusList"  :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.officeId.label"  :label-width="formLabelWidth">
@@ -64,8 +64,8 @@
         <el-table-column prop="mobilePhone" :label="$t('employeeList.mobilePhone')"></el-table-column>
         <el-table-column :label="$t('employeeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'hr:employee:edit'">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:employee:delete'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

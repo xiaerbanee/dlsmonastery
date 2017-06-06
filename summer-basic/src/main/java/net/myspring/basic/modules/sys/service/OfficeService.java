@@ -102,7 +102,7 @@ public class OfficeService {
         if (!officeDto.isCreate()) {
             Office office = officeRepository.findOne(officeDto.getId());
             officeDto = BeanUtil.map(office, OfficeDto.class);
-            if (OfficeTypeEnum.SUPPORT.name().equals(office.getType())) {
+            if (OfficeTypeEnum.职能部门.name().equals(office.getType())) {
                 List<OfficeBusiness> businessOffices = officeBusinessRepository.findBusinessIdById(office.getId());
                 officeDto.setBusinessIdList(CollectionUtil.extractToList(businessOffices,"businessOfficeId"));
             }
@@ -120,7 +120,7 @@ public class OfficeService {
 
     public RestResponse check(OfficeForm officeForm) {
         Office parent = officeRepository.findOne(officeForm.getParentId());
-        if (OfficeTypeEnum.BUSINESS.name().equals(officeForm.getType())) {
+        if (OfficeTypeEnum.业务部门.name().equals(officeForm.getType())) {
             OfficeRule topOfficeRule = officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
             OfficeRule officeRule = officeRuleRepository.findOne(officeForm.getOfficeRuleId());
             if (parent != null && topOfficeRule.getId().equals(officeForm.getOfficeRuleId())) {
@@ -166,7 +166,7 @@ public class OfficeService {
             }
         }
         List<OfficeBusiness> businessOfficeList = officeBusinessRepository.findAllBusinessIdById(office.getId());
-        if (OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())&&CollectionUtil.isNotEmpty(officeForm.getOfficeIdList())) {
+        if (OfficeTypeEnum.职能部门.name().equals(officeForm.getType())&&CollectionUtil.isNotEmpty(officeForm.getOfficeIdList())) {
             List<String> businessOfficeIdList = CollectionUtil.extractToList(businessOfficeList, "businessOfficeId");
             List<String> removeIdList = CollectionUtil.subtract(businessOfficeIdList, officeForm.getOfficeIdList());
             List<String> addIdList = CollectionUtil.subtract(officeForm.getOfficeIdList(), businessOfficeIdList);

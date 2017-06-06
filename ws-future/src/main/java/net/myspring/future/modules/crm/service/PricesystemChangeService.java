@@ -50,6 +50,10 @@ public class PricesystemChangeService {
         return pricesystemChangeQuery;
     }
 
+    public PricesystemChangeForm getForm(PricesystemChangeForm pricesystemChangeForm){
+        return pricesystemChangeForm;
+    }
+
     public void save(PricesystemChangeForm pricesystemChangeForm){
 
     }

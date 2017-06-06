@@ -32,7 +32,7 @@ public class DutyRestService {
     }
 
     public DutyRest save(DutyRestForm dutyRestForm) {
-        dutyRestForm.setStatus(AuditTypeEnum.APPLYING.toString());
+        dutyRestForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyRestForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
         DutyRest dutyRest = BeanUtil.map(dutyRestForm, DutyRest.class);
         dutyRestRepository.save(dutyRest);

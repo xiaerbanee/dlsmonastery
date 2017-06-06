@@ -15,6 +15,7 @@ import net.myspring.future.modules.crm.service.GoodsOrderShipService;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
+import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/goodsOrderShip")
@@ -35,7 +37,6 @@ public class GoodsOrderShipController {
 
     @Autowired
     private GoodsOrderShipService goodsOrderShipService;
-
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -52,8 +53,15 @@ public class GoodsOrderShipController {
         return goodsOrderQuery;
     }
 
-    @RequestMapping(value = "findOne")
-    public GoodsOrderDto findOne(String id) {
-        return goodsOrderService.findOne(id);
+    @RequestMapping(value = "getForm")
+    public GoodsOrderShipForm getForm(GoodsOrderShipForm goodsOrderShipForm) {
+        return goodsOrderShipService.getForm(goodsOrderShipForm);
     }
+
+    @RequestMapping(value = "shipCheck")
+    public Map<String,Object> shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
+        return goodsOrderShipService.shipCheck(goodsOrderShipForm);
+    }
+
+
 }

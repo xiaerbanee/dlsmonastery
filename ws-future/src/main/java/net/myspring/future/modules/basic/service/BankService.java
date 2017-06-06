@@ -50,20 +50,19 @@ public class BankService {
 
     public void save(BankForm bankForm){
         Bank bank = bankRepository.findOne(bankForm.getId());
+        bank.setName(bankForm.getName());
+        bank.setRemarks(bankForm.getRemarks());
         bankRepository.save(bank);
         bankRepository.deleteBankAccount(bankForm.getId());
         if(CollectionUtil.isNotEmpty(bankForm.getAccountIdList())){
-            //TODO 需要重新写该方法
-//            bankRepository.saveAccount(bankForm.getId(),bankForm.getAccountIdList());
+            bankRepository.saveBankAccount(bankForm.getId(),bankForm.getAccountIdList());
         }
     }
 
 
-    @Transactional
     public void syn(){
     }
 
-    @Transactional(readOnly = true)
     public List<BankDto> findByNameContaining(String name){
         List<Bank> banks = bankRepository.findByNameContaining(name);
         List<BankDto> bankDtos= BeanUtil.map(banks, BankDto.class);
@@ -71,7 +70,6 @@ public class BankService {
         return bankDtos;
     }
 
-    @Transactional(readOnly = true)
     public BankDto findOne(String id){
         BankDto bankDto;
         if(StringUtils.isBlank(id)) {

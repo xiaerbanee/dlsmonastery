@@ -83,7 +83,12 @@
       depotSelect
     },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         pageLoading:false,
@@ -108,8 +113,8 @@
         }
       }
     },
-    methods:{
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
 
@@ -126,14 +131,12 @@
             this.submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
             axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+            Object.assign(this.$data, this.getData());
+              if(!this.isCreate){
                 this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -188,7 +191,9 @@
           }
         }
         this.summary = "总订货数为：" + totalQty + "，总价格为：" + totalAmount;
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         if(!this.isCreate) {
@@ -207,12 +212,7 @@
         });
         }
       }
-    }, created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>
