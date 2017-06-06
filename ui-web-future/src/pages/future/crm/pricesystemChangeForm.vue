@@ -6,10 +6,10 @@
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item :label="$t('pricesystemChangeForm.product')" prop="productId">
-              <product-select v-model="formProperty.productId" @change="handChange"></product-select>
+              <product-select v-model="inputForm.productId"></product-select>
             </el-form-item>
             <el-form-item :label="$t('pricesystemChangeForm.remarks')" prop="remarks">
-              <el-input type="textarea" :rows="2" v-model="formProperty.remarks"></el-input>
+              <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('pricesystemChangeForm.save')}}</el-button>
@@ -33,7 +33,12 @@
       productSelect,
     },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         submitDisabled:false,
         table:null,
         settings: {
@@ -66,7 +71,6 @@
     mounted () {
       this.table = new Handsontable(this.$refs["handsontable"], this.settings)
     },
-    methods:{
       formSubmit(){
         var that = this;
         that.submitDisabled = true;
@@ -77,11 +81,10 @@
               if (valid) {
                 that.inputForm.data = that.settings.data;
                 axios.post('/api/ws/future/crm/pricesystemChange/save',qs.stringify(that.inputForm)).then((response)=> {
-                  that.$message(response.data.message);
-                  form.resetFields();
-                  that.submitDisabled = false;
+                  this.$message(response.data.message);
+                Object.assign(this.$data, this.getData());
                 }).catch(function () {
-                  this.submitDisabled = false;
+                  that.submitDisabled = false;
                 });
               }
             })
@@ -90,17 +93,14 @@
               that.submitDisabled = false;
           }
         });
-      },handChange(){
-          axios
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/crm/pricesystemChange/getForm').then((response)=>{
           this.formProperty=response.data;
       });
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

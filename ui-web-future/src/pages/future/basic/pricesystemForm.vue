@@ -34,7 +34,12 @@
 <script>
   export default{
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         productName:'',
@@ -54,8 +59,8 @@
         }
       }
     },
-    methods:{
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -72,14 +77,12 @@
             this.submitData.enabled = true;
             axios.post('/api/ws/future/basic/pricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+            Object.assign(this.$data, this.getData());
+              if(!this.isCreate){
                 this.$router.push({name:'pricesystemList',query:util.getQuery("pricesystemList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -101,7 +104,9 @@
           }
         }
         this.filterPricesystemDetailList = tempList;
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           console.log(this.inputForm)
@@ -111,12 +116,7 @@
           this.pricesystemDetailList = response.data.pricesystemDetailList;
         });
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

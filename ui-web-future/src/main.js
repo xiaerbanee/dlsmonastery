@@ -17,6 +17,7 @@ import searchTag from './components/common/search-tag';
 import datePicker from './components/common/date-picker.vue'
 import dateRangePicker from './components/common/date-range-picker.vue';
 import searchDialog from './components/common/search-dialog.vue';
+import suAlert from './components/common/su-alert.vue';
 
 import App from './app.vue';
 import fullCalendar from 'vue-fullcalendar'
@@ -41,6 +42,7 @@ Vue.component('search-tag', searchTag);
 Vue.component('date-picker',datePicker);
 Vue.component('date-range-picker', dateRangePicker);
 Vue.component('search-dialog', searchDialog);
+Vue.component('su-alert', suAlert);
 
 // progressBar
 const options = {

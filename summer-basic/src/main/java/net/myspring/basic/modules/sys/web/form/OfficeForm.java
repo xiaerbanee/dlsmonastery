@@ -190,7 +190,7 @@ public class OfficeForm extends BaseForm<Office> {
     }
 
     public String getOfficeRuleId() {
-        if(OfficeTypeEnum.SUPPORT.name().equals(type)){
+        if(OfficeTypeEnum.业务部门.name().equals(type)){
             this.officeRuleId=null;
         }
         return officeRuleId;

@@ -31,7 +31,12 @@
 
   export default{
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         submitDisabled:false,
         table:null,
         formData:{
@@ -153,8 +158,8 @@
         this.table = new Handsontable(this.$refs["handsontable"], this.settings)
       })
     },
-    methods:{
       formSubmit(){
+        var that = this;
           this.inputForm.data =new Array();
           let list=this.table.getData();
           for(var item in list){
@@ -165,30 +170,24 @@
           this.inputForm.data = JSON.stringify(this.inputForm.data);
           axios.post('/api/crm/afterSale/update',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
             this.$message(response.data.message);
-            this.submitDisabled = false;
-          if(this.isCreate){
-            this.table.loadData(null);
-          } else {
+            Object.assign(this.$data, this.getData());
+          if(!this.isCreate){
              this.$router.push({name:'afterSaleList',query:util.getQuery("afterSaleList")})
           }
         }).catch(function () {
-          this.submitDisabled = false;
+          that.submitDisabled = false;
         });
       },getImeStr(imeStr){
         this.formVisible = false;
-        axios.get("/api/crm/afterSale/editFormData",{params:{imeStr:imeStr}}).then((response)=>{
-        console.log(response.data);
-          this.settings.data=response.data.list;
+        axios.get("/api/crm/afterSale/editFormData", {params: {imeStr: imeStr}}).then((response) => {
+          console.log(response.data);
+          this.settings.data = response.data.list;
           this.table.loadData(this.settings.data);
         })
-      },initPage(){
-
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
+      },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
+
       }
     }
   }

@@ -17,7 +17,7 @@
         <el-table-column prop="remarks" :label="$t('folderList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('folderList.operation')" width="140">
           <template scope="scope">
-              <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'修改')" v-permit="'sys:folder:edit'">修改</el-button>
           </template>
         </el-table-column>
       </el-table>

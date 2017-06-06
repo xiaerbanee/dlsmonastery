@@ -37,7 +37,12 @@
       expressCompanySelect,
     },
       data(){
+        return this.getData()
+      },
+    methods:{
+      getData() {
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             expressOrder:{},
@@ -54,9 +59,8 @@
             }
           }
       },
-      methods:{
         formSubmit(){
-
+          var that = this;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
@@ -64,22 +68,21 @@
               util.copyValue(this.expressOrder,this.submitData);
               axios.post('/api/ws/future/crm/expressOrder/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
-                if(this.isCreate){
-                  form.resetFields();
-                } else {
+                Object.assign(this.$data, this.getData());
+                if(!this.isCreate){
                   this.$router.push({name:'expressOrderList',query:util.getQuery("expressOrderList")})
                 }
               }).catch( () => {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }
           })
         }
-      },created(){
+      },activated () {
         axios.get('/api/ws/future/crm/expressOrder/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
           this.expressOrder = response.data;
         })
+      this.isInit = true;
       }
     }
 </script>

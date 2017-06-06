@@ -26,8 +26,13 @@
 </template>
 <script>
     export default{
-      data(){
+      data:function () {
+        return this.getData();
+      },
+      methods:{
+        getData(){
           return{
+            isInit:false,
             submitDisabled:false,
             inputForm:{},
             inputProperty:{},
@@ -44,9 +49,9 @@
               code: [{ required: true, message: this.$t('backendModuleForm.prerequisiteMessage')}]
             }
           }
-      },
-      methods:{
+        },
         formSubmit(){
+          var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
@@ -54,19 +59,21 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/backendModule/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                form.resetFields();
-                this.submitDisabled = false;
+                Object.assign(this.$data,this.getData());
                 if(!this.inputForm.create){
                   this.$router.push({name:'backendModuleList',query:util.getQuery("backendModuleList")})
                 }
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
             }
           })
-        },initPage() {
+        }
+      },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
+          Object.assign(this.$data,this.getData());
           axios.get('/api/basic/sys/backendModule/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
@@ -74,10 +81,7 @@
             this.inputProperty = response.data;
           })
         }
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
-        }
+        this.isInit = true;
       }
     }
 </script>

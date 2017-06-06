@@ -42,7 +42,7 @@ public class ChainService {
         if (StringUtils.isNotBlank(id)){
             Chain chain = chainRepository.findOne(id);
             chainDto = BeanUtil.map(chain, ChainDto.class);
-            List<String> ids = chainRepository.findDepotId(chainDto.getId());
+            List<String> ids = CollectionUtil.extractToList(depotRepository.findByChainId(id),"id");
             chainDto.setDepotIdList(ids);
             cacheUtils.initCacheInput(chainDto);
         }
@@ -71,16 +71,16 @@ public class ChainService {
             List<Depot> depotList = depotRepository.findByChainId(chainForm.getId());
             for (Depot depot : depotList) {
                 depot.setChainId(null);
-                depotRepository.save(depot);
             }
+            depotRepository.save(depotList);
         }
         //保存门店
         if (CollectionUtil.isNotEmpty(chainForm.getDepotIdList())) {
             List<Depot> depotList = depotRepository.findByEnabledIsTrueAndIdIn(chainForm.getDepotIdList());
             for (Depot depot : depotList) {
                 depot.setChainId(chain.getId());
-                depotRepository.save(depot);
             }
+            depotRepository.save(depotList);
         }
         return chain;
     }

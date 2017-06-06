@@ -5,6 +5,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 
 import java.util.List;
@@ -97,5 +98,9 @@ public class GoodsOrderShipForm extends BaseForm<GoodsOrder> {
 
     public void setGoodsOrderDetailList(List<GoodsOrderDetailDto> goodsOrderDetailList) {
         this.goodsOrderDetailList = goodsOrderDetailList;
+    }
+
+    public String getFormatId() {
+        return IdUtils.getFormatId(getId(),"XK");
     }
 }

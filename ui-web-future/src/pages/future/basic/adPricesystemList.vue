@@ -11,7 +11,7 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('adPricesystemList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -24,7 +24,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adPricesystemList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('adPricesystemList.name')" sortable width="150"></el-table-column>
         <el-table-column prop="remarks" :label="$t('adPricesystemList.remarks')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('adPricesystemList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('adPricesystemList.createdBy')" sortable></el-table-column>
         <el-table-column prop="enabled" :label="$t('adPricesystemList.enabled')" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
@@ -57,6 +57,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           name:''
         },formLabel:{
           name:{label:this.$t('adPricesystemList.name')}
@@ -81,7 +82,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -93,16 +94,21 @@
         if(action=="edit") {
           this.$router.push({ name: 'adPricesystemForm', query: { id: id }})
         }else if(action=="delete"){
-          axios.get('/api/ws/future/basic/adPricesystem/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/basic/adPricesystem/delete', {params: {id: id}}).then((response) => {
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
           })
         }
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      axios.get('/api/ws/future/basic/adPricesystem/getQuery').then((response) => {
+        this.formData=response.data;
+        util.copyValue(this.$route.query, this.formData);
+        this.pageRequest();
+      });
     }
   };
 </script>

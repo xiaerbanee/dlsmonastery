@@ -15,39 +15,21 @@ import java.util.List;
  */
 public class AccountChangeQuery extends BaseQuery {
 
-    private List<String> officeIds= Lists.newArrayList();
-    private String officeRuleName;
+    private String officeName;
     private String createdByName;
-    private String officeId;
-    private List<String> typeList=Lists.newArrayList();
-    private List<Office> areaList=Lists.newArrayList();
-    private String id;
     private String accountId;
     private String createdDate;
     private String type;
+    private String id;
 
-    public String getType() {
-        return type;
-    }
+    private List<String> typeList=Lists.newArrayList();
+    private List<Office> areaList=Lists.newArrayList();
 
-    public void setType(String type) {
-        this.type = type;
-    }
+    public AccountChangeQuery(){}
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public AccountChangeQuery(String accountId,String id){
+        this.accountId=accountId;
+        this.id=id;
     }
 
     public List<String> getTypeList() {
@@ -66,12 +48,36 @@ public class AccountChangeQuery extends BaseQuery {
         this.areaList = areaList;
     }
 
-    public List<String> getOfficeIds() {
-        return officeIds;
+    public String getId() {
+        return id;
     }
 
-    public void setOfficeIds(List<String> officeIds) {
-        this.officeIds = officeIds;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getCreatedByName() {
@@ -82,28 +88,12 @@ public class AccountChangeQuery extends BaseQuery {
         this.createdByName = createdByName;
     }
 
-    public String getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
-    }
-
-    public String getOfficeRuleName() {
-        return officeRuleName;
-    }
-
-    public void setOfficeRuleName(String officeRuleName) {
-        this.officeRuleName = officeRuleName;
+    public String getCreatedDate() {
+        return createdDate;
     }
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
     }
 
     public LocalDate getCreatedDateStart() {

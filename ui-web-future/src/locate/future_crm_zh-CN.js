@@ -899,7 +899,7 @@ export default {
     expressCodes: "快递单号",
     shopName: "门店",
     remarks: "备注",
-    redictView: "连续发货",
+    redirectView: "连续发货",
     imeStr: "串码",
     shipRemarks: "发货备注",
     save: "保存",

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public class AdPricesystemDto extends DataDto<AdPricesystem> {
     private String name;
     protected Boolean enabled;
     protected Boolean locked;
-    private List<String> officeIdList;
+    private List<String> officeIdList =  new ArrayList<>();
 
     public List<String> getOfficeIdList() {
         return officeIdList;

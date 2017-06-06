@@ -31,12 +31,13 @@
           return;
         }
         this.innerId=val;
+        this.remoteLoading = true;
         let idStr=this.innerId;
         if(this.innerId instanceof Array){
           idStr=this.innerId.join();
         }
-        this.remoteLoading = true;
-        axios.get('/api/basic/hr/employee/findByIds?id=' + idStr).then((response)=>{
+        console.log(this.innerId);
+        axios.get('/api/basic/hr/employee/findByIds?idStr='+idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })
@@ -45,9 +46,7 @@
       this.setValue(this.value);
     },watch: {
       value :function (newVal) {
-        if(newVal){
           this.setValue(newVal);
-        }
       }
     }
   };

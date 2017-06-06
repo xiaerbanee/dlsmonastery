@@ -5,6 +5,7 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.Chain;
 import net.myspring.future.modules.basic.domain.Depot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
 public class ChainDto extends DataDto<Chain>{
     private String name;
 
-    private List<String> depotIdList;
+    private List<String> depotIdList = new ArrayList<>();
 
 
     public String getName() {
