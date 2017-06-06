@@ -16,7 +16,6 @@
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('adPricesystemForm.save')}}
               </el-button>
             </el-form-item>
-
       </el-form>
     </div>
   </div>
@@ -41,11 +40,7 @@
         rules: {
           name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
         },
-        remoteLoading: false,
-        defaultProps: {
-          label: 'label',
-          children: 'children'
-        }
+        remoteLoading: false
       };
     },
     methods: {
@@ -56,9 +51,9 @@
           if (valid) {
             util.copyValue(this.inputForm, this.submitData);
             axios.post('/api/ws/future/basic/adPricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response) => {
-              if(response.data.success){
-                this.$message(response.data.message);
+              this.$message(response.data.message);
               this.submitDisabled = false;
+                if(response.data.success){
                 if (this.isCreate) {
                   form.resetFields();
                 } else {
@@ -74,8 +69,6 @@
             }).catch(function () {
               this.submitDisabled = false;
             });
-          } else {
-            this.submitDisabled = false;
           }
         })
       },
@@ -84,8 +77,6 @@
           this.inputForm = response.data;
       });
       }
-    }, created(){
-     this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

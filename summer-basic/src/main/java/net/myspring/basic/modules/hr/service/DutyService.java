@@ -222,7 +222,7 @@ public class DutyService {
                    dutyRestOvertimeRepository.save(dutyRestOvertimes);
                }
             } else {
-                restHour = DutyDateTypeEnum.DAY.toString().equals(dutyRest.getDateType()) ? 8.0 : 4.0;
+                restHour = DutyDateTypeEnum.全天.toString().equals(dutyRest.getDateType()) ? 8.0 : 4.0;
                 DutyAnnual dutyAnnual = dutyAnnualRepository.findByEmployee(dutyRest.getEmployeeId()).get(0);
                 if(dutyAnnual==null||dutyAnnual.getLeftHour()<restHour){
                     return false;
