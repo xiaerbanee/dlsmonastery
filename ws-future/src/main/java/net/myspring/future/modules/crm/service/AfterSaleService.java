@@ -99,8 +99,12 @@ public class AfterSaleService {
         List<String> depotNameList=Lists.newArrayList();
         for (List<String> row : datas) {
             imeList.add( StringUtils.toString(row.get(0)).trim());
+            imeList.add( StringUtils.toString(row.get(8)).trim());
             productNameList.add( StringUtils.toString(row.get(1)).trim());
+            productNameList.add( StringUtils.toString(row.get(9)).trim());
             depotNameList.add( StringUtils.toString(row.get(2)).trim());
+            depotNameList.add( StringUtils.toString(row.get(6)).trim());
+            depotNameList.add( StringUtils.toString(row.get(7)).trim());
         }
         List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
         List<Product> productList=productRepository.findByNameIn(productNameList);
@@ -155,38 +159,46 @@ public class AfterSaleService {
                         afterSale.setMemory(value);
                         break;
                     case 6:
-                        afterSale.setMemory(value);
+                        if(StringUtils.isNotBlank(value)){
+                            Depot fromDepot=depotMap.get(value);
+                            afterSaleDetail.setFromDepotId(fromDepot.getId());
+                        }
                         break;
                     case 7:
                         if(StringUtils.isNotBlank(value)){
-                            Depot fromDepot=depotRepository.findByName(value);
-                            afterSaleDetail.setFromDepotId(fromDepot.getId());
+                            Depot toDepot=depotMap.get(value);
+                            afterSaleDetail.setToDepotId(toDepot.getId());
                         }
                         break;
                     case 8:
                         if(StringUtils.isNotBlank(value)){
-                            Depot toDepot=depotRepository.findByName(value);
-                            afterSaleDetail.setToDepotId(toDepot.getId());
-                        }
-                        break;
-                    case 9:
-                        if(StringUtils.isNotBlank(value)){
-                            ProductIme replaceProductIme=productImeRepository.findByIme(value);
+                            ProductIme replaceProductIme=productImeMap.get(value);
                             afterSaleDetail.setReplaceProductImeId(replaceProductIme.getId());
                             afterSaleDetail.setReplaceProductId(replaceProductIme.getProductId());
                         }
                         break;
+                    case 9:
+                        if(StringUtils.isNotBlank(value)){
+                            Product product=productMap.get(value);
+                            afterSaleDetail.setReplaceProductId(product.getId());
+                        }
+                        break;
                     case 10:
-                        afterSaleFlee.setAddress(value);
+                        if(StringUtils.isNotBlank(value)){
+                            afterSaleDetail.setReplaceAmount(new BigDecimal(value));
+                        }
                         break;
                     case 11:
-                        afterSaleFlee.setBuyAmount(new BigDecimal(value));
-                        break;
-                    case 12:
                         afterSaleFlee.setContact(value);
                         break;
-                    case 13:
+                    case 12:
                         afterSaleFlee.setMobilePhone(value);
+                        break;
+                    case 13:
+                        afterSaleFlee.setAddress(value);
+                        break;
+                    case 14:
+                        afterSaleFlee.setBuyAmount(new BigDecimal(value));
                         break;
                     default:
                         break;
