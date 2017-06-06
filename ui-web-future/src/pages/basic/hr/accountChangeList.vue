@@ -42,7 +42,7 @@
         <el-table-column  prop="remarks" :label="$t('accountChangeList.remarks')" sortable ></el-table-column>
         <el-table-column :label="$t('accountChangeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">详细</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'audit')">审核</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
@@ -93,7 +93,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.order=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -102,8 +102,8 @@
       },itemAdd(){
         this.$router.push({ name: 'accountChangeForm'})
       },itemAction:function(id,action){
-        if(action=="edit") {
-          this.$router.push({ name: 'accountChangeForm', query: { id: id }})
+        if(action=="detail") {
+          this.$router.push({ name: 'accountChangeForm', query: { id: id,action:action }})
         } else if(action="delete") {
             util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/basic/hr/accountChange/delete',{params:{id:id}}).then((response) =>{

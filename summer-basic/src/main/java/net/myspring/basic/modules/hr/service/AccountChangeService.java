@@ -63,6 +63,8 @@ public class AccountChangeService {
             if(StringUtils.isNotBlank(accountChangeQuery.getId())){
                 AccountChange accountChange=accountChangeRepository.findOne(accountChangeQuery.getId());
                 accountChangeForm.setType(accountChange.getType());
+                accountChangeForm.setNewValue(accountChange.getNewValue());
+                accountChangeForm.setRemarks(accountChange.getRemarks());
             }
             cacheUtils.initCacheInput(accountChangeForm);
         }
@@ -80,25 +82,25 @@ public class AccountChangeService {
         if (AuditTypeEnum.PASSED.name().equals(accountChange.getProcessStatus())) {
             Account account = accountRepository.findOne(accountChange.getAccountId());
             Employee employee=employeeRepository.findOne(account.getEmployeeId());
-            if (accountChange.getType().equals(AccountChangeTypeEnum.部门.toString())) {
+            if (accountChange.getType().equals(AccountChangeTypeEnum.OFFICE.toString())) {
                 account.setOfficeId(accountChange.getNewValue());
-            } else if (accountChange.getType().equals(AccountChangeTypeEnum.岗位.toString())) {
+            } else if (accountChange.getType().equals(AccountChangeTypeEnum.POSITION.toString())) {
                 account.setPositionId(accountChange.getNewValue());
-            } else if (accountChange.getType().equals(AccountChangeTypeEnum.上级.toString())) {
+            } else if (accountChange.getType().equals(AccountChangeTypeEnum.LEADER.toString())) {
                 account.setLeaderId(accountChange.getNewValue());
-            } else if (accountChange.getType().equals(AccountChangeTypeEnum.手机.toString())) {
+            } else if (accountChange.getType().equals(AccountChangeTypeEnum.MOBILE_PHONE.toString())) {
                 employee.setMobilePhone(accountChange.getNewValue());
-            } else if (accountChange.getType().equals(AccountChangeTypeEnum.身份证.toString())) {
+            } else if (accountChange.getType().equals(AccountChangeTypeEnum.ID_CARD.toString())) {
                 employee.setIdcard(accountChange.getNewValue());
-            } else if (accountChange.getType().equals(AccountChangeTypeEnum.银行卡号.toString())) {
+            } else if (accountChange.getType().equals(AccountChangeTypeEnum.BANK_CARD.toString())) {
                 employee.setBankNumber(accountChange.getNewValue());
-            } else if (accountChange.getType().equals(AccountChangeTypeEnum.转正.toString())) {
+            } else if (accountChange.getType().equals(AccountChangeTypeEnum.REGULAR_WORKER.toString())) {
                 employee.setRegularDate(LocalDateUtils.parse(accountChange.getNewValue()));
-            } else if (accountChange.getType().equals(AccountChangeTypeEnum.离职.toString())) {
+            } else if (accountChange.getType().equals(AccountChangeTypeEnum.LEAVE_WORKER.toString())) {
                 employee.setLeaveDate(LocalDateUtils.parse(accountChange.getNewValue()));
-            }else if(accountChange.getType().equals(AccountChangeTypeEnum.入职.name())){
+            }else if(accountChange.getType().equals(AccountChangeTypeEnum.ENTRY_WORKER.name())){
                 employee.setEntryDate(LocalDateUtils.parse(accountChange.getNewValue()));
-            }else if(accountChange.getType().equals(AccountChangeTypeEnum.底薪.name())){
+            }else if(accountChange.getType().equals(AccountChangeTypeEnum.BASE_SALARY.name())){
                 employee.setSalary(new BigDecimal(accountChange.getNewValue()));
             }
             accountRepository.save(account);
@@ -112,56 +114,56 @@ public class AccountChangeService {
         AccountChange accountChange=new AccountChange();
         accountChange.setAccountId(accountChange.getAccountId());
         accountChange.setNewValue(accountChange.getNewValue());
-        if (accountChangeForm.getType().equals(AccountChangeTypeEnum.部门.toString())) {
+        if (accountChangeForm.getType().equals(AccountChangeTypeEnum.OFFICE.toString())) {
             if (StringUtils.isNotBlank(account.getOfficeId())) {
                 Office office=officeRepository.findOne(account.getOfficeId());
                 accountChange.setOldValue(office.getId());
                 accountChange.setOldLabel(office.getName());
             }
             accountChange.setNewLabel(officeRepository.findOne(accountChange.getNewValue()).getName());
-        } else if (accountChange.getType().equals(AccountChangeTypeEnum.岗位.toString())) {
+        } else if (accountChange.getType().equals(AccountChangeTypeEnum.POSITION.toString())) {
             if (StringUtils.isNotBlank(account.getPositionId())) {
                 Position position=positionRepository.findOne(account.getPositionId());
                 accountChange.setOldValue(position.getId());
                 accountChange.setOldLabel(position.getName());
             }
             accountChange.setNewLabel(positionRepository.findOne(accountChange.getNewValue()).getName());
-        } else if (accountChange.getType().equals(AccountChangeTypeEnum.上级.toString())) {
+        } else if (accountChange.getType().equals(AccountChangeTypeEnum.LEADER.toString())) {
             if (StringUtils.isNotBlank(account.getLeaderId())) {
                 Account leader=accountRepository.findOne(account.getLeaderId());
                 accountChange.setOldValue(leader.getId());
                 accountChange.setOldLabel(leader.getLoginName());
             }
             accountChange.setNewLabel(accountRepository.findOne(accountChange.getNewValue()).getLoginName());
-        } else if (accountChange.getType().equals(AccountChangeTypeEnum.手机.toString())) {
+        } else if (accountChange.getType().equals(AccountChangeTypeEnum.MOBILE_PHONE.toString())) {
             accountChange.setOldLabel(employee.getMobilePhone());
             accountChange.setOldValue(employee.getMobilePhone());
             accountChange.setNewLabel(accountChangeForm.getNewValue());
-        } else if (accountChange.getType().equals(AccountChangeTypeEnum.身份证.toString())) {
+        } else if (accountChange.getType().equals(AccountChangeTypeEnum.ID_CARD.toString())) {
             accountChange.setOldLabel(employee.getIdcard());
             accountChange.setOldValue(employee.getIdcard());
             accountChange.setNewLabel(accountChangeForm.getNewValue());
-        } else if (accountChange.getType().equals(AccountChangeTypeEnum.银行卡号.toString())) {
+        } else if (accountChange.getType().equals(AccountChangeTypeEnum.BANK_CARD.toString())) {
             accountChange.setOldLabel(employee.getBankNumber());
             accountChange.setOldValue(employee.getBankNumber());
             accountChange.setNewLabel(accountChangeForm.getNewValue());
-        } else if (accountChange.getType().equals(AccountChangeTypeEnum.底薪.toString())) {
+        } else if (accountChange.getType().equals(AccountChangeTypeEnum.BASE_SALARY.toString())) {
             accountChange.setOldLabel(employee.getSalary()!=null?employee.getSalary().toString():null);
             accountChange.setOldValue(employee.getSalary()!=null?employee.getSalary().toString():null);
             accountChange.setNewLabel(accountChangeForm.getNewValue());
-        } else if (accountChange.getType().equals(AccountChangeTypeEnum.转正.toString())) {
+        } else if (accountChange.getType().equals(AccountChangeTypeEnum.REGULAR_WORKER.toString())) {
             if (employee.getRegularDate() != null) {
                 accountChange.setOldLabel(LocalDateUtils.format(employee.getRegularDate()));
                 accountChange.setOldValue(LocalDateUtils.format(employee.getRegularDate()));
                 accountChange.setNewLabel(accountChangeForm.getNewValue());
             }
-        } else if (accountChange.getType().equals(AccountChangeTypeEnum.离职.toString())) {
+        } else if (accountChange.getType().equals(AccountChangeTypeEnum.LEAVE_WORKER.toString())) {
             if (employee.getLeaveDate() != null) {
                 accountChange.setOldLabel(LocalDateUtils.format(employee.getLeaveDate()));
                 accountChange.setOldValue(LocalDateUtils.format(employee.getLeaveDate()));
                 accountChange.setNewLabel(accountChangeForm.getNewValue());
             }
-        }else if(accountChange.getType().equals(AccountChangeTypeEnum.入职.name())){
+        }else if(accountChange.getType().equals(AccountChangeTypeEnum.ENTRY_WORKER.name())){
             if (employee.getEntryDate() != null) {
                 accountChange.setOldLabel(LocalDateUtils.format(employee.getEntryDate()));
                 accountChange.setOldValue(LocalDateUtils.format(employee.getEntryDate()));

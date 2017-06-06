@@ -11,18 +11,19 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     private String productId;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
-    private Boolean productHasIme;
+    private Boolean hasIme;
     private BigDecimal price;
     private Integer qty;
     private Integer returnQty;
     private Integer billQty;
 
     private Integer areaQty;
-    private Boolean productAllowOrder;
-    private Boolean productAllowBill;
+    private Boolean allowOrder;
+    private Boolean allowBill;
 
     //发货信息
     private Integer shippedQty;
+
 
     public Integer getBillQty() {
         return billQty;
@@ -32,20 +33,20 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
         this.billQty = billQty;
     }
 
-    public Boolean getProductAllowOrder() {
-        return productAllowOrder;
+    public Boolean getAllowOrder() {
+        return allowOrder;
     }
 
-    public void setProductAllowOrder(Boolean productAllowOrder) {
-        this.productAllowOrder = productAllowOrder;
+    public void setAllowOrder(Boolean allowOrder) {
+        this.allowOrder = allowOrder;
     }
 
-    public Boolean getProductAllowBill() {
-        return productAllowBill;
+    public Boolean getAllowBill() {
+        return allowBill;
     }
 
-    public void setProductAllowBill(Boolean productAllowBill) {
-        this.productAllowBill = productAllowBill;
+    public void setAllowBill(Boolean allowBill) {
+        this.allowBill = allowBill;
     }
 
     public Integer getAreaQty() {
@@ -56,12 +57,12 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
         this.areaQty = areaQty;
     }
 
-    public Boolean getProductHasIme() {
-        return productHasIme;
+    public Boolean getHasIme() {
+        return hasIme;
     }
 
-    public void setProductHasIme(Boolean productHasIme) {
-        this.productHasIme = productHasIme;
+    public void setHasIme(Boolean hasIme) {
+        this.hasIme = hasIme;
     }
 
     public String getProductId() {
@@ -97,6 +98,9 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     }
 
     public Integer getReturnQty() {
+        if(returnQty==null) {
+            returnQty = 0 ;
+        }
         return returnQty;
     }
 
@@ -105,6 +109,9 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     }
 
     public Integer getShippedQty() {
+        if(shippedQty==null) {
+            shippedQty = 0 ;
+        }
         return shippedQty;
     }
 
