@@ -1,8 +1,6 @@
 
 <template>
-  <div v-show="text !=null && text !=''"  class="alert"  :class="typeClass">
-    {{text}}
-  </div>
+  <div v-show="text !=null && text !=''"  class="alert"  :class="typeClass" v-html="text"></div>
 </template>
 <script>
   export default {

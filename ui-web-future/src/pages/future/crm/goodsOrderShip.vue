@@ -3,9 +3,7 @@
     <head-tab active="goodsOrderShip"></head-tab>
     <div>
       <su-alert  :text="shipResult.warnMsg"  type="warning"></su-alert>
-
-
-
+      <su-alert :text="shipResult.errorMsg" type="danger"></su-alert>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form" style="margin-top: 10px;">
         <el-row >
           <el-col :span="12">
@@ -50,7 +48,7 @@
               <el-input type="textarea" v-model="inputForm.shipRemarks"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderShip.save')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="showSummary(true)">{{$t('goodsOrderShip.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -97,31 +95,10 @@
       }
     },
     methods:{
-      formSubmit(){
-        this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
-        form.validate((valid) => {
-          if (valid) {
-            axios.post('/api/crm/goodsOrder/ship',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
-              if(response.data.errors){
-                this.error=response.data.errors.id.message
-                this.alertError=true;
-                this.submitDisabled = false;
-              }else{
-                this.$message(response.data.message);
-                if(response.data.success){
-                  this.$router.push({name:'goodsOrderShipList',query:util.getQuery("goodsOrderShipList")})
-                }
-              }
-            }).catch(function () {
-              this.submitDisabled = false;
-            });
-          }else{
-            this.submitDisabled = false;
-          }
-        })
-      },summary(isSubmit){
-        this.submitDisabled = true;
+      summary(isSubmit){
+        if(isSubmit) {
+          this.submitDisabled = true;
+        }
         var boxImeStr=this.inputForm.boxImeStr;
         var imeStr=this.inputForm.imeStr;
         this.pageLoading = true;
@@ -130,17 +107,16 @@
           this.pageLoading = false;
           //错误信息
           var errorMsg = "";
-          for(var error in this.shipResult.restResponse.errors) {
-            errorMsg = errorMsg + error + "<br/>";
+          for(var index in this.shipResult.restResponse.errors) {
+            errorMsg = errorMsg + this.shipResult.restResponse.errors[index].message + "<br/>";
           }
-
+          this.shipResult.errorMsg = errorMsg;
           //如果提交表单
           if(isSubmit) {
             if(this.shipResult.restResponse.success) {
 
             } else {
               alert("请先处理错误信息");
-              return;
             }
           }
           this.submitDisabled = false;
