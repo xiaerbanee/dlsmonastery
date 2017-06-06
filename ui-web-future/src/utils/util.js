@@ -259,7 +259,7 @@ util.getFormItemValue = function getFormItemValue(formItem){
 
 };
 
-util.getSearchText = function initSearchText(root){
+util.getSearchText = function getSearchText(root){
 
   console.log("getSearchText");
   let formItems = [];
