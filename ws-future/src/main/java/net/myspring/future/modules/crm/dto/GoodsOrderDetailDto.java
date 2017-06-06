@@ -98,6 +98,9 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     }
 
     public Integer getReturnQty() {
+        if(returnQty==null) {
+            returnQty = 0 ;
+        }
         return returnQty;
     }
 
@@ -106,6 +109,9 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     }
 
     public Integer getShippedQty() {
+        if(shippedQty==null) {
+            shippedQty = 0 ;
+        }
         return shippedQty;
     }
 

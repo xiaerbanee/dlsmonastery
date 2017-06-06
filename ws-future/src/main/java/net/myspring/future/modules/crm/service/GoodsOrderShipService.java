@@ -326,6 +326,12 @@ public class GoodsOrderShipService {
             List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
             List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
             cacheUtils.initCacheInput(goodsOrderDetailDtoList);
+
+            Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailDtoList,"productId"));
+            for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
+                Product product = productMap.get(goodsOrderDetailDto.getProductId());
+                goodsOrderDetailDto.setHasIme(product.getHasIme());
+            }
             goodsOrderShipForm.setStoreName(goodsOrderDto.getStoreName());
             goodsOrderShipForm.setShopName(goodsOrderDto.getShopName());
             goodsOrderShipForm.setGoodsOrderDetailList(goodsOrderDetailDtoList);
