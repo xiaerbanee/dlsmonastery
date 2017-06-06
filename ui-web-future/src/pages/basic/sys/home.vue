@@ -21,15 +21,14 @@
             <el-dropdown split-button type="primary" style="float: right;" @click="handleClick(account.employeeId)">
               {{$t('home.edit')}}
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item><div  @click="updateMsg(account.id,'手机')">{{$t('home.mobilePhoneEdit')}}</div></el-dropdown-item>
+                <el-dropdown-item><div  @click="updateMsg(account.id,'MOBILE_PHONE')">{{$t('home.mobilePhoneEdit')}}</div></el-dropdown-item>
                 <el-dropdown-item><div  @click="updateMsg(account.id,'身份证')">{{$t('home.idCardEdit')}}</div></el-dropdown-item>
-                <el-dropdown-item><div  @click="updateMsg(account.id,'银行卡号')">{{$t('home.bankAccountEdit')}}</div></el-dropdown-item>
-                <el-dropdown-item><div  @click="updateMsg(account.id,'部门')">{{$t('home.officeEdit')}}</div></el-dropdown-item>
-                <el-dropdown-item><div  @click="updateMsg(account.id,'岗位')">{{$t('home.positionEdit')}}</div></el-dropdown-item>
-                <el-dropdown-item><div  @click="updateMsg(account.id,'上级')">{{$t('home.readerEdit')}}</div></el-dropdown-item>
-                <el-dropdown-item><div  @click="updateMsg(account.id,'转正')">{{$t('home.regularEdit')}}</div></el-dropdown-item>
-                <el-dropdown-item><div  @click="updateMsg(account.id,'离职')">{{$t('home.leaveEdit')}}</div></el-dropdown-item>
-
+                <el-dropdown-item><div  @click="updateMsg(account.id,'BANK_CARD')">{{$t('home.bankAccountEdit')}}</div></el-dropdown-item>
+                <el-dropdown-item><div  @click="updateMsg(account.id,'OFFICE')">{{$t('home.officeEdit')}}</div></el-dropdown-item>
+                <el-dropdown-item><div  @click="updateMsg(account.id,'POSITION')">{{$t('home.positionEdit')}}</div></el-dropdown-item>
+                <el-dropdown-item><div  @click="updateMsg(account.id,'LEADER')">{{$t('home.readerEdit')}}</div></el-dropdown-item>
+                <el-dropdown-item><div  @click="updateMsg(account.id,'REGULAR_WORKER')">{{$t('home.regularEdit')}}</div></el-dropdown-item>
+                <el-dropdown-item><div  @click="updateMsg(account.id,'LEAVE_WORKER')">{{$t('home.leaveEdit')}}</div></el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>

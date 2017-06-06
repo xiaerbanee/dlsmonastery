@@ -7,6 +7,8 @@ import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -19,7 +21,13 @@ public class AccountChangeForm extends BaseForm<AccountChange> {
     private String officeId;
     private String positionId;
     private String leaderId;
-    private Employee employee;
+    private String mobilePhone;
+    private String idcard;
+    private LocalDate entryDate;
+    private BigDecimal salary;
+    private LocalDate leaveDate;
+    private LocalDate regularDate;
+    private String bankNumber;
     private String remarks;
     private String oldValue;
     private String newValue;
@@ -33,6 +41,62 @@ public class AccountChangeForm extends BaseForm<AccountChange> {
     private String leaderName;
     private List<String> typeList= Lists.newArrayList();
     private List<PositionDto> positionList=Lists.newArrayList();
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getIdcard() {
+        return idcard;
+    }
+
+    public void setIdcard(String idcard) {
+        this.idcard = idcard;
+    }
+
+    public LocalDate getEntryDate() {
+        return entryDate;
+    }
+
+    public void setEntryDate(LocalDate entryDate) {
+        this.entryDate = entryDate;
+    }
+
+    public BigDecimal getSalary() {
+        return salary;
+    }
+
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
+
+    public LocalDate getLeaveDate() {
+        return leaveDate;
+    }
+
+    public void setLeaveDate(LocalDate leaveDate) {
+        this.leaveDate = leaveDate;
+    }
+
+    public LocalDate getRegularDate() {
+        return regularDate;
+    }
+
+    public void setRegularDate(LocalDate regularDate) {
+        this.regularDate = regularDate;
+    }
+
+    public String getBankNumber() {
+        return bankNumber;
+    }
+
+    public void setBankNumber(String bankNumber) {
+        this.bankNumber = bankNumber;
+    }
 
     public String getAccountName() {
         return accountName;
@@ -112,14 +176,6 @@ public class AccountChangeForm extends BaseForm<AccountChange> {
 
     public void setLeaderId(String leaderId) {
         this.leaderId = leaderId;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     public String getType() {

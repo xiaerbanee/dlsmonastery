@@ -93,13 +93,13 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
                 t2.office_id,
                 t2.leader_id,
                 t2.position_id,
-                t3.mobile_phone AS 'employee.mobilePhone',
-                t3.idcard AS 'employee.idcard',
-                t3.entry_date AS 'employee.entryDate',
-                t3.bank_number AS 'employee.bankNumber',
-                t3.salary AS 'employee.salary',
-                t3.regular_date AS 'employee.regularDate',
-                t3.leave_date AS 'employee.leaveDate'
+                t3.mobile_phone ,
+                t3.idcard,
+                t3.entry_date ,
+                t3.bank_number,
+                t3.salary,
+                t3.regular_date ,
+                t3.leave_date
             FROM
                 hr_account t2,
                 hr_employee t3
