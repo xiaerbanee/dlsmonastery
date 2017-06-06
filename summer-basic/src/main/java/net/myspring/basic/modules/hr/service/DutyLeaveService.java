@@ -56,9 +56,9 @@ public class DutyLeaveService {
             LocalDate dateEnd = LocalDate.parse(dutyLeaveForm.getDutyDateEnd());
             List<LocalDate> dateList = LocalDateUtils.getDateList(dateStart, dateEnd);
             for (LocalDate date : dateList) {
-                if (dutyLeaveRepository.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, DutyDateTypeEnum.DAY.toString()) == null) {
+                if (dutyLeaveRepository.findByEmployeeAndDateAndDateType(dutyLeaveForm.getEmployeeId(), date, DutyDateTypeEnum.全天.toString()) == null) {
                     DutyLeave item = new DutyLeave();
-                    item.setDateType(DutyDateTypeEnum.DAY.toString());
+                    item.setDateType(DutyDateTypeEnum.全天.toString());
                     item.setDutyDate(date);
                     item.setStatus(AuditTypeEnum.APPLYING.toString());
                     item.setLeaveType(dutyLeaveForm.getLeaveType());

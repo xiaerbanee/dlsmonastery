@@ -10,17 +10,17 @@ import java.util.List;
  */
 public enum AccountChangeTypeEnum {
     // 基础信息
-    MOBILE_PHONE,
-    ID_CARD,
-    BANK_CARD,
-    BASE_SALARY,
+    手机,
+    身份证,
+    银行卡号,
+    底薪,
     // 调职调岗
-    OFFICE,
-    POSITION,
-    LEADER,
-    REGULAR_WORKER,
-    ENTRY_WORKER,
-    LEAVE_WORKER;
+    部门,
+    岗位,
+    上级,
+    转正,
+    入职,
+    离职;
 
     private static List<String> list= Lists.newArrayList();
 

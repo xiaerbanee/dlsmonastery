@@ -18,7 +18,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.dateType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.dateType" filterable clearable :placeholder="$t('dutyRestList.inputKey')">
-                  <el-option v-for="item in formData.dateList" :key="item" :label="$t('DutyDateTypeEnum.'+item)" :value="item"></el-option>
+                  <el-option v-for="item in formData.dateList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
         </el-form>

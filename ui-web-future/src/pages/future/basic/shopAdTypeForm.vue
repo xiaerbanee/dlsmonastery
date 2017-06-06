@@ -37,7 +37,7 @@
             submitData:{
               id:'',
               name:'',
-              totalPriceType:'按数量',
+              totalPriceType:'',
               price:'',
               remarks:''
             },
@@ -57,11 +57,13 @@
               axios.post('/api/ws/future/basic/shopAdType/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
               this.submitDisabled = false;
+              if(response.data.success){
                 if(this.isCreate){
                   form.resetFields();
                 } else {
                   this.$router.push({name:'shopAdTypeList',query:util.getQuery("shopAdTypeList")})
                 }
+              }
               }).catch(function () {
                 this.submitDisabled = false;
               });
@@ -77,8 +79,6 @@
             this.formProperty = response.data;
         });
         }
-      },created(){
-        this.initPage();
       },activated () {
         if(!this.$route.query.headClick) {
           this.initPage();
