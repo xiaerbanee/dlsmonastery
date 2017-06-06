@@ -65,15 +65,8 @@ public class PermissionController {
     }
 
     @RequestMapping(value = "search")
-    public List<Map<String, String>> search(String query){
-        List<Permission> permissions=permissionService.findByPermissionLike(query);
-        List<Map<String, String>> list = Lists.newArrayList();
-        for (Permission permission : permissions) {
-            Map<String, String> map = Maps.newHashMap();
-            map.put("id", permission.getId());
-            map.put("fullName",permission.getName()+" "+permission.getPermission());
-            list.add(map);
-        }
-        return list;
+    public List<PermissionDto> search(String query){
+        List<PermissionDto> permissions=permissionService.findByPermissionLike(query);
+        return permissions;
     }
 }

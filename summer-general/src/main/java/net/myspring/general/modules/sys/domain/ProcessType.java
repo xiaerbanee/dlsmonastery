@@ -13,7 +13,7 @@ public class ProcessType extends CompanyEntity<ProcessType> {
     private String type;
     private String name;
     private String viewPositionIds;
-    private String createPositionIds;
+    private String createdPositionIds;
     private Integer version = 0;
     private Boolean auditFileType;
 
@@ -41,12 +41,12 @@ public class ProcessType extends CompanyEntity<ProcessType> {
         this.viewPositionIds = viewPositionIds;
     }
 
-    public String getCreatePositionIds() {
-        return createPositionIds;
+    public String getCreatedPositionIds() {
+        return createdPositionIds;
     }
 
-    public void setCreatePositionIds(String createPositionIds) {
-        this.createPositionIds = createPositionIds;
+    public void setCreatedPositionIds(String createdPositionIds) {
+        this.createdPositionIds = createdPositionIds;
     }
 
     public Integer getVersion() {

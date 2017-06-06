@@ -1,6 +1,7 @@
 package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.common.utils.RequestUtils;
 import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
@@ -42,6 +43,8 @@ public class ProcessTypeService {
     private ProcessFlowRepository processFlowRepository;
     @Autowired
     private RepositoryService repositoryService;
+    @Autowired
+    private CacheUtils cacheUtils;
 
     public ProcessTypeDto findByName(String name){
         ProcessType processType =processTypeRepository.findByName(name);
@@ -53,9 +56,13 @@ public class ProcessTypeService {
         return BeanUtil.map(processTypeList,ProcessTypeDto.class);
     }
 
-    public ProcessTypeForm getForm(String id){
-        ProcessType processType=processTypeRepository.findOne(id);
-        return BeanUtil.map(processType,ProcessTypeForm.class);
+    public ProcessTypeDto findOne(ProcessTypeDto processTypeDto){
+        if(!processTypeDto.isCreate()){
+            ProcessType processType=processTypeRepository.findOne(processTypeDto.getId());
+            processTypeDto=BeanUtil.map(processType,ProcessTypeDto.class);
+            cacheUtils.initCacheInput(processTypeDto);
+        }
+        return processTypeDto;
     }
 
     public void logicDelete(String id) {
@@ -67,18 +74,18 @@ public class ProcessTypeService {
 
     @Transactional
     public void save(ProcessTypeForm processTypeForm){
-        for (int i = processTypeForm.getProcessFlowFormList().size() - 1; i >= 0; i--) {
-            ProcessFlowForm processFlowForm= processTypeForm.getProcessFlowFormList().get(i);
-            if (StringUtils.isBlank(processFlowForm.getName())) {
-                processTypeForm.getProcessFlowFormList().remove(i);
+        for (int i = processTypeForm.getProcessFlowList().size() - 1; i >= 0; i--) {
+            ProcessFlowDto processFlowDto= processTypeForm.getProcessFlowList().get(i);
+            if (StringUtils.isBlank(processFlowDto.getName())) {
+                processTypeForm.getProcessFlowList().remove(i);
             }
         }
         ProcessType processType = BeanUtil.map(processTypeForm,ProcessType.class);
         processTypeRepository.save(processType);
-        for(ProcessFlowForm processFlowForm:processTypeForm.getProcessFlowFormList()) {
-            processFlowForm.setProcessTypeId(processType.getId());
+        for(ProcessFlowDto processFlowDto:processTypeForm.getProcessFlowList()) {
+            processFlowDto.setProcessTypeId(processType.getId());
         }
-        processFlowRepository.save(BeanUtil.map(processTypeForm.getProcessFlowFormList(),ProcessFlow.class));
+        processFlowRepository.save(BeanUtil.map(processTypeForm.getProcessFlowList(),ProcessFlow.class));
         // 部署流程
         String processId = "process_type_" + processType.getId();
         BpmnModel model = new BpmnModel();
@@ -150,8 +157,9 @@ public class ProcessTypeService {
     }
 
     public Page<ProcessTypeDto> findPage(Pageable pageable, ProcessTypeQuery processTypeQuery) {
-        Page<ProcessType> page = processTypeRepository.findAll(pageable,processTypeQuery);
-        return BeanUtil.map(page,ProcessTypeDto.class);
+        Page<ProcessTypeDto> page = processTypeRepository.findPage(pageable,processTypeQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
     }
 
     public List<ProcessTypeDto>  findAll(){
