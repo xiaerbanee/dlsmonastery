@@ -89,7 +89,12 @@
   export default {
     components:{officeSelect,districtSelect,boolRadioGroup,expressCompanySelect},
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{},
@@ -149,8 +154,8 @@
         }
       }
     },
-    methods:{
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -158,14 +163,12 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/basic/depotShop/saveDepot', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+            Object.assign(this.$data, this.getData());
+            if(!this.isCreate){
                 this.$router.push({name:'depotShopList',query:util.getQuery("depotShopList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -179,17 +182,14 @@
             this.remoteLoading = false;
           });
         }
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/basic/depotShop/findDepotForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
       });
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

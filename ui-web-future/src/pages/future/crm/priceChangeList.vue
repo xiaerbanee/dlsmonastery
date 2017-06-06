@@ -88,10 +88,12 @@
         if(action=="edit") {
           this.$router.push({ name: 'priceChangeForm', query: { id: id,action:action}})
         } else if(action=="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/ws/future/crm/priceChange/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
+        }).catch(()=>{});
         }else if(action =='audit'){
           this.$router.push({ name: 'priceChangeForm', query: { id: id,action:action}})
         }

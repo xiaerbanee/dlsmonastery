@@ -28,7 +28,12 @@
       officeSelect
     },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return {
+        isInit:false,
         isCreate: this.$route.query.id == null,
         submitDisabled: false,
         inputForm: {},
@@ -48,8 +53,8 @@
         }
       };
     },
-    methods: {
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -58,10 +63,8 @@
             axios.post('/api/ws/future/basic/adPricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
-              this.submitDisabled = false;
-                if (this.isCreate) {
-                  form.resetFields();
-                } else {
+                Object.assign(this.$data, this.getData());
+                if (!this.isCreate) {
                   this.$router.push({name: 'adPricesystemList', query: util.getQuery("adPricesystemList")})
                 }
               }else {
@@ -72,24 +75,20 @@
                 });
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           } else {
             this.submitDisabled = false;
           }
         })
-      },
-      initPage(){
+      }
+    },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
           this.inputForm = response.data;
       });
       }
-    }, created(){
-     this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

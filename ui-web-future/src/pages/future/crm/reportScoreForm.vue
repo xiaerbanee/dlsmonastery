@@ -43,7 +43,12 @@
 <script>
     export default{
       data(){
+        return this.getData()
+      },
+      methods:{
+        getData() {
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             productTypeNames:'',
@@ -68,8 +73,8 @@
             }
           }
       },
-      methods:{
         formSubmit(){
+          var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
@@ -77,22 +82,22 @@
               util.copyValue(this.reportScore, this.submitData);
               axios.post('/api/ws/future/crm/reportScore/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
                 if(response.data.success){
-                  if(this.isCreate){
-                    form.resetFields();
-                  } else {
+                  if(!this.isCreate){
                     this.$router.push({name:'reportScoreList',query:util.getQuery("reportScoreList")})
                   }
                 }
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
             }
           })
-        },initPage(){
+        }
+      },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
           axios.get('/api/ws/future/crm/reportScore/getProductTypeNamesAndNotScores').then((response)=>{
             this.productTypeNames = response.data.productTypeNames;
           this.notScores = response.data.notScores;
@@ -103,12 +108,7 @@
             this.reportScore=response.data;
         });
         }
-      },created(){
-        this.initPage();
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
-        }
+        this.isInit = true;
       }
     }
 </script>

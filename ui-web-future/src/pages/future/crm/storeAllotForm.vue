@@ -62,7 +62,12 @@
       boolRadioGroup,
     },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{},
@@ -92,9 +97,8 @@
         filterStoreAllotDetailList:[],
       }
     },
-    methods: {
       formSubmit(){
-
+        var that = this;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
@@ -102,16 +106,14 @@
             this.initSubmitDataBeforeSubmit();
             axios.post('/api/ws/future/crm/storeAllot/save', qs.stringify(this.submitData, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
-              this.submitDisabled = false;
+            Object.assign(this.$data, this.getData());
               if(response.data.success) {
-                if (this.isCreate) {
-                  form.resetFields();
-                } else {
+                if (!this.isCreate) {
                   this.$router.push({name: 'storeAllotList', query: util.getQuery("storeAllotList")});
                 }
               }
             }).catch( () => {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }
         })
@@ -203,7 +205,9 @@
           }
         }
         this.filterStoreAllotDetailList = tempList;
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/crm/storeAllot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputProperty = response.data;
       });
@@ -217,12 +221,7 @@
           this.storeAllot = response.data;
       });
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

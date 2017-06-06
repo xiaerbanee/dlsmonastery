@@ -33,7 +33,12 @@
       productSelect,
     },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         submitDisabled:false,
         table:null,
         settings: {
@@ -66,7 +71,6 @@
     mounted () {
       this.table = new Handsontable(this.$refs["handsontable"], this.settings)
     },
-    methods:{
       formSubmit(){
         var that = this;
         that.submitDisabled = true;
@@ -77,11 +81,10 @@
               if (valid) {
                 that.inputForm.data = that.settings.data;
                 axios.post('/api/ws/future/crm/pricesystemChange/save',qs.stringify(that.inputForm)).then((response)=> {
-                  that.$message(response.data.message);
-                  form.resetFields();
-                  that.submitDisabled = false;
+                  this.$message(response.data.message);
+                Object.assign(this.$data, this.getData());
                 }).catch(function () {
-                  this.submitDisabled = false;
+                  that.submitDisabled = false;
                 });
               }
             })
@@ -90,18 +93,14 @@
               that.submitDisabled = false;
           }
         });
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/crm/pricesystemChange/getForm').then((response)=>{
           this.formProperty=response.data;
       });
       }
-    },
-      created(){
-        this.initPage();
-      },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>
