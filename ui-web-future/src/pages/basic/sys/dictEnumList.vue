@@ -43,8 +43,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('dictEnumList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('dictEnumList.edit')}}</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('dictEnumList.delete')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'sys:dictEnum:edit'">{{$t('dictEnumList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:dictEnum:delete'">{{$t('dictEnumList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
