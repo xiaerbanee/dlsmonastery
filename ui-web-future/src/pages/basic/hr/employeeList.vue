@@ -64,8 +64,8 @@
         <el-table-column prop="mobilePhone" :label="$t('employeeList.mobilePhone')"></el-table-column>
         <el-table-column :label="$t('employeeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'hr:employee:edit'">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:employee:delete'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

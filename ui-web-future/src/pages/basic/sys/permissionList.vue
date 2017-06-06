@@ -39,8 +39,8 @@
         <el-table-column prop="remarks" :label="$t('permissionList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('permissionList.operation')" width="140">
           <template scope="scope">
-              <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-              <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'sys:permission:edit'">修改</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:permission:delete'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

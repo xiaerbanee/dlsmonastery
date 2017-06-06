@@ -2,7 +2,9 @@
   <div>
     <head-tab active="goodsOrderShip"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form">
+      <su-alert  :text="shipResult.warnMsg"  type="warning"></su-alert>
+      <su-alert :text="shipResult.errorMsg" type="danger"></su-alert>
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form" style="margin-top: 10px;">
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderShip.businessId')" prop="businessId">
@@ -13,7 +15,7 @@
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.boxImeStr')" prop="boxImeStr">
               <textarea  v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner"
-                         @paste="showSummary(false)"
+                         @paste="showSummary(false,100)"
                          @keyup.enter="showSummary(false)"
                          @keyup.delete="showSummary(false)"
                          @keyup.backspace="showSummary(false)"
@@ -36,7 +38,7 @@
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.imeStr')" prop="imeStr">
               <textarea v-model="inputForm.imeStr"  :rows="5" class="el-textarea__inner"
-                        @keyup.enter="showSummary(false)"
+                        @keyup.enter="showSummary(false,100)"
                         @keyup.delete="showSummary(false)"
                         @keyup.backspace="showSummary(false)"
                         @keyup.control="showSummary(false)">
@@ -46,7 +48,7 @@
               <el-input type="textarea" v-model="inputForm.shipRemarks"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderShip.save')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="showSummary(true)">{{$t('goodsOrderShip.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -78,6 +80,7 @@
         submitDisabled:false,
         inputForm:{},
         goodsOrder:{},
+        shipResult:{},
         submitData:{
           id:'',
           businessId:'',
@@ -92,44 +95,38 @@
       }
     },
     methods:{
-      formSubmit(){
-        this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
-        form.validate((valid) => {
-          if (valid) {
-            axios.post('/api/crm/goodsOrder/ship',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
-              if(response.data.errors){
-                this.error=response.data.errors.id.message
-                this.alertError=true;
-                this.submitDisabled = false;
-              }else{
-                this.$message(response.data.message);
-                if(response.data.success){
-                  this.$router.push({name:'goodsOrderShipList',query:util.getQuery("goodsOrderShipList")})
-                }
-              }
-            }).catch(function () {
-              this.submitDisabled = false;
-            });
-          }else{
-            this.submitDisabled = false;
-          }
-        })
-      },showSummary(isSubmit){
+      summary(isSubmit){
+        if(isSubmit) {
+          this.submitDisabled = true;
+        }
         var boxImeStr=this.inputForm.boxImeStr;
         var imeStr=this.inputForm.imeStr;
         this.pageLoading = true;
-        axios.get('/api/crm/goodsOrder/shipBoxAndIme',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
-          if(response.data.errors){
-            this.error=response.data.errors.id.message
-            this.alertError=true;
-            this.submitDisabled = false;
-          }else{
-            this.inputForm.goodsOrderDetailList=response.data.goodsOrderDetailList;
-            this.pageLoading = false;
-            this.alertError=false;
+        axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
+          this.shipResult = response.data;
+          this.pageLoading = false;
+          //错误信息
+          var errorMsg = "";
+          for(var index in this.shipResult.restResponse.errors) {
+            errorMsg = errorMsg + this.shipResult.restResponse.errors[index].message + "<br/>";
           }
-        })
+          this.shipResult.errorMsg = errorMsg;
+          //如果提交表单
+          if(isSubmit) {
+            if(this.shipResult.restResponse.success) {
+
+            } else {
+              alert("请先处理错误信息");
+            }
+          }
+          this.submitDisabled = false;
+        });
+      },showSummary(isSubmit,timeout) {
+        if(timeout != null) {
+          setTimeout(this.summary(isSubmit), timeout);
+        } else {
+          this.summary(isSubmit);
+        }
       }
     },created(){
       axios.get('/api/ws/future/crm/goodsOrderShip/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
