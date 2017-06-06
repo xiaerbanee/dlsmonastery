@@ -44,8 +44,8 @@
         <el-table-column prop="remarks" :label="$t('officeList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('officeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('officeList.edit')}}</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('officeList.delete')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'hr:office:edit'">{{$t('officeList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:office:delete'">{{$t('officeList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
