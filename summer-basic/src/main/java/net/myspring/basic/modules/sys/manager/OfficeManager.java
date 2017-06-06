@@ -58,21 +58,18 @@ public class OfficeManager {
         return officeIdList;
     }
 
-    public String findByOfficeIdAndRuleName(String officeId, String ruleName) {
-        String id = null;
+    public List<Office> findByOfficeIdAndRuleName(String officeId, String ruleName) {
+        List<Office> officeList =Lists.newArrayList();
         OfficeRule officeRule = officeRuleRepository.findByName(ruleName);
         if (officeRule != null) {
-            id = findByOfficeIdAndRuleId(officeId, officeRule.getId());
+            officeList = findByOfficeIdAndRuleId(officeId, officeRule.getId());
         }
-        return id;
+        return officeList;
     }
 
-    public String findByOfficeIdAndRuleId(String officeId, String ruleId) {
-        Office office = officeRepository.findByOfficeIdAndRuleId(officeId, ruleId);
-        if (office != null) {
-            return office.getId();
-        }
-        return null;
+    public List<Office> findByOfficeIdAndRuleId(String officeId, String ruleId) {
+        List<Office> officeList = officeRepository.findByOfficeIdAndRuleId(officeId, ruleId);
+        return officeList;
     }
 
     //根据officeId获取某个级别的Office

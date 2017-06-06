@@ -2,16 +2,20 @@ package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.AuditFile;
+import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.repository.AuditFileRepository;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
+import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
+import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 @Service
 @Transactional
@@ -31,13 +37,14 @@ public class AuditFileService {
     @Autowired
     private ActivitiClient activitiClient;
     @Autowired
-    private OfficeManager officeManager;
+    private OfficeRepository officeRepository;
 
 
     public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery) {
         Page<AuditFileDto> page = auditFileRepository.findPage(pageable, auditFileQuery);
+        Map<String, Office> officeMap = officeRepository.findMap(CollectionUtil.extractToList(page.getContent(), "officeId"));
         for(AuditFileDto auditFileDto:page.getContent()){
-            auditFileDto.setAreaId(officeManager.findByOfficeIdAndRuleName(auditFileDto.getOfficeId(),"办事处"));
+            auditFileDto.setAreaId(officeMap.get(auditFileDto.getOfficeId()).getAreaId());
         }
         cacheUtils.initCacheInput(page.getContent());
         return page;

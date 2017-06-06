@@ -5,6 +5,8 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">{{$t('accountChangeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('accountChangeList.filter')}}</el-button>
+        <el-button type="primary" @click="batchPass" icon="check" >批量通过</el-button>
+        <el-button type="primary" @click="batchNoPass" icon="close" >批量打回</el-button>
         <search-tag  :submitData="submitData" :formLabel = "formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('accountChangeList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -30,20 +32,20 @@
           <el-button type="primary" @click="search()">{{$t('accountChangeList.sure')}}</el-button>
         </div>
       </el-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('accountChangeList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('accountChangeList.loading')" @sort-change="sortChange" stripe border>
+        <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column fixed prop="id" :label="$t('accountChangeList.id')" sortable></el-table-column>
         <el-table-column  prop="areaName" :label="$t('accountChangeList.areaName')" sortable></el-table-column>
         <el-table-column  prop="createdByName" :label="$t('accountChangeList.applyAccount')" sortable></el-table-column>
         <el-table-column  prop="createdDate" :label="$t('accountChangeList.applyDate')" sortable></el-table-column>
         <el-table-column  prop="type" :label="$t('accountChangeList.type')" sortable></el-table-column>
-        <el-table-column  prop="oldValue" :label="$t('accountChangeList.oldValue')" sortable></el-table-column>
-        <el-table-column  prop="newValue" :label="$t('accountChangeList.newValue')" sortable></el-table-column>
+        <el-table-column  prop="oldLabel" :label="$t('accountChangeList.oldValue')" sortable></el-table-column>
+        <el-table-column  prop="newLabel" :label="$t('accountChangeList.newValue')" sortable></el-table-column>
         <el-table-column  prop="processStatus" :label="$t('accountChangeList.processStatus')" sortable ></el-table-column>
         <el-table-column  prop="remarks" :label="$t('accountChangeList.remarks')" sortable ></el-table-column>
         <el-table-column :label="$t('accountChangeList.operation')" width="140">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'audit')">审核</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
@@ -73,6 +75,7 @@
           createdByName:'',
           officeRuleName:''
         },
+        selects:[],
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -111,9 +114,44 @@
             this.pageRequest();
           })
         }).catch(()=>{});
-        }else if(action=="audit"){
-          his.$router.push({ name: 'accountChangeDetail', query: { id: id }})
         }
+      },selectionChange(selection){
+        this.selects = [];
+        for (let each of selection) {
+          this.selects.push(each.id);
+        }
+      },batchPass(){
+        if(!this.selects || this.selects.length < 1){
+          this.$message("请选择审批记录");
+          return ;
+        }
+        util.confirmBeforeBatchPass(this).then(() => {
+          this.submitDisabled = true;
+          this.pageLoading = true;
+          axios.get('/api/basic/hr/accountChange/batchPass',{params:{ids:this.selects, pass:'1'}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageLoading = false;
+            this.submitDisabled = false;
+            this.pageRequest();
+          });
+        }).catch(()=>{});
+      },batchNoPass(){
+        if(!this.selects || this.selects.length < 1){
+          this.$message("请选择审批记录");
+          return ;
+        }
+        util.confirmBeforeBatchPass(this).then(() => {
+          this.submitDisabled = true;
+          this.pageLoading = true;
+          axios.get('/api/basic/hr/accountChange/batchPass',{params:{ids:this.selects, pass:'0'}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageLoading = false;
+            this.submitDisabled = false;
+            this.pageRequest();
+          });
+        }).catch(()=>{});
+      },checkSelectable(row) {
+        return row.processStatus !== '已通过' && row.processStatus !== '未通过'
       }
     },created () {
         var that=this;

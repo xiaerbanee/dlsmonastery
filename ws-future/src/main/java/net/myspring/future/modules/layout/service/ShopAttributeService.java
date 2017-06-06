@@ -67,7 +67,7 @@ public class ShopAttributeService {
             shopAttributeForm.setShop(depotRepository.findOne(shopAttributeForm.getShopId()));
             List<ShopAttribute> shopAttributeList=shopAttributeRepository.findByShopId(shopAttributeForm.getShopId());
             Map<String,ShopAttribute> shopAttributeMap= CollectionUtil.extractToMap(shopAttributeList,"typeName");
-            List<DictEnumDto> dictEnumList=dictEnumClient.findByCategory(DictEnumCategoryEnum.SHOP_ATTRIBUTE_TYPE.name());
+            List<DictEnumDto> dictEnumList=dictEnumClient.findByCategory(DictEnumCategoryEnum.SHOP_ATTRIBUTE_TYPE.getValue());
             List<ShopAttribute> shopAttributes=Lists.newArrayList();
             for(DictEnumDto dictEnumDto:dictEnumList){
                 ShopAttribute shopAttribute=shopAttributeMap.get(dictEnumDto.getValue());

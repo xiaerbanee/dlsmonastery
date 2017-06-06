@@ -62,7 +62,7 @@ public class EmployeeController {
     @RequestMapping(value = "getForm")
     public EmployeeForm findForm(EmployeeForm employeeForm){
         employeeForm.setPositionList(positionService.findAll());
-        employeeForm.setEducationList( dictEnumService.findValueByCategory(DictEnumCategoryEnum.EDUCATION.toString()));
+        employeeForm.setEducationList( dictEnumService.findValueByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
         return employeeForm;
     }
 
@@ -94,7 +94,7 @@ public class EmployeeController {
     @RequestMapping(value = "editForm",method = RequestMethod.GET)
     public Map<String,Object> editForm(){
         Map<String,Object> map=Maps.newHashMap();
-        map.put("educationsList", dictEnumService.findByCategory(DictEnumCategoryEnum.EDUCATION.toString()));
+        map.put("educationsList", dictEnumService.findByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
         return map;
     }
 
