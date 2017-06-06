@@ -145,7 +145,7 @@
           this.page = response.data;
           this.pageLoading = false;
         });
-        this.searchText = util.getSearchText(this.$refs.dialog);
+        this.initSearchText();
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
