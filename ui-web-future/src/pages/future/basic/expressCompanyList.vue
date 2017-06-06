@@ -48,12 +48,8 @@
         <el-table-column prop="remarks" :label="$t('expressCompanyList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressCompanyList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small"  v-permit="'crm:expressCompany:edit'" @click.native="itemEdit(scope.row.id)">{{$t('expressCompanyList.edit')}}</el-button>
-            <el-button size="small"  v-permit="'crm:expressCompany:edit'" @click.native="itemDelete(scope.row.id)">{{$t('expressCompanyList.delete')}}</el-button>
-
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <div class="action" v-permit="'crm:expressCompany:edit'"><el-button size="small" @click.native="itemEdit(scope.row.id)">{{$t('expressCompanyList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:expressCompany:delete'"><el-button size="small"  @click.native="itemDelete(scope.row.id)">{{$t('expressCompanyList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -70,6 +66,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           name:'',
           expressType:"",
           reachPlace:"",
@@ -106,7 +103,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

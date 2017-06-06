@@ -25,8 +25,8 @@
         <el-table-column fixed prop="id" :label="$t('chainList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="name" :label="$t('chainList.name')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('chainList.remarks')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('chainList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('chainList.createdDate')"></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('chainList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('chainList.createdDate')" sortable></el-table-column>
         <el-table-column prop="locked" :label="$t('chainList.locked')" width="100">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
@@ -34,8 +34,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('chainList.operation')" width="160">
           <template scope="scope">
-              <el-button size="small" v-permit="'crm:chain:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('chainList.edit')}}</el-button>
-              <el-button size="small" v-permit="'crm:chain:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('chainList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:chain:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('chainList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:chain:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('chainList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -53,6 +53,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           name:''
         },formLabel:{
           name:{label: this.$t('chainList.name')}
@@ -77,7 +78,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

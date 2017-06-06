@@ -22,6 +22,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 import javax.persistence.EntityManager
+import kotlin.collections.HashMap
+
 //import kotlin.collections.HashMap
 
 /**
@@ -57,7 +59,7 @@ interface AdpricesystemRepositoryCustom{
 
     fun findOfficeById(id: String): MutableList<String>
 
-    fun saveAdpricesystemOffice(adPricesystemId:String,officeId:String):Int
+    fun saveAdpricesystemOffice(adPricesystemId:String,officeId:MutableList<String>):Int
 
     fun deleteOfficeId(id: String):Int
 
@@ -77,13 +79,15 @@ class AdpricesystemRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         """,Collections.singletonMap("id",id),String::class.java)
     }
 
-    override fun saveAdpricesystemOffice(adPricesystemId:String,officeId:String):Int{
-        val params = java.util.HashMap<String, Any>()
-        params.put("adPricesystemId",adPricesystemId)
-        params.put("officeId",officeId)
-        return namedParameterJdbcTemplate.queryForObject("""
-          INSERT INTO crm_ad_pricesystem_office (ad_pricesystem_id,office_id) VALUES (:adPricesystemId,:officeId)
-        """,params,Int::class.java)
+    override fun saveAdpricesystemOffice(adPricesystemId:String,officeIdList:MutableList<String>):Int{
+        val sb = StringBuilder("""
+            INSERT INTO crm_ad_pricesystem_office (ad_pricesystem_id,office_id) VALUES
+        """)
+        for(officeId in officeIdList){
+            sb.append("("+adPricesystemId+","+officeId+"),")
+        }
+        sb.deleteCharAt(sb.length-1)
+        return namedParameterJdbcTemplate.update(sb.toString(),HashMap<String,Any>())
     }
 
     override fun deleteOfficeId(id: String):Int{

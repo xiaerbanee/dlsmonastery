@@ -27,11 +27,6 @@ public class ShopAdTypeService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public List<ShopAdTypeDto> findAllByEnabled() {
-        List<ShopAdTypeDto> shopAdTypes = shopAdTypeRepository.findAllByEnabled();
-        return shopAdTypes;
-    }
-
     public ShopAdTypeDto findOne(String id) {
         ShopAdTypeDto shopAdTypeDto = new ShopAdTypeDto();
         if(StringUtils.isNotBlank(id)){
