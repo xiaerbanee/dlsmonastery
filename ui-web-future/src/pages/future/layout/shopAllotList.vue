@@ -13,10 +13,10 @@
             <el-col :span="24">
 
               <el-form-item :label="formLabel.fromShopId.label" :label-width="formLabelWidth">
-                <depot-select category="directShop" v-model="formData.fromShopId"  @selectedTextChange="formLabel.fromShopId.value =$event"></depot-select>
+                <depot-select ref = "fromShop" category="directShop" v-model="formData.fromShopId"  ></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.toShopId.label" :label-width="formLabelWidth">
-                <depot-select category="directShop" v-model="formData.toShopId"  @selectedTextChange="formLabel.toShopId.value =$event"></depot-select>
+                <depot-select ref = "toShop" category="directShop" v-model="formData.toShopId"  ></depot-select>
               </el-form-item>
 
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
@@ -120,8 +120,8 @@
         },formLabel:{
           createdDateRange:{label: this.$t('shopAllotList.createdDate')},
           auditDateRange:{label: this.$t('shopAllotList.auditDateRange')},
-          fromShopId:{label:this.$t('shopAllotList.fromShop')},
-          toShopId:{label:this.$t('shopAllotList.toShop')},
+          fromShopId:{label:this.$t('shopAllotList.fromShop'), value:''},
+          toShopId:{label:this.$t('shopAllotList.toShop'),value:''},
           businessId:{label:this.$t('shopAllotList.billCode')},
           businessIds:{label:this.$t('shopAllotList.billCode')},
           status:{label:this.$t('shopAllotList.status')},
@@ -135,7 +135,11 @@
 
       pageRequest() {
         this.pageLoading = true;
+
+        this.formLabel.fromShopId.value = this.$refs.fromShop.selectedLabel;
+        this.formLabel.toShopId.value = this.$refs.toShop.selectedLabel;
         util.copyValue(this.formData,this.submitData);
+
         util.setQuery("shopAllotList",this.submitData);
         axios.get('/api/ws/future/crm/shopAllot',{params:this.submitData}).then((response) => {
           this.page = response.data;
