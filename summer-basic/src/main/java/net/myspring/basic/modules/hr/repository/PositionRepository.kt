@@ -34,6 +34,7 @@ interface PositionRepository : BaseRepository<Position,String>,PositionRepositor
     @CachePut(key="#p0.id")
     fun save(position: Position): Position
 
+    fun findByIdIn(id: MutableList<String>): MutableList<Position>
 }
 interface PositionRepositoryCustom{
     fun findByNameLike(@Param("name") name: String): MutableList<Position>
@@ -66,11 +67,9 @@ class PositionRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         """)
         if (StringUtils.isNotBlank(name)) {
             sb.append("""
-                and (t1.name like %:name%)
+                and t1.name like  concat('%', :name,'%')
             """)
         }
         return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("name", name), BeanPropertyRowMapper(Position::class.java))
     }
-
-
 }

@@ -34,8 +34,10 @@
     },methods: {
       headTabClick (event) {
         let name=event.target.dataset.tabName;
-        var query = this.tabs.get(name);
-        query.headClick = true;
+        if(name!="home"){
+          var query = this.tabs.get(name);
+          query.headClick = true;
+        }
         this.$router.push({ name: name, query: query})
       },
       headTabRemove(event) {

@@ -1,8 +1,12 @@
 package net.myspring.general.modules.sys.web.form;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.BaseForm;
 import net.myspring.general.modules.sys.domain.ProcessType;
+import net.myspring.general.modules.sys.dto.ProcessFlowDto;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 
 import java.util.List;
 
@@ -16,7 +20,31 @@ public class ProcessTypeForm extends BaseForm<ProcessType> {
     private String viewPositionIds;
     private String createdPositionIds;
     private Boolean auditFileType;
-    private List<ProcessFlowForm> processFlowFormList = Lists.newArrayList();
+    private List<String> viewPositionIdList=Lists.newArrayList();
+    private List<String> createdPositionIdList=Lists.newArrayList();
+    private List<ProcessFlowDto> processFlowList = Lists.newArrayList();
+
+    public List<String> getViewPositionIdList() {
+        if(StringUtils.isBlank(viewPositionIds)&&CollectionUtil.isNotEmpty(viewPositionIdList)){
+            this.viewPositionIds=StringUtils.join(viewPositionIdList, CharConstant.COMMA);
+        }
+        return viewPositionIdList;
+    }
+
+    public void setViewPositionIdList(List<String> viewPositionIdList) {
+        this.viewPositionIdList = viewPositionIdList;
+    }
+
+    public List<String> getCreatedPositionIdList() {
+        if(StringUtils.isBlank(createdPositionIds)&&CollectionUtil.isNotEmpty(createdPositionIdList)){
+            this.createdPositionIds=StringUtils.join(createdPositionIdList, CharConstant.COMMA);
+        }
+        return createdPositionIdList;
+    }
+
+    public void setCreatedPositionIdList(List<String> createdPositionIdList) {
+        this.createdPositionIdList = createdPositionIdList;
+    }
 
     public String getType() {
         return type;
@@ -58,11 +86,11 @@ public class ProcessTypeForm extends BaseForm<ProcessType> {
         this.auditFileType = auditFileType;
     }
 
-    public List<ProcessFlowForm> getProcessFlowFormList() {
-        return processFlowFormList;
+    public List<ProcessFlowDto> getProcessFlowList() {
+        return processFlowList;
     }
 
-    public void setProcessFlowFormList(List<ProcessFlowForm> processFlowFormList) {
-        this.processFlowFormList = processFlowFormList;
+    public void setProcessFlowList(List<ProcessFlowDto> processFlowList) {
+        this.processFlowList = processFlowList;
     }
 }

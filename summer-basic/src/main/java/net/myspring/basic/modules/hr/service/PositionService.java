@@ -45,10 +45,10 @@ public class PositionService {
         return  positionDtoList;
     }
 
-    public PositionDto findOne(String id){
-        Position position = positionRepository.findOne(id);
-        PositionDto positionDto=BeanUtil.map(position,PositionDto.class);
-        return positionDto;
+    public List<PositionDto> findByIds(List<String> ids){
+        List<Position> positionList = positionRepository.findByIdIn(ids);
+        List<PositionDto> positionDtoList=BeanUtil.map(positionList,PositionDto.class);
+        return positionDtoList;
     }
 
     public PositionDto findOne(PositionDto positionDto){

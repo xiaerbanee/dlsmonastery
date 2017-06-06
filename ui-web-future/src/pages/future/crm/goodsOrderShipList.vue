@@ -191,7 +191,7 @@
       if(action=="detail") {
         this.$router.push({ name: 'goodsOrderDetail', query: { id: id }})
       }else if(action =="ship"){
-        //todo
+        this.$router.push({name:'goodsOrderShip',query:{id:id}})
       }else if(action=="sign"){
         //todo
       }else if(action =="shipBack"){

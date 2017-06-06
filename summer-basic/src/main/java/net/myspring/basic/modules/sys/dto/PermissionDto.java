@@ -1,10 +1,12 @@
 package net.myspring.basic.modules.sys.dto;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 import java.util.List;
 
@@ -26,6 +28,18 @@ public class PermissionDto extends DataDto<Permission> {
     private List<Position> positionList = Lists.newArrayList();
     private List<String> positionIdList = Lists.newArrayList();
     private List<String> roleIdList=Lists.newArrayList();
+    private String fullName;
+
+    public String getFullName() {
+        if(StringUtils.isBlank(fullName)){
+            this.fullName=name+ CharConstant.MINUS+permission;
+        }
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
     public String getUrl() {
         return url;

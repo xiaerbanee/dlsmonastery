@@ -14,12 +14,15 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     private Boolean productHasIme;
     private BigDecimal price;
     private Integer qty;
+    private Integer returnQty;
     private Integer billQty;
 
     private Integer areaQty;
     private Boolean productAllowOrder;
     private Boolean productAllowBill;
 
+    //发货信息
+    private Integer shippedQty;
 
     public Integer getBillQty() {
         return billQty;
@@ -93,5 +96,19 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
         this.qty = qty;
     }
 
+    public Integer getReturnQty() {
+        return returnQty;
+    }
 
+    public void setReturnQty(Integer returnQty) {
+        this.returnQty = returnQty;
+    }
+
+    public Integer getShippedQty() {
+        return shippedQty;
+    }
+
+    public void setShippedQty(Integer shippedQty) {
+        this.shippedQty = shippedQty;
+    }
 }

@@ -26,12 +26,13 @@
 </template>
 <script>
   export default{
-    data:function () {
-      return this.getData();
+    data(){
+      return this.getData()
     },
     methods:{
       getData() {
         return{
+          isInit:false,
           submitDisabled:false,
           inputForm:{},
           inputProperty:{},
@@ -71,7 +72,7 @@
         })
       }
     },activated () {
-      if(!this.$route.query.headClick) {
+      if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
         axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
@@ -80,6 +81,7 @@
           this.inputProperty = response.data;
         });
       }
+      this.isInit = true;
     }
   }
 </script>
