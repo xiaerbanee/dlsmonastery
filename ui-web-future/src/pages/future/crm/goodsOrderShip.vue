@@ -13,7 +13,7 @@
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.boxImeStr')" prop="boxImeStr">
               <textarea  v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner"
-                         @paste="showSummary(false)"
+                         @paste="showSummary(false,100)"
                          @keyup.enter="showSummary(false)"
                          @keyup.delete="showSummary(false)"
                          @keyup.backspace="showSummary(false)"
@@ -36,7 +36,7 @@
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.imeStr')" prop="imeStr">
               <textarea v-model="inputForm.imeStr"  :rows="5" class="el-textarea__inner"
-                        @keyup.enter="showSummary(false)"
+                        @keyup.enter="showSummary(false,100)"
                         @keyup.delete="showSummary(false)"
                         @keyup.backspace="showSummary(false)"
                         @keyup.control="showSummary(false)">
@@ -115,21 +115,19 @@
             this.submitDisabled = false;
           }
         })
-      },showSummary(isSubmit){
+      },summary(isSubmit){
         var boxImeStr=this.inputForm.boxImeStr;
         var imeStr=this.inputForm.imeStr;
         this.pageLoading = true;
-        axios.get('/api/crm/goodsOrder/shipBoxAndIme',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
-          if(response.data.errors){
-            this.error=response.data.errors.id.message
-            this.alertError=true;
-            this.submitDisabled = false;
-          }else{
-            this.inputForm.goodsOrderDetailList=response.data.goodsOrderDetailList;
-            this.pageLoading = false;
-            this.alertError=false;
-          }
-        })
+        axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
+          console.log(response);
+        });
+      },showSummary(isSubmit,timeout) {
+        if(timeout != null) {
+          setTimeout(this.summary(isSubmit), timeout);
+        } else {
+          this.summary(isSubmit);
+        }
       }
     },created(){
       axios.get('/api/ws/future/crm/goodsOrderShip/getForm',{params: {id:this.$route.query.id}}).then((response)=>{

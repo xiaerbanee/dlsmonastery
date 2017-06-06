@@ -94,7 +94,7 @@ public class GoodsOrderShipService {
         Integer totalShippedQty = 0;
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getId());
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"productId");
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
             if (goodsOrderDetail.getBillQty() > 0 && productMap.get(goodsOrderDetail.getProductId()).getHasIme()) {
