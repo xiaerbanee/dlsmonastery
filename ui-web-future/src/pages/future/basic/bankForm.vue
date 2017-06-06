@@ -32,7 +32,7 @@
             remoteLoading:false,
             inputForm:{},
             submitData:{
-              id:this.$route.query.id,
+              id:'',
               name:'',
               accountIdList:"",
               remarks:''
@@ -71,8 +71,6 @@
             this.inputForm=response.data;
         });
         }
-      },created(){
-        this.initPage();
       },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

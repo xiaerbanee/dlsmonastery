@@ -53,7 +53,7 @@
         },
         rules: {
           employeeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
-          mobilePhone: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}]
+          productIme: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}]
         },
         remoteLoading:false,
         productImes:[],
@@ -96,8 +96,6 @@
           this.inputForm = response.data;
         })
       }
-    },created(){
-      this.initPage();
     },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();

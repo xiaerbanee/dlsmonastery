@@ -8,9 +8,7 @@ import net.myspring.util.text.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by wangzm on 2017/4/21.
- */
+
 public class ProductImeUploadForm extends BaseForm<ProductImeUpload> {
 
     private String imeStr;

@@ -6,10 +6,10 @@
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item :label="$t('pricesystemChangeForm.product')" prop="productId">
-              <product-select v-model="inputForm.productId"></product-select>
+              <product-select v-model="formProperty.productId" @change="handChange"></product-select>
             </el-form-item>
             <el-form-item :label="$t('pricesystemChangeForm.remarks')" prop="remarks">
-              <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
+              <el-input type="textarea" :rows="2" v-model="formProperty.remarks"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('pricesystemChangeForm.save')}}</el-button>
@@ -90,15 +90,14 @@
               that.submitDisabled = false;
           }
         });
+      },handChange(){
+          axios
       },initPage(){
         axios.get('/api/ws/future/crm/pricesystemChange/getForm').then((response)=>{
           this.formProperty=response.data;
       });
       }
-    },
-      created(){
-        this.initPage();
-      },activated () {
+    },activated () {
       if(!this.$route.query.headClick) {
         this.initPage();
       }

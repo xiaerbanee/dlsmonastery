@@ -43,8 +43,8 @@ public class PricesystemChangeController {
     }
 
     @RequestMapping(value="getForm")
-    public String getForm(){
-        return null;
+    public PricesystemChangeForm getForm(PricesystemChangeForm pricesystemChangeForm){
+        return pricesystemChangeService.getForm(pricesystemChangeForm);
     }
 
 

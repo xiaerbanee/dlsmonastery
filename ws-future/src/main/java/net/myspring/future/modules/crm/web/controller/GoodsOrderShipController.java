@@ -15,6 +15,7 @@ import net.myspring.future.modules.crm.service.GoodsOrderShipService;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
+import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,6 @@ public class GoodsOrderShipController {
     private GoodsOrderShipService goodsOrderShipService;
 
 
-
     @RequestMapping(method = RequestMethod.GET)
     public Page<GoodsOrderDto> list(Pageable pageable, GoodsOrderQuery goodsOrderQuery){
         Page<GoodsOrderDto> page = goodsOrderShipService.findAll(pageable, goodsOrderQuery);
@@ -52,8 +52,11 @@ public class GoodsOrderShipController {
         return goodsOrderQuery;
     }
 
-    @RequestMapping(value = "findOne")
-    public GoodsOrderDto findOne(String id) {
-        return goodsOrderService.findOne(id);
+    @RequestMapping(value = "getForm")
+    public GoodsOrderShipForm getForm(GoodsOrderShipForm goodsOrderShipForm) {
+        return goodsOrderShipService.getForm(goodsOrderShipForm);
     }
+
+
+
 }
