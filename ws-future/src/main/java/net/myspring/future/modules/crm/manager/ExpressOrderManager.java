@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@Transactional
 public class ExpressOrderManager {
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
