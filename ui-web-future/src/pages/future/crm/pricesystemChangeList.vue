@@ -12,7 +12,7 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.productId.label" :label-width="formLabelWidth">
                 <product-select v-model="formData.productId"></product-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
@@ -37,21 +37,21 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('pricesystemChangeList.loading')"  @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column prop="productName":label="$t('pricesystemChangeList.productName')" width="150" ></el-table-column>
-        <el-table-column prop="pricesystemName" :label="$t('pricesystemChangeList.pricesystemName')" ></el-table-column>
-        <el-table-column prop="oldPrice" :label="$t('pricesystemChangeList.oldPrice')"  ></el-table-column>
+        <el-table-column column-key="productId" prop="productName":label="$t('pricesystemChangeList.productName')" width="150" sortable></el-table-column>
+        <el-table-column column-key="pricesystemId" prop="pricesystemName" :label="$t('pricesystemChangeList.pricesystemName')" sortable></el-table-column>
+        <el-table-column prop="oldPrice" :label="$t('pricesystemChangeList.oldPrice')"></el-table-column>
         <el-table-column prop="newPrice" :label="$t('pricesystemChangeList.newPrice')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('pricesystemChangeList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('pricesystemChangeList.createdDate')"></el-table-column>
-        <el-table-column prop="status" :label="$t('pricesystemChangeList.status')" width="120">
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('pricesystemChangeList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('pricesystemChangeList.createdDate')" sortable></el-table-column>
+        <el-table-column prop="status" :label="$t('pricesystemChangeList.status')" width="120" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.status=='未通过' ? 'danger' : 'primary'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column  :label="$t('pricesystemChangeList.operation')" width="160">
           <template scope="scope">
-              <el-button size="small" v-if="scope.row.status == '申请中'" v-permit="'crm:pricesystemChange:edit'" @click.native="itemAction(scope.row.id,'pass')">{{$t('pricesystemChangeList.pass')}}</el-button>
-              <el-button size="small" v-if="scope.row.status == '申请中'" v-permit="'crm:pricesystemChange:edit'" @click.native="itemAction(scope.row.id,'notPass')">{{$t('pricesystemChangeList.noPass')}}</el-button>
+            <div class="action" v-if="scope.row.status == '申请中'" v-permit="'crm:pricesystemChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'pass')">{{$t('pricesystemChangeList.pass')}}</el-button></div>
+            <div class="action" v-if="scope.row.status == '申请中'" v-permit="'crm:pricesystemChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'notPass')">{{$t('pricesystemChangeList.noPass')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -74,13 +74,14 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           productId:'',
           createdDate:'',
           status:'',
           pricesystemId:'',
         },
         formLabel:{
-          productName:{label: this.$t('pricesystemChangeList.productName')},
+          productId:{label: this.$t('pricesystemChangeList.productName')},
           createdDate:{label: this.$t('pricesystemChangeList.createdDate')},
           status:{label: this.$t('pricesystemChangeList.status')},
           pricesystemId:{label: this.$t('pricesystemChangeList.pricesystemName'),value:""},
@@ -106,7 +107,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -125,12 +126,16 @@
           this.selects.push(selection[key].id)
         }
       },batchPass(){
+        if(!this.selects || this.selects.length < 1){
+          this.$message(this.$t('pricesystemChangeList.noSelectionFound'));
+          return ;
+        }
         axios.get('/api/ws/future/crm/pricesystemChange/batchAudit',{params:{ids:this.selects,pass:true}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
         });
       },checkSelectable(row) {
-        return row.status.indexOf('通过')<0;
+        return row.status =='申请中';
       },
     },created () {
       var that = this;

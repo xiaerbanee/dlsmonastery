@@ -87,9 +87,9 @@ class AdpricesystemRepositoryImpl @Autowired constructor(val namedParameterJdbcT
     }
 
     override fun deleteOfficeId(id: String):Int{
-        return namedParameterJdbcTemplate.queryForObject("""
+        return namedParameterJdbcTemplate.update("""
              DELETE FROM crm_ad_pricesystem_office where ad_pricesystem_id = :id
-        """,Collections.singletonMap("id",id),Int::class.java)
+        """,Collections.singletonMap("id",id))
     }
 
     override fun findPage(pageable: Pageable, adPricesystemQuery: AdPricesystemQuery): Page<AdPricesystemDto> {

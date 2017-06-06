@@ -11,7 +11,7 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('bankList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -24,9 +24,9 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('bankList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('bankList.name')" sortable width="150"></el-table-column>
         <el-table-column prop="code" :label="$t('bankList.code')"  sortable></el-table-column>
-        <el-table-column prop="accountNameStr" :label="$t('bankList.account')"   sortable></el-table-column>
+        <el-table-column prop="accountNameStr" :label="$t('bankList.account')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('bankList.remarks')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('bankList.createdBy')"></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('bankList.createdBy')" sortable></el-table-column>
         <el-table-column prop="enabled" :label="$t('bankList.enabled')" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
@@ -34,7 +34,7 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('bankList.operation')" width="140">
           <template scope="scope">
-            <div class="action" v-permit="'crm:bank:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button></div>
+            <div class="action" v-permit="'crm:bank:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('bankList.edit')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -53,9 +53,10 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           name:''
         },formLabel:{
-          name:this.$t('bankList.name')
+          name:{label:this.$t('bankList.name')}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -76,7 +77,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -94,8 +95,11 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      axios.get('/api/ws/future/basic/bank/getQuery').then((response) => {
+          this.formData = response.data;
+          util.copyValue(this.$route.query, this.formData);
+          this.pageRequest();
+      })
     }
   };
 </script>
