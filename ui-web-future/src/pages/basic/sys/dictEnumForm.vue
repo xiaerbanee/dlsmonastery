@@ -32,10 +32,10 @@
     methods:{
       getData() {
         return{
+          isInit:false,
           submitDisabled:false,
           inputForm:{},
           inputProperty:{},
-          isInit:false,
           submitData:{
             id:'',
             category:'',
