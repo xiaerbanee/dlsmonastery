@@ -9,15 +9,15 @@
               <el-input v-model="inputForm.formatId"></el-input>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.storeName')" prop="storeId">
-              {{goodsOrder.storeName}}
+              {{inputForm.storeName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.boxImeStr')" prop="boxImeStr">
               <textarea  v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner"
-                         @paste="shipBoxAndIme"
-                         @keyup.enter="shipBoxAndIme"
-                         @keyup.delete="shipBoxAndIme"
-                         @keyup.backspace="shipBoxAndIme"
-                         @keyup.control="shipBoxAndIme">
+                         @paste="showSummary(false)"
+                         @keyup.enter="showSummary(false)"
+                         @keyup.delete="showSummary(false)"
+                         @keyup.backspace="showSummary(false)"
+                         @keyup.control="showSummary(false)">
               </textarea>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.expressCodes')" prop="expressCodes">
@@ -26,21 +26,20 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderShip.shopName')" prop="shopId">
-              {{goodsOrder.shopName}}
+              {{inputForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.remarks')" prop="remarks">
-              {{goodsOrder.remarks}}
+              {{inputForm.remarks}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.redirectView')" prop="redictView">
               <bool-radio-group v-model="inputForm.redirectView"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.imeStr')" prop="imeStr">
               <textarea v-model="inputForm.imeStr"  :rows="5" class="el-textarea__inner"
-                        @paste="shipBoxAndIme"
-                        @keyup.enter="shipBoxAndIme"
-                        @keyup.delete="shipBoxAndIme"
-                        @keyup.backspace="shipBoxAndIme"
-                        @keyup.control="shipBoxAndIme">
+                        @keyup.enter="showSummary(false)"
+                        @keyup.delete="showSummary(false)"
+                        @keyup.backspace="showSummary(false)"
+                        @keyup.control="showSummary(false)">
               </textarea>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.shipRemarks')" prop="shipRemarks">
@@ -51,17 +50,17 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="goodsOrder.goodsOrderDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
+        <el-table :data="inputForm.goodsOrderDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
-          <el-table-column prop="product.hasIme" :label="$t('goodsOrderShip.hasIme')" >
+          <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
             <template scope="scope">
-              <el-tag :type="scope.row.product.hasIme ? 'primary' : 'danger'">{{scope.row.product.hasIme | bool2str}}</el-tag>
+              <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="billQty"  :label="$t('goodsOrderShip.billQty')"></el-table-column>
           <el-table-column prop="returnQty" :label="$t('goodsOrderShip.returnQty')"></el-table-column>
           <el-table-column prop="shippedQty" :label="$t('goodsOrderShip.shippedQty')"></el-table-column>
-          <el-table-column prop="extendMap.waitShipQty" :label="$t('goodsOrderShip.waitShipQty')" ></el-table-column>
+          <el-table-column prop="shipQty" :label="$t('goodsOrderShip.shipQty')" ></el-table-column>
           <el-table-column prop="shipQty" :label="$t('goodsOrderShip.shipQty')"></el-table-column>
         </el-table>
       </el-form>
@@ -69,7 +68,11 @@
   </div>
 </template>
 <script>
+  import boolRadioGroup from 'components/common/bool-radio-group'
   export default{
+    components:{
+      boolRadioGroup
+    },
     data(){
       return{
         submitDisabled:false,

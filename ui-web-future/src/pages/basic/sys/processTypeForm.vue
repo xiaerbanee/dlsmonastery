@@ -54,91 +54,97 @@
   import boolRadioGroup from 'components/common/bool-radio-group'
   export default{
     components:{positionSelect,boolRadioGroup},
-    data(){
+    data:function () {
+      return this.getData();
+    },
+    methods:{
+      getData(){
         return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            loading: false,
-            inputForm:{},
-            submitData:{
-              id:"",
-              name:'',
-              auditFileType:"1",
-              remarks:'',
-              createdPositionIdList:[],
-              viewPositionIdList:[],
-              processFlowList:[]
-            },
-            rules: {
-              name: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-              auditFileType: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-              createdPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-              viewPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-            }
-          }
-      },
-      methods:{
-        formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/general/sys/processType/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
-                this.$message(response.data.message);
-                form.resetFields();
-                this.submitDisabled = false;
-                if(!this.isCreate){
-                  this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")})
-                }
-              }).catch(function () {
-                this.submitDisabled = false;
-              });
-            } else {
-              this.submitDisabled = false;
-            }
-          })
-        },removeDomain(item) {
-          var index = this.inputForm.processFlowList.indexOf(item)
-          if (index !== -1) {
-            this.inputForm.processFlowList.splice(index, 1)
-          }
-        },renderAction(createElement) {
-          return createElement(
-            'a',{
-               attrs: {
-                class: 'el-button el-button--primary el-button--small'
-              }, domProps: {
-                innerHTML: '增加'
-              },on: {
-                click: this.addDomain
-              }
-            }
-          );
-        },addDomain(){
-          var sort = 10;
-          if(this.inputForm.processFlowList.length>0 && this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort != null) {
-            sort = this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort + 10;
-          }
-          this.inputForm.processFlowList.push({name:"",sort:sort,positionId:""});
-        },initPage() {
-          if(this.isCreate){
-            for(var i = 0;i<3;i++) {
-              this.inputForm.processFlowList.push({name:"",sort:(i+1)*10,positionId:""});
-            }
-          } else {
-            axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-              this.inputForm = response.data;
-              axios.get('/api/general/sys/processType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-                this.inputForm.processFlowList = response.data.processFlowList;
-              });
-            });
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          loading: false,
+          inputForm:{},
+          submitData:{
+            id:"",
+            name:'',
+            auditFileType:"1",
+            remarks:'',
+            createdPositionIdList:[],
+            viewPositionIdList:[],
+            processFlowList:[]
+          },
+          rules: {
+            name: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+            auditFileType: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+            createdPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+            viewPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
           }
         }
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
+      },
+      formSubmit(){
+        var that = this;
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            util.copyValue(this.inputForm,this.submitData);
+            axios.post('/api/general/sys/processType/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+              this.$message(response.data.message);
+              Object.assign(this.$data,this.getData());
+              if(!this.isCreate){
+                this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")})
+              }
+            }).catch(function () {
+              that.submitDisabled = false;
+            });
+          } else {
+            this.submitDisabled = false;
+          }
+        })
+      },removeDomain(item) {
+        var index = this.inputForm.processFlowList.indexOf(item)
+        if (index !== -1) {
+          this.inputForm.processFlowList.splice(index, 1)
+        }
+      },renderAction(createElement) {
+        return createElement(
+          'a',{
+             attrs: {
+              class: 'el-button el-button--primary el-button--small'
+            }, domProps: {
+              innerHTML: '增加'
+            },on: {
+              click: this.addDomain
+            }
+          }
+        );
+      },addDomain(){
+        var sort = 10;
+        if(this.inputForm.processFlowList.length>0 && this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort != null) {
+          sort = this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort + 10;
+        }
+        this.inputForm.processFlowList.push({name:"",sort:sort,positionId:""});
+      },initPage() {
+
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data,this.getData());
+        if(this.isCreate){
+          for(var i = 0;i<3;i++) {
+            this.inputForm.processFlowList.push({name:"",sort:(i+1)*10,positionId:""});
+          }
+        } else {
+          axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm = response.data;
+            axios.get('/api/general/sys/processType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+              this.inputForm.processFlowList = response.data.processFlowList;
+            });
+          });
         }
       }
+      this.isInit = true;
     }
+  }
 </script>

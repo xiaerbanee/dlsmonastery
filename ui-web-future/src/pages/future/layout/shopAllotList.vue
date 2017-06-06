@@ -13,10 +13,10 @@
             <el-col :span="24">
 
               <el-form-item :label="formLabel.fromShopId.label" :label-width="formLabelWidth">
-                <depot-select category="directShop" v-model="formData.fromShopId"  @selectedTextChange="formLabel.fromShopId.value =$event"></depot-select>
+                <depot-select  category="directShop" v-model="formData.fromShopId"  @selectedTextChange="formLabel.fromShopId.value = $event"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.toShopId.label" :label-width="formLabelWidth">
-                <depot-select category="directShop" v-model="formData.toShopId"  @selectedTextChange="formLabel.toShopId.value =$event"></depot-select>
+                <depot-select  category="directShop" v-model="formData.toShopId"  @selectedTextChange="formLabel.toShopId.value = $event"></depot-select>
               </el-form-item>
 
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
@@ -135,7 +135,10 @@
 
       pageRequest() {
         this.pageLoading = true;
+
+
         util.copyValue(this.formData,this.submitData);
+
         util.setQuery("shopAllotList",this.submitData);
         axios.get('/api/ws/future/crm/shopAllot',{params:this.submitData}).then((response) => {
           this.page = response.data;
