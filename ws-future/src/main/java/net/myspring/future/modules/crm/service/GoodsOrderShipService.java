@@ -94,7 +94,7 @@ public class GoodsOrderShipService {
         Integer totalShippedQty = 0;
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getId());
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"productId");
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
             if (goodsOrderDetail.getBillQty() > 0 && productMap.get(goodsOrderDetail.getProductId()).getHasIme()) {
@@ -152,7 +152,7 @@ public class GoodsOrderShipService {
         }
         Map<String, Object> result = Maps.newHashMap();
         if (!totalShouldShipQty.equals(totalShippedQty)) {
-            result.put("warnMsg", "货品总开单数和实际发货数不一致");
+            result.put("warnMsg", "货品总开单数"+totalShouldShipQty+ ",和实际发货数"+totalShippedQty + "不一致");
         }
         Map<String, Integer> shipQtyMap = Maps.newHashMap();
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailMap.values()) {

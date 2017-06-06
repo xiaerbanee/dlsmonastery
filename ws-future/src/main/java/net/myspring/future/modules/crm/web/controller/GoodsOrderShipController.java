@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/goodsOrderShip")
@@ -57,6 +58,10 @@ public class GoodsOrderShipController {
         return goodsOrderShipService.getForm(goodsOrderShipForm);
     }
 
+    @RequestMapping(value = "shipCheck")
+    public Map<String,Object> shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
+        return goodsOrderShipService.shipCheck(goodsOrderShipForm);
+    }
 
 
 }

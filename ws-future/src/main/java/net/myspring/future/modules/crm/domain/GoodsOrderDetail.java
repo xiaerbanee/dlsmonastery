@@ -21,6 +21,8 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     private String goodsOrderId;
     @Transient
     private Integer shipQty;
+    @Transient
+    private Integer realBillQty;
 
     public BigDecimal getPrice() {
         return price;
@@ -47,6 +49,9 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     }
 
     public Integer getShippedQty() {
+        if(shippedQty==null) {
+            shippedQty = 0;
+        }
         return shippedQty;
     }
 
@@ -55,6 +60,9 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     }
 
     public Integer getReturnQty() {
+        if(returnQty==null) {
+            returnQty = 0;
+        }
         return returnQty;
     }
 
@@ -80,6 +88,9 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     }
 
     public Integer getShipQty() {
+        if(shipQty==null) {
+            shipQty=0;
+        }
         return shipQty;
     }
 
@@ -88,10 +99,10 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     }
 
     public Integer getRealBillQty() {
-        if (getReturnQty() == null || getReturnQty() == 0) {
-            return getBillQty();
-        } else {
-            return getBillQty() - getReturnQty();
-        }
+        return getBillQty() - (getReturnQty()==null?0:getReturnQty());
+    }
+
+    public void setRealBillQty(Integer realBillQty) {
+        this.realBillQty = realBillQty;
     }
 }

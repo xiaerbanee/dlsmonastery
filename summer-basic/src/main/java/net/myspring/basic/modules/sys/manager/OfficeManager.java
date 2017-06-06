@@ -39,7 +39,7 @@ public class OfficeManager {
         if (!StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())) {
             Office office = officeRepository.findOne(officeId);
             officeIdList.add(office.getId());
-            if (OfficeTypeEnum.BUSINESS.name().equalsIgnoreCase(office.getType())) {
+            if (OfficeTypeEnum.职能部门.name().equalsIgnoreCase(office.getType())) {
                 officeIdList.addAll(CollectionUtil.extractToList(officeRepository.findByParentIdsLike(office.getParentId()), "id"));
             } else {
                 List<OfficeBusiness> businessList = officeBusinessRepository.findBusinessIdById(office.getId());

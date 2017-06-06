@@ -27,7 +27,7 @@
         <el-table-column prop="officeRuleName" label="业务类型" ></el-table-column>
         <el-table-column prop="type" label="类型">
           <template scope="scope">
-            {{$t('OfficeRuleEnum.'+ scope.row.type)}}
+            {{scope.row.type}}
           </template>
         </el-table-column>
         <el-table-column prop="locked" :label="$t('officeList.locked')">
