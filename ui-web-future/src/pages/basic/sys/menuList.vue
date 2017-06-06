@@ -55,8 +55,8 @@
         <el-table-column prop="remarks" :label="$t('menuList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('menuList.operation')" width="140">
           <template scope="scope">
-              <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-              <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'sys:menu:edit'">修改</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:menu:delete'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
