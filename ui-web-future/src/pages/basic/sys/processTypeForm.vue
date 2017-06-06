@@ -7,19 +7,13 @@
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.createdPositionIds')" prop="createdPositionIds">
-          <el-select v-model="inputForm.createdPositionIds" filterable remote :placeholder="$t('processTypeForm.inputWord')" :remote-method="createPermissionMethod" :loading="loading">
-            <el-option v-for="item in createPermissions" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
-          </el-select>
+          <position-select v-model="inputForm.createdPositionIdList" multiple></position-select>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.viewPositionIds')" prop="viewPositionIds">
-          <el-select v-model="inputForm.viewPositionIds" filterable remote :placeholder="$t('processTypeForm.inputWord')"  :remote-method="viewPermissionMethod" :loading="loading">
-            <el-option v-for="item in viewPermissions" :key="item.id" :label="item.fullName" :value="item.id"></el-option>
-          </el-select>
+          <position-select v-model="inputForm.viewPositionIdList" multiple></position-select>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.auditFileType')" prop="auditFileType">
-          <el-radio-group v-model="inputForm.auditFileType">
-            <el-radio v-for="(value, key) in inputForm.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
-          </el-radio-group>
+          <bool-radio-group v-model="inputForm.auditFileType"></bool-radio-group>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -28,7 +22,7 @@
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" v-if="isCreate">{{$t('processTypeForm.save')}}</el-button>
         </el-form-item>
         <template>
-          <el-table :data="inputForm.processFlowDtoList" border stripe>
+          <el-table :data="inputForm.processFlowList" border stripe>
             <el-table-column :label="$t('processTypeForm.name')">
               <template scope="scope">
                 <el-input v-model="scope.row.name"></el-input>
@@ -41,9 +35,7 @@
             </el-table-column>
             <el-table-column :label="$t('processTypeForm.positionName')">
               <template scope="scope">
-                <el-select v-model="scope.row.positionId" filterable :placeholder="$t('processTypeForm.selectPositionName')" :loading="loading">
-                  <el-option v-for="item in inputForm.positionList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
+                <position-select v-model="scope.row.positionId" ></position-select>
               </template>
             </el-table-column>
             <el-table-column :label="$t('processTypeForm.operation')" :render-header="renderAction"  v-if="isCreate">
@@ -58,113 +50,101 @@
   </div>
 </template>
 <script>
-    export default{
-      data(){
-          return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            createPermissions:[],
-            viewPermissions:[],
-            loading: false,
-            inputForm:{},
-            submitData:{
-              name:'',
-              auditFileType:"1",
-              remarks:'',
-              createdPositionIds:"",
-              viewPositionIds:"",
-              processFlowDtoList:[]
-            },
-            rules: {
-              name: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-              auditFileType: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-              createdPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-              viewPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-            }
-          }
-      },
-      methods:{
-        formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/basic/sys/processType/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
-                this.$message(response.data.message);
-                form.resetFields();
-                this.submitDisabled = false;
-                if(!this.isCreate){
-                  this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")})
-                }
-              }).catch(function () {
-                this.submitDisabled = false;
-              });
-            } else {
-              this.submitDisabled = false;
-            }
-          })
-        },createPermissionMethod(query){
-          if(query!==''){
-            this.loading = true;
-            axios.get('/api/basic/sys/permission/search',{params: {query:query}}).then((response)=>{
-              this.createPermissions=response.data;
-              this.loading = false;
-            });
-          }
-        },viewPermissionMethod(query){
-          if(query!==''){
-            this.loading = true;
-            axios.get('/api/basic/sys/permission/search',{params: {query:query}}).then((response)=>{
-              this.viewPermissions=response.data;
-              this.loading = false;
-            });
-          }
-        },removeDomain(item) {
-          var index = this.inputForm.processFlowDtoList.indexOf(item)
-          if (index !== -1) {
-            this.inputForm.processFlowDtoList.splice(index, 1)
-          }
-        },renderAction(createElement) {
-          return createElement(
-            'a',{
-               attrs: {
-                class: 'el-button el-button--primary el-button--small'
-              }, domProps: {
-                innerHTML: '增加'
-              },on: {
-                click: this.addDomain
-              }
-            }
-          );
-        },addDomain(){
-          var sort = 10;
-          if(this.inputForm.processFlowDtoList.length>0 && this.inputForm.processFlowDtoList[this.inputForm.processFlowDtoList.length-1].sort != null) {
-            sort = this.inputForm.processFlowDtoList[this.inputForm.processFlowDtoList.length-1].sort + 10;
-          }
-          this.inputForm.processFlowDtoList.push({name:"",sort:sort,positionId:""});
-        },initPage() {
-          if(this.isCreate){
-            for(var i = 0;i<3;i++) {
-              this.inputForm.processFlowDtoList.push({name:"",sort:(i+1)*10,positionId:""});
-            }
-          } else {
-            axios.get('/api/basic/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-              this.inputForm = response.data;
-              this.inputForm.processFlowDtoList=response.data.processFlowDtoList;
-              if(response.data.createPermission!=null){
-                this.createPermissions=new Array(response.data.createPermission);
-              }
-              if(response.data.viewPermission!=null){
-                this.viewPermissions=new Array(response.data.viewPermission);
-              }
-            });
+  import positionSelect from 'components/basic/position-select'
+  import boolRadioGroup from 'components/common/bool-radio-group'
+  export default{
+    components:{positionSelect,boolRadioGroup},
+    data:function () {
+      return this.getData();
+    },
+    methods:{
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          loading: false,
+          inputForm:{},
+          submitData:{
+            id:"",
+            name:'',
+            auditFileType:"1",
+            remarks:'',
+            createdPositionIdList:[],
+            viewPositionIdList:[],
+            processFlowList:[]
+          },
+          rules: {
+            name: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+            auditFileType: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+            createdPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+            viewPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
           }
         }
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
+      },
+      formSubmit(){
+        var that = this;
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            util.copyValue(this.inputForm,this.submitData);
+            axios.post('/api/general/sys/processType/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+              this.$message(response.data.message);
+              Object.assign(this.$data,this.getData());
+              if(!this.isCreate){
+                this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")})
+              }
+            }).catch(function () {
+              that.submitDisabled = false;
+            });
+          } else {
+            this.submitDisabled = false;
+          }
+        })
+      },removeDomain(item) {
+        var index = this.inputForm.processFlowList.indexOf(item)
+        if (index !== -1) {
+          this.inputForm.processFlowList.splice(index, 1)
+        }
+      },renderAction(createElement) {
+        return createElement(
+          'a',{
+             attrs: {
+              class: 'el-button el-button--primary el-button--small'
+            }, domProps: {
+              innerHTML: '增加'
+            },on: {
+              click: this.addDomain
+            }
+          }
+        );
+      },addDomain(){
+        var sort = 10;
+        if(this.inputForm.processFlowList.length>0 && this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort != null) {
+          sort = this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort + 10;
+        }
+        this.inputForm.processFlowList.push({name:"",sort:sort,positionId:""});
+      },initPage() {
+
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data,this.getData());
+        if(this.isCreate){
+          for(var i = 0;i<3;i++) {
+            this.inputForm.processFlowList.push({name:"",sort:(i+1)*10,positionId:""});
+          }
+        } else {
+          axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm = response.data;
+            axios.get('/api/general/sys/processType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+              this.inputForm.processFlowList = response.data.processFlowList;
+            });
+          });
         }
       }
+      this.isInit = true;
     }
+  }
 </script>

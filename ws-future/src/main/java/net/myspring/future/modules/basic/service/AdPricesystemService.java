@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class AdPricesystemService {
 
     @Autowired
@@ -30,7 +32,7 @@ public class AdPricesystemService {
         if(StringUtils.isNotBlank(id)){
             AdPricesystem adPricesystem = adpricesystemRepository.findOne(id);
             adPricesystemDto = BeanUtil.map(adPricesystem,AdPricesystemDto.class);
-            adPricesystemDto.setOfficeIdList(adpricesystemRepository.findOfficeById(adPricesystemDto.getId()));
+            adPricesystemDto.setOfficeIdList(adpricesystemRepository.findOfficeById(id));
             cacheUtils.initCacheInput(adPricesystemDto);
         }
         return adPricesystemDto;
@@ -63,9 +65,7 @@ public class AdPricesystemService {
 
         }
         if(CollectionUtil.isNotEmpty(adPricesystemForm.getOfficeIdList())){
-            for(String officeId:adPricesystemForm.getOfficeIdList()){
-                adpricesystemRepository.saveAdpricesystemOffice(adPricesystem.getId(),officeId);
-            }
+            adpricesystemRepository.saveAdpricesystemOffice(adPricesystem.getId(),adPricesystemForm.getOfficeIdList());
         }
         return adPricesystem;
     }

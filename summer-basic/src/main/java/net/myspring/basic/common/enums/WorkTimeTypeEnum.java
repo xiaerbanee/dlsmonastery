@@ -9,9 +9,7 @@ import java.util.List;
  * Created by admin on 2016/12/31.
  */
 public enum WorkTimeTypeEnum {
-    PUNCH_THE_CLOCK,
-    WORK_DONE_OUTSIDE,
-    FILL_THE_CLOCK;
+    打卡, 外勤, 补卡;
 
     private static List<String> list= Lists.newArrayList();
 

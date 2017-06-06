@@ -151,6 +151,9 @@
         }else if(action==="ship"){
           this.$router.push({ name: 'storeAllotShip', query: { id: id }});
         }else if(action==="print"){
+
+          this.$router.push({ name: 'storeAllotPrint', query: { id: id }});
+
         }else if(action==="shipPrint"){
         }else if(action==="delete") {
           util.confirmBeforeDelRecord(this).then(() => {

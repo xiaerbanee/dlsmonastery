@@ -48,8 +48,13 @@
     components:{
       boolRadioGroup
     },
-      data(){
+      data:function () {
+        return this.getData();
+      },
+      methods:{
+        getData(){
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{},
@@ -72,9 +77,9 @@
               sort: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
             }
           }
-      },
-      methods:{
+        },
         formSubmit(){
+          var that = this ;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
@@ -82,19 +87,21 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/menu/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                form.resetFields();
-                this.submitDisabled = false;
+                Object.assign(this.$data,this.getData());
                 if(!this.isCreate){
                   this.$router.push({name:'menuList',query:util.getQuery("menuList")})
                 }
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
             }
           })
-        },initPage() {
+        }
+      },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
+          Object.assign(this.$data,this.getData());
           axios.get('/api/basic/sys/menu/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
           })
@@ -102,10 +109,7 @@
             this.inputProperty = response.data;
           })
         }
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
-        }
+        this.isInit = true;
       }
     }
 </script>

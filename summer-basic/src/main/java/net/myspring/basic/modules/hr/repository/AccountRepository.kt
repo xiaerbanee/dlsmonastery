@@ -74,7 +74,7 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
 }
 
 interface AccountRepositoryCustom{
-    fun findByLoginNameLikeAndType(type: String, name: String): MutableList<Account>
+    fun findByLoginNameLikeAndType(type: String, loginName: String): MutableList<Account>
 
     fun findPage(pageable: Pageable, accountQuery: AccountQuery): Page<AccountDto>
 

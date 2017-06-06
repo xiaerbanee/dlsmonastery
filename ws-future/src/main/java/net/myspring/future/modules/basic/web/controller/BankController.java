@@ -49,6 +49,11 @@ public class BankController {
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
+    @RequestMapping(value = "getQuery")
+    public BankQuery getQuery(BankQuery bankQuery){
+        return bankQuery;
+    }
+
     @RequestMapping(value = "findOne")
     public BankDto findOne(String id){
         return bankService.findOne(id);

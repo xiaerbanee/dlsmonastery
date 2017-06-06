@@ -77,7 +77,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         and (t1.parentIds like %?1% or t1.id=?2)
         and t1.officeRuleId=?2
      """)
-    fun findByOfficeIdAndRuleId( officeId: String, officeRuleId: String): Office
+    fun findByOfficeIdAndRuleId( officeId: String, officeRuleId: String): MutableList<Office>
 
     @Query("""
         SELECT t

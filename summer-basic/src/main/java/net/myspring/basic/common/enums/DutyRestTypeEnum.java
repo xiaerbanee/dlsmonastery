@@ -9,7 +9,7 @@ import java.util.List;
  * Created by liuj on 2016/12/31.
  */
 public enum DutyRestTypeEnum {
-    OVER_TIME_OFF, ANNUAL_TIME_OFF;
+    加班调休, 年假调休;
 
     private static List<String> list= Lists.newArrayList();
 

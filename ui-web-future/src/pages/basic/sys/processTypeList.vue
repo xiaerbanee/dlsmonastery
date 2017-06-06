@@ -22,9 +22,9 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('processTypeList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="id" :label="$t('processTypeList.id')" sortable width="150"></el-table-column>
+        <el-table-column fixed prop="id" :label="$t('processTypeList.id')" sortable ></el-table-column>
         <el-table-column prop="name" :label="$t('processTypeList.name')"sortable ></el-table-column>
-        <el-table-column prop="locked" :label="$t('processTypeList.locked')" width="100">
+        <el-table-column prop="locked" :label="$t('processTypeList.locked')" >
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
@@ -36,8 +36,8 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('processTypeList.operation')" width="140">
           <template scope="scope">
-              <el-button size="small" @click.native="itemAction(scope.row.id,'详细')">详细</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'详细')" v-permit="'sys:processType:view'">详细</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')" v-permit="'sys:processType:delete'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

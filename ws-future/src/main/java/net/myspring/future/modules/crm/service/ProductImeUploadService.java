@@ -1,17 +1,10 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import net.myspring.common.response.ResponseCodeEnum;
-import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.domain.ProductImeSale;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto;
@@ -21,14 +14,12 @@ import net.myspring.future.modules.crm.web.form.ProductImeUploadForm;
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
-import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +32,6 @@ public class ProductImeUploadService {
     @Autowired
     private ProductImeRepository productImeRepository;
     @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
     private CacheUtils cacheUtils;
 
     public Page<ProductImeUploadDto> findPage(Pageable pageable, ProductImeUploadQuery productImeUploadQuery) {
@@ -51,10 +40,6 @@ public class ProductImeUploadService {
         cacheUtils.initCacheInput(page.getContent());
 
         return page;
-    }
-
-
-    public void save(ProductImeUploadForm productImeUploadForm){
     }
 
     public void batchAudit(String[] ids, boolean pass) {

@@ -35,30 +35,35 @@
 </template>
 <script>
   export default{
-    data(){
-      return{
-        remoteLoading:false,
-        isCreate:this.$route.query.id!=null,
-        submitDisabled:false,
-        inputForm:{},
-        submitData:{
-          id:"",
-          permissionIdList:""
-        },
-        rules: {
-          id: [{ required: true, message: "必填属性"}],
-        },
-        roleList:[],
-        treeData:[],
-        checked:[],
-        defaultProps: {
-          label: 'label',
-          children: 'children'
-        }
-      };
+    data:function () {
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          inInit:false,
+          remoteLoading:false,
+          isCreate:this.$route.query.id!=null,
+          submitDisabled:false,
+          inputForm:{},
+          submitData:{
+            id:"",
+            permissionIdList:""
+          },
+          rules: {
+            id: [{ required: true, message: "必填属性"}],
+          },
+          roleList:[],
+          treeData:[],
+          checked:[],
+          defaultProps: {
+            label: 'label',
+            children: 'children'
+          }
+        };
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -66,11 +71,10 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/basic/sys/role/saveAuthorityList',qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
-              this.submitDisabled = false;
-              form.resetFields();
+              Object.assign(this.$data,this.getData())
             }).catch(function () {
-                this.submitDisabled = false;
-              });
+                that.submitDisabled = false;
+            });
           }else{
             this.submitDisabled = false;
           }

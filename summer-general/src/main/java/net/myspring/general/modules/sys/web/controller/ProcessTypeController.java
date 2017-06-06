@@ -4,6 +4,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.general.modules.sys.domain.ProcessType;
 import net.myspring.general.modules.sys.dto.ProcessTypeDto;
+import net.myspring.general.modules.sys.service.ProcessFlowService;
 import net.myspring.general.modules.sys.service.ProcessTypeService;
 import net.myspring.general.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.general.modules.sys.web.query.ProcessTypeQuery;
@@ -24,12 +25,28 @@ public class ProcessTypeController {
 
     @Autowired
     private ProcessTypeService processTypeService;
+    @Autowired
+    private ProcessFlowService processFlowService;
 
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProcessTypeDto> list(Pageable pageable, ProcessTypeQuery processTypeQuery){
         Page<ProcessTypeDto> page = processTypeService.findPage(pageable,processTypeQuery);
         return page;
+    }
+
+    @RequestMapping(value = "findOne")
+    public ProcessTypeDto list(ProcessTypeDto processTypeDto){
+        processTypeDto=processTypeService.findOne(processTypeDto);
+        return processTypeDto;
+    }
+
+    @RequestMapping(value = "getForm")
+    public ProcessTypeForm list(ProcessTypeForm processTypeForm){
+        if(!processTypeForm.isCreate()){
+            processTypeForm.setProcessFlowList(processFlowService.findByProcessTypeId(processTypeForm.getId()));
+        }
+        return processTypeForm;
     }
 
     @RequestMapping(value = "delete")

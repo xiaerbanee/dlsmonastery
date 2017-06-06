@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.web.query.PositionQuery;
 import net.myspring.basic.modules.sys.service.BackendModuleService;
 import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.basic.modules.sys.service.RoleService;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.text.StringUtils;
@@ -74,12 +75,13 @@ public class PositionController {
         return positionDtoList;
     }
 
-    @RequestMapping(value = "findById")
-    public PositionDto findById(String id) {
-        PositionDto positionDto =new PositionDto();
-        if(StringUtils.isNotBlank(id)){
-            positionDto =positionService.findOne(id);
+    @RequestMapping(value = "findByIds")
+    public List<PositionDto> findById(String idStr) {
+        List<PositionDto> positionDtoList =Lists.newArrayList();
+        if(StringUtils.isNotBlank(idStr)){
+            List<String> ids=StringUtils.getSplitList(idStr, CharConstant.COMMA);
+            positionDtoList =positionService.findByIds(ids);
         }
-        return positionDto;
+        return positionDtoList;
     }
 }
