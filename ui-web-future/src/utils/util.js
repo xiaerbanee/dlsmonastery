@@ -298,6 +298,20 @@ util.getLabel = function (array, id, labelColumn) {
   }
 }
 
+util.getLabelList = function (array, labelColumn) {
+  if (labelColumn == null) {
+    labelColumn = "name";
+  }
+  let list=new Array();
+  if (array != null && array.length > 0) {
+    for (var index in array) {
+      var obj = array[index];
+      list.push(obj[labelColumn])
+    }
+  }
+  return list;
+}
+
 util.getFolderFileIdStr = function (array) {
   var idList = new Array();
   if (array != null && array.length > 0) {
