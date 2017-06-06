@@ -63,6 +63,7 @@ const dataReportList = r => require.ensure([], () => r(require('pages/future/crm
 const storeAllotList = r => require.ensure([], () => r(require('pages/future/crm/storeAllotList.vue')));
 const storeAllotForm = r => require.ensure([], () => r(require('pages/future/crm/storeAllotForm.vue')));
 const storeAllotShip= r => require.ensure([], () => r(require('pages/future/crm/storeAllotShip.vue')));
+const storeAllotPrint= r => require.ensure([], () => r(require('pages/future/crm/storeAllotPrint.vue')));
 const storeAllotDetail = r => require.ensure([], () => r(require('pages/future/crm/storeAllotDetail.vue')));
 
 
@@ -135,6 +136,7 @@ let routes = [
   {path:'/future/crm/storeAllotList',component:storeAllotList,name:'storeAllotList'},
   {path:'/future/crm/storeAllotForm',component:storeAllotForm,name:'storeAllotForm',meta: {menu:"storeAllotList",keepAlive:true}},
   {path:'/future/crm/storeAllotShip',component:storeAllotShip,name:'storeAllotShip',meta: {menu:"storeAllotList"}},
+  {path:'/future/crm/storeAllotPrint',component:storeAllotPrint,name:'storeAllotPrint',meta: {hidden: true}},
   {path:'/future/crm/storeAllotDetail',component:storeAllotDetail,name:'storeAllotDetail',meta: {menu:"storeAllotList"}},
 
 ];

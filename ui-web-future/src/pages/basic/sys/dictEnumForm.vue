@@ -26,8 +26,8 @@
 </template>
 <script>
   export default{
-    data:function () {
-      return this.getData();
+    data(){
+      return this.getData()
     },
     methods:{
       getData() {

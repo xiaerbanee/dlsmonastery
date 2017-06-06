@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.EntityManager
+import kotlin.collections.HashMap
 
 @CacheConfig(cacheNames = arrayOf("banks"))
 interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
@@ -39,18 +40,27 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
 
     fun findByName(name: String): Bank
 
-    fun findByOutId(outId: String): Bank
+    fun findByNameContaining(name: String): MutableList<Bank>
 
-    @Query("""
-        DELETE FROM
-        crm_account_bank
-        where bank_id=?1
-    """, nativeQuery = true)
+}
+
+interface BankRepositoryCustom{
+
+    fun findByAccountId(accountId: String): MutableList<Bank>
+
     fun deleteBankAccount(bankId: String): Int
 
-//    fun saveAccount(bankId: String,accountIds: MutableList<String>): Int
+    fun saveBankAccount(bankId: String,accountIdList: MutableList<String>):Int
 
-    @Query("""
+    fun findAccountIdList(id: String): MutableList<String>
+
+    fun findPage(pageable: Pageable, bankQuery: BankQuery): Page<BankDto>
+}
+
+class BankRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):BankRepositoryCustom{
+
+    override fun findByAccountId(accountId: String): MutableList<Bank>{
+        return namedParameterJdbcTemplate.query("""
         select
         t1.*
         from
@@ -59,36 +69,30 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
         where
         t1.enabled =1
         and t1.id=t2.bank_id
-        and t2.account_id=?1
-    """, nativeQuery = true)
-    fun findByAccountId(accountId: String): MutableList<Bank>
+        and t2.account_id=:accountId
+        """,Collections.singletonMap("accountId",accountId),BeanPropertyRowMapper(Bank::class.java))
+    }
 
-    @Query("""
-        select
-            MAX(out_date)
-        from
-            crm_bank t1
-        where
-            t1.enabled=1
-    """, nativeQuery = true)
-    fun getMaxOutDate(): LocalDateTime
+    override fun deleteBankAccount(bankId: String): Int{
+        return namedParameterJdbcTemplate.update("""
+          DELETE FROM
+              crm_account_bank
+          where bank_id=:bankId
+        """,Collections.singletonMap("bankId",bankId))
+    }
 
-    fun findByNameContaining(name: String): MutableList<Bank>
+    override fun saveBankAccount(bankId: String,accountIdList: MutableList<String>):Int{
 
-    /*@Query("""
-        select account_id from crm_account_bank where bank_id=?1
-    """, nativeQuery = true)
-    fun findAccountIdList(id: String): MutableList<String>*/
-}
+        val sb = StringBuilder("""
+            INSERT INTO crm_account_bank(account_id,bank_id) values
+        """)
+        for(accountId in accountIdList){
+            sb.append("("+accountId+","+bankId+"),")
+        }
+        sb.deleteCharAt(sb.length -1)
+        return namedParameterJdbcTemplate.update(sb.toString(),HashMap<String,Any>())
 
-interface BankRepositoryCustom{
-
-    fun findAccountIdList(id: String): MutableList<String>
-
-    fun findPage(pageable: Pageable, bankQuery: BankQuery): Page<BankDto>
-}
-
-class BankRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):BankRepositoryCustom{
+    }
 
     override fun findAccountIdList(id: String): MutableList<String>{
         return namedParameterJdbcTemplate.queryForList("""

@@ -35,10 +35,10 @@
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('bankList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('adPricesystemList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small"  @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-            <el-button size="small"  @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <div class="action" v-permit="'crm:adPricesystem:edit'"><el-button size="small"  @click.native="itemAction(scope.row.id,'edit')">{{$t('adPricesystemList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:adPricesystem:edit'"><el-button size="small"  @click.native="itemAction(scope.row.id,'delete')">{{$t('adPricesystemList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
