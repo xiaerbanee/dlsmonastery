@@ -50,11 +50,6 @@ public class PermissionService {
         return permissionRepository.findByRoleId(roleId);
     }
 
-    public Permission findOne(String id) {
-        Permission permission = permissionRepository.findOne(id);
-        return permission;
-    }
-
     public PermissionDto findOne(PermissionDto permissionDto) {
         if (!permissionDto.isCreate()) {
             Permission permission = permissionRepository.findOne(permissionDto.getId());
@@ -69,8 +64,18 @@ public class PermissionService {
         return permissionRepository.findAll();
     }
 
-    public List<Permission> findByPermissionLike(String permissionStr) {
-        return permissionRepository.findByPermissionLike(permissionStr);
+    public List<PermissionDto> findByPermissionLike(String permissionStr) {
+        List<Permission> permissionList = permissionRepository.findByPermissionLike(permissionStr);
+        List<PermissionDto> permissionDtoList=BeanUtil.map(permissionList,PermissionDto.class);
+        cacheUtils.initCacheInput(permissionDtoList);
+        return permissionDtoList;
+    }
+
+    public PermissionDto findOne(String id) {
+        Permission permission = permissionRepository.getOne(id);
+        PermissionDto permissionDto=BeanUtil.map(permission,PermissionDto.class);
+        cacheUtils.initCacheInput(permissionDto);
+        return permissionDto;
     }
 
     public Page<PermissionDto> findPage(Pageable pageable, PermissionQuery permissionQuery) {

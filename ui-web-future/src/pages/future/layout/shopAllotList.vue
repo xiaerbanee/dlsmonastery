@@ -7,16 +7,16 @@
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAllot:view'">{{$t('shopAllotList.filter')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
-      <el-dialog :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('shopAllotList.filter')" :visible.sync="formVisible" size="tiny" class="search-form" zIndex="1800">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
 
               <el-form-item :label="formLabel.fromShopId.label" :label-width="formLabelWidth">
-                <depot-select category="directShop" v-model="formData.fromShopId"  ></depot-select>
+                <depot-select category="directShop" v-model="formData.fromShopId"  @selectedTextChange="formLabel.fromShopId.value =$event"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.toShopId.label" :label-width="formLabelWidth">
-                <depot-select category="directShop" v-model="formData.toShopId"  ></depot-select>
+                <depot-select category="directShop" v-model="formData.toShopId"  @selectedTextChange="formLabel.toShopId.value =$event"></depot-select>
               </el-form-item>
 
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
@@ -43,7 +43,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('shopAllotList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="formatId" column-key="id" :label="$t('shopAllotList.billCode')" width="180" sortable></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy" :label="$t('shopAllotList.createdBy')" sortable></el-table-column>

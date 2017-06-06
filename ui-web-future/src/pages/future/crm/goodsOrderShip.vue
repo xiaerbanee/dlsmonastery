@@ -132,9 +132,6 @@
       axios.get('/api/ws/future/crm/goodsOrderShip/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
       });
-      axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.goodsOrder = response.data;
-      });
     }
   }
 </script>

@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.domain.OfficeBusiness
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 
 /**
@@ -36,10 +37,12 @@ interface  OfficeBusinessRepository: BaseRepository<OfficeBusiness, String> {
     @Query("""
              UPDATE  #{#entityName} t set t.enabled=0 where t.businessOfficeId IN ?1
      """)
+    @Modifying
     fun setEnabledByBusinessOfficeIds(businessOfficeIds:MutableList<String>):Int
 
     @Query("""
            UPDATE  #{#entityName} t set t.enabled=?1 where t.officeId IN ?2
-     """, nativeQuery = true)
+     """)
+    @Modifying
     fun setEnabledByOfficeId(enabled:Boolean,officeId:String ):Int
 }

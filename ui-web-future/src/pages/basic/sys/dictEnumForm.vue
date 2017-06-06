@@ -26,16 +26,16 @@
 </template>
 <script>
   export default{
-    data:function () {
-      return this.getData();
+    data(){
+      return this.getData()
     },
     methods:{
       getData() {
         return{
+          isInit:false,
           submitDisabled:false,
           inputForm:{},
           inputProperty:{},
-          isInit:false,
           submitData:{
             id:'',
             category:'',

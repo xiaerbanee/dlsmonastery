@@ -121,7 +121,6 @@
     },activated () {
 
       if(!this.$route.query.headClick) {
-        console.log(this.$route.query.headClick);
         this.initPage();
       }
     }
