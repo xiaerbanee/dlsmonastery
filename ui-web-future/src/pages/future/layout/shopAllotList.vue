@@ -5,18 +5,18 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAllot:edit'">{{$t('shopAllotList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAllot:view'">{{$t('shopAllotList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <search-tag   :formLabel="searchText"></search-tag>
       </el-row>
-      <search-dialog :title="$t('shopAllotList.filter')" :visible.sync="formVisible" size="tiny" class="search-form" zIndex="1800">
+      <search-dialog ref="dialog" :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" zIndex="1800">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
 
               <el-form-item :label="formLabel.fromShopId.label" :label-width="formLabelWidth">
-                <depot-select  category="directShop" v-model="formData.fromShopId"  @selectedTextChange="formLabel.fromShopId.value = $event"></depot-select>
+                <depot-select  category="directShop" v-model="formData.fromShopId"  @selectedTextChange="initSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.toShopId.label" :label-width="formLabelWidth">
-                <depot-select  category="directShop" v-model="formData.toShopId"  @selectedTextChange="formLabel.toShopId.value = $event"></depot-select>
+                <depot-select  category="directShop" v-model="formData.toShopId"  @selectedTextChange="initSearchText"></depot-select>
               </el-form-item>
 
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
@@ -106,6 +106,7 @@
       return {
         page:{},
         formData:{},
+        searchText:[],
         submitData:{
           page:0,
           size:25,
@@ -118,13 +119,13 @@
           createdDateRange:'',
           auditDateRange:'',
         },formLabel:{
-          createdDateRange:{label: this.$t('shopAllotList.createdDate')},
-          auditDateRange:{label: this.$t('shopAllotList.auditDateRange')},
-          fromShopId:{label:this.$t('shopAllotList.fromShop')},
-          toShopId:{label:this.$t('shopAllotList.toShop')},
-          businessId:{label:this.$t('shopAllotList.billCode')},
-          businessIds:{label:this.$t('shopAllotList.billCode')},
-          status:{label:this.$t('shopAllotList.status')},
+          createdDateRange:{label: this.$t('shopAllotList.createdDate'),value:''},
+          auditDateRange:{label: this.$t('shopAllotList.auditDateRange'),value:''},
+          fromShopId:{label:this.$t('shopAllotList.fromShop'),value:''},
+          toShopId:{label:this.$t('shopAllotList.toShop'),value:''},
+          businessId:{label:this.$t('shopAllotList.billCode'),value:''},
+          businessIds:{label:this.$t('shopAllotList.billCode'),value:''},
+          status:{label:this.$t('shopAllotList.status'),value:''},
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -143,7 +144,8 @@
         axios.get('/api/ws/future/crm/shopAllot',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        })
+        });
+        this.searchText = util.getSearchText(this.$refs.dialog);
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
@@ -178,6 +180,8 @@
           this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'view'}})
         }else if(action==="audit"){
           this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'audit'}})}
+      },initSearchText(){
+          this.searchText = util.getSearchText(this.$refs.dialog);
       }
     },created () {
       let that = this;

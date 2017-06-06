@@ -48,7 +48,9 @@
         })
       }, handleChange(newVal) {
         this.$emit('input', newVal);
-        this.$emit('selectedTextChange', this.$refs.select.selectedLabel);
+        this.$nextTick(()=>{
+          this.$emit('selectedTextChange', this.$refs.select.selectedLabel);
+        });
 
       },setValue(val) {
         this.innerId=val;
@@ -64,6 +66,10 @@
         axios.get('/api/ws/future/basic/depot/findByIds'+'?idStr=' + idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
+          this.$nextTick(()=>{
+            this.$emit('selectedTextChange', this.$refs.select.selectedLabel);
+          });
+
         })
       }
     },created () {

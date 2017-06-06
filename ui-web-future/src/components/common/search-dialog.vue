@@ -1,5 +1,5 @@
 <template>
-  <transition name="dialog-fade">
+  <transition name="dialog-fade" v-show="visible">
     <div class="el-dialog__wrapper" v-show="visible" @click.self="handleWrapperClick" >
       <div
         class="el-dialog"
@@ -11,11 +11,11 @@
             <span class="el-dialog__title">{{title}}</span>
           </slot>
           <div class="el-dialog__headerbtn">
-            <i v-show="showClose" class="el-dialog__close el-icon el-icon-close" @click='handleClose'></i>
+            <i v-show="visible && showClose" class="el-dialog__close el-icon el-icon-close" @click='handleClose'></i>
           </div>
         </div>
-        <div class="el-dialog__body" v-show="rendered"><slot></slot></div>
-        <div class="el-dialog__footer" v-show="$slots.footer">
+        <div class="el-dialog__body" v-show="visible"><slot></slot></div>
+        <div class="el-dialog__footer" v-show="visible && $slots.footer">
           <slot name="footer"></slot>
         </div>
       </div>
