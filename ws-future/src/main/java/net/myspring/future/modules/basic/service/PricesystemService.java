@@ -127,11 +127,10 @@ public class PricesystemService {
     }
 
     public PricesystemForm getForm(PricesystemForm pricesystemForm) {
-        initPricesystemDetail(pricesystemForm);
-        return pricesystemForm;
+        return initPricesystemDetail(pricesystemForm);
     }
 
-    public void initPricesystemDetail(PricesystemForm pricesystemForm){
+    public PricesystemForm initPricesystemDetail(PricesystemForm pricesystemForm){
         List<PricesystemDetailForm> pricesystemDetailFormList=Lists.newArrayList();
         if(pricesystemForm.isCreate()){
             String value =CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
@@ -149,6 +148,7 @@ public class PricesystemService {
         }
         cacheUtils.initCacheInput(pricesystemDetailFormList);
         pricesystemForm.setPricesystemDetailList(pricesystemDetailFormList);
+        return pricesystemForm;
     }
 
 }

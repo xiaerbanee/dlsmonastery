@@ -15,8 +15,8 @@
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('pricesystemForm.save')}}</el-button>
         </el-form-item>
-        <el-input v-model="productName" @change="searchDetail" :placeholder="$t('pricesystemForm.input2Key')" style="width:200px;"></el-input>
-          <el-table :data="pricesystemDetailList"  style="margin-top:5px;"   stripe border >
+        <el-input v-model="productName" @change="searchDetail" :placeholder="$t('pricesystemForm.inputKey')" style="width:200px;"></el-input>
+          <el-table :data="filterPricesystemDetailList"  style="margin-top:5px;"   stripe border >
             <el-table-column prop="productName" :label="$t('pricesystemForm.productName')"></el-table-column>
             <el-table-column prop="price":label="$t('pricesystemForm.price')" v-if="isCreate">
               <template scope="scope">
@@ -39,6 +39,7 @@
         submitDisabled:false,
         productName:'',
         pricesystemDetailList:[],
+        filterPricesystemDetailList:[],
         inputForm:{},
         submitData:{
           id:'',
@@ -88,15 +89,15 @@
       },searchDetail(){
         var val=this.productName;
         var tempList=new Array();
-        for(var index in this.inputForm.pricesystemDetailList){
-          var detail=this.inputForm.pricesystemDetailList[index];
+        for(var index in this.filterPricesystemDetailList){
+          var detail=this.filterPricesystemDetailList[index];
           if(util.isNotBlank(detail.qty)){
             tempList.push(detail)
           }
         }
-        for(var index in this.inputForm.pricesystemDetailList){
-          var detail=this.inputForm.pricesystemDetailList[index];
-          if(util.contains(detail.productName,val) && util.isBlank(detail.qty)){
+        for(var index in this.pricesystemDetailList){
+          var detail=this.pricesystemDetailList[index];
+          if(util.contains(detail.productName,val)){
             tempList.push(detail)
           }
         }
@@ -104,11 +105,10 @@
       },initPage(){
         axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
-          console.log(this.inputForm)
-          this.searchDetail();
         });
         axios.get('/api/ws/future/basic/pricesystem/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.pricesystemDetailList = response.data.pricesystemDetailList;
+          this.filterPricesystemDetailList = this.pricesystemDetailList;
         });
       }
     },created(){
