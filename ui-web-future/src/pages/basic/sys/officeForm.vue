@@ -49,7 +49,7 @@
             </el-form-item>
           </el-col>
           <el-col :span = "10" v-show="treeData.length>0">
-            <el-form-item  label="授权" prop="businessOfficeStr">
+            <el-form-item  label="授权" prop="officeIdList">
               <el-tree
                 :data="treeData"
                 show-checkbox
@@ -96,7 +96,7 @@
           point: '',
           taskPoint: '',
           sort: '',
-          officeIdStr:"",
+          officeIdList:"",
           leaderIdList:"",
           jointLevel:"",
         },
@@ -116,6 +116,7 @@
     },
     methods: {
       formSubmit(){
+          var that=this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -137,7 +138,7 @@
                 });
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           } else {
             this.submitDisabled = false;
@@ -152,18 +153,17 @@
             officeIdList.push(check[index])
           }
         }
-        this.inputForm.officeIdStr=officeIdList.join();
+        this.inputForm.officeIdList=officeIdList;
       },typeChange(evl){
           if(evl!=null&&evl=="SUPPORT"){
             this.isBusiness=false;
             axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
               this.treeData =new Array(response.data);
-              this.inputForm.officeIdStr = response.data.checked.join();
+              this.inputForm.officeIdList=this.checked
             })
           }else {
             this.treeData =new Array();
-            this.checked = new Array();
-            this.inputForm.officeIdStr = "";
+            this.inputForm.officeIdList=new Array();
             this.isBusiness=true;
           }
       },initPage() {
@@ -172,6 +172,7 @@
           if(response.data.type =="SUPPORT" ){
             this.isBusiness=false;
             this.checked=response.data.businessIdList
+            this.inputForm.officeIdList = response.data.businessIdList;
           }else {
             this.isBusiness=true;
           }

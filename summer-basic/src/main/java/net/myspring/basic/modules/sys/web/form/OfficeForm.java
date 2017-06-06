@@ -30,7 +30,6 @@ public class OfficeForm extends BaseForm<Office> {
     private TreeNode officeTree;
     private String type;
     private List<String> officeIdList=Lists.newArrayList();
-    private String officeIdStr;
     private List<OfficeRuleDto>  officeRuleList= Lists.newArrayList();
     private List<String> jointTypeList= Lists.newArrayList();
     private String officeRuleId;
@@ -42,6 +41,10 @@ public class OfficeForm extends BaseForm<Office> {
     private Office parent;
     private String areaId;
     private String jointLevel;
+    @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
+    private String parentName;
+    @CacheInput(inputKey = "accounts",inputInstance = "leaderIdList",outputInstance = "loginName")
+    private List<String> leaderNameList=Lists.newArrayList();
 
     public List<String> getJointLevelList() {
         return jointLevelList;
@@ -66,11 +69,6 @@ public class OfficeForm extends BaseForm<Office> {
     public void setAreaId(String areaId) {
         this.areaId = areaId;
     }
-
-    @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
-    private String parentName;
-    @CacheInput(inputKey = "accounts",inputInstance = "leaderIdList",outputInstance = "loginName")
-    private List<String> leaderNameList=Lists.newArrayList();
 
     public Integer getLevel() {
         return (getParentIds().split(CharConstant.COMMA)).length+1;
@@ -149,14 +147,6 @@ public class OfficeForm extends BaseForm<Office> {
 
     public void setOfficeIdList(List<String> officeIdList) {
         this.officeIdList = officeIdList;
-    }
-
-    public String getOfficeIdStr() {
-        return officeIdStr;
-    }
-
-    public void setOfficeIdStr(String officeIdStr) {
-        this.officeIdStr = officeIdStr;
     }
 
     public String getParentName() {
