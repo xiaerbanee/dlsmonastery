@@ -63,6 +63,8 @@ public class AccountChangeService {
             if(StringUtils.isNotBlank(accountChangeQuery.getId())){
                 AccountChange accountChange=accountChangeRepository.findOne(accountChangeQuery.getId());
                 accountChangeForm.setType(accountChange.getType());
+                accountChangeForm.setNewValue(accountChange.getNewValue());
+                accountChangeForm.setRemarks(accountChange.getRemarks());
             }
             cacheUtils.initCacheInput(accountChangeForm);
         }
@@ -96,9 +98,9 @@ public class AccountChangeService {
                 employee.setRegularDate(LocalDateUtils.parse(accountChange.getNewValue()));
             } else if (accountChange.getType().equals(AccountChangeTypeEnum.LEAVE_WORKER.toString())) {
                 employee.setLeaveDate(LocalDateUtils.parse(accountChange.getNewValue()));
-            }else if(accountChange.getType().equals(AccountChangeTypeEnum.ENTRY_WORKER.name())){
+            }else if(accountChange.getType().equals(AccountChangeTypeEnum.ENTRY_WORKER.toString())){
                 employee.setEntryDate(LocalDateUtils.parse(accountChange.getNewValue()));
-            }else if(accountChange.getType().equals(AccountChangeTypeEnum.BASE_SALARY.name())){
+            }else if(accountChange.getType().equals(AccountChangeTypeEnum.BASE_SALARY.toString())){
                 employee.setSalary(new BigDecimal(accountChange.getNewValue()));
             }
             accountRepository.save(account);
@@ -110,9 +112,11 @@ public class AccountChangeService {
         Account account=accountRepository.findOne(accountChangeForm.getAccountId());
         Employee employee=employeeRepository.findOne(account.getEmployeeId());
         AccountChange accountChange=new AccountChange();
-        accountChange.setAccountId(accountChange.getAccountId());
-        accountChange.setNewValue(accountChange.getNewValue());
-        if (accountChangeForm.getType().equals(AccountChangeTypeEnum.OFFICE.toString())) {
+        accountChange.setAccountId(accountChangeForm.getAccountId());
+        accountChange.setNewValue(accountChangeForm.getNewValue());
+        accountChange.setType(accountChangeForm.getType());
+        accountChange.setRemarks(accountChangeForm.getRemarks());
+        if (accountChange.getType().equals(AccountChangeTypeEnum.OFFICE.toString())) {
             if (StringUtils.isNotBlank(account.getOfficeId())) {
                 Office office=officeRepository.findOne(account.getOfficeId());
                 accountChange.setOldValue(office.getId());
