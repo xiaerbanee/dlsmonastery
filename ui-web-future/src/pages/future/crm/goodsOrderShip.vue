@@ -16,12 +16,7 @@
               {{inputForm.storeName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.boxImeStr')" prop="boxImeStr">
-              <textarea  v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner"
-                         @paste="showSummary(false,100)"
-                         @keyup.enter="showSummary(false)"
-                         @keyup.delete="showSummary(false)"
-                         @keyup.backspace="showSummary(false)"
-                         @keyup.control="showSummary(false)">
+              <textarea  v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner">
               </textarea>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.expressCodes')" prop="expressCodes">
@@ -39,11 +34,7 @@
               <bool-radio-group v-model="inputForm.redirectView"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.imeStr')" prop="imeStr">
-              <textarea v-model="inputForm.imeStr"  :rows="5" class="el-textarea__inner"
-                        @keyup.enter="showSummary(false,100)"
-                        @keyup.delete="showSummary(false)"
-                        @keyup.backspace="showSummary(false)"
-                        @keyup.control="showSummary(false)">
+              <textarea v-model="inputForm.imeStr"  :rows="5" class="el-textarea__inner">
               </textarea>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.shipRemarks')" prop="shipRemarks">
@@ -99,6 +90,16 @@
         rules: {},
         pageLoading:false,
       }
+    },watch: {
+      "inputForm.imeStr": function (oldVal,newVal) {
+          if(_.trim(oldVal) != _.trim(newVal)) {
+            this.summary(false);
+          }
+      },"inputForm.boxImeStr":function (oldVal,newVal) {
+        if(_.trim(oldVal) != _.trim(newVal)) {
+          this.summary(false);
+        }
+      }
     },
     methods:{
       summary(isSubmit){
@@ -117,23 +118,22 @@
             errorMsg = errorMsg + this.shipResult.restResponse.errors[index].message + "<br/>";
           }
           this.shipResult.errorMsg = errorMsg;
+          if(util.isNotBlank(errorMsg)) {
+            this.$refs.mediaNotify.play();
+          } else {
+            if(util.isBlank(this.warnMsg)) {
+              this.$refs.mediaSuccess.play();
+            }
+          }
           //如果提交表单
           if(isSubmit) {
-            if(this.shipResult.restResponse.success) {
-
-
+            if(util.isBlank(errorMsg)) {
             } else {
               alert("请先处理错误信息");
             }
           }
           this.submitDisabled = false;
         });
-      },showSummary(isSubmit,timeout) {
-        if(timeout != null) {
-          setTimeout(this.summary(isSubmit), timeout);
-        } else {
-          this.summary(isSubmit);
-        }
       }
     },created(){
       axios.get('/api/ws/future/crm/goodsOrderShip/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
