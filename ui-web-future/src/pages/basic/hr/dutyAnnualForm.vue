@@ -32,28 +32,33 @@
 <script>
   export default{
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        fileList:[],
-        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
-        inputForm:{
-          annualYear:''
-        },
-        submitData:{
-          id:'',
-          mongoId:'',
-          annualYear:'',
-          remarks:''
-        },
-        rules: {
-          folderFileId: [{ required: true, message: this.$t('dutyAnnualForm.prerequisiteMessage')}],
-          annualYear: [{ required: true, message: this.$t('dutyAnnualForm.prerequisiteMessage')}],
-        },
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          fileList:[],
+          headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
+          inputForm:{
+            annualYear:''
+          },
+          submitData:{
+            id:'',
+            mongoId:'',
+            annualYear:'',
+            remarks:''
+          },
+          rules: {
+            folderFileId: [{ required: true, message: this.$t('dutyAnnualForm.prerequisiteMessage')}],
+            annualYear: [{ required: true, message: this.$t('dutyAnnualForm.prerequisiteMessage')}],
+          },
+        }
+      },
       formSubmit(){
+        var that = this;
        this.inputForm.mongoId = util.getMongoId(this.fileList);
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
@@ -65,15 +70,14 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
-              form.resetFields();
-              this.submitDisabled = false;
+              Object.assign(this.$data, this.getData())
               if(this.isCreate){
                 this.fileList = [];
               } else {
                 this.$router.push({name:'dutyAnnualList',query:util.getQuery("dutyAnnualList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -89,13 +93,12 @@
         axios.get('/api/basic/hr/dutyAnnual/import/template').then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
-      },initPage() {
-
       }
     },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
+      if(!this.$route.query.headClick || !this.isInit) {
+
       }
+      this.isInit = true;
     }
   }
 </script>

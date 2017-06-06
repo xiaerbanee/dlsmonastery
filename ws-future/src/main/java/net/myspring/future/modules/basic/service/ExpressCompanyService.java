@@ -36,8 +36,11 @@ public class ExpressCompanyService {
     private RedisTemplate redisTemplate;
 
     public ExpressCompanyDto findDto(String id){
-        ExpressCompanyDto expressCompanyDto = BeanUtil.map(expressCompanyRepository.findOne(id), ExpressCompanyDto.class);
-        cacheUtils.initCacheInput(expressCompanyDto);
+        ExpressCompanyDto expressCompanyDto=new ExpressCompanyDto();
+        if(StringUtils.isNotBlank(id)) {
+             expressCompanyDto = BeanUtil.map(expressCompanyRepository.findOne(id), ExpressCompanyDto.class);
+            cacheUtils.initCacheInput(expressCompanyDto);
+        }
         return expressCompanyDto;
     }
 

@@ -29,7 +29,12 @@
 <script>
     export default{
       data(){
+        return this.getData()
+      },
+      methods:{
+        getData() {
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             formProperty:{},
@@ -37,7 +42,7 @@
             submitData:{
               id:'',
               name:'',
-              totalPriceType:'',
+              totalPriceType:'按数量',
               price:'',
               remarks:''
             },
@@ -47,8 +52,8 @@
             }
           }
       },
-      methods:{
         formSubmit(){
+          var that = this;
           this.submitDisabled = true;
           var form = this.$refs["formData"];
           util.copyValue(this.formData,this.submitData);
@@ -56,22 +61,20 @@
             if (valid) {
               axios.post('/api/ws/future/basic/shopAdType/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-              this.submitDisabled = false;
-              if(response.data.success){
-                if(this.isCreate){
-                  form.resetFields();
-                } else {
+              Object.assign(this.$data, this.getData());
+                if(!this.isCreate){
                   this.$router.push({name:'shopAdTypeList',query:util.getQuery("shopAdTypeList")})
                 }
-              }
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
             }
           })
-        },initPage(){
+        }
+      },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
           axios.get('/api/ws/future/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.formData = response.data;
         });
@@ -79,10 +82,7 @@
             this.formProperty = response.data;
         });
         }
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
-        }
+        this.isInit = true;
       }
     }
 </script>

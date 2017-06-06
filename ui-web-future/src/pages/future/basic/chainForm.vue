@@ -26,7 +26,12 @@
           depotSelect
       },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{},
@@ -42,39 +47,34 @@
         }
       }
     },
-    methods:{
       formSubmit(){
-        this.submitDisabled = true;
+        var that = this;
+          this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/basic/chain/save',qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+              Object.assign(this.$data, this.getData());
+              if(!this.isCreate){
                 this.$router.push({name:'chainList',query:util.getQuery("chainList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
           }
         })
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/basic/chain/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         });
       }
-      },created(){
-        this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

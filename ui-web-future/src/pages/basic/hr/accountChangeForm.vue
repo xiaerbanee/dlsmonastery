@@ -59,31 +59,35 @@
           officeSelect
       },
     data(){
-      return{
-        isDetail:this.$route.query.action=="detail",
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        accounts:[],
-        offices:[],
-        inputForm:{},
-        submitData:{
-          id:'',
-          accountId:"",
-          type:'',
-          oldValue:'',
-          newValue:'',
-          remarks:''
-        },
-        rules: {
-          accountId: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
-          type: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
-          remarks: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
-        },
-        remoteLoading:false,
-
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          isDetail:this.$route.query.action=="detail",
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          accounts:[],
+          offices:[],
+          inputForm:{},
+          submitData:{
+            id:'',
+            accountId:"",
+            type:'',
+            oldValue:'',
+            newValue:'',
+            remarks:''
+          },
+          rules: {
+            accountId: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
+            type: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
+            remarks: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
+          },
+          remoteLoading:false,
+
+        }
+      },
       formSubmit(){
          var that=this;
         this.submitDisabled = true;
@@ -96,8 +100,7 @@
               if(response.data.message){
               this.$message(response.data.message);
             }
-            form.resetFields();
-            this.submitDisabled = false;
+            Object.assign(this.$data, this.getData());
             if(!this.isCreate){
               this.$router.push({name:'accountChangeList',query:util.getQuery("accountChangeList")})
             }
@@ -155,13 +158,14 @@
         }else {
           this.inputForm.oldValue ="";
         }
-      },initPage() {
+      }
+    },created () {
+      if(!this.$route.query.headClick || !this.isInit) {
         this.inputForm.type=this.$route.query.type;
         this.inputForm.id=this.$route.query.id;
         this.getAccount(this.$route.query.accountId);
       }
-    },created () {
-      this.initPage();
+      this.isInit = true;
     }
   }
 </script>

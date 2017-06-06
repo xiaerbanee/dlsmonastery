@@ -2,6 +2,8 @@
   <div>
     <head-tab active="goodsOrderShip"></head-tab>
     <div>
+      <audio ref="mediaNotify"><source :src="mediaNotify"  type="audio/ogg"></audio>
+      <audio ref="mediaSuccess"><source :src="mediaSuccess"  type="audio/ogg"></audio>
       <su-alert  :text="shipResult.warnMsg"  type="warning"></su-alert>
       <su-alert :text="shipResult.errorMsg" type="danger"></su-alert>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form" style="margin-top: 10px;">
@@ -70,6 +72,8 @@
   </div>
 </template>
 <script>
+  import mediaNotify from "assets/media/notify.mp3"
+  import mediaSuccess from "assets/media/success.mp3"
   import boolRadioGroup from 'components/common/bool-radio-group'
   export default{
     components:{
@@ -77,6 +81,8 @@
     },
     data(){
       return{
+        mediaNotify: mediaNotify,
+        mediaSuccess: mediaSuccess,
         submitDisabled:false,
         inputForm:{},
         goodsOrder:{},
@@ -114,6 +120,7 @@
           //如果提交表单
           if(isSubmit) {
             if(this.shipResult.restResponse.success) {
+
 
             } else {
               alert("请先处理错误信息");

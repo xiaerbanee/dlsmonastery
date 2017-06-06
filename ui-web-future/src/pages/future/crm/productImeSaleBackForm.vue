@@ -64,99 +64,105 @@
 
 
   export default{
-    components:{
+    components: {
       depotSelect,
 
 
     },
-      data(){
-          return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
+    data(){
+      return this.getData()
+    },
+    methods: {
+      getData() {
+        return {
+          isInit: false,
+          isCreate: this.$route.query.id == null,
+          submitDisabled: false,
 
-            searched:false,
-            imeStr:'',
-            productImeSale:{},
-            errMsg:'',
-            productImeList:[],
-            productQtyList:[],
-            submitData:{
-              imeStr:'',
-              remarks:''
-            },
-            rules: {
-              imeStr: [{ required: true, message: this.$t('productImeSaleBackForm.prerequisiteMessage')}],
-            },
+          searched: false,
+          imeStr: '',
+          productImeSale: {},
+          errMsg: '',
+          productImeList: [],
+          productQtyList: [],
+          submitData: {
+            imeStr: '',
+            remarks: ''
+          },
+          rules: {
+            imeStr: [{required: true, message: this.$t('productImeSaleBackForm.prerequisiteMessage')}],
+          },
 
-          }
-      },
-      methods:{
-        formSubmit(){
-            if(this.errMsg){
-              this.$alert(this.errMsg, this.$t('productImeSaleBackForm.notify'));
-                return ;
-            }
-
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-                this.initSubmitDataBeforeSubmit();
-              axios.post('/api/ws/future/crm/productImeSale/saleBack',qs.stringify(this.submitData)).then((response)=> {
-                this.$message(response.data.message);
-                this.submitDisabled = false;
-                if(response.data.success){
-                  if(this.isCreate){
-                    form.resetFields();
-                  } else {
-                    this.$router.push({name:'productImeSaleList',query:util.getQuery("productImeSaleList")})
-                  }
-                }
-              }).catch(function () {
-                this.submitDisabled = false;
-              });
-            }
-          })
-        }, initSubmitDataBeforeSubmit(){
-
-          this.submitData.imeStr = this.imeStr;
-          this.submitData.remarks = this.productImeSale.remarks;
-
-        },onImeStrChange(){
-            this.searched = true;
-            axios.get('/api/ws/future/crm/productImeSale/checkForSaleBack',{params:{imeStr:this.imeStr}}).then((response)=>{
-              this.errMsg=response.data;
-            });
-          axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.imeStr}}).then((response)=>{
-            this.productImeList=response.data;
-
-            let tmpMap = new Map();
-            if(this.productImeList){
-              for(let productIme of this.productImeList ){
-                if(!tmpMap.has(productIme.productId)){
-                  tmpMap.set(productIme.productId, {productName:productIme.productName, qty:0});
-                }
-                tmpMap.get(productIme.productId).qty+=1;
-              }
-            }
-            let tmpList = [];
-            for(let key of tmpMap.keys()){
-              tmpList.push(tmpMap.get(key));
-            }
-            this.productQtyList = tmpList;
-          });
-        },reset(){
-          this.searched = false;
-          this.imeStr = '';
-          this.errMsg='';
-          this.productImeList=[];
-          this.productQtyList = [];
-          this.$refs["inputForm"].resetFields();
         }
-      },created(){
-        axios.get('/api/ws/future/crm/productImeSale/findDto').then((response)=>{
-          this.productImeSale=response.data;
+      },
+      formSubmit(){
+        var that = this;
+        if (this.errMsg) {
+          this.$alert(this.errMsg, this.$t('productImeSaleBackForm.notify'));
+          return;
+        }
+
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            this.initSubmitDataBeforeSubmit();
+            axios.post('/api/ws/future/crm/productImeSale/saleBack', qs.stringify(this.submitData)).then((response) => {
+              this.$message(response.data.message);
+              Object.assign(this.$data, this.getData());
+              if (response.data.success) {
+                if (!this.isCreate) {
+                  this.$router.push({name: 'productImeSaleList', query: util.getQuery("productImeSaleList")})
+                }
+              }
+            }).catch(function () {
+              that.submitDisabled = false;
+            });
+          }
+        })
+      }, initSubmitDataBeforeSubmit(){
+
+        this.submitData.imeStr = this.imeStr;
+        this.submitData.remarks = this.productImeSale.remarks;
+
+      }, onImeStrChange(){
+        this.searched = true;
+        axios.get('/api/ws/future/crm/productImeSale/checkForSaleBack', {params: {imeStr: this.imeStr}}).then((response) => {
+          this.errMsg = response.data;
+        });
+        axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr: this.imeStr}}).then((response) => {
+          this.productImeList = response.data;
+
+          let tmpMap = new Map();
+          if (this.productImeList) {
+            for (let productIme of this.productImeList) {
+              if (!tmpMap.has(productIme.productId)) {
+                tmpMap.set(productIme.productId, {productName: productIme.productName, qty: 0});
+              }
+              tmpMap.get(productIme.productId).qty += 1;
+            }
+          }
+          let tmpList = [];
+          for (let key of tmpMap.keys()) {
+            tmpList.push(tmpMap.get(key));
+          }
+          this.productQtyList = tmpList;
+        });
+      }, reset(){
+        this.searched = false;
+        this.imeStr = '';
+        this.errMsg = '';
+        this.productImeList = [];
+        this.productQtyList = [];
+        this.$refs["inputForm"].resetFields();
+      }
+    }, activated () {
+      if (!this.$route.query.headClick || !this.isInit) {
+        axios.get('/api/ws/future/crm/productImeSale/findDto').then((response) => {
+          this.productImeSale = response.data;
         })
       }
+      this.isInit = true;
     }
+  }
 </script>
