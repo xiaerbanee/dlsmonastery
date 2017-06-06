@@ -15,13 +15,7 @@
         itemList : [],
         remoteLoading:false
       };
-    },
-    computed:{
-      selectedLabel() {
-        return this.$refs.select.selectedLabel;
-      },
-    },
-    methods:{
+    },methods:{
       remoteSelect(query) {
         if(util.isBlank(query)) {
           return;
@@ -54,7 +48,7 @@
         })
       }, handleChange(newVal) {
         this.$emit('input', newVal);
-        this.$emit('selectedTextChange', );
+        this.$emit('selectedTextChange', this.$refs.select.selectedLabel);
 
       },setValue(val) {
         this.innerId=val;
