@@ -2,9 +2,11 @@
   <div>
     <head-tab active="goodsOrderShip"></head-tab>
     <div>
-      <el-alert  v-show="shipResult.warnMsg !=null"  :title="shipResult.warnMsg" type="warning" :closable="false">
-      </el-alert>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form">
+      <su-alert  :text="shipResult.warnMsg"  type="warning"></su-alert>
+
+
+
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form" style="margin-top: 10px;">
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderShip.businessId')" prop="businessId">
@@ -119,11 +121,29 @@
           }
         })
       },summary(isSubmit){
+        this.submitDisabled = true;
         var boxImeStr=this.inputForm.boxImeStr;
         var imeStr=this.inputForm.imeStr;
         this.pageLoading = true;
         axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
           this.shipResult = response.data;
+          this.pageLoading = false;
+          //错误信息
+          var errorMsg = "";
+          for(var error in this.shipResult.restResponse.errors) {
+            errorMsg = errorMsg + error + "<br/>";
+          }
+
+          //如果提交表单
+          if(isSubmit) {
+            if(this.shipResult.restResponse.success) {
+
+            } else {
+              alert("请先处理错误信息");
+              return;
+            }
+          }
+          this.submitDisabled = false;
         });
       },showSummary(isSubmit,timeout) {
         if(timeout != null) {
