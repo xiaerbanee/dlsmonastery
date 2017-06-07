@@ -94,7 +94,7 @@
         submitData: {
           page:0,
           size:25,
-          sort:'t1.FCUSTID',
+          sort:'t1.fcustid',
           dateRange: '',
           customerGroup:'',
           customerIdList:[],
