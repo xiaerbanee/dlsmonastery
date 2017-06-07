@@ -19,7 +19,7 @@ public class PriceChangeImeForm extends BaseForm<PriceChangeIme> {
     private String ime;
     private String shopId;
 
-    private String pass;
+    private Boolean pass;
     private String auditRemarks;
 
     private String image;
@@ -82,11 +82,11 @@ public class PriceChangeImeForm extends BaseForm<PriceChangeIme> {
         this.shopId = shopId;
     }
 
-    public String getPass() {
+    public Boolean getPass() {
         return pass;
     }
 
-    public void setPass(String pass) {
+    public void setPass(Boolean pass) {
         this.pass = pass;
     }
 

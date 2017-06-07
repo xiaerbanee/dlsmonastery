@@ -37,7 +37,7 @@
             remoteLoading:false,
             inputForm:{},
             submitData:{
-              id:this.$route.query.id,
+              id:'',
               name:'',
               accountIdList:"",
               remarks:''

@@ -13,7 +13,6 @@ import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +76,7 @@ public class BankInController {
     }
 
     @RequestMapping(value = "batchAudit")
-    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids, String pass){
+    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids, boolean pass){
 
         bankInService.batchAudit(ids, pass);
         return new RestResponse("批量审核成功",ResponseCodeEnum.audited.name());
