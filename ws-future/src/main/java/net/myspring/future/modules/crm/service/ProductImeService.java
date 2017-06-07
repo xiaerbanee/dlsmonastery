@@ -5,16 +5,21 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.future.common.enums.SaleSumTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
+import net.myspring.future.modules.crm.dto.ProductImeSaleReportDto;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
+import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
+import net.myspring.future.modules.crm.web.query.ProductImeSaleReportQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeStockReportQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -32,6 +37,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.misc.Request;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -53,6 +59,8 @@ public class ProductImeService {
     private CacheUtils cacheUtils;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
+    @Autowired
+    private OfficeClient officeClient;
 
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable,ProductImeQuery productImeQuery) {
@@ -151,6 +159,49 @@ public class ProductImeService {
     public List<ProductIme> findByImeLike(String imeReverse,String shopId){
         List<ProductIme> productImeList = productImeRepository.findTop20ByDepotIdAndImeReverseStartingWithAndEnabledIsTrue(shopId,imeReverse);
         return productImeList;
+    }
+
+    public List<ProductImeSaleReportDto> saleReport(ProductImeSaleReportQuery productImeSaleReportQuery) {
+        List<ProductImeSaleReportDto> productImeSaleReportList=Lists.newArrayList();
+        productImeSaleReportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        Map<String,List<String>>  childOfficeMap=Maps.newHashMap();
+        if(StringUtils.isNotBlank(productImeSaleReportQuery.getOfficeId())){
+            productImeSaleReportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(productImeSaleReportQuery.getOfficeId()));
+            childOfficeMap=officeClient.getChildOfficeMap(productImeSaleReportQuery.getOfficeId());
+        }
+        if("电子报卡".equals(productImeSaleReportQuery.getOutType())){
+            productImeSaleReportList=productImeRepository.findBaokaSaleReport(productImeSaleReportQuery);
+        }else {
+            productImeSaleReportList=productImeRepository.findSaleReport(productImeSaleReportQuery);
+        }
+        if(StringUtils.isNotBlank(productImeSaleReportQuery.getOfficeId())){
+            Map<String,ProductImeSaleReportDto> map=Maps.newHashMap();
+            for(ProductImeSaleReportDto productImeSaleReportDto:productImeSaleReportList){
+                String key=getOfficeKey(childOfficeMap,productImeSaleReportDto.getOfficeId());
+                if(map.containsKey(key)){
+                    map.get(key).addQty(productImeSaleReportDto.getQty());
+                }else {
+                    ProductImeSaleReportDto productImeSaleReport=new ProductImeSaleReportDto(key,productImeSaleReportDto.getQty());
+                    map.put(key,productImeSaleReport);
+                }
+            }
+            cacheUtils.initCacheInput(map.values());
+            return Lists.newArrayList(map.values());
+        }else {
+            cacheUtils.initCacheInput(productImeSaleReportList);
+            return productImeSaleReportList;
+        }
+    }
+
+    private String getOfficeKey(Map<String,List<String>> officeMap,String officeId){
+        for(Map.Entry<String,List<String>> entry:officeMap.entrySet()){
+            for (String childId:entry.getValue()){
+                if(childId.equals(officeId)){
+                    return entry.getKey();
+                }
+            }
+        }
+        return null;
     }
 
     public Page stockReport(Pageable pageable, ProductImeStockReportQuery productImeStockReportQuery) {

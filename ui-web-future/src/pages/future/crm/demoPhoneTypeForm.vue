@@ -62,7 +62,8 @@
           applyEndDate:'',
           renewEndDate:'',
           remarks:'',
-          demoPhoneTypeOfficeDtos:[]
+          demoPhoneTypeOfficeDtos:[],
+          productTypeIdList:[]
         },
         remoteLoading:false,
         productTypes:[],
