@@ -9,25 +9,24 @@ import java.time.LocalDate;
 public class BankInAuditForm extends BaseForm<BankIn> {
 
 
-    private String syn;
-    private String pass;
+    private Boolean syn;
+    private Boolean pass;
     private String auditRemarks;
     private LocalDate billDate;
 
-
-    public String getSyn() {
+    public Boolean getSyn() {
         return syn;
     }
 
-    public void setSyn(String syn) {
+    public void setSyn(Boolean syn) {
         this.syn = syn;
     }
 
-    public String getPass() {
+    public Boolean getPass() {
         return pass;
     }
 
-    public void setPass(String pass) {
+    public void setPass(Boolean pass) {
         this.pass = pass;
     }
 

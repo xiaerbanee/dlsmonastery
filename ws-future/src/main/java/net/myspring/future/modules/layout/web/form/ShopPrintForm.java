@@ -21,14 +21,14 @@ public class ShopPrintForm extends BaseForm<ShopPrint> {
     private String createdBy;
 
     private LocalDateTime createdDate;
-    private String pass;
+    private Boolean pass;
     private String passRemarks;
 
-    public String getPass() {
+    public Boolean getPass() {
         return pass;
     }
 
-    public void setPass(String pass) {
+    public void setPass(Boolean pass) {
         this.pass = pass;
     }
 

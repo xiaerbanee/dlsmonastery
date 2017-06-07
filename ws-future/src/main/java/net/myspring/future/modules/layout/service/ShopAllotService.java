@@ -140,13 +140,13 @@ public class ShopAllotService {
 //        }
 
         ShopAllot shopAllot = findOne(shopAllotViewOrAuditForm.getId());
-        shopAllot.setStatus("1".equals(shopAllotViewOrAuditForm.getPass()) ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());
+        shopAllot.setStatus(shopAllotViewOrAuditForm.getPass() ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());
         shopAllot.setAuditRemarks(shopAllotViewOrAuditForm.getAuditRemarks());
         shopAllot.setAuditBy(RequestUtils.getAccountId());
         shopAllot.setAuditDate(LocalDateTime.now());
         shopAllotRepository.save(shopAllot);
 
-        if(!"1".equals(shopAllotViewOrAuditForm.getPass())) {
+        if( !shopAllotViewOrAuditForm.getPass()) {
             return;
         }
 
@@ -159,7 +159,7 @@ public class ShopAllotService {
             }
         }
 
-        if("1".equals(shopAllotViewOrAuditForm.getSyn())) {
+        if(shopAllotViewOrAuditForm.getSyn()) {
 //                Long defaultStoreId = Long.valueOf(Global.getCompanyConfig(shopAllot.getCompany().getId(), CompanyConfigCode.DEFAULT_STORE_ID.getCode()));
 //                shopAllot.setStore(depotDao.findOne(defaultStoreId));
 //                //都不是寄售门店  一出一退
